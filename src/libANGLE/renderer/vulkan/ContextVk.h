@@ -166,12 +166,9 @@ class ContextVk : public ContextImpl
   private:
     gl::Error initPipeline(const gl::Context *context);
     gl::Error setupDraw(const gl::Context *context,
-                        GLenum mode,
-                        DrawType drawType,
-                        size_t firstVertex,
-                        size_t lastVertex,
+                        const gl::DrawCallParams &drawCallParams,
                         ResourceVk *elementArrayBufferOverride,
-                        vk::CommandBuffer **commandBuffer);
+                        vk::CommandBuffer **commandBufferOut);
 
     RendererVk *mRenderer;
     vk::PipelineAndSerial *mCurrentPipeline;

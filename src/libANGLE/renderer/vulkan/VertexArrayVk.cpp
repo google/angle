@@ -43,23 +43,27 @@ void VertexArrayVk::destroy(const gl::Context *context)
 {
 }
 
-gl::AttributesMask VertexArrayVk::attribsToStream(ContextVk *context) const
+gl::AttributesMask VertexArrayVk::getAttribsToStream(const gl::Context *context) const
 {
     const gl::Program *programGL = context->getGLState().getProgram();
     return mClientMemoryAttribs & programGL->getActiveAttribLocationsMask();
 }
 
-gl::Error VertexArrayVk::streamVertexData(ContextVk *context,
+gl::Error VertexArrayVk::streamVertexData(const gl::Context *context,
                                           StreamingBuffer *stream,
-                                          size_t firstVertex,
-                                          size_t lastVertex)
+                                          const gl::DrawCallParams &drawCallParams)
 {
+    ContextVk *contextVk         = vk::GetImpl(context);
     const auto &attribs          = mState.getVertexAttributes();
     const auto &bindings         = mState.getVertexBindings();
 
+    ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
+
+    const size_t lastVertex = drawCallParams.firstVertex() + drawCallParams.vertexCount();
+
     // TODO(fjhenigman): When we have a bunch of interleaved attributes, they end up
     // un-interleaved, wasting space and copying time.  Consider improving on that.
-    for (auto attribIndex : attribsToStream(context))
+    for (auto attribIndex : getAttribsToStream(context))
     {
         const gl::VertexAttribute &attrib = attribs[attribIndex];
         const gl::VertexBinding &binding  = bindings[attrib.bindingIndex];
@@ -77,19 +81,19 @@ gl::Error VertexArrayVk::streamVertexData(ContextVk *context,
         // will work.  If we don't start at zero all the indices will be off.
         // TODO(fjhenigman): See if we can account for indices being off by adjusting
         // the offset, thus avoiding wasted memory.
-        const size_t firstByte = firstVertex * binding.getStride();
+        const size_t firstByte = drawCallParams.firstVertex() * binding.getStride();
         const size_t lastByte =
             lastVertex * binding.getStride() + gl::ComputeVertexAttributeTypeSize(attrib);
         uint8_t *dst = nullptr;
         uint32_t offset = 0;
-        ANGLE_TRY(stream->allocate(context, lastByte, &dst,
+        ANGLE_TRY(stream->allocate(contextVk, lastByte, &dst,
                                    &mCurrentArrayBufferHandles[attribIndex], &offset, nullptr));
         mCurrentArrayBufferOffsets[attribIndex] = static_cast<VkDeviceSize>(offset);
         memcpy(dst + firstByte, static_cast<const uint8_t *>(attrib.pointer) + firstByte,
                lastByte - firstByte);
     }
 
-    ANGLE_TRY(stream->flush(context));
+    ANGLE_TRY(stream->flush(contextVk));
     return gl::NoError();
 }
 
@@ -188,7 +192,7 @@ void VertexArrayVk::updateDrawDependencies(vk::CommandGraphNode *readNode,
                                            const gl::AttributesMask &activeAttribsMask,
                                            ResourceVk *elementArrayBufferOverride,
                                            Serial serial,
-                                           DrawType drawType)
+                                           bool isDrawElements)
 {
     // Handle the bound array buffers.
     for (auto attribIndex : activeAttribsMask)
@@ -198,7 +202,7 @@ void VertexArrayVk::updateDrawDependencies(vk::CommandGraphNode *readNode,
     }
 
     // Handle the bound element array buffer.
-    if (drawType == DrawType::Elements)
+    if (isDrawElements)
     {
         if (elementArrayBufferOverride != nullptr)
         {

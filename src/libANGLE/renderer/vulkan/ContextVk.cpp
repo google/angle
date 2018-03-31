@@ -148,17 +148,14 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
 }
 
 gl::Error ContextVk::setupDraw(const gl::Context *context,
-                               GLenum mode,
-                               DrawType drawType,
-                               size_t firstVertex,
-                               size_t lastVertex,
+                               const gl::DrawCallParams &drawCallParams,
                                ResourceVk *elementArrayBufferOverride,
-                               vk::CommandBuffer **commandBuffer)
+                               vk::CommandBuffer **commandBufferOut)
 {
-    if (mode != mCurrentDrawMode)
+    if (drawCallParams.mode() != mCurrentDrawMode)
     {
         invalidateCurrentPipeline();
-        mCurrentDrawMode = mode;
+        mCurrentDrawMode = drawCallParams.mode();
     }
 
     if (!mCurrentPipeline)
@@ -179,15 +176,17 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     vk::CommandGraphNode *graphNode = nullptr;
     ANGLE_TRY(vkFBO->getCommandGraphNodeForDraw(context, &graphNode));
 
+    vk::CommandBuffer *commandBuffer = nullptr;
+
     if (!graphNode->getInsideRenderPassCommands()->valid())
     {
         mVertexArrayDirty = true;
         mTexturesDirty    = true;
-        ANGLE_TRY(graphNode->beginInsideRenderPassRecording(mRenderer, commandBuffer));
+        ANGLE_TRY(graphNode->beginInsideRenderPassRecording(mRenderer, &commandBuffer));
     }
     else
     {
-        *commandBuffer = graphNode->getInsideRenderPassCommands();
+        commandBuffer = graphNode->getInsideRenderPassCommands();
     }
 
     // Ensure any writes to the VAO buffers are flushed before we read from them.
@@ -196,7 +195,8 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 
         mVertexArrayDirty = false;
         vkVAO->updateDrawDependencies(graphNode, programGL->getActiveAttribLocationsMask(),
-                                      elementArrayBufferOverride, queueSerial, drawType);
+                                      elementArrayBufferOverride, queueSerial,
+                                      drawCallParams.isDrawElements());
     }
 
     // Ensure any writes to the textures are flushed before we read from them.
@@ -223,12 +223,10 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
         }
     }
 
-    (*commandBuffer)->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline->get());
-    ContextVk *contextVk = vk::GetImpl(context);
-    ANGLE_TRY(vkVAO->streamVertexData(contextVk, &mStreamingVertexData, firstVertex, lastVertex));
-    (*commandBuffer)
-        ->bindVertexBuffers(0, maxAttrib, vkVAO->getCurrentArrayBufferHandles().data(),
-                            vkVAO->getCurrentArrayBufferOffsets().data());
+    commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline->get());
+    ANGLE_TRY(vkVAO->streamVertexData(context, &mStreamingVertexData, drawCallParams));
+    commandBuffer->bindVertexBuffers(0, maxAttrib, vkVAO->getCurrentArrayBufferHandles().data(),
+                                     vkVAO->getCurrentArrayBufferOffsets().data());
 
     // Update the queue serial for the pipeline object.
     ASSERT(mCurrentPipeline && mCurrentPipeline->valid());
@@ -247,21 +245,22 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
         ASSERT(!descriptorSets.empty());
         const vk::PipelineLayout &pipelineLayout = mRenderer->getGraphicsPipelineLayout();
 
-        (*commandBuffer)
-            ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, usedRange.low(),
-                                 usedRange.length(), &descriptorSets[usedRange.low()],
-                                 programVk->getDynamicOffsetsCount(),
-                                 programVk->getDynamicOffsets());
+        commandBuffer->bindDescriptorSets(
+            VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, usedRange.low(), usedRange.length(),
+            &descriptorSets[usedRange.low()], programVk->getDynamicOffsetsCount(),
+            programVk->getDynamicOffsets());
     }
 
+    *commandBufferOut = commandBuffer;
     return gl::NoError();
 }
 
 gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
 {
+    const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
+
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(setupDraw(context, mode, DrawType::Arrays, first, first + count - 1, nullptr,
-                        &commandBuffer));
+    ANGLE_TRY(setupDraw(context, drawCallParams, nullptr, &commandBuffer));
 
     if (mode == GL_LINE_LOOP)
     {
@@ -293,6 +292,8 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
                                   GLenum type,
                                   const void *indices)
 {
+    const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
+
     gl::VertexArray *vao                 = mState.getState().getVertexArray();
     const gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
     vk::CommandBuffer *commandBuffer = nullptr;
@@ -311,8 +312,8 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
             this, elementArrayBufferVk, GetVkIndexType(type), count));
 
         // TODO(fjhenigman): calculate the index range and pass to setupDraw()
-        ANGLE_TRY(setupDraw(context, mode, DrawType::Elements, 0, 0,
-                            mLineLoopHandler.getLineLoopBufferResource(), &commandBuffer));
+        ANGLE_TRY(setupDraw(context, drawCallParams, mLineLoopHandler.getLineLoopBufferResource(),
+                            &commandBuffer));
 
         mLineLoopHandler.bindIndexBuffer(GetVkIndexType(type), &commandBuffer);
         commandBuffer->drawIndexed(count + 1, 1, 0, 0, 0);
@@ -320,7 +321,6 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
     else
     {
         ContextVk *contextVk         = vk::GetImpl(context);
-        const bool computeIndexRange = vk::GetImpl(vao)->attribsToStream(contextVk).any();
         gl::IndexRange range;
         VkBuffer buffer     = VK_NULL_HANDLE;
         uint32_t offset     = 0;
@@ -338,12 +338,6 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
             BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
             buffer                         = elementArrayBufferVk->getVkBuffer().getHandle();
             offset                         = 0;
-
-            if (computeIndexRange)
-            {
-                ANGLE_TRY(elementArrayBufferVk->getIndexRange(
-                    context, type, 0, count, false /*primitiveRestartEnabled*/, &range));
-            }
         }
         else
         {
@@ -368,16 +362,9 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
                 memcpy(dst, indices, amount);
             }
             ANGLE_TRY(mStreamingIndexData.flush(contextVk));
-
-            if (computeIndexRange)
-            {
-                range =
-                    gl::ComputeIndexRange(type, indices, count, false /*primitiveRestartEnabled*/);
-            }
         }
 
-        ANGLE_TRY(setupDraw(context, mode, DrawType::Elements, range.start, range.end, nullptr,
-                            &commandBuffer));
+        ANGLE_TRY(setupDraw(context, drawCallParams, nullptr, &commandBuffer));
         commandBuffer->bindIndexBuffer(buffer, offset, GetVkIndexType(type));
         commandBuffer->drawIndexed(count, 1, 0, 0, 0);
     }

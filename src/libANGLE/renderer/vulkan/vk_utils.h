@@ -59,12 +59,6 @@ class ResourceVk;
 class RenderPassCache;
 class StreamingBuffer;
 
-enum class DrawType
-{
-    Arrays,
-    Elements,
-};
-
 ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_VK_OBJECT);
 
 const char *VulkanResultString(VkResult result);

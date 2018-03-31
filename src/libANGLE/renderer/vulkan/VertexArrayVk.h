@@ -13,6 +13,11 @@
 #include "libANGLE/renderer/VertexArrayImpl.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
+namespace gl
+{
+class DrawCallParams;
+}  // namespace gl
+
 namespace rx
 {
 class BufferVk;
@@ -26,11 +31,9 @@ class VertexArrayVk : public VertexArrayImpl
 
     void destroy(const gl::Context *context) override;
 
-    gl::AttributesMask attribsToStream(ContextVk *context) const;
-    gl::Error streamVertexData(ContextVk *context,
+    gl::Error streamVertexData(const gl::Context *context,
                                StreamingBuffer *stream,
-                               size_t firstVertex,
-                               size_t lastVertex);
+                               const gl::DrawCallParams &drawCallParams);
     gl::Error syncState(const gl::Context *context,
                         const gl::VertexArray::DirtyBits &dirtyBits,
                         const gl::VertexArray::DirtyAttribBitsArray &attribBits,
@@ -43,7 +46,7 @@ class VertexArrayVk : public VertexArrayImpl
                                 const gl::AttributesMask &activeAttribsMask,
                                 ResourceVk *elementArrayBufferOverride,
                                 Serial serial,
-                                DrawType drawType);
+                                bool isDrawElements);
 
     void getPackedInputDescriptions(vk::PipelineDesc *pipelineDesc);
 
@@ -57,6 +60,8 @@ class VertexArrayVk : public VertexArrayImpl
     void updatePackedInputInfo(uint32_t attribIndex,
                                const gl::VertexBinding &binding,
                                const gl::VertexAttribute &attrib);
+
+    gl::AttributesMask getAttribsToStream(const gl::Context *context) const;
 
     gl::AttribArray<VkBuffer> mCurrentArrayBufferHandles;
     gl::AttribArray<VkDeviceSize> mCurrentArrayBufferOffsets;
