@@ -54,20 +54,12 @@ FramebufferVk *FramebufferVk::CreateDefaultFBO(const gl::FramebufferState &state
 }
 
 FramebufferVk::FramebufferVk(const gl::FramebufferState &state)
-    : FramebufferImpl(state),
-      mBackbuffer(nullptr),
-      mRenderPassDesc(),
-      mFramebuffer(),
-      mLastRenderNodeSerial()
+    : FramebufferImpl(state), mBackbuffer(nullptr), mRenderPassDesc(), mFramebuffer()
 {
 }
 
 FramebufferVk::FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer)
-    : FramebufferImpl(state),
-      mBackbuffer(backbuffer),
-      mRenderPassDesc(),
-      mFramebuffer(),
-      mLastRenderNodeSerial()
+    : FramebufferImpl(state), mBackbuffer(backbuffer), mRenderPassDesc(), mFramebuffer()
 {
 }
 
@@ -154,7 +146,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     if (clearDepth || clearStencil)
     {
         ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
-        writingNode = getCurrentWritingNode(currentSerial);
+        writingNode = getCurrentWritingNode();
 
         const VkClearDepthStencilValue &clearDepthStencilValue =
             contextVk->getClearDepthStencilValue().depthStencil;
@@ -183,7 +175,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     if (!commandBuffer)
     {
         ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
-        writingNode = getCurrentWritingNode(currentSerial);
+        writingNode = getCurrentWritingNode();
     }
 
     // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
@@ -340,8 +332,8 @@ gl::Error FramebufferVk::syncState(const gl::Context *context,
     mRenderPassDesc.reset();
     renderer->releaseResource(*this, &mFramebuffer);
 
-    // Trigger a new set of secondary commands next time we render to this FBO,.
-    mLastRenderNodeSerial = Serial();
+    // Trigger a new set of secondary commands next time we render to this FBO.
+    getNewWritingNode(renderer);
 
     contextVk->invalidateCurrentPipeline();
 
@@ -538,14 +530,22 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
     RendererVk *renderer = contextVk->getRenderer();
     Serial currentSerial = renderer->getCurrentQueueSerial();
 
-    if (hasCurrentWritingNode(currentSerial) && mLastRenderNodeSerial == currentSerial)
+    // This will reset the current writing node if it has been completed.
+    updateQueueSerial(currentSerial);
+
+    if (hasChildlessWritingNode())
     {
-        *nodeOut = getCurrentWritingNode(currentSerial);
-        ASSERT((*nodeOut)->getInsideRenderPassCommands()->valid());
-        return gl::NoError();
+        *nodeOut = getCurrentWritingNode();
+    }
+    else
+    {
+        *nodeOut = getNewWritingNode(renderer);
     }
 
-    vk::CommandGraphNode *node = getNewWritingNode(renderer);
+    if ((*nodeOut)->getInsideRenderPassCommands()->valid())
+    {
+        return gl::NoError();
+    }
 
     vk::Framebuffer *framebuffer = nullptr;
     ANGLE_TRY_RESULT(getFramebuffer(context, renderer), framebuffer);
@@ -553,8 +553,15 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
     std::vector<VkClearValue> attachmentClearValues;
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(node->beginOutsideRenderPassRecording(renderer->getDevice(),
-                                                    renderer->getCommandPool(), &commandBuffer));
+    if (!(*nodeOut)->getOutsideRenderPassCommands()->valid())
+    {
+        ANGLE_TRY((*nodeOut)->beginOutsideRenderPassRecording(
+            renderer->getDevice(), renderer->getCommandPool(), &commandBuffer));
+    }
+    else
+    {
+        commandBuffer = (*nodeOut)->getOutsideRenderPassCommands();
+    }
 
     // Initialize RenderPass info.
     // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
@@ -569,7 +576,7 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
             VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             commandBuffer);
-        node->appendColorRenderTarget(currentSerial, colorRenderTarget);
+        (*nodeOut)->appendColorRenderTarget(currentSerial, colorRenderTarget);
         attachmentClearValues.emplace_back(contextVk->getClearColorValue());
     }
 
@@ -585,17 +592,15 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
             aspectFlags, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
             commandBuffer);
-        node->appendDepthStencilRenderTarget(currentSerial, depthStencilRenderTarget);
+        (*nodeOut)->appendDepthStencilRenderTarget(currentSerial, depthStencilRenderTarget);
         attachmentClearValues.emplace_back(contextVk->getClearDepthStencilValue());
     }
 
     // Hard-code RenderPass to clear the first render target to the current clear value.
     // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
     const gl::State &glState = context->getGLState();
-    node->storeRenderPassInfo(*framebuffer, glState.getViewport(), attachmentClearValues);
-    mLastRenderNodeSerial = currentSerial;
+    (*nodeOut)->storeRenderPassInfo(*framebuffer, glState.getViewport(), attachmentClearValues);
 
-    *nodeOut = node;
     return gl::NoError();
 }
 

@@ -77,15 +77,13 @@ Serial CommandGraphResource::getQueueSerial() const
     return mStoredQueueSerial;
 }
 
-bool CommandGraphResource::hasCurrentWritingNode(Serial currentSerial) const
+bool CommandGraphResource::hasChildlessWritingNode() const
 {
-    return (mStoredQueueSerial == currentSerial && mCurrentWritingNode != nullptr &&
-            !mCurrentWritingNode->hasChildren());
+    return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
 }
 
-CommandGraphNode *CommandGraphResource::getCurrentWritingNode(Serial currentSerial)
+CommandGraphNode *CommandGraphResource::getCurrentWritingNode()
 {
-    ASSERT(currentSerial == mStoredQueueSerial);
     return mCurrentWritingNode;
 }
 
@@ -111,7 +109,7 @@ void CommandGraphResource::onWriteResource(CommandGraphNode *writingNode, Serial
 {
     updateQueueSerial(serial);
 
-    // Make sure any open reads and writes finish before we execute 'newCommands'.
+    // Make sure any open reads and writes finish before we execute 'writingNode'.
     if (!mCurrentReadingNodes.empty())
     {
         CommandGraphNode::SetHappensBeforeDependencies(mCurrentReadingNodes, writingNode);
@@ -128,19 +126,32 @@ void CommandGraphResource::onWriteResource(CommandGraphNode *writingNode, Serial
 
 void CommandGraphResource::onReadResource(CommandGraphNode *readingNode, Serial serial)
 {
-    if (hasCurrentWritingNode(serial))
+    updateQueueSerial(serial);
+
+    if (hasChildlessWritingNode())
     {
-        // Ensure 'readOperation' happens after the current write commands.
-        CommandGraphNode::SetHappensBeforeDependency(getCurrentWritingNode(serial), readingNode);
         ASSERT(mStoredQueueSerial == serial);
+
+        // Ensure 'readingNode' happens after the current writing node.
+        CommandGraphNode::SetHappensBeforeDependency(mCurrentWritingNode, readingNode);
+    }
+
+    // Add the read node to the list of nodes currently reading this resource.
+    mCurrentReadingNodes.push_back(readingNode);
+}
+
+bool CommandGraphResource::checkResourceInUseAndRefreshDeps(RendererVk *renderer)
+{
+    if (!renderer->isResourceInUse(*this))
+    {
+        mCurrentReadingNodes.clear();
+        mCurrentWritingNode = nullptr;
+        return false;
     }
     else
     {
-        updateQueueSerial(serial);
+        return true;
     }
-
-    // Add the read operation to the list of nodes currently reading this resource.
-    mCurrentReadingNodes.push_back(readingNode);
 }
 
 // CommandGraphNode implementation.
@@ -247,9 +258,9 @@ void CommandGraphNode::appendDepthStencilRenderTarget(Serial serial,
 void CommandGraphNode::SetHappensBeforeDependency(CommandGraphNode *beforeNode,
                                                   CommandGraphNode *afterNode)
 {
+    ASSERT(beforeNode != afterNode && !beforeNode->isChildOf(afterNode));
     afterNode->mParents.emplace_back(beforeNode);
     beforeNode->setHasChildren();
-    ASSERT(beforeNode != afterNode && !beforeNode->isChildOf(afterNode));
 }
 
 // static

@@ -523,7 +523,9 @@ TEST_P(SimpleOperationTest, DrawIndexedQuadAndSwap)
 {
     ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
 
-    for (int i = 0; i < 8; ++i)
+    // 32 iterations is an arbitrary number. The more iterations, the more flaky syncronization
+    // issues will reproduce consistently.
+    for (int i = 0; i < 32; ++i)
     {
         drawIndexedQuad(program.get(), "position", 0.5f, 1.0f, true);
         ASSERT_GL_NO_ERROR();

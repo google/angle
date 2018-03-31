@@ -45,7 +45,7 @@ class VertexArrayVk : public VertexArrayImpl
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const;
     const gl::AttribArray<VkDeviceSize> &getCurrentArrayBufferOffsets() const;
 
-    void updateDrawDependencies(vk::CommandGraphNode *readNode,
+    void updateDrawDependencies(vk::CommandGraphNode *readingNode,
                                 const gl::AttributesMask &activeAttribsMask,
                                 vk::CommandGraphResource *elementArrayBufferOverride,
                                 Serial serial,
