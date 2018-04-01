@@ -187,15 +187,14 @@ void VertexArrayVk::updateDrawDependencies(vk::CommandGraphNode *readNode,
     }
 
     // Handle the bound element array buffer.
-    if (drawType == DrawType::Elements && mCurrentElementArrayBufferResource)
+    if (drawType == DrawType::Elements)
     {
         if (elementArrayBufferOverride != nullptr)
         {
             elementArrayBufferOverride->onReadResource(readNode, serial);
         }
-        else
+        else if (mCurrentElementArrayBufferResource != nullptr)
         {
-            ASSERT(mCurrentElementArrayBufferResource);
             mCurrentElementArrayBufferResource->onReadResource(readNode, serial);
         }
     }
