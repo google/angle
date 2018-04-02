@@ -85,7 +85,7 @@ bool ValidateMaterialf(Context *context, GLenum face, GLenum pname, GLfloat para
 bool ValidateMaterialfv(Context *context, GLenum face, GLenum pname, const GLfloat *params);
 bool ValidateMaterialx(Context *context, GLenum face, GLenum pname, GLfixed param);
 bool ValidateMaterialxv(Context *context, GLenum face, GLenum pname, const GLfixed *param);
-bool ValidateMatrixMode(Context *context, GLenum mode);
+bool ValidateMatrixMode(Context *context, MatrixType mode);
 bool ValidateMultMatrixf(Context *context, const GLfloat *m);
 bool ValidateMultMatrixx(Context *context, const GLfixed *m);
 bool ValidateMultiTexCoord4f(Context *context,

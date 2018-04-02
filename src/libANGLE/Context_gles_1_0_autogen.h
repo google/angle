@@ -59,7 +59,7 @@
     void materialfv(GLenum face, GLenum pname, const GLfloat *params);                     \
     void materialx(GLenum face, GLenum pname, GLfixed param);                              \
     void materialxv(GLenum face, GLenum pname, const GLfixed *param);                      \
-    void matrixMode(GLenum mode);                                                          \
+    void matrixMode(MatrixType modePacked);                                                \
     void multMatrixf(const GLfloat *m);                                                    \
     void multMatrixx(const GLfixed *m);                                                    \
     void multiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q);       \

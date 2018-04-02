@@ -835,11 +835,12 @@ void GL_APIENTRY MatrixMode(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::MatrixMode>(mode);
+        MatrixType modePacked = FromGLenum<MatrixType>(mode);
+        context->gatherParams<EntryPoint::MatrixMode>(modePacked);
 
-        if (context->skipValidation() || ValidateMatrixMode(context, mode))
+        if (context->skipValidation() || ValidateMatrixMode(context, modePacked))
         {
-            context->matrixMode(mode);
+            context->matrixMode(modePacked);
         }
     }
 }

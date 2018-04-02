@@ -163,6 +163,9 @@
     "glMapBufferRangeEXT": {
         "target": "BufferBinding"
     },
+    "glMatrixMode": {
+        "mode": "MatrixType"
+    },
     "glTexImage2D": {
         "target": "TextureTarget"
     },

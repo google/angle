@@ -369,7 +369,7 @@ bool ValidateMaterialxv(Context *context, GLenum face, GLenum pname, const GLfix
     return true;
 }
 
-bool ValidateMatrixMode(Context *context, GLenum mode)
+bool ValidateMatrixMode(Context *context, MatrixType mode)
 {
     UNIMPLEMENTED();
     return true;

@@ -262,7 +262,7 @@ void Context::materialxv(GLenum face, GLenum pname, const GLfixed *param)
     UNIMPLEMENTED();
 }
 
-void Context::matrixMode(GLenum mode)
+void Context::matrixMode(MatrixType mode)
 {
     UNIMPLEMENTED();
 }
