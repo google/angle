@@ -64,7 +64,7 @@ ANGLE_EXPORT void GL_APIENTRY CoverageModulationCHROMIUM(GLenum components)
         {
             return;
         }
-        context->setCoverageModulation(components);
+        context->coverageModulation(components);
     }
 }
 
@@ -80,7 +80,7 @@ ANGLE_EXPORT void GL_APIENTRY MatrixLoadfCHROMIUM(GLenum matrixMode, const GLflo
         {
             return;
         }
-        context->loadPathRenderingMatrix(matrixMode, matrix);
+        context->matrixLoadf(matrixMode, matrix);
     }
 }
 
@@ -95,7 +95,7 @@ ANGLE_EXPORT void GL_APIENTRY MatrixLoadIdentityCHROMIUM(GLenum matrixMode)
         {
             return;
         }
-        context->loadPathRenderingIdentityMatrix(matrixMode);
+        context->matrixLoadIdentity(matrixMode);
     }
 }
 
@@ -110,7 +110,7 @@ ANGLE_EXPORT GLuint GL_APIENTRY GenPathsCHROMIUM(GLsizei range)
         {
             return 0;
         }
-        return context->createPaths(range);
+        return context->genPaths(range);
     }
     return 0;
 }
@@ -141,7 +141,7 @@ ANGLE_EXPORT GLboolean GL_APIENTRY IsPathCHROMIUM(GLuint path)
         {
             return GL_FALSE;
         }
-        return context->hasPathData(path);
+        return context->isPath(path);
     }
     return GL_FALSE;
 }
@@ -167,7 +167,7 @@ ANGLE_EXPORT void GL_APIENTRY PathCommandsCHROMIUM(GLuint path,
         {
             return;
         }
-        context->setPathCommands(path, numCommands, commands, numCoords, coordType, coords);
+        context->pathCommands(path, numCommands, commands, numCoords, coordType, coords);
     }
 }
 
@@ -249,7 +249,7 @@ ANGLE_EXPORT void GL_APIENTRY PathStencilFuncCHROMIUM(GLenum func, GLint ref, GL
         {
             return;
         }
-        context->setPathStencilFunc(func, ref, mask);
+        context->pathStencilFunc(func, ref, mask);
     }
 }
 
@@ -711,7 +711,7 @@ ANGLE_EXPORT void GL_APIENTRY GetBooleanvRobustANGLE(GLenum pname,
             return;
         }
 
-        context->getBooleanv(pname, params);
+        context->getBooleanvRobust(pname, bufSize, length, params);
     }
 }
 
@@ -735,8 +735,7 @@ ANGLE_EXPORT void GL_APIENTRY GetBufferParameterivRobustANGLE(GLenum target,
             return;
         }
 
-        Buffer *buffer = context->getGLState().getTargetBuffer(targetPacked);
-        QueryBufferParameteriv(buffer, pname, params);
+        context->getBufferParameterivRobust(targetPacked, pname, bufSize, length, params);
     }
 }
 
@@ -758,7 +757,7 @@ ANGLE_EXPORT void GL_APIENTRY GetFloatvRobustANGLE(GLenum pname,
             return;
         }
 
-        context->getFloatv(pname, params);
+        context->getFloatvRobust(pname, bufSize, length, params);
     }
 }
 
@@ -783,8 +782,8 @@ ANGLE_EXPORT void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLE(GLe
             return;
         }
 
-        const Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
-        QueryFramebufferAttachmentParameteriv(context, framebuffer, attachment, pname, params);
+        context->getFramebufferAttachmentParameterivRobust(target, attachment, pname, bufSize,
+                                                           length, params);
     }
 }
 
@@ -806,7 +805,7 @@ ANGLE_EXPORT void GL_APIENTRY GetIntegervRobustANGLE(GLenum pname,
             return;
         }
 
-        context->getIntegerv(pname, data);
+        context->getIntegervRobust(pname, bufSize, length, data);
     }
 }
 
@@ -829,8 +828,7 @@ ANGLE_EXPORT void GL_APIENTRY GetProgramivRobustANGLE(GLuint program,
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        QueryProgramiv(context, programObject, pname, params);
+        context->getProgramivRobust(program, pname, bufSize, length, params);
     }
 }
 
@@ -854,8 +852,7 @@ ANGLE_EXPORT void GL_APIENTRY GetRenderbufferParameterivRobustANGLE(GLenum targe
             return;
         }
 
-        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
-        QueryRenderbufferiv(context, renderbuffer, pname, params);
+        context->getRenderbufferParameterivRobust(target, pname, bufSize, length, params);
     }
 }
 
@@ -875,8 +872,7 @@ GetShaderivRobustANGLE(GLuint shader, GLenum pname, GLsizei bufSize, GLsizei *le
             return;
         }
 
-        Shader *shaderObject = context->getShader(shader);
-        QueryShaderiv(context, shaderObject, pname, params);
+        context->getShaderivRobust(shader, pname, bufSize, length, params);
     }
 }
 
@@ -901,8 +897,7 @@ ANGLE_EXPORT void GL_APIENTRY GetTexParameterfvRobustANGLE(GLenum target,
             return;
         }
 
-        Texture *texture = context->getTargetTexture(targetPacked);
-        QueryTexParameterfv(texture, pname, params);
+        context->getTexParameterfvRobust(targetPacked, pname, bufSize, length, params);
     }
 }
 
@@ -927,8 +922,7 @@ ANGLE_EXPORT void GL_APIENTRY GetTexParameterivRobustANGLE(GLenum target,
             return;
         }
 
-        Texture *texture = context->getTargetTexture(targetPacked);
-        QueryTexParameteriv(texture, pname, params);
+        context->getTexParameterivRobust(targetPacked, pname, bufSize, length, params);
     }
 }
 
@@ -951,10 +945,7 @@ ANGLE_EXPORT void GL_APIENTRY GetUniformfvRobustANGLE(GLuint program,
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject);
-
-        programObject->getUniformfv(context, location, params);
+        context->getUniformfvRobust(program, location, bufSize, length, params);
     }
 }
 
@@ -977,10 +968,7 @@ ANGLE_EXPORT void GL_APIENTRY GetUniformivRobustANGLE(GLuint program,
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject);
-
-        programObject->getUniformiv(context, location, params);
+        context->getUniformivRobust(program, location, bufSize, length, params);
     }
 }
 
@@ -1003,7 +991,7 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribfvRobustANGLE(GLuint index,
             return;
         }
 
-        context->getVertexAttribfv(index, pname, params);
+        context->getVertexAttribfvRobust(index, pname, bufSize, length, params);
     }
 }
 
@@ -1026,7 +1014,7 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribivRobustANGLE(GLuint index,
             return;
         }
 
-        context->getVertexAttribiv(index, pname, params);
+        context->getVertexAttribivRobust(index, pname, bufSize, length, params);
     }
 }
 
@@ -1050,7 +1038,7 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribPointervRobustANGLE(GLuint index,
             return;
         }
 
-        context->getVertexAttribPointerv(index, pname, pointer);
+        context->getVertexAttribPointervRobust(index, pname, bufSize, length, pointer);
     }
 }
 
@@ -1081,7 +1069,8 @@ ANGLE_EXPORT void GL_APIENTRY ReadPixelsRobustANGLE(GLint x,
             return;
         }
 
-        context->readPixels(x, y, width, height, format, type, pixels);
+        context->readPixelsRobust(x, y, width, height, format, type, bufSize, length, columns, rows,
+                                  pixels);
     }
 }
 
@@ -1112,8 +1101,8 @@ ANGLE_EXPORT void GL_APIENTRY TexImage2DRobustANGLE(GLenum target,
             return;
         }
 
-        context->texImage2D(targetPacked, level, internalformat, width, height, border, format,
-                            type, pixels);
+        context->texImage2DRobust(targetPacked, level, internalformat, width, height, border,
+                                  format, type, bufSize, pixels);
     }
 }
 
@@ -1136,8 +1125,7 @@ ANGLE_EXPORT void GL_APIENTRY TexParameterfvRobustANGLE(GLenum target,
             return;
         }
 
-        Texture *texture = context->getTargetTexture(targetPacked);
-        SetTexParameterfv(context, texture, pname, params);
+        context->texParameterfvRobust(targetPacked, pname, bufSize, params);
     }
 }
 
@@ -1160,8 +1148,7 @@ ANGLE_EXPORT void GL_APIENTRY TexParameterivRobustANGLE(GLenum target,
             return;
         }
 
-        Texture *texture = context->getTargetTexture(targetPacked);
-        SetTexParameteriv(context, texture, pname, params);
+        context->texParameterivRobust(targetPacked, pname, bufSize, params);
     }
 }
 
@@ -1192,8 +1179,8 @@ ANGLE_EXPORT void GL_APIENTRY TexSubImage2DRobustANGLE(GLenum target,
             return;
         }
 
-        context->texSubImage2D(targetPacked, level, xoffset, yoffset, width, height, format, type,
-                               pixels);
+        context->texSubImage2DRobust(targetPacked, level, xoffset, yoffset, width, height, format,
+                                     type, bufSize, pixels);
     }
 }
 
@@ -1225,8 +1212,8 @@ ANGLE_EXPORT void GL_APIENTRY TexImage3DRobustANGLE(GLenum target,
             return;
         }
 
-        context->texImage3D(targetPacked, level, internalformat, width, height, depth, border,
-                            format, type, pixels);
+        context->texImage3DRobust(targetPacked, level, internalformat, width, height, depth, border,
+                                  format, type, bufSize, pixels);
     }
 }
 
@@ -1262,8 +1249,8 @@ ANGLE_EXPORT void GL_APIENTRY TexSubImage3DRobustANGLE(GLenum target,
             return;
         }
 
-        context->texSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width, height, depth,
-                               format, type, pixels);
+        context->texSubImage3DRobust(targetPacked, level, xoffset, yoffset, zoffset, width, height,
+                                     depth, format, type, bufSize, pixels);
     }
 }
 
@@ -1295,8 +1282,8 @@ void GL_APIENTRY CompressedTexImage2DRobustANGLE(GLenum target,
             return;
         }
 
-        context->compressedTexImage2D(targetPacked, level, internalformat, width, height, border,
-                                      imageSize, data);
+        context->compressedTexImage2DRobust(targetPacked, level, internalformat, width, height,
+                                            border, imageSize, dataSize, data);
     }
 }
 
@@ -1328,8 +1315,8 @@ void GL_APIENTRY CompressedTexSubImage2DRobustANGLE(GLenum target,
             return;
         }
 
-        context->compressedTexSubImage2D(targetPacked, level, xoffset, yoffset, width, height,
-                                         format, imageSize, data);
+        context->compressedTexSubImage2DRobust(targetPacked, level, xoffset, yoffset, width, height,
+                                               format, imageSize, dataSize, data);
     }
 }
 
@@ -1362,8 +1349,8 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLE(GLenum target,
             return;
         }
 
-        context->compressedTexImage3D(targetPacked, level, internalformat, width, height, depth,
-                                      border, imageSize, data);
+        context->compressedTexImage3DRobust(targetPacked, level, internalformat, width, height,
+                                            depth, border, imageSize, dataSize, data);
     }
 }
 
@@ -1400,8 +1387,9 @@ void GL_APIENTRY CompressedTexSubImage3DRobustANGLE(GLenum target,
             return;
         }
 
-        context->compressedTexSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width,
-                                         height, depth, format, imageSize, data);
+        context->compressedTexSubImage3DRobust(targetPacked, level, xoffset, yoffset, zoffset,
+                                               width, height, depth, format, imageSize, dataSize,
+                                               data);
     }
 }
 
@@ -1421,7 +1409,7 @@ GetQueryivRobustANGLE(GLenum target, GLenum pname, GLsizei bufSize, GLsizei *len
             return;
         }
 
-        context->getQueryiv(target, pname, params);
+        context->getQueryivRobust(target, pname, bufSize, length, params);
     }
 }
 
@@ -1444,7 +1432,7 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectuivRobustANGLE(GLuint id,
             return;
         }
 
-        context->getQueryObjectuiv(id, pname, params);
+        context->getQueryObjectuivRobust(id, pname, bufSize, length, params);
     }
 }
 
@@ -1470,7 +1458,7 @@ ANGLE_EXPORT void GL_APIENTRY GetBufferPointervRobustANGLE(GLenum target,
             return;
         }
 
-        context->getBufferPointerv(targetPacked, pname, params);
+        context->getBufferPointervRobust(targetPacked, pname, bufSize, length, params);
     }
 }
 
@@ -1490,7 +1478,7 @@ GetIntegeri_vRobustANGLE(GLenum target, GLuint index, GLsizei bufSize, GLsizei *
             return;
         }
 
-        context->getIntegeri_v(target, index, data);
+        context->getIntegeri_vRobust(target, index, bufSize, length, data);
     }
 }
 
@@ -1515,8 +1503,7 @@ ANGLE_EXPORT void GL_APIENTRY GetInternalformativRobustANGLE(GLenum target,
             return;
         }
 
-        const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
-        QueryInternalFormativ(formatCaps, pname, bufSize, params);
+        context->getInternalformativRobust(target, internalformat, pname, bufSize, length, params);
     }
 }
 
@@ -1539,7 +1526,7 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribIivRobustANGLE(GLuint index,
             return;
         }
 
-        context->getVertexAttribIiv(index, pname, params);
+        context->getVertexAttribIivRobust(index, pname, bufSize, length, params);
     }
 }
 
@@ -1562,7 +1549,7 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribIuivRobustANGLE(GLuint index,
             return;
         }
 
-        context->getVertexAttribIuiv(index, pname, params);
+        context->getVertexAttribIuivRobust(index, pname, bufSize, length, params);
     }
 }
 
@@ -1585,10 +1572,7 @@ ANGLE_EXPORT void GL_APIENTRY GetUniformuivRobustANGLE(GLuint program,
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject);
-
-        programObject->getUniformuiv(context, location, params);
+        context->getUniformuivRobust(program, location, bufSize, length, params);
     }
 }
 
@@ -1613,8 +1597,8 @@ ANGLE_EXPORT void GL_APIENTRY GetActiveUniformBlockivRobustANGLE(GLuint program,
             return;
         }
 
-        const Program *programObject = context->getProgram(program);
-        QueryActiveUniformBlockiv(programObject, uniformBlockIndex, pname, params);
+        context->getActiveUniformBlockivRobust(program, uniformBlockIndex, pname, bufSize, length,
+                                               params);
     }
 }
 
@@ -1636,7 +1620,7 @@ ANGLE_EXPORT void GL_APIENTRY GetInteger64vRobustANGLE(GLenum pname,
             return;
         }
 
-        context->getInteger64v(pname, data);
+        context->getInteger64vRobust(pname, bufSize, length, data);
     }
 }
 
@@ -1659,7 +1643,7 @@ ANGLE_EXPORT void GL_APIENTRY GetInteger64i_vRobustANGLE(GLenum target,
             return;
         }
 
-        context->getInteger64i_v(target, index, data);
+        context->getInteger64i_vRobust(target, index, bufSize, length, data);
     }
 }
 
@@ -1683,8 +1667,7 @@ ANGLE_EXPORT void GL_APIENTRY GetBufferParameteri64vRobustANGLE(GLenum target,
             return;
         }
 
-        Buffer *buffer = context->getGLState().getTargetBuffer(targetPacked);
-        QueryBufferParameteri64v(buffer, pname, params);
+        context->getBufferParameteri64vRobust(targetPacked, pname, bufSize, length, params);
     }
 }
 
@@ -1706,7 +1689,7 @@ ANGLE_EXPORT void GL_APIENTRY SamplerParameterivRobustANGLE(GLuint sampler,
             return;
         }
 
-        context->samplerParameteriv(sampler, pname, param);
+        context->samplerParameterivRobust(sampler, pname, bufSize, param);
     }
 }
 
@@ -1728,7 +1711,7 @@ ANGLE_EXPORT void GL_APIENTRY SamplerParameterfvRobustANGLE(GLuint sampler,
             return;
         }
 
-        context->samplerParameterfv(sampler, pname, param);
+        context->samplerParameterfvRobust(sampler, pname, bufSize, param);
     }
 }
 
@@ -1752,7 +1735,7 @@ ANGLE_EXPORT void GL_APIENTRY GetSamplerParameterivRobustANGLE(GLuint sampler,
             return;
         }
 
-        context->getSamplerParameteriv(sampler, pname, params);
+        context->getSamplerParameterivRobust(sampler, pname, bufSize, length, params);
     }
 }
 
@@ -1776,7 +1759,7 @@ ANGLE_EXPORT void GL_APIENTRY GetSamplerParameterfvRobustANGLE(GLuint sampler,
             return;
         }
 
-        context->getSamplerParameterfv(sampler, pname, params);
+        context->getSamplerParameterfvRobust(sampler, pname, bufSize, length, params);
     }
 }
 
@@ -1825,7 +1808,7 @@ ANGLE_EXPORT void GL_APIENTRY GetBooleani_vRobustANGLE(GLenum target,
             return;
         }
 
-        context->getBooleani_v(target, index, data);
+        context->getBooleani_vRobust(target, index, bufSize, length, data);
     }
 }
 
@@ -1909,7 +1892,8 @@ ANGLE_EXPORT void GL_APIENTRY ReadnPixelsRobustANGLE(GLint x,
             return;
         }
 
-        context->readPixels(x, y, width, height, format, type, data);
+        context->readnPixelsRobust(x, y, width, height, format, type, bufSize, length, columns,
+                                   rows, data);
     }
 }
 
@@ -2071,7 +2055,7 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectivRobustANGLE(GLuint id,
             return;
         }
 
-        context->getQueryObjectiv(id, pname, params);
+        context->getQueryObjectivRobust(id, pname, bufSize, length, params);
     }
 }
 
@@ -2094,7 +2078,7 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjecti64vRobustANGLE(GLuint id,
             return;
         }
 
-        context->getQueryObjecti64v(id, pname, params);
+        context->getQueryObjecti64vRobust(id, pname, bufSize, length, params);
     }
 }
 
@@ -2117,7 +2101,7 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
             return;
         }
 
-        context->getQueryObjectui64v(id, pname, params);
+        context->getQueryObjectui64vRobust(id, pname, bufSize, length, params);
     }
 }
 
@@ -2141,8 +2125,8 @@ GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewLayeredANGLE(GLenum targe
         {
             return;
         }
-        context->framebufferTextureMultiviewLayeredANGLE(target, attachment, texture, level,
-                                                         baseViewIndex, numViews);
+        context->framebufferTextureMultiviewLayered(target, attachment, texture, level,
+                                                    baseViewIndex, numViews);
     }
 }
 
@@ -2166,8 +2150,8 @@ GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewSideBySideANGLE(GLenum ta
         {
             return;
         }
-        context->framebufferTextureMultiviewSideBySideANGLE(target, attachment, texture, level,
-                                                            numViews, viewportOffsets);
+        context->framebufferTextureMultiviewSideBySide(target, attachment, texture, level, numViews,
+                                                       viewportOffsets);
     }
 }
 
