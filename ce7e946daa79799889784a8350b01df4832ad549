@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea230f3f_dc012571",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-02T11:28:55Z",
+      "side": 1,
+      "message": "nice!",
+      "range": {
+        "startLine": 46,
+        "startChar": 39,
+        "endLine": 46,
+        "endChar": 50
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b2709d1_cb19bf61",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-02T11:28:55Z",
+      "side": 1,
+      "message": "instead of setting all uniforms dirty here, can you set the shaders dirty that are non-null in link/load?",
+      "range": {
+        "startLine": 627,
+        "startChar": 3,
+        "endLine": 627,
+        "endChar": 31
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01bc9613_98f75382",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1967,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-02T11:28:55Z",
+      "side": 1,
+      "message": "here you will need to store a mask of active shaders.",
+      "range": {
+        "startLine": 1967,
+        "startChar": 17,
+        "endLine": 1967,
+        "endChar": 33
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33abfaa9_a7e37f5c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2008,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-02T11:28:55Z",
+      "side": 1,
+      "message": "nit: can you tag this with your anglebug for geometry shaders? http://anglebug.com/####",
+      "range": {
+        "startLine": 2008,
+        "startChar": 7,
+        "endLine": 2008,
+        "endChar": 34
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74a33f3b_f9b76ac3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3221,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-02T11:28:55Z",
+      "side": 1,
+      "message": "can you rename this to \"areShaderUniformsDirty\"",
+      "range": {
+        "startLine": 3221,
+        "startChar": 20,
+        "endLine": 3221,
+        "endChar": 44
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3581e2a_919fea17",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1810,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-02T11:28:55Z",
+      "side": 1,
+      "message": "and this to anyShaderUniformsDirty, and just check if the bitmask has any bits left? Let\u0027s only set the shaders that exist to be dirty initially (see other comments)",
+      "range": {
+        "startLine": 1810,
+        "startChar": 21,
+        "endLine": 1810,
+        "endChar": 49
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
