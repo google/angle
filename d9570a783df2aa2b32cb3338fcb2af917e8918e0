@@ -46,6 +46,30 @@
       "revId": "d9570a783df2aa2b32cb3338fcb2af917e8918e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cfdced2_4ca3c79e",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-03T16:15:18Z",
+      "side": 1,
+      "message": "ok we could rename both later if we find a better name. Lets leave it as is for now then.",
+      "parentUuid": "18820435_936f9a11",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 19
+      },
+      "revId": "d9570a783df2aa2b32cb3338fcb2af917e8918e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
