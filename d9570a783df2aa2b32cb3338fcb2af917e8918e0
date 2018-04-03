@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09aa7b60_960d9dd8",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-03T12:11:11Z",
+      "side": 1,
+      "message": "Should we call this something like an ImageDecorator or VkImageDecorator instead? To see from the name that it actually contains a real image, and that it adds features on it.\n\nThis is *almost* much the decorator pattern, but a bit more since you are wrapping 2 important classes (devicememory + image): \nhttps://en.wikipedia.org/wiki/Decorator_pattern",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 19
+      },
+      "revId": "d9570a783df2aa2b32cb3338fcb2af917e8918e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
