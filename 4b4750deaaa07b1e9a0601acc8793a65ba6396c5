@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e07e5c05_2f450398",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-04-03T22:05:47Z",
+      "side": 1,
+      "message": "micro nit: can we have a consistent order these assignments in both code paths?\nI suggest: resource, handle, offset.  That also sort of matches the vertex data order below.\nSmall thing but it seems to help me see the differences between the various paths.",
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
