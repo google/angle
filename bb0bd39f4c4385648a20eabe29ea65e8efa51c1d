@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9176b5e6_239322fb",
+        "filename": "src/tests/gl_tests/gles1/CurrentTextureCoordsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-03T17:06:55Z",
+      "side": 1,
+      "message": "nit: comment before test.",
+      "revId": "bb0bd39f4c4385648a20eabe29ea65e8efa51c1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
