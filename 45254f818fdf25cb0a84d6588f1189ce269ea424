@@ -94,6 +94,30 @@
       "revId": "45254f818fdf25cb0a84d6588f1189ce269ea424",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c38f9e9_38951bfb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-03T08:58:45Z",
+      "side": 1,
+      "message": "I had to think about this. I guess you\u0027d either have to store the full mangled name, or some index into the name of the builtins (which I think you have somewhere) plus the mangled parameter string, or some way of identifying the parameters. I\u0027m not sure if this would save any space or not - it would be something we\u0027d only know experimentally. It still would be worth doing if it does save binary size and code gen time and there isn\u0027t a big speed regression, but you\u0027ve already done so much on this.\n\nI\u0027m okay with the one minute build time for now but the annoying thing with the run_code_gen script is it seems to like to re-run things once when files are modified locally, so it will get called even if there\u0027s no local modifications. We might want to take this out of the script for now, or find a solution to the rebuilding problem.",
+      "parentUuid": "330a7c9e_7d69c8be",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 49
+      },
+      "revId": "45254f818fdf25cb0a84d6588f1189ce269ea424",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
