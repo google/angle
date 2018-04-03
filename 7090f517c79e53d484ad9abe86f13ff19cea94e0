@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "7569245e_fde2dc85",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-03T22:48:00Z",
+      "side": 1,
+      "message": "there\u0027s a macro helper for this in angleutil .. IsMaskFlagSet",
+      "range": {
+        "startLine": 134,
+        "startChar": 22,
+        "endLine": 134,
+        "endChar": 73
+      },
+      "revId": "7090f517c79e53d484ad9abe86f13ff19cea94e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a6296ef0_a3a4f8af",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
@@ -59,6 +82,53 @@
     },
     {
       "key": {
+        "uuid": "cb1e0b1e_c269499b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-03T22:48:00Z",
+      "side": 1,
+      "message": "It\u0027s redundant if outside the if... not possible for it to be !clearDepth \u0026\u0026 !clearStencil \u0026\u0026 !clearColor. could add an ASSERT(clearColor) though.",
+      "parentUuid": "03888c72_dd581477",
+      "range": {
+        "startLine": 171,
+        "startChar": 0,
+        "endLine": 174,
+        "endChar": 9
+      },
+      "revId": "7090f517c79e53d484ad9abe86f13ff19cea94e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df2e1430_95831a86",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-03T22:48:00Z",
+      "side": 1,
+      "message": "nit: size_t\nalso can you copy/paste the TODO assigned to me to handle draw buffers with gaps (need to verify we don\u0027t need to pack the RTs into \"Gapless\" form)",
+      "range": {
+        "startLine": 495,
+        "startChar": 13,
+        "endLine": 495,
+        "endChar": 18
+      },
+      "revId": "7090f517c79e53d484ad9abe86f13ff19cea94e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30a385ed_bad578cd",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
@@ -76,6 +146,24 @@
     },
     {
       "key": {
+        "uuid": "fa9c4e0b_1578d6c9",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-03T22:48:00Z",
+      "side": 1,
+      "message": "that\u0027s not valid... VkClearAttachment even uses a union, not a struct.",
+      "parentUuid": "30a385ed_bad578cd",
+      "revId": "7090f517c79e53d484ad9abe86f13ff19cea94e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cc8cff6b_f590c57e",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
@@ -87,6 +175,47 @@
       "writtenOn": "2018-04-03T20:03:05Z",
       "side": 1,
       "message": "The spec\u0027s intent for vkCmdClearAttachments is clear but not the text: \"colorAttachment is only meaningful if VK_IMAGE_ASPECT_COLOR_BIT is set in aspectMask [...] If colorAttachment is VK_ATTACHMENT_UNUSED then the clear has no effect.\" Which one takes precedence?\n\nMaybe we could set colorAttachment to 0 for depth and stencil?",
+      "revId": "7090f517c79e53d484ad9abe86f13ff19cea94e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e702240_255c67b4",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-03T22:48:00Z",
+      "side": 1,
+      "message": "the intent seems pretty clear to me for DS clear this attachment index is not meaningful. would be fine with any resolution of this.",
+      "parentUuid": "cc8cff6b_f590c57e",
+      "revId": "7090f517c79e53d484ad9abe86f13ff19cea94e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "306667ca_d610ec09",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-03T22:48:00Z",
+      "side": 1,
+      "message": "was this one also blocked on \"default_attribute\" support?",
+      "range": {
+        "startLine": 372,
+        "startChar": 0,
+        "endLine": 372,
+        "endChar": 47
+      },
       "revId": "7090f517c79e53d484ad9abe86f13ff19cea94e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
