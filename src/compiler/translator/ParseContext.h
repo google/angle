@@ -606,10 +606,6 @@ class TParseContext : angle::NonCopyable
     TDirectiveHandler mDirectiveHandler;
     pp::Preprocessor mPreprocessor;
     void *mScanner;
-    bool mUsesFragData;  // track if we are using both gl_FragData and gl_FragColor
-    bool mUsesFragColor;
-    bool mUsesSecondaryOutputs;  // Track if we are using either gl_SecondaryFragData or
-                                 // gl_Secondary FragColor or both.
     int mMinProgramTexelOffset;
     int mMaxProgramTexelOffset;
 

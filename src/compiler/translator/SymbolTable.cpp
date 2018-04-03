@@ -158,6 +158,16 @@ TVariable *TSymbolTable::getGlInVariableWithArraySize() const
     return mGlInVariableWithArraySize;
 }
 
+const TVariable *TSymbolTable::gl_FragData() const
+{
+    return mVar_gl_FragData;
+}
+
+const TVariable *TSymbolTable::gl_SecondaryFragDataEXT() const
+{
+    return mVar_gl_SecondaryFragDataEXT;
+}
+
 void TSymbolTable::markStaticWrite(const TVariable &variable)
 {
     int id    = variable.uniqueId().get();

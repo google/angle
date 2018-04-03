@@ -5919,3 +5919,23 @@ TEST_F(FragmentShaderValidationTest, HandleLoopInnerIfStatementAlwaysTriviallyPr
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Test that declaring both gl_FragColor and gl_FragData invariant is not an error. The GLSL ES 1.00
+// spec only disallows writing to both of them. ANGLE extends this validation to also cover reads,
+// but it makes sense not to treat declaring them both invariant as an error.
+TEST_F(FragmentShaderValidationTest, DeclareBothBuiltInFragmentOutputsInvariant)
+{
+    const std::string &shaderString =
+        R"(
+        invariant gl_FragColor;
+        invariant gl_FragData;
+        precision mediump float;
+        void main()
+        {
+            gl_FragColor = vec4(0.0);
+        })";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}

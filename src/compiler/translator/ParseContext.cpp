@@ -196,9 +196,6 @@ TParseContext::TParseContext(TSymbolTable &symt,
                         resources.WEBGL_debug_shader_precision == 1),
       mPreprocessor(mDiagnostics, &mDirectiveHandler, pp::PreprocessorSettings()),
       mScanner(nullptr),
-      mUsesFragData(false),
-      mUsesFragColor(false),
-      mUsesSecondaryOutputs(false),
       mMinProgramTexelOffset(resources.MinProgramTexelOffset),
       mMaxProgramTexelOffset(resources.MaxProgramTexelOffset),
       mMinProgramTextureGatherOffset(resources.MinProgramTextureGatherOffset),
@@ -1830,40 +1827,9 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
         checkCanUseExtension(location, variable->extension());
     }
 
-    // Reject shaders using both gl_FragData and gl_FragColor
-    TQualifier qualifier = variable->getType().getQualifier();
-    if (qualifier == EvqFragData || qualifier == EvqSecondaryFragDataEXT)
-    {
-        mUsesFragData = true;
-    }
-    else if (qualifier == EvqFragColor || qualifier == EvqSecondaryFragColorEXT)
-    {
-        mUsesFragColor = true;
-    }
-    if (qualifier == EvqSecondaryFragDataEXT || qualifier == EvqSecondaryFragColorEXT)
-    {
-        mUsesSecondaryOutputs = true;
-    }
-
-    // This validation is not quite correct - it's only an error to write to
-    // both FragData and FragColor. For simplicity, and because users shouldn't
-    // be rewarded for reading from undefined varaibles, return an error
-    // if they are both referenced, rather than assigned.
-    if (mUsesFragData && mUsesFragColor)
-    {
-        const char *errorMessage = "cannot use both gl_FragData and gl_FragColor";
-        if (mUsesSecondaryOutputs)
-        {
-            errorMessage =
-                "cannot use both output variable sets (gl_FragData, gl_SecondaryFragDataEXT)"
-                " and (gl_FragColor, gl_SecondaryFragColorEXT)";
-        }
-        error(location, errorMessage, name);
-    }
-
     // GLSL ES 3.1 Revision 4, 7.1.3 Compute Shader Special Variables
     if (getShaderType() == GL_COMPUTE_SHADER && !mComputeShaderLocalSizeDeclared &&
-        qualifier == EvqWorkGroupSize)
+        variable->getType().getQualifier() == EvqWorkGroupSize)
     {
         error(location,
               "It is an error to use gl_WorkGroupSize before declaring the local group size",

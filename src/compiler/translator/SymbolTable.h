@@ -94,6 +94,9 @@ class TSymbolTable : angle::NonCopyable, TSymbolTableBase
     bool setGlInArraySize(unsigned int inputArraySize);
     TVariable *getGlInVariableWithArraySize() const;
 
+    const TVariable *gl_FragData() const;
+    const TVariable *gl_SecondaryFragDataEXT() const;
+
     void markStaticRead(const TVariable &variable);
     void markStaticWrite(const TVariable &variable);
 

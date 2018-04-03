@@ -45,6 +45,7 @@
 #include "compiler/translator/tree_ops/UnfoldShortCircuitAST.h"
 #include "compiler/translator/tree_ops/UseInterfaceBlockFields.h"
 #include "compiler/translator/tree_ops/VectorizeVectorScalarArithmetic.h"
+#include "compiler/translator/tree_util/BuiltIn_autogen.h"
 #include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
 #include "compiler/translator/util.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
@@ -222,6 +223,51 @@ int MapSpecToShaderVersion(ShShaderSpec spec)
             UNREACHABLE();
             return 0;
     }
+}
+
+bool ValidateFragColorAndFragData(GLenum shaderType,
+                                  int shaderVersion,
+                                  const TSymbolTable &symbolTable,
+                                  TDiagnostics *diagnostics)
+{
+    if (shaderVersion > 100 || shaderType != GL_FRAGMENT_SHADER)
+    {
+        return true;
+    }
+
+    bool usesFragColor = false;
+    bool usesFragData  = false;
+    // This validation is a bit stricter than the spec - it's only an error to write to
+    // both FragData and FragColor. But because it's better not to have reads from undefined
+    // variables, we always return an error if they are both referenced, rather than only if they
+    // are written.
+    if (symbolTable.isStaticallyUsed(*BuiltInVariable::gl_FragColor()) ||
+        symbolTable.isStaticallyUsed(*BuiltInVariable::gl_SecondaryFragColorEXT()))
+    {
+        usesFragColor = true;
+    }
+    // Extension variables may not always be initialized (saves some time at symbol table init).
+    bool secondaryFragDataUsed =
+        symbolTable.gl_SecondaryFragDataEXT() != nullptr &&
+        symbolTable.isStaticallyUsed(*symbolTable.gl_SecondaryFragDataEXT());
+    if (symbolTable.isStaticallyUsed(*symbolTable.gl_FragData()) || secondaryFragDataUsed)
+    {
+        usesFragData = true;
+    }
+    if (usesFragColor && usesFragData)
+    {
+        const char *errorMessage = "cannot use both gl_FragData and gl_FragColor";
+        if (symbolTable.isStaticallyUsed(*BuiltInVariable::gl_SecondaryFragColorEXT()) ||
+            secondaryFragDataUsed)
+        {
+            errorMessage =
+                "cannot use both output variable sets (gl_FragData, gl_SecondaryFragDataEXT)"
+                " and (gl_FragColor, gl_SecondaryFragColorEXT)";
+        }
+        diagnostics->globalError(errorMessage);
+        return false;
+    }
+    return true;
 }
 
 }  // namespace
@@ -446,6 +492,11 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     if (shouldRunLoopAndIndexingValidation(compileOptions) &&
         !ValidateLimitations(root, shaderType, &symbolTable, &mDiagnostics))
+    {
+        return false;
+    }
+
+    if (!ValidateFragColorAndFragData(shaderType, shaderVersion, symbolTable, &mDiagnostics))
     {
         return false;
     }
