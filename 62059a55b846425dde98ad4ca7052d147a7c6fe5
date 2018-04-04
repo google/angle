@@ -22,6 +22,30 @@
       "revId": "62059a55b846425dde98ad4ca7052d147a7c6fe5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a0db019_7f30709d",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-04T16:02:16Z",
+      "side": 1,
+      "message": "Np done here: \nhttps://chromium-review.googlesource.com/c/angle/angle/+/996012",
+      "parentUuid": "7eb947b5_330ef6c8",
+      "range": {
+        "startLine": 440,
+        "startChar": 4,
+        "endLine": 457,
+        "endChar": 9
+      },
+      "revId": "62059a55b846425dde98ad4ca7052d147a7c6fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
