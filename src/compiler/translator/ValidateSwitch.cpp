@@ -26,7 +26,7 @@ class ValidateSwitch : public TIntermTraverser
     void visitSymbol(TIntermSymbol *) override;
     void visitConstantUnion(TIntermConstantUnion *) override;
     bool visitDeclaration(Visit, TIntermDeclaration *) override;
-    bool visitBlock(Visit, TIntermBlock *) override;
+    bool visitBlock(Visit visit, TIntermBlock *) override;
     bool visitBinary(Visit, TIntermBinary *) override;
     bool visitUnary(Visit, TIntermUnary *) override;
     bool visitTernary(Visit, TIntermTernary *) override;
@@ -107,13 +107,17 @@ bool ValidateSwitch::visitDeclaration(Visit, TIntermDeclaration *)
     return true;
 }
 
-bool ValidateSwitch::visitBlock(Visit, TIntermBlock *)
+bool ValidateSwitch::visitBlock(Visit visit, TIntermBlock *)
 {
     if (getParentNode() != nullptr)
     {
         if (!mFirstCaseFound)
             mStatementBeforeCase = true;
         mLastStatementWasCase    = false;
+        if (visit == PreVisit)
+            ++mControlFlowDepth;
+        if (visit == PostVisit)
+            --mControlFlowDepth;
     }
     return true;
 }

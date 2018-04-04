@@ -5939,3 +5939,31 @@ TEST_F(FragmentShaderValidationTest, DeclareBothBuiltInFragmentOutputsInvariant)
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Test that a case cannot be placed inside a block nested inside a switch statement. GLSL ES 3.10
+// section 6.2.
+TEST_F(FragmentShaderValidationTest, CaseInsideBlock)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+        uniform int u;
+        out vec4 my_FragColor;
+        void main()
+        {
+            switch (u)
+            {
+                case 1:
+                {
+                    case 0:
+                        my_FragColor = vec4(0.0);
+                }
+                default:
+                    my_FragColor = vec4(1.0);
+            }
+        })";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
