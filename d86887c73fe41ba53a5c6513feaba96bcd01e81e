@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "32517d2d_a8e3e595",
+        "filename": "src/compiler/translator/builtin_symbols_hash_autogen.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-04T14:58:57Z",
+      "side": 1,
+      "message": "Yes, that\u0027s the idea.",
+      "parentUuid": "92f6398a_43ef91ba",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 32
+      },
+      "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3bae86e_0f5e455d",
         "filename": "src/compiler/translator/tree_util/BuiltIn_autogen.h",
         "patchSetId": 3
@@ -108,6 +132,24 @@
       "side": 1,
       "message": "constant integers are weird.. static constexpr should be better. Can you make sure you were using constepxr? Maybe the fellow responding on the binary size regression issue would know.\n\nYou can also try building with the same flags as they use to detect binary size regressions (assuming you weren\u0027t already)",
       "parentUuid": "b159aac9_1056485c",
+      "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0b48a78_b092ef79",
+        "filename": "src/compiler/translator/tree_util/BuiltIn_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-04T14:58:57Z",
+      "side": 1,
+      "message": "I could try different flags. Are the proper flags documented somewhere?",
+      "parentUuid": "8a3fb121_729529ac",
       "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
