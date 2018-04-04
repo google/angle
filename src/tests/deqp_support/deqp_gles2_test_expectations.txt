@@ -188,12 +188,12 @@
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
 
 // Vulkan failures
-2161 VULKAN : dEQP-GLES2.functional.color_clear.masked_* = SKIP
+2455 VULKAN : dEQP-GLES2.functional.color_clear.masked_scissor* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.color_clear.complex_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.color_clear.long_masked_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.prerequisite.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.implementation_limits.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.depth_stencil = SKIP
 2161 VULKAN : dEQP-GLES2.functional.buffer.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.light_amount.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.shaders.* = SKIP

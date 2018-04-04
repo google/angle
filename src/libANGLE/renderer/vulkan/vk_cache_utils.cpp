@@ -724,6 +724,19 @@ void PipelineDesc::updateBlendFuncs(const gl::BlendState &blendState)
     }
 }
 
+void PipelineDesc::updateColorWriteMask(const gl::BlendState &blendState)
+{
+    for (auto &blendAttachmentState : mColorBlendStateInfo.attachments)
+    {
+        int colorMask = blendState.colorMaskRed ? VK_COLOR_COMPONENT_R_BIT : 0;
+        colorMask |= blendState.colorMaskGreen ? VK_COLOR_COMPONENT_G_BIT : 0;
+        colorMask |= blendState.colorMaskBlue ? VK_COLOR_COMPONENT_B_BIT : 0;
+        colorMask |= blendState.colorMaskAlpha ? VK_COLOR_COMPONENT_A_BIT : 0;
+
+        blendAttachmentState.colorWriteMask = static_cast<uint8_t>(colorMask);
+    }
+}
+
 void PipelineDesc::updateDepthTestEnabled(const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.depthTestEnable = static_cast<uint8_t>(depthStencilState.depthTest);
@@ -732,6 +745,11 @@ void PipelineDesc::updateDepthTestEnabled(const gl::DepthStencilState &depthSten
 void PipelineDesc::updateDepthFunc(const gl::DepthStencilState &depthStencilState)
 {
     mDepthStencilStateInfo.depthCompareOp = PackGLCompareFunc(depthStencilState.depthFunc);
+}
+
+void PipelineDesc::updateDepthWriteEnabled(const gl::DepthStencilState &depthStencilState)
+{
+    mDepthStencilStateInfo.depthWriteEnable = (depthStencilState.depthMask == GL_FALSE ? 0 : 1);
 }
 
 void PipelineDesc::updateStencilTestEnabled(const gl::DepthStencilState &depthStencilState)

@@ -521,7 +521,7 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 mPipelineDesc->updateBlendEquations(glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_COLOR_MASK:
-                WARN() << "DIRTY_BIT_COLOR_MASK unimplemented";
+                mPipelineDesc->updateColorWriteMask(glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
                 WARN() << "DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED unimplemented";
@@ -545,7 +545,7 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 mPipelineDesc->updateDepthFunc(glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_DEPTH_MASK:
-                WARN() << "DIRTY_BIT_DEPTH_MASK unimplemented";
+                mPipelineDesc->updateDepthWriteEnabled(glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED:
                 mPipelineDesc->updateStencilTestEnabled(glState.getDepthStencilState());
