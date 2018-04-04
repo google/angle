@@ -94,6 +94,30 @@
       "revId": "35b5077f00b08da914f7216af65d663c8b1963d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "957e4e66_f45c23b4",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-04T19:41:29Z",
+      "side": 1,
+      "message": "Drat, I\u0027m sorry. I did make it, not sure how I lost it again. Will fix in a follow up.",
+      "parentUuid": "c80292f0_3812d0f9",
+      "range": {
+        "startLine": 62,
+        "startChar": 30,
+        "endLine": 62,
+        "endChar": 89
+      },
+      "revId": "35b5077f00b08da914f7216af65d663c8b1963d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
