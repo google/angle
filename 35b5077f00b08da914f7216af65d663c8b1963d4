@@ -70,6 +70,30 @@
       "revId": "35b5077f00b08da914f7216af65d663c8b1963d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c80292f0_3812d0f9",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-04T19:07:38Z",
+      "side": 1,
+      "message": "Where is the fix?",
+      "parentUuid": "85c09e4c_a719807e",
+      "range": {
+        "startLine": 62,
+        "startChar": 30,
+        "endLine": 62,
+        "endChar": 89
+      },
+      "revId": "35b5077f00b08da914f7216af65d663c8b1963d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
