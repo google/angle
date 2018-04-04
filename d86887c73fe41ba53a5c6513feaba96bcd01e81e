@@ -34,6 +34,24 @@
       "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8379c19_66a460b8",
+        "filename": "src/compiler/translator/tree_util/BuiltIn_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-04T14:07:13Z",
+      "side": 1,
+      "message": "I just had const int values inside a namespace as the alternative.",
+      "parentUuid": "00e49eb1_ab859978",
+      "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
