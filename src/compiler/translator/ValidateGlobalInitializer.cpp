@@ -14,6 +14,8 @@ namespace sh
 namespace
 {
 
+const int kMaxAllowedTraversalDepth = 256;
+
 class ValidateGlobalInitializerTraverser : public TIntermTraverser
 {
   public:
@@ -25,7 +27,7 @@ class ValidateGlobalInitializerTraverser : public TIntermTraverser
     bool visitBinary(Visit visit, TIntermBinary *node) override;
     bool visitUnary(Visit visit, TIntermUnary *node) override;
 
-    bool isValid() const { return mIsValid; }
+    bool isValid() const { return mIsValid && mMaxDepth < mMaxAllowedDepth; }
     bool issueWarning() const { return mIssueWarning; }
 
   private:
@@ -117,11 +119,12 @@ bool ValidateGlobalInitializerTraverser::visitUnary(Visit visit, TIntermUnary *n
 }
 
 ValidateGlobalInitializerTraverser::ValidateGlobalInitializerTraverser(int shaderVersion)
-    : TIntermTraverser(true, false, false),
+    : TIntermTraverser(true, false, false, nullptr),
       mShaderVersion(shaderVersion),
       mIsValid(true),
       mIssueWarning(false)
 {
+    setMaxAllowedDepth(kMaxAllowedTraversalDepth);
 }
 
 }  // namespace

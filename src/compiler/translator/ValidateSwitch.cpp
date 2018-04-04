@@ -15,6 +15,8 @@ namespace sh
 namespace
 {
 
+const int kMaxAllowedTraversalDepth = 256;
+
 class ValidateSwitch : public TIntermTraverser
 {
   public:
@@ -69,7 +71,7 @@ bool ValidateSwitch::validate(TBasicType switchType,
 }
 
 ValidateSwitch::ValidateSwitch(TBasicType switchType, TDiagnostics *diagnostics)
-    : TIntermTraverser(true, false, true),
+    : TIntermTraverser(true, false, true, nullptr),
       mSwitchType(switchType),
       mDiagnostics(diagnostics),
       mCaseTypeMismatch(false),
@@ -81,6 +83,7 @@ ValidateSwitch::ValidateSwitch(TBasicType switchType, TDiagnostics *diagnostics)
       mDefaultCount(0),
       mDuplicateCases(false)
 {
+    setMaxAllowedDepth(kMaxAllowedTraversalDepth);
 }
 
 void ValidateSwitch::visitSymbol(TIntermSymbol *)
@@ -290,8 +293,13 @@ bool ValidateSwitch::validateInternal(const TSourceLoc &loc)
             loc, "no statement between the last label and the end of the switch statement",
             "switch");
     }
+    if (getMaxDepth() >= kMaxAllowedTraversalDepth)
+    {
+        mDiagnostics->error(loc, "too complex expressions inside a switch statement", "switch");
+    }
     return !mStatementBeforeCase && !mLastStatementWasCase && !mCaseInsideControlFlow &&
-           !mCaseTypeMismatch && mDefaultCount <= 1 && !mDuplicateCases;
+           !mCaseTypeMismatch && mDefaultCount <= 1 && !mDuplicateCases &&
+           getMaxDepth() < kMaxAllowedTraversalDepth;
 }
 
 }  // anonymous namespace

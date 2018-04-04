@@ -110,8 +110,8 @@ TIntermTraverser::TIntermTraverser(bool preVisit,
     : preVisit(preVisit),
       inVisit(inVisit),
       postVisit(postVisit),
-      mDepth(-1),
       mMaxDepth(0),
+      mMaxAllowedDepth(std::numeric_limits<int>::max()),
       mInGlobalScope(true),
       mSymbolTable(symbolTable)
 {
@@ -119,6 +119,11 @@ TIntermTraverser::TIntermTraverser(bool preVisit,
 
 TIntermTraverser::~TIntermTraverser()
 {
+}
+
+void TIntermTraverser::setMaxAllowedDepth(int depth)
+{
+    mMaxAllowedDepth = depth;
 }
 
 const TIntermBlock *TIntermTraverser::getParentBlock() const
@@ -215,6 +220,8 @@ void TIntermTraverser::traverseConstantUnion(TIntermConstantUnion *node)
 void TIntermTraverser::traverseSwizzle(TIntermSwizzle *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -236,6 +243,8 @@ void TIntermTraverser::traverseSwizzle(TIntermSwizzle *node)
 void TIntermTraverser::traverseBinary(TIntermBinary *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -271,6 +280,8 @@ void TIntermTraverser::traverseBinary(TIntermBinary *node)
 void TLValueTrackingTraverser::traverseBinary(TIntermBinary *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -335,6 +346,8 @@ void TLValueTrackingTraverser::traverseBinary(TIntermBinary *node)
 void TIntermTraverser::traverseUnary(TIntermUnary *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -353,6 +366,8 @@ void TIntermTraverser::traverseUnary(TIntermUnary *node)
 void TLValueTrackingTraverser::traverseUnary(TIntermUnary *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -387,6 +402,8 @@ void TLValueTrackingTraverser::traverseUnary(TIntermUnary *node)
 void TIntermTraverser::traverseFunctionDefinition(TIntermFunctionDefinition *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -413,6 +430,9 @@ void TIntermTraverser::traverseFunctionDefinition(TIntermFunctionDefinition *nod
 void TIntermTraverser::traverseBlock(TIntermBlock *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
+
     pushParentBlock(node);
 
     bool visit = true;
@@ -446,6 +466,8 @@ void TIntermTraverser::traverseBlock(TIntermBlock *node)
 void TIntermTraverser::traverseInvariantDeclaration(TIntermInvariantDeclaration *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -468,6 +490,8 @@ void TIntermTraverser::traverseInvariantDeclaration(TIntermInvariantDeclaration 
 void TIntermTraverser::traverseDeclaration(TIntermDeclaration *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -496,6 +520,7 @@ void TIntermTraverser::traverseDeclaration(TIntermDeclaration *node)
 void TIntermTraverser::traverseFunctionPrototype(TIntermFunctionPrototype *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+
     visitFunctionPrototype(node);
 }
 
@@ -503,6 +528,8 @@ void TIntermTraverser::traverseFunctionPrototype(TIntermFunctionPrototype *node)
 void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -633,6 +660,8 @@ TLValueTrackingTraverser::TLValueTrackingTraverser(bool preVisit,
 void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -680,6 +709,8 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
 void TIntermTraverser::traverseTernary(TIntermTernary *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -703,6 +734,8 @@ void TIntermTraverser::traverseTernary(TIntermTernary *node)
 void TIntermTraverser::traverseIfElse(TIntermIfElse *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -728,6 +761,8 @@ void TIntermTraverser::traverseIfElse(TIntermIfElse *node)
 void TIntermTraverser::traverseSwitch(TIntermSwitch *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -753,6 +788,8 @@ void TIntermTraverser::traverseSwitch(TIntermSwitch *node)
 void TIntermTraverser::traverseCase(TIntermCase *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -774,6 +811,8 @@ void TIntermTraverser::traverseCase(TIntermCase *node)
 void TIntermTraverser::traverseLoop(TIntermLoop *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
@@ -805,6 +844,8 @@ void TIntermTraverser::traverseLoop(TIntermLoop *node)
 void TIntermTraverser::traverseBranch(TIntermBranch *node)
 {
     ScopedNodeInTraversalPath addToPath(this, node);
+    if (!addToPath.isWithinDepthLimit())
+        return;
 
     bool visit = true;
 
