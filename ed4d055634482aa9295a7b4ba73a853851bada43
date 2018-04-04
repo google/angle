@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f9084f1_7153aa74",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1988,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-04T09:37:22Z",
+      "side": 1,
+      "message": "this is smart - can you please call dirtyAllLinkedUniforms from link() and load() instead?",
+      "range": {
+        "startLine": 1988,
+        "startChar": 4,
+        "endLine": 1988,
+        "endChar": 58
+      },
+      "revId": "ed4d055634482aa9295a7b4ba73a853851bada43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
