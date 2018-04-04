@@ -6872,6 +6872,10 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
                 *type      = GL_FLOAT;
                 *numParams = 4;
                 return true;
+            case GL_MATRIX_MODE:
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
         }
     }
 

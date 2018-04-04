@@ -2333,6 +2333,9 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         case GL_CLIENT_ACTIVE_TEXTURE:
             *params = mGLES1State.mClientActiveTexture + GL_TEXTURE0;
             break;
+        case GL_MATRIX_MODE:
+            *params = ToGLenum(mGLES1State.mMatrixMode);
+            break;
         default:
             UNREACHABLE();
             break;

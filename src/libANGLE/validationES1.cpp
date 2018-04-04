@@ -371,8 +371,17 @@ bool ValidateMaterialxv(Context *context, GLenum face, GLenum pname, const GLfix
 
 bool ValidateMatrixMode(Context *context, MatrixType mode)
 {
-    UNIMPLEMENTED();
-    return true;
+    ANGLE_VALIDATE_IS_GLES1(context);
+    switch (mode)
+    {
+        case MatrixType::Projection:
+        case MatrixType::Modelview:
+        case MatrixType::Texture:
+            return true;
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMatrixMode);
+            return false;
+    }
 }
 
 bool ValidateMultMatrixf(Context *context, const GLfloat *m)

@@ -135,6 +135,9 @@ class GLES1State final : angle::NonCopyable
     void setCurrentTextureCoords(unsigned int unit, const TextureCoordF &coords);
     const TextureCoordF &getCurrentTextureCoords(unsigned int unit) const;
 
+    void setMatrixMode(MatrixType mode);
+    MatrixType getMatrixMode() const;
+
   private:
     friend class State;
 
@@ -179,7 +182,7 @@ class GLES1State final : angle::NonCopyable
 
     // Table 6.7
     using MatrixStack = std::vector<angle::Mat4>;
-    MatrixType mCurrMatrixMode;
+    MatrixType mMatrixMode;
     MatrixStack mProjMatrices;
     MatrixStack mModelviewMatrices;
     std::vector<MatrixStack> mTextureMatrices;

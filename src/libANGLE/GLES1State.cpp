@@ -44,7 +44,7 @@ GLES1State::GLES1State()
       mCurrentColor({0.0f, 0.0f, 0.0f, 0.0f}),
       mCurrentNormal({0.0f, 0.0f, 0.0f}),
       mClientActiveTexture(0),
-      mCurrMatrixMode(MatrixType::Modelview),
+      mMatrixMode(MatrixType::Modelview),
       mShadeModel(ShadingModel::Smooth),
       mAlphaTestFunc(AlphaTestFunc::AlwaysPass),
       mAlphaTestRef(0.0f),
@@ -88,7 +88,7 @@ void GLES1State::initialize(const Context *context)
     mColorMaterialEnabled = false;
     mReflectionMapEnabled = false;
 
-    mCurrMatrixMode = MatrixType::Modelview;
+    mMatrixMode = MatrixType::Modelview;
 
     mCurrentColor  = {1.0f, 1.0f, 1.0f, 1.0f};
     mCurrentNormal = {0.0f, 0.0f, 1.0f};
@@ -198,6 +198,16 @@ void GLES1State::setCurrentTextureCoords(unsigned int unit, const TextureCoordF 
 const TextureCoordF &GLES1State::getCurrentTextureCoords(unsigned int unit) const
 {
     return mCurrentTextureCoords[unit];
+}
+
+void GLES1State::setMatrixMode(MatrixType mode)
+{
+    mMatrixMode = mode;
+}
+
+MatrixType GLES1State::getMatrixMode() const
+{
+    return mMatrixMode;
 }
 
 }  // namespace gl

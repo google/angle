@@ -264,7 +264,7 @@ void Context::materialxv(GLenum face, GLenum pname, const GLfixed *param)
 
 void Context::matrixMode(MatrixType mode)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setMatrixMode(mode);
 }
 
 void Context::multMatrixf(const GLfloat *m)
