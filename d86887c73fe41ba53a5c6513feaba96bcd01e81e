@@ -16,6 +16,24 @@
       "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00e49eb1_ab859978",
+        "filename": "src/compiler/translator/tree_util/BuiltIn_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-04T14:06:08Z",
+      "side": 1,
+      "message": "What was the alternative? I suspect query functions would go away with LTO/LTCG but this kind of stuff is hard to test for.",
+      "parentUuid": "a3bae86e_0f5e455d",
+      "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
