@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a4c9708_708f6b9e",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-04T19:31:58Z",
+      "side": 1,
+      "message": "Isn\u0027t this an off-by-one error, too? Looks like this was this way in the old code as well, but in my math understanding: first + count \u003d one beyond last.",
+      "range": {
+        "startLine": 414,
+        "startChar": 4,
+        "endLine": 414,
+        "endChar": 81
+      },
+      "revId": "b4415459db8001cb50e727f650df4fbe5e7cfe94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
