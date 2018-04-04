@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "6cf3e7d4_371c754d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-04T03:25:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b2709d1_cb19bf61",
+      "range": {
+        "startLine": 627,
+        "startChar": 3,
+        "endLine": 627,
+        "endChar": 31
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01bc9613_98f75382",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -68,6 +92,30 @@
       "revId": "ce7e946daa79799889784a8350b01df4832ad549",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fec5bcb_8935f673",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1967,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-04T03:25:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01bc9613_98f75382",
+      "range": {
+        "startLine": 1967,
+        "startChar": 17,
+        "endLine": 1967,
+        "endChar": 33
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "f808eea3_26966942",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2008,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-04T03:25:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "33abfaa9_a7e37f5c",
+      "range": {
+        "startLine": 2008,
+        "startChar": 7,
+        "endLine": 2008,
+        "endChar": 34
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74a33f3b_f9b76ac3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 2
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "df400438_6612dbab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3221,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-04T03:25:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74a33f3b_f9b76ac3",
+      "range": {
+        "startLine": 3221,
+        "startChar": 20,
+        "endLine": 3221,
+        "endChar": 44
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3581e2a_919fea17",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 2
@@ -137,6 +233,30 @@
       "revId": "ce7e946daa79799889784a8350b01df4832ad549",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f61eb371_3d3ef421",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1810,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-04T03:25:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3581e2a_919fea17",
+      "range": {
+        "startLine": 1810,
+        "startChar": 21,
+        "endLine": 1810,
+        "endChar": 49
+      },
+      "revId": "ce7e946daa79799889784a8350b01df4832ad549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
