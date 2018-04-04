@@ -437,24 +437,38 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
         return;
     }
 
-    for (auto &uniformBlock : mDefaultUniformBlocks)
+    if (linkedUniform.typeInfo->type == entryPointType)
     {
-        const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
-
-        // Assume an offset of -1 means the block is unused.
-        if (layoutInfo.offset == -1)
+        for (auto &uniformBlock : mDefaultUniformBlocks)
         {
-            continue;
-        }
+            const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
 
-        const GLint componentCount = linkedUniform.typeInfo->componentCount;
-        if (linkedUniform.typeInfo->type == entryPointType)
-        {
+            // Assume an offset of -1 means the block is unused.
+            if (layoutInfo.offset == -1)
+            {
+                continue;
+            }
+
+            const GLint componentCount = linkedUniform.typeInfo->componentCount;
             UpdateDefaultUniformBlock(count, locationInfo.arrayIndex, componentCount, v, layoutInfo,
                                       &uniformBlock.uniformData);
+            uniformBlock.uniformsDirty = true;
         }
-        else
+    }
+    else
+    {
+        for (auto &uniformBlock : mDefaultUniformBlocks)
         {
+            const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
+
+            // Assume an offset of -1 means the block is unused.
+            if (layoutInfo.offset == -1)
+            {
+                continue;
+            }
+
+            const GLint componentCount = linkedUniform.typeInfo->componentCount;
+
             ASSERT(linkedUniform.typeInfo->type == gl::VariableBoolVectorType(entryPointType));
 
             GLint initialArrayOffset = locationInfo.arrayIndex * layoutInfo.arrayStride;
@@ -470,8 +484,8 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
                     dest[c] = (source[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE;
                 }
             }
+            uniformBlock.uniformsDirty = true;
         }
-        uniformBlock.uniformsDirty = true;
     }
 }
 
