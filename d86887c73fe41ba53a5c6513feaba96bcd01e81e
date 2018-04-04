@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3bae86e_0f5e455d",
+        "filename": "src/compiler/translator/tree_util/BuiltIn_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-04T12:24:34Z",
+      "side": 1,
+      "message": "This generated a much larger shader_translator binary size on Linux if I simply had constant integers here, but I wonder if that\u0027s because even the release build binary includes some debug information that\u0027s stripped from actual releases? It would be nicer not to use the defines.",
+      "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
