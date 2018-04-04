@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "32a2b3a9_c79be19f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-04T15:42:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41178753_0eacef21",
+      "range": {
+        "startLine": 186,
+        "startChar": 9,
+        "endLine": 186,
+        "endChar": 27
+      },
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e07e5c05_2f450398",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 3
@@ -60,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "a8f194bb_e27e9d81",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-04T15:42:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "802f732a_b7c0ec2d",
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33dd887e_41a79bc5",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 3
@@ -80,6 +122,30 @@
       "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce4ce967_1277ec85",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1385,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-04T15:42:08Z",
+      "side": 1,
+      "message": "I moved these into VertexArrayVk, to move all the state management into that class (except the StreamingBuffer). The next patch will remove the ObserverBinding.",
+      "parentUuid": "33dd887e_41a79bc5",
+      "range": {
+        "startLine": 1384,
+        "startChar": 8,
+        "endLine": 1385,
+        "endChar": 65
+      },
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -106,6 +172,30 @@
     },
     {
       "key": {
+        "uuid": "f9142a5c_2cc602d5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-04T15:42:08Z",
+      "side": 1,
+      "message": "Not sure if we can ASSERT this - the comment I think was actually referring to createIndexBuffer/createIndexBufferFromElementArrayBuffer, rather than bindIndexBuffer. Updated.",
+      "parentUuid": "14974008_26a8cf93",
+      "range": {
+        "startLine": 1471,
+        "startChar": 74,
+        "endLine": 1471,
+        "endChar": 97
+      },
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2f2fc35_c40ee77a",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 3
@@ -126,6 +216,30 @@
       "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbcd5824_790bddd5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-04T15:42:08Z",
+      "side": 1,
+      "message": "Thanks, updated comment.",
+      "parentUuid": "c2f2fc35_c40ee77a",
+      "range": {
+        "startLine": 691,
+        "startChar": 38,
+        "endLine": 691,
+        "endChar": 62
+      },
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
