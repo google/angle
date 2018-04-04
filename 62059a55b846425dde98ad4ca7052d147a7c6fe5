@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7eb947b5_330ef6c8",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-04T14:39:57Z",
+      "side": 1,
+      "message": "sorry to comment after you submit, but the \"if\" should be outside of the \"for\". more code repetition, but saves the extra \"if\" per uniform block",
+      "range": {
+        "startLine": 440,
+        "startChar": 4,
+        "endLine": 457,
+        "endChar": 9
+      },
+      "revId": "62059a55b846425dde98ad4ca7052d147a7c6fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
