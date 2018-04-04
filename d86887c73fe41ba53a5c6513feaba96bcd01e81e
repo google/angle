@@ -153,6 +153,24 @@
       "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f5af0c7_b6abe863",
+        "filename": "src/compiler/translator/tree_util/BuiltIn_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-04T15:17:31Z",
+      "side": 1,
+      "message": "Well, there\u0027s this document:\n\nhttps://chromium.googlesource.com/chromium/src/+/master/docs/speed/apk_size_regressions.md#Debugging-Apk-Size-Increase\n\nI particularly think this section might be relevant:\n\nhttps://chromium.googlesource.com/chromium/src/+/master/docs/speed/apk_size_regressions.md#You-Would-Like-Assistance\n\ni.e. I\u0027m not super expert on this and probably a quick email to binary-size@chromium.org would help -- but make sure you try the constexpr thing if you didn\u0027t already.",
+      "parentUuid": "b0b48a78_b092ef79",
+      "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
