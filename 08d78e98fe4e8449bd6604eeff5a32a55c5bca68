@@ -22,6 +22,30 @@
       "revId": "08d78e98fe4e8449bd6604eeff5a32a55c5bca68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06eb5469_6b68bb19",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-04T11:28:06Z",
+      "side": 1,
+      "message": "Yes still no good. The mix of depth / stencil seems to be failing. I am investigating and a fix will eventually follow-up but I didn\u0027t want to hold off the addition of the other tests and the code I wrote already.",
+      "parentUuid": "edc59839_a3acad2e",
+      "range": {
+        "startLine": 233,
+        "startChar": 49,
+        "endLine": 233,
+        "endChar": 62
+      },
+      "revId": "08d78e98fe4e8449bd6604eeff5a32a55c5bca68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
