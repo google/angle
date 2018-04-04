@@ -25,7 +25,7 @@ class TSymbolUniqueId
     TSymbolUniqueId &operator=(const TSymbolUniqueId &);
     bool operator==(const TSymbolUniqueId &) const;
 
-    int get() const;
+    constexpr int get() const { return mId; }
 
   private:
     friend class TSymbolTable;

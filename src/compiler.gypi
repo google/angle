@@ -68,7 +68,6 @@
             'compiler/translator/Operator.h',
             'compiler/translator/OutputTree.cpp',
             'compiler/translator/OutputTree.h',
-            'compiler/translator/ParamType.h',
             'compiler/translator/ParseContext.cpp',
             'compiler/translator/ParseContext.h',
             'compiler/translator/ParseContext_autogen.h',

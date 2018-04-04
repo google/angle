@@ -4859,7 +4859,8 @@ TIntermCase *TParseContext::addDefault(const TSourceLoc &loc)
 
 TIntermTyped *TParseContext::createUnaryMath(TOperator op,
                                              TIntermTyped *child,
-                                             const TSourceLoc &loc)
+                                             const TSourceLoc &loc,
+                                             const TFunction *func)
 {
     ASSERT(child != nullptr);
 
@@ -4907,7 +4908,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
     }
 
     markStaticReadIfSymbol(child);
-    TIntermUnary *node = new TIntermUnary(op, child);
+    TIntermUnary *node = new TIntermUnary(op, child, func);
     node->setLine(loc);
 
     return node->fold(mDiagnostics);
@@ -4916,7 +4917,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
 TIntermTyped *TParseContext::addUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc)
 {
     ASSERT(op != EOpNull);
-    TIntermTyped *node = createUnaryMath(op, child, loc);
+    TIntermTyped *node = createUnaryMath(op, child, loc, nullptr);
     if (node == nullptr)
     {
         return child;
@@ -5779,7 +5780,7 @@ TIntermTyped *TParseContext::addMethod(TFunctionLookup *fnCall, const TSourceLoc
     }
     else
     {
-        TIntermUnary *node = new TIntermUnary(EOpArrayLength, thisNode);
+        TIntermUnary *node = new TIntermUnary(EOpArrayLength, thisNode, nullptr);
         node->setLine(loc);
         return node->fold(mDiagnostics);
     }
@@ -5837,7 +5838,8 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
                 {
                     // Treat it like a built-in unary operator.
                     TIntermNode *unaryParamNode = fnCall->arguments().front();
-                    TIntermTyped *callNode = createUnaryMath(op, unaryParamNode->getAsTyped(), loc);
+                    TIntermTyped *callNode =
+                        createUnaryMath(op, unaryParamNode->getAsTyped(), loc, fnCandidate);
                     ASSERT(callNode != nullptr);
                     return callNode;
                 }

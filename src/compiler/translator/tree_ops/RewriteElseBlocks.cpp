@@ -92,7 +92,8 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
         }
 
         TIntermSymbol *conditionSymbolElse = CreateTempSymbolNode(conditionVariable);
-        TIntermUnary *negatedCondition     = new TIntermUnary(EOpLogicalNot, conditionSymbolElse);
+        TIntermUnary *negatedCondition =
+            new TIntermUnary(EOpLogicalNot, conditionSymbolElse, nullptr);
         TIntermIfElse *falseIfElse =
             new TIntermIfElse(negatedCondition, ifElse->getFalseBlock(), negatedElse);
         falseBlock = EnsureBlock(falseIfElse);

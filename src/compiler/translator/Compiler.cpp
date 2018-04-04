@@ -588,7 +588,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     if (compileOptions & SH_REMOVE_POW_WITH_CONSTANT_EXPONENT)
     {
-        RemovePow(root);
+        RemovePow(root, &symbolTable);
     }
 
     if (compileOptions & SH_REGENERATE_STRUCT_NAMES)

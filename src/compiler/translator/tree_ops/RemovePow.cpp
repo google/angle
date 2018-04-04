@@ -11,6 +11,7 @@
 #include "compiler/translator/tree_ops/RemovePow.h"
 
 #include "compiler/translator/InfoSink.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
@@ -34,7 +35,7 @@ bool IsProblematicPow(TIntermTyped *node)
 class RemovePowTraverser : public TIntermTraverser
 {
   public:
-    RemovePowTraverser();
+    RemovePowTraverser(TSymbolTable *symbolTable);
 
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
 
@@ -45,8 +46,8 @@ class RemovePowTraverser : public TIntermTraverser
     bool mNeedAnotherIteration;
 };
 
-RemovePowTraverser::RemovePowTraverser()
-    : TIntermTraverser(true, false, false), mNeedAnotherIteration(false)
+RemovePowTraverser::RemovePowTraverser(TSymbolTable *symbolTable)
+    : TIntermTraverser(true, false, false, symbolTable), mNeedAnotherIteration(false)
 {
 }
 
@@ -57,14 +58,18 @@ bool RemovePowTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         TIntermTyped *x = node->getSequence()->at(0)->getAsTyped();
         TIntermTyped *y = node->getSequence()->at(1)->getAsTyped();
 
-        TIntermUnary *log = new TIntermUnary(EOpLog2, x);
+        TIntermSequence *logArgs = new TIntermSequence();
+        logArgs->push_back(x);
+        TIntermTyped *log = CreateBuiltInFunctionCallNode("log2", logArgs, *mSymbolTable, 100);
         log->setLine(node->getLine());
 
         TOperator op       = TIntermBinary::GetMulOpBasedOnOperands(y->getType(), log->getType());
         TIntermBinary *mul = new TIntermBinary(op, y, log);
         mul->setLine(node->getLine());
 
-        TIntermUnary *exp = new TIntermUnary(EOpExp2, mul);
+        TIntermSequence *expArgs = new TIntermSequence();
+        expArgs->push_back(mul);
+        TIntermTyped *exp = CreateBuiltInFunctionCallNode("exp2", expArgs, *mSymbolTable, 100);
         exp->setLine(node->getLine());
 
         queueReplacement(exp, OriginalNode::IS_DROPPED);
@@ -82,9 +87,9 @@ bool RemovePowTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
 }  // namespace
 
-void RemovePow(TIntermNode *root)
+void RemovePow(TIntermNode *root, TSymbolTable *symbolTable)
 {
-    RemovePowTraverser traverser;
+    RemovePowTraverser traverser(symbolTable);
     // Iterate as necessary, and reset the traverser between iterations.
     do
     {

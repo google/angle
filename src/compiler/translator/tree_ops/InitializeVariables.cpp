@@ -114,7 +114,8 @@ void AddArrayZeroInitForLoop(const TIntermTyped *initializedNode,
     TIntermConstantUnion *arraySizeNode = CreateIndexNode(initializedNode->getOutermostArraySize());
     TIntermBinary *indexSmallerThanSize =
         new TIntermBinary(EOpLessThan, indexSymbolNode->deepCopy(), arraySizeNode);
-    TIntermUnary *indexIncrement = new TIntermUnary(EOpPreIncrement, indexSymbolNode->deepCopy());
+    TIntermUnary *indexIncrement =
+        new TIntermUnary(EOpPreIncrement, indexSymbolNode->deepCopy(), nullptr);
 
     TIntermBlock *forLoopBody       = new TIntermBlock();
     TIntermSequence *forLoopBodySeq = forLoopBody->getSequence();

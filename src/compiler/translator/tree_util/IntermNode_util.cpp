@@ -261,7 +261,7 @@ TIntermTyped *CreateBuiltInFunctionCallNode(const char *name,
     TOperator op = fn->getBuiltInOp();
     if (op != EOpCallBuiltInFunction && arguments->size() == 1)
     {
-        return new TIntermUnary(op, arguments->at(0)->getAsTyped());
+        return new TIntermUnary(op, arguments->at(0)->getAsTyped(), fn);
     }
     return TIntermAggregate::CreateBuiltInFunctionCall(*fn, arguments);
 }

@@ -88,7 +88,7 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
                 CreateTempAssignmentNode(resultVariable, node->getRight()));
 
             TIntermUnary *notTempSymbol =
-                new TIntermUnary(EOpLogicalNot, CreateTempSymbolNode(resultVariable));
+                new TIntermUnary(EOpLogicalNot, CreateTempSymbolNode(resultVariable), nullptr);
             TIntermIfElse *ifNode = new TIntermIfElse(notTempSymbol, assignRightBlock, nullptr);
             insertions.push_back(ifNode);
 

@@ -549,7 +549,10 @@ class TParseContext : angle::NonCopyable
                                         TIntermTyped *left,
                                         TIntermTyped *right,
                                         const TSourceLoc &loc);
-    TIntermTyped *createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc);
+    TIntermTyped *createUnaryMath(TOperator op,
+                                  TIntermTyped *child,
+                                  const TSourceLoc &loc,
+                                  const TFunction *func);
 
     TIntermTyped *addMethod(TFunctionLookup *fnCall, const TSourceLoc &loc);
     TIntermTyped *addConstructor(TFunctionLookup *fnCall, const TSourceLoc &line);

@@ -16,1033 +16,883 @@
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/SymbolTable.h"
-#include "compiler/translator/SymbolUniqueId.h"
+#include "compiler/translator/tree_util/BuiltIn_autogen.h"
 
 namespace sh
 {
 
-class BuiltInId
-{
-  public:
-    static constexpr const TSymbolUniqueId radians_0B                       = TSymbolUniqueId(0);
-    static constexpr const TSymbolUniqueId pt0B                             = TSymbolUniqueId(1);
-    static constexpr const TSymbolUniqueId radians_1B                       = TSymbolUniqueId(2);
-    static constexpr const TSymbolUniqueId pt1B                             = TSymbolUniqueId(3);
-    static constexpr const TSymbolUniqueId radians_2B                       = TSymbolUniqueId(4);
-    static constexpr const TSymbolUniqueId pt2B                             = TSymbolUniqueId(5);
-    static constexpr const TSymbolUniqueId radians_3B                       = TSymbolUniqueId(6);
-    static constexpr const TSymbolUniqueId pt3B                             = TSymbolUniqueId(7);
-    static constexpr const TSymbolUniqueId degrees_0B                       = TSymbolUniqueId(8);
-    static constexpr const TSymbolUniqueId degrees_1B                       = TSymbolUniqueId(9);
-    static constexpr const TSymbolUniqueId degrees_2B                       = TSymbolUniqueId(10);
-    static constexpr const TSymbolUniqueId degrees_3B                       = TSymbolUniqueId(11);
-    static constexpr const TSymbolUniqueId sin_0B                           = TSymbolUniqueId(12);
-    static constexpr const TSymbolUniqueId sin_1B                           = TSymbolUniqueId(13);
-    static constexpr const TSymbolUniqueId sin_2B                           = TSymbolUniqueId(14);
-    static constexpr const TSymbolUniqueId sin_3B                           = TSymbolUniqueId(15);
-    static constexpr const TSymbolUniqueId cos_0B                           = TSymbolUniqueId(16);
-    static constexpr const TSymbolUniqueId cos_1B                           = TSymbolUniqueId(17);
-    static constexpr const TSymbolUniqueId cos_2B                           = TSymbolUniqueId(18);
-    static constexpr const TSymbolUniqueId cos_3B                           = TSymbolUniqueId(19);
-    static constexpr const TSymbolUniqueId tan_0B                           = TSymbolUniqueId(20);
-    static constexpr const TSymbolUniqueId tan_1B                           = TSymbolUniqueId(21);
-    static constexpr const TSymbolUniqueId tan_2B                           = TSymbolUniqueId(22);
-    static constexpr const TSymbolUniqueId tan_3B                           = TSymbolUniqueId(23);
-    static constexpr const TSymbolUniqueId asin_0B                          = TSymbolUniqueId(24);
-    static constexpr const TSymbolUniqueId asin_1B                          = TSymbolUniqueId(25);
-    static constexpr const TSymbolUniqueId asin_2B                          = TSymbolUniqueId(26);
-    static constexpr const TSymbolUniqueId asin_3B                          = TSymbolUniqueId(27);
-    static constexpr const TSymbolUniqueId acos_0B                          = TSymbolUniqueId(28);
-    static constexpr const TSymbolUniqueId acos_1B                          = TSymbolUniqueId(29);
-    static constexpr const TSymbolUniqueId acos_2B                          = TSymbolUniqueId(30);
-    static constexpr const TSymbolUniqueId acos_3B                          = TSymbolUniqueId(31);
-    static constexpr const TSymbolUniqueId atan_0B0B                        = TSymbolUniqueId(32);
-    static constexpr const TSymbolUniqueId atan_1B1B                        = TSymbolUniqueId(33);
-    static constexpr const TSymbolUniqueId atan_2B2B                        = TSymbolUniqueId(34);
-    static constexpr const TSymbolUniqueId atan_3B3B                        = TSymbolUniqueId(35);
-    static constexpr const TSymbolUniqueId atan_0B                          = TSymbolUniqueId(36);
-    static constexpr const TSymbolUniqueId atan_1B                          = TSymbolUniqueId(37);
-    static constexpr const TSymbolUniqueId atan_2B                          = TSymbolUniqueId(38);
-    static constexpr const TSymbolUniqueId atan_3B                          = TSymbolUniqueId(39);
-    static constexpr const TSymbolUniqueId sinh_0B                          = TSymbolUniqueId(40);
-    static constexpr const TSymbolUniqueId sinh_1B                          = TSymbolUniqueId(41);
-    static constexpr const TSymbolUniqueId sinh_2B                          = TSymbolUniqueId(42);
-    static constexpr const TSymbolUniqueId sinh_3B                          = TSymbolUniqueId(43);
-    static constexpr const TSymbolUniqueId cosh_0B                          = TSymbolUniqueId(44);
-    static constexpr const TSymbolUniqueId cosh_1B                          = TSymbolUniqueId(45);
-    static constexpr const TSymbolUniqueId cosh_2B                          = TSymbolUniqueId(46);
-    static constexpr const TSymbolUniqueId cosh_3B                          = TSymbolUniqueId(47);
-    static constexpr const TSymbolUniqueId tanh_0B                          = TSymbolUniqueId(48);
-    static constexpr const TSymbolUniqueId tanh_1B                          = TSymbolUniqueId(49);
-    static constexpr const TSymbolUniqueId tanh_2B                          = TSymbolUniqueId(50);
-    static constexpr const TSymbolUniqueId tanh_3B                          = TSymbolUniqueId(51);
-    static constexpr const TSymbolUniqueId asinh_0B                         = TSymbolUniqueId(52);
-    static constexpr const TSymbolUniqueId asinh_1B                         = TSymbolUniqueId(53);
-    static constexpr const TSymbolUniqueId asinh_2B                         = TSymbolUniqueId(54);
-    static constexpr const TSymbolUniqueId asinh_3B                         = TSymbolUniqueId(55);
-    static constexpr const TSymbolUniqueId acosh_0B                         = TSymbolUniqueId(56);
-    static constexpr const TSymbolUniqueId acosh_1B                         = TSymbolUniqueId(57);
-    static constexpr const TSymbolUniqueId acosh_2B                         = TSymbolUniqueId(58);
-    static constexpr const TSymbolUniqueId acosh_3B                         = TSymbolUniqueId(59);
-    static constexpr const TSymbolUniqueId atanh_0B                         = TSymbolUniqueId(60);
-    static constexpr const TSymbolUniqueId atanh_1B                         = TSymbolUniqueId(61);
-    static constexpr const TSymbolUniqueId atanh_2B                         = TSymbolUniqueId(62);
-    static constexpr const TSymbolUniqueId atanh_3B                         = TSymbolUniqueId(63);
-    static constexpr const TSymbolUniqueId pow_0B0B                         = TSymbolUniqueId(64);
-    static constexpr const TSymbolUniqueId pow_1B1B                         = TSymbolUniqueId(65);
-    static constexpr const TSymbolUniqueId pow_2B2B                         = TSymbolUniqueId(66);
-    static constexpr const TSymbolUniqueId pow_3B3B                         = TSymbolUniqueId(67);
-    static constexpr const TSymbolUniqueId exp_0B                           = TSymbolUniqueId(68);
-    static constexpr const TSymbolUniqueId exp_1B                           = TSymbolUniqueId(69);
-    static constexpr const TSymbolUniqueId exp_2B                           = TSymbolUniqueId(70);
-    static constexpr const TSymbolUniqueId exp_3B                           = TSymbolUniqueId(71);
-    static constexpr const TSymbolUniqueId log_0B                           = TSymbolUniqueId(72);
-    static constexpr const TSymbolUniqueId log_1B                           = TSymbolUniqueId(73);
-    static constexpr const TSymbolUniqueId log_2B                           = TSymbolUniqueId(74);
-    static constexpr const TSymbolUniqueId log_3B                           = TSymbolUniqueId(75);
-    static constexpr const TSymbolUniqueId exp2_0B                          = TSymbolUniqueId(76);
-    static constexpr const TSymbolUniqueId exp2_1B                          = TSymbolUniqueId(77);
-    static constexpr const TSymbolUniqueId exp2_2B                          = TSymbolUniqueId(78);
-    static constexpr const TSymbolUniqueId exp2_3B                          = TSymbolUniqueId(79);
-    static constexpr const TSymbolUniqueId log2_0B                          = TSymbolUniqueId(80);
-    static constexpr const TSymbolUniqueId log2_1B                          = TSymbolUniqueId(81);
-    static constexpr const TSymbolUniqueId log2_2B                          = TSymbolUniqueId(82);
-    static constexpr const TSymbolUniqueId log2_3B                          = TSymbolUniqueId(83);
-    static constexpr const TSymbolUniqueId sqrt_0B                          = TSymbolUniqueId(84);
-    static constexpr const TSymbolUniqueId sqrt_1B                          = TSymbolUniqueId(85);
-    static constexpr const TSymbolUniqueId sqrt_2B                          = TSymbolUniqueId(86);
-    static constexpr const TSymbolUniqueId sqrt_3B                          = TSymbolUniqueId(87);
-    static constexpr const TSymbolUniqueId inversesqrt_0B                   = TSymbolUniqueId(88);
-    static constexpr const TSymbolUniqueId inversesqrt_1B                   = TSymbolUniqueId(89);
-    static constexpr const TSymbolUniqueId inversesqrt_2B                   = TSymbolUniqueId(90);
-    static constexpr const TSymbolUniqueId inversesqrt_3B                   = TSymbolUniqueId(91);
-    static constexpr const TSymbolUniqueId abs_0B                           = TSymbolUniqueId(92);
-    static constexpr const TSymbolUniqueId abs_1B                           = TSymbolUniqueId(93);
-    static constexpr const TSymbolUniqueId abs_2B                           = TSymbolUniqueId(94);
-    static constexpr const TSymbolUniqueId abs_3B                           = TSymbolUniqueId(95);
-    static constexpr const TSymbolUniqueId abs_0C                           = TSymbolUniqueId(96);
-    static constexpr const TSymbolUniqueId pt0C                             = TSymbolUniqueId(97);
-    static constexpr const TSymbolUniqueId abs_1C                           = TSymbolUniqueId(98);
-    static constexpr const TSymbolUniqueId pt1C                             = TSymbolUniqueId(99);
-    static constexpr const TSymbolUniqueId abs_2C                           = TSymbolUniqueId(100);
-    static constexpr const TSymbolUniqueId pt2C                             = TSymbolUniqueId(101);
-    static constexpr const TSymbolUniqueId abs_3C                           = TSymbolUniqueId(102);
-    static constexpr const TSymbolUniqueId pt3C                             = TSymbolUniqueId(103);
-    static constexpr const TSymbolUniqueId sign_0B                          = TSymbolUniqueId(104);
-    static constexpr const TSymbolUniqueId sign_1B                          = TSymbolUniqueId(105);
-    static constexpr const TSymbolUniqueId sign_2B                          = TSymbolUniqueId(106);
-    static constexpr const TSymbolUniqueId sign_3B                          = TSymbolUniqueId(107);
-    static constexpr const TSymbolUniqueId sign_0C                          = TSymbolUniqueId(108);
-    static constexpr const TSymbolUniqueId sign_1C                          = TSymbolUniqueId(109);
-    static constexpr const TSymbolUniqueId sign_2C                          = TSymbolUniqueId(110);
-    static constexpr const TSymbolUniqueId sign_3C                          = TSymbolUniqueId(111);
-    static constexpr const TSymbolUniqueId floor_0B                         = TSymbolUniqueId(112);
-    static constexpr const TSymbolUniqueId floor_1B                         = TSymbolUniqueId(113);
-    static constexpr const TSymbolUniqueId floor_2B                         = TSymbolUniqueId(114);
-    static constexpr const TSymbolUniqueId floor_3B                         = TSymbolUniqueId(115);
-    static constexpr const TSymbolUniqueId trunc_0B                         = TSymbolUniqueId(116);
-    static constexpr const TSymbolUniqueId trunc_1B                         = TSymbolUniqueId(117);
-    static constexpr const TSymbolUniqueId trunc_2B                         = TSymbolUniqueId(118);
-    static constexpr const TSymbolUniqueId trunc_3B                         = TSymbolUniqueId(119);
-    static constexpr const TSymbolUniqueId round_0B                         = TSymbolUniqueId(120);
-    static constexpr const TSymbolUniqueId round_1B                         = TSymbolUniqueId(121);
-    static constexpr const TSymbolUniqueId round_2B                         = TSymbolUniqueId(122);
-    static constexpr const TSymbolUniqueId round_3B                         = TSymbolUniqueId(123);
-    static constexpr const TSymbolUniqueId roundEven_0B                     = TSymbolUniqueId(124);
-    static constexpr const TSymbolUniqueId roundEven_1B                     = TSymbolUniqueId(125);
-    static constexpr const TSymbolUniqueId roundEven_2B                     = TSymbolUniqueId(126);
-    static constexpr const TSymbolUniqueId roundEven_3B                     = TSymbolUniqueId(127);
-    static constexpr const TSymbolUniqueId ceil_0B                          = TSymbolUniqueId(128);
-    static constexpr const TSymbolUniqueId ceil_1B                          = TSymbolUniqueId(129);
-    static constexpr const TSymbolUniqueId ceil_2B                          = TSymbolUniqueId(130);
-    static constexpr const TSymbolUniqueId ceil_3B                          = TSymbolUniqueId(131);
-    static constexpr const TSymbolUniqueId fract_0B                         = TSymbolUniqueId(132);
-    static constexpr const TSymbolUniqueId fract_1B                         = TSymbolUniqueId(133);
-    static constexpr const TSymbolUniqueId fract_2B                         = TSymbolUniqueId(134);
-    static constexpr const TSymbolUniqueId fract_3B                         = TSymbolUniqueId(135);
-    static constexpr const TSymbolUniqueId mod_0B0B                         = TSymbolUniqueId(136);
-    static constexpr const TSymbolUniqueId mod_1B0B                         = TSymbolUniqueId(137);
-    static constexpr const TSymbolUniqueId mod_2B0B                         = TSymbolUniqueId(138);
-    static constexpr const TSymbolUniqueId mod_3B0B                         = TSymbolUniqueId(139);
-    static constexpr const TSymbolUniqueId mod_1B1B                         = TSymbolUniqueId(140);
-    static constexpr const TSymbolUniqueId mod_2B2B                         = TSymbolUniqueId(141);
-    static constexpr const TSymbolUniqueId mod_3B3B                         = TSymbolUniqueId(142);
-    static constexpr const TSymbolUniqueId min_0B0B                         = TSymbolUniqueId(143);
-    static constexpr const TSymbolUniqueId min_1B0B                         = TSymbolUniqueId(144);
-    static constexpr const TSymbolUniqueId min_2B0B                         = TSymbolUniqueId(145);
-    static constexpr const TSymbolUniqueId min_3B0B                         = TSymbolUniqueId(146);
-    static constexpr const TSymbolUniqueId min_1B1B                         = TSymbolUniqueId(147);
-    static constexpr const TSymbolUniqueId min_2B2B                         = TSymbolUniqueId(148);
-    static constexpr const TSymbolUniqueId min_3B3B                         = TSymbolUniqueId(149);
-    static constexpr const TSymbolUniqueId min_0C0C                         = TSymbolUniqueId(150);
-    static constexpr const TSymbolUniqueId min_1C1C                         = TSymbolUniqueId(151);
-    static constexpr const TSymbolUniqueId min_2C2C                         = TSymbolUniqueId(152);
-    static constexpr const TSymbolUniqueId min_3C3C                         = TSymbolUniqueId(153);
-    static constexpr const TSymbolUniqueId min_1C0C                         = TSymbolUniqueId(154);
-    static constexpr const TSymbolUniqueId min_2C0C                         = TSymbolUniqueId(155);
-    static constexpr const TSymbolUniqueId min_3C0C                         = TSymbolUniqueId(156);
-    static constexpr const TSymbolUniqueId min_0D0D                         = TSymbolUniqueId(157);
-    static constexpr const TSymbolUniqueId pt0D                             = TSymbolUniqueId(158);
-    static constexpr const TSymbolUniqueId min_1D1D                         = TSymbolUniqueId(159);
-    static constexpr const TSymbolUniqueId pt1D                             = TSymbolUniqueId(160);
-    static constexpr const TSymbolUniqueId min_2D2D                         = TSymbolUniqueId(161);
-    static constexpr const TSymbolUniqueId pt2D                             = TSymbolUniqueId(162);
-    static constexpr const TSymbolUniqueId min_3D3D                         = TSymbolUniqueId(163);
-    static constexpr const TSymbolUniqueId pt3D                             = TSymbolUniqueId(164);
-    static constexpr const TSymbolUniqueId min_1D0D                         = TSymbolUniqueId(165);
-    static constexpr const TSymbolUniqueId min_2D0D                         = TSymbolUniqueId(166);
-    static constexpr const TSymbolUniqueId min_3D0D                         = TSymbolUniqueId(167);
-    static constexpr const TSymbolUniqueId max_0B0B                         = TSymbolUniqueId(168);
-    static constexpr const TSymbolUniqueId max_1B0B                         = TSymbolUniqueId(169);
-    static constexpr const TSymbolUniqueId max_2B0B                         = TSymbolUniqueId(170);
-    static constexpr const TSymbolUniqueId max_3B0B                         = TSymbolUniqueId(171);
-    static constexpr const TSymbolUniqueId max_1B1B                         = TSymbolUniqueId(172);
-    static constexpr const TSymbolUniqueId max_2B2B                         = TSymbolUniqueId(173);
-    static constexpr const TSymbolUniqueId max_3B3B                         = TSymbolUniqueId(174);
-    static constexpr const TSymbolUniqueId max_0C0C                         = TSymbolUniqueId(175);
-    static constexpr const TSymbolUniqueId max_1C1C                         = TSymbolUniqueId(176);
-    static constexpr const TSymbolUniqueId max_2C2C                         = TSymbolUniqueId(177);
-    static constexpr const TSymbolUniqueId max_3C3C                         = TSymbolUniqueId(178);
-    static constexpr const TSymbolUniqueId max_1C0C                         = TSymbolUniqueId(179);
-    static constexpr const TSymbolUniqueId max_2C0C                         = TSymbolUniqueId(180);
-    static constexpr const TSymbolUniqueId max_3C0C                         = TSymbolUniqueId(181);
-    static constexpr const TSymbolUniqueId max_0D0D                         = TSymbolUniqueId(182);
-    static constexpr const TSymbolUniqueId max_1D1D                         = TSymbolUniqueId(183);
-    static constexpr const TSymbolUniqueId max_2D2D                         = TSymbolUniqueId(184);
-    static constexpr const TSymbolUniqueId max_3D3D                         = TSymbolUniqueId(185);
-    static constexpr const TSymbolUniqueId max_1D0D                         = TSymbolUniqueId(186);
-    static constexpr const TSymbolUniqueId max_2D0D                         = TSymbolUniqueId(187);
-    static constexpr const TSymbolUniqueId max_3D0D                         = TSymbolUniqueId(188);
-    static constexpr const TSymbolUniqueId clamp_0B0B0B                     = TSymbolUniqueId(189);
-    static constexpr const TSymbolUniqueId clamp_1B0B0B                     = TSymbolUniqueId(190);
-    static constexpr const TSymbolUniqueId clamp_2B0B0B                     = TSymbolUniqueId(191);
-    static constexpr const TSymbolUniqueId clamp_3B0B0B                     = TSymbolUniqueId(192);
-    static constexpr const TSymbolUniqueId clamp_1B1B1B                     = TSymbolUniqueId(193);
-    static constexpr const TSymbolUniqueId clamp_2B2B2B                     = TSymbolUniqueId(194);
-    static constexpr const TSymbolUniqueId clamp_3B3B3B                     = TSymbolUniqueId(195);
-    static constexpr const TSymbolUniqueId clamp_0C0C0C                     = TSymbolUniqueId(196);
-    static constexpr const TSymbolUniqueId clamp_1C0C0C                     = TSymbolUniqueId(197);
-    static constexpr const TSymbolUniqueId clamp_2C0C0C                     = TSymbolUniqueId(198);
-    static constexpr const TSymbolUniqueId clamp_3C0C0C                     = TSymbolUniqueId(199);
-    static constexpr const TSymbolUniqueId clamp_1C1C1C                     = TSymbolUniqueId(200);
-    static constexpr const TSymbolUniqueId clamp_2C2C2C                     = TSymbolUniqueId(201);
-    static constexpr const TSymbolUniqueId clamp_3C3C3C                     = TSymbolUniqueId(202);
-    static constexpr const TSymbolUniqueId clamp_0D0D0D                     = TSymbolUniqueId(203);
-    static constexpr const TSymbolUniqueId clamp_1D0D0D                     = TSymbolUniqueId(204);
-    static constexpr const TSymbolUniqueId clamp_2D0D0D                     = TSymbolUniqueId(205);
-    static constexpr const TSymbolUniqueId clamp_3D0D0D                     = TSymbolUniqueId(206);
-    static constexpr const TSymbolUniqueId clamp_1D1D1D                     = TSymbolUniqueId(207);
-    static constexpr const TSymbolUniqueId clamp_2D2D2D                     = TSymbolUniqueId(208);
-    static constexpr const TSymbolUniqueId clamp_3D3D3D                     = TSymbolUniqueId(209);
-    static constexpr const TSymbolUniqueId mix_0B0B0B                       = TSymbolUniqueId(210);
-    static constexpr const TSymbolUniqueId mix_1B1B0B                       = TSymbolUniqueId(211);
-    static constexpr const TSymbolUniqueId mix_2B2B0B                       = TSymbolUniqueId(212);
-    static constexpr const TSymbolUniqueId mix_3B3B0B                       = TSymbolUniqueId(213);
-    static constexpr const TSymbolUniqueId mix_1B1B1B                       = TSymbolUniqueId(214);
-    static constexpr const TSymbolUniqueId mix_2B2B2B                       = TSymbolUniqueId(215);
-    static constexpr const TSymbolUniqueId mix_3B3B3B                       = TSymbolUniqueId(216);
-    static constexpr const TSymbolUniqueId mix_0B0B0E                       = TSymbolUniqueId(217);
-    static constexpr const TSymbolUniqueId pt0E                             = TSymbolUniqueId(218);
-    static constexpr const TSymbolUniqueId mix_1B1B1E                       = TSymbolUniqueId(219);
-    static constexpr const TSymbolUniqueId pt1E                             = TSymbolUniqueId(220);
-    static constexpr const TSymbolUniqueId mix_2B2B2E                       = TSymbolUniqueId(221);
-    static constexpr const TSymbolUniqueId pt2E                             = TSymbolUniqueId(222);
-    static constexpr const TSymbolUniqueId mix_3B3B3E                       = TSymbolUniqueId(223);
-    static constexpr const TSymbolUniqueId pt3E                             = TSymbolUniqueId(224);
-    static constexpr const TSymbolUniqueId step_0B0B                        = TSymbolUniqueId(225);
-    static constexpr const TSymbolUniqueId step_1B1B                        = TSymbolUniqueId(226);
-    static constexpr const TSymbolUniqueId step_2B2B                        = TSymbolUniqueId(227);
-    static constexpr const TSymbolUniqueId step_3B3B                        = TSymbolUniqueId(228);
-    static constexpr const TSymbolUniqueId step_0B1B                        = TSymbolUniqueId(229);
-    static constexpr const TSymbolUniqueId step_0B2B                        = TSymbolUniqueId(230);
-    static constexpr const TSymbolUniqueId step_0B3B                        = TSymbolUniqueId(231);
-    static constexpr const TSymbolUniqueId smoothstep_0B0B0B                = TSymbolUniqueId(232);
-    static constexpr const TSymbolUniqueId smoothstep_1B1B1B                = TSymbolUniqueId(233);
-    static constexpr const TSymbolUniqueId smoothstep_2B2B2B                = TSymbolUniqueId(234);
-    static constexpr const TSymbolUniqueId smoothstep_3B3B3B                = TSymbolUniqueId(235);
-    static constexpr const TSymbolUniqueId smoothstep_0B0B1B                = TSymbolUniqueId(236);
-    static constexpr const TSymbolUniqueId smoothstep_0B0B2B                = TSymbolUniqueId(237);
-    static constexpr const TSymbolUniqueId smoothstep_0B0B3B                = TSymbolUniqueId(238);
-    static constexpr const TSymbolUniqueId modf_0B0B                        = TSymbolUniqueId(239);
-    static constexpr const TSymbolUniqueId pt_o_0B                          = TSymbolUniqueId(240);
-    static constexpr const TSymbolUniqueId modf_1B1B                        = TSymbolUniqueId(241);
-    static constexpr const TSymbolUniqueId pt_o_1B                          = TSymbolUniqueId(242);
-    static constexpr const TSymbolUniqueId modf_2B2B                        = TSymbolUniqueId(243);
-    static constexpr const TSymbolUniqueId pt_o_2B                          = TSymbolUniqueId(244);
-    static constexpr const TSymbolUniqueId modf_3B3B                        = TSymbolUniqueId(245);
-    static constexpr const TSymbolUniqueId pt_o_3B                          = TSymbolUniqueId(246);
-    static constexpr const TSymbolUniqueId isnan_0B                         = TSymbolUniqueId(247);
-    static constexpr const TSymbolUniqueId isnan_1B                         = TSymbolUniqueId(248);
-    static constexpr const TSymbolUniqueId isnan_2B                         = TSymbolUniqueId(249);
-    static constexpr const TSymbolUniqueId isnan_3B                         = TSymbolUniqueId(250);
-    static constexpr const TSymbolUniqueId isinf_0B                         = TSymbolUniqueId(251);
-    static constexpr const TSymbolUniqueId isinf_1B                         = TSymbolUniqueId(252);
-    static constexpr const TSymbolUniqueId isinf_2B                         = TSymbolUniqueId(253);
-    static constexpr const TSymbolUniqueId isinf_3B                         = TSymbolUniqueId(254);
-    static constexpr const TSymbolUniqueId floatBitsToInt_0B                = TSymbolUniqueId(255);
-    static constexpr const TSymbolUniqueId floatBitsToInt_1B                = TSymbolUniqueId(256);
-    static constexpr const TSymbolUniqueId floatBitsToInt_2B                = TSymbolUniqueId(257);
-    static constexpr const TSymbolUniqueId floatBitsToInt_3B                = TSymbolUniqueId(258);
-    static constexpr const TSymbolUniqueId floatBitsToUint_0B               = TSymbolUniqueId(259);
-    static constexpr const TSymbolUniqueId floatBitsToUint_1B               = TSymbolUniqueId(260);
-    static constexpr const TSymbolUniqueId floatBitsToUint_2B               = TSymbolUniqueId(261);
-    static constexpr const TSymbolUniqueId floatBitsToUint_3B               = TSymbolUniqueId(262);
-    static constexpr const TSymbolUniqueId intBitsToFloat_0C                = TSymbolUniqueId(263);
-    static constexpr const TSymbolUniqueId intBitsToFloat_1C                = TSymbolUniqueId(264);
-    static constexpr const TSymbolUniqueId intBitsToFloat_2C                = TSymbolUniqueId(265);
-    static constexpr const TSymbolUniqueId intBitsToFloat_3C                = TSymbolUniqueId(266);
-    static constexpr const TSymbolUniqueId uintBitsToFloat_0D               = TSymbolUniqueId(267);
-    static constexpr const TSymbolUniqueId uintBitsToFloat_1D               = TSymbolUniqueId(268);
-    static constexpr const TSymbolUniqueId uintBitsToFloat_2D               = TSymbolUniqueId(269);
-    static constexpr const TSymbolUniqueId uintBitsToFloat_3D               = TSymbolUniqueId(270);
-    static constexpr const TSymbolUniqueId frexp_0B0C                       = TSymbolUniqueId(271);
-    static constexpr const TSymbolUniqueId pt_o_0C                          = TSymbolUniqueId(272);
-    static constexpr const TSymbolUniqueId frexp_1B1C                       = TSymbolUniqueId(273);
-    static constexpr const TSymbolUniqueId pt_o_1C                          = TSymbolUniqueId(274);
-    static constexpr const TSymbolUniqueId frexp_2B2C                       = TSymbolUniqueId(275);
-    static constexpr const TSymbolUniqueId pt_o_2C                          = TSymbolUniqueId(276);
-    static constexpr const TSymbolUniqueId frexp_3B3C                       = TSymbolUniqueId(277);
-    static constexpr const TSymbolUniqueId pt_o_3C                          = TSymbolUniqueId(278);
-    static constexpr const TSymbolUniqueId ldexp_0B0C                       = TSymbolUniqueId(279);
-    static constexpr const TSymbolUniqueId ldexp_1B1C                       = TSymbolUniqueId(280);
-    static constexpr const TSymbolUniqueId ldexp_2B2C                       = TSymbolUniqueId(281);
-    static constexpr const TSymbolUniqueId ldexp_3B3C                       = TSymbolUniqueId(282);
-    static constexpr const TSymbolUniqueId packSnorm2x16_1B                 = TSymbolUniqueId(283);
-    static constexpr const TSymbolUniqueId packUnorm2x16_1B                 = TSymbolUniqueId(284);
-    static constexpr const TSymbolUniqueId packHalf2x16_1B                  = TSymbolUniqueId(285);
-    static constexpr const TSymbolUniqueId unpackSnorm2x16_0D               = TSymbolUniqueId(286);
-    static constexpr const TSymbolUniqueId unpackUnorm2x16_0D               = TSymbolUniqueId(287);
-    static constexpr const TSymbolUniqueId unpackHalf2x16_0D                = TSymbolUniqueId(288);
-    static constexpr const TSymbolUniqueId packUnorm4x8_3B                  = TSymbolUniqueId(289);
-    static constexpr const TSymbolUniqueId packSnorm4x8_3B                  = TSymbolUniqueId(290);
-    static constexpr const TSymbolUniqueId unpackUnorm4x8_0D                = TSymbolUniqueId(291);
-    static constexpr const TSymbolUniqueId unpackSnorm4x8_0D                = TSymbolUniqueId(292);
-    static constexpr const TSymbolUniqueId length_0B                        = TSymbolUniqueId(293);
-    static constexpr const TSymbolUniqueId length_1B                        = TSymbolUniqueId(294);
-    static constexpr const TSymbolUniqueId length_2B                        = TSymbolUniqueId(295);
-    static constexpr const TSymbolUniqueId length_3B                        = TSymbolUniqueId(296);
-    static constexpr const TSymbolUniqueId distance_0B0B                    = TSymbolUniqueId(297);
-    static constexpr const TSymbolUniqueId distance_1B1B                    = TSymbolUniqueId(298);
-    static constexpr const TSymbolUniqueId distance_2B2B                    = TSymbolUniqueId(299);
-    static constexpr const TSymbolUniqueId distance_3B3B                    = TSymbolUniqueId(300);
-    static constexpr const TSymbolUniqueId dot_0B0B                         = TSymbolUniqueId(301);
-    static constexpr const TSymbolUniqueId dot_1B1B                         = TSymbolUniqueId(302);
-    static constexpr const TSymbolUniqueId dot_2B2B                         = TSymbolUniqueId(303);
-    static constexpr const TSymbolUniqueId dot_3B3B                         = TSymbolUniqueId(304);
-    static constexpr const TSymbolUniqueId cross_2B2B                       = TSymbolUniqueId(305);
-    static constexpr const TSymbolUniqueId normalize_0B                     = TSymbolUniqueId(306);
-    static constexpr const TSymbolUniqueId normalize_1B                     = TSymbolUniqueId(307);
-    static constexpr const TSymbolUniqueId normalize_2B                     = TSymbolUniqueId(308);
-    static constexpr const TSymbolUniqueId normalize_3B                     = TSymbolUniqueId(309);
-    static constexpr const TSymbolUniqueId faceforward_0B0B0B               = TSymbolUniqueId(310);
-    static constexpr const TSymbolUniqueId faceforward_1B1B1B               = TSymbolUniqueId(311);
-    static constexpr const TSymbolUniqueId faceforward_2B2B2B               = TSymbolUniqueId(312);
-    static constexpr const TSymbolUniqueId faceforward_3B3B3B               = TSymbolUniqueId(313);
-    static constexpr const TSymbolUniqueId reflect_0B0B                     = TSymbolUniqueId(314);
-    static constexpr const TSymbolUniqueId reflect_1B1B                     = TSymbolUniqueId(315);
-    static constexpr const TSymbolUniqueId reflect_2B2B                     = TSymbolUniqueId(316);
-    static constexpr const TSymbolUniqueId reflect_3B3B                     = TSymbolUniqueId(317);
-    static constexpr const TSymbolUniqueId refract_0B0B0B                   = TSymbolUniqueId(318);
-    static constexpr const TSymbolUniqueId refract_1B1B0B                   = TSymbolUniqueId(319);
-    static constexpr const TSymbolUniqueId refract_2B2B0B                   = TSymbolUniqueId(320);
-    static constexpr const TSymbolUniqueId refract_3B3B0B                   = TSymbolUniqueId(321);
-    static constexpr const TSymbolUniqueId matrixCompMult_5B5B              = TSymbolUniqueId(322);
-    static constexpr const TSymbolUniqueId pt5B                             = TSymbolUniqueId(323);
-    static constexpr const TSymbolUniqueId matrixCompMult_ABAB              = TSymbolUniqueId(324);
-    static constexpr const TSymbolUniqueId ptAB                             = TSymbolUniqueId(325);
-    static constexpr const TSymbolUniqueId matrixCompMult_FBFB              = TSymbolUniqueId(326);
-    static constexpr const TSymbolUniqueId ptFB                             = TSymbolUniqueId(327);
-    static constexpr const TSymbolUniqueId matrixCompMult_9B9B              = TSymbolUniqueId(328);
-    static constexpr const TSymbolUniqueId pt9B                             = TSymbolUniqueId(329);
-    static constexpr const TSymbolUniqueId matrixCompMult_6B6B              = TSymbolUniqueId(330);
-    static constexpr const TSymbolUniqueId pt6B                             = TSymbolUniqueId(331);
-    static constexpr const TSymbolUniqueId matrixCompMult_DBDB              = TSymbolUniqueId(332);
-    static constexpr const TSymbolUniqueId ptDB                             = TSymbolUniqueId(333);
-    static constexpr const TSymbolUniqueId matrixCompMult_7B7B              = TSymbolUniqueId(334);
-    static constexpr const TSymbolUniqueId pt7B                             = TSymbolUniqueId(335);
-    static constexpr const TSymbolUniqueId matrixCompMult_EBEB              = TSymbolUniqueId(336);
-    static constexpr const TSymbolUniqueId ptEB                             = TSymbolUniqueId(337);
-    static constexpr const TSymbolUniqueId matrixCompMult_BBBB              = TSymbolUniqueId(338);
-    static constexpr const TSymbolUniqueId ptBB                             = TSymbolUniqueId(339);
-    static constexpr const TSymbolUniqueId outerProduct_1B1B                = TSymbolUniqueId(340);
-    static constexpr const TSymbolUniqueId outerProduct_2B2B                = TSymbolUniqueId(341);
-    static constexpr const TSymbolUniqueId outerProduct_3B3B                = TSymbolUniqueId(342);
-    static constexpr const TSymbolUniqueId outerProduct_2B1B                = TSymbolUniqueId(343);
-    static constexpr const TSymbolUniqueId outerProduct_1B2B                = TSymbolUniqueId(344);
-    static constexpr const TSymbolUniqueId outerProduct_3B1B                = TSymbolUniqueId(345);
-    static constexpr const TSymbolUniqueId outerProduct_1B3B                = TSymbolUniqueId(346);
-    static constexpr const TSymbolUniqueId outerProduct_3B2B                = TSymbolUniqueId(347);
-    static constexpr const TSymbolUniqueId outerProduct_2B3B                = TSymbolUniqueId(348);
-    static constexpr const TSymbolUniqueId transpose_5B                     = TSymbolUniqueId(349);
-    static constexpr const TSymbolUniqueId transpose_AB                     = TSymbolUniqueId(350);
-    static constexpr const TSymbolUniqueId transpose_FB                     = TSymbolUniqueId(351);
-    static constexpr const TSymbolUniqueId transpose_6B                     = TSymbolUniqueId(352);
-    static constexpr const TSymbolUniqueId transpose_9B                     = TSymbolUniqueId(353);
-    static constexpr const TSymbolUniqueId transpose_7B                     = TSymbolUniqueId(354);
-    static constexpr const TSymbolUniqueId transpose_DB                     = TSymbolUniqueId(355);
-    static constexpr const TSymbolUniqueId transpose_BB                     = TSymbolUniqueId(356);
-    static constexpr const TSymbolUniqueId transpose_EB                     = TSymbolUniqueId(357);
-    static constexpr const TSymbolUniqueId determinant_5B                   = TSymbolUniqueId(358);
-    static constexpr const TSymbolUniqueId determinant_AB                   = TSymbolUniqueId(359);
-    static constexpr const TSymbolUniqueId determinant_FB                   = TSymbolUniqueId(360);
-    static constexpr const TSymbolUniqueId inverse_5B                       = TSymbolUniqueId(361);
-    static constexpr const TSymbolUniqueId inverse_AB                       = TSymbolUniqueId(362);
-    static constexpr const TSymbolUniqueId inverse_FB                       = TSymbolUniqueId(363);
-    static constexpr const TSymbolUniqueId lessThan_1B1B                    = TSymbolUniqueId(364);
-    static constexpr const TSymbolUniqueId lessThan_2B2B                    = TSymbolUniqueId(365);
-    static constexpr const TSymbolUniqueId lessThan_3B3B                    = TSymbolUniqueId(366);
-    static constexpr const TSymbolUniqueId lessThan_1C1C                    = TSymbolUniqueId(367);
-    static constexpr const TSymbolUniqueId lessThan_2C2C                    = TSymbolUniqueId(368);
-    static constexpr const TSymbolUniqueId lessThan_3C3C                    = TSymbolUniqueId(369);
-    static constexpr const TSymbolUniqueId lessThan_1D1D                    = TSymbolUniqueId(370);
-    static constexpr const TSymbolUniqueId lessThan_2D2D                    = TSymbolUniqueId(371);
-    static constexpr const TSymbolUniqueId lessThan_3D3D                    = TSymbolUniqueId(372);
-    static constexpr const TSymbolUniqueId lessThanEqual_1B1B               = TSymbolUniqueId(373);
-    static constexpr const TSymbolUniqueId lessThanEqual_2B2B               = TSymbolUniqueId(374);
-    static constexpr const TSymbolUniqueId lessThanEqual_3B3B               = TSymbolUniqueId(375);
-    static constexpr const TSymbolUniqueId lessThanEqual_1C1C               = TSymbolUniqueId(376);
-    static constexpr const TSymbolUniqueId lessThanEqual_2C2C               = TSymbolUniqueId(377);
-    static constexpr const TSymbolUniqueId lessThanEqual_3C3C               = TSymbolUniqueId(378);
-    static constexpr const TSymbolUniqueId lessThanEqual_1D1D               = TSymbolUniqueId(379);
-    static constexpr const TSymbolUniqueId lessThanEqual_2D2D               = TSymbolUniqueId(380);
-    static constexpr const TSymbolUniqueId lessThanEqual_3D3D               = TSymbolUniqueId(381);
-    static constexpr const TSymbolUniqueId greaterThan_1B1B                 = TSymbolUniqueId(382);
-    static constexpr const TSymbolUniqueId greaterThan_2B2B                 = TSymbolUniqueId(383);
-    static constexpr const TSymbolUniqueId greaterThan_3B3B                 = TSymbolUniqueId(384);
-    static constexpr const TSymbolUniqueId greaterThan_1C1C                 = TSymbolUniqueId(385);
-    static constexpr const TSymbolUniqueId greaterThan_2C2C                 = TSymbolUniqueId(386);
-    static constexpr const TSymbolUniqueId greaterThan_3C3C                 = TSymbolUniqueId(387);
-    static constexpr const TSymbolUniqueId greaterThan_1D1D                 = TSymbolUniqueId(388);
-    static constexpr const TSymbolUniqueId greaterThan_2D2D                 = TSymbolUniqueId(389);
-    static constexpr const TSymbolUniqueId greaterThan_3D3D                 = TSymbolUniqueId(390);
-    static constexpr const TSymbolUniqueId greaterThanEqual_1B1B            = TSymbolUniqueId(391);
-    static constexpr const TSymbolUniqueId greaterThanEqual_2B2B            = TSymbolUniqueId(392);
-    static constexpr const TSymbolUniqueId greaterThanEqual_3B3B            = TSymbolUniqueId(393);
-    static constexpr const TSymbolUniqueId greaterThanEqual_1C1C            = TSymbolUniqueId(394);
-    static constexpr const TSymbolUniqueId greaterThanEqual_2C2C            = TSymbolUniqueId(395);
-    static constexpr const TSymbolUniqueId greaterThanEqual_3C3C            = TSymbolUniqueId(396);
-    static constexpr const TSymbolUniqueId greaterThanEqual_1D1D            = TSymbolUniqueId(397);
-    static constexpr const TSymbolUniqueId greaterThanEqual_2D2D            = TSymbolUniqueId(398);
-    static constexpr const TSymbolUniqueId greaterThanEqual_3D3D            = TSymbolUniqueId(399);
-    static constexpr const TSymbolUniqueId equal_1B1B                       = TSymbolUniqueId(400);
-    static constexpr const TSymbolUniqueId equal_2B2B                       = TSymbolUniqueId(401);
-    static constexpr const TSymbolUniqueId equal_3B3B                       = TSymbolUniqueId(402);
-    static constexpr const TSymbolUniqueId equal_1C1C                       = TSymbolUniqueId(403);
-    static constexpr const TSymbolUniqueId equal_2C2C                       = TSymbolUniqueId(404);
-    static constexpr const TSymbolUniqueId equal_3C3C                       = TSymbolUniqueId(405);
-    static constexpr const TSymbolUniqueId equal_1D1D                       = TSymbolUniqueId(406);
-    static constexpr const TSymbolUniqueId equal_2D2D                       = TSymbolUniqueId(407);
-    static constexpr const TSymbolUniqueId equal_3D3D                       = TSymbolUniqueId(408);
-    static constexpr const TSymbolUniqueId equal_1E1E                       = TSymbolUniqueId(409);
-    static constexpr const TSymbolUniqueId equal_2E2E                       = TSymbolUniqueId(410);
-    static constexpr const TSymbolUniqueId equal_3E3E                       = TSymbolUniqueId(411);
-    static constexpr const TSymbolUniqueId notEqual_1B1B                    = TSymbolUniqueId(412);
-    static constexpr const TSymbolUniqueId notEqual_2B2B                    = TSymbolUniqueId(413);
-    static constexpr const TSymbolUniqueId notEqual_3B3B                    = TSymbolUniqueId(414);
-    static constexpr const TSymbolUniqueId notEqual_1C1C                    = TSymbolUniqueId(415);
-    static constexpr const TSymbolUniqueId notEqual_2C2C                    = TSymbolUniqueId(416);
-    static constexpr const TSymbolUniqueId notEqual_3C3C                    = TSymbolUniqueId(417);
-    static constexpr const TSymbolUniqueId notEqual_1D1D                    = TSymbolUniqueId(418);
-    static constexpr const TSymbolUniqueId notEqual_2D2D                    = TSymbolUniqueId(419);
-    static constexpr const TSymbolUniqueId notEqual_3D3D                    = TSymbolUniqueId(420);
-    static constexpr const TSymbolUniqueId notEqual_1E1E                    = TSymbolUniqueId(421);
-    static constexpr const TSymbolUniqueId notEqual_2E2E                    = TSymbolUniqueId(422);
-    static constexpr const TSymbolUniqueId notEqual_3E3E                    = TSymbolUniqueId(423);
-    static constexpr const TSymbolUniqueId any_1E                           = TSymbolUniqueId(424);
-    static constexpr const TSymbolUniqueId any_2E                           = TSymbolUniqueId(425);
-    static constexpr const TSymbolUniqueId any_3E                           = TSymbolUniqueId(426);
-    static constexpr const TSymbolUniqueId all_1E                           = TSymbolUniqueId(427);
-    static constexpr const TSymbolUniqueId all_2E                           = TSymbolUniqueId(428);
-    static constexpr const TSymbolUniqueId all_3E                           = TSymbolUniqueId(429);
-    static constexpr const TSymbolUniqueId notFunc_1E                       = TSymbolUniqueId(430);
-    static constexpr const TSymbolUniqueId notFunc_2E                       = TSymbolUniqueId(431);
-    static constexpr const TSymbolUniqueId notFunc_3E                       = TSymbolUniqueId(432);
-    static constexpr const TSymbolUniqueId bitfieldExtract_0C0C0C           = TSymbolUniqueId(433);
-    static constexpr const TSymbolUniqueId bitfieldExtract_1C0C0C           = TSymbolUniqueId(434);
-    static constexpr const TSymbolUniqueId bitfieldExtract_2C0C0C           = TSymbolUniqueId(435);
-    static constexpr const TSymbolUniqueId bitfieldExtract_3C0C0C           = TSymbolUniqueId(436);
-    static constexpr const TSymbolUniqueId bitfieldExtract_0D0C0C           = TSymbolUniqueId(437);
-    static constexpr const TSymbolUniqueId bitfieldExtract_1D0C0C           = TSymbolUniqueId(438);
-    static constexpr const TSymbolUniqueId bitfieldExtract_2D0C0C           = TSymbolUniqueId(439);
-    static constexpr const TSymbolUniqueId bitfieldExtract_3D0C0C           = TSymbolUniqueId(440);
-    static constexpr const TSymbolUniqueId bitfieldInsert_0C0C0C0C          = TSymbolUniqueId(441);
-    static constexpr const TSymbolUniqueId bitfieldInsert_1C1C0C0C          = TSymbolUniqueId(442);
-    static constexpr const TSymbolUniqueId bitfieldInsert_2C2C0C0C          = TSymbolUniqueId(443);
-    static constexpr const TSymbolUniqueId bitfieldInsert_3C3C0C0C          = TSymbolUniqueId(444);
-    static constexpr const TSymbolUniqueId bitfieldInsert_0D0D0C0C          = TSymbolUniqueId(445);
-    static constexpr const TSymbolUniqueId bitfieldInsert_1D1D0C0C          = TSymbolUniqueId(446);
-    static constexpr const TSymbolUniqueId bitfieldInsert_2D2D0C0C          = TSymbolUniqueId(447);
-    static constexpr const TSymbolUniqueId bitfieldInsert_3D3D0C0C          = TSymbolUniqueId(448);
-    static constexpr const TSymbolUniqueId bitfieldReverse_0C               = TSymbolUniqueId(449);
-    static constexpr const TSymbolUniqueId bitfieldReverse_1C               = TSymbolUniqueId(450);
-    static constexpr const TSymbolUniqueId bitfieldReverse_2C               = TSymbolUniqueId(451);
-    static constexpr const TSymbolUniqueId bitfieldReverse_3C               = TSymbolUniqueId(452);
-    static constexpr const TSymbolUniqueId bitfieldReverse_0D               = TSymbolUniqueId(453);
-    static constexpr const TSymbolUniqueId bitfieldReverse_1D               = TSymbolUniqueId(454);
-    static constexpr const TSymbolUniqueId bitfieldReverse_2D               = TSymbolUniqueId(455);
-    static constexpr const TSymbolUniqueId bitfieldReverse_3D               = TSymbolUniqueId(456);
-    static constexpr const TSymbolUniqueId bitCount_0C                      = TSymbolUniqueId(457);
-    static constexpr const TSymbolUniqueId bitCount_1C                      = TSymbolUniqueId(458);
-    static constexpr const TSymbolUniqueId bitCount_2C                      = TSymbolUniqueId(459);
-    static constexpr const TSymbolUniqueId bitCount_3C                      = TSymbolUniqueId(460);
-    static constexpr const TSymbolUniqueId bitCount_0D                      = TSymbolUniqueId(461);
-    static constexpr const TSymbolUniqueId bitCount_1D                      = TSymbolUniqueId(462);
-    static constexpr const TSymbolUniqueId bitCount_2D                      = TSymbolUniqueId(463);
-    static constexpr const TSymbolUniqueId bitCount_3D                      = TSymbolUniqueId(464);
-    static constexpr const TSymbolUniqueId findLSB_0C                       = TSymbolUniqueId(465);
-    static constexpr const TSymbolUniqueId findLSB_1C                       = TSymbolUniqueId(466);
-    static constexpr const TSymbolUniqueId findLSB_2C                       = TSymbolUniqueId(467);
-    static constexpr const TSymbolUniqueId findLSB_3C                       = TSymbolUniqueId(468);
-    static constexpr const TSymbolUniqueId findLSB_0D                       = TSymbolUniqueId(469);
-    static constexpr const TSymbolUniqueId findLSB_1D                       = TSymbolUniqueId(470);
-    static constexpr const TSymbolUniqueId findLSB_2D                       = TSymbolUniqueId(471);
-    static constexpr const TSymbolUniqueId findLSB_3D                       = TSymbolUniqueId(472);
-    static constexpr const TSymbolUniqueId findMSB_0C                       = TSymbolUniqueId(473);
-    static constexpr const TSymbolUniqueId findMSB_1C                       = TSymbolUniqueId(474);
-    static constexpr const TSymbolUniqueId findMSB_2C                       = TSymbolUniqueId(475);
-    static constexpr const TSymbolUniqueId findMSB_3C                       = TSymbolUniqueId(476);
-    static constexpr const TSymbolUniqueId findMSB_0D                       = TSymbolUniqueId(477);
-    static constexpr const TSymbolUniqueId findMSB_1D                       = TSymbolUniqueId(478);
-    static constexpr const TSymbolUniqueId findMSB_2D                       = TSymbolUniqueId(479);
-    static constexpr const TSymbolUniqueId findMSB_3D                       = TSymbolUniqueId(480);
-    static constexpr const TSymbolUniqueId uaddCarry_0D0D0D                 = TSymbolUniqueId(481);
-    static constexpr const TSymbolUniqueId pt_o_0D                          = TSymbolUniqueId(482);
-    static constexpr const TSymbolUniqueId uaddCarry_1D1D1D                 = TSymbolUniqueId(483);
-    static constexpr const TSymbolUniqueId pt_o_1D                          = TSymbolUniqueId(484);
-    static constexpr const TSymbolUniqueId uaddCarry_2D2D2D                 = TSymbolUniqueId(485);
-    static constexpr const TSymbolUniqueId pt_o_2D                          = TSymbolUniqueId(486);
-    static constexpr const TSymbolUniqueId uaddCarry_3D3D3D                 = TSymbolUniqueId(487);
-    static constexpr const TSymbolUniqueId pt_o_3D                          = TSymbolUniqueId(488);
-    static constexpr const TSymbolUniqueId usubBorrow_0D0D0D                = TSymbolUniqueId(489);
-    static constexpr const TSymbolUniqueId usubBorrow_1D1D1D                = TSymbolUniqueId(490);
-    static constexpr const TSymbolUniqueId usubBorrow_2D2D2D                = TSymbolUniqueId(491);
-    static constexpr const TSymbolUniqueId usubBorrow_3D3D3D                = TSymbolUniqueId(492);
-    static constexpr const TSymbolUniqueId umulExtended_0D0D0D0D            = TSymbolUniqueId(493);
-    static constexpr const TSymbolUniqueId umulExtended_1D1D1D1D            = TSymbolUniqueId(494);
-    static constexpr const TSymbolUniqueId umulExtended_2D2D2D2D            = TSymbolUniqueId(495);
-    static constexpr const TSymbolUniqueId umulExtended_3D3D3D3D            = TSymbolUniqueId(496);
-    static constexpr const TSymbolUniqueId imulExtended_0C0C0C0C            = TSymbolUniqueId(497);
-    static constexpr const TSymbolUniqueId imulExtended_1C1C1C1C            = TSymbolUniqueId(498);
-    static constexpr const TSymbolUniqueId imulExtended_2C2C2C2C            = TSymbolUniqueId(499);
-    static constexpr const TSymbolUniqueId imulExtended_3C3C3C3C            = TSymbolUniqueId(500);
-    static constexpr const TSymbolUniqueId texture2D_0H1B                   = TSymbolUniqueId(501);
-    static constexpr const TSymbolUniqueId pt0H                             = TSymbolUniqueId(502);
-    static constexpr const TSymbolUniqueId texture2DProj_0H2B               = TSymbolUniqueId(503);
-    static constexpr const TSymbolUniqueId texture2DProj_0H3B               = TSymbolUniqueId(504);
-    static constexpr const TSymbolUniqueId textureCube_0J2B                 = TSymbolUniqueId(505);
-    static constexpr const TSymbolUniqueId pt0J                             = TSymbolUniqueId(506);
-    static constexpr const TSymbolUniqueId texture2D_0L1B                   = TSymbolUniqueId(507);
-    static constexpr const TSymbolUniqueId pt0L                             = TSymbolUniqueId(508);
-    static constexpr const TSymbolUniqueId texture2DProj_0L2B               = TSymbolUniqueId(509);
-    static constexpr const TSymbolUniqueId texture2DProj_0L3B               = TSymbolUniqueId(510);
-    static constexpr const TSymbolUniqueId texture2DRect_0N1B               = TSymbolUniqueId(511);
-    static constexpr const TSymbolUniqueId pt0N                             = TSymbolUniqueId(512);
-    static constexpr const TSymbolUniqueId texture2DRectProj_0N2B           = TSymbolUniqueId(513);
-    static constexpr const TSymbolUniqueId texture2DRectProj_0N3B           = TSymbolUniqueId(514);
-    static constexpr const TSymbolUniqueId texture_0N1B                     = TSymbolUniqueId(515);
-    static constexpr const TSymbolUniqueId textureProj_0N2B                 = TSymbolUniqueId(516);
-    static constexpr const TSymbolUniqueId textureProj_0N3B                 = TSymbolUniqueId(517);
-    static constexpr const TSymbolUniqueId texture2DGradEXT_0H1B1B1B        = TSymbolUniqueId(518);
-    static constexpr const TSymbolUniqueId texture2DProjGradEXT_0H2B1B1B    = TSymbolUniqueId(519);
-    static constexpr const TSymbolUniqueId texture2DProjGradEXT_0H3B1B1B    = TSymbolUniqueId(520);
-    static constexpr const TSymbolUniqueId textureCubeGradEXT_0J2B2B2B      = TSymbolUniqueId(521);
-    static constexpr const TSymbolUniqueId texture2D_0H1B0B                 = TSymbolUniqueId(522);
-    static constexpr const TSymbolUniqueId texture2DProj_0H2B0B             = TSymbolUniqueId(523);
-    static constexpr const TSymbolUniqueId texture2DProj_0H3B0B             = TSymbolUniqueId(524);
-    static constexpr const TSymbolUniqueId textureCube_0J2B0B               = TSymbolUniqueId(525);
-    static constexpr const TSymbolUniqueId dFdxExt_0B                       = TSymbolUniqueId(526);
-    static constexpr const TSymbolUniqueId dFdxExt_1B                       = TSymbolUniqueId(527);
-    static constexpr const TSymbolUniqueId dFdxExt_2B                       = TSymbolUniqueId(528);
-    static constexpr const TSymbolUniqueId dFdxExt_3B                       = TSymbolUniqueId(529);
-    static constexpr const TSymbolUniqueId dFdyExt_0B                       = TSymbolUniqueId(530);
-    static constexpr const TSymbolUniqueId dFdyExt_1B                       = TSymbolUniqueId(531);
-    static constexpr const TSymbolUniqueId dFdyExt_2B                       = TSymbolUniqueId(532);
-    static constexpr const TSymbolUniqueId dFdyExt_3B                       = TSymbolUniqueId(533);
-    static constexpr const TSymbolUniqueId fwidthExt_0B                     = TSymbolUniqueId(534);
-    static constexpr const TSymbolUniqueId fwidthExt_1B                     = TSymbolUniqueId(535);
-    static constexpr const TSymbolUniqueId fwidthExt_2B                     = TSymbolUniqueId(536);
-    static constexpr const TSymbolUniqueId fwidthExt_3B                     = TSymbolUniqueId(537);
-    static constexpr const TSymbolUniqueId texture2DLodEXT_0H1B0B           = TSymbolUniqueId(538);
-    static constexpr const TSymbolUniqueId texture2DProjLodEXT_0H2B0B       = TSymbolUniqueId(539);
-    static constexpr const TSymbolUniqueId texture2DProjLodEXT_0H3B0B       = TSymbolUniqueId(540);
-    static constexpr const TSymbolUniqueId textureCubeLodEXT_0J2B0B         = TSymbolUniqueId(541);
-    static constexpr const TSymbolUniqueId texture2DLod_0H1B0B              = TSymbolUniqueId(542);
-    static constexpr const TSymbolUniqueId texture2DProjLod_0H2B0B          = TSymbolUniqueId(543);
-    static constexpr const TSymbolUniqueId texture2DProjLod_0H3B0B          = TSymbolUniqueId(544);
-    static constexpr const TSymbolUniqueId textureCubeLod_0J2B0B            = TSymbolUniqueId(545);
-    static constexpr const TSymbolUniqueId texture_0H1B                     = TSymbolUniqueId(546);
-    static constexpr const TSymbolUniqueId texture_0P1B                     = TSymbolUniqueId(547);
-    static constexpr const TSymbolUniqueId pt0P                             = TSymbolUniqueId(548);
-    static constexpr const TSymbolUniqueId texture_0U1B                     = TSymbolUniqueId(549);
-    static constexpr const TSymbolUniqueId pt0U                             = TSymbolUniqueId(550);
-    static constexpr const TSymbolUniqueId texture_0I2B                     = TSymbolUniqueId(551);
-    static constexpr const TSymbolUniqueId pt0I                             = TSymbolUniqueId(552);
-    static constexpr const TSymbolUniqueId texture_0Q2B                     = TSymbolUniqueId(553);
-    static constexpr const TSymbolUniqueId pt0Q                             = TSymbolUniqueId(554);
-    static constexpr const TSymbolUniqueId texture_0V2B                     = TSymbolUniqueId(555);
-    static constexpr const TSymbolUniqueId pt0V                             = TSymbolUniqueId(556);
-    static constexpr const TSymbolUniqueId texture_0J2B                     = TSymbolUniqueId(557);
-    static constexpr const TSymbolUniqueId texture_0R2B                     = TSymbolUniqueId(558);
-    static constexpr const TSymbolUniqueId pt0R                             = TSymbolUniqueId(559);
-    static constexpr const TSymbolUniqueId texture_0W2B                     = TSymbolUniqueId(560);
-    static constexpr const TSymbolUniqueId pt0W                             = TSymbolUniqueId(561);
-    static constexpr const TSymbolUniqueId texture_0K2B                     = TSymbolUniqueId(562);
-    static constexpr const TSymbolUniqueId pt0K                             = TSymbolUniqueId(563);
-    static constexpr const TSymbolUniqueId texture_0S2B                     = TSymbolUniqueId(564);
-    static constexpr const TSymbolUniqueId pt0S                             = TSymbolUniqueId(565);
-    static constexpr const TSymbolUniqueId texture_0X2B                     = TSymbolUniqueId(566);
-    static constexpr const TSymbolUniqueId pt0X                             = TSymbolUniqueId(567);
-    static constexpr const TSymbolUniqueId textureProj_0H2B                 = TSymbolUniqueId(568);
-    static constexpr const TSymbolUniqueId textureProj_0P2B                 = TSymbolUniqueId(569);
-    static constexpr const TSymbolUniqueId textureProj_0U2B                 = TSymbolUniqueId(570);
-    static constexpr const TSymbolUniqueId textureProj_0H3B                 = TSymbolUniqueId(571);
-    static constexpr const TSymbolUniqueId textureProj_0P3B                 = TSymbolUniqueId(572);
-    static constexpr const TSymbolUniqueId textureProj_0U3B                 = TSymbolUniqueId(573);
-    static constexpr const TSymbolUniqueId textureProj_0I3B                 = TSymbolUniqueId(574);
-    static constexpr const TSymbolUniqueId textureProj_0Q3B                 = TSymbolUniqueId(575);
-    static constexpr const TSymbolUniqueId textureProj_0V3B                 = TSymbolUniqueId(576);
-    static constexpr const TSymbolUniqueId textureLod_0H1B0B                = TSymbolUniqueId(577);
-    static constexpr const TSymbolUniqueId textureLod_0P1B0B                = TSymbolUniqueId(578);
-    static constexpr const TSymbolUniqueId textureLod_0U1B0B                = TSymbolUniqueId(579);
-    static constexpr const TSymbolUniqueId textureLod_0I2B0B                = TSymbolUniqueId(580);
-    static constexpr const TSymbolUniqueId textureLod_0Q2B0B                = TSymbolUniqueId(581);
-    static constexpr const TSymbolUniqueId textureLod_0V2B0B                = TSymbolUniqueId(582);
-    static constexpr const TSymbolUniqueId textureLod_0J2B0B                = TSymbolUniqueId(583);
-    static constexpr const TSymbolUniqueId textureLod_0R2B0B                = TSymbolUniqueId(584);
-    static constexpr const TSymbolUniqueId textureLod_0W2B0B                = TSymbolUniqueId(585);
-    static constexpr const TSymbolUniqueId textureLod_0K2B0B                = TSymbolUniqueId(586);
-    static constexpr const TSymbolUniqueId textureLod_0S2B0B                = TSymbolUniqueId(587);
-    static constexpr const TSymbolUniqueId textureLod_0X2B0B                = TSymbolUniqueId(588);
-    static constexpr const TSymbolUniqueId texture_0Z2B                     = TSymbolUniqueId(589);
-    static constexpr const TSymbolUniqueId pt0Z                             = TSymbolUniqueId(590);
-    static constexpr const TSymbolUniqueId texture_0a3B                     = TSymbolUniqueId(591);
-    static constexpr const TSymbolUniqueId pt0a                             = TSymbolUniqueId(592);
-    static constexpr const TSymbolUniqueId texture_0b3B                     = TSymbolUniqueId(593);
-    static constexpr const TSymbolUniqueId pt0b                             = TSymbolUniqueId(594);
-    static constexpr const TSymbolUniqueId textureProj_0Z3B                 = TSymbolUniqueId(595);
-    static constexpr const TSymbolUniqueId textureLod_0Z2B0B                = TSymbolUniqueId(596);
-    static constexpr const TSymbolUniqueId textureSize_0H0C                 = TSymbolUniqueId(597);
-    static constexpr const TSymbolUniqueId textureSize_0P0C                 = TSymbolUniqueId(598);
-    static constexpr const TSymbolUniqueId textureSize_0U0C                 = TSymbolUniqueId(599);
-    static constexpr const TSymbolUniqueId textureSize_0I0C                 = TSymbolUniqueId(600);
-    static constexpr const TSymbolUniqueId textureSize_0Q0C                 = TSymbolUniqueId(601);
-    static constexpr const TSymbolUniqueId textureSize_0V0C                 = TSymbolUniqueId(602);
-    static constexpr const TSymbolUniqueId textureSize_0J0C                 = TSymbolUniqueId(603);
-    static constexpr const TSymbolUniqueId textureSize_0R0C                 = TSymbolUniqueId(604);
-    static constexpr const TSymbolUniqueId textureSize_0W0C                 = TSymbolUniqueId(605);
-    static constexpr const TSymbolUniqueId textureSize_0K0C                 = TSymbolUniqueId(606);
-    static constexpr const TSymbolUniqueId textureSize_0S0C                 = TSymbolUniqueId(607);
-    static constexpr const TSymbolUniqueId textureSize_0X0C                 = TSymbolUniqueId(608);
-    static constexpr const TSymbolUniqueId textureSize_0Z0C                 = TSymbolUniqueId(609);
-    static constexpr const TSymbolUniqueId textureSize_0a0C                 = TSymbolUniqueId(610);
-    static constexpr const TSymbolUniqueId textureSize_0b0C                 = TSymbolUniqueId(611);
-    static constexpr const TSymbolUniqueId textureSize_0O                   = TSymbolUniqueId(612);
-    static constexpr const TSymbolUniqueId pt0O                             = TSymbolUniqueId(613);
-    static constexpr const TSymbolUniqueId textureSize_0T                   = TSymbolUniqueId(614);
-    static constexpr const TSymbolUniqueId pt0T                             = TSymbolUniqueId(615);
-    static constexpr const TSymbolUniqueId textureSize_0Y                   = TSymbolUniqueId(616);
-    static constexpr const TSymbolUniqueId pt0Y                             = TSymbolUniqueId(617);
-    static constexpr const TSymbolUniqueId textureProjLod_0H2B0B            = TSymbolUniqueId(618);
-    static constexpr const TSymbolUniqueId textureProjLod_0P2B0B            = TSymbolUniqueId(619);
-    static constexpr const TSymbolUniqueId textureProjLod_0U2B0B            = TSymbolUniqueId(620);
-    static constexpr const TSymbolUniqueId textureProjLod_0H3B0B            = TSymbolUniqueId(621);
-    static constexpr const TSymbolUniqueId textureProjLod_0P3B0B            = TSymbolUniqueId(622);
-    static constexpr const TSymbolUniqueId textureProjLod_0U3B0B            = TSymbolUniqueId(623);
-    static constexpr const TSymbolUniqueId textureProjLod_0I3B0B            = TSymbolUniqueId(624);
-    static constexpr const TSymbolUniqueId textureProjLod_0Q3B0B            = TSymbolUniqueId(625);
-    static constexpr const TSymbolUniqueId textureProjLod_0V3B0B            = TSymbolUniqueId(626);
-    static constexpr const TSymbolUniqueId textureProjLod_0Z3B0B            = TSymbolUniqueId(627);
-    static constexpr const TSymbolUniqueId texelFetch_0H1C0C                = TSymbolUniqueId(628);
-    static constexpr const TSymbolUniqueId texelFetch_0P1C0C                = TSymbolUniqueId(629);
-    static constexpr const TSymbolUniqueId texelFetch_0U1C0C                = TSymbolUniqueId(630);
-    static constexpr const TSymbolUniqueId texelFetch_0I2C0C                = TSymbolUniqueId(631);
-    static constexpr const TSymbolUniqueId texelFetch_0Q2C0C                = TSymbolUniqueId(632);
-    static constexpr const TSymbolUniqueId texelFetch_0V2C0C                = TSymbolUniqueId(633);
-    static constexpr const TSymbolUniqueId texelFetch_0K2C0C                = TSymbolUniqueId(634);
-    static constexpr const TSymbolUniqueId texelFetch_0S2C0C                = TSymbolUniqueId(635);
-    static constexpr const TSymbolUniqueId texelFetch_0X2C0C                = TSymbolUniqueId(636);
-    static constexpr const TSymbolUniqueId textureGrad_0H1B1B1B             = TSymbolUniqueId(637);
-    static constexpr const TSymbolUniqueId textureGrad_0P1B1B1B             = TSymbolUniqueId(638);
-    static constexpr const TSymbolUniqueId textureGrad_0U1B1B1B             = TSymbolUniqueId(639);
-    static constexpr const TSymbolUniqueId textureGrad_0I2B2B2B             = TSymbolUniqueId(640);
-    static constexpr const TSymbolUniqueId textureGrad_0Q2B2B2B             = TSymbolUniqueId(641);
-    static constexpr const TSymbolUniqueId textureGrad_0V2B2B2B             = TSymbolUniqueId(642);
-    static constexpr const TSymbolUniqueId textureGrad_0J2B2B2B             = TSymbolUniqueId(643);
-    static constexpr const TSymbolUniqueId textureGrad_0R2B2B2B             = TSymbolUniqueId(644);
-    static constexpr const TSymbolUniqueId textureGrad_0W2B2B2B             = TSymbolUniqueId(645);
-    static constexpr const TSymbolUniqueId textureGrad_0Z2B1B1B             = TSymbolUniqueId(646);
-    static constexpr const TSymbolUniqueId textureGrad_0a3B2B2B             = TSymbolUniqueId(647);
-    static constexpr const TSymbolUniqueId textureGrad_0K2B1B1B             = TSymbolUniqueId(648);
-    static constexpr const TSymbolUniqueId textureGrad_0S2B1B1B             = TSymbolUniqueId(649);
-    static constexpr const TSymbolUniqueId textureGrad_0X2B1B1B             = TSymbolUniqueId(650);
-    static constexpr const TSymbolUniqueId textureGrad_0b3B1B1B             = TSymbolUniqueId(651);
-    static constexpr const TSymbolUniqueId textureProjGrad_0H2B1B1B         = TSymbolUniqueId(652);
-    static constexpr const TSymbolUniqueId textureProjGrad_0P2B1B1B         = TSymbolUniqueId(653);
-    static constexpr const TSymbolUniqueId textureProjGrad_0U2B1B1B         = TSymbolUniqueId(654);
-    static constexpr const TSymbolUniqueId textureProjGrad_0H3B1B1B         = TSymbolUniqueId(655);
-    static constexpr const TSymbolUniqueId textureProjGrad_0P3B1B1B         = TSymbolUniqueId(656);
-    static constexpr const TSymbolUniqueId textureProjGrad_0U3B1B1B         = TSymbolUniqueId(657);
-    static constexpr const TSymbolUniqueId textureProjGrad_0I3B2B2B         = TSymbolUniqueId(658);
-    static constexpr const TSymbolUniqueId textureProjGrad_0Q3B2B2B         = TSymbolUniqueId(659);
-    static constexpr const TSymbolUniqueId textureProjGrad_0V3B2B2B         = TSymbolUniqueId(660);
-    static constexpr const TSymbolUniqueId textureProjGrad_0Z3B1B1B         = TSymbolUniqueId(661);
-    static constexpr const TSymbolUniqueId textureOffset_0H1B1C             = TSymbolUniqueId(662);
-    static constexpr const TSymbolUniqueId textureOffset_0P1B1C             = TSymbolUniqueId(663);
-    static constexpr const TSymbolUniqueId textureOffset_0U1B1C             = TSymbolUniqueId(664);
-    static constexpr const TSymbolUniqueId textureOffset_0I2B2C             = TSymbolUniqueId(665);
-    static constexpr const TSymbolUniqueId textureOffset_0Q2B2C             = TSymbolUniqueId(666);
-    static constexpr const TSymbolUniqueId textureOffset_0V2B2C             = TSymbolUniqueId(667);
-    static constexpr const TSymbolUniqueId textureOffset_0Z2B1C             = TSymbolUniqueId(668);
-    static constexpr const TSymbolUniqueId textureOffset_0K2B1C             = TSymbolUniqueId(669);
-    static constexpr const TSymbolUniqueId textureOffset_0S2B1C             = TSymbolUniqueId(670);
-    static constexpr const TSymbolUniqueId textureOffset_0X2B1C             = TSymbolUniqueId(671);
-    static constexpr const TSymbolUniqueId textureProjOffset_0H2B1C         = TSymbolUniqueId(672);
-    static constexpr const TSymbolUniqueId textureProjOffset_0P2B1C         = TSymbolUniqueId(673);
-    static constexpr const TSymbolUniqueId textureProjOffset_0U2B1C         = TSymbolUniqueId(674);
-    static constexpr const TSymbolUniqueId textureProjOffset_0H3B1C         = TSymbolUniqueId(675);
-    static constexpr const TSymbolUniqueId textureProjOffset_0P3B1C         = TSymbolUniqueId(676);
-    static constexpr const TSymbolUniqueId textureProjOffset_0U3B1C         = TSymbolUniqueId(677);
-    static constexpr const TSymbolUniqueId textureProjOffset_0I3B2C         = TSymbolUniqueId(678);
-    static constexpr const TSymbolUniqueId textureProjOffset_0Q3B2C         = TSymbolUniqueId(679);
-    static constexpr const TSymbolUniqueId textureProjOffset_0V3B2C         = TSymbolUniqueId(680);
-    static constexpr const TSymbolUniqueId textureProjOffset_0Z3B1C         = TSymbolUniqueId(681);
-    static constexpr const TSymbolUniqueId textureLodOffset_0H1B0B1C        = TSymbolUniqueId(682);
-    static constexpr const TSymbolUniqueId textureLodOffset_0P1B0B1C        = TSymbolUniqueId(683);
-    static constexpr const TSymbolUniqueId textureLodOffset_0U1B0B1C        = TSymbolUniqueId(684);
-    static constexpr const TSymbolUniqueId textureLodOffset_0I2B0B2C        = TSymbolUniqueId(685);
-    static constexpr const TSymbolUniqueId textureLodOffset_0Q2B0B2C        = TSymbolUniqueId(686);
-    static constexpr const TSymbolUniqueId textureLodOffset_0V2B0B2C        = TSymbolUniqueId(687);
-    static constexpr const TSymbolUniqueId textureLodOffset_0Z2B0B1C        = TSymbolUniqueId(688);
-    static constexpr const TSymbolUniqueId textureLodOffset_0K2B0B1C        = TSymbolUniqueId(689);
-    static constexpr const TSymbolUniqueId textureLodOffset_0S2B0B1C        = TSymbolUniqueId(690);
-    static constexpr const TSymbolUniqueId textureLodOffset_0X2B0B1C        = TSymbolUniqueId(691);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0H2B0B1C    = TSymbolUniqueId(692);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0P2B0B1C    = TSymbolUniqueId(693);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0U2B0B1C    = TSymbolUniqueId(694);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0H3B0B1C    = TSymbolUniqueId(695);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0P3B0B1C    = TSymbolUniqueId(696);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0U3B0B1C    = TSymbolUniqueId(697);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0I3B0B2C    = TSymbolUniqueId(698);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0Q3B0B2C    = TSymbolUniqueId(699);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0V3B0B2C    = TSymbolUniqueId(700);
-    static constexpr const TSymbolUniqueId textureProjLodOffset_0Z3B0B1C    = TSymbolUniqueId(701);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0H1C0C1C        = TSymbolUniqueId(702);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0P1C0C1C        = TSymbolUniqueId(703);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0U1C0C1C        = TSymbolUniqueId(704);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0I2C0C2C        = TSymbolUniqueId(705);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0Q2C0C2C        = TSymbolUniqueId(706);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0V2C0C2C        = TSymbolUniqueId(707);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0K2C0C1C        = TSymbolUniqueId(708);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0S2C0C1C        = TSymbolUniqueId(709);
-    static constexpr const TSymbolUniqueId texelFetchOffset_0X2C0C1C        = TSymbolUniqueId(710);
-    static constexpr const TSymbolUniqueId textureGradOffset_0H1B1B1B1C     = TSymbolUniqueId(711);
-    static constexpr const TSymbolUniqueId textureGradOffset_0P1B1B1B1C     = TSymbolUniqueId(712);
-    static constexpr const TSymbolUniqueId textureGradOffset_0U1B1B1B1C     = TSymbolUniqueId(713);
-    static constexpr const TSymbolUniqueId textureGradOffset_0I2B2B2B2C     = TSymbolUniqueId(714);
-    static constexpr const TSymbolUniqueId textureGradOffset_0Q2B2B2B2C     = TSymbolUniqueId(715);
-    static constexpr const TSymbolUniqueId textureGradOffset_0V2B2B2B2C     = TSymbolUniqueId(716);
-    static constexpr const TSymbolUniqueId textureGradOffset_0Z2B1B1B1C     = TSymbolUniqueId(717);
-    static constexpr const TSymbolUniqueId textureGradOffset_0K2B1B1B1C     = TSymbolUniqueId(718);
-    static constexpr const TSymbolUniqueId textureGradOffset_0S2B1B1B1C     = TSymbolUniqueId(719);
-    static constexpr const TSymbolUniqueId textureGradOffset_0X2B1B1B1C     = TSymbolUniqueId(720);
-    static constexpr const TSymbolUniqueId textureGradOffset_0b3B1B1B1C     = TSymbolUniqueId(721);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0H2B1B1B1C = TSymbolUniqueId(722);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0P2B1B1B1C = TSymbolUniqueId(723);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0U2B1B1B1C = TSymbolUniqueId(724);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0H3B1B1B1C = TSymbolUniqueId(725);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0P3B1B1B1C = TSymbolUniqueId(726);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0U3B1B1B1C = TSymbolUniqueId(727);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0I3B2B2B2C = TSymbolUniqueId(728);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0Q3B2B2B2C = TSymbolUniqueId(729);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0V3B2B2B2C = TSymbolUniqueId(730);
-    static constexpr const TSymbolUniqueId textureProjGradOffset_0Z3B1B1B1C = TSymbolUniqueId(731);
-    static constexpr const TSymbolUniqueId textureOffset_0H1B1C0B           = TSymbolUniqueId(732);
-    static constexpr const TSymbolUniqueId textureOffset_0P1B1C0B           = TSymbolUniqueId(733);
-    static constexpr const TSymbolUniqueId textureOffset_0U1B1C0B           = TSymbolUniqueId(734);
-    static constexpr const TSymbolUniqueId textureOffset_0I2B2C0B           = TSymbolUniqueId(735);
-    static constexpr const TSymbolUniqueId textureOffset_0Q2B2C0B           = TSymbolUniqueId(736);
-    static constexpr const TSymbolUniqueId textureOffset_0V2B2C0B           = TSymbolUniqueId(737);
-    static constexpr const TSymbolUniqueId textureOffset_0Z2B1C0B           = TSymbolUniqueId(738);
-    static constexpr const TSymbolUniqueId textureOffset_0K2B1C0B           = TSymbolUniqueId(739);
-    static constexpr const TSymbolUniqueId textureOffset_0S2B1C0B           = TSymbolUniqueId(740);
-    static constexpr const TSymbolUniqueId textureOffset_0X2B1C0B           = TSymbolUniqueId(741);
-    static constexpr const TSymbolUniqueId textureProjOffset_0H2B1C0B       = TSymbolUniqueId(742);
-    static constexpr const TSymbolUniqueId textureProjOffset_0P2B1C0B       = TSymbolUniqueId(743);
-    static constexpr const TSymbolUniqueId textureProjOffset_0U2B1C0B       = TSymbolUniqueId(744);
-    static constexpr const TSymbolUniqueId textureProjOffset_0H3B1C0B       = TSymbolUniqueId(745);
-    static constexpr const TSymbolUniqueId textureProjOffset_0P3B1C0B       = TSymbolUniqueId(746);
-    static constexpr const TSymbolUniqueId textureProjOffset_0U3B1C0B       = TSymbolUniqueId(747);
-    static constexpr const TSymbolUniqueId textureProjOffset_0I3B2C0B       = TSymbolUniqueId(748);
-    static constexpr const TSymbolUniqueId textureProjOffset_0Q3B2C0B       = TSymbolUniqueId(749);
-    static constexpr const TSymbolUniqueId textureProjOffset_0V3B2C0B       = TSymbolUniqueId(750);
-    static constexpr const TSymbolUniqueId textureProjOffset_0Z3B1C0B       = TSymbolUniqueId(751);
-    static constexpr const TSymbolUniqueId texture_0L1B                     = TSymbolUniqueId(752);
-    static constexpr const TSymbolUniqueId textureProj_0L2B                 = TSymbolUniqueId(753);
-    static constexpr const TSymbolUniqueId textureProj_0L3B                 = TSymbolUniqueId(754);
-    static constexpr const TSymbolUniqueId textureSize_0L0C                 = TSymbolUniqueId(755);
-    static constexpr const TSymbolUniqueId texelFetch_0L1C0C                = TSymbolUniqueId(756);
-    static constexpr const TSymbolUniqueId texture_0M1B                     = TSymbolUniqueId(757);
-    static constexpr const TSymbolUniqueId pt0M                             = TSymbolUniqueId(758);
-    static constexpr const TSymbolUniqueId textureProj_0M2B                 = TSymbolUniqueId(759);
-    static constexpr const TSymbolUniqueId textureProj_0M3B                 = TSymbolUniqueId(760);
-    static constexpr const TSymbolUniqueId rgb_2_yuv_2B0G                   = TSymbolUniqueId(761);
-    static constexpr const TSymbolUniqueId pt0G                             = TSymbolUniqueId(762);
-    static constexpr const TSymbolUniqueId yuv_2_rgb_2B0G                   = TSymbolUniqueId(763);
-    static constexpr const TSymbolUniqueId textureSize_0M0C                 = TSymbolUniqueId(764);
-    static constexpr const TSymbolUniqueId texelFetch_0M1C0C                = TSymbolUniqueId(765);
-    static constexpr const TSymbolUniqueId texture_0H1B0B                   = TSymbolUniqueId(766);
-    static constexpr const TSymbolUniqueId texture_0P1B0B                   = TSymbolUniqueId(767);
-    static constexpr const TSymbolUniqueId texture_0U1B0B                   = TSymbolUniqueId(768);
-    static constexpr const TSymbolUniqueId texture_0I2B0B                   = TSymbolUniqueId(769);
-    static constexpr const TSymbolUniqueId texture_0Q2B0B                   = TSymbolUniqueId(770);
-    static constexpr const TSymbolUniqueId texture_0V2B0B                   = TSymbolUniqueId(771);
-    static constexpr const TSymbolUniqueId texture_0J2B0B                   = TSymbolUniqueId(772);
-    static constexpr const TSymbolUniqueId texture_0R2B0B                   = TSymbolUniqueId(773);
-    static constexpr const TSymbolUniqueId texture_0W2B0B                   = TSymbolUniqueId(774);
-    static constexpr const TSymbolUniqueId texture_0K2B0B                   = TSymbolUniqueId(775);
-    static constexpr const TSymbolUniqueId texture_0S2B0B                   = TSymbolUniqueId(776);
-    static constexpr const TSymbolUniqueId texture_0X2B0B                   = TSymbolUniqueId(777);
-    static constexpr const TSymbolUniqueId textureProj_0H2B0B               = TSymbolUniqueId(778);
-    static constexpr const TSymbolUniqueId textureProj_0P2B0B               = TSymbolUniqueId(779);
-    static constexpr const TSymbolUniqueId textureProj_0U2B0B               = TSymbolUniqueId(780);
-    static constexpr const TSymbolUniqueId textureProj_0H3B0B               = TSymbolUniqueId(781);
-    static constexpr const TSymbolUniqueId textureProj_0P3B0B               = TSymbolUniqueId(782);
-    static constexpr const TSymbolUniqueId textureProj_0U3B0B               = TSymbolUniqueId(783);
-    static constexpr const TSymbolUniqueId textureProj_0I3B0B               = TSymbolUniqueId(784);
-    static constexpr const TSymbolUniqueId textureProj_0Q3B0B               = TSymbolUniqueId(785);
-    static constexpr const TSymbolUniqueId textureProj_0V3B0B               = TSymbolUniqueId(786);
-    static constexpr const TSymbolUniqueId texture_0Z2B0B                   = TSymbolUniqueId(787);
-    static constexpr const TSymbolUniqueId texture_0a3B0B                   = TSymbolUniqueId(788);
-    static constexpr const TSymbolUniqueId textureProj_0Z3B0B               = TSymbolUniqueId(789);
-    static constexpr const TSymbolUniqueId texture_0L1B0B                   = TSymbolUniqueId(790);
-    static constexpr const TSymbolUniqueId textureProj_0L2B0B               = TSymbolUniqueId(791);
-    static constexpr const TSymbolUniqueId textureProj_0L3B0B               = TSymbolUniqueId(792);
-    static constexpr const TSymbolUniqueId texture_0M1B0B                   = TSymbolUniqueId(793);
-    static constexpr const TSymbolUniqueId textureProj_0M2B0B               = TSymbolUniqueId(794);
-    static constexpr const TSymbolUniqueId textureProj_0M3B0B               = TSymbolUniqueId(795);
-    static constexpr const TSymbolUniqueId texelFetch_0O1C0C                = TSymbolUniqueId(796);
-    static constexpr const TSymbolUniqueId texelFetch_0T1C0C                = TSymbolUniqueId(797);
-    static constexpr const TSymbolUniqueId texelFetch_0Y1C0C                = TSymbolUniqueId(798);
-    static constexpr const TSymbolUniqueId textureGather_0H1B               = TSymbolUniqueId(799);
-    static constexpr const TSymbolUniqueId textureGather_0P1B               = TSymbolUniqueId(800);
-    static constexpr const TSymbolUniqueId textureGather_0U1B               = TSymbolUniqueId(801);
-    static constexpr const TSymbolUniqueId textureGather_0H1B0C             = TSymbolUniqueId(802);
-    static constexpr const TSymbolUniqueId textureGather_0P1B0C             = TSymbolUniqueId(803);
-    static constexpr const TSymbolUniqueId textureGather_0U1B0C             = TSymbolUniqueId(804);
-    static constexpr const TSymbolUniqueId textureGather_0K2B               = TSymbolUniqueId(805);
-    static constexpr const TSymbolUniqueId textureGather_0S2B               = TSymbolUniqueId(806);
-    static constexpr const TSymbolUniqueId textureGather_0X2B               = TSymbolUniqueId(807);
-    static constexpr const TSymbolUniqueId textureGather_0K2B0C             = TSymbolUniqueId(808);
-    static constexpr const TSymbolUniqueId textureGather_0S2B0C             = TSymbolUniqueId(809);
-    static constexpr const TSymbolUniqueId textureGather_0X2B0C             = TSymbolUniqueId(810);
-    static constexpr const TSymbolUniqueId textureGather_0J2B               = TSymbolUniqueId(811);
-    static constexpr const TSymbolUniqueId textureGather_0R2B               = TSymbolUniqueId(812);
-    static constexpr const TSymbolUniqueId textureGather_0W2B               = TSymbolUniqueId(813);
-    static constexpr const TSymbolUniqueId textureGather_0J2B0C             = TSymbolUniqueId(814);
-    static constexpr const TSymbolUniqueId textureGather_0R2B0C             = TSymbolUniqueId(815);
-    static constexpr const TSymbolUniqueId textureGather_0W2B0C             = TSymbolUniqueId(816);
-    static constexpr const TSymbolUniqueId textureGather_0Z1B               = TSymbolUniqueId(817);
-    static constexpr const TSymbolUniqueId textureGather_0Z1B0B             = TSymbolUniqueId(818);
-    static constexpr const TSymbolUniqueId textureGather_0b2B               = TSymbolUniqueId(819);
-    static constexpr const TSymbolUniqueId textureGather_0b2B0B             = TSymbolUniqueId(820);
-    static constexpr const TSymbolUniqueId textureGather_0a2B               = TSymbolUniqueId(821);
-    static constexpr const TSymbolUniqueId textureGather_0a2B0B             = TSymbolUniqueId(822);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0H1B1C       = TSymbolUniqueId(823);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0P1B1C       = TSymbolUniqueId(824);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0U1B1C       = TSymbolUniqueId(825);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0H1B1C0C     = TSymbolUniqueId(826);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0P1B1C0C     = TSymbolUniqueId(827);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0U1B1C0C     = TSymbolUniqueId(828);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0K2B1C       = TSymbolUniqueId(829);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0S2B1C       = TSymbolUniqueId(830);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0X2B1C       = TSymbolUniqueId(831);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0K2B1C0C     = TSymbolUniqueId(832);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0S2B1C0C     = TSymbolUniqueId(833);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0X2B1C0C     = TSymbolUniqueId(834);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0Z1B0B1C     = TSymbolUniqueId(835);
-    static constexpr const TSymbolUniqueId textureGatherOffset_0b2B0B1C     = TSymbolUniqueId(836);
-    static constexpr const TSymbolUniqueId dFdx_0B                          = TSymbolUniqueId(837);
-    static constexpr const TSymbolUniqueId dFdx_1B                          = TSymbolUniqueId(838);
-    static constexpr const TSymbolUniqueId dFdx_2B                          = TSymbolUniqueId(839);
-    static constexpr const TSymbolUniqueId dFdx_3B                          = TSymbolUniqueId(840);
-    static constexpr const TSymbolUniqueId dFdy_0B                          = TSymbolUniqueId(841);
-    static constexpr const TSymbolUniqueId dFdy_1B                          = TSymbolUniqueId(842);
-    static constexpr const TSymbolUniqueId dFdy_2B                          = TSymbolUniqueId(843);
-    static constexpr const TSymbolUniqueId dFdy_3B                          = TSymbolUniqueId(844);
-    static constexpr const TSymbolUniqueId fwidth_0B                        = TSymbolUniqueId(845);
-    static constexpr const TSymbolUniqueId fwidth_1B                        = TSymbolUniqueId(846);
-    static constexpr const TSymbolUniqueId fwidth_2B                        = TSymbolUniqueId(847);
-    static constexpr const TSymbolUniqueId fwidth_3B                        = TSymbolUniqueId(848);
-    static constexpr const TSymbolUniqueId atomicCounter_0F                 = TSymbolUniqueId(849);
-    static constexpr const TSymbolUniqueId pt0F                             = TSymbolUniqueId(850);
-    static constexpr const TSymbolUniqueId atomicCounterIncrement_0F        = TSymbolUniqueId(851);
-    static constexpr const TSymbolUniqueId atomicCounterDecrement_0F        = TSymbolUniqueId(852);
-    static constexpr const TSymbolUniqueId atomicAdd_0D0D                   = TSymbolUniqueId(853);
-    static constexpr const TSymbolUniqueId pt_io_0D                         = TSymbolUniqueId(854);
-    static constexpr const TSymbolUniqueId atomicAdd_0C0C                   = TSymbolUniqueId(855);
-    static constexpr const TSymbolUniqueId pt_io_0C                         = TSymbolUniqueId(856);
-    static constexpr const TSymbolUniqueId atomicMin_0D0D                   = TSymbolUniqueId(857);
-    static constexpr const TSymbolUniqueId atomicMin_0C0C                   = TSymbolUniqueId(858);
-    static constexpr const TSymbolUniqueId atomicMax_0D0D                   = TSymbolUniqueId(859);
-    static constexpr const TSymbolUniqueId atomicMax_0C0C                   = TSymbolUniqueId(860);
-    static constexpr const TSymbolUniqueId atomicAnd_0D0D                   = TSymbolUniqueId(861);
-    static constexpr const TSymbolUniqueId atomicAnd_0C0C                   = TSymbolUniqueId(862);
-    static constexpr const TSymbolUniqueId atomicOr_0D0D                    = TSymbolUniqueId(863);
-    static constexpr const TSymbolUniqueId atomicOr_0C0C                    = TSymbolUniqueId(864);
-    static constexpr const TSymbolUniqueId atomicXor_0D0D                   = TSymbolUniqueId(865);
-    static constexpr const TSymbolUniqueId atomicXor_0C0C                   = TSymbolUniqueId(866);
-    static constexpr const TSymbolUniqueId atomicExchange_0D0D              = TSymbolUniqueId(867);
-    static constexpr const TSymbolUniqueId atomicExchange_0C0C              = TSymbolUniqueId(868);
-    static constexpr const TSymbolUniqueId atomicCompSwap_0D0D0D            = TSymbolUniqueId(869);
-    static constexpr const TSymbolUniqueId atomicCompSwap_0C0C0C            = TSymbolUniqueId(870);
-    static constexpr const TSymbolUniqueId imageSize_0c                     = TSymbolUniqueId(871);
-    static constexpr const TSymbolUniqueId pt0c                             = TSymbolUniqueId(872);
-    static constexpr const TSymbolUniqueId imageSize_0d                     = TSymbolUniqueId(873);
-    static constexpr const TSymbolUniqueId pt0d                             = TSymbolUniqueId(874);
-    static constexpr const TSymbolUniqueId imageSize_0e                     = TSymbolUniqueId(875);
-    static constexpr const TSymbolUniqueId pt0e                             = TSymbolUniqueId(876);
-    static constexpr const TSymbolUniqueId imageSize_0f                     = TSymbolUniqueId(877);
-    static constexpr const TSymbolUniqueId pt0f                             = TSymbolUniqueId(878);
-    static constexpr const TSymbolUniqueId imageSize_0g                     = TSymbolUniqueId(879);
-    static constexpr const TSymbolUniqueId pt0g                             = TSymbolUniqueId(880);
-    static constexpr const TSymbolUniqueId imageSize_0h                     = TSymbolUniqueId(881);
-    static constexpr const TSymbolUniqueId pt0h                             = TSymbolUniqueId(882);
-    static constexpr const TSymbolUniqueId imageSize_0i                     = TSymbolUniqueId(883);
-    static constexpr const TSymbolUniqueId pt0i                             = TSymbolUniqueId(884);
-    static constexpr const TSymbolUniqueId imageSize_0j                     = TSymbolUniqueId(885);
-    static constexpr const TSymbolUniqueId pt0j                             = TSymbolUniqueId(886);
-    static constexpr const TSymbolUniqueId imageSize_0k                     = TSymbolUniqueId(887);
-    static constexpr const TSymbolUniqueId pt0k                             = TSymbolUniqueId(888);
-    static constexpr const TSymbolUniqueId imageSize_0l                     = TSymbolUniqueId(889);
-    static constexpr const TSymbolUniqueId pt0l                             = TSymbolUniqueId(890);
-    static constexpr const TSymbolUniqueId imageSize_0m                     = TSymbolUniqueId(891);
-    static constexpr const TSymbolUniqueId pt0m                             = TSymbolUniqueId(892);
-    static constexpr const TSymbolUniqueId imageSize_0n                     = TSymbolUniqueId(893);
-    static constexpr const TSymbolUniqueId pt0n                             = TSymbolUniqueId(894);
-    static constexpr const TSymbolUniqueId imageLoad_0c1C                   = TSymbolUniqueId(895);
-    static constexpr const TSymbolUniqueId imageLoad_0d1C                   = TSymbolUniqueId(896);
-    static constexpr const TSymbolUniqueId imageLoad_0e1C                   = TSymbolUniqueId(897);
-    static constexpr const TSymbolUniqueId imageLoad_0f2C                   = TSymbolUniqueId(898);
-    static constexpr const TSymbolUniqueId imageLoad_0g2C                   = TSymbolUniqueId(899);
-    static constexpr const TSymbolUniqueId imageLoad_0h2C                   = TSymbolUniqueId(900);
-    static constexpr const TSymbolUniqueId imageLoad_0i2C                   = TSymbolUniqueId(901);
-    static constexpr const TSymbolUniqueId imageLoad_0j2C                   = TSymbolUniqueId(902);
-    static constexpr const TSymbolUniqueId imageLoad_0k2C                   = TSymbolUniqueId(903);
-    static constexpr const TSymbolUniqueId imageLoad_0l2C                   = TSymbolUniqueId(904);
-    static constexpr const TSymbolUniqueId imageLoad_0m2C                   = TSymbolUniqueId(905);
-    static constexpr const TSymbolUniqueId imageLoad_0n2C                   = TSymbolUniqueId(906);
-    static constexpr const TSymbolUniqueId imageStore_0c1C3B                = TSymbolUniqueId(907);
-    static constexpr const TSymbolUniqueId imageStore_0d1C3C                = TSymbolUniqueId(908);
-    static constexpr const TSymbolUniqueId imageStore_0e1C3D                = TSymbolUniqueId(909);
-    static constexpr const TSymbolUniqueId imageStore_0f2C3B                = TSymbolUniqueId(910);
-    static constexpr const TSymbolUniqueId imageStore_0g2C3C                = TSymbolUniqueId(911);
-    static constexpr const TSymbolUniqueId imageStore_0h2C3D                = TSymbolUniqueId(912);
-    static constexpr const TSymbolUniqueId imageStore_0i2C3B                = TSymbolUniqueId(913);
-    static constexpr const TSymbolUniqueId imageStore_0j2C3C                = TSymbolUniqueId(914);
-    static constexpr const TSymbolUniqueId imageStore_0k2C3D                = TSymbolUniqueId(915);
-    static constexpr const TSymbolUniqueId imageStore_0l2C3B                = TSymbolUniqueId(916);
-    static constexpr const TSymbolUniqueId imageStore_0m2C3C                = TSymbolUniqueId(917);
-    static constexpr const TSymbolUniqueId imageStore_0n2C3D                = TSymbolUniqueId(918);
-    static constexpr const TSymbolUniqueId memoryBarrier_                   = TSymbolUniqueId(919);
-    static constexpr const TSymbolUniqueId memoryBarrierAtomicCounter_      = TSymbolUniqueId(920);
-    static constexpr const TSymbolUniqueId memoryBarrierBuffer_             = TSymbolUniqueId(921);
-    static constexpr const TSymbolUniqueId memoryBarrierImage_              = TSymbolUniqueId(922);
-    static constexpr const TSymbolUniqueId barrier_                         = TSymbolUniqueId(923);
-    static constexpr const TSymbolUniqueId memoryBarrierShared_             = TSymbolUniqueId(924);
-    static constexpr const TSymbolUniqueId groupMemoryBarrier_              = TSymbolUniqueId(925);
-    static constexpr const TSymbolUniqueId EmitVertex_                      = TSymbolUniqueId(926);
-    static constexpr const TSymbolUniqueId EndPrimitive_                    = TSymbolUniqueId(927);
-    static constexpr const TSymbolUniqueId gl_DepthRangeParameters          = TSymbolUniqueId(928);
-    static constexpr const TSymbolUniqueId gl_DepthRange                    = TSymbolUniqueId(929);
-    static constexpr const TSymbolUniqueId gl_MaxVertexAttribs              = TSymbolUniqueId(930);
-    static constexpr const TSymbolUniqueId gl_MaxVertexUniformVectors       = TSymbolUniqueId(931);
-    static constexpr const TSymbolUniqueId gl_MaxVertexTextureImageUnits    = TSymbolUniqueId(932);
-    static constexpr const TSymbolUniqueId gl_MaxCombinedTextureImageUnits  = TSymbolUniqueId(933);
-    static constexpr const TSymbolUniqueId gl_MaxTextureImageUnits          = TSymbolUniqueId(934);
-    static constexpr const TSymbolUniqueId gl_MaxFragmentUniformVectors     = TSymbolUniqueId(935);
-    static constexpr const TSymbolUniqueId gl_MaxVaryingVectors             = TSymbolUniqueId(936);
-    static constexpr const TSymbolUniqueId gl_MaxDrawBuffers                = TSymbolUniqueId(937);
-    static constexpr const TSymbolUniqueId gl_MaxDualSourceDrawBuffersEXT   = TSymbolUniqueId(938);
-    static constexpr const TSymbolUniqueId gl_MaxVertexOutputVectors        = TSymbolUniqueId(939);
-    static constexpr const TSymbolUniqueId gl_MaxFragmentInputVectors       = TSymbolUniqueId(940);
-    static constexpr const TSymbolUniqueId gl_MinProgramTexelOffset         = TSymbolUniqueId(941);
-    static constexpr const TSymbolUniqueId gl_MaxProgramTexelOffset         = TSymbolUniqueId(942);
-    static constexpr const TSymbolUniqueId gl_MaxImageUnits                 = TSymbolUniqueId(943);
-    static constexpr const TSymbolUniqueId gl_MaxVertexImageUniforms        = TSymbolUniqueId(944);
-    static constexpr const TSymbolUniqueId gl_MaxFragmentImageUniforms      = TSymbolUniqueId(945);
-    static constexpr const TSymbolUniqueId gl_MaxComputeImageUniforms       = TSymbolUniqueId(946);
-    static constexpr const TSymbolUniqueId gl_MaxCombinedImageUniforms      = TSymbolUniqueId(947);
-    static constexpr const TSymbolUniqueId gl_MaxCombinedShaderOutputResources =
-        TSymbolUniqueId(948);
-    static constexpr const TSymbolUniqueId gl_MaxComputeWorkGroupCount       = TSymbolUniqueId(949);
-    static constexpr const TSymbolUniqueId gl_MaxComputeWorkGroupSize        = TSymbolUniqueId(950);
-    static constexpr const TSymbolUniqueId gl_MaxComputeUniformComponents    = TSymbolUniqueId(951);
-    static constexpr const TSymbolUniqueId gl_MaxComputeTextureImageUnits    = TSymbolUniqueId(952);
-    static constexpr const TSymbolUniqueId gl_MaxComputeAtomicCounters       = TSymbolUniqueId(953);
-    static constexpr const TSymbolUniqueId gl_MaxComputeAtomicCounterBuffers = TSymbolUniqueId(954);
-    static constexpr const TSymbolUniqueId gl_MaxVertexAtomicCounters        = TSymbolUniqueId(955);
-    static constexpr const TSymbolUniqueId gl_MaxFragmentAtomicCounters      = TSymbolUniqueId(956);
-    static constexpr const TSymbolUniqueId gl_MaxCombinedAtomicCounters      = TSymbolUniqueId(957);
-    static constexpr const TSymbolUniqueId gl_MaxAtomicCounterBindings       = TSymbolUniqueId(958);
-    static constexpr const TSymbolUniqueId gl_MaxVertexAtomicCounterBuffers  = TSymbolUniqueId(959);
-    static constexpr const TSymbolUniqueId gl_MaxFragmentAtomicCounterBuffers =
-        TSymbolUniqueId(960);
-    static constexpr const TSymbolUniqueId gl_MaxCombinedAtomicCounterBuffers =
-        TSymbolUniqueId(961);
-    static constexpr const TSymbolUniqueId gl_MaxAtomicCounterBufferSize   = TSymbolUniqueId(962);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryInputComponents   = TSymbolUniqueId(963);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryOutputComponents  = TSymbolUniqueId(964);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryImageUniforms     = TSymbolUniqueId(965);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryTextureImageUnits = TSymbolUniqueId(966);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryOutputVertices    = TSymbolUniqueId(967);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryTotalOutputComponents =
-        TSymbolUniqueId(968);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryUniformComponents = TSymbolUniqueId(969);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryAtomicCounters    = TSymbolUniqueId(970);
-    static constexpr const TSymbolUniqueId gl_MaxGeometryAtomicCounterBuffers =
-        TSymbolUniqueId(971);
-    static constexpr const TSymbolUniqueId gl_FragCoord             = TSymbolUniqueId(972);
-    static constexpr const TSymbolUniqueId gl_FrontFacing           = TSymbolUniqueId(973);
-    static constexpr const TSymbolUniqueId gl_PointCoord            = TSymbolUniqueId(974);
-    static constexpr const TSymbolUniqueId gl_FragColor             = TSymbolUniqueId(975);
-    static constexpr const TSymbolUniqueId gl_FragData              = TSymbolUniqueId(976);
-    static constexpr const TSymbolUniqueId gl_FragDepth             = TSymbolUniqueId(977);
-    static constexpr const TSymbolUniqueId gl_SecondaryFragColorEXT = TSymbolUniqueId(978);
-    static constexpr const TSymbolUniqueId gl_SecondaryFragDataEXT  = TSymbolUniqueId(979);
-    static constexpr const TSymbolUniqueId gl_FragDepthEXT          = TSymbolUniqueId(980);
-    static constexpr const TSymbolUniqueId gl_LastFragData          = TSymbolUniqueId(981);
-    static constexpr const TSymbolUniqueId gl_LastFragColor         = TSymbolUniqueId(982);
-    static constexpr const TSymbolUniqueId gl_LastFragDataNV        = TSymbolUniqueId(983);
-    static constexpr const TSymbolUniqueId gl_LastFragColorARM      = TSymbolUniqueId(984);
-    static constexpr const TSymbolUniqueId gl_PrimitiveID           = TSymbolUniqueId(985);
-    static constexpr const TSymbolUniqueId gl_Layer                 = TSymbolUniqueId(986);
-    static constexpr const TSymbolUniqueId gl_Position              = TSymbolUniqueId(987);
-    static constexpr const TSymbolUniqueId gl_PointSize             = TSymbolUniqueId(988);
-    static constexpr const TSymbolUniqueId gl_InstanceID            = TSymbolUniqueId(989);
-    static constexpr const TSymbolUniqueId gl_VertexID              = TSymbolUniqueId(990);
-    static constexpr const TSymbolUniqueId gl_ViewportIndex         = TSymbolUniqueId(991);
-    static constexpr const TSymbolUniqueId gl_LayerVS               = TSymbolUniqueId(992);
-    static constexpr const TSymbolUniqueId gl_NumWorkGroups         = TSymbolUniqueId(993);
-    static constexpr const TSymbolUniqueId gl_WorkGroupSize         = TSymbolUniqueId(994);
-    static constexpr const TSymbolUniqueId gl_WorkGroupID           = TSymbolUniqueId(995);
-    static constexpr const TSymbolUniqueId gl_LocalInvocationID     = TSymbolUniqueId(996);
-    static constexpr const TSymbolUniqueId gl_GlobalInvocationID    = TSymbolUniqueId(997);
-    static constexpr const TSymbolUniqueId gl_LocalInvocationIndex  = TSymbolUniqueId(998);
-    static constexpr const TSymbolUniqueId gl_PrimitiveIDIn         = TSymbolUniqueId(999);
-    static constexpr const TSymbolUniqueId gl_InvocationID          = TSymbolUniqueId(1000);
-    static constexpr const TSymbolUniqueId gl_PrimitiveIDGS         = TSymbolUniqueId(1001);
-    static constexpr const TSymbolUniqueId gl_LayerGS               = TSymbolUniqueId(1002);
-    static constexpr const TSymbolUniqueId gl_PerVertex             = TSymbolUniqueId(1003);
-    static constexpr const TSymbolUniqueId gl_in                    = TSymbolUniqueId(1004);
-    static constexpr const TSymbolUniqueId gl_PerVertexOutBlock     = TSymbolUniqueId(1005);
-    static constexpr const TSymbolUniqueId gl_PositionGS            = TSymbolUniqueId(1006);
-    static constexpr const TSymbolUniqueId gl_ViewID_OVR            = TSymbolUniqueId(1007);
-    static constexpr const TSymbolUniqueId gl_ViewID_OVRESSL1       = TSymbolUniqueId(1008);
-
-};  // namespace BuiltInId
-
 // Since some of the BuiltInId declarations are used outside of constexpr expressions, we need to
 // have these definitions without an initializer. C++17 should eventually remove the need for this.
+constexpr const TSymbolUniqueId BuiltInId::radians_Float1;
+constexpr const TSymbolUniqueId BuiltInId::radians_Float2;
+constexpr const TSymbolUniqueId BuiltInId::radians_Float3;
+constexpr const TSymbolUniqueId BuiltInId::radians_Float4;
+constexpr const TSymbolUniqueId BuiltInId::degrees_Float1;
+constexpr const TSymbolUniqueId BuiltInId::degrees_Float2;
+constexpr const TSymbolUniqueId BuiltInId::degrees_Float3;
+constexpr const TSymbolUniqueId BuiltInId::degrees_Float4;
+constexpr const TSymbolUniqueId BuiltInId::sin_Float1;
+constexpr const TSymbolUniqueId BuiltInId::sin_Float2;
+constexpr const TSymbolUniqueId BuiltInId::sin_Float3;
+constexpr const TSymbolUniqueId BuiltInId::sin_Float4;
+constexpr const TSymbolUniqueId BuiltInId::cos_Float1;
+constexpr const TSymbolUniqueId BuiltInId::cos_Float2;
+constexpr const TSymbolUniqueId BuiltInId::cos_Float3;
+constexpr const TSymbolUniqueId BuiltInId::cos_Float4;
+constexpr const TSymbolUniqueId BuiltInId::tan_Float1;
+constexpr const TSymbolUniqueId BuiltInId::tan_Float2;
+constexpr const TSymbolUniqueId BuiltInId::tan_Float3;
+constexpr const TSymbolUniqueId BuiltInId::tan_Float4;
+constexpr const TSymbolUniqueId BuiltInId::asin_Float1;
+constexpr const TSymbolUniqueId BuiltInId::asin_Float2;
+constexpr const TSymbolUniqueId BuiltInId::asin_Float3;
+constexpr const TSymbolUniqueId BuiltInId::asin_Float4;
+constexpr const TSymbolUniqueId BuiltInId::acos_Float1;
+constexpr const TSymbolUniqueId BuiltInId::acos_Float2;
+constexpr const TSymbolUniqueId BuiltInId::acos_Float3;
+constexpr const TSymbolUniqueId BuiltInId::acos_Float4;
+constexpr const TSymbolUniqueId BuiltInId::atan_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::atan_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::atan_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::atan_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::atan_Float1;
+constexpr const TSymbolUniqueId BuiltInId::atan_Float2;
+constexpr const TSymbolUniqueId BuiltInId::atan_Float3;
+constexpr const TSymbolUniqueId BuiltInId::atan_Float4;
+constexpr const TSymbolUniqueId BuiltInId::sinh_Float1;
+constexpr const TSymbolUniqueId BuiltInId::sinh_Float2;
+constexpr const TSymbolUniqueId BuiltInId::sinh_Float3;
+constexpr const TSymbolUniqueId BuiltInId::sinh_Float4;
+constexpr const TSymbolUniqueId BuiltInId::cosh_Float1;
+constexpr const TSymbolUniqueId BuiltInId::cosh_Float2;
+constexpr const TSymbolUniqueId BuiltInId::cosh_Float3;
+constexpr const TSymbolUniqueId BuiltInId::cosh_Float4;
+constexpr const TSymbolUniqueId BuiltInId::tanh_Float1;
+constexpr const TSymbolUniqueId BuiltInId::tanh_Float2;
+constexpr const TSymbolUniqueId BuiltInId::tanh_Float3;
+constexpr const TSymbolUniqueId BuiltInId::tanh_Float4;
+constexpr const TSymbolUniqueId BuiltInId::asinh_Float1;
+constexpr const TSymbolUniqueId BuiltInId::asinh_Float2;
+constexpr const TSymbolUniqueId BuiltInId::asinh_Float3;
+constexpr const TSymbolUniqueId BuiltInId::asinh_Float4;
+constexpr const TSymbolUniqueId BuiltInId::acosh_Float1;
+constexpr const TSymbolUniqueId BuiltInId::acosh_Float2;
+constexpr const TSymbolUniqueId BuiltInId::acosh_Float3;
+constexpr const TSymbolUniqueId BuiltInId::acosh_Float4;
+constexpr const TSymbolUniqueId BuiltInId::atanh_Float1;
+constexpr const TSymbolUniqueId BuiltInId::atanh_Float2;
+constexpr const TSymbolUniqueId BuiltInId::atanh_Float3;
+constexpr const TSymbolUniqueId BuiltInId::atanh_Float4;
+constexpr const TSymbolUniqueId BuiltInId::pow_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::pow_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::pow_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::pow_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::exp_Float1;
+constexpr const TSymbolUniqueId BuiltInId::exp_Float2;
+constexpr const TSymbolUniqueId BuiltInId::exp_Float3;
+constexpr const TSymbolUniqueId BuiltInId::exp_Float4;
+constexpr const TSymbolUniqueId BuiltInId::log_Float1;
+constexpr const TSymbolUniqueId BuiltInId::log_Float2;
+constexpr const TSymbolUniqueId BuiltInId::log_Float3;
+constexpr const TSymbolUniqueId BuiltInId::log_Float4;
+constexpr const TSymbolUniqueId BuiltInId::exp2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::exp2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::exp2_Float3;
+constexpr const TSymbolUniqueId BuiltInId::exp2_Float4;
+constexpr const TSymbolUniqueId BuiltInId::log2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::log2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::log2_Float3;
+constexpr const TSymbolUniqueId BuiltInId::log2_Float4;
+constexpr const TSymbolUniqueId BuiltInId::sqrt_Float1;
+constexpr const TSymbolUniqueId BuiltInId::sqrt_Float2;
+constexpr const TSymbolUniqueId BuiltInId::sqrt_Float3;
+constexpr const TSymbolUniqueId BuiltInId::sqrt_Float4;
+constexpr const TSymbolUniqueId BuiltInId::inversesqrt_Float1;
+constexpr const TSymbolUniqueId BuiltInId::inversesqrt_Float2;
+constexpr const TSymbolUniqueId BuiltInId::inversesqrt_Float3;
+constexpr const TSymbolUniqueId BuiltInId::inversesqrt_Float4;
+constexpr const TSymbolUniqueId BuiltInId::abs_Float1;
+constexpr const TSymbolUniqueId BuiltInId::abs_Float2;
+constexpr const TSymbolUniqueId BuiltInId::abs_Float3;
+constexpr const TSymbolUniqueId BuiltInId::abs_Float4;
+constexpr const TSymbolUniqueId BuiltInId::abs_Int1;
+constexpr const TSymbolUniqueId BuiltInId::abs_Int2;
+constexpr const TSymbolUniqueId BuiltInId::abs_Int3;
+constexpr const TSymbolUniqueId BuiltInId::abs_Int4;
+constexpr const TSymbolUniqueId BuiltInId::sign_Float1;
+constexpr const TSymbolUniqueId BuiltInId::sign_Float2;
+constexpr const TSymbolUniqueId BuiltInId::sign_Float3;
+constexpr const TSymbolUniqueId BuiltInId::sign_Float4;
+constexpr const TSymbolUniqueId BuiltInId::sign_Int1;
+constexpr const TSymbolUniqueId BuiltInId::sign_Int2;
+constexpr const TSymbolUniqueId BuiltInId::sign_Int3;
+constexpr const TSymbolUniqueId BuiltInId::sign_Int4;
+constexpr const TSymbolUniqueId BuiltInId::floor_Float1;
+constexpr const TSymbolUniqueId BuiltInId::floor_Float2;
+constexpr const TSymbolUniqueId BuiltInId::floor_Float3;
+constexpr const TSymbolUniqueId BuiltInId::floor_Float4;
+constexpr const TSymbolUniqueId BuiltInId::trunc_Float1;
+constexpr const TSymbolUniqueId BuiltInId::trunc_Float2;
+constexpr const TSymbolUniqueId BuiltInId::trunc_Float3;
+constexpr const TSymbolUniqueId BuiltInId::trunc_Float4;
+constexpr const TSymbolUniqueId BuiltInId::round_Float1;
+constexpr const TSymbolUniqueId BuiltInId::round_Float2;
+constexpr const TSymbolUniqueId BuiltInId::round_Float3;
+constexpr const TSymbolUniqueId BuiltInId::round_Float4;
+constexpr const TSymbolUniqueId BuiltInId::roundEven_Float1;
+constexpr const TSymbolUniqueId BuiltInId::roundEven_Float2;
+constexpr const TSymbolUniqueId BuiltInId::roundEven_Float3;
+constexpr const TSymbolUniqueId BuiltInId::roundEven_Float4;
+constexpr const TSymbolUniqueId BuiltInId::ceil_Float1;
+constexpr const TSymbolUniqueId BuiltInId::ceil_Float2;
+constexpr const TSymbolUniqueId BuiltInId::ceil_Float3;
+constexpr const TSymbolUniqueId BuiltInId::ceil_Float4;
+constexpr const TSymbolUniqueId BuiltInId::fract_Float1;
+constexpr const TSymbolUniqueId BuiltInId::fract_Float2;
+constexpr const TSymbolUniqueId BuiltInId::fract_Float3;
+constexpr const TSymbolUniqueId BuiltInId::fract_Float4;
+constexpr const TSymbolUniqueId BuiltInId::mod_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::mod_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::mod_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::mod_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::mod_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::mod_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::mod_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::min_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::min_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::min_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::min_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::min_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::min_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::min_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::min_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::min_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::min_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::min_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::min_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::min_Int3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::min_Int4_Int1;
+constexpr const TSymbolUniqueId BuiltInId::min_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::min_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::min_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::min_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::min_UInt2_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::min_UInt3_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::min_UInt4_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::max_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::max_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::max_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::max_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::max_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::max_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::max_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::max_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::max_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::max_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::max_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::max_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::max_Int3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::max_Int4_Int1;
+constexpr const TSymbolUniqueId BuiltInId::max_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::max_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::max_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::max_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::max_UInt2_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::max_UInt3_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::max_UInt4_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Float1_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Float2_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Float3_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Float4_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Float2_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Float4_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Int1_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Int2_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Int3_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Int4_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Int2_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Int3_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::clamp_Int4_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::clamp_UInt1_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_UInt2_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_UInt3_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_UInt4_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::clamp_UInt2_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::clamp_UInt3_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::clamp_UInt4_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float1_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float2_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float3_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float4_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float2_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float4_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float1_Float1_Bool1;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float2_Float2_Bool2;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float3_Float3_Bool3;
+constexpr const TSymbolUniqueId BuiltInId::mix_Float4_Float4_Bool4;
+constexpr const TSymbolUniqueId BuiltInId::step_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::step_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::step_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::step_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::step_Float1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::step_Float1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::step_Float1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::smoothstep_Float1_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::smoothstep_Float2_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::smoothstep_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::smoothstep_Float4_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::smoothstep_Float1_Float1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::smoothstep_Float1_Float1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::smoothstep_Float1_Float1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::modf_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::modf_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::modf_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::modf_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::isnan_Float1;
+constexpr const TSymbolUniqueId BuiltInId::isnan_Float2;
+constexpr const TSymbolUniqueId BuiltInId::isnan_Float3;
+constexpr const TSymbolUniqueId BuiltInId::isnan_Float4;
+constexpr const TSymbolUniqueId BuiltInId::isinf_Float1;
+constexpr const TSymbolUniqueId BuiltInId::isinf_Float2;
+constexpr const TSymbolUniqueId BuiltInId::isinf_Float3;
+constexpr const TSymbolUniqueId BuiltInId::isinf_Float4;
+constexpr const TSymbolUniqueId BuiltInId::floatBitsToInt_Float1;
+constexpr const TSymbolUniqueId BuiltInId::floatBitsToInt_Float2;
+constexpr const TSymbolUniqueId BuiltInId::floatBitsToInt_Float3;
+constexpr const TSymbolUniqueId BuiltInId::floatBitsToInt_Float4;
+constexpr const TSymbolUniqueId BuiltInId::floatBitsToUint_Float1;
+constexpr const TSymbolUniqueId BuiltInId::floatBitsToUint_Float2;
+constexpr const TSymbolUniqueId BuiltInId::floatBitsToUint_Float3;
+constexpr const TSymbolUniqueId BuiltInId::floatBitsToUint_Float4;
+constexpr const TSymbolUniqueId BuiltInId::intBitsToFloat_Int1;
+constexpr const TSymbolUniqueId BuiltInId::intBitsToFloat_Int2;
+constexpr const TSymbolUniqueId BuiltInId::intBitsToFloat_Int3;
+constexpr const TSymbolUniqueId BuiltInId::intBitsToFloat_Int4;
+constexpr const TSymbolUniqueId BuiltInId::uintBitsToFloat_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::uintBitsToFloat_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::uintBitsToFloat_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::uintBitsToFloat_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::frexp_Float1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::frexp_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::frexp_Float3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::frexp_Float4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::ldexp_Float1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::ldexp_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::ldexp_Float3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::ldexp_Float4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::packSnorm2x16_Float2;
+constexpr const TSymbolUniqueId BuiltInId::packUnorm2x16_Float2;
+constexpr const TSymbolUniqueId BuiltInId::packHalf2x16_Float2;
+constexpr const TSymbolUniqueId BuiltInId::unpackSnorm2x16_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::unpackUnorm2x16_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::unpackHalf2x16_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::packUnorm4x8_Float4;
+constexpr const TSymbolUniqueId BuiltInId::packSnorm4x8_Float4;
+constexpr const TSymbolUniqueId BuiltInId::unpackUnorm4x8_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::unpackSnorm4x8_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::length_Float1;
+constexpr const TSymbolUniqueId BuiltInId::length_Float2;
+constexpr const TSymbolUniqueId BuiltInId::length_Float3;
+constexpr const TSymbolUniqueId BuiltInId::length_Float4;
+constexpr const TSymbolUniqueId BuiltInId::distance_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::distance_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::distance_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::distance_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::dot_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::dot_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::dot_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::dot_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::cross_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::normalize_Float1;
+constexpr const TSymbolUniqueId BuiltInId::normalize_Float2;
+constexpr const TSymbolUniqueId BuiltInId::normalize_Float3;
+constexpr const TSymbolUniqueId BuiltInId::normalize_Float4;
+constexpr const TSymbolUniqueId BuiltInId::faceforward_Float1_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::faceforward_Float2_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::faceforward_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::faceforward_Float4_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::reflect_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::reflect_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::reflect_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::reflect_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::refract_Float1_Float1_Float1;
+constexpr const TSymbolUniqueId BuiltInId::refract_Float2_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::refract_Float3_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::refract_Float4_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::matrixCompMult_Float2x2_Float2x2;
+constexpr const TSymbolUniqueId BuiltInId::matrixCompMult_Float3x3_Float3x3;
+constexpr const TSymbolUniqueId BuiltInId::matrixCompMult_Float4x4_Float4x4;
+constexpr const TSymbolUniqueId BuiltInId::matrixCompMult_Float2x3_Float2x3;
+constexpr const TSymbolUniqueId BuiltInId::matrixCompMult_Float3x2_Float3x2;
+constexpr const TSymbolUniqueId BuiltInId::matrixCompMult_Float2x4_Float2x4;
+constexpr const TSymbolUniqueId BuiltInId::matrixCompMult_Float4x2_Float4x2;
+constexpr const TSymbolUniqueId BuiltInId::matrixCompMult_Float3x4_Float3x4;
+constexpr const TSymbolUniqueId BuiltInId::matrixCompMult_Float4x3_Float4x3;
+constexpr const TSymbolUniqueId BuiltInId::outerProduct_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::outerProduct_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::outerProduct_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::outerProduct_Float3_Float2;
+constexpr const TSymbolUniqueId BuiltInId::outerProduct_Float2_Float3;
+constexpr const TSymbolUniqueId BuiltInId::outerProduct_Float4_Float2;
+constexpr const TSymbolUniqueId BuiltInId::outerProduct_Float2_Float4;
+constexpr const TSymbolUniqueId BuiltInId::outerProduct_Float4_Float3;
+constexpr const TSymbolUniqueId BuiltInId::outerProduct_Float3_Float4;
+constexpr const TSymbolUniqueId BuiltInId::transpose_Float2x2;
+constexpr const TSymbolUniqueId BuiltInId::transpose_Float3x3;
+constexpr const TSymbolUniqueId BuiltInId::transpose_Float4x4;
+constexpr const TSymbolUniqueId BuiltInId::transpose_Float3x2;
+constexpr const TSymbolUniqueId BuiltInId::transpose_Float2x3;
+constexpr const TSymbolUniqueId BuiltInId::transpose_Float4x2;
+constexpr const TSymbolUniqueId BuiltInId::transpose_Float2x4;
+constexpr const TSymbolUniqueId BuiltInId::transpose_Float4x3;
+constexpr const TSymbolUniqueId BuiltInId::transpose_Float3x4;
+constexpr const TSymbolUniqueId BuiltInId::determinant_Float2x2;
+constexpr const TSymbolUniqueId BuiltInId::determinant_Float3x3;
+constexpr const TSymbolUniqueId BuiltInId::determinant_Float4x4;
+constexpr const TSymbolUniqueId BuiltInId::inverse_Float2x2;
+constexpr const TSymbolUniqueId BuiltInId::inverse_Float3x3;
+constexpr const TSymbolUniqueId BuiltInId::inverse_Float4x4;
+constexpr const TSymbolUniqueId BuiltInId::lessThan_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::lessThan_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::lessThan_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::lessThan_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::lessThan_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::lessThan_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::lessThan_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::lessThan_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::lessThan_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::lessThanEqual_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::lessThanEqual_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::lessThanEqual_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::lessThanEqual_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::lessThanEqual_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::lessThanEqual_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::lessThanEqual_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::lessThanEqual_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::lessThanEqual_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::greaterThan_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::greaterThan_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::greaterThan_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::greaterThan_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::greaterThan_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::greaterThan_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::greaterThan_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::greaterThan_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::greaterThan_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::greaterThanEqual_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::greaterThanEqual_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::greaterThanEqual_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::greaterThanEqual_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::greaterThanEqual_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::greaterThanEqual_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::greaterThanEqual_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::greaterThanEqual_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::greaterThanEqual_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::equal_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::equal_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::equal_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::equal_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::equal_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::equal_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::equal_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::equal_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::equal_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::equal_Bool2_Bool2;
+constexpr const TSymbolUniqueId BuiltInId::equal_Bool3_Bool3;
+constexpr const TSymbolUniqueId BuiltInId::equal_Bool4_Bool4;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_Float4_Float4;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_Bool2_Bool2;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_Bool3_Bool3;
+constexpr const TSymbolUniqueId BuiltInId::notEqual_Bool4_Bool4;
+constexpr const TSymbolUniqueId BuiltInId::any_Bool2;
+constexpr const TSymbolUniqueId BuiltInId::any_Bool3;
+constexpr const TSymbolUniqueId BuiltInId::any_Bool4;
+constexpr const TSymbolUniqueId BuiltInId::all_Bool2;
+constexpr const TSymbolUniqueId BuiltInId::all_Bool3;
+constexpr const TSymbolUniqueId BuiltInId::all_Bool4;
+constexpr const TSymbolUniqueId BuiltInId::notFunc_Bool2;
+constexpr const TSymbolUniqueId BuiltInId::notFunc_Bool3;
+constexpr const TSymbolUniqueId BuiltInId::notFunc_Bool4;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldExtract_Int1_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldExtract_Int2_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldExtract_Int3_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldExtract_Int4_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldExtract_UInt1_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldExtract_UInt2_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldExtract_UInt3_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldExtract_UInt4_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldInsert_Int1_Int1_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldInsert_Int2_Int2_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldInsert_Int3_Int3_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldInsert_Int4_Int4_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldInsert_UInt1_UInt1_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldInsert_UInt2_UInt2_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldInsert_UInt3_UInt3_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldInsert_UInt4_UInt4_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldReverse_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldReverse_Int2;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldReverse_Int3;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldReverse_Int4;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldReverse_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldReverse_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldReverse_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::bitfieldReverse_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::bitCount_Int1;
+constexpr const TSymbolUniqueId BuiltInId::bitCount_Int2;
+constexpr const TSymbolUniqueId BuiltInId::bitCount_Int3;
+constexpr const TSymbolUniqueId BuiltInId::bitCount_Int4;
+constexpr const TSymbolUniqueId BuiltInId::bitCount_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::bitCount_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::bitCount_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::bitCount_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::findLSB_Int1;
+constexpr const TSymbolUniqueId BuiltInId::findLSB_Int2;
+constexpr const TSymbolUniqueId BuiltInId::findLSB_Int3;
+constexpr const TSymbolUniqueId BuiltInId::findLSB_Int4;
+constexpr const TSymbolUniqueId BuiltInId::findLSB_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::findLSB_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::findLSB_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::findLSB_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::findMSB_Int1;
+constexpr const TSymbolUniqueId BuiltInId::findMSB_Int2;
+constexpr const TSymbolUniqueId BuiltInId::findMSB_Int3;
+constexpr const TSymbolUniqueId BuiltInId::findMSB_Int4;
+constexpr const TSymbolUniqueId BuiltInId::findMSB_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::findMSB_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::findMSB_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::findMSB_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::uaddCarry_UInt1_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::uaddCarry_UInt2_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::uaddCarry_UInt3_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::uaddCarry_UInt4_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::usubBorrow_UInt1_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::usubBorrow_UInt2_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::usubBorrow_UInt3_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::usubBorrow_UInt4_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::umulExtended_UInt1_UInt1_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::umulExtended_UInt2_UInt2_UInt2_UInt2;
+constexpr const TSymbolUniqueId BuiltInId::umulExtended_UInt3_UInt3_UInt3_UInt3;
+constexpr const TSymbolUniqueId BuiltInId::umulExtended_UInt4_UInt4_UInt4_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::imulExtended_Int1_Int1_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::imulExtended_Int2_Int2_Int2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::imulExtended_Int3_Int3_Int3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imulExtended_Int4_Int4_Int4_Int4;
+constexpr const TSymbolUniqueId BuiltInId::texture2D_Sampler2D1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProj_Sampler2D1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProj_Sampler2D1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureCube_SamplerCube1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture2D_SamplerExternalOES1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProj_SamplerExternalOES1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProj_SamplerExternalOES1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::texture2DRect_Sampler2DRect1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::texture2DRectProj_Sampler2DRect1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture2DRectProj_Sampler2DRect1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2DRect1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2DRect1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2DRect1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::texture2DGradEXT_Sampler2D1_Float2_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProjGradEXT_Sampler2D1_Float3_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProjGradEXT_Sampler2D1_Float4_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureCubeGradEXT_SamplerCube1_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture2D_Sampler2D1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProj_Sampler2D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProj_Sampler2D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureCube_SamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::dFdxExt_Float1;
+constexpr const TSymbolUniqueId BuiltInId::dFdxExt_Float2;
+constexpr const TSymbolUniqueId BuiltInId::dFdxExt_Float3;
+constexpr const TSymbolUniqueId BuiltInId::dFdxExt_Float4;
+constexpr const TSymbolUniqueId BuiltInId::dFdyExt_Float1;
+constexpr const TSymbolUniqueId BuiltInId::dFdyExt_Float2;
+constexpr const TSymbolUniqueId BuiltInId::dFdyExt_Float3;
+constexpr const TSymbolUniqueId BuiltInId::dFdyExt_Float4;
+constexpr const TSymbolUniqueId BuiltInId::fwidthExt_Float1;
+constexpr const TSymbolUniqueId BuiltInId::fwidthExt_Float2;
+constexpr const TSymbolUniqueId BuiltInId::fwidthExt_Float3;
+constexpr const TSymbolUniqueId BuiltInId::fwidthExt_Float4;
+constexpr const TSymbolUniqueId BuiltInId::texture2DLodEXT_Sampler2D1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProjLodEXT_Sampler2D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProjLodEXT_Sampler2D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureCubeLodEXT_SamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture2DLod_Sampler2D1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProjLod_Sampler2D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture2DProjLod_Sampler2D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureCubeLod_SamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2D1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::texture_ISampler2D1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::texture_USampler2D1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler3D1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_ISampler3D1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_USampler3D1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_SamplerCube1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_ISamplerCube1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_USamplerCube1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2DArray1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_ISampler2DArray1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_USampler2DArray1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2D1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler2D1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler2D1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2D1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler2D1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler2D1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler3D1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler3D1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler3D1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_Sampler2D1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_ISampler2D1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_USampler2D1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_Sampler3D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_ISampler3D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_USampler3D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_SamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_ISamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_USamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_Sampler2DArray1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_ISampler2DArray1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_USampler2DArray1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2DShadow1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::texture_SamplerCubeShadow1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2DArrayShadow1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2DShadow1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureLod_Sampler2DShadow1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_Sampler2D1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_ISampler2D1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_USampler2D1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_Sampler3D1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_ISampler3D1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_USampler3D1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_SamplerCube1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_ISamplerCube1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_USamplerCube1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_Sampler2DArray1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_ISampler2DArray1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_USampler2DArray1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_Sampler2DShadow1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_SamplerCubeShadow1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_Sampler2DArrayShadow1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_Sampler2DMS1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_ISampler2DMS1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_USampler2DMS1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_Sampler2D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_ISampler2D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_USampler2D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_Sampler2D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_ISampler2D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_USampler2D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_Sampler3D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_ISampler3D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_USampler3D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLod_Sampler2DShadow1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_Sampler2D1_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_ISampler2D1_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_USampler2D1_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_Sampler3D1_Int3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_ISampler3D1_Int3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_USampler3D1_Int3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_Sampler2DArray1_Int3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_ISampler2DArray1_Int3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_USampler2DArray1_Int3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_Sampler2D1_Float2_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_ISampler2D1_Float2_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_USampler2D1_Float2_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_Sampler3D1_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_ISampler3D1_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_USampler3D1_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_SamplerCube1_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_ISamplerCube1_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_USamplerCube1_Float3_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_Sampler2DShadow1_Float3_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_SamplerCubeShadow1_Float4_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_Sampler2DArray1_Float3_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_ISampler2DArray1_Float3_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_USampler2DArray1_Float3_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGrad_Sampler2DArrayShadow1_Float4_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_Sampler2D1_Float3_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_ISampler2D1_Float3_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_USampler2D1_Float3_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_Sampler2D1_Float4_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_ISampler2D1_Float4_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_USampler2D1_Float4_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_Sampler3D1_Float4_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_ISampler3D1_Float4_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_USampler3D1_Float4_Float3_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProjGrad_Sampler2DShadow1_Float4_Float2_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_Sampler2D1_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_ISampler2D1_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_USampler2D1_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_Sampler3D1_Float3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_ISampler3D1_Float3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_USampler3D1_Float3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_Sampler2DShadow1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_Sampler2DArray1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_ISampler2DArray1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_USampler2DArray1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler2D1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_ISampler2D1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_USampler2D1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler2D1_Float4_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_ISampler2D1_Float4_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_USampler2D1_Float4_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler3D1_Float4_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_ISampler3D1_Float4_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_USampler3D1_Float4_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler2DShadow1_Float4_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_Sampler2D1_Float2_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_ISampler2D1_Float2_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_USampler2D1_Float2_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_Sampler3D1_Float3_Float1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_ISampler3D1_Float3_Float1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_USampler3D1_Float3_Float1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_Sampler2DShadow1_Float3_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_Sampler2DArray1_Float3_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_ISampler2DArray1_Float3_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureLodOffset_USampler2DArray1_Float3_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_Sampler2D1_Float3_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_ISampler2D1_Float3_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_USampler2D1_Float3_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_Sampler2D1_Float4_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_ISampler2D1_Float4_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_USampler2D1_Float4_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_Sampler3D1_Float4_Float1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_ISampler3D1_Float4_Float1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_USampler3D1_Float4_Float1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureProjLodOffset_Sampler2DShadow1_Float4_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::texelFetchOffset_Sampler2D1_Int2_Int1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::texelFetchOffset_ISampler2D1_Int2_Int1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::texelFetchOffset_USampler2D1_Int2_Int1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::texelFetchOffset_Sampler3D1_Int3_Int1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::texelFetchOffset_ISampler3D1_Int3_Int1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::texelFetchOffset_USampler3D1_Int3_Int1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::texelFetchOffset_Sampler2DArray1_Int3_Int1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::texelFetchOffset_ISampler2DArray1_Int3_Int1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::texelFetchOffset_USampler2DArray1_Int3_Int1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGradOffset_Sampler2D1_Float2_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGradOffset_ISampler2D1_Float2_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGradOffset_USampler2D1_Float2_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGradOffset_Sampler3D1_Float3_Float3_Float3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureGradOffset_ISampler3D1_Float3_Float3_Float3_Int3;
+constexpr const TSymbolUniqueId BuiltInId::textureGradOffset_USampler3D1_Float3_Float3_Float3_Int3;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureGradOffset_Sampler2DShadow1_Float3_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureGradOffset_Sampler2DArray1_Float3_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureGradOffset_ISampler2DArray1_Float3_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureGradOffset_USampler2DArray1_Float3_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureGradOffset_Sampler2DArrayShadow1_Float4_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_Sampler2D1_Float3_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_ISampler2D1_Float3_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_USampler2D1_Float3_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_Sampler2D1_Float4_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_ISampler2D1_Float4_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_USampler2D1_Float4_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_Sampler3D1_Float4_Float3_Float3_Int3;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_ISampler3D1_Float4_Float3_Float3_Int3;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_USampler3D1_Float4_Float3_Float3_Int3;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureProjGradOffset_Sampler2DShadow1_Float4_Float2_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_Sampler2D1_Float2_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_ISampler2D1_Float2_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_USampler2D1_Float2_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_Sampler3D1_Float3_Int3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_ISampler3D1_Float3_Int3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_USampler3D1_Float3_Int3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_Sampler2DShadow1_Float3_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_Sampler2DArray1_Float3_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_ISampler2DArray1_Float3_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureOffset_USampler2DArray1_Float3_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler2D1_Float3_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_ISampler2D1_Float3_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_USampler2D1_Float3_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler2D1_Float4_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_ISampler2D1_Float4_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_USampler2D1_Float4_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler3D1_Float4_Int3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_ISampler3D1_Float4_Int3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_USampler3D1_Float4_Int3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProjOffset_Sampler2DShadow1_Float4_Int2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_SamplerExternalOES1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_SamplerExternalOES1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_SamplerExternalOES1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_SamplerExternalOES1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_SamplerExternalOES1_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texture_SamplerExternal2DY2YEXT1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_SamplerExternal2DY2YEXT1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_SamplerExternal2DY2YEXT1_Float4;
+constexpr const TSymbolUniqueId BuiltInId::rgb_2_yuv_Float3_YuvCscStandardEXT1;
+constexpr const TSymbolUniqueId BuiltInId::yuv_2_rgb_Float3_YuvCscStandardEXT1;
+constexpr const TSymbolUniqueId BuiltInId::textureSize_SamplerExternal2DY2YEXT1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_SamplerExternal2DY2YEXT1_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2D1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_ISampler2D1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_USampler2D1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler3D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_ISampler3D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_USampler3D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_SamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_ISamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_USamplerCube1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2DArray1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_ISampler2DArray1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_USampler2DArray1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler2D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler2D1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler2D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler2D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler3D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_ISampler3D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_USampler3D1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_Sampler2DShadow1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_SamplerCubeShadow1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_Sampler2DShadow1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_SamplerExternalOES1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_SamplerExternalOES1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_SamplerExternalOES1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texture_SamplerExternal2DY2YEXT1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_SamplerExternal2DY2YEXT1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureProj_SamplerExternal2DY2YEXT1_Float4_Float1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_Sampler2DMS1_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_ISampler2DMS1_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::texelFetch_USampler2DMS1_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2D1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_ISampler2D1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_USampler2D1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2D1_Float2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_ISampler2D1_Float2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_USampler2D1_Float2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2DArray1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_ISampler2DArray1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_USampler2DArray1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2DArray1_Float3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_ISampler2DArray1_Float3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_USampler2DArray1_Float3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_SamplerCube1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_ISamplerCube1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_USamplerCube1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_SamplerCube1_Float3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_ISamplerCube1_Float3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_USamplerCube1_Float3_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2DShadow1_Float2;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2DShadow1_Float2_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2DArrayShadow1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_Sampler2DArrayShadow1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_SamplerCubeShadow1_Float3;
+constexpr const TSymbolUniqueId BuiltInId::textureGather_SamplerCubeShadow1_Float3_Float1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_Sampler2D1_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_ISampler2D1_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_USampler2D1_Float2_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_Sampler2D1_Float2_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_ISampler2D1_Float2_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_USampler2D1_Float2_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_Sampler2DArray1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_ISampler2DArray1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_USampler2DArray1_Float3_Int2;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_Sampler2DArray1_Float3_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_ISampler2DArray1_Float3_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_USampler2DArray1_Float3_Int2_Int1;
+constexpr const TSymbolUniqueId BuiltInId::textureGatherOffset_Sampler2DShadow1_Float2_Float1_Int2;
+constexpr const TSymbolUniqueId
+    BuiltInId::textureGatherOffset_Sampler2DArrayShadow1_Float3_Float1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::dFdx_Float1;
+constexpr const TSymbolUniqueId BuiltInId::dFdx_Float2;
+constexpr const TSymbolUniqueId BuiltInId::dFdx_Float3;
+constexpr const TSymbolUniqueId BuiltInId::dFdx_Float4;
+constexpr const TSymbolUniqueId BuiltInId::dFdy_Float1;
+constexpr const TSymbolUniqueId BuiltInId::dFdy_Float2;
+constexpr const TSymbolUniqueId BuiltInId::dFdy_Float3;
+constexpr const TSymbolUniqueId BuiltInId::dFdy_Float4;
+constexpr const TSymbolUniqueId BuiltInId::fwidth_Float1;
+constexpr const TSymbolUniqueId BuiltInId::fwidth_Float2;
+constexpr const TSymbolUniqueId BuiltInId::fwidth_Float3;
+constexpr const TSymbolUniqueId BuiltInId::fwidth_Float4;
+constexpr const TSymbolUniqueId BuiltInId::atomicCounter_AtomicCounter1;
+constexpr const TSymbolUniqueId BuiltInId::atomicCounterIncrement_AtomicCounter1;
+constexpr const TSymbolUniqueId BuiltInId::atomicCounterDecrement_AtomicCounter1;
+constexpr const TSymbolUniqueId BuiltInId::atomicAdd_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::atomicAdd_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::atomicMin_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::atomicMin_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::atomicMax_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::atomicMax_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::atomicAnd_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::atomicAnd_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::atomicOr_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::atomicOr_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::atomicXor_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::atomicXor_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::atomicExchange_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::atomicExchange_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::atomicCompSwap_UInt1_UInt1_UInt1;
+constexpr const TSymbolUniqueId BuiltInId::atomicCompSwap_Int1_Int1_Int1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_Image2D1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_IImage2D1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_UImage2D1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_Image3D1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_IImage3D1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_UImage3D1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_Image2DArray1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_IImage2DArray1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_UImage2DArray1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_ImageCube1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_IImageCube1;
+constexpr const TSymbolUniqueId BuiltInId::imageSize_UImageCube1;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_Image2D1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_IImage2D1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_UImage2D1_Int2;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_Image3D1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_IImage3D1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_UImage3D1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_Image2DArray1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_IImage2DArray1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_UImage2DArray1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_ImageCube1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_IImageCube1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imageLoad_UImageCube1_Int3;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_Image2D1_Int2_Float4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_IImage2D1_Int2_Int4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_UImage2D1_Int2_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_Image3D1_Int3_Float4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_IImage3D1_Int3_Int4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_UImage3D1_Int3_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_Image2DArray1_Int3_Float4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_IImage2DArray1_Int3_Int4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_UImage2DArray1_Int3_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_ImageCube1_Int3_Float4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_IImageCube1_Int3_Int4;
+constexpr const TSymbolUniqueId BuiltInId::imageStore_UImageCube1_Int3_UInt4;
+constexpr const TSymbolUniqueId BuiltInId::memoryBarrier;
+constexpr const TSymbolUniqueId BuiltInId::memoryBarrierAtomicCounter;
+constexpr const TSymbolUniqueId BuiltInId::memoryBarrierBuffer;
+constexpr const TSymbolUniqueId BuiltInId::memoryBarrierImage;
+constexpr const TSymbolUniqueId BuiltInId::barrier;
+constexpr const TSymbolUniqueId BuiltInId::memoryBarrierShared;
+constexpr const TSymbolUniqueId BuiltInId::groupMemoryBarrier;
+constexpr const TSymbolUniqueId BuiltInId::EmitVertex;
+constexpr const TSymbolUniqueId BuiltInId::EndPrimitive;
 constexpr const TSymbolUniqueId BuiltInId::gl_DepthRangeParameters;
 constexpr const TSymbolUniqueId BuiltInId::gl_DepthRange;
 constexpr const TSymbolUniqueId BuiltInId::gl_MaxVertexAttribs;
@@ -2804,7 +2654,7 @@ namespace BuiltInFunction
 {
 
 constexpr const TFunction kFunction_radians_0B(
-    BuiltInId::radians_0B,
+    BuiltInId::radians_Float1,
     BuiltInName::radians,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -2813,7 +2663,7 @@ constexpr const TFunction kFunction_radians_0B(
     EOpRadians,
     true);
 constexpr const TFunction kFunction_radians_1B(
-    BuiltInId::radians_1B,
+    BuiltInId::radians_Float2,
     BuiltInName::radians,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -2822,7 +2672,7 @@ constexpr const TFunction kFunction_radians_1B(
     EOpRadians,
     true);
 constexpr const TFunction kFunction_radians_2B(
-    BuiltInId::radians_2B,
+    BuiltInId::radians_Float3,
     BuiltInName::radians,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -2831,7 +2681,7 @@ constexpr const TFunction kFunction_radians_2B(
     EOpRadians,
     true);
 constexpr const TFunction kFunction_radians_3B(
-    BuiltInId::radians_3B,
+    BuiltInId::radians_Float4,
     BuiltInName::radians,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -2840,7 +2690,7 @@ constexpr const TFunction kFunction_radians_3B(
     EOpRadians,
     true);
 constexpr const TFunction kFunction_degrees_0B(
-    BuiltInId::degrees_0B,
+    BuiltInId::degrees_Float1,
     BuiltInName::degrees,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -2849,7 +2699,7 @@ constexpr const TFunction kFunction_degrees_0B(
     EOpDegrees,
     true);
 constexpr const TFunction kFunction_degrees_1B(
-    BuiltInId::degrees_1B,
+    BuiltInId::degrees_Float2,
     BuiltInName::degrees,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -2858,7 +2708,7 @@ constexpr const TFunction kFunction_degrees_1B(
     EOpDegrees,
     true);
 constexpr const TFunction kFunction_degrees_2B(
-    BuiltInId::degrees_2B,
+    BuiltInId::degrees_Float3,
     BuiltInName::degrees,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -2867,7 +2717,7 @@ constexpr const TFunction kFunction_degrees_2B(
     EOpDegrees,
     true);
 constexpr const TFunction kFunction_degrees_3B(
-    BuiltInId::degrees_3B,
+    BuiltInId::degrees_Float4,
     BuiltInName::degrees,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -2876,7 +2726,7 @@ constexpr const TFunction kFunction_degrees_3B(
     EOpDegrees,
     true);
 constexpr const TFunction kFunction_sin_0B(
-    BuiltInId::sin_0B,
+    BuiltInId::sin_Float1,
     BuiltInName::sin,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -2885,7 +2735,7 @@ constexpr const TFunction kFunction_sin_0B(
     EOpSin,
     true);
 constexpr const TFunction kFunction_sin_1B(
-    BuiltInId::sin_1B,
+    BuiltInId::sin_Float2,
     BuiltInName::sin,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -2894,7 +2744,7 @@ constexpr const TFunction kFunction_sin_1B(
     EOpSin,
     true);
 constexpr const TFunction kFunction_sin_2B(
-    BuiltInId::sin_2B,
+    BuiltInId::sin_Float3,
     BuiltInName::sin,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -2903,7 +2753,7 @@ constexpr const TFunction kFunction_sin_2B(
     EOpSin,
     true);
 constexpr const TFunction kFunction_sin_3B(
-    BuiltInId::sin_3B,
+    BuiltInId::sin_Float4,
     BuiltInName::sin,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -2912,7 +2762,7 @@ constexpr const TFunction kFunction_sin_3B(
     EOpSin,
     true);
 constexpr const TFunction kFunction_cos_0B(
-    BuiltInId::cos_0B,
+    BuiltInId::cos_Float1,
     BuiltInName::cos,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -2921,7 +2771,7 @@ constexpr const TFunction kFunction_cos_0B(
     EOpCos,
     true);
 constexpr const TFunction kFunction_cos_1B(
-    BuiltInId::cos_1B,
+    BuiltInId::cos_Float2,
     BuiltInName::cos,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -2930,7 +2780,7 @@ constexpr const TFunction kFunction_cos_1B(
     EOpCos,
     true);
 constexpr const TFunction kFunction_cos_2B(
-    BuiltInId::cos_2B,
+    BuiltInId::cos_Float3,
     BuiltInName::cos,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -2939,7 +2789,7 @@ constexpr const TFunction kFunction_cos_2B(
     EOpCos,
     true);
 constexpr const TFunction kFunction_cos_3B(
-    BuiltInId::cos_3B,
+    BuiltInId::cos_Float4,
     BuiltInName::cos,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -2948,7 +2798,7 @@ constexpr const TFunction kFunction_cos_3B(
     EOpCos,
     true);
 constexpr const TFunction kFunction_tan_0B(
-    BuiltInId::tan_0B,
+    BuiltInId::tan_Float1,
     BuiltInName::tan,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -2957,7 +2807,7 @@ constexpr const TFunction kFunction_tan_0B(
     EOpTan,
     true);
 constexpr const TFunction kFunction_tan_1B(
-    BuiltInId::tan_1B,
+    BuiltInId::tan_Float2,
     BuiltInName::tan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -2966,7 +2816,7 @@ constexpr const TFunction kFunction_tan_1B(
     EOpTan,
     true);
 constexpr const TFunction kFunction_tan_2B(
-    BuiltInId::tan_2B,
+    BuiltInId::tan_Float3,
     BuiltInName::tan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -2975,7 +2825,7 @@ constexpr const TFunction kFunction_tan_2B(
     EOpTan,
     true);
 constexpr const TFunction kFunction_tan_3B(
-    BuiltInId::tan_3B,
+    BuiltInId::tan_Float4,
     BuiltInName::tan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -2984,7 +2834,7 @@ constexpr const TFunction kFunction_tan_3B(
     EOpTan,
     true);
 constexpr const TFunction kFunction_asin_0B(
-    BuiltInId::asin_0B,
+    BuiltInId::asin_Float1,
     BuiltInName::asin,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -2993,7 +2843,7 @@ constexpr const TFunction kFunction_asin_0B(
     EOpAsin,
     true);
 constexpr const TFunction kFunction_asin_1B(
-    BuiltInId::asin_1B,
+    BuiltInId::asin_Float2,
     BuiltInName::asin,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3002,7 +2852,7 @@ constexpr const TFunction kFunction_asin_1B(
     EOpAsin,
     true);
 constexpr const TFunction kFunction_asin_2B(
-    BuiltInId::asin_2B,
+    BuiltInId::asin_Float3,
     BuiltInName::asin,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3011,7 +2861,7 @@ constexpr const TFunction kFunction_asin_2B(
     EOpAsin,
     true);
 constexpr const TFunction kFunction_asin_3B(
-    BuiltInId::asin_3B,
+    BuiltInId::asin_Float4,
     BuiltInName::asin,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3020,7 +2870,7 @@ constexpr const TFunction kFunction_asin_3B(
     EOpAsin,
     true);
 constexpr const TFunction kFunction_acos_0B(
-    BuiltInId::acos_0B,
+    BuiltInId::acos_Float1,
     BuiltInName::acos,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3029,7 +2879,7 @@ constexpr const TFunction kFunction_acos_0B(
     EOpAcos,
     true);
 constexpr const TFunction kFunction_acos_1B(
-    BuiltInId::acos_1B,
+    BuiltInId::acos_Float2,
     BuiltInName::acos,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3038,7 +2888,7 @@ constexpr const TFunction kFunction_acos_1B(
     EOpAcos,
     true);
 constexpr const TFunction kFunction_acos_2B(
-    BuiltInId::acos_2B,
+    BuiltInId::acos_Float3,
     BuiltInName::acos,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3047,7 +2897,7 @@ constexpr const TFunction kFunction_acos_2B(
     EOpAcos,
     true);
 constexpr const TFunction kFunction_acos_3B(
-    BuiltInId::acos_3B,
+    BuiltInId::acos_Float4,
     BuiltInName::acos,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3056,7 +2906,7 @@ constexpr const TFunction kFunction_acos_3B(
     EOpAcos,
     true);
 constexpr const TFunction kFunction_atan_0B0B(
-    BuiltInId::atan_0B0B,
+    BuiltInId::atan_Float1_Float1,
     BuiltInName::atan,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -3065,7 +2915,7 @@ constexpr const TFunction kFunction_atan_0B0B(
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_1B1B(
-    BuiltInId::atan_1B1B,
+    BuiltInId::atan_Float2_Float2,
     BuiltInName::atan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3074,7 +2924,7 @@ constexpr const TFunction kFunction_atan_1B1B(
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_2B2B(
-    BuiltInId::atan_2B2B,
+    BuiltInId::atan_Float3_Float3,
     BuiltInName::atan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -3083,7 +2933,7 @@ constexpr const TFunction kFunction_atan_2B2B(
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_3B3B(
-    BuiltInId::atan_3B3B,
+    BuiltInId::atan_Float4_Float4,
     BuiltInName::atan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -3092,7 +2942,7 @@ constexpr const TFunction kFunction_atan_3B3B(
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_0B(
-    BuiltInId::atan_0B,
+    BuiltInId::atan_Float1,
     BuiltInName::atan,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3101,7 +2951,7 @@ constexpr const TFunction kFunction_atan_0B(
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_1B(
-    BuiltInId::atan_1B,
+    BuiltInId::atan_Float2,
     BuiltInName::atan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3110,7 +2960,7 @@ constexpr const TFunction kFunction_atan_1B(
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_2B(
-    BuiltInId::atan_2B,
+    BuiltInId::atan_Float3,
     BuiltInName::atan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3119,7 +2969,7 @@ constexpr const TFunction kFunction_atan_2B(
     EOpAtan,
     true);
 constexpr const TFunction kFunction_atan_3B(
-    BuiltInId::atan_3B,
+    BuiltInId::atan_Float4,
     BuiltInName::atan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3128,7 +2978,7 @@ constexpr const TFunction kFunction_atan_3B(
     EOpAtan,
     true);
 constexpr const TFunction kFunction_sinh_0B(
-    BuiltInId::sinh_0B,
+    BuiltInId::sinh_Float1,
     BuiltInName::sinh,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3137,7 +2987,7 @@ constexpr const TFunction kFunction_sinh_0B(
     EOpSinh,
     true);
 constexpr const TFunction kFunction_sinh_1B(
-    BuiltInId::sinh_1B,
+    BuiltInId::sinh_Float2,
     BuiltInName::sinh,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3146,7 +2996,7 @@ constexpr const TFunction kFunction_sinh_1B(
     EOpSinh,
     true);
 constexpr const TFunction kFunction_sinh_2B(
-    BuiltInId::sinh_2B,
+    BuiltInId::sinh_Float3,
     BuiltInName::sinh,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3155,7 +3005,7 @@ constexpr const TFunction kFunction_sinh_2B(
     EOpSinh,
     true);
 constexpr const TFunction kFunction_sinh_3B(
-    BuiltInId::sinh_3B,
+    BuiltInId::sinh_Float4,
     BuiltInName::sinh,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3164,7 +3014,7 @@ constexpr const TFunction kFunction_sinh_3B(
     EOpSinh,
     true);
 constexpr const TFunction kFunction_cosh_0B(
-    BuiltInId::cosh_0B,
+    BuiltInId::cosh_Float1,
     BuiltInName::cosh,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3173,7 +3023,7 @@ constexpr const TFunction kFunction_cosh_0B(
     EOpCosh,
     true);
 constexpr const TFunction kFunction_cosh_1B(
-    BuiltInId::cosh_1B,
+    BuiltInId::cosh_Float2,
     BuiltInName::cosh,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3182,7 +3032,7 @@ constexpr const TFunction kFunction_cosh_1B(
     EOpCosh,
     true);
 constexpr const TFunction kFunction_cosh_2B(
-    BuiltInId::cosh_2B,
+    BuiltInId::cosh_Float3,
     BuiltInName::cosh,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3191,7 +3041,7 @@ constexpr const TFunction kFunction_cosh_2B(
     EOpCosh,
     true);
 constexpr const TFunction kFunction_cosh_3B(
-    BuiltInId::cosh_3B,
+    BuiltInId::cosh_Float4,
     BuiltInName::cosh,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3200,7 +3050,7 @@ constexpr const TFunction kFunction_cosh_3B(
     EOpCosh,
     true);
 constexpr const TFunction kFunction_tanh_0B(
-    BuiltInId::tanh_0B,
+    BuiltInId::tanh_Float1,
     BuiltInName::tanh,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3209,7 +3059,7 @@ constexpr const TFunction kFunction_tanh_0B(
     EOpTanh,
     true);
 constexpr const TFunction kFunction_tanh_1B(
-    BuiltInId::tanh_1B,
+    BuiltInId::tanh_Float2,
     BuiltInName::tanh,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3218,7 +3068,7 @@ constexpr const TFunction kFunction_tanh_1B(
     EOpTanh,
     true);
 constexpr const TFunction kFunction_tanh_2B(
-    BuiltInId::tanh_2B,
+    BuiltInId::tanh_Float3,
     BuiltInName::tanh,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3227,7 +3077,7 @@ constexpr const TFunction kFunction_tanh_2B(
     EOpTanh,
     true);
 constexpr const TFunction kFunction_tanh_3B(
-    BuiltInId::tanh_3B,
+    BuiltInId::tanh_Float4,
     BuiltInName::tanh,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3236,7 +3086,7 @@ constexpr const TFunction kFunction_tanh_3B(
     EOpTanh,
     true);
 constexpr const TFunction kFunction_asinh_0B(
-    BuiltInId::asinh_0B,
+    BuiltInId::asinh_Float1,
     BuiltInName::asinh,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3245,7 +3095,7 @@ constexpr const TFunction kFunction_asinh_0B(
     EOpAsinh,
     true);
 constexpr const TFunction kFunction_asinh_1B(
-    BuiltInId::asinh_1B,
+    BuiltInId::asinh_Float2,
     BuiltInName::asinh,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3254,7 +3104,7 @@ constexpr const TFunction kFunction_asinh_1B(
     EOpAsinh,
     true);
 constexpr const TFunction kFunction_asinh_2B(
-    BuiltInId::asinh_2B,
+    BuiltInId::asinh_Float3,
     BuiltInName::asinh,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3263,7 +3113,7 @@ constexpr const TFunction kFunction_asinh_2B(
     EOpAsinh,
     true);
 constexpr const TFunction kFunction_asinh_3B(
-    BuiltInId::asinh_3B,
+    BuiltInId::asinh_Float4,
     BuiltInName::asinh,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3272,7 +3122,7 @@ constexpr const TFunction kFunction_asinh_3B(
     EOpAsinh,
     true);
 constexpr const TFunction kFunction_acosh_0B(
-    BuiltInId::acosh_0B,
+    BuiltInId::acosh_Float1,
     BuiltInName::acosh,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3281,7 +3131,7 @@ constexpr const TFunction kFunction_acosh_0B(
     EOpAcosh,
     true);
 constexpr const TFunction kFunction_acosh_1B(
-    BuiltInId::acosh_1B,
+    BuiltInId::acosh_Float2,
     BuiltInName::acosh,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3290,7 +3140,7 @@ constexpr const TFunction kFunction_acosh_1B(
     EOpAcosh,
     true);
 constexpr const TFunction kFunction_acosh_2B(
-    BuiltInId::acosh_2B,
+    BuiltInId::acosh_Float3,
     BuiltInName::acosh,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3299,7 +3149,7 @@ constexpr const TFunction kFunction_acosh_2B(
     EOpAcosh,
     true);
 constexpr const TFunction kFunction_acosh_3B(
-    BuiltInId::acosh_3B,
+    BuiltInId::acosh_Float4,
     BuiltInName::acosh,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3308,7 +3158,7 @@ constexpr const TFunction kFunction_acosh_3B(
     EOpAcosh,
     true);
 constexpr const TFunction kFunction_atanh_0B(
-    BuiltInId::atanh_0B,
+    BuiltInId::atanh_Float1,
     BuiltInName::atanh,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3317,7 +3167,7 @@ constexpr const TFunction kFunction_atanh_0B(
     EOpAtanh,
     true);
 constexpr const TFunction kFunction_atanh_1B(
-    BuiltInId::atanh_1B,
+    BuiltInId::atanh_Float2,
     BuiltInName::atanh,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3326,7 +3176,7 @@ constexpr const TFunction kFunction_atanh_1B(
     EOpAtanh,
     true);
 constexpr const TFunction kFunction_atanh_2B(
-    BuiltInId::atanh_2B,
+    BuiltInId::atanh_Float3,
     BuiltInName::atanh,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3335,7 +3185,7 @@ constexpr const TFunction kFunction_atanh_2B(
     EOpAtanh,
     true);
 constexpr const TFunction kFunction_atanh_3B(
-    BuiltInId::atanh_3B,
+    BuiltInId::atanh_Float4,
     BuiltInName::atanh,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3344,7 +3194,7 @@ constexpr const TFunction kFunction_atanh_3B(
     EOpAtanh,
     true);
 constexpr const TFunction kFunction_pow_0B0B(
-    BuiltInId::pow_0B0B,
+    BuiltInId::pow_Float1_Float1,
     BuiltInName::pow,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -3353,7 +3203,7 @@ constexpr const TFunction kFunction_pow_0B0B(
     EOpPow,
     true);
 constexpr const TFunction kFunction_pow_1B1B(
-    BuiltInId::pow_1B1B,
+    BuiltInId::pow_Float2_Float2,
     BuiltInName::pow,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3362,7 +3212,7 @@ constexpr const TFunction kFunction_pow_1B1B(
     EOpPow,
     true);
 constexpr const TFunction kFunction_pow_2B2B(
-    BuiltInId::pow_2B2B,
+    BuiltInId::pow_Float3_Float3,
     BuiltInName::pow,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -3371,7 +3221,7 @@ constexpr const TFunction kFunction_pow_2B2B(
     EOpPow,
     true);
 constexpr const TFunction kFunction_pow_3B3B(
-    BuiltInId::pow_3B3B,
+    BuiltInId::pow_Float4_Float4,
     BuiltInName::pow,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -3380,7 +3230,7 @@ constexpr const TFunction kFunction_pow_3B3B(
     EOpPow,
     true);
 constexpr const TFunction kFunction_exp_0B(
-    BuiltInId::exp_0B,
+    BuiltInId::exp_Float1,
     BuiltInName::exp,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3389,7 +3239,7 @@ constexpr const TFunction kFunction_exp_0B(
     EOpExp,
     true);
 constexpr const TFunction kFunction_exp_1B(
-    BuiltInId::exp_1B,
+    BuiltInId::exp_Float2,
     BuiltInName::exp,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3398,7 +3248,7 @@ constexpr const TFunction kFunction_exp_1B(
     EOpExp,
     true);
 constexpr const TFunction kFunction_exp_2B(
-    BuiltInId::exp_2B,
+    BuiltInId::exp_Float3,
     BuiltInName::exp,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3407,7 +3257,7 @@ constexpr const TFunction kFunction_exp_2B(
     EOpExp,
     true);
 constexpr const TFunction kFunction_exp_3B(
-    BuiltInId::exp_3B,
+    BuiltInId::exp_Float4,
     BuiltInName::exp,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3416,7 +3266,7 @@ constexpr const TFunction kFunction_exp_3B(
     EOpExp,
     true);
 constexpr const TFunction kFunction_log_0B(
-    BuiltInId::log_0B,
+    BuiltInId::log_Float1,
     BuiltInName::log,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3425,7 +3275,7 @@ constexpr const TFunction kFunction_log_0B(
     EOpLog,
     true);
 constexpr const TFunction kFunction_log_1B(
-    BuiltInId::log_1B,
+    BuiltInId::log_Float2,
     BuiltInName::log,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3434,7 +3284,7 @@ constexpr const TFunction kFunction_log_1B(
     EOpLog,
     true);
 constexpr const TFunction kFunction_log_2B(
-    BuiltInId::log_2B,
+    BuiltInId::log_Float3,
     BuiltInName::log,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3443,7 +3293,7 @@ constexpr const TFunction kFunction_log_2B(
     EOpLog,
     true);
 constexpr const TFunction kFunction_log_3B(
-    BuiltInId::log_3B,
+    BuiltInId::log_Float4,
     BuiltInName::log,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3452,7 +3302,7 @@ constexpr const TFunction kFunction_log_3B(
     EOpLog,
     true);
 constexpr const TFunction kFunction_exp2_0B(
-    BuiltInId::exp2_0B,
+    BuiltInId::exp2_Float1,
     BuiltInName::exp2,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3461,7 +3311,7 @@ constexpr const TFunction kFunction_exp2_0B(
     EOpExp2,
     true);
 constexpr const TFunction kFunction_exp2_1B(
-    BuiltInId::exp2_1B,
+    BuiltInId::exp2_Float2,
     BuiltInName::exp2,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3470,7 +3320,7 @@ constexpr const TFunction kFunction_exp2_1B(
     EOpExp2,
     true);
 constexpr const TFunction kFunction_exp2_2B(
-    BuiltInId::exp2_2B,
+    BuiltInId::exp2_Float3,
     BuiltInName::exp2,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3479,7 +3329,7 @@ constexpr const TFunction kFunction_exp2_2B(
     EOpExp2,
     true);
 constexpr const TFunction kFunction_exp2_3B(
-    BuiltInId::exp2_3B,
+    BuiltInId::exp2_Float4,
     BuiltInName::exp2,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3488,7 +3338,7 @@ constexpr const TFunction kFunction_exp2_3B(
     EOpExp2,
     true);
 constexpr const TFunction kFunction_log2_0B(
-    BuiltInId::log2_0B,
+    BuiltInId::log2_Float1,
     BuiltInName::log2,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3497,7 +3347,7 @@ constexpr const TFunction kFunction_log2_0B(
     EOpLog2,
     true);
 constexpr const TFunction kFunction_log2_1B(
-    BuiltInId::log2_1B,
+    BuiltInId::log2_Float2,
     BuiltInName::log2,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3506,7 +3356,7 @@ constexpr const TFunction kFunction_log2_1B(
     EOpLog2,
     true);
 constexpr const TFunction kFunction_log2_2B(
-    BuiltInId::log2_2B,
+    BuiltInId::log2_Float3,
     BuiltInName::log2,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3515,7 +3365,7 @@ constexpr const TFunction kFunction_log2_2B(
     EOpLog2,
     true);
 constexpr const TFunction kFunction_log2_3B(
-    BuiltInId::log2_3B,
+    BuiltInId::log2_Float4,
     BuiltInName::log2,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3524,7 +3374,7 @@ constexpr const TFunction kFunction_log2_3B(
     EOpLog2,
     true);
 constexpr const TFunction kFunction_sqrt_0B(
-    BuiltInId::sqrt_0B,
+    BuiltInId::sqrt_Float1,
     BuiltInName::sqrt,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3533,7 +3383,7 @@ constexpr const TFunction kFunction_sqrt_0B(
     EOpSqrt,
     true);
 constexpr const TFunction kFunction_sqrt_1B(
-    BuiltInId::sqrt_1B,
+    BuiltInId::sqrt_Float2,
     BuiltInName::sqrt,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3542,7 +3392,7 @@ constexpr const TFunction kFunction_sqrt_1B(
     EOpSqrt,
     true);
 constexpr const TFunction kFunction_sqrt_2B(
-    BuiltInId::sqrt_2B,
+    BuiltInId::sqrt_Float3,
     BuiltInName::sqrt,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3551,7 +3401,7 @@ constexpr const TFunction kFunction_sqrt_2B(
     EOpSqrt,
     true);
 constexpr const TFunction kFunction_sqrt_3B(
-    BuiltInId::sqrt_3B,
+    BuiltInId::sqrt_Float4,
     BuiltInName::sqrt,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3560,7 +3410,7 @@ constexpr const TFunction kFunction_sqrt_3B(
     EOpSqrt,
     true);
 constexpr const TFunction kFunction_inversesqrt_0B(
-    BuiltInId::inversesqrt_0B,
+    BuiltInId::inversesqrt_Float1,
     BuiltInName::inversesqrt,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3569,7 +3419,7 @@ constexpr const TFunction kFunction_inversesqrt_0B(
     EOpInversesqrt,
     true);
 constexpr const TFunction kFunction_inversesqrt_1B(
-    BuiltInId::inversesqrt_1B,
+    BuiltInId::inversesqrt_Float2,
     BuiltInName::inversesqrt,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3578,7 +3428,7 @@ constexpr const TFunction kFunction_inversesqrt_1B(
     EOpInversesqrt,
     true);
 constexpr const TFunction kFunction_inversesqrt_2B(
-    BuiltInId::inversesqrt_2B,
+    BuiltInId::inversesqrt_Float3,
     BuiltInName::inversesqrt,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3587,7 +3437,7 @@ constexpr const TFunction kFunction_inversesqrt_2B(
     EOpInversesqrt,
     true);
 constexpr const TFunction kFunction_inversesqrt_3B(
-    BuiltInId::inversesqrt_3B,
+    BuiltInId::inversesqrt_Float4,
     BuiltInName::inversesqrt,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3596,7 +3446,7 @@ constexpr const TFunction kFunction_inversesqrt_3B(
     EOpInversesqrt,
     true);
 constexpr const TFunction kFunction_abs_0B(
-    BuiltInId::abs_0B,
+    BuiltInId::abs_Float1,
     BuiltInName::abs,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3605,7 +3455,7 @@ constexpr const TFunction kFunction_abs_0B(
     EOpAbs,
     true);
 constexpr const TFunction kFunction_abs_1B(
-    BuiltInId::abs_1B,
+    BuiltInId::abs_Float2,
     BuiltInName::abs,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3614,7 +3464,7 @@ constexpr const TFunction kFunction_abs_1B(
     EOpAbs,
     true);
 constexpr const TFunction kFunction_abs_2B(
-    BuiltInId::abs_2B,
+    BuiltInId::abs_Float3,
     BuiltInName::abs,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3623,7 +3473,7 @@ constexpr const TFunction kFunction_abs_2B(
     EOpAbs,
     true);
 constexpr const TFunction kFunction_abs_3B(
-    BuiltInId::abs_3B,
+    BuiltInId::abs_Float4,
     BuiltInName::abs,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3631,7 +3481,7 @@ constexpr const TFunction kFunction_abs_3B(
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpAbs,
     true);
-constexpr const TFunction kFunction_abs_0C(BuiltInId::abs_0C,
+constexpr const TFunction kFunction_abs_0C(BuiltInId::abs_Int1,
                                            BuiltInName::abs,
                                            TExtension::UNDEFINED,
                                            BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -3639,7 +3489,7 @@ constexpr const TFunction kFunction_abs_0C(BuiltInId::abs_0C,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
                                            EOpAbs,
                                            true);
-constexpr const TFunction kFunction_abs_1C(BuiltInId::abs_1C,
+constexpr const TFunction kFunction_abs_1C(BuiltInId::abs_Int2,
                                            BuiltInName::abs,
                                            TExtension::UNDEFINED,
                                            BuiltInParameters::p1C1C0C0C,
@@ -3647,7 +3497,7 @@ constexpr const TFunction kFunction_abs_1C(BuiltInId::abs_1C,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 2, 1>(),
                                            EOpAbs,
                                            true);
-constexpr const TFunction kFunction_abs_2C(BuiltInId::abs_2C,
+constexpr const TFunction kFunction_abs_2C(BuiltInId::abs_Int3,
                                            BuiltInName::abs,
                                            TExtension::UNDEFINED,
                                            BuiltInParameters::p2C2C0C0C,
@@ -3655,7 +3505,7 @@ constexpr const TFunction kFunction_abs_2C(BuiltInId::abs_2C,
                                            StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
                                            EOpAbs,
                                            true);
-constexpr const TFunction kFunction_abs_3C(BuiltInId::abs_3C,
+constexpr const TFunction kFunction_abs_3C(BuiltInId::abs_Int4,
                                            BuiltInName::abs,
                                            TExtension::UNDEFINED,
                                            BuiltInParameters::p3C0C0C,
@@ -3664,7 +3514,7 @@ constexpr const TFunction kFunction_abs_3C(BuiltInId::abs_3C,
                                            EOpAbs,
                                            true);
 constexpr const TFunction kFunction_sign_0B(
-    BuiltInId::sign_0B,
+    BuiltInId::sign_Float1,
     BuiltInName::sign,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3673,7 +3523,7 @@ constexpr const TFunction kFunction_sign_0B(
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_1B(
-    BuiltInId::sign_1B,
+    BuiltInId::sign_Float2,
     BuiltInName::sign,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3682,7 +3532,7 @@ constexpr const TFunction kFunction_sign_1B(
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_2B(
-    BuiltInId::sign_2B,
+    BuiltInId::sign_Float3,
     BuiltInName::sign,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3691,7 +3541,7 @@ constexpr const TFunction kFunction_sign_2B(
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_3B(
-    BuiltInId::sign_3B,
+    BuiltInId::sign_Float4,
     BuiltInName::sign,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3700,7 +3550,7 @@ constexpr const TFunction kFunction_sign_3B(
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_0C(
-    BuiltInId::sign_0C,
+    BuiltInId::sign_Int1,
     BuiltInName::sign,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -3709,7 +3559,7 @@ constexpr const TFunction kFunction_sign_0C(
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_1C(
-    BuiltInId::sign_1C,
+    BuiltInId::sign_Int2,
     BuiltInName::sign,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -3718,7 +3568,7 @@ constexpr const TFunction kFunction_sign_1C(
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_2C(
-    BuiltInId::sign_2C,
+    BuiltInId::sign_Int3,
     BuiltInName::sign,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -3727,7 +3577,7 @@ constexpr const TFunction kFunction_sign_2C(
     EOpSign,
     true);
 constexpr const TFunction kFunction_sign_3C(
-    BuiltInId::sign_3C,
+    BuiltInId::sign_Int4,
     BuiltInName::sign,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -3736,7 +3586,7 @@ constexpr const TFunction kFunction_sign_3C(
     EOpSign,
     true);
 constexpr const TFunction kFunction_floor_0B(
-    BuiltInId::floor_0B,
+    BuiltInId::floor_Float1,
     BuiltInName::floor,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3745,7 +3595,7 @@ constexpr const TFunction kFunction_floor_0B(
     EOpFloor,
     true);
 constexpr const TFunction kFunction_floor_1B(
-    BuiltInId::floor_1B,
+    BuiltInId::floor_Float2,
     BuiltInName::floor,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3754,7 +3604,7 @@ constexpr const TFunction kFunction_floor_1B(
     EOpFloor,
     true);
 constexpr const TFunction kFunction_floor_2B(
-    BuiltInId::floor_2B,
+    BuiltInId::floor_Float3,
     BuiltInName::floor,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3763,7 +3613,7 @@ constexpr const TFunction kFunction_floor_2B(
     EOpFloor,
     true);
 constexpr const TFunction kFunction_floor_3B(
-    BuiltInId::floor_3B,
+    BuiltInId::floor_Float4,
     BuiltInName::floor,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3772,7 +3622,7 @@ constexpr const TFunction kFunction_floor_3B(
     EOpFloor,
     true);
 constexpr const TFunction kFunction_trunc_0B(
-    BuiltInId::trunc_0B,
+    BuiltInId::trunc_Float1,
     BuiltInName::trunc,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3781,7 +3631,7 @@ constexpr const TFunction kFunction_trunc_0B(
     EOpTrunc,
     true);
 constexpr const TFunction kFunction_trunc_1B(
-    BuiltInId::trunc_1B,
+    BuiltInId::trunc_Float2,
     BuiltInName::trunc,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3790,7 +3640,7 @@ constexpr const TFunction kFunction_trunc_1B(
     EOpTrunc,
     true);
 constexpr const TFunction kFunction_trunc_2B(
-    BuiltInId::trunc_2B,
+    BuiltInId::trunc_Float3,
     BuiltInName::trunc,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3799,7 +3649,7 @@ constexpr const TFunction kFunction_trunc_2B(
     EOpTrunc,
     true);
 constexpr const TFunction kFunction_trunc_3B(
-    BuiltInId::trunc_3B,
+    BuiltInId::trunc_Float4,
     BuiltInName::trunc,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3808,7 +3658,7 @@ constexpr const TFunction kFunction_trunc_3B(
     EOpTrunc,
     true);
 constexpr const TFunction kFunction_round_0B(
-    BuiltInId::round_0B,
+    BuiltInId::round_Float1,
     BuiltInName::round,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3817,7 +3667,7 @@ constexpr const TFunction kFunction_round_0B(
     EOpRound,
     true);
 constexpr const TFunction kFunction_round_1B(
-    BuiltInId::round_1B,
+    BuiltInId::round_Float2,
     BuiltInName::round,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3826,7 +3676,7 @@ constexpr const TFunction kFunction_round_1B(
     EOpRound,
     true);
 constexpr const TFunction kFunction_round_2B(
-    BuiltInId::round_2B,
+    BuiltInId::round_Float3,
     BuiltInName::round,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3835,7 +3685,7 @@ constexpr const TFunction kFunction_round_2B(
     EOpRound,
     true);
 constexpr const TFunction kFunction_round_3B(
-    BuiltInId::round_3B,
+    BuiltInId::round_Float4,
     BuiltInName::round,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3844,7 +3694,7 @@ constexpr const TFunction kFunction_round_3B(
     EOpRound,
     true);
 constexpr const TFunction kFunction_roundEven_0B(
-    BuiltInId::roundEven_0B,
+    BuiltInId::roundEven_Float1,
     BuiltInName::roundEven,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3853,7 +3703,7 @@ constexpr const TFunction kFunction_roundEven_0B(
     EOpRoundEven,
     true);
 constexpr const TFunction kFunction_roundEven_1B(
-    BuiltInId::roundEven_1B,
+    BuiltInId::roundEven_Float2,
     BuiltInName::roundEven,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3862,7 +3712,7 @@ constexpr const TFunction kFunction_roundEven_1B(
     EOpRoundEven,
     true);
 constexpr const TFunction kFunction_roundEven_2B(
-    BuiltInId::roundEven_2B,
+    BuiltInId::roundEven_Float3,
     BuiltInName::roundEven,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3871,7 +3721,7 @@ constexpr const TFunction kFunction_roundEven_2B(
     EOpRoundEven,
     true);
 constexpr const TFunction kFunction_roundEven_3B(
-    BuiltInId::roundEven_3B,
+    BuiltInId::roundEven_Float4,
     BuiltInName::roundEven,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3880,7 +3730,7 @@ constexpr const TFunction kFunction_roundEven_3B(
     EOpRoundEven,
     true);
 constexpr const TFunction kFunction_ceil_0B(
-    BuiltInId::ceil_0B,
+    BuiltInId::ceil_Float1,
     BuiltInName::ceil,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3889,7 +3739,7 @@ constexpr const TFunction kFunction_ceil_0B(
     EOpCeil,
     true);
 constexpr const TFunction kFunction_ceil_1B(
-    BuiltInId::ceil_1B,
+    BuiltInId::ceil_Float2,
     BuiltInName::ceil,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3898,7 +3748,7 @@ constexpr const TFunction kFunction_ceil_1B(
     EOpCeil,
     true);
 constexpr const TFunction kFunction_ceil_2B(
-    BuiltInId::ceil_2B,
+    BuiltInId::ceil_Float3,
     BuiltInName::ceil,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3907,7 +3757,7 @@ constexpr const TFunction kFunction_ceil_2B(
     EOpCeil,
     true);
 constexpr const TFunction kFunction_ceil_3B(
-    BuiltInId::ceil_3B,
+    BuiltInId::ceil_Float4,
     BuiltInName::ceil,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3916,7 +3766,7 @@ constexpr const TFunction kFunction_ceil_3B(
     EOpCeil,
     true);
 constexpr const TFunction kFunction_fract_0B(
-    BuiltInId::fract_0B,
+    BuiltInId::fract_Float1,
     BuiltInName::fract,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -3925,7 +3775,7 @@ constexpr const TFunction kFunction_fract_0B(
     EOpFract,
     true);
 constexpr const TFunction kFunction_fract_1B(
-    BuiltInId::fract_1B,
+    BuiltInId::fract_Float2,
     BuiltInName::fract,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3934,7 +3784,7 @@ constexpr const TFunction kFunction_fract_1B(
     EOpFract,
     true);
 constexpr const TFunction kFunction_fract_2B(
-    BuiltInId::fract_2B,
+    BuiltInId::fract_Float3,
     BuiltInName::fract,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -3943,7 +3793,7 @@ constexpr const TFunction kFunction_fract_2B(
     EOpFract,
     true);
 constexpr const TFunction kFunction_fract_3B(
-    BuiltInId::fract_3B,
+    BuiltInId::fract_Float4,
     BuiltInName::fract,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -3952,7 +3802,7 @@ constexpr const TFunction kFunction_fract_3B(
     EOpFract,
     true);
 constexpr const TFunction kFunction_mod_0B0B(
-    BuiltInId::mod_0B0B,
+    BuiltInId::mod_Float1_Float1,
     BuiltInName::mod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -3961,7 +3811,7 @@ constexpr const TFunction kFunction_mod_0B0B(
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_1B0B(
-    BuiltInId::mod_1B0B,
+    BuiltInId::mod_Float2_Float1,
     BuiltInName::mod,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B0B0B,
@@ -3970,7 +3820,7 @@ constexpr const TFunction kFunction_mod_1B0B(
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_2B0B(
-    BuiltInId::mod_2B0B,
+    BuiltInId::mod_Float3_Float1,
     BuiltInName::mod,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B0B0B,
@@ -3979,7 +3829,7 @@ constexpr const TFunction kFunction_mod_2B0B(
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_3B0B(
-    BuiltInId::mod_3B0B,
+    BuiltInId::mod_Float4_Float1,
     BuiltInName::mod,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B0B0B,
@@ -3988,7 +3838,7 @@ constexpr const TFunction kFunction_mod_3B0B(
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_1B1B(
-    BuiltInId::mod_1B1B,
+    BuiltInId::mod_Float2_Float2,
     BuiltInName::mod,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -3997,7 +3847,7 @@ constexpr const TFunction kFunction_mod_1B1B(
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_2B2B(
-    BuiltInId::mod_2B2B,
+    BuiltInId::mod_Float3_Float3,
     BuiltInName::mod,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -4006,7 +3856,7 @@ constexpr const TFunction kFunction_mod_2B2B(
     EOpMod,
     true);
 constexpr const TFunction kFunction_mod_3B3B(
-    BuiltInId::mod_3B3B,
+    BuiltInId::mod_Float4_Float4,
     BuiltInName::mod,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -4015,7 +3865,7 @@ constexpr const TFunction kFunction_mod_3B3B(
     EOpMod,
     true);
 constexpr const TFunction kFunction_min_0B0B(
-    BuiltInId::min_0B0B,
+    BuiltInId::min_Float1_Float1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -4024,7 +3874,7 @@ constexpr const TFunction kFunction_min_0B0B(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1B0B(
-    BuiltInId::min_1B0B,
+    BuiltInId::min_Float2_Float1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B0B0B,
@@ -4033,7 +3883,7 @@ constexpr const TFunction kFunction_min_1B0B(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2B0B(
-    BuiltInId::min_2B0B,
+    BuiltInId::min_Float3_Float1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B0B0B,
@@ -4042,7 +3892,7 @@ constexpr const TFunction kFunction_min_2B0B(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3B0B(
-    BuiltInId::min_3B0B,
+    BuiltInId::min_Float4_Float1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B0B0B,
@@ -4051,7 +3901,7 @@ constexpr const TFunction kFunction_min_3B0B(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1B1B(
-    BuiltInId::min_1B1B,
+    BuiltInId::min_Float2_Float2,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -4060,7 +3910,7 @@ constexpr const TFunction kFunction_min_1B1B(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2B2B(
-    BuiltInId::min_2B2B,
+    BuiltInId::min_Float3_Float3,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -4069,7 +3919,7 @@ constexpr const TFunction kFunction_min_2B2B(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3B3B(
-    BuiltInId::min_3B3B,
+    BuiltInId::min_Float4_Float4,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -4078,7 +3928,7 @@ constexpr const TFunction kFunction_min_3B3B(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_0C0C(
-    BuiltInId::min_0C0C,
+    BuiltInId::min_Int1_Int1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -4087,7 +3937,7 @@ constexpr const TFunction kFunction_min_0C0C(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1C1C(
-    BuiltInId::min_1C1C,
+    BuiltInId::min_Int2_Int2,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -4096,7 +3946,7 @@ constexpr const TFunction kFunction_min_1C1C(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2C2C(
-    BuiltInId::min_2C2C,
+    BuiltInId::min_Int3_Int3,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -4105,7 +3955,7 @@ constexpr const TFunction kFunction_min_2C2C(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3C3C(
-    BuiltInId::min_3C3C,
+    BuiltInId::min_Int4_Int4,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C0C0C,
@@ -4114,7 +3964,7 @@ constexpr const TFunction kFunction_min_3C3C(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1C0C(
-    BuiltInId::min_1C0C,
+    BuiltInId::min_Int2_Int1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C0C0C,
@@ -4123,7 +3973,7 @@ constexpr const TFunction kFunction_min_1C0C(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2C0C(
-    BuiltInId::min_2C0C,
+    BuiltInId::min_Int3_Int1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C0C0C,
@@ -4132,7 +3982,7 @@ constexpr const TFunction kFunction_min_2C0C(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3C0C(
-    BuiltInId::min_3C0C,
+    BuiltInId::min_Int4_Int1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -4141,7 +3991,7 @@ constexpr const TFunction kFunction_min_3C0C(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_0D0D(
-    BuiltInId::min_0D0D,
+    BuiltInId::min_UInt1_UInt1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0D0C0C,
@@ -4150,7 +4000,7 @@ constexpr const TFunction kFunction_min_0D0D(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1D1D(
-    BuiltInId::min_1D1D,
+    BuiltInId::min_UInt2_UInt2,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D0C0C,
@@ -4159,7 +4009,7 @@ constexpr const TFunction kFunction_min_1D1D(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2D2D(
-    BuiltInId::min_2D2D,
+    BuiltInId::min_UInt3_UInt3,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -4168,7 +4018,7 @@ constexpr const TFunction kFunction_min_2D2D(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3D3D(
-    BuiltInId::min_3D3D,
+    BuiltInId::min_UInt4_UInt4,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D0C0C,
@@ -4177,7 +4027,7 @@ constexpr const TFunction kFunction_min_3D3D(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_1D0D(
-    BuiltInId::min_1D0D,
+    BuiltInId::min_UInt2_UInt1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D0D0D,
@@ -4186,7 +4036,7 @@ constexpr const TFunction kFunction_min_1D0D(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_2D0D(
-    BuiltInId::min_2D0D,
+    BuiltInId::min_UInt3_UInt1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D0D0D,
@@ -4195,7 +4045,7 @@ constexpr const TFunction kFunction_min_2D0D(
     EOpMin,
     true);
 constexpr const TFunction kFunction_min_3D0D(
-    BuiltInId::min_3D0D,
+    BuiltInId::min_UInt4_UInt1,
     BuiltInName::min,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D0D0D,
@@ -4204,7 +4054,7 @@ constexpr const TFunction kFunction_min_3D0D(
     EOpMin,
     true);
 constexpr const TFunction kFunction_max_0B0B(
-    BuiltInId::max_0B0B,
+    BuiltInId::max_Float1_Float1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -4213,7 +4063,7 @@ constexpr const TFunction kFunction_max_0B0B(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1B0B(
-    BuiltInId::max_1B0B,
+    BuiltInId::max_Float2_Float1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B0B0B,
@@ -4222,7 +4072,7 @@ constexpr const TFunction kFunction_max_1B0B(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2B0B(
-    BuiltInId::max_2B0B,
+    BuiltInId::max_Float3_Float1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B0B0B,
@@ -4231,7 +4081,7 @@ constexpr const TFunction kFunction_max_2B0B(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3B0B(
-    BuiltInId::max_3B0B,
+    BuiltInId::max_Float4_Float1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B0B0B,
@@ -4240,7 +4090,7 @@ constexpr const TFunction kFunction_max_3B0B(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1B1B(
-    BuiltInId::max_1B1B,
+    BuiltInId::max_Float2_Float2,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -4249,7 +4099,7 @@ constexpr const TFunction kFunction_max_1B1B(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2B2B(
-    BuiltInId::max_2B2B,
+    BuiltInId::max_Float3_Float3,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -4258,7 +4108,7 @@ constexpr const TFunction kFunction_max_2B2B(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3B3B(
-    BuiltInId::max_3B3B,
+    BuiltInId::max_Float4_Float4,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -4267,7 +4117,7 @@ constexpr const TFunction kFunction_max_3B3B(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_0C0C(
-    BuiltInId::max_0C0C,
+    BuiltInId::max_Int1_Int1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -4276,7 +4126,7 @@ constexpr const TFunction kFunction_max_0C0C(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1C1C(
-    BuiltInId::max_1C1C,
+    BuiltInId::max_Int2_Int2,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -4285,7 +4135,7 @@ constexpr const TFunction kFunction_max_1C1C(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2C2C(
-    BuiltInId::max_2C2C,
+    BuiltInId::max_Int3_Int3,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -4294,7 +4144,7 @@ constexpr const TFunction kFunction_max_2C2C(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3C3C(
-    BuiltInId::max_3C3C,
+    BuiltInId::max_Int4_Int4,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C0C0C,
@@ -4303,7 +4153,7 @@ constexpr const TFunction kFunction_max_3C3C(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1C0C(
-    BuiltInId::max_1C0C,
+    BuiltInId::max_Int2_Int1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C0C0C,
@@ -4312,7 +4162,7 @@ constexpr const TFunction kFunction_max_1C0C(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2C0C(
-    BuiltInId::max_2C0C,
+    BuiltInId::max_Int3_Int1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C0C0C,
@@ -4321,7 +4171,7 @@ constexpr const TFunction kFunction_max_2C0C(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3C0C(
-    BuiltInId::max_3C0C,
+    BuiltInId::max_Int4_Int1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -4330,7 +4180,7 @@ constexpr const TFunction kFunction_max_3C0C(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_0D0D(
-    BuiltInId::max_0D0D,
+    BuiltInId::max_UInt1_UInt1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0D0C0C,
@@ -4339,7 +4189,7 @@ constexpr const TFunction kFunction_max_0D0D(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1D1D(
-    BuiltInId::max_1D1D,
+    BuiltInId::max_UInt2_UInt2,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D0C0C,
@@ -4348,7 +4198,7 @@ constexpr const TFunction kFunction_max_1D1D(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2D2D(
-    BuiltInId::max_2D2D,
+    BuiltInId::max_UInt3_UInt3,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -4357,7 +4207,7 @@ constexpr const TFunction kFunction_max_2D2D(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3D3D(
-    BuiltInId::max_3D3D,
+    BuiltInId::max_UInt4_UInt4,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D0C0C,
@@ -4366,7 +4216,7 @@ constexpr const TFunction kFunction_max_3D3D(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_1D0D(
-    BuiltInId::max_1D0D,
+    BuiltInId::max_UInt2_UInt1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D0D0D,
@@ -4375,7 +4225,7 @@ constexpr const TFunction kFunction_max_1D0D(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_2D0D(
-    BuiltInId::max_2D0D,
+    BuiltInId::max_UInt3_UInt1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D0D0D,
@@ -4384,7 +4234,7 @@ constexpr const TFunction kFunction_max_2D0D(
     EOpMax,
     true);
 constexpr const TFunction kFunction_max_3D0D(
-    BuiltInId::max_3D0D,
+    BuiltInId::max_UInt4_UInt1,
     BuiltInName::max,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D0D0D,
@@ -4393,7 +4243,7 @@ constexpr const TFunction kFunction_max_3D0D(
     EOpMax,
     true);
 constexpr const TFunction kFunction_clamp_0B0B0B(
-    BuiltInId::clamp_0B0B0B,
+    BuiltInId::clamp_Float1_Float1_Float1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B0B,
@@ -4402,7 +4252,7 @@ constexpr const TFunction kFunction_clamp_0B0B0B(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1B0B0B(
-    BuiltInId::clamp_1B0B0B,
+    BuiltInId::clamp_Float2_Float1_Float1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B0B0B,
@@ -4411,7 +4261,7 @@ constexpr const TFunction kFunction_clamp_1B0B0B(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2B0B0B(
-    BuiltInId::clamp_2B0B0B,
+    BuiltInId::clamp_Float3_Float1_Float1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B0B0B,
@@ -4420,7 +4270,7 @@ constexpr const TFunction kFunction_clamp_2B0B0B(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3B0B0B(
-    BuiltInId::clamp_3B0B0B,
+    BuiltInId::clamp_Float4_Float1_Float1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B0B0B,
@@ -4429,7 +4279,7 @@ constexpr const TFunction kFunction_clamp_3B0B0B(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1B1B1B(
-    BuiltInId::clamp_1B1B1B,
+    BuiltInId::clamp_Float2_Float2_Float2,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B1B,
@@ -4438,7 +4288,7 @@ constexpr const TFunction kFunction_clamp_1B1B1B(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2B2B2B(
-    BuiltInId::clamp_2B2B2B,
+    BuiltInId::clamp_Float3_Float3_Float3,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B2B,
@@ -4447,7 +4297,7 @@ constexpr const TFunction kFunction_clamp_2B2B2B(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3B3B3B(
-    BuiltInId::clamp_3B3B3B,
+    BuiltInId::clamp_Float4_Float4_Float4,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -4456,7 +4306,7 @@ constexpr const TFunction kFunction_clamp_3B3B3B(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_0C0C0C(
-    BuiltInId::clamp_0C0C0C,
+    BuiltInId::clamp_Int1_Int1_Int1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C0C0C,
@@ -4465,7 +4315,7 @@ constexpr const TFunction kFunction_clamp_0C0C0C(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1C0C0C(
-    BuiltInId::clamp_1C0C0C,
+    BuiltInId::clamp_Int2_Int1_Int1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C0C0C,
@@ -4474,7 +4324,7 @@ constexpr const TFunction kFunction_clamp_1C0C0C(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2C0C0C(
-    BuiltInId::clamp_2C0C0C,
+    BuiltInId::clamp_Int3_Int1_Int1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C0C0C,
@@ -4483,7 +4333,7 @@ constexpr const TFunction kFunction_clamp_2C0C0C(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3C0C0C(
-    BuiltInId::clamp_3C0C0C,
+    BuiltInId::clamp_Int4_Int1_Int1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -4492,7 +4342,7 @@ constexpr const TFunction kFunction_clamp_3C0C0C(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1C1C1C(
-    BuiltInId::clamp_1C1C1C,
+    BuiltInId::clamp_Int2_Int2_Int2,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C1C,
@@ -4501,7 +4351,7 @@ constexpr const TFunction kFunction_clamp_1C1C1C(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2C2C2C(
-    BuiltInId::clamp_2C2C2C,
+    BuiltInId::clamp_Int3_Int3_Int3,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C2C,
@@ -4510,7 +4360,7 @@ constexpr const TFunction kFunction_clamp_2C2C2C(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3C3C3C(
-    BuiltInId::clamp_3C3C3C,
+    BuiltInId::clamp_Int4_Int4_Int4,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C3C,
@@ -4519,7 +4369,7 @@ constexpr const TFunction kFunction_clamp_3C3C3C(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_0D0D0D(
-    BuiltInId::clamp_0D0D0D,
+    BuiltInId::clamp_UInt1_UInt1_UInt1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0D0D,
@@ -4528,7 +4378,7 @@ constexpr const TFunction kFunction_clamp_0D0D0D(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1D0D0D(
-    BuiltInId::clamp_1D0D0D,
+    BuiltInId::clamp_UInt2_UInt1_UInt1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D0D0D,
@@ -4537,7 +4387,7 @@ constexpr const TFunction kFunction_clamp_1D0D0D(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2D0D0D(
-    BuiltInId::clamp_2D0D0D,
+    BuiltInId::clamp_UInt3_UInt1_UInt1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D0D0D,
@@ -4546,7 +4396,7 @@ constexpr const TFunction kFunction_clamp_2D0D0D(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3D0D0D(
-    BuiltInId::clamp_3D0D0D,
+    BuiltInId::clamp_UInt4_UInt1_UInt1,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D0D0D,
@@ -4555,7 +4405,7 @@ constexpr const TFunction kFunction_clamp_3D0D0D(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_1D1D1D(
-    BuiltInId::clamp_1D1D1D,
+    BuiltInId::clamp_UInt2_UInt2_UInt2,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D1D,
@@ -4564,7 +4414,7 @@ constexpr const TFunction kFunction_clamp_1D1D1D(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_2D2D2D(
-    BuiltInId::clamp_2D2D2D,
+    BuiltInId::clamp_UInt3_UInt3_UInt3,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D2D,
@@ -4573,7 +4423,7 @@ constexpr const TFunction kFunction_clamp_2D2D2D(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_clamp_3D3D3D(
-    BuiltInId::clamp_3D3D3D,
+    BuiltInId::clamp_UInt4_UInt4_UInt4,
     BuiltInName::clamp,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D3D,
@@ -4582,7 +4432,7 @@ constexpr const TFunction kFunction_clamp_3D3D3D(
     EOpClamp,
     true);
 constexpr const TFunction kFunction_mix_0B0B0B(
-    BuiltInId::mix_0B0B0B,
+    BuiltInId::mix_Float1_Float1_Float1,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B0B,
@@ -4591,7 +4441,7 @@ constexpr const TFunction kFunction_mix_0B0B0B(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_1B1B0B(
-    BuiltInId::mix_1B1B0B,
+    BuiltInId::mix_Float2_Float2_Float1,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -4600,7 +4450,7 @@ constexpr const TFunction kFunction_mix_1B1B0B(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_2B2B0B(
-    BuiltInId::mix_2B2B0B,
+    BuiltInId::mix_Float3_Float3_Float1,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -4609,7 +4459,7 @@ constexpr const TFunction kFunction_mix_2B2B0B(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_3B3B0B(
-    BuiltInId::mix_3B3B0B,
+    BuiltInId::mix_Float4_Float4_Float1,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B0B,
@@ -4618,7 +4468,7 @@ constexpr const TFunction kFunction_mix_3B3B0B(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_1B1B1B(
-    BuiltInId::mix_1B1B1B,
+    BuiltInId::mix_Float2_Float2_Float2,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B1B,
@@ -4627,7 +4477,7 @@ constexpr const TFunction kFunction_mix_1B1B1B(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_2B2B2B(
-    BuiltInId::mix_2B2B2B,
+    BuiltInId::mix_Float3_Float3_Float3,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B2B,
@@ -4636,7 +4486,7 @@ constexpr const TFunction kFunction_mix_2B2B2B(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_3B3B3B(
-    BuiltInId::mix_3B3B3B,
+    BuiltInId::mix_Float4_Float4_Float4,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -4645,7 +4495,7 @@ constexpr const TFunction kFunction_mix_3B3B3B(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_0B0B0E(
-    BuiltInId::mix_0B0B0E,
+    BuiltInId::mix_Float1_Float1_Bool1,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B0E,
@@ -4654,7 +4504,7 @@ constexpr const TFunction kFunction_mix_0B0B0E(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_1B1B1E(
-    BuiltInId::mix_1B1B1E,
+    BuiltInId::mix_Float2_Float2_Bool2,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B1E,
@@ -4663,7 +4513,7 @@ constexpr const TFunction kFunction_mix_1B1B1E(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_2B2B2E(
-    BuiltInId::mix_2B2B2E,
+    BuiltInId::mix_Float3_Float3_Bool3,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B2E,
@@ -4672,7 +4522,7 @@ constexpr const TFunction kFunction_mix_2B2B2E(
     EOpMix,
     true);
 constexpr const TFunction kFunction_mix_3B3B3E(
-    BuiltInId::mix_3B3B3E,
+    BuiltInId::mix_Float4_Float4_Bool4,
     BuiltInName::mix,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3E,
@@ -4681,7 +4531,7 @@ constexpr const TFunction kFunction_mix_3B3B3E(
     EOpMix,
     true);
 constexpr const TFunction kFunction_step_0B0B(
-    BuiltInId::step_0B0B,
+    BuiltInId::step_Float1_Float1,
     BuiltInName::step,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -4690,7 +4540,7 @@ constexpr const TFunction kFunction_step_0B0B(
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_1B1B(
-    BuiltInId::step_1B1B,
+    BuiltInId::step_Float2_Float2,
     BuiltInName::step,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -4699,7 +4549,7 @@ constexpr const TFunction kFunction_step_1B1B(
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_2B2B(
-    BuiltInId::step_2B2B,
+    BuiltInId::step_Float3_Float3,
     BuiltInName::step,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -4708,7 +4558,7 @@ constexpr const TFunction kFunction_step_2B2B(
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_3B3B(
-    BuiltInId::step_3B3B,
+    BuiltInId::step_Float4_Float4,
     BuiltInName::step,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -4717,7 +4567,7 @@ constexpr const TFunction kFunction_step_3B3B(
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_0B1B(
-    BuiltInId::step_0B1B,
+    BuiltInId::step_Float1_Float2,
     BuiltInName::step,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B1B,
@@ -4726,7 +4576,7 @@ constexpr const TFunction kFunction_step_0B1B(
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_0B2B(
-    BuiltInId::step_0B2B,
+    BuiltInId::step_Float1_Float3,
     BuiltInName::step,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B2B,
@@ -4735,7 +4585,7 @@ constexpr const TFunction kFunction_step_0B2B(
     EOpStep,
     true);
 constexpr const TFunction kFunction_step_0B3B(
-    BuiltInId::step_0B3B,
+    BuiltInId::step_Float1_Float4,
     BuiltInName::step,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B3B,
@@ -4744,7 +4594,7 @@ constexpr const TFunction kFunction_step_0B3B(
     EOpStep,
     true);
 constexpr const TFunction kFunction_smoothstep_0B0B0B(
-    BuiltInId::smoothstep_0B0B0B,
+    BuiltInId::smoothstep_Float1_Float1_Float1,
     BuiltInName::smoothstep,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B0B,
@@ -4753,7 +4603,7 @@ constexpr const TFunction kFunction_smoothstep_0B0B0B(
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_1B1B1B(
-    BuiltInId::smoothstep_1B1B1B,
+    BuiltInId::smoothstep_Float2_Float2_Float2,
     BuiltInName::smoothstep,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B1B,
@@ -4762,7 +4612,7 @@ constexpr const TFunction kFunction_smoothstep_1B1B1B(
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_2B2B2B(
-    BuiltInId::smoothstep_2B2B2B,
+    BuiltInId::smoothstep_Float3_Float3_Float3,
     BuiltInName::smoothstep,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B2B,
@@ -4771,7 +4621,7 @@ constexpr const TFunction kFunction_smoothstep_2B2B2B(
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_3B3B3B(
-    BuiltInId::smoothstep_3B3B3B,
+    BuiltInId::smoothstep_Float4_Float4_Float4,
     BuiltInName::smoothstep,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -4780,7 +4630,7 @@ constexpr const TFunction kFunction_smoothstep_3B3B3B(
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_0B0B1B(
-    BuiltInId::smoothstep_0B0B1B,
+    BuiltInId::smoothstep_Float1_Float1_Float2,
     BuiltInName::smoothstep,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -4789,7 +4639,7 @@ constexpr const TFunction kFunction_smoothstep_0B0B1B(
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_0B0B2B(
-    BuiltInId::smoothstep_0B0B2B,
+    BuiltInId::smoothstep_Float1_Float1_Float3,
     BuiltInName::smoothstep,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B2B,
@@ -4798,7 +4648,7 @@ constexpr const TFunction kFunction_smoothstep_0B0B2B(
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_smoothstep_0B0B3B(
-    BuiltInId::smoothstep_0B0B3B,
+    BuiltInId::smoothstep_Float1_Float1_Float4,
     BuiltInName::smoothstep,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B3B,
@@ -4807,7 +4657,7 @@ constexpr const TFunction kFunction_smoothstep_0B0B3B(
     EOpSmoothstep,
     true);
 constexpr const TFunction kFunction_modf_0B0B(
-    BuiltInId::modf_0B0B,
+    BuiltInId::modf_Float1_Float1,
     BuiltInName::modf,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B_o_0B,
@@ -4816,7 +4666,7 @@ constexpr const TFunction kFunction_modf_0B0B(
     EOpModf,
     false);
 constexpr const TFunction kFunction_modf_1B1B(
-    BuiltInId::modf_1B1B,
+    BuiltInId::modf_Float2_Float2,
     BuiltInName::modf,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B_o_1B,
@@ -4825,7 +4675,7 @@ constexpr const TFunction kFunction_modf_1B1B(
     EOpModf,
     false);
 constexpr const TFunction kFunction_modf_2B2B(
-    BuiltInId::modf_2B2B,
+    BuiltInId::modf_Float3_Float3,
     BuiltInName::modf,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B_o_2B,
@@ -4834,7 +4684,7 @@ constexpr const TFunction kFunction_modf_2B2B(
     EOpModf,
     false);
 constexpr const TFunction kFunction_modf_3B3B(
-    BuiltInId::modf_3B3B,
+    BuiltInId::modf_Float4_Float4,
     BuiltInName::modf,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B_o_3B,
@@ -4843,7 +4693,7 @@ constexpr const TFunction kFunction_modf_3B3B(
     EOpModf,
     false);
 constexpr const TFunction kFunction_isnan_0B(
-    BuiltInId::isnan_0B,
+    BuiltInId::isnan_Float1,
     BuiltInName::isnan,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -4852,7 +4702,7 @@ constexpr const TFunction kFunction_isnan_0B(
     EOpIsnan,
     true);
 constexpr const TFunction kFunction_isnan_1B(
-    BuiltInId::isnan_1B,
+    BuiltInId::isnan_Float2,
     BuiltInName::isnan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -4861,7 +4711,7 @@ constexpr const TFunction kFunction_isnan_1B(
     EOpIsnan,
     true);
 constexpr const TFunction kFunction_isnan_2B(
-    BuiltInId::isnan_2B,
+    BuiltInId::isnan_Float3,
     BuiltInName::isnan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -4870,7 +4720,7 @@ constexpr const TFunction kFunction_isnan_2B(
     EOpIsnan,
     true);
 constexpr const TFunction kFunction_isnan_3B(
-    BuiltInId::isnan_3B,
+    BuiltInId::isnan_Float4,
     BuiltInName::isnan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -4879,7 +4729,7 @@ constexpr const TFunction kFunction_isnan_3B(
     EOpIsnan,
     true);
 constexpr const TFunction kFunction_isinf_0B(
-    BuiltInId::isinf_0B,
+    BuiltInId::isinf_Float1,
     BuiltInName::isinf,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -4888,7 +4738,7 @@ constexpr const TFunction kFunction_isinf_0B(
     EOpIsinf,
     true);
 constexpr const TFunction kFunction_isinf_1B(
-    BuiltInId::isinf_1B,
+    BuiltInId::isinf_Float2,
     BuiltInName::isinf,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -4897,7 +4747,7 @@ constexpr const TFunction kFunction_isinf_1B(
     EOpIsinf,
     true);
 constexpr const TFunction kFunction_isinf_2B(
-    BuiltInId::isinf_2B,
+    BuiltInId::isinf_Float3,
     BuiltInName::isinf,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -4906,7 +4756,7 @@ constexpr const TFunction kFunction_isinf_2B(
     EOpIsinf,
     true);
 constexpr const TFunction kFunction_isinf_3B(
-    BuiltInId::isinf_3B,
+    BuiltInId::isinf_Float4,
     BuiltInName::isinf,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -4915,7 +4765,7 @@ constexpr const TFunction kFunction_isinf_3B(
     EOpIsinf,
     true);
 constexpr const TFunction kFunction_floatBitsToInt_0B(
-    BuiltInId::floatBitsToInt_0B,
+    BuiltInId::floatBitsToInt_Float1,
     BuiltInName::floatBitsToInt,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -4924,7 +4774,7 @@ constexpr const TFunction kFunction_floatBitsToInt_0B(
     EOpFloatBitsToInt,
     true);
 constexpr const TFunction kFunction_floatBitsToInt_1B(
-    BuiltInId::floatBitsToInt_1B,
+    BuiltInId::floatBitsToInt_Float2,
     BuiltInName::floatBitsToInt,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -4933,7 +4783,7 @@ constexpr const TFunction kFunction_floatBitsToInt_1B(
     EOpFloatBitsToInt,
     true);
 constexpr const TFunction kFunction_floatBitsToInt_2B(
-    BuiltInId::floatBitsToInt_2B,
+    BuiltInId::floatBitsToInt_Float3,
     BuiltInName::floatBitsToInt,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -4942,7 +4792,7 @@ constexpr const TFunction kFunction_floatBitsToInt_2B(
     EOpFloatBitsToInt,
     true);
 constexpr const TFunction kFunction_floatBitsToInt_3B(
-    BuiltInId::floatBitsToInt_3B,
+    BuiltInId::floatBitsToInt_Float4,
     BuiltInName::floatBitsToInt,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -4951,7 +4801,7 @@ constexpr const TFunction kFunction_floatBitsToInt_3B(
     EOpFloatBitsToInt,
     true);
 constexpr const TFunction kFunction_floatBitsToUint_0B(
-    BuiltInId::floatBitsToUint_0B,
+    BuiltInId::floatBitsToUint_Float1,
     BuiltInName::floatBitsToUint,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -4960,7 +4810,7 @@ constexpr const TFunction kFunction_floatBitsToUint_0B(
     EOpFloatBitsToUint,
     true);
 constexpr const TFunction kFunction_floatBitsToUint_1B(
-    BuiltInId::floatBitsToUint_1B,
+    BuiltInId::floatBitsToUint_Float2,
     BuiltInName::floatBitsToUint,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -4969,7 +4819,7 @@ constexpr const TFunction kFunction_floatBitsToUint_1B(
     EOpFloatBitsToUint,
     true);
 constexpr const TFunction kFunction_floatBitsToUint_2B(
-    BuiltInId::floatBitsToUint_2B,
+    BuiltInId::floatBitsToUint_Float3,
     BuiltInName::floatBitsToUint,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -4978,7 +4828,7 @@ constexpr const TFunction kFunction_floatBitsToUint_2B(
     EOpFloatBitsToUint,
     true);
 constexpr const TFunction kFunction_floatBitsToUint_3B(
-    BuiltInId::floatBitsToUint_3B,
+    BuiltInId::floatBitsToUint_Float4,
     BuiltInName::floatBitsToUint,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -4987,7 +4837,7 @@ constexpr const TFunction kFunction_floatBitsToUint_3B(
     EOpFloatBitsToUint,
     true);
 constexpr const TFunction kFunction_intBitsToFloat_0C(
-    BuiltInId::intBitsToFloat_0C,
+    BuiltInId::intBitsToFloat_Int1,
     BuiltInName::intBitsToFloat,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -4996,7 +4846,7 @@ constexpr const TFunction kFunction_intBitsToFloat_0C(
     EOpIntBitsToFloat,
     true);
 constexpr const TFunction kFunction_intBitsToFloat_1C(
-    BuiltInId::intBitsToFloat_1C,
+    BuiltInId::intBitsToFloat_Int2,
     BuiltInName::intBitsToFloat,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -5005,7 +4855,7 @@ constexpr const TFunction kFunction_intBitsToFloat_1C(
     EOpIntBitsToFloat,
     true);
 constexpr const TFunction kFunction_intBitsToFloat_2C(
-    BuiltInId::intBitsToFloat_2C,
+    BuiltInId::intBitsToFloat_Int3,
     BuiltInName::intBitsToFloat,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -5014,7 +4864,7 @@ constexpr const TFunction kFunction_intBitsToFloat_2C(
     EOpIntBitsToFloat,
     true);
 constexpr const TFunction kFunction_intBitsToFloat_3C(
-    BuiltInId::intBitsToFloat_3C,
+    BuiltInId::intBitsToFloat_Int4,
     BuiltInName::intBitsToFloat,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -5023,7 +4873,7 @@ constexpr const TFunction kFunction_intBitsToFloat_3C(
     EOpIntBitsToFloat,
     true);
 constexpr const TFunction kFunction_uintBitsToFloat_0D(
-    BuiltInId::uintBitsToFloat_0D,
+    BuiltInId::uintBitsToFloat_UInt1,
     BuiltInName::uintBitsToFloat,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -5032,7 +4882,7 @@ constexpr const TFunction kFunction_uintBitsToFloat_0D(
     EOpUintBitsToFloat,
     true);
 constexpr const TFunction kFunction_uintBitsToFloat_1D(
-    BuiltInId::uintBitsToFloat_1D,
+    BuiltInId::uintBitsToFloat_UInt2,
     BuiltInName::uintBitsToFloat,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D0C0C,
@@ -5041,7 +4891,7 @@ constexpr const TFunction kFunction_uintBitsToFloat_1D(
     EOpUintBitsToFloat,
     true);
 constexpr const TFunction kFunction_uintBitsToFloat_2D(
-    BuiltInId::uintBitsToFloat_2D,
+    BuiltInId::uintBitsToFloat_UInt3,
     BuiltInName::uintBitsToFloat,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -5050,7 +4900,7 @@ constexpr const TFunction kFunction_uintBitsToFloat_2D(
     EOpUintBitsToFloat,
     true);
 constexpr const TFunction kFunction_uintBitsToFloat_3D(
-    BuiltInId::uintBitsToFloat_3D,
+    BuiltInId::uintBitsToFloat_UInt4,
     BuiltInName::uintBitsToFloat,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D0C0C,
@@ -5059,7 +4909,7 @@ constexpr const TFunction kFunction_uintBitsToFloat_3D(
     EOpUintBitsToFloat,
     true);
 constexpr const TFunction kFunction_frexp_0B0C(
-    BuiltInId::frexp_0B0C,
+    BuiltInId::frexp_Float1_Int1,
     BuiltInName::frexp,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B_o_0C,
@@ -5068,7 +4918,7 @@ constexpr const TFunction kFunction_frexp_0B0C(
     EOpFrexp,
     false);
 constexpr const TFunction kFunction_frexp_1B1C(
-    BuiltInId::frexp_1B1C,
+    BuiltInId::frexp_Float2_Int2,
     BuiltInName::frexp,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B_o_1C,
@@ -5077,7 +4927,7 @@ constexpr const TFunction kFunction_frexp_1B1C(
     EOpFrexp,
     false);
 constexpr const TFunction kFunction_frexp_2B2C(
-    BuiltInId::frexp_2B2C,
+    BuiltInId::frexp_Float3_Int3,
     BuiltInName::frexp,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B_o_2C,
@@ -5086,7 +4936,7 @@ constexpr const TFunction kFunction_frexp_2B2C(
     EOpFrexp,
     false);
 constexpr const TFunction kFunction_frexp_3B3C(
-    BuiltInId::frexp_3B3C,
+    BuiltInId::frexp_Float4_Int4,
     BuiltInName::frexp,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B_o_3C,
@@ -5095,7 +4945,7 @@ constexpr const TFunction kFunction_frexp_3B3C(
     EOpFrexp,
     false);
 constexpr const TFunction kFunction_ldexp_0B0C(
-    BuiltInId::ldexp_0B0C,
+    BuiltInId::ldexp_Float1_Int1,
     BuiltInName::ldexp,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -5104,7 +4954,7 @@ constexpr const TFunction kFunction_ldexp_0B0C(
     EOpLdexp,
     true);
 constexpr const TFunction kFunction_ldexp_1B1C(
-    BuiltInId::ldexp_1B1C,
+    BuiltInId::ldexp_Float2_Int2,
     BuiltInName::ldexp,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1C,
@@ -5113,7 +4963,7 @@ constexpr const TFunction kFunction_ldexp_1B1C(
     EOpLdexp,
     true);
 constexpr const TFunction kFunction_ldexp_2B2C(
-    BuiltInId::ldexp_2B2C,
+    BuiltInId::ldexp_Float3_Int3,
     BuiltInName::ldexp,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -5122,7 +4972,7 @@ constexpr const TFunction kFunction_ldexp_2B2C(
     EOpLdexp,
     true);
 constexpr const TFunction kFunction_ldexp_3B3C(
-    BuiltInId::ldexp_3B3C,
+    BuiltInId::ldexp_Float4_Int4,
     BuiltInName::ldexp,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3C,
@@ -5131,7 +4981,7 @@ constexpr const TFunction kFunction_ldexp_3B3C(
     EOpLdexp,
     true);
 constexpr const TFunction kFunction_packSnorm2x16_1B(
-    BuiltInId::packSnorm2x16_1B,
+    BuiltInId::packSnorm2x16_Float2,
     BuiltInName::packSnorm2x16,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5140,7 +4990,7 @@ constexpr const TFunction kFunction_packSnorm2x16_1B(
     EOpPackSnorm2x16,
     true);
 constexpr const TFunction kFunction_packUnorm2x16_1B(
-    BuiltInId::packUnorm2x16_1B,
+    BuiltInId::packUnorm2x16_Float2,
     BuiltInName::packUnorm2x16,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5149,7 +4999,7 @@ constexpr const TFunction kFunction_packUnorm2x16_1B(
     EOpPackUnorm2x16,
     true);
 constexpr const TFunction kFunction_packHalf2x16_1B(
-    BuiltInId::packHalf2x16_1B,
+    BuiltInId::packHalf2x16_Float2,
     BuiltInName::packHalf2x16,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5158,7 +5008,7 @@ constexpr const TFunction kFunction_packHalf2x16_1B(
     EOpPackHalf2x16,
     true);
 constexpr const TFunction kFunction_unpackSnorm2x16_0D(
-    BuiltInId::unpackSnorm2x16_0D,
+    BuiltInId::unpackSnorm2x16_UInt1,
     BuiltInName::unpackSnorm2x16,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -5167,7 +5017,7 @@ constexpr const TFunction kFunction_unpackSnorm2x16_0D(
     EOpUnpackSnorm2x16,
     true);
 constexpr const TFunction kFunction_unpackUnorm2x16_0D(
-    BuiltInId::unpackUnorm2x16_0D,
+    BuiltInId::unpackUnorm2x16_UInt1,
     BuiltInName::unpackUnorm2x16,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -5176,7 +5026,7 @@ constexpr const TFunction kFunction_unpackUnorm2x16_0D(
     EOpUnpackUnorm2x16,
     true);
 constexpr const TFunction kFunction_unpackHalf2x16_0D(
-    BuiltInId::unpackHalf2x16_0D,
+    BuiltInId::unpackHalf2x16_UInt1,
     BuiltInName::unpackHalf2x16,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -5185,7 +5035,7 @@ constexpr const TFunction kFunction_unpackHalf2x16_0D(
     EOpUnpackHalf2x16,
     true);
 constexpr const TFunction kFunction_packUnorm4x8_3B(
-    BuiltInId::packUnorm4x8_3B,
+    BuiltInId::packUnorm4x8_Float4,
     BuiltInName::packUnorm4x8,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -5194,7 +5044,7 @@ constexpr const TFunction kFunction_packUnorm4x8_3B(
     EOpPackUnorm4x8,
     true);
 constexpr const TFunction kFunction_packSnorm4x8_3B(
-    BuiltInId::packSnorm4x8_3B,
+    BuiltInId::packSnorm4x8_Float4,
     BuiltInName::packSnorm4x8,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -5203,7 +5053,7 @@ constexpr const TFunction kFunction_packSnorm4x8_3B(
     EOpPackSnorm4x8,
     true);
 constexpr const TFunction kFunction_unpackUnorm4x8_0D(
-    BuiltInId::unpackUnorm4x8_0D,
+    BuiltInId::unpackUnorm4x8_UInt1,
     BuiltInName::unpackUnorm4x8,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -5212,7 +5062,7 @@ constexpr const TFunction kFunction_unpackUnorm4x8_0D(
     EOpUnpackUnorm4x8,
     true);
 constexpr const TFunction kFunction_unpackSnorm4x8_0D(
-    BuiltInId::unpackSnorm4x8_0D,
+    BuiltInId::unpackSnorm4x8_UInt1,
     BuiltInName::unpackSnorm4x8,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -5221,7 +5071,7 @@ constexpr const TFunction kFunction_unpackSnorm4x8_0D(
     EOpUnpackSnorm4x8,
     true);
 constexpr const TFunction kFunction_length_0B(
-    BuiltInId::length_0B,
+    BuiltInId::length_Float1,
     BuiltInName::length,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -5230,7 +5080,7 @@ constexpr const TFunction kFunction_length_0B(
     EOpLength,
     true);
 constexpr const TFunction kFunction_length_1B(
-    BuiltInId::length_1B,
+    BuiltInId::length_Float2,
     BuiltInName::length,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5239,7 +5089,7 @@ constexpr const TFunction kFunction_length_1B(
     EOpLength,
     true);
 constexpr const TFunction kFunction_length_2B(
-    BuiltInId::length_2B,
+    BuiltInId::length_Float3,
     BuiltInName::length,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -5248,7 +5098,7 @@ constexpr const TFunction kFunction_length_2B(
     EOpLength,
     true);
 constexpr const TFunction kFunction_length_3B(
-    BuiltInId::length_3B,
+    BuiltInId::length_Float4,
     BuiltInName::length,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -5257,7 +5107,7 @@ constexpr const TFunction kFunction_length_3B(
     EOpLength,
     true);
 constexpr const TFunction kFunction_distance_0B0B(
-    BuiltInId::distance_0B0B,
+    BuiltInId::distance_Float1_Float1,
     BuiltInName::distance,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -5266,7 +5116,7 @@ constexpr const TFunction kFunction_distance_0B0B(
     EOpDistance,
     true);
 constexpr const TFunction kFunction_distance_1B1B(
-    BuiltInId::distance_1B1B,
+    BuiltInId::distance_Float2_Float2,
     BuiltInName::distance,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5275,7 +5125,7 @@ constexpr const TFunction kFunction_distance_1B1B(
     EOpDistance,
     true);
 constexpr const TFunction kFunction_distance_2B2B(
-    BuiltInId::distance_2B2B,
+    BuiltInId::distance_Float3_Float3,
     BuiltInName::distance,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -5284,7 +5134,7 @@ constexpr const TFunction kFunction_distance_2B2B(
     EOpDistance,
     true);
 constexpr const TFunction kFunction_distance_3B3B(
-    BuiltInId::distance_3B3B,
+    BuiltInId::distance_Float4_Float4,
     BuiltInName::distance,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -5293,7 +5143,7 @@ constexpr const TFunction kFunction_distance_3B3B(
     EOpDistance,
     true);
 constexpr const TFunction kFunction_dot_0B0B(
-    BuiltInId::dot_0B0B,
+    BuiltInId::dot_Float1_Float1,
     BuiltInName::dot,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -5302,7 +5152,7 @@ constexpr const TFunction kFunction_dot_0B0B(
     EOpDot,
     true);
 constexpr const TFunction kFunction_dot_1B1B(
-    BuiltInId::dot_1B1B,
+    BuiltInId::dot_Float2_Float2,
     BuiltInName::dot,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5311,7 +5161,7 @@ constexpr const TFunction kFunction_dot_1B1B(
     EOpDot,
     true);
 constexpr const TFunction kFunction_dot_2B2B(
-    BuiltInId::dot_2B2B,
+    BuiltInId::dot_Float3_Float3,
     BuiltInName::dot,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -5320,7 +5170,7 @@ constexpr const TFunction kFunction_dot_2B2B(
     EOpDot,
     true);
 constexpr const TFunction kFunction_dot_3B3B(
-    BuiltInId::dot_3B3B,
+    BuiltInId::dot_Float4_Float4,
     BuiltInName::dot,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -5329,7 +5179,7 @@ constexpr const TFunction kFunction_dot_3B3B(
     EOpDot,
     true);
 constexpr const TFunction kFunction_cross_2B2B(
-    BuiltInId::cross_2B2B,
+    BuiltInId::cross_Float3_Float3,
     BuiltInName::cross,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -5338,7 +5188,7 @@ constexpr const TFunction kFunction_cross_2B2B(
     EOpCross,
     true);
 constexpr const TFunction kFunction_normalize_0B(
-    BuiltInId::normalize_0B,
+    BuiltInId::normalize_Float1,
     BuiltInName::normalize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -5347,7 +5197,7 @@ constexpr const TFunction kFunction_normalize_0B(
     EOpNormalize,
     true);
 constexpr const TFunction kFunction_normalize_1B(
-    BuiltInId::normalize_1B,
+    BuiltInId::normalize_Float2,
     BuiltInName::normalize,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5356,7 +5206,7 @@ constexpr const TFunction kFunction_normalize_1B(
     EOpNormalize,
     true);
 constexpr const TFunction kFunction_normalize_2B(
-    BuiltInId::normalize_2B,
+    BuiltInId::normalize_Float3,
     BuiltInName::normalize,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -5365,7 +5215,7 @@ constexpr const TFunction kFunction_normalize_2B(
     EOpNormalize,
     true);
 constexpr const TFunction kFunction_normalize_3B(
-    BuiltInId::normalize_3B,
+    BuiltInId::normalize_Float4,
     BuiltInName::normalize,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -5374,7 +5224,7 @@ constexpr const TFunction kFunction_normalize_3B(
     EOpNormalize,
     true);
 constexpr const TFunction kFunction_faceforward_0B0B0B(
-    BuiltInId::faceforward_0B0B0B,
+    BuiltInId::faceforward_Float1_Float1_Float1,
     BuiltInName::faceforward,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B0B,
@@ -5383,7 +5233,7 @@ constexpr const TFunction kFunction_faceforward_0B0B0B(
     EOpFaceforward,
     true);
 constexpr const TFunction kFunction_faceforward_1B1B1B(
-    BuiltInId::faceforward_1B1B1B,
+    BuiltInId::faceforward_Float2_Float2_Float2,
     BuiltInName::faceforward,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B1B,
@@ -5392,7 +5242,7 @@ constexpr const TFunction kFunction_faceforward_1B1B1B(
     EOpFaceforward,
     true);
 constexpr const TFunction kFunction_faceforward_2B2B2B(
-    BuiltInId::faceforward_2B2B2B,
+    BuiltInId::faceforward_Float3_Float3_Float3,
     BuiltInName::faceforward,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B2B,
@@ -5401,7 +5251,7 @@ constexpr const TFunction kFunction_faceforward_2B2B2B(
     EOpFaceforward,
     true);
 constexpr const TFunction kFunction_faceforward_3B3B3B(
-    BuiltInId::faceforward_3B3B3B,
+    BuiltInId::faceforward_Float4_Float4_Float4,
     BuiltInName::faceforward,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -5410,7 +5260,7 @@ constexpr const TFunction kFunction_faceforward_3B3B3B(
     EOpFaceforward,
     true);
 constexpr const TFunction kFunction_reflect_0B0B(
-    BuiltInId::reflect_0B0B,
+    BuiltInId::reflect_Float1_Float1,
     BuiltInName::reflect,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B1B,
@@ -5419,7 +5269,7 @@ constexpr const TFunction kFunction_reflect_0B0B(
     EOpReflect,
     true);
 constexpr const TFunction kFunction_reflect_1B1B(
-    BuiltInId::reflect_1B1B,
+    BuiltInId::reflect_Float2_Float2,
     BuiltInName::reflect,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5428,7 +5278,7 @@ constexpr const TFunction kFunction_reflect_1B1B(
     EOpReflect,
     true);
 constexpr const TFunction kFunction_reflect_2B2B(
-    BuiltInId::reflect_2B2B,
+    BuiltInId::reflect_Float3_Float3,
     BuiltInName::reflect,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -5437,7 +5287,7 @@ constexpr const TFunction kFunction_reflect_2B2B(
     EOpReflect,
     true);
 constexpr const TFunction kFunction_reflect_3B3B(
-    BuiltInId::reflect_3B3B,
+    BuiltInId::reflect_Float4_Float4,
     BuiltInName::reflect,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -5446,7 +5296,7 @@ constexpr const TFunction kFunction_reflect_3B3B(
     EOpReflect,
     true);
 constexpr const TFunction kFunction_refract_0B0B0B(
-    BuiltInId::refract_0B0B0B,
+    BuiltInId::refract_Float1_Float1_Float1,
     BuiltInName::refract,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0B0B,
@@ -5455,7 +5305,7 @@ constexpr const TFunction kFunction_refract_0B0B0B(
     EOpRefract,
     true);
 constexpr const TFunction kFunction_refract_1B1B0B(
-    BuiltInId::refract_1B1B0B,
+    BuiltInId::refract_Float2_Float2_Float1,
     BuiltInName::refract,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5464,7 +5314,7 @@ constexpr const TFunction kFunction_refract_1B1B0B(
     EOpRefract,
     true);
 constexpr const TFunction kFunction_refract_2B2B0B(
-    BuiltInId::refract_2B2B0B,
+    BuiltInId::refract_Float3_Float3_Float1,
     BuiltInName::refract,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -5473,7 +5323,7 @@ constexpr const TFunction kFunction_refract_2B2B0B(
     EOpRefract,
     true);
 constexpr const TFunction kFunction_refract_3B3B0B(
-    BuiltInId::refract_3B3B0B,
+    BuiltInId::refract_Float4_Float4_Float1,
     BuiltInName::refract,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B0B,
@@ -5482,7 +5332,7 @@ constexpr const TFunction kFunction_refract_3B3B0B(
     EOpRefract,
     true);
 constexpr const TFunction kFunction_matrixCompMult_5B5B(
-    BuiltInId::matrixCompMult_5B5B,
+    BuiltInId::matrixCompMult_Float2x2_Float2x2,
     BuiltInName::matrixCompMult,
     TExtension::UNDEFINED,
     BuiltInParameters::p5B5B,
@@ -5491,7 +5341,7 @@ constexpr const TFunction kFunction_matrixCompMult_5B5B(
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_ABAB(
-    BuiltInId::matrixCompMult_ABAB,
+    BuiltInId::matrixCompMult_Float3x3_Float3x3,
     BuiltInName::matrixCompMult,
     TExtension::UNDEFINED,
     BuiltInParameters::pABAB,
@@ -5500,7 +5350,7 @@ constexpr const TFunction kFunction_matrixCompMult_ABAB(
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_FBFB(
-    BuiltInId::matrixCompMult_FBFB,
+    BuiltInId::matrixCompMult_Float4x4_Float4x4,
     BuiltInName::matrixCompMult,
     TExtension::UNDEFINED,
     BuiltInParameters::pFBFB,
@@ -5509,7 +5359,7 @@ constexpr const TFunction kFunction_matrixCompMult_FBFB(
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_9B9B(
-    BuiltInId::matrixCompMult_9B9B,
+    BuiltInId::matrixCompMult_Float2x3_Float2x3,
     BuiltInName::matrixCompMult,
     TExtension::UNDEFINED,
     BuiltInParameters::p9B9B,
@@ -5518,7 +5368,7 @@ constexpr const TFunction kFunction_matrixCompMult_9B9B(
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_6B6B(
-    BuiltInId::matrixCompMult_6B6B,
+    BuiltInId::matrixCompMult_Float3x2_Float3x2,
     BuiltInName::matrixCompMult,
     TExtension::UNDEFINED,
     BuiltInParameters::p6B6B,
@@ -5527,7 +5377,7 @@ constexpr const TFunction kFunction_matrixCompMult_6B6B(
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_DBDB(
-    BuiltInId::matrixCompMult_DBDB,
+    BuiltInId::matrixCompMult_Float2x4_Float2x4,
     BuiltInName::matrixCompMult,
     TExtension::UNDEFINED,
     BuiltInParameters::pDBDB,
@@ -5536,7 +5386,7 @@ constexpr const TFunction kFunction_matrixCompMult_DBDB(
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_7B7B(
-    BuiltInId::matrixCompMult_7B7B,
+    BuiltInId::matrixCompMult_Float4x2_Float4x2,
     BuiltInName::matrixCompMult,
     TExtension::UNDEFINED,
     BuiltInParameters::p7B7B,
@@ -5545,7 +5395,7 @@ constexpr const TFunction kFunction_matrixCompMult_7B7B(
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_EBEB(
-    BuiltInId::matrixCompMult_EBEB,
+    BuiltInId::matrixCompMult_Float3x4_Float3x4,
     BuiltInName::matrixCompMult,
     TExtension::UNDEFINED,
     BuiltInParameters::pEBEB,
@@ -5554,7 +5404,7 @@ constexpr const TFunction kFunction_matrixCompMult_EBEB(
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_matrixCompMult_BBBB(
-    BuiltInId::matrixCompMult_BBBB,
+    BuiltInId::matrixCompMult_Float4x3_Float4x3,
     BuiltInName::matrixCompMult,
     TExtension::UNDEFINED,
     BuiltInParameters::pBBBB,
@@ -5563,7 +5413,7 @@ constexpr const TFunction kFunction_matrixCompMult_BBBB(
     EOpMulMatrixComponentWise,
     true);
 constexpr const TFunction kFunction_outerProduct_1B1B(
-    BuiltInId::outerProduct_1B1B,
+    BuiltInId::outerProduct_Float2_Float2,
     BuiltInName::outerProduct,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5572,7 +5422,7 @@ constexpr const TFunction kFunction_outerProduct_1B1B(
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_2B2B(
-    BuiltInId::outerProduct_2B2B,
+    BuiltInId::outerProduct_Float3_Float3,
     BuiltInName::outerProduct,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -5581,7 +5431,7 @@ constexpr const TFunction kFunction_outerProduct_2B2B(
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_3B3B(
-    BuiltInId::outerProduct_3B3B,
+    BuiltInId::outerProduct_Float4_Float4,
     BuiltInName::outerProduct,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -5590,7 +5440,7 @@ constexpr const TFunction kFunction_outerProduct_3B3B(
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_2B1B(
-    BuiltInId::outerProduct_2B1B,
+    BuiltInId::outerProduct_Float3_Float2,
     BuiltInName::outerProduct,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B1B,
@@ -5599,7 +5449,7 @@ constexpr const TFunction kFunction_outerProduct_2B1B(
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_1B2B(
-    BuiltInId::outerProduct_1B2B,
+    BuiltInId::outerProduct_Float2_Float3,
     BuiltInName::outerProduct,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B2B,
@@ -5608,7 +5458,7 @@ constexpr const TFunction kFunction_outerProduct_1B2B(
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_3B1B(
-    BuiltInId::outerProduct_3B1B,
+    BuiltInId::outerProduct_Float4_Float2,
     BuiltInName::outerProduct,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -5617,7 +5467,7 @@ constexpr const TFunction kFunction_outerProduct_3B1B(
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_1B3B(
-    BuiltInId::outerProduct_1B3B,
+    BuiltInId::outerProduct_Float2_Float4,
     BuiltInName::outerProduct,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B3B,
@@ -5626,7 +5476,7 @@ constexpr const TFunction kFunction_outerProduct_1B3B(
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_3B2B(
-    BuiltInId::outerProduct_3B2B,
+    BuiltInId::outerProduct_Float4_Float3,
     BuiltInName::outerProduct,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B2B,
@@ -5635,7 +5485,7 @@ constexpr const TFunction kFunction_outerProduct_3B2B(
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_outerProduct_2B3B(
-    BuiltInId::outerProduct_2B3B,
+    BuiltInId::outerProduct_Float3_Float4,
     BuiltInName::outerProduct,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B3B,
@@ -5644,7 +5494,7 @@ constexpr const TFunction kFunction_outerProduct_2B3B(
     EOpOuterProduct,
     true);
 constexpr const TFunction kFunction_transpose_5B(
-    BuiltInId::transpose_5B,
+    BuiltInId::transpose_Float2x2,
     BuiltInName::transpose,
     TExtension::UNDEFINED,
     BuiltInParameters::p5B5B,
@@ -5653,7 +5503,7 @@ constexpr const TFunction kFunction_transpose_5B(
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_AB(
-    BuiltInId::transpose_AB,
+    BuiltInId::transpose_Float3x3,
     BuiltInName::transpose,
     TExtension::UNDEFINED,
     BuiltInParameters::pABAB,
@@ -5662,7 +5512,7 @@ constexpr const TFunction kFunction_transpose_AB(
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_FB(
-    BuiltInId::transpose_FB,
+    BuiltInId::transpose_Float4x4,
     BuiltInName::transpose,
     TExtension::UNDEFINED,
     BuiltInParameters::pFBFB,
@@ -5671,7 +5521,7 @@ constexpr const TFunction kFunction_transpose_FB(
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_6B(
-    BuiltInId::transpose_6B,
+    BuiltInId::transpose_Float3x2,
     BuiltInName::transpose,
     TExtension::UNDEFINED,
     BuiltInParameters::p6B6B,
@@ -5680,7 +5530,7 @@ constexpr const TFunction kFunction_transpose_6B(
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_9B(
-    BuiltInId::transpose_9B,
+    BuiltInId::transpose_Float2x3,
     BuiltInName::transpose,
     TExtension::UNDEFINED,
     BuiltInParameters::p9B9B,
@@ -5689,7 +5539,7 @@ constexpr const TFunction kFunction_transpose_9B(
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_7B(
-    BuiltInId::transpose_7B,
+    BuiltInId::transpose_Float4x2,
     BuiltInName::transpose,
     TExtension::UNDEFINED,
     BuiltInParameters::p7B7B,
@@ -5698,7 +5548,7 @@ constexpr const TFunction kFunction_transpose_7B(
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_DB(
-    BuiltInId::transpose_DB,
+    BuiltInId::transpose_Float2x4,
     BuiltInName::transpose,
     TExtension::UNDEFINED,
     BuiltInParameters::pDBDB,
@@ -5707,7 +5557,7 @@ constexpr const TFunction kFunction_transpose_DB(
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_BB(
-    BuiltInId::transpose_BB,
+    BuiltInId::transpose_Float4x3,
     BuiltInName::transpose,
     TExtension::UNDEFINED,
     BuiltInParameters::pBBBB,
@@ -5716,7 +5566,7 @@ constexpr const TFunction kFunction_transpose_BB(
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_transpose_EB(
-    BuiltInId::transpose_EB,
+    BuiltInId::transpose_Float3x4,
     BuiltInName::transpose,
     TExtension::UNDEFINED,
     BuiltInParameters::pEBEB,
@@ -5725,7 +5575,7 @@ constexpr const TFunction kFunction_transpose_EB(
     EOpTranspose,
     true);
 constexpr const TFunction kFunction_determinant_5B(
-    BuiltInId::determinant_5B,
+    BuiltInId::determinant_Float2x2,
     BuiltInName::determinant,
     TExtension::UNDEFINED,
     BuiltInParameters::p5B5B,
@@ -5734,7 +5584,7 @@ constexpr const TFunction kFunction_determinant_5B(
     EOpDeterminant,
     true);
 constexpr const TFunction kFunction_determinant_AB(
-    BuiltInId::determinant_AB,
+    BuiltInId::determinant_Float3x3,
     BuiltInName::determinant,
     TExtension::UNDEFINED,
     BuiltInParameters::pABAB,
@@ -5743,7 +5593,7 @@ constexpr const TFunction kFunction_determinant_AB(
     EOpDeterminant,
     true);
 constexpr const TFunction kFunction_determinant_FB(
-    BuiltInId::determinant_FB,
+    BuiltInId::determinant_Float4x4,
     BuiltInName::determinant,
     TExtension::UNDEFINED,
     BuiltInParameters::pFBFB,
@@ -5752,7 +5602,7 @@ constexpr const TFunction kFunction_determinant_FB(
     EOpDeterminant,
     true);
 constexpr const TFunction kFunction_inverse_5B(
-    BuiltInId::inverse_5B,
+    BuiltInId::inverse_Float2x2,
     BuiltInName::inverse,
     TExtension::UNDEFINED,
     BuiltInParameters::p5B5B,
@@ -5761,7 +5611,7 @@ constexpr const TFunction kFunction_inverse_5B(
     EOpInverse,
     true);
 constexpr const TFunction kFunction_inverse_AB(
-    BuiltInId::inverse_AB,
+    BuiltInId::inverse_Float3x3,
     BuiltInName::inverse,
     TExtension::UNDEFINED,
     BuiltInParameters::pABAB,
@@ -5770,7 +5620,7 @@ constexpr const TFunction kFunction_inverse_AB(
     EOpInverse,
     true);
 constexpr const TFunction kFunction_inverse_FB(
-    BuiltInId::inverse_FB,
+    BuiltInId::inverse_Float4x4,
     BuiltInName::inverse,
     TExtension::UNDEFINED,
     BuiltInParameters::pFBFB,
@@ -5779,7 +5629,7 @@ constexpr const TFunction kFunction_inverse_FB(
     EOpInverse,
     true);
 constexpr const TFunction kFunction_lessThan_1B1B(
-    BuiltInId::lessThan_1B1B,
+    BuiltInId::lessThan_Float2_Float2,
     BuiltInName::lessThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5788,7 +5638,7 @@ constexpr const TFunction kFunction_lessThan_1B1B(
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_2B2B(
-    BuiltInId::lessThan_2B2B,
+    BuiltInId::lessThan_Float3_Float3,
     BuiltInName::lessThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -5797,7 +5647,7 @@ constexpr const TFunction kFunction_lessThan_2B2B(
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_3B3B(
-    BuiltInId::lessThan_3B3B,
+    BuiltInId::lessThan_Float4_Float4,
     BuiltInName::lessThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -5806,7 +5656,7 @@ constexpr const TFunction kFunction_lessThan_3B3B(
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_1C1C(
-    BuiltInId::lessThan_1C1C,
+    BuiltInId::lessThan_Int2_Int2,
     BuiltInName::lessThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -5815,7 +5665,7 @@ constexpr const TFunction kFunction_lessThan_1C1C(
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_2C2C(
-    BuiltInId::lessThan_2C2C,
+    BuiltInId::lessThan_Int3_Int3,
     BuiltInName::lessThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -5824,7 +5674,7 @@ constexpr const TFunction kFunction_lessThan_2C2C(
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_3C3C(
-    BuiltInId::lessThan_3C3C,
+    BuiltInId::lessThan_Int4_Int4,
     BuiltInName::lessThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C0C0C,
@@ -5833,7 +5683,7 @@ constexpr const TFunction kFunction_lessThan_3C3C(
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_1D1D(
-    BuiltInId::lessThan_1D1D,
+    BuiltInId::lessThan_UInt2_UInt2,
     BuiltInName::lessThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D0C0C,
@@ -5842,7 +5692,7 @@ constexpr const TFunction kFunction_lessThan_1D1D(
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_2D2D(
-    BuiltInId::lessThan_2D2D,
+    BuiltInId::lessThan_UInt3_UInt3,
     BuiltInName::lessThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -5851,7 +5701,7 @@ constexpr const TFunction kFunction_lessThan_2D2D(
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThan_3D3D(
-    BuiltInId::lessThan_3D3D,
+    BuiltInId::lessThan_UInt4_UInt4,
     BuiltInName::lessThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D0C0C,
@@ -5860,7 +5710,7 @@ constexpr const TFunction kFunction_lessThan_3D3D(
     EOpLessThanComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_1B1B(
-    BuiltInId::lessThanEqual_1B1B,
+    BuiltInId::lessThanEqual_Float2_Float2,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5869,7 +5719,7 @@ constexpr const TFunction kFunction_lessThanEqual_1B1B(
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_2B2B(
-    BuiltInId::lessThanEqual_2B2B,
+    BuiltInId::lessThanEqual_Float3_Float3,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -5878,7 +5728,7 @@ constexpr const TFunction kFunction_lessThanEqual_2B2B(
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_3B3B(
-    BuiltInId::lessThanEqual_3B3B,
+    BuiltInId::lessThanEqual_Float4_Float4,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -5887,7 +5737,7 @@ constexpr const TFunction kFunction_lessThanEqual_3B3B(
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_1C1C(
-    BuiltInId::lessThanEqual_1C1C,
+    BuiltInId::lessThanEqual_Int2_Int2,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -5896,7 +5746,7 @@ constexpr const TFunction kFunction_lessThanEqual_1C1C(
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_2C2C(
-    BuiltInId::lessThanEqual_2C2C,
+    BuiltInId::lessThanEqual_Int3_Int3,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -5905,7 +5755,7 @@ constexpr const TFunction kFunction_lessThanEqual_2C2C(
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_3C3C(
-    BuiltInId::lessThanEqual_3C3C,
+    BuiltInId::lessThanEqual_Int4_Int4,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C0C0C,
@@ -5914,7 +5764,7 @@ constexpr const TFunction kFunction_lessThanEqual_3C3C(
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_1D1D(
-    BuiltInId::lessThanEqual_1D1D,
+    BuiltInId::lessThanEqual_UInt2_UInt2,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D0C0C,
@@ -5923,7 +5773,7 @@ constexpr const TFunction kFunction_lessThanEqual_1D1D(
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_2D2D(
-    BuiltInId::lessThanEqual_2D2D,
+    BuiltInId::lessThanEqual_UInt3_UInt3,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -5932,7 +5782,7 @@ constexpr const TFunction kFunction_lessThanEqual_2D2D(
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_lessThanEqual_3D3D(
-    BuiltInId::lessThanEqual_3D3D,
+    BuiltInId::lessThanEqual_UInt4_UInt4,
     BuiltInName::lessThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D0C0C,
@@ -5941,7 +5791,7 @@ constexpr const TFunction kFunction_lessThanEqual_3D3D(
     EOpLessThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_1B1B(
-    BuiltInId::greaterThan_1B1B,
+    BuiltInId::greaterThan_Float2_Float2,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -5950,7 +5800,7 @@ constexpr const TFunction kFunction_greaterThan_1B1B(
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_2B2B(
-    BuiltInId::greaterThan_2B2B,
+    BuiltInId::greaterThan_Float3_Float3,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -5959,7 +5809,7 @@ constexpr const TFunction kFunction_greaterThan_2B2B(
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_3B3B(
-    BuiltInId::greaterThan_3B3B,
+    BuiltInId::greaterThan_Float4_Float4,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -5968,7 +5818,7 @@ constexpr const TFunction kFunction_greaterThan_3B3B(
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_1C1C(
-    BuiltInId::greaterThan_1C1C,
+    BuiltInId::greaterThan_Int2_Int2,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -5977,7 +5827,7 @@ constexpr const TFunction kFunction_greaterThan_1C1C(
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_2C2C(
-    BuiltInId::greaterThan_2C2C,
+    BuiltInId::greaterThan_Int3_Int3,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -5986,7 +5836,7 @@ constexpr const TFunction kFunction_greaterThan_2C2C(
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_3C3C(
-    BuiltInId::greaterThan_3C3C,
+    BuiltInId::greaterThan_Int4_Int4,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C0C0C,
@@ -5995,7 +5845,7 @@ constexpr const TFunction kFunction_greaterThan_3C3C(
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_1D1D(
-    BuiltInId::greaterThan_1D1D,
+    BuiltInId::greaterThan_UInt2_UInt2,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D0C0C,
@@ -6004,7 +5854,7 @@ constexpr const TFunction kFunction_greaterThan_1D1D(
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_2D2D(
-    BuiltInId::greaterThan_2D2D,
+    BuiltInId::greaterThan_UInt3_UInt3,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -6013,7 +5863,7 @@ constexpr const TFunction kFunction_greaterThan_2D2D(
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThan_3D3D(
-    BuiltInId::greaterThan_3D3D,
+    BuiltInId::greaterThan_UInt4_UInt4,
     BuiltInName::greaterThan,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D0C0C,
@@ -6022,7 +5872,7 @@ constexpr const TFunction kFunction_greaterThan_3D3D(
     EOpGreaterThanComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_1B1B(
-    BuiltInId::greaterThanEqual_1B1B,
+    BuiltInId::greaterThanEqual_Float2_Float2,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -6031,7 +5881,7 @@ constexpr const TFunction kFunction_greaterThanEqual_1B1B(
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_2B2B(
-    BuiltInId::greaterThanEqual_2B2B,
+    BuiltInId::greaterThanEqual_Float3_Float3,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -6040,7 +5890,7 @@ constexpr const TFunction kFunction_greaterThanEqual_2B2B(
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_3B3B(
-    BuiltInId::greaterThanEqual_3B3B,
+    BuiltInId::greaterThanEqual_Float4_Float4,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -6049,7 +5899,7 @@ constexpr const TFunction kFunction_greaterThanEqual_3B3B(
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_1C1C(
-    BuiltInId::greaterThanEqual_1C1C,
+    BuiltInId::greaterThanEqual_Int2_Int2,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -6058,7 +5908,7 @@ constexpr const TFunction kFunction_greaterThanEqual_1C1C(
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_2C2C(
-    BuiltInId::greaterThanEqual_2C2C,
+    BuiltInId::greaterThanEqual_Int3_Int3,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -6067,7 +5917,7 @@ constexpr const TFunction kFunction_greaterThanEqual_2C2C(
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_3C3C(
-    BuiltInId::greaterThanEqual_3C3C,
+    BuiltInId::greaterThanEqual_Int4_Int4,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C0C0C,
@@ -6076,7 +5926,7 @@ constexpr const TFunction kFunction_greaterThanEqual_3C3C(
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_1D1D(
-    BuiltInId::greaterThanEqual_1D1D,
+    BuiltInId::greaterThanEqual_UInt2_UInt2,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D0C0C,
@@ -6085,7 +5935,7 @@ constexpr const TFunction kFunction_greaterThanEqual_1D1D(
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_2D2D(
-    BuiltInId::greaterThanEqual_2D2D,
+    BuiltInId::greaterThanEqual_UInt3_UInt3,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -6094,7 +5944,7 @@ constexpr const TFunction kFunction_greaterThanEqual_2D2D(
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_greaterThanEqual_3D3D(
-    BuiltInId::greaterThanEqual_3D3D,
+    BuiltInId::greaterThanEqual_UInt4_UInt4,
     BuiltInName::greaterThanEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D0C0C,
@@ -6103,7 +5953,7 @@ constexpr const TFunction kFunction_greaterThanEqual_3D3D(
     EOpGreaterThanEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_1B1B(
-    BuiltInId::equal_1B1B,
+    BuiltInId::equal_Float2_Float2,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -6112,7 +5962,7 @@ constexpr const TFunction kFunction_equal_1B1B(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_2B2B(
-    BuiltInId::equal_2B2B,
+    BuiltInId::equal_Float3_Float3,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -6121,7 +5971,7 @@ constexpr const TFunction kFunction_equal_2B2B(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_3B3B(
-    BuiltInId::equal_3B3B,
+    BuiltInId::equal_Float4_Float4,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -6130,7 +5980,7 @@ constexpr const TFunction kFunction_equal_3B3B(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_1C1C(
-    BuiltInId::equal_1C1C,
+    BuiltInId::equal_Int2_Int2,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -6139,7 +5989,7 @@ constexpr const TFunction kFunction_equal_1C1C(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_2C2C(
-    BuiltInId::equal_2C2C,
+    BuiltInId::equal_Int3_Int3,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -6148,7 +5998,7 @@ constexpr const TFunction kFunction_equal_2C2C(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_3C3C(
-    BuiltInId::equal_3C3C,
+    BuiltInId::equal_Int4_Int4,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C0C0C,
@@ -6157,7 +6007,7 @@ constexpr const TFunction kFunction_equal_3C3C(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_1D1D(
-    BuiltInId::equal_1D1D,
+    BuiltInId::equal_UInt2_UInt2,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D0C0C,
@@ -6166,7 +6016,7 @@ constexpr const TFunction kFunction_equal_1D1D(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_2D2D(
-    BuiltInId::equal_2D2D,
+    BuiltInId::equal_UInt3_UInt3,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -6175,7 +6025,7 @@ constexpr const TFunction kFunction_equal_2D2D(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_3D3D(
-    BuiltInId::equal_3D3D,
+    BuiltInId::equal_UInt4_UInt4,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D0C0C,
@@ -6184,7 +6034,7 @@ constexpr const TFunction kFunction_equal_3D3D(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_1E1E(
-    BuiltInId::equal_1E1E,
+    BuiltInId::equal_Bool2_Bool2,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p1E1E,
@@ -6193,7 +6043,7 @@ constexpr const TFunction kFunction_equal_1E1E(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_2E2E(
-    BuiltInId::equal_2E2E,
+    BuiltInId::equal_Bool3_Bool3,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p2E2E,
@@ -6202,7 +6052,7 @@ constexpr const TFunction kFunction_equal_2E2E(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_equal_3E3E(
-    BuiltInId::equal_3E3E,
+    BuiltInId::equal_Bool4_Bool4,
     BuiltInName::equal,
     TExtension::UNDEFINED,
     BuiltInParameters::p3E3E,
@@ -6211,7 +6061,7 @@ constexpr const TFunction kFunction_equal_3E3E(
     EOpEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_1B1B(
-    BuiltInId::notEqual_1B1B,
+    BuiltInId::notEqual_Float2_Float2,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -6220,7 +6070,7 @@ constexpr const TFunction kFunction_notEqual_1B1B(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_2B2B(
-    BuiltInId::notEqual_2B2B,
+    BuiltInId::notEqual_Float3_Float3,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2B0B,
@@ -6229,7 +6079,7 @@ constexpr const TFunction kFunction_notEqual_2B2B(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_3B3B(
-    BuiltInId::notEqual_3B3B,
+    BuiltInId::notEqual_Float4_Float4,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B3B3B,
@@ -6238,7 +6088,7 @@ constexpr const TFunction kFunction_notEqual_3B3B(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_1C1C(
-    BuiltInId::notEqual_1C1C,
+    BuiltInId::notEqual_Int2_Int2,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -6247,7 +6097,7 @@ constexpr const TFunction kFunction_notEqual_1C1C(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_2C2C(
-    BuiltInId::notEqual_2C2C,
+    BuiltInId::notEqual_Int3_Int3,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -6256,7 +6106,7 @@ constexpr const TFunction kFunction_notEqual_2C2C(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_3C3C(
-    BuiltInId::notEqual_3C3C,
+    BuiltInId::notEqual_Int4_Int4,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C0C0C,
@@ -6265,7 +6115,7 @@ constexpr const TFunction kFunction_notEqual_3C3C(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_1D1D(
-    BuiltInId::notEqual_1D1D,
+    BuiltInId::notEqual_UInt2_UInt2,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D0C0C,
@@ -6274,7 +6124,7 @@ constexpr const TFunction kFunction_notEqual_1D1D(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_2D2D(
-    BuiltInId::notEqual_2D2D,
+    BuiltInId::notEqual_UInt3_UInt3,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -6283,7 +6133,7 @@ constexpr const TFunction kFunction_notEqual_2D2D(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_3D3D(
-    BuiltInId::notEqual_3D3D,
+    BuiltInId::notEqual_UInt4_UInt4,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D0C0C,
@@ -6292,7 +6142,7 @@ constexpr const TFunction kFunction_notEqual_3D3D(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_1E1E(
-    BuiltInId::notEqual_1E1E,
+    BuiltInId::notEqual_Bool2_Bool2,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p1E1E,
@@ -6301,7 +6151,7 @@ constexpr const TFunction kFunction_notEqual_1E1E(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_2E2E(
-    BuiltInId::notEqual_2E2E,
+    BuiltInId::notEqual_Bool3_Bool3,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p2E2E,
@@ -6310,7 +6160,7 @@ constexpr const TFunction kFunction_notEqual_2E2E(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_notEqual_3E3E(
-    BuiltInId::notEqual_3E3E,
+    BuiltInId::notEqual_Bool4_Bool4,
     BuiltInName::notEqual,
     TExtension::UNDEFINED,
     BuiltInParameters::p3E3E,
@@ -6319,7 +6169,7 @@ constexpr const TFunction kFunction_notEqual_3E3E(
     EOpNotEqualComponentWise,
     true);
 constexpr const TFunction kFunction_any_1E(
-    BuiltInId::any_1E,
+    BuiltInId::any_Bool2,
     BuiltInName::any,
     TExtension::UNDEFINED,
     BuiltInParameters::p1E1E,
@@ -6328,7 +6178,7 @@ constexpr const TFunction kFunction_any_1E(
     EOpAny,
     true);
 constexpr const TFunction kFunction_any_2E(
-    BuiltInId::any_2E,
+    BuiltInId::any_Bool3,
     BuiltInName::any,
     TExtension::UNDEFINED,
     BuiltInParameters::p2E2E,
@@ -6337,7 +6187,7 @@ constexpr const TFunction kFunction_any_2E(
     EOpAny,
     true);
 constexpr const TFunction kFunction_any_3E(
-    BuiltInId::any_3E,
+    BuiltInId::any_Bool4,
     BuiltInName::any,
     TExtension::UNDEFINED,
     BuiltInParameters::p3E3E,
@@ -6346,7 +6196,7 @@ constexpr const TFunction kFunction_any_3E(
     EOpAny,
     true);
 constexpr const TFunction kFunction_all_1E(
-    BuiltInId::all_1E,
+    BuiltInId::all_Bool2,
     BuiltInName::all,
     TExtension::UNDEFINED,
     BuiltInParameters::p1E1E,
@@ -6355,7 +6205,7 @@ constexpr const TFunction kFunction_all_1E(
     EOpAll,
     true);
 constexpr const TFunction kFunction_all_2E(
-    BuiltInId::all_2E,
+    BuiltInId::all_Bool3,
     BuiltInName::all,
     TExtension::UNDEFINED,
     BuiltInParameters::p2E2E,
@@ -6364,7 +6214,7 @@ constexpr const TFunction kFunction_all_2E(
     EOpAll,
     true);
 constexpr const TFunction kFunction_all_3E(
-    BuiltInId::all_3E,
+    BuiltInId::all_Bool4,
     BuiltInName::all,
     TExtension::UNDEFINED,
     BuiltInParameters::p3E3E,
@@ -6373,7 +6223,7 @@ constexpr const TFunction kFunction_all_3E(
     EOpAll,
     true);
 constexpr const TFunction kFunction_notFunc_1E(
-    BuiltInId::notFunc_1E,
+    BuiltInId::notFunc_Bool2,
     BuiltInName::notFunc,
     TExtension::UNDEFINED,
     BuiltInParameters::p1E1E,
@@ -6382,7 +6232,7 @@ constexpr const TFunction kFunction_notFunc_1E(
     EOpLogicalNotComponentWise,
     true);
 constexpr const TFunction kFunction_notFunc_2E(
-    BuiltInId::notFunc_2E,
+    BuiltInId::notFunc_Bool3,
     BuiltInName::notFunc,
     TExtension::UNDEFINED,
     BuiltInParameters::p2E2E,
@@ -6391,7 +6241,7 @@ constexpr const TFunction kFunction_notFunc_2E(
     EOpLogicalNotComponentWise,
     true);
 constexpr const TFunction kFunction_notFunc_3E(
-    BuiltInId::notFunc_3E,
+    BuiltInId::notFunc_Bool4,
     BuiltInName::notFunc,
     TExtension::UNDEFINED,
     BuiltInParameters::p3E3E,
@@ -6400,7 +6250,7 @@ constexpr const TFunction kFunction_notFunc_3E(
     EOpLogicalNotComponentWise,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_0C0C0C(
-    BuiltInId::bitfieldExtract_0C0C0C,
+    BuiltInId::bitfieldExtract_Int1_Int1_Int1,
     BuiltInName::bitfieldExtract,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C0C0C,
@@ -6409,7 +6259,7 @@ constexpr const TFunction kFunction_bitfieldExtract_0C0C0C(
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_1C0C0C(
-    BuiltInId::bitfieldExtract_1C0C0C,
+    BuiltInId::bitfieldExtract_Int2_Int1_Int1,
     BuiltInName::bitfieldExtract,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C0C0C,
@@ -6418,7 +6268,7 @@ constexpr const TFunction kFunction_bitfieldExtract_1C0C0C(
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_2C0C0C(
-    BuiltInId::bitfieldExtract_2C0C0C,
+    BuiltInId::bitfieldExtract_Int3_Int1_Int1,
     BuiltInName::bitfieldExtract,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C0C0C,
@@ -6427,7 +6277,7 @@ constexpr const TFunction kFunction_bitfieldExtract_2C0C0C(
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_3C0C0C(
-    BuiltInId::bitfieldExtract_3C0C0C,
+    BuiltInId::bitfieldExtract_Int4_Int1_Int1,
     BuiltInName::bitfieldExtract,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -6436,7 +6286,7 @@ constexpr const TFunction kFunction_bitfieldExtract_3C0C0C(
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_0D0C0C(
-    BuiltInId::bitfieldExtract_0D0C0C,
+    BuiltInId::bitfieldExtract_UInt1_Int1_Int1,
     BuiltInName::bitfieldExtract,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -6445,7 +6295,7 @@ constexpr const TFunction kFunction_bitfieldExtract_0D0C0C(
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_1D0C0C(
-    BuiltInId::bitfieldExtract_1D0C0C,
+    BuiltInId::bitfieldExtract_UInt2_Int1_Int1,
     BuiltInName::bitfieldExtract,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D0C0C,
@@ -6454,7 +6304,7 @@ constexpr const TFunction kFunction_bitfieldExtract_1D0C0C(
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_2D0C0C(
-    BuiltInId::bitfieldExtract_2D0C0C,
+    BuiltInId::bitfieldExtract_UInt3_Int1_Int1,
     BuiltInName::bitfieldExtract,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D0C0C,
@@ -6463,7 +6313,7 @@ constexpr const TFunction kFunction_bitfieldExtract_2D0C0C(
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldExtract_3D0C0C(
-    BuiltInId::bitfieldExtract_3D0C0C,
+    BuiltInId::bitfieldExtract_UInt4_Int1_Int1,
     BuiltInName::bitfieldExtract,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D0C0C,
@@ -6472,7 +6322,7 @@ constexpr const TFunction kFunction_bitfieldExtract_3D0C0C(
     EOpBitfieldExtract,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_0C0C0C0C(
-    BuiltInId::bitfieldInsert_0C0C0C0C,
+    BuiltInId::bitfieldInsert_Int1_Int1_Int1_Int1,
     BuiltInName::bitfieldInsert,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C0C0C,
@@ -6481,7 +6331,7 @@ constexpr const TFunction kFunction_bitfieldInsert_0C0C0C0C(
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_1C1C0C0C(
-    BuiltInId::bitfieldInsert_1C1C0C0C,
+    BuiltInId::bitfieldInsert_Int2_Int2_Int1_Int1,
     BuiltInName::bitfieldInsert,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -6490,7 +6340,7 @@ constexpr const TFunction kFunction_bitfieldInsert_1C1C0C0C(
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_2C2C0C0C(
-    BuiltInId::bitfieldInsert_2C2C0C0C,
+    BuiltInId::bitfieldInsert_Int3_Int3_Int1_Int1,
     BuiltInName::bitfieldInsert,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -6499,7 +6349,7 @@ constexpr const TFunction kFunction_bitfieldInsert_2C2C0C0C(
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_3C3C0C0C(
-    BuiltInId::bitfieldInsert_3C3C0C0C,
+    BuiltInId::bitfieldInsert_Int4_Int4_Int1_Int1,
     BuiltInName::bitfieldInsert,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C0C0C,
@@ -6508,7 +6358,7 @@ constexpr const TFunction kFunction_bitfieldInsert_3C3C0C0C(
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_0D0D0C0C(
-    BuiltInId::bitfieldInsert_0D0D0C0C,
+    BuiltInId::bitfieldInsert_UInt1_UInt1_Int1_Int1,
     BuiltInName::bitfieldInsert,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0D0C0C,
@@ -6517,7 +6367,7 @@ constexpr const TFunction kFunction_bitfieldInsert_0D0D0C0C(
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_1D1D0C0C(
-    BuiltInId::bitfieldInsert_1D1D0C0C,
+    BuiltInId::bitfieldInsert_UInt2_UInt2_Int1_Int1,
     BuiltInName::bitfieldInsert,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D0C0C,
@@ -6526,7 +6376,7 @@ constexpr const TFunction kFunction_bitfieldInsert_1D1D0C0C(
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_2D2D0C0C(
-    BuiltInId::bitfieldInsert_2D2D0C0C,
+    BuiltInId::bitfieldInsert_UInt3_UInt3_Int1_Int1,
     BuiltInName::bitfieldInsert,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -6535,7 +6385,7 @@ constexpr const TFunction kFunction_bitfieldInsert_2D2D0C0C(
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldInsert_3D3D0C0C(
-    BuiltInId::bitfieldInsert_3D3D0C0C,
+    BuiltInId::bitfieldInsert_UInt4_UInt4_Int1_Int1,
     BuiltInName::bitfieldInsert,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D0C0C,
@@ -6544,7 +6394,7 @@ constexpr const TFunction kFunction_bitfieldInsert_3D3D0C0C(
     EOpBitfieldInsert,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_0C(
-    BuiltInId::bitfieldReverse_0C,
+    BuiltInId::bitfieldReverse_Int1,
     BuiltInName::bitfieldReverse,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -6553,7 +6403,7 @@ constexpr const TFunction kFunction_bitfieldReverse_0C(
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_1C(
-    BuiltInId::bitfieldReverse_1C,
+    BuiltInId::bitfieldReverse_Int2,
     BuiltInName::bitfieldReverse,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -6562,7 +6412,7 @@ constexpr const TFunction kFunction_bitfieldReverse_1C(
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_2C(
-    BuiltInId::bitfieldReverse_2C,
+    BuiltInId::bitfieldReverse_Int3,
     BuiltInName::bitfieldReverse,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -6571,7 +6421,7 @@ constexpr const TFunction kFunction_bitfieldReverse_2C(
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_3C(
-    BuiltInId::bitfieldReverse_3C,
+    BuiltInId::bitfieldReverse_Int4,
     BuiltInName::bitfieldReverse,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -6580,7 +6430,7 @@ constexpr const TFunction kFunction_bitfieldReverse_3C(
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_0D(
-    BuiltInId::bitfieldReverse_0D,
+    BuiltInId::bitfieldReverse_UInt1,
     BuiltInName::bitfieldReverse,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -6589,7 +6439,7 @@ constexpr const TFunction kFunction_bitfieldReverse_0D(
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_1D(
-    BuiltInId::bitfieldReverse_1D,
+    BuiltInId::bitfieldReverse_UInt2,
     BuiltInName::bitfieldReverse,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D0C0C,
@@ -6598,7 +6448,7 @@ constexpr const TFunction kFunction_bitfieldReverse_1D(
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_2D(
-    BuiltInId::bitfieldReverse_2D,
+    BuiltInId::bitfieldReverse_UInt3,
     BuiltInName::bitfieldReverse,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -6607,7 +6457,7 @@ constexpr const TFunction kFunction_bitfieldReverse_2D(
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitfieldReverse_3D(
-    BuiltInId::bitfieldReverse_3D,
+    BuiltInId::bitfieldReverse_UInt4,
     BuiltInName::bitfieldReverse,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D0C0C,
@@ -6616,7 +6466,7 @@ constexpr const TFunction kFunction_bitfieldReverse_3D(
     EOpBitfieldReverse,
     true);
 constexpr const TFunction kFunction_bitCount_0C(
-    BuiltInId::bitCount_0C,
+    BuiltInId::bitCount_Int1,
     BuiltInName::bitCount,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -6625,7 +6475,7 @@ constexpr const TFunction kFunction_bitCount_0C(
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_1C(
-    BuiltInId::bitCount_1C,
+    BuiltInId::bitCount_Int2,
     BuiltInName::bitCount,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -6634,7 +6484,7 @@ constexpr const TFunction kFunction_bitCount_1C(
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_2C(
-    BuiltInId::bitCount_2C,
+    BuiltInId::bitCount_Int3,
     BuiltInName::bitCount,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -6643,7 +6493,7 @@ constexpr const TFunction kFunction_bitCount_2C(
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_3C(
-    BuiltInId::bitCount_3C,
+    BuiltInId::bitCount_Int4,
     BuiltInName::bitCount,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -6652,7 +6502,7 @@ constexpr const TFunction kFunction_bitCount_3C(
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_0D(
-    BuiltInId::bitCount_0D,
+    BuiltInId::bitCount_UInt1,
     BuiltInName::bitCount,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -6661,7 +6511,7 @@ constexpr const TFunction kFunction_bitCount_0D(
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_1D(
-    BuiltInId::bitCount_1D,
+    BuiltInId::bitCount_UInt2,
     BuiltInName::bitCount,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D0C0C,
@@ -6670,7 +6520,7 @@ constexpr const TFunction kFunction_bitCount_1D(
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_2D(
-    BuiltInId::bitCount_2D,
+    BuiltInId::bitCount_UInt3,
     BuiltInName::bitCount,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -6679,7 +6529,7 @@ constexpr const TFunction kFunction_bitCount_2D(
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_bitCount_3D(
-    BuiltInId::bitCount_3D,
+    BuiltInId::bitCount_UInt4,
     BuiltInName::bitCount,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D0C0C,
@@ -6688,7 +6538,7 @@ constexpr const TFunction kFunction_bitCount_3D(
     EOpBitCount,
     true);
 constexpr const TFunction kFunction_findLSB_0C(
-    BuiltInId::findLSB_0C,
+    BuiltInId::findLSB_Int1,
     BuiltInName::findLSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -6697,7 +6547,7 @@ constexpr const TFunction kFunction_findLSB_0C(
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_1C(
-    BuiltInId::findLSB_1C,
+    BuiltInId::findLSB_Int2,
     BuiltInName::findLSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -6706,7 +6556,7 @@ constexpr const TFunction kFunction_findLSB_1C(
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_2C(
-    BuiltInId::findLSB_2C,
+    BuiltInId::findLSB_Int3,
     BuiltInName::findLSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -6715,7 +6565,7 @@ constexpr const TFunction kFunction_findLSB_2C(
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_3C(
-    BuiltInId::findLSB_3C,
+    BuiltInId::findLSB_Int4,
     BuiltInName::findLSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -6724,7 +6574,7 @@ constexpr const TFunction kFunction_findLSB_3C(
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_0D(
-    BuiltInId::findLSB_0D,
+    BuiltInId::findLSB_UInt1,
     BuiltInName::findLSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -6733,7 +6583,7 @@ constexpr const TFunction kFunction_findLSB_0D(
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_1D(
-    BuiltInId::findLSB_1D,
+    BuiltInId::findLSB_UInt2,
     BuiltInName::findLSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D0C0C,
@@ -6742,7 +6592,7 @@ constexpr const TFunction kFunction_findLSB_1D(
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_2D(
-    BuiltInId::findLSB_2D,
+    BuiltInId::findLSB_UInt3,
     BuiltInName::findLSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -6751,7 +6601,7 @@ constexpr const TFunction kFunction_findLSB_2D(
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findLSB_3D(
-    BuiltInId::findLSB_3D,
+    BuiltInId::findLSB_UInt4,
     BuiltInName::findLSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D0C0C,
@@ -6760,7 +6610,7 @@ constexpr const TFunction kFunction_findLSB_3D(
     EOpFindLSB,
     true);
 constexpr const TFunction kFunction_findMSB_0C(
-    BuiltInId::findMSB_0C,
+    BuiltInId::findMSB_Int1,
     BuiltInName::findMSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -6769,7 +6619,7 @@ constexpr const TFunction kFunction_findMSB_0C(
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_1C(
-    BuiltInId::findMSB_1C,
+    BuiltInId::findMSB_Int2,
     BuiltInName::findMSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C0C0C,
@@ -6778,7 +6628,7 @@ constexpr const TFunction kFunction_findMSB_1C(
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_2C(
-    BuiltInId::findMSB_2C,
+    BuiltInId::findMSB_Int3,
     BuiltInName::findMSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C0C0C,
@@ -6787,7 +6637,7 @@ constexpr const TFunction kFunction_findMSB_2C(
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_3C(
-    BuiltInId::findMSB_3C,
+    BuiltInId::findMSB_Int4,
     BuiltInName::findMSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C0C0C,
@@ -6796,7 +6646,7 @@ constexpr const TFunction kFunction_findMSB_3C(
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_0D(
-    BuiltInId::findMSB_0D,
+    BuiltInId::findMSB_UInt1,
     BuiltInName::findMSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0C0C,
@@ -6805,7 +6655,7 @@ constexpr const TFunction kFunction_findMSB_0D(
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_1D(
-    BuiltInId::findMSB_1D,
+    BuiltInId::findMSB_UInt2,
     BuiltInName::findMSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D0C0C,
@@ -6814,7 +6664,7 @@ constexpr const TFunction kFunction_findMSB_1D(
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_2D(
-    BuiltInId::findMSB_2D,
+    BuiltInId::findMSB_UInt3,
     BuiltInName::findMSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D0C0C,
@@ -6823,7 +6673,7 @@ constexpr const TFunction kFunction_findMSB_2D(
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_findMSB_3D(
-    BuiltInId::findMSB_3D,
+    BuiltInId::findMSB_UInt4,
     BuiltInName::findMSB,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D0C0C,
@@ -6832,7 +6682,7 @@ constexpr const TFunction kFunction_findMSB_3D(
     EOpFindMSB,
     true);
 constexpr const TFunction kFunction_uaddCarry_0D0D0D(
-    BuiltInId::uaddCarry_0D0D0D,
+    BuiltInId::uaddCarry_UInt1_UInt1_UInt1,
     BuiltInName::uaddCarry,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0D_o_0D_o_0D,
@@ -6841,7 +6691,7 @@ constexpr const TFunction kFunction_uaddCarry_0D0D0D(
     EOpUaddCarry,
     false);
 constexpr const TFunction kFunction_uaddCarry_1D1D1D(
-    BuiltInId::uaddCarry_1D1D1D,
+    BuiltInId::uaddCarry_UInt2_UInt2_UInt2,
     BuiltInName::uaddCarry,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D_o_1D_o_1D,
@@ -6850,7 +6700,7 @@ constexpr const TFunction kFunction_uaddCarry_1D1D1D(
     EOpUaddCarry,
     false);
 constexpr const TFunction kFunction_uaddCarry_2D2D2D(
-    BuiltInId::uaddCarry_2D2D2D,
+    BuiltInId::uaddCarry_UInt3_UInt3_UInt3,
     BuiltInName::uaddCarry,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D_o_2D_o_2D,
@@ -6859,7 +6709,7 @@ constexpr const TFunction kFunction_uaddCarry_2D2D2D(
     EOpUaddCarry,
     false);
 constexpr const TFunction kFunction_uaddCarry_3D3D3D(
-    BuiltInId::uaddCarry_3D3D3D,
+    BuiltInId::uaddCarry_UInt4_UInt4_UInt4,
     BuiltInName::uaddCarry,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D_o_3D_o_3D,
@@ -6868,7 +6718,7 @@ constexpr const TFunction kFunction_uaddCarry_3D3D3D(
     EOpUaddCarry,
     false);
 constexpr const TFunction kFunction_usubBorrow_0D0D0D(
-    BuiltInId::usubBorrow_0D0D0D,
+    BuiltInId::usubBorrow_UInt1_UInt1_UInt1,
     BuiltInName::usubBorrow,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0D_o_0D_o_0D,
@@ -6877,7 +6727,7 @@ constexpr const TFunction kFunction_usubBorrow_0D0D0D(
     EOpUsubBorrow,
     false);
 constexpr const TFunction kFunction_usubBorrow_1D1D1D(
-    BuiltInId::usubBorrow_1D1D1D,
+    BuiltInId::usubBorrow_UInt2_UInt2_UInt2,
     BuiltInName::usubBorrow,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D_o_1D_o_1D,
@@ -6886,7 +6736,7 @@ constexpr const TFunction kFunction_usubBorrow_1D1D1D(
     EOpUsubBorrow,
     false);
 constexpr const TFunction kFunction_usubBorrow_2D2D2D(
-    BuiltInId::usubBorrow_2D2D2D,
+    BuiltInId::usubBorrow_UInt3_UInt3_UInt3,
     BuiltInName::usubBorrow,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D_o_2D_o_2D,
@@ -6895,7 +6745,7 @@ constexpr const TFunction kFunction_usubBorrow_2D2D2D(
     EOpUsubBorrow,
     false);
 constexpr const TFunction kFunction_usubBorrow_3D3D3D(
-    BuiltInId::usubBorrow_3D3D3D,
+    BuiltInId::usubBorrow_UInt4_UInt4_UInt4,
     BuiltInName::usubBorrow,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D_o_3D_o_3D,
@@ -6904,7 +6754,7 @@ constexpr const TFunction kFunction_usubBorrow_3D3D3D(
     EOpUsubBorrow,
     false);
 constexpr const TFunction kFunction_umulExtended_0D0D0D0D(
-    BuiltInId::umulExtended_0D0D0D0D,
+    BuiltInId::umulExtended_UInt1_UInt1_UInt1_UInt1,
     BuiltInName::umulExtended,
     TExtension::UNDEFINED,
     BuiltInParameters::p0D0D_o_0D_o_0D,
@@ -6913,7 +6763,7 @@ constexpr const TFunction kFunction_umulExtended_0D0D0D0D(
     EOpUmulExtended,
     false);
 constexpr const TFunction kFunction_umulExtended_1D1D1D1D(
-    BuiltInId::umulExtended_1D1D1D1D,
+    BuiltInId::umulExtended_UInt2_UInt2_UInt2_UInt2,
     BuiltInName::umulExtended,
     TExtension::UNDEFINED,
     BuiltInParameters::p1D1D_o_1D_o_1D,
@@ -6922,7 +6772,7 @@ constexpr const TFunction kFunction_umulExtended_1D1D1D1D(
     EOpUmulExtended,
     false);
 constexpr const TFunction kFunction_umulExtended_2D2D2D2D(
-    BuiltInId::umulExtended_2D2D2D2D,
+    BuiltInId::umulExtended_UInt3_UInt3_UInt3_UInt3,
     BuiltInName::umulExtended,
     TExtension::UNDEFINED,
     BuiltInParameters::p2D2D_o_2D_o_2D,
@@ -6931,7 +6781,7 @@ constexpr const TFunction kFunction_umulExtended_2D2D2D2D(
     EOpUmulExtended,
     false);
 constexpr const TFunction kFunction_umulExtended_3D3D3D3D(
-    BuiltInId::umulExtended_3D3D3D3D,
+    BuiltInId::umulExtended_UInt4_UInt4_UInt4_UInt4,
     BuiltInName::umulExtended,
     TExtension::UNDEFINED,
     BuiltInParameters::p3D3D_o_3D_o_3D,
@@ -6940,7 +6790,7 @@ constexpr const TFunction kFunction_umulExtended_3D3D3D3D(
     EOpUmulExtended,
     false);
 constexpr const TFunction kFunction_imulExtended_0C0C0C0C(
-    BuiltInId::imulExtended_0C0C0C0C,
+    BuiltInId::imulExtended_Int1_Int1_Int1_Int1,
     BuiltInName::imulExtended,
     TExtension::UNDEFINED,
     BuiltInParameters::p0C0C_o_0C_o_0C,
@@ -6949,7 +6799,7 @@ constexpr const TFunction kFunction_imulExtended_0C0C0C0C(
     EOpImulExtended,
     false);
 constexpr const TFunction kFunction_imulExtended_1C1C1C1C(
-    BuiltInId::imulExtended_1C1C1C1C,
+    BuiltInId::imulExtended_Int2_Int2_Int2_Int2,
     BuiltInName::imulExtended,
     TExtension::UNDEFINED,
     BuiltInParameters::p1C1C_o_1C_o_1C,
@@ -6958,7 +6808,7 @@ constexpr const TFunction kFunction_imulExtended_1C1C1C1C(
     EOpImulExtended,
     false);
 constexpr const TFunction kFunction_imulExtended_2C2C2C2C(
-    BuiltInId::imulExtended_2C2C2C2C,
+    BuiltInId::imulExtended_Int3_Int3_Int3_Int3,
     BuiltInName::imulExtended,
     TExtension::UNDEFINED,
     BuiltInParameters::p2C2C_o_2C_o_2C,
@@ -6967,7 +6817,7 @@ constexpr const TFunction kFunction_imulExtended_2C2C2C2C(
     EOpImulExtended,
     false);
 constexpr const TFunction kFunction_imulExtended_3C3C3C3C(
-    BuiltInId::imulExtended_3C3C3C3C,
+    BuiltInId::imulExtended_Int4_Int4_Int4_Int4,
     BuiltInName::imulExtended,
     TExtension::UNDEFINED,
     BuiltInParameters::p3C3C_o_3C_o_3C,
@@ -6976,7 +6826,7 @@ constexpr const TFunction kFunction_imulExtended_3C3C3C3C(
     EOpImulExtended,
     false);
 constexpr const TFunction kFunction_texture2D_0H1B(
-    BuiltInId::texture2D_0H1B,
+    BuiltInId::texture2D_Sampler2D1_Float2,
     BuiltInName::texture2D,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B1B1B1C,
@@ -6985,7 +6835,7 @@ constexpr const TFunction kFunction_texture2D_0H1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0H2B(
-    BuiltInId::texture2DProj_0H2B,
+    BuiltInId::texture2DProj_Sampler2D1_Float3,
     BuiltInName::texture2DProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B0B1C,
@@ -6994,7 +6844,7 @@ constexpr const TFunction kFunction_texture2DProj_0H2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0H3B(
-    BuiltInId::texture2DProj_0H3B,
+    BuiltInId::texture2DProj_Sampler2D1_Float4,
     BuiltInName::texture2DProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B0B1C,
@@ -7003,7 +6853,7 @@ constexpr const TFunction kFunction_texture2DProj_0H3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCube_0J2B(
-    BuiltInId::textureCube_0J2B,
+    BuiltInId::textureCube_SamplerCube1_Float3,
     BuiltInName::textureCube,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J2B2B2B,
@@ -7012,7 +6862,7 @@ constexpr const TFunction kFunction_textureCube_0J2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2D_0L1B(
-    BuiltInId::texture2D_0L1B,
+    BuiltInId::texture2D_SamplerExternalOES1_Float2,
     BuiltInName::texture2D,
     TExtension::UNDEFINED,
     BuiltInParameters::p0L1B0B,
@@ -7021,7 +6871,7 @@ constexpr const TFunction kFunction_texture2D_0L1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0L2B(
-    BuiltInId::texture2DProj_0L2B,
+    BuiltInId::texture2DProj_SamplerExternalOES1_Float3,
     BuiltInName::texture2DProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0L2B0B,
@@ -7030,7 +6880,7 @@ constexpr const TFunction kFunction_texture2DProj_0L2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0L3B(
-    BuiltInId::texture2DProj_0L3B,
+    BuiltInId::texture2DProj_SamplerExternalOES1_Float4,
     BuiltInName::texture2DProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0L3B0B,
@@ -7039,7 +6889,7 @@ constexpr const TFunction kFunction_texture2DProj_0L3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DRect_0N1B(
-    BuiltInId::texture2DRect_0N1B,
+    BuiltInId::texture2DRect_Sampler2DRect1_Float2,
     BuiltInName::texture2DRect,
     TExtension::ARB_texture_rectangle,
     BuiltInParameters::p0N1B,
@@ -7048,7 +6898,7 @@ constexpr const TFunction kFunction_texture2DRect_0N1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DRectProj_0N2B(
-    BuiltInId::texture2DRectProj_0N2B,
+    BuiltInId::texture2DRectProj_Sampler2DRect1_Float3,
     BuiltInName::texture2DRectProj,
     TExtension::ARB_texture_rectangle,
     BuiltInParameters::p0N2B,
@@ -7057,7 +6907,7 @@ constexpr const TFunction kFunction_texture2DRectProj_0N2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DRectProj_0N3B(
-    BuiltInId::texture2DRectProj_0N3B,
+    BuiltInId::texture2DRectProj_Sampler2DRect1_Float4,
     BuiltInName::texture2DRectProj,
     TExtension::ARB_texture_rectangle,
     BuiltInParameters::p0N3B,
@@ -7066,7 +6916,7 @@ constexpr const TFunction kFunction_texture2DRectProj_0N3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0N1B(
-    BuiltInId::texture_0N1B,
+    BuiltInId::texture_Sampler2DRect1_Float2,
     BuiltInName::texture,
     TExtension::ARB_texture_rectangle,
     BuiltInParameters::p0N1B,
@@ -7075,7 +6925,7 @@ constexpr const TFunction kFunction_texture_0N1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0N2B(
-    BuiltInId::textureProj_0N2B,
+    BuiltInId::textureProj_Sampler2DRect1_Float3,
     BuiltInName::textureProj,
     TExtension::ARB_texture_rectangle,
     BuiltInParameters::p0N2B,
@@ -7084,7 +6934,7 @@ constexpr const TFunction kFunction_textureProj_0N2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0N3B(
-    BuiltInId::textureProj_0N3B,
+    BuiltInId::textureProj_Sampler2DRect1_Float4,
     BuiltInName::textureProj,
     TExtension::ARB_texture_rectangle,
     BuiltInParameters::p0N3B,
@@ -7093,7 +6943,7 @@ constexpr const TFunction kFunction_textureProj_0N3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DGradEXT_0H1B1B1B(
-    BuiltInId::texture2DGradEXT_0H1B1B1B,
+    BuiltInId::texture2DGradEXT_Sampler2D1_Float2_Float2_Float2,
     BuiltInName::texture2DGradEXT,
     TExtension::EXT_shader_texture_lod,
     BuiltInParameters::p0H1B1B1B1C,
@@ -7102,7 +6952,7 @@ constexpr const TFunction kFunction_texture2DGradEXT_0H1B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjGradEXT_0H2B1B1B(
-    BuiltInId::texture2DProjGradEXT_0H2B1B1B,
+    BuiltInId::texture2DProjGradEXT_Sampler2D1_Float3_Float2_Float2,
     BuiltInName::texture2DProjGradEXT,
     TExtension::EXT_shader_texture_lod,
     BuiltInParameters::p0H2B1B1B1C,
@@ -7111,7 +6961,7 @@ constexpr const TFunction kFunction_texture2DProjGradEXT_0H2B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjGradEXT_0H3B1B1B(
-    BuiltInId::texture2DProjGradEXT_0H3B1B1B,
+    BuiltInId::texture2DProjGradEXT_Sampler2D1_Float4_Float2_Float2,
     BuiltInName::texture2DProjGradEXT,
     TExtension::EXT_shader_texture_lod,
     BuiltInParameters::p0H3B1B1B1C,
@@ -7120,7 +6970,7 @@ constexpr const TFunction kFunction_texture2DProjGradEXT_0H3B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCubeGradEXT_0J2B2B2B(
-    BuiltInId::textureCubeGradEXT_0J2B2B2B,
+    BuiltInId::textureCubeGradEXT_SamplerCube1_Float3_Float3_Float3,
     BuiltInName::textureCubeGradEXT,
     TExtension::EXT_shader_texture_lod,
     BuiltInParameters::p0J2B2B2B,
@@ -7129,7 +6979,7 @@ constexpr const TFunction kFunction_textureCubeGradEXT_0J2B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2D_0H1B0B(
-    BuiltInId::texture2D_0H1B0B,
+    BuiltInId::texture2D_Sampler2D1_Float2_Float1,
     BuiltInName::texture2D,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B0B1C,
@@ -7138,7 +6988,7 @@ constexpr const TFunction kFunction_texture2D_0H1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0H2B0B(
-    BuiltInId::texture2DProj_0H2B0B,
+    BuiltInId::texture2DProj_Sampler2D1_Float3_Float1,
     BuiltInName::texture2DProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B0B1C,
@@ -7147,7 +6997,7 @@ constexpr const TFunction kFunction_texture2DProj_0H2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProj_0H3B0B(
-    BuiltInId::texture2DProj_0H3B0B,
+    BuiltInId::texture2DProj_Sampler2D1_Float4_Float1,
     BuiltInName::texture2DProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B0B1C,
@@ -7156,7 +7006,7 @@ constexpr const TFunction kFunction_texture2DProj_0H3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCube_0J2B0B(
-    BuiltInId::textureCube_0J2B0B,
+    BuiltInId::textureCube_SamplerCube1_Float3_Float1,
     BuiltInName::textureCube,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J2B0B,
@@ -7165,7 +7015,7 @@ constexpr const TFunction kFunction_textureCube_0J2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_dFdxExt_0B(
-    BuiltInId::dFdxExt_0B,
+    BuiltInId::dFdxExt_Float1,
     BuiltInName::dFdxExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p0B0C,
@@ -7174,7 +7024,7 @@ constexpr const TFunction kFunction_dFdxExt_0B(
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdxExt_1B(
-    BuiltInId::dFdxExt_1B,
+    BuiltInId::dFdxExt_Float2,
     BuiltInName::dFdxExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p1B1B0B,
@@ -7183,7 +7033,7 @@ constexpr const TFunction kFunction_dFdxExt_1B(
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdxExt_2B(
-    BuiltInId::dFdxExt_2B,
+    BuiltInId::dFdxExt_Float3,
     BuiltInName::dFdxExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p2B2C,
@@ -7192,7 +7042,7 @@ constexpr const TFunction kFunction_dFdxExt_2B(
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdxExt_3B(
-    BuiltInId::dFdxExt_3B,
+    BuiltInId::dFdxExt_Float4,
     BuiltInName::dFdxExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p3B1B,
@@ -7201,7 +7051,7 @@ constexpr const TFunction kFunction_dFdxExt_3B(
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdyExt_0B(
-    BuiltInId::dFdyExt_0B,
+    BuiltInId::dFdyExt_Float1,
     BuiltInName::dFdyExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p0B0C,
@@ -7210,7 +7060,7 @@ constexpr const TFunction kFunction_dFdyExt_0B(
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdyExt_1B(
-    BuiltInId::dFdyExt_1B,
+    BuiltInId::dFdyExt_Float2,
     BuiltInName::dFdyExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p1B1B0B,
@@ -7219,7 +7069,7 @@ constexpr const TFunction kFunction_dFdyExt_1B(
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdyExt_2B(
-    BuiltInId::dFdyExt_2B,
+    BuiltInId::dFdyExt_Float3,
     BuiltInName::dFdyExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p2B2C,
@@ -7228,7 +7078,7 @@ constexpr const TFunction kFunction_dFdyExt_2B(
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdyExt_3B(
-    BuiltInId::dFdyExt_3B,
+    BuiltInId::dFdyExt_Float4,
     BuiltInName::dFdyExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p3B1B,
@@ -7237,7 +7087,7 @@ constexpr const TFunction kFunction_dFdyExt_3B(
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_fwidthExt_0B(
-    BuiltInId::fwidthExt_0B,
+    BuiltInId::fwidthExt_Float1,
     BuiltInName::fwidthExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p0B0C,
@@ -7246,7 +7096,7 @@ constexpr const TFunction kFunction_fwidthExt_0B(
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidthExt_1B(
-    BuiltInId::fwidthExt_1B,
+    BuiltInId::fwidthExt_Float2,
     BuiltInName::fwidthExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p1B1B0B,
@@ -7255,7 +7105,7 @@ constexpr const TFunction kFunction_fwidthExt_1B(
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidthExt_2B(
-    BuiltInId::fwidthExt_2B,
+    BuiltInId::fwidthExt_Float3,
     BuiltInName::fwidthExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p2B2C,
@@ -7264,7 +7114,7 @@ constexpr const TFunction kFunction_fwidthExt_2B(
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidthExt_3B(
-    BuiltInId::fwidthExt_3B,
+    BuiltInId::fwidthExt_Float4,
     BuiltInName::fwidthExt,
     TExtension::OES_standard_derivatives,
     BuiltInParameters::p3B1B,
@@ -7273,7 +7123,7 @@ constexpr const TFunction kFunction_fwidthExt_3B(
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_texture2DLodEXT_0H1B0B(
-    BuiltInId::texture2DLodEXT_0H1B0B,
+    BuiltInId::texture2DLodEXT_Sampler2D1_Float2_Float1,
     BuiltInName::texture2DLodEXT,
     TExtension::EXT_shader_texture_lod,
     BuiltInParameters::p0H1B0B1C,
@@ -7282,7 +7132,7 @@ constexpr const TFunction kFunction_texture2DLodEXT_0H1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjLodEXT_0H2B0B(
-    BuiltInId::texture2DProjLodEXT_0H2B0B,
+    BuiltInId::texture2DProjLodEXT_Sampler2D1_Float3_Float1,
     BuiltInName::texture2DProjLodEXT,
     TExtension::EXT_shader_texture_lod,
     BuiltInParameters::p0H2B0B1C,
@@ -7291,7 +7141,7 @@ constexpr const TFunction kFunction_texture2DProjLodEXT_0H2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjLodEXT_0H3B0B(
-    BuiltInId::texture2DProjLodEXT_0H3B0B,
+    BuiltInId::texture2DProjLodEXT_Sampler2D1_Float4_Float1,
     BuiltInName::texture2DProjLodEXT,
     TExtension::EXT_shader_texture_lod,
     BuiltInParameters::p0H3B0B1C,
@@ -7300,7 +7150,7 @@ constexpr const TFunction kFunction_texture2DProjLodEXT_0H3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCubeLodEXT_0J2B0B(
-    BuiltInId::textureCubeLodEXT_0J2B0B,
+    BuiltInId::textureCubeLodEXT_SamplerCube1_Float3_Float1,
     BuiltInName::textureCubeLodEXT,
     TExtension::EXT_shader_texture_lod,
     BuiltInParameters::p0J2B0B,
@@ -7309,7 +7159,7 @@ constexpr const TFunction kFunction_textureCubeLodEXT_0J2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DLod_0H1B0B(
-    BuiltInId::texture2DLod_0H1B0B,
+    BuiltInId::texture2DLod_Sampler2D1_Float2_Float1,
     BuiltInName::texture2DLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B0B1C,
@@ -7318,7 +7168,7 @@ constexpr const TFunction kFunction_texture2DLod_0H1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjLod_0H2B0B(
-    BuiltInId::texture2DProjLod_0H2B0B,
+    BuiltInId::texture2DProjLod_Sampler2D1_Float3_Float1,
     BuiltInName::texture2DProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B0B1C,
@@ -7327,7 +7177,7 @@ constexpr const TFunction kFunction_texture2DProjLod_0H2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture2DProjLod_0H3B0B(
-    BuiltInId::texture2DProjLod_0H3B0B,
+    BuiltInId::texture2DProjLod_Sampler2D1_Float4_Float1,
     BuiltInName::texture2DProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B0B1C,
@@ -7336,7 +7186,7 @@ constexpr const TFunction kFunction_texture2DProjLod_0H3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureCubeLod_0J2B0B(
-    BuiltInId::textureCubeLod_0J2B0B,
+    BuiltInId::textureCubeLod_SamplerCube1_Float3_Float1,
     BuiltInName::textureCubeLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J2B0B,
@@ -7345,7 +7195,7 @@ constexpr const TFunction kFunction_textureCubeLod_0J2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0H1B(
-    BuiltInId::texture_0H1B,
+    BuiltInId::texture_Sampler2D1_Float2,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B1B1B1C,
@@ -7354,7 +7204,7 @@ constexpr const TFunction kFunction_texture_0H1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0P1B(
-    BuiltInId::texture_0P1B,
+    BuiltInId::texture_ISampler2D1_Float2,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B0C,
@@ -7363,7 +7213,7 @@ constexpr const TFunction kFunction_texture_0P1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0U1B(
-    BuiltInId::texture_0U1B,
+    BuiltInId::texture_USampler2D1_Float2,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B0B1C,
@@ -7372,7 +7222,7 @@ constexpr const TFunction kFunction_texture_0U1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0I2B(
-    BuiltInId::texture_0I2B,
+    BuiltInId::texture_Sampler3D1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2B0B2C,
@@ -7381,7 +7231,7 @@ constexpr const TFunction kFunction_texture_0I2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0Q2B(
-    BuiltInId::texture_0Q2B,
+    BuiltInId::texture_ISampler3D1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2B0B2C,
@@ -7390,7 +7240,7 @@ constexpr const TFunction kFunction_texture_0Q2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0V2B(
-    BuiltInId::texture_0V2B,
+    BuiltInId::texture_USampler3D1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2B2B2B2C,
@@ -7399,7 +7249,7 @@ constexpr const TFunction kFunction_texture_0V2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0J2B(
-    BuiltInId::texture_0J2B,
+    BuiltInId::texture_SamplerCube1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J2B2B2B,
@@ -7408,7 +7258,7 @@ constexpr const TFunction kFunction_texture_0J2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0R2B(
-    BuiltInId::texture_0R2B,
+    BuiltInId::texture_ISamplerCube1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0R2B2B2B,
@@ -7417,7 +7267,7 @@ constexpr const TFunction kFunction_texture_0R2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0W2B(
-    BuiltInId::texture_0W2B,
+    BuiltInId::texture_USamplerCube1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0W2B0B,
@@ -7426,7 +7276,7 @@ constexpr const TFunction kFunction_texture_0W2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0K2B(
-    BuiltInId::texture_0K2B,
+    BuiltInId::texture_Sampler2DArray1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B0B1C,
@@ -7435,7 +7285,7 @@ constexpr const TFunction kFunction_texture_0K2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0S2B(
-    BuiltInId::texture_0S2B,
+    BuiltInId::texture_ISampler2DArray1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B0B1C,
@@ -7444,7 +7294,7 @@ constexpr const TFunction kFunction_texture_0S2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0X2B(
-    BuiltInId::texture_0X2B,
+    BuiltInId::texture_USampler2DArray1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B1C0C,
@@ -7453,7 +7303,7 @@ constexpr const TFunction kFunction_texture_0X2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0H2B(
-    BuiltInId::textureProj_0H2B,
+    BuiltInId::textureProj_Sampler2D1_Float3,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B0B1C,
@@ -7462,7 +7312,7 @@ constexpr const TFunction kFunction_textureProj_0H2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0P2B(
-    BuiltInId::textureProj_0P2B,
+    BuiltInId::textureProj_ISampler2D1_Float3,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P2B0B1C,
@@ -7471,7 +7321,7 @@ constexpr const TFunction kFunction_textureProj_0P2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0U2B(
-    BuiltInId::textureProj_0U2B,
+    BuiltInId::textureProj_USampler2D1_Float3,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U2B1B1B1C,
@@ -7480,7 +7330,7 @@ constexpr const TFunction kFunction_textureProj_0U2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0H3B(
-    BuiltInId::textureProj_0H3B,
+    BuiltInId::textureProj_Sampler2D1_Float4,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B0B1C,
@@ -7489,7 +7339,7 @@ constexpr const TFunction kFunction_textureProj_0H3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0P3B(
-    BuiltInId::textureProj_0P3B,
+    BuiltInId::textureProj_ISampler2D1_Float4,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P3B0B1C,
@@ -7498,7 +7348,7 @@ constexpr const TFunction kFunction_textureProj_0P3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0U3B(
-    BuiltInId::textureProj_0U3B,
+    BuiltInId::textureProj_USampler2D1_Float4,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U3B1C0B,
@@ -7507,7 +7357,7 @@ constexpr const TFunction kFunction_textureProj_0U3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0I3B(
-    BuiltInId::textureProj_0I3B,
+    BuiltInId::textureProj_Sampler3D1_Float4,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I3B2C0B,
@@ -7516,7 +7366,7 @@ constexpr const TFunction kFunction_textureProj_0I3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0Q3B(
-    BuiltInId::textureProj_0Q3B,
+    BuiltInId::textureProj_ISampler3D1_Float4,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q3B0B2C,
@@ -7525,7 +7375,7 @@ constexpr const TFunction kFunction_textureProj_0Q3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0V3B(
-    BuiltInId::textureProj_0V3B,
+    BuiltInId::textureProj_USampler3D1_Float4,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V3B2B2B2C,
@@ -7534,7 +7384,7 @@ constexpr const TFunction kFunction_textureProj_0V3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0H1B0B(
-    BuiltInId::textureLod_0H1B0B,
+    BuiltInId::textureLod_Sampler2D1_Float2_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B0B1C,
@@ -7543,7 +7393,7 @@ constexpr const TFunction kFunction_textureLod_0H1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0P1B0B(
-    BuiltInId::textureLod_0P1B0B,
+    BuiltInId::textureLod_ISampler2D1_Float2_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B0B1C,
@@ -7552,7 +7402,7 @@ constexpr const TFunction kFunction_textureLod_0P1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0U1B0B(
-    BuiltInId::textureLod_0U1B0B,
+    BuiltInId::textureLod_USampler2D1_Float2_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B0B1C,
@@ -7561,7 +7411,7 @@ constexpr const TFunction kFunction_textureLod_0U1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0I2B0B(
-    BuiltInId::textureLod_0I2B0B,
+    BuiltInId::textureLod_Sampler3D1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2B0B2C,
@@ -7570,7 +7420,7 @@ constexpr const TFunction kFunction_textureLod_0I2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0Q2B0B(
-    BuiltInId::textureLod_0Q2B0B,
+    BuiltInId::textureLod_ISampler3D1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2B0B2C,
@@ -7579,7 +7429,7 @@ constexpr const TFunction kFunction_textureLod_0Q2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0V2B0B(
-    BuiltInId::textureLod_0V2B0B,
+    BuiltInId::textureLod_USampler3D1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2B0B2C,
@@ -7588,7 +7438,7 @@ constexpr const TFunction kFunction_textureLod_0V2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0J2B0B(
-    BuiltInId::textureLod_0J2B0B,
+    BuiltInId::textureLod_SamplerCube1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J2B0B,
@@ -7597,7 +7447,7 @@ constexpr const TFunction kFunction_textureLod_0J2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0R2B0B(
-    BuiltInId::textureLod_0R2B0B,
+    BuiltInId::textureLod_ISamplerCube1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0R2B0B,
@@ -7606,7 +7456,7 @@ constexpr const TFunction kFunction_textureLod_0R2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0W2B0B(
-    BuiltInId::textureLod_0W2B0B,
+    BuiltInId::textureLod_USamplerCube1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0W2B0B,
@@ -7615,7 +7465,7 @@ constexpr const TFunction kFunction_textureLod_0W2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0K2B0B(
-    BuiltInId::textureLod_0K2B0B,
+    BuiltInId::textureLod_Sampler2DArray1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B0B1C,
@@ -7624,7 +7474,7 @@ constexpr const TFunction kFunction_textureLod_0K2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0S2B0B(
-    BuiltInId::textureLod_0S2B0B,
+    BuiltInId::textureLod_ISampler2DArray1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B0B1C,
@@ -7633,7 +7483,7 @@ constexpr const TFunction kFunction_textureLod_0S2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0X2B0B(
-    BuiltInId::textureLod_0X2B0B,
+    BuiltInId::textureLod_USampler2DArray1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B0B1C,
@@ -7642,7 +7492,7 @@ constexpr const TFunction kFunction_textureLod_0X2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0Z2B(
-    BuiltInId::texture_0Z2B,
+    BuiltInId::texture_Sampler2DShadow1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z2B1B1B1C,
@@ -7651,7 +7501,7 @@ constexpr const TFunction kFunction_texture_0Z2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0a3B(
-    BuiltInId::texture_0a3B,
+    BuiltInId::texture_SamplerCubeShadow1_Float4,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0a3B2B2B,
@@ -7660,7 +7510,7 @@ constexpr const TFunction kFunction_texture_0a3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0b3B(
-    BuiltInId::texture_0b3B,
+    BuiltInId::texture_Sampler2DArrayShadow1_Float4,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0b3B1B1B1C,
@@ -7669,7 +7519,7 @@ constexpr const TFunction kFunction_texture_0b3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0Z3B(
-    BuiltInId::textureProj_0Z3B,
+    BuiltInId::textureProj_Sampler2DShadow1_Float4,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z3B0B1C,
@@ -7678,7 +7528,7 @@ constexpr const TFunction kFunction_textureProj_0Z3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLod_0Z2B0B(
-    BuiltInId::textureLod_0Z2B0B,
+    BuiltInId::textureLod_Sampler2DShadow1_Float3_Float1,
     BuiltInName::textureLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z2B0B1C,
@@ -7687,7 +7537,7 @@ constexpr const TFunction kFunction_textureLod_0Z2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0H0C(
-    BuiltInId::textureSize_0H0C,
+    BuiltInId::textureSize_Sampler2D1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H0C,
@@ -7696,7 +7546,7 @@ constexpr const TFunction kFunction_textureSize_0H0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0P0C(
-    BuiltInId::textureSize_0P0C,
+    BuiltInId::textureSize_ISampler2D1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P0C,
@@ -7705,7 +7555,7 @@ constexpr const TFunction kFunction_textureSize_0P0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0U0C(
-    BuiltInId::textureSize_0U0C,
+    BuiltInId::textureSize_USampler2D1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U0C,
@@ -7714,7 +7564,7 @@ constexpr const TFunction kFunction_textureSize_0U0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0I0C(
-    BuiltInId::textureSize_0I0C,
+    BuiltInId::textureSize_Sampler3D1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I0C,
@@ -7723,7 +7573,7 @@ constexpr const TFunction kFunction_textureSize_0I0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0Q0C(
-    BuiltInId::textureSize_0Q0C,
+    BuiltInId::textureSize_ISampler3D1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q0C,
@@ -7732,7 +7582,7 @@ constexpr const TFunction kFunction_textureSize_0Q0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0V0C(
-    BuiltInId::textureSize_0V0C,
+    BuiltInId::textureSize_USampler3D1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V0C,
@@ -7741,7 +7591,7 @@ constexpr const TFunction kFunction_textureSize_0V0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0J0C(
-    BuiltInId::textureSize_0J0C,
+    BuiltInId::textureSize_SamplerCube1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J0C,
@@ -7750,7 +7600,7 @@ constexpr const TFunction kFunction_textureSize_0J0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0R0C(
-    BuiltInId::textureSize_0R0C,
+    BuiltInId::textureSize_ISamplerCube1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0R0C,
@@ -7759,7 +7609,7 @@ constexpr const TFunction kFunction_textureSize_0R0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0W0C(
-    BuiltInId::textureSize_0W0C,
+    BuiltInId::textureSize_USamplerCube1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0W0C,
@@ -7768,7 +7618,7 @@ constexpr const TFunction kFunction_textureSize_0W0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0K0C(
-    BuiltInId::textureSize_0K0C,
+    BuiltInId::textureSize_Sampler2DArray1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K0C,
@@ -7777,7 +7627,7 @@ constexpr const TFunction kFunction_textureSize_0K0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0S0C(
-    BuiltInId::textureSize_0S0C,
+    BuiltInId::textureSize_ISampler2DArray1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S0C,
@@ -7786,7 +7636,7 @@ constexpr const TFunction kFunction_textureSize_0S0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0X0C(
-    BuiltInId::textureSize_0X0C,
+    BuiltInId::textureSize_USampler2DArray1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X0C,
@@ -7795,7 +7645,7 @@ constexpr const TFunction kFunction_textureSize_0X0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0Z0C(
-    BuiltInId::textureSize_0Z0C,
+    BuiltInId::textureSize_Sampler2DShadow1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z0C,
@@ -7804,7 +7654,7 @@ constexpr const TFunction kFunction_textureSize_0Z0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0a0C(
-    BuiltInId::textureSize_0a0C,
+    BuiltInId::textureSize_SamplerCubeShadow1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0a0C,
@@ -7813,7 +7663,7 @@ constexpr const TFunction kFunction_textureSize_0a0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0b0C(
-    BuiltInId::textureSize_0b0C,
+    BuiltInId::textureSize_Sampler2DArrayShadow1_Int1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0b0C,
@@ -7822,7 +7672,7 @@ constexpr const TFunction kFunction_textureSize_0b0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0O(
-    BuiltInId::textureSize_0O,
+    BuiltInId::textureSize_Sampler2DMS1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0O1C0C,
@@ -7831,7 +7681,7 @@ constexpr const TFunction kFunction_textureSize_0O(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0T(
-    BuiltInId::textureSize_0T,
+    BuiltInId::textureSize_ISampler2DMS1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0T1C0C,
@@ -7840,7 +7690,7 @@ constexpr const TFunction kFunction_textureSize_0T(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0Y(
-    BuiltInId::textureSize_0Y,
+    BuiltInId::textureSize_USampler2DMS1,
     BuiltInName::textureSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Y1C0C,
@@ -7849,7 +7699,7 @@ constexpr const TFunction kFunction_textureSize_0Y(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0H2B0B(
-    BuiltInId::textureProjLod_0H2B0B,
+    BuiltInId::textureProjLod_Sampler2D1_Float3_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B0B1C,
@@ -7858,7 +7708,7 @@ constexpr const TFunction kFunction_textureProjLod_0H2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0P2B0B(
-    BuiltInId::textureProjLod_0P2B0B,
+    BuiltInId::textureProjLod_ISampler2D1_Float3_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P2B0B1C,
@@ -7867,7 +7717,7 @@ constexpr const TFunction kFunction_textureProjLod_0P2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0U2B0B(
-    BuiltInId::textureProjLod_0U2B0B,
+    BuiltInId::textureProjLod_USampler2D1_Float3_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U2B0B1C,
@@ -7876,7 +7726,7 @@ constexpr const TFunction kFunction_textureProjLod_0U2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0H3B0B(
-    BuiltInId::textureProjLod_0H3B0B,
+    BuiltInId::textureProjLod_Sampler2D1_Float4_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B0B1C,
@@ -7885,7 +7735,7 @@ constexpr const TFunction kFunction_textureProjLod_0H3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0P3B0B(
-    BuiltInId::textureProjLod_0P3B0B,
+    BuiltInId::textureProjLod_ISampler2D1_Float4_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P3B0B1C,
@@ -7894,7 +7744,7 @@ constexpr const TFunction kFunction_textureProjLod_0P3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0U3B0B(
-    BuiltInId::textureProjLod_0U3B0B,
+    BuiltInId::textureProjLod_USampler2D1_Float4_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U3B0B1C,
@@ -7903,7 +7753,7 @@ constexpr const TFunction kFunction_textureProjLod_0U3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0I3B0B(
-    BuiltInId::textureProjLod_0I3B0B,
+    BuiltInId::textureProjLod_Sampler3D1_Float4_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I3B0B2C,
@@ -7912,7 +7762,7 @@ constexpr const TFunction kFunction_textureProjLod_0I3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0Q3B0B(
-    BuiltInId::textureProjLod_0Q3B0B,
+    BuiltInId::textureProjLod_ISampler3D1_Float4_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q3B0B2C,
@@ -7921,7 +7771,7 @@ constexpr const TFunction kFunction_textureProjLod_0Q3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0V3B0B(
-    BuiltInId::textureProjLod_0V3B0B,
+    BuiltInId::textureProjLod_USampler3D1_Float4_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V3B0B2C,
@@ -7930,7 +7780,7 @@ constexpr const TFunction kFunction_textureProjLod_0V3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLod_0Z3B0B(
-    BuiltInId::textureProjLod_0Z3B0B,
+    BuiltInId::textureProjLod_Sampler2DShadow1_Float4_Float1,
     BuiltInName::textureProjLod,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z3B0B1C,
@@ -7939,7 +7789,7 @@ constexpr const TFunction kFunction_textureProjLod_0Z3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0H1C0C(
-    BuiltInId::texelFetch_0H1C0C,
+    BuiltInId::texelFetch_Sampler2D1_Int2_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1C0C1C,
@@ -7948,7 +7798,7 @@ constexpr const TFunction kFunction_texelFetch_0H1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0P1C0C(
-    BuiltInId::texelFetch_0P1C0C,
+    BuiltInId::texelFetch_ISampler2D1_Int2_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1C0C1C,
@@ -7957,7 +7807,7 @@ constexpr const TFunction kFunction_texelFetch_0P1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0U1C0C(
-    BuiltInId::texelFetch_0U1C0C,
+    BuiltInId::texelFetch_USampler2D1_Int2_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1C0C1C,
@@ -7966,7 +7816,7 @@ constexpr const TFunction kFunction_texelFetch_0U1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0I2C0C(
-    BuiltInId::texelFetch_0I2C0C,
+    BuiltInId::texelFetch_Sampler3D1_Int3_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2C0C2C,
@@ -7975,7 +7825,7 @@ constexpr const TFunction kFunction_texelFetch_0I2C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0Q2C0C(
-    BuiltInId::texelFetch_0Q2C0C,
+    BuiltInId::texelFetch_ISampler3D1_Int3_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2C0C2C,
@@ -7984,7 +7834,7 @@ constexpr const TFunction kFunction_texelFetch_0Q2C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0V2C0C(
-    BuiltInId::texelFetch_0V2C0C,
+    BuiltInId::texelFetch_USampler3D1_Int3_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2C0C2C,
@@ -7993,7 +7843,7 @@ constexpr const TFunction kFunction_texelFetch_0V2C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0K2C0C(
-    BuiltInId::texelFetch_0K2C0C,
+    BuiltInId::texelFetch_Sampler2DArray1_Int3_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2C0C1C,
@@ -8002,7 +7852,7 @@ constexpr const TFunction kFunction_texelFetch_0K2C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0S2C0C(
-    BuiltInId::texelFetch_0S2C0C,
+    BuiltInId::texelFetch_ISampler2DArray1_Int3_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2C0C1C,
@@ -8011,7 +7861,7 @@ constexpr const TFunction kFunction_texelFetch_0S2C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0X2C0C(
-    BuiltInId::texelFetch_0X2C0C,
+    BuiltInId::texelFetch_USampler2DArray1_Int3_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2C0C1C,
@@ -8020,7 +7870,7 @@ constexpr const TFunction kFunction_texelFetch_0X2C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0H1B1B1B(
-    BuiltInId::textureGrad_0H1B1B1B,
+    BuiltInId::textureGrad_Sampler2D1_Float2_Float2_Float2,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B1B1B1C,
@@ -8029,7 +7879,7 @@ constexpr const TFunction kFunction_textureGrad_0H1B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0P1B1B1B(
-    BuiltInId::textureGrad_0P1B1B1B,
+    BuiltInId::textureGrad_ISampler2D1_Float2_Float2_Float2,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B1B1B1C,
@@ -8038,7 +7888,7 @@ constexpr const TFunction kFunction_textureGrad_0P1B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0U1B1B1B(
-    BuiltInId::textureGrad_0U1B1B1B,
+    BuiltInId::textureGrad_USampler2D1_Float2_Float2_Float2,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B1B1B1C,
@@ -8047,7 +7897,7 @@ constexpr const TFunction kFunction_textureGrad_0U1B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0I2B2B2B(
-    BuiltInId::textureGrad_0I2B2B2B,
+    BuiltInId::textureGrad_Sampler3D1_Float3_Float3_Float3,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2B2B2B2C,
@@ -8056,7 +7906,7 @@ constexpr const TFunction kFunction_textureGrad_0I2B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0Q2B2B2B(
-    BuiltInId::textureGrad_0Q2B2B2B,
+    BuiltInId::textureGrad_ISampler3D1_Float3_Float3_Float3,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2B2B2B2C,
@@ -8065,7 +7915,7 @@ constexpr const TFunction kFunction_textureGrad_0Q2B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0V2B2B2B(
-    BuiltInId::textureGrad_0V2B2B2B,
+    BuiltInId::textureGrad_USampler3D1_Float3_Float3_Float3,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2B2B2B2C,
@@ -8074,7 +7924,7 @@ constexpr const TFunction kFunction_textureGrad_0V2B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0J2B2B2B(
-    BuiltInId::textureGrad_0J2B2B2B,
+    BuiltInId::textureGrad_SamplerCube1_Float3_Float3_Float3,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J2B2B2B,
@@ -8083,7 +7933,7 @@ constexpr const TFunction kFunction_textureGrad_0J2B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0R2B2B2B(
-    BuiltInId::textureGrad_0R2B2B2B,
+    BuiltInId::textureGrad_ISamplerCube1_Float3_Float3_Float3,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0R2B2B2B,
@@ -8092,7 +7942,7 @@ constexpr const TFunction kFunction_textureGrad_0R2B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0W2B2B2B(
-    BuiltInId::textureGrad_0W2B2B2B,
+    BuiltInId::textureGrad_USamplerCube1_Float3_Float3_Float3,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0W2B2B2B,
@@ -8101,7 +7951,7 @@ constexpr const TFunction kFunction_textureGrad_0W2B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0Z2B1B1B(
-    BuiltInId::textureGrad_0Z2B1B1B,
+    BuiltInId::textureGrad_Sampler2DShadow1_Float3_Float2_Float2,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z2B1B1B1C,
@@ -8110,7 +7960,7 @@ constexpr const TFunction kFunction_textureGrad_0Z2B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0a3B2B2B(
-    BuiltInId::textureGrad_0a3B2B2B,
+    BuiltInId::textureGrad_SamplerCubeShadow1_Float4_Float3_Float3,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0a3B2B2B,
@@ -8119,7 +7969,7 @@ constexpr const TFunction kFunction_textureGrad_0a3B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0K2B1B1B(
-    BuiltInId::textureGrad_0K2B1B1B,
+    BuiltInId::textureGrad_Sampler2DArray1_Float3_Float2_Float2,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B1B1B1C,
@@ -8128,7 +7978,7 @@ constexpr const TFunction kFunction_textureGrad_0K2B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0S2B1B1B(
-    BuiltInId::textureGrad_0S2B1B1B,
+    BuiltInId::textureGrad_ISampler2DArray1_Float3_Float2_Float2,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B1B1B1C,
@@ -8137,7 +7987,7 @@ constexpr const TFunction kFunction_textureGrad_0S2B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0X2B1B1B(
-    BuiltInId::textureGrad_0X2B1B1B,
+    BuiltInId::textureGrad_USampler2DArray1_Float3_Float2_Float2,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B1B1B1C,
@@ -8146,7 +7996,7 @@ constexpr const TFunction kFunction_textureGrad_0X2B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGrad_0b3B1B1B(
-    BuiltInId::textureGrad_0b3B1B1B,
+    BuiltInId::textureGrad_Sampler2DArrayShadow1_Float4_Float2_Float2,
     BuiltInName::textureGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0b3B1B1B1C,
@@ -8155,7 +8005,7 @@ constexpr const TFunction kFunction_textureGrad_0b3B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0H2B1B1B(
-    BuiltInId::textureProjGrad_0H2B1B1B,
+    BuiltInId::textureProjGrad_Sampler2D1_Float3_Float2_Float2,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B1B1B1C,
@@ -8164,7 +8014,7 @@ constexpr const TFunction kFunction_textureProjGrad_0H2B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0P2B1B1B(
-    BuiltInId::textureProjGrad_0P2B1B1B,
+    BuiltInId::textureProjGrad_ISampler2D1_Float3_Float2_Float2,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P2B1B1B1C,
@@ -8173,7 +8023,7 @@ constexpr const TFunction kFunction_textureProjGrad_0P2B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0U2B1B1B(
-    BuiltInId::textureProjGrad_0U2B1B1B,
+    BuiltInId::textureProjGrad_USampler2D1_Float3_Float2_Float2,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U2B1B1B1C,
@@ -8182,7 +8032,7 @@ constexpr const TFunction kFunction_textureProjGrad_0U2B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0H3B1B1B(
-    BuiltInId::textureProjGrad_0H3B1B1B,
+    BuiltInId::textureProjGrad_Sampler2D1_Float4_Float2_Float2,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B1B1B1C,
@@ -8191,7 +8041,7 @@ constexpr const TFunction kFunction_textureProjGrad_0H3B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0P3B1B1B(
-    BuiltInId::textureProjGrad_0P3B1B1B,
+    BuiltInId::textureProjGrad_ISampler2D1_Float4_Float2_Float2,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P3B1B1B1C,
@@ -8200,7 +8050,7 @@ constexpr const TFunction kFunction_textureProjGrad_0P3B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0U3B1B1B(
-    BuiltInId::textureProjGrad_0U3B1B1B,
+    BuiltInId::textureProjGrad_USampler2D1_Float4_Float2_Float2,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U3B1B1B1C,
@@ -8209,7 +8059,7 @@ constexpr const TFunction kFunction_textureProjGrad_0U3B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0I3B2B2B(
-    BuiltInId::textureProjGrad_0I3B2B2B,
+    BuiltInId::textureProjGrad_Sampler3D1_Float4_Float3_Float3,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I3B2B2B2C,
@@ -8218,7 +8068,7 @@ constexpr const TFunction kFunction_textureProjGrad_0I3B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0Q3B2B2B(
-    BuiltInId::textureProjGrad_0Q3B2B2B,
+    BuiltInId::textureProjGrad_ISampler3D1_Float4_Float3_Float3,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q3B2B2B2C,
@@ -8227,7 +8077,7 @@ constexpr const TFunction kFunction_textureProjGrad_0Q3B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0V3B2B2B(
-    BuiltInId::textureProjGrad_0V3B2B2B,
+    BuiltInId::textureProjGrad_USampler3D1_Float4_Float3_Float3,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V3B2B2B2C,
@@ -8236,7 +8086,7 @@ constexpr const TFunction kFunction_textureProjGrad_0V3B2B2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGrad_0Z3B1B1B(
-    BuiltInId::textureProjGrad_0Z3B1B1B,
+    BuiltInId::textureProjGrad_Sampler2DShadow1_Float4_Float2_Float2,
     BuiltInName::textureProjGrad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z3B1B1B1C,
@@ -8245,7 +8095,7 @@ constexpr const TFunction kFunction_textureProjGrad_0Z3B1B1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0H1B1C(
-    BuiltInId::textureOffset_0H1B1C,
+    BuiltInId::textureOffset_Sampler2D1_Float2_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B1C0B,
@@ -8254,7 +8104,7 @@ constexpr const TFunction kFunction_textureOffset_0H1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0P1B1C(
-    BuiltInId::textureOffset_0P1B1C,
+    BuiltInId::textureOffset_ISampler2D1_Float2_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B1C0B,
@@ -8263,7 +8113,7 @@ constexpr const TFunction kFunction_textureOffset_0P1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0U1B1C(
-    BuiltInId::textureOffset_0U1B1C,
+    BuiltInId::textureOffset_USampler2D1_Float2_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B1C0C,
@@ -8272,7 +8122,7 @@ constexpr const TFunction kFunction_textureOffset_0U1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0I2B2C(
-    BuiltInId::textureOffset_0I2B2C,
+    BuiltInId::textureOffset_Sampler3D1_Float3_Int3,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2B2C0B,
@@ -8281,7 +8131,7 @@ constexpr const TFunction kFunction_textureOffset_0I2B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0Q2B2C(
-    BuiltInId::textureOffset_0Q2B2C,
+    BuiltInId::textureOffset_ISampler3D1_Float3_Int3,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2B2C0B,
@@ -8290,7 +8140,7 @@ constexpr const TFunction kFunction_textureOffset_0Q2B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0V2B2C(
-    BuiltInId::textureOffset_0V2B2C,
+    BuiltInId::textureOffset_USampler3D1_Float3_Int3,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2B2C0B,
@@ -8299,7 +8149,7 @@ constexpr const TFunction kFunction_textureOffset_0V2B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0Z2B1C(
-    BuiltInId::textureOffset_0Z2B1C,
+    BuiltInId::textureOffset_Sampler2DShadow1_Float3_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z2B1C0B,
@@ -8308,7 +8158,7 @@ constexpr const TFunction kFunction_textureOffset_0Z2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0K2B1C(
-    BuiltInId::textureOffset_0K2B1C,
+    BuiltInId::textureOffset_Sampler2DArray1_Float3_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B1C0B,
@@ -8317,7 +8167,7 @@ constexpr const TFunction kFunction_textureOffset_0K2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0S2B1C(
-    BuiltInId::textureOffset_0S2B1C,
+    BuiltInId::textureOffset_ISampler2DArray1_Float3_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B1C0B,
@@ -8326,7 +8176,7 @@ constexpr const TFunction kFunction_textureOffset_0S2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0X2B1C(
-    BuiltInId::textureOffset_0X2B1C,
+    BuiltInId::textureOffset_USampler2DArray1_Float3_Int2,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B1C0C,
@@ -8335,7 +8185,7 @@ constexpr const TFunction kFunction_textureOffset_0X2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0H2B1C(
-    BuiltInId::textureProjOffset_0H2B1C,
+    BuiltInId::textureProjOffset_Sampler2D1_Float3_Int2,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B1C0B,
@@ -8344,7 +8194,7 @@ constexpr const TFunction kFunction_textureProjOffset_0H2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0P2B1C(
-    BuiltInId::textureProjOffset_0P2B1C,
+    BuiltInId::textureProjOffset_ISampler2D1_Float3_Int2,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P2B1C0B,
@@ -8353,7 +8203,7 @@ constexpr const TFunction kFunction_textureProjOffset_0P2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0U2B1C(
-    BuiltInId::textureProjOffset_0U2B1C,
+    BuiltInId::textureProjOffset_USampler2D1_Float3_Int2,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U2B1C0B,
@@ -8362,7 +8212,7 @@ constexpr const TFunction kFunction_textureProjOffset_0U2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0H3B1C(
-    BuiltInId::textureProjOffset_0H3B1C,
+    BuiltInId::textureProjOffset_Sampler2D1_Float4_Int2,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B1C0B,
@@ -8371,7 +8221,7 @@ constexpr const TFunction kFunction_textureProjOffset_0H3B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0P3B1C(
-    BuiltInId::textureProjOffset_0P3B1C,
+    BuiltInId::textureProjOffset_ISampler2D1_Float4_Int2,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P3B1C0B,
@@ -8380,7 +8230,7 @@ constexpr const TFunction kFunction_textureProjOffset_0P3B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0U3B1C(
-    BuiltInId::textureProjOffset_0U3B1C,
+    BuiltInId::textureProjOffset_USampler2D1_Float4_Int2,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U3B1C0B,
@@ -8389,7 +8239,7 @@ constexpr const TFunction kFunction_textureProjOffset_0U3B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0I3B2C(
-    BuiltInId::textureProjOffset_0I3B2C,
+    BuiltInId::textureProjOffset_Sampler3D1_Float4_Int3,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I3B2C0B,
@@ -8398,7 +8248,7 @@ constexpr const TFunction kFunction_textureProjOffset_0I3B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0Q3B2C(
-    BuiltInId::textureProjOffset_0Q3B2C,
+    BuiltInId::textureProjOffset_ISampler3D1_Float4_Int3,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q3B2C0B,
@@ -8407,7 +8257,7 @@ constexpr const TFunction kFunction_textureProjOffset_0Q3B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0V3B2C(
-    BuiltInId::textureProjOffset_0V3B2C,
+    BuiltInId::textureProjOffset_USampler3D1_Float4_Int3,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V3B2C0B,
@@ -8416,7 +8266,7 @@ constexpr const TFunction kFunction_textureProjOffset_0V3B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0Z3B1C(
-    BuiltInId::textureProjOffset_0Z3B1C,
+    BuiltInId::textureProjOffset_Sampler2DShadow1_Float4_Int2,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z3B1C0B,
@@ -8425,7 +8275,7 @@ constexpr const TFunction kFunction_textureProjOffset_0Z3B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0H1B0B1C(
-    BuiltInId::textureLodOffset_0H1B0B1C,
+    BuiltInId::textureLodOffset_Sampler2D1_Float2_Float1_Int2,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B0B1C,
@@ -8434,7 +8284,7 @@ constexpr const TFunction kFunction_textureLodOffset_0H1B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0P1B0B1C(
-    BuiltInId::textureLodOffset_0P1B0B1C,
+    BuiltInId::textureLodOffset_ISampler2D1_Float2_Float1_Int2,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B0B1C,
@@ -8443,7 +8293,7 @@ constexpr const TFunction kFunction_textureLodOffset_0P1B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0U1B0B1C(
-    BuiltInId::textureLodOffset_0U1B0B1C,
+    BuiltInId::textureLodOffset_USampler2D1_Float2_Float1_Int2,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B0B1C,
@@ -8452,7 +8302,7 @@ constexpr const TFunction kFunction_textureLodOffset_0U1B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0I2B0B2C(
-    BuiltInId::textureLodOffset_0I2B0B2C,
+    BuiltInId::textureLodOffset_Sampler3D1_Float3_Float1_Int3,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2B0B2C,
@@ -8461,7 +8311,7 @@ constexpr const TFunction kFunction_textureLodOffset_0I2B0B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0Q2B0B2C(
-    BuiltInId::textureLodOffset_0Q2B0B2C,
+    BuiltInId::textureLodOffset_ISampler3D1_Float3_Float1_Int3,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2B0B2C,
@@ -8470,7 +8320,7 @@ constexpr const TFunction kFunction_textureLodOffset_0Q2B0B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0V2B0B2C(
-    BuiltInId::textureLodOffset_0V2B0B2C,
+    BuiltInId::textureLodOffset_USampler3D1_Float3_Float1_Int3,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2B0B2C,
@@ -8479,7 +8329,7 @@ constexpr const TFunction kFunction_textureLodOffset_0V2B0B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0Z2B0B1C(
-    BuiltInId::textureLodOffset_0Z2B0B1C,
+    BuiltInId::textureLodOffset_Sampler2DShadow1_Float3_Float1_Int2,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z2B0B1C,
@@ -8488,7 +8338,7 @@ constexpr const TFunction kFunction_textureLodOffset_0Z2B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0K2B0B1C(
-    BuiltInId::textureLodOffset_0K2B0B1C,
+    BuiltInId::textureLodOffset_Sampler2DArray1_Float3_Float1_Int2,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B0B1C,
@@ -8497,7 +8347,7 @@ constexpr const TFunction kFunction_textureLodOffset_0K2B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0S2B0B1C(
-    BuiltInId::textureLodOffset_0S2B0B1C,
+    BuiltInId::textureLodOffset_ISampler2DArray1_Float3_Float1_Int2,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B0B1C,
@@ -8506,7 +8356,7 @@ constexpr const TFunction kFunction_textureLodOffset_0S2B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureLodOffset_0X2B0B1C(
-    BuiltInId::textureLodOffset_0X2B0B1C,
+    BuiltInId::textureLodOffset_USampler2DArray1_Float3_Float1_Int2,
     BuiltInName::textureLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B0B1C,
@@ -8515,7 +8365,7 @@ constexpr const TFunction kFunction_textureLodOffset_0X2B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0H2B0B1C(
-    BuiltInId::textureProjLodOffset_0H2B0B1C,
+    BuiltInId::textureProjLodOffset_Sampler2D1_Float3_Float1_Int2,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B0B1C,
@@ -8524,7 +8374,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0H2B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0P2B0B1C(
-    BuiltInId::textureProjLodOffset_0P2B0B1C,
+    BuiltInId::textureProjLodOffset_ISampler2D1_Float3_Float1_Int2,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P2B0B1C,
@@ -8533,7 +8383,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0P2B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0U2B0B1C(
-    BuiltInId::textureProjLodOffset_0U2B0B1C,
+    BuiltInId::textureProjLodOffset_USampler2D1_Float3_Float1_Int2,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U2B0B1C,
@@ -8542,7 +8392,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0U2B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0H3B0B1C(
-    BuiltInId::textureProjLodOffset_0H3B0B1C,
+    BuiltInId::textureProjLodOffset_Sampler2D1_Float4_Float1_Int2,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B0B1C,
@@ -8551,7 +8401,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0H3B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0P3B0B1C(
-    BuiltInId::textureProjLodOffset_0P3B0B1C,
+    BuiltInId::textureProjLodOffset_ISampler2D1_Float4_Float1_Int2,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P3B0B1C,
@@ -8560,7 +8410,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0P3B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0U3B0B1C(
-    BuiltInId::textureProjLodOffset_0U3B0B1C,
+    BuiltInId::textureProjLodOffset_USampler2D1_Float4_Float1_Int2,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U3B0B1C,
@@ -8569,7 +8419,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0U3B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0I3B0B2C(
-    BuiltInId::textureProjLodOffset_0I3B0B2C,
+    BuiltInId::textureProjLodOffset_Sampler3D1_Float4_Float1_Int3,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I3B0B2C,
@@ -8578,7 +8428,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0I3B0B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0Q3B0B2C(
-    BuiltInId::textureProjLodOffset_0Q3B0B2C,
+    BuiltInId::textureProjLodOffset_ISampler3D1_Float4_Float1_Int3,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q3B0B2C,
@@ -8587,7 +8437,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0Q3B0B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0V3B0B2C(
-    BuiltInId::textureProjLodOffset_0V3B0B2C,
+    BuiltInId::textureProjLodOffset_USampler3D1_Float4_Float1_Int3,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V3B0B2C,
@@ -8596,7 +8446,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0V3B0B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjLodOffset_0Z3B0B1C(
-    BuiltInId::textureProjLodOffset_0Z3B0B1C,
+    BuiltInId::textureProjLodOffset_Sampler2DShadow1_Float4_Float1_Int2,
     BuiltInName::textureProjLodOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z3B0B1C,
@@ -8605,7 +8455,7 @@ constexpr const TFunction kFunction_textureProjLodOffset_0Z3B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0H1C0C1C(
-    BuiltInId::texelFetchOffset_0H1C0C1C,
+    BuiltInId::texelFetchOffset_Sampler2D1_Int2_Int1_Int2,
     BuiltInName::texelFetchOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1C0C1C,
@@ -8614,7 +8464,7 @@ constexpr const TFunction kFunction_texelFetchOffset_0H1C0C1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0P1C0C1C(
-    BuiltInId::texelFetchOffset_0P1C0C1C,
+    BuiltInId::texelFetchOffset_ISampler2D1_Int2_Int1_Int2,
     BuiltInName::texelFetchOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1C0C1C,
@@ -8623,7 +8473,7 @@ constexpr const TFunction kFunction_texelFetchOffset_0P1C0C1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0U1C0C1C(
-    BuiltInId::texelFetchOffset_0U1C0C1C,
+    BuiltInId::texelFetchOffset_USampler2D1_Int2_Int1_Int2,
     BuiltInName::texelFetchOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1C0C1C,
@@ -8632,7 +8482,7 @@ constexpr const TFunction kFunction_texelFetchOffset_0U1C0C1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0I2C0C2C(
-    BuiltInId::texelFetchOffset_0I2C0C2C,
+    BuiltInId::texelFetchOffset_Sampler3D1_Int3_Int1_Int3,
     BuiltInName::texelFetchOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2C0C2C,
@@ -8641,7 +8491,7 @@ constexpr const TFunction kFunction_texelFetchOffset_0I2C0C2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0Q2C0C2C(
-    BuiltInId::texelFetchOffset_0Q2C0C2C,
+    BuiltInId::texelFetchOffset_ISampler3D1_Int3_Int1_Int3,
     BuiltInName::texelFetchOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2C0C2C,
@@ -8650,7 +8500,7 @@ constexpr const TFunction kFunction_texelFetchOffset_0Q2C0C2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0V2C0C2C(
-    BuiltInId::texelFetchOffset_0V2C0C2C,
+    BuiltInId::texelFetchOffset_USampler3D1_Int3_Int1_Int3,
     BuiltInName::texelFetchOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2C0C2C,
@@ -8659,7 +8509,7 @@ constexpr const TFunction kFunction_texelFetchOffset_0V2C0C2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0K2C0C1C(
-    BuiltInId::texelFetchOffset_0K2C0C1C,
+    BuiltInId::texelFetchOffset_Sampler2DArray1_Int3_Int1_Int2,
     BuiltInName::texelFetchOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2C0C1C,
@@ -8668,7 +8518,7 @@ constexpr const TFunction kFunction_texelFetchOffset_0K2C0C1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0S2C0C1C(
-    BuiltInId::texelFetchOffset_0S2C0C1C,
+    BuiltInId::texelFetchOffset_ISampler2DArray1_Int3_Int1_Int2,
     BuiltInName::texelFetchOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2C0C1C,
@@ -8677,7 +8527,7 @@ constexpr const TFunction kFunction_texelFetchOffset_0S2C0C1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetchOffset_0X2C0C1C(
-    BuiltInId::texelFetchOffset_0X2C0C1C,
+    BuiltInId::texelFetchOffset_USampler2DArray1_Int3_Int1_Int2,
     BuiltInName::texelFetchOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2C0C1C,
@@ -8686,7 +8536,7 @@ constexpr const TFunction kFunction_texelFetchOffset_0X2C0C1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0H1B1B1B1C(
-    BuiltInId::textureGradOffset_0H1B1B1B1C,
+    BuiltInId::textureGradOffset_Sampler2D1_Float2_Float2_Float2_Int2,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B1B1B1C,
@@ -8695,7 +8545,7 @@ constexpr const TFunction kFunction_textureGradOffset_0H1B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0P1B1B1B1C(
-    BuiltInId::textureGradOffset_0P1B1B1B1C,
+    BuiltInId::textureGradOffset_ISampler2D1_Float2_Float2_Float2_Int2,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B1B1B1C,
@@ -8704,7 +8554,7 @@ constexpr const TFunction kFunction_textureGradOffset_0P1B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0U1B1B1B1C(
-    BuiltInId::textureGradOffset_0U1B1B1B1C,
+    BuiltInId::textureGradOffset_USampler2D1_Float2_Float2_Float2_Int2,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B1B1B1C,
@@ -8713,7 +8563,7 @@ constexpr const TFunction kFunction_textureGradOffset_0U1B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0I2B2B2B2C(
-    BuiltInId::textureGradOffset_0I2B2B2B2C,
+    BuiltInId::textureGradOffset_Sampler3D1_Float3_Float3_Float3_Int3,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2B2B2B2C,
@@ -8722,7 +8572,7 @@ constexpr const TFunction kFunction_textureGradOffset_0I2B2B2B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0Q2B2B2B2C(
-    BuiltInId::textureGradOffset_0Q2B2B2B2C,
+    BuiltInId::textureGradOffset_ISampler3D1_Float3_Float3_Float3_Int3,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2B2B2B2C,
@@ -8731,7 +8581,7 @@ constexpr const TFunction kFunction_textureGradOffset_0Q2B2B2B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0V2B2B2B2C(
-    BuiltInId::textureGradOffset_0V2B2B2B2C,
+    BuiltInId::textureGradOffset_USampler3D1_Float3_Float3_Float3_Int3,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2B2B2B2C,
@@ -8740,7 +8590,7 @@ constexpr const TFunction kFunction_textureGradOffset_0V2B2B2B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0Z2B1B1B1C(
-    BuiltInId::textureGradOffset_0Z2B1B1B1C,
+    BuiltInId::textureGradOffset_Sampler2DShadow1_Float3_Float2_Float2_Int2,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z2B1B1B1C,
@@ -8749,7 +8599,7 @@ constexpr const TFunction kFunction_textureGradOffset_0Z2B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0K2B1B1B1C(
-    BuiltInId::textureGradOffset_0K2B1B1B1C,
+    BuiltInId::textureGradOffset_Sampler2DArray1_Float3_Float2_Float2_Int2,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B1B1B1C,
@@ -8758,7 +8608,7 @@ constexpr const TFunction kFunction_textureGradOffset_0K2B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0S2B1B1B1C(
-    BuiltInId::textureGradOffset_0S2B1B1B1C,
+    BuiltInId::textureGradOffset_ISampler2DArray1_Float3_Float2_Float2_Int2,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B1B1B1C,
@@ -8767,7 +8617,7 @@ constexpr const TFunction kFunction_textureGradOffset_0S2B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0X2B1B1B1C(
-    BuiltInId::textureGradOffset_0X2B1B1B1C,
+    BuiltInId::textureGradOffset_USampler2DArray1_Float3_Float2_Float2_Int2,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B1B1B1C,
@@ -8776,7 +8626,7 @@ constexpr const TFunction kFunction_textureGradOffset_0X2B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGradOffset_0b3B1B1B1C(
-    BuiltInId::textureGradOffset_0b3B1B1B1C,
+    BuiltInId::textureGradOffset_Sampler2DArrayShadow1_Float4_Float2_Float2_Int2,
     BuiltInName::textureGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0b3B1B1B1C,
@@ -8785,7 +8635,7 @@ constexpr const TFunction kFunction_textureGradOffset_0b3B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0H2B1B1B1C(
-    BuiltInId::textureProjGradOffset_0H2B1B1B1C,
+    BuiltInId::textureProjGradOffset_Sampler2D1_Float3_Float2_Float2_Int2,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B1B1B1C,
@@ -8794,7 +8644,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0H2B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0P2B1B1B1C(
-    BuiltInId::textureProjGradOffset_0P2B1B1B1C,
+    BuiltInId::textureProjGradOffset_ISampler2D1_Float3_Float2_Float2_Int2,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P2B1B1B1C,
@@ -8803,7 +8653,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0P2B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0U2B1B1B1C(
-    BuiltInId::textureProjGradOffset_0U2B1B1B1C,
+    BuiltInId::textureProjGradOffset_USampler2D1_Float3_Float2_Float2_Int2,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U2B1B1B1C,
@@ -8812,7 +8662,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0U2B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0H3B1B1B1C(
-    BuiltInId::textureProjGradOffset_0H3B1B1B1C,
+    BuiltInId::textureProjGradOffset_Sampler2D1_Float4_Float2_Float2_Int2,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B1B1B1C,
@@ -8821,7 +8671,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0H3B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0P3B1B1B1C(
-    BuiltInId::textureProjGradOffset_0P3B1B1B1C,
+    BuiltInId::textureProjGradOffset_ISampler2D1_Float4_Float2_Float2_Int2,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P3B1B1B1C,
@@ -8830,7 +8680,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0P3B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0U3B1B1B1C(
-    BuiltInId::textureProjGradOffset_0U3B1B1B1C,
+    BuiltInId::textureProjGradOffset_USampler2D1_Float4_Float2_Float2_Int2,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U3B1B1B1C,
@@ -8839,7 +8689,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0U3B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0I3B2B2B2C(
-    BuiltInId::textureProjGradOffset_0I3B2B2B2C,
+    BuiltInId::textureProjGradOffset_Sampler3D1_Float4_Float3_Float3_Int3,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I3B2B2B2C,
@@ -8848,7 +8698,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0I3B2B2B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0Q3B2B2B2C(
-    BuiltInId::textureProjGradOffset_0Q3B2B2B2C,
+    BuiltInId::textureProjGradOffset_ISampler3D1_Float4_Float3_Float3_Int3,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q3B2B2B2C,
@@ -8857,7 +8707,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0Q3B2B2B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0V3B2B2B2C(
-    BuiltInId::textureProjGradOffset_0V3B2B2B2C,
+    BuiltInId::textureProjGradOffset_USampler3D1_Float4_Float3_Float3_Int3,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V3B2B2B2C,
@@ -8866,7 +8716,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0V3B2B2B2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjGradOffset_0Z3B1B1B1C(
-    BuiltInId::textureProjGradOffset_0Z3B1B1B1C,
+    BuiltInId::textureProjGradOffset_Sampler2DShadow1_Float4_Float2_Float2_Int2,
     BuiltInName::textureProjGradOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z3B1B1B1C,
@@ -8875,7 +8725,7 @@ constexpr const TFunction kFunction_textureProjGradOffset_0Z3B1B1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0H1B1C0B(
-    BuiltInId::textureOffset_0H1B1C0B,
+    BuiltInId::textureOffset_Sampler2D1_Float2_Int2_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B1C0B,
@@ -8884,7 +8734,7 @@ constexpr const TFunction kFunction_textureOffset_0H1B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0P1B1C0B(
-    BuiltInId::textureOffset_0P1B1C0B,
+    BuiltInId::textureOffset_ISampler2D1_Float2_Int2_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B1C0B,
@@ -8893,7 +8743,7 @@ constexpr const TFunction kFunction_textureOffset_0P1B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0U1B1C0B(
-    BuiltInId::textureOffset_0U1B1C0B,
+    BuiltInId::textureOffset_USampler2D1_Float2_Int2_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B1C0B,
@@ -8902,7 +8752,7 @@ constexpr const TFunction kFunction_textureOffset_0U1B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0I2B2C0B(
-    BuiltInId::textureOffset_0I2B2C0B,
+    BuiltInId::textureOffset_Sampler3D1_Float3_Int3_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2B2C0B,
@@ -8911,7 +8761,7 @@ constexpr const TFunction kFunction_textureOffset_0I2B2C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0Q2B2C0B(
-    BuiltInId::textureOffset_0Q2B2C0B,
+    BuiltInId::textureOffset_ISampler3D1_Float3_Int3_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2B2C0B,
@@ -8920,7 +8770,7 @@ constexpr const TFunction kFunction_textureOffset_0Q2B2C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0V2B2C0B(
-    BuiltInId::textureOffset_0V2B2C0B,
+    BuiltInId::textureOffset_USampler3D1_Float3_Int3_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2B2C0B,
@@ -8929,7 +8779,7 @@ constexpr const TFunction kFunction_textureOffset_0V2B2C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0Z2B1C0B(
-    BuiltInId::textureOffset_0Z2B1C0B,
+    BuiltInId::textureOffset_Sampler2DShadow1_Float3_Int2_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z2B1C0B,
@@ -8938,7 +8788,7 @@ constexpr const TFunction kFunction_textureOffset_0Z2B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0K2B1C0B(
-    BuiltInId::textureOffset_0K2B1C0B,
+    BuiltInId::textureOffset_Sampler2DArray1_Float3_Int2_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B1C0B,
@@ -8947,7 +8797,7 @@ constexpr const TFunction kFunction_textureOffset_0K2B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0S2B1C0B(
-    BuiltInId::textureOffset_0S2B1C0B,
+    BuiltInId::textureOffset_ISampler2DArray1_Float3_Int2_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B1C0B,
@@ -8956,7 +8806,7 @@ constexpr const TFunction kFunction_textureOffset_0S2B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureOffset_0X2B1C0B(
-    BuiltInId::textureOffset_0X2B1C0B,
+    BuiltInId::textureOffset_USampler2DArray1_Float3_Int2_Float1,
     BuiltInName::textureOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B1C0B,
@@ -8965,7 +8815,7 @@ constexpr const TFunction kFunction_textureOffset_0X2B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0H2B1C0B(
-    BuiltInId::textureProjOffset_0H2B1C0B,
+    BuiltInId::textureProjOffset_Sampler2D1_Float3_Int2_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B1C0B,
@@ -8974,7 +8824,7 @@ constexpr const TFunction kFunction_textureProjOffset_0H2B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0P2B1C0B(
-    BuiltInId::textureProjOffset_0P2B1C0B,
+    BuiltInId::textureProjOffset_ISampler2D1_Float3_Int2_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P2B1C0B,
@@ -8983,7 +8833,7 @@ constexpr const TFunction kFunction_textureProjOffset_0P2B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0U2B1C0B(
-    BuiltInId::textureProjOffset_0U2B1C0B,
+    BuiltInId::textureProjOffset_USampler2D1_Float3_Int2_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U2B1C0B,
@@ -8992,7 +8842,7 @@ constexpr const TFunction kFunction_textureProjOffset_0U2B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0H3B1C0B(
-    BuiltInId::textureProjOffset_0H3B1C0B,
+    BuiltInId::textureProjOffset_Sampler2D1_Float4_Int2_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B1C0B,
@@ -9001,7 +8851,7 @@ constexpr const TFunction kFunction_textureProjOffset_0H3B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0P3B1C0B(
-    BuiltInId::textureProjOffset_0P3B1C0B,
+    BuiltInId::textureProjOffset_ISampler2D1_Float4_Int2_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P3B1C0B,
@@ -9010,7 +8860,7 @@ constexpr const TFunction kFunction_textureProjOffset_0P3B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0U3B1C0B(
-    BuiltInId::textureProjOffset_0U3B1C0B,
+    BuiltInId::textureProjOffset_USampler2D1_Float4_Int2_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U3B1C0B,
@@ -9019,7 +8869,7 @@ constexpr const TFunction kFunction_textureProjOffset_0U3B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0I3B2C0B(
-    BuiltInId::textureProjOffset_0I3B2C0B,
+    BuiltInId::textureProjOffset_Sampler3D1_Float4_Int3_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I3B2C0B,
@@ -9028,7 +8878,7 @@ constexpr const TFunction kFunction_textureProjOffset_0I3B2C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0Q3B2C0B(
-    BuiltInId::textureProjOffset_0Q3B2C0B,
+    BuiltInId::textureProjOffset_ISampler3D1_Float4_Int3_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q3B2C0B,
@@ -9037,7 +8887,7 @@ constexpr const TFunction kFunction_textureProjOffset_0Q3B2C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0V3B2C0B(
-    BuiltInId::textureProjOffset_0V3B2C0B,
+    BuiltInId::textureProjOffset_USampler3D1_Float4_Int3_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V3B2C0B,
@@ -9046,7 +8896,7 @@ constexpr const TFunction kFunction_textureProjOffset_0V3B2C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProjOffset_0Z3B1C0B(
-    BuiltInId::textureProjOffset_0Z3B1C0B,
+    BuiltInId::textureProjOffset_Sampler2DShadow1_Float4_Int2_Float1,
     BuiltInName::textureProjOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z3B1C0B,
@@ -9055,7 +8905,7 @@ constexpr const TFunction kFunction_textureProjOffset_0Z3B1C0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0L1B(
-    BuiltInId::texture_0L1B,
+    BuiltInId::texture_SamplerExternalOES1_Float2,
     BuiltInName::texture,
     TExtension::OES_EGL_image_external_essl3,
     BuiltInParameters::p0L1B0B,
@@ -9064,7 +8914,7 @@ constexpr const TFunction kFunction_texture_0L1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0L2B(
-    BuiltInId::textureProj_0L2B,
+    BuiltInId::textureProj_SamplerExternalOES1_Float3,
     BuiltInName::textureProj,
     TExtension::OES_EGL_image_external_essl3,
     BuiltInParameters::p0L2B0B,
@@ -9073,7 +8923,7 @@ constexpr const TFunction kFunction_textureProj_0L2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0L3B(
-    BuiltInId::textureProj_0L3B,
+    BuiltInId::textureProj_SamplerExternalOES1_Float4,
     BuiltInName::textureProj,
     TExtension::OES_EGL_image_external_essl3,
     BuiltInParameters::p0L3B0B,
@@ -9082,7 +8932,7 @@ constexpr const TFunction kFunction_textureProj_0L3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0L0C(
-    BuiltInId::textureSize_0L0C,
+    BuiltInId::textureSize_SamplerExternalOES1_Int1,
     BuiltInName::textureSize,
     TExtension::OES_EGL_image_external_essl3,
     BuiltInParameters::p0L0C,
@@ -9091,7 +8941,7 @@ constexpr const TFunction kFunction_textureSize_0L0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0L1C0C(
-    BuiltInId::texelFetch_0L1C0C,
+    BuiltInId::texelFetch_SamplerExternalOES1_Int2_Int1,
     BuiltInName::texelFetch,
     TExtension::OES_EGL_image_external_essl3,
     BuiltInParameters::p0L1C0C,
@@ -9100,7 +8950,7 @@ constexpr const TFunction kFunction_texelFetch_0L1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0M1B(
-    BuiltInId::texture_0M1B,
+    BuiltInId::texture_SamplerExternal2DY2YEXT1_Float2,
     BuiltInName::texture,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p0M1B0B,
@@ -9109,7 +8959,7 @@ constexpr const TFunction kFunction_texture_0M1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0M2B(
-    BuiltInId::textureProj_0M2B,
+    BuiltInId::textureProj_SamplerExternal2DY2YEXT1_Float3,
     BuiltInName::textureProj,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p0M2B0B,
@@ -9118,7 +8968,7 @@ constexpr const TFunction kFunction_textureProj_0M2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0M3B(
-    BuiltInId::textureProj_0M3B,
+    BuiltInId::textureProj_SamplerExternal2DY2YEXT1_Float4,
     BuiltInName::textureProj,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p0M3B0B,
@@ -9127,7 +8977,7 @@ constexpr const TFunction kFunction_textureProj_0M3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_rgb_2_yuv_2B0G(
-    BuiltInId::rgb_2_yuv_2B0G,
+    BuiltInId::rgb_2_yuv_Float3_YuvCscStandardEXT1,
     BuiltInName::rgb_2_yuv,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p2B0G,
@@ -9136,7 +8986,7 @@ constexpr const TFunction kFunction_rgb_2_yuv_2B0G(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_yuv_2_rgb_2B0G(
-    BuiltInId::yuv_2_rgb_2B0G,
+    BuiltInId::yuv_2_rgb_Float3_YuvCscStandardEXT1,
     BuiltInName::yuv_2_rgb,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p2B0G,
@@ -9145,7 +8995,7 @@ constexpr const TFunction kFunction_yuv_2_rgb_2B0G(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureSize_0M0C(
-    BuiltInId::textureSize_0M0C,
+    BuiltInId::textureSize_SamplerExternal2DY2YEXT1_Int1,
     BuiltInName::textureSize,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p0M0C,
@@ -9154,7 +9004,7 @@ constexpr const TFunction kFunction_textureSize_0M0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0M1C0C(
-    BuiltInId::texelFetch_0M1C0C,
+    BuiltInId::texelFetch_SamplerExternal2DY2YEXT1_Int2_Int1,
     BuiltInName::texelFetch,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p0M1C0C,
@@ -9163,7 +9013,7 @@ constexpr const TFunction kFunction_texelFetch_0M1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0H1B0B(
-    BuiltInId::texture_0H1B0B,
+    BuiltInId::texture_Sampler2D1_Float2_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B0B1C,
@@ -9172,7 +9022,7 @@ constexpr const TFunction kFunction_texture_0H1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0P1B0B(
-    BuiltInId::texture_0P1B0B,
+    BuiltInId::texture_ISampler2D1_Float2_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B0B1C,
@@ -9181,7 +9031,7 @@ constexpr const TFunction kFunction_texture_0P1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0U1B0B(
-    BuiltInId::texture_0U1B0B,
+    BuiltInId::texture_USampler2D1_Float2_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B0B1C,
@@ -9190,7 +9040,7 @@ constexpr const TFunction kFunction_texture_0U1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0I2B0B(
-    BuiltInId::texture_0I2B0B,
+    BuiltInId::texture_Sampler3D1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I2B0B2C,
@@ -9199,7 +9049,7 @@ constexpr const TFunction kFunction_texture_0I2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0Q2B0B(
-    BuiltInId::texture_0Q2B0B,
+    BuiltInId::texture_ISampler3D1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q2B0B2C,
@@ -9208,7 +9058,7 @@ constexpr const TFunction kFunction_texture_0Q2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0V2B0B(
-    BuiltInId::texture_0V2B0B,
+    BuiltInId::texture_USampler3D1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V2B0B2C,
@@ -9217,7 +9067,7 @@ constexpr const TFunction kFunction_texture_0V2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0J2B0B(
-    BuiltInId::texture_0J2B0B,
+    BuiltInId::texture_SamplerCube1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J2B0B,
@@ -9226,7 +9076,7 @@ constexpr const TFunction kFunction_texture_0J2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0R2B0B(
-    BuiltInId::texture_0R2B0B,
+    BuiltInId::texture_ISamplerCube1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0R2B0B,
@@ -9235,7 +9085,7 @@ constexpr const TFunction kFunction_texture_0R2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0W2B0B(
-    BuiltInId::texture_0W2B0B,
+    BuiltInId::texture_USamplerCube1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0W2B0B,
@@ -9244,7 +9094,7 @@ constexpr const TFunction kFunction_texture_0W2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0K2B0B(
-    BuiltInId::texture_0K2B0B,
+    BuiltInId::texture_Sampler2DArray1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B0B1C,
@@ -9253,7 +9103,7 @@ constexpr const TFunction kFunction_texture_0K2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0S2B0B(
-    BuiltInId::texture_0S2B0B,
+    BuiltInId::texture_ISampler2DArray1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B0B1C,
@@ -9262,7 +9112,7 @@ constexpr const TFunction kFunction_texture_0S2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0X2B0B(
-    BuiltInId::texture_0X2B0B,
+    BuiltInId::texture_USampler2DArray1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B0B1C,
@@ -9271,7 +9121,7 @@ constexpr const TFunction kFunction_texture_0X2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0H2B0B(
-    BuiltInId::textureProj_0H2B0B,
+    BuiltInId::textureProj_Sampler2D1_Float3_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H2B0B1C,
@@ -9280,7 +9130,7 @@ constexpr const TFunction kFunction_textureProj_0H2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0P2B0B(
-    BuiltInId::textureProj_0P2B0B,
+    BuiltInId::textureProj_ISampler2D1_Float3_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P2B0B1C,
@@ -9289,7 +9139,7 @@ constexpr const TFunction kFunction_textureProj_0P2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0U2B0B(
-    BuiltInId::textureProj_0U2B0B,
+    BuiltInId::textureProj_USampler2D1_Float3_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U2B0B1C,
@@ -9298,7 +9148,7 @@ constexpr const TFunction kFunction_textureProj_0U2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0H3B0B(
-    BuiltInId::textureProj_0H3B0B,
+    BuiltInId::textureProj_Sampler2D1_Float4_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H3B0B1C,
@@ -9307,7 +9157,7 @@ constexpr const TFunction kFunction_textureProj_0H3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0P3B0B(
-    BuiltInId::textureProj_0P3B0B,
+    BuiltInId::textureProj_ISampler2D1_Float4_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P3B0B1C,
@@ -9316,7 +9166,7 @@ constexpr const TFunction kFunction_textureProj_0P3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0U3B0B(
-    BuiltInId::textureProj_0U3B0B,
+    BuiltInId::textureProj_USampler2D1_Float4_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U3B0B1C,
@@ -9325,7 +9175,7 @@ constexpr const TFunction kFunction_textureProj_0U3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0I3B0B(
-    BuiltInId::textureProj_0I3B0B,
+    BuiltInId::textureProj_Sampler3D1_Float4_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0I3B0B2C,
@@ -9334,7 +9184,7 @@ constexpr const TFunction kFunction_textureProj_0I3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0Q3B0B(
-    BuiltInId::textureProj_0Q3B0B,
+    BuiltInId::textureProj_ISampler3D1_Float4_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Q3B0B2C,
@@ -9343,7 +9193,7 @@ constexpr const TFunction kFunction_textureProj_0Q3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0V3B0B(
-    BuiltInId::textureProj_0V3B0B,
+    BuiltInId::textureProj_USampler3D1_Float4_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0V3B0B2C,
@@ -9352,7 +9202,7 @@ constexpr const TFunction kFunction_textureProj_0V3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0Z2B0B(
-    BuiltInId::texture_0Z2B0B,
+    BuiltInId::texture_Sampler2DShadow1_Float3_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z2B0B1C,
@@ -9361,7 +9211,7 @@ constexpr const TFunction kFunction_texture_0Z2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0a3B0B(
-    BuiltInId::texture_0a3B0B,
+    BuiltInId::texture_SamplerCubeShadow1_Float4_Float1,
     BuiltInName::texture,
     TExtension::UNDEFINED,
     BuiltInParameters::p0a3B0B,
@@ -9370,7 +9220,7 @@ constexpr const TFunction kFunction_texture_0a3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0Z3B0B(
-    BuiltInId::textureProj_0Z3B0B,
+    BuiltInId::textureProj_Sampler2DShadow1_Float4_Float1,
     BuiltInName::textureProj,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z3B0B1C,
@@ -9379,7 +9229,7 @@ constexpr const TFunction kFunction_textureProj_0Z3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0L1B0B(
-    BuiltInId::texture_0L1B0B,
+    BuiltInId::texture_SamplerExternalOES1_Float2_Float1,
     BuiltInName::texture,
     TExtension::OES_EGL_image_external_essl3,
     BuiltInParameters::p0L1B0B,
@@ -9388,7 +9238,7 @@ constexpr const TFunction kFunction_texture_0L1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0L2B0B(
-    BuiltInId::textureProj_0L2B0B,
+    BuiltInId::textureProj_SamplerExternalOES1_Float3_Float1,
     BuiltInName::textureProj,
     TExtension::OES_EGL_image_external_essl3,
     BuiltInParameters::p0L2B0B,
@@ -9397,7 +9247,7 @@ constexpr const TFunction kFunction_textureProj_0L2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0L3B0B(
-    BuiltInId::textureProj_0L3B0B,
+    BuiltInId::textureProj_SamplerExternalOES1_Float4_Float1,
     BuiltInName::textureProj,
     TExtension::OES_EGL_image_external_essl3,
     BuiltInParameters::p0L3B0B,
@@ -9406,7 +9256,7 @@ constexpr const TFunction kFunction_textureProj_0L3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texture_0M1B0B(
-    BuiltInId::texture_0M1B0B,
+    BuiltInId::texture_SamplerExternal2DY2YEXT1_Float2_Float1,
     BuiltInName::texture,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p0M1B0B,
@@ -9415,7 +9265,7 @@ constexpr const TFunction kFunction_texture_0M1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0M2B0B(
-    BuiltInId::textureProj_0M2B0B,
+    BuiltInId::textureProj_SamplerExternal2DY2YEXT1_Float3_Float1,
     BuiltInName::textureProj,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p0M2B0B,
@@ -9424,7 +9274,7 @@ constexpr const TFunction kFunction_textureProj_0M2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureProj_0M3B0B(
-    BuiltInId::textureProj_0M3B0B,
+    BuiltInId::textureProj_SamplerExternal2DY2YEXT1_Float4_Float1,
     BuiltInName::textureProj,
     TExtension::EXT_YUV_target,
     BuiltInParameters::p0M3B0B,
@@ -9433,7 +9283,7 @@ constexpr const TFunction kFunction_textureProj_0M3B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0O1C0C(
-    BuiltInId::texelFetch_0O1C0C,
+    BuiltInId::texelFetch_Sampler2DMS1_Int2_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0O1C0C,
@@ -9442,7 +9292,7 @@ constexpr const TFunction kFunction_texelFetch_0O1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0T1C0C(
-    BuiltInId::texelFetch_0T1C0C,
+    BuiltInId::texelFetch_ISampler2DMS1_Int2_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0T1C0C,
@@ -9451,7 +9301,7 @@ constexpr const TFunction kFunction_texelFetch_0T1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_texelFetch_0Y1C0C(
-    BuiltInId::texelFetch_0Y1C0C,
+    BuiltInId::texelFetch_USampler2DMS1_Int2_Int1,
     BuiltInName::texelFetch,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Y1C0C,
@@ -9460,7 +9310,7 @@ constexpr const TFunction kFunction_texelFetch_0Y1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0H1B(
-    BuiltInId::textureGather_0H1B,
+    BuiltInId::textureGather_Sampler2D1_Float2,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B1B1B1C,
@@ -9469,7 +9319,7 @@ constexpr const TFunction kFunction_textureGather_0H1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0P1B(
-    BuiltInId::textureGather_0P1B,
+    BuiltInId::textureGather_ISampler2D1_Float2,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B0C,
@@ -9478,7 +9328,7 @@ constexpr const TFunction kFunction_textureGather_0P1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0U1B(
-    BuiltInId::textureGather_0U1B,
+    BuiltInId::textureGather_USampler2D1_Float2,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B0B1C,
@@ -9487,7 +9337,7 @@ constexpr const TFunction kFunction_textureGather_0U1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0H1B0C(
-    BuiltInId::textureGather_0H1B0C,
+    BuiltInId::textureGather_Sampler2D1_Float2_Int1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B0C,
@@ -9496,7 +9346,7 @@ constexpr const TFunction kFunction_textureGather_0H1B0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0P1B0C(
-    BuiltInId::textureGather_0P1B0C,
+    BuiltInId::textureGather_ISampler2D1_Float2_Int1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B0C,
@@ -9505,7 +9355,7 @@ constexpr const TFunction kFunction_textureGather_0P1B0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0U1B0C(
-    BuiltInId::textureGather_0U1B0C,
+    BuiltInId::textureGather_USampler2D1_Float2_Int1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B0C,
@@ -9514,7 +9364,7 @@ constexpr const TFunction kFunction_textureGather_0U1B0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0K2B(
-    BuiltInId::textureGather_0K2B,
+    BuiltInId::textureGather_Sampler2DArray1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B0B1C,
@@ -9523,7 +9373,7 @@ constexpr const TFunction kFunction_textureGather_0K2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0S2B(
-    BuiltInId::textureGather_0S2B,
+    BuiltInId::textureGather_ISampler2DArray1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B0B1C,
@@ -9532,7 +9382,7 @@ constexpr const TFunction kFunction_textureGather_0S2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0X2B(
-    BuiltInId::textureGather_0X2B,
+    BuiltInId::textureGather_USampler2DArray1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B1C0C,
@@ -9541,7 +9391,7 @@ constexpr const TFunction kFunction_textureGather_0X2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0K2B0C(
-    BuiltInId::textureGather_0K2B0C,
+    BuiltInId::textureGather_Sampler2DArray1_Float3_Int1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B0C,
@@ -9550,7 +9400,7 @@ constexpr const TFunction kFunction_textureGather_0K2B0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0S2B0C(
-    BuiltInId::textureGather_0S2B0C,
+    BuiltInId::textureGather_ISampler2DArray1_Float3_Int1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B0C,
@@ -9559,7 +9409,7 @@ constexpr const TFunction kFunction_textureGather_0S2B0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0X2B0C(
-    BuiltInId::textureGather_0X2B0C,
+    BuiltInId::textureGather_USampler2DArray1_Float3_Int1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B0C,
@@ -9568,7 +9418,7 @@ constexpr const TFunction kFunction_textureGather_0X2B0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0J2B(
-    BuiltInId::textureGather_0J2B,
+    BuiltInId::textureGather_SamplerCube1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J2B2B2B,
@@ -9577,7 +9427,7 @@ constexpr const TFunction kFunction_textureGather_0J2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0R2B(
-    BuiltInId::textureGather_0R2B,
+    BuiltInId::textureGather_ISamplerCube1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0R2B2B2B,
@@ -9586,7 +9436,7 @@ constexpr const TFunction kFunction_textureGather_0R2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0W2B(
-    BuiltInId::textureGather_0W2B,
+    BuiltInId::textureGather_USamplerCube1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0W2B0B,
@@ -9595,7 +9445,7 @@ constexpr const TFunction kFunction_textureGather_0W2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0J2B0C(
-    BuiltInId::textureGather_0J2B0C,
+    BuiltInId::textureGather_SamplerCube1_Float3_Int1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0J2B0C,
@@ -9604,7 +9454,7 @@ constexpr const TFunction kFunction_textureGather_0J2B0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0R2B0C(
-    BuiltInId::textureGather_0R2B0C,
+    BuiltInId::textureGather_ISamplerCube1_Float3_Int1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0R2B0C,
@@ -9613,7 +9463,7 @@ constexpr const TFunction kFunction_textureGather_0R2B0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0W2B0C(
-    BuiltInId::textureGather_0W2B0C,
+    BuiltInId::textureGather_USamplerCube1_Float3_Int1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0W2B0C,
@@ -9622,7 +9472,7 @@ constexpr const TFunction kFunction_textureGather_0W2B0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0Z1B(
-    BuiltInId::textureGather_0Z1B,
+    BuiltInId::textureGather_Sampler2DShadow1_Float2,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z1B0B1C,
@@ -9631,7 +9481,7 @@ constexpr const TFunction kFunction_textureGather_0Z1B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0Z1B0B(
-    BuiltInId::textureGather_0Z1B0B,
+    BuiltInId::textureGather_Sampler2DShadow1_Float2_Float1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z1B0B1C,
@@ -9640,7 +9490,7 @@ constexpr const TFunction kFunction_textureGather_0Z1B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0b2B(
-    BuiltInId::textureGather_0b2B,
+    BuiltInId::textureGather_Sampler2DArrayShadow1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0b2B0B1C,
@@ -9649,7 +9499,7 @@ constexpr const TFunction kFunction_textureGather_0b2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0b2B0B(
-    BuiltInId::textureGather_0b2B0B,
+    BuiltInId::textureGather_Sampler2DArrayShadow1_Float3_Float1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0b2B0B1C,
@@ -9658,7 +9508,7 @@ constexpr const TFunction kFunction_textureGather_0b2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0a2B(
-    BuiltInId::textureGather_0a2B,
+    BuiltInId::textureGather_SamplerCubeShadow1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0a2B0B,
@@ -9667,7 +9517,7 @@ constexpr const TFunction kFunction_textureGather_0a2B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGather_0a2B0B(
-    BuiltInId::textureGather_0a2B0B,
+    BuiltInId::textureGather_SamplerCubeShadow1_Float3_Float1,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
     BuiltInParameters::p0a2B0B,
@@ -9676,7 +9526,7 @@ constexpr const TFunction kFunction_textureGather_0a2B0B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0H1B1C(
-    BuiltInId::textureGatherOffset_0H1B1C,
+    BuiltInId::textureGatherOffset_Sampler2D1_Float2_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B1C0B,
@@ -9685,7 +9535,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0H1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0P1B1C(
-    BuiltInId::textureGatherOffset_0P1B1C,
+    BuiltInId::textureGatherOffset_ISampler2D1_Float2_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B1C0B,
@@ -9694,7 +9544,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0P1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0U1B1C(
-    BuiltInId::textureGatherOffset_0U1B1C,
+    BuiltInId::textureGatherOffset_USampler2D1_Float2_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B1C0C,
@@ -9703,7 +9553,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0U1B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0H1B1C0C(
-    BuiltInId::textureGatherOffset_0H1B1C0C,
+    BuiltInId::textureGatherOffset_Sampler2D1_Float2_Int2_Int1,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0H1B1C0C,
@@ -9712,7 +9562,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0H1B1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0P1B1C0C(
-    BuiltInId::textureGatherOffset_0P1B1C0C,
+    BuiltInId::textureGatherOffset_ISampler2D1_Float2_Int2_Int1,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0P1B1C0C,
@@ -9721,7 +9571,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0P1B1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0U1B1C0C(
-    BuiltInId::textureGatherOffset_0U1B1C0C,
+    BuiltInId::textureGatherOffset_USampler2D1_Float2_Int2_Int1,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0U1B1C0C,
@@ -9730,7 +9580,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0U1B1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0K2B1C(
-    BuiltInId::textureGatherOffset_0K2B1C,
+    BuiltInId::textureGatherOffset_Sampler2DArray1_Float3_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B1C0B,
@@ -9739,7 +9589,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0K2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0S2B1C(
-    BuiltInId::textureGatherOffset_0S2B1C,
+    BuiltInId::textureGatherOffset_ISampler2DArray1_Float3_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B1C0B,
@@ -9748,7 +9598,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0S2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0X2B1C(
-    BuiltInId::textureGatherOffset_0X2B1C,
+    BuiltInId::textureGatherOffset_USampler2DArray1_Float3_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B1C0C,
@@ -9757,7 +9607,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0X2B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0K2B1C0C(
-    BuiltInId::textureGatherOffset_0K2B1C0C,
+    BuiltInId::textureGatherOffset_Sampler2DArray1_Float3_Int2_Int1,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0K2B1C0C,
@@ -9766,7 +9616,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0K2B1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0S2B1C0C(
-    BuiltInId::textureGatherOffset_0S2B1C0C,
+    BuiltInId::textureGatherOffset_ISampler2DArray1_Float3_Int2_Int1,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0S2B1C0C,
@@ -9775,7 +9625,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0S2B1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0X2B1C0C(
-    BuiltInId::textureGatherOffset_0X2B1C0C,
+    BuiltInId::textureGatherOffset_USampler2DArray1_Float3_Int2_Int1,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0X2B1C0C,
@@ -9784,7 +9634,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0X2B1C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0Z1B0B1C(
-    BuiltInId::textureGatherOffset_0Z1B0B1C,
+    BuiltInId::textureGatherOffset_Sampler2DShadow1_Float2_Float1_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0Z1B0B1C,
@@ -9793,7 +9643,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0Z1B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_textureGatherOffset_0b2B0B1C(
-    BuiltInId::textureGatherOffset_0b2B0B1C,
+    BuiltInId::textureGatherOffset_Sampler2DArrayShadow1_Float3_Float1_Int2,
     BuiltInName::textureGatherOffset,
     TExtension::UNDEFINED,
     BuiltInParameters::p0b2B0B1C,
@@ -9802,7 +9652,7 @@ constexpr const TFunction kFunction_textureGatherOffset_0b2B0B1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_dFdx_0B(
-    BuiltInId::dFdx_0B,
+    BuiltInId::dFdx_Float1,
     BuiltInName::dFdx,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -9811,7 +9661,7 @@ constexpr const TFunction kFunction_dFdx_0B(
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdx_1B(
-    BuiltInId::dFdx_1B,
+    BuiltInId::dFdx_Float2,
     BuiltInName::dFdx,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -9820,7 +9670,7 @@ constexpr const TFunction kFunction_dFdx_1B(
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdx_2B(
-    BuiltInId::dFdx_2B,
+    BuiltInId::dFdx_Float3,
     BuiltInName::dFdx,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -9829,7 +9679,7 @@ constexpr const TFunction kFunction_dFdx_2B(
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdx_3B(
-    BuiltInId::dFdx_3B,
+    BuiltInId::dFdx_Float4,
     BuiltInName::dFdx,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -9838,7 +9688,7 @@ constexpr const TFunction kFunction_dFdx_3B(
     EOpDFdx,
     false);
 constexpr const TFunction kFunction_dFdy_0B(
-    BuiltInId::dFdy_0B,
+    BuiltInId::dFdy_Float1,
     BuiltInName::dFdy,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -9847,7 +9697,7 @@ constexpr const TFunction kFunction_dFdy_0B(
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdy_1B(
-    BuiltInId::dFdy_1B,
+    BuiltInId::dFdy_Float2,
     BuiltInName::dFdy,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -9856,7 +9706,7 @@ constexpr const TFunction kFunction_dFdy_1B(
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdy_2B(
-    BuiltInId::dFdy_2B,
+    BuiltInId::dFdy_Float3,
     BuiltInName::dFdy,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -9865,7 +9715,7 @@ constexpr const TFunction kFunction_dFdy_2B(
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_dFdy_3B(
-    BuiltInId::dFdy_3B,
+    BuiltInId::dFdy_Float4,
     BuiltInName::dFdy,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -9874,7 +9724,7 @@ constexpr const TFunction kFunction_dFdy_3B(
     EOpDFdy,
     false);
 constexpr const TFunction kFunction_fwidth_0B(
-    BuiltInId::fwidth_0B,
+    BuiltInId::fwidth_Float1,
     BuiltInName::fwidth,
     TExtension::UNDEFINED,
     BuiltInParameters::p0B0C,
@@ -9883,7 +9733,7 @@ constexpr const TFunction kFunction_fwidth_0B(
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidth_1B(
-    BuiltInId::fwidth_1B,
+    BuiltInId::fwidth_Float2,
     BuiltInName::fwidth,
     TExtension::UNDEFINED,
     BuiltInParameters::p1B1B0B,
@@ -9892,7 +9742,7 @@ constexpr const TFunction kFunction_fwidth_1B(
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidth_2B(
-    BuiltInId::fwidth_2B,
+    BuiltInId::fwidth_Float3,
     BuiltInName::fwidth,
     TExtension::UNDEFINED,
     BuiltInParameters::p2B2C,
@@ -9901,7 +9751,7 @@ constexpr const TFunction kFunction_fwidth_2B(
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_fwidth_3B(
-    BuiltInId::fwidth_3B,
+    BuiltInId::fwidth_Float4,
     BuiltInName::fwidth,
     TExtension::UNDEFINED,
     BuiltInParameters::p3B1B,
@@ -9910,7 +9760,7 @@ constexpr const TFunction kFunction_fwidth_3B(
     EOpFwidth,
     false);
 constexpr const TFunction kFunction_atomicCounter_0F(
-    BuiltInId::atomicCounter_0F,
+    BuiltInId::atomicCounter_AtomicCounter1,
     BuiltInName::atomicCounter,
     TExtension::UNDEFINED,
     BuiltInParameters::p0F,
@@ -9919,7 +9769,7 @@ constexpr const TFunction kFunction_atomicCounter_0F(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicCounterIncrement_0F(
-    BuiltInId::atomicCounterIncrement_0F,
+    BuiltInId::atomicCounterIncrement_AtomicCounter1,
     BuiltInName::atomicCounterIncrement,
     TExtension::UNDEFINED,
     BuiltInParameters::p0F,
@@ -9928,7 +9778,7 @@ constexpr const TFunction kFunction_atomicCounterIncrement_0F(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicCounterDecrement_0F(
-    BuiltInId::atomicCounterDecrement_0F,
+    BuiltInId::atomicCounterDecrement_AtomicCounter1,
     BuiltInName::atomicCounterDecrement,
     TExtension::UNDEFINED,
     BuiltInParameters::p0F,
@@ -9937,7 +9787,7 @@ constexpr const TFunction kFunction_atomicCounterDecrement_0F(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicAdd_0D0D(
-    BuiltInId::atomicAdd_0D0D,
+    BuiltInId::atomicAdd_UInt1_UInt1,
     BuiltInName::atomicAdd,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0D0D0D,
@@ -9946,7 +9796,7 @@ constexpr const TFunction kFunction_atomicAdd_0D0D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicAdd_0C0C(
-    BuiltInId::atomicAdd_0C0C,
+    BuiltInId::atomicAdd_Int1_Int1,
     BuiltInName::atomicAdd,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0C0C0C,
@@ -9955,7 +9805,7 @@ constexpr const TFunction kFunction_atomicAdd_0C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicMin_0D0D(
-    BuiltInId::atomicMin_0D0D,
+    BuiltInId::atomicMin_UInt1_UInt1,
     BuiltInName::atomicMin,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0D0D0D,
@@ -9964,7 +9814,7 @@ constexpr const TFunction kFunction_atomicMin_0D0D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicMin_0C0C(
-    BuiltInId::atomicMin_0C0C,
+    BuiltInId::atomicMin_Int1_Int1,
     BuiltInName::atomicMin,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0C0C0C,
@@ -9973,7 +9823,7 @@ constexpr const TFunction kFunction_atomicMin_0C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicMax_0D0D(
-    BuiltInId::atomicMax_0D0D,
+    BuiltInId::atomicMax_UInt1_UInt1,
     BuiltInName::atomicMax,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0D0D0D,
@@ -9982,7 +9832,7 @@ constexpr const TFunction kFunction_atomicMax_0D0D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicMax_0C0C(
-    BuiltInId::atomicMax_0C0C,
+    BuiltInId::atomicMax_Int1_Int1,
     BuiltInName::atomicMax,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0C0C0C,
@@ -9991,7 +9841,7 @@ constexpr const TFunction kFunction_atomicMax_0C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicAnd_0D0D(
-    BuiltInId::atomicAnd_0D0D,
+    BuiltInId::atomicAnd_UInt1_UInt1,
     BuiltInName::atomicAnd,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0D0D0D,
@@ -10000,7 +9850,7 @@ constexpr const TFunction kFunction_atomicAnd_0D0D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicAnd_0C0C(
-    BuiltInId::atomicAnd_0C0C,
+    BuiltInId::atomicAnd_Int1_Int1,
     BuiltInName::atomicAnd,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0C0C0C,
@@ -10009,7 +9859,7 @@ constexpr const TFunction kFunction_atomicAnd_0C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicOr_0D0D(
-    BuiltInId::atomicOr_0D0D,
+    BuiltInId::atomicOr_UInt1_UInt1,
     BuiltInName::atomicOr,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0D0D0D,
@@ -10018,7 +9868,7 @@ constexpr const TFunction kFunction_atomicOr_0D0D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicOr_0C0C(
-    BuiltInId::atomicOr_0C0C,
+    BuiltInId::atomicOr_Int1_Int1,
     BuiltInName::atomicOr,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0C0C0C,
@@ -10027,7 +9877,7 @@ constexpr const TFunction kFunction_atomicOr_0C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicXor_0D0D(
-    BuiltInId::atomicXor_0D0D,
+    BuiltInId::atomicXor_UInt1_UInt1,
     BuiltInName::atomicXor,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0D0D0D,
@@ -10036,7 +9886,7 @@ constexpr const TFunction kFunction_atomicXor_0D0D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicXor_0C0C(
-    BuiltInId::atomicXor_0C0C,
+    BuiltInId::atomicXor_Int1_Int1,
     BuiltInName::atomicXor,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0C0C0C,
@@ -10045,7 +9895,7 @@ constexpr const TFunction kFunction_atomicXor_0C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicExchange_0D0D(
-    BuiltInId::atomicExchange_0D0D,
+    BuiltInId::atomicExchange_UInt1_UInt1,
     BuiltInName::atomicExchange,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0D0D0D,
@@ -10054,7 +9904,7 @@ constexpr const TFunction kFunction_atomicExchange_0D0D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicExchange_0C0C(
-    BuiltInId::atomicExchange_0C0C,
+    BuiltInId::atomicExchange_Int1_Int1,
     BuiltInName::atomicExchange,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0C0C0C,
@@ -10063,7 +9913,7 @@ constexpr const TFunction kFunction_atomicExchange_0C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicCompSwap_0D0D0D(
-    BuiltInId::atomicCompSwap_0D0D0D,
+    BuiltInId::atomicCompSwap_UInt1_UInt1_UInt1,
     BuiltInName::atomicCompSwap,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0D0D0D,
@@ -10072,7 +9922,7 @@ constexpr const TFunction kFunction_atomicCompSwap_0D0D0D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_atomicCompSwap_0C0C0C(
-    BuiltInId::atomicCompSwap_0C0C0C,
+    BuiltInId::atomicCompSwap_Int1_Int1_Int1,
     BuiltInName::atomicCompSwap,
     TExtension::UNDEFINED,
     BuiltInParameters::p_io_0C0C0C,
@@ -10081,7 +9931,7 @@ constexpr const TFunction kFunction_atomicCompSwap_0C0C0C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0c(
-    BuiltInId::imageSize_0c,
+    BuiltInId::imageSize_Image2D1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0c1C3B,
@@ -10090,7 +9940,7 @@ constexpr const TFunction kFunction_imageSize_0c(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0d(
-    BuiltInId::imageSize_0d,
+    BuiltInId::imageSize_IImage2D1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0d1C3C,
@@ -10099,7 +9949,7 @@ constexpr const TFunction kFunction_imageSize_0d(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0e(
-    BuiltInId::imageSize_0e,
+    BuiltInId::imageSize_UImage2D1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0e1C3D,
@@ -10108,7 +9958,7 @@ constexpr const TFunction kFunction_imageSize_0e(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0f(
-    BuiltInId::imageSize_0f,
+    BuiltInId::imageSize_Image3D1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0f2C3B,
@@ -10117,7 +9967,7 @@ constexpr const TFunction kFunction_imageSize_0f(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0g(
-    BuiltInId::imageSize_0g,
+    BuiltInId::imageSize_IImage3D1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0g2C3C,
@@ -10126,7 +9976,7 @@ constexpr const TFunction kFunction_imageSize_0g(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0h(
-    BuiltInId::imageSize_0h,
+    BuiltInId::imageSize_UImage3D1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0h2C3D,
@@ -10135,7 +9985,7 @@ constexpr const TFunction kFunction_imageSize_0h(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0i(
-    BuiltInId::imageSize_0i,
+    BuiltInId::imageSize_Image2DArray1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0i2C3B,
@@ -10144,7 +9994,7 @@ constexpr const TFunction kFunction_imageSize_0i(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0j(
-    BuiltInId::imageSize_0j,
+    BuiltInId::imageSize_IImage2DArray1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0j2C3C,
@@ -10153,7 +10003,7 @@ constexpr const TFunction kFunction_imageSize_0j(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0k(
-    BuiltInId::imageSize_0k,
+    BuiltInId::imageSize_UImage2DArray1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0k2C3D,
@@ -10162,7 +10012,7 @@ constexpr const TFunction kFunction_imageSize_0k(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0l(
-    BuiltInId::imageSize_0l,
+    BuiltInId::imageSize_ImageCube1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0l2C3B,
@@ -10171,7 +10021,7 @@ constexpr const TFunction kFunction_imageSize_0l(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0m(
-    BuiltInId::imageSize_0m,
+    BuiltInId::imageSize_IImageCube1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0m2C3C,
@@ -10180,7 +10030,7 @@ constexpr const TFunction kFunction_imageSize_0m(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageSize_0n(
-    BuiltInId::imageSize_0n,
+    BuiltInId::imageSize_UImageCube1,
     BuiltInName::imageSize,
     TExtension::UNDEFINED,
     BuiltInParameters::p0n2C3D,
@@ -10189,7 +10039,7 @@ constexpr const TFunction kFunction_imageSize_0n(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0c1C(
-    BuiltInId::imageLoad_0c1C,
+    BuiltInId::imageLoad_Image2D1_Int2,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0c1C3B,
@@ -10198,7 +10048,7 @@ constexpr const TFunction kFunction_imageLoad_0c1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0d1C(
-    BuiltInId::imageLoad_0d1C,
+    BuiltInId::imageLoad_IImage2D1_Int2,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0d1C3C,
@@ -10207,7 +10057,7 @@ constexpr const TFunction kFunction_imageLoad_0d1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0e1C(
-    BuiltInId::imageLoad_0e1C,
+    BuiltInId::imageLoad_UImage2D1_Int2,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0e1C3D,
@@ -10216,7 +10066,7 @@ constexpr const TFunction kFunction_imageLoad_0e1C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0f2C(
-    BuiltInId::imageLoad_0f2C,
+    BuiltInId::imageLoad_Image3D1_Int3,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0f2C3B,
@@ -10225,7 +10075,7 @@ constexpr const TFunction kFunction_imageLoad_0f2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0g2C(
-    BuiltInId::imageLoad_0g2C,
+    BuiltInId::imageLoad_IImage3D1_Int3,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0g2C3C,
@@ -10234,7 +10084,7 @@ constexpr const TFunction kFunction_imageLoad_0g2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0h2C(
-    BuiltInId::imageLoad_0h2C,
+    BuiltInId::imageLoad_UImage3D1_Int3,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0h2C3D,
@@ -10243,7 +10093,7 @@ constexpr const TFunction kFunction_imageLoad_0h2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0i2C(
-    BuiltInId::imageLoad_0i2C,
+    BuiltInId::imageLoad_Image2DArray1_Int3,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0i2C3B,
@@ -10252,7 +10102,7 @@ constexpr const TFunction kFunction_imageLoad_0i2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0j2C(
-    BuiltInId::imageLoad_0j2C,
+    BuiltInId::imageLoad_IImage2DArray1_Int3,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0j2C3C,
@@ -10261,7 +10111,7 @@ constexpr const TFunction kFunction_imageLoad_0j2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0k2C(
-    BuiltInId::imageLoad_0k2C,
+    BuiltInId::imageLoad_UImage2DArray1_Int3,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0k2C3D,
@@ -10270,7 +10120,7 @@ constexpr const TFunction kFunction_imageLoad_0k2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0l2C(
-    BuiltInId::imageLoad_0l2C,
+    BuiltInId::imageLoad_ImageCube1_Int3,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0l2C3B,
@@ -10279,7 +10129,7 @@ constexpr const TFunction kFunction_imageLoad_0l2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0m2C(
-    BuiltInId::imageLoad_0m2C,
+    BuiltInId::imageLoad_IImageCube1_Int3,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0m2C3C,
@@ -10288,7 +10138,7 @@ constexpr const TFunction kFunction_imageLoad_0m2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageLoad_0n2C(
-    BuiltInId::imageLoad_0n2C,
+    BuiltInId::imageLoad_UImageCube1_Int3,
     BuiltInName::imageLoad,
     TExtension::UNDEFINED,
     BuiltInParameters::p0n2C3D,
@@ -10297,7 +10147,7 @@ constexpr const TFunction kFunction_imageLoad_0n2C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0c1C3B(
-    BuiltInId::imageStore_0c1C3B,
+    BuiltInId::imageStore_Image2D1_Int2_Float4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0c1C3B,
@@ -10306,7 +10156,7 @@ constexpr const TFunction kFunction_imageStore_0c1C3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0d1C3C(
-    BuiltInId::imageStore_0d1C3C,
+    BuiltInId::imageStore_IImage2D1_Int2_Int4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0d1C3C,
@@ -10315,7 +10165,7 @@ constexpr const TFunction kFunction_imageStore_0d1C3C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0e1C3D(
-    BuiltInId::imageStore_0e1C3D,
+    BuiltInId::imageStore_UImage2D1_Int2_UInt4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0e1C3D,
@@ -10324,7 +10174,7 @@ constexpr const TFunction kFunction_imageStore_0e1C3D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0f2C3B(
-    BuiltInId::imageStore_0f2C3B,
+    BuiltInId::imageStore_Image3D1_Int3_Float4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0f2C3B,
@@ -10333,7 +10183,7 @@ constexpr const TFunction kFunction_imageStore_0f2C3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0g2C3C(
-    BuiltInId::imageStore_0g2C3C,
+    BuiltInId::imageStore_IImage3D1_Int3_Int4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0g2C3C,
@@ -10342,7 +10192,7 @@ constexpr const TFunction kFunction_imageStore_0g2C3C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0h2C3D(
-    BuiltInId::imageStore_0h2C3D,
+    BuiltInId::imageStore_UImage3D1_Int3_UInt4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0h2C3D,
@@ -10351,7 +10201,7 @@ constexpr const TFunction kFunction_imageStore_0h2C3D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0i2C3B(
-    BuiltInId::imageStore_0i2C3B,
+    BuiltInId::imageStore_Image2DArray1_Int3_Float4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0i2C3B,
@@ -10360,7 +10210,7 @@ constexpr const TFunction kFunction_imageStore_0i2C3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0j2C3C(
-    BuiltInId::imageStore_0j2C3C,
+    BuiltInId::imageStore_IImage2DArray1_Int3_Int4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0j2C3C,
@@ -10369,7 +10219,7 @@ constexpr const TFunction kFunction_imageStore_0j2C3C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0k2C3D(
-    BuiltInId::imageStore_0k2C3D,
+    BuiltInId::imageStore_UImage2DArray1_Int3_UInt4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0k2C3D,
@@ -10378,7 +10228,7 @@ constexpr const TFunction kFunction_imageStore_0k2C3D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0l2C3B(
-    BuiltInId::imageStore_0l2C3B,
+    BuiltInId::imageStore_ImageCube1_Int3_Float4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0l2C3B,
@@ -10387,7 +10237,7 @@ constexpr const TFunction kFunction_imageStore_0l2C3B(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0m2C3C(
-    BuiltInId::imageStore_0m2C3C,
+    BuiltInId::imageStore_IImageCube1_Int3_Int4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0m2C3C,
@@ -10396,7 +10246,7 @@ constexpr const TFunction kFunction_imageStore_0m2C3C(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_imageStore_0n2C3D(
-    BuiltInId::imageStore_0n2C3D,
+    BuiltInId::imageStore_UImageCube1_Int3_UInt4,
     BuiltInName::imageStore,
     TExtension::UNDEFINED,
     BuiltInParameters::p0n2C3D,
@@ -10405,7 +10255,7 @@ constexpr const TFunction kFunction_imageStore_0n2C3D(
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction kFunction_memoryBarrier_(
-    BuiltInId::memoryBarrier_,
+    BuiltInId::memoryBarrier,
     BuiltInName::memoryBarrier,
     TExtension::UNDEFINED,
     BuiltInParameters::empty,
@@ -10414,7 +10264,7 @@ constexpr const TFunction kFunction_memoryBarrier_(
     EOpMemoryBarrier,
     false);
 constexpr const TFunction kFunction_memoryBarrierAtomicCounter_(
-    BuiltInId::memoryBarrierAtomicCounter_,
+    BuiltInId::memoryBarrierAtomicCounter,
     BuiltInName::memoryBarrierAtomicCounter,
     TExtension::UNDEFINED,
     BuiltInParameters::empty,
@@ -10423,7 +10273,7 @@ constexpr const TFunction kFunction_memoryBarrierAtomicCounter_(
     EOpMemoryBarrierAtomicCounter,
     false);
 constexpr const TFunction kFunction_memoryBarrierBuffer_(
-    BuiltInId::memoryBarrierBuffer_,
+    BuiltInId::memoryBarrierBuffer,
     BuiltInName::memoryBarrierBuffer,
     TExtension::UNDEFINED,
     BuiltInParameters::empty,
@@ -10432,7 +10282,7 @@ constexpr const TFunction kFunction_memoryBarrierBuffer_(
     EOpMemoryBarrierBuffer,
     false);
 constexpr const TFunction kFunction_memoryBarrierImage_(
-    BuiltInId::memoryBarrierImage_,
+    BuiltInId::memoryBarrierImage,
     BuiltInName::memoryBarrierImage,
     TExtension::UNDEFINED,
     BuiltInParameters::empty,
@@ -10441,7 +10291,7 @@ constexpr const TFunction kFunction_memoryBarrierImage_(
     EOpMemoryBarrierImage,
     false);
 constexpr const TFunction kFunction_barrier_(
-    BuiltInId::barrier_,
+    BuiltInId::barrier,
     BuiltInName::barrier,
     TExtension::UNDEFINED,
     BuiltInParameters::empty,
@@ -10450,7 +10300,7 @@ constexpr const TFunction kFunction_barrier_(
     EOpBarrier,
     false);
 constexpr const TFunction kFunction_memoryBarrierShared_(
-    BuiltInId::memoryBarrierShared_,
+    BuiltInId::memoryBarrierShared,
     BuiltInName::memoryBarrierShared,
     TExtension::UNDEFINED,
     BuiltInParameters::empty,
@@ -10459,7 +10309,7 @@ constexpr const TFunction kFunction_memoryBarrierShared_(
     EOpMemoryBarrierShared,
     false);
 constexpr const TFunction kFunction_groupMemoryBarrier_(
-    BuiltInId::groupMemoryBarrier_,
+    BuiltInId::groupMemoryBarrier,
     BuiltInName::groupMemoryBarrier,
     TExtension::UNDEFINED,
     BuiltInParameters::empty,
@@ -10468,7 +10318,7 @@ constexpr const TFunction kFunction_groupMemoryBarrier_(
     EOpGroupMemoryBarrier,
     false);
 constexpr const TFunction kFunction_EmitVertex_(
-    BuiltInId::EmitVertex_,
+    BuiltInId::EmitVertex,
     BuiltInName::EmitVertex,
     TExtension::EXT_geometry_shader,
     BuiltInParameters::empty,
@@ -10477,7 +10327,7 @@ constexpr const TFunction kFunction_EmitVertex_(
     EOpEmitVertex,
     false);
 constexpr const TFunction kFunction_EndPrimitive_(
-    BuiltInId::EndPrimitive_,
+    BuiltInId::EndPrimitive,
     BuiltInName::EndPrimitive,
     TExtension::EXT_geometry_shader,
     BuiltInParameters::empty,

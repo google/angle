@@ -96,7 +96,7 @@ class DoWhileRewriter : public TIntermTraverser
                 breakBlock->getSequence()->push_back(breakStatement);
 
                 TIntermUnary *negatedCondition =
-                    new TIntermUnary(EOpLogicalNot, loop->getCondition());
+                    new TIntermUnary(EOpLogicalNot, loop->getCondition(), nullptr);
 
                 TIntermIfElse *innerIf = new TIntermIfElse(negatedCondition, breakBlock, nullptr);
 

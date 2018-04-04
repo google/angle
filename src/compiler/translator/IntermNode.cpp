@@ -809,7 +809,9 @@ TIntermBinary::TIntermBinary(const TIntermBinary &node)
 }
 
 TIntermUnary::TIntermUnary(const TIntermUnary &node)
-    : TIntermOperator(node), mUseEmulatedFunction(node.mUseEmulatedFunction)
+    : TIntermOperator(node),
+      mUseEmulatedFunction(node.mUseEmulatedFunction),
+      mFunction(node.mFunction)
 {
     TIntermTyped *operandCopy = node.mOperand->deepCopy();
     ASSERT(operandCopy != nullptr);
@@ -1049,8 +1051,8 @@ TIntermSwizzle::TIntermSwizzle(TIntermTyped *operand, const TVector<int> &swizzl
     promote();
 }
 
-TIntermUnary::TIntermUnary(TOperator op, TIntermTyped *operand)
-    : TIntermOperator(op), mOperand(operand), mUseEmulatedFunction(false)
+TIntermUnary::TIntermUnary(TOperator op, TIntermTyped *operand, const TFunction *function)
+    : TIntermOperator(op), mOperand(operand), mUseEmulatedFunction(false), mFunction(function)
 {
     promote();
 }

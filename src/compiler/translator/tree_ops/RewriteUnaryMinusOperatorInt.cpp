@@ -75,7 +75,7 @@ bool Traverser::visitUnary(Visit visit, TIntermUnary *node)
 
     // Potential problem case detected, apply workaround: -(int) -> ~(int) + 1.
     // ~(int)
-    TIntermUnary *bitwiseNot = new TIntermUnary(EOpBitwiseNot, opr);
+    TIntermUnary *bitwiseNot = new TIntermUnary(EOpBitwiseNot, opr, nullptr);
     bitwiseNot->setLine(opr->getLine());
 
     // Constant 1 (or 1u)

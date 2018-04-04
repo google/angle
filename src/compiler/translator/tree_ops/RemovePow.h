@@ -14,8 +14,9 @@
 namespace sh
 {
 class TIntermNode;
+class TSymbolTable;
 
-void RemovePow(TIntermNode *root);
+void RemovePow(TIntermNode *root, TSymbolTable *symbolTable);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_REMOVEPOW_H_
