@@ -191,7 +191,7 @@ bool TransformFeedback::checkBufferSpaceForDraw(GLsizei count, GLsizei primcount
     return vertices.IsValid() && vertices.ValueOrDie() <= mState.mVertexCapacity;
 }
 
-void TransformFeedback::onVerticesDrawn(GLsizei count, GLsizei primcount)
+void TransformFeedback::onVerticesDrawn(const Context *context, GLsizei count, GLsizei primcount)
 {
     ASSERT(mState.mActive && !mState.mPaused);
     // All draws should be validated with checkBufferSpaceForDraw so ValueOrDie should never fail.
@@ -203,7 +203,7 @@ void TransformFeedback::onVerticesDrawn(GLsizei count, GLsizei primcount)
     {
         if (buffer.get() != nullptr)
         {
-            buffer->onTransformFeedback();
+            buffer->onTransformFeedback(context);
         }
     }
 }

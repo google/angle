@@ -1388,7 +1388,7 @@ Error Framebuffer::readPixels(const Context *context,
     Buffer *unpackBuffer = context->getGLState().getTargetBuffer(BufferBinding::PixelUnpack);
     if (unpackBuffer)
     {
-        unpackBuffer->onPixelUnpack();
+        unpackBuffer->onPixelPack(context);
     }
 
     return NoError();

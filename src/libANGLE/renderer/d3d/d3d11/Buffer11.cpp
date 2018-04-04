@@ -398,9 +398,6 @@ gl::Error Buffer11::setSubData(const gl::Context *context,
 
         ANGLE_TRY(writeBuffer->setData(static_cast<const uint8_t *>(data), offset, size));
         onStorageUpdate(writeBuffer);
-
-        // Notify when data changes.
-        onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
     }
 
     mSize = std::max(mSize, requiredSize);
@@ -469,9 +466,6 @@ gl::Error Buffer11::copySubData(const gl::Context *context,
 
     mSize = std::max<size_t>(mSize, destOffset + size);
     invalidateStaticData(context);
-
-    // Also notify that the contents are dirty.
-    onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 
     return gl::NoError();
 }

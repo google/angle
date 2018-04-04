@@ -587,8 +587,6 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mDirtyCurrentValueAttribs(),
       mCurrentValueAttribs(),
       mCurrentInputLayout(),
-      mInputLayoutIsDirty(false),
-      mVertexAttribsNeedTranslation(false),
       mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0),
       mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
       mLastAppliedDrawMode(GL_INVALID_INDEX),
@@ -1015,7 +1013,7 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 // owned by the StateManager11/Context.
                 mDirtyCurrentValueAttribs.set();
                 // Invalidate the cached index buffer.
-                mIndexBufferIsDirty = true;
+                invalidateIndexBuffer();
                 break;
             case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
                 invalidateProgramUniformBuffers();
@@ -1039,18 +1037,16 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 invalidateProgramUniforms();
                 invalidateProgramUniformBuffers();
                 invalidateDriverUniforms();
-                gl::VertexArray *vao = state.getVertexArray();
-                if (mIsMultiviewEnabled && vao != nullptr)
+                if (mIsMultiviewEnabled)
                 {
+                    gl::VertexArray *vao = state.getVertexArray();
+                    ASSERT(vao);
                     // If ANGLE_multiview is enabled, the attribute divisor has to be updated for
                     // each binding.
                     VertexArray11 *vao11       = GetImplAs<VertexArray11>(vao);
                     const gl::Program *program = state.getProgram();
-                    int numViews               = 1;
-                    if (program != nullptr && program->usesMultiview())
-                    {
-                        numViews = program->getNumViews();
-                    }
+                    ASSERT(program);
+                    int numViews = program->usesMultiview() ? program->getNumViews() : 1;
                     vao11->markAllAttributeDivisorsForAdjustment(numViews);
                 }
                 break;
@@ -1465,10 +1461,9 @@ void StateManager11::invalidateVertexBuffer()
     unsigned int limit = std::min<unsigned int>(mRenderer->getNativeCaps().maxVertexAttributes,
                                                 gl::MAX_VERTEX_ATTRIBS);
     mDirtyVertexBufferRange = gl::RangeUI(0, limit);
-    mInputLayoutIsDirty     = true;
+    invalidateInputLayout();
     invalidateShaders();
     mInternalDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_ATTRIBS);
-    invalidateVertexAttributeTranslation();
 }
 
 void StateManager11::invalidateViewport(const gl::Context *context)
@@ -1536,6 +1531,16 @@ void StateManager11::invalidateTransformFeedback()
     mInternalDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK);
 }
 
+void StateManager11::invalidateInputLayout()
+{
+    mInternalDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS_AND_INPUT_LAYOUT);
+}
+
+void StateManager11::invalidateIndexBuffer()
+{
+    mIndexBufferIsDirty = true;
+}
+
 void StateManager11::setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv)
 {
     if ((rtv && unsetConflictingView(rtv)) || (dsv && unsetConflictingView(dsv)))
@@ -1570,11 +1575,6 @@ void StateManager11::setRenderTargets(ID3D11RenderTargetView **rtvs,
 
     mRenderer->getDeviceContext()->OMSetRenderTargets(numRTVs, (numRTVs > 0) ? rtvs : nullptr, dsv);
     mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
-}
-
-void StateManager11::invalidateVertexAttributeTranslation()
-{
-    mVertexAttribsNeedTranslation = true;
 }
 
 void StateManager11::onBeginQuery(Query11 *query)
@@ -1874,7 +1874,7 @@ void StateManager11::invalidateCurrentValueAttrib(size_t attribIndex)
 {
     mDirtyCurrentValueAttribs.set(attribIndex);
     mInternalDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_ATTRIBS);
-    mInputLayoutIsDirty = true;
+    invalidateInputLayout();
     invalidateShaders();
 }
 
@@ -1917,7 +1917,7 @@ void StateManager11::setInputLayout(const d3d11::InputLayout *inputLayout)
 {
     if (setInputLayoutInternal(inputLayout))
     {
-        mInputLayoutIsDirty = true;
+        invalidateInputLayout();
     }
 }
 
@@ -1987,7 +1987,7 @@ void StateManager11::setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT str
     ID3D11Buffer *native = buffer ? buffer->get() : nullptr;
     if (queueVertexBufferChange(0, native, stride, offset))
     {
-        mInputLayoutIsDirty = true;
+        invalidateInputLayout();
         applyVertexBufferChanges();
     }
 }
@@ -1995,8 +1995,8 @@ void StateManager11::setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT str
 gl::Error StateManager11::updateState(const gl::Context *context,
                                       const gl::DrawCallParams &drawCallParams)
 {
-    const auto &glState = context->getGLState();
-    auto *programD3D    = GetImplAs<ProgramD3D>(glState.getProgram());
+    const gl::State &glState = context->getGLState();
+    auto *programD3D         = GetImplAs<ProgramD3D>(glState.getProgram());
 
     // TODO(jmadill): Use dirty bits.
     processFramebufferInvalidation(context);
@@ -2034,12 +2034,19 @@ gl::Error StateManager11::updateState(const gl::Context *context,
         mInternalDirtyBits.set(DIRTY_BIT_BLEND_STATE);
     }
 
-    // Changing the vertex attribute state can affect the vertex shader.
-    gl::VertexArray *vao = glState.getVertexArray();
-    VertexArray11 *vao11 = GetImplAs<VertexArray11>(vao);
-    if (vao11->flushAttribUpdates(context))
+    // Changes in the draw call can affect the vertex buffer translations.
+    if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != drawCallParams.firstVertex())
     {
-        mInternalDirtyBits.set(DIRTY_BIT_SHADERS);
+        mLastFirstVertex = drawCallParams.firstVertex();
+        invalidateInputLayout();
+    }
+
+    VertexArray11 *vao11 = GetImplAs<VertexArray11>(glState.getVertexArray());
+    ANGLE_TRY(vao11->syncStateForDraw(context, drawCallParams));
+
+    if (drawCallParams.isDrawElements())
+    {
+        ANGLE_TRY(applyIndexBuffer(context, drawCallParams));
     }
 
     if (mLastAppliedDrawMode != drawCallParams.mode())
@@ -2105,6 +2112,9 @@ gl::Error StateManager11::updateState(const gl::Context *context,
                 break;
             case DIRTY_BIT_TRANSFORM_FEEDBACK:
                 ANGLE_TRY(syncTransformFeedbackBuffers(context));
+                break;
+            case DIRTY_BIT_VERTEX_BUFFERS_AND_INPUT_LAYOUT:
+                ANGLE_TRY(syncVertexBuffersAndInputLayout(context, drawCallParams));
                 break;
             case DIRTY_BIT_PRIMITIVE_TOPOLOGY:
                 syncPrimitiveTopology(glState, programD3D, drawCallParams.mode());
@@ -2713,33 +2723,12 @@ gl::Error StateManager11::syncProgram(const gl::Context *context, GLenum drawMod
     return gl::NoError();
 }
 
-gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
-                                            const gl::DrawCallParams &drawCallParams)
+gl::Error StateManager11::syncVertexBuffersAndInputLayout(const gl::Context *context,
+                                                          const gl::DrawCallParams &drawCallParams)
 {
-    const auto &state       = context->getGLState();
+    const gl::State &state             = context->getGLState();
     const gl::VertexArray *vertexArray = state.getVertexArray();
     VertexArray11 *vertexArray11       = GetImplAs<VertexArray11>(vertexArray);
-
-    if (mVertexAttribsNeedTranslation)
-    {
-        ANGLE_TRY(vertexArray11->updateDirtyAndDynamicAttribs(context, &mVertexDataManager,
-                                                              drawCallParams));
-        mInputLayoutIsDirty = true;
-
-        // Determine if we need to update attribs on the next draw.
-        mVertexAttribsNeedTranslation = (vertexArray11->hasActiveDynamicAttrib(context));
-    }
-
-    if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != drawCallParams.firstVertex())
-    {
-        mLastFirstVertex    = drawCallParams.firstVertex();
-        mInputLayoutIsDirty = true;
-    }
-
-    if (!mInputLayoutIsDirty)
-    {
-        return gl::NoError();
-    }
 
     const auto &vertexArrayAttribs = vertexArray11->getTranslatedAttribs();
     gl::Program *program           = state.getProgram();
@@ -2749,7 +2738,7 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
     SortAttributesByLayout(program, vertexArrayAttribs, mCurrentValueAttribs,
                            &sortedSemanticIndices, &mCurrentAttributes);
 
-    auto featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
+    D3D_FEATURE_LEVEL featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
 
     // If we are using FL 9_3, make sure the first attribute is not instanced
     if (featureLevel <= D3D_FEATURE_LEVEL_9_3 && !mCurrentAttributes.empty())
@@ -2774,21 +2763,6 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
 
     // Update the applied vertex buffers.
     ANGLE_TRY(applyVertexBuffers(context, drawCallParams));
-
-    // InputLayoutCache::applyVertexBuffers calls through to the Bufer11 to get the native vertex
-    // buffer (ID3D11Buffer *). Because we allocate these buffers lazily, this will trigger
-    // allocation. This in turn will signal that the buffer is dirty. Since we just resolved the
-    // dirty-ness in VertexArray11::updateDirtyAndDynamicAttribs, this can make us do a needless
-    // update on the second draw call.
-    // Hence we clear the flags here, after we've applied vertex data, since we know everything
-    // is clean. This is a bit of a hack.
-    vertexArray11->clearDirtyAndPromoteDynamicAttribs(context, drawCallParams);
-
-    // Retrieving ID3D11Buffer handles and promotion can trigger dependent state changes.
-    // TODO(jmadill): Clean this up.
-    mInternalDirtyBits.reset(DIRTY_BIT_SHADERS);
-
-    mInputLayoutIsDirty = false;
 
     return gl::NoError();
 }
@@ -2834,23 +2808,25 @@ gl::Error StateManager11::applyVertexBuffers(const gl::Context *context,
             {
                 VertexArray11 *vao11 = GetImplAs<VertexArray11>(state.getVertexArray());
                 ASSERT(vao11->isCachedIndexInfoValid());
-                TranslatedIndexData *indexInfo = vao11->getCachedIndexInfo();
-                if (indexInfo->srcIndexData.srcBuffer != nullptr)
+                TranslatedIndexData indexInfo = vao11->getCachedIndexInfo();
+                if (indexInfo.srcIndexData.srcBuffer != nullptr)
                 {
                     const uint8_t *bufferData = nullptr;
-                    ANGLE_TRY(indexInfo->srcIndexData.srcBuffer->getData(context, &bufferData));
+                    ANGLE_TRY(indexInfo.srcIndexData.srcBuffer->getData(context, &bufferData));
                     ASSERT(bufferData != nullptr);
 
                     ptrdiff_t offset =
-                        reinterpret_cast<ptrdiff_t>(indexInfo->srcIndexData.srcIndices);
-                    indexInfo->srcIndexData.srcBuffer  = nullptr;
-                    indexInfo->srcIndexData.srcIndices = bufferData + offset;
+                        reinterpret_cast<ptrdiff_t>(indexInfo.srcIndexData.srcIndices);
+                    indexInfo.srcIndexData.srcBuffer  = nullptr;
+                    indexInfo.srcIndexData.srcIndices = bufferData + offset;
                 }
 
                 ANGLE_TRY_RESULT(
-                    bufferStorage->getEmulatedIndexedBuffer(context, &indexInfo->srcIndexData,
+                    bufferStorage->getEmulatedIndexedBuffer(context, &indexInfo.srcIndexData,
                                                             attrib, drawCallParams.firstVertex()),
                     buffer);
+
+                vao11->updateCachedIndexInfo(indexInfo);
             }
             else
             {
@@ -2944,54 +2920,48 @@ gl::Error StateManager11::applyVertexBuffers(const gl::Context *context,
 }
 
 gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
-                                           const gl::DrawCallParams &params,
-                                           bool usePrimitiveRestartWorkaround)
+                                           const gl::DrawCallParams &params)
 {
     const auto &glState  = context->getGLState();
     gl::VertexArray *vao = glState.getVertexArray();
     VertexArray11 *vao11 = GetImplAs<VertexArray11>(vao);
 
-    GLenum destElementType = GL_NONE;
-    ANGLE_TRY(GetIndexTranslationDestType(context, params, usePrimitiveRestartWorkaround,
-                                          &destElementType));
-
-    if (!vao11->updateElementArrayStorage(context, params.type(), destElementType,
-                                          params.indices()) &&
-        !mIndexBufferIsDirty)
+    if (!mIndexBufferIsDirty)
     {
         // No streaming or index buffer application necessary.
         return gl::NoError();
     }
 
+    GLenum destElementType         = vao11->getCachedDestinationIndexType();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
-    TranslatedIndexData *indexInfo = vao11->getCachedIndexInfo();
+    TranslatedIndexData indexInfo;
     ANGLE_TRY(mIndexDataManager.prepareIndexData(context, params.type(), destElementType,
                                                  params.indexCount(), elementArrayBuffer,
-                                                 params.indices(), indexInfo));
+                                                 params.indices(), &indexInfo));
 
     ID3D11Buffer *buffer = nullptr;
     DXGI_FORMAT bufferFormat =
-        (indexInfo->indexType == GL_UNSIGNED_INT) ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
+        (indexInfo.indexType == GL_UNSIGNED_INT) ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
 
-    if (indexInfo->storage)
+    if (indexInfo.storage)
     {
-        Buffer11 *storage = GetAs<Buffer11>(indexInfo->storage);
+        Buffer11 *storage = GetAs<Buffer11>(indexInfo.storage);
         ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDEX), buffer);
     }
     else
     {
-        IndexBuffer11 *indexBuffer = GetAs<IndexBuffer11>(indexInfo->indexBuffer);
+        IndexBuffer11 *indexBuffer = GetAs<IndexBuffer11>(indexInfo.indexBuffer);
         buffer                     = indexBuffer->getBuffer().get();
     }
 
     // Track dirty indices in the index range cache.
-    indexInfo->srcIndexData.srcIndicesChanged =
-        syncIndexBuffer(buffer, bufferFormat, indexInfo->startOffset);
+    indexInfo.srcIndexData.srcIndicesChanged =
+        syncIndexBuffer(buffer, bufferFormat, indexInfo.startOffset);
 
     mIndexBufferIsDirty = false;
 
-    vao11->setCachedIndexInfoValid();
+    vao11->updateCachedIndexInfo(indexInfo);
     return gl::NoError();
 }
 
@@ -3001,7 +2971,7 @@ void StateManager11::setIndexBuffer(ID3D11Buffer *buffer,
 {
     if (syncIndexBuffer(buffer, indexFormat, offset))
     {
-        mIndexBufferIsDirty = true;
+        invalidateIndexBuffer();
     }
 }
 
@@ -3039,7 +3009,7 @@ gl::Error StateManager11::updateVertexOffsetsForPointSpritesEmulation(GLint star
             offset += (attrib.stride * (emulatedInstanceId / attrib.divisor));
             if (offset != mCurrentVertexOffsets[bufferIndex])
             {
-                mInputLayoutIsDirty = true;
+                invalidateInputLayout();
                 mDirtyVertexBufferRange.extend(static_cast<unsigned int>(bufferIndex));
                 mCurrentVertexOffsets[bufferIndex] = offset;
             }

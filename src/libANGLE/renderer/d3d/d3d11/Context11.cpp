@@ -69,10 +69,22 @@ bool DrawCallHasStreamingElementArray(const gl::Context *context, GLenum srcType
                                : GL_UNSIGNED_SHORT;
 
     // Not clear where the offset comes from here.
-    bool needsTranslation = false;
-    ClassifyIndexStorage(glState, elementArrayBuffer, srcType, dstType, 0, &needsTranslation);
-
-    return needsTranslation;
+    switch (ClassifyIndexStorage(glState, elementArrayBuffer, srcType, dstType, 0))
+    {
+        case IndexStorageType::Dynamic:
+            return true;
+        case IndexStorageType::Direct:
+            return false;
+        case IndexStorageType::Static:
+        {
+            BufferD3D *bufferD3D                     = GetImplAs<BufferD3D>(elementArrayBuffer);
+            StaticIndexBufferInterface *staticBuffer = bufferD3D->getStaticIndexBuffer();
+            return (staticBuffer->getBufferSize() == 0 || staticBuffer->getIndexType() != dstType);
+        }
+        default:
+            UNREACHABLE();
+            return true;
+    }
 }
 
 template <typename IndirectBufferT>

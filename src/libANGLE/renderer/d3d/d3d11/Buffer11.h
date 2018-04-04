@@ -47,10 +47,7 @@ enum BufferUsage
 
 typedef size_t DataRevision;
 
-// We use two set of Subject messages. The CONTENTS_CHANGED message is signaled whenever data
-// changes, to trigger re-translation or other events. Some buffers only need to be updated when the
-// underlying ID3D11Buffer object changes - this is notified via the STORAGE_CHANGED message.
-class Buffer11 : public BufferD3D, public angle::Subject
+class Buffer11 : public BufferD3D
 {
   public:
     Buffer11(const gl::BufferState &state, Renderer11 *renderer);

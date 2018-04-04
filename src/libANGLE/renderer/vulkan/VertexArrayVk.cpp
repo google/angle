@@ -109,54 +109,65 @@ gl::Error VertexArrayVk::syncState(const gl::Context *context,
     const auto &attribs  = mState.getVertexAttributes();
     const auto &bindings = mState.getVertexBindings();
 
-    for (auto dirtyBit : dirtyBits)
+    for (size_t dirtyBit : dirtyBits)
     {
-        if (dirtyBit == gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER)
+        switch (dirtyBit)
         {
-            gl::Buffer *bufferGL = mState.getElementArrayBuffer().get();
-            if (bufferGL)
+            case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:
             {
-                mCurrentElementArrayBufferResource = vk::GetImpl(bufferGL);
+                gl::Buffer *bufferGL = mState.getElementArrayBuffer().get();
+                if (bufferGL)
+                {
+                    mCurrentElementArrayBufferResource = vk::GetImpl(bufferGL);
+                }
+                else
+                {
+                    mCurrentElementArrayBufferResource = nullptr;
+                }
+                break;
             }
-            else
+
+            case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
+                break;
+
+            default:
             {
-                mCurrentElementArrayBufferResource = nullptr;
+                size_t attribIndex = gl::VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
+
+                // Invalidate the input description for pipelines.
+                mDirtyPackedInputs.set(attribIndex);
+
+                const auto &attrib  = attribs[attribIndex];
+                const auto &binding = bindings[attrib.bindingIndex];
+
+                if (attrib.enabled)
+                {
+                    gl::Buffer *bufferGL = binding.getBuffer().get();
+
+                    if (bufferGL)
+                    {
+                        BufferVk *bufferVk                        = vk::GetImpl(bufferGL);
+                        mCurrentArrayBufferResources[attribIndex] = bufferVk;
+                        mCurrentArrayBufferHandles[attribIndex] =
+                            bufferVk->getVkBuffer().getHandle();
+                        mClientMemoryAttribs.reset(attribIndex);
+                    }
+                    else
+                    {
+                        mCurrentArrayBufferResources[attribIndex] = nullptr;
+                        mCurrentArrayBufferHandles[attribIndex]   = VK_NULL_HANDLE;
+                        mClientMemoryAttribs.set(attribIndex);
+                    }
+                    // TODO(jmadill): Offset handling.  Assume zero for now.
+                    mCurrentArrayBufferOffsets[attribIndex] = 0;
+                }
+                else
+                {
+                    mClientMemoryAttribs.reset(attribIndex);
+                    UNIMPLEMENTED();
+                }
+                break;
             }
-            continue;
-        }
-
-        size_t attribIndex = gl::VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
-
-        // Invalidate the input description for pipelines.
-        mDirtyPackedInputs.set(attribIndex);
-
-        const auto &attrib  = attribs[attribIndex];
-        const auto &binding = bindings[attrib.bindingIndex];
-
-        if (attrib.enabled)
-        {
-            gl::Buffer *bufferGL = binding.getBuffer().get();
-
-            if (bufferGL)
-            {
-                BufferVk *bufferVk                        = vk::GetImpl(bufferGL);
-                mCurrentArrayBufferResources[attribIndex] = bufferVk;
-                mCurrentArrayBufferHandles[attribIndex]   = bufferVk->getVkBuffer().getHandle();
-                mClientMemoryAttribs.reset(attribIndex);
-            }
-            else
-            {
-                mCurrentArrayBufferResources[attribIndex] = nullptr;
-                mCurrentArrayBufferHandles[attribIndex]   = VK_NULL_HANDLE;
-                mClientMemoryAttribs.set(attribIndex);
-            }
-            // TODO(jmadill): Offset handling.  Assume zero for now.
-            mCurrentArrayBufferOffsets[attribIndex] = 0;
-        }
-        else
-        {
-            mClientMemoryAttribs.reset(attribIndex);
-            UNIMPLEMENTED();
         }
     }
 

@@ -339,7 +339,7 @@ TEST_P(IndexedBufferCopyTest, IndexRangeBug)
     glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, nullptr);
 
     EXPECT_GL_NO_ERROR();
-    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 class BufferDataTestES3 : public BufferDataTest

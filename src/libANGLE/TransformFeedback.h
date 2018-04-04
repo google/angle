@@ -77,7 +77,7 @@ class TransformFeedback final : public RefCountObject, public LabeledObject
     // how many vertices have been written to the buffers. This information is needed by
     // checkBufferSpaceForDraw because each draw call appends vertices to the buffers starting just
     // after the last vertex of the previous draw call.
-    void onVerticesDrawn(GLsizei count, GLsizei primcount);
+    void onVerticesDrawn(const Context *context, GLsizei count, GLsizei primcount);
 
     bool hasBoundProgram(GLuint program) const;
 

@@ -88,6 +88,9 @@ Error Buffer::bufferData(const Context *context,
     mState.mUsage = usage;
     mState.mSize  = size;
 
+    // Notify when data changes.
+    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+
     return NoError();
 }
 
@@ -100,6 +103,9 @@ Error Buffer::bufferSubData(const Context *context,
     ANGLE_TRY(mImpl->setSubData(context, target, data, size, offset));
 
     mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset), static_cast<unsigned int>(size));
+
+    // Notify when data changes.
+    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 
     return NoError();
 }
@@ -114,6 +120,9 @@ Error Buffer::copyBufferSubData(const Context *context,
         mImpl->copySubData(context, source->getImplementation(), sourceOffset, destOffset, size));
 
     mIndexRangeCache.invalidateRange(static_cast<unsigned int>(destOffset), static_cast<unsigned int>(size));
+
+    // Notify when data changes.
+    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 
     return NoError();
 }
@@ -181,17 +190,26 @@ Error Buffer::unmap(const Context *context, GLboolean *result)
     mState.mAccess      = GL_WRITE_ONLY_OES;
     mState.mAccessFlags = 0;
 
+    // Notify when data changes.
+    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+
     return NoError();
 }
 
-void Buffer::onTransformFeedback()
+void Buffer::onTransformFeedback(const Context *context)
 {
     mIndexRangeCache.clear();
+
+    // Notify when data changes.
+    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 }
 
-void Buffer::onPixelUnpack()
+void Buffer::onPixelPack(const Context *context)
 {
     mIndexRangeCache.clear();
+
+    // Notify when data changes.
+    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 }
 
 Error Buffer::getIndexRange(const gl::Context *context,

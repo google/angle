@@ -419,8 +419,7 @@ IndexStorageType ClassifyIndexStorage(const gl::State &glState,
                                       const gl::Buffer *elementArrayBuffer,
                                       GLenum elementType,
                                       GLenum destElementType,
-                                      unsigned int offset,
-                                      bool *needsTranslation);
+                                      unsigned int offset);
 
 }  // namespace rx
 

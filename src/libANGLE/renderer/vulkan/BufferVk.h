@@ -18,7 +18,7 @@ namespace rx
 {
 class RendererVk;
 
-class BufferVk : public BufferImpl, public ResourceVk, public angle::Subject
+class BufferVk : public BufferImpl, public ResourceVk
 {
   public:
     BufferVk(const gl::BufferState &state);

@@ -1414,7 +1414,7 @@ void LineLoopHandler::onSubjectStateChange(const gl::Context *context,
                                            angle::SubjectMessage message)
 {
     // Indicate we want to recopy on next draw since something changed in the buffer.
-    if (message == angle::SubjectMessage::STORAGE_CHANGED)
+    if (message == angle::SubjectMessage::CONTENTS_CHANGED)
     {
         mLineLoopIndexBuffer = VK_NULL_HANDLE;
     }

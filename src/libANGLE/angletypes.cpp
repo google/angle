@@ -311,7 +311,7 @@ unsigned long ComponentTypeMask::to_ulong() const
 
 void ComponentTypeMask::from_ulong(unsigned long mask)
 {
-    mTypeMask = mask;
+    mTypeMask = angle::BitSet<MAX_COMPONENT_TYPE_MASK_INDEX * 2>(mask);
 }
 
 bool ComponentTypeMask::Validate(unsigned long outputTypes,

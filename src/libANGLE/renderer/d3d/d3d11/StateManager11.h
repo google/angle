@@ -183,14 +183,17 @@ class StateManager11 final : angle::NonCopyable
     // Called by the Framebuffer11 and VertexArray11.
     void invalidateShaders();
 
-    // Called by VertexArray11 to trigger attribute translation.
-    void invalidateVertexAttributeTranslation();
-
     // Called by the Program on Uniform Buffer change. Also called internally.
     void invalidateProgramUniformBuffers();
 
     // Called by TransformFeedback11.
     void invalidateTransformFeedback();
+
+    // Called by VertexArray11.
+    void invalidateInputLayout();
+
+    // Called by VertexArray11 element array buffer sync.
+    void invalidateIndexBuffer();
 
     void setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv);
     void setRenderTargets(ID3D11RenderTargetView **rtvs, UINT numRtvs, ID3D11DepthStencilView *dsv);
@@ -232,14 +235,6 @@ class StateManager11 final : angle::NonCopyable
     void setSimpleScissorRect(const gl::Rectangle &glRect);
     void setScissorRectD3D(const D3D11_RECT &d3dRect);
 
-    // Not handled by an internal dirty bit because of the extra draw parameters.
-    gl::Error applyVertexBuffer(const gl::Context *context,
-                                const gl::DrawCallParams &drawCallParams);
-
-    gl::Error applyIndexBuffer(const gl::Context *context,
-                               const gl::DrawCallParams &drawCallParams,
-                               bool usePrimitiveRestartWorkaround);
-
     void setIndexBuffer(ID3D11Buffer *buffer, DXGI_FORMAT indexFormat, unsigned int offset);
 
     gl::Error updateVertexOffsetsForPointSpritesEmulation(GLint startVertex,
@@ -252,6 +247,7 @@ class StateManager11 final : angle::NonCopyable
     InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
 
     GLsizei getCurrentMinimumDrawCount() const { return mCurrentMinimumDrawCount; }
+    VertexDataManager *getVertexDataManager() { return &mVertexDataManager; }
 
   private:
     template <typename SRVType>
@@ -336,6 +332,8 @@ class StateManager11 final : angle::NonCopyable
     void processFramebufferInvalidation(const gl::Context *context);
 
     bool syncIndexBuffer(ID3D11Buffer *buffer, DXGI_FORMAT indexFormat, unsigned int offset);
+    gl::Error syncVertexBuffersAndInputLayout(const gl::Context *context,
+                                              const gl::DrawCallParams &vertexParams);
 
     bool setInputLayoutInternal(const d3d11::InputLayout *inputLayout);
 
@@ -352,6 +350,10 @@ class StateManager11 final : angle::NonCopyable
                                ProgramD3D *programD3D,
                                GLenum currentDrawMode);
 
+    // Not handled by an internal dirty bit because it isn't synced on drawArrays calls.
+    gl::Error applyIndexBuffer(const gl::Context *context,
+                               const gl::DrawCallParams &drawCallParams);
+
     enum DirtyBitType
     {
         DIRTY_BIT_RENDER_TARGET,
@@ -367,6 +369,7 @@ class StateManager11 final : angle::NonCopyable
         DIRTY_BIT_SHADERS,
         DIRTY_BIT_CURRENT_VALUE_ATTRIBS,
         DIRTY_BIT_TRANSFORM_FEEDBACK,
+        DIRTY_BIT_VERTEX_BUFFERS_AND_INPUT_LAYOUT,
         DIRTY_BIT_PRIMITIVE_TOPOLOGY,
         DIRTY_BIT_INVALID,
         DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
@@ -475,8 +478,6 @@ class StateManager11 final : angle::NonCopyable
 
     // Current applied input layout.
     ResourceSerial mCurrentInputLayout;
-    bool mInputLayoutIsDirty;
-    bool mVertexAttribsNeedTranslation;
 
     // Current applied vertex states.
     // TODO(jmadill): Figure out how to use ResourceSerial here.

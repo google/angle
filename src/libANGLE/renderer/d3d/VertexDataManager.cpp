@@ -153,7 +153,7 @@ VertexStorageType ClassifyAttributeStorage(const gl::VertexAttribute &attrib,
     }
 
     // If specified with immediate data, we must use dynamic storage.
-    auto *buffer = binding.getBuffer().get();
+    gl::Buffer *buffer = binding.getBuffer().get();
     if (!buffer)
     {
         return VertexStorageType::DYNAMIC;

@@ -92,8 +92,9 @@ class Buffer final : public RefCountObject, public LabeledObject
     Error mapRange(const Context *context, GLintptr offset, GLsizeiptr length, GLbitfield access);
     Error unmap(const Context *context, GLboolean *result);
 
-    void onTransformFeedback();
-    void onPixelUnpack();
+    // These are called when another operation changes Buffer data.
+    void onTransformFeedback(const Context *context);
+    void onPixelPack(const Context *context);
 
     Error getIndexRange(const gl::Context *context,
                         GLenum type,
