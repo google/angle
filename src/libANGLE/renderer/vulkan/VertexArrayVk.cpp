@@ -36,6 +36,7 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state)
       mCurrentElementArrayBufferResource(nullptr),
       mDynamicVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kDynamicVertexDataSize),
       mDynamicIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kDynamicIndexDataSize),
+      mDirtyLineLoopTranslation(true),
       mVertexBuffersDirty(false),
       mIndexBufferDirty(false)
 {
@@ -76,7 +77,7 @@ gl::Error VertexArrayVk::streamVertexData(RendererVk *renderer,
 
     // TODO(fjhenigman): When we have a bunch of interleaved attributes, they end up
     // un-interleaved, wasting space and copying time.  Consider improving on that.
-    for (auto attribIndex : attribsToStream)
+    for (size_t attribIndex : attribsToStream)
     {
         const gl::VertexAttribute &attrib = attribs[attribIndex];
         const gl::VertexBinding &binding  = bindings[attrib.bindingIndex];
@@ -181,13 +182,15 @@ gl::Error VertexArrayVk::syncState(const gl::Context *context,
                     mCurrentElementArrayBufferHandle   = VK_NULL_HANDLE;
                     mCurrentElementArrayBufferOffset   = 0;
                 }
-                mIndexBufferDirty = true;
+                mIndexBufferDirty         = true;
+                mDirtyLineLoopTranslation = true;
                 break;
             }
 
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
                 mLineLoopBufferFirstIndex.reset();
                 mLineLoopBufferLastIndex.reset();
+                mDirtyLineLoopTranslation = true;
                 break;
 
             default:
@@ -348,6 +351,7 @@ gl::Error VertexArrayVk::drawArrays(const gl::Context *context,
     }
 
     // Handle GL_LINE_LOOP drawArrays.
+    // This test may be incorrect if the draw call switches from DrawArrays/DrawElements.
     int lastVertex = drawCallParams.firstVertex() + drawCallParams.vertexCount();
     if (!mLineLoopBufferFirstIndex.valid() || !mLineLoopBufferLastIndex.valid() ||
         mLineLoopBufferFirstIndex != drawCallParams.firstVertex() ||
@@ -397,9 +401,13 @@ gl::Error VertexArrayVk::drawElements(const gl::Context *context,
 
     VkIndexType indexType = gl_vk::GetIndexType(drawCallParams.type());
 
-    ANGLE_TRY(mLineLoopHandler.createIndexBufferFromElementArrayBuffer(
-        renderer, elementArrayBufferVk, indexType, drawCallParams.indexCount(),
-        &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
+    // This also doesn't check if the element type changed, which should trigger translation.
+    if (mDirtyLineLoopTranslation)
+    {
+        ANGLE_TRY(mLineLoopHandler.createIndexBufferFromElementArrayBuffer(
+            renderer, elementArrayBufferVk, indexType, drawCallParams.indexCount(),
+            &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
+    }
 
     ANGLE_TRY(onIndexedDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
     vk::LineLoopHandler::Draw(drawCallParams.indexCount(), commandBuffer);
@@ -480,5 +488,4 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
 
     return gl::NoError();
 }
-
 }  // namespace rx

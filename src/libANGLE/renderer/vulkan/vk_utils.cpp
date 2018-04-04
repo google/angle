@@ -1176,8 +1176,7 @@ void GarbageObject::destroy(VkDevice device)
 }
 
 LineLoopHandler::LineLoopHandler()
-    : mObserverBinding(this, 0u),
-      mDynamicLineLoopIndicesData(
+    : mDynamicLineLoopIndicesData(
           new DynamicBuffer(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                             kLineLoopDynamicBufferMinSize))
 {
@@ -1224,15 +1223,6 @@ gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(RendererVk *r
 {
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
 
-    if (elementArrayBufferVk == mObserverBinding.getSubject())
-    {
-        return gl::NoError();
-    }
-
-    // We want to know if the bufferVk changes at any point in time, because if it does we need to
-    // recopy our data on the next call.
-    mObserverBinding.bind(elementArrayBufferVk);
-
     uint32_t *indices = nullptr;
     uint32_t offset   = 0;
 
@@ -1262,7 +1252,6 @@ gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(RendererVk *r
 
 void LineLoopHandler::destroy(VkDevice device)
 {
-    mObserverBinding.reset();
     mDynamicLineLoopIndicesData->destroy(device);
 }
 
@@ -1276,17 +1265,6 @@ void LineLoopHandler::Draw(int count, CommandBuffer *commandBuffer)
 ResourceVk *LineLoopHandler::getLineLoopBufferResource()
 {
     return mDynamicLineLoopIndicesData.get();
-}
-
-void LineLoopHandler::onSubjectStateChange(const gl::Context *context,
-                                           angle::SubjectIndex index,
-                                           angle::SubjectMessage message)
-{
-    // Indicate we want to recopy on next draw since something changed in the buffer.
-    if (message == angle::SubjectMessage::CONTENTS_CHANGED)
-    {
-        mObserverBinding.reset();
-    }
 }
 
 // ImageHelper implementation.

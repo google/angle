@@ -649,7 +649,7 @@ Error AllocateImageMemory(RendererVk *renderer,
 //
 // If the user wants to draw a loop between [v1, v2, v3], we will create an indexed buffer with
 // these indexes: [0, 1, 2, 3, 0] to emulate the loop.
-class LineLoopHandler final : angle::NonCopyable, angle::ObserverInterface
+class LineLoopHandler final : angle::NonCopyable
 {
   public:
     LineLoopHandler();
@@ -671,13 +671,7 @@ class LineLoopHandler final : angle::NonCopyable, angle::ObserverInterface
 
     ResourceVk *getLineLoopBufferResource();
 
-    // Observer interface implementation.
-    void onSubjectStateChange(const gl::Context *context,
-                              angle::SubjectIndex index,
-                              angle::SubjectMessage message) override;
-
   private:
-    angle::ObserverBinding mObserverBinding;
     std::unique_ptr<DynamicBuffer> mDynamicLineLoopIndicesData;
 };
 
@@ -763,7 +757,6 @@ class ImageHelper final : angle::NonCopyable
     // Current state.
     VkImageLayout mCurrentLayout;
 };
-
 }  // namespace vk
 
 namespace gl_vk
