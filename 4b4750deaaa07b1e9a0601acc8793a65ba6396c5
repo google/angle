@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "41178753_0eacef21",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-04T00:51:57Z",
+      "side": 1,
+      "message": "I\u0027d prefer something like mVertexArrayHasChanged or mVertexArrayIsChanging, whatever better describes what\u0027s going on (has/is can be dropped). \"if vertex array change\" doesn\u0027t read nice.",
+      "range": {
+        "startLine": 186,
+        "startChar": 9,
+        "endLine": 186,
+        "endChar": 27
+      },
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e07e5c05_2f450398",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 3
@@ -13,6 +36,93 @@
       "writtenOn": "2018-04-03T22:05:47Z",
       "side": 1,
       "message": "micro nit: can we have a consistent order these assignments in both code paths?\nI suggest: resource, handle, offset.  That also sort of matches the vertex data order below.\nSmall thing but it seems to help me see the differences between the various paths.",
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "802f732a_b7c0ec2d",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-04T00:51:57Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "e07e5c05_2f450398",
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33dd887e_41a79bc5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1385,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-04T00:51:57Z",
+      "side": 1,
+      "message": "The condition !mLineLoopBufferFirstIndex.valid() \u0026\u0026 mLineLoopBufferFirstIndex \u003d\u003d drawCallParams.firstVertex() is always false. I think you need a bool to replace mLineLoopIndexBuffer.\nAlso, I understand that bufferHandleOut and offsetOut are cached in the caller now? This is quite a confusing pattern. I\u0027d do something like if(needToCreateIndexBuffer()) {createIndexBuffer()} to make it less confusing.",
+      "range": {
+        "startLine": 1384,
+        "startChar": 8,
+        "endLine": 1385,
+        "endChar": 65
+      },
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14974008_26a8cf93",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1471,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-04T00:51:57Z",
+      "side": 1,
+      "message": "I don\u0027t see this method anywhere. I think this refers to LineLoopHandler::bindIndexBuffer(), which you\u0027ve removed. Now you call CommandBuffer::bindIndexBuffer() directly, and I\u0027m not able to verify if the comment is still true. Can this be changed into an ASSERT somehow?",
+      "range": {
+        "startLine": 1471,
+        "startChar": 74,
+        "endLine": 1471,
+        "endChar": 97
+      },
+      "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2f2fc35_c40ee77a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-04T00:51:57Z",
+      "side": 1,
+      "message": "Similar issue as in LineLoopHandler::Draw comment.",
+      "range": {
+        "startLine": 691,
+        "startChar": 38,
+        "endLine": 691,
+        "endChar": 62
+      },
       "revId": "4b4750deaaa07b1e9a0601acc8793a65ba6396c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
