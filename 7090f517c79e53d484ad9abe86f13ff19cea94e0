@@ -164,6 +164,24 @@
     },
     {
       "key": {
+        "uuid": "5345ab44_0131ef15",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-04T01:41:08Z",
+      "side": 1,
+      "message": "I meant just for packed depth and stencil.\n\n typedef struct VkClearDepthStencilValue {\n     float       depth;\n     uint32_t    stencil;\n } VkClearDepthStencilValue;",
+      "parentUuid": "fa9c4e0b_1578d6c9",
+      "revId": "7090f517c79e53d484ad9abe86f13ff19cea94e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cc8cff6b_f590c57e",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
