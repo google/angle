@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c2eacb4c_299229c4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T12:21:08Z",
+      "side": 1,
+      "message": "Done. I kept the LineLoopHandler for now to abstract the management of the StreamingBuffer/DynamicBuffer, but it is cleaner with the line loop check entirely in VertexArrayVk.",
+      "parentUuid": "79cad9ab_5ca2efa2",
+      "range": {
+        "startLine": 224,
+        "startChar": 1,
+        "endLine": 233,
+        "endChar": 5
+      },
+      "revId": "b4415459db8001cb50e727f650df4fbe5e7cfe94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e59423f1_b0f9c1b8",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "b4415459db8001cb50e727f650df4fbe5e7cfe94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e7c5eb2_38ce416c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T12:21:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e59423f1_b0f9c1b8",
+      "range": {
+        "startLine": 265,
+        "startChar": 4,
+        "endLine": 274,
+        "endChar": 61
+      },
+      "revId": "b4415459db8001cb50e727f650df4fbe5e7cfe94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
