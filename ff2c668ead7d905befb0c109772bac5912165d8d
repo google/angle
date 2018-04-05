@@ -46,6 +46,30 @@
       "revId": "ff2c668ead7d905befb0c109772bac5912165d8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc94d62f_25bea7c8",
+        "filename": "src/compiler/translator/gen_emulated_builtin_function_tables.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T12:31:13Z",
+      "side": 1,
+      "message": "Well, maybe as a follow up you could make UniqueId a type, if this is used in other places. I only saw them being used as Builin Ids, not from a shared pool of ids. Are they from a shared pool of ids or totally separate?",
+      "parentUuid": "766057a0_f1298b61",
+      "range": {
+        "startLine": 34,
+        "startChar": 26,
+        "endLine": 34,
+        "endChar": 30
+      },
+      "revId": "ff2c668ead7d905befb0c109772bac5912165d8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
