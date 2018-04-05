@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50511195_f8dd5755",
+        "filename": "luci-milo.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002080
+      },
+      "writtenOn": "2018-04-05T19:40:17Z",
+      "side": 1,
+      "message": "buildbucket/luci.angle.ci/windows",
+      "range": {
+        "startLine": 12,
+        "startChar": 11,
+        "endLine": 12,
+        "endChar": 18
+      },
+      "revId": "39d24cf09071f491011df90775ead647d57bb14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb3e4e55_031c038a",
+        "filename": "luci-milo.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1002080
+      },
+      "writtenOn": "2018-04-05T19:40:17Z",
+      "side": 1,
+      "message": "buildbucket/luci.angle.try/windows",
+      "range": {
+        "startLine": 25,
+        "startChar": 11,
+        "endLine": 25,
+        "endChar": 18
+      },
+      "revId": "39d24cf09071f491011df90775ead647d57bb14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
