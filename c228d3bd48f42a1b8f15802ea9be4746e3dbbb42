@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f091528f_ec0adf44",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-05T16:58:53Z",
+      "side": 1,
+      "message": "Maybe the caps could be a constant and matrices an std::array? The type alias or MatrixStack as an std::vector is fine too.",
+      "revId": "c228d3bd48f42a1b8f15802ea9be4746e3dbbb42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e428b39_239e08af",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-05T16:58:53Z",
+      "side": 1,
+      "message": "maybe this can be replaced by getting the MatrixStack and checking its size?",
+      "range": {
+        "startLine": 507,
+        "startChar": 38,
+        "endLine": 507,
+        "endChar": 61
+      },
+      "revId": "c228d3bd48f42a1b8f15802ea9be4746e3dbbb42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "200bc280_8c4dc19d",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-05T16:58:53Z",
+      "side": 1,
+      "message": "Same here, could have a all matrix stacks be the same size or have the max size in MatrixStack.",
+      "revId": "c228d3bd48f42a1b8f15802ea9be4746e3dbbb42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
