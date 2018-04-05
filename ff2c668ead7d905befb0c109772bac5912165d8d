@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6deab050_2b2eeb4b",
+        "filename": "src/compiler/translator/gen_emulated_builtin_function_tables.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T11:48:45Z",
+      "side": 1,
+      "message": "maybe instead of int we could use an enum type? you already had the namespace, maybe you could use a \"enum class\" and static cast this to int when you need to resolve the index.",
+      "range": {
+        "startLine": 34,
+        "startChar": 26,
+        "endLine": 34,
+        "endChar": 30
+      },
+      "revId": "ff2c668ead7d905befb0c109772bac5912165d8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
