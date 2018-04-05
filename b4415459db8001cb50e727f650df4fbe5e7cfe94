@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "79cad9ab_5ca2efa2",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-05T11:33:35Z",
+      "side": 1,
+      "message": "since you now have moved some of the line loop logic to the vertexArrayVk , why not just move the handler directly in it as well and abstract it away from here entirely? You could even remove that if condition and pass the mode to vertexArrayVk-\u003eonDraw and let it handle the line loop complexity instead of having that logic scattered in 3 places now.",
+      "range": {
+        "startLine": 224,
+        "startChar": 1,
+        "endLine": 233,
+        "endChar": 5
+      },
+      "revId": "b4415459db8001cb50e727f650df4fbe5e7cfe94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e59423f1_b0f9c1b8",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-05T11:33:35Z",
+      "side": 1,
+      "message": "same here the mode could be passed and you wouldn\u0027t need to know if you need to call onIndexedDrawLineLoop or onIndexedDraw",
+      "range": {
+        "startLine": 265,
+        "startChar": 4,
+        "endLine": 274,
+        "endChar": 61
+      },
+      "revId": "b4415459db8001cb50e727f650df4fbe5e7cfe94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1a4c9708_708f6b9e",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 6
