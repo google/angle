@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "859a51f0_dadd8fef",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-05T19:06:38Z",
+      "side": 1,
+      "message": "nit: comment about this being required because the scissor is clipped with the viewport.",
+      "revId": "d02917a5f0f438e8984730afb3b88ca2823ce130",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
