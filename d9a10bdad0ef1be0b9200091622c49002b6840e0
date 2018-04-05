@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72b52389_e45c203e",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T14:27:28Z",
+      "side": 1,
+      "message": "the description and implementation of this method are a bit at odds. it is a specific implementation for commit_id. Maybe you should just ignore this rule, and any actions.",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 379,
+        "endChar": 17
+      },
+      "revId": "d9a10bdad0ef1be0b9200091622c49002b6840e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
