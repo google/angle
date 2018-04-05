@@ -22,6 +22,30 @@
       "revId": "0c9539061bb42f6002a3eaabce956a5f8e71eba3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4338208_3b15d6b0",
+        "filename": "src/compiler/translator/emulated_builtin_functions_hlsl_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 869,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-05T14:00:45Z",
+      "side": 1,
+      "message": "In BuiltInFunctionEmulator, it\u0027s much simpler to store just ints in the internal data structures instead of TSymbolUniqueId. Because of this BuiltInFunctionEmulator::setFunctionCalled() needs to be called with an int id to set dependency functions as called. Since int can\u0027t be converted back to TSymbolUniqueId by design, this function needs to take int as well.",
+      "parentUuid": "10ba21d3_4ca73273",
+      "range": {
+        "startLine": 869,
+        "startChar": 29,
+        "endLine": 869,
+        "endChar": 41
+      },
+      "revId": "0c9539061bb42f6002a3eaabce956a5f8e71eba3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
