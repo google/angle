@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "445f4dde_86622a72",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T13:35:13Z",
+      "side": 1,
+      "message": "nit: brackets for clarity",
+      "range": {
+        "startLine": 752,
+        "startChar": 46,
+        "endLine": 752,
+        "endChar": 93
+      },
+      "revId": "890f14d3c481527c3f66bcf0dbfe5224a32c2859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db854eee_903630b0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T13:35:13Z",
+      "side": 1,
+      "message": "nit: not a depth/stencil state (more of a blend state)",
+      "range": {
+        "startLine": 312,
+        "startChar": 9,
+        "endLine": 312,
+        "endChar": 29
+      },
+      "revId": "890f14d3c481527c3f66bcf0dbfe5224a32c2859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
