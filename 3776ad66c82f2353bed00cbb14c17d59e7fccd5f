@@ -16,6 +16,24 @@
       "revId": "3776ad66c82f2353bed00cbb14c17d59e7fccd5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "198a28c2_8d88bfde",
+        "filename": "src/compiler/translator/ValidateGlobalInitializer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-05T17:07:18Z",
+      "side": 1,
+      "message": "Yes - if the code can\u0027t make sure that the expression is correct, it generates an error. We could make an alternative where we gather the deepest nodes of the traversal into a list and traverse them separately etc., but I don\u0027t think there are any practical uses for a global variable initializer that\u0027s that complex, and in WebGL\u0027s case it would fail the max depth check later either way, so we might just as well not implement that.",
+      "parentUuid": "6f610f0a_e0f8232c",
+      "revId": "3776ad66c82f2353bed00cbb14c17d59e7fccd5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
