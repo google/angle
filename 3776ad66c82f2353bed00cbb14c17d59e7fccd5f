@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f610f0a_e0f8232c",
+        "filename": "src/compiler/translator/ValidateGlobalInitializer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-05T16:50:25Z",
+      "side": 1,
+      "message": "Should this produce an error if the max depth is reached?",
+      "revId": "3776ad66c82f2353bed00cbb14c17d59e7fccd5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
