@@ -432,6 +432,11 @@ Context::Context(rx::EGLImplFactory *implFactory,
 
 egl::Error Context::onDestroy(const egl::Display *display)
 {
+    // Delete the Surface first to trigger a finish() in Vulkan.
+    SafeDelete(mSurfacelessFramebuffer);
+
+    ANGLE_TRY(releaseSurface(display));
+
     for (auto fence : mFenceNVMap)
     {
         SafeDelete(fence.second);
@@ -474,9 +479,6 @@ egl::Error Context::onDestroy(const egl::Display *display)
         }
     }
 
-    SafeDelete(mSurfacelessFramebuffer);
-
-    ANGLE_TRY(releaseSurface(display));
     releaseShaderCompiler();
 
     mGLState.reset(this);
