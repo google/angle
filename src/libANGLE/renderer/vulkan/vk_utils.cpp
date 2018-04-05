@@ -1179,93 +1179,84 @@ LineLoopHandler::LineLoopHandler()
     : mObserverBinding(this, 0u),
       mDynamicLineLoopIndicesData(
           new DynamicBuffer(VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                            kLineLoopDynamicBufferMinSize)),
-      mLineLoopIndexBuffer(VK_NULL_HANDLE),
-      mLineLoopIndexBufferOffset(VK_NULL_HANDLE)
+                            kLineLoopDynamicBufferMinSize))
 {
     mDynamicLineLoopIndicesData->init(1);
 }
 
 LineLoopHandler::~LineLoopHandler() = default;
 
-void LineLoopHandler::bindIndexBuffer(VkIndexType indexType, vk::CommandBuffer **commandBuffer)
+gl::Error LineLoopHandler::createIndexBuffer(RendererVk *renderer,
+                                             const gl::DrawCallParams &drawCallParams,
+                                             VkBuffer *bufferHandleOut,
+                                             VkDeviceSize *offsetOut)
 {
-    (*commandBuffer)->bindIndexBuffer(mLineLoopIndexBuffer, mLineLoopIndexBufferOffset, indexType);
-}
+    uint32_t *indices    = nullptr;
+    size_t allocateBytes = sizeof(uint32_t) * (drawCallParams.vertexCount() + 1);
+    uint32_t offset      = 0;
+    ANGLE_TRY(mDynamicLineLoopIndicesData->allocate(renderer, allocateBytes,
+                                                    reinterpret_cast<uint8_t **>(&indices),
+                                                    bufferHandleOut, &offset, nullptr));
+    *offsetOut = static_cast<VkDeviceSize>(offset);
 
-gl::Error LineLoopHandler::createIndexBuffer(ContextVk *contextVk, int firstVertex, int count)
-{
-    int lastVertex = firstVertex + count;
-    if (mLineLoopIndexBuffer == VK_NULL_HANDLE || !mLineLoopBufferFirstIndex.valid() ||
-        !mLineLoopBufferLastIndex.valid() || mLineLoopBufferFirstIndex != firstVertex ||
-        mLineLoopBufferLastIndex != lastVertex)
+    uint32_t unsignedFirstVertex = static_cast<uint32_t>(drawCallParams.firstVertex());
+    uint32_t vertexCount         = (drawCallParams.vertexCount() + unsignedFirstVertex);
+    for (uint32_t vertexIndex = unsignedFirstVertex; vertexIndex < vertexCount; vertexIndex++)
     {
-        uint32_t *indices = nullptr;
-        size_t allocateBytes = sizeof(uint32_t) * (count + 1);
-        ANGLE_TRY(mDynamicLineLoopIndicesData->allocate(
-            contextVk, allocateBytes, reinterpret_cast<uint8_t **>(&indices), &mLineLoopIndexBuffer,
-            &mLineLoopIndexBufferOffset, nullptr));
-
-        auto unsignedFirstVertex = static_cast<uint32_t>(firstVertex);
-        for (auto vertexIndex = unsignedFirstVertex; vertexIndex < (count + unsignedFirstVertex);
-             vertexIndex++)
-        {
-            *indices++ = vertexIndex;
-        }
-        *indices = unsignedFirstVertex;
-
-        // Since we are not using the VK_MEMORY_PROPERTY_HOST_COHERENT_BIT flag when creating the
-        // device memory in the DynamicBuffer, we always need to make sure we flush it after
-        // writing.
-        ANGLE_TRY(mDynamicLineLoopIndicesData->flush(contextVk));
-
-        mLineLoopBufferFirstIndex = firstVertex;
-        mLineLoopBufferLastIndex  = lastVertex;
+        *indices++ = vertexIndex;
     }
+    *indices = unsignedFirstVertex;
+
+    // Since we are not using the VK_MEMORY_PROPERTY_HOST_COHERENT_BIT flag when creating the
+    // device memory in the StreamingBuffer, we always need to make sure we flush it after
+    // writing.
+    ANGLE_TRY(mDynamicLineLoopIndicesData->flush(renderer->getDevice()));
 
     return gl::NoError();
 }
 
-gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(ContextVk *contextVk,
-                                                                   BufferVk *bufferVk,
+gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(RendererVk *renderer,
+                                                                   BufferVk *elementArrayBufferVk,
                                                                    VkIndexType indexType,
-                                                                   int count)
+                                                                   int indexCount,
+                                                                   VkBuffer *bufferHandleOut,
+                                                                   VkDeviceSize *bufferOffsetOut)
 {
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
 
-    if (bufferVk == mObserverBinding.getSubject() && mLineLoopIndexBuffer != VK_NULL_HANDLE)
+    if (elementArrayBufferVk == mObserverBinding.getSubject())
     {
         return gl::NoError();
     }
 
     // We want to know if the bufferVk changes at any point in time, because if it does we need to
     // recopy our data on the next call.
-    mObserverBinding.bind(bufferVk);
+    mObserverBinding.bind(elementArrayBufferVk);
 
     uint32_t *indices = nullptr;
+    uint32_t offset   = 0;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
-    size_t allocateBytes = unitSize * (count + 1);
-    ANGLE_TRY(mDynamicLineLoopIndicesData->allocate(
-        contextVk, allocateBytes, reinterpret_cast<uint8_t **>(&indices), &mLineLoopIndexBuffer,
-        &mLineLoopIndexBufferOffset, nullptr));
+    size_t allocateBytes = unitSize * (indexCount + 1);
+    ANGLE_TRY(mDynamicLineLoopIndicesData->allocate(renderer, allocateBytes,
+                                                    reinterpret_cast<uint8_t **>(&indices),
+                                                    bufferHandleOut, &offset, nullptr));
+    *bufferOffsetOut = static_cast<VkDeviceSize>(offset);
 
-    VkBufferCopy copy1 = {0, mLineLoopIndexBufferOffset,
-                          static_cast<VkDeviceSize>(count) * unitSize};
-    VkBufferCopy copy2 = {
-        0, mLineLoopIndexBufferOffset + static_cast<VkDeviceSize>(count) * unitSize, unitSize};
+    VkBufferCopy copy1 = {0, offset, static_cast<VkDeviceSize>(indexCount) * unitSize};
+    VkBufferCopy copy2 = {0, offset + static_cast<VkDeviceSize>(indexCount) * unitSize, unitSize};
     std::array<VkBufferCopy, 2> copies = {{copy1, copy2}};
 
     vk::CommandBuffer *commandBuffer;
-    mDynamicLineLoopIndicesData->beginWriteResource(contextVk->getRenderer(), &commandBuffer);
+    mDynamicLineLoopIndicesData->beginWriteResource(renderer, &commandBuffer);
 
-    Serial currentSerial = contextVk->getRenderer()->getCurrentQueueSerial();
-    bufferVk->onReadResource(mDynamicLineLoopIndicesData->getCurrentWritingNode(currentSerial),
-                             currentSerial);
-    commandBuffer->copyBuffer(bufferVk->getVkBuffer().getHandle(), mLineLoopIndexBuffer, 2,
+    Serial currentSerial = renderer->getCurrentQueueSerial();
+    elementArrayBufferVk->onReadResource(
+        mDynamicLineLoopIndicesData->getCurrentWritingNode(currentSerial), currentSerial);
+    commandBuffer->copyBuffer(elementArrayBufferVk->getVkBuffer().getHandle(), *bufferHandleOut, 2,
                               copies.data());
 
-    ANGLE_TRY(mDynamicLineLoopIndicesData->flush(contextVk));
+    ANGLE_TRY(mDynamicLineLoopIndicesData->flush(renderer->getDevice()));
     return gl::NoError();
 }
 
@@ -1275,13 +1266,11 @@ void LineLoopHandler::destroy(VkDevice device)
     mDynamicLineLoopIndicesData->destroy(device);
 }
 
-gl::Error LineLoopHandler::draw(int count, CommandBuffer *commandBuffer)
+// static
+void LineLoopHandler::Draw(int count, CommandBuffer *commandBuffer)
 {
-    // Our first index is always 0 because that's how we set it up in the
-    // bindLineLoopIndexBuffer.
+    // Our first index is always 0 because that's how we set it up in createIndexBuffer*.
     commandBuffer->drawIndexed(count + 1, 1, 0, 0, 0);
-
-    return gl::NoError();
 }
 
 ResourceVk *LineLoopHandler::getLineLoopBufferResource()
@@ -1296,7 +1285,7 @@ void LineLoopHandler::onSubjectStateChange(const gl::Context *context,
     // Indicate we want to recopy on next draw since something changed in the buffer.
     if (message == angle::SubjectMessage::CONTENTS_CHANGED)
     {
-        mLineLoopIndexBuffer = VK_NULL_HANDLE;
+        mObserverBinding.reset();
     }
 }
 
@@ -1766,6 +1755,21 @@ VkComponentSwizzle GetSwizzle(const GLenum swizzle)
         default:
             UNREACHABLE();
             return VK_COMPONENT_SWIZZLE_IDENTITY;
+    }
+}
+
+VkIndexType GetIndexType(GLenum elementType)
+{
+    switch (elementType)
+    {
+        case GL_UNSIGNED_BYTE:
+        case GL_UNSIGNED_SHORT:
+            return VK_INDEX_TYPE_UINT16;
+        case GL_UNSIGNED_INT:
+            return VK_INDEX_TYPE_UINT32;
+        default:
+            UNREACHABLE();
+            return VK_INDEX_TYPE_MAX_ENUM;
     }
 }
 }  // namespace gl_vk

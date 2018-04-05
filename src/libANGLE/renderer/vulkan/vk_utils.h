@@ -38,6 +38,7 @@ class Display;
 namespace gl
 {
 struct Box;
+class DrawCallParams;
 struct Extents;
 struct RasterizerState;
 struct Rectangle;
@@ -641,27 +642,32 @@ Error AllocateImageMemory(RendererVk *renderer,
                           DeviceMemory *deviceMemoryOut,
                           size_t *requiredSizeOut);
 
-// This class responsibility is to bind an indexed buffer needed to support line loops in Vulkan.
-// In the setup phase of drawing, the bindLineLoopIndexBuffer method should be called with the
-// first/last vertex and the current commandBuffer. If the user wants to draw a loop between [v1,
-// v2, v3], we will create an indexed buffer with these indexes: [0, 1, 2, 3, 0] to emulate the
-// loop.
+// This class' responsibility is to create index buffers needed to support line loops in Vulkan.
+// In the setup phase of drawing, the createIndexBuffer method should be called with the
+// current draw call parameters. If an element array buffer is bound for an indexed draw, use
+// createIndexBufferFromElementArrayBuffer.
+//
+// If the user wants to draw a loop between [v1, v2, v3], we will create an indexed buffer with
+// these indexes: [0, 1, 2, 3, 0] to emulate the loop.
 class LineLoopHandler final : angle::NonCopyable, angle::ObserverInterface
 {
   public:
     LineLoopHandler();
     ~LineLoopHandler();
 
-    void bindIndexBuffer(VkIndexType indexType, CommandBuffer **commandBuffer);
-
-    gl::Error createIndexBuffer(ContextVk *contextVk, int firstVertex, int count);
-    gl::Error createIndexBufferFromElementArrayBuffer(ContextVk *contextVk,
-                                                      BufferVk *bufferVk,
+    gl::Error createIndexBuffer(RendererVk *renderer,
+                                const gl::DrawCallParams &drawCallParams,
+                                VkBuffer *bufferHandleOut,
+                                VkDeviceSize *offsetOut);
+    gl::Error createIndexBufferFromElementArrayBuffer(RendererVk *renderer,
+                                                      BufferVk *elementArrayBufferVk,
                                                       VkIndexType indexType,
-                                                      int count);
+                                                      int indexCount,
+                                                      VkBuffer *bufferHandleOut,
+                                                      VkDeviceSize *bufferOffsetOut);
     void destroy(VkDevice device);
 
-    gl::Error draw(int count, CommandBuffer *commandBuffer);
+    static void Draw(int count, CommandBuffer *commandBuffer);
 
     ResourceVk *getLineLoopBufferResource();
 
@@ -673,10 +679,6 @@ class LineLoopHandler final : angle::NonCopyable, angle::ObserverInterface
   private:
     angle::ObserverBinding mObserverBinding;
     std::unique_ptr<DynamicBuffer> mDynamicLineLoopIndicesData;
-    VkBuffer mLineLoopIndexBuffer;
-    uint32_t mLineLoopIndexBufferOffset;
-    Optional<int> mLineLoopBufferFirstIndex;
-    Optional<int> mLineLoopBufferLastIndex;
 };
 
 class ImageHelper final : angle::NonCopyable
@@ -771,6 +773,7 @@ VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState);
 VkFrontFace GetFrontFace(GLenum frontFace);
 VkSampleCountFlagBits GetSamples(GLint sampleCount);
 VkComponentSwizzle GetSwizzle(const GLenum swizzle);
+VkIndexType GetIndexType(GLenum elementType);
 }  // namespace gl_vk
 
 // This is a helper class for back-end objects used in Vk command buffers. It records a serial

@@ -38,44 +38,16 @@
 
 namespace rx
 {
-
-namespace
-{
-
-VkIndexType GetVkIndexType(GLenum glIndexType)
-{
-    switch (glIndexType)
-    {
-        case GL_UNSIGNED_BYTE:
-        case GL_UNSIGNED_SHORT:
-            return VK_INDEX_TYPE_UINT16;
-        case GL_UNSIGNED_INT:
-            return VK_INDEX_TYPE_UINT32;
-        default:
-            UNREACHABLE();
-            return VK_INDEX_TYPE_MAX_ENUM;
-    }
-}
-
-constexpr size_t kDynamicVertexDataSize = 1024 * 1024;
-constexpr size_t kDynamicIndexDataSize  = 1024 * 8;
-
-}  // anonymous namespace
-
 ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     : ContextImpl(state),
       mRenderer(renderer),
       mCurrentDrawMode(GL_NONE),
       mDynamicDescriptorPool(),
-      mVertexArrayDirty(false),
       mTexturesDirty(false),
-      mDynamicVertexData(VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, kDynamicVertexDataSize),
-      mDynamicIndexData(VK_BUFFER_USAGE_INDEX_BUFFER_BIT, kDynamicIndexDataSize)
+      mVertexArrayBindingHasChanged(false)
 {
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
-    mDynamicVertexData.init(1);
-    mDynamicIndexData.init(1);
 }
 
 ContextVk::~ContextVk()
@@ -84,12 +56,7 @@ ContextVk::~ContextVk()
 
 void ContextVk::onDestroy(const gl::Context *context)
 {
-    VkDevice device = mRenderer->getDevice();
-
     mDynamicDescriptorPool.destroy(mRenderer);
-    mDynamicVertexData.destroy(device);
-    mDynamicIndexData.destroy(device);
-    mLineLoopHandler.destroy(device);
 }
 
 gl::Error ContextVk::initialize()
@@ -149,8 +116,8 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
 
 gl::Error ContextVk::setupDraw(const gl::Context *context,
                                const gl::DrawCallParams &drawCallParams,
-                               ResourceVk *elementArrayBufferOverride,
-                               vk::CommandBuffer **commandBufferOut)
+                               vk::CommandGraphNode **drawNodeOut,
+                               bool *newCommandBufferOut)
 {
     if (drawCallParams.mode() != mCurrentDrawMode)
     {
@@ -166,12 +133,9 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     const auto &state            = mState.getState();
     const gl::Program *programGL = state.getProgram();
     ProgramVk *programVk         = vk::GetImpl(programGL);
-    const gl::VertexArray *vao   = state.getVertexArray();
-    VertexArrayVk *vkVAO         = vk::GetImpl(vao);
     const auto *drawFBO          = state.getDrawFramebuffer();
     FramebufferVk *vkFBO         = vk::GetImpl(drawFBO);
     Serial queueSerial           = mRenderer->getCurrentQueueSerial();
-    uint32_t maxAttrib           = programGL->getState().getMaxActiveAttribLocation();
 
     vk::CommandGraphNode *graphNode = nullptr;
     ANGLE_TRY(vkFBO->getCommandGraphNodeForDraw(context, &graphNode));
@@ -180,23 +144,15 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 
     if (!graphNode->getInsideRenderPassCommands()->valid())
     {
-        mVertexArrayDirty = true;
         mTexturesDirty    = true;
+        *newCommandBufferOut = true;
         ANGLE_TRY(graphNode->beginInsideRenderPassRecording(mRenderer, &commandBuffer));
     }
     else
     {
-        commandBuffer = graphNode->getInsideRenderPassCommands();
-    }
-
-    // Ensure any writes to the VAO buffers are flushed before we read from them.
-    if (mVertexArrayDirty || elementArrayBufferOverride != nullptr)
-    {
-
-        mVertexArrayDirty = false;
-        vkVAO->updateDrawDependencies(graphNode, programGL->getActiveAttribLocationsMask(),
-                                      elementArrayBufferOverride, queueSerial,
-                                      drawCallParams.isDrawElements());
+        *newCommandBufferOut          = mVertexArrayBindingHasChanged;
+        mVertexArrayBindingHasChanged = false;
+        commandBuffer                 = graphNode->getInsideRenderPassCommands();
     }
 
     // Ensure any writes to the textures are flushed before we read from them.
@@ -224,9 +180,6 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     }
 
     commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline->get());
-    ANGLE_TRY(vkVAO->streamVertexData(context, &mDynamicVertexData, drawCallParams));
-    commandBuffer->bindVertexBuffers(0, maxAttrib, vkVAO->getCurrentArrayBufferHandles().data(),
-                                     vkVAO->getCurrentArrayBufferOffsets().data());
 
     // Update the queue serial for the pipeline object.
     ASSERT(mCurrentPipeline && mCurrentPipeline->valid());
@@ -251,7 +204,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
             programVk->getDynamicOffsets());
     }
 
-    *commandBufferOut = commandBuffer;
+    *drawNodeOut = graphNode;
     return gl::NoError();
 }
 
@@ -259,19 +212,13 @@ gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint f
 {
     const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
 
-    vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(setupDraw(context, drawCallParams, nullptr, &commandBuffer));
+    vk::CommandGraphNode *drawNode = nullptr;
+    bool newCommands               = false;
+    ANGLE_TRY(setupDraw(context, drawCallParams, &drawNode, &newCommands));
 
-    if (mode == GL_LINE_LOOP)
-    {
-        ANGLE_TRY(mLineLoopHandler.createIndexBuffer(this, first, count));
-        mLineLoopHandler.bindIndexBuffer(VK_INDEX_TYPE_UINT32, &commandBuffer);
-        ANGLE_TRY(mLineLoopHandler.draw(count, commandBuffer));
-    }
-    else
-    {
-        commandBuffer->draw(count, 1, first, 0);
-    }
+    const gl::VertexArray *vertexArray = context->getGLState().getVertexArray();
+    VertexArrayVk *vertexArrayVk       = vk::GetImpl(vertexArray);
+    ANGLE_TRY(vertexArrayVk->drawArrays(context, mRenderer, drawCallParams, drawNode, newCommands));
 
     return gl::NoError();
 }
@@ -294,80 +241,14 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
 {
     const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
 
-    gl::VertexArray *vao                 = mState.getState().getVertexArray();
-    const gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
-    vk::CommandBuffer *commandBuffer = nullptr;
+    vk::CommandGraphNode *drawNode = nullptr;
+    bool newCommands               = false;
+    ANGLE_TRY(setupDraw(context, drawCallParams, &drawNode, &newCommands));
 
-    if (mode == GL_LINE_LOOP)
-    {
-        if (!elementArrayBuffer)
-        {
-            UNIMPLEMENTED();
-            return gl::InternalError() << "Line loop indices in client memory not supported";
-        }
-
-        BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
-
-        ANGLE_TRY(mLineLoopHandler.createIndexBufferFromElementArrayBuffer(
-            this, elementArrayBufferVk, GetVkIndexType(type), count));
-
-        // TODO(fjhenigman): calculate the index range and pass to setupDraw()
-        ANGLE_TRY(setupDraw(context, drawCallParams, mLineLoopHandler.getLineLoopBufferResource(),
-                            &commandBuffer));
-
-        mLineLoopHandler.bindIndexBuffer(GetVkIndexType(type), &commandBuffer);
-        commandBuffer->drawIndexed(count + 1, 1, 0, 0, 0);
-    }
-    else
-    {
-        ContextVk *contextVk         = vk::GetImpl(context);
-        gl::IndexRange range;
-        VkBuffer buffer     = VK_NULL_HANDLE;
-        uint32_t offset     = 0;
-
-        if (elementArrayBuffer)
-        {
-            if (type == GL_UNSIGNED_BYTE)
-            {
-                // TODO(fjhenigman): Index format translation.
-                UNIMPLEMENTED();
-                return gl::InternalError() << "Unsigned byte translation is not implemented for "
-                                           << "indices in a buffer object";
-            }
-
-            BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
-            buffer                         = elementArrayBufferVk->getVkBuffer().getHandle();
-            offset                         = 0;
-        }
-        else
-        {
-            const GLsizei amount = sizeof(GLushort) * count;
-            GLubyte *dst         = nullptr;
-
-            ANGLE_TRY(
-                mDynamicIndexData.allocate(contextVk, amount, &dst, &buffer, &offset, nullptr));
-            if (type == GL_UNSIGNED_BYTE)
-            {
-                // Unsigned bytes don't have direct support in Vulkan so we have to expand the
-                // memory to a GLushort.
-                const GLubyte *in     = static_cast<const GLubyte *>(indices);
-                GLushort *expandedDst = reinterpret_cast<GLushort *>(dst);
-                for (GLsizei index = 0; index < count; index++)
-                {
-                    expandedDst[index] = static_cast<GLushort>(in[index]);
-                }
-            }
-            else
-            {
-                memcpy(dst, indices, amount);
-            }
-            ANGLE_TRY(mDynamicIndexData.flush(contextVk));
-        }
-
-        ANGLE_TRY(setupDraw(context, drawCallParams, nullptr, &commandBuffer));
-        commandBuffer->bindIndexBuffer(buffer, offset, GetVkIndexType(type));
-        commandBuffer->drawIndexed(count, 1, 0, 0, 0);
-    }
+    gl::VertexArray *vao         = mState.getState().getVertexArray();
+    VertexArrayVk *vertexArrayVk = vk::GetImpl(vao);
+    ANGLE_TRY(
+        vertexArrayVk->drawElements(context, mRenderer, drawCallParams, drawNode, newCommands));
 
     return gl::NoError();
 }
@@ -636,7 +517,8 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_RENDERBUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
-                mVertexArrayDirty = true;
+                invalidateCurrentPipeline();
+                mVertexArrayBindingHasChanged = true;
                 break;
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
                 WARN() << "DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING unimplemented";
@@ -821,13 +703,6 @@ std::vector<PathImpl *> ContextVk::createPaths(GLsizei)
 void ContextVk::invalidateCurrentPipeline()
 {
     mCurrentPipeline = nullptr;
-}
-
-void ContextVk::onVertexArrayChange()
-{
-    // TODO(jmadill): Does not handle dependent state changes.
-    mVertexArrayDirty = true;
-    invalidateCurrentPipeline();
 }
 
 gl::Error ContextVk::dispatchCompute(const gl::Context *context,

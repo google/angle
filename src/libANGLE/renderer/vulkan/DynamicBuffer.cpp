@@ -44,7 +44,7 @@ bool DynamicBuffer::valid()
     return mAlignment > 0;
 }
 
-vk::Error DynamicBuffer::allocate(ContextVk *context,
+vk::Error DynamicBuffer::allocate(RendererVk *renderer,
                                   size_t sizeInBytes,
                                   uint8_t **ptrOut,
                                   VkBuffer *handleOut,
@@ -52,11 +52,7 @@ vk::Error DynamicBuffer::allocate(ContextVk *context,
                                   bool *outNewBufferAllocated)
 {
     ASSERT(valid());
-    RendererVk *renderer = context->getRenderer();
-
-    // TODO(fjhenigman): Update this when we have buffers that need to
-    // persist longer than one frame.
-    updateQueueSerial(renderer->getCurrentQueueSerial());
+    VkDevice device = renderer->getDevice();
 
     size_t sizeToAllocate = roundUp(sizeInBytes, mAlignment);
 
@@ -65,16 +61,15 @@ vk::Error DynamicBuffer::allocate(ContextVk *context,
 
     if (!checkedNextWriteOffset.IsValid() || checkedNextWriteOffset.ValueOrDie() > mSize)
     {
-        VkDevice device = context->getDevice();
-
         if (mMappedMemory)
         {
-            ANGLE_TRY(flush(context));
+            ANGLE_TRY(flush(device));
             mMemory.unmap(device);
             mMappedMemory = nullptr;
         }
-        renderer->releaseResource(*this, &mBuffer);
-        renderer->releaseResource(*this, &mMemory);
+        Serial currentSerial = renderer->getCurrentQueueSerial();
+        renderer->releaseObject(currentSerial, &mBuffer);
+        renderer->releaseObject(currentSerial, &mMemory);
 
         VkBufferCreateInfo createInfo;
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -121,7 +116,7 @@ vk::Error DynamicBuffer::allocate(ContextVk *context,
     return vk::NoError();
 }
 
-vk::Error DynamicBuffer::flush(ContextVk *context)
+vk::Error DynamicBuffer::flush(VkDevice device)
 {
     if (mNextWriteOffset > mLastFlushOffset)
     {
@@ -131,7 +126,7 @@ vk::Error DynamicBuffer::flush(ContextVk *context)
         range.memory = mMemory.getHandle();
         range.offset = mLastFlushOffset;
         range.size   = mNextWriteOffset - mLastFlushOffset;
-        ANGLE_VK_TRY(vkFlushMappedMemoryRanges(context->getDevice(), 1, &range));
+        ANGLE_VK_TRY(vkFlushMappedMemoryRanges(device, 1, &range));
 
         mLastFlushOffset = mNextWriteOffset;
     }

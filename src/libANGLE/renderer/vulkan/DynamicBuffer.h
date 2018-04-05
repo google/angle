@@ -20,16 +20,17 @@ class DynamicBuffer : public ResourceVk
 {
   public:
     DynamicBuffer(VkBufferUsageFlags usage, size_t minSize);
+    ~DynamicBuffer();
+
     void init(size_t alignment);
     bool valid();
-    ~DynamicBuffer();
-    vk::Error allocate(ContextVk *context,
+    vk::Error allocate(RendererVk *renderer,
                        size_t sizeInBytes,
                        uint8_t **ptrOut,
                        VkBuffer *handleOut,
                        uint32_t *offsetOut,
                        bool *outNewBufferAllocated);
-    vk::Error flush(ContextVk *context);
+    vk::Error flush(VkDevice device);
     void destroy(VkDevice device);
     VkBuffer getCurrentBufferHandle() const;
 

@@ -155,7 +155,6 @@ class ContextVk : public ContextImpl
     RendererVk *getRenderer() { return mRenderer; }
 
     void invalidateCurrentPipeline();
-    void onVertexArrayChange();
 
     DynamicDescriptorPool *getDynamicDescriptorPool();
 
@@ -167,8 +166,8 @@ class ContextVk : public ContextImpl
     gl::Error initPipeline(const gl::Context *context);
     gl::Error setupDraw(const gl::Context *context,
                         const gl::DrawCallParams &drawCallParams,
-                        ResourceVk *elementArrayBufferOverride,
-                        vk::CommandBuffer **commandBufferOut);
+                        vk::CommandGraphNode **drawNodeOut,
+                        bool *newCommandBufferOut);
 
     RendererVk *mRenderer;
     vk::PipelineAndSerial *mCurrentPipeline;
@@ -183,17 +182,12 @@ class ContextVk : public ContextImpl
     DynamicDescriptorPool mDynamicDescriptorPool;
 
     // Triggers adding dependencies to the command graph.
-    bool mVertexArrayDirty;
     bool mTexturesDirty;
+    bool mVertexArrayBindingHasChanged;
 
     // Cached clear value for color and depth/stencil.
     VkClearValue mClearColorValue;
     VkClearValue mClearDepthStencilValue;
-
-    DynamicBuffer mDynamicVertexData;
-    DynamicBuffer mDynamicIndexData;
-
-    vk::LineLoopHandler mLineLoopHandler;
 };
 
 }  // namespace rx
