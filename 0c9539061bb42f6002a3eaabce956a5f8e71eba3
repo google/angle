@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10ba21d3_4ca73273",
+        "filename": "src/compiler/translator/emulated_builtin_functions_hlsl_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 869,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T13:47:47Z",
+      "side": 1,
+      "message": "can this take the typed parameter now?",
+      "range": {
+        "startLine": 869,
+        "startChar": 29,
+        "endLine": 869,
+        "endChar": 41
+      },
+      "revId": "0c9539061bb42f6002a3eaabce956a5f8e71eba3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
