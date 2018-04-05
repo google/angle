@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ca42e79_2ecc0afa",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T21:42:56Z",
+      "side": 1,
+      "message": "do you mean the viewport? (the one stored in the glState instead seems a bit vague)",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 35
+      },
+      "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a5429c3_ef8f4a43",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T21:42:56Z",
+      "side": 1,
+      "message": "this code is repeated - can you abstract it?",
+      "range": {
+        "startLine": 499,
+        "startChar": 0,
+        "endLine": 512,
+        "endChar": 72
+      },
+      "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "537c07a6_217d20eb",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T21:42:56Z",
+      "side": 1,
+      "message": "can you move this function into the gl_vk:: namespace and call it GetRect? I forgot this namespace existed, it\u0027s the perfect place for this function.",
+      "range": {
+        "startLine": 521,
+        "startChar": 31,
+        "endLine": 521,
+        "endChar": 56
+      },
+      "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad06e9ca_6944778f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T21:42:56Z",
+      "side": 1,
+      "message": "nit: can you pull this out into a temporary",
+      "range": {
+        "startLine": 596,
+        "startChar": 8,
+        "endLine": 596,
+        "endChar": 88
+      },
+      "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
