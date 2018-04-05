@@ -579,10 +579,11 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
         attachmentClearValues.emplace_back(contextVk->getClearDepthStencilValue());
     }
 
+    gl::Rectangle renderArea =
+        gl::Rectangle(0, 0, mState.getDimensions().width, mState.getDimensions().height);
     // Hard-code RenderPass to clear the first render target to the current clear value.
     // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
-    const gl::State &glState = context->getGLState();
-    (*nodeOut)->storeRenderPassInfo(*framebuffer, glState.getViewport(), attachmentClearValues);
+    (*nodeOut)->storeRenderPassInfo(*framebuffer, renderArea, attachmentClearValues);
 
     return gl::NoError();
 }

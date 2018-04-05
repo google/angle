@@ -808,21 +808,21 @@ void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
     mRenderPassDesc = renderPassDesc;
 }
 
-void PipelineDesc::updateScissor(const gl::Rectangle &rect)
+void PipelineDesc::updateScissor(const gl::Rectangle &rect, gl::Box framebufferDimensions)
 {
     gl::Rectangle intersection;
-    gl::Rectangle clipRect(static_cast<GLuint>(mViewport.x), static_cast<GLuint>(mViewport.y),
-                           static_cast<GLuint>(mViewport.width),
-                           static_cast<GLuint>(mViewport.height));
-    // Coordinates outside surface aren't valid in Vulkan but not error is returned, the scissor is
-    // just ignored.
+    gl::Rectangle clipRect(static_cast<GLuint>(0), static_cast<GLuint>(0),
+                           static_cast<GLuint>(framebufferDimensions.width),
+                           static_cast<GLuint>(framebufferDimensions.height));
+    // Coordinates outside the framebuffer aren't valid in Vulkan but not error is returned, the
+    // scissor is just ignored.
     if (ClipRectangle(rect, clipRect, &intersection))
     {
-        mScissor = ConvertGlRectToVkRect(intersection);
+        mScissor = gl_vk::GetRect(intersection);
     }
     else
     {
-        mScissor = ConvertGlRectToVkRect(rect);
+        mScissor = gl_vk::GetRect(rect);
     }
 }
 

@@ -167,6 +167,8 @@ class ContextVk : public ContextImpl
                         vk::CommandGraphNode **drawNodeOut,
                         bool *newCommandBufferOut);
 
+    void updateScissor(const gl::State &glState);
+
     RendererVk *mRenderer;
     vk::PipelineAndSerial *mCurrentPipeline;
     GLenum mCurrentDrawMode;
