@@ -134,7 +134,14 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
     bool clearColor = IsMaskFlagSet(static_cast<int>(mask), GL_COLOR_BUFFER_BIT);
 
-    if (context->getGLState().isScissorTestEnabled())
+    const gl::FramebufferAttachment *depthStencilAttachment = mState.getDepthStencilAttachment();
+
+    // If we clear the depth OR the stencil but not both, and we have a packed depth stencil
+    // attachment, we need to use clearAttachment instead of clearDepthStencil since Vulkan won't
+    // allow us to clear one or the other separately.
+    bool isSingleClearOnPackedDepthStencilAttachment =
+        depthStencilAttachment && (clearDepth != clearStencil);
+    if (context->getGLState().isScissorTestEnabled() || isSingleClearOnPackedDepthStencilAttachment)
     {
         // With scissor test enabled, we clear very differently and we don't need to access
         // the image inside each attachment we can just use clearCmdAttachments with our
@@ -153,7 +160,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
             contextVk->getClearDepthStencilValue().depthStencil;
 
         // We only support packed depth/stencil, not separate.
-        ASSERT(!(clearDepth && clearStencil) || mState.getDepthStencilAttachment());
+        ASSERT(!(clearDepth && clearStencil) || depthStencilAttachment);
 
         const VkImageAspectFlags aspectFlags =
             (depthAttachment ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |

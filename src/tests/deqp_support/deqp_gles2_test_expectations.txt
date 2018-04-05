@@ -193,7 +193,6 @@
 2161 VULKAN : dEQP-GLES2.functional.color_clear.long_masked_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.prerequisite.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.implementation_limits.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.depth_stencil = SKIP
 2161 VULKAN : dEQP-GLES2.functional.buffer.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.light_amount.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.shaders.* = SKIP
