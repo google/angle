@@ -34,6 +34,29 @@
       "revId": "b5a925acf0102f297556b8b43c34b44c0105c628",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "222d9705_d3a5cad4",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-05T00:13:32Z",
+      "side": 1,
+      "message": "Why did you remove this?",
+      "range": {
+        "startLine": 457,
+        "startChar": 10,
+        "endLine": 457,
+        "endChar": 28
+      },
+      "revId": "b5a925acf0102f297556b8b43c34b44c0105c628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
