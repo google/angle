@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d70a3c3_ad4bf6c2",
+        "filename": "src/compiler/translator/tree_util/IntermTraverse.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T13:55:00Z",
+      "side": 1,
+      "message": "it isn\u0027t great to use default values for arguments. maybe we should default this to max and have a set function that we can call from the constructors of the classes that care?",
+      "range": {
+        "startLine": 43,
+        "startChar": 21,
+        "endLine": 44,
+        "endChar": 80
+      },
+      "revId": "9dd9e96c212e20cc3ff6cdf3695724012b71cdd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97e77495_c3b4b476",
+        "filename": "src/compiler/translator/tree_util/IntermTraverse.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-05T13:55:00Z",
+      "side": 1,
+      "message": "again default values are always something we would like to avoid if possible",
+      "range": {
+        "startLine": 289,
+        "startChar": 54,
+        "endLine": 290,
+        "endChar": 82
+      },
+      "revId": "9dd9e96c212e20cc3ff6cdf3695724012b71cdd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
