@@ -359,12 +359,12 @@ void Context::polygonOffsetx(GLfixed factor, GLfixed units)
 
 void Context::popMatrix()
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().popMatrix();
 }
 
 void Context::pushMatrix()
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().pushMatrix();
 }
 
 void Context::rotatef(float angle, float x, float y, float z)

@@ -12,9 +12,11 @@
 
 #include <unordered_set>
 
+#include "common/FixedVector.h"
 #include "common/angleutils.h"
 #include "common/matrix_utils.h"
 #include "common/vector_utils.h"
+#include "libANGLE/Caps.h"
 #include "libANGLE/angletypes.h"
 
 namespace gl
@@ -120,7 +122,7 @@ class GLES1State final : angle::NonCopyable
     GLES1State();
     ~GLES1State();
 
-    void initialize(const Context *context);
+    void initialize(const Context *context, const State *state);
 
     void setAlphaFunc(AlphaTestFunc func, GLfloat ref);
     void setClientTextureUnit(unsigned int unit);
@@ -138,8 +140,18 @@ class GLES1State final : angle::NonCopyable
     void setMatrixMode(MatrixType mode);
     MatrixType getMatrixMode() const;
 
+    void pushMatrix();
+    void popMatrix();
+
+    using MatrixStack = angle::FixedVector<angle::Mat4, Caps::GlobalMatrixStackDepth>;
+    MatrixStack &currentMatrixStack();
+    const MatrixStack &currentMatrixStack() const;
+
   private:
     friend class State;
+
+    // Back pointer for reading from State.
+    const State *mGLState;
 
     // All initial state values come from the
     // OpenGL ES 1.1 spec.
@@ -181,9 +193,8 @@ class GLES1State final : angle::NonCopyable
     unsigned int mClientActiveTexture;
 
     // Table 6.7
-    using MatrixStack = std::vector<angle::Mat4>;
     MatrixType mMatrixMode;
-    MatrixStack mProjMatrices;
+    MatrixStack mProjectionMatrices;
     MatrixStack mModelviewMatrices;
     std::vector<MatrixStack> mTextureMatrices;
 

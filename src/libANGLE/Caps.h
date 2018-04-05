@@ -589,6 +589,7 @@ struct Caps
     GLuint maxMultitextureUnits;
     GLuint maxClipPlanes;
     GLuint maxLights;
+    static constexpr int GlobalMatrixStackDepth = 16;
     GLuint maxModelviewMatrixStackDepth;
     GLuint maxProjectionMatrixStackDepth;
     GLuint maxTextureMatrixStackDepth;

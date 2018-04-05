@@ -1647,6 +1647,15 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
         case GL_MAX_TEXTURE_UNITS:
             *params = mCaps.maxMultitextureUnits;
             break;
+        case GL_MAX_MODELVIEW_STACK_DEPTH:
+            *params = mCaps.maxModelviewMatrixStackDepth;
+            break;
+        case GL_MAX_PROJECTION_STACK_DEPTH:
+            *params = mCaps.maxProjectionMatrixStackDepth;
+            break;
+        case GL_MAX_TEXTURE_STACK_DEPTH:
+            *params = mCaps.maxTextureMatrixStackDepth;
+            break;
         default:
             handleError(mGLState.getIntegerv(this, pname, params));
             break;
@@ -2860,9 +2869,9 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions, bool rob
         mCaps.maxMultitextureUnits          = 4;
         mCaps.maxClipPlanes                 = 6;
         mCaps.maxLights                     = 8;
-        mCaps.maxModelviewMatrixStackDepth  = 16;
-        mCaps.maxProjectionMatrixStackDepth = 16;
-        mCaps.maxTextureMatrixStackDepth    = 16;
+        mCaps.maxModelviewMatrixStackDepth  = Caps::GlobalMatrixStackDepth;
+        mCaps.maxProjectionMatrixStackDepth = Caps::GlobalMatrixStackDepth;
+        mCaps.maxTextureMatrixStackDepth    = Caps::GlobalMatrixStackDepth;
     }
 
     mExtensions = mImplementation->getNativeExtensions();
@@ -6845,6 +6854,12 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         switch (pname)
         {
             case GL_ALPHA_TEST_FUNC:
+            case GL_CLIENT_ACTIVE_TEXTURE:
+            case GL_MATRIX_MODE:
+            case GL_MAX_TEXTURE_UNITS:
+            case GL_MAX_MODELVIEW_STACK_DEPTH:
+            case GL_MAX_PROJECTION_STACK_DEPTH:
+            case GL_MAX_TEXTURE_STACK_DEPTH:
                 *type      = GL_INT;
                 *numParams = 1;
                 return true;
@@ -6852,29 +6867,14 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
                 *type      = GL_FLOAT;
                 *numParams = 1;
                 return true;
-            case GL_MAX_TEXTURE_UNITS:
-                *type      = GL_INT;
-                *numParams = 1;
-                return true;
-            case GL_CLIENT_ACTIVE_TEXTURE:
-                *type      = GL_INT;
-                *numParams = 1;
-                return true;
             case GL_CURRENT_COLOR:
+            case GL_CURRENT_TEXTURE_COORDS:
                 *type      = GL_FLOAT;
                 *numParams = 4;
                 return true;
             case GL_CURRENT_NORMAL:
                 *type      = GL_FLOAT;
                 *numParams = 3;
-                return true;
-            case GL_CURRENT_TEXTURE_COORDS:
-                *type      = GL_FLOAT;
-                *numParams = 4;
-                return true;
-            case GL_MATRIX_MODE:
-                *type      = GL_INT;
-                *numParams = 1;
                 return true;
         }
     }

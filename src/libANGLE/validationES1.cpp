@@ -504,13 +504,25 @@ bool ValidatePolygonOffsetx(Context *context, GLfixed factor, GLfixed units)
 
 bool ValidatePopMatrix(Context *context)
 {
-    UNIMPLEMENTED();
+    ANGLE_VALIDATE_IS_GLES1(context);
+    const auto &stack = context->getGLState().gles1().currentMatrixStack();
+    if (stack.size() == 1)
+    {
+        ANGLE_VALIDATION_ERR(context, StackUnderflow(), MatrixStackUnderflow);
+        return false;
+    }
     return true;
 }
 
 bool ValidatePushMatrix(Context *context)
 {
-    UNIMPLEMENTED();
+    ANGLE_VALIDATE_IS_GLES1(context);
+    const auto &stack = context->getGLState().gles1().currentMatrixStack();
+    if (stack.size() == stack.max_size())
+    {
+        ANGLE_VALIDATION_ERR(context, StackOverflow(), MatrixStackOverflow);
+        return false;
+    }
     return true;
 }
 

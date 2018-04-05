@@ -128,6 +128,8 @@ ERRMSG(InvalidVertexAttrSize, "Vertex attribute size must be 1, 2, 3, or 4.");
 ERRMSG(InvalidWidth, "Invalid width.");
 ERRMSG(InvalidWrapModeTexture, "Invalid wrap mode for texture type.");
 ERRMSG(LevelNotZero, "Texture level must be zero.");
+ERRMSG(MatrixStackOverflow, "Current matrix stack is full.");
+ERRMSG(MatrixStackUnderflow, "Current matrix stack has only a single matrix.");
 ERRMSG(MismatchedByteCountType, "Buffer size does not align with data type.");
 ERRMSG(MismatchedFormat, "Format must match internal format.");
 ERRMSG(MismatchedTargetAndFormat, "Invalid texture target and format combination.");

@@ -26,7 +26,8 @@ bool TextureCoordF::operator==(const TextureCoordF &other) const
 }
 
 GLES1State::GLES1State()
-    : mVertexArrayEnabled(false),
+    : mGLState(nullptr),
+      mVertexArrayEnabled(false),
       mNormalArrayEnabled(false),
       mColorArrayEnabled(false),
       mPointSizeArrayEnabled(false),
@@ -59,8 +60,10 @@ GLES1State::GLES1State()
 GLES1State::~GLES1State() = default;
 
 // Taken from the GLES 1.x spec which specifies all initial state values.
-void GLES1State::initialize(const Context *context)
+void GLES1State::initialize(const Context *context, const State *state)
 {
+    mGLState = state;
+
     const Caps &caps = context->getCaps();
 
     mTexUnitEnables.resize(caps.maxMultitextureUnits);
@@ -97,12 +100,12 @@ void GLES1State::initialize(const Context *context)
 
     mTextureEnvironments.resize(caps.maxMultitextureUnits);
 
-    mProjMatrices.resize(caps.maxProjectionMatrixStackDepth);
-    mModelviewMatrices.resize(caps.maxModelviewMatrixStackDepth);
+    mModelviewMatrices.push_back(angle::Mat4());
+    mProjectionMatrices.push_back(angle::Mat4());
     mTextureMatrices.resize(caps.maxMultitextureUnits);
-    for (auto &textureMatrixStack : mTextureMatrices)
+    for (auto &stack : mTextureMatrices)
     {
-        textureMatrixStack.resize(caps.maxTextureMatrixStackDepth);
+        stack.push_back(angle::Mat4());
     }
 
     mMaterial.ambient  = {0.2f, 0.2f, 0.2f, 1.0f};
@@ -208,6 +211,50 @@ void GLES1State::setMatrixMode(MatrixType mode)
 MatrixType GLES1State::getMatrixMode() const
 {
     return mMatrixMode;
+}
+
+void GLES1State::pushMatrix()
+{
+    auto &stack = currentMatrixStack();
+    stack.push_back(stack.back());
+}
+
+void GLES1State::popMatrix()
+{
+    auto &stack = currentMatrixStack();
+    stack.pop_back();
+}
+
+GLES1State::MatrixStack &GLES1State::currentMatrixStack()
+{
+    switch (mMatrixMode)
+    {
+        case MatrixType::Modelview:
+            return mModelviewMatrices;
+        case MatrixType::Projection:
+            return mProjectionMatrices;
+        case MatrixType::Texture:
+            return mTextureMatrices[mGLState->getActiveSampler()];
+        default:
+            UNREACHABLE();
+            return mModelviewMatrices;
+    }
+}
+
+const GLES1State::MatrixStack &GLES1State::currentMatrixStack() const
+{
+    switch (mMatrixMode)
+    {
+        case MatrixType::Modelview:
+            return mModelviewMatrices;
+        case MatrixType::Projection:
+            return mProjectionMatrices;
+        case MatrixType::Texture:
+            return mTextureMatrices[mGLState->getActiveSampler()];
+        default:
+            UNREACHABLE();
+            return mModelviewMatrices;
+    }
 }
 
 }  // namespace gl

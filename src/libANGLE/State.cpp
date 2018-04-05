@@ -246,7 +246,7 @@ void State::initialize(const Context *context,
     // applies
     if (clientVersion < Version(2, 0))
     {
-        mGLES1State.initialize(context);
+        mGLES1State.initialize(context, this);
     }
 }
 
