@@ -171,6 +171,24 @@
       "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "920ff9e7_91164359",
+        "filename": "src/compiler/translator/tree_util/BuiltIn_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-05T09:41:50Z",
+      "side": 1,
+      "message": "Did it with constexpr ints and the binary size got smaller as expected.",
+      "parentUuid": "1f5af0c7_b6abe863",
+      "revId": "d86887c73fe41ba53a5c6513feaba96bcd01e81e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
