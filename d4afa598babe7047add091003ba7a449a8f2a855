@@ -16,6 +16,24 @@
       "revId": "d4afa598babe7047add091003ba7a449a8f2a855",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cddb6e1_aa668df2",
+        "filename": "scripts/gen_angle_json.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-06T13:30:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd1f7610_7bb0f316",
+      "revId": "d4afa598babe7047add091003ba7a449a8f2a855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
