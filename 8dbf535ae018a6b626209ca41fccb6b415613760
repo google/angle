@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "e9e446c8_9b8af1f7",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T18:38:43Z",
+      "side": 1,
+      "message": "It is a problem. Just confirmed with a test: \nhttps://bugs.chromium.org/p/angleproject/issues/detail?id\u003d2458",
+      "parentUuid": "b47b601e_ef67eb58",
+      "revId": "8dbf535ae018a6b626209ca41fccb6b415613760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "810b14da_63a6a7d9",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 10
@@ -69,6 +87,24 @@
       "revId": "8dbf535ae018a6b626209ca41fccb6b415613760",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3683b4f8_7df9b663",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T18:38:43Z",
+      "side": 1,
+      "message": "I just wrote a simple test that broke it so yes its still applicable.\n\nI\u0027ll work on fixing it",
+      "parentUuid": "810b14da_63a6a7d9",
+      "revId": "8dbf535ae018a6b626209ca41fccb6b415613760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
