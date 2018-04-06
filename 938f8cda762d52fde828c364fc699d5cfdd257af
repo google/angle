@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69d65f26_f65e3b0c",
+        "filename": "src/compiler/translator/ImmutableStringBuilder.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-06T16:54:57Z",
+      "side": 1,
+      "message": "please use brackets here as appropriate",
+      "range": {
+        "startLine": 50,
+        "startChar": 29,
+        "endLine": 50,
+        "endChar": 73
+      },
+      "revId": "938f8cda762d52fde828c364fc699d5cfdd257af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfe277c3_2fed12b2",
+        "filename": "src/tests/compiler_tests/ImmutableString_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-06T16:54:57Z",
+      "side": 1,
+      "message": "please comment before the tests",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 6
+      },
+      "revId": "938f8cda762d52fde828c364fc699d5cfdd257af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
