@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "02da87ba_8f545907",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T16:55:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8ad87c5_364afe3a",
+      "range": {
+        "startLine": 9,
+        "startChar": 2,
+        "endLine": 10,
+        "endChar": 35
+      },
+      "revId": "04fa67c011241af3b67b542786315d862feaa85a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10fcec33_64bbc390",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "2aaf71e5_ab514714",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T16:55:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10fcec33_64bbc390",
+      "range": {
+        "startLine": 521,
+        "startChar": 38,
+        "endLine": 521,
+        "endChar": 59
+      },
+      "revId": "04fa67c011241af3b67b542786315d862feaa85a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1e87d472_d335990e",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 5
@@ -68,6 +116,30 @@
       "revId": "04fa67c011241af3b67b542786315d862feaa85a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f4cf0c7_101e7278",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T16:55:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e87d472_d335990e",
+      "range": {
+        "startLine": 767,
+        "startChar": 9,
+        "endLine": 767,
+        "endChar": 30
+      },
+      "revId": "04fa67c011241af3b67b542786315d862feaa85a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
