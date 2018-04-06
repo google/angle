@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c1b699be_4ee47fc6",
+        "filename": "src/compiler/translator/ImmutableStringBuilder.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-06T20:01:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69d65f26_f65e3b0c",
+      "range": {
+        "startLine": 50,
+        "startChar": 29,
+        "endLine": 50,
+        "endChar": 73
+      },
+      "revId": "938f8cda762d52fde828c364fc699d5cfdd257af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfe277c3_2fed12b2",
         "filename": "src/tests/compiler_tests/ImmutableString_test.cpp",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "938f8cda762d52fde828c364fc699d5cfdd257af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8480a7f4_dca2ed8c",
+        "filename": "src/tests/compiler_tests/ImmutableString_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-06T20:01:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfe277c3_2fed12b2",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 6
+      },
+      "revId": "938f8cda762d52fde828c364fc699d5cfdd257af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
