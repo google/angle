@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "96b3b7b4_3c4474c9",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T17:08:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0598c3f1_0ec89bb0",
+      "range": {
+        "startLine": 28,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 34
+      },
+      "revId": "ad19717867c066b82d4b4ac28de7e85640748e10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0eead374_e5e349b4",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 2
@@ -59,6 +83,30 @@
       "writtenOn": "2018-04-06T16:53:48Z",
       "side": 1,
       "message": "what about nested structs?",
+      "range": {
+        "startLine": 56,
+        "startChar": 16,
+        "endLine": 56,
+        "endChar": 35
+      },
+      "revId": "ad19717867c066b82d4b4ac28de7e85640748e10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f234ed3_c28b0912",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T17:08:33Z",
+      "side": 1,
+      "message": "Olli, would the check be very different here to support nested structs? Would it impact the design of this change very much?",
+      "parentUuid": "2f5342ee_da85c7c4",
       "range": {
         "startLine": 56,
         "startChar": 16,
