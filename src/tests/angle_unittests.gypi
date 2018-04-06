@@ -72,6 +72,7 @@
             '<(angle_path)/src/tests/compiler_tests/GLSLCompatibilityOutput_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/GlFragDataNotModified_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/GeometryShader_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/ImmutableString_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ImmutableString_test_autogen.cpp',
             '<(angle_path)/src/tests/compiler_tests/InitOutputVariables_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/IntermNode_test.cpp',
