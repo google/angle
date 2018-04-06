@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ec788ff_80df2b16",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-04-06T02:15:06Z",
+      "side": 1,
+      "message": "Sounds like there\u0027s a TODO here?",
+      "revId": "8dbf535ae018a6b626209ca41fccb6b415613760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "810b14da_63a6a7d9",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-04-06T02:15:06Z",
+      "side": 1,
+      "message": "TODO ?",
+      "revId": "8dbf535ae018a6b626209ca41fccb6b415613760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
