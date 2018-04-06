@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45b8f1e1_8cf35500",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T12:06:39Z",
+      "side": 0,
+      "message": "Can you add this bug ID to the commit message as well if you are resolving it?",
+      "range": {
+        "startLine": 129,
+        "startChar": 12,
+        "endLine": 129,
+        "endChar": 39
+      },
+      "revId": "5f2221c42b651c3666bed4ff6e61ba5fad7e3ffb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
