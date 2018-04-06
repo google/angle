@@ -103,6 +103,11 @@ bool ValidateGetObjectPtrLabelKHR(Context *context,
                                   GLsizei *length,
                                   GLchar *label);
 bool ValidateGetPointervKHR(Context *context, GLenum pname, void **params);
+bool ValidateGetPointervRobustANGLERobustANGLE(Context *context,
+                                               GLenum pname,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               void **params);
 bool ValidateBlitFramebufferANGLE(Context *context,
                                   GLint srcX0,
                                   GLint srcY0,

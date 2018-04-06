@@ -940,6 +940,18 @@ bool ValidateGetTexLevelParameterfv(Context *context,
     return ValidateGetTexLevelParameterBase(context, target, level, pname, nullptr);
 }
 
+bool ValidateGetTexLevelParameterfvRobustANGLE(Context *context,
+                                               TextureTarget target,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLfloat *params)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateGetTexLevelParameteriv(Context *context,
                                     TextureTarget target,
                                     GLint level,
@@ -947,6 +959,18 @@ bool ValidateGetTexLevelParameteriv(Context *context,
                                     GLint *params)
 {
     return ValidateGetTexLevelParameterBase(context, target, level, pname, nullptr);
+}
+
+bool ValidateGetTexLevelParameterivRobustANGLE(Context *context,
+                                               TextureTarget target,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLint *params)
+{
+    UNIMPLEMENTED();
+    return false;
 }
 
 bool ValidateTexStorage2DMultisample(Context *context,
@@ -1063,6 +1087,17 @@ bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfl
     return true;
 }
 
+bool ValidateGetMultisamplefvRobustANGLE(Context *context,
+                                         GLenum pname,
+                                         GLuint index,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLfloat *val)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateFramebufferParameteri(Context *context, GLenum target, GLenum pname, GLint param)
 {
     if (context->getClientVersion() < ES_3_1)
@@ -1171,6 +1206,17 @@ bool ValidateGetFramebufferParameteriv(Context *context, GLenum target, GLenum p
         return false;
     }
     return true;
+}
+
+bool ValidateGetFramebufferParameterivRobustANGLE(Context *context,
+                                                  GLenum target,
+                                                  GLenum pname,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLint *params)
+{
+    UNIMPLEMENTED();
+    return false;
 }
 
 bool ValidateGetProgramResourceIndex(Context *context,
@@ -1695,6 +1741,18 @@ bool ValidateGetProgramInterfaceiv(Context *context,
     }
 
     return true;
+}
+
+bool ValidateGetProgramInterfaceivRobustANGLE(Context *context,
+                                              GLuint program,
+                                              GLenum programInterface,
+                                              GLenum pname,
+                                              GLsizei bufSize,
+                                              GLsizei *length,
+                                              GLint *params)
+{
+    UNIMPLEMENTED();
+    return false;
 }
 
 static bool ValidateGenOrDeleteES31(Context *context, GLint n)

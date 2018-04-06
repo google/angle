@@ -225,9 +225,31 @@ class Context final : angle::NonCopyable
                                  GLsizei bufSize,
                                  GLsizei *length,
                                  GLint *params);
+    void getTexParameterIivRobust(TextureType target,
+                                  GLenum pname,
+                                  GLsizei bufSize,
+                                  GLsizei *length,
+                                  GLint *params);
+    void getTexParameterIuivRobust(TextureType target,
+                                   GLenum pname,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLuint *params);
 
     void getTexLevelParameteriv(TextureTarget target, GLint level, GLenum pname, GLint *params);
+    void getTexLevelParameterivRobust(TextureTarget target,
+                                      GLint level,
+                                      GLenum pname,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      GLint *params);
     void getTexLevelParameterfv(TextureTarget target, GLint level, GLenum pname, GLfloat *params);
+    void getTexLevelParameterfvRobust(TextureTarget target,
+                                      GLint level,
+                                      GLenum pname,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      GLfloat *params);
     void texParameterf(TextureType target, GLenum pname, GLfloat param);
     void texParameterfv(TextureType target, GLenum pname, const GLfloat *params);
     void texParameterfvRobust(TextureType target,
@@ -240,12 +262,28 @@ class Context final : angle::NonCopyable
                               GLenum pname,
                               GLsizei bufSize,
                               const GLint *params);
+    void texParameterIivRobust(TextureType target,
+                               GLenum pname,
+                               GLsizei bufSize,
+                               const GLint *params);
+    void texParameterIuivRobust(TextureType target,
+                                GLenum pname,
+                                GLsizei bufSize,
+                                const GLuint *params);
     void samplerParameteri(GLuint sampler, GLenum pname, GLint param);
     void samplerParameteriv(GLuint sampler, GLenum pname, const GLint *param);
     void samplerParameterivRobust(GLuint sampler,
                                   GLenum pname,
                                   GLsizei bufSize,
                                   const GLint *param);
+    void samplerParameterIivRobust(GLuint sampler,
+                                   GLenum pname,
+                                   GLsizei bufSize,
+                                   const GLint *param);
+    void samplerParameterIuivRobust(GLuint sampler,
+                                    GLenum pname,
+                                    GLsizei bufSize,
+                                    const GLuint *param);
     void samplerParameterf(GLuint sampler, GLenum pname, GLfloat param);
     void samplerParameterfv(GLuint sampler, GLenum pname, const GLfloat *param);
     void samplerParameterfvRobust(GLuint sampler,
@@ -259,6 +297,16 @@ class Context final : angle::NonCopyable
                                      GLsizei bufSize,
                                      GLsizei *length,
                                      GLint *params);
+    void getSamplerParameterIivRobust(GLuint sampler,
+                                      GLenum pname,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      GLint *params);
+    void getSamplerParameterIuivRobust(GLuint sampler,
+                                       GLenum pname,
+                                       GLsizei bufSize,
+                                       GLsizei *length,
+                                       GLuint *params);
     void getSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat *params);
     void getSamplerParameterfvRobust(GLuint sampler,
                                      GLenum pname,
@@ -289,6 +337,12 @@ class Context final : angle::NonCopyable
                                GLenum programInterface,
                                GLenum pname,
                                GLint *params);
+    void getProgramInterfaceivRobust(GLuint program,
+                                     GLenum programInterface,
+                                     GLenum pname,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLint *params);
 
     Buffer *getBuffer(GLuint handle) const;
     FenceNV *getFenceNV(GLuint handle);
@@ -333,6 +387,10 @@ class Context final : angle::NonCopyable
     void getIntegervImpl(GLenum pname, GLint *params);
     void getInteger64vImpl(GLenum pname, GLint64 *params);
     void getPointerv(GLenum pname, void **params) const;
+    void getPointervRobustANGLERobust(GLenum pname,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      void **params);
     void getBooleani_v(GLenum target, GLuint index, GLboolean *data);
     void getBooleani_vRobust(GLenum target,
                              GLuint index,
@@ -916,6 +974,11 @@ class Context final : angle::NonCopyable
                                  GLboolean fixedsamplelocations);
 
     void getMultisamplefv(GLenum pname, GLuint index, GLfloat *val);
+    void getMultisamplefvRobust(GLenum pname,
+                                GLuint index,
+                                GLsizei bufSize,
+                                GLsizei *length,
+                                GLfloat *val);
 
     void copyBufferSubData(BufferBinding readTarget,
                            BufferBinding writeTarget,
@@ -1256,7 +1319,22 @@ class Context final : angle::NonCopyable
 
     void getTranslatedShaderSource(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *source);
     void getnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
+    void getnUniformfvRobust(GLuint program,
+                             GLint location,
+                             GLsizei bufSize,
+                             GLsizei *length,
+                             GLfloat *params);
     void getnUniformiv(GLuint program, GLint location, GLsizei bufSize, GLint *params);
+    void getnUniformivRobust(GLuint program,
+                             GLint location,
+                             GLsizei bufSize,
+                             GLsizei *length,
+                             GLint *params);
+    void getnUniformuivRobust(GLuint program,
+                              GLint location,
+                              GLsizei bufSize,
+                              GLsizei *length,
+                              GLuint *params);
     void readnPixels(GLint x,
                      GLint y,
                      GLsizei width,
@@ -1269,6 +1347,11 @@ class Context final : angle::NonCopyable
     void eGLImageTargetRenderbufferStorage(GLenum target, GLeglImageOES image);
 
     void getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params);
+    void getFramebufferParameterivRobust(GLenum target,
+                                         GLenum pname,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLint *params);
     void framebufferParameteri(GLenum target, GLenum pname, GLint param);
 
     void dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);

@@ -30,11 +30,25 @@ bool ValidateGetTexLevelParameterfv(Context *context,
                                     GLint level,
                                     GLenum pname,
                                     GLfloat *params);
+bool ValidateGetTexLevelParameterfvRobustANGLE(Context *context,
+                                               TextureTarget target,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLfloat *params);
 bool ValidateGetTexLevelParameteriv(Context *context,
                                     TextureTarget target,
                                     GLint level,
                                     GLenum pname,
                                     GLint *param);
+bool ValidateGetTexLevelParameterivRobustANGLE(Context *context,
+                                               TextureTarget target,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLint *params);
 
 bool ValidateTexStorage2DMultisample(Context *context,
                                      TextureType target,
@@ -44,6 +58,12 @@ bool ValidateTexStorage2DMultisample(Context *context,
                                      GLsizei height,
                                      GLboolean fixedSampleLocations);
 bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfloat *val);
+bool ValidateGetMultisamplefvRobustANGLE(Context *context,
+                                         GLenum pname,
+                                         GLuint index,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLfloat *val);
 
 bool ValidateDrawIndirectBase(Context *context, GLenum mode, const void *indirect);
 bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indirect);
@@ -229,6 +249,12 @@ bool ValidateGetFramebufferParameteriv(Context *context,
                                        GLenum target,
                                        GLenum pname,
                                        GLint *params);
+bool ValidateGetFramebufferParameterivRobustANGLE(Context *context,
+                                                  GLenum target,
+                                                  GLenum pname,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLint *params);
 
 bool ValidateGetProgramResourceIndex(Context *context,
                                      GLuint program,
@@ -262,6 +288,13 @@ bool ValidateGetProgramInterfaceiv(Context *context,
                                    GLenum pname,
                                    GLint *params);
 
+bool ValidateGetProgramInterfaceivRobustANGLE(Context *context,
+                                              GLuint program,
+                                              GLenum programInterface,
+                                              GLenum pname,
+                                              GLsizei bufSize,
+                                              GLsizei *length,
+                                              GLint *params);
 bool ValidateBindVertexBuffer(Context *context,
                               GLuint bindingIndex,
                               GLuint buffer,

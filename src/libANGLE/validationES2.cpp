@@ -2419,6 +2419,16 @@ bool ValidateGetPointervKHR(Context *context, GLenum pname, void **params)
     return true;
 }
 
+bool ValidateGetPointervRobustANGLERobustANGLE(Context *context,
+                                               GLenum pname,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               void **params)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateBlitFramebufferANGLE(Context *context,
                                   GLint srcX0,
                                   GLint srcY0,
