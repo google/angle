@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9168c1e3_622700db",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-06T02:25:07Z",
+      "side": 1,
+      "message": "Needs a ANGLE_VALIDATE_IS_GLES1(context);",
+      "revId": "c9eb19037c6e18b286acf1489a112e8727d3a290",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
