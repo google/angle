@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c14456c2_d239b01b",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-06T17:59:23Z",
+      "side": 1,
+      "message": "There can\u0027t be declarations in declarations so any single visit should be fine.",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59940cea_61185f37",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-06T17:59:23Z",
+      "side": 1,
+      "message": "If a single visit type is chosen this could become\n\n node-\u003etraverse\n add ;\\n\n queue replacement\n return false;",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
