@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8ad87c5_364afe3a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-06T15:21:00Z",
+      "side": 1,
+      "message": "should not be clipped against the viewport.",
+      "range": {
+        "startLine": 9,
+        "startChar": 2,
+        "endLine": 10,
+        "endChar": 35
+      },
+      "revId": "04fa67c011241af3b67b542786315d862feaa85a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10fcec33_64bbc390",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-06T15:21:00Z",
+      "side": 1,
+      "message": "GetRect",
+      "range": {
+        "startLine": 521,
+        "startChar": 38,
+        "endLine": 521,
+        "endChar": 59
+      },
+      "revId": "04fa67c011241af3b67b542786315d862feaa85a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e87d472_d335990e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-06T15:21:00Z",
+      "side": 1,
+      "message": "GetRect",
+      "range": {
+        "startLine": 767,
+        "startChar": 9,
+        "endLine": 767,
+        "endChar": 30
+      },
+      "revId": "04fa67c011241af3b67b542786315d862feaa85a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
