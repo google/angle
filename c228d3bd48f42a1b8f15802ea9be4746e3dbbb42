@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "a9f61484_1394dc97",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-06T02:23:30Z",
+      "side": 1,
+      "message": "nit: I would use the full class name here, it\u0027s not a complex iterator type.",
+      "range": {
+        "startLine": 218,
+        "startChar": 4,
+        "endLine": 218,
+        "endChar": 8
+      },
+      "revId": "c228d3bd48f42a1b8f15802ea9be4746e3dbbb42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f091528f_ec0adf44",
         "filename": "src/libANGLE/GLES1State.h",
         "patchSetId": 1
@@ -19,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "8323d10b_0cd531b3",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-06T02:23:30Z",
+      "side": 1,
+      "message": "This would actually be perfect for the FixedVector class (it may need a new pop_back method).  We can add a constant in constants.h.",
+      "parentUuid": "f091528f_ec0adf44",
+      "revId": "c228d3bd48f42a1b8f15802ea9be4746e3dbbb42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8e428b39_239e08af",
         "filename": "src/libANGLE/validationES1.cpp",
         "patchSetId": 1
@@ -30,6 +71,30 @@
       "writtenOn": "2018-04-05T16:58:53Z",
       "side": 1,
       "message": "maybe this can be replaced by getting the MatrixStack and checking its size?",
+      "range": {
+        "startLine": 507,
+        "startChar": 38,
+        "endLine": 507,
+        "endChar": 61
+      },
+      "revId": "c228d3bd48f42a1b8f15802ea9be4746e3dbbb42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90a2c1e4_af7280bc",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-06T02:23:30Z",
+      "side": 1,
+      "message": "Slight preference for this as well, then we don\u0027t need to store the topIndex and it keeps the validation code out of the state code.",
+      "parentUuid": "8e428b39_239e08af",
       "range": {
         "startLine": 507,
         "startChar": 38,
