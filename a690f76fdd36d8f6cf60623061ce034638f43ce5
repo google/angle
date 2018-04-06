@@ -22,6 +22,29 @@
       "revId": "a690f76fdd36d8f6cf60623061ce034638f43ce5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "973310b1_341a6d3a",
+        "filename": "luci-scheduler.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1141499
+      },
+      "writtenOn": "2018-04-06T22:50:46Z",
+      "side": 1,
+      "message": "also, we recommend to use \"admins\" here -- only people ready to mess with ChOps stuff should need to have OWNER access to scheduler.",
+      "range": {
+        "startLine": 15,
+        "startChar": 37,
+        "endLine": 15,
+        "endChar": 47
+      },
+      "revId": "a690f76fdd36d8f6cf60623061ce034638f43ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
