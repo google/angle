@@ -45,6 +45,23 @@
       "revId": "5f2221c42b651c3666bed4ff6e61ba5fad7e3ffb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80bf7c7c_cc1e2712",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-04-06T18:57:29Z",
+      "side": 1,
+      "message": "why 32?  maybe deserves a comment, unless it\u0027s obvious to everyone but me.",
+      "revId": "5f2221c42b651c3666bed4ff6e61ba5fad7e3ffb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
