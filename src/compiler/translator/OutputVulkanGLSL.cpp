@@ -77,4 +77,10 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     out << ") ";
 }
 
+void TOutputVulkanGLSL::writeStructType(const TStructure *structure)
+{
+    declareStruct(structure);
+    objSink() << ";\n";
+}
+
 }  // namespace sh

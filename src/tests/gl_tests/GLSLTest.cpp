@@ -4208,7 +4208,10 @@ TEST_P(GLSLTest_ES3, VaryingStaticallyUsedButNotActiveInFragmentShader)
     ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
+// TODO(lucferron): Enable tests for Vulkan and debug/open bugs for each failing ones.
+// http://anglebug.com/2460
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

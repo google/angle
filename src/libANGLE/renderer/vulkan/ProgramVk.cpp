@@ -469,7 +469,8 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
 
             ASSERT(linkedUniform.typeInfo->type == gl::VariableBoolVectorType(entryPointType));
 
-            GLint initialArrayOffset = locationInfo.arrayIndex * layoutInfo.arrayStride;
+            GLint initialArrayOffset =
+                locationInfo.arrayIndex * layoutInfo.arrayStride + layoutInfo.offset;
             for (GLint i = 0; i < count; i++)
             {
                 GLint elementOffset = i * layoutInfo.arrayStride + initialArrayOffset;
