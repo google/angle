@@ -71,6 +71,10 @@ class FixedVector final
     void push_back(const value_type &value);
     void push_back(value_type &&value);
 
+    void pop_back();
+    reference back();
+    const_reference back() const;
+
     void swap(FixedVector<T, N, Storage> &other);
 
     void resize(size_type count);
@@ -241,7 +245,7 @@ void FixedVector<T, N, Storage>::clear()
 template <class T, size_t N, class Storage>
 void FixedVector<T, N, Storage>::push_back(const value_type &value)
 {
-    ASSERT(mSize + 1 < N);
+    ASSERT(mSize + 1 <= N);
     mStorage[mSize] = value;
     mSize++;
 }
@@ -249,9 +253,30 @@ void FixedVector<T, N, Storage>::push_back(const value_type &value)
 template <class T, size_t N, class Storage>
 void FixedVector<T, N, Storage>::push_back(value_type &&value)
 {
-    ASSERT(mSize + 1 < N);
+    ASSERT(mSize + 1 <= N);
     mStorage[mSize] = std::move(value);
     mSize++;
+}
+
+template <class T, size_t N, class Storage>
+void FixedVector<T, N, Storage>::pop_back()
+{
+    ASSERT(mSize > 0);
+    mSize--;
+}
+
+template <class T, size_t N, class Storage>
+typename FixedVector<T, N, Storage>::reference FixedVector<T, N, Storage>::back()
+{
+    ASSERT(mSize > 0);
+    return mStorage[mSize - 1];
+}
+
+template <class T, size_t N, class Storage>
+typename FixedVector<T, N, Storage>::const_reference FixedVector<T, N, Storage>::back() const
+{
+    ASSERT(mSize > 0);
+    return mStorage[mSize - 1];
 }
 
 template <class T, size_t N, class Storage>

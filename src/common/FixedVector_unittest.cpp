@@ -61,6 +61,30 @@ TEST(FixedVector, PushBack)
     FixedVector<int, 5> vec;
     vec.push_back(1);
     EXPECT_EQ(1, vec[0]);
+    vec.push_back(1);
+    vec.push_back(1);
+    vec.push_back(1);
+    vec.push_back(1);
+    EXPECT_EQ(vec.size(), vec.max_size());
+}
+
+// Test the pop_back function
+TEST(FixedVector, PopBack)
+{
+    FixedVector<int, 5> vec;
+    vec.push_back(1);
+    EXPECT_EQ(1, (int)vec.size());
+    vec.pop_back();
+    EXPECT_EQ(0, (int)vec.size());
+}
+
+// Test the back function
+TEST(FixedVector, Back)
+{
+    FixedVector<int, 5> vec;
+    vec.push_back(1);
+    vec.push_back(2);
+    EXPECT_EQ(2, vec.back());
 }
 
 // Test the sizing operations
@@ -99,7 +123,7 @@ TEST(FixedVector, Resize)
 // Test iterating over the vector
 TEST(FixedVector, Iteration)
 {
-    FixedVector<int, 5> vec = { 0, 1, 2, 3 };
+    FixedVector<int, 5> vec = {0, 1, 2, 3};
 
     int vistedCount = 0;
     for (int value : vec)
@@ -110,4 +134,4 @@ TEST(FixedVector, Iteration)
     EXPECT_EQ(4, vistedCount);
 }
 
-} // namespace angle
+}  // namespace angle
