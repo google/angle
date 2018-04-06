@@ -41,6 +41,10 @@ TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
     // http://anglebug.com/1643
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
 
+    // TODO: Point coord not yet implemented in Vulkan.
+    // http://anglebug.com/2457
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string fs =
         R"(precision mediump float;
         void main()
@@ -472,6 +476,10 @@ TEST_P(PointSpritesTest, PointSizeAboveMaxIsClamped)
     // framebuffer. http://anglebug.com/2113
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
+    // If the center of the point ends up being outside the renderable surface, no point gets
+    // rendered at all on AMD. http://anglebug.com/2113
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan());
+
     GLfloat pointSizeRange[2] = {};
     glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
     GLfloat maxPointSize = pointSizeRange[1];
@@ -544,4 +552,5 @@ ANGLE_INSTANTIATE_TEST(PointSpritesTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());

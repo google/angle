@@ -439,11 +439,14 @@ gl::Error VertexArrayVk::onDraw(const gl::Context *context,
     }
     else if (mVertexBuffersDirty || newCommandBuffer)
     {
-        vk::CommandBuffer *commandBuffer = drawNode->getInsideRenderPassCommands();
-        commandBuffer->bindVertexBuffers(0, maxAttrib, mCurrentArrayBufferHandles.data(),
-                                         mCurrentArrayBufferOffsets.data());
-        updateArrayBufferReadDependencies(drawNode, activeAttribs,
-                                          renderer->getCurrentQueueSerial());
+        if (maxAttrib > 0)
+        {
+            vk::CommandBuffer *commandBuffer = drawNode->getInsideRenderPassCommands();
+            commandBuffer->bindVertexBuffers(0, maxAttrib, mCurrentArrayBufferHandles.data(),
+                                             mCurrentArrayBufferOffsets.data());
+            updateArrayBufferReadDependencies(drawNode, activeAttribs,
+                                              renderer->getCurrentQueueSerial());
+        }
         mVertexBuffersDirty = false;
     }
 
