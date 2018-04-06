@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "03c30b41_33aafa92",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-06T11:22:18Z",
+      "side": 1,
+      "message": "Yes, but Luc wanted to enforce a policy of always opening issues for TODOs and I wasn\u0027t sure if it warranted opening an issue.",
+      "parentUuid": "1ec788ff_80df2b16",
+      "revId": "8dbf535ae018a6b626209ca41fccb6b415613760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "810b14da_63a6a7d9",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 10
