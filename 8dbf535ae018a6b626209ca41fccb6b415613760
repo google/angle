@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "5b07a8d9_e60b6f26",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-04-06T19:20:11Z",
+      "side": 1,
+      "message": "I don\u0027t mind whether it\u0027s a TODO comment or a link to an issue, but only saying \"this is/may be broken\" is kind of weird.  :)",
+      "parentUuid": "e9e446c8_9b8af1f7",
+      "revId": "8dbf535ae018a6b626209ca41fccb6b415613760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "810b14da_63a6a7d9",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 10
