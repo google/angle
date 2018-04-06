@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "b47b601e_ef67eb58",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1262022
+      },
+      "writtenOn": "2018-04-06T11:27:24Z",
+      "side": 1,
+      "message": "Why wouldn\u0027t it warrant opening an issue if its an issue?",
+      "parentUuid": "03c30b41_33aafa92",
+      "revId": "8dbf535ae018a6b626209ca41fccb6b415613760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "810b14da_63a6a7d9",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 10
