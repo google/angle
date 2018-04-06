@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9beb9a7b_45e1d05e",
+        "filename": "luci-milo.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1181690
+      },
+      "writtenOn": "2018-04-06T10:35:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50511195_f8dd5755",
+      "range": {
+        "startLine": 12,
+        "startChar": 11,
+        "endLine": 12,
+        "endChar": 18
+      },
+      "revId": "39d24cf09071f491011df90775ead647d57bb14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb3e4e55_031c038a",
         "filename": "luci-milo.cfg",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "39d24cf09071f491011df90775ead647d57bb14f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76273e00_d2086e06",
+        "filename": "luci-milo.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1181690
+      },
+      "writtenOn": "2018-04-06T10:35:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb3e4e55_031c038a",
+      "range": {
+        "startLine": 25,
+        "startChar": 11,
+        "endLine": 25,
+        "endChar": 18
+      },
+      "revId": "39d24cf09071f491011df90775ead647d57bb14f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
