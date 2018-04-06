@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db8bf666_842fb939",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T12:03:36Z",
+      "side": 1,
+      "message": "update comment",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 77
+      },
+      "revId": "5f2221c42b651c3666bed4ff6e61ba5fad7e3ffb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a676716c_38e43fef",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T12:03:36Z",
+      "side": 1,
+      "message": "This is a side effect. A function named \"checkSomething\" should not clear something as a side effect, its not intuitive from the user\u0027s perspective calling it that a state will change because something is being checked.\n\nI\u0027ll give the +1 to the review but I think you should find a better name for it that will be more indicative of what it does when its called.",
+      "range": {
+        "startLine": 55,
+        "startChar": 51,
+        "endLine": 55,
+        "endChar": 92
+      },
+      "revId": "5f2221c42b651c3666bed4ff6e61ba5fad7e3ffb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
