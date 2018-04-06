@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48e5d53a_b9b95d2b",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-06T10:07:35Z",
+      "side": 1,
+      "message": "Can you rename this to isPathGenerated, looks like it\u0027s not part of the extension and then it\u0027ll match some other function names below.",
+      "range": {
+        "startLine": 103,
+        "startChar": 9,
+        "endLine": 103,
+        "endChar": 16
+      },
+      "revId": "d589500c5032af2778084cfb8e7cf3ebd3bbc818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
