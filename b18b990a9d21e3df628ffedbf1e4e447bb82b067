@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ecfb6e9b_bf9d300d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T11:51:45Z",
+      "side": 1,
+      "message": "No I really mean the one stored in the front-end that is non-clipped with the viewport. I\u0027ll adjust the comment.",
+      "parentUuid": "8ca42e79_2ecc0afa",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 35
+      },
+      "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a5429c3_ef8f4a43",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68aa54d4_7819364d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T11:51:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a5429c3_ef8f4a43",
+      "range": {
+        "startLine": 499,
+        "startChar": 0,
+        "endLine": 512,
+        "endChar": 72
+      },
+      "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "4ddeeb53_3cb12dec",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T11:51:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "537c07a6_217d20eb",
+      "range": {
+        "startLine": 521,
+        "startChar": 31,
+        "endLine": 521,
+        "endChar": 56
+      },
+      "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad06e9ca_6944778f",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ed9d96f_7602ccdf",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-06T11:51:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad06e9ca_6944778f",
+      "range": {
+        "startLine": 596,
+        "startChar": 8,
+        "endLine": 596,
+        "endChar": 88
+      },
+      "revId": "b18b990a9d21e3df628ffedbf1e4e447bb82b067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
