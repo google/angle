@@ -119,6 +119,7 @@ class CollectVariablesTraverser : public TIntermTraverser
                               GLenum shaderType,
                               const TExtensionBehavior &extensionBehavior);
 
+    bool visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node) override;
     void visitSymbol(TIntermSymbol *symbol) override;
     bool visitDeclaration(Visit, TIntermDeclaration *node) override;
     bool visitBinary(Visit visit, TIntermBinary *binaryNode) override;
@@ -336,11 +337,17 @@ InterfaceBlock *CollectVariablesTraverser::recordGLInUsed(const TType &glInType)
     }
 }
 
-// We want to check whether a uniform/varying is statically used
-// because we only count the used ones in packing computing.
-// Also, gl_FragCoord, gl_PointCoord, and gl_FrontFacing count
-// toward varying counting if they are statically used in a fragment
-// shader.
+bool CollectVariablesTraverser::visitInvariantDeclaration(Visit visit,
+                                                          TIntermInvariantDeclaration *node)
+{
+    // We should not mark variables as active just based on an invariant declaration, so we don't
+    // traverse the symbols declared invariant.
+    return false;
+}
+
+// We want to check whether a uniform/varying is active because we need to skip updating inactive
+// ones. We also only count the active ones in packing computing. Also, gl_FragCoord, gl_PointCoord,
+// and gl_FrontFacing count toward varying counting if they are active in a fragment shader.
 void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
 {
     ASSERT(symbol != nullptr);

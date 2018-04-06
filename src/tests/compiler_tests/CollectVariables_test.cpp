@@ -2036,3 +2036,25 @@ TEST_F(CollectVertexVariablesTest, StaticallyUsedButNotActiveInstancedInterfaceB
     // EXPECT_TRUE(field.staticUse);
     EXPECT_FALSE(field.active);
 }
+
+// Test a varying that is declared invariant but not otherwise used.
+TEST_F(CollectVertexVariablesTest, VaryingOnlyDeclaredInvariant)
+{
+    const std::string &shaderString =
+        R"(precision mediump float;
+        varying float vf;
+        invariant vf;
+        void main()
+        {
+        })";
+
+    compile(shaderString);
+
+    const auto &varyings = mTranslator->getOutputVaryings();
+    ASSERT_EQ(1u, varyings.size());
+
+    const Varying &varying = varyings[0];
+    EXPECT_EQ("vf", varying.name);
+    EXPECT_FALSE(varying.staticUse);
+    EXPECT_FALSE(varying.active);
+}
