@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "dcc8ccaa_3c77ba14",
+        "filename": "cr-buildbucket.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-07T08:44:51Z",
+      "side": 1,
+      "message": "is it possible to use underscores? I think almost every other config does.",
+      "range": {
+        "startLine": 84,
+        "startChar": 13,
+        "endLine": 84,
+        "endChar": 21
+      },
+      "revId": "a690f76fdd36d8f6cf60623061ce034638f43ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "663aeb88_3e98dabe",
         "filename": "cr-buildbucket.cfg",
         "patchSetId": 2
