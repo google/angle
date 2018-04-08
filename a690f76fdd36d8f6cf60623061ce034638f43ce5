@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7d12b88a_3cf70b7b",
+        "filename": "cr-buildbucket.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-04-08T01:32:35Z",
+      "side": 1,
+      "message": "For better or worse, the powers that be decided that the new way to name bots is with dashes. All new bots have dashes in their names.",
+      "parentUuid": "dcc8ccaa_3c77ba14",
+      "range": {
+        "startLine": 84,
+        "startChar": 13,
+        "endLine": 84,
+        "endChar": 21
+      },
+      "revId": "a690f76fdd36d8f6cf60623061ce034638f43ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "663aeb88_3e98dabe",
         "filename": "cr-buildbucket.cfg",
         "patchSetId": 2
