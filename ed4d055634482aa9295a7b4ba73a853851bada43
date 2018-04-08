@@ -22,6 +22,30 @@
       "revId": "ed4d055634482aa9295a7b4ba73a853851bada43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d05425a8_18a17730",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1988,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-08T04:58:41Z",
+      "side": 1,
+      "message": "Done for load() because if load() succeeds the linkage of the program must be successful. \n\nI think cannot make such change for link() because as updateLinkedShaderStages() is called after link(), mState.mLinkedShaderStages isn\u0027t updated when ProgramD3D.link() is executed:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/Program.cpp?l\u003d1192\n\nSee https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d2266 for more details.",
+      "parentUuid": "2f9084f1_7153aa74",
+      "range": {
+        "startLine": 1988,
+        "startChar": 4,
+        "endLine": 1988,
+        "endChar": 58
+      },
+      "revId": "ed4d055634482aa9295a7b4ba73a853851bada43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
