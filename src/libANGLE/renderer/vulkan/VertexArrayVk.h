@@ -119,7 +119,7 @@ class VertexArrayVk : public VertexArrayImpl
     vk::DynamicBuffer mDynamicVertexData;
     vk::DynamicBuffer mDynamicIndexData;
 
-    vk::LineLoopHandler mLineLoopHandler;
+    vk::LineLoopHelper mLineLoopHelper;
     Optional<int> mLineLoopBufferFirstIndex;
     Optional<int> mLineLoopBufferLastIndex;
     bool mDirtyLineLoopTranslation;

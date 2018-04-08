@@ -61,7 +61,7 @@ void VertexArrayVk::destroy(const gl::Context *context)
 
     mDynamicVertexData.destroy(device);
     mDynamicIndexData.destroy(device);
-    mLineLoopHandler.destroy(device);
+    mLineLoopHelper.destroy(device);
 }
 
 gl::Error VertexArrayVk::streamVertexData(RendererVk *renderer,
@@ -356,9 +356,9 @@ gl::Error VertexArrayVk::drawArrays(const gl::Context *context,
         mLineLoopBufferFirstIndex != drawCallParams.firstVertex() ||
         mLineLoopBufferLastIndex != lastVertex)
     {
-        ANGLE_TRY(mLineLoopHandler.createIndexBuffer(renderer, drawCallParams,
-                                                     &mCurrentElementArrayBufferHandle,
-                                                     &mCurrentElementArrayBufferOffset));
+        ANGLE_TRY(mLineLoopHelper.getIndexBufferForDrawArrays(renderer, drawCallParams,
+                                                              &mCurrentElementArrayBufferHandle,
+                                                              &mCurrentElementArrayBufferOffset));
 
         mLineLoopBufferFirstIndex = drawCallParams.firstVertex();
         mLineLoopBufferLastIndex  = lastVertex;
@@ -367,7 +367,7 @@ gl::Error VertexArrayVk::drawArrays(const gl::Context *context,
     commandBuffer->bindIndexBuffer(mCurrentElementArrayBufferHandle,
                                    mCurrentElementArrayBufferOffset, VK_INDEX_TYPE_UINT32);
 
-    vk::LineLoopHandler::Draw(drawCallParams.vertexCount(), commandBuffer);
+    vk::LineLoopHelper::Draw(drawCallParams.vertexCount(), commandBuffer);
 
     return gl::NoError();
 }
@@ -403,13 +403,13 @@ gl::Error VertexArrayVk::drawElements(const gl::Context *context,
     // This also doesn't check if the element type changed, which should trigger translation.
     if (mDirtyLineLoopTranslation)
     {
-        ANGLE_TRY(mLineLoopHandler.createIndexBufferFromElementArrayBuffer(
+        ANGLE_TRY(mLineLoopHelper.getIndexBufferForElementArrayBuffer(
             renderer, elementArrayBufferVk, indexType, drawCallParams.indexCount(),
             &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
     }
 
     ANGLE_TRY(onIndexedDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
-    vk::LineLoopHandler::Draw(drawCallParams.indexCount(), commandBuffer);
+    vk::LineLoopHelper::Draw(drawCallParams.indexCount(), commandBuffer);
 
     return gl::NoError();
 }

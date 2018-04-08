@@ -112,28 +112,28 @@ class DynamicDescriptorPool final : angle::NonCopyable
 //
 // If the user wants to draw a loop between [v1, v2, v3], we will create an indexed buffer with
 // these indexes: [0, 1, 2, 3, 0] to emulate the loop.
-class LineLoopHandler final : public vk::CommandGraphResource
+class LineLoopHelper final : public vk::CommandGraphResource
 {
   public:
-    LineLoopHandler();
-    ~LineLoopHandler();
+    LineLoopHelper();
+    ~LineLoopHelper();
 
-    gl::Error createIndexBuffer(RendererVk *renderer,
-                                const gl::DrawCallParams &drawCallParams,
-                                VkBuffer *bufferHandleOut,
-                                VkDeviceSize *offsetOut);
-    gl::Error createIndexBufferFromElementArrayBuffer(RendererVk *renderer,
-                                                      BufferVk *elementArrayBufferVk,
-                                                      VkIndexType indexType,
-                                                      int indexCount,
-                                                      VkBuffer *bufferHandleOut,
-                                                      VkDeviceSize *bufferOffsetOut);
+    gl::Error getIndexBufferForDrawArrays(RendererVk *renderer,
+                                          const gl::DrawCallParams &drawCallParams,
+                                          VkBuffer *bufferHandleOut,
+                                          VkDeviceSize *offsetOut);
+    gl::Error getIndexBufferForElementArrayBuffer(RendererVk *renderer,
+                                                  BufferVk *elementArrayBufferVk,
+                                                  VkIndexType indexType,
+                                                  int indexCount,
+                                                  VkBuffer *bufferHandleOut,
+                                                  VkDeviceSize *bufferOffsetOut);
     void destroy(VkDevice device);
 
     static void Draw(int count, CommandBuffer *commandBuffer);
 
   private:
-    std::unique_ptr<DynamicBuffer> mDynamicLineLoopIndicesData;
+    DynamicBuffer mDynamicIndexBuffer;
 };
 
 class ImageHelper final : angle::NonCopyable

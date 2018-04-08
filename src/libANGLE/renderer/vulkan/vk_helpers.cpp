@@ -300,26 +300,25 @@ Error DynamicDescriptorPool::allocateNewPool(const VkDevice &device)
     return NoError();
 }
 
-LineLoopHandler::LineLoopHandler()
-    : mDynamicLineLoopIndicesData(
-          new DynamicBuffer(kLineLoopDynamicBufferUsage, kLineLoopDynamicBufferMinSize))
+LineLoopHelper::LineLoopHelper()
+    : mDynamicIndexBuffer(kLineLoopDynamicBufferUsage, kLineLoopDynamicBufferMinSize)
 {
-    mDynamicLineLoopIndicesData->init(1);
+    mDynamicIndexBuffer.init(1);
 }
 
-LineLoopHandler::~LineLoopHandler() = default;
+LineLoopHelper::~LineLoopHelper() = default;
 
-gl::Error LineLoopHandler::createIndexBuffer(RendererVk *renderer,
-                                             const gl::DrawCallParams &drawCallParams,
-                                             VkBuffer *bufferHandleOut,
-                                             VkDeviceSize *offsetOut)
+gl::Error LineLoopHelper::getIndexBufferForDrawArrays(RendererVk *renderer,
+                                                      const gl::DrawCallParams &drawCallParams,
+                                                      VkBuffer *bufferHandleOut,
+                                                      VkDeviceSize *offsetOut)
 {
     uint32_t *indices    = nullptr;
     size_t allocateBytes = sizeof(uint32_t) * (drawCallParams.vertexCount() + 1);
     uint32_t offset      = 0;
-    ANGLE_TRY(mDynamicLineLoopIndicesData->allocate(renderer, allocateBytes,
-                                                    reinterpret_cast<uint8_t **>(&indices),
-                                                    bufferHandleOut, &offset, nullptr));
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
+                                           reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
+                                           &offset, nullptr));
     *offsetOut = static_cast<VkDeviceSize>(offset);
 
     uint32_t unsignedFirstVertex = static_cast<uint32_t>(drawCallParams.firstVertex());
@@ -333,17 +332,17 @@ gl::Error LineLoopHandler::createIndexBuffer(RendererVk *renderer,
     // Since we are not using the VK_MEMORY_PROPERTY_HOST_COHERENT_BIT flag when creating the
     // device memory in the StreamingBuffer, we always need to make sure we flush it after
     // writing.
-    ANGLE_TRY(mDynamicLineLoopIndicesData->flush(renderer->getDevice()));
+    ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
 
     return gl::NoError();
 }
 
-gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(RendererVk *renderer,
-                                                                   BufferVk *elementArrayBufferVk,
-                                                                   VkIndexType indexType,
-                                                                   int indexCount,
-                                                                   VkBuffer *bufferHandleOut,
-                                                                   VkDeviceSize *bufferOffsetOut)
+gl::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *renderer,
+                                                              BufferVk *elementArrayBufferVk,
+                                                              VkIndexType indexType,
+                                                              int indexCount,
+                                                              VkBuffer *bufferHandleOut,
+                                                              VkDeviceSize *bufferOffsetOut)
 {
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
 
@@ -352,9 +351,9 @@ gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(RendererVk *r
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (indexCount + 1);
-    ANGLE_TRY(mDynamicLineLoopIndicesData->allocate(renderer, allocateBytes,
-                                                    reinterpret_cast<uint8_t **>(&indices),
-                                                    bufferHandleOut, &offset, nullptr));
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
+                                           reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
+                                           &offset, nullptr));
     *bufferOffsetOut = static_cast<VkDeviceSize>(offset);
 
     VkBufferCopy copy1 = {0, offset, static_cast<VkDeviceSize>(indexCount) * unitSize};
@@ -369,17 +368,17 @@ gl::Error LineLoopHandler::createIndexBufferFromElementArrayBuffer(RendererVk *r
     commandBuffer->copyBuffer(elementArrayBufferVk->getVkBuffer().getHandle(), *bufferHandleOut, 2,
                               copies.data());
 
-    ANGLE_TRY(mDynamicLineLoopIndicesData->flush(renderer->getDevice()));
+    ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
     return gl::NoError();
 }
 
-void LineLoopHandler::destroy(VkDevice device)
+void LineLoopHelper::destroy(VkDevice device)
 {
-    mDynamicLineLoopIndicesData->destroy(device);
+    mDynamicIndexBuffer.destroy(device);
 }
 
 // static
-void LineLoopHandler::Draw(int count, CommandBuffer *commandBuffer)
+void LineLoopHelper::Draw(int count, CommandBuffer *commandBuffer)
 {
     // Our first index is always 0 because that's how we set it up in createIndexBuffer*.
     commandBuffer->drawIndexed(count + 1, 1, 0, 0, 0);
