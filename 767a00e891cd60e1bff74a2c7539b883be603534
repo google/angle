@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "f510bb1f_d3eb87f8",
+        "filename": "src/common/matrix_utils_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1214,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-09T15:39:21Z",
+      "side": 1,
+      "message": "Can we check that it compares different even with a tiny epsilon?",
+      "revId": "767a00e891cd60e1bff74a2c7539b883be603534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fe2311ae_e7e036be",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 1
@@ -42,6 +59,23 @@
         "endLine": 1293,
         "endChar": 43
       },
+      "revId": "767a00e891cd60e1bff74a2c7539b883be603534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cc3a47e_8998b33e",
+        "filename": "src/tests/gl_tests/gles1/MatrixLoadTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-09T15:39:21Z",
+      "side": 1,
+      "message": "Can we have a test for the different matrix queries too?",
       "revId": "767a00e891cd60e1bff74a2c7539b883be603534",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
