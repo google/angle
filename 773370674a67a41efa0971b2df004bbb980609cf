@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5276c747_705885c2",
+        "filename": "src/libANGLE/Observer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-09T23:53:06Z",
+      "side": 1,
+      "message": "Love the creative naming :)",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 0
+      },
+      "revId": "773370674a67a41efa0971b2df004bbb980609cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae3cab4a_faba30ea",
+        "filename": "src/libANGLE/Observer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-09T23:53:06Z",
+      "side": 1,
+      "message": "I would skip this to make removeObserver() a bit faster. Though, you\u0027d need to also change hasObservers() and onStateChange() if you do so.\nWDYTH?",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 9
+      },
+      "revId": "773370674a67a41efa0971b2df004bbb980609cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
