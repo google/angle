@@ -19,6 +19,64 @@
     },
     {
       "key": {
+        "uuid": "9f602e22_4ba9d634",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-09T08:45:20Z",
+      "side": 1,
+      "message": "Yep, use preVisit.",
+      "parentUuid": "c14456c2_d239b01b",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26a2e38f_34a5e9bf",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-09T08:45:20Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem to be needed either.",
+      "range": {
+        "startLine": 37,
+        "startChar": 10,
+        "endLine": 37,
+        "endChar": 35
+      },
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "779bfc80_4c5b8069",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-09T08:45:20Z",
+      "side": 1,
+      "message": "You can rely on all declarations being single declarations by this point - SeparateDeclarations() is always being called in Compiler.",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "59940cea_61185f37",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 3
@@ -30,6 +88,64 @@
       "writtenOn": "2018-04-06T17:59:23Z",
       "side": 1,
       "message": "If a single visit type is chosen this could become\n\n node-\u003etraverse\n add ;\\n\n queue replacement\n return false;",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71047bd8_67d78c40",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-09T08:45:20Z",
+      "side": 1,
+      "message": "Better yet the code should be something like this:\n\nif (type.isStructSpecifier())\n{\n    // Write the struct declarator. Probably you need a new helper for this rather than just using node-\u003etraverse(mOutputVulkanGLSL).\n    if (variable-\u003egetAsSymbolNode() \u0026\u0026 variable-\u003egetAsSymbolNode()-\u003evariable().symbolType() \u003d\u003d SymbolType::Empty)\n    {\n        // This node only declares a struct type, so remove the node.\n    }\n    else\n    {\n        // This node declares a variable that may also have an initializer, so you can\u0027t remove the node entirely. You need to give the struct type a name if it doesn\u0027t already have one and unset mIsStructSpecifier in the type of this node.\n    }\n}\n\nI\u0027d also rename \"variable\" to \"declarator\" here, that\u0027s the usual convention. It can be either an EOPInitialize binary node or a symbol node.",
+      "parentUuid": "59940cea_61185f37",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dec0421d_afb489c5",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-09T08:45:20Z",
+      "side": 1,
+      "message": "A case where a declaration declares both a type and a variable is also possible.",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c096da5d_b0906744",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-09T08:45:20Z",
+      "side": 1,
+      "message": "\"structTypesUsedForUniforms\" would be more descriptive, though a bit verbose.",
+      "range": {
+        "startLine": 224,
+        "startChar": 8,
+        "endLine": 224,
+        "endChar": 23
+      },
       "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
