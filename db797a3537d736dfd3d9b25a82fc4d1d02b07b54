@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2e80edc_1d5b48a6",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-09T16:54:10Z",
+      "side": 1,
+      "message": "Why isn\u0027t this an or condition of the above block? Its the same exact code when the condition is met.",
+      "range": {
+        "startLine": 154,
+        "startChar": 7,
+        "endLine": 156,
+        "endChar": 21
+      },
+      "revId": "db797a3537d736dfd3d9b25a82fc4d1d02b07b54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "395225f8_a50c4adf",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-09T16:54:10Z",
+      "side": 1,
+      "message": "Should we also assert that format.depthBits AND/OR format.stencilBits is \u003e 0 ?",
+      "range": {
+        "startLine": 268,
+        "startChar": 4,
+        "endLine": 268,
+        "endChar": 47
+      },
+      "revId": "db797a3537d736dfd3d9b25a82fc4d1d02b07b54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
