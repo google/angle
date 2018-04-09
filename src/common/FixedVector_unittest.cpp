@@ -134,4 +134,15 @@ TEST(FixedVector, Iteration)
     EXPECT_EQ(4, vistedCount);
 }
 
+// Test the "full" method.
+TEST(FixedVector, Full)
+{
+    FixedVector<int, 2> vec;
+
+    EXPECT_FALSE(vec.full());
+    vec.push_back(0);
+    EXPECT_FALSE(vec.full());
+    vec.push_back(1);
+    EXPECT_TRUE(vec.full());
+}
 }  // namespace angle

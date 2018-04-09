@@ -80,6 +80,8 @@ class FixedVector final
     void resize(size_type count);
     void resize(size_type count, const value_type &value);
 
+    bool full() const;
+
   private:
     void assign_from_initializer_list(std::initializer_list<value_type> init);
 
@@ -245,7 +247,7 @@ void FixedVector<T, N, Storage>::clear()
 template <class T, size_t N, class Storage>
 void FixedVector<T, N, Storage>::push_back(const value_type &value)
 {
-    ASSERT(mSize + 1 <= N);
+    ASSERT(mSize < N);
     mStorage[mSize] = value;
     mSize++;
 }
@@ -253,7 +255,7 @@ void FixedVector<T, N, Storage>::push_back(const value_type &value)
 template <class T, size_t N, class Storage>
 void FixedVector<T, N, Storage>::push_back(value_type &&value)
 {
-    ASSERT(mSize + 1 <= N);
+    ASSERT(mSize < N);
     mStorage[mSize] = std::move(value);
     mSize++;
 }
@@ -317,6 +319,12 @@ void FixedVector<T, N, Storage>::assign_from_initializer_list(
         mStorage[mSize] = std::move(element);
         mSize++;
     }
+}
+
+template <class T, size_t N, class Storage>
+bool FixedVector<T, N, Storage>::full() const
+{
+    return (mSize == N);
 }
 }  // namespace angle
 
