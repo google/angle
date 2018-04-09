@@ -93,8 +93,12 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     // we'll defer the implementation until we tackle the next version.
     // outCaps->maxServerWaitTimeout
 
-    const GLuint maxUniformVectors = physicalDeviceProperties.limits.maxUniformBufferRange /
-                                     (sizeof(GLfloat) * kComponentsPerVector);
+    GLuint maxUniformVectors = physicalDeviceProperties.limits.maxUniformBufferRange /
+                               (sizeof(GLfloat) * kComponentsPerVector);
+
+    // Clamp the maxUniformVectors to 1024u, on AMD the maxUniformBufferRange is way too high.
+    maxUniformVectors = std::min(1024u, maxUniformVectors);
+
     const GLuint maxUniformComponents = maxUniformVectors * kComponentsPerVector;
 
     // Uniforms are implemented using a uniform buffer, so the max number of uniforms we can
@@ -110,8 +114,6 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     // and likely one per shader stage for ANGLE internal variables.
     // outCaps->maxVertexUniformBlocks = ...
 
-    outCaps->maxVertexOutputComponents = physicalDeviceProperties.limits.maxVertexOutputComponents;
-
     // we use the same bindings on each stage, so the limitation is the same combined or not.
     outCaps->maxCombinedTextureImageUnits =
         physicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
@@ -119,8 +121,14 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outCaps->maxVertexTextureImageUnits =
         physicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
 
-    // TODO(jmadill): count reserved varyings
-    outCaps->maxVaryingVectors = physicalDeviceProperties.limits.maxVertexOutputComponents / 4;
+    // The max vertex output components includes the reserved varyings like gl_PointSize,
+    // gl_PointCoord, gl_Position, and gl_FragColor. On a vertex shader, you can only have
+    // gl_PointCoord and gl_Position, and on a fragment shader you can have gl_PointSize and
+    // gl_FragColor, so the reserved varying count is always 2 at most.
+    constexpr GLint kReservedVaryingCount = 2;
+    outCaps->maxVaryingVectors =
+        (physicalDeviceProperties.limits.maxVertexOutputComponents / 4) - kReservedVaryingCount;
+    outCaps->maxVertexOutputComponents = outCaps->maxVaryingVectors * 4;
 }
 }  // namespace vk
 }  // namespace rx

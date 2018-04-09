@@ -544,6 +544,10 @@ TEST_P(GLSLTest, ScopedStructsOrderBug)
     // (http://anglebug.com/1291)
     ANGLE_SKIP_TEST_IF(IsDesktopOpenGL() && (IsOSX() || !IsNVIDIA()));
 
+    // TODO(lucferron): Support for inner scoped structs
+    // http://anglebug.com/2459
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string fragmentShaderSource =
         R"(precision mediump float;
 
@@ -976,6 +980,10 @@ TEST_P(GLSLTest, InvariantAllBoth)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest, MissingReturnFloat)
 {
+    // TODO(lucferron): Varyings that aren't used as an output in the FS are not yet supported.
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string vertexShaderSource =
         "varying float v_varying;\n"
         "float f() { if (v_varying > 0.0) return 1.0; }\n"
@@ -992,6 +1000,10 @@ TEST_P(GLSLTest, MissingReturnFloat)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest, MissingReturnVec2)
 {
+    // TODO(lucferron): Varyings that aren't used as an output in the FS are not yet supported.
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string vertexShaderSource =
         "varying float v_varying;\n"
         "vec2 f() { if (v_varying > 0.0) return vec2(1.0, 1.0); }\n"
@@ -1008,6 +1020,10 @@ TEST_P(GLSLTest, MissingReturnVec2)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest, MissingReturnVec3)
 {
+    // TODO(lucferron): Varyings that aren't used as an output in the FS are not yet supported.
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string vertexShaderSource =
         "varying float v_varying;\n"
         "vec3 f() { if (v_varying > 0.0) return vec3(1.0, 1.0, 1.0); }\n"
@@ -1024,6 +1040,10 @@ TEST_P(GLSLTest, MissingReturnVec3)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest, MissingReturnVec4)
 {
+    // TODO(lucferron): Varyings that aren't used as an output in the FS are not yet supported.
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string vertexShaderSource =
         "varying float v_varying;\n"
         "vec4 f() { if (v_varying > 0.0) return vec4(1.0, 1.0, 1.0, 1.0); }\n"
@@ -1040,6 +1060,10 @@ TEST_P(GLSLTest, MissingReturnVec4)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest, MissingReturnIVec4)
 {
+    // TODO(lucferron): Varyings that aren't used as an output in the FS are not yet supported.
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string vertexShaderSource =
         "varying float v_varying;\n"
         "ivec4 f() { if (v_varying > 0.0) return ivec4(1, 1, 1, 1); }\n"
@@ -1056,6 +1080,10 @@ TEST_P(GLSLTest, MissingReturnIVec4)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest, MissingReturnMat4)
 {
+    // TODO(lucferron): Varyings that aren't used as an output in the FS are not yet supported.
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string vertexShaderSource =
         "varying float v_varying;\n"
         "mat4 f() { if (v_varying > 0.0) return mat4(1.0); }\n"
@@ -1072,6 +1100,10 @@ TEST_P(GLSLTest, MissingReturnMat4)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest, MissingReturnStruct)
 {
+    // TODO(lucferron): Varyings that aren't used as an output in the FS are not yet supported.
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string vertexShaderSource =
         "varying float v_varying;\n"
         "struct s { float a; int b; vec2 c; };\n"
@@ -1321,6 +1353,10 @@ TEST_P(GLSLTest, MaxVaryingsSpecialCases)
 // rather than total register use.
 TEST_P(GLSLTest, MaxMinusTwoVaryingVec2PlusOneSpecialVariable)
 {
+    // TODO(lucferron): Root cause and fix it. Looks like a location is used twice (loc = 31).
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -1347,6 +1383,11 @@ TEST_P(GLSLTest, MaxVaryingVec3Array)
 // Only fails on D3D9 because of packing limitations.
 TEST_P(GLSLTest, MaxVaryingVec3AndOneFloat)
 {
+    // TODO(lucferron): Root cause and fix it.
+    // ERROR: 0:62: 'location' : overlapping use of location x
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -1356,6 +1397,11 @@ TEST_P(GLSLTest, MaxVaryingVec3AndOneFloat)
 // Only fails on D3D9 because of packing limitations.
 TEST_P(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 {
+    // TODO(lucferron): Root cause and fix it.
+    // ERROR: 0:62: 'location' : overlapping use of location x
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -1365,6 +1411,11 @@ TEST_P(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 // Only fails on D3D9 because of packing limitations.
 TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 {
+    // TODO(lucferron): Root cause and fix it.
+    // ERROR: 0:62: 'location' : overlapping use of location x
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // TODO(geofflang): Figure out why this fails on NVIDIA's GLES driver
     ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGLES());
 
@@ -1381,6 +1432,11 @@ TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 // Disabled because of a failure in D3D9
 TEST_P(GLSLTest, MaxVaryingVec2Arrays)
 {
+    // TODO(lucferron): Root cause and fix it.
+    // ERROR: 0:62: 'location' : overlapping use of location x
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     ANGLE_SKIP_TEST_IF(IsD3DSM3());
 
     // TODO(geofflang): Figure out why this fails on NVIDIA's GLES driver
@@ -1562,6 +1618,10 @@ TEST_P(GLSLTest, BadIndexBug)
 // Test that structs defined in uniforms are translated correctly.
 TEST_P(GLSLTest, StructSpecifiersUniforms)
 {
+    // TODO(lucferron): Support struct initializers.
+    // http://anglebug.com/2459
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string fragmentShaderSource =
         R"(precision mediump float;
 
@@ -2020,6 +2080,10 @@ TEST_P(GLSLTest_ES3, InitGlobalArrayWithArrayIndexing)
 // Test that index-constant sampler array indexing is supported.
 TEST_P(GLSLTest, IndexConstantSamplerArrayIndexing)
 {
+    // TODO(lucferron): Samplers array support.
+    // http://anglebug.com/2462
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
     const std::string vertexShaderSource =
@@ -2862,6 +2926,10 @@ TEST_P(GLSLTest_ES3, InitUninitializedLocals)
 // specifically tests with two different struct variables declared in the same block.
 TEST_P(GLSLTest, InitUninitializedStructContainingArrays)
 {
+    // TODO(lucferron): Root cause and fix it.
+    // http://anglebug.com/2460
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux());
+
     // Test skipped on Android GLES because local variable initialization is disabled.
     // http://anglebug.com/2046
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
@@ -3189,6 +3257,10 @@ TEST_P(GLSLTest, ArrayOfStructsWithSamplersAsFunctionArg)
     // Shader failed to compile on Android. http://anglebug.com/2114
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 
+    // TODO(lucferron): Sampler arrays support
+    // http://anglebug.com/2462
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     const std::string &vertexShader =
         "attribute vec2 position;\n"
         "void main()\n"
@@ -3246,6 +3318,10 @@ TEST_P(GLSLTest, StructWithSamplerArrayAsFunctionArg)
 {
     // Shader failed to compile on Android. http://anglebug.com/2114
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+
+    // TODO(lucferron): Sampler arrays support
+    // http://anglebug.com/2462
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     const std::string &vertexShader =
         "attribute vec2 position;\n"
@@ -4210,13 +4286,12 @@ TEST_P(GLSLTest_ES3, VaryingStaticallyUsedButNotActiveInFragmentShader)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-// TODO(lucferron): Enable tests for Vulkan and debug/open bugs for each failing ones.
-// http://anglebug.com/2460
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
+                       ES2_VULKAN(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGLES());
