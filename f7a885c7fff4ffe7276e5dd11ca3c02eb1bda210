@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6288a720_6c7917c6",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-09T15:39:52Z",
+      "side": 1,
+      "message": "nit: spell out the type completely.",
+      "revId": "f7a885c7fff4ffe7276e5dd11ca3c02eb1bda210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31bfb4d8_fd181db1",
+        "filename": "src/tests/gl_tests/gles1/MatrixMultTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-09T15:39:52Z",
+      "side": 1,
+      "message": "nit: extra newline.",
+      "revId": "f7a885c7fff4ffe7276e5dd11ca3c02eb1bda210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
