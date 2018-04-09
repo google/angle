@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7b00d46_efe9142d",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1401,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-09T18:42:22Z",
+      "side": 1,
+      "message": "hm... looks like our packing isn\u0027t quite correct. good to know.",
+      "range": {
+        "startLine": 1401,
+        "startChar": 4,
+        "endLine": 1401,
+        "endChar": 62
+      },
+      "revId": "5e223aa72eb7163c80c5ea6e8c83b8da1931a0d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcc26ed4_98f21f82",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2083,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-09T18:42:22Z",
+      "side": 1,
+      "message": "you can tag the bug now",
+      "range": {
+        "startLine": 2083,
+        "startChar": 39,
+        "endLine": 2083,
+        "endChar": 46
+      },
+      "revId": "5e223aa72eb7163c80c5ea6e8c83b8da1931a0d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
