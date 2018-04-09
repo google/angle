@@ -429,6 +429,19 @@ void CommandBuffer::copyBuffer(const VkBuffer &srcBuffer,
     vkCmdCopyBuffer(mHandle, srcBuffer, destBuffer, regionCount, regions);
 }
 
+void CommandBuffer::copyBufferToImage(VkBuffer srcBuffer,
+                                      const Image &dstImage,
+                                      VkImageLayout dstImageLayout,
+                                      uint32_t regionCount,
+                                      const VkBufferImageCopy *regions)
+{
+    ASSERT(valid());
+    ASSERT(srcBuffer != VK_NULL_HANDLE);
+    ASSERT(dstImage.valid());
+    vkCmdCopyBufferToImage(mHandle, srcBuffer, dstImage.getHandle(), dstImageLayout, regionCount,
+                           regions);
+}
+
 void CommandBuffer::clearColorImage(const vk::Image &image,
                                     VkImageLayout imageLayout,
                                     const VkClearColorValue &color,
@@ -1251,8 +1264,21 @@ VkIndexType GetIndexType(GLenum elementType)
             return VK_INDEX_TYPE_MAX_ENUM;
     }
 }
-}  // namespace gl_vk
 
+void GetOffset(const gl::Offset &glOffset, VkOffset3D *vkOffset)
+{
+    vkOffset->x = glOffset.x;
+    vkOffset->y = glOffset.y;
+    vkOffset->z = glOffset.z;
+}
+
+void GetExtent(const gl::Extents &glExtent, VkExtent3D *vkExtent)
+{
+    vkExtent->width  = glExtent.width;
+    vkExtent->height = glExtent.height;
+    vkExtent->depth  = glExtent.depth;
+}
+}  // namespace gl_vk
 }  // namespace rx
 
 std::ostream &operator<<(std::ostream &stream, const rx::vk::Error &error)

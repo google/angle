@@ -568,11 +568,6 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
         ASSERT(colorRenderTarget);
 
-        // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
-        colorRenderTarget->image->changeLayoutWithStages(
-            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-            commandBuffer);
         (*nodeOut)->appendColorRenderTarget(currentSerial, colorRenderTarget);
         attachmentClearValues.emplace_back(contextVk->getClearColorValue());
     }
@@ -580,15 +575,6 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
     RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
     if (depthStencilRenderTarget)
     {
-        // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
-        const angle::Format &format = depthStencilRenderTarget->image->getFormat().textureFormat();
-        VkImageAspectFlags aspectFlags = (format.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
-                                         (format.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
-
-        depthStencilRenderTarget->image->changeLayoutWithStages(
-            aspectFlags, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
-            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
-            commandBuffer);
         (*nodeOut)->appendDepthStencilRenderTarget(currentSerial, depthStencilRenderTarget);
         attachmentClearValues.emplace_back(contextVk->getClearDepthStencilValue());
     }

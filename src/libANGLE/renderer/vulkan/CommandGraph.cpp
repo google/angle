@@ -12,6 +12,7 @@
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
+#include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 namespace rx
 {
@@ -142,7 +143,8 @@ void CommandGraphResource::onReadResource(CommandGraphNode *readingNode, Serial 
 
 bool CommandGraphResource::checkResourceInUseAndRefreshDeps(RendererVk *renderer)
 {
-    if (!renderer->isResourceInUse(*this))
+    if (!renderer->isResourceInUse(*this) ||
+        (renderer->getCurrentQueueSerial() > mStoredQueueSerial))
     {
         mCurrentReadingNodes.clear();
         mCurrentWritingNode = nullptr;
@@ -243,6 +245,14 @@ void CommandGraphNode::storeRenderPassInfo(const Framebuffer &framebuffer,
 
 void CommandGraphNode::appendColorRenderTarget(Serial serial, RenderTargetVk *colorRenderTarget)
 {
+    ASSERT(mOutsideRenderPassCommands.valid());
+
+    // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
+    colorRenderTarget->image->changeLayoutWithStages(
+        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        &mOutsideRenderPassCommands);
+
     mRenderPassDesc.packColorAttachment(*colorRenderTarget->image);
     colorRenderTarget->resource->onWriteResource(this, serial);
 }
@@ -250,6 +260,19 @@ void CommandGraphNode::appendColorRenderTarget(Serial serial, RenderTargetVk *co
 void CommandGraphNode::appendDepthStencilRenderTarget(Serial serial,
                                                       RenderTargetVk *depthStencilRenderTarget)
 {
+    ASSERT(mOutsideRenderPassCommands.valid());
+    ASSERT(depthStencilRenderTarget->image->getFormat().textureFormat().hasDepthOrStencilBits());
+
+    // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
+    const angle::Format &format    = depthStencilRenderTarget->image->getFormat().textureFormat();
+    VkImageAspectFlags aspectFlags = (format.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
+                                     (format.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
+
+    depthStencilRenderTarget->image->changeLayoutWithStages(
+        aspectFlags, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+        &mOutsideRenderPassCommands);
+
     mRenderPassDesc.packDepthStencilAttachment(*depthStencilRenderTarget->image);
     depthStencilRenderTarget->resource->onWriteResource(this, serial);
 }

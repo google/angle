@@ -356,6 +356,12 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                     uint32_t regionCount,
                     const VkBufferCopy *regions);
 
+    void copyBufferToImage(VkBuffer srcBuffer,
+                           const Image &dstImage,
+                           VkImageLayout dstImageLayout,
+                           uint32_t regionCount,
+                           const VkBufferImageCopy *regions);
+
     void copyImage(const Image &srcImage,
                    VkImageLayout srcImageLayout,
                    const Image &dstImage,
@@ -651,6 +657,8 @@ VkFrontFace GetFrontFace(GLenum frontFace);
 VkSampleCountFlagBits GetSamples(GLint sampleCount);
 VkComponentSwizzle GetSwizzle(const GLenum swizzle);
 VkIndexType GetIndexType(GLenum elementType);
+void GetOffset(const gl::Offset &glOffset, VkOffset3D *vkOffset);
+void GetExtent(const gl::Extents &glExtent, VkExtent3D *vkExtent);
 }  // namespace gl_vk
 
 }  // namespace rx

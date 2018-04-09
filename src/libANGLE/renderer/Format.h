@@ -41,6 +41,8 @@ struct Format final : private angle::NonCopyable
     static const Format &Get(ID id);
     static ID InternalFormatToID(GLenum internalFormat);
 
+    constexpr bool hasDepthOrStencilBits() const;
+
     ID id;
 
     // The closest matching GL internal format for the storage this format uses. Note that this
@@ -108,6 +110,10 @@ constexpr Format::Format(ID id,
 {
 }
 
+constexpr bool Format::hasDepthOrStencilBits() const
+{
+    return depthBits > 0 || stencilBits > 0;
+}
 }  // namespace angle
 
 #include "libANGLE/renderer/Format_ID_autogen.inl"

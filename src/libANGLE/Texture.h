@@ -115,6 +115,9 @@ struct TextureState final : private angle::NonCopyable
     GLenum getUsage() const { return mUsage; }
     GLenum getDepthStencilTextureMode() const { return mDepthStencilTextureMode; }
 
+    // Returns the desc of the base level. Only valid for cube-complete/mip-complete textures.
+    const ImageDesc &getBaseLevelDesc() const;
+
     // GLES1 emulation: For GL_OES_draw_texture
     void setCrop(const gl::Rectangle& rect);
     const gl::Rectangle& getCrop() const;

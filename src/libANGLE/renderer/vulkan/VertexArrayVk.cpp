@@ -141,7 +141,6 @@ gl::Error VertexArrayVk::streamIndexData(RendererVk *renderer,
     ANGLE_TRY(mDynamicIndexData.flush(renderer->getDevice()));
 
     mCurrentElementArrayBufferOffset = offset;
-
     return gl::NoError();
 }
 

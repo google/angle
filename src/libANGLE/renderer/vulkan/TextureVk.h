@@ -18,6 +18,31 @@
 namespace rx
 {
 
+class StagingStorage final : angle::NonCopyable
+{
+  public:
+    StagingStorage();
+    ~StagingStorage();
+
+    void release(RendererVk *renderer);
+
+    gl::Error stageSubresourceUpdate(ContextVk *contextVk,
+                                     const gl::Extents &extents,
+                                     const gl::InternalFormat &formatInfo,
+                                     const gl::PixelUnpackState &unpack,
+                                     GLenum type,
+                                     const uint8_t *pixels);
+
+    vk::Error flushUpdatesToImage(RendererVk *renderer,
+                                  vk::ImageHelper *image,
+                                  vk::CommandBuffer *commandBuffer);
+
+  private:
+    vk::DynamicBuffer mStagingBuffer;
+    VkBuffer mCurrentBufferHandle;
+    VkBufferImageCopy mCurrentCopyRegion;
+};
+
 class TextureVk : public TextureImpl, public vk::CommandGraphResource
 {
   public:
@@ -116,18 +141,16 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     const vk::ImageView &getImageView() const;
     const vk::Sampler &getSampler() const;
 
-  private:
-    gl::Error setSubImageImpl(ContextVk *contextVk,
-                              const gl::InternalFormat &formatInfo,
-                              const gl::PixelUnpackState &unpack,
-                              GLenum type,
-                              const uint8_t *pixels);
+    vk::Error ensureImageInitialized(RendererVk *renderer);
 
+  private:
     vk::ImageHelper mImage;
     vk::ImageView mImageView;
     vk::Sampler mSampler;
 
     RenderTargetVk mRenderTarget;
+
+    StagingStorage mStagingStorage;
 };
 
 }  // namespace rx
