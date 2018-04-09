@@ -1289,9 +1289,18 @@ void Context::getFloatvImpl(GLenum pname, GLfloat *params)
         case GL_PATH_MODELVIEW_MATRIX_CHROMIUM:
         case GL_PATH_PROJECTION_MATRIX_CHROMIUM:
         {
-            ASSERT(mExtensions.pathRendering);
-            const GLfloat *m = mGLState.getPathRenderingMatrix(pname);
-            memcpy(params, m, 16 * sizeof(GLfloat));
+            // GLES1 emulation: // GL_PATH_(MODELVIEW|PROJECTION)_MATRIX_CHROMIUM collides with the
+            // GLES1 constants for modelview/projection matrix.
+            if (getClientVersion() < Version(2, 0))
+            {
+                mGLState.getFloatv(pname, params);
+            }
+            else
+            {
+                ASSERT(mExtensions.pathRendering);
+                const GLfloat *m = mGLState.getPathRenderingMatrix(pname);
+                memcpy(params, m, 16 * sizeof(GLfloat));
+            }
         }
         break;
 
@@ -7026,6 +7035,12 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             case GL_CURRENT_NORMAL:
                 *type      = GL_FLOAT;
                 *numParams = 3;
+                return true;
+            case GL_MODELVIEW_MATRIX:
+            case GL_PROJECTION_MATRIX:
+            case GL_TEXTURE_MATRIX:
+                *type      = GL_FLOAT;
+                *numParams = 16;
                 return true;
         }
     }

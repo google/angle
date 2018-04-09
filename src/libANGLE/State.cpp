@@ -1956,6 +1956,16 @@ void State::getFloatv(GLenum pname, GLfloat *params)
             params[3]            = texcoord.q;
             break;
         }
+        case GL_MODELVIEW_MATRIX:
+            memcpy(params, mGLES1State.mModelviewMatrices.back().data(), 16 * sizeof(GLfloat));
+            break;
+        case GL_PROJECTION_MATRIX:
+            memcpy(params, mGLES1State.mProjectionMatrices.back().data(), 16 * sizeof(GLfloat));
+            break;
+        case GL_TEXTURE_MATRIX:
+            memcpy(params, mGLES1State.mTextureMatrices[mActiveSampler].back().data(),
+                   16 * sizeof(GLfloat));
+            break;
         default:
             UNREACHABLE();
             break;

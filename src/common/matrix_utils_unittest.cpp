@@ -505,8 +505,8 @@ TEST(MatrixUtilsTest, Mat4Translate)
     Mat4 golden1(elementsExpected1);
     Mat4 golden2(elementsExpected2);
 
-    Mat4 t1 = Mat4::Translate(Vector3(1.f, 1.f, 1.f));
-    Mat4 t2 = Mat4::Translate(Vector3(2.f, 2.f, 2.f));
+    Mat4 t1   = Mat4::Translate(Vector3(1.f, 1.f, 1.f));
+    Mat4 t2   = Mat4::Translate(Vector3(2.f, 2.f, 2.f));
     Mat4 t1t1 = t1.product(t1);
 
     CheckMat4ExactlyEq(t1, golden1);
@@ -549,12 +549,11 @@ TEST(MatrixUtilsTest, Mat4Scale)
     Mat4 golden2(elementsExpected2);
     Mat4 golden4(elementsExpected4);
 
-    Mat4 t2 = Mat4::Scale(Vector3(2.f, 2.f, 2.f));
+    Mat4 t2   = Mat4::Scale(Vector3(2.f, 2.f, 2.f));
     Mat4 t2t2 = t2.product(t2);
 
     CheckMat4ExactlyEq(t2, golden2);
     CheckMat4ExactlyEq(t2t2, golden4);
-
 }
 
 // Tests frustum matrices.
@@ -1207,4 +1206,36 @@ TEST(MatrixUtilsTest, Mat4Mult)
     Mat4 t = r.product(r);
     CheckMatrixCloseToGolden(s.data(), t);
 }
+
+// Tests exact equality.
+TEST(MatrixUtilsTest, ExactEquality)
+{
+    Mat4 a, b;
+    EXPECT_EQ(a, b);
+    Mat4 c;
+    c(0, 0) += 0.000001f;
+    EXPECT_NE(a, c);
 }
+
+// Tests near equality.
+TEST(MatrixUtilsTest, NearEquality)
+{
+    Mat4 a, b;
+
+    float *bData = b.data();
+    for (int i = 0; i < 16; i++)
+    {
+        bData[i] += 0.09f;
+    }
+
+    EXPECT_TRUE(a.nearlyEqual(0.1f, b));
+
+    for (int i = 0; i < 16; i++)
+    {
+        bData[i] -= 2 * 0.09f;
+    }
+
+    EXPECT_TRUE(a.nearlyEqual(0.1f, b));
+}
+
+}  // namespace

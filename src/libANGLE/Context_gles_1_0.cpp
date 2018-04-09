@@ -224,17 +224,25 @@ void Context::lineWidthx(GLfixed width)
 
 void Context::loadIdentity()
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().loadMatrix(angle::Mat4());
 }
 
 void Context::loadMatrixf(const GLfloat *m)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().loadMatrix(angle::Mat4(m));
 }
 
 void Context::loadMatrixx(const GLfixed *m)
 {
-    UNIMPLEMENTED();
+    angle::Mat4 matrixAsFloat;
+    GLfloat *floatData = matrixAsFloat.data();
+
+    for (int i = 0; i < 16; i++)
+    {
+        floatData[i] = FixedToFloat(m[i]);
+    }
+
+    mGLState.gles1().loadMatrix(matrixAsFloat);
 }
 
 void Context::logicOp(GLenum opcode)

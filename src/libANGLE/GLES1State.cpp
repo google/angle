@@ -257,4 +257,9 @@ const GLES1State::MatrixStack &GLES1State::currentMatrixStack() const
     }
 }
 
+void GLES1State::loadMatrix(const angle::Mat4 &m)
+{
+    currentMatrixStack().back() = m;
+}
+
 }  // namespace gl

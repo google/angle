@@ -147,6 +147,8 @@ class GLES1State final : angle::NonCopyable
     MatrixStack &currentMatrixStack();
     const MatrixStack &currentMatrixStack() const;
 
+    void loadMatrix(const angle::Mat4 &m);
+
   private:
     friend class State;
 
