@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7e50e244_bf08914f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-09T13:26:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f602e22_4ba9d634",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "26a2e38f_34a5e9bf",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 3
@@ -60,6 +78,30 @@
     },
     {
       "key": {
+        "uuid": "ed21afae_8e39c7e4",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-09T13:26:35Z",
+      "side": 1,
+      "message": "Not anymore, thanks",
+      "parentUuid": "26a2e38f_34a5e9bf",
+      "range": {
+        "startLine": 37,
+        "startChar": 10,
+        "endLine": 37,
+        "endChar": 35
+      },
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "779bfc80_4c5b8069",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 3
@@ -74,6 +116,24 @@
       "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70670882_78414223",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-09T13:26:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "779bfc80_4c5b8069",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -112,6 +172,24 @@
     },
     {
       "key": {
+        "uuid": "ca2bae15_d53f83f2",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-09T13:26:35Z",
+      "side": 1,
+      "message": "Instead of the new helper for outputting the struct declaration, I made a small adjustment just to be more explicit and call declareStruct directly (making this public from the TOutputVulkanGLSL class only) instead of traversing.\n\nExtracting this to a specific helper would be fairly complex since its used in TOutputGLSLBase and entirely integrated there already.\n\nFor the else branch, I created a TODO with a new bug to follow up on that specific case.",
+      "parentUuid": "71047bd8_67d78c40",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dec0421d_afb489c5",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 3
@@ -126,6 +204,24 @@
       "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa35ef62_7ea8f55c",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-09T13:26:35Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dec0421d_afb489c5",
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -149,6 +245,30 @@
       "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd873adf_51322ee4",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-09T13:26:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c096da5d_b0906744",
+      "range": {
+        "startLine": 224,
+        "startChar": 8,
+        "endLine": 224,
+        "endChar": 23
+      },
+      "revId": "6a0e4c17c51405ee00eff1a60408ed82adbeb083",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
