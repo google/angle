@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9a5c6bb6_c075ee05",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-09T01:29:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db8bf666_842fb939",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 77
+      },
+      "revId": "5f2221c42b651c3666bed4ff6e61ba5fad7e3ffb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a676716c_38e43fef",
         "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "08e1964e_f2f9615e",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-09T01:29:10Z",
+      "side": 1,
+      "message": "Done.. still not happy with the name but at least makes it clear there\u0027s a side effect.",
+      "parentUuid": "a676716c_38e43fef",
+      "range": {
+        "startLine": 55,
+        "startChar": 51,
+        "endLine": 55,
+        "endChar": 92
+      },
+      "revId": "5f2221c42b651c3666bed4ff6e61ba5fad7e3ffb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "80bf7c7c_cc1e2712",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 4
@@ -62,6 +110,24 @@
       "revId": "5f2221c42b651c3666bed4ff6e61ba5fad7e3ffb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b62c0ac4_555fecc5",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-09T01:29:10Z",
+      "side": 1,
+      "message": "Oh, no, it\u0027s not obvious. It just made a certain flaky bug fail all the time. Added a comment.",
+      "parentUuid": "80bf7c7c_cc1e2712",
+      "revId": "5f2221c42b651c3666bed4ff6e61ba5fad7e3ffb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
