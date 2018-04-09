@@ -100,6 +100,9 @@ ERRMSG(InvalidNameCharacters, "Name contains invalid characters.");
 ERRMSG(InvalidPname, "Invalid pname.");
 ERRMSG(InvalidPrecision, "Invalid or unsupported precision type.");
 ERRMSG(InvalidProgramName, "Program object expected.");
+ERRMSG(InvalidProjectionMatrix,
+       "Invalid projection matrix. Left/right, top/bottom, near/far intervals cannot be zero, and "
+       "near/far cannot be less than zero.");
 ERRMSG(InvalidQueryId, "Invalid query Id.");
 ERRMSG(InvalidQueryTarget, "Invalid query target.");
 ERRMSG(InvalidQueryType, "Invalid query type.");

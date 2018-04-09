@@ -125,19 +125,16 @@ void Context::fogxv(GLenum pname, const GLfixed *param)
     UNIMPLEMENTED();
 }
 
-void Context::frustumf(GLfloat left,
-                       GLfloat right,
-                       GLfloat bottom,
-                       GLfloat top,
-                       GLfloat zNear,
-                       GLfloat zFar)
+void Context::frustumf(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat n, GLfloat f)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(angle::Mat4::Frustum(l, r, b, t, n, f));
 }
 
 void Context::frustumx(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n, GLfixed f)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(angle::Mat4::Frustum(FixedToFloat(l), FixedToFloat(r),
+                                                     FixedToFloat(b), FixedToFloat(t),
+                                                     FixedToFloat(n), FixedToFloat(f)));
 }
 
 void Context::getClipPlanef(GLenum plane, GLfloat *equation)
@@ -332,12 +329,14 @@ void Context::orthof(GLfloat left,
                      GLfloat zNear,
                      GLfloat zFar)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(angle::Mat4::Ortho(left, right, bottom, top, zNear, zFar));
 }
 
 void Context::orthox(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n, GLfixed f)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(angle::Mat4::Ortho(FixedToFloat(l), FixedToFloat(r),
+                                                   FixedToFloat(b), FixedToFloat(t),
+                                                   FixedToFloat(n), FixedToFloat(f)));
 }
 
 void Context::pointParameterf(GLenum pname, GLfloat param)
@@ -387,12 +386,13 @@ void Context::pushMatrix()
 
 void Context::rotatef(float angle, float x, float y, float z)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(angle::Mat4::Rotate(angle, angle::Vector3(x, y, z)));
 }
 
 void Context::rotatex(GLfixed angle, GLfixed x, GLfixed y, GLfixed z)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(angle::Mat4::Rotate(
+        FixedToFloat(angle), angle::Vector3(FixedToFloat(x), FixedToFloat(y), FixedToFloat(z))));
 }
 
 void Context::sampleCoveragex(GLclampx value, GLboolean invert)
@@ -402,12 +402,13 @@ void Context::sampleCoveragex(GLclampx value, GLboolean invert)
 
 void Context::scalef(float x, float y, float z)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(angle::Mat4::Scale(angle::Vector3(x, y, z)));
 }
 
 void Context::scalex(GLfixed x, GLfixed y, GLfixed z)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(
+        angle::Mat4::Scale(angle::Vector3(FixedToFloat(x), FixedToFloat(y), FixedToFloat(z))));
 }
 
 void Context::shadeModel(GLenum mode)
@@ -462,12 +463,13 @@ void Context::texParameterxv(TextureType target, GLenum pname, const GLfixed *pa
 
 void Context::translatef(float x, float y, float z)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(angle::Mat4::Translate(angle::Vector3(x, y, z)));
 }
 
 void Context::translatex(GLfixed x, GLfixed y, GLfixed z)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(
+        angle::Mat4::Translate(angle::Vector3(FixedToFloat(x), FixedToFloat(y), FixedToFloat(z))));
 }
 
 void Context::vertexPointer(GLint size, GLenum type, GLsizei stride, const void *ptr)
