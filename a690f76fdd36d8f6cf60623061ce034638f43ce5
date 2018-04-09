@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "67aa579c_1bbe6796",
+        "filename": "cr-buildbucket.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1181690
+      },
+      "writtenOn": "2018-04-09T13:26:02Z",
+      "side": 1,
+      "message": "yep, this is https://bit.ly/chromium-build-naming",
+      "parentUuid": "7d12b88a_3cf70b7b",
+      "range": {
+        "startLine": 84,
+        "startChar": 13,
+        "endLine": 84,
+        "endChar": 21
+      },
+      "revId": "a690f76fdd36d8f6cf60623061ce034638f43ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "663aeb88_3e98dabe",
         "filename": "cr-buildbucket.cfg",
         "patchSetId": 2
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "6dc88706_48151d54",
+        "filename": "cr-buildbucket.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1181690
+      },
+      "writtenOn": "2018-04-09T13:26:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "663aeb88_3e98dabe",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 0
+      },
+      "revId": "a690f76fdd36d8f6cf60623061ce034638f43ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "973310b1_341a6d3a",
         "filename": "luci-scheduler.cfg",
         "patchSetId": 2
@@ -92,6 +140,30 @@
       "revId": "a690f76fdd36d8f6cf60623061ce034638f43ce5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e154e6c_f49370a5",
+        "filename": "luci-scheduler.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1181690
+      },
+      "writtenOn": "2018-04-09T13:26:02Z",
+      "side": 1,
+      "message": "I imagine this was the motivation for https://chromium.googlesource.com/chromium/src/+/6d0464eb74315e9b376770071a5659ed703706b1 ? :)\n\nFixed.",
+      "parentUuid": "973310b1_341a6d3a",
+      "range": {
+        "startLine": 15,
+        "startChar": 37,
+        "endLine": 15,
+        "endChar": 47
+      },
+      "revId": "a690f76fdd36d8f6cf60623061ce034638f43ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
