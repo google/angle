@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "9d79d8b9_8bb4c759",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-09T23:16:06Z",
+      "side": 1,
+      "message": "Got permission from authors so all set.",
+      "parentUuid": "337909d8_ac78c70b",
+      "range": {
+        "startLine": 8,
+        "startChar": 3,
+        "endLine": 8,
+        "endChar": 62
+      },
+      "revId": "233e62e4a5142039a429da2081b26d4ed05a3dea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6d60ab4_b7e8ba50",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 8
@@ -108,6 +132,30 @@
       "side": 1,
       "message": "Ack",
       "parentUuid": "d6d60ab4_b7e8ba50",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 7
+      },
+      "revId": "233e62e4a5142039a429da2081b26d4ed05a3dea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baae22de_5ef46147",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-09T23:16:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9dcfc92a_2fa3c379",
       "range": {
         "startLine": 44,
         "startChar": 0,

@@ -22,6 +22,30 @@
       "revId": "d9a10bdad0ef1be0b9200091622c49002b6840e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7b13108_62d5e3aa",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-09T23:16:06Z",
+      "side": 1,
+      "message": "I\u0027ll update the comment to better match what the code is doing.\nBTW, this has moved to the android.bp generation script.",
+      "parentUuid": "72b52389_e45c203e",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 379,
+        "endChar": 17
+      },
+      "revId": "d9a10bdad0ef1be0b9200091622c49002b6840e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

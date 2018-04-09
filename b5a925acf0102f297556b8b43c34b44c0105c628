@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "75ed562e_37a7f601",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-09T23:16:06Z",
+      "side": 1,
+      "message": "Have permission to change to ANGLE copyright.",
+      "parentUuid": "9422d071_4b58e865",
+      "revId": "b5a925acf0102f297556b8b43c34b44c0105c628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "222d9705_d3a5cad4",
         "filename": "scripts/gen_angle_android_bp.py",
         "patchSetId": 10
@@ -96,6 +114,30 @@
       "side": 1,
       "message": "We control this by defining LIBGLESV2_IMPLEMENTATION. We build everything with -fvisibility\u003dhidden, I think. I don\u0027t think maintaining a version script is worth the investment.",
       "parentUuid": "47879ae8_923376da",
+      "range": {
+        "startLine": 457,
+        "startChar": 10,
+        "endLine": 457,
+        "endChar": 28
+      },
+      "revId": "b5a925acf0102f297556b8b43c34b44c0105c628",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a07544ab_aca2e890",
+        "filename": "scripts/gen_angle_android_bp.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-09T23:16:06Z",
+      "side": 1,
+      "message": "This has moved to separate script that does the Android.bp generation.\nWe keep this flag.",
+      "parentUuid": "fd09b612_4064f259",
       "range": {
         "startLine": 457,
         "startChar": 10,
