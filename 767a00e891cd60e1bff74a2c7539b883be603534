@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fb7a7ef_a6864a68",
+        "filename": "src/common/matrix_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-09T15:21:57Z",
+      "side": 1,
+      "message": "can\u0027t you use !\u003d on the vector directly?",
+      "range": {
+        "startLine": 99,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 20
+      },
+      "revId": "767a00e891cd60e1bff74a2c7539b883be603534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe2311ae_e7e036be",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-09T15:21:57Z",
+      "side": 1,
+      "message": "hah, this is funny. BTW, did you still want to do the GLES1 tagging comments?",
+      "range": {
+        "startLine": 1292,
+        "startChar": 13,
+        "endLine": 1293,
+        "endChar": 43
+      },
+      "revId": "767a00e891cd60e1bff74a2c7539b883be603534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
