@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3d062b26_e50bb183",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-09T16:31:00Z",
+      "side": 1,
+      "message": "nit: closing namespace comment",
+      "range": {
+        "startLine": 29,
+        "startChar": 1,
+        "endLine": 29,
+        "endChar": 0
+      },
+      "revId": "f7a885c7fff4ffe7276e5dd11ca3c02eb1bda210",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6288a720_6c7917c6",
         "filename": "src/libANGLE/GLES1State.cpp",
         "patchSetId": 1
