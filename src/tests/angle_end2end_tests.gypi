@@ -54,6 +54,7 @@
             '<(angle_path)/src/tests/gl_tests/gles1/CurrentTextureCoordsTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/MatrixLoadTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/MatrixModeTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/gles1/MatrixMultTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/MatrixStackTest.cpp',
             '<(angle_path)/src/tests/gl_tests/GLSLTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ImageTest.cpp',

@@ -11,6 +11,24 @@
 #include "common/mathutil.h"
 #include "common/utilities.h"
 
+namespace
+{
+
+angle::Mat4 FixedMatrixToMat4(const GLfixed *m)
+{
+    angle::Mat4 matrixAsFloat;
+    GLfloat *floatData = matrixAsFloat.data();
+
+    for (int i = 0; i < 16; i++)
+    {
+        floatData[i] = gl::FixedToFloat(m[i]);
+    }
+
+    return matrixAsFloat;
+}
+
+}  // namespace
+
 namespace gl
 {
 
@@ -234,15 +252,7 @@ void Context::loadMatrixf(const GLfloat *m)
 
 void Context::loadMatrixx(const GLfixed *m)
 {
-    angle::Mat4 matrixAsFloat;
-    GLfloat *floatData = matrixAsFloat.data();
-
-    for (int i = 0; i < 16; i++)
-    {
-        floatData[i] = FixedToFloat(m[i]);
-    }
-
-    mGLState.gles1().loadMatrix(matrixAsFloat);
+    mGLState.gles1().loadMatrix(FixedMatrixToMat4(m));
 }
 
 void Context::logicOp(GLenum opcode)
@@ -277,12 +287,12 @@ void Context::matrixMode(MatrixType mode)
 
 void Context::multMatrixf(const GLfloat *m)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(angle::Mat4(m));
 }
 
 void Context::multMatrixx(const GLfixed *m)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().multMatrix(FixedMatrixToMat4(m));
 }
 
 void Context::multiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q)

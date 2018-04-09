@@ -386,13 +386,13 @@ bool ValidateMatrixMode(Context *context, MatrixType mode)
 
 bool ValidateMultMatrixf(Context *context, const GLfloat *m)
 {
-    UNIMPLEMENTED();
+    ANGLE_VALIDATE_IS_GLES1(context);
     return true;
 }
 
 bool ValidateMultMatrixx(Context *context, const GLfixed *m)
 {
-    UNIMPLEMENTED();
+    ANGLE_VALIDATE_IS_GLES1(context);
     return true;
 }
 
