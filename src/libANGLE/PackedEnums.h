@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_PACKEDGLENUMS_H_
 #define LIBANGLE_PACKEDGLENUMS_H_
 
+#include "libANGLE/PackedEGLEnums_autogen.h"
 #include "libANGLE/PackedGLEnums_autogen.h"
 
 #include <array>
@@ -70,8 +71,8 @@ template <typename E, typename T>
 class PackedEnumMap
 {
   private:
-    using UnderlyingType          = typename std::underlying_type<E>::type;
-    using Storage                 = std::array<T, EnumSize<E>()>;
+    using UnderlyingType = typename std::underlying_type<E>::type;
+    using Storage        = std::array<T, EnumSize<E>()>;
 
     Storage mData;
 

@@ -752,7 +752,7 @@ EGLBoolean EGLAPIENTRY BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint b
         return EGL_FALSE;
     }
 
-    if (eglSurface->getTextureFormat() == EGL_NO_TEXTURE)
+    if (eglSurface->getTextureFormat() == TextureFormat::NoTexture)
     {
         thread->setError(EglBadMatch());
         return EGL_FALSE;
@@ -839,7 +839,7 @@ EGLBoolean EGLAPIENTRY ReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLin
         return EGL_FALSE;
     }
 
-    if (eglSurface->getTextureFormat() == EGL_NO_TEXTURE)
+    if (eglSurface->getTextureFormat() == TextureFormat::NoTexture)
     {
         thread->setError(EglBadMatch());
         return EGL_FALSE;

@@ -15,7 +15,7 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/IndexRangeCache.h"
-#include "libANGLE/PackedGLEnums.h"
+#include "libANGLE/PackedEnums.h"
 #include "libANGLE/RefCountObject.h"
 
 namespace rx

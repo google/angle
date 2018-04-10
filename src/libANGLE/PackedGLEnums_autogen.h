@@ -6,12 +6,14 @@
 // found in the LICENSE file.
 //
 // PackedGLEnums_autogen.h:
-//   Declares ANGLE-specific enums classes for GLEnum and functions operating
+//   Declares ANGLE-specific enums classes for GLenums and functions operating
 //   on them.
 
 #ifndef LIBANGLE_PACKEDGLENUMS_AUTOGEN_H_
 #define LIBANGLE_PACKEDGLENUMS_AUTOGEN_H_
 
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
 #include <angle_gl.h>
 
 #include <cstdint>

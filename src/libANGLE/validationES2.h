@@ -9,7 +9,7 @@
 #ifndef LIBANGLE_VALIDATION_ES2_H_
 #define LIBANGLE_VALIDATION_ES2_H_
 
-#include "libANGLE/PackedGLEnums.h"
+#include "libANGLE/PackedEnums.h"
 
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>

@@ -115,11 +115,14 @@ generators = {
         ],
         'script': 'src/libANGLE/renderer/gl/generate_gl_dispatch_table.py',
     },
-    'packed GLenum': {
+    'packed enum': {
         'inputs': [
             'src/libANGLE/packed_gl_enums.json',
+            'src/libANGLE/packed_egl_enums.json',
         ],
         'outputs': [
+            'src/libANGLE/PackedEGLEnums_autogen.cpp',
+            'src/libANGLE/PackedEGLEnums_autogen.h',
             'src/libANGLE/PackedGLEnums_autogen.cpp',
             'src/libANGLE/PackedGLEnums_autogen.h',
         ],

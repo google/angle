@@ -22,7 +22,7 @@
 #include "libANGLE/Context_gles_1_0_autogen.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
-#include "libANGLE/PackedGLEnums.h"
+#include "libANGLE/PackedEnums.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/ResourceMap.h"
 #include "libANGLE/VertexAttribute.h"

@@ -14,7 +14,7 @@
 #include "common/vector_utils.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/PackedGLEnums.h"
+#include "libANGLE/PackedEnums.h"
 #include "libANGLE/RefCountObject.h"
 
 #include <stdint.h>

@@ -11,7 +11,7 @@
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
-#include "libANGLE/PackedGLEnums.h"
+#include "libANGLE/PackedEnums.h"
 
 #include <EGL/egl.h>
 

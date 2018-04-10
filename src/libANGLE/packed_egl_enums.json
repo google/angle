@@ -1,0 +1,8 @@
+{
+    "TextureFormat":
+    {
+        "NoTexture": "EGL_NO_TEXTURE",
+        "RGB": "EGL_TEXTURE_RGB",
+        "RGBA": "EGL_TEXTURE_RGBA"
+    }
+}

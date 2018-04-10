@@ -12,7 +12,7 @@
 
 #include "GLSLANG/ShaderLang.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/PackedGLEnums.h"
+#include "libANGLE/PackedEnums.h"
 #include "libANGLE/RefCountObject.h"
 
 namespace rx

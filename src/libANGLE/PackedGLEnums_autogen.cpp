@@ -6,7 +6,7 @@
 // found in the LICENSE file.
 //
 // PackedGLEnums_autogen.cpp:
-//   Implements ANGLE-specific enums classes for GLEnum and functions operating
+//   Implements ANGLE-specific enums classes for GLenums and functions operating
 //   on them.
 
 #include "libANGLE/PackedGLEnums_autogen.h"
@@ -63,7 +63,7 @@ GLenum ToGLenum(AlphaTestFunc from)
             return GL_NOTEQUAL;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -131,7 +131,7 @@ GLenum ToGLenum(BufferBinding from)
             return GL_UNIFORM_BUFFER;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -187,7 +187,7 @@ GLenum ToGLenum(BufferUsage from)
             return GL_STREAM_READ;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -227,7 +227,7 @@ GLenum ToGLenum(ClientVertexArrayType from)
             return GL_VERTEX_ARRAY;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -259,7 +259,7 @@ GLenum ToGLenum(CullFaceMode from)
             return GL_FRONT_AND_BACK;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -291,7 +291,7 @@ GLenum ToGLenum(FogMode from)
             return GL_LINEAR;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -323,7 +323,7 @@ GLenum ToGLenum(HintSetting from)
             return GL_NICEST;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -407,7 +407,7 @@ GLenum ToGLenum(LogicalOperation from)
             return GL_XOR;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -439,7 +439,7 @@ GLenum ToGLenum(MatrixType from)
             return GL_TEXTURE;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -475,7 +475,7 @@ GLenum ToGLenum(ShaderType from)
             return GL_COMPUTE_SHADER;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -503,7 +503,7 @@ GLenum ToGLenum(ShadingModel from)
             return GL_SMOOTH;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -555,7 +555,7 @@ GLenum ToGLenum(TextureCombine from)
             return GL_SUBTRACT;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -599,7 +599,7 @@ GLenum ToGLenum(TextureEnvMode from)
             return GL_REPLACE;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -635,7 +635,7 @@ GLenum ToGLenum(TextureOp from)
             return GL_SRC_COLOR;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -671,7 +671,7 @@ GLenum ToGLenum(TextureSrc from)
             return GL_TEXTURE;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -739,7 +739,7 @@ GLenum ToGLenum(TextureTarget from)
             return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -787,7 +787,7 @@ GLenum ToGLenum(TextureType from)
             return GL_TEXTURE_CUBE_MAP;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 
@@ -827,7 +827,7 @@ GLenum ToGLenum(VertexArrayType from)
             return GL_VERTEX_ARRAY;
         default:
             UNREACHABLE();
-            return GL_NONE;
+            return 0;
     }
 }
 

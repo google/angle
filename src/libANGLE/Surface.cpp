@@ -53,7 +53,7 @@ Surface::Surface(EGLint surfaceType,
       mFixedSize(false),
       mFixedWidth(0),
       mFixedHeight(0),
-      mTextureFormat(EGL_NO_TEXTURE),
+      mTextureFormat(TextureFormat::NoTexture),
       mTextureTarget(EGL_NO_TEXTURE),
       // FIXME: Determine actual pixel aspect ratio
       mPixelAspectRatio(static_cast<EGLint>(1.0 * EGL_DISPLAY_SCALING)),
@@ -99,7 +99,7 @@ Surface::Surface(EGLint surfaceType,
 
     if (mType != EGL_WINDOW_BIT)
     {
-        mTextureFormat = static_cast<EGLenum>(attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE));
+        mTextureFormat = attributes.getAsPackedEnum(EGL_TEXTURE_FORMAT, TextureFormat::NoTexture);
         mTextureTarget = static_cast<EGLenum>(attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE));
     }
 
@@ -312,7 +312,7 @@ EGLenum Surface::getSwapBehavior() const
     return mSwapBehavior;
 }
 
-EGLenum Surface::getTextureFormat() const
+TextureFormat Surface::getTextureFormat() const
 {
     return mTextureFormat;
 }

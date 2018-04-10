@@ -10,7 +10,7 @@
 #define LIBANGLE_IMAGE_INDEX_H_
 
 #include "common/mathutil.h"
-#include "libANGLE/PackedGLEnums.h"
+#include "libANGLE/PackedEnums.h"
 
 #include "angle_gl.h"
 

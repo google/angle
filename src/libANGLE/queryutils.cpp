@@ -1937,7 +1937,7 @@ void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
             // The EGL spec states that value is not written if the surface is not a pbuffer
             if (surface->getType() == EGL_PBUFFER_BIT)
             {
-                *value = surface->getTextureFormat();
+                *value = ToEGLenum(surface->getTextureFormat());
             }
             break;
         case EGL_TEXTURE_TARGET:
