@@ -1237,8 +1237,8 @@ TEST_P(Texture2DTest, QueryBinding)
 
 TEST_P(Texture2DTest, ZeroSizedUploads)
 {
-    // TODO(lucferron): Enable this test on Vulkan after this bug is done.
-    // http://anglebug.com/2392
+    // TODO(lucferron): Enable this test on Vulkan after Sampler Arrays are implemented.
+    // http://anglebug.com/2462
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -2443,50 +2443,43 @@ TEST_P(Texture2DTest, TextureLuminanceAlphaRGBSame)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTest, TextureLuminance32ImplicitAlpha1)
 {
-    // TODO(lucferron): Enable Vulkan when we implement float support in ES3.0.
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsD3D9());
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_float"));
+    ANGLE_SKIP_TEST_IF(IsD3D9());
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     setUpProgram();
 
-    if (extensionEnabled("GL_OES_texture_float"))
-    {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mTexture2D);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 1, 1, 0, GL_LUMINANCE, GL_FLOAT, nullptr);
-        EXPECT_GL_NO_ERROR();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 1, 1, 0, GL_LUMINANCE, GL_FLOAT, nullptr);
+    EXPECT_GL_NO_ERROR();
 
-        drawQuad(mProgram, "position", 0.5f);
+    drawQuad(mProgram, "position", 0.5f);
 
-        EXPECT_PIXEL_ALPHA_EQ(0, 0, 255);
-    }
+    EXPECT_PIXEL_ALPHA_EQ(0, 0, 255);
 }
 
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTest, TextureLuminance16ImplicitAlpha1)
 {
-    // TODO(lucferron): Enable Vulkan when we implement float support in ES3.0.
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsD3D9());
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_float"));
+    ANGLE_SKIP_TEST_IF(IsD3D9());
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGLES());
+    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1420 is fixed
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 
-    if (extensionEnabled("GL_OES_texture_half_float"))
-    {
-        setUpProgram();
+    setUpProgram();
 
-        ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGLES());
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 1, 1, 0, GL_LUMINANCE, GL_HALF_FLOAT_OES, nullptr);
+    EXPECT_GL_NO_ERROR();
 
-        // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1420 is fixed
-        ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+    drawQuad(mProgram, "position", 0.5f);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mTexture2D);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 1, 1, 0, GL_LUMINANCE, GL_HALF_FLOAT_OES,
-                     nullptr);
-        EXPECT_GL_NO_ERROR();
-
-        drawQuad(mProgram, "position", 0.5f);
-
-        EXPECT_PIXEL_ALPHA_EQ(0, 0, 255);
-    }
+    EXPECT_PIXEL_ALPHA_EQ(0, 0, 255);
 }
 
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
