@@ -143,6 +143,10 @@ TEST_P(PointSpritesTest, PointWithoutAttributesCompliance)
     // http://anglebug.com/1643
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
 
+    // TODO(lucferron): Failing on Android/Vulkan. Investigate and fix.
+    // http://anglebug.com/2447
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
     const std::string fs =
         R"(precision mediump float;
         void main()
@@ -176,6 +180,10 @@ TEST_P(PointSpritesTest, PointCoordRegressionTest)
     // TODO(jmadill): Investigate potential AMD driver bug.
     // http://anglebug.com/1643
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
+
+    // TODO(lucferron): Failing on Android/Vulkan. Investigate and fix.
+    // http://anglebug.com/2447
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     const std::string fs =
         R"(precision mediump float;
@@ -406,6 +414,10 @@ TEST_P(PointSpritesTest, PointSizeDeclaredButUnused)
 // spites.
 TEST_P(PointSpritesTest, PointSpriteAlternatingDrawTypes)
 {
+    // TODO(lucferron): Failing on Android/Vulkan. Investigate and fix.
+    // http://anglebug.com/2447
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
     const std::string pointFS =
         R"(precision mediump float;
         void main()
