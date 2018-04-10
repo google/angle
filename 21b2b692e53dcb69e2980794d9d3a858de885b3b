@@ -22,6 +22,30 @@
       "revId": "21b2b692e53dcb69e2980794d9d3a858de885b3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed625381_c49cb61a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-10T19:07:02Z",
+      "side": 1,
+      "message": "The scissor will still be ok there because of this : \n\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/vulkan/vk_cache_utils.cpp?q\u003dvk_cache_utils\u0026sq\u003dpackage:chromium\u0026l\u003d653\n\nThe clipping only should happen on the full surface, but we still have to get the scissor region to follow the viewport when we dont have the scissor test enabled because the scissor region is included here: \n\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/vulkan/vk_cache_utils.cpp?q\u003dvk_cache_utils\u0026sq\u003dpackage:chromium\u0026l\u003d530",
+      "parentUuid": "6eec3a66_8226d9fe",
+      "range": {
+        "startLine": 354,
+        "startChar": 37,
+        "endLine": 354,
+        "endChar": 58
+      },
+      "revId": "21b2b692e53dcb69e2980794d9d3a858de885b3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
