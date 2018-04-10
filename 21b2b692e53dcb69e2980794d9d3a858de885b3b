@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6eec3a66_8226d9fe",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-10T17:25:56Z",
+      "side": 1,
+      "message": "I thought we had talked about a Vulkan validation rule where the scissor must be contained inside the viewport, but couldn\u0027t find it again. The current version of the code seems to point at it not existing. So here glState.getViewport() should be replaced with glState.getDrawFramebuffer()-\u003egetDimensions(). Otherwise the following would produce unexpected results:\n\n - // Framebuffer is 2, 2\n - glViewport(0, 0, 1, 1)\n - glDisable(GL_SCISSOR_TEST)\n - glViewport(0, 0, 2, 2)\n - // Now the scissor test is (0, 0, 1, 1) but should be disabled.",
+      "range": {
+        "startLine": 354,
+        "startChar": 37,
+        "endLine": 354,
+        "endChar": 58
+      },
+      "revId": "21b2b692e53dcb69e2980794d9d3a858de885b3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
