@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cf59125e_c4a4b228",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2671,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-10T15:12:43Z",
+      "side": 1,
+      "message": "There\u0027s still the issue that aliasing should be allowed on ES2, I assumed this TODO was about that.",
+      "parentUuid": "a5a762d4_8341aeb1",
+      "range": {
+        "startLine": 2671,
+        "startChar": 4,
+        "endLine": 2671,
+        "endChar": 46
+      },
+      "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d3e1550b_1fd23b0a",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22d2dd63_dbfbf6c3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2672,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-10T15:12:43Z",
+      "side": 1,
+      "message": "Yes, mAttributes can contain inactive attributes at this point.\n\nAnd yeah, it makes the code a bit neater if we pick whether we process all/active attributes based on shaderVersion. Changed it.",
+      "parentUuid": "d3e1550b_1fd23b0a",
+      "range": {
+        "startLine": 2672,
+        "startChar": 40,
+        "endLine": 2672,
+        "endChar": 51
+      },
+      "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6a2cf3ab_f98a3adf",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2727,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-10T15:12:43Z",
+      "side": 1,
+      "message": "No, since the fix is not relevant for WebGL. It might turn out to be quite a lot of work only to support code that relies on this odd quirk of GLES2.",
+      "parentUuid": "49eb3cb4_d6c4fcbe",
+      "range": {
+        "startLine": 2727,
+        "startChar": 20,
+        "endLine": 2727,
+        "endChar": 57
+      },
+      "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "313c37d6_0a6369a8",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2
@@ -91,6 +163,30 @@
       "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bbe5a70_757d7e7b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2745,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-10T15:12:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "313c37d6_0a6369a8",
+      "range": {
+        "startLine": 2745,
+        "startChar": 24,
+        "endLine": 2745,
+        "endChar": 28
+      },
+      "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
