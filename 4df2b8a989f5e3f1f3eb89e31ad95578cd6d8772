@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aaa9a3ae_bfa56f83",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-10T17:40:20Z",
+      "side": 1,
+      "message": "I had a different solution in mind... use a new method to merge your gl_angle_ext.xml with gl.xml and then treat these extensions normally.\n\nSee some examples on SO:\nhttps://stackoverflow.com/questions/15921642/merging-xml-files-using-pythons-elementtree\nhttps://stackoverflow.com/questions/14878706/merge-xml-files-with-nested-elements-without-external-libraries",
+      "revId": "4df2b8a989f5e3f1f3eb89e31ad95578cd6d8772",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "428dd7cb_dc181252",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-10T17:40:20Z",
+      "side": 1,
+      "message": "can we call this gl_angle_ext.xml",
+      "range": {
+        "startLine": 192,
+        "startChar": 46,
+        "endLine": 192,
+        "endChar": 52
+      },
+      "revId": "4df2b8a989f5e3f1f3eb89e31ad95578cd6d8772",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35eef675_10095267",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-10T17:40:20Z",
+      "side": 1,
+      "message": "fyi most of these includes should be unnecessary",
+      "range": {
+        "startLine": 611,
+        "startChar": 0,
+        "endLine": 627,
+        "endChar": 36
+      },
+      "revId": "4df2b8a989f5e3f1f3eb89e31ad95578cd6d8772",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d64bfa7b_462cc1de",
+        "filename": "scripts/gl_ext.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-10T17:40:20Z",
+      "side": 1,
+      "message": "can you please include a comment at the top with the ANGLE license and a brief file description and pointer to the generator script?",
+      "revId": "4df2b8a989f5e3f1f3eb89e31ad95578cd6d8772",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
