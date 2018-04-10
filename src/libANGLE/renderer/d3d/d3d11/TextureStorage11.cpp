@@ -1109,7 +1109,15 @@ gl::Error TextureStorage11_2D::ensureTextureExists(int mipLevels)
         desc.MiscFlags          = getMiscFlags();
 
         ANGLE_TRY(mRenderer->allocateTexture(desc, mFormatInfo, outputTexture));
-        outputTexture->setDebugName("TexStorage2D.Texture");
+
+        if (useLevelZeroTexture)
+        {
+            outputTexture->setDebugName("TexStorage2D.Level0Texture");
+        }
+        else
+        {
+            outputTexture->setDebugName("TexStorage2D.Texture");
+        }
     }
 
     return gl::NoError();
@@ -1166,6 +1174,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
 
             d3d11::RenderTargetView rtv;
             ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mLevelZeroTexture.get(), &rtv));
+            rtv.setDebugName("TexStorage2D.Level0RTV");
 
             mLevelZeroRenderTarget.reset(new TextureRenderTarget11(
                 std::move(rtv), mLevelZeroTexture, d3d11::SharedSRV(), d3d11::SharedSRV(),
@@ -1186,6 +1195,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
 
         d3d11::RenderTargetView rtv;
         ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
+        rtv.setDebugName("TexStorage2D.RTV");
 
         mRenderTarget[level].reset(new TextureRenderTarget11(
             std::move(rtv), *texture, *srv, *blitSRV, mFormatInfo.internalFormat, getFormatSet(),
@@ -1205,6 +1215,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
 
     d3d11::DepthStencilView dsv;
     ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture->get(), &dsv));
+    dsv.setDebugName("TexStorage2D.DSV");
 
     mRenderTarget[level].reset(new TextureRenderTarget11(
         std::move(dsv), *texture, *srv, mFormatInfo.internalFormat, getFormatSet(),

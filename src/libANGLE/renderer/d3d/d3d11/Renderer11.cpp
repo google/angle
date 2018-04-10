@@ -2520,6 +2520,7 @@ gl::Error Renderer11::createRenderTarget(int width,
 
         TextureHelper11 texture;
         ANGLE_TRY(allocateTexture(desc, formatInfo, &texture));
+        texture.setDebugName("createRenderTarget.Texture");
 
         d3d11::SharedSRV srv;
         d3d11::SharedSRV blitSRV;
@@ -2533,6 +2534,7 @@ gl::Error Renderer11::createRenderTarget(int width,
             srvDesc.Texture2D.MipLevels       = 1;
 
             ANGLE_TRY(allocateResource(srvDesc, texture.get(), &srv));
+            srv.setDebugName("createRenderTarget.SRV");
 
             if (formatInfo.blitSRVFormat != formatInfo.srvFormat)
             {
@@ -2545,6 +2547,7 @@ gl::Error Renderer11::createRenderTarget(int width,
                 blitSRVDesc.Texture2D.MipLevels       = 1;
 
                 ANGLE_TRY(allocateResource(blitSRVDesc, texture.get(), &blitSRV));
+                blitSRV.setDebugName("createRenderTarget.BlitSRV");
             }
             else
             {
@@ -2563,6 +2566,7 @@ gl::Error Renderer11::createRenderTarget(int width,
 
             d3d11::DepthStencilView dsv;
             ANGLE_TRY(allocateResource(dsvDesc, texture.get(), &dsv));
+            dsv.setDebugName("createRenderTarget.DSV");
 
             *outRT = new TextureRenderTarget11(std::move(dsv), texture, srv, format, formatInfo,
                                                width, height, 1, supportedSamples);
@@ -2577,6 +2581,7 @@ gl::Error Renderer11::createRenderTarget(int width,
 
             d3d11::RenderTargetView rtv;
             ANGLE_TRY(allocateResource(rtvDesc, texture.get(), &rtv));
+            rtv.setDebugName("createRenderTarget.RTV");
 
             if (formatInfo.dataInitializerFunction != nullptr)
             {
@@ -3051,6 +3056,7 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
         createStagingTexture(textureHelper.getTextureType(), textureHelper.getFormatSet(), safeSize,
                              StagingAccess::READ),
         stagingHelper);
+    stagingHelper.setDebugName("readFromAttachment::stagingHelper");
 
     TextureHelper11 resolvedTextureHelper;
 
@@ -3075,6 +3081,7 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
 
         ANGLE_TRY(
             allocateTexture(resolveDesc, textureHelper.getFormatSet(), &resolvedTextureHelper));
+        resolvedTextureHelper.setDebugName("readFromAttachment::resolvedTextureHelper");
 
         mDeviceContext->ResolveSubresource(resolvedTextureHelper.get(), 0, textureHelper.get(),
                                            sourceSubResource, textureHelper.getFormat());
