@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c9bd139_25ef9c96",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-10T01:11:30Z",
+      "side": 1,
+      "message": "I think you\u0027ve written this one on your own, actually.\nSeems like perfetto instructions are to just:\ngn desc out --format\u003djson --all-toolchains \"//*\" \u003e desc.json",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 0
+      },
+      "revId": "771220204986e76f5574c300b37e9059321dae03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc8179eb_fecef990",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-10T01:11:30Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 14,
+        "startChar": 61,
+        "endLine": 14,
+        "endChar": 70
+      },
+      "revId": "771220204986e76f5574c300b37e9059321dae03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbcc6027_1a2b5ab7",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-10T01:11:30Z",
+      "side": 1,
+      "message": "I don\u0027t see errno, os, shutil being used.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 10
+      },
+      "revId": "771220204986e76f5574c300b37e9059321dae03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d485ddf3_f7aeed10",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-10T01:11:30Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 0
+      },
+      "revId": "771220204986e76f5574c300b37e9059321dae03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c51745dc_9691cb55",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-10T01:11:30Z",
+      "side": 1,
+      "message": "Doesn\u0027t seem to be used",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 0
+      },
+      "revId": "771220204986e76f5574c300b37e9059321dae03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "475e9dc7_65b67707",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-10T01:11:30Z",
+      "side": 1,
+      "message": "json",
+      "range": {
+        "startLine": 108,
+        "startChar": 21,
+        "endLine": 108,
+        "endChar": 62
+      },
+      "revId": "771220204986e76f5574c300b37e9059321dae03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
