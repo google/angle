@@ -50,6 +50,7 @@ declare_args() {
 declare_args() {
   angle_enable_gl_null = angle_enable_gl
   angle_enable_hlsl = angle_enable_d3d9 || angle_enable_d3d11
+  angle_enable_vulkan_validation_layers = angle_enable_vulkan
 }
 
 if (is_win) {

@@ -422,20 +422,26 @@ if (angle_enable_vulkan) {
     public_deps = [
       "$angle_root/third_party/vulkan-validation-layers:vulkan_headers",
     ]
-    data_deps = [
-      "$angle_root/third_party/vulkan-validation-layers:vulkan_validation_layers",
-    ]
     public_configs = [
       "$angle_root/third_party/glslang:glslang_config",
       "$angle_root/third_party/vulkan-validation-layers:vulkan_config",
     ]
+    data_deps = [ ]
     if (!is_android) {
       deps += [ "$angle_root/third_party/vulkan-validation-layers:libvulkan" ]
-      data_deps += [
-        "$angle_root/third_party/vulkan-validation-layers:vulkan_gen_json_files",
-        "$angle_root/third_party/vulkan-validation-layers:VkICD_mock_icd",
-      ]
+      data_deps += [ "$angle_root/third_party/vulkan-validation-layers:VkICD_mock_icd" ]
       public_configs += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_loader_config" ]
+    }
+
+    if (angle_enable_vulkan_validation_layers) {
+      data_deps += [
+        "$angle_root/third_party/vulkan-validation-layers:vulkan_validation_layers",
+      ]
+      if (!is_android) {
+        data_deps += [
+          "$angle_root/third_party/vulkan-validation-layers:vulkan_gen_json_files",
+        ]
+      }
     }
   }
 }
