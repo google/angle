@@ -303,7 +303,12 @@ Error DynamicDescriptorPool::allocateNewPool(const VkDevice &device)
 LineLoopHelper::LineLoopHelper()
     : mDynamicIndexBuffer(kLineLoopDynamicBufferUsage, kLineLoopDynamicBufferMinSize)
 {
-    mDynamicIndexBuffer.init(1);
+    // We need to use an alignment of the maximum size we're going to allocate, which is
+    // VK_INDEX_TYPE_UINT32. When we switch from a drawElement to a drawArray call, the allocations
+    // can vary in size. According to the Vulkan spec, when calling vkCmdBindIndexBuffer: 'The
+    // sum of offset and the address of the range of VkDeviceMemory object that is backing buffer,
+    // must be a multiple of the type indicated by indexType'.
+    mDynamicIndexBuffer.init(sizeof(uint32_t));
 }
 
 LineLoopHelper::~LineLoopHelper() = default;

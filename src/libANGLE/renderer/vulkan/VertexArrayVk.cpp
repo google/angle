@@ -367,7 +367,6 @@ gl::Error VertexArrayVk::drawArrays(const gl::Context *context,
     }
 
     // Handle GL_LINE_LOOP drawArrays.
-    // This test may be incorrect if the draw call switches from DrawArrays/DrawElements.
     int lastVertex = drawCallParams.firstVertex() + drawCallParams.vertexCount();
     if (!mLineLoopBufferFirstIndex.valid() || !mLineLoopBufferLastIndex.valid() ||
         mLineLoopBufferFirstIndex != drawCallParams.firstVertex() ||
@@ -417,7 +416,6 @@ gl::Error VertexArrayVk::drawElements(const gl::Context *context,
 
     VkIndexType indexType = gl_vk::GetIndexType(drawCallParams.type());
 
-    // This also doesn't check if the element type changed, which should trigger translation.
     if (mDirtyLineLoopTranslation)
     {
         ANGLE_TRY(mLineLoopHelper.getIndexBufferForElementArrayBuffer(
@@ -469,6 +467,11 @@ gl::Error VertexArrayVk::onDraw(const gl::Context *context,
 
         // This forces the binding to happen if we follow a drawElement call from a drawArrays call.
         mIndexBufferDirty = true;
+
+        // If we've had a drawElements call with a line loop before, we want to make sure this is
+        // invalidated the next time drawElements is called since we use the same index buffer for
+        // both calls.
+        mDirtyLineLoopTranslation = true;
     }
 
     return gl::NoError();
@@ -507,6 +510,12 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
                                        gl_vk::GetIndexType(drawCallParams.type()));
         updateElementArrayBufferReadDependency(drawNode, renderer->getCurrentQueueSerial());
         mIndexBufferDirty = false;
+
+        // If we've had a drawArrays call with a line loop before, we want to make sure this is
+        // invalidated the next time drawArrays is called since we use the same index buffer for
+        // both calls.
+        mLineLoopBufferFirstIndex.reset();
+        mLineLoopBufferLastIndex.reset();
     }
 
     return gl::NoError();
