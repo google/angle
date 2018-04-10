@@ -628,7 +628,7 @@ bool ValidateGetActiveUniformBlockivRobustANGLE(Context *context,
                                                 GLsizei *length,
                                                 GLint *params);
 
-bool ValidateGetInternalFormativRobustANGLE(Context *context,
+bool ValidateGetInternalformativRobustANGLE(Context *context,
                                             GLenum target,
                                             GLenum internalformat,
                                             GLenum pname,

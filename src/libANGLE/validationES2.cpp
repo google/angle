@@ -2623,17 +2623,17 @@ bool ValidateTexImage2D(Context *context,
                                            pixels);
 }
 
-bool ValidateTexImage2DRobust(Context *context,
-                              TextureTarget target,
-                              GLint level,
-                              GLint internalformat,
-                              GLsizei width,
-                              GLsizei height,
-                              GLint border,
-                              GLenum format,
-                              GLenum type,
-                              GLsizei bufSize,
-                              const void *pixels)
+bool ValidateTexImage2DRobustANGLE(Context *context,
+                                   TextureTarget target,
+                                   GLint level,
+                                   GLint internalformat,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLint border,
+                                   GLenum format,
+                                   GLenum type,
+                                   GLsizei bufSize,
+                                   const void *pixels)
 {
     if (!ValidateRobustEntryPoint(context, bufSize))
     {
