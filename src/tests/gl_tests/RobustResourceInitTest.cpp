@@ -1283,7 +1283,7 @@ TEST_P(RobustResourceInitTestES3, MaskedStencilClearBuffer)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     // http://anglebug.com/2408
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL() && IsIntel());
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL() && (IsIntel() || IsNVIDIA()));
 
     // http://anglebug.com/2407
     ANGLE_SKIP_TEST_IF(IsAndroid());
