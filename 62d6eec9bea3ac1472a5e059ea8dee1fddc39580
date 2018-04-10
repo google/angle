@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de2c59cb_8c4933eb",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2448,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-10T17:42:57Z",
+      "side": 1,
+      "message": "for this test and the below, could you change this to \n\nANGLE_SKIP_TEST_IF(!extensionEnabled(\"...\"));\n\nthen flatten out the if block",
+      "range": {
+        "startLine": 2447,
+        "startChar": 0,
+        "endLine": 2448,
+        "endChar": 49
+      },
+      "revId": "62d6eec9bea3ac1472a5e059ea8dee1fddc39580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
