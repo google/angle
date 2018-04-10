@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5a762d4_8341aeb1",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2671,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-10T14:39:25Z",
+      "side": 1,
+      "message": "is this being resolved? can you remove it?",
+      "range": {
+        "startLine": 2671,
+        "startChar": 4,
+        "endLine": 2671,
+        "endChar": 46
+      },
+      "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3e1550b_1fd23b0a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2672,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-10T14:39:25Z",
+      "side": 1,
+      "message": "can mAttributes contain inactive attributes? trying to understand the difference - maybe a comment would help. not sure how the program has inactive attributes if the vertex shader only has active ones.\n\njust saw you added \"all\" attributes as well - maybe you should instead query the vertex shader for all/active if the shaderVersion \u003e\u003d 300",
+      "range": {
+        "startLine": 2672,
+        "startChar": 40,
+        "endLine": 2672,
+        "endChar": 51
+      },
+      "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49eb3cb4_d6c4fcbe",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2727,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-10T14:39:25Z",
+      "side": 1,
+      "message": "are you planning on fixing this?",
+      "range": {
+        "startLine": 2727,
+        "startChar": 20,
+        "endLine": 2727,
+        "endChar": 57
+      },
+      "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "313c37d6_0a6369a8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2745,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-10T14:39:25Z",
+      "side": 1,
+      "message": "nit: to",
+      "range": {
+        "startLine": 2745,
+        "startChar": 24,
+        "endLine": 2745,
+        "endChar": 28
+      },
+      "revId": "ae7ab8febb6df2e7751d52f43a343f7619c34f48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
