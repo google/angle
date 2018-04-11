@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46e650e2_92ca5acc",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-11T16:59:29Z",
+      "side": 1,
+      "message": "I think you can do mIndexBufferDirty \u003d true; in this block instead to preserve the hot path speed.",
+      "range": {
+        "startLine": 443,
+        "startChar": 4,
+        "endLine": 443,
+        "endChar": 53
+      },
+      "revId": "7137f144eea944af4c055b43e7a81601fc10369e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
