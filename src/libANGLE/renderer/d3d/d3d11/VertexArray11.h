@@ -62,10 +62,12 @@ class VertexArray11 : public VertexArrayImpl
     void updateVertexAttribStorage(StateManager11 *stateManager,
                                    size_t dirtyBit,
                                    size_t attribIndex);
-    gl::Error updateDirtyAttribs(const gl::Context *context);
+    gl::Error updateDirtyAttribs(const gl::Context *context,
+                                 const gl::AttributesMask &activeDirtyAttribs);
     gl::Error updateDynamicAttribs(const gl::Context *context,
                                    VertexDataManager *vertexDataManager,
-                                   const gl::DrawCallParams &drawCallParams);
+                                   const gl::DrawCallParams &drawCallParams,
+                                   const gl::AttributesMask &activeDynamicAttribs);
 
     std::vector<VertexStorageType> mAttributeStorageTypes;
     std::vector<TranslatedAttribute> mTranslatedAttribs;

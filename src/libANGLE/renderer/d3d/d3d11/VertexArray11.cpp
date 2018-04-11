@@ -109,21 +109,35 @@ gl::Error VertexArray11::syncStateForDraw(const gl::Context *context,
     Renderer11 *renderer         = GetImplAs<Context11>(context)->getRenderer();
     StateManager11 *stateManager = renderer->getStateManager();
 
-    const gl::Program *program = context->getGLState().getProgram();
+    const gl::State &glState   = context->getGLState();
+    const gl::Program *program = glState.getProgram();
     ASSERT(program);
     mAppliedNumViewsToDivisor = (program->usesMultiview() ? program->getNumViews() : 1);
 
     if (mAttribsToTranslate.any())
     {
-        ANGLE_TRY(updateDirtyAttribs(context));
-        stateManager->invalidateInputLayout();
+        const gl::AttributesMask &activeLocations =
+            glState.getProgram()->getActiveAttribLocationsMask();
+        gl::AttributesMask activeDirtyAttribs = (mAttribsToTranslate & activeLocations);
+        if (activeDirtyAttribs.any())
+        {
+            ANGLE_TRY(updateDirtyAttribs(context, activeDirtyAttribs));
+            stateManager->invalidateInputLayout();
+        }
     }
 
     if (mDynamicAttribsMask.any())
     {
-        ANGLE_TRY(
-            updateDynamicAttribs(context, stateManager->getVertexDataManager(), drawCallParams));
-        stateManager->invalidateInputLayout();
+        const gl::AttributesMask &activeLocations =
+            glState.getProgram()->getActiveAttribLocationsMask();
+        gl::AttributesMask activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
+
+        if (activeDynamicAttribs.any())
+        {
+            ANGLE_TRY(updateDynamicAttribs(context, stateManager->getVertexDataManager(),
+                                           drawCallParams, activeDynamicAttribs));
+            stateManager->invalidateInputLayout();
+        }
     }
 
     if (drawCallParams.isDrawElements())
@@ -210,17 +224,14 @@ bool VertexArray11::hasActiveDynamicAttrib(const gl::Context *context)
     return activeDynamicAttribs.any();
 }
 
-gl::Error VertexArray11::updateDirtyAttribs(const gl::Context *context)
+gl::Error VertexArray11::updateDirtyAttribs(const gl::Context *context,
+                                            const gl::AttributesMask &activeDirtyAttribs)
 {
-    const auto &glState         = context->getGLState();
-    const auto &activeLocations = glState.getProgram()->getActiveAttribLocationsMask();
-    const auto &attribs         = mState.getVertexAttributes();
-    const auto &bindings        = mState.getVertexBindings();
+    const auto &glState  = context->getGLState();
+    const auto &attribs  = mState.getVertexAttributes();
+    const auto &bindings = mState.getVertexBindings();
 
-    // Skip attrib locations the program doesn't use, saving for the next frame.
-    gl::AttributesMask dirtyActiveAttribs = (mAttribsToTranslate & activeLocations);
-
-    for (size_t dirtyAttribIndex : dirtyActiveAttribs)
+    for (size_t dirtyAttribIndex : activeDirtyAttribs)
     {
         mAttribsToTranslate.reset(dirtyAttribIndex);
 
@@ -258,20 +269,14 @@ gl::Error VertexArray11::updateDirtyAttribs(const gl::Context *context)
 
 gl::Error VertexArray11::updateDynamicAttribs(const gl::Context *context,
                                               VertexDataManager *vertexDataManager,
-                                              const gl::DrawCallParams &drawCallParams)
+                                              const gl::DrawCallParams &drawCallParams,
+                                              const gl::AttributesMask &activeDynamicAttribs)
 {
-    const auto &glState         = context->getGLState();
-    const auto &activeLocations = glState.getProgram()->getActiveAttribLocationsMask();
-    const auto &attribs         = mState.getVertexAttributes();
-    const auto &bindings        = mState.getVertexBindings();
+    const auto &glState  = context->getGLState();
+    const auto &attribs  = mState.getVertexAttributes();
+    const auto &bindings = mState.getVertexBindings();
 
     ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
-
-    auto activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
-    if (activeDynamicAttribs.none())
-    {
-        return gl::NoError();
-    }
 
     for (size_t dynamicAttribIndex : activeDynamicAttribs)
     {
