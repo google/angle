@@ -16,6 +16,7 @@
 #include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "libANGLE/AttributeMap.h"
+#include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/RefCountObject.h"
@@ -43,14 +44,18 @@ struct SurfaceState final : private angle::NonCopyable
 {
     SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn);
 
+    EGLLabelKHR label;
     const egl::Config *config;
     AttributeMap attributes;
 };
 
-class Surface : public gl::FramebufferAttachmentObject
+class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
 {
   public:
     rx::SurfaceImpl *getImplementation() const { return mImplementation; }
+
+    void setLabel(EGLLabelKHR label) override;
+    EGLLabelKHR getLabel() const override;
 
     EGLint getType() const;
 

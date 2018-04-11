@@ -50,7 +50,6 @@ void ClipConfigs(const std::vector<const Config *> &filteredConfigs,
     }
     *num_config = result_size;
 }
-
 }  // anonymous namespace
 
 // EGL 1.0
@@ -60,7 +59,7 @@ EGLint EGLAPIENTRY GetError(void)
     Thread *thread = GetCurrentThread();
 
     EGLint error = thread->getError();
-    thread->setError(NoError());
+    thread->setSuccess();
     return error;
 }
 
@@ -80,14 +79,14 @@ EGLBoolean EGLAPIENTRY Initialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
     Display *display = static_cast<Display *>(dpy);
     if (dpy == EGL_NO_DISPLAY || !Display::isValidDisplay(display))
     {
-        thread->setError(EglBadDisplay());
+        thread->setError(EglBadDisplay(), GetDebug(), "eglInitialize", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
     Error error = display->initialize();
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglInitialize", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
@@ -96,7 +95,7 @@ EGLBoolean EGLAPIENTRY Initialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
     if (minor)
         *minor = 4;
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -108,7 +107,7 @@ EGLBoolean EGLAPIENTRY Terminate(EGLDisplay dpy)
     Display *display = static_cast<Display *>(dpy);
     if (dpy == EGL_NO_DISPLAY || !Display::isValidDisplay(display))
     {
-        thread->setError(EglBadDisplay());
+        thread->setError(EglBadDisplay(), GetDebug(), "eglTerminate", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
@@ -120,11 +119,11 @@ EGLBoolean EGLAPIENTRY Terminate(EGLDisplay dpy)
     Error error = display->terminate();
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglTerminate", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -139,7 +138,7 @@ const char *EGLAPIENTRY QueryString(EGLDisplay dpy, EGLint name)
         Error error = ValidateDisplay(display);
         if (error.isError())
         {
-            thread->setError(error);
+            thread->setError(error, GetDebug(), "eglQueryString", GetDisplayIfValid(display));
             return nullptr;
         }
     }
@@ -167,11 +166,12 @@ const char *EGLAPIENTRY QueryString(EGLDisplay dpy, EGLint name)
             result = "1.4 (ANGLE " ANGLE_VERSION_STRING ")";
             break;
         default:
-            thread->setError(EglBadParameter());
+            thread->setError(EglBadParameter(), GetDebug(), "eglQueryString",
+                             GetDisplayIfValid(display));
             return nullptr;
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return result;
 }
 
@@ -191,13 +191,13 @@ EGLBoolean EGLAPIENTRY GetConfigs(EGLDisplay dpy,
     Error error = ValidateGetConfigs(display, config_size, num_config);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglGetConfigs", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
     ClipConfigs(display->getConfigs(AttributeMap()), configs, config_size, num_config);
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -219,13 +219,13 @@ EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy,
     Error error = ValidateChooseConfig(display, attribMap, config_size, num_config);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglChooseConfig", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
     ClipConfigs(display->getConfigs(attribMap), configs, config_size, num_config);
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -246,13 +246,13 @@ EGLBoolean EGLAPIENTRY GetConfigAttrib(EGLDisplay dpy,
     Error error = ValidateGetConfigAttrib(display, configuration, attribute);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglGetConfigAttrib", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
     QueryConfigAttrib(configuration, attribute, value);
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -274,7 +274,7 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy,
     Error error = ValidateCreateWindowSurface(display, configuration, win, attributes);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCreateWindowSurface", GetDisplayIfValid(display));
         return EGL_NO_SURFACE;
     }
 
@@ -282,7 +282,7 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy,
     error                 = display->createWindowSurface(configuration, win, attributes, &surface);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCreateWindowSurface", GetDisplayIfValid(display));
         return EGL_NO_SURFACE;
     }
 
@@ -306,7 +306,7 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy,
     Error error = ValidateCreatePbufferSurface(display, configuration, attributes);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCreatePbufferSurface", GetDisplayIfValid(display));
         return EGL_NO_SURFACE;
     }
 
@@ -314,7 +314,7 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy,
     error                 = display->createPbufferSurface(configuration, attributes, &surface);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCreatePbufferSurface", GetDisplayIfValid(display));
         return EGL_NO_SURFACE;
     }
 
@@ -339,13 +339,13 @@ EGLSurface EGLAPIENTRY CreatePixmapSurface(EGLDisplay dpy,
     Error error = ValidateConfig(display, configuration);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCreatePixmapSurface", GetDisplayIfValid(display));
         return EGL_NO_SURFACE;
     }
 
     UNIMPLEMENTED();  // FIXME
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_NO_SURFACE;
 }
 
@@ -360,24 +360,27 @@ EGLBoolean EGLAPIENTRY DestroySurface(EGLDisplay dpy, EGLSurface surface)
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglDestroySurface",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (surface == EGL_NO_SURFACE)
     {
-        thread->setError(EglBadSurface());
+        thread->setError(EglBadSurface(), GetDebug(), "eglDestroySurface",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
-    error = display->destroySurface(reinterpret_cast<Surface *>(surface));
+    error = display->destroySurface(eglSurface);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglDestroySurface",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -398,13 +401,14 @@ EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy,
     Error error = ValidateQuerySurface(display, eglSurface, attribute, value);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglQuerySurface",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     QuerySurfaceAttrib(eglSurface, attribute, value);
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -428,7 +432,7 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy,
     Error error = ValidateCreateContext(display, configuration, sharedGLContext, attributes);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCreateContext", GetDisplayIfValid(display));
         return EGL_NO_CONTEXT;
     }
 
@@ -436,11 +440,11 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy,
     error = display->createContext(configuration, sharedGLContext, attributes, &context);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCreateContext", GetDisplayIfValid(display));
         return EGL_NO_CONTEXT;
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return static_cast<EGLContext>(context);
 }
 
@@ -455,13 +459,15 @@ EGLBoolean EGLAPIENTRY DestroyContext(EGLDisplay dpy, EGLContext ctx)
     Error error = ValidateContext(display, context);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglDestroyContext",
+                         GetContextIfValid(display, context));
         return EGL_FALSE;
     }
 
     if (ctx == EGL_NO_CONTEXT)
     {
-        thread->setError(EglBadContext());
+        thread->setError(EglBadContext(), GetDebug(), "eglDestroyContext",
+                         GetContextIfValid(display, context));
         return EGL_FALSE;
     }
 
@@ -473,11 +479,12 @@ EGLBoolean EGLAPIENTRY DestroyContext(EGLDisplay dpy, EGLContext ctx)
     error = display->destroyContext(context);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglDestroyContext",
+                         GetContextIfValid(display, context));
         return EGL_FALSE;
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -495,7 +502,7 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
     gl::Context *context = static_cast<gl::Context *>(ctx);
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateMakeCurrent(display, drawSurface, readSurface, context),
-                         EGL_FALSE);
+                         "eglMakeCurrent", GetContextIfValid(display, context), EGL_FALSE);
 
     Surface *previousDraw        = thread->getCurrentDrawSurface();
     Surface *previousRead        = thread->getCurrentReadSurface();
@@ -505,7 +512,7 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
     if (previousDraw != drawSurface || previousRead != readSurface || previousContext != context)
     {
         ANGLE_EGL_TRY_RETURN(thread, display->makeCurrent(drawSurface, readSurface, context),
-                             EGL_FALSE);
+                             "eglMakeCurrent", GetContextIfValid(display, context), EGL_FALSE);
 
         thread->setCurrent(context);
 
@@ -513,11 +520,12 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
         // destroyed surfaces to delete themselves.
         if (previousContext != nullptr && context != previousContext)
         {
-            ANGLE_EGL_TRY_RETURN(thread, previousContext->releaseSurface(display), EGL_FALSE);
+            ANGLE_EGL_TRY_RETURN(thread, previousContext->releaseSurface(display), "eglMakeCurrent",
+                                 GetContextIfValid(display, context), EGL_FALSE);
         }
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -528,17 +536,17 @@ EGLSurface EGLAPIENTRY GetCurrentSurface(EGLint readdraw)
 
     if (readdraw == EGL_READ)
     {
-        thread->setError(NoError());
+        thread->setSuccess();
         return thread->getCurrentReadSurface();
     }
     else if (readdraw == EGL_DRAW)
     {
-        thread->setError(NoError());
+        thread->setSuccess();
         return thread->getCurrentDrawSurface();
     }
     else
     {
-        thread->setError(EglBadParameter());
+        thread->setError(EglBadParameter(), GetDebug(), "eglGetCurrentSurface", nullptr);
         return EGL_NO_SURFACE;
     }
 }
@@ -548,7 +556,7 @@ EGLDisplay EGLAPIENTRY GetCurrentDisplay(void)
     EVENT("()");
     Thread *thread = GetCurrentThread();
 
-    thread->setError(NoError());
+    thread->setSuccess();
     if (thread->getContext() != nullptr)
     {
         return thread->getContext()->getCurrentDisplay();
@@ -570,13 +578,13 @@ EGLBoolean EGLAPIENTRY QueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attri
     Error error = ValidateQueryContext(display, context, attribute, value);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglQueryContext", GetContextIfValid(display, context));
         return EGL_FALSE;
     }
 
     QueryContextAttrib(context, attribute, value);
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -590,7 +598,7 @@ EGLBoolean EGLAPIENTRY WaitGL(void)
     Error error = ValidateDisplay(display);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglWaitGL", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
@@ -599,11 +607,11 @@ EGLBoolean EGLAPIENTRY WaitGL(void)
     error = display->waitClient(thread->getContext());
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglWaitGL", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -617,23 +625,24 @@ EGLBoolean EGLAPIENTRY WaitNative(EGLint engine)
     Error error = ValidateDisplay(display);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglWaitNative", GetThreadIfValid(thread));
         return EGL_FALSE;
     }
 
     if (engine != EGL_CORE_NATIVE_ENGINE)
     {
-        thread->setError(EglBadParameter() << "the 'engine' parameter has an unrecognized value");
+        thread->setError(EglBadParameter() << "the 'engine' parameter has an unrecognized value",
+                         GetDebug(), "eglWaitNative", GetDisplayIfValid(display));
     }
 
     error = display->waitNative(thread->getContext(), engine);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglWaitNative", GetThreadIfValid(thread));
         return EGL_FALSE;
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -648,36 +657,41 @@ EGLBoolean EGLAPIENTRY SwapBuffers(EGLDisplay dpy, EGLSurface surface)
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglSwapBuffers",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (display->isDeviceLost())
     {
-        thread->setError(EglContextLost());
+        thread->setError(EglContextLost(), GetDebug(), "eglSwapBuffers",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (surface == EGL_NO_SURFACE)
     {
-        thread->setError(EglBadSurface());
+        thread->setError(EglBadSurface(), GetDebug(), "eglSwapBuffers",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (!thread->getContext() || thread->getCurrentDrawSurface() != eglSurface)
     {
-        thread->setError(EglBadSurface());
+        thread->setError(EglBadSurface(), GetDebug(), "eglSwapBuffers",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     error = eglSurface->swap(thread->getContext());
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglSwapBuffers",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -695,19 +709,21 @@ EGLBoolean EGLAPIENTRY CopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNative
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCopyBuffers",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (display->testDeviceLost())
     {
-        thread->setError(EglContextLost());
+        thread->setError(EglContextLost(), GetDebug(), "eglCopyBuffers",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     UNIMPLEMENTED();  // FIXME
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return 0;
 }
 
@@ -724,31 +740,36 @@ EGLBoolean EGLAPIENTRY BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint b
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglBindTexImage",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (buffer != EGL_BACK_BUFFER)
     {
-        thread->setError(EglBadParameter());
+        thread->setError(EglBadParameter(), GetDebug(), "eglBindTexImage",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (surface == EGL_NO_SURFACE || eglSurface->getType() == EGL_WINDOW_BIT)
     {
-        thread->setError(EglBadSurface());
+        thread->setError(EglBadSurface(), GetDebug(), "eglBindTexImage",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (eglSurface->getBoundTexture())
     {
-        thread->setError(EglBadAccess());
+        thread->setError(EglBadAccess(), GetDebug(), "eglBindTexImage",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (eglSurface->getTextureFormat() == TextureFormat::NoTexture)
     {
-        thread->setError(EglBadMatch());
+        thread->setError(EglBadMatch(), GetDebug(), "eglBindTexImage",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
@@ -762,19 +783,21 @@ EGLBoolean EGLAPIENTRY BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint b
 
         if (textureObject->getImmutableFormat())
         {
-            thread->setError(EglBadMatch());
+            thread->setError(EglBadMatch(), GetDebug(), "eglBindTexImage",
+                             GetSurfaceIfValid(display, eglSurface));
             return EGL_FALSE;
         }
 
         error = eglSurface->bindTexImage(context, textureObject, buffer);
         if (error.isError())
         {
-            thread->setError(error);
+            thread->setError(error, GetDebug(), "eglBindTexImage",
+                             GetSurfaceIfValid(display, eglSurface));
             return EGL_FALSE;
         }
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -795,13 +818,14 @@ EGLBoolean EGLAPIENTRY SurfaceAttrib(EGLDisplay dpy,
     Error error = ValidateSurfaceAttrib(display, eglSurface, attribute, value);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglSurfaceAttrib",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     SetSurfaceAttrib(eglSurface, attribute, value);
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -817,25 +841,29 @@ EGLBoolean EGLAPIENTRY ReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLin
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglReleaseTexImage",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (buffer != EGL_BACK_BUFFER)
     {
-        thread->setError(EglBadParameter());
+        thread->setError(EglBadParameter(), GetDebug(), "eglReleaseTexImage",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (surface == EGL_NO_SURFACE || eglSurface->getType() == EGL_WINDOW_BIT)
     {
-        thread->setError(EglBadSurface());
+        thread->setError(EglBadSurface(), GetDebug(), "eglReleaseTexImage",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
     if (eglSurface->getTextureFormat() == TextureFormat::NoTexture)
     {
-        thread->setError(EglBadMatch());
+        thread->setError(EglBadMatch(), GetDebug(), "eglReleaseTexImage",
+                         GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
 
@@ -846,12 +874,13 @@ EGLBoolean EGLAPIENTRY ReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLin
         error = eglSurface->releaseTexImage(thread->getContext(), buffer);
         if (error.isError())
         {
-            thread->setError(error);
+            thread->setError(error, GetDebug(), "eglReleaseTexImage",
+                             GetSurfaceIfValid(display, eglSurface));
             return EGL_FALSE;
         }
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -865,7 +894,7 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
     Error error = ValidateDisplay(display);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglSwapInterval", GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
@@ -873,7 +902,8 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
 
     if (draw_surface == nullptr)
     {
-        thread->setError(EglBadSurface());
+        thread->setError(EglBadSurface(), GetDebug(), "eglSwapInterval",
+                         GetDisplayIfValid(display));
         return EGL_FALSE;
     }
 
@@ -883,7 +913,7 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
 
     draw_surface->setSwapInterval(clampedInterval);
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -897,18 +927,18 @@ EGLBoolean EGLAPIENTRY BindAPI(EGLenum api)
     {
         case EGL_OPENGL_API:
         case EGL_OPENVG_API:
-            thread->setError(EglBadParameter());
+            thread->setError(EglBadParameter(), GetDebug(), "eglBindAPI", GetThreadIfValid(thread));
             return EGL_FALSE;  // Not supported by this implementation
         case EGL_OPENGL_ES_API:
             break;
         default:
-            thread->setError(EglBadParameter());
+            thread->setError(EglBadParameter(), GetDebug(), "eglBindAPI", GetThreadIfValid(thread));
             return EGL_FALSE;
     }
 
     thread->setAPI(api);
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -919,7 +949,7 @@ EGLenum EGLAPIENTRY QueryAPI(void)
 
     EGLenum API = thread->getAPI();
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return API;
 }
 
@@ -943,7 +973,8 @@ EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy,
         ValidateCreatePbufferFromClientBuffer(display, buftype, buffer, configuration, attributes);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCreatePbufferFromClientBuffer",
+                         GetDisplayIfValid(display));
         return EGL_NO_SURFACE;
     }
 
@@ -952,7 +983,8 @@ EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy,
                                                    &surface);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglCreatePbufferFromClientBuffer",
+                         GetDisplayIfValid(display));
         return EGL_NO_SURFACE;
     }
 
@@ -966,7 +998,7 @@ EGLBoolean EGLAPIENTRY ReleaseThread(void)
 
     MakeCurrent(EGL_NO_DISPLAY, EGL_NO_CONTEXT, EGL_NO_SURFACE, EGL_NO_SURFACE);
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -975,23 +1007,24 @@ EGLBoolean EGLAPIENTRY WaitClient(void)
     EVENT("()");
     Thread *thread = GetCurrentThread();
 
-    Display *display = thread->getCurrentDisplay();
+    Display *display     = thread->getCurrentDisplay();
+    gl::Context *context = thread->getContext();
 
     Error error = ValidateDisplay(display);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglWaitClient", GetContextIfValid(display, context));
         return EGL_FALSE;
     }
 
-    error = display->waitClient(thread->getContext());
+    error = display->waitClient(context);
     if (error.isError())
     {
-        thread->setError(error);
+        thread->setError(error, GetDebug(), "eglWaitClient", GetContextIfValid(display, context));
         return EGL_FALSE;
     }
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return EGL_TRUE;
 }
 
@@ -1003,7 +1036,7 @@ EGLContext EGLAPIENTRY GetCurrentContext(void)
 
     gl::Context *context = thread->getContext();
 
-    thread->setError(NoError());
+    thread->setSuccess();
     return static_cast<EGLContext>(context);
 }
 
@@ -1012,10 +1045,13 @@ EGLSync EGLAPIENTRY CreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib *at
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLenum type = 0x%X, const EGLint* attrib_list = 0x%0.8p)",
           dpy, type, attrib_list);
-    Thread *thread = GetCurrentThread();
+    Thread *thread   = GetCurrentThread();
+    Display *display = static_cast<Display *>(dpy);
 
     UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglCreateSync unimplemented.");
+    // TODO(geofflang): Implement sync objects. http://anglebug.com/2466
+    thread->setError(EglBadDisplay() << "eglCreateSync unimplemented.", GetDebug(), "eglCreateSync",
+                     GetDisplayIfValid(display));
     return EGL_NO_SYNC;
 }
 
@@ -1025,7 +1061,9 @@ EGLBoolean EGLAPIENTRY DestroySync(EGLDisplay dpy, EGLSync sync)
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglDestroySync unimplemented.");
+    // TODO(geofflang): Pass the EGL sync object to the setError function. http://anglebug.com/2466
+    thread->setError(EglBadDisplay() << "eglDestroySync unimplemented.", GetDebug(),
+                     "eglDestroySync", nullptr);
     return EGL_FALSE;
 }
 
@@ -1038,7 +1076,9 @@ EGLint EGLAPIENTRY ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EG
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglClientWaitSync unimplemented.");
+    // TODO(geofflang): Pass the EGL sync object to the setError function. http://anglebug.com/2466
+    thread->setError(EglBadDisplay() << "eglClientWaitSync unimplemented.", GetDebug(),
+                     "eglClientWaitSync", nullptr);
     return 0;
 }
 
@@ -1054,7 +1094,9 @@ EGLBoolean EGLAPIENTRY GetSyncAttrib(EGLDisplay dpy,
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglSyncAttrib unimplemented.");
+    // TODO(geofflang): Pass the EGL sync object to the setError function. http://anglebug.com/2466
+    thread->setError(EglBadDisplay() << "eglSyncAttrib unimplemented.", GetDebug(),
+                     "eglGetSyncAttrib", nullptr);
     return EGL_FALSE;
 }
 
@@ -1068,20 +1110,25 @@ EGLImage EGLAPIENTRY CreateImage(EGLDisplay dpy,
         "(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p, EGLenum target = 0x%X, "
         "EGLClientBuffer buffer = 0x%0.8p, const EGLAttrib *attrib_list = 0x%0.8p)",
         dpy, ctx, target, buffer, attrib_list);
-    Thread *thread = GetCurrentThread();
+    Thread *thread   = GetCurrentThread();
+    Display *display = static_cast<Display *>(dpy);
 
     UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglCreateImage unimplemented.");
+    thread->setError(EglBadDisplay() << "eglCreateImage unimplemented.", GetDebug(),
+                     "eglCreateImage", GetDisplayIfValid(display));
     return EGL_NO_IMAGE;
 }
 
 EGLBoolean EGLAPIENTRY DestroyImage(EGLDisplay dpy, EGLImage image)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLImage image = 0x%0.8p)", dpy, image);
-    Thread *thread = GetCurrentThread();
+    Thread *thread   = GetCurrentThread();
+    Display *display = static_cast<Display *>(dpy);
+    Image *eglImage  = static_cast<Image *>(image);
 
     UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglDestroyImage unimplemented.");
+    thread->setError(EglBadDisplay() << "eglDestroyImage unimplemented.", GetDebug(),
+                     "eglDestroyImage", GetImageIfValid(display, eglImage));
     return EGL_FALSE;
 }
 
@@ -1096,7 +1143,7 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplay(EGLenum platform,
     Thread *thread = GetCurrentThread();
 
     Error err = ValidateGetPlatformDisplay(platform, native_display, attrib_list);
-    thread->setError(err);
+    thread->setError(err, GetDebug(), "eglGetPlatformDisplay", GetThreadIfValid(thread));
     if (err.isError())
     {
         return EGL_NO_DISPLAY;
@@ -1129,10 +1176,12 @@ EGLSurface EGLAPIENTRY CreatePlatformWindowSurface(EGLDisplay dpy,
         "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, void* native_window = 0x%0.8p, "
         "const EGLint* attrib_list = 0x%0.8p)",
         dpy, config, native_window, attrib_list);
-    Thread *thread = GetCurrentThread();
+    Thread *thread   = GetCurrentThread();
+    Display *display = static_cast<Display *>(dpy);
 
     UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglCreatePlatformWindowSurface unimplemented.");
+    thread->setError(EglBadDisplay() << "eglCreatePlatformWindowSurface unimplemented.", GetDebug(),
+                     "eglCreatePlatformWindowSurface", GetDisplayIfValid(display));
     return EGL_NO_SURFACE;
 }
 
@@ -1145,10 +1194,12 @@ EGLSurface EGLAPIENTRY CreatePlatformPixmapSurface(EGLDisplay dpy,
         "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, void* native_pixmap = 0x%0.8p, "
         "const EGLint* attrib_list = 0x%0.8p)",
         dpy, config, native_pixmap, attrib_list);
-    Thread *thread = GetCurrentThread();
+    Thread *thread   = GetCurrentThread();
+    Display *display = static_cast<Display *>(dpy);
 
     UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglCreatePlatformPixmapSurface unimplemented.");
+    thread->setError(EglBadDisplay() << "eglCreatePlatformPixmapSurface unimplemented.", GetDebug(),
+                     "eglCreatePlatformPixmapSurface", GetDisplayIfValid(display));
     return EGL_NO_SURFACE;
 }
 
@@ -1156,10 +1207,12 @@ EGLBoolean EGLAPIENTRY WaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSync sync = 0x%0.8p, EGLint flags = 0x%X)", dpy, sync,
           flags);
-    Thread *thread = GetCurrentThread();
+    Thread *thread   = GetCurrentThread();
+    Display *display = static_cast<Display *>(dpy);
 
     UNIMPLEMENTED();
-    thread->setError(EglBadDisplay() << "eglWaitSync unimplemented.");
+    thread->setError(EglBadDisplay() << "eglWaitSync unimplemented.", GetDebug(), "eglWaitSync",
+                     GetDisplayIfValid(display));
     return EGL_FALSE;
 }
 
@@ -1171,7 +1224,7 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
     ProcEntry *entry =
         std::lower_bound(&g_procTable[0], &g_procTable[g_numProcs], procname, CompareProc);
 
-    thread->setError(NoError());
+    thread->setSuccess();
 
     if (entry == &g_procTable[g_numProcs] || strcmp(entry->first, procname) != 0)
     {

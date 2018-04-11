@@ -25,7 +25,8 @@ namespace egl
 {
 
 Stream::Stream(Display *display, const AttributeMap &attribs)
-    : mDisplay(display),
+    : mLabel(nullptr),
+      mDisplay(display),
       mProducerImplementation(nullptr),
       mState(EGL_STREAM_STATE_CREATED_KHR),
       mProducerFrame(0),
@@ -53,6 +54,16 @@ Stream::~Stream()
             plane.texture->releaseStream();
         }
     }
+}
+
+void Stream::setLabel(EGLLabelKHR label)
+{
+    mLabel = label;
+}
+
+EGLLabelKHR Stream::getLabel() const
+{
+    return mLabel;
 }
 
 void Stream::setConsumerLatency(EGLint latency)

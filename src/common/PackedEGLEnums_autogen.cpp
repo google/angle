@@ -16,6 +16,90 @@ namespace egl
 {
 
 template <>
+MessageType FromEGLenum<MessageType>(EGLenum from)
+{
+    switch (from)
+    {
+        case EGL_DEBUG_MSG_CRITICAL_KHR:
+            return MessageType::Critical;
+        case EGL_DEBUG_MSG_ERROR_KHR:
+            return MessageType::Error;
+        case EGL_DEBUG_MSG_WARN_KHR:
+            return MessageType::Warn;
+        case EGL_DEBUG_MSG_INFO_KHR:
+            return MessageType::Info;
+        default:
+            return MessageType::InvalidEnum;
+    }
+}
+
+EGLenum ToEGLenum(MessageType from)
+{
+    switch (from)
+    {
+        case MessageType::Critical:
+            return EGL_DEBUG_MSG_CRITICAL_KHR;
+        case MessageType::Error:
+            return EGL_DEBUG_MSG_ERROR_KHR;
+        case MessageType::Warn:
+            return EGL_DEBUG_MSG_WARN_KHR;
+        case MessageType::Info:
+            return EGL_DEBUG_MSG_INFO_KHR;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
+ObjectType FromEGLenum<ObjectType>(EGLenum from)
+{
+    switch (from)
+    {
+        case EGL_OBJECT_THREAD_KHR:
+            return ObjectType::Thread;
+        case EGL_OBJECT_DISPLAY_KHR:
+            return ObjectType::Display;
+        case EGL_OBJECT_CONTEXT_KHR:
+            return ObjectType::Context;
+        case EGL_OBJECT_SURFACE_KHR:
+            return ObjectType::Surface;
+        case EGL_OBJECT_IMAGE_KHR:
+            return ObjectType::Image;
+        case EGL_OBJECT_SYNC_KHR:
+            return ObjectType::Sync;
+        case EGL_OBJECT_STREAM_KHR:
+            return ObjectType::Stream;
+        default:
+            return ObjectType::InvalidEnum;
+    }
+}
+
+EGLenum ToEGLenum(ObjectType from)
+{
+    switch (from)
+    {
+        case ObjectType::Thread:
+            return EGL_OBJECT_THREAD_KHR;
+        case ObjectType::Display:
+            return EGL_OBJECT_DISPLAY_KHR;
+        case ObjectType::Context:
+            return EGL_OBJECT_CONTEXT_KHR;
+        case ObjectType::Surface:
+            return EGL_OBJECT_SURFACE_KHR;
+        case ObjectType::Image:
+            return EGL_OBJECT_IMAGE_KHR;
+        case ObjectType::Sync:
+            return EGL_OBJECT_SYNC_KHR;
+        case ObjectType::Stream:
+            return EGL_OBJECT_STREAM_KHR;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
 TextureFormat FromEGLenum<TextureFormat>(EGLenum from)
 {
     switch (from)

@@ -17,6 +17,7 @@
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Config.h"
+#include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/LoggingAnnotator.h"
 #include "libANGLE/MemoryProgramCache.h"
@@ -48,16 +49,20 @@ struct DisplayState final : private angle::NonCopyable
     DisplayState();
     ~DisplayState();
 
+    EGLLabelKHR label;
     SurfaceSet surfaceSet;
 };
 
 // Constant coded here as a sanity limit.
 constexpr EGLAttrib kProgramCacheSizeAbsoluteMax = 0x4000000;
 
-class Display final : angle::NonCopyable
+class Display final : public LabeledObject, angle::NonCopyable
 {
   public:
     ~Display();
+
+    void setLabel(EGLLabelKHR label) override;
+    EGLLabelKHR getLabel() const override;
 
     Error initialize();
     Error terminate();

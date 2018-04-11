@@ -20,9 +20,11 @@ Context *GetValidGlobalContext();
 
 namespace egl
 {
+class Debug;
 class Thread;
 
 Thread *GetCurrentThread();
+Debug *GetDebug();
 
 }  // namespace egl
 

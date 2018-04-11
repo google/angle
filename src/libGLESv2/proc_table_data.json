@@ -839,6 +839,12 @@
         "eglProgramCacheResizeANGLE"
     ],
 
+    "EGL_KHR_debug": [
+        "eglDebugMessageControlKHR",
+        "eglQueryDebugKHR",
+        "eglLabelObjectKHR"
+    ],
+
     "angle::Platform related entry points": [
         "ANGLEGetDisplayPlatform",
         "ANGLEResetDisplayPlatform"

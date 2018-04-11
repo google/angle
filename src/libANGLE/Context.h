@@ -63,7 +63,7 @@ class TransformFeedback;
 class VertexArray;
 struct VertexAttribute;
 
-class Context final : angle::NonCopyable
+class Context final : public egl::LabeledObject, angle::NonCopyable
 {
   public:
     Context(rx::EGLImplFactory *implFactory,
@@ -77,6 +77,9 @@ class Context final : angle::NonCopyable
 
     egl::Error onDestroy(const egl::Display *display);
     ~Context();
+
+    void setLabel(EGLLabelKHR label) override;
+    EGLLabelKHR getLabel() const override;
 
     egl::Error makeCurrent(egl::Display *display, egl::Surface *surface);
     egl::Error releaseSurface(const egl::Display *display);
@@ -1502,8 +1505,8 @@ class Context final : angle::NonCopyable
     void updateCaps();
     void initWorkarounds();
 
-    LabeledObject *getLabeledObject(GLenum identifier, GLuint name) const;
-    LabeledObject *getLabeledObjectFromPtr(const void *ptr) const;
+    gl::LabeledObject *getLabeledObject(GLenum identifier, GLuint name) const;
+    gl::LabeledObject *getLabeledObjectFromPtr(const void *ptr) const;
 
     ContextState mState;
     bool mSkipValidation;
@@ -1518,6 +1521,8 @@ class Context final : angle::NonCopyable
     mutable std::array<uint8_t, kParamsBufferSize> mParamsBuffer;
 
     std::unique_ptr<rx::ContextImpl> mImplementation;
+
+    EGLLabelKHR mLabel;
 
     // Caps to use for validation
     Caps mCaps;

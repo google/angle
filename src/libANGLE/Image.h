@@ -11,6 +11,7 @@
 
 #include "common/angleutils.h"
 #include "libANGLE/AttributeMap.h"
+#include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/RefCountObject.h"
@@ -66,12 +67,13 @@ struct ImageState : private angle::NonCopyable
     ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs);
     ~ImageState();
 
+    EGLLabelKHR label;
     gl::ImageIndex imageIndex;
     gl::BindingPointer<ImageSibling> source;
     std::set<ImageSibling *> targets;
 };
 
-class Image final : public gl::RefCountObject
+class Image final : public gl::RefCountObject, public LabeledObject
 {
   public:
     Image(rx::EGLImplFactory *factory,
@@ -81,6 +83,9 @@ class Image final : public gl::RefCountObject
 
     gl::Error onDestroy(const gl::Context *context) override;
     ~Image() override;
+
+    void setLabel(EGLLabelKHR label) override;
+    EGLLabelKHR getLabel() const override;
 
     gl::Format getFormat() const;
     size_t getWidth() const;

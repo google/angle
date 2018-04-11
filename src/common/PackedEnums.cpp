@@ -149,6 +149,41 @@ TextureType SamplerTypeToTextureType(GLenum samplerType)
 
 }  // namespace gl
 
+namespace egl
+{
+MessageType ErrorCodeToMessageType(EGLint errorCode)
+{
+    switch (errorCode)
+    {
+        case EGL_BAD_ALLOC:
+        case EGL_CONTEXT_LOST:
+        case EGL_NOT_INITIALIZED:
+            return MessageType::Critical;
+
+        case EGL_BAD_ACCESS:
+        case EGL_BAD_ATTRIBUTE:
+        case EGL_BAD_CONFIG:
+        case EGL_BAD_CONTEXT:
+        case EGL_BAD_CURRENT_SURFACE:
+        case EGL_BAD_DISPLAY:
+        case EGL_BAD_MATCH:
+        case EGL_BAD_NATIVE_PIXMAP:
+        case EGL_BAD_NATIVE_WINDOW:
+        case EGL_BAD_PARAMETER:
+        case EGL_BAD_SURFACE:
+        case EGL_BAD_STREAM_KHR:
+        case EGL_BAD_STATE_KHR:
+        case EGL_BAD_DEVICE_EXT:
+            return MessageType::Error;
+
+        case EGL_SUCCESS:
+        default:
+            UNREACHABLE();
+            return MessageType::InvalidEnum;
+    }
+}
+}  // namespace egl
+
 namespace egl_gl
 {
 

@@ -493,4 +493,22 @@ EGLint EGLAPIENTRY eglProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit, EGLe
     return egl::ProgramCacheResizeANGLE(dpy, limit, mode);
 }
 
+EGLint EGLAPIENTRY eglDebugMessageControlKHR(EGLDEBUGPROCKHR callback, const EGLAttrib *attrib_list)
+{
+    return egl::DebugMessageControlKHR(callback, attrib_list);
+}
+
+EGLBoolean EGLAPIENTRY eglQueryDebugKHR(EGLint attribute, EGLAttrib *value)
+{
+    return egl::QueryDebugKHR(attribute, value);
+}
+
+EGLint EGLAPIENTRY eglLabelObjectKHR(EGLDisplay dpy,
+                                     EGLenum objectType,
+                                     EGLObjectKHR object,
+                                     EGLLabelKHR label)
+{
+    return egl::LabelObjectKHR(dpy, objectType, object, label);
+}
+
 }  // extern "C"

@@ -70,14 +70,14 @@ egl::Error Device::CreateDevice(EGLint deviceType, void *nativeDevice, Device **
     return NoError();
 }
 
-bool Device::IsValidDevice(Device *device)
+bool Device::IsValidDevice(const Device *device)
 {
     const DeviceSet *deviceSet = GetDeviceSet();
-    return deviceSet->find(device) != deviceSet->end();
+    return deviceSet->find(const_cast<Device *>(device)) != deviceSet->end();
 }
 
 Device::Device(Display *owningDisplay, rx::DeviceImpl *impl)
-    : mOwningDisplay(owningDisplay), mImplementation(impl)
+    : mLabel(nullptr), mOwningDisplay(owningDisplay), mImplementation(impl)
 {
     ASSERT(GetDeviceSet()->find(this) == GetDeviceSet()->end());
     GetDeviceSet()->insert(this);
@@ -88,6 +88,16 @@ Device::~Device()
 {
     ASSERT(GetDeviceSet()->find(this) != GetDeviceSet()->end());
     GetDeviceSet()->erase(this);
+}
+
+void Device::setLabel(EGLLabelKHR label)
+{
+    mLabel = label;
+}
+
+EGLLabelKHR Device::getLabel() const
+{
+    return mLabel;
 }
 
 Error Device::getDevice(EGLAttrib *value)

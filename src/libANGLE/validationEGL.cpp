@@ -17,6 +17,7 @@
 #include "libANGLE/Stream.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
+#include "libANGLE/Thread.h"
 #include "libANGLE/formatutils.h"
 
 #include <EGL/eglext.h>
@@ -493,6 +494,100 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
     return NoError();
 }
 
+Error ValidateStream(const Display *display, const Stream *stream)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    if (!displayExtensions.stream)
+    {
+        return EglBadAccess() << "Stream extension not active";
+    }
+
+    if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
+    {
+        return EglBadStream() << "Invalid stream";
+    }
+
+    return NoError();
+}
+
+Error ValidateLabeledObject(Thread *thread,
+                            const Display *display,
+                            ObjectType objectType,
+                            EGLObjectKHR object,
+                            LabeledObject **outLabeledObject)
+{
+    switch (objectType)
+    {
+        case ObjectType::Context:
+        {
+            gl::Context *context = static_cast<gl::Context *>(object);
+            ANGLE_TRY(ValidateContext(display, context));
+            *outLabeledObject = context;
+            break;
+        }
+
+        case ObjectType::Display:
+        {
+            ANGLE_TRY(ValidateDisplay(display));
+            if (display != object)
+            {
+                return EglBadParameter() << "when object type is EGL_OBJECT_DISPLAY_KHR, the "
+                                            "object must be the same as the display.";
+            }
+
+            *outLabeledObject = static_cast<Display *>(object);
+            break;
+        }
+
+        case ObjectType::Image:
+        {
+            Image *image = static_cast<Image *>(object);
+            ANGLE_TRY(ValidateImage(display, image));
+            *outLabeledObject = image;
+            break;
+        }
+
+        case ObjectType::Stream:
+        {
+            Stream *stream = static_cast<Stream *>(object);
+            ANGLE_TRY(ValidateStream(display, stream));
+            *outLabeledObject = stream;
+            break;
+        }
+
+        case ObjectType::Surface:
+        {
+            Surface *surface = static_cast<Surface *>(object);
+            ANGLE_TRY(ValidateSurface(display, surface));
+            *outLabeledObject = surface;
+            break;
+        }
+
+        case ObjectType::Sync:
+        {
+            ANGLE_TRY(ValidateDisplay(display));
+            // TODO(geofflang): Implement sync objects. http://anglebug.com/2466
+            UNIMPLEMENTED();
+            return EglBadDisplay() << "Sync objects are unimplemented.";
+
+            break;
+        }
+
+        case ObjectType::Thread:
+        {
+            *outLabeledObject = thread;
+            break;
+        }
+
+        default:
+            return EglBadParameter() << "unknown object type.";
+    }
+
+    return NoError();
+}
+
 }  // namespace
 
 Error ValidateDisplay(const Display *display)
@@ -568,22 +663,99 @@ Error ValidateImage(const Display *display, const Image *image)
     return NoError();
 }
 
-Error ValidateStream(const Display *display, const Stream *stream)
+Error ValidateDevice(const Device *device)
 {
-    ANGLE_TRY(ValidateDisplay(display));
-
-    const DisplayExtensions &displayExtensions = display->getExtensions();
-    if (!displayExtensions.stream)
+    if (device == EGL_NO_DEVICE_EXT)
     {
-        return EglBadAccess() << "Stream extension not active";
+        return EglBadAccess() << "device is EGL_NO_DEVICE.";
     }
 
-    if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
+    if (!Device::IsValidDevice(device))
     {
-        return EglBadStream() << "Invalid stream";
+        return EglBadAccess() << "device is not valid.";
     }
 
     return NoError();
+}
+
+const Thread *GetThreadIfValid(const Thread *thread)
+{
+    // Threads should always be valid
+    return thread;
+}
+
+const Display *GetDisplayIfValid(const Display *display)
+{
+    if (ValidateDisplay(display).isError())
+    {
+        return nullptr;
+    }
+
+    return display;
+}
+
+const Surface *GetSurfaceIfValid(const Display *display, const Surface *surface)
+{
+    if (ValidateSurface(display, surface).isError())
+    {
+        return nullptr;
+    }
+
+    return surface;
+}
+
+const Image *GetImageIfValid(const Display *display, const Image *image)
+{
+    if (ValidateImage(display, image).isError())
+    {
+        return nullptr;
+    }
+
+    return image;
+}
+
+const Stream *GetStreamIfValid(const Display *display, const Stream *stream)
+{
+    if (ValidateStream(display, stream).isError())
+    {
+        return nullptr;
+    }
+
+    return stream;
+}
+
+const gl::Context *GetContextIfValid(const Display *display, const gl::Context *context)
+{
+    if (ValidateContext(display, context).isError())
+    {
+        return nullptr;
+    }
+
+    return context;
+}
+
+const Device *GetDeviceIfValid(const Device *device)
+{
+    if (ValidateDevice(device).isError())
+    {
+        return nullptr;
+    }
+
+    return device;
+}
+
+LabeledObject *GetLabeledObjectIfValid(Thread *thread,
+                                       const Display *display,
+                                       ObjectType objectType,
+                                       EGLObjectKHR object)
+{
+    LabeledObject *labeledObject = nullptr;
+    if (ValidateLabeledObject(thread, display, objectType, object, &labeledObject).isError())
+    {
+        return nullptr;
+    }
+
+    return labeledObject;
 }
 
 Error ValidateCreateContext(Display *display,
@@ -2711,6 +2883,75 @@ Error ValidateQueryContext(const Display *display,
         default:
             return EglBadAttribute() << "Invalid context attribute.";
     }
+
+    return NoError();
+}
+
+Error ValidateDebugMessageControlKHR(EGLDEBUGPROCKHR callback, const AttributeMap &attribs)
+{
+    const ClientExtensions &clientExtensions = Display::GetClientExtensions();
+    if (!clientExtensions.debug)
+    {
+        return EglBadAccess() << "EGL_KHR_debug extension is not available.";
+    }
+
+    for (const auto &attrib : attribs)
+    {
+        switch (attrib.first)
+        {
+            case EGL_DEBUG_MSG_CRITICAL_KHR:
+            case EGL_DEBUG_MSG_ERROR_KHR:
+            case EGL_DEBUG_MSG_WARN_KHR:
+            case EGL_DEBUG_MSG_INFO_KHR:
+                if (attrib.second != EGL_TRUE && attrib.second != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "message controls must be EGL_TRUE or EGL_FALSE.";
+                }
+                break;
+        }
+    }
+
+    return NoError();
+}
+
+Error ValidateQueryDebugKHR(EGLint attribute, EGLAttrib *value)
+{
+    const ClientExtensions &clientExtensions = Display::GetClientExtensions();
+    if (!clientExtensions.debug)
+    {
+        return EglBadAccess() << "EGL_KHR_debug extension is not available.";
+    }
+
+    switch (attribute)
+    {
+        case EGL_DEBUG_MSG_CRITICAL_KHR:
+        case EGL_DEBUG_MSG_ERROR_KHR:
+        case EGL_DEBUG_MSG_WARN_KHR:
+        case EGL_DEBUG_MSG_INFO_KHR:
+        case EGL_DEBUG_CALLBACK_KHR:
+            break;
+
+        default:
+            return EglBadAttribute() << "unknown attribute.";
+    }
+
+    return NoError();
+}
+
+Error ValidateLabelObjectKHR(Thread *thread,
+                             const Display *display,
+                             ObjectType objectType,
+                             EGLObjectKHR object,
+                             EGLLabelKHR label)
+{
+    const ClientExtensions &clientExtensions = Display::GetClientExtensions();
+    if (!clientExtensions.debug)
+    {
+        return EglBadAccess() << "EGL_KHR_debug extension is not available.";
+    }
+
+    LabeledObject *labeledObject = nullptr;
+    ANGLE_TRY(ValidateLabeledObject(thread, display, objectType, object, &labeledObject));
 
     return NoError();
 }

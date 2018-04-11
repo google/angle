@@ -47,6 +47,7 @@ ProcEntry g_procTable[] = {
     {"eglCreateStreamProducerD3DTextureANGLE", P(egl::CreateStreamProducerD3DTextureANGLE)},
     {"eglCreateSync", P(egl::CreateSync)},
     {"eglCreateWindowSurface", P(egl::CreateWindowSurface)},
+    {"eglDebugMessageControlKHR", P(egl::DebugMessageControlKHR)},
     {"eglDestroyContext", P(egl::DestroyContext)},
     {"eglDestroyImage", P(egl::DestroyImage)},
     {"eglDestroyImageKHR", P(egl::DestroyImageKHR)},
@@ -66,6 +67,7 @@ ProcEntry g_procTable[] = {
     {"eglGetSyncAttrib", P(egl::GetSyncAttrib)},
     {"eglGetSyncValuesCHROMIUM", P(egl::GetSyncValuesCHROMIUM)},
     {"eglInitialize", P(egl::Initialize)},
+    {"eglLabelObjectKHR", P(egl::LabelObjectKHR)},
     {"eglMakeCurrent", P(egl::MakeCurrent)},
     {"eglPostSubBufferNV", P(egl::PostSubBufferNV)},
     {"eglPresentationTimeANDROID", P(egl::PresentationTimeANDROID)},
@@ -75,6 +77,7 @@ ProcEntry g_procTable[] = {
     {"eglProgramCacheResizeANGLE", P(egl::ProgramCacheResizeANGLE)},
     {"eglQueryAPI", P(egl::QueryAPI)},
     {"eglQueryContext", P(egl::QueryContext)},
+    {"eglQueryDebugKHR", P(egl::QueryDebugKHR)},
     {"eglQueryDeviceAttribEXT", P(egl::QueryDeviceAttribEXT)},
     {"eglQueryDeviceStringEXT", P(egl::QueryDeviceStringEXT)},
     {"eglQueryDisplayAttribEXT", P(egl::QueryDisplayAttribEXT)},
@@ -1234,5 +1237,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1166;
+size_t g_numProcs = 1169;
 }  // namespace egl

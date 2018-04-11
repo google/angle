@@ -66,6 +66,9 @@ EXPORTS
     eglCreatePlatformWindowSurfaceEXT           @72
     eglCreatePlatformPixmapSurfaceEXT           @73
     eglPresentationTimeANDROID                  @74
+    eglDebugMessageControlKHR                   @75
+    eglQueryDebugKHR                            @76
+    eglLabelObjectKHR                           @77
 
     ; 1.5 entry points
     eglCreateSync                               @38

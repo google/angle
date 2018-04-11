@@ -127,6 +127,7 @@
             '<(angle_path)/src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp',
             '<(angle_path)/src/tests/egl_tests/EGLContextCompatibilityTest.cpp',
             '<(angle_path)/src/tests/egl_tests/EGLContextSharingTest.cpp',
+            '<(angle_path)/src/tests/egl_tests/EGLDebugTest.cpp',
             '<(angle_path)/src/tests/egl_tests/EGLProgramCacheControlTest.cpp',
             '<(angle_path)/src/tests/egl_tests/EGLQueryContextTest.cpp',
             '<(angle_path)/src/tests/egl_tests/EGLRobustnessTest.cpp',

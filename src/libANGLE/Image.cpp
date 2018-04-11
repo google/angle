@@ -118,7 +118,7 @@ void ImageSibling::setSourceEGLImageInitState(gl::InitState initState) const
 }
 
 ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs)
-    : imageIndex(GetImageIndex(target, attribs)), source(buffer), targets()
+    : label(nullptr), imageIndex(GetImageIndex(target, attribs)), source(buffer), targets()
 {
 }
 
@@ -159,6 +159,16 @@ gl::Error Image::onDestroy(const gl::Context *context)
 Image::~Image()
 {
     SafeDelete(mImplementation);
+}
+
+void Image::setLabel(EGLLabelKHR label)
+{
+    mState.label = label;
+}
+
+EGLLabelKHR Image::getLabel() const
+{
+    return mState.label;
 }
 
 void Image::addTargetSibling(ImageSibling *sibling)
