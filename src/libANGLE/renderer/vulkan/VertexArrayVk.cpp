@@ -464,7 +464,11 @@ gl::Error VertexArrayVk::onDraw(const gl::Context *context,
             updateArrayBufferReadDependencies(drawNode, activeAttribs,
                                               renderer->getCurrentQueueSerial());
         }
+
         mVertexBuffersDirty = false;
+
+        // This forces the binding to happen if we follow a drawElement call from a drawArrays call.
+        mIndexBufferDirty = true;
     }
 
     return gl::NoError();
