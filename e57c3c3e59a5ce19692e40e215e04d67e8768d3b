@@ -22,6 +22,30 @@
       "revId": "e57c3c3e59a5ce19692e40e215e04d67e8768d3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dde1a34e_b9447426",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-04-11T15:01:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d670a62_540a4945",
+      "range": {
+        "startLine": 573,
+        "startChar": 0,
+        "endLine": 576,
+        "endChar": 111
+      },
+      "revId": "e57c3c3e59a5ce19692e40e215e04d67e8768d3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
