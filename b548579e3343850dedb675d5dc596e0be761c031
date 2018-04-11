@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ff527183_69912e09",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-11T19:19:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02d68ed9_0a3c8b1f",
+      "range": {
+        "startLine": 351,
+        "startChar": 0,
+        "endLine": 353,
+        "endChar": 71
+      },
+      "revId": "b548579e3343850dedb675d5dc596e0be761c031",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "982a396b_1a0a05ae",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "28d664cb_c704eebf",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1493,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-11T19:19:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "982a396b_1a0a05ae",
+      "range": {
+        "startLine": 1493,
+        "startChar": 0,
+        "endLine": 1493,
+        "endChar": 6
+      },
+      "revId": "b548579e3343850dedb675d5dc596e0be761c031",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8694fb2e_cd292e15",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 5
@@ -68,6 +116,30 @@
       "revId": "b548579e3343850dedb675d5dc596e0be761c031",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1139866b_6e424886",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1495,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-11T19:19:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8694fb2e_cd292e15",
+      "range": {
+        "startLine": 1495,
+        "startChar": 4,
+        "endLine": 1495,
+        "endChar": 34
+      },
+      "revId": "b548579e3343850dedb675d5dc596e0be761c031",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
