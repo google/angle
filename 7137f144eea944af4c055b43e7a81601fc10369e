@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "84493313_1eb5749b",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-11T18:52:14Z",
+      "side": 1,
+      "message": "Not really related. Even if there was no line loops at all we would still need to do this. Draw arrays already initializes the inside render pass command, so when comes a following drawelement call, we end up in a branch of code in VertexArrayVk that will only bind the index buffer if mIndexBufferDirty  || thereWasNoInsidePassNodeStarted.",
+      "parentUuid": "941bcad5_c5c9521b",
+      "revId": "7137f144eea944af4c055b43e7a81601fc10369e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc5b7e4a_d9bf6503",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 4
@@ -33,6 +51,24 @@
       "revId": "7137f144eea944af4c055b43e7a81601fc10369e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89c4d924_08b16263",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-11T18:52:14Z",
+      "side": 1,
+      "message": "This will be fixed in the CL following this one in my relation chain where I specifically write new tests for line loops and the same situation. I didn\u0027t want to mix both.",
+      "parentUuid": "fc5b7e4a_d9bf6503",
+      "revId": "7137f144eea944af4c055b43e7a81601fc10369e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -56,6 +92,30 @@
       "revId": "7137f144eea944af4c055b43e7a81601fc10369e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3edbe47e_9867d44c",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-11T18:52:14Z",
+      "side": 1,
+      "message": "Indeed it works. Done.",
+      "parentUuid": "46e650e2_92ca5acc",
+      "range": {
+        "startLine": 443,
+        "startChar": 4,
+        "endLine": 443,
+        "endChar": 53
+      },
+      "revId": "7137f144eea944af4c055b43e7a81601fc10369e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
