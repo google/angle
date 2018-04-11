@@ -22,6 +22,30 @@
       "revId": "982d0ca4008e3f36e30b6b02f373671cae2cccba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48f96361_d3e5938c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-11T18:38:35Z",
+      "side": 1,
+      "message": "It works with max int, updated it.",
+      "parentUuid": "afad91be_096b3a17",
+      "range": {
+        "startLine": 352,
+        "startChar": 8,
+        "endLine": 355,
+        "endChar": 77
+      },
+      "revId": "982d0ca4008e3f36e30b6b02f373671cae2cccba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
