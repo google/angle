@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afad91be_096b3a17",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-11T14:59:14Z",
+      "side": 1,
+      "message": "nit: use \n\ngl::Rectangle \u003cvarName\u003e(...params...);\n\nThe issue here is this code makes the scissor dependent on the current framebuffer size. You should be able to cause a test failure by doing something like this:\n\nGLFramebuffer fbo1;\nGLFramebuffer fbo2;\n1. make a 16x16 texture in fbo1\n2. make a 32x32 texture in fbo2\n3. draw to the 16x16 texture fbo1\n4. draw to the 32x32 texture fbo2\n\nSome combination of repeated 3/4 should fail to update the scissor here and cause a rendering error. Can you make a test for this? For a solution, can you see if it\u0027s valid to use an arbitrarily large scissor here (maxint, or the size of the maximum 2D texture size) and draw with that?\n\nSame for the above check with scissor enabled.",
+      "range": {
+        "startLine": 352,
+        "startChar": 8,
+        "endLine": 355,
+        "endChar": 77
+      },
+      "revId": "982d0ca4008e3f36e30b6b02f373671cae2cccba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
