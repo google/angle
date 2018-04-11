@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "941bcad5_c5c9521b",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-11T17:02:06Z",
+      "side": 1,
+      "message": "Is it because some types of drawcall use the index buffer to emulate stuff? Then in [1] seems a good place too.",
+      "revId": "7137f144eea944af4c055b43e7a81601fc10369e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc5b7e4a_d9bf6503",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-11T17:02:06Z",
+      "side": 1,
+      "message": "[1]",
+      "revId": "7137f144eea944af4c055b43e7a81601fc10369e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "46e650e2_92ca5acc",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 4
