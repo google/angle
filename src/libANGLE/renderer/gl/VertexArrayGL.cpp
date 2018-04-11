@@ -701,6 +701,20 @@ void VertexArrayGL::syncDirtyBinding(const gl::Context *context,
     }
 }
 
+#define ANGLE_DIRTY_ATTRIB_FUNC(INDEX)                      \
+    case VertexArray::DIRTY_BIT_ATTRIB_0 + INDEX:           \
+        syncDirtyAttrib(context, INDEX, attribBits[INDEX]); \
+        break;
+
+#define ANGLE_DIRTY_BINDING_FUNC(INDEX)                       \
+    case VertexArray::DIRTY_BIT_BINDING_0 + INDEX:            \
+        syncDirtyBinding(context, INDEX, bindingBits[INDEX]); \
+        break;
+
+#define ANGLE_DIRTY_BUFFER_DATA_FUNC(INDEX)            \
+    case VertexArray::DIRTY_BIT_BUFFER_DATA_0 + INDEX: \
+        break;
+
 gl::Error VertexArrayGL::syncState(const gl::Context *context,
                                    const VertexArray::DirtyBits &dirtyBits,
                                    const gl::VertexArray::DirtyAttribBitsArray &attribBits,
@@ -719,26 +733,13 @@ gl::Error VertexArrayGL::syncState(const gl::Context *context,
             case VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
                 break;
 
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_DIRTY_ATTRIB_FUNC);
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_DIRTY_BINDING_FUNC);
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_DIRTY_BUFFER_DATA_FUNC);
+
             default:
-            {
-                ASSERT(dirtyBit >= VertexArray::DIRTY_BIT_ATTRIB_0);
-                size_t index = VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
-                if (dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX)
-                {
-                    syncDirtyAttrib(context, index, attribBits[index]);
-                }
-                else if (dirtyBit < VertexArray::DIRTY_BIT_BINDING_MAX)
-                {
-                    ASSERT(dirtyBit >= VertexArray::DIRTY_BIT_BINDING_0);
-                    syncDirtyBinding(context, index, bindingBits[index]);
-                }
-                else
-                {
-                    ASSERT(dirtyBit >= VertexArray::DIRTY_BIT_BUFFER_DATA_0 &&
-                           dirtyBit < VertexArray::DIRTY_BIT_BUFFER_DATA_MAX);
-                }
+                UNREACHABLE();
                 break;
-            }
         }
     }
 

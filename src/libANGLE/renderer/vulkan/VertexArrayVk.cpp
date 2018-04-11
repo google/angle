@@ -144,6 +144,22 @@ gl::Error VertexArrayVk::streamIndexData(RendererVk *renderer,
     return gl::NoError();
 }
 
+#define ANGLE_VERTEX_DIRTY_ATTRIB_FUNC(INDEX)                                          \
+    case gl::VertexArray::DIRTY_BIT_ATTRIB_0 + INDEX:                                  \
+        syncDirtyAttrib(attribs[INDEX], bindings[attribs[INDEX].bindingIndex], INDEX); \
+        invalidatePipeline = true;                                                     \
+        break;
+
+#define ANGLE_VERTEX_DIRTY_BINDING_FUNC(INDEX)                                         \
+    case gl::VertexArray::DIRTY_BIT_BINDING_0 + INDEX:                                 \
+        syncDirtyAttrib(attribs[INDEX], bindings[attribs[INDEX].bindingIndex], INDEX); \
+        invalidatePipeline = true;                                                     \
+        break;
+
+#define ANGLE_VERTEX_DIRTY_BUFFER_DATA_FUNC(INDEX)         \
+    case gl::VertexArray::DIRTY_BIT_BUFFER_DATA_0 + INDEX: \
+        break;
+
 gl::Error VertexArrayVk::syncState(const gl::Context *context,
                                    const gl::VertexArray::DirtyBits &dirtyBits,
                                    const gl::VertexArray::DirtyAttribBitsArray &attribBits,
@@ -192,46 +208,13 @@ gl::Error VertexArrayVk::syncState(const gl::Context *context,
                 mDirtyLineLoopTranslation = true;
                 break;
 
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_ATTRIB_FUNC);
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_BINDING_FUNC);
+                ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_BUFFER_DATA_FUNC);
+
             default:
-            {
-                size_t attribIndex = gl::VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
-
-                // Invalidate the input description for pipelines.
-                mDirtyPackedInputs.set(attribIndex);
-
-                const auto &attrib  = attribs[attribIndex];
-                const auto &binding = bindings[attrib.bindingIndex];
-
-                if (attrib.enabled)
-                {
-                    gl::Buffer *bufferGL = binding.getBuffer().get();
-
-                    if (bufferGL)
-                    {
-                        BufferVk *bufferVk                        = vk::GetImpl(bufferGL);
-                        mCurrentArrayBufferResources[attribIndex] = bufferVk;
-                        mCurrentArrayBufferHandles[attribIndex] =
-                            bufferVk->getVkBuffer().getHandle();
-                        mClientMemoryAttribs.reset(attribIndex);
-                    }
-                    else
-                    {
-                        mCurrentArrayBufferResources[attribIndex] = nullptr;
-                        mCurrentArrayBufferHandles[attribIndex]   = VK_NULL_HANDLE;
-                        mClientMemoryAttribs.set(attribIndex);
-                    }
-                    // TODO(jmadill): Offset handling.  Assume zero for now.
-                    mCurrentArrayBufferOffsets[attribIndex] = 0;
-                }
-                else
-                {
-                    mClientMemoryAttribs.reset(attribIndex);
-                    UNIMPLEMENTED();
-                }
-
-                invalidatePipeline = true;
+                UNREACHABLE();
                 break;
-            }
         }
     }
 
@@ -242,6 +225,40 @@ gl::Error VertexArrayVk::syncState(const gl::Context *context,
     }
 
     return gl::NoError();
+}
+
+void VertexArrayVk::syncDirtyAttrib(const gl::VertexAttribute &attrib,
+                                    const gl::VertexBinding &binding,
+                                    size_t attribIndex)
+{
+    // Invalidate the input description for pipelines.
+    mDirtyPackedInputs.set(attribIndex);
+
+    if (attrib.enabled)
+    {
+        gl::Buffer *bufferGL = binding.getBuffer().get();
+
+        if (bufferGL)
+        {
+            BufferVk *bufferVk                        = vk::GetImpl(bufferGL);
+            mCurrentArrayBufferResources[attribIndex] = bufferVk;
+            mCurrentArrayBufferHandles[attribIndex]   = bufferVk->getVkBuffer().getHandle();
+            mClientMemoryAttribs.reset(attribIndex);
+        }
+        else
+        {
+            mCurrentArrayBufferResources[attribIndex] = nullptr;
+            mCurrentArrayBufferHandles[attribIndex]   = VK_NULL_HANDLE;
+            mClientMemoryAttribs.set(attribIndex);
+        }
+        // TODO(jmadill): Offset handling.  Assume zero for now.
+        mCurrentArrayBufferOffsets[attribIndex] = 0;
+    }
+    else
+    {
+        mClientMemoryAttribs.reset(attribIndex);
+        UNIMPLEMENTED();
+    }
 }
 
 const gl::AttribArray<VkBuffer> &VertexArrayVk::getCurrentArrayBufferHandles() const
