@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02d68ed9_0a3c8b1f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-11T18:46:54Z",
+      "side": 1,
+      "message": "can you make this a constexpr kMaxSizedScissor defined in the anonymous block above? You will need to make the rectangle constructor constexpr.",
+      "range": {
+        "startLine": 351,
+        "startChar": 0,
+        "endLine": 353,
+        "endChar": 71
+      },
+      "revId": "b548579e3343850dedb675d5dc596e0be761c031",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "982a396b_1a0a05ae",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1493,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-11T18:46:54Z",
+      "side": 1,
+      "message": "nit: comment before test",
+      "range": {
+        "startLine": 1493,
+        "startChar": 0,
+        "endLine": 1493,
+        "endChar": 6
+      },
+      "revId": "b548579e3343850dedb675d5dc596e0be761c031",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8694fb2e_cd292e15",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1495,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-11T18:46:54Z",
+      "side": 1,
+      "message": "nit: prefer constexpr char kVertexShader[] style",
+      "range": {
+        "startLine": 1495,
+        "startChar": 4,
+        "endLine": 1495,
+        "endChar": 34
+      },
+      "revId": "b548579e3343850dedb675d5dc596e0be761c031",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
