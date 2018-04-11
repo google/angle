@@ -507,7 +507,19 @@ gl::Error FramebufferVk::clearAttachmentsWithScissorRegion(const gl::Context *co
     VkClearRect clearRect;
     clearRect.baseArrayLayer = 0;
     clearRect.layerCount     = 1;
-    clearRect.rect           = contextVk->getScissor();
+
+    // When clearing, the scissor region must be clipped to the renderArea per the validation rules
+    // in Vulkan.
+    gl::Rectangle intersection;
+    if (ClipRectangle(contextVk->getGLState().getScissor(), node->getRenderPassRenderArea(),
+                      &intersection))
+    {
+        clearRect.rect = gl_vk::GetRect(intersection);
+    }
+    else
+    {
+        clearRect.rect = gl_vk::GetRect(contextVk->getGLState().getScissor());
+    }
 
     commandBuffer->clearAttachments(static_cast<uint32_t>(clearAttachmentIndex),
                                     clearAttachments.data(), 1, &clearRect);

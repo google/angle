@@ -1490,6 +1490,89 @@ TEST_P(SimpleStateChangeTest, RedefineRenderbufferInUse)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Validate that we can draw -> change frame buffer size -> draw and we'll be rendering
+// at the full size of the new framebuffer.
+TEST_P(SimpleStateChangeTest, ChangeFramebufferSizeBetweenTwoDraws)
+{
+    constexpr char vertexShader[] =
+        R"(attribute vec2 position;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    constexpr char fragShader[] = R"(precision mediump float;
+uniform vec4 color;
+void main() {
+    gl_FragColor = color;
+})";
+
+    constexpr size_t kSmallTextureSize = 2;
+    constexpr size_t kBigTextureSize   = 4;
+
+    // Create 2 textures, one of 2x2 and the other 4x4
+    GLTexture texture1;
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSmallTextureSize, kSmallTextureSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture texture2;
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kBigTextureSize, kBigTextureSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // A framebuffer for each texture to draw on.
+    GLFramebuffer framebuffer1;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture1, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    GLFramebuffer framebuffer2;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragShader);
+    glUseProgram(program);
+    GLint uniformLocation = glGetUniformLocation(program, "color");
+    ASSERT_NE(uniformLocation, -1);
+
+    // Bind to the first framebuffer for drawing.
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
+
+    // Set a scissor, that will trigger setting the internal scissor state in Vulkan to
+    // (0,0,framebuffer.width, framebuffer.height) size since the scissor isn't enabled.
+    glScissor(0, 0, 16, 16);
+    ASSERT_GL_NO_ERROR();
+
+    // Set color to red.
+    glUniform4f(uniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    glViewport(0, 0, kSmallTextureSize, kSmallTextureSize);
+
+    // Draw a full sized red quad
+    drawQuad(program, "position", 1.0f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind to the second (bigger) framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
+    glViewport(0, 0, kBigTextureSize, kBigTextureSize);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Set color to green.
+    glUniform4f(uniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+
+    // Draw again and we should fill everything with green and expect everything to be green.
+    drawQuad(program, "position", 1.0f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kBigTextureSize, kBigTextureSize, GLColor::green);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());

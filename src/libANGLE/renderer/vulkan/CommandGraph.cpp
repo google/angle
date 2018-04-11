@@ -396,6 +396,11 @@ Error CommandGraphNode::visitAndExecute(VkDevice device,
     return NoError();
 }
 
+const gl::Rectangle &CommandGraphNode::getRenderPassRenderArea() const
+{
+    return mRenderPassRenderArea;
+}
+
 // CommandGraph implementation.
 CommandGraph::CommandGraph()
 {

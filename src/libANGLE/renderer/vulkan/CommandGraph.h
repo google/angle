@@ -132,6 +132,8 @@ class CommandGraphNode final : angle::NonCopyable
                           RenderPassCache *renderPassCache,
                           CommandBuffer *primaryCommandBuffer);
 
+    const gl::Rectangle &getRenderPassRenderArea() const;
+
   private:
     void setHasChildren();
 

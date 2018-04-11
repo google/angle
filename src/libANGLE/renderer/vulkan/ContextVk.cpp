@@ -37,6 +37,16 @@
 
 namespace rx
 {
+
+namespace
+{
+constexpr gl::Rectangle kMaxSizedScissor(0,
+                                         0,
+                                         std::numeric_limits<int>::max(),
+                                         std::numeric_limits<int>::max());
+
+}  // anonymous namespace
+
 ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     : ContextImpl(state),
       mRenderer(renderer),
@@ -344,15 +354,14 @@ void ContextVk::updateScissor(const gl::State &glState)
 {
     if (glState.isScissorTestEnabled())
     {
-        mPipelineDesc->updateScissor(glState.getScissor(),
-                                     glState.getDrawFramebuffer()->getDimensions());
+        mPipelineDesc->updateScissor(glState.getScissor());
     }
     else
     {
-        // If the scissor test isn't enabled, we have to also update the scissor to
-        // be equal to the framebuffer dimensions to make sure we keep rendering everything.
-        mPipelineDesc->updateScissor(glState.getViewport(),
-                                     glState.getDrawFramebuffer()->getDimensions());
+        // If the scissor test isn't enabled, we can simply use a really big scissor that's
+        // certainly larger than the current surface using the maximum size of a 2D texture
+        // for the width and height.
+        mPipelineDesc->updateScissor(kMaxSizedScissor);
     }
 }
 
@@ -373,16 +382,8 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
         switch (dirtyBit)
         {
             case gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED:
-                updateScissor(glState);
-                break;
             case gl::State::DIRTY_BIT_SCISSOR:
-                // Only modify the scissor region if the test is enabled, otherwise we want to keep
-                // the viewport size as the scissor region.
-                if (glState.isScissorTestEnabled())
-                {
-                    mPipelineDesc->updateScissor(glState.getScissor(),
-                                                 glState.getDrawFramebuffer()->getDimensions());
-                }
+                updateScissor(glState);
                 break;
             case gl::State::DIRTY_BIT_VIEWPORT:
                 mPipelineDesc->updateViewport(glState.getViewport(), glState.getNearPlane(),

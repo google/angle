@@ -649,11 +649,6 @@ void PipelineDesc::updateViewport(const gl::Rectangle &viewport, float nearPlane
     mViewport.height   = static_cast<float>(viewport.height);
     mViewport.minDepth = nearPlane;
     mViewport.maxDepth = farPlane;
-
-    mScissor.offset.x      = viewport.x;
-    mScissor.offset.y      = viewport.y;
-    mScissor.extent.width  = viewport.width;
-    mScissor.extent.height = viewport.height;
 }
 
 void PipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
@@ -808,22 +803,9 @@ void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
     mRenderPassDesc = renderPassDesc;
 }
 
-void PipelineDesc::updateScissor(const gl::Rectangle &rect, gl::Box framebufferDimensions)
+void PipelineDesc::updateScissor(const gl::Rectangle &rect)
 {
-    gl::Rectangle intersection;
-    gl::Rectangle clipRect(static_cast<GLuint>(0), static_cast<GLuint>(0),
-                           static_cast<GLuint>(framebufferDimensions.width),
-                           static_cast<GLuint>(framebufferDimensions.height));
-    // Coordinates outside the framebuffer aren't valid in Vulkan but not error is returned, the
-    // scissor is just ignored.
-    if (ClipRectangle(rect, clipRect, &intersection))
-    {
-        mScissor = gl_vk::GetRect(intersection);
-    }
-    else
-    {
-        mScissor = gl_vk::GetRect(rect);
-    }
+    mScissor = gl_vk::GetRect(rect);
 }
 
 // AttachmentOpsArray implementation.

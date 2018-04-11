@@ -292,7 +292,7 @@ class PipelineDesc final
 
     // Scissor support
     const VkRect2D &getScissor() const { return mScissor; }
-    void updateScissor(const gl::Rectangle &rect, gl::Box surfaceDimensions);
+    void updateScissor(const gl::Rectangle &rect);
 
     // Blend states
     void updateBlendEnabled(bool isBlendEnabled);

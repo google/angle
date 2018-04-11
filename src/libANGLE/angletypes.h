@@ -45,7 +45,7 @@ PrimitiveType GetPrimitiveType(GLenum drawMode);
 struct Rectangle
 {
     Rectangle() : x(0), y(0), width(0), height(0) {}
-    Rectangle(int x_in, int y_in, int width_in, int height_in)
+    constexpr Rectangle(int x_in, int y_in, int width_in, int height_in)
         : x(x_in), y(y_in), width(width_in), height(height_in)
     {
     }
