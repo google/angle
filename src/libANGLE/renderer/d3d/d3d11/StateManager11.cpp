@@ -1526,6 +1526,8 @@ void StateManager11::invalidateTransformFeedback()
     // Transform feedback affects the stream-out geometry shader.
     invalidateShaders();
     mInternalDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK);
+    // syncPrimitiveTopology checks the transform feedback state.
+    mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
 }
 
 void StateManager11::invalidateInputLayout()
