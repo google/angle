@@ -66,6 +66,7 @@ using namespace sh;
 #endif
 #endif
 
+#define YY_NO_INPUT
 #define YY_USER_ACTION                                 \
     yylloc->first_file = yylloc->last_file = yycolumn; \
     yylloc->first_line = yylloc->last_line = yylineno;

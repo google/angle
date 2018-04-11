@@ -99,6 +99,7 @@ config("extra_warnings") {
     cflags += [
       # Remove when crbug.com/428099 is resolved.
       "-Winconsistent-missing-override",
+      "-Wunneeded-internal-declaration",
     ]
   }
 }
