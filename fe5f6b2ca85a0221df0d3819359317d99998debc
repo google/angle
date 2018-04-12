@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0c825562_cea1ef99",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1025,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-12T12:28:46Z",
+      "side": 1,
+      "message": "DrawArraysThenDrawElement\"s\"",
+      "range": {
+        "startLine": 1025,
+        "startChar": 30,
+        "endLine": 1025,
+        "endChar": 55
+      },
+      "revId": "fe5f6b2ca85a0221df0d3819359317d99998debc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
