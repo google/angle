@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36f59b10_b08f4e4c",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-12T21:04:22Z",
+      "side": 1,
+      "message": "Is the number of iteration important? 100 swapbuffers seems a bit excessive",
+      "revId": "79add8301eac1a0d502d00ed9c8d044a71da644b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f5f0116_5dc3b326",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-12T21:04:22Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "79add8301eac1a0d502d00ed9c8d044a71da644b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
