@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e59d2f59_922dc91f",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-12T16:56:31Z",
+      "side": 1,
+      "message": "nit: can you add a comment here with a mention of why this secondary check is necessary? just a short sentence is sufficient.",
+      "range": {
+        "startLine": 695,
+        "startChar": 0,
+        "endLine": 696,
+        "endChar": 58
+      },
+      "revId": "000ab21207e75ae994ac8de82e98b1c29cc7dfaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76c0ac14_eb8f02e7",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-12T16:56:31Z",
+      "side": 1,
+      "message": "Whoops, it does seem like many extension entry points are missing from libGLESv2.def. It\u0027s possible we could autogenerate this at some point. Will poke Geoff.",
+      "range": {
+        "startLine": 782,
+        "startChar": 3,
+        "endLine": 783,
+        "endChar": 99
+      },
+      "revId": "000ab21207e75ae994ac8de82e98b1c29cc7dfaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
