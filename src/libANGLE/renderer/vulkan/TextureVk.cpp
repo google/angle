@@ -190,7 +190,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     VkDevice device      = contextVk->getDevice();
 
     // TODO(jmadill): support multi-level textures.
-    ASSERT(index.mipIndex == 0);
+    ASSERT(index.getLevelIndex() == 0);
 
     // Convert internalFormat to sized internal format.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
@@ -212,7 +212,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     }
 
     // TODO(jmadill): Cube map textures. http://anglebug.com/2318
-    if (index.target != gl::TextureTarget::_2D)
+    if (index.getTarget() != gl::TextureTarget::_2D)
     {
         UNIMPLEMENTED();
         return gl::InternalError();
@@ -375,10 +375,10 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                                FramebufferAttachmentRenderTarget **rtOut)
 {
     // TODO(jmadill): Handle cube textures. http://anglebug.com/2318
-    ASSERT(imageIndex.type == gl::TextureType::_2D);
+    ASSERT(imageIndex.getType() == gl::TextureType::_2D);
 
     // Non-zero mip level attachments are an ES 3.0 feature.
-    ASSERT(imageIndex.mipIndex == 0 && imageIndex.layerIndex == gl::ImageIndex::ENTIRE_LEVEL);
+    ASSERT(imageIndex.getLevelIndex() == 0 && !imageIndex.hasLayer());
 
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();

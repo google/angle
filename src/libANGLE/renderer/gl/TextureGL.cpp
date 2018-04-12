@@ -152,8 +152,8 @@ gl::Error TextureGL::setImage(const gl::Context *context,
     const gl::Buffer *unpackBuffer =
         context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
 
-    gl::TextureTarget target = index.target;
-    size_t level             = static_cast<size_t>(index.mipIndex);
+    gl::TextureTarget target = index.getTarget();
+    size_t level             = static_cast<size_t>(index.getLevelIndex());
 
     if (mWorkarounds.unpackOverlappingRowsSeparatelyUnpackBuffer && unpackBuffer &&
         unpack.rowLength != 0 && unpack.rowLength < size.width)
@@ -257,7 +257,7 @@ gl::Error TextureGL::setSubImage(const gl::Context *context,
                                  const gl::PixelUnpackState &unpack,
                                  const uint8_t *pixels)
 {
-    ASSERT(TextureTargetToType(index.target) == getType());
+    ASSERT(TextureTargetToType(index.getTarget()) == getType());
 
     const gl::Buffer *unpackBuffer =
         context->getGLState().getTargetBuffer(gl::BufferBinding::PixelUnpack);
@@ -265,8 +265,8 @@ gl::Error TextureGL::setSubImage(const gl::Context *context,
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(mFunctions, mWorkarounds, format, type);
 
-    gl::TextureTarget target = index.target;
-    size_t level             = static_cast<size_t>(index.mipIndex);
+    gl::TextureTarget target = index.getTarget();
+    size_t level             = static_cast<size_t>(index.getLevelIndex());
 
     ASSERT(getLevelInfo(target, level).lumaWorkaround.enabled ==
            GetLevelInfo(format, texSubImageFormat.format).lumaWorkaround.enabled);
@@ -466,8 +466,8 @@ gl::Error TextureGL::setCompressedImage(const gl::Context *context,
                                         size_t imageSize,
                                         const uint8_t *pixels)
 {
-    gl::TextureTarget target = index.target;
-    size_t level             = static_cast<size_t>(index.mipIndex);
+    gl::TextureTarget target = index.getTarget();
+    size_t level             = static_cast<size_t>(index.getLevelIndex());
     ASSERT(TextureTargetToType(target) == getType());
 
     nativegl::CompressedTexImageFormat compressedTexImageFormat =
@@ -507,8 +507,8 @@ gl::Error TextureGL::setCompressedSubImage(const gl::Context *context,
                                            size_t imageSize,
                                            const uint8_t *pixels)
 {
-    gl::TextureTarget target = index.target;
-    size_t level             = static_cast<size_t>(index.mipIndex);
+    gl::TextureTarget target = index.getTarget();
+    size_t level             = static_cast<size_t>(index.getLevelIndex());
     ASSERT(TextureTargetToType(target) == getType());
 
     nativegl::CompressedTexSubImageFormat compressedTexSubImageFormat =
@@ -546,8 +546,8 @@ gl::Error TextureGL::copyImage(const gl::Context *context,
                                GLenum internalFormat,
                                gl::Framebuffer *source)
 {
-    gl::TextureTarget target = index.target;
-    size_t level             = static_cast<size_t>(index.mipIndex);
+    gl::TextureTarget target = index.getTarget();
+    size_t level             = static_cast<size_t>(index.getLevelIndex());
     GLenum type = GL_NONE;
     ANGLE_TRY(source->getImplementationColorReadType(context, &type));
     nativegl::CopyTexImageImageFormat copyTexImageFormat =
@@ -648,8 +648,8 @@ gl::Error TextureGL::copySubImage(const gl::Context *context,
                                   const gl::Rectangle &origSourceArea,
                                   gl::Framebuffer *source)
 {
-    gl::TextureTarget target                 = index.target;
-    size_t level                             = static_cast<size_t>(index.mipIndex);
+    gl::TextureTarget target                 = index.getTarget();
+    size_t level                             = static_cast<size_t>(index.getLevelIndex());
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
 
     // Clip source area to framebuffer.
@@ -712,8 +712,8 @@ gl::Error TextureGL::copyTexture(const gl::Context *context,
                                  bool unpackUnmultiplyAlpha,
                                  const gl::Texture *source)
 {
-    gl::TextureTarget target             = index.target;
-    size_t level                         = static_cast<size_t>(index.mipIndex);
+    gl::TextureTarget target             = index.getTarget();
+    size_t level                         = static_cast<size_t>(index.getLevelIndex());
     const TextureGL *sourceGL            = GetImplAs<TextureGL>(source);
     const gl::ImageDesc &sourceImageDesc =
         sourceGL->mState.getImageDesc(NonCubeTextureTypeToTarget(source->getType()), sourceLevel);
@@ -737,8 +737,8 @@ gl::Error TextureGL::copySubTexture(const gl::Context *context,
                                     bool unpackUnmultiplyAlpha,
                                     const gl::Texture *source)
 {
-    gl::TextureTarget target                 = index.target;
-    size_t level                             = static_cast<size_t>(index.mipIndex);
+    gl::TextureTarget target                 = index.getTarget();
+    size_t level                             = static_cast<size_t>(index.getLevelIndex());
     const gl::InternalFormat &destFormatInfo = *mState.getImageDesc(target, level).format.info;
     return copySubTextureHelper(context, target, level, destOffset, sourceLevel, sourceArea,
                                 destFormatInfo.format, destFormatInfo.type, unpackFlipY,
@@ -1436,7 +1436,7 @@ gl::Error TextureGL::initializeContents(const gl::Context *context,
                                         const gl::ImageIndex &imageIndex)
 {
     GLenum nativeInternalFormat =
-        getLevelInfo(imageIndex.target, imageIndex.mipIndex).nativeInternalFormat;
+        getLevelInfo(imageIndex.getTarget(), imageIndex.getLevelIndex()).nativeInternalFormat;
     if (nativegl::SupportsNativeRendering(mFunctions, mState.getType(), nativeInternalFormat))
     {
         int levelDepth = mState.getImageDesc(imageIndex).size.depth;
@@ -1477,16 +1477,16 @@ gl::Error TextureGL::initializeContents(const gl::Context *context,
         if (nativegl::UseTexImage2D(getType()))
         {
             mFunctions->compressedTexSubImage2D(
-                ToGLenum(imageIndex.target), imageIndex.mipIndex, 0, 0, desc.size.width,
+                ToGLenum(imageIndex.getTarget()), imageIndex.getLevelIndex(), 0, 0, desc.size.width,
                 desc.size.height, nativeSubImageFormat.format, imageSize, zero->data());
         }
         else
         {
             ASSERT(nativegl::UseTexImage3D(getType()));
-            mFunctions->compressedTexSubImage3D(ToGLenum(imageIndex.target), imageIndex.mipIndex, 0,
-                                                0, 0, desc.size.width, desc.size.height,
-                                                desc.size.depth, nativeSubImageFormat.format,
-                                                imageSize, zero->data());
+            mFunctions->compressedTexSubImage3D(
+                ToGLenum(imageIndex.getTarget()), imageIndex.getLevelIndex(), 0, 0, 0,
+                desc.size.width, desc.size.height, desc.size.depth, nativeSubImageFormat.format,
+                imageSize, zero->data());
         }
     }
     else
@@ -1505,16 +1505,16 @@ gl::Error TextureGL::initializeContents(const gl::Context *context,
 
         if (nativegl::UseTexImage2D(getType()))
         {
-            mFunctions->texSubImage2D(ToGLenum(imageIndex.target), imageIndex.mipIndex, 0, 0,
-                                      desc.size.width, desc.size.height,
+            mFunctions->texSubImage2D(ToGLenum(imageIndex.getTarget()), imageIndex.getLevelIndex(),
+                                      0, 0, desc.size.width, desc.size.height,
                                       nativeSubImageFormat.format, nativeSubImageFormat.type,
                                       zero->data());
         }
         else
         {
             ASSERT(nativegl::UseTexImage3D(getType()));
-            mFunctions->texSubImage3D(ToGLenum(imageIndex.target), imageIndex.mipIndex, 0, 0, 0,
-                                      desc.size.width, desc.size.height, desc.size.depth,
+            mFunctions->texSubImage3D(ToGLenum(imageIndex.getTarget()), imageIndex.getLevelIndex(),
+                                      0, 0, 0, desc.size.width, desc.size.height, desc.size.depth,
                                       nativeSubImageFormat.format, nativeSubImageFormat.type,
                                       zero->data());
         }

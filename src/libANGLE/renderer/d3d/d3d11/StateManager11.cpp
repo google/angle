@@ -34,8 +34,8 @@ namespace
 {
 bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOURCE_VIEW_DESC desc)
 {
-    unsigned mipLevel  = index.mipIndex;
-    gl::TextureType textureType = index.type;
+    unsigned mipLevel           = index.getLevelIndex();
+    gl::TextureType textureType = index.getType();
 
     switch (desc.ViewDimension)
     {
@@ -45,7 +45,7 @@ bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOUR
             unsigned int maxSrvMip = desc.Texture2D.MipLevels + desc.Texture2D.MostDetailedMip;
             maxSrvMip              = allLevels ? INT_MAX : maxSrvMip;
 
-            unsigned mipMin = index.mipIndex;
+            unsigned mipMin = index.getLevelIndex();
             unsigned mipMax = INT_MAX;
 
             return textureType == gl::TextureType::_2D &&
@@ -55,7 +55,7 @@ bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOUR
 
         case D3D11_SRV_DIMENSION_TEXTURE2DARRAY:
         {
-            GLint layerIndex = index.layerIndex;
+            GLint layerIndex = index.getLayerIndex();
 
             bool allLevels = (desc.Texture2DArray.MipLevels == std::numeric_limits<UINT>::max());
             unsigned int maxSrvMip =

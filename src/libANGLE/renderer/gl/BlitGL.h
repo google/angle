@@ -19,7 +19,7 @@
 namespace gl
 {
 class Framebuffer;
-struct ImageIndex;
+class ImageIndex;
 }
 
 namespace rx

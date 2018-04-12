@@ -20,7 +20,7 @@ namespace gl
 {
 class Context;
 class Framebuffer;
-struct ImageIndex;
+class ImageIndex;
 struct Box;
 struct Extents;
 struct Offset;

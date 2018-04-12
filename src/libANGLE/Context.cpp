@@ -3493,28 +3493,7 @@ void Context::framebufferTexture2D(GLenum target,
     if (texture != 0)
     {
         Texture *textureObj = getTexture(texture);
-
-        ImageIndex index = ImageIndex::MakeInvalid();
-
-        if (textarget == TextureTarget::_2D)
-        {
-            index = ImageIndex::Make2D(level);
-        }
-        else if (textarget == TextureTarget::Rectangle)
-        {
-            index = ImageIndex::MakeRectangle(level);
-        }
-        else if (textarget == TextureTarget::_2DMultisample)
-        {
-            ASSERT(level == 0);
-            index = ImageIndex::Make2DMultisample();
-        }
-        else
-        {
-            ASSERT(TextureTargetToType(textarget) == TextureType::CubeMap);
-            index = ImageIndex::MakeCube(textarget, level);
-        }
-
+        ImageIndex index    = ImageIndex::MakeFromTarget(textarget, level);
         framebuffer->setAttachment(this, GL_TEXTURE, attachment, index, textureObj);
     }
     else
@@ -3537,7 +3516,7 @@ void Context::framebufferRenderbuffer(GLenum target,
     {
         Renderbuffer *renderbufferObject = getRenderbuffer(renderbuffer);
 
-        framebuffer->setAttachment(this, GL_RENDERBUFFER, attachment, gl::ImageIndex::MakeInvalid(),
+        framebuffer->setAttachment(this, GL_RENDERBUFFER, attachment, gl::ImageIndex(),
                                    renderbufferObject);
     }
     else
@@ -3560,19 +3539,7 @@ void Context::framebufferTextureLayer(GLenum target,
     if (texture != 0)
     {
         Texture *textureObject = getTexture(texture);
-
-        ImageIndex index = ImageIndex::MakeInvalid();
-
-        if (textureObject->getType() == TextureType::_3D)
-        {
-            index = ImageIndex::Make3D(level, layer);
-        }
-        else
-        {
-            ASSERT(textureObject->getType() == TextureType::_2DArray);
-            index = ImageIndex::Make2DArray(level, layer);
-        }
-
+        ImageIndex index       = ImageIndex::MakeFromType(textureObject->getType(), level, layer);
         framebuffer->setAttachment(this, GL_TEXTURE, attachment, index, textureObject);
     }
     else

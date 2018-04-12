@@ -40,13 +40,13 @@ namespace gl
 class Context;
 class ContextState;
 class Framebuffer;
+class ImageIndex;
 class Renderbuffer;
 class State;
 class Texture;
 class TextureCapsMap;
 struct Caps;
 struct Extensions;
-struct ImageIndex;
 struct Rectangle;
 
 class FramebufferState final : angle::NonCopyable

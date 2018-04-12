@@ -113,8 +113,8 @@ bool AreAllLayersActive(const FramebufferAttachment &attachment)
         return false;
     }
     const ImageIndex &imageIndex = attachment.getTextureImageIndex();
-    int numLayers =
-        static_cast<int>(attachment.getTexture()->getDepth(imageIndex.target, imageIndex.mipIndex));
+    int numLayers                = static_cast<int>(
+        attachment.getTexture()->getDepth(imageIndex.getTarget(), imageIndex.getLevelIndex()));
     return (attachment.getNumViews() == numLayers);
 }
 
