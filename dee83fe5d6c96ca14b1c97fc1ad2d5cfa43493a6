@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "49c47638_57f5f3c9",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-12T19:33:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2534a07e_29793d7a",
+      "range": {
+        "startLine": 369,
+        "startChar": 0,
+        "endLine": 373,
+        "endChar": 0
+      },
+      "revId": "dee83fe5d6c96ca14b1c97fc1ad2d5cfa43493a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82bb59f5_27d6f0b2",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 10
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "a8996d99_1e7d6ac9",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-12T19:33:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82bb59f5_27d6f0b2",
+      "range": {
+        "startLine": 412,
+        "startChar": 0,
+        "endLine": 416,
+        "endChar": 37
+      },
+      "revId": "dee83fe5d6c96ca14b1c97fc1ad2d5cfa43493a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cc731920_5e3f58fe",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 10
@@ -68,6 +116,30 @@
       "revId": "dee83fe5d6c96ca14b1c97fc1ad2d5cfa43493a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd489def_2e6fbaad",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 991,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-12T19:33:03Z",
+      "side": 1,
+      "message": "Indeed! The last pixel isn\u0027t filled on a line loop with vulkan somehow. So we check the pixel right before.",
+      "parentUuid": "cc731920_5e3f58fe",
+      "range": {
+        "startLine": 991,
+        "startChar": 69,
+        "endLine": 991,
+        "endChar": 73
+      },
+      "revId": "dee83fe5d6c96ca14b1c97fc1ad2d5cfa43493a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
