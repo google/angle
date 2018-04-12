@@ -22,6 +22,30 @@
       "revId": "4fbb9e8b52df2488334d2bd24f2611f4a3826ab1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8b197f6_734fed71",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-12T18:50:46Z",
+      "side": 1,
+      "message": "I\u0027ve added the optional arguments to the comment. Let me know what you think.",
+      "parentUuid": "60b96474_a2c21bba",
+      "range": {
+        "startLine": 17,
+        "startChar": 1,
+        "endLine": 18,
+        "endChar": 17
+      },
+      "revId": "4fbb9e8b52df2488334d2bd24f2611f4a3826ab1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
