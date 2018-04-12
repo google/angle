@@ -55,10 +55,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
                              state.getExtensions().webglCompatibility)),
       mOutputType(mImplementation->getTranslatorOutputType()),
       mResources(),
-      mFragmentCompiler(nullptr),
-      mVertexCompiler(nullptr),
-      mComputeCompiler(nullptr),
-      mGeometryCompiler(nullptr)
+      mShaderCompilers({})
 {
     ASSERT(state.getClientMajorVersion() == 2 || state.getClientMajorVersion() == 3);
 
@@ -156,40 +153,17 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
 
 Compiler::~Compiler()
 {
-    if (mFragmentCompiler)
+    for (ShaderType shaderType : AllShaderTypes())
     {
-        sh::Destruct(mFragmentCompiler);
-        mFragmentCompiler = nullptr;
+        ShHandle compilerHandle = mShaderCompilers[shaderType];
+        if (compilerHandle)
+        {
+            sh::Destruct(compilerHandle);
+            mShaderCompilers[shaderType] = nullptr;
 
-        ASSERT(activeCompilerHandles > 0);
-        activeCompilerHandles--;
-    }
-
-    if (mVertexCompiler)
-    {
-        sh::Destruct(mVertexCompiler);
-        mVertexCompiler = nullptr;
-
-        ASSERT(activeCompilerHandles > 0);
-        activeCompilerHandles--;
-    }
-
-    if (mComputeCompiler)
-    {
-        sh::Destruct(mComputeCompiler);
-        mComputeCompiler = nullptr;
-
-        ASSERT(activeCompilerHandles > 0);
-        activeCompilerHandles--;
-    }
-
-    if (mGeometryCompiler)
-    {
-        sh::Destruct(mGeometryCompiler);
-        mGeometryCompiler = nullptr;
-
-        ASSERT(activeCompilerHandles > 0);
-        activeCompilerHandles--;
+            ASSERT(activeCompilerHandles > 0);
+            activeCompilerHandles--;
+        }
     }
 
     if (activeCompilerHandles == 0)
@@ -202,26 +176,8 @@ Compiler::~Compiler()
 
 ShHandle Compiler::getCompilerHandle(ShaderType type)
 {
-    ShHandle *compiler = nullptr;
-    switch (type)
-    {
-        case ShaderType::Vertex:
-            compiler = &mVertexCompiler;
-            break;
-
-        case ShaderType::Fragment:
-            compiler = &mFragmentCompiler;
-            break;
-        case ShaderType::Compute:
-            compiler = &mComputeCompiler;
-            break;
-        case ShaderType::Geometry:
-            compiler = &mGeometryCompiler;
-            break;
-        default:
-            UNREACHABLE();
-            return nullptr;
-    }
+    ASSERT(type != ShaderType::InvalidEnum);
+    ShHandle *compiler = &mShaderCompilers[type];
 
     if (!(*compiler))
     {

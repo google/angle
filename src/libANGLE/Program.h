@@ -352,6 +352,8 @@ class ProgramState final : angle::NonCopyable
 
     const ShaderBitSet &getLinkedShaderStages() const { return mLinkedShaderStages; }
 
+    bool hasAttachedShader() const;
+
   private:
     friend class MemoryProgramCache;
     friend class Program;
@@ -362,10 +364,7 @@ class ProgramState final : angle::NonCopyable
 
     sh::WorkGroupSize mComputeShaderLocalSize;
 
-    Shader *mAttachedFragmentShader;
-    Shader *mAttachedVertexShader;
-    Shader *mAttachedComputeShader;
-    Shader *mAttachedGeometryShader;
+    ShaderMap<Shader *> mAttachedShaders;
 
     std::vector<std::string> mTransformFeedbackVaryingNames;
     std::vector<TransformFeedbackVarying> mLinkedTransformFeedbackVaryings;

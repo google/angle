@@ -172,7 +172,15 @@ struct AllShaderTypes
     angle::EnumIterator<ShaderType> end() const { return kAfterShaderTypeMax; }
 };
 
+constexpr size_t kGraphicsShaderCount = static_cast<size_t>(ShaderType::EnumCount) - 1u;
+// Arrange the shader types in the order of rendering pipeline
+constexpr std::array<ShaderType, kGraphicsShaderCount> kAllGraphicsShaderTypes = {
+    ShaderType::Vertex, ShaderType::Geometry, ShaderType::Fragment};
+
 using ShaderBitSet = angle::PackedEnumBitSet<ShaderType>;
+
+template <typename T>
+using ShaderMap = angle::PackedEnumMap<ShaderType, T>;
 
 TextureType SamplerTypeToTextureType(GLenum samplerType);
 

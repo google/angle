@@ -188,27 +188,29 @@ bool UniformLinker::validateGraphicsUniforms(const Context *context, InfoLog &in
 {
     // Check that uniforms defined in the graphics shaders are identical
     std::map<std::string, ShaderUniform> linkedUniforms;
-    for (const sh::Uniform &vertexUniform :
-         mState.getAttachedShader(ShaderType::Vertex)->getUniforms(context))
-    {
-        linkedUniforms[vertexUniform.name] = std::make_pair(ShaderType::Vertex, &vertexUniform);
-    }
 
-    std::vector<Shader *> activeShadersToLink;
-    if (mState.getAttachedShader(ShaderType::Geometry))
+    for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {
-        activeShadersToLink.push_back(mState.getAttachedShader(ShaderType::Geometry));
-    }
-    activeShadersToLink.push_back(mState.getAttachedShader(ShaderType::Fragment));
-
-    const size_t numActiveShadersToLink = activeShadersToLink.size();
-    for (size_t shaderIndex = 0; shaderIndex < numActiveShadersToLink; ++shaderIndex)
-    {
-        bool isLastShader = (shaderIndex == numActiveShadersToLink - 1);
-        if (!ValidateGraphicsUniformsPerShader(context, activeShadersToLink[shaderIndex],
-                                               !isLastShader, &linkedUniforms, infoLog))
+        Shader *currentShader = mState.getAttachedShader(shaderType);
+        if (currentShader)
         {
-            return false;
+            if (shaderType == ShaderType::Vertex)
+            {
+                for (const sh::Uniform &vertexUniform : currentShader->getUniforms(context))
+                {
+                    linkedUniforms[vertexUniform.name] =
+                        std::make_pair(ShaderType::Vertex, &vertexUniform);
+                }
+            }
+            else
+            {
+                bool isLastShader = (shaderType == ShaderType::Fragment);
+                if (!ValidateGraphicsUniformsPerShader(context, currentShader, !isLastShader,
+                                                       &linkedUniforms, infoLog))
+                {
+                    return false;
+                }
+            }
         }
     }
 
@@ -802,7 +804,7 @@ bool UniformLinker::checkMaxCombinedAtomicCounters(const Caps &caps, InfoLog &in
 
 // InterfaceBlockLinker implementation.
 InterfaceBlockLinker::InterfaceBlockLinker(std::vector<InterfaceBlock> *blocksOut)
-    : mBlocksOut(blocksOut)
+    : mShaderBlocks({}), mBlocksOut(blocksOut)
 {
 }
 
@@ -810,10 +812,10 @@ InterfaceBlockLinker::~InterfaceBlockLinker()
 {
 }
 
-void InterfaceBlockLinker::addShaderBlocks(ShaderType shader,
+void InterfaceBlockLinker::addShaderBlocks(ShaderType shaderType,
                                            const std::vector<sh::InterfaceBlock> *blocks)
 {
-    mShaderBlocks.push_back(std::make_pair(shader, blocks));
+    mShaderBlocks[shaderType] = blocks;
 }
 
 void InterfaceBlockLinker::linkBlocks(const GetBlockSize &getBlockSize,
@@ -823,11 +825,14 @@ void InterfaceBlockLinker::linkBlocks(const GetBlockSize &getBlockSize,
 
     std::set<std::string> visitedList;
 
-    for (const auto &shaderBlocks : mShaderBlocks)
+    for (ShaderType shaderType : AllShaderTypes())
     {
-        const ShaderType shaderType = shaderBlocks.first;
+        if (!mShaderBlocks[shaderType])
+        {
+            continue;
+        }
 
-        for (const auto &block : *shaderBlocks.second)
+        for (const auto &block : *mShaderBlocks[shaderType])
         {
             if (!IsActiveInterfaceBlock(block))
                 continue;

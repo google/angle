@@ -700,10 +700,7 @@ ImageBinding::~ImageBinding() = default;
 // ProgramState implementation.
 ProgramState::ProgramState()
     : mLabel(),
-      mAttachedFragmentShader(nullptr),
-      mAttachedVertexShader(nullptr),
-      mAttachedComputeShader(nullptr),
-      mAttachedGeometryShader(nullptr),
+      mAttachedShaders({}),
       mTransformFeedbackBufferMode(GL_INTERLEAVED_ATTRIBS),
       mMaxActiveAttribLocation(0),
       mSamplerUniformRange(0, 0),
@@ -722,8 +719,7 @@ ProgramState::ProgramState()
 
 ProgramState::~ProgramState()
 {
-    ASSERT(!mAttachedVertexShader && !mAttachedFragmentShader && !mAttachedComputeShader &&
-           !mAttachedGeometryShader);
+    ASSERT(!hasAttachedShader());
 }
 
 const std::string &ProgramState::getLabel()
@@ -733,20 +729,8 @@ const std::string &ProgramState::getLabel()
 
 Shader *ProgramState::getAttachedShader(ShaderType shaderType) const
 {
-    switch (shaderType)
-    {
-        case ShaderType::Vertex:
-            return mAttachedVertexShader;
-        case ShaderType::Fragment:
-            return mAttachedFragmentShader;
-        case ShaderType::Compute:
-            return mAttachedComputeShader;
-        case ShaderType::Geometry:
-            return mAttachedGeometryShader;
-        default:
-            UNREACHABLE();
-            return nullptr;
-    }
+    ASSERT(shaderType != ShaderType::InvalidEnum);
+    return mAttachedShaders[shaderType];
 }
 
 GLuint ProgramState::getUniformIndexFromName(const std::string &name) const
@@ -800,6 +784,18 @@ GLuint ProgramState::getAttributeLocation(const std::string &name) const
     return static_cast<GLuint>(-1);
 }
 
+bool ProgramState::hasAttachedShader() const
+{
+    for (const Shader *shader : mAttachedShaders)
+    {
+        if (shader)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, GLuint handle)
     : mProgram(factory->createProgram(mState)),
       mValidated(false),
@@ -821,35 +817,19 @@ Program::~Program()
 
 void Program::onDestroy(const Context *context)
 {
-    if (mState.mAttachedVertexShader != nullptr)
+    for (ShaderType shaderType : AllShaderTypes())
     {
-        mState.mAttachedVertexShader->release(context);
-        mState.mAttachedVertexShader = nullptr;
-    }
-
-    if (mState.mAttachedFragmentShader != nullptr)
-    {
-        mState.mAttachedFragmentShader->release(context);
-        mState.mAttachedFragmentShader = nullptr;
-    }
-
-    if (mState.mAttachedComputeShader != nullptr)
-    {
-        mState.mAttachedComputeShader->release(context);
-        mState.mAttachedComputeShader = nullptr;
-    }
-
-    if (mState.mAttachedGeometryShader != nullptr)
-    {
-        mState.mAttachedGeometryShader->release(context);
-        mState.mAttachedGeometryShader = nullptr;
+        if (mState.mAttachedShaders[shaderType])
+        {
+            mState.mAttachedShaders[shaderType]->release(context);
+            mState.mAttachedShaders[shaderType] = nullptr;
+        }
     }
 
     // TODO(jmadill): Handle error in the Context.
     ANGLE_SWALLOW_ERR(mProgram->destroy(context));
 
-    ASSERT(!mState.mAttachedVertexShader && !mState.mAttachedFragmentShader &&
-           !mState.mAttachedComputeShader && !mState.mAttachedGeometryShader);
+    ASSERT(!mState.hasAttachedShader());
     SafeDelete(mProgram);
 
     delete this;
@@ -867,82 +847,35 @@ const std::string &Program::getLabel() const
 
 void Program::attachShader(Shader *shader)
 {
-    switch (shader->getType())
-    {
-        case ShaderType::Vertex:
-        {
-            ASSERT(!mState.mAttachedVertexShader);
-            mState.mAttachedVertexShader = shader;
-            mState.mAttachedVertexShader->addRef();
-            break;
-        }
-        case ShaderType::Fragment:
-        {
-            ASSERT(!mState.mAttachedFragmentShader);
-            mState.mAttachedFragmentShader = shader;
-            mState.mAttachedFragmentShader->addRef();
-            break;
-        }
-        case ShaderType::Compute:
-        {
-            ASSERT(!mState.mAttachedComputeShader);
-            mState.mAttachedComputeShader = shader;
-            mState.mAttachedComputeShader->addRef();
-            break;
-        }
-        case ShaderType::Geometry:
-        {
-            ASSERT(!mState.mAttachedGeometryShader);
-            mState.mAttachedGeometryShader = shader;
-            mState.mAttachedGeometryShader->addRef();
-            break;
-        }
-        default:
-            UNREACHABLE();
-    }
+    ShaderType shaderType = shader->getType();
+    ASSERT(shaderType != ShaderType::InvalidEnum);
+
+    mState.mAttachedShaders[shaderType] = shader;
+    mState.mAttachedShaders[shaderType]->addRef();
 }
 
 void Program::detachShader(const Context *context, Shader *shader)
 {
-    switch (shader->getType())
-    {
-        case ShaderType::Vertex:
-        {
-            ASSERT(mState.mAttachedVertexShader == shader);
-            shader->release(context);
-            mState.mAttachedVertexShader = nullptr;
-            break;
-        }
-        case ShaderType::Fragment:
-        {
-            ASSERT(mState.mAttachedFragmentShader == shader);
-            shader->release(context);
-            mState.mAttachedFragmentShader = nullptr;
-            break;
-        }
-        case ShaderType::Compute:
-        {
-            ASSERT(mState.mAttachedComputeShader == shader);
-            shader->release(context);
-            mState.mAttachedComputeShader = nullptr;
-            break;
-        }
-        case ShaderType::Geometry:
-        {
-            ASSERT(mState.mAttachedGeometryShader == shader);
-            shader->release(context);
-            mState.mAttachedGeometryShader = nullptr;
-            break;
-        }
-        default:
-            UNREACHABLE();
-    }
+    ShaderType shaderType = shader->getType();
+    ASSERT(shaderType != ShaderType::InvalidEnum);
+
+    ASSERT(mState.mAttachedShaders[shaderType] == shader);
+    shader->release(context);
+    mState.mAttachedShaders[shaderType] = nullptr;
 }
 
 int Program::getAttachedShadersCount() const
 {
-    return (mState.mAttachedVertexShader ? 1 : 0) + (mState.mAttachedFragmentShader ? 1 : 0) +
-           (mState.mAttachedComputeShader ? 1 : 0) + (mState.mAttachedGeometryShader ? 1 : 0);
+    int numAttachedShaders = 0;
+    for (const Shader *shader : mState.mAttachedShaders)
+    {
+        if (shader)
+        {
+            ++numAttachedShaders;
+        }
+    }
+
+    return numAttachedShaders;
 }
 
 const Shader *Program::getAttachedShader(ShaderType shaderType) const
@@ -1079,7 +1012,7 @@ Error Program::link(const gl::Context *context)
     // Re-link shaders after the unlink call.
     ASSERT(linkValidateShaders(context, mInfoLog));
 
-    if (mState.mAttachedComputeShader)
+    if (mState.mAttachedShaders[ShaderType::Compute])
     {
         if (!linkUniforms(context, mInfoLog, mUniformLocationBindings))
         {
@@ -1135,8 +1068,8 @@ Error Program::link(const gl::Context *context)
 
         const auto &mergedVaryings = getMergedVaryings(context);
 
-        ASSERT(mState.mAttachedVertexShader);
-        mState.mNumViews = mState.mAttachedVertexShader->getNumViews(context);
+        ASSERT(mState.mAttachedShaders[ShaderType::Vertex]);
+        mState.mNumViews = mState.mAttachedShaders[ShaderType::Vertex]->getNumViews(context);
 
         linkOutputVariables(context);
 
@@ -1212,24 +1145,12 @@ void Program::updateLinkedShaderStages()
 {
     mState.mLinkedShaderStages.reset();
 
-    if (mState.mAttachedVertexShader)
+    for (const Shader *shader : mState.mAttachedShaders)
     {
-        mState.mLinkedShaderStages.set(ShaderType::Vertex);
-    }
-
-    if (mState.mAttachedFragmentShader)
-    {
-        mState.mLinkedShaderStages.set(ShaderType::Fragment);
-    }
-
-    if (mState.mAttachedComputeShader)
-    {
-        mState.mLinkedShaderStages.set(ShaderType::Compute);
-    }
-
-    if (mState.mAttachedGeometryShader)
-    {
-        mState.mLinkedShaderStages.set(ShaderType::Geometry);
+        if (shader)
+        {
+            mState.mLinkedShaderStages.set(shader->getType());
+        }
     }
 }
 
@@ -1451,39 +1372,12 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
 {
     int total = 0;
 
-    if (mState.mAttachedComputeShader)
+    for (const Shader *shader : mState.mAttachedShaders)
     {
-        if (total < maxCount)
+        if (shader && (total < maxCount))
         {
-            shaders[total] = mState.mAttachedComputeShader->getHandle();
-            total++;
-        }
-    }
-
-    if (mState.mAttachedVertexShader)
-    {
-        if (total < maxCount)
-        {
-            shaders[total] = mState.mAttachedVertexShader->getHandle();
-            total++;
-        }
-    }
-
-    if (mState.mAttachedFragmentShader)
-    {
-        if (total < maxCount)
-        {
-            shaders[total] = mState.mAttachedFragmentShader->getHandle();
-            total++;
-        }
-    }
-
-    if (mState.mAttachedGeometryShader)
-    {
-        if (total < maxCount)
-        {
-            shaders[total] = mState.mAttachedGeometryShader->getHandle();
-            total++;
+            shaders[total] = shader->getHandle();
+            ++total;
         }
     }
 
@@ -2261,10 +2155,10 @@ GLenum Program::getTransformFeedbackBufferMode() const
 
 bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
 {
-    Shader *vertexShader   = mState.mAttachedVertexShader;
-    Shader *fragmentShader = mState.mAttachedFragmentShader;
-    Shader *computeShader  = mState.mAttachedComputeShader;
-    Shader *geometryShader = mState.mAttachedGeometryShader;
+    Shader *vertexShader   = mState.mAttachedShaders[ShaderType::Vertex];
+    Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
+    Shader *computeShader  = mState.mAttachedShaders[ShaderType::Compute];
+    Shader *geometryShader = mState.mAttachedShaders[ShaderType::Geometry];
 
     bool isComputeShaderAttached  = (computeShader != nullptr);
     bool isGraphicsShaderAttached =
@@ -2400,22 +2294,24 @@ const TransformFeedbackVarying &Program::getTransformFeedbackVaryingResource(GLu
 
 bool Program::linkVaryings(const Context *context, InfoLog &infoLog) const
 {
-    std::vector<Shader *> activeShaders;
-    activeShaders.push_back(mState.mAttachedVertexShader);
-    if (mState.mAttachedGeometryShader)
+    Shader *previousShader = nullptr;
+    for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {
-        activeShaders.push_back(mState.mAttachedGeometryShader);
-    }
-    activeShaders.push_back(mState.mAttachedFragmentShader);
-
-    const size_t activeShaderCount = activeShaders.size();
-    for (size_t shaderIndex = 0; shaderIndex < activeShaderCount - 1; ++shaderIndex)
-    {
-        if (!linkValidateShaderInterfaceMatching(context, activeShaders[shaderIndex],
-                                                 activeShaders[shaderIndex + 1], infoLog))
+        Shader *currentShader = mState.mAttachedShaders[shaderType];
+        if (!currentShader)
         {
-            return false;
+            continue;
         }
+
+        if (previousShader)
+        {
+            if (!linkValidateShaderInterfaceMatching(context, previousShader, currentShader,
+                                                     infoLog))
+            {
+                return false;
+            }
+        }
+        previousShader = currentShader;
     }
 
     if (!linkValidateBuiltInVaryings(context, infoLog))
@@ -2498,12 +2394,12 @@ bool Program::linkValidateShaderInterfaceMatching(const Context *context,
 
 bool Program::linkValidateFragmentInputBindings(const Context *context, gl::InfoLog &infoLog) const
 {
-    ASSERT(mState.mAttachedFragmentShader);
+    ASSERT(mState.mAttachedShaders[ShaderType::Fragment]);
 
     std::map<GLuint, std::string> staticFragmentInputLocations;
 
     const std::vector<sh::Varying> &fragmentInputVaryings =
-        mState.mAttachedFragmentShader->getInputVaryings(context);
+        mState.mAttachedShaders[ShaderType::Fragment]->getInputVaryings(context);
     for (const sh::Varying &input : fragmentInputVaryings)
     {
         if (input.isBuiltIn() || !input.staticUse)
@@ -2812,9 +2708,9 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
 {
     const auto &caps = context->getCaps();
 
-    if (mState.mAttachedComputeShader)
+    if (mState.mAttachedShaders[ShaderType::Compute])
     {
-        Shader &computeShader              = *mState.mAttachedComputeShader;
+        Shader &computeShader              = *mState.mAttachedShaders[ShaderType::Compute];
         const auto &computeUniformBlocks   = computeShader.getUniformBlocks(context);
 
         if (!ValidateInterfaceBlocksCount(
@@ -2837,8 +2733,8 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         return true;
     }
 
-    Shader &vertexShader   = *mState.mAttachedVertexShader;
-    Shader &fragmentShader = *mState.mAttachedFragmentShader;
+    Shader &vertexShader   = *mState.mAttachedShaders[ShaderType::Vertex];
+    Shader &fragmentShader = *mState.mAttachedShaders[ShaderType::Fragment];
 
     const auto &vertexUniformBlocks   = vertexShader.getUniformBlocks(context);
     const auto &fragmentUniformBlocks = fragmentShader.getUniformBlocks(context);
@@ -2858,7 +2754,7 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         return false;
     }
 
-    Shader *geometryShader = mState.mAttachedGeometryShader;
+    Shader *geometryShader = mState.mAttachedShaders[ShaderType::Geometry];
     if (geometryShader)
     {
         const auto &geometryUniformBlocks = geometryShader->getUniformBlocks(context);
@@ -3029,8 +2925,8 @@ LinkMismatchError Program::LinkValidateVaryings(const sh::Varying &outputVarying
 
 bool Program::linkValidateBuiltInVaryings(const Context *context, InfoLog &infoLog) const
 {
-    Shader *vertexShader         = mState.mAttachedVertexShader;
-    Shader *fragmentShader       = mState.mAttachedFragmentShader;
+    Shader *vertexShader         = mState.mAttachedShaders[ShaderType::Vertex];
+    Shader *fragmentShader       = mState.mAttachedShaders[ShaderType::Fragment];
     const auto &vertexVaryings   = vertexShader->getOutputVaryings(context);
     const auto &fragmentVaryings = fragmentShader->getInputVaryings(context);
     int shaderVersion            = vertexShader->getShaderVersion(context);
@@ -3215,36 +3111,21 @@ bool Program::linkValidateTransformFeedback(const gl::Context *context,
 
 bool Program::linkValidateGlobalNames(const Context *context, InfoLog &infoLog) const
 {
-    const std::vector<sh::Uniform> &vertexUniforms =
-        mState.mAttachedVertexShader->getUniforms(context);
-    const std::vector<sh::Uniform> &fragmentUniforms =
-        mState.mAttachedFragmentShader->getUniforms(context);
-    const std::vector<sh::Uniform> *geometryUniforms =
-        (mState.mAttachedGeometryShader) ? &mState.mAttachedGeometryShader->getUniforms(context)
-                                         : nullptr;
     const std::vector<sh::Attribute> &attributes =
-        mState.mAttachedVertexShader->getActiveAttributes(context);
+        mState.mAttachedShaders[ShaderType::Vertex]->getActiveAttributes(context);
+
     for (const auto &attrib : attributes)
     {
-        for (const auto &uniform : vertexUniforms)
+        for (ShaderType shaderType : kAllGraphicsShaderTypes)
         {
-            if (uniform.name == attrib.name)
+            Shader *shader = mState.mAttachedShaders[shaderType];
+            if (!shader)
             {
-                infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
-                return false;
+                continue;
             }
-        }
-        for (const auto &uniform : fragmentUniforms)
-        {
-            if (uniform.name == attrib.name)
-            {
-                infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
-                return false;
-            }
-        }
-        if (geometryUniforms)
-        {
-            for (const auto &uniform : *geometryUniforms)
+
+            const std::vector<sh::Uniform> &uniforms = shader->getUniforms(context);
+            for (const auto &uniform : uniforms)
             {
                 if (uniform.name == attrib.name)
                 {
@@ -3254,6 +3135,7 @@ bool Program::linkValidateGlobalNames(const Context *context, InfoLog &infoLog) 
             }
         }
     }
+
     return true;
 }
 
@@ -3297,12 +3179,14 @@ ProgramMergedVaryings Program::getMergedVaryings(const Context *context) const
 {
     ProgramMergedVaryings merged;
 
-    for (const sh::Varying &varying : mState.mAttachedVertexShader->getOutputVaryings(context))
+    for (const sh::Varying &varying :
+         mState.mAttachedShaders[ShaderType::Vertex]->getOutputVaryings(context))
     {
         merged[varying.name].vertex = &varying;
     }
 
-    for (const sh::Varying &varying : mState.mAttachedFragmentShader->getInputVaryings(context))
+    for (const sh::Varying &varying :
+         mState.mAttachedShaders[ShaderType::Fragment]->getInputVaryings(context))
     {
         merged[varying.name].fragment = &varying;
     }
@@ -3312,7 +3196,7 @@ ProgramMergedVaryings Program::getMergedVaryings(const Context *context) const
 
 void Program::linkOutputVariables(const Context *context)
 {
-    Shader *fragmentShader = mState.mAttachedFragmentShader;
+    Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
     ASSERT(fragmentShader != nullptr);
 
     ASSERT(mState.mOutputVariableTypes.empty());
