@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c8074d4c_29065249",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-04-12T16:05:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42448af0_bacc6f39",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 21
+      },
+      "revId": "19d60156fd8288bd0b4b3810f199e96c682d24a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb07f9f6_948f466c",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "19d60156fd8288bd0b4b3810f199e96c682d24a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3af6768_9c6d73ac",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-04-12T16:05:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb07f9f6_948f466c",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 24
+      },
+      "revId": "19d60156fd8288bd0b4b3810f199e96c682d24a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
