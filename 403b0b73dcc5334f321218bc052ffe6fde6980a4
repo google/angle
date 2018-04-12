@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3f37f8cc_a39001ed",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-12T17:51:58Z",
+      "side": 1,
+      "message": "It is. You can specify with --output option.",
+      "parentUuid": "4916ff69_3d7c0233",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 17
+      },
+      "revId": "403b0b73dcc5334f321218bc052ffe6fde6980a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d47b9226_e7ea40c8",
         "filename": "src/commit_id.py",
         "patchSetId": 20
@@ -45,6 +69,30 @@
       "revId": "403b0b73dcc5334f321218bc052ffe6fde6980a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "722d9a34_f26f5872",
+        "filename": "src/commit_id.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-12T17:51:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d47b9226_e7ea40c8",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 3
+      },
+      "revId": "403b0b73dcc5334f321218bc052ffe6fde6980a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
