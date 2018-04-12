@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b64b1e91_1b925af1",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-12T02:08:45Z",
+      "side": 1,
+      "message": "I don\u0027t see this used anywhere.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 8
+      },
+      "revId": "b865f85e5eae23f767345b31b10cdfee7392f37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
