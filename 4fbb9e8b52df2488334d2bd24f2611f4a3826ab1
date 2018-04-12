@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60b96474_a2c21bba",
+        "filename": "scripts/gen_angle_gn_info_json.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-12T17:57:12Z",
+      "side": 1,
+      "message": "can you mention the output option up here? and the gn out? Or maybe moving the arguments parser init up the global scope would suffice.",
+      "range": {
+        "startLine": 17,
+        "startChar": 1,
+        "endLine": 18,
+        "endChar": 17
+      },
+      "revId": "4fbb9e8b52df2488334d2bd24f2611f4a3826ab1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
