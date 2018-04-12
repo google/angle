@@ -2926,9 +2926,9 @@ TEST_P(GLSLTest_ES3, InitUninitializedLocals)
 // specifically tests with two different struct variables declared in the same block.
 TEST_P(GLSLTest, InitUninitializedStructContainingArrays)
 {
-    // TODO(lucferron): Root cause and fix it.
+    // TODO(lucferron): Root cause and fix it. Its also flaky sometimes.
     // http://anglebug.com/2460
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux());
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     // Test skipped on Android GLES because local variable initialization is disabled.
     // http://anglebug.com/2046
