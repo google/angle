@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65005115_4da38fcf",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2935,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-12T16:52:37Z",
+      "side": 1,
+      "message": "I would probably replace these two expectations with just IsVulkan().. it could be affecting other platforms.",
+      "range": {
+        "startLine": 2931,
+        "startChar": 0,
+        "endLine": 2935,
+        "endChar": 50
+      },
+      "revId": "4d54d1643c0b9685720dc75105abf3698e1c9eb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
