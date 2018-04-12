@@ -1008,15 +1008,9 @@ TEST_P(LineLoopStateChangeTest, DrawElementsThenDrawArrays)
     glUseProgram(program);
 
     // We expect to draw a square with these 4 vertices with a drawArray call.
-    auto pixelPoints =
-        std::vector<Vector2>{{8.5f, 8.5f}, {8.5f, 24.5f}, {24.5f, 8.5f}, {24.5f, 24.5f}};
-
-    auto vertices = std::vector<Vector3>();
-    for (Vector2 pixelPoint : pixelPoints)
-    {
-        vertices.emplace_back(Vector3(pixelPoint[0] * 2 / getWindowWidth() - 1,
-                                      pixelPoint[1] * 2 / getWindowHeight() - 1, 0.0f));
-    }
+    std::vector<Vector3> vertices;
+    CreatePixelCenterWindowCoords({{8, 8}, {8, 24}, {24, 8}, {24, 24}}, getWindowWidth(),
+                                  getWindowHeight(), &vertices);
 
     // If we use these indices to draw however, we should be drawing an hourglass.
     auto indices = std::vector<GLushort>{0, 2, 1, 3};
@@ -1051,15 +1045,9 @@ TEST_P(LineLoopStateChangeTest, DrawArraysThenDrawElements)
     glUseProgram(program);
 
     // We expect to draw a square with these 4 vertices with a drawArray call.
-    auto pixelPoints =
-        std::vector<Vector2>{{8.5f, 8.5f}, {8.5f, 24.5f}, {24.5f, 8.5f}, {24.5f, 24.5f}};
-
-    auto vertices = std::vector<Vector3>();
-    for (Vector2 pixelPoint : pixelPoints)
-    {
-        vertices.emplace_back(Vector3(pixelPoint[0] * 2 / getWindowWidth() - 1,
-                                      pixelPoint[1] * 2 / getWindowHeight() - 1, 0.0f));
-    }
+    std::vector<Vector3> vertices;
+    CreatePixelCenterWindowCoords({{8, 8}, {8, 24}, {24, 8}, {24, 24}}, getWindowWidth(),
+                                  getWindowHeight(), &vertices);
 
     // If we use these indices to draw however, we should be drawing an hourglass.
     auto indices = std::vector<GLushort>{0, 2, 1, 3};

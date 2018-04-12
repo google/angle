@@ -405,22 +405,24 @@ gl::Error VertexArrayVk::drawElements(const gl::Context *context,
     }
 
     // Handle GL_LINE_LOOP drawElements.
-    gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer().get();
-    if (!elementArrayBuffer)
-    {
-        UNIMPLEMENTED();
-        return gl::InternalError() << "Line loop indices in client memory not supported";
-    }
-
-    BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
-
-    VkIndexType indexType = gl_vk::GetIndexType(drawCallParams.type());
-
     if (mDirtyLineLoopTranslation)
     {
-        ANGLE_TRY(mLineLoopHelper.getIndexBufferForElementArrayBuffer(
-            renderer, elementArrayBufferVk, indexType, drawCallParams.indexCount(),
-            &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
+        gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer().get();
+        VkIndexType indexType          = gl_vk::GetIndexType(drawCallParams.type());
+
+        if (!elementArrayBuffer)
+        {
+            ANGLE_TRY(mLineLoopHelper.getIndexBufferForClientElementArray(
+                renderer, drawCallParams.indices(), indexType, drawCallParams.indexCount(),
+                &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
+        }
+        else
+        {
+            BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
+            ANGLE_TRY(mLineLoopHelper.getIndexBufferForElementArrayBuffer(
+                renderer, elementArrayBufferVk, indexType, drawCallParams.indexCount(),
+                &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
+        }
     }
 
     ANGLE_TRY(onIndexedDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
@@ -485,7 +487,7 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
 {
     ANGLE_TRY(onDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
 
-    if (!mState.getElementArrayBuffer().get())
+    if (!mState.getElementArrayBuffer().get() && drawCallParams.mode() != GL_LINE_LOOP)
     {
         ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
         ANGLE_TRY(streamIndexData(renderer, drawCallParams));

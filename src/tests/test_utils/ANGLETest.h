@@ -111,6 +111,14 @@ static constexpr GLColor32F kFloatBlue  = {0.0f, 0.0f, 1.0f, 1.0f};
 
 struct WorkaroundsD3D;
 
+// The input here for pixelPoints are the expected integer window coordinates, we add .5 to every
+// one of them and re-scale the numbers to be between [-1,1]. Using this technique, we can make
+// sure the rasterization stage will end up drawing pixels at the expected locations.
+void CreatePixelCenterWindowCoords(const std::vector<Vector2> &pixelPoints,
+                                   int windowWidth,
+                                   int windowHeight,
+                                   std::vector<Vector3> *outVertices);
+
 // Useful to cast any type to GLubyte.
 template <typename TR, typename TG, typename TB, typename TA>
 GLColor MakeGLColor(TR r, TG g, TB b, TA a)

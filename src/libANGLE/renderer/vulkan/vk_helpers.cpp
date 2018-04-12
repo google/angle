@@ -377,6 +377,34 @@ gl::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *render
     return gl::NoError();
 }
 
+gl::Error LineLoopHelper::getIndexBufferForClientElementArray(RendererVk *renderer,
+                                                              const void *indicesInput,
+                                                              VkIndexType indexType,
+                                                              int indexCount,
+                                                              VkBuffer *bufferHandleOut,
+                                                              VkDeviceSize *bufferOffsetOut)
+{
+    // TODO(lucferron): we'll eventually need to support uint8, emulated on 16 since Vulkan only
+    // supports 16 / 32.
+    ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
+
+    uint8_t *indices = nullptr;
+    uint32_t offset  = 0;
+
+    auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
+    size_t allocateBytes = unitSize * (indexCount + 1);
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
+                                           reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
+                                           &offset, nullptr));
+    *bufferOffsetOut = static_cast<VkDeviceSize>(offset);
+
+    memcpy(indices, indicesInput, unitSize * indexCount);
+    memcpy(indices + unitSize * indexCount, indicesInput, unitSize);
+
+    ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
+    return gl::NoError();
+}
+
 void LineLoopHelper::destroy(VkDevice device)
 {
     mDynamicIndexBuffer.destroy(device);

@@ -112,6 +112,9 @@ class LineLoopTest : public ANGLETest
 
 TEST_P(LineLoopTest, LineLoopUByteIndices)
 {
+    // TODO(fjhenigman): UByte not yet supported in VertexArrayVk
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
     // On Win7, the D3D SDK Layers emits a false warning for these tests.
     // This doesn't occur on Windows 10 (Version 1511) though.
@@ -146,6 +149,9 @@ TEST_P(LineLoopTest, LineLoopUIntIndices)
 
 TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
 {
+    // TODO(fjhenigman): UByte not yet supported in VertexArrayVk
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
     ignoreD3D11SDKLayersWarnings();
 
@@ -163,6 +169,11 @@ TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
 
 TEST_P(LineLoopTest, LineLoopUShortIndexBuffer)
 {
+    // TODO(lucferron): Looks like we have a bug supporting ushort as index buffers
+    // on line loops drawing.
+    // http://anglebug.com/2473
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
     ignoreD3D11SDKLayersWarnings();
 
@@ -202,4 +213,9 @@ TEST_P(LineLoopTest, LineLoopUIntIndexBuffer)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST(LineLoopTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(LineLoopTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());

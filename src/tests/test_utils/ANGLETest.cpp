@@ -139,6 +139,19 @@ testing::AssertionResult GLColor::ExpectNear(const GLColor &expected, const GLCo
     return result;
 }
 
+void CreatePixelCenterWindowCoords(const std::vector<Vector2> &pixelPoints,
+                                   int windowWidth,
+                                   int windowHeight,
+                                   std::vector<Vector3> *outVertices)
+{
+    for (Vector2 pixelPoint : pixelPoints)
+    {
+        outVertices->emplace_back(Vector3((pixelPoint[0] + 0.5f) * 2.0f / windowWidth - 1.0f,
+                                          (pixelPoint[1] + 0.5f) * 2.0f / windowHeight - 1.0f,
+                                          0.0f));
+    }
+}
+
 angle::Vector4 GLColor::toNormalizedVector() const
 {
     return angle::Vector4(ColorNorm(R), ColorNorm(G), ColorNorm(B), ColorNorm(A));
