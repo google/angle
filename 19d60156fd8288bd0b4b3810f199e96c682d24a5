@@ -68,6 +68,30 @@
       "revId": "19d60156fd8288bd0b4b3810f199e96c682d24a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b632ed2_0007d1a9",
+        "filename": "src/libGLESv2/entry_points_gles_ext_autogen.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-12T11:19:59Z",
+      "side": 1,
+      "message": "Geoff, rather than generating the entry points differently, I think we should just ban the extensions from being enabled together. Let\u0027s handle this separately from this CL.",
+      "parentUuid": "c9366a92_d563c370",
+      "range": {
+        "startLine": 239,
+        "startChar": 12,
+        "endLine": 239,
+        "endChar": 40
+      },
+      "revId": "19d60156fd8288bd0b4b3810f199e96c682d24a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
