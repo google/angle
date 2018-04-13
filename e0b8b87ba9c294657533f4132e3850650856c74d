@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6fda8b84_1bb25c1c",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003232
+      },
+      "writtenOn": "2018-04-13T19:37:11Z",
+      "side": 1,
+      "message": "In theory you should be able to write this as \u0027{root}/build\u0027. I think this\u0027ll work, but see the comment below.",
+      "revId": "e0b8b87ba9c294657533f4132e3850650856c74d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58791f67_3a818818",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003232
+      },
+      "writtenOn": "2018-04-13T19:37:11Z",
+      "side": 1,
+      "message": "I\u0027m not sure if \u0027{root}/buildtools/win/clang-format.exe.sha1\u0027 will work. It should, but we\u0027d have to test it and possibly fix a bug.",
+      "revId": "e0b8b87ba9c294657533f4132e3850650856c74d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
