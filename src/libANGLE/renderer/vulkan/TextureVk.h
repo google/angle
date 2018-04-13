@@ -18,11 +18,11 @@
 namespace rx
 {
 
-class StagingStorage final : angle::NonCopyable
+class PixelBuffer final : angle::NonCopyable
 {
   public:
-    StagingStorage();
-    ~StagingStorage();
+    PixelBuffer();
+    ~PixelBuffer();
 
     void release(RendererVk *renderer);
 
@@ -156,7 +156,7 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
 
     RenderTargetVk mRenderTarget;
 
-    StagingStorage mStagingStorage;
+    PixelBuffer mPixelBuffer;
 };
 
 }  // namespace rx

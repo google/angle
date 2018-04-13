@@ -55,29 +55,29 @@ constexpr size_t kStagingBufferSize = 1024 * 16;
 }  // anonymous namespace
 
 // StagingStorage implementation.
-StagingStorage::StagingStorage() : mStagingBuffer(kStagingBufferFlags, kStagingBufferSize)
+PixelBuffer::PixelBuffer() : mStagingBuffer(kStagingBufferFlags, kStagingBufferSize)
 {
     // vkCmdCopyBufferToImage must have an offset that is a multiple of 4.
     // https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferImageCopy.html
     mStagingBuffer.init(4);
 }
 
-StagingStorage::~StagingStorage()
+PixelBuffer::~PixelBuffer()
 {
 }
 
-void StagingStorage::release(RendererVk *renderer)
+void PixelBuffer::release(RendererVk *renderer)
 {
     mStagingBuffer.release(renderer);
 }
 
-gl::Error StagingStorage::stageSubresourceUpdate(ContextVk *contextVk,
-                                                 const gl::ImageIndex &index,
-                                                 const gl::Extents &extents,
-                                                 const gl::InternalFormat &formatInfo,
-                                                 const gl::PixelUnpackState &unpack,
-                                                 GLenum type,
-                                                 const uint8_t *pixels)
+gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
+                                              const gl::ImageIndex &index,
+                                              const gl::Extents &extents,
+                                              const gl::InternalFormat &formatInfo,
+                                              const gl::PixelUnpackState &unpack,
+                                              GLenum type,
+                                              const uint8_t *pixels)
 {
     GLuint inputRowPitch = 0;
     ANGLE_TRY_RESULT(
@@ -139,9 +139,9 @@ gl::Error StagingStorage::stageSubresourceUpdate(ContextVk *contextVk,
     return gl::NoError();
 }
 
-vk::Error StagingStorage::flushUpdatesToImage(RendererVk *renderer,
-                                              vk::ImageHelper *image,
-                                              vk::CommandBuffer *commandBuffer)
+vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
+                                           vk::ImageHelper *image,
+                                           vk::CommandBuffer *commandBuffer)
 {
     if (mSubresourceUpdates.empty())
     {
@@ -167,17 +167,17 @@ vk::Error StagingStorage::flushUpdatesToImage(RendererVk *renderer,
     return vk::NoError();
 }
 
-StagingStorage::SubresourceUpdate::SubresourceUpdate() : bufferHandle(VK_NULL_HANDLE)
+PixelBuffer::SubresourceUpdate::SubresourceUpdate() : bufferHandle(VK_NULL_HANDLE)
 {
 }
 
-StagingStorage::SubresourceUpdate::SubresourceUpdate(VkBuffer bufferHandleIn,
-                                                     const VkBufferImageCopy &copyRegionIn)
+PixelBuffer::SubresourceUpdate::SubresourceUpdate(VkBuffer bufferHandleIn,
+                                                  const VkBufferImageCopy &copyRegionIn)
     : bufferHandle(bufferHandleIn), copyRegion(copyRegionIn)
 {
 }
 
-StagingStorage::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other) = default;
+PixelBuffer::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other) = default;
 
 // TextureVk implementation.
 TextureVk::TextureVk(const gl::TextureState &state) : TextureImpl(state)
@@ -199,7 +199,7 @@ gl::Error TextureVk::onDestroy(const gl::Context *context)
     releaseImage(context, renderer);
     renderer->releaseResource(*this, &mSampler);
 
-    mStagingStorage.release(renderer);
+    mPixelBuffer.release(renderer);
 
     return gl::NoError();
 }
@@ -276,8 +276,8 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     // Handle initial data.
     if (pixels)
     {
-        ANGLE_TRY(mStagingStorage.stageSubresourceUpdate(contextVk, index, size, formatInfo, unpack,
-                                                         type, pixels));
+        ANGLE_TRY(mPixelBuffer.stageSubresourceUpdate(contextVk, index, size, formatInfo, unpack,
+                                                      type, pixels));
     }
 
     return gl::NoError();
@@ -293,9 +293,9 @@ gl::Error TextureVk::setSubImage(const gl::Context *context,
 {
     ContextVk *contextVk                 = vk::GetImpl(context);
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format, type);
-    ANGLE_TRY(mStagingStorage.stageSubresourceUpdate(
-        contextVk, index, gl::Extents(area.width, area.height, area.depth), formatInfo, unpack,
-        type, pixels));
+    ANGLE_TRY(mPixelBuffer.stageSubresourceUpdate(contextVk, index,
+                                                  gl::Extents(area.width, area.height, area.depth),
+                                                  formatInfo, unpack, type, pixels));
     return gl::NoError();
 }
 
@@ -464,7 +464,7 @@ vk::Error TextureVk::ensureImageInitialized(RendererVk *renderer)
         mImage.clearColor(black, commandBuffer);
     }
 
-    ANGLE_TRY(mStagingStorage.flushUpdatesToImage(renderer, &mImage, commandBuffer));
+    ANGLE_TRY(mPixelBuffer.flushUpdatesToImage(renderer, &mImage, commandBuffer));
     return vk::NoError();
 }
 
