@@ -22,6 +22,30 @@
       "revId": "06ea3c758acc78981156852f97e3e22350fe518f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9dc77e61_181cf239",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-04-13T20:35:16Z",
+      "side": 1,
+      "message": "Good catch, thanks. Done.",
+      "parentUuid": "298c1d7f_43636b2e",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 39
+      },
+      "revId": "06ea3c758acc78981156852f97e3e22350fe518f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
