@@ -22,6 +22,30 @@
       "revId": "f77d039c52b73b86bf2fb2c07e647ea86515b178",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b6d3fe7_b3c3bf29",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T14:15:31Z",
+      "side": 1,
+      "message": "All tests use Vector3, it wouldn\u0027t be convenient at all to make it return Vec2 here and then convert it again in every test",
+      "parentUuid": "3c8532e4_541b5722",
+      "range": {
+        "startLine": 120,
+        "startChar": 47,
+        "endLine": 120,
+        "endChar": 54
+      },
+      "revId": "f77d039c52b73b86bf2fb2c07e647ea86515b178",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
