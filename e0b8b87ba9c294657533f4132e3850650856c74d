@@ -33,6 +33,24 @@
       "revId": "e0b8b87ba9c294657533f4132e3850650856c74d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a314d6d_7333b41d",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-04-13T19:53:24Z",
+      "side": 1,
+      "message": "Trybot says the current syntax works at least: https://logs.chromium.org/v/?s\u003dangle%2Fbuildbucket%2Fcr-buildbucket.appspot.com%2F8949331964914370368%2F%2B%2Fsteps%2Fgclient_runhooks%2F0%2Fstdout",
+      "parentUuid": "58791f67_3a818818",
+      "revId": "e0b8b87ba9c294657533f4132e3850650856c74d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
