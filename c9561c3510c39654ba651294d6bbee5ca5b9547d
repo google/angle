@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "def0cf32_efd2cc68",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 762,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-13T12:11:29Z",
+      "side": 1,
+      "message": "same nit about c++ style constructor init.",
+      "range": {
+        "startLine": 762,
+        "startChar": 4,
+        "endLine": 762,
+        "endChar": 53
+      },
+      "revId": "c9561c3510c39654ba651294d6bbee5ca5b9547d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2db6d233_2d30521f",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-13T12:11:29Z",
+      "side": 1,
+      "message": "integer window coordinates",
+      "range": {
+        "startLine": 114,
+        "startChar": 51,
+        "endLine": 114,
+        "endChar": 76
+      },
+      "revId": "c9561c3510c39654ba651294d6bbee5ca5b9547d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31a003cf_505fe622",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-13T12:11:29Z",
+      "side": 1,
+      "message": "you can make this const \u0026",
+      "range": {
+        "startLine": 117,
+        "startChar": 36,
+        "endLine": 117,
+        "endChar": 55
+      },
+      "revId": "c9561c3510c39654ba651294d6bbee5ca5b9547d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eda1f4bd_518995f2",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-13T12:11:29Z",
+      "side": 1,
+      "message": "this should be a non-const * according to the style guide",
+      "range": {
+        "startLine": 120,
+        "startChar": 36,
+        "endLine": 120,
+        "endChar": 57
+      },
+      "revId": "c9561c3510c39654ba651294d6bbee5ca5b9547d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
