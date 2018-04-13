@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "edc67e87_e64ebdc1",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T13:17:18Z",
+      "side": 1,
+      "message": "needsStreamingAttributes ?",
+      "range": {
+        "startLine": 151,
+        "startChar": 30,
+        "endLine": 151,
+        "endChar": 45
+      },
+      "revId": "a445fd0ebebac9512bcc4754f4e1af8691aef45c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
