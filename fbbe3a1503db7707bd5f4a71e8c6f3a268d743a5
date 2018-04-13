@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "374f8c07_71734a40",
+        "filename": "BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-13T15:48:29Z",
+      "side": 1,
+      "message": "shouldn\u0027t is_clang be true on linux? This doesn\u0027t look right...",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 3
+      },
+      "revId": "fbbe3a1503db7707bd5f4a71e8c6f3a268d743a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
