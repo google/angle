@@ -577,6 +577,13 @@ if (build_angle_deqp_tests) {
       "//build/config/compiler:no_chromium_code",
       angle_root + ":internal_config",
     ]
+    if (is_clang) {
+      cflags_cc = [
+        # Supresses self assign warnings in SharedPtr_selfTest
+        # Can be removed if dEQP or clang are fixed
+        "-Wno-self-assign",
+      ]
+    }
 
     sources = rebase_path(deqp_gypi.deqp_libtester_decpp_sources, ".", "../..")
   }
@@ -589,6 +596,10 @@ if (build_angle_deqp_tests) {
       cflags_cc = [
         "-Wno-delete-non-virtual-dtor",
         "-Wno-deprecated",
+
+        # Supresses self assign warning in setLumSat
+        # Can be removed if dEQP or clang are fixed
+        "-Wno-self-assign",
       ]
     }
   }
