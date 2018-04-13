@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efe9d79f_b4678b1b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-13T22:06:09Z",
+      "side": 1,
+      "message": "Can\u0027t be done with GN, as far as I know.",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 45
+      },
+      "revId": "f057bdefca2c21e25c81bdd3ca6fd795902310d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2286b621_9742f489",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 935,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-13T22:06:09Z",
+      "side": 1,
+      "message": "You don\u0027t need both shared_libraries and deps",
+      "range": {
+        "startLine": 935,
+        "startChar": 4,
+        "endLine": 935,
+        "endChar": 8
+      },
+      "revId": "f057bdefca2c21e25c81bdd3ca6fd795902310d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
