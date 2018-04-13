@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa7da33c_a8e7fa04",
+        "filename": "src/libANGLE/ImageIndex.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T13:24:52Z",
+      "side": 1,
+      "message": "Can you just make the 6 a constant so we can easily understand this relates to the number of faces on a cube?",
+      "range": {
+        "startLine": 153,
+        "startChar": 70,
+        "endLine": 153,
+        "endChar": 71
+      },
+      "revId": "9cc5a3e74de7f56192ce4e1ae5dbfcb94b4005c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3434027_080bbc71",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T13:24:52Z",
+      "side": 1,
+      "message": "Same",
+      "range": {
+        "startLine": 86,
+        "startChar": 15,
+        "endLine": 86,
+        "endChar": 16
+      },
+      "revId": "9cc5a3e74de7f56192ce4e1ae5dbfcb94b4005c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f98b95b8_56aaf54d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1291,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T13:24:52Z",
+      "side": 1,
+      "message": "TODO with a bug? Is this needed for es2?",
+      "range": {
+        "startLine": 1291,
+        "startChar": 12,
+        "endLine": 1291,
+        "endChar": 74
+      },
+      "revId": "9cc5a3e74de7f56192ce4e1ae5dbfcb94b4005c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e264a74_bc636082",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1306,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T13:24:52Z",
+      "side": 1,
+      "message": "Same",
+      "range": {
+        "startLine": 1306,
+        "startChar": 12,
+        "endLine": 1306,
+        "endChar": 74
+      },
+      "revId": "9cc5a3e74de7f56192ce4e1ae5dbfcb94b4005c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19f41d89_2f783cce",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T13:24:52Z",
+      "side": 1,
+      "message": "The exact same array exists above, why not just put it in the anonymous namespace instead and reuse it?",
+      "range": {
+        "startLine": 739,
+        "startChar": 4,
+        "endLine": 742,
+        "endChar": 72
+      },
+      "revId": "9cc5a3e74de7f56192ce4e1ae5dbfcb94b4005c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2ce7f6d_14815aa2",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 808,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T13:24:52Z",
+      "side": 1,
+      "message": "Can you add a comment on these calculations?",
+      "range": {
+        "startLine": 807,
+        "startChar": 8,
+        "endLine": 808,
+        "endChar": 57
+      },
+      "revId": "9cc5a3e74de7f56192ce4e1ae5dbfcb94b4005c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ec6cbcb_7091fa8d",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 919,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T13:24:52Z",
+      "side": 1,
+      "message": "why swap at the end?",
+      "range": {
+        "startLine": 919,
+        "startChar": 4,
+        "endLine": 919,
+        "endChar": 18
+      },
+      "revId": "9cc5a3e74de7f56192ce4e1ae5dbfcb94b4005c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
