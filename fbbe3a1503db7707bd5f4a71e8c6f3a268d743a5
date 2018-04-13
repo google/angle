@@ -22,6 +22,30 @@
       "revId": "fbbe3a1503db7707bd5f4a71e8c6f3a268d743a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6aa84c9f_07666748",
+        "filename": "BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-13T15:56:12Z",
+      "side": 1,
+      "message": "I agree, that looks weird. But the is_clang path was not taken when building on linux.\nI\u0027ll try and figure that out.",
+      "parentUuid": "374f8c07_71734a40",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 3
+      },
+      "revId": "fbbe3a1503db7707bd5f4a71e8c6f3a268d743a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
