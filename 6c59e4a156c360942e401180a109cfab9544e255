@@ -34,6 +34,24 @@
       "revId": "6c59e4a156c360942e401180a109cfab9544e255",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5621263b_495a4ed2",
+        "filename": "DEPS",
+        "patchSetId": 4
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-04-13T15:17:46Z",
+      "side": 0,
+      "message": "(I can update your developer docs in a follow-up)",
+      "parentUuid": "601f7945_5619f9ae",
+      "revId": "6c59e4a156c360942e401180a109cfab9544e255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
