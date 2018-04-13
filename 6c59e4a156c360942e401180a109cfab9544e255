@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26ed8c3a_a5c0e29f",
+        "filename": "DEPS",
+        "patchSetId": 4
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-04-13T13:39:44Z",
+      "side": 0,
+      "message": "The path here was wrong, it should\u0027ve been `angle/gyp/gyp_angle` since hooks run relative to the .gclient file. That\u0027s why the bot is currently red. Does anyone do angle standalone builds? This has prevented them from working until now from what I understand.",
+      "revId": "6c59e4a156c360942e401180a109cfab9544e255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
