@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9f3923b_16df8c18",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-13T11:38:58Z",
+      "side": 1,
+      "message": "I think you can initialize this in the initializer list by going\n\nmAttachedShaders{{}} or mAttachedShaders{{nullptr}}\n\nSomething like that.",
+      "range": {
+        "startLine": 716,
+        "startChar": 4,
+        "endLine": 716,
+        "endChar": 35
+      },
+      "revId": "e799a456d87694696099b6e61a3f517da581f759",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf7f72a4_bfb784a9",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-13T11:38:58Z",
+      "side": 1,
+      "message": "same thing here",
+      "range": {
+        "startLine": 809,
+        "startChar": 4,
+        "endLine": 809,
+        "endChar": 32
+      },
+      "revId": "e799a456d87694696099b6e61a3f517da581f759",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aecea22f_7755415d",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-13T11:38:58Z",
+      "side": 1,
+      "message": "can you change this into \n\nif (!mShaderBlocks[shaderType])\n  continue;\n\nThis will flatten the loop slightly.",
+      "range": {
+        "startLine": 831,
+        "startChar": 8,
+        "endLine": 832,
+        "endChar": 9
+      },
+      "revId": "e799a456d87694696099b6e61a3f517da581f759",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
