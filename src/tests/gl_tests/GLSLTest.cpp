@@ -1305,6 +1305,12 @@ TEST_P(GLSLTest, MaxVaryingVec4)
 // Verify we can pack registers with one builtin varying.
 TEST_P(GLSLTest, MaxVaryingVec4_OneBuiltin)
 {
+    // TODO(lucferron): This test is failing on AMD Windows Vulkan only with an access violation
+    // error. It looks like we would need to reserve one more varying in the maxVaryingVectors
+    // caps for this one.
+    // http://anglebug.com/2483
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -1315,6 +1321,12 @@ TEST_P(GLSLTest, MaxVaryingVec4_OneBuiltin)
 // Verify we can pack registers with two builtin varyings.
 TEST_P(GLSLTest, MaxVaryingVec4_TwoBuiltins)
 {
+    // TODO(lucferron): This test is failing on AMD Windows Vulkan only with an access violation
+    // error. It looks like we would need to reserve one more varying in the maxVaryingVectors
+    // caps for this one.
+    // http://anglebug.com/2483
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -1325,6 +1337,12 @@ TEST_P(GLSLTest, MaxVaryingVec4_TwoBuiltins)
 // Verify we can pack registers with three builtin varyings.
 TEST_P(GLSLTest, MaxVaryingVec4_ThreeBuiltins)
 {
+    // TODO(lucferron): This test is failing on AMD Windows Vulkan only with an access violation
+    // error. It looks like we would need to reserve one more varying in the maxVaryingVectors
+    // caps for this one.
+    // http://anglebug.com/2483
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
+
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -1353,10 +1371,6 @@ TEST_P(GLSLTest, MaxVaryingsSpecialCases)
 // rather than total register use.
 TEST_P(GLSLTest, MaxMinusTwoVaryingVec2PlusOneSpecialVariable)
 {
-    // TODO(lucferron): Root cause and fix it. Looks like a location is used twice (loc = 31).
-    // http://anglebug.com/2460
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -1383,11 +1397,6 @@ TEST_P(GLSLTest, MaxVaryingVec3Array)
 // Only fails on D3D9 because of packing limitations.
 TEST_P(GLSLTest, MaxVaryingVec3AndOneFloat)
 {
-    // TODO(lucferron): Root cause and fix it.
-    // ERROR: 0:62: 'location' : overlapping use of location x
-    // http://anglebug.com/2460
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -1397,11 +1406,6 @@ TEST_P(GLSLTest, MaxVaryingVec3AndOneFloat)
 // Only fails on D3D9 because of packing limitations.
 TEST_P(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 {
-    // TODO(lucferron): Root cause and fix it.
-    // ERROR: 0:62: 'location' : overlapping use of location x
-    // http://anglebug.com/2460
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
@@ -1411,11 +1415,6 @@ TEST_P(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 // Only fails on D3D9 because of packing limitations.
 TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 {
-    // TODO(lucferron): Root cause and fix it.
-    // ERROR: 0:62: 'location' : overlapping use of location x
-    // http://anglebug.com/2460
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // TODO(geofflang): Figure out why this fails on NVIDIA's GLES driver
     ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGLES());
 
@@ -1432,11 +1431,6 @@ TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 // Disabled because of a failure in D3D9
 TEST_P(GLSLTest, MaxVaryingVec2Arrays)
 {
-    // TODO(lucferron): Root cause and fix it.
-    // ERROR: 0:62: 'location' : overlapping use of location x
-    // http://anglebug.com/2460
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_SKIP_TEST_IF(IsD3DSM3());
 
     // TODO(geofflang): Figure out why this fails on NVIDIA's GLES driver

@@ -121,11 +121,11 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outCaps->maxVertexTextureImageUnits =
         physicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
 
-    // The max vertex output components includes the reserved varyings like gl_PointSize,
-    // gl_PointCoord, gl_Position, and gl_FragColor. On a vertex shader, you can only have
-    // gl_PointCoord and gl_Position, and on a fragment shader you can have gl_PointSize and
-    // gl_FragColor, so the reserved varying count is always 2 at most.
-    constexpr GLint kReservedVaryingCount = 2;
+    // The max vertex output components should not include gl_Position.
+    // The gles2.0 section 2.10 states that "gl_Position is not a varying variable and does
+    // not count against this limit.", but the Vulkan spec has no such mention in its Built-in
+    // vars section. It is implicit that we need to actually reserve it for Vulkan in that case.
+    constexpr GLint kReservedVaryingCount = 1;
     outCaps->maxVaryingVectors =
         (physicalDeviceProperties.limits.maxVertexOutputComponents / 4) - kReservedVaryingCount;
     outCaps->maxVertexOutputComponents = outCaps->maxVaryingVectors * 4;
