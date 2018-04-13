@@ -9,7 +9,6 @@
 
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
-#include "shader_utils.h"
 
 using namespace angle;
 
@@ -37,20 +36,10 @@ protected:
     {
         ANGLETest::SetUp();
 
-        static const char* v_shader_str =
-            "attribute vec4 a_Position;\n"
-            "void main()\n"
-            "{ gl_Position = a_Position; }";
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
 
-        static const char* f_shader_str =
-            "precision mediump float;\n"
-            "uniform vec4 color;"
-            "void main() { gl_FragColor = color; }";
-
-        mProgram = CompileProgram(v_shader_str, f_shader_str);
-
-        GLuint position_loc = glGetAttribLocation(mProgram, "a_Position");
-        mColorLoc = glGetUniformLocation(mProgram, "color");
+        GLuint position_loc = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+        mColorLoc           = glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
 
         glGenBuffers(1, &mVBO);
         glBindBuffer(GL_ARRAY_BUFFER, mVBO);
@@ -395,15 +384,7 @@ TEST_P(MultisampleCompatibilityTest, DrawCoverageAndResolve)
     // TODO: Figure out why this fails on Android.
     ANGLE_SKIP_TEST_IF(IsAndroid());
 
-    const std::string &vertex =
-        "attribute vec4 position;\n"
-        "void main()\n"
-        "{ gl_Position = position; }";
-    const std::string &fragment =
-        "void main()\n"
-        "{ gl_FragColor =  vec4(1.0, 0.0, 0.0, 1.0); }";
-
-    ANGLE_GL_PROGRAM(drawRed, vertex, fragment);
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
     GLsizei maxSamples = 0;
     glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
@@ -413,7 +394,7 @@ TEST_P(MultisampleCompatibilityTest, DrawCoverageAndResolve)
         prepareForDraw(samples);
         glEnable(GL_SAMPLE_COVERAGE);
         glSampleCoverage(1.0, false);
-        drawQuad(drawRed.get(), "position", 0.5f);
+        drawQuad(drawRed.get(), essl1_shaders::PositionAttrib(), 0.5f);
 
         prepareForVerify();
         GLsizei pixelCount = kWidth * kHeight;

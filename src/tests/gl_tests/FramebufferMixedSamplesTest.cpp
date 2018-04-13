@@ -9,7 +9,6 @@
 //   sample counts for different render buffers (stencil, depth, color)
 
 #include "test_utils/ANGLETest.h"
-#include "shader_utils.h"
 
 using namespace angle;
 
@@ -38,24 +37,10 @@ class CHROMIUMFramebufferMixedSamplesTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        // clang-format off
-        static const char* kVertexShaderSource =
-            "attribute mediump vec4 position;\n"
-            "void main() {\n"
-            "  gl_Position = position;\n"
-            "}\n";
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
 
-        static const char* kFragmentShaderSource =
-            "uniform mediump vec4 color;\n"
-            "void main() {\n"
-            "  gl_FragColor = color;\n"
-            "}\n";
-
-        // clang-format on
-        mProgram = CompileProgram(kVertexShaderSource, kFragmentShaderSource);
-
-        GLuint position_loc = glGetAttribLocation(mProgram, "position");
-        mColorLoc           = glGetUniformLocation(mProgram, "color");
+        GLuint position_loc = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+        mColorLoc           = glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
 
         glGenBuffers(1, &mVBO);
         glBindBuffer(GL_ARRAY_BUFFER, mVBO);

@@ -192,21 +192,7 @@ TEST_P(DepthStencilFormatsTestES3, DrawWithLargeViewport)
 {
     ANGLE_SKIP_TEST_IF(IsIntel() && (IsOSX() || IsWindows()));
 
-    constexpr char vertexShaderSource[] =
-        R"(attribute vec4 position;
-        void main()
-        {
-          gl_Position = position;
-        })";
-
-    constexpr char fragmentShaderSource[] =
-        R"(precision mediump float;
-        void main()
-        {
-          gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-        })";
-
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
     glEnable(GL_STENCIL_TEST);
     glDisable(GL_DEPTH_TEST);
@@ -245,7 +231,7 @@ TEST_P(DepthStencilFormatsTestES3, DrawWithLargeViewport)
         glViewport(0, 0, viewport[0], viewport[1]);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb);
 
-        drawQuad(program.get(), "position", 0.0f);
+        drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.0f);
         ASSERT_GL_NO_ERROR();
 
         glBindFramebuffer(GL_READ_FRAMEBUFFER, fb);
@@ -294,13 +280,7 @@ TEST_P(TinyDepthStencilWorkaroundTest, DepthTexturesStick)
         "  gl_Position = vec4(vertex.x, vertex.y, vertex.z * 2.0 - 1.0, 1);\n"
         "}\n";
 
-    const std::string &drawFS =
-        "#version 100\n"
-        "void main () {\n"
-        "  gl_FragColor = vec4 (1.);\n"
-        "}\n";
-
-    ANGLE_GL_PROGRAM(drawProgram, drawVS, drawFS);
+    ANGLE_GL_PROGRAM(drawProgram, drawVS, essl1_shaders::fs::Red());
 
     const std::string &blitVS =
         "#version 100\n"

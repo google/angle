@@ -72,7 +72,7 @@ class BlendMinMaxTest : public ANGLETest
             bool blendMin = (rand() % 2 == 0);
             glBlendEquation(blendMin ? GL_MIN : GL_MAX);
 
-            drawQuad(mProgram, "aPosition", 0.5f);
+            drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
             float pixel[4];
             if (type == GL_UNSIGNED_BYTE)
@@ -112,27 +112,13 @@ class BlendMinMaxTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string testVertexShaderSource =
-            R"(attribute highp vec4 aPosition;
-            void main(void)
-            {
-                gl_Position = aPosition;
-            })";
-
-        const std::string testFragmentShaderSource =
-            R"(uniform highp vec4 color;
-            void main(void)
-            {
-                gl_FragColor = color;
-            })";
-
-        mProgram = CompileProgram(testVertexShaderSource, testFragmentShaderSource);
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";
         }
 
-        mColorLocation = glGetUniformLocation(mProgram, "color");
+        mColorLocation = glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
 
         glUseProgram(mProgram);
 

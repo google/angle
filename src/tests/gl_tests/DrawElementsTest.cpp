@@ -74,14 +74,7 @@ TEST_P(DrawElementsTest, ClientSideNullptrArrayZeroCount)
         "    gl_Position = vec4(a_pos, 1.0);\n"
         "}\n";
 
-    const std::string &frag =
-        "precision highp float;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(1.0);\n"
-        "}\n";
-
-    ANGLE_GL_PROGRAM(program, vert, frag);
+    ANGLE_GL_PROGRAM(program, vert, essl1_shaders::fs::Blue());
 
     GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
     ASSERT_NE(-1, posLocation);
@@ -276,14 +269,7 @@ TEST_P(DrawElementsTest, DrawElementsTypeAlignment)
         "    gl_Position = vec4(a_pos, 1.0);\n"
         "}\n";
 
-    const std::string &frag =
-        "precision highp float;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(1.0);\n"
-        "}\n";
-
-    ANGLE_GL_PROGRAM(program, vert, frag);
+    ANGLE_GL_PROGRAM(program, vert, essl1_shaders::fs::Blue());
 
     GLint posLocation = glGetAttribLocation(program, "a_pos");
     ASSERT_NE(-1, posLocation);

@@ -25,28 +25,14 @@ class LineLoopTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vsSource =
-            R"(attribute highp vec4 position;
-            void main(void)
-            {
-                gl_Position = position;
-            })";
-
-        const std::string fsSource =
-            R"(uniform highp vec4 color;
-            void main(void)
-            {
-                gl_FragColor = color;
-            })";
-
-        mProgram = CompileProgram(vsSource, fsSource);
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";
         }
 
-        mPositionLocation = glGetAttribLocation(mProgram, "position");
-        mColorLocation    = glGetUniformLocation(mProgram, "color");
+        mPositionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+        mColorLocation    = glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
 
         glBlendFunc(GL_ONE, GL_ONE);
         glEnable(GL_BLEND);

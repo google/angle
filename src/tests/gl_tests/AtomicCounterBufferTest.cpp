@@ -116,15 +116,6 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
 // Test atomic counter read.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 {
-    const std::string &vertShader =
-        "#version 310 es\n"
-        "precision highp float;\n"
-        "in highp vec4 a_position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
-
     const std::string &fragShader =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -137,7 +128,7 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
         "    if (a1 == 3u) my_color = vec4(1.0);\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, vertShader, fragShader);
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fragShader);
 
     glUseProgram(program.get());
 
@@ -149,7 +140,7 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 
     glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 2, atomicCounterBuffer);
 
-    drawQuad(program.get(), "a_position", 0.0f);
+    drawQuad(program.get(), essl31_shaders::PositionAttrib(), 0.0f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
 }

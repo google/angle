@@ -291,13 +291,6 @@ TEST_P(TextureRectangleTest, SamplingFromRectangleESSL1)
     glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  &GLColor::green);
 
-    const std::string vs =
-        "attribute vec4 position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
-        "}\n";
-
     const std::string fs =
         "#extension GL_ARB_texture_rectangle : require\n"
         "precision mediump float;\n"
@@ -307,7 +300,7 @@ TEST_P(TextureRectangleTest, SamplingFromRectangleESSL1)
         "    gl_FragColor = texture2DRect(tex, vec2(0, 0));\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), fs);
     glUseProgram(program);
 
     GLint location = glGetUniformLocation(program, "tex");
@@ -316,7 +309,7 @@ TEST_P(TextureRectangleTest, SamplingFromRectangleESSL1)
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    drawQuad(program, "position", 0.5f, 1.0f, false);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, false);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     ASSERT_GL_NO_ERROR();
 }
@@ -331,14 +324,6 @@ TEST_P(TextureRectangleTestES3, SamplingFromRectangleESSL3)
     glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  &GLColor::green);
 
-    const std::string vs =
-        "#version 300 es\n"
-        "in vec4 position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(position.xy, 0.0, 1.0);\n"
-        "}\n";
-
     const std::string fs =
         "#version 300 es\n"
         "#extension GL_ARB_texture_rectangle : require\n"
@@ -350,7 +335,7 @@ TEST_P(TextureRectangleTestES3, SamplingFromRectangleESSL3)
         "    fragColor = texture(tex, vec2(0, 0));\n"
         "}\n";
 
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs);
     glUseProgram(program);
 
     GLint location = glGetUniformLocation(program, "tex");
@@ -359,7 +344,7 @@ TEST_P(TextureRectangleTestES3, SamplingFromRectangleESSL3)
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    drawQuad(program, "position", 0.5f, 1.0f, false);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, false);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     ASSERT_GL_NO_ERROR();
 }

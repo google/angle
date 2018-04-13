@@ -36,7 +36,7 @@ GLColor Vec4ToColor(const Vector4 &vec)
 class ClearTestBase : public ANGLETest
 {
   protected:
-    ClearTestBase() : mProgram(0)
+    ClearTestBase()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -59,8 +59,6 @@ class ClearTestBase : public ANGLETest
 
     void TearDown() override
     {
-        glDeleteProgram(mProgram);
-
         if (!mFBOs.empty())
         {
             glDeleteFramebuffers(static_cast<GLsizei>(mFBOs.size()), mFBOs.data());
@@ -74,30 +72,6 @@ class ClearTestBase : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    void setupDefaultProgram()
-    {
-        const std::string vertexShaderSource =
-            R"(precision highp float;
-            attribute vec4 position;
-
-            void main()
-            {
-                gl_Position = position;
-            })";
-
-        const std::string fragmentShaderSource =
-            R"(precision highp float;
-
-            void main()
-            {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            })";
-
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
-        ASSERT_NE(0u, mProgram);
-    }
-
-    GLuint mProgram;
     std::vector<GLuint> mFBOs;
     std::vector<GLuint> mTextures;
 };
@@ -167,8 +141,8 @@ TEST_P(ClearTest, ClearIssue)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    setupDefaultProgram();
-    drawQuad(mProgram, "position", 0.5f);
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
@@ -228,7 +202,7 @@ TEST_P(ClearTestES3, BadFBOSerialBug)
     glClearBufferfv(GL_COLOR, 0, clearValues1);
 
     ASSERT_GL_NO_ERROR();
-    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
     // Next make a second framebuffer, and draw it to red
     // (Triggers bad applied render target serial)
@@ -242,15 +216,15 @@ TEST_P(ClearTestES3, BadFBOSerialBug)
 
     glDrawBuffers(1, drawBuffers);
 
-    setupDefaultProgram();
-    drawQuad(mProgram, "position", 0.5f);
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     ASSERT_GL_NO_ERROR();
-    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     // Check that the first framebuffer is still green.
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
-    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Test that SRGB framebuffers clear to the linearized clear color
@@ -334,8 +308,7 @@ TEST_P(ClearTestES3, RepeatedClear)
         "    color = texture(tex, v_coord);\n"
         "}\n";
 
-    mProgram = CompileProgram(vertexSource, fragmentSource);
-    ASSERT_NE(0u, mProgram);
+    ANGLE_GL_PROGRAM(program, vertexSource, fragmentSource);
 
     mTextures.resize(1, 0);
     glGenTextures(1, mTextures.data());
@@ -363,16 +336,16 @@ TEST_P(ClearTestES3, RepeatedClear)
     ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     // larger fbo bound -- clear to transparent black
-    glUseProgram(mProgram);
-    GLint uniLoc = glGetUniformLocation(mProgram, "tex");
+    glUseProgram(program);
+    GLint uniLoc = glGetUniformLocation(program, "tex");
     ASSERT_NE(-1, uniLoc);
     glUniform1i(uniLoc, 0);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
 
-    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+    GLint positionLocation = glGetAttribLocation(program, "position");
     ASSERT_NE(-1, positionLocation);
 
-    glUseProgram(mProgram);
+    glUseProgram(program);
 
     for (int cellY = 0; cellY < numRowsCols; cellY++)
     {
@@ -388,7 +361,7 @@ TEST_P(ClearTestES3, RepeatedClear)
 
             // Method 1: Set viewport and draw full-viewport quad
             glViewport(cellX * cellSize, cellY * cellSize, cellSize, cellSize);
-            drawQuad(mProgram, "position", 0.5f);
+            drawQuad(program, "position", 0.5f);
 
             // Uncommenting the glFinish call seems to make the test pass.
             // glFinish();

@@ -856,9 +856,7 @@ TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
     // http://anglebug.com/2407
     ANGLE_SKIP_TEST_IF(IsAndroid());
 
-    const std::string vs = "attribute vec4 position; void main() { gl_Position = position; }";
-    const std::string fs = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
     // Make the destination non-multisampled depth FBO.
     GLTexture color;
@@ -901,7 +899,7 @@ TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
     glDepthMask(GL_FALSE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_EQUAL);
-    drawQuad(program, "position", 1.0f);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.0f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
@@ -1224,16 +1222,13 @@ void RobustResourceInitTest::maskedDepthClear(ClearFunc clearFunc)
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_EQUAL);
 
-    const std::string vertexShader =
-        "attribute vec4 position; void main() { gl_Position = position; }";
-    const std::string fragmentShader = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
-    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black) << "depth should not be 0.5f";
 
-    drawQuad(program, "position", 1.0f);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.0f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "depth should be initialized to 1.0f";
 }
 
@@ -1305,12 +1300,9 @@ void RobustResourceInitTest::maskedStencilClear(ClearFunc clearFunc)
     glStencilFunc(GL_EQUAL, 0x00, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-    const std::string vertexShader =
-        "attribute vec4 position; void main() { gl_Position = position; }";
-    const std::string fragmentShader = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
-    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
-    drawQuad(program, "position", 0.5f);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "stencil should be equal to zero";
 }

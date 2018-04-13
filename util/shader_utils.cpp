@@ -248,3 +248,222 @@ bool LinkAttachedProgram(GLuint program)
     glLinkProgram(program);
     return (CheckLinkStatusAndReturnProgram(program, true) != 0);
 }
+
+namespace angle
+{
+
+namespace essl1_shaders
+{
+
+const char *PositionAttrib()
+{
+    return "a_position";
+}
+const char *ColorUniform()
+{
+    return "u_color";
+}
+
+namespace vs
+{
+
+// A shader that sets gl_Position to zero.
+const char *Zero()
+{
+    return R"(void main()
+{
+    gl_Position = vec4(0);
+})";
+}
+
+// A shader that sets gl_Position to attribute a_position.
+const char *Simple()
+{
+    return R"(precision highp float;
+attribute vec4 a_position;
+
+void main()
+{
+    gl_Position = a_position;
+})";
+}
+
+// A shader that simply passes through attribute a_position, setting it to gl_Position and varying
+// pos.
+const char *Passthrough()
+{
+    return R"(precision highp float;
+attribute vec4 a_position;
+varying vec4 v_position;
+
+void main()
+{
+    gl_Position = a_position;
+    v_position = a_position;
+})";
+}
+
+}  // namespace vs
+
+namespace fs
+{
+
+// A shader that renders a simple checker pattern of red and green. X axis and y axis separate the
+// different colors. Needs varying v_position.
+const char *Checkered()
+{
+    return R"(precision highp float;
+varying vec4 v_position;
+
+void main()
+{
+    if (v_position.x * v_position.y > 0.0)
+    {
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+    else
+    {
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    }
+})";
+}
+
+// A shader that fills with color taken from uniform named "color".
+const char *UniformColor()
+{
+    return R"(uniform mediump vec4 u_color;
+void main(void)
+{
+    gl_FragColor = u_color;
+})";
+}
+
+// A shader that fills with 100% opaque red.
+const char *Red()
+{
+    return R"(precision mediump float;
+
+void main()
+{
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+}
+
+// A shader that fills with 100% opaque blue.
+const char *Blue()
+{
+    return R"(precision mediump float;
+
+void main()
+{
+    gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+})";
+}
+
+}  // namespace fs
+}  // namespace essl1_shaders
+
+namespace essl3_shaders
+{
+
+const char *PositionAttrib()
+{
+    return "a_position";
+}
+
+namespace vs
+{
+
+// A shader that sets gl_Position to zero.
+const char *Zero()
+{
+    return R"(#version 300 es
+void main()
+{
+    gl_Position = vec4(0);
+})";
+}
+
+// A shader that sets gl_Position to attribute a_position.
+const char *Simple()
+{
+    return R"(#version 300 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+}
+
+}  // namespace vs
+
+namespace fs
+{
+
+// A shader that fills with 100% opaque red.
+const char *Red()
+{
+    return R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+}
+
+}  // namespace fs
+}  // namespace essl3_shaders
+
+namespace essl31_shaders
+{
+
+const char *PositionAttrib()
+{
+    return "a_position";
+}
+
+namespace vs
+{
+
+// A shader that sets gl_Position to zero.
+const char *Zero()
+{
+    return R"(#version 310 es
+void main()
+{
+    gl_Position = vec4(0);
+})";
+}
+
+// A shader that sets gl_Position to attribute a_position.
+const char *Simple()
+{
+    return R"(#version 310 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+}
+
+}  // namespace vs
+
+namespace fs
+{
+
+// A shader that fills with 100% opaque red.
+const char *Red()
+{
+    return R"(#version 310 es
+precision highp float;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+}
+
+}  // namespace fs
+}  // namespace essl31_shaders
+}  // namespace angle

@@ -31,15 +31,6 @@ class UnpackRowLengthTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource =
-            R"(precision highp float;
-            attribute vec4 position;
-
-            void main()
-            {
-                gl_Position = position;
-            })";
-
         const std::string fragmentShaderSource =
             R"(uniform sampler2D tex;
 
@@ -48,7 +39,7 @@ class UnpackRowLengthTest : public ANGLETest
                 gl_FragColor = texture2D(tex, vec2(0.0, 1.0));
             })";
 
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), fragmentShaderSource);
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -87,7 +78,7 @@ class UnpackRowLengthTest : public ANGLETest
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-            drawQuad(mProgram, "position", 0.5f);
+            drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
             EXPECT_PIXEL_EQ(0, 0, 255, 255, 255, 255);
             EXPECT_PIXEL_EQ(1, 0, 255, 255, 255, 255);

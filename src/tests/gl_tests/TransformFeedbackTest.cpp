@@ -77,25 +77,8 @@ class TransformFeedbackTest : public TransformFeedbackTestBase
     {
         ASSERT_EQ(0u, mProgram);
 
-        const std::string vertexShaderSource =
-            R"(precision highp float;
-            attribute vec4 position;
-
-            void main()
-            {
-                gl_Position = position;
-            })";
-
-        const std::string fragmentShaderSource =
-            R"(precision highp float;
-
-            void main()
-            {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            })";
-
-        mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
-                                                       tfVaryings, bufferMode);
+        mProgram = CompileProgramWithTransformFeedback(
+            essl1_shaders::vs::Simple(), essl1_shaders::fs::Red(), tfVaryings, bufferMode);
         ASSERT_NE(0u, mProgram);
     }
 };
@@ -122,7 +105,7 @@ TEST_P(TransformFeedbackTest, ZeroSizedViewport)
     // a quad
     glViewport(0, 0, 0, 0);
 
-    drawQuad(mProgram, "position", 0.5f);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     // End the query and transform feedkback
     glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
@@ -175,7 +158,7 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
         glBeginTransformFeedback(GL_TRIANGLES);
 
         float z = (loopIdx + 1 == loopCount) ? finalZ : rng.randomFloatBetween(0.1f, 0.5f);
-        drawQuad(mProgram, "position", z);
+        drawQuad(mProgram, essl1_shaders::PositionAttrib(), z);
 
         glEndTransformFeedback();
     }
@@ -228,7 +211,7 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
 
     glUseProgram(mProgram);
 
-    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+    GLint positionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
 
     // First pass: draw 6 points to the XFB buffer
     glEnable(GL_RASTERIZER_DISCARD);
@@ -299,7 +282,7 @@ TEST_P(TransformFeedbackTest, DISABLED_TooSmallBuffers)
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("gl_Position");
     compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
-    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+    GLint positionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
 
     glUseProgram(mProgram);
 
@@ -1026,7 +1009,7 @@ TEST_P(TransformFeedbackTest, CaptureAndCopy)
 
     glUseProgram(mProgram);
 
-    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+    GLint positionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
 
     glEnable(GL_RASTERIZER_DISCARD);
 
@@ -1110,19 +1093,19 @@ TEST_P(TransformFeedbackLifetimeTest, DeletedBuffer)
     glUseProgram(mProgram);
 
     glBeginTransformFeedback(GL_TRIANGLES);
-    drawQuad(mProgram, "position", 0.5f, 1.0f, true);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
     glEndTransformFeedback();
 
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 
     // TODO(jmadill): Remove this when http://anglebug.com/1351 is fixed.
     glBindVertexArray(0);
-    drawQuad(mProgram, "position", 0.5f);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
     glBindVertexArray(1);
 
     // Next, draw vertices with mTransformFeedbackBuffer. This will link to mVertexArray.
     glBindBuffer(GL_ARRAY_BUFFER, mTransformFeedbackBuffer);
-    GLint loc = glGetAttribLocation(mProgram, "position");
+    GLint loc = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, loc);
     glVertexAttribPointer(loc, 1, GL_FLOAT, GL_FALSE, 4, nullptr);
     glEnableVertexAttribArray(loc);
@@ -1138,7 +1121,7 @@ TEST_P(TransformFeedbackLifetimeTest, DeletedBuffer)
     // Then draw again with transform feedback, dereferencing the stranded pointer.
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
     glBeginTransformFeedback(GL_TRIANGLES);
-    drawQuad(mProgram, "position", 0.5f, 1.0f, true);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
     glEndTransformFeedback();
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 
@@ -1426,28 +1409,11 @@ TEST_P(TransformFeedbackTestES31, InvalidStructVaryings)
 // Test that nonexistent transform feedback varyings don't assert when linking.
 TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVarying)
 {
-    const std::string &vertexShaderSource =
-        "#version 300 es\n"
-        "in vec4 a_position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
-
-    const std::string &fragmentShaderSource =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 fragColor;\n"
-        "void main()\n"
-        "{\n"
-        "    fragColor = vec4(0);\n"
-        "}\n";
-
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("bogus");
 
-    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
-                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    mProgram = CompileProgramWithTransformFeedback(
+        essl3_shaders::vs::Simple(), essl3_shaders::fs::Red(), tfVaryings, GL_INTERLEAVED_ATTRIBS);
     ASSERT_EQ(0u, mProgram);
 }
 
@@ -1455,28 +1421,11 @@ TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVarying)
 // nonexistent varying is prefixed with "gl_".
 TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVaryingWithGLPrefix)
 {
-    const std::string &vertexShaderSource =
-        "#version 300 es\n"
-        "in vec4 a_position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
-
-    const std::string &fragmentShaderSource =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 fragColor;\n"
-        "void main()\n"
-        "{\n"
-        "    fragColor = vec4(0);\n"
-        "}\n";
-
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("gl_Bogus");
 
-    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
-                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    mProgram = CompileProgramWithTransformFeedback(
+        essl3_shaders::vs::Simple(), essl3_shaders::fs::Red(), tfVaryings, GL_INTERLEAVED_ATTRIBS);
     ASSERT_EQ(0u, mProgram);
 }
 
@@ -1555,24 +1504,7 @@ TEST_P(TransformFeedbackTest, NoCurrentProgram)
 // generate an INVALID_OPERATION error.
 TEST_P(TransformFeedbackTest, NoTransformFeedbackVaryingsInUse)
 {
-    const std::string &vertexShaderSource =
-        "#version 300 es\n"
-        "in vec4 a_position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
-
-    const std::string &fragmentShaderSource =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 fragColor;\n"
-        "void main()\n"
-        "{\n"
-        "    fragColor = vec4(0);\n"
-        "}\n";
-
-    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
 
     glUseProgram(program);
     glBeginTransformFeedback(GL_TRIANGLES);

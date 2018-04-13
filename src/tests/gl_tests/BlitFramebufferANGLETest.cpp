@@ -5,7 +5,6 @@
 //
 
 #include "test_utils/ANGLETest.h"
-
 #include "test_utils/gl_raii.h"
 
 using namespace angle;
@@ -65,44 +64,9 @@ class BlitFramebufferANGLETest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string passthroughVS =
-            R"(precision highp float;
-            attribute vec4 position;
-            varying vec4 pos;
-
-            void main()
-            {
-                gl_Position = position;
-                pos = position;
-            })";
-
-        const std::string checkeredFS =
-            R"(precision highp float;
-            varying vec4 pos;
-
-            void main()
-            {
-                if (pos.x * pos.y > 0.0)
-                {
-                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-                }
-                else
-                {
-                    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-                }
-            })";
-
-        const std::string blueFS =
-            R"(precision highp float;
-            varying vec4 pos;
-
-            void main()
-            {
-                gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
-            })";
-
-        mCheckerProgram = CompileProgram(passthroughVS, checkeredFS);
-        mBlueProgram = CompileProgram(passthroughVS, blueFS);
+        mCheckerProgram =
+            CompileProgram(essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Checkered());
+        mBlueProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
         if (mCheckerProgram == 0 || mBlueProgram == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -415,7 +379,7 @@ TEST_P(BlitFramebufferANGLETest, BlitColorToDefault)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.8f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.8f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -442,7 +406,7 @@ TEST_P(BlitFramebufferANGLETest, ReverseColorBlit)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.8f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.8f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -469,7 +433,7 @@ TEST_P(BlitFramebufferANGLETest, ScissoredBlit)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.8f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.8f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -504,7 +468,7 @@ TEST_P(BlitFramebufferANGLETest, ReverseScissoredBlit)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.8f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.8f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -539,7 +503,7 @@ TEST_P(BlitFramebufferANGLETest, OversizedBlit)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.8f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.8f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -569,7 +533,7 @@ TEST_P(BlitFramebufferANGLETest, ReverseOversizedBlit)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.8f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.8f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -601,7 +565,7 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepth)
 
     glEnable(GL_DEPTH_TEST);
 
-    drawQuad(mCheckerProgram, "position", 0.3f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.3f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -618,7 +582,7 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepth)
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
     // if blit is happening correctly, this quad will not draw, because it is behind the blitted one
-    drawQuad(mBlueProgram, "position", 0.8f);
+    drawQuad(mBlueProgram, essl1_shaders::PositionAttrib(), 0.8f);
 
     glDisable(GL_DEPTH_TEST);
 
@@ -637,7 +601,7 @@ TEST_P(BlitFramebufferANGLETest, ReverseBlitWithDepth)
 
     glEnable(GL_DEPTH_TEST);
 
-    drawQuad(mCheckerProgram, "position", 0.3f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.3f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -655,7 +619,7 @@ TEST_P(BlitFramebufferANGLETest, ReverseBlitWithDepth)
 
     // if blit is happening correctly, this quad will not draw, because it is behind the blitted one
 
-    drawQuad(mBlueProgram, "position", 0.8f);
+    drawQuad(mBlueProgram, essl1_shaders::PositionAttrib(), 0.8f);
 
     glDisable(GL_DEPTH_TEST);
 
@@ -672,7 +636,7 @@ TEST_P(BlitFramebufferANGLETest, BlitSameBufferOriginal)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.3f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.3f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -688,7 +652,7 @@ TEST_P(BlitFramebufferANGLETest, BlitSameBufferUser)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.3f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.3f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -703,7 +667,7 @@ TEST_P(BlitFramebufferANGLETest, BlitPartialColor)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.5f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -732,7 +696,7 @@ TEST_P(BlitFramebufferANGLETest, BlitDifferentSizes)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.5f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -759,7 +723,7 @@ TEST_P(BlitFramebufferANGLETest, BlitWithMissingAttachments)
     glBindFramebuffer(GL_FRAMEBUFFER, mColorOnlyFBO);
 
     glClear(GL_COLOR_BUFFER_BIT);
-    drawQuad(mCheckerProgram, "position", 0.3f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.3f);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mOriginalFBO);
     glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, mColorOnlyFBO);
@@ -802,7 +766,7 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
     glStencilFunc(GL_ALWAYS, 0x1, 0xFF);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     glEnable(GL_STENCIL_TEST);
-    drawQuad(mCheckerProgram, "position", 0.3f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.3f);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mOriginalFBO);
     glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, mUserFBO);
@@ -825,7 +789,8 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
     EXPECT_PIXEL_EQ(    getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0, 255,   0, 255);
 
     glStencilFunc(GL_EQUAL, 0x1, 0xFF); // only pass if stencil buffer at pixel reads 0x1
-    drawQuad(mBlueProgram, "position", 0.8f); // blue quad will draw if stencil buffer was copied
+    drawQuad(mBlueProgram, essl1_shaders::PositionAttrib(),
+             0.8f);  // blue quad will draw if stencil buffer was copied
     glDisable(GL_STENCIL_TEST);
 
     EXPECT_PIXEL_EQ(    getWindowWidth() / 4,     getWindowHeight() / 4,   0,   0, 255, 255);
@@ -841,7 +806,7 @@ TEST_P(BlitFramebufferANGLETest, BlitPartialDepthStencil)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.5f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -869,9 +834,9 @@ TEST_P(BlitFramebufferANGLETest, BlitMRT)
     glBindFramebuffer(GL_FRAMEBUFFER, mColorOnlyFBO);
 
     glClear(GL_COLOR_BUFFER_BIT);
-    
-    drawQuad(mCheckerProgram, "position", 0.8f);
-    
+
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.8f);
+
     EXPECT_GL_NO_ERROR();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, mColorOnlyFBO);
@@ -962,7 +927,7 @@ TEST_P(BlitFramebufferANGLETest, ErrorStretching)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.5f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -981,7 +946,7 @@ TEST_P(BlitFramebufferANGLETest, ErrorFlipping)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.5f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -999,7 +964,7 @@ TEST_P(BlitFramebufferANGLETest, Errors)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    drawQuad(mCheckerProgram, "position", 0.5f);
+    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EXPECT_GL_NO_ERROR();
 
@@ -1047,12 +1012,6 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
     glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT24, 256, 256);
 
-    const std::string &vertex =
-        "#version 300 es\n"
-        "in vec2 position;\n"
-        "void main() {\n"
-        "  gl_Position = vec4(position, 0.0, 0.5);\n"
-        "}";
     const std::string &fragment =
         "#version 300 es\n"
         "out mediump vec4 red;\n"
@@ -1061,7 +1020,7 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
         "   gl_FragDepth = 0.5;\n"
         "}";
 
-    ANGLE_GL_PROGRAM(drawRed, vertex, fragment);
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), fragment);
 
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
@@ -1102,7 +1061,7 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
     // Draw with 0.5f test and the test should pass.
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_EQUAL);
-    drawQuad(drawRed.get(), "position", 0.5f);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     ASSERT_GL_NO_ERROR();
@@ -1115,20 +1074,7 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
     glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_STENCIL_INDEX8, 256, 256);
 
-    const std::string &vertex =
-        "#version 300 es\n"
-        "in vec2 position;\n"
-        "void main() {\n"
-        "  gl_Position = vec4(position, 0.0, 1.0);\n"
-        "}";
-    const std::string &fragment =
-        "#version 300 es\n"
-        "out mediump vec4 red;\n"
-        "void main() {\n"
-        "   red = vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}";
-
-    ANGLE_GL_PROGRAM(drawRed, vertex, fragment);
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
 
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
@@ -1141,7 +1087,7 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
     glStencilFunc(GL_ALWAYS, 0x1, 0xFF);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     glEnable(GL_STENCIL_TEST);
-    drawQuad(drawRed.get(), "position", 0.5f);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
 
     GLTexture destColorbuf;
     glBindTexture(GL_TEXTURE_2D, destColorbuf.get());
@@ -1172,7 +1118,7 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
 
     // Draw red if the stencil is 0x1, which should be true after the blit/resolve.
     glStencilFunc(GL_EQUAL, 0x1, 0xFF);
-    drawQuad(drawRed.get(), "position", 0.5f);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     ASSERT_GL_NO_ERROR();

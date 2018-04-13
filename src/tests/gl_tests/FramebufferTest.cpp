@@ -305,11 +305,9 @@ TEST_P(FramebufferFormatsTest, IncompleteCubeMap)
                      glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     // Verify drawing with the incomplete framebuffer produces a GL error
-    const std::string &vs = "attribute vec4 position; void main() { gl_Position = position; }";
-    const std::string &ps = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
-    mProgram = CompileProgram(vs, ps);
+    mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     ASSERT_NE(0u, mProgram);
-    drawQuad(mProgram, "position", 0.5f);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
     ASSERT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
 }
 

@@ -25,27 +25,13 @@ class FramebufferRenderMipmapTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vsSource =
-            R"(attribute highp vec4 position;
-            void main(void)
-            {
-                gl_Position = position;
-            })";
-
-        const std::string fsSource =
-            R"(uniform highp vec4 color;
-            void main(void)
-            {
-                gl_FragColor = color;
-            })";
-
-        mProgram = CompileProgram(vsSource, fsSource);
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";
         }
 
-        mColorLocation = glGetUniformLocation(mProgram, "color");
+        mColorLocation = glGetUniformLocation(mProgram, essl1_shaders::ColorUniform());
 
         glUseProgram(mProgram);
 
@@ -158,7 +144,7 @@ TEST_P(FramebufferRenderMipmapTest, RenderToMipmap)
         glUseProgram(mProgram);
         glUniform4fv(mColorLocation, 1, levelColors + (i * 4));
 
-        drawQuad(mProgram, "position", 0.5f);
+        drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
         EXPECT_GL_NO_ERROR();
     }
 

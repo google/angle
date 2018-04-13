@@ -59,13 +59,6 @@ TEST_P(BindUniformLocationTest, Basic)
 
     ASSERT_NE(mBindUniformLocation, nullptr);
 
-    const std::string vsSource =
-        R"(attribute vec4 a_position;
-        void main()
-        {
-            gl_Position = a_position;
-        })";
-
     const std::string fsSource =
         R"(precision mediump float;
         uniform vec4 u_colorC;
@@ -80,7 +73,7 @@ TEST_P(BindUniformLocationTest, Basic)
     GLint colorBLocation = 10;
     GLint colorCLocation = 5;
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
 
     mProgram = glCreateProgram();
@@ -112,7 +105,7 @@ TEST_P(BindUniformLocationTest, Basic)
     glUniform4fv(colorBLocation, 2, colorB);
     glUniform4f(colorCLocation, 0.0f, 0.0f, 0.0f, 1.0f);
 
-    drawQuad(mProgram, "a_position", 0.5f);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_NEAR(0, 0, 64, 128, 192, 255, 1.0);
@@ -124,13 +117,6 @@ TEST_P(BindUniformLocationTest, ConflictsDetection)
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
     ASSERT_NE(nullptr, mBindUniformLocation);
-
-    const std::string vsSource =
-        R"(attribute vec4 a_position;
-        void main()
-        {
-            gl_Position = a_position;
-        })";
 
     const std::string fsSource =
         R"(precision mediump float;
@@ -144,7 +130,7 @@ TEST_P(BindUniformLocationTest, ConflictsDetection)
     GLint colorALocation = 3;
     GLint colorBLocation = 4;
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
 
     mProgram = glCreateProgram();
@@ -281,13 +267,6 @@ TEST_P(BindUniformLocationTest, UnusedUniformUpdate)
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
-    const std::string vsSource =
-        R"(attribute vec4 a_position;
-        void main()
-        {
-            gl_Position = a_position;
-        })";
-
     const std::string fsSource =
         R"(precision mediump float;
         uniform vec4 u_colorA;
@@ -302,7 +281,7 @@ TEST_P(BindUniformLocationTest, UnusedUniformUpdate)
     const GLint nonexistingLocation = 5;
     const GLint unboundLocation     = 6;
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
 
     mProgram = glCreateProgram();
@@ -381,12 +360,6 @@ TEST_P(BindUniformLocationTest, UseSamplerWhenUnusedUniforms)
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
-    const std::string vsSource =
-        R"(void main()
-        {
-            gl_Position = vec4(0);
-        })";
-
     const std::string fsSource =
         R"(uniform sampler2D tex;
         void main()
@@ -396,7 +369,7 @@ TEST_P(BindUniformLocationTest, UseSamplerWhenUnusedUniforms)
 
     const GLuint texLocation = 54;
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
 
     mProgram = glCreateProgram();
@@ -425,12 +398,6 @@ TEST_P(BindUniformLocationTest, SameLocationForUsedAndUnusedUniform)
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
-    const std::string vsSource =
-        R"(void main()
-        {
-            gl_Position = vec4(0);
-        })";
-
     const std::string fsSource =
         R"(precision mediump float;
         uniform vec4 a;
@@ -442,7 +409,7 @@ TEST_P(BindUniformLocationTest, SameLocationForUsedAndUnusedUniform)
 
     const GLuint location = 54;
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Zero());
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
 
     mProgram = glCreateProgram();
@@ -492,13 +459,6 @@ TEST_P(BindUniformLocationES31Test, ConsistentWithLocationLayoutQualifier)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
-    const std::string vsSource =
-        "#version 310 es\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(0);\n"
-        "}\n";
-
     const std::string fsSource =
         "#version 310 es\n"
         "uniform layout(location=2) highp sampler2D tex;\n"
@@ -510,7 +470,7 @@ TEST_P(BindUniformLocationES31Test, ConsistentWithLocationLayoutQualifier)
 
     const GLuint texLocation = 2;
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl31_shaders::vs::Zero());
     EXPECT_NE(0u, vs);
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
     EXPECT_NE(0u, fs);
@@ -533,13 +493,6 @@ TEST_P(BindUniformLocationES31Test, LocationLayoutQualifierOverridesAPIBinding)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
-    const std::string vsSource =
-        "#version 310 es\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(0);\n"
-        "}\n";
-
     const std::string fsSource =
         "#version 310 es\n"
         "uniform layout(location=2) highp sampler2D tex;\n"
@@ -552,7 +505,7 @@ TEST_P(BindUniformLocationES31Test, LocationLayoutQualifierOverridesAPIBinding)
     const GLuint shaderTexLocation = 2;
     const GLuint texLocation       = 3;
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl31_shaders::vs::Zero());
     EXPECT_NE(0u, vs);
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
     EXPECT_NE(0u, fs);
@@ -577,13 +530,6 @@ TEST_P(BindUniformLocationES31Test, LocationLayoutQualifierConflictsWithAPIBindi
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
-    const std::string vsSource =
-        "#version 310 es\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(0);\n"
-        "}\n";
-
     const std::string fsSource =
         "#version 310 es\n"
         "uniform layout(location=2) highp sampler2D tex;\n"
@@ -596,7 +542,7 @@ TEST_P(BindUniformLocationES31Test, LocationLayoutQualifierConflictsWithAPIBindi
 
     const GLuint tex2Location = 2;
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl31_shaders::vs::Zero());
     EXPECT_NE(0u, vs);
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
     EXPECT_NE(0u, fs);
@@ -612,16 +558,6 @@ TEST_P(BindUniformLocationES31Test, ArrayOfArrays)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
-    const std::string vsSource =
-        R"(#version 310 es
-
-        in vec4 a_position;
-
-        void main()
-        {
-            gl_Position = a_position;
-        })";
-
     const std::string fsSource =
         R"(#version 310 es
         precision highp float;
@@ -634,7 +570,7 @@ TEST_P(BindUniformLocationES31Test, ArrayOfArrays)
 
     const GLuint location = 8;
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl31_shaders::vs::Simple());
     EXPECT_NE(0u, vs);
     GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
     EXPECT_NE(0u, fs);
@@ -647,7 +583,7 @@ TEST_P(BindUniformLocationES31Test, ArrayOfArrays)
     glUseProgram(mProgram);
     glUniform4f(location, 0.0f, 1.0f, 0.0f, 1.0f);
 
-    drawQuad(mProgram, "a_position", 0.5f);
+    drawQuad(mProgram, essl31_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);

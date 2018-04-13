@@ -214,13 +214,6 @@ class BuiltinVariableFragDepthClampingFloatRBOTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vs =
-            R"(#version 300 es
-            in vec4 a_position;
-            void main(){
-                gl_Position = a_position;
-            })";
-
         // Writes a fixed detph value and green.
         // Section 15.2.3 of the GL 4.5 specification says that conversion is not
         // done but clamping is so the output depth should be in [0.0, 1.0]
@@ -234,7 +227,7 @@ class BuiltinVariableFragDepthClampingFloatRBOTest : public ANGLETest
                 fragColor = vec4(0.0, 1.0, 0.0, 1.0);
             })";
 
-        mProgram = CompileProgram(vs, depthFs);
+        mProgram = CompileProgram(essl3_shaders::vs::Simple(), depthFs);
         ASSERT_NE(0u, mProgram);
 
         mDepthLocation = glGetUniformLocation(mProgram, "u_depth");

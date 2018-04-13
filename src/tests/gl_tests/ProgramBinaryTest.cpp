@@ -34,20 +34,7 @@ class ProgramBinaryTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource =
-            R"(attribute vec4 inputAttribute;
-            void main()
-            {
-                gl_Position = inputAttribute;
-            })";
-
-        const std::string fragmentShaderSource =
-            R"(void main()
-            {
-                gl_FragColor = vec4(1,0,0,1);
-            })";
-
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
         if (mProgram == 0)
         {
             FAIL() << "shader compilation failed.";
@@ -140,7 +127,7 @@ TEST_P(ProgramBinaryTest, DynamicShadersSignatureBug)
     glUseProgram(mProgram);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
 
-    GLint attribLocation = glGetAttribLocation(mProgram, "inputAttribute");
+    GLint attribLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, attribLocation);
     glEnableVertexAttribArray(attribLocation);
 
@@ -244,7 +231,7 @@ TEST_P(ProgramBinaryTest, CallProgramBinaryBeforeLink)
     ANGLE_GL_BINARY_OES_PROGRAM(binaryProgram, binaryBlob, binaryFormat);
     ASSERT_GL_NO_ERROR();
 
-    drawQuad(binaryProgram, "inputAttribute", 0.5f);
+    drawQuad(binaryProgram, essl1_shaders::PositionAttrib(), 0.5f);
     ASSERT_GL_NO_ERROR();
 }
 
@@ -608,46 +595,12 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
 
     GLuint createES2ProgramFromSource()
     {
-        const std::string testVertexShaderSource =
-            R"(attribute highp vec4 position;
-
-            void main(void)
-            {
-                gl_Position = position;
-            })";
-
-        const std::string testFragmentShaderSource =
-            R"(void main(void)
-            {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            })";
-
-        return CompileProgram(testVertexShaderSource, testFragmentShaderSource);
+        return CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     }
 
     GLuint createES3ProgramFromSource()
     {
-        const std::string testVertexShaderSource =
-            R"(#version 300 es
-            precision highp float;
-            in highp vec4 position;
-
-            void main(void)
-            {
-                gl_Position = position;
-            })";
-
-        const std::string testFragmentShaderSource =
-            R"(#version 300 es
-            precision highp float;
-            out vec4 out_FragColor;
-
-            void main(void)
-            {
-                out_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            })";
-
-        return CompileProgram(testVertexShaderSource, testFragmentShaderSource);
+        return CompileProgram(essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
     }
 
     void drawWithProgram(GLuint program)
@@ -655,7 +608,7 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        GLint positionLocation = glGetAttribLocation(program, "position");
+        GLint positionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
 
         glUseProgram(program);
 

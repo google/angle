@@ -4,9 +4,9 @@
 // found in the LICENSE file.
 //
 
+#include "random_utils.h"
 #include "system_utils.h"
 #include "test_utils/ANGLETest.h"
-#include "random_utils.h"
 
 using namespace angle;
 
@@ -28,21 +28,7 @@ class OcclusionQueriesTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string passthroughVS =
-            R"(attribute highp vec4 position;
-            void main(void)
-            {
-                gl_Position = position;
-            })";
-
-        const std::string passthroughPS =
-            R"(precision highp float;
-            void main(void)
-            {
-               gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-            })";
-
-        mProgram = CompileProgram(passthroughVS, passthroughPS);
+        mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
         ASSERT_NE(0u, mProgram);
     }
 
@@ -68,7 +54,7 @@ TEST_P(OcclusionQueriesTest, IsOccluded)
     // draw a quad at depth 0.3
     glEnable(GL_DEPTH_TEST);
     glUseProgram(mProgram);
-    drawQuad(mProgram, "position", 0.3f);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.3f);
     glUseProgram(0);
 
     EXPECT_GL_NO_ERROR();
@@ -76,7 +62,8 @@ TEST_P(OcclusionQueriesTest, IsOccluded)
     GLuint query = 0;
     glGenQueriesEXT(1, &query);
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
-    drawQuad(mProgram, "position", 0.8f); // this quad should be occluded by first quad
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(),
+             0.8f);  // this quad should be occluded by first quad
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
 
     EXPECT_GL_NO_ERROR();
@@ -113,7 +100,7 @@ TEST_P(OcclusionQueriesTest, IsNotOccluded)
     GLuint query = 0;
     glGenQueriesEXT(1, &query);
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
-    drawQuad(mProgram, "position", 0.8f); // this quad should not be occluded
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.8f);  // this quad should not be occluded
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
 
     EXPECT_GL_NO_ERROR();
@@ -157,7 +144,7 @@ TEST_P(OcclusionQueriesTest, Errors)
     EXPECT_GL_TRUE(glIsQueryEXT(query));
     EXPECT_GL_FALSE(glIsQueryEXT(query2));  // have not called begin
 
-    drawQuad(mProgram, "position", 0.8f); // this quad should not be occluded
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.8f);  // this quad should not be occluded
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT); // no active query for this target
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
@@ -172,7 +159,8 @@ TEST_P(OcclusionQueriesTest, Errors)
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT, query2); // should be ok now
     EXPECT_GL_TRUE(glIsQueryEXT(query2));
 
-    drawQuad(mProgram, "position", 0.3f); // this should draw in front of other quad
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(),
+             0.3f);                 // this should draw in front of other quad
     glDeleteQueriesEXT(1, &query2); // should delete when query becomes inactive
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT); // should not incur error; should delete query + 1 at end of execution.
     EXPECT_GL_NO_ERROR();
@@ -205,7 +193,7 @@ TEST_P(OcclusionQueriesTest, MultiContext)
 
     // draw a quad at depth 0.5
     glEnable(GL_DEPTH_TEST);
-    drawQuad(mProgram, "position", 0.5f);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     EGLWindow *window = getEGLWindow();
 
@@ -265,21 +253,7 @@ TEST_P(OcclusionQueriesTest, MultiContext)
 
         eglMakeCurrent(display, surface, surface, context.context);
 
-        const std::string passthroughVS =
-            R"(attribute highp vec4 position;
-            void main(void)
-            {
-                gl_Position = position;
-            })";
-
-        const std::string passthroughPS =
-            R"(precision highp float;
-            void main(void)
-            {
-               gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-            })";
-
-        context.program = CompileProgram(passthroughVS, passthroughPS);
+        context.program = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
         ASSERT_NE(context.program, 0u);
 
         glDepthMask(GL_FALSE);
@@ -299,7 +273,7 @@ TEST_P(OcclusionQueriesTest, MultiContext)
 
             float depth = context.visiblePasses[pass] ? mRNG.randomFloatBetween(0.0f, 0.4f)
                                                       : mRNG.randomFloatBetween(0.6f, 1.0f);
-            drawQuad(context.program, "position", depth);
+            drawQuad(context.program, essl1_shaders::PositionAttrib(), depth);
 
             EXPECT_GL_NO_ERROR();
         }
