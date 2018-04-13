@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "683810a7_d366e9ed",
+        "filename": "luci-milo.cfg",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-04-13T14:14:46Z",
+      "side": 1,
+      "message": "I think this needs to say luci.angle.try, not luci.angle.ci. I tried to send you a CL, but I got\n\nremote: Processing changes: refs: 1, done            \nTo https://chromium.googlesource.com/a/angle/angle\n ! [remote rejected] f971993842e0676248bde9cb22e14e630bb8bee1 -\u003e refs/for/refs/heads/master%wip,m\u003dInitial_upload,hashtag\u003dmake-clicking-lnx-bot-on-https (no common ancestry)\nerror: failed to push some refs to \u0027https://chromium.googlesource.com/a/angle/angle\u0027\n\n(I guess gerrit commit permissions are per branch or something?)",
+      "revId": "e64784f6b18f7480c9eda9478179ba19967cfe16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
