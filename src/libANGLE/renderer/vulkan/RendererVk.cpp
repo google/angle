@@ -579,22 +579,7 @@ vk::ErrorOrResult<uint32_t> RendererVk::selectPresentQueueForSurface(VkSurfaceKH
 
 std::string RendererVk::getVendorString() const
 {
-    switch (mPhysicalDeviceProperties.vendorID)
-    {
-        case VENDOR_ID_AMD:
-            return "Advanced Micro Devices";
-        case VENDOR_ID_NVIDIA:
-            return "NVIDIA";
-        case VENDOR_ID_INTEL:
-            return "Intel";
-        default:
-        {
-            // TODO(jmadill): More vendor IDs.
-            std::stringstream strstr;
-            strstr << "Vendor ID: " << mPhysicalDeviceProperties.vendorID;
-            return strstr.str();
-        }
-    }
+    return GetVendorString(mPhysicalDeviceProperties.vendorID);
 }
 
 std::string RendererVk::getRendererDescription() const
@@ -608,7 +593,18 @@ std::string RendererVk::getRendererDescription() const
     strstr << VK_VERSION_MINOR(apiVersion) << ".";
     strstr << VK_VERSION_PATCH(apiVersion);
 
-    strstr << "(" << mPhysicalDeviceProperties.deviceName << ")";
+    strstr << "(";
+
+    // In the case of NVIDIA, deviceName does not necessarily contain "NVIDIA". Add "NVIDIA" so that
+    // Vulkan end2end tests can be selectively disabled on NVIDIA. TODO(jmadill): should not be
+    // needed after http://anglebug.com/1874 is fixed and end2end_tests use more sophisticated
+    // driver detection.
+    if (mPhysicalDeviceProperties.vendorID == VENDOR_ID_NVIDIA)
+    {
+        strstr << GetVendorString(mPhysicalDeviceProperties.vendorID) << " ";
+    }
+
+    strstr << mPhysicalDeviceProperties.deviceName << ")";
 
     return strstr.str();
 }
