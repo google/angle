@@ -16,6 +16,24 @@
       "revId": "6c59e4a156c360942e401180a109cfab9544e255",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "601f7945_5619f9ae",
+        "filename": "DEPS",
+        "patchSetId": 4
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-04-13T15:15:16Z",
+      "side": 0,
+      "message": "\u0027Because gclient won\u0027t accept \"--name .\" use a different name then edit.\u0027 suggests that what you\u0027re doing isn\u0027t super well supported. How about changing the standalone workflow to give it a checkout layout like all the other chromium projects have? That seems better than adding yet another special case to the bot configs.",
+      "parentUuid": "26ed8c3a_a5c0e29f",
+      "revId": "6c59e4a156c360942e401180a109cfab9544e255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
