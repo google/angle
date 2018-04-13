@@ -2514,8 +2514,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                 }
             }
 
-            GLint samples = 0;
-            ANGLE_VALIDATION_TRY(readFramebuffer->getSamples(context, &samples));
+            GLint samples = readFramebuffer->getSamples(context);
             if (samples != 0 &&
                 IsPartialBlit(context, readColorAttachment, drawColorAttachment, srcX0, srcY0,
                               srcX1, srcY1, dstX0, dstY0, dstX1, dstY1))
@@ -2566,7 +2565,7 @@ bool ValidateClear(Context *context, GLbitfield mask)
 {
     Framebuffer *fbo = context->getGLState().getDrawFramebuffer();
 
-    if (!ValidateFramebufferComplete(context, fbo, true))
+    if (!ValidateFramebufferComplete(context, fbo))
     {
         return false;
     }

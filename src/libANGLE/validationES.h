@@ -10,6 +10,8 @@
 #define LIBANGLE_VALIDATION_ES_H_
 
 #include "common/mathutil.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/Framebuffer.h"
 #include "libANGLE/PackedGLEnums.h"
 
 #include <GLES2/gl2.h>
@@ -676,7 +678,6 @@ bool ValidateGetInternalFormativBase(Context *context,
                                      GLsizei bufSize,
                                      GLsizei *numParams);
 
-bool ValidateFramebufferComplete(Context *context, Framebuffer *framebuffer, bool isFramebufferOp);
 bool ValidateFramebufferNotMultisampled(Context *context, Framebuffer *framebuffer);
 
 bool ValidateMultitextureUnit(Context *context, GLenum texture);
@@ -687,6 +688,21 @@ bool ValidateMultitextureUnit(Context *context, GLenum texture);
     return false;
 #define ANGLE_VALIDATION_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_VALIDATION_ERR);
 
+// We should check with Khronos if returning INVALID_FRAMEBUFFER_OPERATION is OK when querying
+// implementation format info for incomplete framebuffers. It seems like these queries are
+// incongruent with the other errors.
+// Inlined for speed.
+template <typename ErrorStream = InvalidFramebufferOperation>
+ANGLE_INLINE bool ValidateFramebufferComplete(Context *context, Framebuffer *framebuffer)
+{
+    if (!framebuffer->isComplete(context))
+    {
+        context->handleError(ErrorStream());
+        return false;
+    }
+
+    return true;
+}
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES_H_

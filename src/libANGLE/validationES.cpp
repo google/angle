@@ -1277,12 +1277,12 @@ bool ValidateBlitFramebufferParameters(Context *context,
         return false;
     }
 
-    if (!ValidateFramebufferComplete(context, readFramebuffer, true))
+    if (!ValidateFramebufferComplete(context, readFramebuffer))
     {
         return false;
     }
 
-    if (!ValidateFramebufferComplete(context, drawFramebuffer, true))
+    if (!ValidateFramebufferComplete(context, drawFramebuffer))
     {
         return false;
     }
@@ -2251,7 +2251,7 @@ bool ValidateStateQuery(Context *context, GLenum pname, GLenum *nativeType, unsi
             Framebuffer *readFramebuffer = context->getGLState().getReadFramebuffer();
             ASSERT(readFramebuffer);
 
-            if (!ValidateFramebufferComplete(context, readFramebuffer, false))
+            if (!ValidateFramebufferComplete<InvalidOperation>(context, readFramebuffer))
             {
                 return false;
             }
@@ -2439,7 +2439,7 @@ bool ValidateCopyTexImageParametersBase(Context *context,
 
     const gl::State &state       = context->getGLState();
     Framebuffer *readFramebuffer = state.getReadFramebuffer();
-    if (!ValidateFramebufferComplete(context, readFramebuffer, true))
+    if (!ValidateFramebufferComplete(context, readFramebuffer))
     {
         return false;
     }
@@ -2670,7 +2670,7 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
         }
     }
 
-    if (!ValidateFramebufferComplete(context, framebuffer, true))
+    if (!ValidateFramebufferComplete(context, framebuffer))
     {
         return false;
     }
@@ -5576,7 +5576,7 @@ bool ValidateReadPixelsBase(Context *context,
 
     Framebuffer *readFramebuffer = context->getGLState().getReadFramebuffer();
 
-    if (!ValidateFramebufferComplete(context, readFramebuffer, true))
+    if (!ValidateFramebufferComplete(context, readFramebuffer))
     {
         return false;
     }
@@ -6333,33 +6333,9 @@ bool ValidateGetInternalFormativBase(Context *context,
     return true;
 }
 
-// We should check with Khronos if returning INVALID_FRAMEBUFFER_OPERATION is OK when querying
-// implementation format info for incomplete framebuffers. It seems like these queries are
-// incongruent with the other errors.
-bool ValidateFramebufferComplete(Context *context, Framebuffer *framebuffer, bool isFramebufferOp)
-{
-    bool complete = false;
-    ANGLE_VALIDATION_TRY(framebuffer->isComplete(context, &complete));
-    if (!complete)
-    {
-        if (isFramebufferOp)
-        {
-            context->handleError(InvalidFramebufferOperation());
-        }
-        else
-        {
-            context->handleError(InvalidOperation());
-        }
-        return false;
-    }
-    return true;
-}
-
 bool ValidateFramebufferNotMultisampled(Context *context, Framebuffer *framebuffer)
 {
-    GLint samples = 0;
-    ANGLE_VALIDATION_TRY(framebuffer->getSamples(context, &samples));
-    if (samples != 0)
+    if (framebuffer->getSamples(context) != 0)
     {
         context->handleError(InvalidOperation());
         return false;

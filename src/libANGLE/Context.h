@@ -1374,11 +1374,11 @@ class Context final : angle::NonCopyable
     void memoryBarrierByRegion(GLbitfield barriers);
 
     // Consumes the error.
-    void handleError(const Error &error);
+    void handleError(const Error &error) const;
 
     GLenum getError();
-    void markContextLost();
-    bool isContextLost();
+    void markContextLost() const;
+    bool isContextLost() const;
     GLenum getGraphicsResetStatus();
     bool isResetNotificationEnabled();
 
@@ -1546,13 +1546,13 @@ class Context final : angle::NonCopyable
 
     // Recorded errors
     typedef std::set<GLenum> ErrorSet;
-    ErrorSet mErrors;
+    mutable ErrorSet mErrors;
 
     // Current/lost context flags
     bool mHasBeenCurrent;
-    bool mContextLost;
-    GLenum mResetStatus;
-    bool mContextLostForced;
+    mutable bool mContextLost;
+    mutable GLenum mResetStatus;
+    mutable bool mContextLostForced;
     GLenum mResetStrategy;
     bool mRobustAccess;
     egl::Surface *mCurrentSurface;

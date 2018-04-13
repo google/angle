@@ -2420,7 +2420,7 @@ void Context::getProgramInterfaceivRobust(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::handleError(const Error &error)
+void Context::handleError(const Error &error) const
 {
     if (error.isError())
     {
@@ -2454,7 +2454,7 @@ GLenum Context::getError()
 }
 
 // NOTE: this function should not assume that this context is current!
-void Context::markContextLost()
+void Context::markContextLost() const
 {
     if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
     {
@@ -2464,7 +2464,7 @@ void Context::markContextLost()
     mContextLost = true;
 }
 
-bool Context::isContextLost()
+bool Context::isContextLost() const
 {
     return mContextLost;
 }
@@ -3643,9 +3643,7 @@ void Context::invalidateFramebuffer(GLenum target,
     Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    bool complete = false;
-    ANGLE_CONTEXT_TRY(framebuffer->isComplete(this, &complete));
-    if (!complete)
+    if (!framebuffer->isComplete(this))
     {
         return;
     }
@@ -3667,9 +3665,7 @@ void Context::invalidateSubFramebuffer(GLenum target,
     Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    bool complete = false;
-    ANGLE_CONTEXT_TRY(framebuffer->isComplete(this, &complete));
-    if (!complete)
+    if (!framebuffer->isComplete(this))
     {
         return;
     }
@@ -4918,15 +4914,7 @@ GLenum Context::checkFramebufferStatus(GLenum target)
 {
     Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
-
-    GLenum status = GL_NONE;
-    Error err     = framebuffer->checkStatus(this, &status);
-    if (err.isError())
-    {
-        handleError(err);
-        return 0;
-    }
-    return status;
+    return framebuffer->checkStatus(this);
 }
 
 void Context::compileShader(GLuint shader)

@@ -1075,8 +1075,7 @@ bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfl
     }
 
     Framebuffer *framebuffer = context->getGLState().getDrawFramebuffer();
-    GLint samples            = 0;
-    ANGLE_VALIDATION_TRY(framebuffer->getSamples(context, &samples));
+    GLint samples            = framebuffer->getSamples(context);
 
     if (index >= static_cast<GLuint>(samples))
     {

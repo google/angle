@@ -2148,12 +2148,9 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         case GL_SAMPLES:
         {
             Framebuffer *framebuffer = mDrawFramebuffer;
-            bool complete            = false;
-            ANGLE_TRY(framebuffer->isComplete(context, &complete));
-            if (complete)
+            if (framebuffer->isComplete(context))
             {
-                GLint samples = 0;
-                ANGLE_TRY(framebuffer->getSamples(context, &samples));
+                GLint samples = framebuffer->getSamples(context);
                 switch (pname)
                 {
                     case GL_SAMPLE_BUFFERS:

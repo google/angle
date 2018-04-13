@@ -981,7 +981,7 @@ void Framebuffer::invalidateCompletenessCache()
     }
 }
 
-Error Framebuffer::checkStatus(const Context *context, GLenum *statusOut)
+GLenum Framebuffer::checkStatus(const Context *context)
 {
     // The default framebuffer is always complete except when it is surfaceless in which
     // case it is always unsupported. We return early because the default framebuffer may
@@ -991,8 +991,7 @@ Error Framebuffer::checkStatus(const Context *context, GLenum *statusOut)
         ASSERT(mCachedStatus.valid());
         ASSERT(mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE ||
                mCachedStatus.value() == GL_FRAMEBUFFER_UNDEFINED_OES);
-        *statusOut = mCachedStatus.value();
-        return NoError();
+        return mCachedStatus.value();
     }
 
     if (hasAnyDirtyBit() || !mCachedStatus.valid())
@@ -1001,7 +1000,12 @@ Error Framebuffer::checkStatus(const Context *context, GLenum *statusOut)
 
         if (mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE)
         {
-            ANGLE_TRY(syncState(context));
+            Error err = syncState(context);
+            if (err.isError())
+            {
+                context->handleError(err);
+                return GetDefaultReturnValue<EntryPoint::CheckFramebufferStatus, GLenum>();
+            }
             if (!mImpl->checkStatus(context))
             {
                 mCachedStatus = GL_FRAMEBUFFER_UNSUPPORTED;
@@ -1009,8 +1013,7 @@ Error Framebuffer::checkStatus(const Context *context, GLenum *statusOut)
         }
     }
 
-    *statusOut = mCachedStatus.value();
-    return NoError();
+    return mCachedStatus.value();
 }
 
 GLenum Framebuffer::checkStatusWithGLFrontEnd(const Context *context)
@@ -1433,12 +1436,9 @@ Error Framebuffer::blit(const Context *context,
     return mImpl->blit(context, sourceArea, destArea, blitMask, filter);
 }
 
-Error Framebuffer::getSamples(const Context *context, int *samplesOut)
+int Framebuffer::getSamples(const Context *context)
 {
-    bool completeness = false;
-    ANGLE_TRY(isComplete(context, &completeness));
-    *samplesOut = completeness ? getCachedSamples(context) : 0;
-    return NoError();
+    return (isComplete(context) ? getCachedSamples(context) : 0);
 }
 
 int Framebuffer::getCachedSamples(const Context *context)
@@ -1792,12 +1792,9 @@ FramebufferAttachment *Framebuffer::getAttachmentFromSubjectIndex(angle::Subject
     }
 }
 
-Error Framebuffer::isComplete(const Context *context, bool *completeOut)
+bool Framebuffer::isComplete(const Context *context)
 {
-    GLenum status = GL_NONE;
-    ANGLE_TRY(checkStatus(context, &status));
-    *completeOut = (status == GL_FRAMEBUFFER_COMPLETE);
-    return NoError();
+    return (checkStatus(context) == GL_FRAMEBUFFER_COMPLETE);
 }
 
 bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
