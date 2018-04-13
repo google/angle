@@ -169,11 +169,6 @@ TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
 
 TEST_P(LineLoopTest, LineLoopUShortIndexBuffer)
 {
-    // TODO(lucferron): Looks like we have a bug supporting ushort as index buffers
-    // on line loops drawing.
-    // http://anglebug.com/2473
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
     ignoreD3D11SDKLayersWarnings();
 

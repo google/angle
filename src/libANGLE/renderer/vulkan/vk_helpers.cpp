@@ -370,23 +370,26 @@ gl::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *render
                                                               BufferVk *elementArrayBufferVk,
                                                               VkIndexType indexType,
                                                               int indexCount,
+                                                              intptr_t elementArrayOffset,
                                                               VkBuffer *bufferHandleOut,
                                                               VkDeviceSize *bufferOffsetOut)
 {
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
 
     uint32_t *indices = nullptr;
-    uint32_t offset   = 0;
+    uint32_t destinationOffset = 0;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (indexCount + 1);
     ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
-                                           &offset, nullptr));
-    *bufferOffsetOut = static_cast<VkDeviceSize>(offset);
+                                           &destinationOffset, nullptr));
+    *bufferOffsetOut = static_cast<VkDeviceSize>(destinationOffset);
 
-    VkBufferCopy copy1 = {0, offset, static_cast<VkDeviceSize>(indexCount) * unitSize};
-    VkBufferCopy copy2 = {0, offset + static_cast<VkDeviceSize>(indexCount) * unitSize, unitSize};
+    VkDeviceSize sourceOffset = static_cast<VkDeviceSize>(elementArrayOffset);
+    uint64_t unitCount        = static_cast<VkDeviceSize>(indexCount);
+    VkBufferCopy copy1        = {sourceOffset, destinationOffset, unitCount * unitSize};
+    VkBufferCopy copy2        = {sourceOffset, destinationOffset + unitCount * unitSize, unitSize};
     std::array<VkBufferCopy, 2> copies = {{copy1, copy2}};
 
     vk::CommandBuffer *commandBuffer;
