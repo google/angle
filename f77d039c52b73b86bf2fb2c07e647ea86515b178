@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c8532e4_541b5722",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-13T14:09:08Z",
+      "side": 1,
+      "message": "nit: It is a bit weird that this returns Vec3 and not Vec2 because that\u0027s the type of window coordinates.",
+      "range": {
+        "startLine": 120,
+        "startChar": 47,
+        "endLine": 120,
+        "endChar": 54
+      },
+      "revId": "f77d039c52b73b86bf2fb2c07e647ea86515b178",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
