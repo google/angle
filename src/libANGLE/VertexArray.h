@@ -63,6 +63,9 @@ class VertexArrayState final : angle::NonCopyable
         return mVertexAttributes[attribIndex].bindingIndex;
     }
 
+    // Combines mClientMemoryAttribsMask with mEnabledAttributesMask.
+    gl::AttributesMask getEnabledClientMemoryAttribsMask() const;
+
   private:
     friend class VertexArray;
     std::string mLabel;
@@ -71,6 +74,12 @@ class VertexArrayState final : angle::NonCopyable
     std::vector<VertexBinding> mVertexBindings;
     AttributesMask mEnabledAttributesMask;
     ComponentTypeMask mVertexAttributesTypeMask;
+
+    // From the GLES 3.1 spec:
+    // When a generic attribute array is sourced from client memory, the vertex attribute binding
+    // state is ignored. Thus we don't have to worry about binding state when using client memory
+    // attribs.
+    gl::AttributesMask mClientMemoryAttribsMask;
 };
 
 class VertexArray final : public angle::ObserverInterface, public LabeledObject

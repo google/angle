@@ -70,8 +70,8 @@ gl::Error VertexArrayVk::streamVertexData(RendererVk *renderer,
 {
     ASSERT(!attribsToStream.none());
 
-    const auto &attribs          = mState.getVertexAttributes();
-    const auto &bindings         = mState.getVertexBindings();
+    const auto &attribs  = mState.getVertexAttributes();
+    const auto &bindings = mState.getVertexBindings();
 
     const size_t lastVertex = drawCallParams.firstVertex() + drawCallParams.vertexCount();
 
@@ -243,20 +243,17 @@ void VertexArrayVk::syncDirtyAttrib(const gl::VertexAttribute &attrib,
             BufferVk *bufferVk                        = vk::GetImpl(bufferGL);
             mCurrentArrayBufferResources[attribIndex] = bufferVk;
             mCurrentArrayBufferHandles[attribIndex]   = bufferVk->getVkBuffer().getHandle();
-            mClientMemoryAttribs.reset(attribIndex);
         }
         else
         {
             mCurrentArrayBufferResources[attribIndex] = nullptr;
             mCurrentArrayBufferHandles[attribIndex]   = VK_NULL_HANDLE;
-            mClientMemoryAttribs.set(attribIndex);
         }
         // TODO(jmadill): Offset handling.  Assume zero for now.
         mCurrentArrayBufferOffsets[attribIndex] = 0;
     }
     else
     {
-        mClientMemoryAttribs.reset(attribIndex);
         UNIMPLEMENTED();
     }
 }
@@ -439,12 +436,13 @@ gl::Error VertexArrayVk::onDraw(const gl::Context *context,
 {
     const gl::State &state                  = context->getGLState();
     const gl::Program *programGL            = state.getProgram();
+    const gl::AttributesMask &clientAttribs = mState.getEnabledClientMemoryAttribsMask();
     const gl::AttributesMask &activeAttribs = programGL->getActiveAttribLocationsMask();
     uint32_t maxAttrib                      = programGL->getState().getMaxActiveAttribLocation();
 
-    if (mClientMemoryAttribs.any())
+    if (clientAttribs.any())
     {
-        const gl::AttributesMask &attribsToStream = (mClientMemoryAttribs & activeAttribs);
+        const gl::AttributesMask &attribsToStream = (clientAttribs & activeAttribs);
         if (attribsToStream.any())
         {
             ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));

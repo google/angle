@@ -26,12 +26,6 @@ namespace rx
 {
 namespace
 {
-// Warning: you should ensure binding really matches attrib.bindingIndex before using this function.
-bool AttributeNeedsStreaming(const VertexAttribute &attrib, const VertexBinding &binding)
-{
-    return (attrib.enabled && binding.getBuffer().get() == nullptr);
-}
-
 bool SameVertexAttribFormat(const VertexAttribute &a, const VertexAttribute &b)
 {
     return a.size == b.size && a.type == b.type && a.normalized == b.normalized &&
@@ -154,7 +148,8 @@ gl::Error VertexArrayGL::syncDrawState(const gl::Context *context,
 {
     // Check if any attributes need to be streamed, determines if the index range needs to be
     // computed
-    bool attributesNeedStreaming = mAttributesNeedStreaming.any();
+    const gl::AttributesMask &needsStreamingAttribs =
+        (mState.getEnabledClientMemoryAttribsMask() & activeAttributesMask);
 
     // Determine if an index buffer needs to be streamed and the range of vertices that need to be
     // copied
@@ -162,7 +157,7 @@ gl::Error VertexArrayGL::syncDrawState(const gl::Context *context,
     if (type != GL_NONE)
     {
         ANGLE_TRY(syncIndexData(context, count, type, indices, primitiveRestartEnabled,
-                                attributesNeedStreaming, &indexRange, outIndices));
+                                needsStreamingAttribs.any(), &indexRange, outIndices));
     }
     else
     {
@@ -171,9 +166,9 @@ gl::Error VertexArrayGL::syncDrawState(const gl::Context *context,
         indexRange.end   = first + count - 1;
     }
 
-    if (attributesNeedStreaming)
+    if (needsStreamingAttribs.any())
     {
-        ANGLE_TRY(streamAttributes(activeAttributesMask, instanceCount, indexRange));
+        ANGLE_TRY(streamAttributes(needsStreamingAttribs, instanceCount, indexRange));
     }
 
     return gl::NoError();
@@ -261,7 +256,7 @@ gl::Error VertexArrayGL::syncIndexData(const gl::Context *context,
     return gl::NoError();
 }
 
-void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &activeAttributesMask,
+void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &attribsToStream,
                                                    GLsizei instanceCount,
                                                    const gl::IndexRange &indexRange,
                                                    size_t *outStreamingDataSize,
@@ -270,18 +265,15 @@ void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &act
     *outStreamingDataSize    = 0;
     *outMaxAttributeDataSize = 0;
 
-    ASSERT(mAttributesNeedStreaming.any());
+    ASSERT(attribsToStream.any());
 
     const auto &attribs  = mState.getVertexAttributes();
     const auto &bindings = mState.getVertexBindings();
-
-    gl::AttributesMask attribsToStream = (mAttributesNeedStreaming & activeAttributesMask);
 
     for (auto idx : attribsToStream)
     {
         const auto &attrib  = attribs[idx];
         const auto &binding = bindings[attrib.bindingIndex];
-        ASSERT(AttributeNeedsStreaming(attrib, binding));
 
         // If streaming is going to be required, compute the size of the required buffer
         // and how much slack space at the beginning of the buffer will be required by determining
@@ -295,7 +287,7 @@ void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &act
     }
 }
 
-gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttributesMask,
+gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &attribsToStream,
                                           GLsizei instanceCount,
                                           const gl::IndexRange &indexRange) const
 {
@@ -303,8 +295,8 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
     size_t streamingDataSize    = 0;
     size_t maxAttributeDataSize = 0;
 
-    computeStreamingAttributeSizes(activeAttributesMask, instanceCount, indexRange,
-                                   &streamingDataSize, &maxAttributeDataSize);
+    computeStreamingAttributeSizes(attribsToStream, instanceCount, indexRange, &streamingDataSize,
+                                   &maxAttributeDataSize);
 
     if (streamingDataSize == 0)
     {
@@ -345,15 +337,12 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
         const auto &attribs  = mState.getVertexAttributes();
         const auto &bindings = mState.getVertexBindings();
 
-        gl::AttributesMask attribsToStream = (mAttributesNeedStreaming & activeAttributesMask);
-
         for (auto idx : attribsToStream)
         {
             const auto &attrib  = attribs[idx];
             ASSERT(IsVertexAttribPointerSupported(idx, attrib));
 
             const auto &binding = bindings[attrib.bindingIndex];
-            ASSERT(AttributeNeedsStreaming(attrib, binding));
 
             GLuint adjustedDivisor = GetAdjustedDivisor(mAppliedNumViews, binding.getDivisor());
             const size_t streamedVertexCount = ComputeVertexBindingElementCount(
@@ -425,13 +414,6 @@ GLuint VertexArrayGL::getAppliedElementArrayBufferID() const
     return GetImplAs<BufferGL>(mAppliedElementArrayBuffer.get())->getBufferID();
 }
 
-void VertexArrayGL::updateNeedsStreaming(size_t attribIndex)
-{
-    const auto &attrib  = mState.getVertexAttribute(attribIndex);
-    const auto &binding = mState.getBindingFromAttribIndex(attribIndex);
-    mAttributesNeedStreaming.set(attribIndex, AttributeNeedsStreaming(attrib, binding));
-}
-
 void VertexArrayGL::updateAttribEnabled(size_t attribIndex)
 {
     const bool enabled = mState.getVertexAttribute(attribIndex).enabled;
@@ -439,8 +421,6 @@ void VertexArrayGL::updateAttribEnabled(size_t attribIndex)
     {
         return;
     }
-
-    updateNeedsStreaming(attribIndex);
 
     if (enabled)
     {
@@ -462,21 +442,12 @@ void VertexArrayGL::updateAttribPointer(const gl::Context *context, size_t attri
     // of the binding indexed attrib.bindingIndex (unless attribIndex == attrib.bindingIndex).
     const VertexBinding &binding = mState.getVertexBinding(attribIndex);
 
-    // Since mAttributesNeedStreaming[attribIndex] keeps the value set in the last draw, here we
-    // only need to update it when the buffer has been changed. e.g. When we set an attribute to be
-    // streamed in the last draw, and only change its format in this draw without calling
-    // updateNeedsStreaming, it will still be streamed because the flag is already on.
-    const auto &bindingBuffer = binding.getBuffer();
-    if (bindingBuffer != mAppliedBindings[attribIndex].getBuffer())
-    {
-        updateNeedsStreaming(attribIndex);
-    }
-
     // Early return when the vertex attribute isn't using a buffer object:
     // - If we need to stream, defer the attribPointer to the draw call.
     // - Skip the attribute that is disabled and uses a client memory pointer.
     // - Skip the attribute whose buffer is detached by BindVertexBuffer. Since it cannot have a
     //   client memory pointer either, it must be disabled and shouldn't affect the draw.
+    const auto &bindingBuffer = binding.getBuffer();
     const Buffer *arrayBuffer = bindingBuffer.get();
     if (arrayBuffer == nullptr)
     {

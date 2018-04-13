@@ -15,7 +15,7 @@
 
 namespace gl
 {
-
+// VertexArrayState implementation.
 VertexArrayState::VertexArrayState(size_t maxAttribs, size_t maxAttribBindings)
     : mLabel(), mVertexBindings(maxAttribBindings)
 {
@@ -31,6 +31,12 @@ VertexArrayState::~VertexArrayState()
 {
 }
 
+gl::AttributesMask VertexArrayState::getEnabledClientMemoryAttribsMask() const
+{
+    return (mClientMemoryAttribsMask & mEnabledAttributesMask);
+}
+
+// VertexArray implementation.
 VertexArray::VertexArray(rx::GLImplFactory *factory,
                          GLuint id,
                          size_t maxAttribs,
@@ -49,7 +55,7 @@ VertexArray::VertexArray(rx::GLImplFactory *factory,
 void VertexArray::onDestroy(const Context *context)
 {
     bool isBound = context->isCurrentVertexArray(this);
-    for (auto &binding : mState.mVertexBindings)
+    for (VertexBinding &binding : mState.mVertexBindings)
     {
         binding.setBuffer(context, nullptr, isBound);
     }
@@ -202,7 +208,6 @@ void VertexArray::setVertexAttribFormatImpl(size_t attribIndex,
     attrib->pureInteger    = pureInteger;
     attrib->relativeOffset = relativeOffset;
     mState.mVertexAttributesTypeMask.setIndex(GetVertexAttributeBaseType(*attrib), attribIndex);
-    mState.mEnabledAttributesMask.set(attribIndex);
 }
 
 void VertexArray::setVertexAttribFormat(size_t attribIndex,
@@ -265,6 +270,8 @@ void VertexArray::setVertexAttribPointer(const Context *context,
     bindVertexBufferImpl(context, attribIndex, boundBuffer, offset, effectiveStride);
 
     setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER);
+
+    mState.mClientMemoryAttribsMask.set(attribIndex, boundBuffer == nullptr);
 }
 
 void VertexArray::setElementArrayBuffer(const Context *context, Buffer *buffer)

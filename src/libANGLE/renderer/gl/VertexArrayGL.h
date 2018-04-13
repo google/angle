@@ -74,14 +74,14 @@ class VertexArrayGL : public VertexArrayImpl
 
     // Returns the amount of space needed to stream all attributes that need streaming
     // and the data size of the largest attribute
-    void computeStreamingAttributeSizes(const gl::AttributesMask &activeAttributesMask,
+    void computeStreamingAttributeSizes(const gl::AttributesMask &attribsToStream,
                                         GLsizei instanceCount,
                                         const gl::IndexRange &indexRange,
                                         size_t *outStreamingDataSize,
                                         size_t *outMaxAttributeDataSize) const;
 
     // Stream attributes that have client data
-    gl::Error streamAttributes(const gl::AttributesMask &activeAttributesMask,
+    gl::Error streamAttributes(const gl::AttributesMask &attribsToStream,
                                GLsizei instanceCount,
                                const gl::IndexRange &indexRange) const;
     void syncDirtyAttrib(const gl::Context *context,
@@ -125,9 +125,7 @@ class VertexArrayGL : public VertexArrayImpl
 
     mutable size_t mStreamingArrayBufferSize;
     mutable GLuint mStreamingArrayBuffer;
-
-    gl::AttributesMask mAttributesNeedStreaming;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_VERTEXARRAYGL_H_

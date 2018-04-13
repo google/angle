@@ -116,10 +116,6 @@ class VertexArrayVk : public VertexArrayImpl
     vk::VertexInputBindings mPackedInputBindings;
     vk::VertexInputAttributes mPackedInputAttributes;
 
-    // Which attributes need to be copied from client memory.
-    // TODO(jmadill): Move this to VertexArrayState. http://anglebug.com/1391
-    gl::AttributesMask mClientMemoryAttribs;
-
     vk::DynamicBuffer mDynamicVertexData;
     vk::DynamicBuffer mDynamicIndexData;
 
