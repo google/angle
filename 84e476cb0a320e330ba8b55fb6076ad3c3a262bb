@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fec472f4_aa200757",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T11:41:36Z",
+      "side": 1,
+      "message": "That doesn\u0027t exist in Vulkan so the input type here will always be 16 or 32 at this point, we\u0027ll need to add an additional parameters to read 8bits but write 16 when needed.",
+      "parentUuid": "b0f89cb7_baa03c69",
+      "range": {
+        "startLine": 388,
+        "startChar": 4,
+        "endLine": 389,
+        "endChar": 0
+      },
+      "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53e267a0_9984513e",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 3
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "8631c0a9_de151e3e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T11:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f26c566_9cc060dd",
+      "range": {
+        "startLine": 131,
+        "startChar": 14,
+        "endLine": 131,
+        "endChar": 65
+      },
+      "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56d34c7a_6c3be3ef",
         "filename": "src/tests/gl_tests/LineLoopTest.cpp",
         "patchSetId": 3
@@ -91,6 +139,30 @@
       "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a87d2a3_434c3714",
+        "filename": "src/tests/gl_tests/LineLoopTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T11:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56d34c7a_6c3be3ef",
+      "range": {
+        "startLine": 172,
+        "startChar": 7,
+        "endLine": 172,
+        "endChar": 11
+      },
+      "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "4c077596_9b686ef4",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 756,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T11:41:36Z",
+      "side": 1,
+      "message": "Instead, I have created a util with the comment on the util in test_utils because I expect this pattern to be reused multiple times.",
+      "parentUuid": "8cdfcb98_88aa7abe",
+      "range": {
+        "startLine": 756,
+        "startChar": 4,
+        "endLine": 756,
+        "endChar": 78
+      },
+      "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4caaa8a1_0995fa6a",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 3
@@ -137,6 +233,30 @@
       "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f871a789_4a0b8bc3",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T11:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4caaa8a1_0995fa6a",
+      "range": {
+        "startLine": 757,
+        "startChar": 5,
+        "endLine": 757,
+        "endChar": 22
+      },
+      "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "82da27cf_354be2bb",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T11:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96e9068b_729650c3",
+      "range": {
+        "startLine": 760,
+        "startChar": 4,
+        "endLine": 760,
+        "endChar": 43
+      },
+      "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9046f234_f6497361",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 3
@@ -186,6 +330,30 @@
     },
     {
       "key": {
+        "uuid": "a9acd20c_9ea95cc9",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T11:41:36Z",
+      "side": 1,
+      "message": "At least I\u0027m consistent ;-) Done",
+      "parentUuid": "9046f234_f6497361",
+      "range": {
+        "startLine": 768,
+        "startChar": 4,
+        "endLine": 768,
+        "endChar": 17
+      },
+      "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fac7dc92_c6a3b03e",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 3
@@ -206,6 +374,30 @@
       "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9b44045_860a9f1f",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-13T11:41:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fac7dc92_c6a3b03e",
+      "range": {
+        "startLine": 781,
+        "startChar": 3,
+        "endLine": 781,
+        "endChar": 32
+      },
+      "revId": "84e476cb0a320e330ba8b55fb6076ad3c3a262bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
