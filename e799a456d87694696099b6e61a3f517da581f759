@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "31765564_f4ae60ed",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2297,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-13T14:25:13Z",
+      "side": 1,
+      "message": "nit: Maybe rename generatingShader to previousShader so that it is easy to understand its relationship with the \"current\" shader.",
+      "range": {
+        "startLine": 2297,
+        "startChar": 12,
+        "endLine": 2297,
+        "endChar": 28
+      },
+      "revId": "e799a456d87694696099b6e61a3f517da581f759",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bf7f72a4_bfb784a9",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 2
