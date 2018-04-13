@@ -46,6 +46,30 @@
       "revId": "fbbe3a1503db7707bd5f4a71e8c6f3a268d743a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1a130b1_78bc57fd",
+        "filename": "BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-13T16:39:59Z",
+      "side": 1,
+      "message": "I\u0027ve put it back under is_clang.\nAs far as I can tell, the linux clang compiler has a somewhat different behavior here than on Windows.",
+      "parentUuid": "6aa84c9f_07666748",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 3
+      },
+      "revId": "fbbe3a1503db7707bd5f4a71e8c6f3a268d743a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
