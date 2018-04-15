@@ -12,6 +12,11 @@
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
+namespace gl
+{
+class ImageIndex;
+}  // namespace gl;
+
 namespace rx
 {
 namespace vk
@@ -152,15 +157,17 @@ class ImageHelper final : angle::NonCopyable
 
     bool valid() const;
 
-    Error init2D(VkDevice device,
-                 const gl::Extents &extents,
-                 const Format &format,
-                 GLint samples,
-                 VkImageUsageFlags usage);
+    Error init(VkDevice device,
+               gl::TextureType textureType,
+               const gl::Extents &extents,
+               const Format &format,
+               GLint samples,
+               VkImageUsageFlags usage);
     Error initMemory(VkDevice device,
                      const MemoryProperties &memoryProperties,
                      VkMemoryPropertyFlags flags);
     Error initImageView(VkDevice device,
+                        gl::TextureType textureType,
                         VkImageAspectFlags aspectMask,
                         const gl::SwizzleState &swizzleMap,
                         ImageView *imageViewOut);
@@ -224,6 +231,9 @@ class ImageHelper final : angle::NonCopyable
 
     // Current state.
     VkImageLayout mCurrentLayout;
+
+    // Cached properties.
+    uint32_t mLayerCount;
 };
 
 }  // namespace vk

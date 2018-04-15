@@ -27,6 +27,7 @@ class StagingStorage final : angle::NonCopyable
     void release(RendererVk *renderer);
 
     gl::Error stageSubresourceUpdate(ContextVk *contextVk,
+                                     const gl::ImageIndex &index,
                                      const gl::Extents &extents,
                                      const gl::InternalFormat &formatInfo,
                                      const gl::PixelUnpackState &unpack,
@@ -38,9 +39,18 @@ class StagingStorage final : angle::NonCopyable
                                   vk::CommandBuffer *commandBuffer);
 
   private:
+    struct SubresourceUpdate
+    {
+        SubresourceUpdate();
+        SubresourceUpdate(VkBuffer bufferHandle, const VkBufferImageCopy &copyRegion);
+        SubresourceUpdate(const SubresourceUpdate &other);
+
+        VkBuffer bufferHandle;
+        VkBufferImageCopy copyRegion;
+    };
+
     vk::DynamicBuffer mStagingBuffer;
-    VkBuffer mCurrentBufferHandle;
-    VkBufferImageCopy mCurrentCopyRegion;
+    std::vector<SubresourceUpdate> mSubresourceUpdates;
 };
 
 class TextureVk : public TextureImpl, public vk::CommandGraphResource

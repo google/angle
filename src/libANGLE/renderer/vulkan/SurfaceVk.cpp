@@ -396,8 +396,8 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     {
         SwapchainImage &member = mSwapchainImages[imageIndex];
         member.image.init2DWeakReference(swapchainImages[imageIndex], extents, format, 1);
-        member.image.initImageView(device, VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
-                                   &member.imageView);
+        member.image.initImageView(device, gl::TextureType::_2D, VK_IMAGE_ASPECT_COLOR_BIT,
+                                   gl::SwizzleState(), &member.imageView);
 
         // Set transfer dest layout, and clear the image to black.
         member.image.clearColor(transparentBlack, commandBuffer);
@@ -418,7 +418,8 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
             (VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
              VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
 
-        ANGLE_TRY(mDepthStencilImage.init2D(device, extents, dsFormat, 1, usage));
+        ANGLE_TRY(
+            mDepthStencilImage.init(device, gl::TextureType::_2D, extents, dsFormat, 1, usage));
         ANGLE_TRY(mDepthStencilImage.initMemory(device, renderer->getMemoryProperties(),
                                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
@@ -431,8 +432,8 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         // Set transfer dest layout, and clear the image.
         mDepthStencilImage.clearDepthStencil(aspect, depthStencilClearValue, commandBuffer);
 
-        ANGLE_TRY(mDepthStencilImage.initImageView(device, aspect, gl::SwizzleState(),
-                                                   &mDepthStencilImageView));
+        ANGLE_TRY(mDepthStencilImage.initImageView(device, gl::TextureType::_2D, aspect,
+                                                   gl::SwizzleState(), &mDepthStencilImageView));
 
         mDepthStencilRenderTarget.resource  = this;
         mDepthStencilRenderTarget.image     = &mDepthStencilImage;

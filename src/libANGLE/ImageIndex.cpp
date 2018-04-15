@@ -1,4 +1,3 @@
-#include "ImageIndex.h"
 //
 // Copyright 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,8 +7,10 @@
 // ImageIndex.cpp: Implementation for ImageIndex methods.
 
 #include "libANGLE/ImageIndex.h"
-#include "libANGLE/Constants.h"
+
 #include "common/utilities.h"
+#include "libANGLE/Constants.h"
+#include "libANGLE/angletypes.h"
 
 #include <tuple>
 
@@ -99,7 +100,7 @@ TextureTarget ImageIndex::getTarget() const
 GLint ImageIndex::cubeMapFaceIndex() const
 {
     ASSERT(mType == TextureType::CubeMap);
-    ASSERT(mLayerIndex == kEntireLevel || mLayerIndex < 6);
+    ASSERT(mLayerIndex == kEntireLevel || mLayerIndex < static_cast<GLint>(CUBE_FACE_COUNT));
     return mLayerIndex;
 }
 
@@ -149,7 +150,9 @@ ImageIndex ImageIndex::MakeFromType(TextureType type,
                                     GLint layerIndex,
                                     GLint layerCount)
 {
-    return ImageIndex(type, levelIndex, layerIndex, layerCount);
+    GLint overrideLayerCount =
+        (type == TextureType::CubeMap && layerIndex == kEntireLevel ? CUBE_FACE_COUNT : layerCount);
+    return ImageIndex(type, levelIndex, layerIndex, overrideLayerCount);
 }
 
 ImageIndex ImageIndex::Make2DMultisample()

@@ -30,6 +30,11 @@ constexpr char kGreenFragmentShader[] =
     gl_FragColor = vec4(0, 1, 0, 1);
 })";
 
+constexpr std::array<GLenum, 6> kCubeFaces = {
+    {GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+     GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+     GL_TEXTURE_CUBE_MAP_NEGATIVE_Z}};
+
 class SimpleOperationTest : public ANGLETest
 {
   protected:
@@ -696,7 +701,7 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
 }
 
-// Creates a texture, no other operations.
+// Creates a 2D texture, no other operations.
 TEST_P(SimpleOperationTest, CreateTexture2DNoData)
 {
     GLTexture texture;
@@ -705,7 +710,7 @@ TEST_P(SimpleOperationTest, CreateTexture2DNoData)
     ASSERT_GL_NO_ERROR();
 }
 
-// Creates a texture, no other operations.
+// Creates a 2D texture, no other operations.
 TEST_P(SimpleOperationTest, CreateTexture2DWithData)
 {
     std::vector<GLColor> colors(16 * 16, GLColor::red);
@@ -716,6 +721,32 @@ TEST_P(SimpleOperationTest, CreateTexture2DWithData)
     ASSERT_GL_NO_ERROR();
 }
 
+// Creates a cube texture, no other operations.
+TEST_P(SimpleOperationTest, CreateTextureCubeNoData)
+{
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+    for (GLenum cubeFace : kCubeFaces)
+    {
+        glTexImage2D(cubeFace, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Creates a cube texture, no other operations.
+TEST_P(SimpleOperationTest, CreateTextureCubeWithData)
+{
+    std::vector<GLColor> colors(16 * 16, GLColor::red);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+    for (GLenum cubeFace : kCubeFaces)
+    {
+        glTexImage2D(cubeFace, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
 // Creates a program with a texture.
 TEST_P(SimpleOperationTest, LinkProgramWithTexture)
 {
@@ -723,8 +754,8 @@ TEST_P(SimpleOperationTest, LinkProgramWithTexture)
     ASSERT_GL_NO_ERROR();
 }
 
-// Creates a program with a texture and renders with it.
-TEST_P(SimpleOperationTest, DrawWithTexture)
+// Creates a program with a 2D texture and renders with it.
+TEST_P(SimpleOperationTest, DrawWith2DTexture)
 {
     std::array<GLColor, 4> colors = {
         {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
@@ -791,6 +822,138 @@ TEST_P(SimpleOperationTest, DrawElementsLineLoopUsingClientSideMemory)
 
     // Verify line is closed between the 2 last vertices
     EXPECT_PIXEL_COLOR_EQ((quarterWidth * 2), quarterHeight, GLColor::green);
+}
+
+// Creates a program with a cube texture and renders with it.
+TEST_P(SimpleOperationTest, DrawWithCubeTexture)
+{
+    std::array<Vector2, 6 * 4> positions = {{
+        {0, 1}, {1, 1}, {1, 2}, {0, 2} /* first face */,
+        {1, 0}, {2, 0}, {2, 1}, {1, 1} /* second face */,
+        {1, 1}, {2, 1}, {2, 2}, {1, 2} /* third face */,
+        {1, 2}, {2, 2}, {2, 3}, {1, 3} /* fourth face */,
+        {2, 1}, {3, 1}, {3, 2}, {2, 2} /* fifth face */,
+        {3, 1}, {4, 1}, {4, 2}, {3, 2} /* sixth face */,
+    }};
+
+    const float w4 = 1.0f / 4.0f;
+    const float h3 = 1.0f / 3.0f;
+
+    // This draws a "T" shape based on the four faces of the cube. The window is divided into four
+    // tiles horizontally and three tiles vertically (hence the w4 and h3 variable naming).
+    for (Vector2 &pos : positions)
+    {
+        pos.data()[0] = pos.data()[0] * w4 * 2.0f - 1.0f;
+        pos.data()[1] = pos.data()[1] * h3 * 2.0f - 1.0f;
+    }
+
+    const Vector3 posX(1, 0, 0);
+    const Vector3 negX(-1, 0, 0);
+    const Vector3 posY(0, 1, 0);
+    const Vector3 negY(0, -1, 0);
+    const Vector3 posZ(0, 0, 1);
+    const Vector3 negZ(0, 0, -1);
+
+    std::array<Vector3, 6 * 4> coords = {{
+        posX, posX, posX, posX /* first face */, negX, negX, negX, negX /* second face */,
+        posY, posY, posY, posY /* third face */, negY, negY, negY, negY /* fourth face */,
+        posZ, posZ, posZ, posZ /* fifth face */, negZ, negZ, negZ, negZ /* sixth face */,
+    }};
+
+    const std::array<std::array<GLColor, 4>, 6> colors = {{
+        {GLColor::red, GLColor::red, GLColor::red, GLColor::red},
+        {GLColor::green, GLColor::green, GLColor::green, GLColor::green},
+        {GLColor::blue, GLColor::blue, GLColor::blue, GLColor::blue},
+        {GLColor::yellow, GLColor::yellow, GLColor::yellow, GLColor::yellow},
+        {GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan},
+        {GLColor::magenta, GLColor::magenta, GLColor::magenta, GLColor::magenta},
+    }};
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+
+    for (size_t faceIndex = 0; faceIndex < kCubeFaces.size(); ++faceIndex)
+    {
+        glTexImage2D(kCubeFaces[faceIndex], 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     colors[faceIndex].data());
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    constexpr char kVertexShader[] = R"(attribute vec2 pos;
+attribute vec3 coord;
+varying vec3 texCoord;
+void main()
+{
+    gl_Position = vec4(pos, 0, 1);
+    texCoord = coord;
+})";
+
+    constexpr char kFragmentShader[] = R"(precision mediump float;
+varying vec3 texCoord;
+uniform samplerCube tex;
+void main()
+{
+    gl_FragColor = textureCube(tex, texCoord);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVertexShader, kFragmentShader);
+    GLint samplerLoc = glGetUniformLocation(program, "tex");
+    ASSERT_EQ(samplerLoc, 0);
+
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, "pos");
+    ASSERT_NE(-1, posLoc);
+
+    GLint coordLoc = glGetAttribLocation(program, "coord");
+    ASSERT_NE(-1, coordLoc);
+
+    GLBuffer posBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer);
+    glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(Vector2), positions.data(),
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+
+    GLBuffer coordBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, coordBuffer);
+    glBufferData(GL_ARRAY_BUFFER, coords.size() * sizeof(Vector3), coords.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(coordLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(coordLoc);
+
+    auto quadIndices = GetQuadIndices();
+    std::array<GLushort, 6 * 6> kElementsData;
+    for (GLushort quadIndex = 0; quadIndex < 6; ++quadIndex)
+    {
+        for (GLushort elementIndex = 0; elementIndex < 6; ++elementIndex)
+        {
+            kElementsData[quadIndex * 6 + elementIndex] = quadIndices[elementIndex] + 4 * quadIndex;
+        }
+    }
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLBuffer elementBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, kElementsData.size() * sizeof(GLushort),
+                 kElementsData.data(), GL_STATIC_DRAW);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(kElementsData.size()), GL_UNSIGNED_SHORT,
+                   nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    for (int faceIndex = 0; faceIndex < 6; ++faceIndex)
+    {
+        int index      = faceIndex * 4;
+        Vector2 center = (positions[index] + positions[index + 1] + positions[index + 2] +
+                          positions[index + 3]) /
+                         4.0f;
+        center *= 0.5f;
+        center += Vector2(0.5f);
+        center *= Vector2(getWindowWidth(), getWindowHeight());
+        EXPECT_PIXEL_COLOR_EQ(center.x(), center.y(), colors[faceIndex][0]);
+    }
 }
 
 // Tests rendering to a user framebuffer.

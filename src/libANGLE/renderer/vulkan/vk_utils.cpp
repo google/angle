@@ -1278,6 +1278,36 @@ void GetExtent(const gl::Extents &glExtent, VkExtent3D *vkExtent)
     vkExtent->height = glExtent.height;
     vkExtent->depth  = glExtent.depth;
 }
+
+VkImageType GetImageType(gl::TextureType textureType)
+{
+    switch (textureType)
+    {
+        case gl::TextureType::_2D:
+            return VK_IMAGE_TYPE_2D;
+        case gl::TextureType::CubeMap:
+            return VK_IMAGE_TYPE_2D;
+        default:
+            // We will need to implement all the texture types for ES3+.
+            UNIMPLEMENTED();
+            return VK_IMAGE_TYPE_MAX_ENUM;
+    }
+}
+
+VkImageViewType GetImageViewType(gl::TextureType textureType)
+{
+    switch (textureType)
+    {
+        case gl::TextureType::_2D:
+            return VK_IMAGE_VIEW_TYPE_2D;
+        case gl::TextureType::CubeMap:
+            return VK_IMAGE_VIEW_TYPE_CUBE;
+        default:
+            // We will need to implement all the texture types for ES3+.
+            UNIMPLEMENTED();
+            return VK_IMAGE_VIEW_TYPE_MAX_ENUM;
+    }
+}
 }  // namespace gl_vk
 }  // namespace rx
 

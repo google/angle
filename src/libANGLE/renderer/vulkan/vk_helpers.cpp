@@ -66,6 +66,30 @@ VkAccessFlags GetBasicLayoutAccessFlags(VkImageLayout layout)
             return 0;
     }
 }
+
+VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType)
+{
+    if (textureType == gl::TextureType::CubeMap)
+    {
+        return VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+uint32_t GetImageLayerCount(gl::TextureType textureType)
+{
+    if (textureType == gl::TextureType::CubeMap)
+    {
+        return gl::CUBE_FACE_COUNT;
+    }
+    else
+    {
+        return 1;
+    }
+}
 }  // anonymous namespace
 
 // DynamicBuffer implementation.
@@ -422,7 +446,8 @@ ImageHelper::ImageHelper()
     : mFormat(nullptr),
       mSamples(0),
       mAllocatedMemorySize(0),
-      mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
+      mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED),
+      mLayerCount(0)
 {
 }
 
@@ -433,8 +458,11 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mFormat(other.mFormat),
       mSamples(other.mSamples),
       mAllocatedMemorySize(other.mAllocatedMemorySize),
-      mCurrentLayout(other.mCurrentLayout)
+      mCurrentLayout(other.mCurrentLayout),
+      mLayerCount(other.mLayerCount)
 {
+    other.mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    other.mLayerCount    = 0;
 }
 
 ImageHelper::~ImageHelper()
@@ -447,29 +475,31 @@ bool ImageHelper::valid() const
     return mImage.valid();
 }
 
-Error ImageHelper::init2D(VkDevice device,
-                          const gl::Extents &extents,
-                          const Format &format,
-                          GLint samples,
-                          VkImageUsageFlags usage)
+Error ImageHelper::init(VkDevice device,
+                        gl::TextureType textureType,
+                        const gl::Extents &extents,
+                        const Format &format,
+                        GLint samples,
+                        VkImageUsageFlags usage)
 {
     ASSERT(!valid());
 
-    mExtents = extents;
-    mFormat  = &format;
-    mSamples = samples;
+    mExtents    = extents;
+    mFormat     = &format;
+    mSamples    = samples;
+    mLayerCount = GetImageLayerCount(textureType);
 
     VkImageCreateInfo imageInfo;
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.pNext                 = nullptr;
-    imageInfo.flags                 = 0;
-    imageInfo.imageType             = VK_IMAGE_TYPE_2D;
+    imageInfo.flags                 = GetImageCreateFlags(textureType);
+    imageInfo.imageType             = gl_vk::GetImageType(textureType);
     imageInfo.format                = format.vkTextureFormat;
     imageInfo.extent.width          = static_cast<uint32_t>(extents.width);
     imageInfo.extent.height         = static_cast<uint32_t>(extents.height);
     imageInfo.extent.depth          = 1;
     imageInfo.mipLevels             = 1;
-    imageInfo.arrayLayers           = 1;
+    imageInfo.arrayLayers           = mLayerCount;
     imageInfo.samples               = gl_vk::GetSamples(samples);
     imageInfo.tiling                = VK_IMAGE_TILING_OPTIMAL;
     imageInfo.usage                 = usage;
@@ -506,6 +536,7 @@ Error ImageHelper::initMemory(VkDevice device,
 }
 
 Error ImageHelper::initImageView(VkDevice device,
+                                 gl::TextureType textureType,
                                  VkImageAspectFlags aspectMask,
                                  const gl::SwizzleState &swizzleMap,
                                  ImageView *imageViewOut)
@@ -515,7 +546,7 @@ Error ImageHelper::initImageView(VkDevice device,
     viewInfo.pNext                           = nullptr;
     viewInfo.flags                           = 0;
     viewInfo.image                           = mImage.getHandle();
-    viewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
+    viewInfo.viewType                        = gl_vk::GetImageViewType(textureType);
     viewInfo.format                          = mFormat->vkTextureFormat;
     viewInfo.components.r                    = gl_vk::GetSwizzle(swizzleMap.swizzleRed);
     viewInfo.components.g                    = gl_vk::GetSwizzle(swizzleMap.swizzleGreen);
@@ -525,7 +556,7 @@ Error ImageHelper::initImageView(VkDevice device,
     viewInfo.subresourceRange.baseMipLevel   = 0;
     viewInfo.subresourceRange.levelCount     = 1;
     viewInfo.subresourceRange.baseArrayLayer = 0;
-    viewInfo.subresourceRange.layerCount     = 1;
+    viewInfo.subresourceRange.layerCount     = mLayerCount;
 
     ANGLE_TRY(imageViewOut->init(device, viewInfo));
     return NoError();
@@ -535,6 +566,8 @@ void ImageHelper::destroy(VkDevice device)
 {
     mImage.destroy(device);
     mDeviceMemory.destroy(device);
+    mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    mLayerCount    = 0;
 }
 
 void ImageHelper::init2DWeakReference(VkImage handle,
@@ -544,9 +577,10 @@ void ImageHelper::init2DWeakReference(VkImage handle,
 {
     ASSERT(!valid());
 
-    mExtents = extents;
-    mFormat  = &format;
-    mSamples = samples;
+    mExtents    = extents;
+    mFormat     = &format;
+    mSamples    = samples;
+    mLayerCount = 1;
 
     mImage.setHandle(handle);
 }
@@ -559,9 +593,10 @@ Error ImageHelper::init2DStaging(VkDevice device,
 {
     ASSERT(!valid());
 
-    mExtents = extents;
-    mFormat  = &format;
-    mSamples = 1;
+    mExtents    = extents;
+    mFormat     = &format;
+    mSamples    = 1;
+    mLayerCount = 1;
 
     // Use Preinitialized for writable staging images - in these cases we want to map the memory
     // before we do a copy. For readback images, use an undefined layout.
@@ -659,7 +694,7 @@ void ImageHelper::changeLayoutWithStages(VkImageAspectFlags aspectMask,
     imageMemoryBarrier.subresourceRange.baseMipLevel   = 0;
     imageMemoryBarrier.subresourceRange.levelCount     = 1;
     imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
-    imageMemoryBarrier.subresourceRange.layerCount     = 1;
+    imageMemoryBarrier.subresourceRange.layerCount     = mLayerCount;
 
     // TODO(jmadill): Test all the permutations of the access flags.
     imageMemoryBarrier.srcAccessMask = GetBasicLayoutAccessFlags(mCurrentLayout);
@@ -701,7 +736,7 @@ void ImageHelper::clearColor(const VkClearColorValue &color, CommandBuffer *comm
     range.baseMipLevel   = 0;
     range.levelCount     = 1;
     range.baseArrayLayer = 0;
-    range.layerCount     = 1;
+    range.layerCount     = mLayerCount;
 
     commandBuffer->clearColorImage(mImage, mCurrentLayout, color, 1, &range);
 }
