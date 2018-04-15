@@ -66,6 +66,9 @@ class VertexArrayState final : angle::NonCopyable
     // Combines mClientMemoryAttribsMask with mEnabledAttributesMask.
     gl::AttributesMask getEnabledClientMemoryAttribsMask() const;
 
+    // Extra validation performed on the Vertex Array.
+    bool hasEnabledNullPointerClientArray() const;
+
   private:
     friend class VertexArray;
     std::string mLabel;
@@ -80,6 +83,7 @@ class VertexArrayState final : angle::NonCopyable
     // state is ignored. Thus we don't have to worry about binding state when using client memory
     // attribs.
     gl::AttributesMask mClientMemoryAttribsMask;
+    gl::AttributesMask mNullPointerClientMemoryAttribsMask;
 };
 
 class VertexArray final : public angle::ObserverInterface, public LabeledObject
@@ -161,6 +165,16 @@ class VertexArray final : public angle::ObserverInterface, public LabeledObject
     const AttributesMask &getEnabledAttributesMask() const
     {
         return mState.getEnabledAttributesMask();
+    }
+
+    gl::AttributesMask getEnabledClientMemoryAttribsMask() const
+    {
+        return mState.getEnabledClientMemoryAttribsMask();
+    }
+
+    bool hasEnabledNullPointerClientArray() const
+    {
+        return mState.hasEnabledNullPointerClientArray();
     }
 
     // Observer implementation

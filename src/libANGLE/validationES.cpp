@@ -75,57 +75,54 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
 
     bool webglCompatibility = context->getExtensions().webglCompatibility;
 
-    const VertexArray *vao     = state.getVertexArray();
+    const VertexArray *vao              = state.getVertexArray();
+    const AttributesMask &clientAttribs = vao->getEnabledClientMemoryAttribsMask();
+
+    if (clientAttribs.any())
+    {
+        if (webglCompatibility || !state.areClientArraysEnabled())
+        {
+            // [WebGL 1.0] Section 6.5 Enabled Vertex Attributes and Range Checking
+            // If a vertex attribute is enabled as an array via enableVertexAttribArray but no
+            // buffer is bound to that attribute via bindBuffer and vertexAttribPointer, then calls
+            // to drawArrays or drawElements will generate an INVALID_OPERATION error.
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBuffer);
+            return false;
+        }
+        else if (vao->hasEnabledNullPointerClientArray())
+        {
+            // This is an application error that would normally result in a crash, but we catch it
+            // and return an error
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBufferPointer);
+            return false;
+        }
+    }
+
+    // If we're drawing zero vertices, we have enough data.
+    if (vertexCount <= 0 || primcount <= 0)
+    {
+        return true;
+    }
+
     const auto &vertexAttribs  = vao->getVertexAttributes();
     const auto &vertexBindings = vao->getVertexBindings();
-    for (size_t attributeIndex : vao->getEnabledAttributesMask())
+
+    const AttributesMask &activeAttribs =
+        (program->getActiveAttribLocationsMask() & vao->getEnabledAttributesMask());
+
+    for (size_t attributeIndex : activeAttribs)
     {
         const VertexAttribute &attrib = vertexAttribs[attributeIndex];
+        ASSERT(attrib.enabled);
 
-        // No need to range check for disabled attribs.
-        if (!attrib.enabled)
-        {
-            continue;
-        }
-
-        // If we have no buffer, then we either get an error, or there are no more checks to be
-        // done.
         const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
         gl::Buffer *buffer           = binding.getBuffer().get();
         if (!buffer)
         {
-            if (webglCompatibility || !state.areClientArraysEnabled())
-            {
-                // [WebGL 1.0] Section 6.5 Enabled Vertex Attributes and Range Checking
-                // If a vertex attribute is enabled as an array via enableVertexAttribArray but
-                // no buffer is bound to that attribute via bindBuffer and vertexAttribPointer,
-                // then calls to drawArrays or drawElements will generate an INVALID_OPERATION
-                // error.
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBuffer);
-                return false;
-            }
-            else if (attrib.pointer == nullptr)
-            {
-                // This is an application error that would normally result in a crash,
-                // but we catch it and return an error
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBufferPointer);
-                return false;
-            }
             continue;
         }
 
-        // This needs to come after the check for client arrays as even unused attributes cannot use
-        // client-side arrays
-        if (!program->isAttribLocationActive(attributeIndex))
-        {
-            continue;
-        }
-
-        // If we're drawing zero vertices, we have enough data.
-        if (vertexCount <= 0 || primcount <= 0)
-        {
-            continue;
-        }
+        ASSERT(program->isAttribLocationActive(attributeIndex));
 
         GLint maxVertexElement = 0;
         GLuint divisor         = binding.getDivisor();
