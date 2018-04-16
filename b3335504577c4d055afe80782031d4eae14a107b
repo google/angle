@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "36c9409c_e5c8eb81",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-04-16T19:16:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14e4ebd8_6c990001",
+      "range": {
+        "startLine": 45,
+        "startChar": 79,
+        "endLine": 45,
+        "endChar": 84
+      },
+      "revId": "b3335504577c4d055afe80782031d4eae14a107b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "994f5edb_06326bc8",
         "filename": "src/libANGLE/validationES1.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "b3335504577c4d055afe80782031d4eae14a107b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f829bdd3_6d2361db",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-04-16T19:16:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "994f5edb_06326bc8",
+      "range": {
+        "startLine": 52,
+        "startChar": 40,
+        "endLine": 52,
+        "endChar": 49
+      },
+      "revId": "b3335504577c4d055afe80782031d4eae14a107b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -119,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "607493e5_bd562a24",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-04-16T19:16:54Z",
+      "side": 1,
+      "message": "Do you mean ANGLE_VALIDATION_ERR? Since this is a static utility function it needs to be in the anonymous namespace, while ANGLE_VALIDATION_ERR assumes that we are in the gl namespace. What should we do here?",
+      "parentUuid": "53c6e68e_78acf5e5",
+      "range": {
+        "startLine": 56,
+        "startChar": 58,
+        "endLine": 56,
+        "endChar": 82
+      },
+      "revId": "b3335504577c4d055afe80782031d4eae14a107b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98c1f2b1_3b23e40c",
         "filename": "src/tests/gl_tests/gles1/ClientStateEnable.cpp",
         "patchSetId": 3
@@ -133,6 +205,24 @@
       "revId": "b3335504577c4d055afe80782031d4eae14a107b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36d0ad62_32224341",
+        "filename": "src/tests/gl_tests/gles1/ClientStateEnable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-04-16T19:16:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "98c1f2b1_3b23e40c",
+      "revId": "b3335504577c4d055afe80782031d4eae14a107b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
