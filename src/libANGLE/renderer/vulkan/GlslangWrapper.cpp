@@ -120,17 +120,29 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     // Parse attribute locations and replace them in the vertex shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
     // TODO(jmadill): Also do the same for ESSL 3 fragment outputs.
-    for (const auto &attribute : programState.getAttributes())
+    for (const sh::Attribute &attribute : programState.getAttributes())
     {
-        if (!attribute.active)
-        {
-            InsertQualifierSpecifierString(&vertexSource, attribute.name, "");
-            continue;
-        }
+        // Warning: If we endup supporting ES 3.0 shaders and up, Program::linkAttributes is going
+        // to bring us all attributes in this list instead of only the active ones.
+        ASSERT(attribute.active);
 
         std::string locationString = "location = " + Str(attribute.location);
         InsertLayoutSpecifierString(&vertexSource, attribute.name, locationString);
         InsertQualifierSpecifierString(&vertexSource, attribute.name, "in");
+    }
+
+    // The attributes in the programState could have been filled with active attributes only
+    // depending on the shader version. If there is inactive attributes left, we have to remove
+    // their @@ QUALIFIER and @@ LAYOUT markers.
+    for (const sh::Attribute &attribute : glVertexShader->getAllAttributes(glContext))
+    {
+        if (attribute.active)
+        {
+            continue;
+        }
+
+        InsertLayoutSpecifierString(&vertexSource, attribute.name, "");
+        InsertQualifierSpecifierString(&vertexSource, attribute.name, "");
     }
 
     // Assign varying locations.

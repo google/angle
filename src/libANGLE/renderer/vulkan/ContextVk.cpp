@@ -390,7 +390,7 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                                               glState.getFarPlane());
                 break;
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
-                WARN() << "DIRTY_BIT_DEPTH_RANGE unimplemented";
+                mPipelineDesc->updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
                 break;
             case gl::State::DIRTY_BIT_BLEND_ENABLED:
                 mPipelineDesc->updateBlendEnabled(glState.isBlendEnabled());

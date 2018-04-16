@@ -269,6 +269,7 @@ class PipelineDesc final
                              Pipeline *pipelineOut) const;
 
     void updateViewport(const gl::Rectangle &viewport, float nearPlane, float farPlane);
+    void updateDepthRange(float nearPlane, float farPlane);
 
     // Shader stage info
     const ShaderStageInfo &getShaderStageInfo() const;

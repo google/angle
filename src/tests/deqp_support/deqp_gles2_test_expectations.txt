@@ -320,7 +320,6 @@
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.unused_uniforms.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.random.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.read_pixels.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.depth_range.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.dither.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.state_query.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP

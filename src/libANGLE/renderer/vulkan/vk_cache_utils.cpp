@@ -647,8 +647,15 @@ void PipelineDesc::updateViewport(const gl::Rectangle &viewport, float nearPlane
     mViewport.y        = static_cast<float>(viewport.y);
     mViewport.width    = static_cast<float>(viewport.width);
     mViewport.height   = static_cast<float>(viewport.height);
-    mViewport.minDepth = nearPlane;
-    mViewport.maxDepth = farPlane;
+    updateDepthRange(nearPlane, farPlane);
+}
+
+void PipelineDesc::updateDepthRange(float nearPlane, float farPlane)
+{
+    // GLES2.0 Section 2.12.1: Each of n and f are clamped to lie within [0, 1], as are all
+    // arguments of type clampf.
+    mViewport.minDepth = gl::clamp01(nearPlane);
+    mViewport.maxDepth = gl::clamp01(farPlane);
 }
 
 void PipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
