@@ -232,6 +232,30 @@
     },
     {
       "key": {
+        "uuid": "0a2ebc8b_4f502e6a",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-16T19:55:37Z",
+      "side": 1,
+      "message": "sorry this got mangled. should be nit: can you take this out and store it in a temporary variable",
+      "parentUuid": "16e2fccd_e4e23885",
+      "range": {
+        "startLine": 685,
+        "startChar": 17,
+        "endLine": 685,
+        "endChar": 79
+      },
+      "revId": "837e93e79c796e506bfc3fab9e90fe7da2eaf6a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "060a2125_0adcd8ae",
         "filename": "src/libANGLE/validationES1.cpp",
         "patchSetId": 1
@@ -243,6 +267,30 @@
       "writtenOn": "2018-04-16T19:55:12Z",
       "side": 1,
       "message": "context-\u003evertexArrayIndex(ClientVertexArrayType::TextureCoord)",
+      "range": {
+        "startLine": 788,
+        "startChar": 40,
+        "endLine": 788,
+        "endChar": 98
+      },
+      "revId": "837e93e79c796e506bfc3fab9e90fe7da2eaf6a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08535279_8ed29c42",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-16T19:55:37Z",
+      "side": 1,
+      "message": "nit: can you take this out and store it in a temporary variable",
+      "parentUuid": "060a2125_0adcd8ae",
       "range": {
         "startLine": 788,
         "startChar": 40,
