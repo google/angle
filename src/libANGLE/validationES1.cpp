@@ -20,7 +20,7 @@
         return false;                                                 \
     }
 
-namespace
+namespace gl
 {
 
 bool ValidateAlphaFuncCommon(gl::Context *context, gl::AlphaTestFunc func)
@@ -37,12 +37,35 @@ bool ValidateAlphaFuncCommon(gl::Context *context, gl::AlphaTestFunc func)
         case gl::AlphaTestFunc::NotEqual:
             return true;
         default:
-            context->handleError(gl::InvalidEnum() << gl::kErrorEnumNotSupported);
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
             return false;
     }
 }
 
-}  // anonymous namespace
+bool ValidateClientStateCommon(gl::Context *context, gl::ClientVertexArrayType arrayType)
+{
+    ANGLE_VALIDATE_IS_GLES1(context);
+    switch (arrayType)
+    {
+        case gl::ClientVertexArrayType::Vertex:
+        case gl::ClientVertexArrayType::Normal:
+        case gl::ClientVertexArrayType::Color:
+        case gl::ClientVertexArrayType::TextureCoord:
+            return true;
+        case gl::ClientVertexArrayType::PointSize:
+            if (!context->getExtensions().pointSizeArray)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), PointSizeArrayExtensionNotEnabled);
+                return false;
+            }
+            return true;
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidClientState);
+            return false;
+    }
+}
+
+}  // namespace gl
 
 namespace gl
 {
@@ -129,16 +152,14 @@ bool ValidateDepthRangex(Context *context, GLfixed n, GLfixed f)
     return true;
 }
 
-bool ValidateDisableClientState(Context *context, GLenum array)
+bool ValidateDisableClientState(Context *context, ClientVertexArrayType arrayType)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateClientStateCommon(context, arrayType);
 }
 
-bool ValidateEnableClientState(Context *context, GLenum array)
+bool ValidateEnableClientState(Context *context, ClientVertexArrayType arrayType)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateClientStateCommon(context, arrayType);
 }
 
 bool ValidateFogf(Context *context, GLenum pname, GLfloat param)
@@ -933,4 +954,5 @@ bool ValidateTexGenxOES(Context *context, GLenum coord, GLenum pname, GLfixed pa
     UNIMPLEMENTED();
     return true;
 }
-}
+
+}  // namespace gl

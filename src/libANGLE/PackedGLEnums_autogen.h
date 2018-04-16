@@ -84,6 +84,22 @@ template <>
 BufferUsage FromGLenum<BufferUsage>(GLenum from);
 GLenum ToGLenum(BufferUsage from);
 
+enum class ClientVertexArrayType : uint8_t
+{
+    Color        = 0,
+    Normal       = 1,
+    PointSize    = 2,
+    TextureCoord = 3,
+    Vertex       = 4,
+
+    InvalidEnum = 5,
+    EnumCount   = 5,
+};
+
+template <>
+ClientVertexArrayType FromGLenum<ClientVertexArrayType>(GLenum from);
+GLenum ToGLenum(ClientVertexArrayType from);
+
 enum class CullFaceMode : uint8_t
 {
     Back         = 0,

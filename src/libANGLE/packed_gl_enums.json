@@ -37,6 +37,14 @@
         "StreamDraw": "GL_STREAM_DRAW",
         "StreamRead": "GL_STREAM_READ"
     },
+    "ClientVertexArrayType":
+    {
+        "Vertex": "GL_VERTEX_ARRAY",
+        "Normal": "GL_NORMAL_ARRAY",
+        "Color": "GL_COLOR_ARRAY",
+        "PointSize": "GL_POINT_SIZE_ARRAY_OES",
+        "TextureCoord": "GL_TEXTURE_COORD_ARRAY"
+    },
     "CullFaceMode":
     {
         "Back": "GL_BACK",

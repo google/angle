@@ -827,6 +827,16 @@ bool State::getEnableFeature(GLenum feature) const
         // GLES1 emulation
         case GL_ALPHA_TEST:
             return mGLES1State.mAlphaTestEnabled;
+        case GL_VERTEX_ARRAY:
+            return mGLES1State.mVertexArrayEnabled;
+        case GL_NORMAL_ARRAY:
+            return mGLES1State.mNormalArrayEnabled;
+        case GL_COLOR_ARRAY:
+            return mGLES1State.mColorArrayEnabled;
+        case GL_POINT_SIZE_ARRAY_OES:
+            return mGLES1State.mPointSizeArrayEnabled;
+        case GL_TEXTURE_COORD_ARRAY:
+            return mGLES1State.mTexCoordArrayEnabled[mGLES1State.mClientActiveTexture];
 
         default:
             UNREACHABLE();

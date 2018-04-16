@@ -374,6 +374,9 @@ struct Extensions
 
     // GL_EXT_geometry_shader
     bool geometryShader;
+
+    // GLES1 emulation: GLES1 extensions
+    bool pointSizeArray;
 };
 
 struct ExtensionInfo

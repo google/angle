@@ -794,7 +794,14 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
 
         // GLES1 emulation: GLES1-specific caps
         case GL_ALPHA_TEST:
+        case GL_VERTEX_ARRAY:
+        case GL_NORMAL_ARRAY:
+        case GL_COLOR_ARRAY:
+        case GL_TEXTURE_COORD_ARRAY:
             return context->getClientVersion() < Version(2, 0);
+        case GL_POINT_SIZE_ARRAY_OES:
+            return context->getClientVersion() < Version(2, 0) &&
+                   context->getExtensions().pointSizeArray;
 
         default:
             return false;

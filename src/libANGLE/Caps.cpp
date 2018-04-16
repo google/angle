@@ -226,7 +226,8 @@ Extensions::Extensions()
       robustResourceInitialization(false),
       programCacheControl(false),
       textureRectangle(false),
-      geometryShader(false)
+      geometryShader(false),
+      pointSizeArray(false)
 {
 }
 
@@ -698,6 +699,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_program_cache_control"] = esOnlyExtension(&Extensions::programCacheControl);
         map["GL_ANGLE_texture_rectangle"] = enableableExtension(&Extensions::textureRectangle);
         map["GL_EXT_geometry_shader"] = enableableExtension(&Extensions::geometryShader);
+        // GLES1 extensinos
+        map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArray);
         // clang-format on
 
         return map;

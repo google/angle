@@ -64,6 +64,7 @@ ERRMSG(InvalidBorder, "Border must be 0.");
 ERRMSG(InvalidBufferTypes, "Invalid buffer target enum.");
 ERRMSG(InvalidBufferUsage, "Invalid buffer usage enum.");
 ERRMSG(InvalidClearMask, "Invalid mask bits.");
+ERRMSG(InvalidClientState, "Invalid client vertex array type.");
 ERRMSG(InvalidCombinedImageUnit,
        "Specified unit must be in [GL_TEXTURE0, GL_TEXTURE0 + GL_MAX_COMBINED_IMAGE_UNITS)");
 ERRMSG(InvalidConstantColor,
@@ -172,6 +173,7 @@ ERRMSG(PixelPackBufferBoundForTransformFeedback,
 ERRMSG(
     PixelUnpackBufferBoundForTransformFeedback,
     "It is undefined behavior to use a pixel unpack buffer that is bound for transform feedback.");
+ERRMSG(PointSizeArrayExtensionNotEnabled, "GL_OES_point_size_array not enabled.");
 ERRMSG(ProgramDoesNotExist, "Program doesn't exist.");
 ERRMSG(ProgramNotBound, "A program must be bound.");
 ERRMSG(ProgramNotLinked, "Program not linked.");

@@ -264,8 +264,53 @@ void GLES1State::loadMatrix(const angle::Mat4 &m)
 
 void GLES1State::multMatrix(const angle::Mat4 &m)
 {
-    angle::Mat4 currentMatrix             = currentMatrixStack().back();
+    angle::Mat4 currentMatrix   = currentMatrixStack().back();
     currentMatrixStack().back() = currentMatrix.product(m);
+}
+
+void GLES1State::setClientStateEnabled(ClientVertexArrayType clientState, bool enable)
+{
+    switch (clientState)
+    {
+        case ClientVertexArrayType::Vertex:
+            mVertexArrayEnabled = enable;
+            break;
+        case ClientVertexArrayType::Normal:
+            mNormalArrayEnabled = enable;
+            break;
+        case ClientVertexArrayType::Color:
+            mColorArrayEnabled = enable;
+            break;
+        case ClientVertexArrayType::PointSize:
+            mPointSizeArrayEnabled = enable;
+            break;
+        case ClientVertexArrayType::TextureCoord:
+            mTexCoordArrayEnabled[mClientActiveTexture] = enable;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+bool GLES1State::isClientStateEnabled(ClientVertexArrayType clientState) const
+{
+    switch (clientState)
+    {
+        case ClientVertexArrayType::Vertex:
+            return mVertexArrayEnabled;
+        case ClientVertexArrayType::Normal:
+            return mNormalArrayEnabled;
+        case ClientVertexArrayType::Color:
+            return mColorArrayEnabled;
+        case ClientVertexArrayType::PointSize:
+            return mPointSizeArrayEnabled;
+        case ClientVertexArrayType::TextureCoord:
+            return mTexCoordArrayEnabled[mClientActiveTexture];
+        default:
+            UNREACHABLE();
+            return false;
+    }
 }
 
 }  // namespace gl

@@ -76,8 +76,14 @@
     "glCullFace": {
         "mode": "CullFaceMode"
     },
+    "glDisableClientState": {
+        "array": "ClientVertexArrayType"
+    },
     "glEGLImageTargetTexture2DOES": {
         "target": "TextureType"
+    },
+    "glEnableClientState": {
+        "array": "ClientVertexArrayType"
     },
     "glFlushMappedBufferRange": {
         "target": "BufferBinding"

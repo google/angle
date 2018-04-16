@@ -2978,6 +2978,10 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions, bool rob
 {
     mCaps = mImplementation->getNativeCaps();
 
+    mExtensions = mImplementation->getNativeExtensions();
+
+    mLimitations = mImplementation->getNativeLimitations();
+
     // GLES1 emulation: Initialize caps (Table 6.20 / 6.22 in the ES 1.1 spec)
     if (getClientVersion() < Version(2, 0))
     {
@@ -2987,11 +2991,10 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions, bool rob
         mCaps.maxModelviewMatrixStackDepth  = Caps::GlobalMatrixStackDepth;
         mCaps.maxProjectionMatrixStackDepth = Caps::GlobalMatrixStackDepth;
         mCaps.maxTextureMatrixStackDepth    = Caps::GlobalMatrixStackDepth;
+
+        // Default extensions for GLES1
+        mExtensions.pointSizeArray = true;
     }
-
-    mExtensions = mImplementation->getNativeExtensions();
-
-    mLimitations = mImplementation->getNativeLimitations();
 
     if (getClientVersion() < Version(3, 0))
     {

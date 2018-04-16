@@ -95,14 +95,14 @@ void Context::depthRangex(GLfixed n, GLfixed f)
     UNIMPLEMENTED();
 }
 
-void Context::disableClientState(GLenum clientState)
+void Context::disableClientState(ClientVertexArrayType clientState)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setClientStateEnabled(clientState, false);
 }
 
-void Context::enableClientState(GLenum clientState)
+void Context::enableClientState(ClientVertexArrayType clientState)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setClientStateEnabled(clientState, true);
 }
 
 void Context::fogf(GLenum pname, GLfloat param)

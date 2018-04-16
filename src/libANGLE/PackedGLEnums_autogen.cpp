@@ -192,6 +192,46 @@ GLenum ToGLenum(BufferUsage from)
 }
 
 template <>
+ClientVertexArrayType FromGLenum<ClientVertexArrayType>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_COLOR_ARRAY:
+            return ClientVertexArrayType::Color;
+        case GL_NORMAL_ARRAY:
+            return ClientVertexArrayType::Normal;
+        case GL_POINT_SIZE_ARRAY_OES:
+            return ClientVertexArrayType::PointSize;
+        case GL_TEXTURE_COORD_ARRAY:
+            return ClientVertexArrayType::TextureCoord;
+        case GL_VERTEX_ARRAY:
+            return ClientVertexArrayType::Vertex;
+        default:
+            return ClientVertexArrayType::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(ClientVertexArrayType from)
+{
+    switch (from)
+    {
+        case ClientVertexArrayType::Color:
+            return GL_COLOR_ARRAY;
+        case ClientVertexArrayType::Normal:
+            return GL_NORMAL_ARRAY;
+        case ClientVertexArrayType::PointSize:
+            return GL_POINT_SIZE_ARRAY_OES;
+        case ClientVertexArrayType::TextureCoord:
+            return GL_TEXTURE_COORD_ARRAY;
+        case ClientVertexArrayType::Vertex:
+            return GL_VERTEX_ARRAY;
+        default:
+            UNREACHABLE();
+            return GL_NONE;
+    }
+}
+
+template <>
 CullFaceMode FromGLenum<CullFaceMode>(GLenum from)
 {
     switch (from)
