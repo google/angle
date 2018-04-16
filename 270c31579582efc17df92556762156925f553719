@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d396f3c0_097186e1",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T21:45:58Z",
+      "side": 1,
+      "message": "nit: comment needs updating.",
+      "revId": "270c31579582efc17df92556762156925f553719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65b77de9_e730993a",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T21:45:58Z",
+      "side": 1,
+      "message": "This could overflow because mOffset is arbitrary.",
+      "revId": "270c31579582efc17df92556762156925f553719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f37dd13c_20119996",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T21:45:58Z",
+      "side": 1,
+      "message": "nit: static assert that there can\u0027t be overflows here.",
+      "revId": "270c31579582efc17df92556762156925f553719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
