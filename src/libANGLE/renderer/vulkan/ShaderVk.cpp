@@ -26,7 +26,7 @@ ShCompileOptions ShaderVk::prepareSourceAndReturnOptions(std::stringstream *sour
                                                          std::string *sourcePath)
 {
     *sourceStream << mData.getSource();
-    return 0;
+    return SH_INITIALIZE_UNINITIALIZED_LOCALS;
 }
 
 bool ShaderVk::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog)
