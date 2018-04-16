@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6cd1aa01_cd39ae91",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-16T17:17:41Z",
+      "side": 1,
+      "message": "We have many uniform sampler test in dEQP left to enable blocked on the implementation of that here. Should you open an issue and link it here?",
+      "range": {
+        "startLine": 434,
+        "startChar": 8,
+        "endLine": 436,
+        "endChar": 15
+      },
+      "revId": "d4eed3c40b282553114fab167e81624d55429db8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
