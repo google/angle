@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db3da08a_95cb6d3e",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-16T17:43:41Z",
+      "side": 1,
+      "message": "I didn\u0027t quite catch why this is needed in this CL. Is it possible this snuck in by accident?",
+      "range": {
+        "startLine": 379,
+        "startChar": 4,
+        "endLine": 379,
+        "endChar": 24
+      },
+      "revId": "749d780da363d7f181ce97cbe3d0715f6f638c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae459273_dd2ef81d",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-16T17:43:41Z",
+      "side": 1,
+      "message": "I think you need the GLES 1 checks in here.",
+      "range": {
+        "startLine": 150,
+        "startChar": 11,
+        "endLine": 150,
+        "endChar": 36
+      },
+      "revId": "749d780da363d7f181ce97cbe3d0715f6f638c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37c10162_24d2c241",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-16T17:43:41Z",
+      "side": 1,
+      "message": "I think you need the GLES 1 checks in here.",
+      "range": {
+        "startLine": 155,
+        "startChar": 11,
+        "endLine": 155,
+        "endChar": 36
+      },
+      "revId": "749d780da363d7f181ce97cbe3d0715f6f638c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
