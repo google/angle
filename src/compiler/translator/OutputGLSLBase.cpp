@@ -214,7 +214,16 @@ void TOutputGLSLBase::writeLayoutQualifier(TIntermTyped *variable)
     out << ") ";
 }
 
-const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier, const TSymbol *symbol)
+void TOutputGLSLBase::writeQualifier(TQualifier qualifier, const TSymbol *symbol)
+{
+    const char *result = mapQualifierToString(qualifier);
+    if (result && result[0] != '\0')
+    {
+        objSink() << result << " ";
+    }
+}
+
+const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
 {
     if (sh::IsGLSL410OrOlder(mOutput) && mShaderVersion >= 300 &&
         (mCompileOptions & SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3) != 0)
@@ -265,11 +274,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type, const TSymbol *symbol
     }
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
-        const char *qualifierString = mapQualifierToString(qualifier, symbol);
-        if (qualifierString && qualifierString[0] != '\0')
-        {
-            out << qualifierString << " ";
-        }
+        writeQualifier(qualifier, symbol);
     }
 
     const TMemoryQualifier &memoryQualifier = type.getMemoryQualifier();
