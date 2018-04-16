@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "3ebc5c6e_e8d78c59",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-16T18:00:10Z",
+      "side": 1,
+      "message": "OK - can you also explain you\u0027re adding this extension in this CL in the description? Usually we would make a separate CL, but seems fine.",
+      "parentUuid": "ee9c9f71_d78fd2e5",
+      "range": {
+        "startLine": 379,
+        "startChar": 4,
+        "endLine": 379,
+        "endChar": 24
+      },
+      "revId": "749d780da363d7f181ce97cbe3d0715f6f638c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ae459273_dd2ef81d",
         "filename": "src/libANGLE/validationES1.cpp",
         "patchSetId": 2
