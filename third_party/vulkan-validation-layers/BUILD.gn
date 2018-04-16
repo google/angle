@@ -284,8 +284,8 @@ if (!is_android) {
     sources = [
       "src/loader/cJSON.c",
       "src/loader/cJSON.h",
-      "src/loader/debug_report.c",
-      "src/loader/debug_report.h",
+      "src/loader/debug_utils.c",
+      "src/loader/debug_utils.h",
       "src/loader/dev_ext_trampoline.c",
       "src/loader/extension_manual.c",
       "src/loader/extension_manual.h",

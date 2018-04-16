@@ -345,3 +345,12 @@
 2161 VULKAN : dEQP-GLES2.functional.default_vertex_attrib.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.lifetime.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.debug_marker.* = SKIP
+
+// TODO(lucferron) This is a regression tracked in http://anglebug.com/2484
+2484 VULKAN WIN LINUX ANDROID : dEQP-GLES2.functional.color_clear.short_scissored_rgb = SKIP
+2484 VULKAN WIN LINUX ANDROID : dEQP-GLES2.functional.color_clear.scissored_rgb = SKIP
+2484 VULKAN WIN LINUX ANDROID : dEQP-GLES2.functional.color_clear.scissored_rgba = SKIP
+2484 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.depth_scissored = SKIP
+2484 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.stencil_scissored = SKIP
+2484 VULKAN : dEQP-GLES2.functional.depth_stencil_clear.depth_stencil_scissored = SKIP
+2484 VULKAN : dEQP-GLES2.functional.fragment_ops.scissor.clear_color = SKIP
