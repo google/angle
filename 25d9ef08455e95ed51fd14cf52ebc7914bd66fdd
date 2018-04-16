@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7cc0463_f0c80cad",
+        "filename": "src/compiler/translator/OutputGLSLBase.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T18:08:20Z",
+      "side": 1,
+      "message": "The translator uses the pool-alllocated TString instead of std::string. But here could we make this a \"writeQualifier\" function that gets out from objSink() and writes to it directly?",
+      "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efaee9db_a88c1f2d",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T18:08:20Z",
+      "side": 1,
+      "message": "nit: use kMarkerEnd instead?",
+      "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a102801c_b70fbde8",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T18:08:20Z",
+      "side": 1,
+      "message": "nit: this is unused.",
+      "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "722d2d01_a43b9ce6",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T18:08:20Z",
+      "side": 1,
+      "message": "nit: you could use std::string::erase here.",
+      "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
