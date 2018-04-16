@@ -145,6 +145,8 @@ void QueryProgramInterfaceiv(const Program *program,
                              GLenum pname,
                              GLint *params);
 
+ClientVertexArrayType ParamToVertexArrayType(GLenum param);
+
 }  // namespace gl
 
 namespace egl

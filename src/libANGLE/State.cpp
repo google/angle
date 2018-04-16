@@ -23,6 +23,7 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
+#include "libANGLE/queryutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
 
 namespace
@@ -2361,7 +2362,7 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
     return NoError();
 }
 
-void State::getPointerv(GLenum pname, void **params) const
+void State::getPointerv(const Context *context, GLenum pname, void **params) const
 {
     switch (pname)
     {
@@ -2371,6 +2372,15 @@ void State::getPointerv(GLenum pname, void **params) const
         case GL_DEBUG_CALLBACK_USER_PARAM:
             *params = const_cast<void *>(mDebug.getUserParam());
             break;
+        case GL_VERTEX_ARRAY_POINTER:
+        case GL_NORMAL_ARRAY_POINTER:
+        case GL_COLOR_ARRAY_POINTER:
+        case GL_TEXTURE_COORD_ARRAY_POINTER:
+        case GL_POINT_SIZE_ARRAY_POINTER_OES:
+            QueryVertexAttribPointerv(getVertexArray()->getVertexAttribute(
+                                          context->vertexArrayIndex(ParamToVertexArrayType(pname))),
+                                      GL_VERTEX_ATTRIB_ARRAY_POINTER, params);
+            return;
         default:
             UNREACHABLE();
             break;

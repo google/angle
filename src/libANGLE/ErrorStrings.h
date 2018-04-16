@@ -99,6 +99,7 @@ ERRMSG(InvalidMultitextureUnit,
 ERRMSG(InvalidName, "Invalid name.");
 ERRMSG(InvalidNameCharacters, "Name contains invalid characters.");
 ERRMSG(InvalidPname, "Invalid pname.");
+ERRMSG(InvalidPointerQuery, "Invalid pointer query.");
 ERRMSG(InvalidPrecision, "Invalid or unsupported precision type.");
 ERRMSG(InvalidProgramName, "Program object expected.");
 ERRMSG(InvalidProjectionMatrix,
@@ -129,6 +130,9 @@ ERRMSG(InvalidType, "Invalid type.");
 ERRMSG(InvalidTypePureInt, "Invalid type, should be integer");
 ERRMSG(InvalidUnpackAlignment, "Unpack alignment must be 1, 2, 4, or 8.");
 ERRMSG(InvalidVertexAttrSize, "Vertex attribute size must be 1, 2, 3, or 4.");
+ERRMSG(InvalidVertexPointerSize, "Size for built-in vertex attribute is outside allowed range.");
+ERRMSG(InvalidVertexPointerStride, "Invalid stride for built-in vertex attribute.");
+ERRMSG(InvalidVertexPointerType, "Invalid type for built-in vertex attribute.");
 ERRMSG(InvalidWidth, "Invalid width.");
 ERRMSG(InvalidWrapModeTexture, "Invalid wrap mode for texture type.");
 ERRMSG(LevelNotZero, "Texture level must be zero.");

@@ -87,7 +87,8 @@ void Context::color4x(GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha)
 
 void Context::colorPointer(GLint size, GLenum type, GLsizei stride, const void *ptr)
 {
-    UNIMPLEMENTED();
+    vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::Color), size, type, GL_FALSE,
+                        stride, ptr);
 }
 
 void Context::depthRangex(GLfixed n, GLfixed f)
@@ -98,11 +99,13 @@ void Context::depthRangex(GLfixed n, GLfixed f)
 void Context::disableClientState(ClientVertexArrayType clientState)
 {
     mGLState.gles1().setClientStateEnabled(clientState, false);
+    disableVertexAttribArray(vertexArrayIndex(clientState));
 }
 
 void Context::enableClientState(ClientVertexArrayType clientState)
 {
     mGLState.gles1().setClientStateEnabled(clientState, true);
+    enableVertexAttribArray(vertexArrayIndex(clientState));
 }
 
 void Context::fogf(GLenum pname, GLfloat param)
@@ -319,7 +322,8 @@ void Context::normal3x(GLfixed nx, GLfixed ny, GLfixed nz)
 
 void Context::normalPointer(GLenum type, GLsizei stride, const void *ptr)
 {
-    UNIMPLEMENTED();
+    vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::Normal), 3, type, GL_FALSE, stride,
+                        ptr);
 }
 
 void Context::orthof(GLfloat left,
@@ -418,7 +422,8 @@ void Context::shadeModel(GLenum mode)
 
 void Context::texCoordPointer(GLint size, GLenum type, GLsizei stride, const void *ptr)
 {
-    UNIMPLEMENTED();
+    vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::TextureCoord), size, type, GL_FALSE,
+                        stride, ptr);
 }
 
 void Context::texEnvf(GLenum target, GLenum pname, GLfloat param)
@@ -474,7 +479,8 @@ void Context::translatex(GLfixed x, GLfixed y, GLfixed z)
 
 void Context::vertexPointer(GLint size, GLenum type, GLsizei stride, const void *ptr)
 {
-    UNIMPLEMENTED();
+    vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::Vertex), size, type, GL_FALSE,
+                        stride, ptr);
 }
 
 // GL_OES_draw_texture
@@ -542,7 +548,8 @@ void Context::weightPointer(GLint size, GLenum type, GLsizei stride, const void 
 // GL_OES_point_size_array
 void Context::pointSizePointer(GLenum type, GLsizei stride, const void *ptr)
 {
-    UNIMPLEMENTED();
+    vertexAttribPointer(vertexArrayIndex(ClientVertexArrayType::PointSize), 1, type, GL_FALSE,
+                        stride, ptr);
 }
 
 // GL_OES_query_matrix
@@ -598,4 +605,25 @@ void Context::texGenxv(GLenum coord, GLenum pname, const GLint *params)
     UNIMPLEMENTED();
 }
 
+int Context::vertexArrayIndex(ClientVertexArrayType type) const
+{
+    switch (type)
+    {
+        case ClientVertexArrayType::Vertex:
+            return 0;
+        case ClientVertexArrayType::Normal:
+            return 1;
+        case ClientVertexArrayType::Color:
+            return 2;
+        case ClientVertexArrayType::PointSize:
+            return 3;
+        case ClientVertexArrayType::TextureCoord:
+            return 4 + mGLState.gles1().getClientTextureUnit();
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+// static
 }  // namespace gl
