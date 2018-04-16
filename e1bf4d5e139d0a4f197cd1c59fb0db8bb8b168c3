@@ -34,6 +34,47 @@
       "revId": "e1bf4d5e139d0a4f197cd1c59fb0db8bb8b168c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d48e5280_da1339eb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-16T18:01:37Z",
+      "side": 1,
+      "message": "It\u0027s in the GLES spec.. you should include a reference.",
+      "parentUuid": "ac372624_e6747d9f",
+      "revId": "e1bf4d5e139d0a4f197cd1c59fb0db8bb8b168c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "865f3dab_89b8e1c3",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1311,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-16T18:01:37Z",
+      "side": 1,
+      "message": "let\u0027s investigate this and try to get a small repro case.",
+      "range": {
+        "startLine": 1309,
+        "startChar": 4,
+        "endLine": 1311,
+        "endChar": 31
+      },
+      "revId": "e1bf4d5e139d0a4f197cd1c59fb0db8bb8b168c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
