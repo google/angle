@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb080ca0_40b0eb89",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1674,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "Here and in other places: use static_cast.",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d44f10d6_c14d1430",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1742,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "Why was the const removed?",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ac5877a_9f69c121",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1757,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "539792db_7b3b03a4",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1461,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "This becomes private after the comments are addressed.",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2580084_66dab69f",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "I think these entry points should jsut validate what\u0027s in the GLES 1 specification and at most assert that the other validation is true.\n\nAlso a non-speced max stride check?\n\nHere size should be checked to be exactly 4.",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfc951c0_91099732",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "nit: need to validate pname?",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b96ba72f_441271fc",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7696a4f_5045f76c",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5fd937e_e0a51bb0",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d29ac70e_9400ee1f",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-16T19:58:25Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "e35e773c92325fbe5397f5579ce544774a45b0a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
