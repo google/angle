@@ -46,6 +46,30 @@
       "revId": "d4eed3c40b282553114fab167e81624d55429db8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6320db26_fdd0b271",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-16T19:32:57Z",
+      "side": 1,
+      "message": "In that case, should you enable these tests in dEQP along with this CL ?",
+      "parentUuid": "9ac87482_62058c4d",
+      "range": {
+        "startLine": 434,
+        "startChar": 8,
+        "endLine": 436,
+        "endChar": 15
+      },
+      "revId": "d4eed3c40b282553114fab167e81624d55429db8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
