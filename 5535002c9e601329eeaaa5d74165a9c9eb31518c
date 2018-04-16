@@ -22,6 +22,30 @@
       "revId": "5535002c9e601329eeaaa5d74165a9c9eb31518c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "183a484d_eaca9d3c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-16T18:54:25Z",
+      "side": 1,
+      "message": "It only states that it must be between 0.0 and 1.0. I added a ref to that.",
+      "parentUuid": "0d6e626c_7df830e8",
+      "range": {
+        "startLine": 655,
+        "startChar": 4,
+        "endLine": 655,
+        "endChar": 71
+      },
+      "revId": "5535002c9e601329eeaaa5d74165a9c9eb31518c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
