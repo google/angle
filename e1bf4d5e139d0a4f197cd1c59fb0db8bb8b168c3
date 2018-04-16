@@ -16,6 +16,24 @@
       "revId": "e1bf4d5e139d0a4f197cd1c59fb0db8bb8b168c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac372624_e6747d9f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-16T18:00:17Z",
+      "side": 1,
+      "message": "Can\u0027t find anything in the spec for that. It just makes sense that it counts as an output since its an output.",
+      "parentUuid": "d750f688_288c855f",
+      "revId": "e1bf4d5e139d0a4f197cd1c59fb0db8bb8b168c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
