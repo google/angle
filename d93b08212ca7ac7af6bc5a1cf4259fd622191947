@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36c2cee4_6464203f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-16T19:04:24Z",
+      "side": 1,
+      "message": "can you ref the GL spec? also can use clamp01. also this can be moved to the front-end (summarizing in-person discussion)",
+      "range": {
+        "startLine": 655,
+        "startChar": 0,
+        "endLine": 657,
+        "endChar": 50
+      },
+      "revId": "d93b08212ca7ac7af6bc5a1cf4259fd622191947",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
