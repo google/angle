@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d238d980_3be96dfc",
+        "filename": "src/compiler/translator/OutputGLSLBase.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-16T18:48:59Z",
+      "side": 1,
+      "message": "If I do this suggested change, I won\u0027t be able to know if \"writeQualifier\" did output anything to the sink, and in the Vulkan implementation I won\u0027t have a choice to add the @@ QUALIFIER to every output even the empty ones, and this will have an effect on performance afterwards.",
+      "parentUuid": "c7cc0463_f0c80cad",
+      "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "efaee9db_a88c1f2d",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
         "patchSetId": 6
@@ -33,6 +51,24 @@
       "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "620df441_88aa106d",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-16T18:48:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efaee9db_a88c1f2d",
+      "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "348f12cc_cc7ec500",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-16T18:48:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a102801c_b70fbde8",
+      "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "722d2d01_a43b9ce6",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
         "patchSetId": 6
@@ -67,6 +121,24 @@
       "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a925ead8_5b73de47",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-16T18:48:59Z",
+      "side": 1,
+      "message": "Much better like this thanks",
+      "parentUuid": "722d2d01_a43b9ce6",
+      "revId": "25d9ef08455e95ed51fd14cf52ebc7914bd66fdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
