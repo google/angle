@@ -101,9 +101,13 @@ class DynamicDescriptorPool final : angle::NonCopyable
                                  uint32_t descriptorSetCount,
                                  VkDescriptorSet *descriptorSetsOut);
 
+    // For testing only!
+    void setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool);
+
   private:
     Error allocateNewPool(const VkDevice &device);
 
+    uint32_t mMaxSetsPerPool;
     DescriptorPool mCurrentDescriptorSetPool;
     size_t mCurrentAllocatedDescriptorSetCount;
     uint32_t mUniformBufferDescriptorsPerSet;

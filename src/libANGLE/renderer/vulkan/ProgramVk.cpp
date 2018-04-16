@@ -431,7 +431,8 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
 
     if (linkedUniform.isSampler())
     {
-        UNIMPLEMENTED();
+        // We could potentially cache some indexing here. For now this is a no-op since the mapping
+        // is handled entirely in ContextVk.
         return;
     }
 

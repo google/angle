@@ -19,7 +19,7 @@ namespace vk
 namespace
 {
 // TODO(jmadill): Pick non-arbitrary max.
-constexpr uint32_t kDynamicDescriptorPoolMaxSets = 2048;
+constexpr uint32_t kDefaultDynamicDescriptorPoolMaxSets = 2048;
 
 constexpr VkBufferUsageFlags kLineLoopDynamicBufferUsage =
     (VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT);
@@ -239,7 +239,8 @@ void DynamicBuffer::setMinimumSizeForTesting(size_t minSize)
 
 // DynamicDescriptorPool implementation.
 DynamicDescriptorPool::DynamicDescriptorPool()
-    : mCurrentAllocatedDescriptorSetCount(0),
+    : mMaxSetsPerPool(kDefaultDynamicDescriptorPoolMaxSets),
+      mCurrentAllocatedDescriptorSetCount(0),
       mUniformBufferDescriptorsPerSet(0),
       mCombinedImageSamplerDescriptorsPerSet(0)
 {
@@ -274,7 +275,7 @@ Error DynamicDescriptorPool::allocateDescriptorSets(
     uint32_t descriptorSetCount,
     VkDescriptorSet *descriptorSetsOut)
 {
-    if (descriptorSetCount + mCurrentAllocatedDescriptorSetCount > kDynamicDescriptorPoolMaxSets)
+    if (descriptorSetCount + mCurrentAllocatedDescriptorSetCount > mMaxSetsPerPool)
     {
         RendererVk *renderer = contextVk->getRenderer();
         Serial currentSerial = renderer->getCurrentQueueSerial();
@@ -303,17 +304,16 @@ Error DynamicDescriptorPool::allocateNewPool(const VkDevice &device)
     VkDescriptorPoolSize poolSizes[DescriptorPoolIndexCount];
     poolSizes[UniformBufferIndex].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
     poolSizes[UniformBufferIndex].descriptorCount =
-        mUniformBufferDescriptorsPerSet * kDynamicDescriptorPoolMaxSets / DescriptorPoolIndexCount;
+        mUniformBufferDescriptorsPerSet * mMaxSetsPerPool;
     poolSizes[TextureIndex].type            = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[TextureIndex].descriptorCount = mCombinedImageSamplerDescriptorsPerSet *
-                                              kDynamicDescriptorPoolMaxSets /
-                                              DescriptorPoolIndexCount;
+    poolSizes[TextureIndex].descriptorCount =
+        mCombinedImageSamplerDescriptorsPerSet * mMaxSetsPerPool;
 
     VkDescriptorPoolCreateInfo descriptorPoolInfo;
     descriptorPoolInfo.sType   = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
     descriptorPoolInfo.pNext   = nullptr;
     descriptorPoolInfo.flags   = 0;
-    descriptorPoolInfo.maxSets = kDynamicDescriptorPoolMaxSets;
+    descriptorPoolInfo.maxSets = mMaxSetsPerPool;
 
     // Reserve pools for uniform blocks and textures.
     descriptorPoolInfo.poolSizeCount = DescriptorPoolIndexCount;
@@ -324,6 +324,12 @@ Error DynamicDescriptorPool::allocateNewPool(const VkDevice &device)
     return NoError();
 }
 
+void DynamicDescriptorPool::setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool)
+{
+    mMaxSetsPerPool = maxSetsPerPool;
+}
+
+// LineLoopHelper implementation.
 LineLoopHelper::LineLoopHelper()
     : mDynamicIndexBuffer(kLineLoopDynamicBufferUsage, kLineLoopDynamicBufferMinSize)
 {
