@@ -454,6 +454,26 @@ gl::Error FramebufferVk::clearAttachmentsWithScissorRegion(const gl::Context *co
         ANGLE_TRY(node->beginInsideRenderPassRecording(renderer, &commandBuffer));
     }
 
+    // TODO(jmadill): Cube map attachments. http://anglebug.com/2470
+    // We assume for now that we always need to clear only 1 layer starting at the
+    // baseArrayLayer 0, this might need to change depending how we'll implement
+    // cube maps, 3d textures and array textures.
+    VkClearRect clearRect;
+    clearRect.baseArrayLayer = 0;
+    clearRect.layerCount     = 1;
+
+    // When clearing, the scissor region must be clipped to the renderArea per the validation rules
+    // in Vulkan.
+    gl::Rectangle intersection;
+    if (!ClipRectangle(contextVk->getGLState().getScissor(), node->getRenderPassRenderArea(),
+                       &intersection))
+    {
+        // There is nothing to clear since the scissor is outside of the render area.
+        return gl::NoError();
+    }
+
+    clearRect.rect = gl_vk::GetRect(intersection);
+
     gl::AttachmentArray<VkClearAttachment> clearAttachments;
     int clearAttachmentIndex = 0;
 
@@ -499,26 +519,6 @@ gl::Error FramebufferVk::clearAttachmentsWithScissorRegion(const gl::Context *co
             clearAttachment.clearValue         = contextVk->getClearDepthStencilValue();
             ++clearAttachmentIndex;
         }
-    }
-
-    // We assume for now that we always need to clear only 1 layer starting at the
-    // baseArrayLayer 0, this might need to change depending how we'll implement
-    // cube maps, 3d textures and array textures.
-    VkClearRect clearRect;
-    clearRect.baseArrayLayer = 0;
-    clearRect.layerCount     = 1;
-
-    // When clearing, the scissor region must be clipped to the renderArea per the validation rules
-    // in Vulkan.
-    gl::Rectangle intersection;
-    if (ClipRectangle(contextVk->getGLState().getScissor(), node->getRenderPassRenderArea(),
-                      &intersection))
-    {
-        clearRect.rect = gl_vk::GetRect(intersection);
-    }
-    else
-    {
-        clearRect.rect = gl_vk::GetRect(contextVk->getGLState().getScissor());
     }
 
     commandBuffer->clearAttachments(static_cast<uint32_t>(clearAttachmentIndex),
