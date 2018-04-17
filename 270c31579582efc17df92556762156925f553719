@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f7f4c04_9b28f660",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T18:00:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d396f3c0_097186e1",
+      "revId": "270c31579582efc17df92556762156925f553719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65b77de9_e730993a",
         "filename": "src/libANGLE/VertexAttribute.cpp",
         "patchSetId": 8
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "ba8ce52e_83df4705",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T18:00:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65b77de9_e730993a",
+      "revId": "270c31579582efc17df92556762156925f553719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f37dd13c_20119996",
         "filename": "src/libANGLE/VertexAttribute.cpp",
         "patchSetId": 8
@@ -50,6 +86,24 @@
       "revId": "270c31579582efc17df92556762156925f553719",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49129943_5c5e0221",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T18:00:51Z",
+      "side": 1,
+      "message": "done, but not static.",
+      "parentUuid": "f37dd13c_20119996",
+      "revId": "270c31579582efc17df92556762156925f553719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
