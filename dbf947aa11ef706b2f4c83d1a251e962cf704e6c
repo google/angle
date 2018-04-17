@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3a1d7d2_61911925",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T12:59:28Z",
+      "side": 1,
+      "message": "this seems like an unrelated change. can you de-couple it?",
+      "range": {
+        "startLine": 613,
+        "startChar": 4,
+        "endLine": 620,
+        "endChar": 10
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4310219b_729ee7c4",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T12:59:28Z",
+      "side": 1,
+      "message": "can you reduce the number of characters it takes to make this pattern?",
+      "range": {
+        "startLine": 228,
+        "startChar": 22,
+        "endLine": 228,
+        "endChar": 58
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2559b5e3_1d07363d",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T12:59:28Z",
+      "side": 1,
+      "message": "maybe replacing shader_library with just namespace shaders is better",
+      "range": {
+        "startLine": 783,
+        "startChar": 30,
+        "endLine": 783,
+        "endChar": 44
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f4945da_3b7bb3bd",
+        "filename": "src/tests/test_utils/shader_library.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T12:59:28Z",
+      "side": 1,
+      "message": "can you merge this file with shader_utils.h?",
+      "range": {
+        "startLine": 7,
+        "startChar": 8,
+        "endLine": 7,
+        "endChar": 40
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77635009_17c027c4",
+        "filename": "src/tests/test_utils/shader_library.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T12:59:28Z",
+      "side": 1,
+      "message": "these static functions should all be capitalized",
+      "range": {
+        "startLine": 18,
+        "startChar": 12,
+        "endLine": 18,
+        "endChar": 30
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
