@@ -172,24 +172,10 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
         }
     }
 
-    // TODO(jmadill): Cache this. http://anglebug.com/1391
-    if (webglCompatibility)
+    if (webglCompatibility && vao->hasTransformFeedbackBindingConflict(activeAttribs))
     {
-        for (size_t attributeIndex : activeAttribs)
-        {
-            const VertexAttribute &attrib = vertexAttribs[attributeIndex];
-            ASSERT(attrib.enabled);
-
-            const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
-
-            gl::Buffer *buffer = binding.getBuffer().get();
-            if (buffer && buffer->isBoundForTransformFeedbackAndOtherUse())
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(),
-                                     VertexBufferBoundForTransformFeedback);
-                return false;
-            }
-        }
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexBufferBoundForTransformFeedback);
+        return false;
     }
 
     return true;

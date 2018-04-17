@@ -43,16 +43,16 @@ VertexBinding &VertexBinding::operator=(VertexBinding &&binding)
 void VertexBinding::setBuffer(const gl::Context *context, Buffer *bufferIn, bool containerIsBound)
 {
     if (mBuffer.get() && containerIsBound)
-        mBuffer->onBindingChanged(false, BufferBinding::Array);
+        mBuffer->onBindingChanged(context, false, BufferBinding::Array);
     mBuffer.set(context, bufferIn);
     if (mBuffer.get() && containerIsBound)
-        mBuffer->onBindingChanged(true, BufferBinding::Array);
+        mBuffer->onBindingChanged(context, true, BufferBinding::Array);
 }
 
-void VertexBinding::onContainerBindingChanged(bool bound)
+void VertexBinding::onContainerBindingChanged(const Context *context, bool bound)
 {
     if (mBuffer.get())
-        mBuffer->onBindingChanged(bound, BufferBinding::Array);
+        mBuffer->onBindingChanged(context, bound, BufferBinding::Array);
 }
 
 void VertexBinding::updateCachedBufferSizeMinusOffset()

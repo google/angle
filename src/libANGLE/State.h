@@ -204,10 +204,10 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     bool removeDrawFramebufferBinding(GLuint framebuffer);
 
     // Vertex array object binding manipulation
-    void setVertexArrayBinding(VertexArray *vertexArray);
+    void setVertexArrayBinding(const Context *context, VertexArray *vertexArray);
     GLuint getVertexArrayId() const;
     VertexArray *getVertexArray() const;
-    bool removeVertexArrayBinding(GLuint vertexArray);
+    bool removeVertexArrayBinding(const Context *context, GLuint vertexArray);
 
     // Program binding manipulation
     void setProgram(const Context *context, Program *newProgram);

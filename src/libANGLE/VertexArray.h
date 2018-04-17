@@ -244,7 +244,8 @@ class VertexArray final : public angle::ObserverInterface, public LabeledObject
     ComponentTypeMask getAttributesTypeMask() const { return mState.mVertexAttributesTypeMask; }
     AttributesMask getAttributesMask() const { return mState.mEnabledAttributesMask; }
 
-    void onBindingChanged(bool bound);
+    void onBindingChanged(const Context *context, bool bound);
+    bool hasTransformFeedbackBindingConflict(const AttributesMask &activeAttribues) const;
 
   private:
     ~VertexArray() override;
@@ -254,10 +255,14 @@ class VertexArray final : public angle::ObserverInterface, public LabeledObject
 
     void updateObserverBinding(size_t bindingIndex);
     DirtyBitType getDirtyBitFromIndex(bool contentsChanged, angle::SubjectIndex index) const;
+    void setDependentDirtyBit(const gl::Context *context,
+                              bool contentsChanged,
+                              angle::SubjectIndex index);
 
     // These are used to optimize draw call validation.
     void updateCachedVertexAttributeSize(size_t attribIndex);
     void updateCachedBufferBindingSize(size_t bindingIndex);
+    void updateCachedTransformFeedbackBindingValidation(size_t bindingIndex, const Buffer *buffer);
 
     GLuint mId;
 
@@ -271,6 +276,8 @@ class VertexArray final : public angle::ObserverInterface, public LabeledObject
 
     std::vector<angle::ObserverBinding> mArrayBufferObserverBindings;
     angle::ObserverBinding mElementArrayBufferObserverBinding;
+
+    AttributesMask mCachedTransformFeedbackConflictedBindingsMask;
 };
 
 }  // namespace gl

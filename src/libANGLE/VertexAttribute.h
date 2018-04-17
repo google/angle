@@ -38,7 +38,8 @@ class VertexBinding final : angle::NonCopyable
 
     const BindingPointer<Buffer> &getBuffer() const { return mBuffer; }
     void setBuffer(const gl::Context *context, Buffer *bufferIn, bool containerIsBound);
-    void onContainerBindingChanged(bool bound);
+
+    void onContainerBindingChanged(const Context *context, bool bound);
 
     // Called from VertexArray.
     void updateCachedBufferSizeMinusOffset();
