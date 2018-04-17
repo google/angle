@@ -506,6 +506,8 @@ if (!is_android) {
     if (is_win) {
       sources += [ "src/icd/VkICD_mock_icd.def" ]
     }
+    configs -= [ "//build/config/compiler:chromium_code" ]
+    configs += [ "//build/config/compiler:no_chromium_code" ]
   }
 
   action("vulkan_gen_icd_json_file") {

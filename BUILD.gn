@@ -424,6 +424,7 @@ if (angle_enable_vulkan) {
     ]
     data_deps = [
       "$angle_root/third_party/vulkan-validation-layers:vulkan_validation_layers",
+      "$angle_root/third_party/vulkan-validation-layers:VkICD_mock_icd",
     ]
     public_configs = [
       "$angle_root/third_party/glslang:glslang_config",
