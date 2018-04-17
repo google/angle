@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70ff010e_f9aaf88f",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-17T02:42:05Z",
+      "side": 1,
+      "message": "Can be enableable.",
+      "range": {
+        "startLine": 702,
+        "startChar": 41,
+        "endLine": 702,
+        "endChar": 56
+      },
+      "revId": "48446e850f4fd4c34941e04eb99323bb3c180860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d9a5a7e_22cf1b7c",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-17T02:42:05Z",
+      "side": 1,
+      "message": "initialize in the Extensions constructor.",
+      "range": {
+        "startLine": 379,
+        "startChar": 9,
+        "endLine": 379,
+        "endChar": 23
+      },
+      "revId": "48446e850f4fd4c34941e04eb99323bb3c180860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f12afd7_e4b0fbc1",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-17T02:42:05Z",
+      "side": 1,
+      "message": "This should generate an error too.",
+      "range": {
+        "startLine": 55,
+        "startChar": 12,
+        "endLine": 55,
+        "endChar": 59
+      },
+      "revId": "48446e850f4fd4c34941e04eb99323bb3c180860",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
