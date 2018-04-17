@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a1c28b2_d34adf27",
+        "filename": "src/compiler/translator/OutputGLSLBase.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T19:44:17Z",
+      "side": 0,
+      "message": "nit: could you please keep this function and call it from writeQualifier?",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 0
+      },
+      "revId": "aed1b56aac8e5d14f4a5101f0f85135717a3d744",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
