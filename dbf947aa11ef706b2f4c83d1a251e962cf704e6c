@@ -49,6 +49,257 @@
     },
     {
       "key": {
+        "uuid": "59f11ade_0b61ce35",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "This used to be \"simple\" before, even if \"zero\" shouldn\u0027t change the behavior of the test.",
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "974dc01d_594f6450",
+        "filename": "src/tests/gl_tests/BlendMinMaxTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "This could be queried from the shader library",
+      "range": {
+        "startLine": 123,
+        "startChar": 57,
+        "endLine": 123,
+        "endChar": 62
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0914ebbd_831d33ce",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "The program used to output red.",
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b790060_ccbb46ae",
+        "filename": "src/tests/gl_tests/ColorMaskTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 37,
+        "startChar": 55,
+        "endLine": 37,
+        "endChar": 62
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5b62023_bca5af6a",
+        "filename": "src/tests/gl_tests/CubeMapTextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 36,
+        "startChar": 56,
+        "endLine": 36,
+        "endChar": 63
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce1d8514_573346f8",
+        "filename": "src/tests/gl_tests/DrawElementsTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "I think tests here could use the simple VS.",
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b1b1eb8_2739288c",
+        "filename": "src/tests/gl_tests/FramebufferMixedSamplesTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 45,
+        "startChar": 61,
+        "endLine": 45,
+        "endChar": 70
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba095508_cfedd85e",
+        "filename": "src/tests/gl_tests/FramebufferRenderMipmapTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f86ff08_42d8efdf",
+        "filename": "src/tests/gl_tests/LineLoopTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cf4ff93_29023dbb",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3e569d0_502094bd",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "Change this to shader_library::positionAttribName().size()?",
+      "range": {
+        "startLine": 288,
+        "startChar": 14,
+        "endLine": 288,
+        "endChar": 16
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32a6b2bd_b43b72a0",
+        "filename": "src/tests/gl_tests/SRGBFramebufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a045218_af38390e",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-17T13:52:56Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4310219b_729ee7c4",
         "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
         "patchSetId": 7
