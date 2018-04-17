@@ -1,0 +1,205 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cea20c84_473150af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T23:40:15Z",
+      "side": 1,
+      "message": "nit:\n\nVulkan: Add build toggle for validation layers.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 47
+      },
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8f38fa0_647e56eb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T23:40:15Z",
+      "side": 1,
+      "message": "nit: \"We want\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 4
+      },
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db4d8d66_2a1c7efc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T23:40:15Z",
+      "side": 1,
+      "message": "nit: update with other comment",
+      "range": {
+        "startLine": 11,
+        "startChar": 17,
+        "endLine": 11,
+        "endChar": 47
+      },
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "289adda8_91c6d9a6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T23:40:15Z",
+      "side": 1,
+      "message": "build the",
+      "range": {
+        "startLine": 13,
+        "startChar": 9,
+        "endLine": 13,
+        "endChar": 15
+      },
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8666c822_8f56a950",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T23:40:15Z",
+      "side": 1,
+      "message": "can you please associate this with a bug in the issue tracker.",
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea81969d_e279a2db",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T23:40:15Z",
+      "side": 1,
+      "message": "you can omit this comment.",
+      "range": {
+        "startLine": 439,
+        "startChar": 6,
+        "endLine": 439,
+        "endChar": 92
+      },
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "675c70b6_f99252b8",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T23:40:15Z",
+      "side": 1,
+      "message": "the mock ICD isn\u0027t a validation layer, so you should just make this part of if (!is_android) above.",
+      "range": {
+        "startLine": 446,
+        "startChar": 9,
+        "endLine": 446,
+        "endChar": 75
+      },
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fea33e90_5d2d8d98",
+        "filename": "gni/angle.gni",
+        "patchSetId": 8
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T23:40:15Z",
+      "side": 1,
+      "message": "can you please declare this below in the declare_args section as \n\nangle_enable_vulkan_validation_layers \u003d angle_enable_vulkan\n\nyou can override this in your configs. we need it for our Android testing.",
+      "range": {
+        "startLine": 45,
+        "startChar": 1,
+        "endLine": 46,
+        "endChar": 82
+      },
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7b491b2_8ac957b8",
+        "filename": "gyp/gyp_angle",
+        "patchSetId": 8
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T23:40:15Z",
+      "side": 1,
+      "message": "you can omit this.",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 53
+      },
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
