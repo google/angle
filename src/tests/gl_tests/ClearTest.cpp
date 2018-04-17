@@ -133,9 +133,9 @@ TEST_P(ClearTest, RGBA8Framebuffer)
 
 TEST_P(ClearTest, ClearIssue)
 {
-    // Skip this test because of an issue on older Windows AMD Vulkan drivers.
-    // TODO(jmadill): Re-enable this once Chromium bots are upgraded. http://crbug.com/821522
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
+    // This test seems to triggere flaky validation error in Vulkan.
+    // TODO(lucferron): Re-enable when test is fixed. http://anglebug.com/2484
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
