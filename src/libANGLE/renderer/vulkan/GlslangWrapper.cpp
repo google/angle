@@ -108,12 +108,11 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     }
 
     // Assign varying locations.
+    // TODO(jmadill): This might need to be redone.
     for (const auto &varyingReg : resources.varyingPacking.getRegisterList())
     {
         const auto &varying        = *varyingReg.packedVarying;
-
-        std::string locationString = "location = " + Str(varyingReg.registerRow) +
-                                     ", component = " + Str(varyingReg.registerColumn);
+        std::string locationString = "location = " + Str(varyingReg.registerRow);
         InsertLayoutSpecifierString(&vertexSource, varying.varying->name, locationString);
         InsertLayoutSpecifierString(&fragmentSource, varying.varying->name, locationString);
     }
