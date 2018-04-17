@@ -650,7 +650,7 @@ void VertexArrayGL::syncDirtyBinding(const gl::Context *context,
                                      size_t bindingIndex,
                                      const gl::VertexArray::DirtyBindingBits &dirtyBindingBits)
 {
-    ASSERT(dirtyBindingBits.any());
+    // Dependent state changes in buffers can trigger updates with no dirty bits set.
 
     for (size_t dirtyBit : dirtyBindingBits)
     {

@@ -107,8 +107,8 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
     const auto &vertexAttribs  = vao->getVertexAttributes();
     const auto &vertexBindings = vao->getVertexBindings();
 
-    const AttributesMask &activeAttribs =
-        (program->getActiveAttribLocationsMask() & vao->getEnabledAttributesMask());
+    const AttributesMask &activeAttribs = (program->getActiveAttribLocationsMask() &
+                                           vao->getEnabledAttributesMask() & ~clientAttribs);
 
     for (size_t attributeIndex : activeAttribs)
     {
@@ -116,21 +116,11 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
         ASSERT(attrib.enabled);
 
         const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
-        gl::Buffer *buffer           = binding.getBuffer().get();
-        if (!buffer)
-        {
-            continue;
-        }
-
         ASSERT(program->isAttribLocationActive(attributeIndex));
 
-        GLint maxVertexElement = 0;
+        GLint maxVertexElement = maxVertex;
         GLuint divisor         = binding.getDivisor();
-        if (divisor == 0)
-        {
-            maxVertexElement = maxVertex;
-        }
-        else
+        if (divisor != 0)
         {
             maxVertexElement = (primcount - 1) / divisor;
         }
@@ -146,39 +136,49 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
 
         // We know attribStride is given as a GLsizei which is typedefed to int.
         // We also know an upper bound for attribSize.
-        static_assert(std::is_same<int, GLsizei>::value, "");
-        uint64_t attribStride = ComputeVertexAttributeStride(attrib, binding);
-        uint64_t attribSize   = ComputeVertexAttributeTypeSize(attrib);
-        ASSERT(attribStride <= kIntMax && attribSize <= kMaxAttribSize);
+        static_assert(std::is_same<int, GLsizei>::value, "Unexpected type");
+        ASSERT(ComputeVertexAttributeStride(attrib, binding) == binding.getStride());
+        uint64_t attribStride = binding.getStride();
+        ASSERT(attribStride <= kIntMax && ComputeVertexAttributeTypeSize(attrib) <= kMaxAttribSize);
 
-        // Computing the max offset using uint64_t without attrib.offset is overflow
-        // safe. Note: Last vertex element does not take the full stride!
-        static_assert(kIntMax * kIntMax < kUint64Max - kMaxAttribSize, "");
-        uint64_t attribDataSizeNoOffset = maxVertexElement * attribStride + attribSize;
+        // Computing the product of two 32-bit ints will fit in 64 bits without overflow.
+        static_assert(kIntMax * kIntMax < kUint64Max, "Unexpected overflow");
+        uint64_t attribDataSizeMinusAttribSize = maxVertexElement * attribStride;
 
         // An overflow can happen when adding the offset, check for it.
-        uint64_t attribOffset = ComputeVertexAttributeOffset(attrib, binding);
-        if (attribDataSizeNoOffset > kUint64Max - attribOffset)
+        if (attribDataSizeMinusAttribSize > kUint64Max - attrib.cachedSizePlusRelativeOffset)
         {
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
             return false;
         }
-        uint64_t attribDataSizeWithOffset = attribDataSizeNoOffset + attribOffset;
 
         // [OpenGL ES 3.0.2] section 2.9.4 page 40:
-        // We can return INVALID_OPERATION if our vertex attribute does not have
-        // enough backing data.
-        if (attribDataSizeWithOffset > static_cast<uint64_t>(buffer->getSize()))
+        // We can return INVALID_OPERATION if our array buffer does not have enough backing data.
+        if (attribDataSizeMinusAttribSize + attrib.cachedSizePlusRelativeOffset >
+            binding.getCachedBufferSizeMinusOffset())
         {
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), InsufficientVertexBufferSize);
             return false;
         }
+    }
 
-        if (webglCompatibility && buffer->isBoundForTransformFeedbackAndOtherUse())
+    // TODO(jmadill): Cache this. http://anglebug.com/1391
+    if (webglCompatibility)
+    {
+        for (size_t attributeIndex : activeAttribs)
         {
-            ANGLE_VALIDATION_ERR(context, InvalidOperation(),
-                                 VertexBufferBoundForTransformFeedback);
-            return false;
+            const VertexAttribute &attrib = vertexAttribs[attributeIndex];
+            ASSERT(attrib.enabled);
+
+            const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
+
+            gl::Buffer *buffer = binding.getBuffer().get();
+            if (buffer->isBoundForTransformFeedbackAndOtherUse())
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                     VertexBufferBoundForTransformFeedback);
+                return false;
+            }
         }
     }
 

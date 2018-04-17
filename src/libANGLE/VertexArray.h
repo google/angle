@@ -255,6 +255,10 @@ class VertexArray final : public angle::ObserverInterface, public LabeledObject
     void updateObserverBinding(size_t bindingIndex);
     DirtyBitType getDirtyBitFromIndex(bool contentsChanged, angle::SubjectIndex index) const;
 
+    // These are used to optimize draw call validation.
+    void updateCachedVertexAttributeSize(size_t attribIndex);
+    void updateCachedBufferBindingSize(size_t bindingIndex);
+
     GLuint mId;
 
     VertexArrayState mState;
