@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c85c9c6d_fdea1b28",
+        "filename": "util/shader_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T19:04:04Z",
+      "side": 1,
+      "message": "tiny nit: you can probably collapse a lot of the whitespace empty lines",
+      "revId": "5f319a62b85d443cbc47b52935780ab6e40af0aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
