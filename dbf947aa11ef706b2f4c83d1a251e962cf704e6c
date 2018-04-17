@@ -71,6 +71,29 @@
     },
     {
       "key": {
+        "uuid": "51645145_73c45b31",
+        "filename": "src/tests/test_utils/shader_library.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-17T13:00:31Z",
+      "side": 1,
+      "message": "please unindent all these shaders. the extra whitespace just makes debugging them more awkward and does not add readability.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 8
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9f4945da_3b7bb3bd",
         "filename": "src/tests/test_utils/shader_library.h",
         "patchSetId": 7
