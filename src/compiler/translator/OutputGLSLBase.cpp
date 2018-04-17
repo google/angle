@@ -214,7 +214,7 @@ void TOutputGLSLBase::writeLayoutQualifier(TIntermTyped *variable)
     out << ") ";
 }
 
-const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
+const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier, const TSymbol *symbol)
 {
     if (sh::IsGLSL410OrOlder(mOutput) && mShaderVersion >= 300 &&
         (mCompileOptions & SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3) != 0)
@@ -250,7 +250,7 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
     return sh::getQualifierString(qualifier);
 }
 
-void TOutputGLSLBase::writeVariableType(const TType &type)
+void TOutputGLSLBase::writeVariableType(const TType &type, const TSymbol *symbol)
 {
     TQualifier qualifier = type.getQualifier();
     TInfoSinkBase &out   = objSink();
@@ -265,7 +265,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
     }
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
-        const char *qualifierString = mapQualifierToString(qualifier);
+        const char *qualifierString = mapQualifierToString(qualifier, symbol);
         if (qualifierString && qualifierString[0] != '\0')
         {
             out << qualifierString << " ";
@@ -336,7 +336,7 @@ void TOutputGLSLBase::writeFunctionParameters(const TFunction *func)
     {
         const TVariable *param = func->getParam(i);
         const TType &type      = param->getType();
-        writeVariableType(type);
+        writeVariableType(type, param);
 
         if (param->symbolType() != SymbolType::Empty)
             out << " " << hashName(param);
@@ -894,7 +894,7 @@ void TOutputGLSLBase::visitFunctionPrototype(TIntermFunctionPrototype *node)
     TInfoSinkBase &out = objSink();
 
     const TType &type = node->getType();
-    writeVariableType(type);
+    writeVariableType(type, node->getFunction());
     if (type.isArray())
         out << ArrayString(type);
 
@@ -995,7 +995,7 @@ bool TOutputGLSLBase::visitDeclaration(Visit visit, TIntermDeclaration *node)
         const TIntermSequence &sequence = *(node->getSequence());
         TIntermTyped *variable          = sequence.front()->getAsTyped();
         writeLayoutQualifier(variable);
-        writeVariableType(variable->getType());
+        writeVariableType(variable->getType(), &variable->getAsSymbolNode()->variable());
         if (variable->getAsSymbolNode() == nullptr ||
             variable->getAsSymbolNode()->variable().symbolType() != SymbolType::Empty)
         {
