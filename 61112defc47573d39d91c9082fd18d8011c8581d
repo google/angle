@@ -157,6 +157,30 @@
     },
     {
       "key": {
+        "uuid": "2d571fd3_7996478b",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-17T23:56:17Z",
+      "side": 1,
+      "message": "This will make it a bit tricky to define data_deps.\nJust have them data_deps \u003d [] on top, and then use +\u003d everywhere.",
+      "parentUuid": "675c70b6_f99252b8",
+      "range": {
+        "startLine": 446,
+        "startChar": 9,
+        "endLine": 446,
+        "endChar": 75
+      },
+      "revId": "61112defc47573d39d91c9082fd18d8011c8581d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fea33e90_5d2d8d98",
         "filename": "gni/angle.gni",
         "patchSetId": 8
