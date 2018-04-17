@@ -46,6 +46,30 @@
       "revId": "97b1381da4367775bd904ee02d98179a125d0b76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01d83ca5_6654521e",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-17T19:41:37Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "62c72cb5_ba6cb2cb",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 15
+      },
+      "revId": "97b1381da4367775bd904ee02d98179a125d0b76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
