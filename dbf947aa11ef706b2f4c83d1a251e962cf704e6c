@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "842f1754_0dfef664",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-17T13:38:04Z",
+      "side": 1,
+      "message": "I think \"library\" makes it more explicit that this is a library of shader sources, but that naming is also fairly reasonable. If it were just \"shaders\" it makes me think that it might have a bunch of other things tangentially related to shaders as well, but \"essl1_shaders\" sounds like something where one puts only shaders written in ESSL1.\n\nThen there\u0027s an issue that now \"positionAttrib\" doesn\u0027t have a very good place to go, but maybe we can make a \"positionAttrib\" function under each of those namespaces.",
+      "parentUuid": "6307447c_e87eed88",
+      "range": {
+        "startLine": 783,
+        "startChar": 30,
+        "endLine": 783,
+        "endChar": 44
+      },
+      "revId": "dbf947aa11ef706b2f4c83d1a251e962cf704e6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "51645145_73c45b31",
         "filename": "src/tests/test_utils/shader_library.cpp",
         "patchSetId": 7
