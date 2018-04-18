@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a8d9dd4f_64ebf82d",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-18T14:05:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dc9a73a_cbf353f0",
+      "range": {
+        "startLine": 3,
+        "startChar": 12,
+        "endLine": 3,
+        "endChar": 15
+      },
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c098a622_40e762b6",
         "filename": "AndroidManifest.xml",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2018-04-18T09:11:53Z",
       "side": 1,
       "message": "You\u0027ll need to use android resources to make this translatable.",
+      "range": {
+        "startLine": 15,
+        "startChar": 32,
+        "endLine": 15,
+        "endChar": 53
+      },
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d1ba382_d57c6887",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-18T14:05:43Z",
+      "side": 1,
+      "message": "Does it matter?\nThis is not intended to be a user visible component, same as webview.",
+      "parentUuid": "c098a622_40e762b6",
       "range": {
         "startLine": 15,
         "startChar": 32,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "f8acb8bd_0bc32854",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 924,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-18T14:05:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6dacde7a_f924cf5d",
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ebedad81_fba3bdfb",
         "filename": "BUILD.gn",
         "patchSetId": 3
@@ -76,6 +142,24 @@
       "writtenOn": "2018-04-18T09:11:53Z",
       "side": 1,
       "message": "The official builds set build_apk_secondary_abi\u003dfalse, so I think you won\u0027t want to use this flag.",
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e6080dd_7803351e",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-18T14:05:43Z",
+      "side": 1,
+      "message": "Hmm. webview appears to be using that flag.\nI expect we\u0027ll use our own config when building the ANGLE libraries as I need other flags to be non-default values.",
+      "parentUuid": "ebedad81_fba3bdfb",
       "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
