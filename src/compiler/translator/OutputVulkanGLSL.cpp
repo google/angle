@@ -106,8 +106,11 @@ void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier, const TSymbol *symb
 
 void TOutputVulkanGLSL::writeStructType(const TStructure *structure)
 {
-    declareStruct(structure);
-    objSink() << ";\n";
+    if (!structDeclared(structure))
+    {
+        declareStruct(structure);
+        objSink() << ";\n";
+    }
 }
 
 }  // namespace sh

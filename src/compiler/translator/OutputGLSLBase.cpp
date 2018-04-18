@@ -314,11 +314,6 @@ void TOutputGLSLBase::writeVariableType(const TType &type, const TSymbol *symbol
         const TStructure *structure = type.getStruct();
 
         declareStruct(structure);
-
-        if (structure->symbolType() != SymbolType::Empty)
-        {
-            mDeclaredStructs.insert(structure->uniqueId().get());
-        }
     }
     else if (type.getBasicType() == EbtInterfaceBlock)
     {
@@ -1180,6 +1175,11 @@ void TOutputGLSLBase::declareStruct(const TStructure *structure)
         out << ";\n";
     }
     out << "}";
+
+    if (structure->symbolType() != SymbolType::Empty)
+    {
+        mDeclaredStructs.insert(structure->uniqueId().get());
+    }
 }
 
 void TOutputGLSLBase::declareInterfaceBlockLayout(const TInterfaceBlock *interfaceBlock)

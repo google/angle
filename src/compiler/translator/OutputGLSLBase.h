@@ -78,9 +78,9 @@ class TOutputGLSLBase : public TIntermTraverser
 
     void declareStruct(const TStructure *structure);
     virtual void writeQualifier(TQualifier qualifier, const TSymbol *symbol);
+    bool structDeclared(const TStructure *structure) const;
 
   private:
-    bool structDeclared(const TStructure *structure) const;
 
     void declareInterfaceBlockLayout(const TInterfaceBlock *interfaceBlock);
     void declareInterfaceBlock(const TInterfaceBlock *interfaceBlock);

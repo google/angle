@@ -519,8 +519,9 @@ TEST_P(GLSLTest, ScopedStructsOrderBug)
     // (http://anglebug.com/1291)
     ANGLE_SKIP_TEST_IF(IsDesktopOpenGL() && (IsOSX() || !IsNVIDIA()));
 
-    // TODO(lucferron): Support for inner scoped structs
-    // http://anglebug.com/2459
+    // TODO(lucferron): Support for inner scoped structs being redeclared in inner scopes
+    // This bug in glslang is preventing us from supporting this use case for now.
+    // https://github.com/KhronosGroup/glslang/issues/1358
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     const std::string fragmentShaderSource =
@@ -1468,14 +1469,10 @@ TEST_P(GLSLTest, BadIndexBug)
 // Test that structs defined in uniforms are translated correctly.
 TEST_P(GLSLTest, StructSpecifiersUniforms)
 {
-    // TODO(lucferron): Support struct initializers.
-    // http://anglebug.com/2459
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     const std::string fragmentShaderSource =
         R"(precision mediump float;
 
-        uniform struct S { float field;} s;
+        uniform struct S { float field; } s;
 
         void main()
         {
@@ -1485,6 +1482,80 @@ TEST_P(GLSLTest, StructSpecifiersUniforms)
 
     GLuint program = CompileProgram(essl1_shaders::vs::Simple(), fragmentShaderSource);
     EXPECT_NE(0u, program);
+}
+
+// Test that structs declaration followed directly by an initialization is translated correctly.
+TEST_P(GLSLTest, StructWithInitializer)
+{
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
+
+        struct S { float a; } s = S(1.0);
+
+        void main()
+        {
+            gl_FragColor = vec4(0, 0, 0, 1);
+            gl_FragColor.r += s.a;
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), fragmentShaderSource);
+    glUseProgram(program);
+
+    // Test drawing, should be red.
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that structs without initializer, followed by a uniform usage works as expected.
+TEST_P(GLSLTest, UniformStructWithoutInitializer)
+{
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
+
+        struct S { float a; };
+        uniform S u_s;
+
+        void main()
+        {
+            gl_FragColor = vec4(u_s.a);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), fragmentShaderSource);
+    glUseProgram(program);
+
+    // Test drawing, should be red.
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that structs declaration followed directly by an initialization in a uniform.
+TEST_P(GLSLTest, StructWithUniformInitializer)
+{
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
+
+        struct S { float a; } s = S(1.0);
+        uniform S us;
+
+        void main()
+        {
+            gl_FragColor = vec4(0, 0, 0, 1);
+            gl_FragColor.r += s.a;
+            gl_FragColor.g += us.a;
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), fragmentShaderSource);
+    glUseProgram(program);
+
+    // Test drawing, should be red.
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_GL_NO_ERROR();
 }
 
 // Test that gl_DepthRange is not stored as a uniform location. Since uniforms

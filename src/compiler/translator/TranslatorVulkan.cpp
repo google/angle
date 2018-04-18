@@ -41,9 +41,6 @@ class DeclareStructTypesTraverser : public TIntermTraverser
 
         if (!mInGlobalScope)
         {
-            // We only want to declare the global structs in this traverser.
-            // TODO(lucferron): Add a test in GLSLTest for this specific case.
-            // http://anglebug.com/2459
             return false;
         }
 
@@ -53,21 +50,15 @@ class DeclareStructTypesTraverser : public TIntermTraverser
 
         if (type.isStructSpecifier())
         {
-            TIntermSymbol *symbolNode = declarator->getAsSymbolNode();
-            if (symbolNode != nullptr && symbolNode->variable().symbolType() == SymbolType::Empty)
-            {
-                mOutputVulkanGLSL->writeStructType(type.getStruct());
+            mOutputVulkanGLSL->writeStructType(type.getStruct());
 
+            TIntermSymbol *symbolNode = declarator->getAsSymbolNode();
+            if (symbolNode && symbolNode->variable().symbolType() == SymbolType::Empty)
+            {
                 // Remove the struct specifier declaration from the tree so it isn't parsed again.
                 TIntermSequence emptyReplacement;
                 mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
                                                 emptyReplacement);
-            }
-            else
-            {
-                // TODO(lucferron): Support structs with initializers correctly.
-                // http://anglebug.com/2459
-                UNIMPLEMENTED();
             }
         }
 
@@ -256,7 +247,7 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         bool hasGLFragColor = false;
         bool hasGLFragData  = false;
 
-        for (const auto &outputVar : outputVariables)
+        for (const OutputVariable &outputVar : outputVariables)
         {
             if (outputVar.name == "gl_FragColor")
             {
