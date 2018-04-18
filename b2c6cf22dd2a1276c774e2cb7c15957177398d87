@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "455e0004_58d6d8c0",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-18T20:01:44Z",
+      "side": 1,
+      "message": "nit: can you swap out auto with simple type names even if they\u0027re RHS is evident?",
+      "range": {
+        "startLine": 71,
+        "startChar": 16,
+        "endLine": 71,
+        "endChar": 20
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3b28e9e_7b9357c9",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-18T20:01:44Z",
+      "side": 1,
+      "message": "seems reasonable, I wonder if Olli has any suggestions for making this a bit shorter",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 83
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
