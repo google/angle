@@ -180,32 +180,32 @@ void FramebufferAttachment::attach(const Context *context,
 
 GLuint FramebufferAttachment::getRedSize() const
 {
-    return getSize().empty() ? 0 : getFormat().info->redBits;
+    return getFormat().info->redBits;
 }
 
 GLuint FramebufferAttachment::getGreenSize() const
 {
-    return getSize().empty() ? 0 : getFormat().info->greenBits;
+    return getFormat().info->greenBits;
 }
 
 GLuint FramebufferAttachment::getBlueSize() const
 {
-    return getSize().empty() ? 0 : getFormat().info->blueBits;
+    return getFormat().info->blueBits;
 }
 
 GLuint FramebufferAttachment::getAlphaSize() const
 {
-    return getSize().empty() ? 0 : getFormat().info->alphaBits;
+    return getFormat().info->alphaBits;
 }
 
 GLuint FramebufferAttachment::getDepthSize() const
 {
-    return getSize().empty() ? 0 : getFormat().info->depthBits;
+    return getFormat().info->depthBits;
 }
 
 GLuint FramebufferAttachment::getStencilSize() const
 {
-    return getSize().empty() ? 0 : getFormat().info->stencilBits;
+    return getFormat().info->stencilBits;
 }
 
 GLenum FramebufferAttachment::getComponentType() const
