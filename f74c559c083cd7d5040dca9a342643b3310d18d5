@@ -22,6 +22,30 @@
       "revId": "f74c559c083cd7d5040dca9a342643b3310d18d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "638568f3_8d4b918e",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-18T14:49:18Z",
+      "side": 1,
+      "message": "Ok, but we got to be careful because Program::linkAttributes could possibly give us inactive attributes if we supported ES3.0 and up.",
+      "parentUuid": "e0328fe1_0a5c5d66",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 129,
+        "endChar": 9
+      },
+      "revId": "f74c559c083cd7d5040dca9a342643b3310d18d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
