@@ -22,6 +22,30 @@
       "revId": "c0fc24b3ac5d99a395a6fe4a09d0a9a1e72de5f7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c094782d_265ecef2",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-04-18T13:49:23Z",
+      "side": 0,
+      "message": "Thanks, updated and re-testing.",
+      "parentUuid": "16cffedb_283a05c9",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 55
+      },
+      "revId": "c0fc24b3ac5d99a395a6fe4a09d0a9a1e72de5f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
