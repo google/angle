@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fbd4e980_03607d58",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-18T14:08:00Z",
+      "side": 1,
+      "message": "I think you can add the condition build_with_chromium as well",
+      "range": {
+        "startLine": 783,
+        "startChar": 4,
+        "endLine": 783,
+        "endChar": 10
+      },
+      "revId": "5e79580d94e7b5eb4273a785b781e922a259182b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
