@@ -132,3 +132,18 @@ static_library("glslang") {
     sources += [ "src/glslang/OSDependent/Unix/ossource.cpp" ]
   }
 }
+
+executable("glslang_validator") {
+  sources = [
+    "src/StandAlone/DirStackFileIncluder.h",
+    "src/StandAlone/StandAlone.cpp",
+  ]
+  configs -= [ "//build/config/compiler:chromium_code" ]
+  configs += [ "//build/config/compiler:no_chromium_code" ]
+  deps = [
+    "//build/config:exe_and_shlib_deps",
+  ]
+  public_deps = [
+    ":glslang",
+  ]
+}
