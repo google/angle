@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0328fe1_0a5c5d66",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-18T14:30:16Z",
+      "side": 1,
+      "message": "I think you can make this ASSERT(attribute.active);",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 129,
+        "endChar": 9
+      },
+      "revId": "f74c559c083cd7d5040dca9a342643b3310d18d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
