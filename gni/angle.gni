@@ -40,8 +40,10 @@ declare_args() {
   angle_enable_d3d11 = is_win
   angle_enable_gl = ozone_platform_gbm || !is_linux || (use_x11 && !is_chromeos)
 
-  angle_enable_vulkan = is_win || (is_linux && use_x11 && !is_chromeos) ||
-                        (is_android && ndk_supports_vulkan)
+  # TODO(tobine): Re-enable after roll
+  # angle_enable_vulkan = is_win || (is_linux && use_x11 && !is_chromeos) ||
+  #                       (is_android && ndk_supports_vulkan)
+  angle_enable_vulkan = false
   angle_enable_null = true
   angle_enable_essl = true
   angle_enable_glsl = true
