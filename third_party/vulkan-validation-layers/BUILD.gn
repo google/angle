@@ -103,49 +103,20 @@ helper_script_and_deps = [
   ],
 ]
 
-# Stage all scripts to the temporary gen directory so we can override 'reg.py'.
-# TODO(tobine): Remove workaround when fix upstreamed. http://anglebug.com/2482
-copy("vulkan_script_workaround") {
-  sources = [
-    "reg.py",
-    "src/layers/vk_validation_error_messages.h",
-    "src/scripts/cgenerator.py",
-    "src/scripts/common_codegen.py",
-    "src/scripts/dispatch_table_helper_generator.py",
-    "src/scripts/generator.py",
-    "src/scripts/helper_file_generator.py",
-    "src/scripts/loader_extension_generator.py",
-    "src/scripts/lvl_genvk.py",
-    "src/scripts/mock_icd_generator.py",
-    "src/scripts/object_tracker_generator.py",
-    "src/scripts/parameter_validation_generator.py",
-    "src/scripts/threading_generator.py",
-    "src/scripts/unique_objects_generator.py",
-    "src/scripts/vk.xml",
-    "src/scripts/vuid_mapping.py",
-  ]
-  outputs = [
-    "$vulkan_gen_dir/{{source_file_part}}",
-  ]
-}
-
 foreach(script_and_dep, helper_script_and_deps) {
   target_name = script_and_dep[0]
   file = script_and_dep[1]
   dep = script_and_dep[2]
   target("action", target_name) {
-    deps = [
-      ":vulkan_script_workaround",
-    ]
-    script = "$vulkan_gen_dir/lvl_genvk.py"
+    script = "src/scripts/lvl_genvk.py"
     inputs = [
-      "$vulkan_gen_dir/$dep",
-      "$vulkan_gen_dir/cgenerator.py",
-      "$vulkan_gen_dir/common_codegen.py",
-      "$vulkan_gen_dir/generator.py",
-      "$vulkan_gen_dir/reg.py",
-      "$vulkan_gen_dir/vuid_mapping.py",
-      "$vulkan_gen_dir/vk_validation_error_messages.h",
+      "src/scripts/$dep",
+      "src/scripts/cgenerator.py",
+      "src/scripts/common_codegen.py",
+      "src/scripts/generator.py",
+      "src/scripts/reg.py",
+      "src/scripts/vuid_mapping.py",
+      "src/layers/vk_validation_error_messages.h",
       "src/scripts/vk.xml",
     ]
     outputs = [
