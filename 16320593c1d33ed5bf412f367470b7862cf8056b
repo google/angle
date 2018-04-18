@@ -163,6 +163,24 @@
       "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec5303de_978ffd6e",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-18T19:31:07Z",
+      "side": 1,
+      "message": "We definitely would need a different set of build flags for ANGLE from the official builder\u0027s ones.\nI think we\u0027ll need a separate builder just for ANGLE apk, for example, because we need NDK 24, and this limits the OSes supported to N and above.",
+      "parentUuid": "5e6080dd_7803351e",
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
