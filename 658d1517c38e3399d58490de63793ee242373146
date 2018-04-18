@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9469ed07_6dfe2041",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-18T08:23:06Z",
+      "side": 1,
+      "message": "Maybe you can remove this since you have used UNREACHABLE() in line 438.",
+      "range": {
+        "startLine": 423,
+        "startChar": 4,
+        "endLine": 423,
+        "endChar": 29
+      },
+      "revId": "658d1517c38e3399d58490de63793ee242373146",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08d63a81_3851d7c2",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-18T08:23:06Z",
+      "side": 1,
+      "message": "Can you keep the original style to make it easy to review?",
+      "range": {
+        "startLine": 519,
+        "startChar": 11,
+        "endLine": 519,
+        "endChar": 72
+      },
+      "revId": "658d1517c38e3399d58490de63793ee242373146",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7841ff43_ec9ac32b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-18T08:23:06Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "658d1517c38e3399d58490de63793ee242373146",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "daf4a3c9_fa7fb39d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-18T08:23:06Z",
+      "side": 1,
+      "message": "missed mShaderUniformStorages({})?",
+      "revId": "658d1517c38e3399d58490de63793ee242373146",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee98043b_4b29259f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2479,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-18T08:23:06Z",
+      "side": 1,
+      "message": "How about changing it to:\nfor (gl::ShaderType shaderType : gl::kAllShaderTypes)\n{\n    if (!mState.getAttachedShader(shaderType))\n    {\n        continue;\n    }\n    const ShaderD3D *shaderD3D \u003d GetImplAs\u003cShaderD3D\u003e(mState.getAttachedShader(shaderType));\n    if (shaderD3D-\u003ehasUniform(baseName))\n    {\n        d3dUniform-\u003emShaderRegisterIndexes[shaderType] \u003d\n            shaderD3D-\u003egetUniformRegister(baseName) + registerOffset;\n        ASSERT(d3dUniform-\u003emShaderRegisterIndexes[shaderType] !\u003d GL_INVALID_INDEX);\n\n        AssignSamplers(d3dUniform-\u003emShaderRegisterIndexes[shaderType], d3dUniform-\u003etypeInfo,\n                       d3dUniform-\u003egetArraySizeProduct(), mShaderSamplers[shaderType],\n                       \u0026mUsedShaderSamplerRanges[shaderType]);\n     }\n}",
+      "range": {
+        "startLine": 2453,
+        "startChar": 0,
+        "endLine": 2479,
+        "endChar": 5
+      },
+      "revId": "658d1517c38e3399d58490de63793ee242373146",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfcd9929_e339dc0d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3227,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-18T08:23:06Z",
+      "side": 1,
+      "message": "Why not change them to:\nunsigned int reservedVertex   \u003d mRenderer-\u003egetReservedShaderUniformBuffers(gl::ShaderType::Vertex);\nunsigned int reservedFragment \u003d mRenderer-\u003egetReservedShaderUniformBuffers(gl::ShaderType::Fragment)",
+      "range": {
+        "startLine": 3226,
+        "startChar": 0,
+        "endLine": 3227,
+        "endChar": 83
+      },
+      "revId": "658d1517c38e3399d58490de63793ee242373146",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
