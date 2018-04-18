@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c00cbd0f_2487079b",
+        "filename": "BUILD.gn",
+        "patchSetId": 11
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-18T14:27:51Z",
+      "side": 1,
+      "message": "you should fix this as well if you\u0027re changing it below",
+      "range": {
+        "startLine": 433,
+        "startChar": 8,
+        "endLine": 433,
+        "endChar": 81
+      },
+      "revId": "bcd2ffb4ae8a0f6beb526ccb515c561cf8d5a60a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91b8513f_cd9626a6",
+        "filename": "BUILD.gn",
+        "patchSetId": 11
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-18T14:27:51Z",
+      "side": 1,
+      "message": "reference",
+      "range": {
+        "startLine": 434,
+        "startChar": 9,
+        "endLine": 434,
+        "endChar": 74
+      },
+      "revId": "bcd2ffb4ae8a0f6beb526ccb515c561cf8d5a60a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b10ca8a1_9004a621",
+        "filename": "BUILD.gn",
+        "patchSetId": 11
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-18T14:27:51Z",
+      "side": 1,
+      "message": "you can omit this - I had to fix it because the android build was broken.",
+      "range": {
+        "startLine": 437,
+        "startChar": 6,
+        "endLine": 437,
+        "endChar": 88
+      },
+      "revId": "bcd2ffb4ae8a0f6beb526ccb515c561cf8d5a60a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
