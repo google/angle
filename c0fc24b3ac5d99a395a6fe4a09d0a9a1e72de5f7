@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16cffedb_283a05c9",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-18T13:36:13Z",
+      "side": 0,
+      "message": "I think you should keep the missing scripts - staging the scripts to a temp directory picked up a number of missing dependencies. it\u0027s possible they might be missing from the cmake too, not sure.",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 55
+      },
+      "revId": "c0fc24b3ac5d99a395a6fe4a09d0a9a1e72de5f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
