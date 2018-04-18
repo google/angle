@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bbbe5bbf_b74e6bbf",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-18T14:08:19Z",
+      "side": 1,
+      "message": "This parameter seems entirely unused - what\u0027s the purpose?",
+      "range": {
+        "startLine": 217,
+        "startChar": 70,
+        "endLine": 217,
+        "endChar": 93
+      },
+      "revId": "aed1b56aac8e5d14f4a5101f0f85135717a3d744",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
