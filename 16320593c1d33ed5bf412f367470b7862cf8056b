@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8dc9a73a_cbf353f0",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1126674
+      },
+      "writtenOn": "2018-04-18T09:11:53Z",
+      "side": 1,
+      "message": "nit: We don\u0027t add (c) any more",
+      "range": {
+        "startLine": 3,
+        "startChar": 12,
+        "endLine": 3,
+        "endChar": 15
+      },
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c098a622_40e762b6",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1126674
+      },
+      "writtenOn": "2018-04-18T09:11:53Z",
+      "side": 1,
+      "message": "You\u0027ll need to use android resources to make this translatable.",
+      "range": {
+        "startLine": 15,
+        "startChar": 32,
+        "endLine": 15,
+        "endChar": 53
+      },
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dacde7a_f924cf5d",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 924,
+      "author": {
+        "id": 1126674
+      },
+      "writtenOn": "2018-04-18T09:11:53Z",
+      "side": 1,
+      "message": "A comment for each of these apks saying what they are for would be good :)",
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebedad81_fba3bdfb",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1126674
+      },
+      "writtenOn": "2018-04-18T09:11:53Z",
+      "side": 1,
+      "message": "The official builds set build_apk_secondary_abi\u003dfalse, so I think you won\u0027t want to use this flag.",
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
