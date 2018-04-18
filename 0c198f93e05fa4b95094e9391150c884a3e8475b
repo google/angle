@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68b6fefe_cd463664",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1462,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-18T15:09:40Z",
+      "side": 1,
+      "message": "Maybe this could be in queryutils? I think that\u0027s where we put helper code for OpenGL getters.",
+      "revId": "0c198f93e05fa4b95094e9391150c884a3e8475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31535c82_f8b051be",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-18T15:09:40Z",
+      "side": 1,
+      "message": "Instead of an unordered_set on the stack we could do a second switch on type.",
+      "revId": "0c198f93e05fa4b95094e9391150c884a3e8475b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
