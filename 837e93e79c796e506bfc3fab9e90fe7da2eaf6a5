@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "ca8fb973_f2952b89",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-18T16:30:26Z",
+      "side": 1,
+      "message": "NP, meant global function not static, which it looks as though you did.",
+      "parentUuid": "c89aec33_bda85193",
+      "range": {
+        "startLine": 628,
+        "startChar": 35,
+        "endLine": 628,
+        "endChar": 57
+      },
+      "revId": "837e93e79c796e506bfc3fab9e90fe7da2eaf6a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db9a096f_1f75ff0e",
         "filename": "src/libANGLE/validationES1.cpp",
         "patchSetId": 1
