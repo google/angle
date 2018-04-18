@@ -411,6 +411,104 @@ TEST_P(GeometryShaderTest, TooManyShaderStorageBlocks)
     EXPECT_GL_NO_ERROR();
 }
 
+// Verify that an link error occurs when the definition of a unform block in the vertex shader is
+// different from that in a geometry shader.
+TEST_P(GeometryShaderTest, UniformBlockMismatchBetweenVertexAndGeometryShader)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    const std::string &vertexShader =
+        R"(#version 310 es
+        uniform ubo
+        {
+            vec4 uniform_value_vert;
+        } block0;
+        in vec4 vertex_in;
+        out vec4 vertex_out;
+        void main()
+        {
+            gl_Position = vertex_in;
+            vertex_out = block0.uniform_value_vert;
+        })";
+
+    const std::string &geometryShader =
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        uniform ubo
+        {
+            vec4 uniform_value_geom;
+        } block0;
+        layout (triangles) in;
+        layout (points, max_vertices = 1) out;
+        in vec4 vertex_out[];
+        void main()
+        {
+            gl_Position = gl_in[0].gl_Position + vertex_out[0];
+            gl_Position += block0.uniform_value_geom;
+            EmitVertex();
+        })";
+
+    GLuint program = CompileProgramWithGS(vertexShader, geometryShader, essl31_shaders::fs::Red());
+    EXPECT_EQ(0u, program);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Verify that an link error occurs when the definition of a shader storage block in the geometry
+// shader is different from that in a fragment shader.
+TEST_P(GeometryShaderTest, ShaderStorageBlockMismatchBetweenGeometryAndFragmentShader)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    GLint maxGeometryShaderStorageBlocks = 0;
+    glGetIntegerv(GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT, &maxGeometryShaderStorageBlocks);
+
+    // The minimun value of MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT can be 0.
+    // [EXT_geometry_shader] Table 20.43gs
+    ANGLE_SKIP_TEST_IF(maxGeometryShaderStorageBlocks == 0);
+
+    GLint maxFragmentShaderStorageBlocks = 0;
+    glGetIntegerv(GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS, &maxFragmentShaderStorageBlocks);
+
+    // The minimun value of MAX_FRAGMENT_SHADER_STORAGE_BLOCKS can be 0.
+    // [OpenGL ES 3.1] Table 20.44
+    ANGLE_SKIP_TEST_IF(maxFragmentShaderStorageBlocks == 0);
+
+    const std::string &geometryShader =
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        buffer ssbo
+        {
+            vec4 ssbo_value;
+        } block0;
+        layout (triangles) in;
+        layout (points, max_vertices = 1) out;
+        void main()
+        {
+            gl_Position = gl_in[0].gl_Position + block0.ssbo_value;
+            EmitVertex();
+        })";
+
+    const std::string &fragmentShader =
+        R"(#version 310 es
+        precision highp float;
+        buffer ssbo
+        {
+            vec3 ssbo_value;
+        } block0;
+        layout (location = 0) out vec4 output_color;
+        void main()
+        {
+            output_color = vec4(block0.ssbo_value, 1);
+        })";
+
+    GLuint program =
+        CompileProgramWithGS(essl31_shaders::vs::Simple(), geometryShader, fragmentShader);
+    EXPECT_EQ(0u, program);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(GeometryShaderTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_D3D11());
 ANGLE_INSTANTIATE_TEST(GeometryShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 }
