@@ -164,6 +164,30 @@
       "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2176f2c9_f7272e66",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-19T11:25:18Z",
+      "side": 1,
+      "message": "Oh, now I realize what\u0027s wrong, it looks like you\u0027re not splitting the struct declaration from the variable declaration in this case either. The reason might be that the type of the declarator doesn\u0027t have \"isStructSpecifier\" set in case the declarator is an init expression. You\u0027ll probably need to check the \"isStructSpecifier\" from the LHS of the init expression in this case.",
+      "parentUuid": "67e27c4d_8ebb8758",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 83
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
