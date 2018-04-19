@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f922931_2852c660",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-19T17:12:56Z",
+      "side": 1,
+      "message": "This doesn\u0027t test requesting OES_EGL_image and NV_EGL_stream_consumer_external.",
+      "revId": "a2b49e7fc336b218e2e565e35fb3b1c358eddb2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
