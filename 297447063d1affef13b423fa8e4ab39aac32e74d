@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b0a4ad92_58d9d804",
+        "filename": "src/libANGLE/PackedEGLEnums_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-19T19:59:00Z",
+      "side": 1,
+      "message": "I implemented the (very simple) egl texture format enum.",
+      "parentUuid": "03d0b2b3_69d52bc4",
+      "revId": "297447063d1affef13b423fa8e4ab39aac32e74d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0c04eb3c_f9040efe",
         "filename": "src/libANGLE/packed_egl_enums.json",
         "patchSetId": 4
@@ -39,6 +57,30 @@
       "revId": "297447063d1affef13b423fa8e4ab39aac32e74d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5c43d99_c3e824c0",
+        "filename": "src/libANGLE/packed_egl_enums.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-19T19:59:00Z",
+      "side": 1,
+      "message": "Not able to do this without updating the scripts to ignore a specific key.  Going to leave it.",
+      "parentUuid": "0c04eb3c_f9040efe",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 1
+      },
+      "revId": "297447063d1affef13b423fa8e4ab39aac32e74d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
