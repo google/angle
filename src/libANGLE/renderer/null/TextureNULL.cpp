@@ -131,8 +131,10 @@ gl::Error TextureNULL::releaseTexImage(const gl::Context *context)
     return gl::NoError();
 }
 
-void TextureNULL::syncState(const gl::Texture::DirtyBits &dirtyBits)
+gl::Error TextureNULL::syncState(const gl::Context *context,
+                                 const gl::Texture::DirtyBits &dirtyBits)
 {
+    return gl::NoError();
 }
 
 gl::Error TextureNULL::setStorageMultisample(const gl::Context *context,

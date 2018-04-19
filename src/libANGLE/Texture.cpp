@@ -1236,7 +1236,7 @@ Error Texture::generateMipmap(const Context *context)
     {
         return NoError();
     }
-    syncState();
+    ANGLE_TRY(syncState(context));
 
     // Clear the base image(s) immediately if needed
     if (context->isRobustResourceInitEnabled())
@@ -1435,10 +1435,11 @@ GLuint Texture::getId() const
     return id();
 }
 
-void Texture::syncState()
+Error Texture::syncState(const Context *context)
 {
-    mTexture->syncState(mDirtyBits);
+    ANGLE_TRY(mTexture->syncState(context, mDirtyBits));
     mDirtyBits.reset();
+    return NoError();
 }
 
 rx::FramebufferAttachmentObjectImpl *Texture::getAttachmentImpl() const

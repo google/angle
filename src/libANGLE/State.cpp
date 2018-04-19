@@ -2563,7 +2563,7 @@ Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset
                 ANGLE_TRY(mVertexArray->syncState(context));
                 break;
             case DIRTY_OBJECT_PROGRAM_TEXTURES:
-                syncProgramTextures(context);
+                ANGLE_TRY(syncProgramTextures(context));
                 break;
 
             default:
@@ -2576,12 +2576,12 @@ Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset
     return NoError();
 }
 
-void State::syncProgramTextures(const Context *context)
+Error State::syncProgramTextures(const Context *context)
 {
     // TODO(jmadill): Fine-grained updates.
     if (!mProgram)
     {
-        return;
+        return NoError();
     }
 
     ASSERT(mDirtyObjects[DIRTY_OBJECT_PROGRAM_TEXTURES]);
@@ -2613,7 +2613,7 @@ void State::syncProgramTextures(const Context *context)
             if (texture->isSamplerComplete(context, sampler) &&
                 !mDrawFramebuffer->hasTextureAttachment(texture))
             {
-                texture->syncState();
+                ANGLE_TRY(texture->syncState(context));
                 mCompleteTextureCache[textureUnitIndex] = texture;
             }
             else
@@ -2649,6 +2649,8 @@ void State::syncProgramTextures(const Context *context)
             mActiveTexturesMask.reset(textureIndex);
         }
     }
+
+    return NoError();
 }
 
 Error State::syncDirtyObject(const Context *context, GLenum target)

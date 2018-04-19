@@ -637,9 +637,10 @@ gl::Error TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLevel)
     return gl::NoError();
 }
 
-void TextureD3D::syncState(const gl::Texture::DirtyBits &dirtyBits)
+gl::Error TextureD3D::syncState(const gl::Context *context, const gl::Texture::DirtyBits &dirtyBits)
 {
     // TODO(geofflang): Use dirty bits
+    return gl::NoError();
 }
 
 gl::Error TextureD3D::releaseTexStorage(const gl::Context *context)

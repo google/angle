@@ -85,7 +85,8 @@ class TextureNULL : public TextureImpl
     gl::Error bindTexImage(const gl::Context *context, egl::Surface *surface) override;
     gl::Error releaseTexImage(const gl::Context *context) override;
 
-    void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
+    gl::Error syncState(const gl::Context *context,
+                        const gl::Texture::DirtyBits &dirtyBits) override;
 
     gl::Error setStorageMultisample(const gl::Context *context,
                                     gl::TextureType type,

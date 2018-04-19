@@ -1062,11 +1062,11 @@ gl::Error TextureGL::setEGLImageTarget(const gl::Context *context,
     return gl::InternalError();
 }
 
-void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
+gl::Error TextureGL::syncState(const gl::Context *context, const gl::Texture::DirtyBits &dirtyBits)
 {
     if (dirtyBits.none() && mLocalDirtyBits.none())
     {
-        return;
+        return gl::NoError();
     }
 
     mStateManager->bindTexture(getType(), mTextureID);
@@ -1187,6 +1187,7 @@ void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
     }
 
     mLocalDirtyBits.reset();
+    return gl::NoError();
 }
 
 bool TextureGL::hasAnyDirtyBit() const

@@ -468,9 +468,10 @@ vk::Error TextureVk::ensureImageInitialized(RendererVk *renderer)
     return vk::NoError();
 }
 
-void TextureVk::syncState(const gl::Texture::DirtyBits &dirtyBits)
+gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::DirtyBits &dirtyBits)
 {
     // TODO(jmadill): Texture sync state.
+    return gl::NoError();
 }
 
 gl::Error TextureVk::setStorageMultisample(const gl::Context *context,

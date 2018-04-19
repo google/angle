@@ -479,7 +479,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     const GLES1State &gles1() const { return mGLES1State; }
 
   private:
-    void syncProgramTextures(const Context *context);
+    Error syncProgramTextures(const Context *context);
 
     // Cached values from Context's caps
     GLuint mMaxDrawBuffers;
