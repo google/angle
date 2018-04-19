@@ -16,6 +16,24 @@
       "revId": "a2b49e7fc336b218e2e565e35fb3b1c358eddb2c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7bf9f30_3d2ffa46",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-19T18:22:31Z",
+      "side": 1,
+      "message": "Added some basic testing of enabling these.  Doing functionality testing requires a lot of setup.",
+      "parentUuid": "1f922931_2852c660",
+      "revId": "a2b49e7fc336b218e2e565e35fb3b1c358eddb2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
