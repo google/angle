@@ -188,6 +188,30 @@
       "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b678466_9d09074d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-19T11:44:40Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand what you mean with \"You\u0027ll probably need to check the \"isStructSpecifier\" from the LHS of the init expression in this case.\"\n\nIt is not clear to me what is wrong here since I\u0027m manually setting \"isStructSpecifier\" to false in the TIntermDeclaration, when its going to get traversed next time, its just going to declare the struct variable as it should since its not a specifier anymore.\n\nCan you elaborate a little bit please?",
+      "parentUuid": "2176f2c9_f7272e66",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 83
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
