@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3786d548_83d3222f",
+        "filename": "src/libANGLE/gen_packed_enums.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-19T14:23:50Z",
+      "side": 1,
+      "message": "It says 57% rewrite locally which I guess isn\u0027t enough for gerrit to merge them.  The generator strings change almost every line with new replacement strings.",
+      "parentUuid": "7dbe8729_82cad19a",
+      "revId": "cebf830ee56a4566890f9ff3f41c8aff38d75bf7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9147eea_15c271c7",
         "filename": "src/libANGLE/gen_packed_enums.py",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "cebf830ee56a4566890f9ff3f41c8aff38d75bf7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "faeaba88_7e665c62",
+        "filename": "src/libANGLE/gen_packed_enums.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-19T14:23:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9147eea_15c271c7",
+      "revId": "cebf830ee56a4566890f9ff3f41c8aff38d75bf7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
