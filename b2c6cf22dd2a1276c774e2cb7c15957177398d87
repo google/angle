@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "a6d5b15b_463d0bb0",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-19T11:56:08Z",
+      "side": 1,
+      "message": "This does not seem to be catching cases where the declarator is an init expression.",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 37
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9fbb9c31_be8a29e3",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 3
@@ -203,6 +226,30 @@
       "side": 1,
       "message": "I\u0027m not sure I understand what you mean with \"You\u0027ll probably need to check the \"isStructSpecifier\" from the LHS of the init expression in this case.\"\n\nIt is not clear to me what is wrong here since I\u0027m manually setting \"isStructSpecifier\" to false in the TIntermDeclaration, when its going to get traversed next time, its just going to declare the struct variable as it should since its not a specifier anymore.\n\nCan you elaborate a little bit please?",
       "parentUuid": "2176f2c9_f7272e66",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 83
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7110348_00a7dfd4",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-19T11:56:08Z",
+      "side": 1,
+      "message": "The intent of this traverser is to put the declarations of struct types in the beginning of the shader, right? Right now it\u0027s not doing it for declarations that both declare a struct type and initialize a variable with that type. See comment above.\n\nTry to use a shader with both a struct declaration with an initializer and a uniform declared with the same struct in the test to cover this. Something like this I suggested on the bug:\n\n\"out vec4 outColor;\nstruct S { float a; } s \u003d S(1.0);\nuniform S us;\nvoid main() {\n    s.a +\u003d us.a;\n    outColor \u003d vec4(us.a + s.a);\n}\"",
+      "parentUuid": "8b678466_9d09074d",
       "range": {
         "startLine": 73,
         "startChar": 0,
