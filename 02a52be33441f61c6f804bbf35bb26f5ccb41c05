@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58c25964_2bb3118e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 614,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-19T18:51:09Z",
+      "side": 1,
+      "message": "can you add a reference to anglebug.com/1874 to remove this workaround when driver info detection works in angle_end2end_tests?\n\nAlso could you make a general function that converts a vendor ID to a const char * in driver_utils.h?",
+      "range": {
+        "startLine": 612,
+        "startChar": 0,
+        "endLine": 614,
+        "endChar": 66
+      },
+      "revId": "02a52be33441f61c6f804bbf35bb26f5ccb41c05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
