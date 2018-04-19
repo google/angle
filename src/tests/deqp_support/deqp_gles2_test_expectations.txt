@@ -230,8 +230,9 @@
 2479 VULKAN : dEQP-GLES2.functional.texture.size.cube.512x512_l8_mipmap = SKIP
 2479 VULKAN : dEQP-GLES2.functional.texture.size.cube.512x512_rgb888_mipmap = SKIP
 2479 VULKAN : dEQP-GLES2.functional.texture.size.cube.512x512_rgba8888_mipmap = SKIP
-2161 VULKAN : dEQP-GLES2.functional.texture.wrap.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.texture.filtering.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.texture.filtering.cube.* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.texture.filtering.nearest_mipmap_* = SKIP
+2161 VULKAN : dEQP-GLES2.functional.texture.filtering.linear_mipmap_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.mipmap.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.specification.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.completeness.* = SKIP

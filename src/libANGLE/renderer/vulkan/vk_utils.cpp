@@ -1139,6 +1139,43 @@ void GarbageObject::destroy(VkDevice device)
 
 namespace gl_vk
 {
+
+VkFilter GetFilter(const GLenum filter)
+{
+    switch (filter)
+    {
+        case GL_LINEAR_MIPMAP_LINEAR:
+        case GL_LINEAR_MIPMAP_NEAREST:
+        case GL_LINEAR:
+            return VK_FILTER_LINEAR;
+        case GL_NEAREST_MIPMAP_LINEAR:
+        case GL_NEAREST_MIPMAP_NEAREST:
+        case GL_NEAREST:
+            return VK_FILTER_NEAREST;
+        default:
+            UNIMPLEMENTED();
+            return VK_FILTER_MAX_ENUM;
+    }
+}
+
+VkSamplerAddressMode GetSamplerAddressMode(const GLenum wrap)
+{
+    switch (wrap)
+    {
+        case GL_REPEAT:
+            return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        case GL_MIRRORED_REPEAT:
+            return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        case GL_CLAMP_TO_BORDER:
+            return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+        case GL_CLAMP_TO_EDGE:
+            return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        default:
+            UNIMPLEMENTED();
+            return VK_SAMPLER_ADDRESS_MODE_MAX_ENUM;
+    }
+}
+
 VkRect2D GetRect(const gl::Rectangle &source)
 {
     return {{source.x, source.y},

@@ -1285,6 +1285,46 @@ TEST_P(SimpleStateChangeTest, DeleteTextureInUse)
     EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::yellow);
 }
 
+// Tests that modifying a texture parameter in-flight does not cause problems.
+TEST_P(SimpleStateChangeTest, ChangeTextureFilterModeBetweenTwoDraws)
+{
+    std::array<GLColor, 4> colors = {
+        {GLColor::black, GLColor::white, GLColor::black, GLColor::white}};
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw to the left side of the window only with NEAREST.
+    glViewport(0, 0, getWindowWidth() / 2, getWindowHeight());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+
+    // Draw to the right side of the window only with LINEAR.
+    glViewport(getWindowWidth() / 2, 0, getWindowWidth() / 2, getWindowHeight());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+    EXPECT_GL_NO_ERROR();
+
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+
+    // The first half (left) should be only black followed by plain white.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ((getWindowWidth() / 2) - 3, 0, GLColor::white);
+    EXPECT_PIXEL_COLOR_EQ((getWindowWidth() / 2) - 4, 0, GLColor::white);
+
+    // The second half (right) should be a gradient so we shouldn't find plain black/white in the
+    // middle.
+    EXPECT_NE(angle::ReadColor((getWindowWidth() / 4) * 3, 0), GLColor::black);
+    EXPECT_NE(angle::ReadColor((getWindowWidth() / 4) * 3, 0), GLColor::white);
+}
+
 // Tests that redefining an in-flight Texture does not affect the in-flight resource.
 TEST_P(SimpleStateChangeTest, RedefineTextureInUse)
 {
