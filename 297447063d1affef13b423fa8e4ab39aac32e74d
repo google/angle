@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03d0b2b3_69d52bc4",
+        "filename": "src/libANGLE/PackedEGLEnums_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-19T17:39:16Z",
+      "side": 1,
+      "message": "ISTC some platform had issues with linking binary files with no objects defined. I\u0027d be okay with merging these into PackedEnums.h if you want, just would be nice to have a separate step that renames the existing one first (or after). I\u0027m ok with any solution that doesn\u0027t define empty cpp files.",
+      "revId": "297447063d1affef13b423fa8e4ab39aac32e74d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c04eb3c_f9040efe",
+        "filename": "src/libANGLE/packed_egl_enums.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-19T17:39:16Z",
+      "side": 1,
+      "message": "is it possible to add a key with a comment indicating the copyright notice? see vk_format_map.json",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 1
+      },
+      "revId": "297447063d1affef13b423fa8e4ab39aac32e74d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
