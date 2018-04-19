@@ -525,6 +525,9 @@ if (!is_android) {
       "//build/config:exe_and_shlib_deps",
     ]
     deps += [ ":vulkan_generate_mock_icd_files" ]
+    data_deps = [
+      ":vulkan_gen_icd_json_file",
+    ]
     sources = mock_icd_sources
     if (is_win) {
       sources += [ "src/icd/VkICD_mock_icd.def" ]
