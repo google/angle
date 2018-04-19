@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9fbb9c31_be8a29e3",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-19T08:30:58Z",
+      "side": 1,
+      "message": "nit: \"can also have\"",
+      "range": {
+        "startLine": 68,
+        "startChar": 54,
+        "endLine": 68,
+        "endChar": 63
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "455e0004_58d6d8c0",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 3
@@ -36,6 +59,30 @@
       "writtenOn": "2018-04-18T20:01:44Z",
       "side": 1,
       "message": "seems reasonable, I wonder if Olli has any suggestions for making this a bit shorter",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 83
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5463305b_653953b7",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-19T08:30:58Z",
+      "side": 1,
+      "message": "This is not entirely correct - what you end up with here is the declaration pointing to one TVariable and then all other references to the same original variable pointing to a different TVariable. This could cause references to the same variable to get treated as different variables later on.\n\nAlso it looks like this code loses the initializer - I\u0027m not sure why the test still seems to pass. Maybe manually take a look at the output GLSL of the test to check if it is in line with expectations.\n\nYou should use ReplaceVariable instead to handle all the cases correctly and make sure that references to variables stay consistent. In here you can add all the variables to be replaced to a list, and call ReplaceVariable on every variable in that list after this traversal is done. It could be more efficient but we can address optimizing it separately.",
+      "parentUuid": "f3b28e9e_7b9357c9",
       "range": {
         "startLine": 73,
         "startChar": 0,
