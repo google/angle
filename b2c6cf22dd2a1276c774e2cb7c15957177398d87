@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cc6adf87_436342e3",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-19T12:04:34Z",
+      "side": 1,
+      "message": "It does catch it, but the getAsSymbolNode() returns a null pointer. I see what\u0027s wrong now and I\u0027ll work on that.",
+      "parentUuid": "a6d5b15b_463d0bb0",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 37
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fbb9c31_be8a29e3",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 3
@@ -250,6 +274,30 @@
       "side": 1,
       "message": "The intent of this traverser is to put the declarations of struct types in the beginning of the shader, right? Right now it\u0027s not doing it for declarations that both declare a struct type and initialize a variable with that type. See comment above.\n\nTry to use a shader with both a struct declaration with an initializer and a uniform declared with the same struct in the test to cover this. Something like this I suggested on the bug:\n\n\"out vec4 outColor;\nstruct S { float a; } s \u003d S(1.0);\nuniform S us;\nvoid main() {\n    s.a +\u003d us.a;\n    outColor \u003d vec4(us.a + s.a);\n}\"",
       "parentUuid": "8b678466_9d09074d",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 83
+      },
+      "revId": "b2c6cf22dd2a1276c774e2cb7c15957177398d87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ac390d6_0815e384",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-19T12:04:34Z",
+      "side": 1,
+      "message": "Ok I understand the difference now, thank you.",
+      "parentUuid": "e7110348_00a7dfd4",
       "range": {
         "startLine": 73,
         "startChar": 0,
