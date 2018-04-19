@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6de3c0e_189e75be",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 1524,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-19T18:34:53Z",
+      "side": 1,
+      "message": "maybe can call this something that indicates it\u0027s both native + front-end extensions - like mFrontEndExtensions or mFrontEndNativeExtensions.. something like that",
+      "range": {
+        "startLine": 1524,
+        "startChar": 4,
+        "endLine": 1524,
+        "endChar": 33
+      },
+      "revId": "112344796fccb749aca710dc3f9edc52fa389a90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
