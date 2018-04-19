@@ -1996,16 +1996,15 @@ unsigned int Renderer11::getReservedFragmentUniformVectors() const
     return d3d11_gl::GetReservedFragmentUniformVectors(mRenderer11DeviceCaps.featureLevel);
 }
 
-unsigned int Renderer11::getReservedVertexUniformBuffers() const
+gl::ShaderMap<unsigned int> Renderer11::getReservedShaderUniformBuffers() const
 {
-    // we reserve one buffer for the application uniforms, and one for driver uniforms
-    return 2;
-}
+    gl::ShaderMap<unsigned int> shaderReservedUniformBuffers = {};
 
-unsigned int Renderer11::getReservedFragmentUniformBuffers() const
-{
     // we reserve one buffer for the application uniforms, and one for driver uniforms
-    return 2;
+    shaderReservedUniformBuffers[gl::ShaderType::Vertex]   = 2;
+    shaderReservedUniformBuffers[gl::ShaderType::Fragment] = 2;
+
+    return shaderReservedUniformBuffers;
 }
 
 d3d11::ANGLED3D11DeviceType Renderer11::getDeviceType() const

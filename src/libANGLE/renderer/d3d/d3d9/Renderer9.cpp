@@ -1817,8 +1817,8 @@ gl::Error Renderer9::applyUniforms(ProgramD3D *programD3D)
     for (const D3DUniform *targetUniform : uniformArray)
     {
         // Built-in uniforms must be skipped.
-        if (!targetUniform->isReferencedByFragmentShader() &&
-            !targetUniform->isReferencedByVertexShader())
+        if (!targetUniform->isReferencedByShader(gl::ShaderType::Vertex) &&
+            !targetUniform->isReferencedByShader(gl::ShaderType::Fragment))
             continue;
 
         const GLfloat *f = reinterpret_cast<const GLfloat *>(targetUniform->firstNonNullData());
@@ -1862,16 +1862,18 @@ gl::Error Renderer9::applyUniforms(ProgramD3D *programD3D)
 
 void Renderer9::applyUniformnfv(const D3DUniform *targetUniform, const GLfloat *v)
 {
-    if (targetUniform->isReferencedByFragmentShader())
+    if (targetUniform->isReferencedByShader(gl::ShaderType::Fragment))
     {
-        mDevice->SetPixelShaderConstantF(targetUniform->psRegisterIndex, v,
-                                         targetUniform->registerCount);
+        mDevice->SetPixelShaderConstantF(
+            targetUniform->mShaderRegisterIndexes[gl::ShaderType::Fragment], v,
+            targetUniform->registerCount);
     }
 
-    if (targetUniform->isReferencedByVertexShader())
+    if (targetUniform->isReferencedByShader(gl::ShaderType::Vertex))
     {
-        mDevice->SetVertexShaderConstantF(targetUniform->vsRegisterIndex, v,
-                                          targetUniform->registerCount);
+        mDevice->SetVertexShaderConstantF(
+            targetUniform->mShaderRegisterIndexes[gl::ShaderType::Vertex], v,
+            targetUniform->registerCount);
     }
 }
 
