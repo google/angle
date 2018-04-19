@@ -22,6 +22,30 @@
       "revId": "8a886f9f918a1d65147001294c08f205a3cd1cc0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34db516e_78304c73",
+        "filename": "src/tests/gl_tests/SRGBTextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-19T12:09:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0314fbbb_958f1b2a",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 140,
+        "endChar": 11
+      },
+      "revId": "8a886f9f918a1d65147001294c08f205a3cd1cc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

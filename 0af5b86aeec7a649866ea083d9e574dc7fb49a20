@@ -22,6 +22,30 @@
       "revId": "0af5b86aeec7a649866ea083d9e574dc7fb49a20",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e59a5b6_d4482068",
+        "filename": "src/tests/gl_tests/SRGBTextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-19T12:09:30Z",
+      "side": 0,
+      "message": "I believe in this case that the unsized texture format is an extension-only format and not the same as the sized ES3 SRGB_ALPHA8 format and thus follows the rules in the extension that state that mipmaps cannot be generated.  ANGLE didn\u0027t really care internally though.",
+      "parentUuid": "bdd8241c_dbfb2535",
+      "range": {
+        "startLine": 127,
+        "startChar": 12,
+        "endLine": 127,
+        "endChar": 30
+      },
+      "revId": "0af5b86aeec7a649866ea083d9e574dc7fb49a20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
