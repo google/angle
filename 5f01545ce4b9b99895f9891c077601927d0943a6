@@ -22,6 +22,30 @@
       "revId": "5f01545ce4b9b99895f9891c077601927d0943a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27c11e14_fc7fcc91",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-04-19T21:40:56Z",
+      "side": 1,
+      "message": "Yeah I hadn\u0027t realized that \u0027til I made this change either.",
+      "parentUuid": "160b69c1_b2cab08f",
+      "range": {
+        "startLine": 539,
+        "startChar": 10,
+        "endLine": 539,
+        "endChar": 34
+      },
+      "revId": "5f01545ce4b9b99895f9891c077601927d0943a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
