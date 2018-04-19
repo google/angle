@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2686b194_692a0b08",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-19T14:47:29Z",
+      "side": 1,
+      "message": "I\u0027m not too happy about having to store 64-bit integers here. I wonder if we can come up with a better alternative? I can think of at least:\n\n1) Store blit dimensions in a different data structure than Rectangle, and use Rectangle just for viewport/scissor. ClipRectangle logic has to be duplicated.\n2) Store all Rectangles as sets of x0, x1, y0, y1 and provide member functions for returning width/height as int64_t, casting it back to int32_t when needed.\n3) Store width/height as uint32_t. Then cast it back to signed whenever it is known to be less than max signed int32_t, and cast to int64_t when it may be more than max signed int32_t. This requires quite carefully written code.\n\nAll of these seem to have some drawback or another.",
+      "revId": "15e2ae87734deb148dcf773d89d340e70c0d8510",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
