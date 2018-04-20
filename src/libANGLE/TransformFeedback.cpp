@@ -41,7 +41,7 @@ angle::CheckedNumeric<GLsizeiptr> GetVerticesNeededForDraw(GLenum primitiveMode,
         case GL_POINTS:
             return checkedPrimcount * checkedCount;
         default:
-            NOTREACHED();
+            UNREACHABLE();
             return checkedPrimcount * checkedCount;
     }
 }

@@ -45,7 +45,7 @@ bool ShouldCreateLogMessage(LogSeverity severity)
 #if defined(ANGLE_TRACE_ENABLED)
     return true;
 #elif defined(ANGLE_ENABLE_ASSERTS)
-    return severity == LOG_ERR;
+    return severity != LOG_EVENT;
 #else
     return false;
 #endif

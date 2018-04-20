@@ -272,10 +272,13 @@ constexpr LogSeverity LOG_ASSERT = LOG_EVENT;
     ANGLE_EMPTY_STATEMENT
 
 // A macro for code which is not expected to be reached under valid assumptions
-#define UNREACHABLE()                                                                            \
-    ((ERR() << "\t! Unreachable reached: " << __FUNCTION__ << "(" << __FILE__ << ":" << __LINE__ \
-            << ")"),                                                                             \
-     ASSERT(false))
+#define UNREACHABLE()                                                                              \
+    {                                                                                              \
+        ERR() << "\t! Unreachable reached: " << __FUNCTION__ << "(" << __FILE__ << ":" << __LINE__ \
+              << ")";                                                                              \
+        ASSERT(false);                                                                             \
+    }                                                                                              \
+    ANGLE_EMPTY_STATEMENT
 #else
 #define UNIMPLEMENTED()                 \
     {                                   \
@@ -284,7 +287,11 @@ constexpr LogSeverity LOG_ASSERT = LOG_EVENT;
     ANGLE_EMPTY_STATEMENT
 
 // A macro for code which is not expected to be reached under valid assumptions
-#define UNREACHABLE() ASSERT(false)
+#define UNREACHABLE()  \
+    {                  \
+        ASSERT(false); \
+    }                  \
+    ANGLE_EMPTY_STATEMENT
 #endif  // defined(ANGLE_TRACE_ENABLED) || defined(ANGLE_ENABLE_ASSERTS)
 
 #endif   // COMMON_DEBUG_H_
