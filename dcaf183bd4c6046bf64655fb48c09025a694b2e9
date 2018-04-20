@@ -22,6 +22,110 @@
       "revId": "dcaf183bd4c6046bf64655fb48c09025a694b2e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3790d6bb_52a49e36",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-20T15:25:10Z",
+      "side": 1,
+      "message": "And it would remove the need for isLastShader that assumes the ordering of the calls.",
+      "parentUuid": "038de1d5_f0f1ac1c",
+      "range": {
+        "startLine": 505,
+        "startChar": 0,
+        "endLine": 508,
+        "endChar": 9
+      },
+      "revId": "dcaf183bd4c6046bf64655fb48c09025a694b2e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2cb29a3_54821f57",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-20T15:25:10Z",
+      "side": 1,
+      "message": "nit: This comment is out of date.",
+      "revId": "dcaf183bd4c6046bf64655fb48c09025a694b2e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88c99399_5a98d47f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-20T15:25:10Z",
+      "side": 1,
+      "message": "Maybe replace the vertex shader check with a \"first\" check? The order here doesn\u0027t matter.",
+      "revId": "dcaf183bd4c6046bf64655fb48c09025a694b2e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27ff639f_56350163",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2832,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-20T15:25:10Z",
+      "side": 1,
+      "message": "This could be replaced by a loop over all graphics shader stages.",
+      "range": {
+        "startLine": 2799,
+        "startChar": 0,
+        "endLine": 2832,
+        "endChar": 0
+      },
+      "revId": "dcaf183bd4c6046bf64655fb48c09025a694b2e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4df95cb_adb0163a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2878,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-20T15:25:10Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 2843,
+        "startChar": 0,
+        "endLine": 2878,
+        "endChar": 0
+      },
+      "revId": "dcaf183bd4c6046bf64655fb48c09025a694b2e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
