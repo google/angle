@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5eb1b8f6_1682b948",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-20T06:31:53Z",
+      "side": 1,
+      "message": "Can we use mState.getAttachedShader or mState.getLinkedShaderStages() to replace availableShaderStages so that you can keep the same interface with old code (empty argument list)?",
+      "range": {
+        "startLine": 1851,
+        "startChar": 12,
+        "endLine": 1851,
+        "endChar": 33
+      },
+      "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7c672f8_e56ef5c2",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-20T06:31:53Z",
+      "side": 1,
+      "message": "mShaderData?",
+      "range": {
+        "startLine": 69,
+        "startChar": 29,
+        "endLine": 69,
+        "endChar": 39
+      },
+      "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cc3b58a_a84f7b7e",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-20T06:31:53Z",
+      "side": 1,
+      "message": "mShaderRegisterIndexes to keep consistent with mShaderRegisterIndexes in D3DUniformBlock?",
+      "range": {
+        "startLine": 73,
+        "startChar": 32,
+        "endLine": 73,
+        "endChar": 53
+      },
+      "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2760da67_0a836d9a",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-20T06:31:53Z",
+      "side": 1,
+      "message": "How about renaming to reservedShaderRegisterIndexes?",
+      "range": {
+        "startLine": 209,
+        "startChar": 69,
+        "endLine": 209,
+        "endChar": 97
+      },
+      "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
