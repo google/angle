@@ -22,6 +22,31 @@
       "revId": "73f6bac582f3fe1248b6848ace369298e189e8c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db7ca499_0f4da95f",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-20T23:02:04Z",
+      "side": 1,
+      "message": "Courtney",
+      "parentUuid": "b631e155_acf4a7bc",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 249,
+        "endChar": 28
+      },
+      "tag": "mailMessageId\u003d\u003cCAJ5RC+-T2XvfcU8DXbxr6DhQs7q_Q9LAXVAfXWAnngJNtg-zsg@mail.gmail.com\u003e",
+      "revId": "73f6bac582f3fe1248b6848ace369298e189e8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
