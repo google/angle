@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "1ad2ae66_4882a2c8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-20T19:03:26Z",
+      "side": 1,
+      "message": "It turns out I cannot remove this. It is possible that syncState will not be called at all if no parameters are set before drawing, and in that case the mSampler will never be intialized and will fail (these are the failing tests in the current CQ Dry Run)",
+      "parentUuid": "2a9d2d09_85a22730",
+      "range": {
+        "startLine": 321,
+        "startChar": 4,
+        "endLine": 321,
+        "endChar": 34
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "545b3db5_7bd5b44c",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 9
