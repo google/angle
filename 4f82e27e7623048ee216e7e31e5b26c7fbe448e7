@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "778aceec_97f06432",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-20T12:54:35Z",
+      "side": 1,
+      "message": "I think this can be implemented here too.  It will require switching on the minFilter and extracting the mipmap part of it.",
+      "range": {
+        "startLine": 262,
+        "startChar": 8,
+        "endLine": 262,
+        "endChar": 77
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "545b3db5_7bd5b44c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-20T12:54:35Z",
+      "side": 1,
+      "message": "Do you need to track this? Can you just keep the dirty bool and use getState().getSamplerState()?",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 159,
+        "endChar": 37
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
