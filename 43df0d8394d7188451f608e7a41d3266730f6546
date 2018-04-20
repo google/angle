@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ec0340a_1dfa8202",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T17:31:02Z",
+      "side": 1,
+      "message": "I am not sure you need to store both lists - can\u0027t you override mConfigAttribList with configAttribListBase in DisplayAndroid::initialize near the end of the function if the extension is not present?",
+      "range": {
+        "startLine": 268,
+        "startChar": 1,
+        "endLine": 271,
+        "endChar": 62
+      },
+      "revId": "43df0d8394d7188451f608e7a41d3266730f6546",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
