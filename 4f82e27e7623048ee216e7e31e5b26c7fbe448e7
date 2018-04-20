@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d529e8f8_512f67fd",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T13:26:43Z",
+      "side": 1,
+      "message": "nit: these can go in vk_utils gl_vk:: namespace as GetFilter and GetSamplerAddressMode",
+      "range": {
+        "startLine": 22,
+        "startChar": 9,
+        "endLine": 22,
+        "endChar": 20
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "778aceec_97f06432",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 9
@@ -49,6 +72,53 @@
     },
     {
       "key": {
+        "uuid": "f4746ae0_debbda96",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T13:26:43Z",
+      "side": 1,
+      "message": "I think you can implement the filtering bits for here too - agree with Geoff. But it\u0027s a minor point.",
+      "parentUuid": "a67a16b5_ef411220",
+      "range": {
+        "startLine": 262,
+        "startChar": 8,
+        "endLine": 262,
+        "endChar": 77
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a039c92e_2b18e128",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T13:26:43Z",
+      "side": 1,
+      "message": "I would like you to remove this if possible",
+      "range": {
+        "startLine": 321,
+        "startChar": 4,
+        "endLine": 321,
+        "endChar": 34
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "545b3db5_7bd5b44c",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 9
@@ -93,6 +163,53 @@
       "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a0fa068_5e7cc679",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T13:26:43Z",
+      "side": 1,
+      "message": "This is surprising - ping me and we can debug the failures. We should have the correct values in syncState, but not in setImage.",
+      "parentUuid": "8557c52e_b3abbf6a",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 159,
+        "endChar": 37
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30aa991d_f8f2ea30",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T13:26:43Z",
+      "side": 1,
+      "message": "any idea why these fail? We have cube support now.",
+      "range": {
+        "startLine": 233,
+        "startChar": 14,
+        "endLine": 233,
+        "endChar": 60
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
