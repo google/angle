@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b631e155_acf4a7bc",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T22:55:26Z",
+      "side": 1,
+      "message": "what\u0027s up with these changes?",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 249,
+        "endChar": 28
+      },
+      "revId": "73f6bac582f3fe1248b6848ace369298e189e8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
