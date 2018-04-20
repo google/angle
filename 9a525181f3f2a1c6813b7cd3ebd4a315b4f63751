@@ -16,6 +16,24 @@
       "revId": "9a525181f3f2a1c6813b7cd3ebd4a315b4f63751",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b45a2a6c_246e74b7",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T15:02:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eddc3f46_67309e60",
+      "revId": "9a525181f3f2a1c6813b7cd3ebd4a315b4f63751",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
