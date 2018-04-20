@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "038de1d5_f0f1ac1c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-20T15:00:40Z",
+      "side": 1,
+      "message": "Might not be worth skipping this, doesn\u0027t look like it matters.",
+      "range": {
+        "startLine": 505,
+        "startChar": 0,
+        "endLine": 508,
+        "endChar": 9
+      },
+      "revId": "dcaf183bd4c6046bf64655fb48c09025a694b2e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
