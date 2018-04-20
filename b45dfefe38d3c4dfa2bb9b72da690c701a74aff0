@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ab9db57_797c1214",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T16:09:58Z",
+      "side": 1,
+      "message": "nit: can you return \"Unknown\" and mark this as UNREACHABLE? If it crashes we can fix it later, but it would be good to know.",
+      "range": {
+        "startLine": 133,
+        "startChar": 19,
+        "endLine": 133,
+        "endChar": 26
+      },
+      "revId": "b45dfefe38d3c4dfa2bb9b72da690c701a74aff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
