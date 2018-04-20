@@ -2453,7 +2453,7 @@ void Context::getProgramInterfaceivRobust(GLuint program,
 
 void Context::handleError(const Error &error) const
 {
-    if (error.isError())
+    if (ANGLE_UNLIKELY(error.isError()))
     {
         GLenum code = error.getCode();
         mErrors.insert(code);

@@ -667,7 +667,7 @@ VkImageViewType GetImageViewType(gl::TextureType textureType);
 #define ANGLE_VK_TRY(command)                                          \
     {                                                                  \
         auto ANGLE_LOCAL_VAR = command;                                \
-        if (ANGLE_LOCAL_VAR != VK_SUCCESS)                             \
+        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS))             \
         {                                                              \
             return rx::vk::Error(ANGLE_LOCAL_VAR, __FILE__, __LINE__); \
         }                                                              \
