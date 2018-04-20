@@ -22,6 +22,30 @@
       "revId": "b45dfefe38d3c4dfa2bb9b72da690c701a74aff0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f39aa2fe_f3b76f85",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-20T17:13:52Z",
+      "side": 1,
+      "message": "RendererVk just uses the vendor id number in this case, I didn\u0027t want to regress that. Do you think UNREACHABLE would still be better?",
+      "parentUuid": "1ab9db57_797c1214",
+      "range": {
+        "startLine": 133,
+        "startChar": 19,
+        "endLine": 133,
+        "endChar": 26
+      },
+      "revId": "b45dfefe38d3c4dfa2bb9b72da690c701a74aff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
