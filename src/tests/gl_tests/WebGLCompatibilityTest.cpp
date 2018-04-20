@@ -4135,6 +4135,23 @@ TEST_P(WebGL2CompatibilityTest, BindAttribLocationLimitation)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
+// Covers a bug in transform feedback loop detection.
+TEST_P(WebGL2CompatibilityTest, TransformFeedbackCheckNullDeref)
+{
+    constexpr char kVS[] = R"(attribute vec4 color; void main() { color.r; })";
+    constexpr char kFS[] = R"(void main(){})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glEnableVertexAttribArray(0);
+    glDrawArrays(GL_POINTS, 0, 1);
+
+    // This should fail because it is trying to pull one vertex from an empty buffer.
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,

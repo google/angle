@@ -173,7 +173,7 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
             const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
 
             gl::Buffer *buffer = binding.getBuffer().get();
-            if (buffer->isBoundForTransformFeedbackAndOtherUse())
+            if (buffer && buffer->isBoundForTransformFeedbackAndOtherUse())
             {
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(),
                                      VertexBufferBoundForTransformFeedback);

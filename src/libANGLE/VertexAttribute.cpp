@@ -86,7 +86,7 @@ VertexAttribute::VertexAttribute(GLuint bindingIndex)
       relativeOffset(0),
       vertexAttribArrayStride(0),
       bindingIndex(bindingIndex),
-      cachedSizePlusRelativeOffset(0)
+      cachedSizePlusRelativeOffset(16)
 {
 }
 
