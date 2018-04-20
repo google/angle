@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a67a16b5_ef411220",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-20T13:03:41Z",
+      "side": 1,
+      "message": "This CL does not touch the existing behavior for anything else than the clamping and filtering. Mipmaps are going to be addressed as a separate CL and task.",
+      "parentUuid": "778aceec_97f06432",
+      "range": {
+        "startLine": 262,
+        "startChar": 8,
+        "endLine": 262,
+        "endChar": 77
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "545b3db5_7bd5b44c",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8557c52e_b3abbf6a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-20T13:03:41Z",
+      "side": 1,
+      "message": "I need to because the glState might not be initialized with correct values. By having our own SamplerState we control what the defaults are and only change what the user wants to change on purpose. (I tried your suggestion and every test was failing when just using what\u0027s in glState directly)",
+      "parentUuid": "545b3db5_7bd5b44c",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 159,
+        "endChar": 37
+      },
+      "revId": "4f82e27e7623048ee216e7e31e5b26c7fbe448e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
