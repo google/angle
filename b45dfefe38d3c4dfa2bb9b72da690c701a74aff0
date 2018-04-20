@@ -46,6 +46,30 @@
       "revId": "b45dfefe38d3c4dfa2bb9b72da690c701a74aff0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "478174be_b40a5cab",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-20T18:55:42Z",
+      "side": 1,
+      "message": "Yeah, I think that\u0027s fine. The only place that the Vulkan backend is used is on the bots - and they start crashing (they shouldn\u0027t) we know immediately what device ID is missing.",
+      "parentUuid": "f39aa2fe_f3b76f85",
+      "range": {
+        "startLine": 133,
+        "startChar": 19,
+        "endLine": 133,
+        "endChar": 26
+      },
+      "revId": "b45dfefe38d3c4dfa2bb9b72da690c701a74aff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
