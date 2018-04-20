@@ -651,6 +651,7 @@ namespace gl_vk
 {
 VkRect2D GetRect(const gl::Rectangle &source);
 VkFilter GetFilter(const GLenum filter);
+VkSamplerMipmapMode GetSamplerMipmapMode(const GLenum filter);
 VkSamplerAddressMode GetSamplerAddressMode(const GLenum wrap);
 VkPrimitiveTopology GetPrimitiveTopology(GLenum mode);
 VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState);

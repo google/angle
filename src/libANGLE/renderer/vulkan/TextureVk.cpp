@@ -183,7 +183,7 @@ PixelBuffer::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other
 TextureVk::TextureVk(const gl::TextureState &state) : TextureImpl(state)
 {
     mRenderTarget.image     = &mImage;
-    mRenderTarget.imageView = &mImageView;
+    mRenderTarget.imageView = &mBaseLevelImageView;
     mRenderTarget.resource  = this;
 }
 
@@ -215,13 +215,6 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
-
-    // TODO(jmadill): support multi-level textures.
-    if (index.getLevelIndex() != 0)
-    {
-        UNIMPLEMENTED();
-        return gl::InternalError();
-    }
 
     // Convert internalFormat to sized internal format.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
@@ -418,9 +411,11 @@ vk::Error TextureVk::ensureImageInitialized(RendererVk *renderer)
             (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
              VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
 
-        ANGLE_TRY(mImage.init(device, mState.getType(), extents, format, 1, usage));
+        const uint32_t levelCount = getLevelCount();
+        ANGLE_TRY(mImage.init(device, mState.getType(), extents, format, 1, usage, levelCount));
 
         VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
         ANGLE_TRY(mImage.initMemory(device, renderer->getMemoryProperties(), flags));
 
         gl::SwizzleState mappedSwizzle;
@@ -428,7 +423,9 @@ vk::Error TextureVk::ensureImageInitialized(RendererVk *renderer)
 
         // TODO(jmadill): Separate imageviews for RenderTargets and Sampling.
         ANGLE_TRY(mImage.initImageView(device, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
-                                       mappedSwizzle, &mImageView));
+                                       mappedSwizzle, &mMipmapImageView, levelCount));
+        ANGLE_TRY(mImage.initImageView(device, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
+                                       mappedSwizzle, &mBaseLevelImageView, 1));
 
         // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
 
@@ -463,7 +460,7 @@ gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::Di
     samplerInfo.flags                   = 0;
     samplerInfo.magFilter               = gl_vk::GetFilter(samplerState.magFilter);
     samplerInfo.minFilter               = gl_vk::GetFilter(samplerState.minFilter);
-    samplerInfo.mipmapMode              = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+    samplerInfo.mipmapMode              = gl_vk::GetSamplerMipmapMode(samplerState.minFilter);
     samplerInfo.addressModeU            = gl_vk::GetSamplerAddressMode(samplerState.wrapS);
     samplerInfo.addressModeV            = gl_vk::GetSamplerAddressMode(samplerState.wrapT);
     samplerInfo.addressModeW            = gl_vk::GetSamplerAddressMode(samplerState.wrapR);
@@ -472,8 +469,8 @@ gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::Di
     samplerInfo.maxAnisotropy           = 1.0f;
     samplerInfo.compareEnable           = VK_FALSE;
     samplerInfo.compareOp               = VK_COMPARE_OP_ALWAYS;
-    samplerInfo.minLod                  = 0.0f;
-    samplerInfo.maxLod                  = 1.0f;
+    samplerInfo.minLod                  = samplerState.minLod;
+    samplerInfo.maxLod                  = samplerState.maxLod;
     samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
@@ -508,7 +505,14 @@ const vk::ImageHelper &TextureVk::getImage() const
 const vk::ImageView &TextureVk::getImageView() const
 {
     ASSERT(mImage.valid());
-    return mImageView;
+
+    const GLenum minFilter = mState.getSamplerState().minFilter;
+    if (minFilter == GL_LINEAR || minFilter == GL_NEAREST)
+    {
+        return mBaseLevelImageView;
+    }
+
+    return mMipmapImageView;
 }
 
 const vk::Sampler &TextureVk::getSampler() const
@@ -520,8 +524,16 @@ const vk::Sampler &TextureVk::getSampler() const
 void TextureVk::releaseImage(const gl::Context *context, RendererVk *renderer)
 {
     mImage.release(renderer->getCurrentQueueSerial(), renderer);
-    renderer->releaseResource(*this, &mImageView);
+    renderer->releaseResource(*this, &mBaseLevelImageView);
+    renderer->releaseResource(*this, &mMipmapImageView);
     onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 }
 
+uint32_t TextureVk::getLevelCount() const
+{
+    ASSERT(mState.getEffectiveBaseLevel() == 0);
+
+    // getMipmapMaxLevel will be 0 here if mipmaps are not used, so the levelCount is always +1.
+    return mState.getMipmapMaxLevel() + 1;
+}
 }  // namespace rx

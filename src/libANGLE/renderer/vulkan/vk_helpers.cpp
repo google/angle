@@ -489,7 +489,8 @@ Error ImageHelper::init(VkDevice device,
                         const gl::Extents &extents,
                         const Format &format,
                         GLint samples,
-                        VkImageUsageFlags usage)
+                        VkImageUsageFlags usage,
+                        uint32_t mipLevels)
 {
     ASSERT(!valid());
 
@@ -507,7 +508,7 @@ Error ImageHelper::init(VkDevice device,
     imageInfo.extent.width          = static_cast<uint32_t>(extents.width);
     imageInfo.extent.height         = static_cast<uint32_t>(extents.height);
     imageInfo.extent.depth          = 1;
-    imageInfo.mipLevels             = 1;
+    imageInfo.mipLevels             = mipLevels;
     imageInfo.arrayLayers           = mLayerCount;
     imageInfo.samples               = gl_vk::GetSamples(samples);
     imageInfo.tiling                = VK_IMAGE_TILING_OPTIMAL;
@@ -548,7 +549,8 @@ Error ImageHelper::initImageView(VkDevice device,
                                  gl::TextureType textureType,
                                  VkImageAspectFlags aspectMask,
                                  const gl::SwizzleState &swizzleMap,
-                                 ImageView *imageViewOut)
+                                 ImageView *imageViewOut,
+                                 uint32_t levelCount)
 {
     VkImageViewCreateInfo viewInfo;
     viewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -563,7 +565,7 @@ Error ImageHelper::initImageView(VkDevice device,
     viewInfo.components.a                    = gl_vk::GetSwizzle(swizzleMap.swizzleAlpha);
     viewInfo.subresourceRange.aspectMask     = aspectMask;
     viewInfo.subresourceRange.baseMipLevel   = 0;
-    viewInfo.subresourceRange.levelCount     = 1;
+    viewInfo.subresourceRange.levelCount     = levelCount;
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount     = mLayerCount;
 
@@ -701,7 +703,7 @@ void ImageHelper::changeLayoutWithStages(VkImageAspectFlags aspectMask,
     // TODO(jmadill): Is this needed for mipped/layer images?
     imageMemoryBarrier.subresourceRange.aspectMask     = aspectMask;
     imageMemoryBarrier.subresourceRange.baseMipLevel   = 0;
-    imageMemoryBarrier.subresourceRange.levelCount     = 1;
+    imageMemoryBarrier.subresourceRange.levelCount     = VK_REMAINING_MIP_LEVELS;
     imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
     imageMemoryBarrier.subresourceRange.layerCount     = mLayerCount;
 
@@ -743,7 +745,7 @@ void ImageHelper::clearColor(const VkClearColorValue &color, CommandBuffer *comm
     VkImageSubresourceRange range;
     range.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     range.baseMipLevel   = 0;
-    range.levelCount     = 1;
+    range.levelCount     = VK_REMAINING_MIP_LEVELS;
     range.baseArrayLayer = 0;
     range.layerCount     = mLayerCount;
 

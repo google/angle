@@ -150,9 +150,11 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
 
   private:
     void releaseImage(const gl::Context *context, RendererVk *renderer);
+    uint32_t getLevelCount() const;
 
     vk::ImageHelper mImage;
-    vk::ImageView mImageView;
+    vk::ImageView mBaseLevelImageView;
+    vk::ImageView mMipmapImageView;
     vk::Sampler mSampler;
 
     RenderTargetVk mRenderTarget;

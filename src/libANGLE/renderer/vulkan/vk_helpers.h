@@ -167,7 +167,8 @@ class ImageHelper final : angle::NonCopyable
                const gl::Extents &extents,
                const Format &format,
                GLint samples,
-               VkImageUsageFlags usage);
+               VkImageUsageFlags usage,
+               uint32_t mipLevels);
     Error initMemory(VkDevice device,
                      const MemoryProperties &memoryProperties,
                      VkMemoryPropertyFlags flags);
@@ -175,7 +176,8 @@ class ImageHelper final : angle::NonCopyable
                         gl::TextureType textureType,
                         VkImageAspectFlags aspectMask,
                         const gl::SwizzleState &swizzleMap,
-                        ImageView *imageViewOut);
+                        ImageView *imageViewOut,
+                        uint32_t levelCount);
     Error init2DStaging(VkDevice device,
                         const MemoryProperties &memoryProperties,
                         const Format &format,
