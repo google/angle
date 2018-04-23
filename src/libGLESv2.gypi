@@ -167,6 +167,7 @@
             'libANGLE/Framebuffer.h',
             'libANGLE/FramebufferAttachment.cpp',
             'libANGLE/FramebufferAttachment.h',
+            'libANGLE/GLES1Renderer.cpp',
             'libANGLE/GLES1State.cpp',
             'libANGLE/HandleAllocator.cpp',
             'libANGLE/HandleAllocator.h',

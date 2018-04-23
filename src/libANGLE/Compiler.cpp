@@ -57,7 +57,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
       mResources(),
       mShaderCompilers({})
 {
-    ASSERT(state.getClientMajorVersion() == 2 || state.getClientMajorVersion() == 3);
+    ASSERT(state.getClientMajorVersion() == 1 || state.getClientMajorVersion() == 2 ||
+           state.getClientMajorVersion() == 3);
 
     const gl::Caps &caps             = state.getCaps();
     const gl::Extensions &extensions = state.getExtensions();
@@ -74,8 +75,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.OES_standard_derivatives     = extensions.standardDerivatives;
     mResources.EXT_draw_buffers             = extensions.drawBuffers;
     mResources.EXT_shader_texture_lod       = extensions.shaderTextureLOD;
-    mResources.OES_EGL_image_external          = extensions.eglImageExternal;
-    mResources.OES_EGL_image_external_essl3    = extensions.eglImageExternalEssl3;
+    mResources.OES_EGL_image_external       = extensions.eglImageExternal;
+    mResources.OES_EGL_image_external_essl3 = extensions.eglImageExternalEssl3;
     mResources.NV_EGL_stream_consumer_external = extensions.eglStreamConsumerExternal;
     mResources.ARB_texture_rectangle           = extensions.textureRectangle;
     // TODO: use shader precision caps to determine if high precision is supported?
@@ -124,7 +125,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.MaxCombinedAtomicCounterBuffers = caps.maxCombinedAtomicCounterBuffers;
     mResources.MaxAtomicCounterBufferSize      = caps.maxAtomicCounterBufferSize;
 
-    mResources.MaxUniformBufferBindings = caps.maxUniformBufferBindings;
+    mResources.MaxUniformBufferBindings       = caps.maxUniformBufferBindings;
     mResources.MaxShaderStorageBufferBindings = caps.maxShaderStorageBufferBindings;
 
     // Needed by point size clamping workaround
@@ -144,11 +145,11 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.MaxGeometryOutputVertices        = caps.maxGeometryOutputVertices;
     mResources.MaxGeometryTotalOutputComponents = caps.maxGeometryTotalOutputComponents;
     mResources.MaxGeometryTextureImageUnits = caps.maxShaderTextureImageUnits[ShaderType::Geometry];
-    mResources.MaxGeometryAtomicCounterBuffers  = caps.maxGeometryAtomicCounterBuffers;
-    mResources.MaxGeometryAtomicCounters        = caps.maxGeometryAtomicCounters;
-    mResources.MaxGeometryShaderStorageBlocks   = caps.maxShaderStorageBlocks[ShaderType::Geometry];
-    mResources.MaxGeometryShaderInvocations     = caps.maxGeometryShaderInvocations;
-    mResources.MaxGeometryImageUniforms         = caps.maxGeometryImageUniforms;
+    mResources.MaxGeometryAtomicCounterBuffers = caps.maxGeometryAtomicCounterBuffers;
+    mResources.MaxGeometryAtomicCounters       = caps.maxGeometryAtomicCounters;
+    mResources.MaxGeometryShaderStorageBlocks  = caps.maxShaderStorageBlocks[ShaderType::Geometry];
+    mResources.MaxGeometryShaderInvocations    = caps.maxGeometryShaderInvocations;
+    mResources.MaxGeometryImageUniforms        = caps.maxGeometryImageUniforms;
 }
 
 Compiler::~Compiler()

@@ -48,6 +48,7 @@
             '<(angle_path)/src/tests/gl_tests/FramebufferTest.cpp',
             '<(angle_path)/src/tests/gl_tests/GeometryShaderTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/AlphaFuncTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/gles1/BasicDrawTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/ClientActiveTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/ClientStateEnable.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/CurrentColorTest.cpp',

@@ -31,6 +31,7 @@ static_library("sample_util") {
     "../:angle_common",
     "../:angle_util",
     "../:libEGL${angle_libs_suffix}",
+    "../:libGLESv1_CM${angle_libs_suffix}",
     "../:libGLESv2${angle_libs_suffix}",
   ]
   public_configs = [ ":sample_util_config" ]
@@ -169,6 +170,18 @@ angle_sample("tri_fan_microbench") {
 angle_sample("window_test") {
   sources = [
     "WindowTest/WindowTest.cpp",
+  ]
+}
+
+angle_sample("gles1_hello_triangle") {
+  sources = [
+    "gles1/HelloTriangle.cpp",
+  ]
+}
+
+angle_sample("gles1_simple_texture_2d") {
+  sources = [
+    "gles1/SimpleTexture2D.cpp",
   ]
 }
 

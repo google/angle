@@ -48,19 +48,20 @@ namespace gl
 class Buffer;
 class Compiler;
 class FenceNV;
-class Sync;
 class Framebuffer;
+class GLES1Renderer;
 class MemoryProgramCache;
 class Program;
+class ProgramPipeline;
 class Query;
 class Renderbuffer;
 class Sampler;
 class Shader;
+class Sync;
 class Texture;
 class TransformFeedback;
 class VertexArray;
 struct VertexAttribute;
-class ProgramPipeline;
 
 class Context final : angle::NonCopyable
 {
@@ -1458,6 +1459,8 @@ class Context final : angle::NonCopyable
 
     // GLES1 emulation: Renderer level (for validation)
     int vertexArrayIndex(ClientVertexArrayType type) const;
+    static int TexCoordArrayIndex(unsigned int unit);
+    AttributesMask getVertexArraysAttributeMask() const;
 
   private:
     Error prepareForDraw();
@@ -1555,6 +1558,9 @@ class Context final : angle::NonCopyable
     // Recorded errors
     typedef std::set<GLenum> ErrorSet;
     mutable ErrorSet mErrors;
+
+    // GLES1 renderer state
+    std::unique_ptr<GLES1Renderer> mGLES1Renderer;
 
     // Current/lost context flags
     bool mHasBeenCurrent;
