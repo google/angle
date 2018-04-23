@@ -772,6 +772,12 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_ALPHA_TEST:
             mGLES1State.mAlphaTestEnabled = enabled;
             break;
+        case GL_TEXTURE_2D:
+            mGLES1State.mTexUnitEnables[mActiveSampler].set(TextureType::_2D, enabled);
+            break;
+        case GL_TEXTURE_CUBE_MAP:
+            mGLES1State.mTexUnitEnables[mActiveSampler].set(TextureType::CubeMap, enabled);
+            break;
 
         default:
             UNREACHABLE();
@@ -838,7 +844,10 @@ bool State::getEnableFeature(GLenum feature) const
             return mGLES1State.mPointSizeArrayEnabled;
         case GL_TEXTURE_COORD_ARRAY:
             return mGLES1State.mTexCoordArrayEnabled[mGLES1State.mClientActiveTexture];
-
+        case GL_TEXTURE_2D:
+            return mGLES1State.mTexUnitEnables[mActiveSampler].test(TextureType::_2D);
+        case GL_TEXTURE_CUBE_MAP:
+            return mGLES1State.mTexUnitEnables[mActiveSampler].test(TextureType::CubeMap);
         default:
             UNREACHABLE();
             return false;

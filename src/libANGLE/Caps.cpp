@@ -227,7 +227,8 @@ Extensions::Extensions()
       programCacheControl(false),
       textureRectangle(false),
       geometryShader(false),
-      pointSizeArray(false)
+      pointSizeArray(false),
+      textureCubeMap(false)
 {
 }
 
@@ -701,6 +702,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_geometry_shader"] = enableableExtension(&Extensions::geometryShader);
         // GLES1 extensinos
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArray);
+        map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMap);
         // clang-format on
 
         return map;

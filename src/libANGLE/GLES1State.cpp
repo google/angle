@@ -69,8 +69,7 @@ void GLES1State::initialize(const Context *context, const State *state)
     mTexUnitEnables.resize(caps.maxMultitextureUnits);
     for (auto &enables : mTexUnitEnables)
     {
-        enables.enable2D      = false;
-        enables.enableCubeMap = false;
+        enables.reset();
     }
 
     mVertexArrayEnabled    = false;
@@ -311,6 +310,11 @@ bool GLES1State::isClientStateEnabled(ClientVertexArrayType clientState) const
             UNREACHABLE();
             return false;
     }
+}
+
+bool GLES1State::isTextureTargetEnabled(unsigned int unit, const TextureType type) const
+{
+    return mTexUnitEnables[unit].test(type);
 }
 
 }  // namespace gl

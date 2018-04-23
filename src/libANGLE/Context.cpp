@@ -3011,6 +3011,7 @@ Extensions Context::generateSupportedExtensions(const egl::DisplayExtensions &di
     {
         // Default extensions for GLES1
         supportedExtensions.pointSizeArray = true;
+        supportedExtensions.textureCubeMap = true;
     }
 
     if (getClientVersion() < ES_3_0)
