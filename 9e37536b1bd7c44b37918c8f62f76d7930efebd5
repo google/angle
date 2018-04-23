@@ -22,6 +22,30 @@
       "revId": "9e37536b1bd7c44b37918c8f62f76d7930efebd5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "627d7112_af15cc68",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-23T12:30:16Z",
+      "side": 1,
+      "message": "I have partial workarounds for the bugs in another patch, so I\u0027d prefer keeping these restrictions WebGL-specific. Workaround patch: https://chromium-review.googlesource.com/c/angle/angle/+/1012849",
+      "parentUuid": "eb9d0c78_0ef390a4",
+      "range": {
+        "startLine": 1313,
+        "startChar": 8,
+        "endLine": 1318,
+        "endChar": 9
+      },
+      "revId": "9e37536b1bd7c44b37918c8f62f76d7930efebd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
