@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cdd9359_e546a07c",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T18:05:58Z",
+      "side": 1,
+      "message": "textureCubeMap",
+      "range": {
+        "startLine": 705,
+        "startChar": 74,
+        "endLine": 705,
+        "endChar": 88
+      },
+      "revId": "04d5d082e5c0c68f7b15298be3c38ec2bd6e24a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26b895f8_768615de",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T18:05:58Z",
+      "side": 1,
+      "message": "nit: let\u0027s keep the extension string above the bools for reference.",
+      "range": {
+        "startLine": 379,
+        "startChar": 0,
+        "endLine": 380,
+        "endChar": 24
+      },
+      "revId": "04d5d082e5c0c68f7b15298be3c38ec2bd6e24a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7e1324b_26a96889",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T18:05:58Z",
+      "side": 1,
+      "message": "Maybe we can chance this to a std::vector\u003cPackedEnumBitSet\u003cTextureType\u003e\u003e.  It should have very similiar memory requirements and simplifies some queries to indexing operations.",
+      "range": {
+        "startLine": 165,
+        "startChar": 4,
+        "endLine": 170,
+        "endChar": 48
+      },
+      "revId": "04d5d082e5c0c68f7b15298be3c38ec2bd6e24a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
