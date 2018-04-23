@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "abebbc6a_5b591e4b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T13:25:03Z",
+      "side": 1,
+      "message": "Let\u0027s assert that mState.getEffectiveMaxLevel() is 0.",
+      "revId": "890c2e2913545280663376aa64677f55c955efe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
