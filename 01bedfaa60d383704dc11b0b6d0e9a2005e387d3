@@ -16,6 +16,24 @@
       "revId": "01bedfaa60d383704dc11b0b6d0e9a2005e387d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "913466cc_4bbebc72",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-23T18:54:31Z",
+      "side": 1,
+      "message": "I\u0027m still learning here. When I wrote this it was my understanding that the two packages were separate. If that\u0027s incorrect, I\u0027m happy to fix it here.",
+      "parentUuid": "f43481a1_09b39a54",
+      "revId": "01bedfaa60d383704dc11b0b6d0e9a2005e387d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
