@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c249ca90_4228c330",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-23T14:34:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db5346ef_731cb7b0",
+      "range": {
+        "startLine": 217,
+        "startChar": 10,
+        "endLine": 217,
+        "endChar": 15
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "38ab53eb_06803299",
         "filename": "src/libANGLE/angletypes.cpp",
         "patchSetId": 13
@@ -45,6 +69,30 @@
       "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc949d0b_eceef896",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-23T14:34:46Z",
+      "side": 1,
+      "message": "The next patch simplifies ClipRectangle to have the same behavior. I changed the order of the patches so there\u0027s no inconsistency.",
+      "parentUuid": "38ab53eb_06803299",
+      "range": {
+        "startLine": 250,
+        "startChar": 5,
+        "endLine": 250,
+        "endChar": 18
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "9cf590e6_e1608438",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-23T14:34:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd4e9b2d_9f2f67f7",
+      "range": {
+        "startLine": 96,
+        "startChar": 9,
+        "endLine": 96,
+        "endChar": 14
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3eb731a_0668d85e",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 13
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "345054eb_0df49595",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-23T14:34:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3eb731a_0668d85e",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 5
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73384df3_0fbcd5bc",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 13
@@ -105,6 +201,30 @@
       "writtenOn": "2018-04-23T13:01:26Z",
       "side": 1,
       "message": "Can we refactor this using templates and create a RectangleBase\u003cT\u003e?",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 2
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02de73b3_571422bc",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-23T14:34:46Z",
+      "side": 1,
+      "message": "The conversion constructors that are needed for the different types are a bit different. I think the code may be neater if we don\u0027t have a RectangleBase template, even if there is some repetition.",
+      "parentUuid": "73384df3_0fbcd5bc",
       "range": {
         "startLine": 125,
         "startChar": 0,
