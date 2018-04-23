@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ab4b945_5e45c6a0",
+        "filename": "doc/WritingShaderASTTransformations.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-23T14:12:37Z",
+      "side": 1,
+      "message": "IIRC we have a pointer to main( in Compiler.cpp so maybe this isn\u0027t needed?",
+      "revId": "ffc73c2d003b2bc0360cd7834ae5177ac95abe98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
