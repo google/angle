@@ -74,6 +74,7 @@ void PixelBuffer::release(RendererVk *renderer)
 gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
                                               const gl::ImageIndex &index,
                                               const gl::Extents &extents,
+                                              const gl::Offset &offset,
                                               const gl::InternalFormat &formatInfo,
                                               const gl::PixelUnpackState &unpack,
                                               GLenum type,
@@ -131,7 +132,7 @@ gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
     copy.imageSubresource.baseArrayLayer = index.hasLayer() ? index.getLayerIndex() : 0;
     copy.imageSubresource.layerCount     = index.getLayerCount();
 
-    gl_vk::GetOffset(gl::Offset(), &copy.imageOffset);
+    gl_vk::GetOffset(offset, &copy.imageOffset);
     gl_vk::GetExtent(extents, &copy.imageExtent);
 
     mSubresourceUpdates.emplace_back(bufferHandle, copy);
@@ -241,8 +242,8 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     // Handle initial data.
     if (pixels)
     {
-        ANGLE_TRY(mPixelBuffer.stageSubresourceUpdate(contextVk, index, size, formatInfo, unpack,
-                                                      type, pixels));
+        ANGLE_TRY(mPixelBuffer.stageSubresourceUpdate(contextVk, index, size, gl::Offset(),
+                                                      formatInfo, unpack, type, pixels));
     }
 
     return gl::NoError();
@@ -258,9 +259,9 @@ gl::Error TextureVk::setSubImage(const gl::Context *context,
 {
     ContextVk *contextVk                 = vk::GetImpl(context);
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format, type);
-    ANGLE_TRY(mPixelBuffer.stageSubresourceUpdate(contextVk, index,
-                                                  gl::Extents(area.width, area.height, area.depth),
-                                                  formatInfo, unpack, type, pixels));
+    ANGLE_TRY(mPixelBuffer.stageSubresourceUpdate(
+        contextVk, index, gl::Extents(area.width, area.height, area.depth),
+        gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels));
     return gl::NoError();
 }
 

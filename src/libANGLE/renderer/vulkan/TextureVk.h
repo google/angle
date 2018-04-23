@@ -29,6 +29,7 @@ class PixelBuffer final : angle::NonCopyable
     gl::Error stageSubresourceUpdate(ContextVk *contextVk,
                                      const gl::ImageIndex &index,
                                      const gl::Extents &extents,
+                                     const gl::Offset &offset,
                                      const gl::InternalFormat &formatInfo,
                                      const gl::PixelUnpackState &unpack,
                                      GLenum type,

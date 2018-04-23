@@ -201,8 +201,6 @@
 2161 VULKAN : dEQP-GLES2.functional.texture.filtering.nearest_mipmap_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.filtering.linear_mipmap_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.mipmap.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.texture.specification.basic_texsubimage2d.* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.texture.specification.texsubimage2d_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.specification.basic_copytex* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.completeness.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.vertex.* = SKIP
@@ -315,3 +313,4 @@
 2161 VULKAN : dEQP-GLES2.functional.default_vertex_attrib.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.lifetime.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.debug_marker.* = SKIP
+2492 VULKAN WIN AMD : dEQP-GLES2.functional.texture.specification.texsubimage2d_align.2d_* = SKIP
