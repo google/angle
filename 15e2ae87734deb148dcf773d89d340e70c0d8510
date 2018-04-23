@@ -16,6 +16,47 @@
       "revId": "15e2ae87734deb148dcf773d89d340e70c0d8510",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "572491cc_08af657d",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-23T19:57:35Z",
+      "side": 1,
+      "message": "Why don\u0027t you make a separate CL that makes the Rectangle type a template struct, and then define gl::RectangleI, gl::RectangleI64, and gl::RectangleF? Then use the various rects where appropriate?",
+      "parentUuid": "2686b194_692a0b08",
+      "revId": "15e2ae87734deb148dcf773d89d340e70c0d8510",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa83275a_ac9ecbad",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-23T19:57:35Z",
+      "side": 1,
+      "message": "this can be just \"true\"",
+      "range": {
+        "startLine": 1167,
+        "startChar": 8,
+        "endLine": 1167,
+        "endChar": 61
+      },
+      "revId": "15e2ae87734deb148dcf773d89d340e70c0d8510",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
