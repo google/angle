@@ -107,10 +107,6 @@ TEST_P(ClearTest, RGBA8Framebuffer)
 
 TEST_P(ClearTest, ClearIssue)
 {
-    // This test seems to triggere flaky validation error in Vulkan.
-    // TODO(lucferron): Re-enable when test is fixed. http://anglebug.com/2484
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
@@ -408,9 +404,6 @@ class ScissoredClearTest : public ANGLETest
 // Simple scissored clear.
 TEST_P(ScissoredClearTest, BasicScissoredColorClear)
 {
-    // TODO(lucferron) This is a regression tracked in http://anglebug.com/2484
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     const int w     = getWindowWidth();
     const int h     = getWindowHeight();
     const int whalf = w >> 1;
