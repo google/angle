@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db5346ef_731cb7b0",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T13:01:26Z",
+      "side": 1,
+      "message": "I think these are all redundant (below too).",
+      "range": {
+        "startLine": 217,
+        "startChar": 10,
+        "endLine": 217,
+        "endChar": 15
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38ab53eb_06803299",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T13:01:26Z",
+      "side": 1,
+      "message": "Let\u0027s call this ClipBlitRectangle because it has slightly different behaviour than the other ClipRectangle.",
+      "range": {
+        "startLine": 250,
+        "startChar": 5,
+        "endLine": 250,
+        "endChar": 18
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd4e9b2d_9f2f67f7",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T13:01:26Z",
+      "side": 1,
+      "message": "Let\u0027s call these something like isFlippedX",
+      "range": {
+        "startLine": 96,
+        "startChar": 9,
+        "endLine": 96,
+        "endChar": 14
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3eb731a_0668d85e",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T13:01:26Z",
+      "side": 1,
+      "message": "nit: let\u0027s put some of these in the cpp (or .inl) file.",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 5
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73384df3_0fbcd5bc",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T13:01:26Z",
+      "side": 1,
+      "message": "Can we refactor this using templates and create a RectangleBase\u003cT\u003e?",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 2
+      },
+      "revId": "75c999f02bde5cddac328fe48ead08f410e5ba0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
