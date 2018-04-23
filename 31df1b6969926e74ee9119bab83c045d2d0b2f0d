@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65febac0_9553b229",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-23T14:26:52Z",
+      "side": 1,
+      "message": "This will be possible to turn into a loop in a follow-up",
+      "range": {
+        "startLine": 752,
+        "startChar": 0,
+        "endLine": 799,
+        "endChar": 9
+      },
+      "revId": "31df1b6969926e74ee9119bab83c045d2d0b2f0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
