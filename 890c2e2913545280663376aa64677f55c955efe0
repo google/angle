@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "41d4850d_80d0e8bd",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-23T14:20:43Z",
+      "side": 1,
+      "message": "I\u0027ll need your help to debug that one, if I do not have this, the graph becomes invalid and I don\u0027t understand why at all.",
+      "parentUuid": "366f8ec7_18f89f17",
+      "range": {
+        "startLine": 384,
+        "startChar": 0,
+        "endLine": 387,
+        "endChar": 5
+      },
+      "revId": "890c2e2913545280663376aa64677f55c955efe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cc18d993_d73180fe",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "890c2e2913545280663376aa64677f55c955efe0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9a0c09a_d1ae6146",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-23T14:20:43Z",
+      "side": 1,
+      "message": "Replaced with the real implementation of using the min/max lod from the frontend.",
+      "parentUuid": "cc18d993_d73180fe",
+      "range": {
+        "startLine": 476,
+        "startChar": 42,
+        "endLine": 476,
+        "endChar": 79
+      },
+      "revId": "890c2e2913545280663376aa64677f55c955efe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -80,6 +128,24 @@
       "revId": "890c2e2913545280663376aa64677f55c955efe0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a6d0abb_7158bba3",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-23T14:20:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e8bc8b4_365d924b",
+      "revId": "890c2e2913545280663376aa64677f55c955efe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
