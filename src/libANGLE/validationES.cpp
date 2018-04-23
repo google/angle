@@ -68,6 +68,16 @@ bool CompressedSubTextureFormatRequiresExactSize(GLenum internalFormat)
     return CompressedTextureFormatRequiresExactSize(internalFormat) ||
            IsETC2EACFormat(internalFormat);
 }
+
+bool DifferenceCanOverflow(GLint a, GLint b)
+{
+    CheckedNumeric<GLint> checkedA(a);
+    checkedA -= b;
+    // Use negation to make sure that the difference can't overflow regardless of the order.
+    checkedA = -checkedA;
+    return !checkedA.IsValid();
+}
+
 bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLint vertexCount)
 {
     const gl::State &state     = context->getGLState();
@@ -1296,6 +1306,16 @@ bool ValidateBlitFramebufferParameters(Context *context,
     if (!ValidateFramebufferNotMultisampled(context, drawFramebuffer))
     {
         return false;
+    }
+
+    if (context->getExtensions().webglCompatibility)
+    {
+        if (DifferenceCanOverflow(srcX0, srcX1) || DifferenceCanOverflow(srcY0, srcY1) ||
+            DifferenceCanOverflow(dstX0, dstX1) || DifferenceCanOverflow(dstY0, dstY1))
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidValue(), BlitDimensionsOutOfRange);
+            return false;
+        }
     }
 
     bool sameBounds = srcX0 == dstX0 && srcY0 == dstY0 && srcX1 == dstX1 && srcY1 == dstY1;

@@ -16,6 +16,7 @@
 
 namespace gl
 {
+ERRMSG(BlitDimensionsOutOfRange, "BlitFramebuffer dimensions out of 32-bit integer range.");
 ERRMSG(BufferBoundForTransformFeedback, "Buffer is bound for transform feedback.");
 ERRMSG(BufferNotBound, "A buffer must be bound.");
 ERRMSG(CompressedTextureDimensionsMustMatchData,

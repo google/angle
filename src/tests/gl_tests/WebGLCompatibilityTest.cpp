@@ -4152,6 +4152,60 @@ TEST_P(WebGL2CompatibilityTest, TransformFeedbackCheckNullDeref)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test blitFramebuffer size overflow checks. WebGL 2.0 spec section 5.41.
+TEST_P(WebGL2CompatibilityTest, BlitFramebufferSizeOverflow)
+{
+    GLTexture textures[2];
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 3, GL_RGBA8, 4, 4);
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 3, GL_RGBA8, 4, 4);
+
+    GLFramebuffer framebuffers[2];
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffers[0]);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffers[1]);
+
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0],
+                           0);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1],
+                           0);
+    ASSERT_GL_NO_ERROR();
+
+    // srcX
+    glBlitFramebuffer(-1, 0, std::numeric_limits<GLint>::max(), 4, 0, 0, 4, 4, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glBlitFramebuffer(std::numeric_limits<GLint>::max(), 0, -1, 4, 0, 0, 4, 4, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // srcY
+    glBlitFramebuffer(0, -1, 4, std::numeric_limits<GLint>::max(), 0, 0, 4, 4, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glBlitFramebuffer(0, std::numeric_limits<GLint>::max(), 4, -1, 0, 0, 4, 4, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // dstX
+    glBlitFramebuffer(0, 0, 4, 4, -1, 0, std::numeric_limits<GLint>::max(), 4, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glBlitFramebuffer(0, 0, 4, 4, std::numeric_limits<GLint>::max(), 0, -1, 4, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // dstY
+    glBlitFramebuffer(0, 0, 4, 4, 0, -1, 4, std::numeric_limits<GLint>::max(), GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glBlitFramebuffer(0, 0, 4, 4, 0, std::numeric_limits<GLint>::max(), 4, -1, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,
