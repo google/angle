@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "91272e0e_75b33234",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1126674
+      },
+      "writtenOn": "2018-04-23T18:42:34Z",
+      "side": 1,
+      "message": "It will still be visible to end users under Settings-\u003eApps, but just checked webview, and it doesn\u0027t localize, so I guess fine to leave it English-only.",
+      "parentUuid": "9d1ba382_d57c6887",
+      "range": {
+        "startLine": 15,
+        "startChar": 32,
+        "endLine": 15,
+        "endChar": 53
+      },
+      "revId": "16320593c1d33ed5bf412f367470b7862cf8056b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6dacde7a_f924cf5d",
         "filename": "BUILD.gn",
         "patchSetId": 3

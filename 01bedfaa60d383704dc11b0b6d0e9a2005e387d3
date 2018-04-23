@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f43481a1_09b39a54",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1126674
+      },
+      "writtenOn": "2018-04-23T18:42:34Z",
+      "side": 1,
+      "message": "I\u0027m curious to know more about this. It looks like the system-image one has a different packageId from the Play Store one... why would you want that?",
+      "revId": "01bedfaa60d383704dc11b0b6d0e9a2005e387d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
