@@ -34,6 +34,24 @@
       "revId": "01bedfaa60d383704dc11b0b6d0e9a2005e387d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "337f3df3_3887e4ee",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1126674
+      },
+      "writtenOn": "2018-04-23T19:17:33Z",
+      "side": 1,
+      "message": "As far as I know, for Play Store to be able to update a system apk, it just has to have the same packageId and a higher versionCode. Chrome\u0027s other apks don\u0027t have different targets for system apk vs play store.",
+      "parentUuid": "913466cc_4bbebc72",
+      "revId": "01bedfaa60d383704dc11b0b6d0e9a2005e387d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
