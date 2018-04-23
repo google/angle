@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb9d0c78_0ef390a4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-23T12:26:20Z",
+      "side": 1,
+      "message": "I think it makes sense to always do this validation if it can cause undefined behaviour in the backends.",
+      "range": {
+        "startLine": 1313,
+        "startChar": 8,
+        "endLine": 1318,
+        "endChar": 9
+      },
+      "revId": "9e37536b1bd7c44b37918c8f62f76d7930efebd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
