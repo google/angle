@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 
+ANGLE_EXPORT GLuint CheckLinkStatusAndReturnProgram(GLuint program, bool outputErrorMessages);
 ANGLE_EXPORT GLuint CompileShader(GLenum type, const std::string &source);
 ANGLE_EXPORT GLuint CompileShaderFromFile(GLenum type, const std::string &sourcePath);
 

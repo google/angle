@@ -530,7 +530,6 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
-                WARN() << "DIRTY_BIT_PROGRAM_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
