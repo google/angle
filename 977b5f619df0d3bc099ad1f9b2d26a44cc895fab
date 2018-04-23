@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d3d16a6f_c2811d57",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-23T19:53:49Z",
+      "side": 1,
+      "message": "I read this a few times and I think all this does is no-op the case where mTexturesDirty \u003d false and mTextureBindingsDirty \u003d true. I think it might not be totally correct. Let me think about this for a few and get back to you.",
+      "range": {
+        "startLine": 169,
+        "startChar": 26,
+        "endLine": 169,
+        "endChar": 47
+      },
+      "revId": "977b5f619df0d3bc099ad1f9b2d26a44cc895fab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
