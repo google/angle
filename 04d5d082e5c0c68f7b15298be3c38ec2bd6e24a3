@@ -68,6 +68,23 @@
       "revId": "04d5d082e5c0c68f7b15298be3c38ec2bd6e24a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94399a6a_6229520b",
+        "filename": "src/tests/gl_tests/gles1/TextureTargetEnableTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-23T18:07:27Z",
+      "side": 1,
+      "message": "Can we have a test setting and getting on different targets to check it is per-target?",
+      "revId": "04d5d082e5c0c68f7b15298be3c38ec2bd6e24a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
