@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5efb0be9_f0743a5d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-23T01:31:35Z",
+      "side": 1,
+      "message": "I\u0027m sorry we cannot use mState.getAttachedShader or getLinkedShaderStages all the time. When this function is called in programD3D::link, mLinkedShaderStages has not been updated and when this function is called in programD3D::load, it is possible that there is no shader attached.\n\nI have added a comment to explain this.",
+      "parentUuid": "5eb1b8f6_1682b948",
+      "range": {
+        "startLine": 1851,
+        "startChar": 12,
+        "endLine": 1851,
+        "endChar": 33
+      },
+      "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c7c672f8_e56ef5c2",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25b18557_89945d65",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-23T01:31:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7c672f8_e56ef5c2",
+      "range": {
+        "startLine": 69,
+        "startChar": 29,
+        "endLine": 69,
+        "endChar": 39
+      },
+      "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "967c4be3_11a4c325",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-23T01:31:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9cc3b58a_a84f7b7e",
+      "range": {
+        "startLine": 73,
+        "startChar": 32,
+        "endLine": 73,
+        "endChar": 53
+      },
+      "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2760da67_0a836d9a",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 1
@@ -91,6 +163,30 @@
       "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb510abe_c3ba4e94",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-23T01:31:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2760da67_0a836d9a",
+      "range": {
+        "startLine": 209,
+        "startChar": 69,
+        "endLine": 209,
+        "endChar": 97
+      },
+      "revId": "db49f9e5a7a714656601a2719ae449f615a4d3e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
