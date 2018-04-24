@@ -164,6 +164,30 @@
       "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79e1002e_89afc0bf",
+        "filename": "BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-24T21:42:17Z",
+      "side": 1,
+      "message": "I know. I just think this should be 24 because Vulkan is supported only in N.",
+      "parentUuid": "59a3362b_1ef896f9",
+      "range": {
+        "startLine": 925,
+        "startChar": 27,
+        "endLine": 925,
+        "endChar": 29
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
