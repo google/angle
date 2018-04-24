@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27e8fec3_fd5b5495",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-24T13:14:15Z",
+      "side": 1,
+      "message": "couldn\u0027t hurt to mention the issue here we were discussing",
+      "revId": "9807f14f9f33d8169d6704a641643d50ee95021a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
