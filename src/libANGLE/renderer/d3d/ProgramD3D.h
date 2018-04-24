@@ -480,11 +480,9 @@ class ProgramD3D : public ProgramImpl
     std::vector<std::unique_ptr<ShaderExecutableD3D>> mGeometryExecutables;
     std::unique_ptr<ShaderExecutableD3D> mComputeExecutable;
 
-    std::string mVertexHLSL;
-    angle::CompilerWorkaroundsD3D mVertexWorkarounds;
+    gl::ShaderMap<std::string> mShaderHLSL;
+    gl::ShaderMap<angle::CompilerWorkaroundsD3D> mShaderWorkarounds;
 
-    std::string mPixelHLSL;
-    angle::CompilerWorkaroundsD3D mPixelWorkarounds;
     bool mUsesFragDepth;
     bool mHasANGLEMultiviewEnabled;
     bool mUsesViewID;
@@ -500,12 +498,8 @@ class ProgramD3D : public ProgramImpl
 
     gl::ShaderMap<std::unique_ptr<UniformStorageD3D>> mShaderUniformStorages;
 
-    std::vector<Sampler> mSamplersPS;
-    std::vector<Sampler> mSamplersVS;
-    std::vector<Sampler> mSamplersCS;
-    GLuint mUsedVertexSamplerRange;
-    GLuint mUsedPixelSamplerRange;
-    GLuint mUsedComputeSamplerRange;
+    gl::ShaderMap<std::vector<Sampler>> mShaderSamplers;
+    gl::ShaderMap<GLuint> mUsedShaderSamplerRanges;
     bool mDirtySamplerMapping;
 
     std::vector<Image> mImagesCS;

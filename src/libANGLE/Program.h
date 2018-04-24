@@ -286,6 +286,7 @@ class ProgramState final : angle::NonCopyable
     const std::string &getLabel();
 
     Shader *getAttachedShader(ShaderType shaderType) const;
+    const gl::ShaderMap<Shader *> &getAttachedShaders() const { return mAttachedShaders; }
     const std::vector<std::string> &getTransformFeedbackVaryingNames() const
     {
         return mTransformFeedbackVaryingNames;
