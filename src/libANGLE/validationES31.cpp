@@ -62,8 +62,9 @@ bool ValidateProgramInterface(GLenum programInterface)
             ValidateNamedProgramInterface(programInterface));
 }
 
-bool ValidateProgramResourceProperty(GLenum prop)
+bool ValidateProgramResourceProperty(const Context *context, GLenum prop)
 {
+    ASSERT(context);
     switch (prop)
     {
         case GL_ACTIVE_VARIABLES:
@@ -96,6 +97,9 @@ bool ValidateProgramResourceProperty(GLenum prop)
 
         case GL_TYPE:
             return true;
+
+        case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
+            return context->getExtensions().geometryShader;
 
         default:
             return false;
@@ -199,6 +203,7 @@ bool ValidateProgramResourcePropertyByInterface(GLenum prop, GLenum programInter
         case GL_REFERENCED_BY_VERTEX_SHADER:
         case GL_REFERENCED_BY_FRAGMENT_SHADER:
         case GL_REFERENCED_BY_COMPUTE_SHADER:
+        case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
         {
             switch (programInterface)
             {
@@ -1665,7 +1670,7 @@ bool ValidateGetProgramResourceiv(Context *context,
     }
     for (GLsizei i = 0; i < propCount; i++)
     {
-        if (!ValidateProgramResourceProperty(props[i]))
+        if (!ValidateProgramResourceProperty(context, props[i]))
         {
             context->handleError(InvalidEnum() << "Invalid prop.");
             return false;

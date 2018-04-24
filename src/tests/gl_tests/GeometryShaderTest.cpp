@@ -7,6 +7,7 @@
 // GeometryShaderTest.cpp : Tests of the implementation of geometry shader
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -507,6 +508,195 @@ TEST_P(GeometryShaderTest, ShaderStorageBlockMismatchBetweenGeometryAndFragmentS
     EXPECT_EQ(0u, program);
 
     EXPECT_GL_NO_ERROR();
+}
+
+// Verify GL_REFERENCED_BY_GEOMETRY_SHADER_EXT cannot be used on platforms that don't support
+// EXT_geometry_shader, or we will get an INVALID_ENUM error.
+TEST_P(GeometryShaderTest, ReferencedByGeometryShaderWithoutExtensionEnabled)
+{
+    ANGLE_SKIP_TEST_IF(extensionEnabled("GL_EXT_geometry_shader"));
+
+    const std::string &fragmentShader =
+        R"(#version 310 es
+        precision highp float;
+        uniform vec4 color;
+        layout(location = 0) out vec4 oColor;
+        void main()
+        {
+            oColor = color;
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fragmentShader);
+
+    const GLuint index = glGetProgramResourceIndex(program, GL_UNIFORM, "color");
+    ASSERT_GL_NO_ERROR();
+    ASSERT_NE(GL_INVALID_INDEX, index);
+
+    constexpr GLenum kProps[]    = {GL_REFERENCED_BY_GEOMETRY_SHADER_EXT};
+    constexpr GLsizei kPropCount = static_cast<GLsizei>(ArraySize(kProps));
+    GLint params[ArraySize(kProps)];
+    GLsizei length;
+
+    glGetProgramResourceiv(program, GL_UNIFORM, index, kPropCount, kProps, kPropCount, &length,
+                           params);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
+// Verify GL_REFERENCED_BY_GEOMETRY_SHADER_EXT can work correctly on platforms that support
+// EXT_geometry_shader.
+TEST_P(GeometryShaderTest, ReferencedByGeometryShader)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    const std::string &vertexShader =
+        R"(#version 310 es
+        precision highp float;
+        layout(location = 0) in highp vec4 position;
+        void main()
+        {
+            gl_Position = position;
+        })";
+
+    const std::string &geometryShader =
+        R"(#version 310 es
+        #extension GL_EXT_geometry_shader : require
+        layout (binding = 3) uniform ubo0
+        {
+            vec4 ubo0_location;
+        } block0;
+        layout (binding = 4) uniform ubo1
+        {
+            vec4 ubo1_location;
+        } block1;
+        uniform vec4 u_color;
+        layout (triangles) in;
+        layout (points, max_vertices = 1) out;
+        out vec4 gs_out;
+        void main()
+        {
+            gl_Position = gl_in[0].gl_Position;
+            gl_Position += block0.ubo0_location + block1.ubo1_location;
+            gs_out = u_color;
+            EmitVertex();
+        })";
+
+    const std::string &fragmentShader =
+        R"(#version 310 es
+        precision highp float;
+        in vec4 gs_out;
+        layout(location = 0) out vec4 oColor;
+        void main()
+        {
+            oColor = gs_out;
+        })";
+
+    ANGLE_GL_PROGRAM_WITH_GS(program, vertexShader, geometryShader, fragmentShader);
+
+    constexpr GLenum kProps[]    = {GL_REFERENCED_BY_GEOMETRY_SHADER_EXT};
+    constexpr GLsizei kPropCount = static_cast<GLsizei>(ArraySize(kProps));
+    std::array<GLint, ArraySize(kProps)> params;
+    GLsizei length;
+
+    params.fill(1);
+    GLuint index = glGetProgramResourceIndex(program, GL_PROGRAM_INPUT, "position");
+    glGetProgramResourceiv(program, GL_PROGRAM_INPUT, index, kPropCount, kProps, kPropCount,
+                           &length, params.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(0, params[0]);
+
+    params.fill(1);
+    index = glGetProgramResourceIndex(program, GL_PROGRAM_OUTPUT, "oColor");
+    glGetProgramResourceiv(program, GL_PROGRAM_OUTPUT, index, kPropCount, kProps, kPropCount,
+                           &length, params.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(0, params[0]);
+
+    index = glGetProgramResourceIndex(program, GL_UNIFORM, "u_color");
+    glGetProgramResourceiv(program, GL_UNIFORM, index, kPropCount, kProps, kPropCount, &length,
+                           params.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1, params[0]);
+
+    params.fill(0);
+    index = glGetProgramResourceIndex(program, GL_UNIFORM_BLOCK, "ubo1");
+    glGetProgramResourceiv(program, GL_UNIFORM_BLOCK, index, kPropCount, kProps, kPropCount,
+                           &length, params.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1, params[0]);
+
+    GLint maxGeometryShaderStorageBlocks = 0;
+    glGetIntegerv(GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT, &maxGeometryShaderStorageBlocks);
+    // The maximum number of shader storage blocks in a geometry shader can be 0.
+    // [EXT_geometry_shader] Table 20.43gs
+    if (maxGeometryShaderStorageBlocks > 0)
+    {
+        const std::string &geometryShaderWithSSBO =
+            R"(#version 310 es
+            #extension GL_EXT_geometry_shader : require
+            layout (binding = 2) buffer ssbo
+            {
+                vec4 ssbo_value;
+            } block0;
+            layout (triangles) in;
+            layout (points, max_vertices = 1) out;
+            out vec4 gs_out;
+            void main()
+            {
+                gl_Position = gl_in[0].gl_Position + block0.ssbo_value;
+                gs_out = block0.ssbo_value;
+                EmitVertex();
+            })";
+
+        ANGLE_GL_PROGRAM_WITH_GS(programWithSSBO, vertexShader, geometryShaderWithSSBO,
+                                 fragmentShader);
+
+        params.fill(0);
+        index = glGetProgramResourceIndex(programWithSSBO, GL_SHADER_STORAGE_BLOCK, "ssbo");
+        glGetProgramResourceiv(programWithSSBO, GL_SHADER_STORAGE_BLOCK, index, kPropCount, kProps,
+                               kPropCount, &length, params.data());
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(1, params[0]);
+
+        params.fill(0);
+        index = glGetProgramResourceIndex(programWithSSBO, GL_BUFFER_VARIABLE, "ssbo.ssbo_value");
+        glGetProgramResourceiv(programWithSSBO, GL_BUFFER_VARIABLE, index, kPropCount, kProps,
+                               kPropCount, &length, params.data());
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(1, params[0]);
+    }
+
+    GLint maxGeometryAtomicCounterBuffers = 0;
+    glGetIntegerv(GL_MAX_GEOMETRY_ATOMIC_COUNTER_BUFFERS_EXT, &maxGeometryAtomicCounterBuffers);
+    // The maximum number of atomic counter buffers in a geometry shader can be 0.
+    // [EXT_geometry_shader] Table 20.43gs
+    if (maxGeometryAtomicCounterBuffers > 0)
+    {
+        const std::string &geometryShaderWithAtomicCounters =
+            R"(#version 310 es
+            #extension GL_EXT_geometry_shader : require
+            layout(binding = 1, offset = 0) uniform atomic_uint gs_counter;
+            layout (triangles) in;
+            layout (points, max_vertices = 1) out;
+            out vec4 gs_out;
+            void main()
+            {
+                atomicCounterIncrement(gs_counter);
+                gl_Position = gl_in[0].gl_Position;
+                gs_out = vec4(1.0, 0.0, 0.0, 1.0);
+                EmitVertex();
+            })";
+
+        ANGLE_GL_PROGRAM_WITH_GS(programWithAtomicCounter, vertexShader,
+                                 geometryShaderWithAtomicCounters, fragmentShader);
+
+        params.fill(0);
+        index = glGetProgramResourceIndex(programWithAtomicCounter, GL_UNIFORM, "gs_counter");
+        EXPECT_GL_NO_ERROR();
+        glGetProgramResourceiv(programWithAtomicCounter, GL_ATOMIC_COUNTER_BUFFER, index,
+                               kPropCount, kProps, kPropCount, &length, params.data());
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(1, params[0]);
+    }
 }
 
 ANGLE_INSTANTIATE_TEST(GeometryShaderTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_D3D11());

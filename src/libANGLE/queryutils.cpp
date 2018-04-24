@@ -480,6 +480,7 @@ GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop
 
         case GL_REFERENCED_BY_FRAGMENT_SHADER:
         case GL_REFERENCED_BY_COMPUTE_SHADER:
+        case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
             return 0;
 
         default:
@@ -501,13 +502,12 @@ GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLen
         case GL_LOCATION:
             return program->getFragDataLocation(outputVariable.name);
 
-        case GL_REFERENCED_BY_VERTEX_SHADER:
-            return 0;
-
         case GL_REFERENCED_BY_FRAGMENT_SHADER:
             return 1;
 
+        case GL_REFERENCED_BY_VERTEX_SHADER:
         case GL_REFERENCED_BY_COMPUTE_SHADER:
+        case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
             return 0;
 
         default:
@@ -734,6 +734,9 @@ void GetShaderVariableBufferResourceProperty(const ShaderVariableBuffer &buffer,
             break;
         case GL_REFERENCED_BY_COMPUTE_SHADER:
             params[(*outputPosition)++] = static_cast<GLint>(buffer.isActive(ShaderType::Compute));
+            break;
+        case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
+            params[(*outputPosition)++] = static_cast<GLint>(buffer.isActive(ShaderType::Geometry));
             break;
         default:
             UNREACHABLE();
@@ -1433,6 +1436,9 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
         case GL_REFERENCED_BY_COMPUTE_SHADER:
             return uniform.isActive(ShaderType::Compute);
 
+        case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
+            return uniform.isActive(ShaderType::Geometry);
+
         case GL_ATOMIC_COUNTER_BUFFER_INDEX:
             return (uniform.isAtomicCounter() ? uniform.bufferIndex : -1);
 
@@ -1475,6 +1481,9 @@ GLint GetBufferVariableResourceProperty(const Program *program, GLuint index, co
 
         case GL_REFERENCED_BY_COMPUTE_SHADER:
             return bufferVariable.isActive(ShaderType::Compute);
+
+        case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
+            return bufferVariable.isActive(ShaderType::Geometry);
 
         case GL_TOP_LEVEL_ARRAY_SIZE:
             return bufferVariable.topLevelArraySize;

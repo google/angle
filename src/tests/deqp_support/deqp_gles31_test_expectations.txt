@@ -1646,8 +1646,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.tessellation_shader = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.object_labels.program_pipeline = FAIL
 
-1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.referenced_by_geometry_shader = FAIL
-
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.program_not_active = FAIL
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.log.compute.program_not_active = FAIL
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.program_not_active = FAIL
