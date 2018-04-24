@@ -42,6 +42,8 @@ class Query11 : public QueryImpl
         QueryState();
         ~QueryState();
 
+        unsigned int getDataAttemptCount;
+
         d3d11::Query query;
         d3d11::Query beginTimestamp;
         d3d11::Query endTimestamp;

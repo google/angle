@@ -16,6 +16,7 @@ namespace rx
 {
 Query9::Query9(Renderer9 *renderer, GLenum type)
     : QueryImpl(type),
+      mGetDataAttemptCount(0),
       mResult(GL_FALSE),
       mQueryFinished(false),
       mRenderer(renderer),
@@ -170,15 +171,22 @@ gl::Error Query9::testQuery()
                 break;
         }
 
-        if (d3d9::isDeviceLostError(result))
+        if (!mQueryFinished)
         {
-            mRenderer->notifyDeviceLost();
-            return gl::OutOfMemory() << "Failed to test get query result, device is lost.";
-        }
-        else if (mRenderer->testDeviceLost())
-        {
-            mRenderer->notifyDeviceLost();
-            return gl::OutOfMemory() << "Failed to test get query result, device is lost.";
+            if (d3d9::isDeviceLostError(result))
+            {
+                mRenderer->notifyDeviceLost();
+                return gl::OutOfMemory() << "Failed to test get query result, device is lost.";
+            }
+
+            mGetDataAttemptCount++;
+            bool checkDeviceLost =
+                (mGetDataAttemptCount % kPollingD3DDeviceLostCheckFrequency) == 0;
+            if (checkDeviceLost && mRenderer->testDeviceLost())
+            {
+                mRenderer->notifyDeviceLost();
+                return gl::OutOfMemory() << "Failed to test get query result, device is lost.";
+            }
         }
     }
 

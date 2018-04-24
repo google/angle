@@ -36,6 +36,7 @@ class Query9 : public QueryImpl
     template <typename T>
     gl::Error getResultBase(T *params);
 
+    unsigned int mGetDataAttemptCount;
     GLuint64 mResult;
     bool mQueryFinished;
 

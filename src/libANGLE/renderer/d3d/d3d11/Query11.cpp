@@ -48,7 +48,8 @@ GLuint64 MergeQueryResults(GLenum type, GLuint64 currentResult, GLuint64 newResu
 namespace rx
 {
 
-Query11::QueryState::QueryState() : query(), beginTimestamp(), endTimestamp(), finished(false)
+Query11::QueryState::QueryState()
+    : getDataAttemptCount(0), query(), beginTimestamp(), endTimestamp(), finished(false)
 {
 }
 
@@ -362,7 +363,10 @@ gl::Error Query11::testQuery(QueryState *queryState)
                 break;
         }
 
-        if (!queryState->finished && mRenderer->testDeviceLost())
+        queryState->getDataAttemptCount++;
+        bool checkDeviceLost =
+            (queryState->getDataAttemptCount % kPollingD3DDeviceLostCheckFrequency) == 0;
+        if (!queryState->finished && checkDeviceLost && mRenderer->testDeviceLost())
         {
             mRenderer->notifyDeviceLost();
             return gl::OutOfMemory() << "Failed to test get query result, device is lost.";

@@ -1232,7 +1232,10 @@ gl::Error Renderer11::finish()
             ScheduleYield();
         }
 
-        if (testDeviceLost())
+        // Attempt is incremented before checking if we should test for device loss so that device
+        // loss is not checked on the first iteration
+        bool checkDeviceLost = (attempt % kPollingD3DDeviceLostCheckFrequency) == 0;
+        if (checkDeviceLost && testDeviceLost())
         {
             mDisplay->notifyDeviceLost();
             return gl::OutOfMemory() << "Device was lost while waiting for sync.";

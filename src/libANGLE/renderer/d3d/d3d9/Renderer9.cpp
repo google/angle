@@ -665,19 +665,25 @@ gl::Error Renderer9::finish()
     }
 
     // Loop until the query completes
+    unsigned int attempt = 0;
     while (result == S_FALSE)
     {
         // Keep polling, but allow other threads to do something useful first
         ScheduleYield();
 
         result = query->GetData(nullptr, 0, D3DGETDATA_FLUSH);
+        attempt++;
 
-        // explicitly check for device loss
-        // some drivers seem to return S_FALSE even if the device is lost
-        // instead of D3DERR_DEVICELOST like they should
-        if (result == S_FALSE && testDeviceLost())
+        if (result == S_FALSE)
         {
-            result = D3DERR_DEVICELOST;
+            // explicitly check for device loss
+            // some drivers seem to return S_FALSE even if the device is lost
+            // instead of D3DERR_DEVICELOST like they should
+            bool checkDeviceLost = (attempt % kPollingD3DDeviceLostCheckFrequency) == 0;
+            if (checkDeviceLost && testDeviceLost())
+            {
+                result = D3DERR_DEVICELOST;
+            }
         }
 
         if (FAILED(result))
