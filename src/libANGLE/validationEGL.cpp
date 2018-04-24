@@ -1321,7 +1321,7 @@ Error ValidateMakeCurrent(Display *display, EGLSurface draw, EGLSurface read, gl
         ANGLE_TRY(ValidateContext(display, context));
     }
 
-    if (display->isInitialized() && display->testDeviceLost())
+    if (display->isInitialized() && display->isDeviceLost())
     {
         return EglContextLost();
     }

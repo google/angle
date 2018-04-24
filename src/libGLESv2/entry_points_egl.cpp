@@ -658,7 +658,7 @@ EGLBoolean EGLAPIENTRY SwapBuffers(EGLDisplay dpy, EGLSurface surface)
         return EGL_FALSE;
     }
 
-    if (display->testDeviceLost())
+    if (display->isDeviceLost())
     {
         thread->setError(EglContextLost());
         return EGL_FALSE;
