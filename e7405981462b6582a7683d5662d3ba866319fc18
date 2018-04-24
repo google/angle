@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39756d19_b869afc3",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1897,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-24T20:17:18Z",
+      "side": 1,
+      "message": "This seems to have formatted a bit weird.",
+      "range": {
+        "startLine": 1897,
+        "startChar": 0,
+        "endLine": 1897,
+        "endChar": 5
+      },
+      "revId": "e7405981462b6582a7683d5662d3ba866319fc18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
