@@ -22,6 +22,52 @@
       "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3c222cf_61a8c569",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-24T21:17:05Z",
+      "side": 1,
+      "message": "Will this always be true, even in production?\nMaybe this should depend on whether this is debug or release build?",
+      "range": {
+        "startLine": 18,
+        "startChar": 28,
+        "endLine": 18,
+        "endChar": 32
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70bdb731_ccce6e32",
+        "filename": "BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-04-24T21:17:05Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be 24?",
+      "range": {
+        "startLine": 925,
+        "startChar": 27,
+        "endLine": 925,
+        "endChar": 29
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
