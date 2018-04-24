@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "c15429ee_f590cc57",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-24T16:00:39Z",
+      "side": 1,
+      "message": "Well, I thought that the \"BlitRectangle\" route was better - my thinking was if we\u0027re going to have a separate type for storing the blit area anyway, it can also be optimized so that we don\u0027t need to do the calculations in 64-bit. I\u0027m not aware of anything else in the GL API which would require us to use a 64-bit rect type.\n\nUsing two offsets to store a rectangle like you suggested could also be a fairly reasonable option, though then we\u0027ll have the unused \"z\" and lose out on a bunch of convenience provided by BlitRectangle, like the isFlipped*() and removeFlip() functions. This would make already complex code even harder to read.",
+      "parentUuid": "572491cc_08af657d",
+      "revId": "15e2ae87734deb148dcf773d89d340e70c0d8510",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aa83275a_ac9ecbad",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 9
@@ -57,6 +75,30 @@
       "revId": "15e2ae87734deb148dcf773d89d340e70c0d8510",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8096bd18_90b2735c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-24T16:00:39Z",
+      "side": 1,
+      "message": "The tests didn\u0027t show issues on the Android bot. On the other hand there are probably more Android vendors that were not tested that also have issues. Done.",
+      "parentUuid": "aa83275a_ac9ecbad",
+      "range": {
+        "startLine": 1167,
+        "startChar": 8,
+        "endLine": 1167,
+        "endChar": 61
+      },
+      "revId": "15e2ae87734deb148dcf773d89d340e70c0d8510",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
