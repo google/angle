@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30c61377_bccbb296",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-24T17:54:27Z",
+      "side": 1,
+      "message": "nit: you can remove static - it will make a separate instance for each compilation unit, but doesn\u0027t actually change behaviour AFAIK",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 7
+      },
+      "revId": "25fb054b7020b9b3ff7d17413d30d87a7acf03c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
