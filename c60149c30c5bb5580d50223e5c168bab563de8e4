@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1b7286ea_a8bbdd71",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-24T21:30:25Z",
+      "side": 1,
+      "message": "Ha! I had that and changed it to bug\u003d because there was another CL that used bug\u003d.\nMaybe we need strong guidance on CL commit message format.",
+      "parentUuid": "922b6b9e_bbaa7412",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 21
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3c222cf_61a8c569",
         "filename": "AndroidManifest.xml",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "825795d4_cc9310cd",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-24T21:30:25Z",
+      "side": 1,
+      "message": "This isn\u0027t final. We know there are other things needed before we are done, just don\u0027t know what they are yet.\nI\u0027ll add a TODO for now.",
+      "parentUuid": "d3c222cf_61a8c569",
+      "range": {
+        "startLine": 18,
+        "startChar": 28,
+        "endLine": 18,
+        "endChar": 32
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70bdb731_ccce6e32",
         "filename": "BUILD.gn",
         "patchSetId": 6
@@ -68,6 +116,30 @@
       "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59a3362b_1ef896f9",
+        "filename": "BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-24T21:30:25Z",
+      "side": 1,
+      "message": "This is a specific build flag in BUILD.gn. This just means that we will be using an api_level or 23 or newer.",
+      "parentUuid": "70bdb731_ccce6e32",
+      "range": {
+        "startLine": 925,
+        "startChar": 27,
+        "endLine": 925,
+        "endChar": 29
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
