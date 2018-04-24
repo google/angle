@@ -490,7 +490,8 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                     static_cast<uint32_t>(glState.getStencilClearValue());
                 break;
             case gl::State::DIRTY_BIT_UNPACK_STATE:
-                WARN() << "DIRTY_BIT_UNPACK_STATE unimplemented";
+                // This is a no-op, its only important to use the right unpack state when we do
+                // setImage or setSubImage in TextureVk, which is plumbed through the frontend call
                 break;
             case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
                 WARN() << "DIRTY_BIT_UNPACK_BUFFER_BINDING unimplemented";
