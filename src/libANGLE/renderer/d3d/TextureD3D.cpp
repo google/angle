@@ -719,19 +719,20 @@ gl::Error TextureD3D::initializeContents(const gl::Context *context,
                      imageBytes);
     imageBytes *= image->getHeight() * image->getDepth();
 
-    gl::PixelUnpackState defaultUnpackState;
+    gl::PixelUnpackState zeroDataUnpackState;
+    zeroDataUnpackState.alignment = 1;
 
     angle::MemoryBuffer *zeroBuffer = nullptr;
     ANGLE_TRY(context->getZeroFilledBuffer(imageBytes, &zeroBuffer));
     if (shouldUseSetData(image))
     {
         ANGLE_TRY(mTexStorage->setData(context, imageIndex, image, nullptr, formatInfo.type,
-                                       defaultUnpackState, zeroBuffer->data()));
+                                       zeroDataUnpackState, zeroBuffer->data()));
     }
     else
     {
         gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
-        ANGLE_TRY(image->loadData(context, fullImageArea, defaultUnpackState, formatInfo.type,
+        ANGLE_TRY(image->loadData(context, fullImageArea, zeroDataUnpackState, formatInfo.type,
                                   zeroBuffer->data(), false));
 
         // Force an update to the tex storage so we avoid problems with subImage and dirty regions.
