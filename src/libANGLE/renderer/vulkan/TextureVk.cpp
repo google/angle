@@ -149,16 +149,20 @@ vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
         return vk::NoError();
     }
 
-    // Conservatively flush all writes to the image. We could use a more restricted barrier.
-    image->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                  VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
-
     ANGLE_TRY(mStagingBuffer.flush(renderer->getDevice()));
 
     for (const SubresourceUpdate &update : mSubresourceUpdates)
     {
         ASSERT(update.bufferHandle != VK_NULL_HANDLE);
+
+        // Conservatively flush all writes to the image. We could use a more restricted barrier.
+        // Do not move this above the for loop, otherwise multiple updates can have race conditions
+        // and not be applied correctly as seen i:
+        // dEQP-gles2.functional_texture_specification_texsubimage2d_align_2d* tests on Windows AMD
+        image->changeLayoutWithStages(
+            VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
+
         commandBuffer->copyBufferToImage(update.bufferHandle, image->getImage(),
                                          image->getCurrentLayout(), 1, &update.copyRegion);
     }
