@@ -168,6 +168,11 @@ vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
     return vk::NoError();
 }
 
+bool PixelBuffer::empty() const
+{
+    return mSubresourceUpdates.empty();
+}
+
 PixelBuffer::SubresourceUpdate::SubresourceUpdate() : bufferHandle(VK_NULL_HANDLE)
 {
 }
@@ -382,6 +387,11 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
 
 vk::Error TextureVk::ensureImageInitialized(RendererVk *renderer)
 {
+    if (mImage.valid() && mPixelBuffer.empty())
+    {
+        return vk::NoError();
+    }
+
     VkDevice device                  = renderer->getDevice();
     vk::CommandBuffer *commandBuffer = nullptr;
 

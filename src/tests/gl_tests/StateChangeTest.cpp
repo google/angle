@@ -1325,6 +1325,98 @@ TEST_P(SimpleStateChangeTest, ChangeTextureFilterModeBetweenTwoDraws)
     EXPECT_NE(angle::ReadColor((getWindowWidth() / 4) * 3, 0), GLColor::white);
 }
 
+// Tests that bind the same texture all the time between different draw calls.
+TEST_P(SimpleStateChangeTest, RebindTextureDrawAgain)
+{
+    GLuint program = get2DTexturedQuadProgram();
+    glUseProgram(program);
+
+    std::array<GLColor, 4> colors = {{GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan}};
+
+    // Setup the texture
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Setup the vertex array to draw a quad.
+    GLint positionLocation = glGetAttribLocation(program, "position");
+    setupQuadVertexBuffer(1.0f, 1.0f);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Draw quad
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind again
+    glBindTexture(GL_TEXTURE_2D, tex);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw again, should still work.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Validate whole surface is filled with cyan.
+    int h = getWindowHeight() - 1;
+    int w = getWindowWidth() - 1;
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::cyan);
+}
+
+// Test that we can alternate between textures between different draws.
+TEST_P(SimpleStateChangeTest, DrawTextureAThenTextureBThenTextureA)
+{
+    GLuint program = get2DTexturedQuadProgram();
+    glUseProgram(program);
+
+    std::array<GLColor, 4> colorsTex1 = {
+        {GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan}};
+
+    std::array<GLColor, 4> colorsTex2 = {
+        {GLColor::magenta, GLColor::magenta, GLColor::magenta, GLColor::magenta}};
+
+    // Setup the texture
+    GLTexture tex1;
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colorsTex1.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    GLTexture tex2;
+    glBindTexture(GL_TEXTURE_2D, tex2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colorsTex2.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Setup the vertex array to draw a quad.
+    GLint positionLocation = glGetAttribLocation(program, "position");
+    setupQuadVertexBuffer(1.0f, 1.0f);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Draw quad
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind again, draw again
+    glBindTexture(GL_TEXTURE_2D, tex2);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind again, draw again
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Validate whole surface is filled with cyan.
+    int h = getWindowHeight() - 1;
+    int w = getWindowWidth() - 1;
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::cyan);
+}
+
 // Tests that redefining an in-flight Texture does not affect the in-flight resource.
 TEST_P(SimpleStateChangeTest, RedefineTextureInUse)
 {
@@ -1811,5 +1903,4 @@ ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
                        ES2_OPENGL(),
                        ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());
-
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTest, ES2_VULKAN(), ES2_OPENGL());

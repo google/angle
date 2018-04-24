@@ -39,6 +39,8 @@ class PixelBuffer final : angle::NonCopyable
                                   vk::ImageHelper *image,
                                   vk::CommandBuffer *commandBuffer);
 
+    bool empty() const;
+
   private:
     struct SubresourceUpdate
     {
