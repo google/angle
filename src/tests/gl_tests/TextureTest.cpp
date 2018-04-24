@@ -3715,8 +3715,31 @@ TEST_P(Texture2DTestES3, NegativeTextureBaseLevelAndMaxLevel)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test setting base level after calling generateMipmap on a LUMA texture.
+// Covers http://anglebug.com/2498
+TEST_P(Texture2DTestES3, GenerateMipmapAndBaseLevelLUMA)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    constexpr const GLsizei kWidth  = 8;
+    constexpr const GLsizei kHeight = 8;
+    std::array<GLubyte, kWidth * kHeight * 2> whiteData;
+    whiteData.fill(255u);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, kWidth, kHeight, 0, GL_LUMINANCE_ALPHA,
+                 GL_UNSIGNED_BYTE, whiteData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, angle::GLColor::white);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-// TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

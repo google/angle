@@ -1374,7 +1374,7 @@ void TextureGL::setLevelInfo(gl::TextureTarget target,
 
     for (size_t i = level; i < level + levelCount; i++)
     {
-        size_t index = GetLevelInfoIndex(target, level);
+        size_t index = GetLevelInfoIndex(target, i);
         ASSERT(index < mLevelInfo.size());
         auto &curLevelInfo = mLevelInfo[index];
 
