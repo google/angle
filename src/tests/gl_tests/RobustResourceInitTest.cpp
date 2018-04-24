@@ -803,10 +803,15 @@ TEST_P(RobustResourceInitTestES3, ReadingOutOfboundsCopiedTextureWithUnpackBuffe
     glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(bunchOfGreen), bunchOfGreen.data(), GL_STATIC_DRAW);
     EXPECT_GL_NO_ERROR();
 
+    // Use non-multiple-of-4 dimensions to make sure unpack alignment is set in the backends
+    // (http://crbug.com/836131)
+    constexpr int kTextureWidth  = 127;
+    constexpr int kTextureHeight = 127;
+
     // Use GL_ALPHA to force a CPU readback in the D3D11 backend
     GLTexture texAlpha;
     glBindTexture(GL_TEXTURE_2D, texAlpha);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, x, y, kWidth, kHeight, 0);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, x, y, kTextureWidth, kTextureHeight, 0);
     EXPECT_GL_NO_ERROR();
 
     // GL_ALPHA cannot be glReadPixels, so copy into a GL_RGBA texture
