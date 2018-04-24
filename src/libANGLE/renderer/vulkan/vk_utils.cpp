@@ -1363,6 +1363,14 @@ VkImageViewType GetImageViewType(gl::TextureType textureType)
             return VK_IMAGE_VIEW_TYPE_MAX_ENUM;
     }
 }
+
+VkColorComponentFlags GetColorComponentFlags(const gl::BlendState &blendState)
+{
+    return (blendState.colorMaskRed ? VK_COLOR_COMPONENT_R_BIT : 0) |
+           (blendState.colorMaskGreen ? VK_COLOR_COMPONENT_G_BIT : 0) |
+           (blendState.colorMaskBlue ? VK_COLOR_COMPONENT_B_BIT : 0) |
+           (blendState.colorMaskAlpha ? VK_COLOR_COMPONENT_A_BIT : 0);
+}
 }  // namespace gl_vk
 }  // namespace rx
 

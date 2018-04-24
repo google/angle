@@ -729,14 +729,11 @@ void PipelineDesc::updateBlendFuncs(const gl::BlendState &blendState)
 
 void PipelineDesc::updateColorWriteMask(const gl::BlendState &blendState)
 {
-    for (auto &blendAttachmentState : mColorBlendStateInfo.attachments)
-    {
-        int colorMask = blendState.colorMaskRed ? VK_COLOR_COMPONENT_R_BIT : 0;
-        colorMask |= blendState.colorMaskGreen ? VK_COLOR_COMPONENT_G_BIT : 0;
-        colorMask |= blendState.colorMaskBlue ? VK_COLOR_COMPONENT_B_BIT : 0;
-        colorMask |= blendState.colorMaskAlpha ? VK_COLOR_COMPONENT_A_BIT : 0;
+    uint8_t colorMask = static_cast<uint8_t>(gl_vk::GetColorComponentFlags(blendState));
 
-        blendAttachmentState.colorWriteMask = static_cast<uint8_t>(colorMask);
+    for (PackedColorBlendAttachmentState &blendAttachmentState : mColorBlendStateInfo.attachments)
+    {
+        blendAttachmentState.colorWriteMask = colorMask;
     }
 }
 
