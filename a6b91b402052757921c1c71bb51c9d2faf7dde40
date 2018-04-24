@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6554a6c_c25f4f86",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-24T14:16:29Z",
+      "side": 1,
+      "message": "micro-nit: this should probably be 2492 (since you can close 2495 - \"align\" tests for texsubimage specifically relate to unpack parameters)",
+      "range": {
+        "startLine": 316,
+        "startChar": 0,
+        "endLine": 316,
+        "endChar": 5
+      },
+      "revId": "a6b91b402052757921c1c71bb51c9d2faf7dde40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
