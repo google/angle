@@ -22,6 +22,30 @@
       "revId": "e7405981462b6582a7683d5662d3ba866319fc18",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cfb5fba_23080863",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1897,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-25T11:13:04Z",
+      "side": 1,
+      "message": "Indeed that was weird, I removed the extra line and did git cl format again and it fixed it.",
+      "parentUuid": "39756d19_b869afc3",
+      "range": {
+        "startLine": 1897,
+        "startChar": 0,
+        "endLine": 1897,
+        "endChar": 5
+      },
+      "revId": "e7405981462b6582a7683d5662d3ba866319fc18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
