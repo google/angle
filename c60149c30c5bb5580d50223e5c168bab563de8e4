@@ -188,6 +188,30 @@
       "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c972277_48fc6aa4",
+        "filename": "BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-25T01:03:59Z",
+      "side": 1,
+      "message": "I did a code search - there\u0027s no equivalent variable name for 24. Maybe this is the best we can do.",
+      "parentUuid": "79e1002e_89afc0bf",
+      "range": {
+        "startLine": 925,
+        "startChar": 27,
+        "endLine": 925,
+        "endChar": 29
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
