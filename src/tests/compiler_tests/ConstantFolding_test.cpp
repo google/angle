@@ -1607,3 +1607,41 @@ TEST_F(ConstantFoldingTest, FoldArrayOfArraysConstructorEquality)
     ASSERT_TRUE(constantFoundInAST(5.0f));
     ASSERT_FALSE(constantFoundInAST(4.0f));
 }
+
+// Test that casting a negative float to uint results in a warning. ESSL 3.00.6 section 5.4.1
+// specifies this as an undefined conversion.
+TEST_F(ConstantFoldingExpressionTest, FoldNegativeFloatToUint)
+{
+    const std::string &uintString = "uint(-1.0)";
+    evaluateUint(uintString);
+    ASSERT_TRUE(constantFoundInAST(std::numeric_limits<unsigned int>::max()));
+    ASSERT_TRUE(hasWarning());
+}
+
+// Test that casting a negative float to uint inside a uvec constructor results in a warning. ESSL
+// 3.00.6 section 5.4.1 specifies this as an undefined conversion.
+TEST_F(ConstantFoldingExpressionTest, FoldNegativeFloatToUvec)
+{
+    const std::string &uintString = "uvec4(2.0, 1.0, vec2(0.0, -1.0)).w";
+    evaluateUint(uintString);
+    ASSERT_TRUE(constantFoundInAST(std::numeric_limits<unsigned int>::max()));
+    ASSERT_TRUE(hasWarning());
+}
+
+// Test that a negative float doesn't result in a warning when it is inside a constructor but isn't
+// actually converted.
+TEST_F(ConstantFoldingExpressionTest, NegativeFloatInsideUvecConstructorButOutOfRange)
+{
+    const std::string &uintString = "uvec2(1.0, vec2(0.0, -1.0)).x";
+    evaluateUint(uintString);
+    ASSERT_FALSE(hasWarning());
+}
+
+// Test that a large float (above max int32_t) is converted to unsigned integer correctly.
+TEST_F(ConstantFoldingExpressionTest, LargeFloatToUint)
+{
+    const std::string &uintString = "uint(3221225472.0)";
+    evaluateUint(uintString);
+    ASSERT_TRUE(constantFoundInAST(3221225472u));
+    ASSERT_FALSE(hasWarning());
+}
