@@ -25,6 +25,40 @@
     },
     {
       "key": {
+        "uuid": "0a6081df_c19d453b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-25T14:33:51Z",
+      "side": 1,
+      "message": "Maybe this could already be done in this patch by looping over shaders and checking for null: the code wouldn\u0027t need any more changes to support GS.",
+      "revId": "a1a967801056f074158a80a60e2f946dea859569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67ea5c7e_26bd5194",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-25T14:33:51Z",
+      "side": 1,
+      "message": "Geoff, Jamie: What do you think about having these in a ShaderMap in Caps?",
+      "revId": "a1a967801056f074158a80a60e2f946dea859569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4b1013e6_7b30735b",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -60,6 +94,30 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "4b1013e6_7b30735b",
+      "range": {
+        "startLine": 2592,
+        "startChar": 8,
+        "endLine": 2592,
+        "endChar": 47
+      },
+      "revId": "a1a967801056f074158a80a60e2f946dea859569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c83fa142_0e84f6b3",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2592,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-25T14:33:51Z",
+      "side": 1,
+      "message": "Could be done with mShaderWorkarounds[shaderType] \u003d CompilerWorkaroundsD3D()",
+      "parentUuid": "12ddb68b_a17cb831",
       "range": {
         "startLine": 2592,
         "startChar": 8,
