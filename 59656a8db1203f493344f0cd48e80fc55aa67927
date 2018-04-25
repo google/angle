@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2362e934_3020e5cc",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-25T15:16:10Z",
+      "side": 1,
+      "message": "Could this return a new BlitRectangle instead?",
+      "revId": "59656a8db1203f493344f0cd48e80fc55aa67927",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84fc3966_ebb75f32",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-25T15:16:10Z",
+      "side": 1,
+      "message": "Maybe this could be implemented by converting to gl::Rectangle clipping then converting back?",
+      "revId": "59656a8db1203f493344f0cd48e80fc55aa67927",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dae0f821_66418e66",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-25T15:16:10Z",
+      "side": 1,
+      "message": "The comment doesn\u0027t match the drivers the workaround is enabled on.",
+      "revId": "59656a8db1203f493344f0cd48e80fc55aa67927",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

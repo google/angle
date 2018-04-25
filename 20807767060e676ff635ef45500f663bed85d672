@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce621afe_a11c8168",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-25T15:16:10Z",
+      "side": 1,
+      "message": "TBH I think the app is doing it wrong is one of width or height is out of range, and we should just do a manual blit in that case.",
+      "revId": "20807767060e676ff635ef45500f663bed85d672",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
