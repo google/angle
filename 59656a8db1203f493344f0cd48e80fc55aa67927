@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e4ca3882_09e49e56",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-25T17:32:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2362e934_3020e5cc",
+      "revId": "59656a8db1203f493344f0cd48e80fc55aa67927",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84fc3966_ebb75f32",
         "filename": "src/libANGLE/angletypes.cpp",
         "patchSetId": 14
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5f914646_5fffa9ed",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-25T17:32:33Z",
+      "side": 1,
+      "message": "No, in the general case we can\u0027t convert BlitRectangle to Rectangle since the width and height may be out of range.",
+      "parentUuid": "84fc3966_ebb75f32",
+      "revId": "59656a8db1203f493344f0cd48e80fc55aa67927",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dae0f821_66418e66",
         "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
         "patchSetId": 14
@@ -50,6 +86,24 @@
       "revId": "59656a8db1203f493344f0cd48e80fc55aa67927",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa3a5494_0163cdf4",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-25T17:32:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dae0f821_66418e66",
+      "revId": "59656a8db1203f493344f0cd48e80fc55aa67927",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

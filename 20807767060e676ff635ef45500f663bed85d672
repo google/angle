@@ -16,6 +16,24 @@
       "revId": "20807767060e676ff635ef45500f663bed85d672",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e749508a_7920b564",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-25T17:32:33Z",
+      "side": 1,
+      "message": "Manual blit is not supported for depth/stencil, that\u0027s why I added this extra path. It may also be faster than manual blit.\n\nI think we should either try to implement the spec as accurately as possible, or explicitly diverge from the spec.",
+      "parentUuid": "ce621afe_a11c8168",
+      "revId": "20807767060e676ff635ef45500f663bed85d672",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
