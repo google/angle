@@ -1365,6 +1365,52 @@ TEST_P(SimpleStateChangeTest, RebindTextureDrawAgain)
     EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::cyan);
 }
 
+// Tests that we can draw with a texture, modify the texture with a texSubImage, and then draw again
+// correctly.
+TEST_P(SimpleStateChangeTest, DrawWithTextureTexSubImageThenDrawAgain)
+{
+    // TODO(jmadill): Start a new command buffer when another draw is called after doing a texture
+    // update to support this use case. http://anglebug.com/2495
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    GLuint program = get2DTexturedQuadProgram();
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    std::array<GLColor, 4> colors    = {{GLColor::red, GLColor::red, GLColor::red, GLColor::red}};
+    std::array<GLColor, 4> subColors = {
+        {GLColor::green, GLColor::green, GLColor::green, GLColor::green}};
+
+    // Setup the texture
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Setup the vertex array to draw a quad.
+    GLint positionLocation = glGetAttribLocation(program, "position");
+    setupQuadVertexBuffer(1.0f, 1.0f);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Draw quad
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Update bottom-half of texture with green.
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 1, GL_RGBA, GL_UNSIGNED_BYTE, subColors.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Draw again, should still work.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Validate first half of the screen is red and the bottom is green.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, getWindowHeight() / 4 * 3, GLColor::red);
+}
+
 // Test that we can alternate between textures between different draws.
 TEST_P(SimpleStateChangeTest, DrawTextureAThenTextureBThenTextureA)
 {
