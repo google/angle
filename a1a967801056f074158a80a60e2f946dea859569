@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6cc8a560_cbc33815",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-25T11:31:26Z",
+      "side": 1,
+      "message": "you can just call this shaderHLSL instead of shaderHLSLs. \"HLSL\" doesn\u0027t really have a quantity",
+      "range": {
+        "startLine": 142,
+        "startChar": 60,
+        "endLine": 142,
+        "endChar": 71
+      },
+      "revId": "a1a967801056f074158a80a60e2f946dea859569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b1013e6_7b30735b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2592,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-25T11:31:26Z",
+      "side": 1,
+      "message": "nit: can you keep the old code without the reset() method?",
+      "range": {
+        "startLine": 2592,
+        "startChar": 8,
+        "endLine": 2592,
+        "endChar": 47
+      },
+      "revId": "a1a967801056f074158a80a60e2f946dea859569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
