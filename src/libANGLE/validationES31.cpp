@@ -475,9 +475,25 @@ bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indir
     if (curTransformFeedback && curTransformFeedback->isActive() &&
         !curTransformFeedback->isPaused())
     {
-        // An INVALID_OPERATION error is generated if transform feedback is active and not paused.
-        context->handleError(InvalidOperation() << "transform feedback is active and not paused.");
-        return false;
+        // EXT_geometry_shader allows transform feedback to work with all draw commands.
+        // [EXT_geometry_shader] Section 12.1, "Transform Feedback"
+        if (context->getExtensions().geometryShader)
+        {
+            if (!ValidateTransformFeedbackPrimitiveMode(
+                    context, curTransformFeedback->getPrimitiveMode(), mode))
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidDrawModeTransformFeedback);
+                return false;
+            }
+        }
+        else
+        {
+            // An INVALID_OPERATION error is generated if transform feedback is active and not
+            // paused.
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                 UnsupportedDrawModeForTransformFeedback);
+            return false;
+        }
     }
 
     if (!ValidateDrawIndirectBase(context, mode, indirect))
@@ -502,8 +518,10 @@ bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indir
 
 bool ValidateDrawElementsIndirect(Context *context, GLenum mode, GLenum type, const void *indirect)
 {
-    if (!ValidateDrawElementsBase(context, type))
+    if (!ValidateDrawElementsBase(context, mode, type))
+    {
         return false;
+    }
 
     const State &state             = context->getGLState();
     const VertexArray *vao         = state.getVertexArray();

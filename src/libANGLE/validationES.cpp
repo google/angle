@@ -634,6 +634,38 @@ bool ValidTexture2DDestinationTarget(const Context *context, TextureTarget targe
     }
 }
 
+bool ValidateTransformFeedbackPrimitiveMode(const Context *context,
+                                            GLenum transformFeedbackPrimitiveMode,
+                                            GLenum renderPrimitiveMode)
+{
+    ASSERT(context);
+
+    if (!context->getExtensions().geometryShader)
+    {
+        // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
+        // that does not match the current transform feedback object's draw mode (if transform
+        // feedback is active), (3.0.2, section 2.14, pg 86)
+        return transformFeedbackPrimitiveMode == renderPrimitiveMode;
+    }
+
+    // [GL_EXT_geometry_shader] Table 12.1gs
+    switch (transformFeedbackPrimitiveMode)
+    {
+        case GL_POINTS:
+            return renderPrimitiveMode == GL_POINTS;
+        case GL_TRIANGLES:
+            return renderPrimitiveMode == GL_TRIANGLES ||
+                   renderPrimitiveMode == GL_TRIANGLE_STRIP ||
+                   renderPrimitiveMode == GL_TRIANGLE_FAN;
+        case GL_LINES:
+            return renderPrimitiveMode == GL_LINES || renderPrimitiveMode == GL_LINE_LOOP ||
+                   renderPrimitiveMode == GL_LINE_STRIP;
+        default:
+            UNREACHABLE();
+            return false;
+    }
+}
+
 bool ValidateDrawElementsInstancedBase(Context *context,
                                        GLenum mode,
                                        GLsizei count,
@@ -2845,12 +2877,9 @@ bool ValidateDrawArraysCommon(Context *context,
     if (curTransformFeedback && curTransformFeedback->isActive() &&
         !curTransformFeedback->isPaused())
     {
-        if (curTransformFeedback->getPrimitiveMode() != mode)
+        if (!ValidateTransformFeedbackPrimitiveMode(context,
+                                                    curTransformFeedback->getPrimitiveMode(), mode))
         {
-            // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
-            // that does not match the current transform feedback object's draw mode (if transform
-            // feedback
-            // is active), (3.0.2, section 2.14, pg 86)
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidDrawModeTransformFeedback);
             return false;
         }
@@ -2910,7 +2939,7 @@ bool ValidateDrawArraysInstancedANGLE(Context *context,
     return ValidateDrawInstancedANGLE(context);
 }
 
-bool ValidateDrawElementsBase(Context *context, GLenum type)
+bool ValidateDrawElementsBase(Context *context, GLenum mode, GLenum type)
 {
     switch (type)
     {
@@ -2935,11 +2964,26 @@ bool ValidateDrawElementsBase(Context *context, GLenum type)
     if (curTransformFeedback && curTransformFeedback->isActive() &&
         !curTransformFeedback->isPaused())
     {
-        // It is an invalid operation to call DrawElements, DrawRangeElements or
-        // DrawElementsInstanced
-        // while transform feedback is active, (3.0.2, section 2.14, pg 86)
-        context->handleError(InvalidOperation());
-        return false;
+        // EXT_geometry_shader allows transform feedback to work with all draw commands.
+        // [EXT_geometry_shader] Section 12.1, "Transform Feedback"
+        if (context->getExtensions().geometryShader)
+        {
+            if (!ValidateTransformFeedbackPrimitiveMode(
+                    context, curTransformFeedback->getPrimitiveMode(), mode))
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidDrawModeTransformFeedback);
+                return false;
+            }
+        }
+        else
+        {
+            // It is an invalid operation to call DrawElements, DrawRangeElements or
+            // DrawElementsInstanced while transform feedback is active, (3.0.2, section 2.14, pg
+            // 86)
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                 UnsupportedDrawModeForTransformFeedback);
+            return false;
+        }
     }
 
     return true;
@@ -2952,7 +2996,7 @@ bool ValidateDrawElementsCommon(Context *context,
                                 const void *indices,
                                 GLsizei primcount)
 {
-    if (!ValidateDrawElementsBase(context, type))
+    if (!ValidateDrawElementsBase(context, mode, type))
         return false;
 
     const State &state = context->getGLState();

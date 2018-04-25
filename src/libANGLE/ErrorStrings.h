@@ -211,6 +211,8 @@ ERRMSG(UniformBufferBoundForTransformFeedback,
        "It is undefined behavior to use an uniform buffer that is bound for transform feedback.");
 ERRMSG(UniformSizeMismatch, "Uniform size does not match uniform method.");
 ERRMSG(UnknownParameter, "Unknown parameter value.");
+ERRMSG(UnsupportedDrawModeForTransformFeedback,
+       "The draw command is unsupported when transform feedback is active and not paused.");
 ERRMSG(VertexArrayNoBuffer, "An enabled vertex array has no buffer.");
 ERRMSG(VertexArrayNoBufferPointer, "An enabled vertex array has no buffer and no pointer.");
 ERRMSG(VertexBufferBoundForTransformFeedback,

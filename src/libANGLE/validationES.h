@@ -289,7 +289,7 @@ bool ValidateDrawArraysInstancedANGLE(Context *context,
                                       GLsizei count,
                                       GLsizei primcount);
 
-bool ValidateDrawElementsBase(Context *context, GLenum type);
+bool ValidateDrawElementsBase(Context *context, GLenum mode, GLenum type);
 bool ValidateDrawElementsCommon(Context *context,
                                 GLenum mode,
                                 GLsizei count,
@@ -678,6 +678,10 @@ bool ValidateGetInternalFormativBase(Context *context,
 bool ValidateFramebufferNotMultisampled(Context *context, Framebuffer *framebuffer);
 
 bool ValidateMultitextureUnit(Context *context, GLenum texture);
+
+bool ValidateTransformFeedbackPrimitiveMode(const Context *context,
+                                            GLenum transformFeedbackPrimitiveMode,
+                                            GLenum renderPrimitiveMode);
 
 // Utility macro for handling implementation methods inside Validation.
 #define ANGLE_HANDLE_VALIDATION_ERR(X) \
