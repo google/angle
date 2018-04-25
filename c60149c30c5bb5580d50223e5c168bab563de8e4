@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "fd671142_8d37c17c",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1126674
+      },
+      "writtenOn": "2018-04-25T11:38:21Z",
+      "side": 1,
+      "message": "Chrome\u0027s build system injects android:debuggable\u003d\"true\" into all APKs so long as is_official_build\u003dfalse, so certainly no harm in removing (unless you want to debug official builds)",
+      "parentUuid": "825795d4_cc9310cd",
+      "range": {
+        "startLine": 18,
+        "startChar": 28,
+        "endLine": 18,
+        "endChar": 32
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70bdb731_ccce6e32",
         "filename": "BUILD.gn",
         "patchSetId": 6
