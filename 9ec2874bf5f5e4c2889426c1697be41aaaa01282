@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ac3b469_b6a30bd5",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-25T02:13:27Z",
+      "side": 1,
+      "message": "Jamie/Geoff/Corentin: do we have plan to use angle::BitSet for CompilerWorkaroundsD3D/WorkaroundsD3D?",
+      "revId": "9ec2874bf5f5e4c2889426c1697be41aaaa01282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eab025fe_92fcd5e9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-25T02:13:27Z",
+      "side": 1,
+      "message": "nit: Repeated?",
+      "range": {
+        "startLine": 188,
+        "startChar": 17,
+        "endLine": 188,
+        "endChar": 30
+      },
+      "revId": "9ec2874bf5f5e4c2889426c1697be41aaaa01282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
