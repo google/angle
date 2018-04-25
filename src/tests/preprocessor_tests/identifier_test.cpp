@@ -9,6 +9,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 #define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
 
 class IdentifierTest : public SimplePreprocessorTest
@@ -161,3 +164,5 @@ TEST_F(IdentifierTest, AllLetters)
 
     expectIdentifier(str);
 }
+
+}  // namespace angle

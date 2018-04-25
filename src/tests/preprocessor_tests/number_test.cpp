@@ -9,6 +9,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 #define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
 
 class InvalidNumberTest : public SimplePreprocessorTest,
@@ -164,3 +167,5 @@ TEST_F(FloatTest, FractionScientific)
     SCOPED_TRACE("FractionScientific");
     expectFloat("0.1e+2");
 }
+
+}  // namespace angle

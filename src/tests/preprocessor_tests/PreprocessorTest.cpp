@@ -7,6 +7,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 void SimplePreprocessorTest::preprocess(const char *input,
                                         std::stringstream *output,
                                         pp::Preprocessor *preprocessor)
@@ -65,3 +68,5 @@ void SimplePreprocessorTest::lexSingleToken(size_t count,
     ASSERT_TRUE(preprocessor.init(count, input, nullptr));
     preprocessor.lex(token);
 }
+
+}  // namespace angle

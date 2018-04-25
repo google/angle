@@ -7,6 +7,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 class ErrorTest : public SimplePreprocessorTest
 {
 };
@@ -90,3 +93,5 @@ TEST_F(ErrorTest, MissingNewline)
 
     preprocess(str, expected);
 }
+
+}  // namespace angle

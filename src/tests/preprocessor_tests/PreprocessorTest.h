@@ -13,6 +13,9 @@
 #ifndef PREPROCESSOR_TESTS_PREPROCESSOR_TEST_H_
 #define PREPROCESSOR_TESTS_PREPROCESSOR_TEST_H_
 
+namespace angle
+{
+
 class PreprocessorTest : public testing::Test
 {
   protected:
@@ -46,5 +49,7 @@ class SimplePreprocessorTest : public testing::Test
   private:
     void preprocess(const char *input, std::stringstream *output, pp::Preprocessor *preprocessor);
 };
+
+}  // namespace angle
 
 #endif  // PREPROCESSOR_TESTS_PREPROCESSOR_TEST_H_

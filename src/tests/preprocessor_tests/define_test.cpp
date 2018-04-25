@@ -9,6 +9,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 using testing::_;
 
 class DefineTest : public SimplePreprocessorTest
@@ -1029,3 +1032,5 @@ TEST_F(DefineTest, LongMacroInvocationChain)
 
     preprocess(inputStream.str().c_str(), settings);
 }
+
+}  // namespace angle

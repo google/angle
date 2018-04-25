@@ -7,6 +7,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 class LocationTest : public PreprocessorTest
 {
 protected:
@@ -411,3 +414,5 @@ static const LineExpressionTestParam kParamsLineExpressionTest[] = {
     {"16 >> 2", 4}};
 
 INSTANTIATE_TEST_CASE_P(All, LineExpressionTest, testing::ValuesIn(kParamsLineExpressionTest));
+
+}  // namespace angle

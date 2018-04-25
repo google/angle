@@ -9,6 +9,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 class SpaceTest : public PreprocessorTest
 {
   protected:
@@ -106,3 +109,5 @@ TEST_F(SpaceTest, LeadingSpace)
     EXPECT_EQ("bar", token.text);
     EXPECT_FALSE(token.hasLeadingSpace());
 }
+
+}  // namespace angle

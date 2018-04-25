@@ -7,6 +7,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 class CommentTest : public SimplePreprocessorTest, public testing::WithParamInterface<const char *>
 {
 };
@@ -59,3 +62,5 @@ TEST_F(BlockCommentTest, UnterminatedComment)
 
     preprocess(str);
 }
+
+}  // namespace angle

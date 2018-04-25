@@ -7,6 +7,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 class PragmaTest : public SimplePreprocessorTest
 {
 };
@@ -152,3 +155,5 @@ INSTANTIATE_TEST_CASE_P(All, InvalidPragmaTest, testing::Values(
     "#pragma foo(bar\n",         // Missing right paren.
     "#pragma foo bar\n",         // Missing parens.
     "#pragma foo(bar) baz\n"));  // Extra tokens.
+
+}  // namespace angle

@@ -12,6 +12,9 @@
 #include <cmath>
 #include <sstream>
 
+namespace angle
+{
+
 namespace pp
 {
 
@@ -54,6 +57,8 @@ bool numeric_lex_float(const std::string &str, FloatType *value)
     return errno != ERANGE && std::isfinite(*value);
 }
 
-}  // namespace pp.
+}  // namespace pp
+
+}  // namespace angle
 
 #endif  // COMPILER_PREPROCESSOR_NUMERICLEX_H_

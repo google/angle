@@ -8,6 +8,9 @@
 
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 TEST(TokenTest, DefaultConstructor)
 {
     pp::Token token;
@@ -88,3 +91,5 @@ TEST(TokenTest, Write)
     EXPECT_TRUE(out2.good());
     EXPECT_EQ(" foo", out2.str());
 }
+
+}  // namespace angle

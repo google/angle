@@ -7,6 +7,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 class VersionTest : public SimplePreprocessorTest
 {
 };
@@ -202,3 +205,5 @@ static const VersionTestParam kParams[] = {
 };
 
 INSTANTIATE_TEST_CASE_P(All, InvalidVersionTest, testing::ValuesIn(kParams));
+
+}  // namespace angle

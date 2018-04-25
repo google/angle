@@ -7,6 +7,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 struct OperatorTestParam
 {
     const char* str;
@@ -76,3 +79,4 @@ static const OperatorTestParam kOperators[] = {
 INSTANTIATE_TEST_CASE_P(All, OperatorTest,
                         testing::ValuesIn(kOperators));
 
+}  // namespace angle

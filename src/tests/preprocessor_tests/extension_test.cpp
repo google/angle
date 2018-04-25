@@ -7,6 +7,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 class ExtensionTest : public SimplePreprocessorTest
 {
 };
@@ -134,3 +137,5 @@ static const ExtensionTestParam kParams[] = {
     {"#extension foo : bar baz\n", pp::Diagnostics::PP_UNEXPECTED_TOKEN}
 };
 INSTANTIATE_TEST_CASE_P(All, InvalidExtensionTest, testing::ValuesIn(kParams));
+
+}  // namespace angle

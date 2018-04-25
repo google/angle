@@ -7,6 +7,9 @@
 #include "PreprocessorTest.h"
 #include "compiler/preprocessor/Token.h"
 
+namespace angle
+{
+
 class IfTest : public SimplePreprocessorTest
 {
 };
@@ -1035,3 +1038,5 @@ TEST_F(IfTest, BitShiftRightOperatorNegativeLHS)
 
     preprocess(str, expected);
 }
+
+}  // namespace angle

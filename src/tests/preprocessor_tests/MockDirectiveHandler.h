@@ -10,6 +10,9 @@
 #include "gmock/gmock.h"
 #include "compiler/preprocessor/DirectiveHandlerBase.h"
 
+namespace angle
+{
+
 class MockDirectiveHandler : public pp::DirectiveHandler
 {
   public:
@@ -30,5 +33,7 @@ class MockDirectiveHandler : public pp::DirectiveHandler
     MOCK_METHOD2(handleVersion,
         void(const pp::SourceLocation& loc, int version));
 };
+
+}  // namespace angle
 
 #endif  // PREPROCESSOR_TESTS_MOCK_DIRECTIVE_HANDLER_H_
