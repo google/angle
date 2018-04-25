@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17bf3e1c_a44f1440",
+        "filename": "src/tests/gl_tests/PointSpritesTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-25T11:33:27Z",
+      "side": 1,
+      "message": "nit: Can you make this a constant for all tests?",
+      "range": {
+        "startLine": 402,
+        "startChar": 38,
+        "endLine": 402,
+        "endChar": 42
+      },
+      "revId": "5006513d32dfa76352e66431146fa1bdbe3483df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
