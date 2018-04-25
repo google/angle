@@ -9,47 +9,47 @@ vars = {
 deps = {
 
   '{root}/build':
-    Var('chromium_git') + '/chromium/src/build.git' + '@' + '2f3b6e8ce9e783b2a09496d70eef2974506a41c8',
+    '{chromium_git}/chromium/src/build.git@2f3b6e8ce9e783b2a09496d70eef2974506a41c8',
 
   '{root}/buildtools':
-    Var('chromium_git') + '/chromium/buildtools.git' + '@' + '461b345a815c1c745ac0534a6a4bd52d123abe68',
+    '{chromium_git}/chromium/buildtools.git@461b345a815c1c745ac0534a6a4bd52d123abe68',
 
   '{root}/testing':
-    Var('chromium_git') + '/chromium/src/testing' + '@' + '6dfa36ab2e5143fa2f7353e3af5d2935af2e61f7',
+    '{chromium_git}/chromium/src/testing@6dfa36ab2e5143fa2f7353e3af5d2935af2e61f7',
 
   # Cherry is a dEQP management GUI written in Go. We use it for viewing test results.
   '{root}/third_party/cherry':
-    Var('android_git') + '/platform/external/cherry' + '@' + '4f8fb08d33ca5ff05a1c638f04c85bbb8d8b52cc',
+    '{android_git}/platform/external/cherry@4f8fb08d33ca5ff05a1c638f04c85bbb8d8b52cc',
 
   '{root}/third_party/deqp/src':
-    Var('android_git') + '/platform/external/deqp' + '@' + '5bc346ba2d5465a2e6094e254f12b1586fd0097f',
+    '{android_git}/platform/external/deqp@5bc346ba2d5465a2e6094e254f12b1586fd0097f',
 
   '{root}/third_party/glslang/src':
-    Var('android_git') + '/platform/external/shaderc/glslang' + '@' + '2edde6665d9a56ead5ea0e55b4e64d9a803e6164',
+    '{android_git}/platform/external/shaderc/glslang@2edde6665d9a56ead5ea0e55b4e64d9a803e6164',
 
   '{root}/third_party/googletest/src':
-    Var('chromium_git') + '/external/github.com/google/googletest.git' + '@' + 'd175c8bf823e709d570772b038757fadf63bc632',
+    '{chromium_git}/external/github.com/google/googletest.git@d175c8bf823e709d570772b038757fadf63bc632',
 
   '{root}/third_party/libpng/src':
-    Var('android_git') + '/platform/external/libpng' + '@' + '094e181e79a3d6c23fd005679025058b7df1ad6c',
+    '{android_git}/platform/external/libpng@094e181e79a3d6c23fd005679025058b7df1ad6c',
 
   '{root}/third_party/spirv-headers/src':
-    Var('android_git') + '/platform/external/shaderc/spirv-headers' + '@' + '98b01515724c428d0f0a5d01deffcce0f5f5e61c',
+    '{android_git}/platform/external/shaderc/spirv-headers@98b01515724c428d0f0a5d01deffcce0f5f5e61c',
 
   '{root}/third_party/spirv-tools/src':
-    Var('android_git') + '/platform/external/shaderc/spirv-tools' + '@' + '9996173f363729b3a97309685dbd4d78547a63a7',
+    '{android_git}/platform/external/shaderc/spirv-tools@9996173f363729b3a97309685dbd4d78547a63a7',
 
   '{root}/third_party/vulkan-validation-layers/src':
-    Var('android_git') + '/platform/external/vulkan-validation-layers' + '@' + '88e43c8f9a750839a5d6d3f90098505bad3a98a1',
+    '{android_git}/platform/external/vulkan-validation-layers@88e43c8f9a750839a5d6d3f90098505bad3a98a1',
 
   '{root}/third_party/zlib':
-    Var('chromium_git') + '/chromium/src/third_party/zlib' + '@' + '24ab14872e8e068ba08cc31cc3d43bcc6d5cb832',
+    '{chromium_git}/chromium/src/third_party/zlib@24ab14872e8e068ba08cc31cc3d43bcc6d5cb832',
 
   '{root}/tools/clang':
-    Var('chromium_git') + '/chromium/src/tools/clang.git' + '@' + 'e70074db10b27867e6c873adc3ac7e5f9ee0ff6e',
+    '{chromium_git}/chromium/src/tools/clang.git@e70074db10b27867e6c873adc3ac7e5f9ee0ff6e',
 
   '{root}/tools/gyp':
-    Var('chromium_git') + '/external/gyp' + '@' + '5e2b3ddde7cda5eb6bc09a5546a76b00e49d888f',
+    '{chromium_git}/external/gyp@5e2b3ddde7cda5eb6bc09a5546a76b00e49d888f',
 }
 
 hooks = [
