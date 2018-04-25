@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aaff553_e2aa13b0",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1376,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-25T15:47:09Z",
+      "side": 1,
+      "message": "nit: you can verify program !\u003d 0 (ASSERT_NE(0u, program))",
+      "range": {
+        "startLine": 1376,
+        "startChar": 3,
+        "endLine": 1376,
+        "endChar": 48
+      },
+      "revId": "fb8ba899277223530014abfbd1dfc26f61e60d64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c3b580b_ac38e653",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1381,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-25T15:47:09Z",
+      "side": 1,
+      "message": "nit: you can make these constexpr  (and kColors/kSubColors)",
+      "range": {
+        "startLine": 1379,
+        "startChar": 4,
+        "endLine": 1381,
+        "endChar": 74
+      },
+      "revId": "fb8ba899277223530014abfbd1dfc26f61e60d64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
