@@ -1003,6 +1003,34 @@ class BlitFramebufferTest : public ANGLETest
         setConfigDepthBits(24);
         setConfigStencilBits(8);
     }
+
+    void initColorFBO(GLFramebuffer *fbo,
+                      GLRenderbuffer *rbo,
+                      GLenum rboFormat,
+                      GLsizei width,
+                      GLsizei height)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, *rbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, rboFormat, width, height);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, *rbo);
+    }
+
+    void initColorFBOWithCheckerPattern(GLFramebuffer *fbo,
+                                        GLRenderbuffer *rbo,
+                                        GLenum rboFormat,
+                                        GLsizei width,
+                                        GLsizei height)
+    {
+        initColorFBO(fbo, rbo, rboFormat, width, height);
+
+        ANGLE_GL_PROGRAM(checkerProgram, essl1_shaders::vs::Passthrough(),
+                         essl1_shaders::fs::Checkered());
+        glViewport(0, 0, width, height);
+        glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
+        drawQuad(checkerProgram.get(), essl1_shaders::PositionAttrib(), 0.5f);
+    }
 };
 
 // Tests resolving a multisample depth buffer.
@@ -1070,6 +1098,9 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
 // Test resolving a multisampled stencil buffer.
 TEST_P(BlitFramebufferTest, MultisampleStencil)
 {
+    // Incorrect rendering results seen on AMD Windows OpenGL. http://anglebug.com/2486
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && IsWindows());
+
     GLRenderbuffer renderbuf;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
     glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_STENCIL_INDEX8, 256, 256);
@@ -1124,6 +1155,165 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
     ASSERT_GL_NO_ERROR();
 }
 
+// Blit an SRGB framebuffer and scale it.
+TEST_P(BlitFramebufferTest, BlitSRGBToRGBAndScale)
+{
+    constexpr const GLsizei kWidth  = 256;
+    constexpr const GLsizei kHeight = 256;
+
+    GLRenderbuffer sourceRBO, targetRBO;
+    GLFramebuffer sourceFBO, targetFBO;
+    initColorFBOWithCheckerPattern(&sourceFBO, &sourceRBO, GL_SRGB8_ALPHA8, kWidth * 2,
+                                   kHeight * 2);
+    initColorFBO(&targetFBO, &targetRBO, GL_RGBA8, kWidth, kHeight);
+
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFBO);
+
+    glViewport(0, 0, kWidth, kHeight);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Scale down without flipping.
+    glBlitFramebuffer(0, 0, kWidth * 2, kHeight * 2, 0, 0, kWidth, kHeight, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
+
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::green);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFBO);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Scale down and flip in the X direction.
+    glBlitFramebuffer(0, 0, kWidth * 2, kHeight * 2, kWidth, 0, 0, kHeight, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
+
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::red);
+}
+
+// Blit a subregion of an SRGB framebuffer to an RGB framebuffer.
+TEST_P(BlitFramebufferTest, PartialBlitSRGBToRGB)
+{
+    constexpr const GLsizei kWidth  = 256;
+    constexpr const GLsizei kHeight = 256;
+
+    GLRenderbuffer sourceRBO, targetRBO;
+    GLFramebuffer sourceFBO, targetFBO;
+    initColorFBOWithCheckerPattern(&sourceFBO, &sourceRBO, GL_SRGB8_ALPHA8, kWidth * 2,
+                                   kHeight * 2);
+    initColorFBO(&targetFBO, &targetRBO, GL_RGBA8, kWidth, kHeight);
+
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFBO);
+
+    glViewport(0, 0, kWidth, kHeight);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Blit a part of the source FBO without flipping.
+    glBlitFramebuffer(kWidth, kHeight, kWidth * 2, kHeight * 2, 0, 0, kWidth, kHeight,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
+
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::red);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFBO);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Blit a part of the source FBO and flip in the X direction.
+    glBlitFramebuffer(kWidth * 2, 0, kWidth, kHeight, kWidth, 0, 0, kHeight, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
+
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::green);
+}
+
+// Blit an SRGB framebuffer with an oversized source area (parts outside the source area should be
+// clipped out).
+TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedSourceArea)
+{
+    // D3D11 blit implementation seems to have a bug where the blit rectangles are computed
+    // incorrectly. http://anglebug.com/2521
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    constexpr const GLsizei kWidth  = 256;
+    constexpr const GLsizei kHeight = 256;
+
+    GLRenderbuffer sourceRBO, targetRBO;
+    GLFramebuffer sourceFBO, targetFBO;
+    initColorFBOWithCheckerPattern(&sourceFBO, &sourceRBO, GL_SRGB8_ALPHA8, kWidth, kHeight);
+    initColorFBO(&targetFBO, &targetRBO, GL_RGBA8, kWidth, kHeight);
+
+    EXPECT_GL_NO_ERROR();
+
+    glViewport(0, 0, kWidth, kHeight);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFBO);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Blit so that the source area gets placed at the center of the target FBO.
+    // The width of the source area is 1/4 of the width of the target FBO.
+    glBlitFramebuffer(-3 * kWidth / 2, -3 * kHeight / 2, 5 * kWidth / 2, 5 * kHeight / 2, 0, 0,
+                      kWidth, kHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
+
+    // Source FBO colors can be found in the middle of the target FBO.
+    EXPECT_PIXEL_COLOR_EQ(7 * kWidth / 16, 7 * kHeight / 16, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(9 * kWidth / 16, 7 * kHeight / 16, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(9 * kWidth / 16, 9 * kHeight / 16, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(7 * kWidth / 16, 9 * kHeight / 16, GLColor::green);
+
+    // Clear color should remain around the edges of the target FBO (WebGL 2.0 spec explicitly
+    // requires this and ANGLE is expected to follow that).
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::black);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(BlitFramebufferANGLETest,
                        ES2_D3D9(),
@@ -1132,4 +1322,6 @@ ANGLE_INSTANTIATE_TEST(BlitFramebufferANGLETest,
                        ES2_OPENGL(),
                        ES3_OPENGL());
 
-ANGLE_INSTANTIATE_TEST(BlitFramebufferTest, ES3_D3D11());
+// We're specifically testing GL 4.4 and GL 4.3 since on versions earlier than 4.4 FramebufferGL
+// takes a different path for blitting SRGB textures.
+ANGLE_INSTANTIATE_TEST(BlitFramebufferTest, ES3_D3D11(), ES3_OPENGL(4, 4), ES3_OPENGL(4, 3));
