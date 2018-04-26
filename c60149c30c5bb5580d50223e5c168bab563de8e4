@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "7d104eea_2d64dea7",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-26T14:18:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd671142_8d37c17c",
+      "range": {
+        "startLine": 18,
+        "startChar": 28,
+        "endLine": 18,
+        "endChar": 32
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70bdb731_ccce6e32",
         "filename": "BUILD.gn",
         "patchSetId": 6
@@ -251,6 +275,30 @@
       "side": 1,
       "message": "Looks like requires_sdk_api_level_23 is just a sanity check for enabling either pack_relocations or load_library_from_apk. And load_library_from_apk is somehow related to uncompress_shared_libraries. A comment would be nice.",
       "parentUuid": "8c972277_48fc6aa4",
+      "range": {
+        "startLine": 925,
+        "startChar": 27,
+        "endLine": 925,
+        "endChar": 29
+      },
+      "revId": "c60149c30c5bb5580d50223e5c168bab563de8e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41730809_65ffeed8",
+        "filename": "BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-04-26T14:18:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d24a4d48_c50a6cfc",
       "range": {
         "startLine": 925,
         "startChar": 27,
