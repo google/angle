@@ -1369,10 +1369,6 @@ TEST_P(SimpleStateChangeTest, RebindTextureDrawAgain)
 // correctly.
 TEST_P(SimpleStateChangeTest, DrawWithTextureTexSubImageThenDrawAgain)
 {
-    // TODO(jmadill): Start a new command buffer when another draw is called after doing a texture
-    // update to support this use case. http://anglebug.com/2495
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLuint program = get2DTexturedQuadProgram();
     ASSERT_NE(0u, program);
     glUseProgram(program);

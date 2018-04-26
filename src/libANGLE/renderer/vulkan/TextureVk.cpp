@@ -271,6 +271,10 @@ gl::Error TextureVk::setSubImage(const gl::Context *context,
     ANGLE_TRY(mPixelBuffer.stageSubresourceUpdate(
         contextVk, index, gl::Extents(area.width, area.height, area.depth),
         gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels));
+
+    // Create a new graph node to store image initialization commands.
+    getNewWritingNode(contextVk->getRenderer());
+
     return gl::NoError();
 }
 
