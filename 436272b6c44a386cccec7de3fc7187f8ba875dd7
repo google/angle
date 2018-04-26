@@ -16,6 +16,24 @@
       "revId": "436272b6c44a386cccec7de3fc7187f8ba875dd7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ee8749e_c81cb8e9",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-26T06:38:00Z",
+      "side": 1,
+      "message": "Could I make this change in another patch? Then this patch can be cleaner.",
+      "parentUuid": "e9360488_dcfdc987",
+      "revId": "436272b6c44a386cccec7de3fc7187f8ba875dd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
