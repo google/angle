@@ -190,6 +190,22 @@ static void MinMax(int a, int b, int *minimum, int *maximum)
     }
 }
 
+Rectangle Rectangle::removeReversal() const
+{
+    Rectangle unreversed = *this;
+    if (isReversedX())
+    {
+        unreversed.x     = unreversed.x + unreversed.width;
+        unreversed.width = -unreversed.width;
+    }
+    if (isReversedY())
+    {
+        unreversed.y      = unreversed.y + unreversed.height;
+        unreversed.height = -unreversed.height;
+    }
+    return unreversed;
+}
+
 bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *intersection)
 {
     int minSourceX, maxSourceX, minSourceY, maxSourceY;

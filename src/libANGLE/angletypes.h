@@ -55,6 +55,12 @@ struct Rectangle
     int x1() const { return x + width; }
     int y1() const { return y + height; }
 
+    bool isReversedX() const { return width < 0; }
+    bool isReversedY() const { return height < 0; }
+
+    // Returns a rectangle with the same area but with height and width guaranteed to be positive.
+    Rectangle removeReversal() const;
+
     int x;
     int y;
     int width;

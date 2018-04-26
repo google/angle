@@ -370,24 +370,13 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
     BlitProgram *blitProgram = nullptr;
     ANGLE_TRY(getBlitProgram(BlitProgramType::FLOAT_TO_FLOAT, &blitProgram));
 
-    // Normalize the destination area to have positive width and height because we will use
-    // glViewport to set it, which doesn't allow negative width or height.
-    gl::Rectangle sourceArea = sourceAreaIn;
-    gl::Rectangle destArea   = destAreaIn;
-    if (destArea.width < 0)
-    {
-        destArea.x += destArea.width;
-        destArea.width = -destArea.width;
-        sourceArea.x += sourceArea.width;
-        sourceArea.width = -sourceArea.width;
-    }
-    if (destArea.height < 0)
-    {
-        destArea.y += destArea.height;
-        destArea.height = -destArea.height;
-        sourceArea.y += sourceArea.height;
-        sourceArea.height = -sourceArea.height;
-    }
+    // We'll keep things simple by removing reversed coordinates from the rectangles. In the end
+    // we'll apply the reversal to the source texture coordinates if needed. The destination
+    // rectangle will be set to the gl viewport, which can't be reversed.
+    bool reverseX            = sourceAreaIn.isReversedX() != destAreaIn.isReversedX();
+    bool reverseY            = sourceAreaIn.isReversedY() != destAreaIn.isReversedY();
+    gl::Rectangle sourceArea = sourceAreaIn.removeReversal();
+    gl::Rectangle destArea   = destAreaIn.removeReversal();
 
     const gl::FramebufferAttachment *readAttachment = source->getReadColorbuffer();
     ASSERT(readAttachment->getSamples() <= 1);
@@ -397,57 +386,23 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
     {
         gl::Extents sourceSize = readAttachment->getSize();
         gl::Rectangle sourceBounds(0, 0, sourceSize.width, sourceSize.height);
-        gl::ClipRectangle(sourceArea, sourceBounds, &inBoundsSource);
-
-        // Note that inBoundsSource will have lost the orientation information.
-        ASSERT(inBoundsSource.width >= 0 && inBoundsSource.height >= 0);
-
-        // Early out when the sampled part is empty as the blit will be a noop,
-        // and it prevents a division by zero in later computations.
-        if (inBoundsSource.width == 0 || inBoundsSource.height == 0)
+        if (!gl::ClipRectangle(sourceArea, sourceBounds, &inBoundsSource))
         {
+            // Early out when the sampled part is empty as the blit will be a noop,
+            // and it prevents a division by zero in later computations.
             return gl::NoError();
         }
     }
 
     // The blit will be emulated by getting the source of the blit in a texture and sampling it
-    // with CLAMP_TO_EDGE. The quad used to draw can trivially compute texture coordinates going
-    // from (0, 0) to (1, 1). These texture coordinates will need to be transformed to make two
-    // regions match:
-    //  - The region of the texture representing the source framebuffer region that will be sampled
-    //  - The region of the drawn quad that corresponds to non-clamped blit, this is the same as the
-    //    region of the source rectangle that is inside the source attachment.
-    //
-    //  These two regions, T (texture) and D (dest) are defined by their offset in texcoord space
-    //  in (0, 1)^2 and their size in texcoord space in (-1, 1)^2. The size can be negative to
-    //  represent the orientation of the blit.
-    //
-    //  Then if P is the quad texcoord, Q the texcoord inside T, and R the texture texcoord:
-    //    - Q = (P - D.offset) / D.size
-    //    - Q = (R - T.offset) / T.size
-    //  Hence R = (P - D.offset) / D.size * T.size - T.offset
-    //          = P * (T.size / D.size) + (T.offset - D.offset * T.size / D.size)
+    // with CLAMP_TO_EDGE.
 
     GLuint textureId;
-    Vector2 TOffset;
-    Vector2 TSize;
 
     // TODO(cwallez) once texture dirty bits are landed, reuse attached texture instead of using
     // CopyTexImage2D
     {
         textureId = mScratchTextures[0];
-        TOffset   = Vector2(0.0);
-        TSize     = Vector2(1.0);
-        if (sourceArea.width < 0)
-        {
-            TOffset.x() = 1.0;
-            TSize.x()   = -1.0;
-        }
-        if (sourceArea.height < 0)
-        {
-            TOffset.y() = 1.0;
-            TSize.y()   = -1.0;
-        }
 
         GLenum format                 = readAttachment->getFormat().info->internalFormat;
         const FramebufferGL *sourceGL = GetImplAs<FramebufferGL>(source);
@@ -457,40 +412,36 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
         mFunctions->copyTexImage2D(GL_TEXTURE_2D, 0, format, inBoundsSource.x, inBoundsSource.y,
                                    inBoundsSource.width, inBoundsSource.height, 0);
 
+        // Translate sourceArea to be relative to the copied image.
+        sourceArea.x -= inBoundsSource.x;
+        sourceArea.y -= inBoundsSource.y;
+
         setScratchTextureParameter(GL_TEXTURE_MIN_FILTER, filter);
         setScratchTextureParameter(GL_TEXTURE_MAG_FILTER, filter);
         setScratchTextureParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         setScratchTextureParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     }
 
-    // Compute normalized sampled draw quad region
-    // It is the same as the region of the source rectangle that is in bounds.
-    Vector2 DOffset;
-    Vector2 DSize;
+    // Transform the source area to the texture coordinate space (where 0.0 and 1.0 correspond to
+    // the edges of the texture).
+    Vector2 texCoordOffset(
+        static_cast<float>(sourceArea.x) / static_cast<float>(inBoundsSource.width),
+        static_cast<float>(sourceArea.y) / static_cast<float>(inBoundsSource.height));
+    // texCoordScale is equal to the size of the source area in texture coordinates.
+    Vector2 texCoordScale(
+        static_cast<float>(sourceArea.width) / static_cast<float>(inBoundsSource.width),
+        static_cast<float>(sourceArea.height) / static_cast<float>(inBoundsSource.height));
+
+    if (reverseX)
     {
-        ASSERT(sourceArea.width != 0 && sourceArea.height != 0);
-        gl::Rectangle orientedInBounds = inBoundsSource;
-        if (sourceArea.width < 0)
-        {
-            orientedInBounds.x += orientedInBounds.width;
-            orientedInBounds.width = -orientedInBounds.width;
-        }
-        if (sourceArea.height < 0)
-        {
-            orientedInBounds.y += orientedInBounds.height;
-            orientedInBounds.height = -orientedInBounds.height;
-        }
-
-        DOffset =
-            Vector2(static_cast<float>(orientedInBounds.x - sourceArea.x) / sourceArea.width,
-                    static_cast<float>(orientedInBounds.y - sourceArea.y) / sourceArea.height);
-        DSize = Vector2(static_cast<float>(orientedInBounds.width) / sourceArea.width,
-                        static_cast<float>(orientedInBounds.height) / sourceArea.height);
+        texCoordOffset.x() = texCoordOffset.x() + texCoordScale.x();
+        texCoordScale.x()  = -texCoordScale.x();
     }
-
-    ASSERT(DSize.x() != 0.0 && DSize.y() != 0.0);
-    Vector2 texCoordScale  = TSize / DSize;
-    Vector2 texCoordOffset = TOffset - DOffset * texCoordScale;
+    if (reverseY)
+    {
+        texCoordOffset.y() = texCoordOffset.y() + texCoordScale.y();
+        texCoordScale.y()  = -texCoordScale.y();
+    }
 
     // Reset all the state except scissor and use the viewport to draw exactly to the destination
     // rectangle
