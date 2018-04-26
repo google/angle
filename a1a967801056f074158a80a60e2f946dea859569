@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b30b8889_151f78cd",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-26T07:49:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6cc8a560_cbc33815",
+      "range": {
+        "startLine": 142,
+        "startChar": 60,
+        "endLine": 142,
+        "endChar": 71
+      },
+      "revId": "a1a967801056f074158a80a60e2f946dea859569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a6081df_c19d453b",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -39,6 +63,24 @@
       "revId": "a1a967801056f074158a80a60e2f946dea859569",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "177ae168_b124c1fd",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-26T07:49:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a6081df_c19d453b",
+      "revId": "a1a967801056f074158a80a60e2f946dea859569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -89,6 +131,24 @@
       "side": 1,
       "message": "Agreed too.  There are probably many candidates for internal enums in the caps eventually.",
       "parentUuid": "e97fbb32_fc281963",
+      "revId": "a1a967801056f074158a80a60e2f946dea859569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c80cacb_264a22a2",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-26T07:49:14Z",
+      "side": 1,
+      "message": "Here I just leave a TODO and I will do this in a following patch.",
+      "parentUuid": "bb30fc79_e640f6a5",
       "revId": "a1a967801056f074158a80a60e2f946dea859569",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -163,6 +223,30 @@
       "revId": "a1a967801056f074158a80a60e2f946dea859569",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b90bdb80_857af95e",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2592,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-04-26T07:49:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c83fa142_0e84f6b3",
+      "range": {
+        "startLine": 2592,
+        "startChar": 8,
+        "endLine": 2592,
+        "endChar": 47
+      },
+      "revId": "a1a967801056f074158a80a60e2f946dea859569",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
