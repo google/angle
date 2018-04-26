@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a7347b0e_cfd8c239",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Query9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-26T15:15:15Z",
+      "side": 1,
+      "message": "It won\u0027t matter in this case, it\u0027s not being assigned.",
+      "parentUuid": "c6523a6c_7bf37e43",
+      "range": {
+        "startLine": 182,
+        "startChar": 12,
+        "endLine": 182,
+        "endChar": 23
+      },
+      "revId": "c2c8f1d8b513bb3d8b24b4cb1652130b33ce24c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "700763a2_766b1632",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2018-04-25T11:40:45Z",
       "side": 1,
       "message": "Could you possibly implement that in testDeviceLost base class instead, and then benefit from it in every place that testDeviceLost is called? \n\nyou would just replace the virtual bool testDeviceLost() \u003d 0 with an actual implementation that call a new pure virtual function called \"testDeviceLostImpl()\" and every renderer would just implement their way of checking if the device is lost in there.\n\ntestDeviceLost would include the frequency check and just call testDeviceLostImpl() if needed. \n\nThis way you hide that logic that could be forgotten next time someone calls testDeviceLost somewhere else.",
+      "range": {
+        "startLine": 682,
+        "startChar": 12,
+        "endLine": 683,
+        "endChar": 52
+      },
+      "revId": "c2c8f1d8b513bb3d8b24b4cb1652130b33ce24c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebcae36f_db6e2589",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 683,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-26T15:15:15Z",
+      "side": 1,
+      "message": "I thought about that but I want to have a counter per loop instead of per device.  The loops are tuned so that they wont do the expensive device loss check until the 10th iteration and in the non-error case the function will likely be done before that point so the device loss check can be skipped entirely.\n\nI would rather not change the behaviour of the testDeviceLost function itself, especially if it decides to not do anything when you do care about the result.",
+      "parentUuid": "700763a2_766b1632",
       "range": {
         "startLine": 682,
         "startChar": 12,
