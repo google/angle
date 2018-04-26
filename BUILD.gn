@@ -430,21 +430,20 @@ if (angle_enable_vulkan) {
       "$angle_root/third_party/glslang:glslang_config",
       "$angle_root/third_party/vulkan-validation-layers:vulkan_config",
     ]
-    data_deps = [ ]
+    data_deps = []
     if (!is_android) {
       deps += [ "$angle_root/third_party/vulkan-validation-layers:libvulkan" ]
-      data_deps += [ "$angle_root/third_party/vulkan-validation-layers:VkICD_mock_icd" ]
-      public_configs += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_loader_config" ]
+      data_deps +=
+          [ "$angle_root/third_party/vulkan-validation-layers:VkICD_mock_icd" ]
+      public_configs += [
+        "$angle_root/third_party/vulkan-validation-layers:vulkan_loader_config",
+      ]
     }
 
     if (angle_enable_vulkan_validation_layers) {
-      data_deps += [
-        "$angle_root/third_party/vulkan-validation-layers:vulkan_validation_layers",
-      ]
+      data_deps += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_validation_layers" ]
       if (!is_android) {
-        data_deps += [
-          "$angle_root/third_party/vulkan-validation-layers:vulkan_gen_json_files",
-        ]
+        data_deps += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_gen_json_files" ]
       }
     }
   }
@@ -916,18 +915,22 @@ if (is_android) {
   android_apk("angle_apk") {
     if (build_apk_secondary_abi && android_64bit_target_cpu) {
       secondary_abi_shared_libraries = [
-          "//third_party/angle:libGLESv2${angle_libs_suffix}($android_secondary_abi_toolchain)" ,
-          "//third_party/angle:libEGL${angle_libs_suffix}($android_secondary_abi_toolchain)"
+        "//third_party/angle:libGLESv2${angle_libs_suffix}($android_secondary_abi_toolchain)",
+        "//third_party/angle:libEGL${angle_libs_suffix}($android_secondary_abi_toolchain)",
       ]
     }
 
     android_manifest = "AndroidManifest.xml"
+
+    # requires_sdk_api_level_23 tells the apk tool that this apk is only
+    # supported on M or later releases (which is true for Vulkan).
+    # Allows tool to optimize for that.
     requires_sdk_api_level_23 = true
     apk_name = "AngleLibraries"
     uncompress_shared_libraries = true
     shared_libraries = [
       "//third_party/angle:libGLESv2${angle_libs_suffix}",
-      "//third_party/angle:libEGL${angle_libs_suffix}"
+      "//third_party/angle:libEGL${angle_libs_suffix}",
     ]
   }
 }

@@ -16,7 +16,6 @@
     <application android:label="Android System Angle"
         android:extractNativeLibs="false"
         android:multiArch="true"
-        android:debuggable="true"
         android:hasCode="false">
     </application>
 </manifest>
