@@ -204,7 +204,8 @@ for name, info in sorted(generators.iteritems()):
                 dirty = True
             else:
                 output_mtime = os.path.getmtime(foutput)
-                if input_mtime > output_mtime:
+                # Use a fuzzy comparison to avoid tiny time delta errors.
+                if input_mtime - output_mtime > 0.1:
                     dirty = True
 
     if dirty:
