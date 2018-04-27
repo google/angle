@@ -327,7 +327,32 @@ gl::Error FramebufferVk::syncState(const gl::Context *context,
     RendererVk *renderer = contextVk->getRenderer();
 
     ASSERT(dirtyBits.any());
-    ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
+    for (size_t dirtyBit : dirtyBits)
+    {
+        switch (dirtyBit)
+        {
+            case gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT:
+            case gl::Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT:
+                ANGLE_TRY(mRenderTargetCache.updateDepthStencilRenderTarget(context, mState));
+                break;
+            case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
+            case gl::Framebuffer::DIRTY_BIT_READ_BUFFER:
+            case gl::Framebuffer::DIRTY_BIT_DEFAULT_WIDTH:
+            case gl::Framebuffer::DIRTY_BIT_DEFAULT_HEIGHT:
+            case gl::Framebuffer::DIRTY_BIT_DEFAULT_SAMPLES:
+            case gl::Framebuffer::DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS:
+                break;
+            default:
+            {
+                ASSERT(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0 &&
+                       dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX);
+                size_t colorIndex =
+                    static_cast<size_t>(dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
+                ANGLE_TRY(mRenderTargetCache.updateColorRenderTarget(context, mState, colorIndex));
+                break;
+            }
+        }
+    }
 
     mRenderPassDesc.reset();
     renderer->releaseResource(*this, &mFramebuffer);
