@@ -2033,15 +2033,15 @@ gl::Error StateManager11::updateState(const gl::Context *context,
         mInternalDirtyBits.set(DIRTY_BIT_BLEND_STATE);
     }
 
+    VertexArray11 *vao11 = GetImplAs<VertexArray11>(glState.getVertexArray());
+    ANGLE_TRY(vao11->syncStateForDraw(context, drawCallParams));
+
     // Changes in the draw call can affect the vertex buffer translations.
     if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != drawCallParams.firstVertex())
     {
         mLastFirstVertex = drawCallParams.firstVertex();
         invalidateInputLayout();
     }
-
-    VertexArray11 *vao11 = GetImplAs<VertexArray11>(glState.getVertexArray());
-    ANGLE_TRY(vao11->syncStateForDraw(context, drawCallParams));
 
     if (drawCallParams.isDrawElements())
     {
