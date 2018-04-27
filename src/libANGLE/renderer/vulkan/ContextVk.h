@@ -158,6 +158,7 @@ class ContextVk : public ContextImpl
 
     const VkClearValue &getClearColorValue() const;
     const VkClearValue &getClearDepthStencilValue() const;
+    VkColorComponentFlags getClearColorMask() const;
     const VkRect2D &getScissor() const { return mPipelineDesc->getScissor(); }
 
   private:
@@ -184,9 +185,10 @@ class ContextVk : public ContextImpl
     bool mTexturesDirty;
     bool mVertexArrayBindingHasChanged;
 
-    // Cached clear value for color and depth/stencil.
+    // Cached clear value/mask for color and depth/stencil.
     VkClearValue mClearColorValue;
     VkClearValue mClearDepthStencilValue;
+    VkColorComponentFlags mClearColorMask;
 };
 }  // namespace rx
 

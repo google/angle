@@ -99,12 +99,24 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                                         bool clearColor,
                                         bool clearDepth,
                                         bool clearStencil);
+    gl::Error clearWithDraw(ContextVk *contextVk, VkColorComponentFlags colorMaskFlags);
+    void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
 
     WindowSurfaceVk *mBackbuffer;
 
     Optional<vk::RenderPassDesc> mRenderPassDesc;
     vk::Framebuffer mFramebuffer;
     RenderTargetCache<RenderTargetVk> mRenderTargetCache;
+
+    // These two variables are used to quickly compute if we need to do a masked clear. If a color
+    // channel is masked out, we check against the Framebuffer Attachments (RenderTargets) to see
+    // if the masked out channel is present in any of the attachments.
+    VkColorComponentFlags mActiveColorComponents;
+    gl::DrawBufferMask mActiveColorComponentMasks[4];
+
+    // For use in masked clear.
+    vk::BufferAndMemory mMaskedClearUniformBuffer;
+    VkDescriptorSet mMaskedClearDescriptorSet;
 };
 
 }  // namespace rx

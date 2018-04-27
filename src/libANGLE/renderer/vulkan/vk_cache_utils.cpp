@@ -727,9 +727,9 @@ void PipelineDesc::updateBlendFuncs(const gl::BlendState &blendState)
     }
 }
 
-void PipelineDesc::updateColorWriteMask(const gl::BlendState &blendState)
+void PipelineDesc::updateColorWriteMask(VkColorComponentFlags colorComponentFlags)
 {
-    uint8_t colorMask = static_cast<uint8_t>(gl_vk::GetColorComponentFlags(blendState));
+    uint8_t colorMask = static_cast<uint8_t>(colorComponentFlags);
 
     for (PackedColorBlendAttachmentState &blendAttachmentState : mColorBlendStateInfo.attachments)
     {

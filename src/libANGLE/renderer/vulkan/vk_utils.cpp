@@ -555,6 +555,15 @@ void CommandBuffer::executeCommands(uint32_t commandBufferCount,
     vkCmdExecuteCommands(mHandle, commandBufferCount, commandBuffers[0].ptr());
 }
 
+void CommandBuffer::updateBuffer(const vk::Buffer &buffer,
+                                 VkDeviceSize dstOffset,
+                                 VkDeviceSize dataSize,
+                                 const void *data)
+{
+    ASSERT(valid() && buffer.valid());
+    vkCmdUpdateBuffer(mHandle, buffer.getHandle(), dstOffset, dataSize, data);
+}
+
 // Image implementation.
 Image::Image()
 {
@@ -1364,12 +1373,10 @@ VkImageViewType GetImageViewType(gl::TextureType textureType)
     }
 }
 
-VkColorComponentFlags GetColorComponentFlags(const gl::BlendState &blendState)
+VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bool alpha)
 {
-    return (blendState.colorMaskRed ? VK_COLOR_COMPONENT_R_BIT : 0) |
-           (blendState.colorMaskGreen ? VK_COLOR_COMPONENT_G_BIT : 0) |
-           (blendState.colorMaskBlue ? VK_COLOR_COMPONENT_B_BIT : 0) |
-           (blendState.colorMaskAlpha ? VK_COLOR_COMPONENT_A_BIT : 0);
+    return (red ? VK_COLOR_COMPONENT_R_BIT : 0) | (green ? VK_COLOR_COMPONENT_G_BIT : 0) |
+           (blue ? VK_COLOR_COMPONENT_B_BIT : 0) | (alpha ? VK_COLOR_COMPONENT_A_BIT : 0);
 }
 }  // namespace gl_vk
 }  // namespace rx

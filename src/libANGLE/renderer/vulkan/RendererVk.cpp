@@ -220,6 +220,7 @@ RendererVk::~RendererVk()
     }
 
     mGraphicsPipelineLayout.destroy(mDevice);
+    mInternalUniformPipelineLayout.destroy(mDevice);
 
     mRenderPassCache.destroy(mDevice);
     mPipelineCache.destroy(mDevice);
@@ -874,7 +875,7 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
     uint32_t blockCount = 0;
 
     {
-        auto &layoutBinding = uniformBindings[blockCount];
+        VkDescriptorSetLayoutBinding &layoutBinding = uniformBindings[blockCount];
 
         layoutBinding.binding            = blockCount;
         layoutBinding.descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
@@ -886,7 +887,7 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
     }
 
     {
-        auto &layoutBinding = uniformBindings[blockCount];
+        VkDescriptorSetLayoutBinding &layoutBinding = uniformBindings[blockCount];
 
         layoutBinding.binding            = blockCount;
         layoutBinding.descriptorType     = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
@@ -951,15 +952,43 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
     return vk::NoError();
 }
 
+const vk::DescriptorSetLayout &RendererVk::getInternalUniformDescriptorSetLayout() const
+{
+    return mGraphicsDescriptorSetLayouts[0];
+}
+
+vk::Error RendererVk::getInternalUniformPipelineLayout(const vk::PipelineLayout **pipelineLayoutOut)
+{
+    *pipelineLayoutOut = &mInternalUniformPipelineLayout;
+    if (mInternalUniformPipelineLayout.valid())
+    {
+        return vk::NoError();
+    }
+
+    // Here we use the knowledge that the "graphics" descriptor set has uniform blocks at offset 0.
+    VkPipelineLayoutCreateInfo createInfo;
+    createInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    createInfo.pNext                  = nullptr;
+    createInfo.flags                  = 0;
+    createInfo.setLayoutCount         = 1;
+    createInfo.pSetLayouts            = mGraphicsDescriptorSetLayouts[0].ptr();
+    createInfo.pushConstantRangeCount = 0;
+    createInfo.pPushConstantRanges    = nullptr;
+
+    ANGLE_TRY(mInternalUniformPipelineLayout.init(mDevice, createInfo));
+
+    return vk::NoError();
+}
+
 Serial RendererVk::issueShaderSerial()
 {
     return mShaderSerialFactory.generate();
 }
 
-vk::Error RendererVk::getPipeline(const ProgramVk *programVk,
-                                  const vk::PipelineDesc &desc,
-                                  const gl::AttributesMask &activeAttribLocationsMask,
-                                  vk::PipelineAndSerial **pipelineOut)
+vk::Error RendererVk::getAppPipeline(const ProgramVk *programVk,
+                                     const vk::PipelineDesc &desc,
+                                     const gl::AttributesMask &activeAttribLocationsMask,
+                                     vk::PipelineAndSerial **pipelineOut)
 {
     ASSERT(programVk->getVertexModuleSerial() ==
            desc.getShaderStageInfo()[vk::ShaderType::VertexShader].moduleSerial);
@@ -973,6 +1002,27 @@ vk::Error RendererVk::getPipeline(const ProgramVk *programVk,
     return mPipelineCache.getPipeline(mDevice, *compatibleRenderPass, mGraphicsPipelineLayout,
                                       activeAttribLocationsMask, programVk->getLinkedVertexModule(),
                                       programVk->getLinkedFragmentModule(), desc, pipelineOut);
+}
+
+vk::Error RendererVk::getInternalPipeline(const vk::ShaderAndSerial &vertexShader,
+                                          const vk::ShaderAndSerial &fragmentShader,
+                                          const vk::PipelineLayout &pipelineLayout,
+                                          const vk::PipelineDesc &pipelineDesc,
+                                          const gl::AttributesMask &activeAttribLocationsMask,
+                                          vk::PipelineAndSerial **pipelineOut)
+{
+    ASSERT(vertexShader.queueSerial() ==
+           pipelineDesc.getShaderStageInfo()[vk::ShaderType::VertexShader].moduleSerial);
+    ASSERT(fragmentShader.queueSerial() ==
+           pipelineDesc.getShaderStageInfo()[vk::ShaderType::FragmentShader].moduleSerial);
+
+    // Pull in a compatible RenderPass.
+    vk::RenderPass *compatibleRenderPass = nullptr;
+    ANGLE_TRY(getCompatibleRenderPass(pipelineDesc.getRenderPassDesc(), &compatibleRenderPass));
+
+    return mPipelineCache.getPipeline(mDevice, *compatibleRenderPass, pipelineLayout,
+                                      activeAttribLocationsMask, vertexShader.get(),
+                                      fragmentShader.get(), pipelineDesc, pipelineOut);
 }
 
 vk::ShaderLibrary *RendererVk::getShaderLibrary()
