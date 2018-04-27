@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cc3b67ad_3e0cdae1",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-27T14:21:58Z",
+      "side": 1,
+      "message": "It only copies part of the source framebuffer, that\u0027s what I was referring to with \"clipping\". Do you think it would be better to say \"copy a part of the source framebuffer without flipping\" and maybe rename the test \"BlitPartOfSRGBFramebufferToRGB\" or something?",
+      "parentUuid": "12d3befc_cf012523",
+      "range": {
+        "startLine": 1234,
+        "startChar": 4,
+        "endLine": 1236,
+        "endChar": 55
+      },
+      "revId": "8abfaec05146c18d305cef552629ee6dc1132516",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d86f80e0_3b8ab3cd",
         "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
         "patchSetId": 5
