@@ -1272,10 +1272,6 @@ TEST_P(BlitFramebufferTest, PartialBlitSRGBToRGB)
 // clipped out).
 TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedSourceArea)
 {
-    // D3D11 blit implementation seems to have a bug where the blit rectangles are computed
-    // incorrectly. http://anglebug.com/2521
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr const GLsizei kWidth  = 256;
     constexpr const GLsizei kHeight = 256;
 
