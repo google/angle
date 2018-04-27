@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12d3befc_cf012523",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T14:18:46Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is clipping: the width and height of the source rect are the same as the width and height of the target framebuffer.",
+      "range": {
+        "startLine": 1234,
+        "startChar": 4,
+        "endLine": 1236,
+        "endChar": 55
+      },
+      "revId": "8abfaec05146c18d305cef552629ee6dc1132516",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d86f80e0_3b8ab3cd",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T14:18:46Z",
+      "side": 1,
+      "message": "Could see be factored between the three tests?",
+      "range": {
+        "startLine": 1281,
+        "startChar": 0,
+        "endLine": 1308,
+        "endChar": 0
+      },
+      "revId": "8abfaec05146c18d305cef552629ee6dc1132516",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
