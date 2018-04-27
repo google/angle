@@ -435,9 +435,7 @@ if (angle_enable_vulkan) {
       deps += [ "$angle_root/third_party/vulkan-validation-layers:libvulkan" ]
       data_deps +=
           [ "$angle_root/third_party/vulkan-validation-layers:VkICD_mock_icd" ]
-      public_configs += [
-        "$angle_root/third_party/vulkan-validation-layers:vulkan_loader_config",
-      ]
+      public_configs += [ "$angle_root/third_party/vulkan-validation-layers:vulkan_loader_config" ]
     }
 
     if (angle_enable_vulkan_validation_layers) {
@@ -552,6 +550,10 @@ static_library("libANGLE") {
     deps += [ ":angle_vulkan" ]
     public_deps +=
         [ "$angle_root/third_party/vulkan-validation-layers:vulkan_headers" ]
+
+    # Include generated shaders.
+    import("src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.gni")
+    sources += angle_vulkan_internal_shaders
   }
 
   if (angle_enable_null) {

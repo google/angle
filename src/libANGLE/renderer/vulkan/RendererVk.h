@@ -17,6 +17,7 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
+#include "libANGLE/renderer/vulkan/vk_internal_shaders.h"
 
 namespace egl
 {
@@ -127,6 +128,8 @@ class RendererVk : angle::NonCopyable
     // Issues a new serial for linked shader modules. Used in the pipeline cache.
     Serial issueProgramSerial();
 
+    vk::ShaderLibrary *getShaderLibrary();
+
   private:
     vk::Error initializeDevice(uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -185,6 +188,9 @@ class RendererVk : angle::NonCopyable
     // See the design doc for an overview of the pipeline layout structure.
     vk::PipelineLayout mGraphicsPipelineLayout;
     std::vector<vk::DescriptorSetLayout> mGraphicsDescriptorSetLayouts;
+
+    // Internal shader library.
+    vk::ShaderLibrary mShaderLibrary;
 };
 
 }  // namespace rx

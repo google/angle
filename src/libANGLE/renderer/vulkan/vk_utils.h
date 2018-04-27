@@ -594,6 +594,8 @@ template <typename ObjT>
 class ObjectAndSerial final : angle::NonCopyable
 {
   public:
+    ObjectAndSerial() {}
+
     ObjectAndSerial(ObjT &&object, Serial queueSerial)
         : mObject(std::move(object)), mQueueSerial(queueSerial)
     {
@@ -645,6 +647,8 @@ Error AllocateImageMemory(VkDevice device,
                           Image *image,
                           DeviceMemory *deviceMemoryOut,
                           size_t *requiredSizeOut);
+
+using ShaderAndSerial = ObjectAndSerial<ShaderModule>;
 }  // namespace vk
 
 namespace gl_vk

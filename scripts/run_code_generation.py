@@ -9,8 +9,25 @@
 
 import os, subprocess, sys
 
-# TODO(jmadill): Might be nice to have a standard way for scripts to return
-# their inputs and outputs rather than listing them here.
+root_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
+# auto_script is a standard way for scripts to return their inputs and outputs.
+
+def grab_from_script(script, param):
+    res = subprocess.check_output(['python', script, param]).strip()
+    return [os.path.abspath(os.path.join(os.path.dirname(script), name)) for name in res.split(',')]
+
+def auto_script(script):
+    # Set the CWD to the script directory.
+    os.chdir(os.path.dirname(os.path.abspath(script)))
+    base_script = os.path.basename(script)
+    return {
+        'script': script,
+        'inputs': grab_from_script(base_script, 'inputs'),
+        'outputs': grab_from_script(base_script, 'outputs'),
+    }
+
+# TODO(jmadill): Convert everyting to auto-script.
 generators = {
     'ANGLE format': {
         'inputs': [
@@ -159,6 +176,8 @@ generators = {
         ],
         'script': 'src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py',
     },
+    'Vulkan internal shader programs':
+        auto_script('src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py'),
     'Emulated HLSL functions': {
         'inputs': [
             'src/compiler/translator/emulated_builtin_function_data_hlsl.json'
@@ -185,7 +204,6 @@ generators = {
     },
 }
 
-root_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 any_dirty = False
 
 for name, info in sorted(generators.iteritems()):

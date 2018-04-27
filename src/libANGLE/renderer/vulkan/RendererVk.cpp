@@ -223,6 +223,7 @@ RendererVk::~RendererVk()
 
     mRenderPassCache.destroy(mDevice);
     mPipelineCache.destroy(mDevice);
+    mShaderLibrary.destroy(mDevice);
 
     if (mGlslangWrapper)
     {
@@ -972,4 +973,8 @@ vk::Error RendererVk::getPipeline(const ProgramVk *programVk,
                                       programVk->getLinkedFragmentModule(), desc, pipelineOut);
 }
 
+vk::ShaderLibrary *RendererVk::getShaderLibrary()
+{
+    return &mShaderLibrary;
+}
 }  // namespace rx
