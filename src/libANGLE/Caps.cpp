@@ -916,27 +916,29 @@ Caps::Caps()
       maxElementsVertices(0),
 
       // Table 20.43
+      // Table 20.44
+      // Table 20.45
+      // Table 20.43gs (GL_EXT_geometry_shader)
+      maxShaderUniformBlocks({}),
+      maxShaderTextureImageUnits({}),
+      maxShaderStorageBlocks({}),
+
+      // Table 20.43
       maxVertexAttributes(0),
       maxVertexUniformComponents(0),
       maxVertexUniformVectors(0),
-      maxVertexUniformBlocks(0),
       maxVertexOutputComponents(0),
-      maxVertexTextureImageUnits(0),
       maxVertexAtomicCounterBuffers(0),
       maxVertexAtomicCounters(0),
       maxVertexImageUniforms(0),
-      maxVertexShaderStorageBlocks(0),
 
       // Table 20.44
       maxFragmentUniformComponents(0),
       maxFragmentUniformVectors(0),
-      maxFragmentUniformBlocks(0),
       maxFragmentInputComponents(0),
-      maxTextureImageUnits(0),
       maxFragmentAtomicCounterBuffers(0),
       maxFragmentAtomicCounters(0),
       maxFragmentImageUniforms(0),
-      maxFragmentShaderStorageBlocks(0),
       minProgramTextureGatherOffset(0),
       maxProgramTextureGatherOffset(0),
       minProgramTexelOffset(0),
@@ -944,15 +946,12 @@ Caps::Caps()
 
       // Table 20.45
       maxComputeWorkGroupInvocations(0),
-      maxComputeUniformBlocks(0),
-      maxComputeTextureImageUnits(0),
       maxComputeSharedMemorySize(0),
       maxComputeUniformComponents(0),
       maxComputeAtomicCounterBuffers(0),
       maxComputeAtomicCounters(0),
       maxComputeImageUniforms(0),
       maxCombinedComputeUniformComponents(0),
-      maxComputeShaderStorageBlocks(0),
 
       // Table 20.46
       maxUniformBufferBindings(0),
@@ -993,15 +992,12 @@ Caps::Caps()
 
       // Table 20.43gs (GL_EXT_geometry_shader)
       maxGeometryUniformComponents(0),
-      maxGeometryUniformBlocks(0),
       maxGeometryInputComponents(0),
       maxGeometryOutputComponents(0),
       maxGeometryOutputVertices(0),
       maxGeometryTotalOutputComponents(0),
-      maxGeometryTextureImageUnits(0),
       maxGeometryAtomicCounterBuffers(0),
       maxGeometryAtomicCounters(0),
-      maxGeometryShaderStorageBlocks(0),
       maxGeometryShaderInvocations(0),
 
       // Table 20.46 (GL_EXT_geometry_shader)
@@ -1074,7 +1070,7 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxVertexUniformVectors      = 128;
         caps.maxVaryingVectors            = 8;
         caps.maxCombinedTextureImageUnits = 8;
-        caps.maxTextureImageUnits         = 8;
+        caps.maxShaderTextureImageUnits[ShaderType::Fragment] = 8;
         caps.maxFragmentUniformVectors    = 16;
         caps.maxRenderbufferSize          = 1;
     }
@@ -1119,16 +1115,16 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxVertexAttributes        = 16;
         caps.maxVertexUniformComponents = 1024;
         caps.maxVertexUniformVectors    = 256;
-        caps.maxVertexUniformBlocks     = 12;
+        caps.maxShaderUniformBlocks[ShaderType::Vertex]     = 12;
         caps.maxVertexOutputComponents  = 64;
-        caps.maxVertexTextureImageUnits = 16;
+        caps.maxShaderTextureImageUnits[ShaderType::Vertex] = 16;
 
         // Table 6.32
         caps.maxFragmentUniformComponents = 896;
         caps.maxFragmentUniformVectors    = 224;
-        caps.maxFragmentUniformBlocks     = 12;
+        caps.maxShaderUniformBlocks[ShaderType::Fragment]     = 12;
         caps.maxFragmentInputComponents   = 60;
-        caps.maxTextureImageUnits         = 16;
+        caps.maxShaderTextureImageUnits[ShaderType::Fragment] = 16;
         caps.minProgramTexelOffset        = -8;
         caps.maxProgramTexelOffset        = 7;
 
@@ -1138,10 +1134,10 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.uniformBufferOffsetAlignment = 256;
         caps.maxCombinedUniformBlocks     = 24;
         caps.maxCombinedVertexUniformComponents =
-            caps.maxVertexUniformBlocks * (caps.maxUniformBlockSize / 4) +
+            caps.maxShaderUniformBlocks[ShaderType::Vertex] * (caps.maxUniformBlockSize / 4) +
             caps.maxVertexUniformComponents;
         caps.maxCombinedFragmentUniformComponents =
-            caps.maxFragmentUniformBlocks * (caps.maxUniformBlockSize / 4) +
+            caps.maxShaderUniformBlocks[ShaderType::Fragment] * (caps.maxUniformBlockSize / 4) +
             caps.maxFragmentUniformComponents;
         caps.maxVaryingComponents         = 60;
         caps.maxVaryingVectors            = 15;
@@ -1176,7 +1172,7 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxVertexAtomicCounterBuffers = 0;
         caps.maxVertexAtomicCounters       = 0;
         caps.maxVertexImageUniforms        = 0;
-        caps.maxVertexShaderStorageBlocks  = 0;
+        caps.maxShaderStorageBlocks[ShaderType::Vertex] = 0;
 
         // Table 20.44
         caps.maxFragmentUniformComponents    = 1024;
@@ -1184,7 +1180,7 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxFragmentAtomicCounterBuffers = 0;
         caps.maxFragmentAtomicCounters       = 0;
         caps.maxFragmentImageUniforms        = 0;
-        caps.maxFragmentShaderStorageBlocks  = 0;
+        caps.maxShaderStorageBlocks[ShaderType::Fragment] = 0;
         caps.minProgramTextureGatherOffset   = 0;
         caps.maxProgramTextureGatherOffset   = 0;
 
@@ -1192,22 +1188,23 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxComputeWorkGroupCount       = {{65535, 65535, 65535}};
         caps.maxComputeWorkGroupSize        = {{128, 128, 64}};
         caps.maxComputeWorkGroupInvocations = 12;
-        caps.maxComputeUniformBlocks        = 12;
-        caps.maxComputeTextureImageUnits    = 16;
+        caps.maxShaderUniformBlocks[ShaderType::Compute]     = 12;
+        caps.maxShaderTextureImageUnits[ShaderType::Compute] = 16;
         caps.maxComputeSharedMemorySize     = 16384;
         caps.maxComputeUniformComponents    = 1024;
         caps.maxComputeAtomicCounterBuffers = 1;
         caps.maxComputeAtomicCounters       = 8;
         caps.maxComputeImageUniforms        = 4;
         caps.maxCombinedComputeUniformComponents =
-            caps.maxComputeUniformBlocks * static_cast<GLuint>(caps.maxUniformBlockSize / 4) +
+            caps.maxShaderUniformBlocks[ShaderType::Compute] *
+                static_cast<GLuint>(caps.maxUniformBlockSize / 4) +
             caps.maxComputeUniformComponents;
-        caps.maxComputeShaderStorageBlocks = 4;
+        caps.maxShaderStorageBlocks[ShaderType::Compute] = 4;
 
         // Table 20.46
         caps.maxUniformBufferBindings = 36;
         caps.maxCombinedFragmentUniformComponents =
-            caps.maxFragmentUniformBlocks * (caps.maxUniformBlockSize / 4) +
+            caps.maxShaderUniformBlocks[ShaderType::Fragment] * (caps.maxUniformBlockSize / 4) +
             caps.maxFragmentUniformComponents;
         caps.maxCombinedTextureImageUnits     = 48;
         caps.maxCombinedShaderOutputResources = 4;
@@ -1239,21 +1236,22 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
 
         // Table 20.43gs (GL_EXT_geometry_shader)
         caps.maxGeometryUniformComponents     = 1024;
-        caps.maxGeometryUniformBlocks         = 12;
+        caps.maxShaderUniformBlocks[ShaderType::Geometry]     = 12;
         caps.maxGeometryInputComponents       = 64;
         caps.maxGeometryOutputComponents      = 64;
         caps.maxGeometryOutputVertices        = 256;
         caps.maxGeometryTotalOutputComponents = 1024;
-        caps.maxGeometryTextureImageUnits     = 16;
+        caps.maxShaderTextureImageUnits[ShaderType::Geometry] = 16;
         caps.maxGeometryAtomicCounterBuffers  = 0;
         caps.maxGeometryAtomicCounters        = 0;
-        caps.maxGeometryShaderStorageBlocks   = 0;
+        caps.maxShaderStorageBlocks[ShaderType::Geometry]     = 0;
         caps.maxGeometryShaderInvocations     = 32;
 
         // Table 20.46 (GL_EXT_geometry_shader)
         caps.maxGeometryImageUniforms = 0;
         caps.maxCombinedGeometryUniformComponents =
-            caps.maxGeometryUniformBlocks * static_cast<GLuint>(caps.maxUniformBlockSize / 4) +
+            caps.maxShaderUniformBlocks[ShaderType::Geometry] *
+                static_cast<GLuint>(caps.maxUniformBlockSize / 4) +
             caps.maxGeometryUniformComponents;
 
         // Table 20.46 (GL_EXT_geometry_shader)

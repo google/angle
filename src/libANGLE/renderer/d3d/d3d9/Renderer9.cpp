@@ -361,11 +361,12 @@ egl::Error Renderer9::initializeDevice()
 
     const gl::Caps &rendererCaps = getNativeCaps();
 
-    mCurVertexSamplerStates.resize(rendererCaps.maxVertexTextureImageUnits);
-    mCurPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
+    mCurVertexSamplerStates.resize(rendererCaps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]);
+    mCurPixelSamplerStates.resize(
+        rendererCaps.maxShaderTextureImageUnits[gl::ShaderType::Fragment]);
 
-    mCurVertexTextures.resize(rendererCaps.maxVertexTextureImageUnits);
-    mCurPixelTextures.resize(rendererCaps.maxTextureImageUnits);
+    mCurVertexTextures.resize(rendererCaps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]);
+    mCurPixelTextures.resize(rendererCaps.maxShaderTextureImageUnits[gl::ShaderType::Fragment]);
 
     markAllStateDirty();
 
@@ -3244,8 +3245,8 @@ gl::Error Renderer9::applyTextures(const gl::Context *context, gl::ShaderType sh
 
     // Set all the remaining textures to NULL
     size_t samplerCount = (shaderType == gl::ShaderType::Fragment)
-                              ? caps.maxTextureImageUnits
-                              : caps.maxVertexTextureImageUnits;
+                              ? caps.maxShaderTextureImageUnits[gl::ShaderType::Fragment]
+                              : caps.maxShaderTextureImageUnits[gl::ShaderType::Vertex];
 
     // TODO(jmadill): faster way?
     for (size_t samplerIndex = samplerRange; samplerIndex < samplerCount; samplerIndex++)

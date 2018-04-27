@@ -524,28 +524,33 @@ struct Caps
     TypePrecision fragmentMediumpInt;
     TypePrecision fragmentLowpInt;
 
+    // Implementation dependent limits required on all shader types.
+    // TODO(jiawei.shao@intel.com): organize all such limits into ShaderMap.
+    // ES 3.1 (April 29, 2015) Table 20.43: Implementation dependent Vertex shader limits
+    // ES 3.1 (April 29, 2015) Table 20.44: Implementation dependent Fragment shader limits
+    // ES 3.1 (April 29, 2015) Table 20.45: implementation dependent compute shader limits
+    // GL_EXT_geometry_shader (May 31, 2016) Table 20.43gs: Implementation dependent geometry shader
+    // limits
+    ShaderMap<GLuint> maxShaderUniformBlocks;
+    ShaderMap<GLuint> maxShaderTextureImageUnits;
+    ShaderMap<GLuint> maxShaderStorageBlocks;
+
     // ES 3.1 (April 29, 2015) Table 20.43: Implementation dependent Vertex shader limits
     GLuint maxVertexAttributes;
     GLuint maxVertexUniformComponents;
     GLuint maxVertexUniformVectors;
-    GLuint maxVertexUniformBlocks;
     GLuint maxVertexOutputComponents;
-    GLuint maxVertexTextureImageUnits;
     GLuint maxVertexAtomicCounterBuffers;
     GLuint maxVertexAtomicCounters;
     GLuint maxVertexImageUniforms;
-    GLuint maxVertexShaderStorageBlocks;
 
     // ES 3.1 (April 29, 2015) Table 20.44: Implementation dependent Fragment shader limits
     GLuint maxFragmentUniformComponents;
     GLuint maxFragmentUniformVectors;
-    GLuint maxFragmentUniformBlocks;
     GLuint maxFragmentInputComponents;
-    GLuint maxTextureImageUnits;
     GLuint maxFragmentAtomicCounterBuffers;
     GLuint maxFragmentAtomicCounters;
     GLuint maxFragmentImageUniforms;
-    GLuint maxFragmentShaderStorageBlocks;
     GLint minProgramTextureGatherOffset;
     GLuint maxProgramTextureGatherOffset;
     GLint minProgramTexelOffset;
@@ -555,15 +560,12 @@ struct Caps
     std::array<GLuint, 3> maxComputeWorkGroupCount;
     std::array<GLuint, 3> maxComputeWorkGroupSize;
     GLuint maxComputeWorkGroupInvocations;
-    GLuint maxComputeUniformBlocks;
-    GLuint maxComputeTextureImageUnits;
     GLuint maxComputeSharedMemorySize;
     GLuint maxComputeUniformComponents;
     GLuint maxComputeAtomicCounterBuffers;
     GLuint maxComputeAtomicCounters;
     GLuint maxComputeImageUniforms;
     GLuint maxCombinedComputeUniformComponents;
-    GLuint maxComputeShaderStorageBlocks;
 
     // ES 3.1 (April 29, 2015) Table 20.46: implementation dependent aggregate shader limits
     GLuint maxUniformBufferBindings;
@@ -605,15 +607,12 @@ struct Caps
     // GL_EXT_geometry_shader (May 31, 2016) Table 20.43gs: Implementation dependent geometry shader
     // limits
     GLuint maxGeometryUniformComponents;
-    GLuint maxGeometryUniformBlocks;
     GLuint maxGeometryInputComponents;
     GLuint maxGeometryOutputComponents;
     GLuint maxGeometryOutputVertices;
     GLuint maxGeometryTotalOutputComponents;
-    GLuint maxGeometryTextureImageUnits;
     GLuint maxGeometryAtomicCounterBuffers;
     GLuint maxGeometryAtomicCounters;
-    GLuint maxGeometryShaderStorageBlocks;
     GLuint maxGeometryShaderInvocations;
 
     // GL_EXT_geometry_shader (May 31, 2016) Table 20.46: Implementation dependent aggregate shader

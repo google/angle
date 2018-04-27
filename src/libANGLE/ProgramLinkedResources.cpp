@@ -462,7 +462,7 @@ bool UniformLinker::flattenUniformsAndCheckCaps(const Context *context, InfoLog 
         // TODO (mradev): check whether we need finer-grained component counting
         if (!flattenUniformsAndCheckCapsForShader(
                 context, computeShader, caps.maxComputeUniformComponents / 4,
-                caps.maxComputeTextureImageUnits, caps.maxComputeImageUniforms,
+                caps.maxShaderTextureImageUnits[ShaderType::Compute], caps.maxComputeImageUniforms,
                 caps.maxComputeAtomicCounters,
                 "Compute shader active uniforms exceed MAX_COMPUTE_UNIFORM_COMPONENTS (",
                 "Compute shader sampler count exceeds MAX_COMPUTE_TEXTURE_IMAGE_UNITS (",
@@ -479,7 +479,7 @@ bool UniformLinker::flattenUniformsAndCheckCaps(const Context *context, InfoLog 
 
         if (!flattenUniformsAndCheckCapsForShader(
                 context, vertexShader, caps.maxVertexUniformVectors,
-                caps.maxVertexTextureImageUnits, caps.maxVertexImageUniforms,
+                caps.maxShaderTextureImageUnits[ShaderType::Vertex], caps.maxVertexImageUniforms,
                 caps.maxVertexAtomicCounters,
                 "Vertex shader active uniforms exceed MAX_VERTEX_UNIFORM_VECTORS (",
                 "Vertex shader sampler count exceeds MAX_VERTEX_TEXTURE_IMAGE_UNITS (",
@@ -493,7 +493,8 @@ bool UniformLinker::flattenUniformsAndCheckCaps(const Context *context, InfoLog 
         Shader *fragmentShader = mState.getAttachedShader(ShaderType::Fragment);
 
         if (!flattenUniformsAndCheckCapsForShader(
-                context, fragmentShader, caps.maxFragmentUniformVectors, caps.maxTextureImageUnits,
+                context, fragmentShader, caps.maxFragmentUniformVectors,
+                caps.maxShaderTextureImageUnits[ShaderType::Fragment],
                 caps.maxFragmentImageUniforms, caps.maxFragmentAtomicCounters,
                 "Fragment shader active uniforms exceed MAX_FRAGMENT_UNIFORM_VECTORS (",
                 "Fragment shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (",
@@ -509,8 +510,8 @@ bool UniformLinker::flattenUniformsAndCheckCaps(const Context *context, InfoLog 
         if (geometryShader &&
             !flattenUniformsAndCheckCapsForShader(
                 context, geometryShader, caps.maxGeometryUniformComponents / 4,
-                caps.maxGeometryTextureImageUnits, caps.maxGeometryImageUniforms,
-                caps.maxGeometryAtomicCounters,
+                caps.maxShaderTextureImageUnits[ShaderType::Geometry],
+                caps.maxGeometryImageUniforms, caps.maxGeometryAtomicCounters,
                 "Geometry shader active uniforms exceed MAX_GEOMETRY_UNIFORM_VECTORS_EXT (",
                 "Geometry shader sampler count exceeds MAX_GEOMETRY_TEXTURE_IMAGE_UNITS_EXT (",
                 "Geometry shader image count exceeds MAX_GEOMETRY_IMAGE_UNIFORMS_EXT (",

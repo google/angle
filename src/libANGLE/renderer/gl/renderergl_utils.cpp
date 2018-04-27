@@ -441,7 +441,8 @@ void GenerateCaps(const FunctionsGL *functions,
     {
         caps->maxVertexAttributes = QuerySingleGLInt(functions, GL_MAX_VERTEX_ATTRIBS);
         caps->maxVertexUniformComponents = QuerySingleGLInt(functions, GL_MAX_VERTEX_UNIFORM_COMPONENTS);
-        caps->maxVertexTextureImageUnits = QuerySingleGLInt(functions, GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+        caps->maxShaderTextureImageUnits[gl::ShaderType::Vertex] =
+            QuerySingleGLInt(functions, GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
     }
     else
     {
@@ -481,7 +482,8 @@ void GenerateCaps(const FunctionsGL *functions,
         functions->isAtLeastGLES(gl::Version(2, 0)))
     {
         caps->maxFragmentUniformComponents = QuerySingleGLInt(functions, GL_MAX_FRAGMENT_UNIFORM_COMPONENTS);
-        caps->maxTextureImageUnits = QuerySingleGLInt(functions, GL_MAX_TEXTURE_IMAGE_UNITS);
+        caps->maxShaderTextureImageUnits[gl::ShaderType::Fragment] =
+            QuerySingleGLInt(functions, GL_MAX_TEXTURE_IMAGE_UNITS);
     }
     else
     {
@@ -517,8 +519,9 @@ void GenerateCaps(const FunctionsGL *functions,
     if (functions->isAtLeastGL(gl::Version(3, 1)) || functions->hasGLExtension("GL_ARB_uniform_buffer_object") ||
         functions->isAtLeastGLES(gl::Version(3, 0)))
     {
-        caps->maxVertexUniformBlocks = QuerySingleGLInt(functions, GL_MAX_VERTEX_UNIFORM_BLOCKS);
-        caps->maxFragmentUniformBlocks =
+        caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] =
+            QuerySingleGLInt(functions, GL_MAX_VERTEX_UNIFORM_BLOCKS);
+        caps->maxShaderUniformBlocks[gl::ShaderType::Fragment] =
             QuerySingleGLInt(functions, GL_MAX_FRAGMENT_UNIFORM_BLOCKS);
         caps->maxUniformBufferBindings = QuerySingleGLInt(functions, GL_MAX_UNIFORM_BUFFER_BINDINGS);
         caps->maxUniformBlockSize = QuerySingleGLInt64(functions, GL_MAX_UNIFORM_BLOCK_SIZE);
@@ -528,9 +531,9 @@ void GenerateCaps(const FunctionsGL *functions,
             QuerySingleGLInt(functions, GL_MAX_COMBINED_UNIFORM_BLOCKS);
         // The real cap contains the limits for shader types that are not available to ES, so limit
         // the cap to the sum of vertex+fragment shader caps.
-        caps->maxCombinedUniformBlocks =
-            std::min(maxCombinedUniformBlocks,
-                     caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks);
+        caps->maxCombinedUniformBlocks = std::min(
+            maxCombinedUniformBlocks, caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] +
+                                          caps->maxShaderUniformBlocks[gl::ShaderType::Fragment]);
 
         caps->maxCombinedVertexUniformComponents = QuerySingleGLInt64(functions, GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS);
         caps->maxCombinedFragmentUniformComponents = QuerySingleGLInt64(functions, GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS);
@@ -575,7 +578,8 @@ void GenerateCaps(const FunctionsGL *functions,
 
     // Determine the max combined texture image units by adding the vertex and fragment limits.  If
     // the real cap is queried, it would contain the limits for shader types that are not available to ES.
-    caps->maxCombinedTextureImageUnits = caps->maxVertexTextureImageUnits + caps->maxTextureImageUnits;
+    caps->maxCombinedTextureImageUnits = caps->maxShaderTextureImageUnits[gl::ShaderType::Vertex] +
+                                         caps->maxShaderTextureImageUnits[gl::ShaderType::Fragment];
 
     // Table 6.34, implementation dependent transform feedback limits
     if (functions->isAtLeastGL(gl::Version(4, 0)) ||
@@ -708,9 +712,9 @@ void GenerateCaps(const FunctionsGL *functions,
     {
         caps->maxCombinedShaderOutputResources =
             QuerySingleGLInt(functions, GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES);
-        caps->maxFragmentShaderStorageBlocks =
+        caps->maxShaderStorageBlocks[gl::ShaderType::Fragment] =
             QuerySingleGLInt(functions, GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS);
-        caps->maxVertexShaderStorageBlocks =
+        caps->maxShaderStorageBlocks[gl::ShaderType::Vertex] =
             QuerySingleGLInt(functions, GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS);
         caps->maxShaderStorageBufferBindings =
             QuerySingleGLInt(functions, GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
@@ -744,8 +748,9 @@ void GenerateCaps(const FunctionsGL *functions,
         }
         caps->maxComputeWorkGroupInvocations =
             QuerySingleGLInt(functions, GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS);
-        caps->maxComputeUniformBlocks = QuerySingleGLInt(functions, GL_MAX_COMPUTE_UNIFORM_BLOCKS);
-        caps->maxComputeTextureImageUnits =
+        caps->maxShaderUniformBlocks[gl::ShaderType::Compute] =
+            QuerySingleGLInt(functions, GL_MAX_COMPUTE_UNIFORM_BLOCKS);
+        caps->maxShaderTextureImageUnits[gl::ShaderType::Compute] =
             QuerySingleGLInt(functions, GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS);
         caps->maxComputeSharedMemorySize =
             QuerySingleGLInt(functions, GL_MAX_COMPUTE_SHARED_MEMORY_SIZE);
@@ -758,7 +763,7 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->maxComputeImageUniforms = QuerySingleGLInt(functions, GL_MAX_COMPUTE_IMAGE_UNIFORMS);
         caps->maxCombinedComputeUniformComponents =
             QuerySingleGLInt(functions, GL_MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS);
-        caps->maxComputeShaderStorageBlocks =
+        caps->maxShaderStorageBlocks[gl::ShaderType::Compute] =
             QuerySingleGLInt(functions, GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS);
     }
     else
@@ -1056,7 +1061,7 @@ void GenerateCaps(const FunctionsGL *functions,
 
         caps->maxGeometryUniformComponents =
             QuerySingleGLInt(functions, GL_MAX_GEOMETRY_UNIFORM_COMPONENTS_EXT);
-        caps->maxGeometryUniformBlocks =
+        caps->maxShaderUniformBlocks[gl::ShaderType::Geometry] =
             QuerySingleGLInt(functions, GL_MAX_GEOMETRY_UNIFORM_BLOCKS_EXT);
         caps->maxCombinedGeometryUniformComponents =
             QuerySingleGLInt(functions, GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS_EXT);
@@ -1070,7 +1075,7 @@ void GenerateCaps(const FunctionsGL *functions,
             QuerySingleGLInt(functions, GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS_EXT);
         caps->maxGeometryShaderInvocations =
             QuerySingleGLInt(functions, GL_MAX_GEOMETRY_SHADER_INVOCATIONS_EXT);
-        caps->maxGeometryTextureImageUnits =
+        caps->maxShaderTextureImageUnits[gl::ShaderType::Geometry] =
             QuerySingleGLInt(functions, GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS_EXT);
         caps->maxGeometryAtomicCounterBuffers =
             QuerySingleGLInt(functions, GL_MAX_GEOMETRY_ATOMIC_COUNTER_BUFFERS_EXT);
@@ -1078,7 +1083,7 @@ void GenerateCaps(const FunctionsGL *functions,
             QuerySingleGLInt(functions, GL_MAX_GEOMETRY_ATOMIC_COUNTERS_EXT);
         caps->maxGeometryImageUniforms =
             QuerySingleGLInt(functions, GL_MAX_GEOMETRY_IMAGE_UNIFORMS_EXT);
-        caps->maxGeometryShaderStorageBlocks =
+        caps->maxShaderStorageBlocks[gl::ShaderType::Geometry] =
             QuerySingleGLInt(functions, GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT);
     }
 }

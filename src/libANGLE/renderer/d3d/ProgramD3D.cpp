@@ -328,45 +328,6 @@ bool UniformBlockInfo::getBlockMemberInfo(const std::string &name,
     *infoOut = infoIter->second;
     return true;
 };
-
-// TODO(jiawei.shao@intel.com): remove this function once we use ShaderMap in gl::Caps.
-GLuint GetMaximumSamplersPerShader(gl::ShaderType shaderType, const gl::Caps &caps)
-{
-    switch (shaderType)
-    {
-        case gl::ShaderType::Fragment:
-            return caps.maxTextureImageUnits;
-        case gl::ShaderType::Vertex:
-            return caps.maxVertexTextureImageUnits;
-        case gl::ShaderType::Compute:
-            return caps.maxComputeTextureImageUnits;
-        case gl::ShaderType::Geometry:
-            return caps.maxGeometryTextureImageUnits;
-        default:
-            UNREACHABLE();
-            return 0u;
-    }
-}
-
-// TODO(jiawei.shao@intel.com): remove this function once we use ShaderMap in gl::Caps.
-GLuint GetMaximumShaderUniformBlocksPerShader(gl::ShaderType shaderType, const gl::Caps &caps)
-{
-    switch (shaderType)
-    {
-        case gl::ShaderType::Vertex:
-            return caps.maxVertexUniformBlocks;
-        case gl::ShaderType::Fragment:
-            return caps.maxFragmentUniformBlocks;
-        case gl::ShaderType::Compute:
-            return caps.maxComputeUniformBlocks;
-        case gl::ShaderType::Geometry:
-            return caps.maxGeometryUniformBlocks;
-        default:
-            UNREACHABLE();
-            return 0u;
-    }
-}
-
 }  // anonymous namespace
 
 // D3DUniform Implementation
@@ -733,7 +694,7 @@ GLint ProgramD3D::getSamplerMapping(gl::ShaderType type,
 
     ASSERT(type != gl::ShaderType::InvalidEnum);
 
-    ASSERT(samplerIndex < GetMaximumSamplersPerShader(type, caps));
+    ASSERT(samplerIndex < caps.maxShaderTextureImageUnits[type]);
 
     const auto &samplers = mShaderSamplers[type];
     if (samplerIndex < samplers.size() && samplers[samplerIndex].active)
@@ -1667,7 +1628,8 @@ gl::LinkResult ProgramD3D::link(const gl::Context *context,
     gl::Shader *computeShader = mState.getAttachedShader(gl::ShaderType::Compute);
     if (computeShader)
     {
-        mShaderSamplers[gl::ShaderType::Compute].resize(data.getCaps().maxComputeTextureImageUnits);
+        mShaderSamplers[gl::ShaderType::Compute].resize(
+            data.getCaps().maxShaderTextureImageUnits[gl::ShaderType::Compute]);
         mImagesCS.resize(data.getCaps().maxImageUnits);
         mReadonlyImagesCS.resize(data.getCaps().maxImageUnits);
 
@@ -1696,7 +1658,7 @@ gl::LinkResult ProgramD3D::link(const gl::Context *context,
                 shadersD3D[shaderType] = GetImplAs<ShaderD3D>(mState.getAttachedShader(shaderType));
 
                 mShaderSamplers[shaderType].resize(
-                    GetMaximumSamplersPerShader(shaderType, data.getCaps()));
+                    data.getCaps().maxShaderTextureImageUnits[shaderType]);
 
                 shadersD3D[shaderType]->generateWorkarounds(&mShaderWorkarounds[shaderType]);
 
@@ -1889,7 +1851,7 @@ void ProgramD3D::updateUniformBufferCache(
 
             unsigned int registerIndex = uniformBlock.mShaderRegisterIndexes[shaderType] -
                                          reservedShaderRegisterIndexes[shaderType];
-            ASSERT(registerIndex < GetMaximumShaderUniformBlocksPerShader(shaderType, caps));
+            ASSERT(registerIndex < caps.maxShaderUniformBlocks[shaderType]);
 
             std::vector<int> &shaderUBOcache = mShaderUBOCaches[shaderType];
             if (shaderUBOcache.size() <= registerIndex)

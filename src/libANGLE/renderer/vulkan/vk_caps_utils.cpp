@@ -112,13 +112,14 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     // This is maxDescriptorSetUniformBuffers minus the number of uniform buffers we
     // reserve for internal variables. We reserve one per shader stage for default uniforms
     // and likely one per shader stage for ANGLE internal variables.
-    // outCaps->maxVertexUniformBlocks = ...
+    // outCaps->maxShaderUniformBlocks[gl::ShaderType::Vertex] = ...
 
     // we use the same bindings on each stage, so the limitation is the same combined or not.
     outCaps->maxCombinedTextureImageUnits =
         physicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
-    outCaps->maxTextureImageUnits = physicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
-    outCaps->maxVertexTextureImageUnits =
+    outCaps->maxShaderTextureImageUnits[gl::ShaderType::Fragment] =
+        physicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
+    outCaps->maxShaderTextureImageUnits[gl::ShaderType::Vertex] =
         physicalDeviceProperties.limits.maxPerStageDescriptorSamplers;
 
     // The max vertex output components should not include gl_Position.
