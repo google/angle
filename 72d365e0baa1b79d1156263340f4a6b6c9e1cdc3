@@ -1,0 +1,283 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdf162a0_6dc68be8",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "nit: declare this just before it is used.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2534657d_df96ea15",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "I think this can just be \u0026kGLES1DrawVShader",
+      "range": {
+        "startLine": 43,
+        "startChar": 37,
+        "endLine": 43,
+        "endChar": 73
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d80cbbcf_e7f21ac2",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "Can we have this in its own block so that status (renamed stat) doesn\u0027t leak to the rest of the scope?",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "413dc5da_8d671121",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "This should assert.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8746f03_fa7b88fa",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "Is there a reason to keep the strings separated? This can be declared as a static array.\n\n  const char * const * sources[] \u003d {\n    kGLES1foo, kGLES1bar\n  };",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a5400db_1db0ccdd",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa5ff72f_4874a476",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "ditto assert.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfc64577_72f6452f",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "I think 2D sampler numbers and Cube map sampler numbers are allowed to alias and the shader will pick up the right one depending on the type of the sampler in the GLSL code. So you the cube samplers could alias at 0, 1, 2, 3.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dda413ab_405f9277",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "This shouldn\u0027t be needed.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f198ead5_32f2a412",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "Should this be GLint?",
+      "range": {
+        "startLine": 70,
+        "startChar": 19,
+        "endLine": 70,
+        "endChar": 22
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4eb9b3c_d69c8b62",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "Will these be UBOs? They aren\u0027t now.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4d6ce90_a58ecf68",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "Is there a reason to keep UBOs and programState in this structure or could they be direct members of GLES1Renderer?",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8a93972_8e66f61e",
+        "filename": "src/libANGLE/GLES1Shaders.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "Maybe these could use internal enums instead of GL enums?",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94b7914b_cd7b0b86",
+        "filename": "src/libANGLE/GLES1Shaders.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "nit:extra space.",
+      "range": {
+        "startLine": 235,
+        "startChar": 33,
+        "endLine": 235,
+        "endChar": 35
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82a3f9ec_a203434d",
+        "filename": "src/tests/gl_tests/gles1/BasicDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T19:46:40Z",
+      "side": 1,
+      "message": "This is common to both cases and could be moved in a block above.",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
