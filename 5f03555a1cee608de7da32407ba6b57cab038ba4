@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fbb3ed3f_caaeca01",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-04-27T20:32:53Z",
+      "side": 1,
+      "message": "Ah, ok.",
+      "parentUuid": "3a7d94df_0e91856a",
+      "revId": "5f03555a1cee608de7da32407ba6b57cab038ba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f013d9b3_7ed46093",
         "filename": "extensions/EGL_ANGLE_explicit_context.txt",
         "patchSetId": 8
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "1da7496b_8881ba92",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-04-27T20:32:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f013d9b3_7ed46093",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 46
+      },
+      "revId": "5f03555a1cee608de7da32407ba6b57cab038ba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d75a7c1b_bd73062e",
         "filename": "extensions/EGL_ANGLE_explicit_context.txt",
         "patchSetId": 8
@@ -53,6 +95,30 @@
       "writtenOn": "2018-04-27T20:05:57Z",
       "side": 1,
       "message": "I don\u0027t think we need to enumerate the entry points, it just forces us to keep lists up to date.\n\nInstead, you describe the naming transformation applied to the entry point name and state that for every non-explicit entry point returned by eglGetProcAddress an additional entry point with the transformation will be available.",
+      "range": {
+        "startLine": 53,
+        "startChar": 9,
+        "endLine": 53,
+        "endChar": 32
+      },
+      "revId": "5f03555a1cee608de7da32407ba6b57cab038ba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d14c90c_2d1e7ebd",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-04-27T20:32:53Z",
+      "side": 1,
+      "message": "Sounds good.",
+      "parentUuid": "d75a7c1b_bd73062e",
       "range": {
         "startLine": 53,
         "startChar": 9,
@@ -85,6 +151,30 @@
       "revId": "5f03555a1cee608de7da32407ba6b57cab038ba4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "405a4249_dfe91aad",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 1626,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-04-27T20:32:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "486e780b_9e69a184",
+      "range": {
+        "startLine": 1622,
+        "startChar": 0,
+        "endLine": 1626,
+        "endChar": 0
+      },
+      "revId": "5f03555a1cee608de7da32407ba6b57cab038ba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
