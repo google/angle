@@ -2,6 +2,69 @@
   "comments": [
     {
       "key": {
+        "uuid": "e66c863a_cc614924",
+        "filename": "samples/gles1/HelloTriangle.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "nit: use override instead of virtual (and below)",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 11
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1c18ffb_65cbebdd",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1562,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "nit: use a unique_ptr",
+      "range": {
+        "startLine": 1562,
+        "startChar": 4,
+        "endLine": 1562,
+        "endChar": 18
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31e1f17c_d0205d34",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "Can you put this code in an init function which returns errors if something doesn\u0027t compile?",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cdf162a0_6dc68be8",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -13,6 +76,29 @@
       "writtenOn": "2018-04-27T19:46:40Z",
       "side": 1,
       "message": "nit: declare this just before it is used.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92dba354_fa3a585e",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "Put these in the error case only and allocate it based on the shader info log length.",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 35
+      },
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -76,6 +162,52 @@
     },
     {
       "key": {
+        "uuid": "bcf767ab_4e3f5017",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "we have LOG, ERR and WARN macros.  Otherwise return an error with this message.",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 73
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4501a8c_c5f9c839",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "Refactor the shader compilation into a helper.",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 0
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a8746f03_fa7b88fa",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -87,6 +219,29 @@
       "writtenOn": "2018-04-27T19:46:40Z",
       "side": 1,
       "message": "Is there a reason to keep the strings separated? This can be declared as a static array.\n\n  const char * const * sources[] \u003d {\n    kGLES1foo, kGLES1bar\n  };",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0048dd9e_3d87a636",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "Streams would be cleaner, imo",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 40
+      },
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -110,6 +265,29 @@
     },
     {
       "key": {
+        "uuid": "ad3fd003_466a42db",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "This should be a loop based on kTexUnitCount and generate the texcoord string.",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 92
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fa5ff72f_4874a476",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -121,6 +299,29 @@
       "writtenOn": "2018-04-27T19:46:40Z",
       "side": 1,
       "message": "ditto assert.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "029718f0_4df785c3",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "You can detatch the shaders too to make sure they really get deleted.",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 34
+      },
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -144,6 +345,98 @@
     },
     {
       "key": {
+        "uuid": "58efafcc_ec76b3ab",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "The uniform IDs should be stored somewhere.  They can be constants in the ProgramState.  They should also be a loop.",
+      "range": {
+        "startLine": 135,
+        "startChar": 8,
+        "endLine": 142,
+        "endChar": 62
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f6ffe9d_46d4f7d2",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "Maybe refactor this into a initializeProgramState function that takes the id?",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 5
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e73481ab_cd659e1d",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "nit: either put the assignment right before the uniformMatrix call or merge them.",
+      "range": {
+        "startLine": 194,
+        "startChar": 8,
+        "endLine": 200,
+        "endChar": 97
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2cb2af9_2d05cc6f",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "This computation is simplified if uniformBuffers is a nested array.",
+      "range": {
+        "startLine": 205,
+        "startChar": 19,
+        "endLine": 205,
+        "endChar": 65
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dda413ab_405f9277",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -155,6 +448,75 @@
       "writtenOn": "2018-04-27T19:46:40Z",
       "side": 1,
       "message": "This shouldn\u0027t be needed.",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4225309_3a8ef14d",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "Should also be a loop.",
+      "range": {
+        "startLine": 246,
+        "startChar": 7,
+        "endLine": 258,
+        "endChar": 0
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c4d3d45_aae36687",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "Should be a std::array of size kTexUnitCount",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 37
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7219c53d_3fba70ed",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-27T19:56:00Z",
+      "side": 1,
+      "message": "what about std::array\u003cstd::array\u003cfloat, 16\u003e kTextureUnitCount\u003e textureMatricies?",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 45
+      },
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
