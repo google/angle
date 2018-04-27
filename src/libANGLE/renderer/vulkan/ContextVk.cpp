@@ -534,7 +534,8 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
                 ProgramVk *programVk = vk::GetImpl(glState.getProgram());
-                mPipelineDesc->updateShaders(programVk);
+                mPipelineDesc->updateShaders(programVk->getVertexModuleSerial(),
+                                             programVk->getFragmentModuleSerial());
                 dirtyTextures = true;
                 break;
             }

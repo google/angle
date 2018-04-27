@@ -126,7 +126,7 @@ class RendererVk : angle::NonCopyable
     const std::vector<vk::DescriptorSetLayout> &getGraphicsDescriptorSetLayouts() const;
 
     // Issues a new serial for linked shader modules. Used in the pipeline cache.
-    Serial issueProgramSerial();
+    Serial issueShaderSerial();
 
     vk::ShaderLibrary *getShaderLibrary();
 
@@ -157,7 +157,7 @@ class RendererVk : angle::NonCopyable
     vk::CommandPool mCommandPool;
     GlslangWrapper *mGlslangWrapper;
     SerialFactory mQueueSerialFactory;
-    SerialFactory mProgramSerialFactory;
+    SerialFactory mShaderSerialFactory;
     Serial mLastCompletedQueueSerial;
     Serial mCurrentQueueSerial;
 

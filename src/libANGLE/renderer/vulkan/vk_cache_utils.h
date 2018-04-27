@@ -273,7 +273,7 @@ class PipelineDesc final
 
     // Shader stage info
     const ShaderStageInfo &getShaderStageInfo() const;
-    void updateShaders(ProgramVk *programVk);
+    void updateShaders(Serial vertexSerial, Serial fragmentSerial);
 
     // Vertex input state
     void updateVertexInputInfo(const VertexInputBindings &bindings,
@@ -315,7 +315,7 @@ class PipelineDesc final
     void updateStencilBackWriteMask(const gl::DepthStencilState &depthStencilState);
 
   private:
-    // TODO(jmadill): Handle Geometry/Compute shaders when necessary.
+    // TODO(jmadill): Use gl::ShaderMap when we can pack into fewer bits. http://anglebug.com/2522
     ShaderStageInfo mShaderStageInfo;
     VertexInputBindings mVertexInputBindings;
     VertexInputAttributes mVertexInputAttribs;

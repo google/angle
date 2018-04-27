@@ -245,7 +245,7 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
         vertexShaderInfo.pCode    = vertexCode.data();
 
         ANGLE_TRY(mLinkedVertexModule.init(device, vertexShaderInfo));
-        mVertexModuleSerial = renderer->issueProgramSerial();
+        mVertexModuleSerial = renderer->issueShaderSerial();
     }
 
     {
@@ -257,7 +257,7 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
         fragmentShaderInfo.pCode    = fragmentCode.data();
 
         ANGLE_TRY(mLinkedFragmentModule.init(device, fragmentShaderInfo));
-        mFragmentModuleSerial = renderer->issueProgramSerial();
+        mFragmentModuleSerial = renderer->issueShaderSerial();
     }
 
     ANGLE_TRY(initDefaultUniformBlocks(glContext));

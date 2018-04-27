@@ -631,14 +631,14 @@ const ShaderStageInfo &PipelineDesc::getShaderStageInfo() const
     return mShaderStageInfo;
 }
 
-void PipelineDesc::updateShaders(ProgramVk *programVk)
+void PipelineDesc::updateShaders(Serial vertexSerial, Serial fragmentSerial)
 {
-    ASSERT(programVk->getVertexModuleSerial() < std::numeric_limits<uint32_t>::max());
+    ASSERT(vertexSerial < std::numeric_limits<uint32_t>::max());
     mShaderStageInfo[ShaderType::VertexShader].moduleSerial =
-        static_cast<uint32_t>(programVk->getVertexModuleSerial().getValue());
-    ASSERT(programVk->getFragmentModuleSerial() < std::numeric_limits<uint32_t>::max());
+        static_cast<uint32_t>(vertexSerial.getValue());
+    ASSERT(fragmentSerial < std::numeric_limits<uint32_t>::max());
     mShaderStageInfo[ShaderType::FragmentShader].moduleSerial =
-        static_cast<uint32_t>(programVk->getFragmentModuleSerial().getValue());
+        static_cast<uint32_t>(fragmentSerial.getValue());
 }
 
 void PipelineDesc::updateViewport(const gl::Rectangle &viewport, float nearPlane, float farPlane)
