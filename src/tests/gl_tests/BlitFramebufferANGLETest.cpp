@@ -1036,6 +1036,9 @@ class BlitFramebufferTest : public ANGLETest
 // Tests resolving a multisample depth buffer.
 TEST_P(BlitFramebufferTest, MultisampleDepth)
 {
+    // TODO(oetuaho@nvidia.com): http://crbug.com/837717
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
     GLRenderbuffer renderbuf;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
     glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT24, 256, 256);
