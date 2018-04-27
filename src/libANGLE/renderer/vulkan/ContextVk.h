@@ -161,9 +161,8 @@ class ContextVk : public ContextImpl
     const VkRect2D &getScissor() const { return mPipelineDesc->getScissor(); }
 
   private:
-    gl::Error initPipeline(const gl::Context *context);
-    gl::Error setupDraw(const gl::Context *context,
-                        const gl::DrawCallParams &drawCallParams,
+    gl::Error initPipeline();
+    gl::Error setupDraw(const gl::DrawCallParams &drawCallParams,
                         vk::CommandGraphNode **drawNodeOut,
                         bool *newCommandBufferOut);
 

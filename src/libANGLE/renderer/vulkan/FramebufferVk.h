@@ -86,21 +86,19 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
-    const vk::RenderPassDesc &getRenderPassDesc(const gl::Context *context);
-    gl::Error getCommandGraphNodeForDraw(const gl::Context *context,
-                                         vk::CommandGraphNode **nodeOut);
+    const vk::RenderPassDesc &getRenderPassDesc();
+    gl::Error getCommandGraphNodeForDraw(ContextVk *contextVk, vk::CommandGraphNode **nodeOut);
 
   private:
     FramebufferVk(const gl::FramebufferState &state);
     FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer);
 
-    gl::ErrorOrResult<vk::Framebuffer *> getFramebuffer(const gl::Context *context,
-                                                        RendererVk *rendererVk);
+    gl::ErrorOrResult<vk::Framebuffer *> getFramebuffer(RendererVk *rendererVk);
 
-    gl::Error clearAttachmentsWithScissorRegion(const gl::Context *context,
-                                                bool clearColor,
-                                                bool clearDepth,
-                                                bool clearStencil);
+    gl::Error clearWithClearAttachments(ContextVk *contextVk,
+                                        bool clearColor,
+                                        bool clearDepth,
+                                        bool clearStencil);
 
     WindowSurfaceVk *mBackbuffer;
 

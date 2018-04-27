@@ -96,7 +96,7 @@ gl::Error ContextVk::finish(const gl::Context *context)
     return mRenderer->finish(context);
 }
 
-gl::Error ContextVk::initPipeline(const gl::Context *context)
+gl::Error ContextVk::initPipeline()
 {
     ASSERT(!mCurrentPipeline);
 
@@ -114,7 +114,7 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     vertexArrayVk->getPackedInputDescriptions(mPipelineDesc.get());
 
     // Ensure that the RenderPass description is updated.
-    mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc(context));
+    mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc());
 
     // TODO(jmadill): Validate with ASSERT against physical device limits/caps?
     ANGLE_TRY(mRenderer->getPipeline(programVk, *mPipelineDesc, activeAttribLocationsMask,
@@ -123,8 +123,7 @@ gl::Error ContextVk::initPipeline(const gl::Context *context)
     return gl::NoError();
 }
 
-gl::Error ContextVk::setupDraw(const gl::Context *context,
-                               const gl::DrawCallParams &drawCallParams,
+gl::Error ContextVk::setupDraw(const gl::DrawCallParams &drawCallParams,
                                vk::CommandGraphNode **drawNodeOut,
                                bool *newCommandBufferOut)
 {
@@ -136,7 +135,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 
     if (!mCurrentPipeline)
     {
-        ANGLE_TRY(initPipeline(context));
+        ANGLE_TRY(initPipeline());
     }
 
     const auto &state            = mState.getState();
@@ -147,7 +146,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     Serial queueSerial           = mRenderer->getCurrentQueueSerial();
 
     vk::CommandGraphNode *graphNode = nullptr;
-    ANGLE_TRY(vkFBO->getCommandGraphNodeForDraw(context, &graphNode));
+    ANGLE_TRY(vkFBO->getCommandGraphNodeForDraw(this, &graphNode));
 
     vk::CommandBuffer *commandBuffer = nullptr;
 
@@ -224,7 +223,7 @@ gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint f
 
     vk::CommandGraphNode *drawNode = nullptr;
     bool newCommands               = false;
-    ANGLE_TRY(setupDraw(context, drawCallParams, &drawNode, &newCommands));
+    ANGLE_TRY(setupDraw(drawCallParams, &drawNode, &newCommands));
 
     const gl::VertexArray *vertexArray = context->getGLState().getVertexArray();
     VertexArrayVk *vertexArrayVk       = vk::GetImpl(vertexArray);
@@ -253,7 +252,7 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
 
     vk::CommandGraphNode *drawNode = nullptr;
     bool newCommands               = false;
-    ANGLE_TRY(setupDraw(context, drawCallParams, &drawNode, &newCommands));
+    ANGLE_TRY(setupDraw(drawCallParams, &drawNode, &newCommands));
 
     gl::VertexArray *vao         = mState.getState().getVertexArray();
     VertexArrayVk *vertexArrayVk = vk::GetImpl(vao);

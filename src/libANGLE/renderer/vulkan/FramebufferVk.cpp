@@ -138,7 +138,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         // With scissor test enabled, we clear very differently and we don't need to access
         // the image inside each attachment we can just use clearCmdAttachments with our
         // scissor region instead.
-        ANGLE_TRY(clearAttachmentsWithScissorRegion(context, clearColor, clearDepth, clearStencil));
+        ANGLE_TRY(clearWithClearAttachments(contextVk, clearColor, clearDepth, clearStencil));
         return gl::NoError();
     }
 
@@ -337,7 +337,7 @@ gl::Error FramebufferVk::syncState(const gl::Context *context,
     return gl::NoError();
 }
 
-const vk::RenderPassDesc &FramebufferVk::getRenderPassDesc(const gl::Context *context)
+const vk::RenderPassDesc &FramebufferVk::getRenderPassDesc()
 {
     if (mRenderPassDesc.valid())
     {
@@ -365,8 +365,7 @@ const vk::RenderPassDesc &FramebufferVk::getRenderPassDesc(const gl::Context *co
     return mRenderPassDesc.value();
 }
 
-gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(const gl::Context *context,
-                                                                   RendererVk *rendererVk)
+gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(RendererVk *rendererVk)
 {
     // If we've already created our cached Framebuffer, return it.
     if (mFramebuffer.valid())
@@ -374,7 +373,7 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(const gl::Con
         return &mFramebuffer;
     }
 
-    const vk::RenderPassDesc &desc = getRenderPassDesc(context);
+    const vk::RenderPassDesc &desc = getRenderPassDesc();
 
     vk::RenderPass *renderPass = nullptr;
     ANGLE_TRY(rendererVk->getCompatibleRenderPass(desc, &renderPass));
@@ -432,19 +431,18 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(const gl::Con
     return &mFramebuffer;
 }
 
-gl::Error FramebufferVk::clearAttachmentsWithScissorRegion(const gl::Context *context,
-                                                           bool clearColor,
-                                                           bool clearDepth,
-                                                           bool clearStencil)
+gl::Error FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
+                                                   bool clearColor,
+                                                   bool clearDepth,
+                                                   bool clearStencil)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
     // This command can only happen inside a render pass, so obtain one if its already happening
     // or create a new one if not.
     vk::CommandGraphNode *node       = nullptr;
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(getCommandGraphNodeForDraw(context, &node));
+    ANGLE_TRY(getCommandGraphNodeForDraw(contextVk, &node));
     if (node->getInsideRenderPassCommands()->valid())
     {
         commandBuffer = node->getInsideRenderPassCommands();
@@ -532,10 +530,9 @@ gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const
     return gl::InternalError() << "getSamplePosition is unimplemented.";
 }
 
-gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
+gl::Error FramebufferVk::getCommandGraphNodeForDraw(ContextVk *contextVk,
                                                     vk::CommandGraphNode **nodeOut)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
     Serial currentSerial = renderer->getCurrentQueueSerial();
 
@@ -557,7 +554,7 @@ gl::Error FramebufferVk::getCommandGraphNodeForDraw(const gl::Context *context,
     }
 
     vk::Framebuffer *framebuffer = nullptr;
-    ANGLE_TRY_RESULT(getFramebuffer(context, renderer), framebuffer);
+    ANGLE_TRY_RESULT(getFramebuffer(renderer), framebuffer);
 
     std::vector<VkClearValue> attachmentClearValues;
 
