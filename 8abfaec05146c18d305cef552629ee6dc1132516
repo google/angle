@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "803b266b_8adf402a",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-04-27T14:25:44Z",
+      "side": 1,
+      "message": "Maybe \"partial blit\" would be more clear?",
+      "parentUuid": "cc3b67ad_3e0cdae1",
+      "range": {
+        "startLine": 1234,
+        "startChar": 4,
+        "endLine": 1236,
+        "endChar": 55
+      },
+      "revId": "8abfaec05146c18d305cef552629ee6dc1132516",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d86f80e0_3b8ab3cd",
         "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
         "patchSetId": 5
