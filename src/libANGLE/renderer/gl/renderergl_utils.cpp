@@ -1092,7 +1092,7 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
     // Don't use 1-bit alpha formats on desktop GL with AMD or Intel drivers.
     workarounds->avoid1BitAlphaTextureFormats =
-        functions->standard == STANDARD_GL_DESKTOP && (IsAMD(vendor) || IsIntel(vendor));
+        functions->standard == STANDARD_GL_DESKTOP && (IsAMD(vendor));
 
     workarounds->rgba4IsNotSupportedForColorRendering =
         functions->standard == STANDARD_GL_DESKTOP && IsIntel(vendor);
