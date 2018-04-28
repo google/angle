@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6969d81_2130ab3a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-04-28T04:42:15Z",
+      "side": 0,
+      "message": "Why not keep the original code?",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 261,
+        "endChar": 58
+      },
+      "revId": "bb3255b5a507b3698449d62830351bd55a9bb7d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
