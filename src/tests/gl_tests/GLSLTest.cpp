@@ -4133,6 +4133,126 @@ TEST_P(GLSLTest_ES3, NestedFloorWithLargeMultiplierInside)
     EXPECT_PIXEL_COLOR_EQ(0, getWindowHeight() - 1, GLColor::green);
 }
 
+// Verify that a link error is generated when the sum of the number of active image uniforms and
+// active shader storage blocks in a rendering pipeline exceeds
+// GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
+TEST_P(GLSLTest_ES31, ExceedCombinedShaderOutputResourcesInVSAndFS)
+{
+    // TODO(jiawei.shao@intel.com): enable this test when shader storage buffer is supported on
+    // D3D11 back-ends.
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    GLint maxVertexShaderStorageBlocks;
+    GLint maxVertexImageUniforms;
+    GLint maxFragmentShaderStorageBlocks;
+    GLint maxFragmentImageUniforms;
+    GLint maxCombinedShaderStorageBlocks;
+    GLint maxCombinedImageUniforms;
+    glGetIntegerv(GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS, &maxVertexShaderStorageBlocks);
+    glGetIntegerv(GL_MAX_VERTEX_IMAGE_UNIFORMS, &maxVertexImageUniforms);
+    glGetIntegerv(GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS, &maxFragmentShaderStorageBlocks);
+    glGetIntegerv(GL_MAX_FRAGMENT_IMAGE_UNIFORMS, &maxFragmentImageUniforms);
+    glGetIntegerv(GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS, &maxCombinedShaderStorageBlocks);
+    glGetIntegerv(GL_MAX_COMBINED_IMAGE_UNIFORMS, &maxCombinedImageUniforms);
+
+    ASSERT_GE(maxCombinedShaderStorageBlocks, maxVertexShaderStorageBlocks);
+    ASSERT_GE(maxCombinedShaderStorageBlocks, maxFragmentShaderStorageBlocks);
+    ASSERT_GE(maxCombinedImageUniforms, maxVertexImageUniforms);
+    ASSERT_GE(maxCombinedImageUniforms, maxFragmentImageUniforms);
+
+    GLint vertexSSBOs   = maxVertexShaderStorageBlocks;
+    GLint fragmentSSBOs = maxFragmentShaderStorageBlocks;
+    // Limit the sum of ssbos in vertex and fragment shaders to maxCombinedShaderStorageBlocks.
+    if (vertexSSBOs + fragmentSSBOs > maxCombinedShaderStorageBlocks)
+    {
+        fragmentSSBOs = maxCombinedShaderStorageBlocks - vertexSSBOs;
+    }
+
+    GLint vertexImages   = maxVertexImageUniforms;
+    GLint fragmentImages = maxFragmentImageUniforms;
+    // Limit the sum of images in vertex and fragment shaders to maxCombinedImageUniforms.
+    if (vertexImages + fragmentImages > maxCombinedImageUniforms)
+    {
+        vertexImages = maxCombinedImageUniforms - fragmentImages;
+    }
+
+    GLint maxDrawBuffers;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+
+    GLint maxCombinedShaderOutputResources;
+    glGetIntegerv(GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES, &maxCombinedShaderOutputResources);
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_SKIP_TEST_IF(vertexSSBOs + fragmentSSBOs + vertexImages + fragmentImages +
+                           maxDrawBuffers <=
+                       maxCombinedShaderOutputResources);
+
+    std::ostringstream vertexStream;
+    vertexStream << "#version 310 es\n";
+    for (int i = 0; i < vertexSSBOs; ++i)
+    {
+        vertexStream << "layout(shared, binding = " << i << ") buffer blockName" << i
+                     << "{\n"
+                        "    float data;\n"
+                        "} ssbo"
+                     << i << ";\n";
+    }
+    vertexStream << "layout(r32f, binding = 0) uniform highp image2D imageArray[" << vertexImages
+                 << "];\n";
+    vertexStream << "void main()\n"
+                    "{\n"
+                    "    float val = 0.1;\n"
+                    "    vec4 val2 = vec4(0.0);\n";
+    for (int i = 0; i < vertexSSBOs; ++i)
+    {
+        vertexStream << "    val += ssbo" << i << ".data; \n";
+    }
+    for (int i = 0; i < vertexImages; ++i)
+    {
+        vertexStream << "    val2 += imageLoad(imageArray[" << i << "], ivec2(0, 0)); \n";
+    }
+    vertexStream << "    gl_Position = vec4(val, val2);\n"
+                    "}\n";
+
+    std::ostringstream fragmentStream;
+    fragmentStream << "#version 310 es\n"
+                   << "precision highp float;\n";
+    for (int i = 0; i < fragmentSSBOs; ++i)
+    {
+        fragmentStream << "layout(shared, binding = " << i << ") buffer blockName" << i
+                       << "{\n"
+                          "    float data;\n"
+                          "} ssbo"
+                       << i << ";\n";
+    }
+    fragmentStream << "layout(r32f, binding = 0) uniform highp image2D imageArray["
+                   << fragmentImages << "];\n";
+    fragmentStream << "layout (location = 0) out vec4 foutput[" << maxDrawBuffers << "];\n";
+
+    fragmentStream << "void main()\n"
+                      "{\n"
+                      "    float val = 0.1;\n"
+                      "    vec4 val2 = vec4(0.0);\n";
+    for (int i = 0; i < fragmentSSBOs; ++i)
+    {
+        fragmentStream << "    val += ssbo" << i << ".data; \n";
+    }
+    for (int i = 0; i < fragmentImages; ++i)
+    {
+        fragmentStream << "    val2 += imageLoad(imageArray[" << i << "], ivec2(0, 0)); \n";
+    }
+    for (int i = 0; i < maxDrawBuffers; ++i)
+    {
+        fragmentStream << "    foutput[" << i << "] = vec4(val, val2);\n";
+    }
+    fragmentStream << "}\n";
+
+    GLuint program = CompileProgram(vertexStream.str(), fragmentStream.str());
+    EXPECT_EQ(0u, program);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,

@@ -1089,13 +1089,31 @@ Error Program::link(const gl::Context *context)
 
     if (mState.mAttachedShaders[ShaderType::Compute])
     {
-        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings))
+        GLuint combinedImageUniforms = 0u;
+        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings, &combinedImageUniforms))
         {
             return NoError();
         }
 
-        if (!linkInterfaceBlocks(context, mInfoLog))
+        GLuint combinedShaderStorageBlocks = 0u;
+        if (!linkInterfaceBlocks(context, mInfoLog, &combinedShaderStorageBlocks))
         {
+            return NoError();
+        }
+
+        // [OpenGL ES 3.1] Chapter 8.22 Page 203:
+        // A link error will be generated if the sum of the number of active image uniforms used in
+        // all shaders, the number of active shader storage blocks, and the number of active
+        // fragment shader outputs exceeds the implementation-dependent value of
+        // MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
+        if (combinedImageUniforms + combinedShaderStorageBlocks >
+            context->getCaps().maxCombinedShaderOutputResources)
+        {
+            mInfoLog
+                << "The sum of the number of active image uniforms, active shader storage blocks "
+                   "and active fragment shader outputs exceeds "
+                   "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
+                << context->getCaps().maxCombinedShaderOutputResources << ")";
             return NoError();
         }
 
@@ -1126,12 +1144,14 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
-        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings))
+        GLuint combinedImageUniforms = 0u;
+        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings, &combinedImageUniforms))
         {
             return NoError();
         }
 
-        if (!linkInterfaceBlocks(context, mInfoLog))
+        GLuint combinedShaderStorageBlocks = 0u;
+        if (!linkInterfaceBlocks(context, mInfoLog, &combinedShaderStorageBlocks))
         {
             return NoError();
         }
@@ -1141,12 +1161,15 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
+        if (!linkOutputVariables(context, combinedImageUniforms, combinedShaderStorageBlocks))
+        {
+            return NoError();
+        }
+
         const auto &mergedVaryings = getMergedVaryings(context);
 
         ASSERT(mState.mAttachedShaders[ShaderType::Vertex]);
         mState.mNumViews = mState.mAttachedShaders[ShaderType::Vertex]->getNumViews(context);
-
-        linkOutputVariables(context);
 
         // Map the varyings to the register file
         // In WebGL, we use a slightly different handling for packing variables.
@@ -2504,7 +2527,8 @@ bool Program::linkValidateFragmentInputBindings(const Context *context, gl::Info
 
 bool Program::linkUniforms(const Context *context,
                            InfoLog &infoLog,
-                           const ProgramBindings &uniformLocationBindings)
+                           const ProgramBindings &uniformLocationBindings,
+                           GLuint *combinedImageUniformsCount)
 {
     UniformLinker linker(mState);
     if (!linker.link(context, infoLog, uniformLocationBindings))
@@ -2514,7 +2538,7 @@ bool Program::linkUniforms(const Context *context,
 
     linker.getResults(&mState.mUniforms, &mState.mUniformLocations);
 
-    linkSamplerAndImageBindings();
+    linkSamplerAndImageBindings(combinedImageUniformsCount);
 
     if (!linkAtomicCounterBuffers())
     {
@@ -2524,8 +2548,10 @@ bool Program::linkUniforms(const Context *context,
     return true;
 }
 
-void Program::linkSamplerAndImageBindings()
+void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
 {
+    ASSERT(combinedImageUniforms);
+
     unsigned int high = static_cast<unsigned int>(mState.mUniforms.size());
     unsigned int low  = high;
 
@@ -2546,7 +2572,7 @@ void Program::linkSamplerAndImageBindings()
     }
 
     mState.mImageUniformRange = RangeUI(low, high);
-
+    *combinedImageUniforms    = 0u;
     // If uniform is a image type, insert it into the mImageBindings array.
     for (unsigned int imageIndex : mState.mImageUniformRange)
     {
@@ -2565,6 +2591,9 @@ void Program::linkSamplerAndImageBindings()
             mState.mImageBindings.emplace_back(
                 ImageBinding(imageUniform.binding, imageUniform.getBasicTypeElementCount()));
         }
+
+        GLuint arraySize = imageUniform.isArray() ? imageUniform.arraySizes[0] : 1u;
+        *combinedImageUniforms += imageUniform.activeShaderCount() * arraySize;
     }
 
     high = low;
@@ -2779,8 +2808,12 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
     return true;
 }
 
-bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
+bool Program::linkInterfaceBlocks(const Context *context,
+                                  InfoLog &infoLog,
+                                  GLuint *combinedShaderStorageBlocksCount)
 {
+    ASSERT(combinedShaderStorageBlocksCount);
+
     const auto &caps = context->getCaps();
 
     if (mState.mAttachedShaders[ShaderType::Compute])
@@ -2796,9 +2829,9 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         }
 
         const auto &computeShaderStorageBlocks = computeShader.getShaderStorageBlocks(context);
-        if (!ValidateInterfaceBlocksCount(caps.maxComputeShaderStorageBlocks,
-                                          computeShaderStorageBlocks, ShaderType::Compute,
-                                          sh::BlockType::BLOCK_BUFFER, nullptr, infoLog))
+        if (!ValidateInterfaceBlocksCount(
+                caps.maxComputeShaderStorageBlocks, computeShaderStorageBlocks, ShaderType::Compute,
+                sh::BlockType::BLOCK_BUFFER, combinedShaderStorageBlocksCount, infoLog))
         {
             return false;
         }
@@ -2852,7 +2885,7 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
         maxShaderStorageBlocks[ShaderType::Fragment] = caps.maxFragmentShaderStorageBlocks;
         maxShaderStorageBlocks[ShaderType::Geometry] = caps.maxGeometryShaderStorageBlocks;
 
-        GLuint combinedShaderStorageBlocksCount                                        = 0u;
+        *combinedShaderStorageBlocksCount                                              = 0u;
         ShaderMap<const std::vector<sh::InterfaceBlock> *> graphicsShaderStorageBlocks = {};
         for (ShaderType shaderType : kAllGraphicsShaderTypes)
         {
@@ -2865,7 +2898,7 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
             const auto &shaderStorageBlocks = shader->getShaderStorageBlocks(context);
             if (!ValidateInterfaceBlocksCount(
                     maxShaderStorageBlocks[shaderType], shaderStorageBlocks, shaderType,
-                    sh::BlockType::BLOCK_BUFFER, &combinedShaderStorageBlocksCount, infoLog))
+                    sh::BlockType::BLOCK_BUFFER, combinedShaderStorageBlocksCount, infoLog))
             {
                 return false;
             }
@@ -2873,7 +2906,7 @@ bool Program::linkInterfaceBlocks(const Context *context, InfoLog &infoLog)
             graphicsShaderStorageBlocks[shaderType] = &shaderStorageBlocks;
         }
 
-        if (combinedShaderStorageBlocksCount > caps.maxCombinedShaderStorageBlocks)
+        if (*combinedShaderStorageBlocksCount > caps.maxCombinedShaderStorageBlocks)
         {
             infoLog << "The sum of the number of active shader storage blocks exceeds "
                        "MAX_COMBINED_SHADER_STORAGE_BLOCKS ("
@@ -3260,7 +3293,9 @@ ProgramMergedVaryings Program::getMergedVaryings(const Context *context) const
     return merged;
 }
 
-void Program::linkOutputVariables(const Context *context)
+bool Program::linkOutputVariables(const Context *context,
+                                  GLuint combinedImageUniformsCount,
+                                  GLuint combinedShaderStorageBlocksCount)
 {
     Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
     ASSERT(fragmentShader != nullptr);
@@ -3269,8 +3304,9 @@ void Program::linkOutputVariables(const Context *context)
     ASSERT(mState.mActiveOutputVariables.none());
     ASSERT(mState.mDrawBufferTypeMask.none());
 
+    const auto &outputVariables = fragmentShader->getActiveOutputVariables(context);
     // Gather output variable types
-    for (const auto &outputVariable : fragmentShader->getActiveOutputVariables(context))
+    for (const auto &outputVariable : outputVariables)
     {
         if (outputVariable.isBuiltIn() && outputVariable.name != "gl_FragColor" &&
             outputVariable.name != "gl_FragData")
@@ -3299,11 +3335,31 @@ void Program::linkOutputVariables(const Context *context)
         }
     }
 
+    if (context->getClientVersion() >= ES_3_1)
+    {
+        // [OpenGL ES 3.1] Chapter 8.22 Page 203:
+        // A link error will be generated if the sum of the number of active image uniforms used in
+        // all shaders, the number of active shader storage blocks, and the number of active
+        // fragment shader outputs exceeds the implementation-dependent value of
+        // MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
+        if (combinedImageUniformsCount + combinedShaderStorageBlocksCount +
+                mState.mActiveOutputVariables.count() >
+            context->getCaps().maxCombinedShaderOutputResources)
+        {
+            mInfoLog
+                << "The sum of the number of active image uniforms, active shader storage blocks "
+                   "and active fragment shader outputs exceeds "
+                   "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
+                << context->getCaps().maxCombinedShaderOutputResources << ")";
+            return false;
+        }
+    }
+
     // Skip this step for GLES2 shaders.
     if (fragmentShader->getShaderVersion(context) == 100)
-        return;
+        return true;
 
-    mState.mOutputVariables = fragmentShader->getActiveOutputVariables(context);
+    mState.mOutputVariables = outputVariables;
     // TODO(jmadill): any caps validation here?
 
     for (unsigned int outputVariableIndex = 0; outputVariableIndex < mState.mOutputVariables.size();
@@ -3352,6 +3408,8 @@ void Program::linkOutputVariables(const Context *context)
             }
         }
     }
+
+    return true;
 }
 
 void Program::setUniformValuesFromBindingQualifiers()

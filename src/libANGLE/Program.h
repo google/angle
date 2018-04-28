@@ -705,13 +705,16 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     bool linkValidateShaders(const Context *context, InfoLog &infoLog);
     bool linkAttributes(const Context *context, InfoLog &infoLog);
-    bool linkInterfaceBlocks(const Context *context, InfoLog &infoLog);
+    bool linkInterfaceBlocks(const Context *context,
+                             InfoLog &infoLog,
+                             GLuint *combinedShaderStorageBlocksCount);
     bool linkVaryings(const Context *context, InfoLog &infoLog) const;
 
     bool linkUniforms(const Context *context,
                       InfoLog &infoLog,
-                      const ProgramBindings &uniformLocationBindings);
-    void linkSamplerAndImageBindings();
+                      const ProgramBindings &uniformLocationBindings,
+                      GLuint *combinedImageUniformsCount);
+    void linkSamplerAndImageBindings(GLuint *combinedImageUniformsCount);
     bool linkAtomicCounterBuffers();
 
     void updateLinkedShaderStages();
@@ -741,7 +744,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     void gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings);
 
     ProgramMergedVaryings getMergedVaryings(const Context *context) const;
-    void linkOutputVariables(const Context *context);
+    bool linkOutputVariables(const Context *context,
+                             GLuint combinedImageUniformsCount,
+                             GLuint combinedShaderStorageBlocksCount);
 
     void setUniformValuesFromBindingQualifiers();
 

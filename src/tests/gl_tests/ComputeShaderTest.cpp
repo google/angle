@@ -1209,6 +1209,75 @@ TEST_P(ComputeShaderTest, groupMemoryBarrierAndBarrierTest)
     }
 }
 
+// Verify that a link error is generated when the sum of the number of active image uniforms and
+// active shader storage blocks in a compute shader exceeds GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
+TEST_P(ComputeShaderTest, ExceedCombinedShaderOutputResourcesInCS)
+{
+    // TODO(jiawei.shao@intel.com): enable this test when shader storage buffer is supported on
+    // D3D11 back-ends.
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    GLint maxCombinedShaderOutputResources;
+    GLint maxComputeShaderStorageBlocks;
+    GLint maxComputeImageUniforms;
+
+    glGetIntegerv(GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES, &maxCombinedShaderOutputResources);
+    glGetIntegerv(GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS, &maxComputeShaderStorageBlocks);
+    glGetIntegerv(GL_MAX_COMPUTE_IMAGE_UNIFORMS, &maxComputeImageUniforms);
+
+    ANGLE_SKIP_TEST_IF(maxCombinedShaderOutputResources >=
+                       maxComputeShaderStorageBlocks + maxComputeImageUniforms);
+
+    std::ostringstream computeShaderStream;
+    computeShaderStream << "#version 310 es\n"
+                           "layout(local_size_x = 3, local_size_y = 1, local_size_z = 1) in;\n"
+                           "layout(shared, binding = 0) buffer blockName"
+                           "{\n"
+                           "    uint data;\n"
+                           "} instance["
+                        << maxComputeShaderStorageBlocks << "];\n";
+
+    ASSERT_GE(maxComputeImageUniforms, 4);
+    int numImagesInArray  = maxComputeImageUniforms / 2;
+    int numImagesNonArray = maxComputeImageUniforms - numImagesInArray;
+    for (int i = 0; i < numImagesNonArray; ++i)
+    {
+        computeShaderStream << "layout(r32f, binding = " << i << ") uniform highp image2D image"
+                            << i << ";\n";
+    }
+
+    computeShaderStream << "layout(r32f, binding = " << numImagesNonArray
+                        << ") uniform highp image2D imageArray[" << numImagesInArray << "];\n";
+
+    computeShaderStream << "void main()\n"
+                           "{\n"
+                           "    uint val = 0u;\n"
+                           "    vec4 val2 = vec4(0.0);\n";
+
+    for (int i = 0; i < maxComputeShaderStorageBlocks; ++i)
+    {
+        computeShaderStream << "    val += instance[" << i << "].data; \n";
+    }
+
+    for (int i = 0; i < numImagesNonArray; ++i)
+    {
+        computeShaderStream << "    val2 += imageLoad(image" << i
+                            << ", ivec2(gl_LocalInvocationID.xy)); \n";
+    }
+
+    for (int i = 0; i < numImagesInArray; ++i)
+    {
+        computeShaderStream << "    val2 += imageLoad(imageArray[" << i << "]"
+                            << ", ivec2(gl_LocalInvocationID.xy)); \n";
+    }
+
+    computeShaderStream << "    instance[0].data = val + uint(val2.x);\n"
+                           "}\n";
+
+    GLuint computeProgram = CompileComputeProgram(computeShaderStream.str());
+    EXPECT_EQ(0u, computeProgram);
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)

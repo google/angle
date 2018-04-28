@@ -957,6 +957,20 @@ size_t GetMaximumComputeImageUniforms(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+size_t GetMaximumCombinedShaderOutputResources(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        // TODO(jiawei.shao@intel.com): Get a more accurate limit. For now using the minimum
+        // requirement for GLES 3.1.
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return 4;
+        default:
+            return 0;
+    }
+}
+
 int GetMinimumTexelOffset(D3D_FEATURE_LEVEL featureLevel)
 {
     switch (featureLevel)
@@ -1396,6 +1410,8 @@ void GenerateCaps(ID3D11Device *device,
     caps->maxImageUnits = static_cast<GLuint>(GetMaximumImageUnits(featureLevel));
     caps->maxComputeImageUniforms =
         static_cast<GLuint>(GetMaximumComputeImageUniforms(featureLevel));
+    caps->maxCombinedShaderOutputResources =
+        static_cast<GLuint>(GetMaximumCombinedShaderOutputResources(featureLevel));
 
     // Aggregate shader limits
     caps->maxUniformBufferBindings = caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks;
