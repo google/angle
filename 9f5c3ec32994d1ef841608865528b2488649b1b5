@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2eca346_423be27f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-30T13:53:08Z",
+      "side": 1,
+      "message": "nit: Can you create a constexpr kVertexIndex and kFragmentIndex and use that everywhere?",
+      "range": {
+        "startLine": 637,
+        "startChar": 21,
+        "endLine": 637,
+        "endChar": 22
+      },
+      "revId": "9f5c3ec32994d1ef841608865528b2488649b1b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
