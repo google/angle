@@ -12,7 +12,6 @@
               android:targetSdkVersion="24">
     </uses-sdk>
 
-    <!-- TODO: Remove debuggable property for production? -->
     <application android:label="Android System Angle"
         android:extractNativeLibs="false"
         android:multiArch="true"

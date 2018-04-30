@@ -917,6 +917,7 @@ if (is_android) {
       secondary_abi_shared_libraries = [
         "//third_party/angle:libGLESv2${angle_libs_suffix}($android_secondary_abi_toolchain)",
         "//third_party/angle:libEGL${angle_libs_suffix}($android_secondary_abi_toolchain)",
+        "//third_party/angle:libGLESv1_CM${angle_libs_suffix}($android_secondary_abi_toolchain)",
       ]
     }
 
@@ -931,6 +932,7 @@ if (is_android) {
     shared_libraries = [
       "//third_party/angle:libGLESv2${angle_libs_suffix}",
       "//third_party/angle:libEGL${angle_libs_suffix}",
+      "//third_party/angle:libGLESv1_CM${angle_libs_suffix}",
     ]
   }
 }
