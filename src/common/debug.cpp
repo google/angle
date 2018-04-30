@@ -65,6 +65,9 @@ bool ShouldCreatePlatformLogMessage(LogSeverity severity)
 #endif
 }
 
+// This is never instantiated, it's just used for EAT_STREAM_PARAMETERS to an object of the correct
+// type on the LHS of the unused part of the ternary operator.
+std::ostream *gSwallowStream;
 }  // namespace priv
 
 bool DebugAnnotationsActive()

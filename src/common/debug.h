@@ -4,7 +4,8 @@
 // found in the LICENSE file.
 //
 
-// debug.h: Debugging utilities.
+// debug.h: Debugging utilities. A lot of the logging code is adapted from Chromium's
+// base/logging.h.
 
 #ifndef COMMON_DEBUG_H_
 #define COMMON_DEBUG_H_
@@ -103,6 +104,8 @@ class LogMessageVoidify
     // This has to be an operator with a precedence lower than << but higher than ?:
     void operator&(std::ostream &) {}
 };
+
+extern std::ostream *gSwallowStream;
 
 // Used by ANGLE_LOG_IS_ON to lazy-evaluate stream arguments.
 bool ShouldCreatePlatformLogMessage(LogSeverity severity);
@@ -232,6 +235,18 @@ std::ostream &FmtHexInt(std::ostream &os, T value)
 #define ANGLE_ASSERT_IMPL_IS_NORETURN 1
 #endif  // !defined(NDEBUG)
 
+// Note that gSwallowStream is used instead of an arbitrary LOG() stream to avoid the creation of an
+// object with a non-trivial destructor (LogMessage). On MSVC x86 (checked on 2015 Update 3), this
+// causes a few additional pointless instructions to be emitted even at full optimization level,
+// even though the : arm of the ternary operator is clearly never executed. Using a simpler object
+// to be &'d with Voidify() avoids these extra instructions. Using a simpler POD object with a
+// templated operator<< also works to avoid these instructions. However, this causes warnings on
+// statically defined implementations of operator<<(std::ostream, ...) in some .cpp files, because
+// they become defined-but-unreferenced functions. A reinterpret_cast of 0 to an ostream* also is
+// not suitable, because some compilers warn of undefined behavior.
+#define ANGLE_EAT_STREAM_PARAMETERS \
+    true ? static_cast<void>(0) : ::gl::priv::LogMessageVoidify() & (*::gl::priv::gSwallowStream)
+
 // A macro asserting a condition and outputting failures to the debug log
 #if defined(ANGLE_ENABLE_ASSERTS)
 #define ASSERT(expression)                                                                         \
@@ -240,18 +255,7 @@ std::ostream &FmtHexInt(std::ostream &os, T value)
                                           ANGLE_ASSERT_IMPL(expression)))
 #define UNREACHABLE_IS_NORETURN ANGLE_ASSERT_IMPL_IS_NORETURN
 #else
-// These are just dummy values.
-#define COMPACT_ANGLE_LOG_EX_ASSERT(ClassName, ...) \
-    COMPACT_ANGLE_LOG_EX_EVENT(ClassName, ##__VA_ARGS__)
-#define COMPACT_ANGLE_LOG_ASSERT COMPACT_ANGLE_LOG_EVENT
-namespace gl
-{
-constexpr LogSeverity LOG_ASSERT = LOG_EVENT;
-}  // namespace gl
-
-#define ASSERT(condition)                                                     \
-    ANGLE_LAZY_STREAM(ANGLE_LOG_STREAM(ASSERT), false ? !(condition) : false) \
-        << "Check failed: " #condition ". "
+#define ASSERT(condition) ANGLE_EAT_STREAM_PARAMETERS << !(condition)
 #define UNREACHABLE_IS_NORETURN 0
 #endif  // defined(ANGLE_ENABLE_ASSERTS)
 
