@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c7baf3e_ed7ae63f",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-30T12:42:59Z",
+      "side": 1,
+      "message": "nit: you could use the term \u0027inverted\u0027, might be clearer",
+      "range": {
+        "startLine": 58,
+        "startChar": 9,
+        "endLine": 58,
+        "endChar": 19
+      },
+      "revId": "c193fe729fab64bbb5c97d6a992ada3b4abfa59c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "112b43de_72cd3e8a",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-30T12:42:59Z",
+      "side": 1,
+      "message": "I think I like the old names better because they\u0027re shorter.",
+      "range": {
+        "startLine": 458,
+        "startChar": 54,
+        "endLine": 458,
+        "endChar": 79
+      },
+      "revId": "c193fe729fab64bbb5c97d6a992ada3b4abfa59c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
