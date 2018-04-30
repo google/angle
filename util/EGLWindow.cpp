@@ -300,7 +300,7 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
     return true;
 }
 
-bool EGLWindow::initializeContext()
+EGLContext EGLWindow::createContext(EGLContext share) const
 {
     const char *displayExtensions = eglQueryString(mDisplay, EGL_EXTENSIONS);
 
@@ -309,39 +309,34 @@ bool EGLWindow::initializeContext()
     if (mClientMajorVersion > 2 && !(mEGLMajorVersion > 1 || mEGLMinorVersion >= 5) &&
         !hasKHRCreateContext)
     {
-        destroyGL();
-        return false;
+        return EGL_NO_CONTEXT;
     }
 
     bool hasWebGLCompatibility =
         strstr(displayExtensions, "EGL_ANGLE_create_context_webgl_compatibility") != nullptr;
     if (mWebGLCompatibility && !hasWebGLCompatibility)
     {
-        destroyGL();
-        return false;
+        return EGL_NO_CONTEXT;
     }
 
     bool hasCreateContextExtensionsEnabled =
         strstr(displayExtensions, "EGL_ANGLE_create_context_extensions_enabled") != nullptr;
     if (mExtensionsEnabled.valid() && !hasCreateContextExtensionsEnabled)
     {
-        destroyGL();
-        return false;
+        return EGL_NO_CONTEXT;
     }
 
     bool hasRobustness = strstr(displayExtensions, "EGL_EXT_create_context_robustness") != nullptr;
     if (mRobustAccess && !hasRobustness)
     {
-        destroyGL();
-        return false;
+        return EGL_NO_CONTEXT;
     }
 
     bool hasBindGeneratesResource =
         strstr(displayExtensions, "EGL_CHROMIUM_create_context_bind_generates_resource") != nullptr;
     if (!mBindGeneratesResource && !hasBindGeneratesResource)
     {
-        destroyGL();
-        return false;
+        return EGL_NO_CONTEXT;
     }
 
     bool hasClientArraysExtension =
@@ -349,23 +344,20 @@ bool EGLWindow::initializeContext()
     if (!mClientArraysEnabled && !hasClientArraysExtension)
     {
         // Non-default state requested without the extension present
-        destroyGL();
-        return false;
+        return EGL_NO_CONTEXT;
     }
 
     bool hasProgramCacheControlExtension =
         strstr(displayExtensions, "EGL_ANGLE_program_cache_control ") != nullptr;
     if (mContextProgramCacheEnabled.valid() && !hasProgramCacheControlExtension)
     {
-        destroyGL();
-        return false;
+        return EGL_NO_CONTEXT;
     }
 
     eglBindAPI(EGL_OPENGL_ES_API);
     if (eglGetError() != EGL_SUCCESS)
     {
-        destroyGL();
-        return false;
+        return EGL_NO_CONTEXT;
     }
 
     std::vector<EGLint> contextAttributes;
@@ -433,8 +425,19 @@ bool EGLWindow::initializeContext()
     }
     contextAttributes.push_back(EGL_NONE);
 
-    mContext = eglCreateContext(mDisplay, mConfig, nullptr, &contextAttributes[0]);
+    EGLContext context = eglCreateContext(mDisplay, mConfig, nullptr, &contextAttributes[0]);
     if (eglGetError() != EGL_SUCCESS)
+    {
+        return EGL_NO_CONTEXT;
+    }
+
+    return context;
+}
+
+bool EGLWindow::initializeContext()
+{
+    mContext = createContext(EGL_NO_CONTEXT);
+    if (mContext == EGL_NO_CONTEXT)
     {
         destroyGL();
         return false;

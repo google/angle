@@ -118,6 +118,9 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     // Only initializes the Display and Surface.
     bool initializeDisplayAndSurface(OSWindow *osWindow);
 
+    // Create an EGL context with this window's configuration
+    EGLContext createContext(EGLContext share) const;
+
     // Only initializes the Context.
     bool initializeContext();
 
