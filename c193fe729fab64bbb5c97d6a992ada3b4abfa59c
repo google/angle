@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "bfaa8fe1_abe08edd",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-04-30T14:43:06Z",
+      "side": 1,
+      "message": "reversed SGTM",
+      "parentUuid": "770f6684_1696edf5",
+      "range": {
+        "startLine": 58,
+        "startChar": 9,
+        "endLine": 58,
+        "endChar": 19
+      },
+      "revId": "c193fe729fab64bbb5c97d6a992ada3b4abfa59c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "112b43de_72cd3e8a",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 6
