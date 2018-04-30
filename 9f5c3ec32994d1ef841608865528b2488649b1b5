@@ -22,6 +22,30 @@
       "revId": "9f5c3ec32994d1ef841608865528b2488649b1b5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27a1b020_cc48e7e0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-30T15:03:24Z",
+      "side": 1,
+      "message": "+1, see a lot of hard coded locations and sizes for the shaders.  Using the internal enums and shader maps should be great.",
+      "parentUuid": "e2eca346_423be27f",
+      "range": {
+        "startLine": 637,
+        "startChar": 21,
+        "endLine": 637,
+        "endChar": 22
+      },
+      "revId": "9f5c3ec32994d1ef841608865528b2488649b1b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
