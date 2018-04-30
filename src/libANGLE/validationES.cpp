@@ -1294,14 +1294,13 @@ bool ValidateBlitFramebufferParameters(Context *context,
         return false;
     }
 
-    if (context->getExtensions().webglCompatibility)
+    // This validation is specified in the WebGL 2.0 spec and not in the GLES 3.0.5 spec, but we
+    // always run it in order to avoid triggering driver bugs.
+    if (DifferenceCanOverflow(srcX0, srcX1) || DifferenceCanOverflow(srcY0, srcY1) ||
+        DifferenceCanOverflow(dstX0, dstX1) || DifferenceCanOverflow(dstY0, dstY1))
     {
-        if (DifferenceCanOverflow(srcX0, srcX1) || DifferenceCanOverflow(srcY0, srcY1) ||
-            DifferenceCanOverflow(dstX0, dstX1) || DifferenceCanOverflow(dstY0, dstY1))
-        {
-            ANGLE_VALIDATION_ERR(context, InvalidValue(), BlitDimensionsOutOfRange);
-            return false;
-        }
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), BlitDimensionsOutOfRange);
+        return false;
     }
 
     bool sameBounds = srcX0 == dstX0 && srcY0 == dstY0 && srcX1 == dstX1 && srcY1 == dstY1;
