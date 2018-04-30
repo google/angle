@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "770f6684_1696edf5",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-04-30T13:35:21Z",
+      "side": 1,
+      "message": "WebGL spec uses \"flipped\" for this, in UNPACK_FLIP_Y_WEBGL. How about \"reversed\"? That\u0027s the term the GLES 3.0 spec uses.",
+      "parentUuid": "5c7baf3e_ed7ae63f",
+      "range": {
+        "startLine": 58,
+        "startChar": 9,
+        "endLine": 58,
+        "endChar": 19
+      },
+      "revId": "c193fe729fab64bbb5c97d6a992ada3b4abfa59c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "112b43de_72cd3e8a",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 6
