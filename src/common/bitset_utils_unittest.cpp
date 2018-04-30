@@ -55,7 +55,7 @@ TEST_F(BitSetIteratorTest, EmptySet)
     for (size_t bit : mStateBits)
     {
         sawBit = true;
-        UNUSED_VARIABLE(bit);
+        ANGLE_UNUSED_VARIABLE(bit);
     }
     EXPECT_FALSE(sawBit);
 }

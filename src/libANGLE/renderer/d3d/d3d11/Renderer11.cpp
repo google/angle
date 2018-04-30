@@ -1259,7 +1259,7 @@ NativeWindowD3D *Renderer11::createNativeWindow(EGLNativeWindowType window,
                                                 const egl::AttributeMap &attribs) const
 {
 #ifdef ANGLE_ENABLE_WINDOWS_STORE
-    UNUSED_VARIABLE(attribs);
+    ANGLE_UNUSED_VARIABLE(attribs);
     return new NativeWindow11WinRT(window, config->alphaSize > 0);
 #else
     return new NativeWindow11Win32(

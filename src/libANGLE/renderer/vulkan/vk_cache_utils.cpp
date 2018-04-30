@@ -246,7 +246,7 @@ Error InitializeRenderPassFromDesc(VkDevice device,
 // RenderPassDesc implementation.
 RenderPassDesc::RenderPassDesc()
 {
-    UNUSED_VARIABLE(mPadding);
+    ANGLE_UNUSED_VARIABLE(mPadding);
     memset(this, 0, sizeof(RenderPassDesc));
 }
 

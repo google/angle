@@ -297,8 +297,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mZeroFilledBuffer(1000u)
 {
     // Needed to solve a Clang warning of unused variables.
-    UNUSED_VARIABLE(mSavedArgsType);
-    UNUSED_VARIABLE(mParamsBuffer);
+    ANGLE_UNUSED_VARIABLE(mSavedArgsType);
+    ANGLE_UNUSED_VARIABLE(mParamsBuffer);
 
     mImplementation->setMemoryProgramCache(memoryProgramCache);
 

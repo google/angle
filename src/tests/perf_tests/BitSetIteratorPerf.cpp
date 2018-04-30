@@ -42,7 +42,7 @@ void BitSetIteratorPerfTest<T>::step()
 
     for (size_t bit : mBits)
     {
-        UNUSED_VARIABLE(bit);
+        ANGLE_UNUSED_VARIABLE(bit);
     }
 
     mBits.reset();

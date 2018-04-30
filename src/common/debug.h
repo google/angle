@@ -259,7 +259,7 @@ std::ostream &FmtHexInt(std::ostream &os, T value)
 #define UNREACHABLE_IS_NORETURN 0
 #endif  // defined(ANGLE_ENABLE_ASSERTS)
 
-#define UNUSED_VARIABLE(variable) ((void)variable)
+#define ANGLE_UNUSED_VARIABLE(variable) (static_cast<void>(variable))
 
 // A macro to indicate unimplemented functionality
 #ifndef NOASSERT_UNIMPLEMENTED
