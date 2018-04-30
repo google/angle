@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9e99d4f_0e97ab6f",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-30T13:48:12Z",
+      "side": 1,
+      "message": "I think you might have misplaced this STEP1 comment? It should be under the definition of the function?",
+      "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14d165ea_fd8dfda9",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-04-30T13:48:12Z",
+      "side": 1,
+      "message": "Can we put this higher in the file so its not intertwined with the actual steps ?\n\nIt would be clearer if we could clearly read the steps this script is doing and look up all the functions / constants independantly at the top of the file.",
+      "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
