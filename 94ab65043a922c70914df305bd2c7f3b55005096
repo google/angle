@@ -33,6 +33,52 @@
       "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfb4dc9e_b905ac16",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-30T15:00:35Z",
+      "side": 1,
+      "message": "I think we could merge the two functions into one using output parameters, they\u0027re both always called together.",
+      "range": {
+        "startLine": 115,
+        "startChar": 16,
+        "endLine": 115,
+        "endChar": 37
+      },
+      "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb8158a3_8a7bca5e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-30T15:00:35Z",
+      "side": 1,
+      "message": "angle::PackedEnumMap should work here as long as the enum has an EnumCount value.",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 81
+      },
+      "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
