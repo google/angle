@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf30aad0_df87d014",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-30T15:40:16Z",
+      "side": 1,
+      "message": "nit: refactor GetColorComponentFlags to take 4 bools (with an overload for gl::BlendState) and use it here?",
+      "range": {
+        "startLine": 394,
+        "startChar": 29,
+        "endLine": 397,
+        "endChar": 98
+      },
+      "revId": "1efbcb35d3d72d3645433baf244a11378250476c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbdcb882_6d3df9eb",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-30T15:40:16Z",
+      "side": 1,
+      "message": "Can you assert that mMaskedClearDescriptorSet is not valid either",
+      "revId": "1efbcb35d3d72d3645433baf244a11378250476c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43526972_74920458",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-04-30T15:40:16Z",
+      "side": 1,
+      "message": "Also add TODOs about pausing queries/transform feedback/etc.",
+      "range": {
+        "startLine": 714,
+        "startChar": 4,
+        "endLine": 714,
+        "endChar": 93
+      },
+      "revId": "1efbcb35d3d72d3645433baf244a11378250476c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
