@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "11c05348_5006a291",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-01T14:36:39Z",
+      "side": 1,
+      "message": "I think this should be resolved with fixing your next comment.",
+      "parentUuid": "b9e99d4f_0e97ab6f",
+      "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14d165ea_fd8dfda9",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
         "patchSetId": 4
@@ -33,6 +51,24 @@
       "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11a8a5ab_f29e3c95",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-01T14:36:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14d165ea_fd8dfda9",
+      "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "02801e7b_ac52c2f6",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-01T14:36:39Z",
+      "side": 1,
+      "message": "Done, I redid the switch into a constexpr array, should be better this way anyway.",
+      "parentUuid": "dfb4dc9e_b905ac16",
+      "range": {
+        "startLine": 115,
+        "startChar": 16,
+        "endLine": 115,
+        "endChar": 37
+      },
+      "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb8158a3_8a7bca5e",
         "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders.h",
         "patchSetId": 4
@@ -79,6 +139,30 @@
       "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b17ca09c_8910f08b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-01T14:36:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb8158a3_8a7bca5e",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 81
+      },
+      "revId": "94ab65043a922c70914df305bd2c7f3b55005096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
