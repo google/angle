@@ -15,18 +15,6 @@ using namespace angle;
 
 namespace
 {
-constexpr char kBasicVertexShader[] =
-    R"(attribute vec3 position;
-void main()
-{
-    gl_Position = vec4(position, 1);
-})";
-
-constexpr char kGreenFragmentShader[] =
-    R"(void main()
-{
-    gl_FragColor = vec4(0, 1, 0, 1);
-})";
 
 class StateChangeTest : public ANGLETest
 {
@@ -982,20 +970,20 @@ class LineLoopStateChangeTest : public StateChangeTest
         int quarterHeight = getWindowHeight() / 4;
 
         // Bottom left
-        EXPECT_PIXEL_COLOR_EQ(quarterWidth, quarterHeight, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(quarterWidth, quarterHeight, GLColor::blue);
 
         // Top left
-        EXPECT_PIXEL_COLOR_EQ(quarterWidth, (quarterHeight * 3), GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(quarterWidth, (quarterHeight * 3), GLColor::blue);
 
         // Top right
         // The last pixel isn't filled on a line loop so we check the pixel right before.
-        EXPECT_PIXEL_COLOR_EQ((quarterWidth * 3), (quarterHeight * 3) - 1, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ((quarterWidth * 3), (quarterHeight * 3) - 1, GLColor::blue);
 
         // dead center to validate the hourglass.
-        EXPECT_PIXEL_COLOR_EQ((quarterWidth * 2), quarterHeight * 2, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ((quarterWidth * 2), quarterHeight * 2, GLColor::blue);
 
         // Verify line is closed between the 2 last vertices
-        EXPECT_PIXEL_COLOR_EQ((quarterWidth * 2), quarterHeight, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ((quarterWidth * 2), quarterHeight, GLColor::blue);
     }
 
     GLint mPositionLocation;
@@ -1004,7 +992,7 @@ class LineLoopStateChangeTest : public StateChangeTest
 // Draw an hourglass with a drawElements call followed by a square with drawArrays.
 TEST_P(LineLoopStateChangeTest, DrawElementsThenDrawArrays)
 {
-    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     glUseProgram(program);
 
     // We expect to draw a square with these 4 vertices with a drawArray call.
@@ -1015,7 +1003,7 @@ TEST_P(LineLoopStateChangeTest, DrawElementsThenDrawArrays)
     // If we use these indices to draw however, we should be drawing an hourglass.
     auto indices = std::vector<GLushort>{0, 2, 1, 3};
 
-    mPositionLocation = glGetAttribLocation(program, "position");
+    mPositionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, mPositionLocation);
 
     GLBuffer vertexBuffer;
@@ -1041,7 +1029,7 @@ TEST_P(LineLoopStateChangeTest, DrawElementsThenDrawArrays)
 // Draw line loop using a drawArrays followed by an hourglass with drawElements.
 TEST_P(LineLoopStateChangeTest, DrawArraysThenDrawElements)
 {
-    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     glUseProgram(program);
 
     // We expect to draw a square with these 4 vertices with a drawArray call.
@@ -1052,7 +1040,7 @@ TEST_P(LineLoopStateChangeTest, DrawArraysThenDrawElements)
     // If we use these indices to draw however, we should be drawing an hourglass.
     auto indices = std::vector<GLushort>{0, 2, 1, 3};
 
-    mPositionLocation = glGetAttribLocation(program, "position");
+    mPositionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, mPositionLocation);
 
     GLBuffer vertexBuffer;
@@ -1141,7 +1129,7 @@ void SimpleStateChangeTest::simpleDrawWithColor(const GLColor &color)
 // frame.
 TEST_P(SimpleStateChangeTest, DrawArraysThenDrawElements)
 {
-    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     glUseProgram(program);
 
     // We expect to draw a triangle with the first 3 points to the left, then another triangle with
@@ -1155,7 +1143,7 @@ TEST_P(SimpleStateChangeTest, DrawArraysThenDrawElements)
     // If we use these indices to draw we'll be using the last 2 vertex only to draw.
     auto indices = std::vector<GLushort>{2, 3, 4};
 
-    GLint positionLocation = glGetAttribLocation(program, "position");
+    GLint positionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, positionLocation);
 
     GLBuffer vertexBuffer;
@@ -1186,10 +1174,10 @@ TEST_P(SimpleStateChangeTest, DrawArraysThenDrawElements)
     int halfHeight   = getWindowHeight() / 2;
 
     // Validate triangle to the left
-    EXPECT_PIXEL_COLOR_EQ(quarterWidth, halfHeight, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(quarterWidth, halfHeight, GLColor::blue);
 
     // Validate triangle to the right
-    EXPECT_PIXEL_COLOR_EQ((quarterWidth * 3), halfHeight, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ((quarterWidth * 3), halfHeight, GLColor::blue);
 }
 
 // Handles deleting a Buffer when it's being used.
@@ -1554,17 +1542,6 @@ TEST_P(SimpleStateChangeTest, UpdateTextureInUse)
     ASSERT_GL_NO_ERROR();
 }
 
-const char kSolidColorVertexShader[] = R"(attribute vec2 position;
-void main()
-{
-    gl_Position = vec4(position, 0, 1);
-})";
-
-const char kSolidColorFragmentShader[] = R"(void main()
-{
-    gl_FragColor = vec4(1, 0, 0, 1);
-})";
-
 // Tests deleting a Framebuffer that is in use.
 TEST_P(SimpleStateChangeTest, DeleteFramebufferInUse)
 {
@@ -1583,8 +1560,8 @@ TEST_P(SimpleStateChangeTest, DeleteFramebufferInUse)
     glViewport(0, 0, kSize, kSize);
 
     // Draw a solid red color to the framebuffer.
-    ANGLE_GL_PROGRAM(program, kSolidColorVertexShader, kSolidColorFragmentShader);
-    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
 
     // Delete the framebuffer while the call is in flight.
     framebuffer.reset();
@@ -1668,7 +1645,7 @@ TEST_P(SimpleStateChangeTest, RedefineFramebufferTexture)
 // Validates disabling cull face really disables it.
 TEST_P(SimpleStateChangeTest, EnableAndDisableCullFace)
 {
-    ANGLE_GL_PROGRAM(program, kSolidColorVertexShader, kSolidColorFragmentShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program);
 
     glClear(GL_COLOR_BUFFER_BIT);
@@ -1676,7 +1653,7 @@ TEST_P(SimpleStateChangeTest, EnableAndDisableCullFace)
 
     glCullFace(GL_FRONT);
 
-    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.0f, 1.0f, true);
 
     ASSERT_GL_NO_ERROR();
 
@@ -1685,7 +1662,7 @@ TEST_P(SimpleStateChangeTest, EnableAndDisableCullFace)
     // Disable cull face and redraw, then make sure we have the quad drawn.
     glDisable(GL_CULL_FACE);
 
-    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.0f, 1.0f, true);
 
     ASSERT_GL_NO_ERROR();
 
@@ -1699,7 +1676,7 @@ TEST_P(SimpleStateChangeTest, ScissorTest)
     // 2- Enable it and validate its working.
     // 3- Disable the scissor validate its not used anymore.
 
-    ANGLE_GL_PROGRAM(program, kSolidColorVertexShader, kSolidColorFragmentShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -1708,7 +1685,7 @@ TEST_P(SimpleStateChangeTest, ScissorTest)
               getWindowHeight() / 2);
 
     // Fill the whole screen with a quad.
-    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.0f, 1.0f, true);
 
     ASSERT_GL_NO_ERROR();
 
@@ -1722,7 +1699,7 @@ TEST_P(SimpleStateChangeTest, ScissorTest)
     glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_SCISSOR_TEST);
 
-    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.0f, 1.0f, true);
 
     ASSERT_GL_NO_ERROR();
 
@@ -1739,7 +1716,7 @@ TEST_P(SimpleStateChangeTest, ScissorTest)
     // Clear everything and start over with the test enabled.
     glClear(GL_COLOR_BUFFER_BIT);
 
-    drawQuad(program.get(), "position", 0.0f, 1.0f, true);
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.0f, 1.0f, true);
 
     ASSERT_GL_NO_ERROR();
 
@@ -1762,15 +1739,7 @@ void main()
     gl_Position = vec4(position + uniPosModifier, 0, 1);
 })";
 
-    constexpr char kColorUniformFragmentShader[] = R"(
-precision mediump float;
-uniform vec4 uniColor;
-void main()
-{
-    gl_FragColor = uniColor;
-})";
-
-    ANGLE_GL_PROGRAM(program, kPositionUniformVertexShader, kColorUniformFragmentShader);
+    ANGLE_GL_PROGRAM(program, kPositionUniformVertexShader, essl1_shaders::fs::UniformColor());
     glUseProgram(program);
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1778,7 +1747,7 @@ void main()
 
     GLint posUniformLocation = glGetUniformLocation(program, "uniPosModifier");
     ASSERT_NE(posUniformLocation, -1);
-    GLint colorUniformLocation = glGetUniformLocation(program, "uniColor");
+    GLint colorUniformLocation = glGetUniformLocation(program, essl1_shaders::ColorUniform());
     ASSERT_NE(colorUniformLocation, -1);
 
     // draw a red quad to the left side.
@@ -1852,19 +1821,6 @@ TEST_P(SimpleStateChangeTest, RedefineRenderbufferInUse)
 // at the full size of the new framebuffer.
 TEST_P(SimpleStateChangeTest, ChangeFramebufferSizeBetweenTwoDraws)
 {
-    constexpr char vertexShader[] =
-        R"(attribute vec2 position;
-void main()
-{
-    gl_Position = vec4(position, 0, 1);
-})";
-
-    constexpr char fragShader[] = R"(precision mediump float;
-uniform vec4 color;
-void main() {
-    gl_FragColor = color;
-})";
-
     constexpr size_t kSmallTextureSize = 2;
     constexpr size_t kBigTextureSize   = 4;
 
@@ -1894,9 +1850,9 @@ void main() {
     ASSERT_GL_NO_ERROR();
     ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
-    ANGLE_GL_PROGRAM(program, vertexShader, fragShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
     glUseProgram(program);
-    GLint uniformLocation = glGetUniformLocation(program, "color");
+    GLint uniformLocation = glGetUniformLocation(program, essl1_shaders::ColorUniform());
     ASSERT_NE(uniformLocation, -1);
 
     // Bind to the first framebuffer for drawing.
@@ -1912,7 +1868,7 @@ void main() {
     glViewport(0, 0, kSmallTextureSize, kSmallTextureSize);
 
     // Draw a full sized red quad
-    drawQuad(program, "position", 1.0f, 1.0f, true);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
 
     // Bind to the second (bigger) framebuffer
@@ -1925,7 +1881,7 @@ void main() {
     glUniform4f(uniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
 
     // Draw again and we should fill everything with green and expect everything to be green.
-    drawQuad(program, "position", 1.0f, 1.0f, true);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
 
     EXPECT_PIXEL_RECT_EQ(0, 0, kBigTextureSize, kBigTextureSize, GLColor::green);
