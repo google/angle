@@ -19,11 +19,6 @@
 
 namespace rx
 {
-namespace
-{
-constexpr uint32_t kShaderTypeCount = 2;
-}  // anonymous namespace.
-
 class ProgramVk : public ProgramImpl
 {
   public:
@@ -163,8 +158,8 @@ class ProgramVk : public ProgramImpl
         std::vector<sh::BlockMemberInfo> uniformLayout;
     };
 
-    std::array<DefaultUniformBlock, kShaderTypeCount> mDefaultUniformBlocks;
-    std::array<uint32_t, kShaderTypeCount> mUniformBlocksOffsets;
+    vk::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
+    vk::ShaderMap<uint32_t> mUniformBlocksOffsets;
 
     // This is a special "empty" placeholder buffer for when a shader has no uniforms.
     // It is necessary because we want to keep a compatible pipeline layout in all cases,

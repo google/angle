@@ -18,6 +18,7 @@
 #include "common/debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Observer.h"
+#include "libANGLE/PackedEnums.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
 #define ANGLE_GL_OBJECTS_X(PROC) \
@@ -649,6 +650,20 @@ Error AllocateImageMemory(VkDevice device,
                           size_t *requiredSizeOut);
 
 using ShaderAndSerial = ObjectAndSerial<ShaderModule>;
+
+// TODO(jmadill): Use gl::ShaderType when possible. http://anglebug.com/2522
+enum class ShaderType
+{
+    VertexShader,
+    FragmentShader,
+    EnumCount,
+    InvalidEnum = EnumCount,
+};
+
+template <typename T>
+using ShaderMap = angle::PackedEnumMap<ShaderType, T>;
+
+using AllShaderTypes = angle::AllEnums<vk::ShaderType>;
 }  // namespace vk
 
 namespace gl_vk

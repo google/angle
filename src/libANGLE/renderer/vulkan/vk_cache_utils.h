@@ -239,7 +239,7 @@ struct PackedColorBlendStateInfo final
 
 static_assert(sizeof(PackedColorBlendStateInfo) == 96, "Size check failed");
 
-using ShaderStageInfo       = std::array<PackedShaderStageInfo, 2>;
+using ShaderStageInfo       = vk::ShaderMap<PackedShaderStageInfo>;
 using VertexInputBindings   = gl::AttribArray<PackedVertexInputBindingDesc>;
 using VertexInputAttributes = gl::AttribArray<PackedVertexInputAttributeDesc>;
 

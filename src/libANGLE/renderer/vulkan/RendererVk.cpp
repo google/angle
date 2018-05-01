@@ -961,8 +961,10 @@ vk::Error RendererVk::getPipeline(const ProgramVk *programVk,
                                   const gl::AttributesMask &activeAttribLocationsMask,
                                   vk::PipelineAndSerial **pipelineOut)
 {
-    ASSERT(programVk->getVertexModuleSerial() == desc.getShaderStageInfo()[0].moduleSerial);
-    ASSERT(programVk->getFragmentModuleSerial() == desc.getShaderStageInfo()[1].moduleSerial);
+    ASSERT(programVk->getVertexModuleSerial() ==
+           desc.getShaderStageInfo()[vk::ShaderType::VertexShader].moduleSerial);
+    ASSERT(programVk->getFragmentModuleSerial() ==
+           desc.getShaderStageInfo()[vk::ShaderType::FragmentShader].moduleSerial);
 
     // Pull in a compatible RenderPass.
     vk::RenderPass *compatibleRenderPass = nullptr;

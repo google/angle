@@ -634,10 +634,10 @@ const ShaderStageInfo &PipelineDesc::getShaderStageInfo() const
 void PipelineDesc::updateShaders(ProgramVk *programVk)
 {
     ASSERT(programVk->getVertexModuleSerial() < std::numeric_limits<uint32_t>::max());
-    mShaderStageInfo[0].moduleSerial =
+    mShaderStageInfo[ShaderType::VertexShader].moduleSerial =
         static_cast<uint32_t>(programVk->getVertexModuleSerial().getValue());
     ASSERT(programVk->getFragmentModuleSerial() < std::numeric_limits<uint32_t>::max());
-    mShaderStageInfo[1].moduleSerial =
+    mShaderStageInfo[ShaderType::FragmentShader].moduleSerial =
         static_cast<uint32_t>(programVk->getFragmentModuleSerial().getValue());
 }
 

@@ -129,30 +129,6 @@ vk::Error SyncDefaultUniformBlock(RendererVk *renderer,
     ANGLE_TRY(dynamicBuffer->flush(renderer->getDevice()));
     return vk::NoError();
 }
-
-// TODO(jiawei.shao@intel.com): Fully remove this enum by gl::ShaderType. (BUG=angleproject:2169)
-enum ShaderIndex : uint32_t
-{
-    MinShaderIndex = 0,
-    VertexShader   = MinShaderIndex,
-    FragmentShader = 1,
-    MaxShaderIndex = kShaderTypeCount,
-};
-
-gl::Shader *GetShader(const gl::ProgramState &programState, uint32_t shaderIndex)
-{
-    switch (shaderIndex)
-    {
-        case VertexShader:
-            return programState.getAttachedShader(gl::ShaderType::Vertex);
-        case FragmentShader:
-            return programState.getAttachedShader(gl::ShaderType::Fragment);
-        default:
-            UNREACHABLE();
-            return nullptr;
-    }
-}
-
 }  // anonymous namespace
 
 ProgramVk::DefaultUniformBlock::DefaultUniformBlock()
@@ -303,14 +279,15 @@ gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
     VkDevice device      = contextVk->getDevice();
 
     // Process vertex and fragment uniforms into std140 packing.
-    std::array<sh::BlockLayoutMap, MaxShaderIndex> layoutMap;
-    std::array<size_t, MaxShaderIndex> requiredBufferSize = {{0, 0}};
+    vk::ShaderMap<sh::BlockLayoutMap> layoutMap;
+    vk::ShaderMap<size_t> requiredBufferSize;
+    requiredBufferSize.fill(0);
 
-    for (uint32_t shaderIndex = MinShaderIndex; shaderIndex < MaxShaderIndex; ++shaderIndex)
+    for (vk::ShaderType shaderType : vk::AllShaderTypes())
     {
-        ANGLE_TRY(InitDefaultUniformBlock(glContext, GetShader(mState, shaderIndex),
-                                          &layoutMap[shaderIndex],
-                                          &requiredBufferSize[shaderIndex]));
+        gl::ShaderType glShaderType = static_cast<gl::ShaderType>(shaderType);
+        ANGLE_TRY(InitDefaultUniformBlock(glContext, mState.getAttachedShader(glShaderType),
+                                          &layoutMap[shaderType], &requiredBufferSize[shaderType]));
     }
 
     // Init the default block layout info.
@@ -318,7 +295,7 @@ gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
     const auto &uniforms  = mState.getUniforms();
     for (size_t locationIndex = 0; locationIndex < locations.size(); ++locationIndex)
     {
-        std::array<sh::BlockMemberInfo, MaxShaderIndex> layoutInfo;
+        vk::ShaderMap<sh::BlockMemberInfo> layoutInfo;
 
         const auto &location = locations[locationIndex];
         if (location.used() && !location.ignored)
@@ -337,45 +314,45 @@ gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
 
             bool found = false;
 
-            for (uint32_t shaderIndex = MinShaderIndex; shaderIndex < MaxShaderIndex; ++shaderIndex)
+            for (vk::ShaderType shaderType : vk::AllShaderTypes())
             {
-                auto it = layoutMap[shaderIndex].find(uniformName);
-                if (it != layoutMap[shaderIndex].end())
+                auto it = layoutMap[shaderType].find(uniformName);
+                if (it != layoutMap[shaderType].end())
                 {
                     found                   = true;
-                    layoutInfo[shaderIndex] = it->second;
+                    layoutInfo[shaderType]  = it->second;
                 }
             }
 
             ASSERT(found);
         }
 
-        for (uint32_t shaderIndex = MinShaderIndex; shaderIndex < MaxShaderIndex; ++shaderIndex)
+        for (vk::ShaderType shaderType : vk::AllShaderTypes())
         {
-            mDefaultUniformBlocks[shaderIndex].uniformLayout.push_back(layoutInfo[shaderIndex]);
+            mDefaultUniformBlocks[shaderType].uniformLayout.push_back(layoutInfo[shaderType]);
         }
     }
 
     bool anyDirty = false;
     bool allDirty = true;
 
-    for (uint32_t shaderIndex = MinShaderIndex; shaderIndex < MaxShaderIndex; ++shaderIndex)
+    for (vk::ShaderType shaderType : vk::AllShaderTypes())
     {
-        if (requiredBufferSize[shaderIndex] > 0)
+        if (requiredBufferSize[shaderType] > 0)
         {
-            if (!mDefaultUniformBlocks[shaderIndex].uniformData.resize(
-                    requiredBufferSize[shaderIndex]))
+            if (!mDefaultUniformBlocks[shaderType].uniformData.resize(
+                    requiredBufferSize[shaderType]))
             {
                 return gl::OutOfMemory() << "Memory allocation failure.";
             }
             size_t minAlignment = static_cast<size_t>(
                 renderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
 
-            mDefaultUniformBlocks[shaderIndex].storage.init(minAlignment);
+            mDefaultUniformBlocks[shaderType].storage.init(minAlignment);
 
             // Initialize uniform buffer memory to zero by default.
-            mDefaultUniformBlocks[shaderIndex].uniformData.fill(0);
-            mDefaultUniformBlocks[shaderIndex].uniformsDirty = true;
+            mDefaultUniformBlocks[shaderType].uniformData.fill(0);
+            mDefaultUniformBlocks[shaderType].uniformsDirty = true;
 
             anyDirty = true;
         }
@@ -505,7 +482,7 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
     ASSERT(shaderType != gl::ShaderType::InvalidEnum);
 
     const DefaultUniformBlock &uniformBlock =
-        mDefaultUniformBlocks[static_cast<GLuint>(shaderType)];
+        mDefaultUniformBlocks[static_cast<vk::ShaderType>(shaderType)];
     const sh::BlockMemberInfo &layoutInfo   = uniformBlock.uniformLayout[location];
 
     ASSERT(linkedUniform.typeInfo->componentType == entryPointType ||
@@ -737,8 +714,8 @@ void ProgramVk::getUniformuiv(const gl::Context *context, GLint location, GLuint
 
 vk::Error ProgramVk::updateUniforms(ContextVk *contextVk)
 {
-    if (!mDefaultUniformBlocks[VertexShader].uniformsDirty &&
-        !mDefaultUniformBlocks[FragmentShader].uniformsDirty)
+    if (!mDefaultUniformBlocks[vk::ShaderType::VertexShader].uniformsDirty &&
+        !mDefaultUniformBlocks[vk::ShaderType::FragmentShader].uniformsDirty)
     {
         return vk::NoError();
     }
@@ -748,16 +725,16 @@ vk::Error ProgramVk::updateUniforms(ContextVk *contextVk)
     // Update buffer memory by immediate mapping. This immediate update only works once.
     // TODO(jmadill): Handle inserting updates into the command stream, or use dynamic buffers.
     bool anyNewBufferAllocated = false;
-    for (size_t index = 0; index < mDefaultUniformBlocks.size(); index++)
+    for (vk::ShaderType shaderType : vk::AllShaderTypes())
     {
-        DefaultUniformBlock &uniformBlock = mDefaultUniformBlocks[index];
+        DefaultUniformBlock &uniformBlock = mDefaultUniformBlocks[shaderType];
 
         if (uniformBlock.uniformsDirty)
         {
             bool bufferModified = false;
             ANGLE_TRY(SyncDefaultUniformBlock(contextVk->getRenderer(), &uniformBlock.storage,
                                               uniformBlock.uniformData,
-                                              &mUniformBlocksOffsets[index], &bufferModified));
+                                              &mUniformBlocksOffsets[shaderType], &bufferModified));
             uniformBlock.uniformsDirty = false;
 
             if (bufferModified)
@@ -780,14 +757,14 @@ vk::Error ProgramVk::updateUniforms(ContextVk *contextVk)
 
 vk::Error ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
 {
-    std::array<VkDescriptorBufferInfo, MaxShaderIndex> descriptorBufferInfo;
-    std::array<VkWriteDescriptorSet, MaxShaderIndex> writeDescriptorInfo;
-    uint32_t bufferCount = 0;
+    vk::ShaderMap<VkDescriptorBufferInfo> descriptorBufferInfo;
+    vk::ShaderMap<VkWriteDescriptorSet> writeDescriptorInfo;
 
-    for (auto &uniformBlock : mDefaultUniformBlocks)
+    for (vk::ShaderType shaderType : vk::AllShaderTypes())
     {
-        auto &bufferInfo = descriptorBufferInfo[bufferCount];
-        auto &writeInfo  = writeDescriptorInfo[bufferCount];
+        auto &uniformBlock = mDefaultUniformBlocks[shaderType];
+        auto &bufferInfo   = descriptorBufferInfo[shaderType];
+        auto &writeInfo    = writeDescriptorInfo[shaderType];
 
         if (!uniformBlock.uniformData.empty())
         {
@@ -804,20 +781,18 @@ vk::Error ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk)
         writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         writeInfo.pNext            = nullptr;
         writeInfo.dstSet           = mDescriptorSets[0];
-        writeInfo.dstBinding       = bufferCount;
+        writeInfo.dstBinding       = static_cast<uint32_t>(shaderType);
         writeInfo.dstArrayElement  = 0;
         writeInfo.descriptorCount  = 1;
         writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         writeInfo.pImageInfo       = nullptr;
         writeInfo.pBufferInfo      = &bufferInfo;
         writeInfo.pTexelBufferView = nullptr;
-
-        bufferCount++;
     }
 
     VkDevice device = contextVk->getDevice();
 
-    vkUpdateDescriptorSets(device, bufferCount, writeDescriptorInfo.data(), 0, nullptr);
+    vkUpdateDescriptorSets(device, 2, writeDescriptorInfo.data(), 0, nullptr);
 
     return vk::NoError();
 }
