@@ -4,6 +4,7 @@
 
 import("//build_overrides/build.gni")
 import("//build/config/ui.gni")  # import the use_x11 variable
+import("//build/config/sanitizers/sanitizers.gni")
 if (is_android) {
   import("//build/config/android/config.gni")
 }
@@ -50,7 +51,10 @@ declare_args() {
 declare_args() {
   angle_enable_gl_null = angle_enable_gl
   angle_enable_hlsl = angle_enable_d3d9 || angle_enable_d3d11
-  angle_enable_vulkan_validation_layers = angle_enable_vulkan
+
+  # Disable the layers in ubsan builds because of really slow builds.
+  angle_enable_vulkan_validation_layers =
+      angle_enable_vulkan && !is_ubsan && !is_tsan && !is_asan
 }
 
 if (is_win) {
