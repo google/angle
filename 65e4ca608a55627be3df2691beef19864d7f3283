@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1864c42e_03b5f103",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-01T17:42:28Z",
+      "side": 1,
+      "message": "How does this work? I guess type of ANGLE_EAT_STREAM_PARAMETERS is std::ostream?\nThis doesn\u0027t appear in Chrome code ...",
+      "range": {
+        "startLine": 258,
+        "startChar": 54,
+        "endLine": 258,
+        "endChar": 69
+      },
+      "revId": "65e4ca608a55627be3df2691beef19864d7f3283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
