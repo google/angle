@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c9b468f_54a43fb6",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-01T13:38:53Z",
+      "side": 1,
+      "message": "is it possible to use shaders from the essl1_shaders namespace?",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 0
+      },
+      "revId": "9d59d4f9fb650ad0fcc6136b5f7d180f4c801477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acd8ce9f_93a6fa5c",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-01T13:38:53Z",
+      "side": 1,
+      "message": "nit: comment before tests - also can you move these into SimpleStateChangeTest?",
+      "range": {
+        "startLine": 242,
+        "startChar": 0,
+        "endLine": 242,
+        "endChar": 6
+      },
+      "revId": "9d59d4f9fb650ad0fcc6136b5f7d180f4c801477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59890172_de56351d",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-01T13:38:53Z",
+      "side": 1,
+      "message": "nit: comment before test",
+      "range": {
+        "startLine": 290,
+        "startChar": 0,
+        "endLine": 290,
+        "endChar": 6
+      },
+      "revId": "9d59d4f9fb650ad0fcc6136b5f7d180f4c801477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
