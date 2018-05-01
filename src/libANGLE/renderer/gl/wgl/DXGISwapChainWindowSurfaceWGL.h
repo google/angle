@@ -59,7 +59,8 @@ class DXGISwapChainWindowSurfaceWGL : public SurfaceWGL
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
-    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &data) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &data) override;
 
     HDC getDC() const override;
 
@@ -92,8 +93,6 @@ class DXGISwapChainWindowSurfaceWGL : public SurfaceWGL
     HANDLE mRenderbufferBufferHandle;
 
     GLuint mDepthRenderbufferID;
-
-    GLuint mFramebufferID;
 
     GLuint mTextureID;
     HANDLE mTextureHandle;

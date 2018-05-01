@@ -24,6 +24,7 @@
 
 namespace gl
 {
+class Context;
 class Framebuffer;
 class Texture;
 }
@@ -42,7 +43,6 @@ struct SurfaceState final : private angle::NonCopyable
 {
     SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn);
 
-    gl::Framebuffer *defaultFramebuffer;
     const egl::Config *config;
     AttributeMap attributes;
 };
@@ -79,6 +79,8 @@ class Surface : public gl::FramebufferAttachmentObject
     void setMultisampleResolve(EGLenum resolve);
     void setSwapBehavior(EGLenum behavior);
 
+    gl::Framebuffer *createDefaultFramebuffer(const gl::Context *context);
+
     const Config *getConfig() const;
 
     // width and height can change with client window resizing
@@ -100,7 +102,6 @@ class Surface : public gl::FramebufferAttachmentObject
     EGLenum getMultisampleResolve() const;
 
     gl::Texture *getBoundTexture() const { return mTexture.get(); }
-    gl::Framebuffer *getDefaultFramebuffer() { return mState.defaultFramebuffer; }
 
     EGLint isFixedSize() const;
 

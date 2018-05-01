@@ -113,15 +113,19 @@ DisplayOzone::Buffer::Buffer(DisplayOzone *display,
       mImage(EGL_NO_IMAGE_KHR),
       mColorBuffer(0),
       mDSBuffer(0),
-      mGLFB(0),
       mTexture(0)
 {
 }
 
 DisplayOzone::Buffer::~Buffer()
 {
-    mDisplay->mFunctionsGL->deleteFramebuffers(1, &mGLFB);
     reset();
+
+    FunctionsGL *gl = mDisplay->mFunctionsGL;
+    gl->deleteRenderbuffers(1, &mColorBuffer);
+    mColorBuffer = 0;
+    gl->deleteRenderbuffers(1, &mDSBuffer);
+    mDSBuffer = 0;
 }
 
 void DisplayOzone::Buffer::reset()
@@ -133,15 +137,8 @@ void DisplayOzone::Buffer::reset()
         mHasDRMFB = false;
     }
 
-    FunctionsGL *gl = mDisplay->mFunctionsGL;
-    gl->deleteRenderbuffers(1, &mColorBuffer);
-    mColorBuffer = 0;
-    gl->deleteRenderbuffers(1, &mDSBuffer);
-    mDSBuffer = 0;
-
-    // Here we might destroy the GL framebuffer (mGLFB) but unlike every other resource in Buffer,
-    // it does not get destroyed (and recreated) because when it is the default framebuffer for
-    // an ANGLE surface then ANGLE expects it to have the same lifetime as that surface.
+    // Make sure to keep the color and depth stencil buffers alive so they maintain the same GL IDs
+    // if they are bound to any emulated default framebuffer.
 
     if (mImage != EGL_NO_IMAGE_KHR)
     {
@@ -151,6 +148,7 @@ void DisplayOzone::Buffer::reset()
 
     if (mTexture)
     {
+        FunctionsGL *gl = mDisplay->mFunctionsGL;
         gl->deleteTextures(1, &mTexture);
         mTexture = 0;
     }
@@ -216,31 +214,15 @@ bool DisplayOzone::Buffer::resize(int32_t width, int32_t height)
     FunctionsGL *gl    = mDisplay->mFunctionsGL;
     StateManagerGL *sm = mDisplay->getRenderer()->getStateManager();
 
-    gl->genRenderbuffers(1, &mColorBuffer);
+    // Update the storage of the renderbuffers but don't generate new IDs. This will update all
+    // framebuffers they are bound to.
     sm->bindRenderbuffer(GL_RENDERBUFFER, mColorBuffer);
     gl->eGLImageTargetRenderbufferStorageOES(GL_RENDERBUFFER, mImage);
 
-    sm->bindFramebuffer(GL_FRAMEBUFFER, mGLFB);
-    gl->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER,
-                                mColorBuffer);
-
     if (mDepthBits || mStencilBits)
     {
-        gl->genRenderbuffers(1, &mDSBuffer);
         sm->bindRenderbuffer(GL_RENDERBUFFER, mDSBuffer);
         gl->renderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, width, height);
-    }
-
-    if (mDepthBits)
-    {
-        gl->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
-                                    mDSBuffer);
-    }
-
-    if (mStencilBits)
-    {
-        gl->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                                    mDSBuffer);
     }
 
     mWidth  = width;
@@ -251,14 +233,12 @@ bool DisplayOzone::Buffer::resize(int32_t width, int32_t height)
 bool DisplayOzone::Buffer::initialize(const NativeWindow *native)
 {
     mNative = native;
-    mDisplay->mFunctionsGL->genFramebuffers(1, &mGLFB);
-    return resize(native->width, native->height);
+    return createRenderbuffers() && resize(native->width, native->height);
 }
 
 bool DisplayOzone::Buffer::initialize(int width, int height)
 {
-    mDisplay->mFunctionsGL->genFramebuffers(1, &mGLFB);
-    return resize(width, height);
+    return createRenderbuffers() && resize(width, height);
 }
 
 void DisplayOzone::Buffer::bindTexImage()
@@ -305,29 +285,70 @@ uint32_t DisplayOzone::Buffer::getDRMFB()
     return mDRMFB;
 }
 
-FramebufferGL *DisplayOzone::Buffer::framebufferGL(const gl::FramebufferState &state)
+GLuint DisplayOzone::Buffer::createGLFB(const gl::Context *context)
 {
-    return new FramebufferGL(state, mGLFB, true);
+    const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    GLuint framebuffer = 0;
+    functions->genFramebuffers(1, &framebuffer);
+    stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER,
+                                       mColorBuffer);
+
+    if (mDepthBits)
+    {
+        functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                           mDSBuffer);
+    }
+
+    if (mStencilBits)
+    {
+        functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                                           mDSBuffer);
+    }
+
+    return framebuffer;
 }
 
-void DisplayOzone::Buffer::present()
+FramebufferGL *DisplayOzone::Buffer::framebufferGL(const gl::Context *context,
+                                                   const gl::FramebufferState &state)
+{
+    return new FramebufferGL(state, createGLFB(context), true);
+}
+
+void DisplayOzone::Buffer::present(const gl::Context *context)
 {
     if (mNative)
     {
         if (mNative->visible)
         {
-            mDisplay->drawBuffer(this);
+            mDisplay->drawBuffer(context, this);
         }
         resize(mNative->width, mNative->height);
     }
 }
 
+bool DisplayOzone::Buffer::createRenderbuffers()
+{
+    FunctionsGL *gl    = mDisplay->mFunctionsGL;
+    StateManagerGL *sm = mDisplay->getRenderer()->getStateManager();
+
+    gl->genRenderbuffers(1, &mColorBuffer);
+    sm->bindRenderbuffer(GL_RENDERBUFFER, mColorBuffer);
+
+    if (mDepthBits || mStencilBits)
+    {
+        gl->genRenderbuffers(1, &mDSBuffer);
+        sm->bindRenderbuffer(GL_RENDERBUFFER, mDSBuffer);
+    }
+
+    return true;
+}
+
 DisplayOzone::DisplayOzone(const egl::DisplayState &state)
     : DisplayEGL(state),
-      mSwapControl(SwapControl::ABSENT),
-      mMinSwapInterval(0),
-      mMaxSwapInterval(0),
-      mCurrentSwapInterval(-1),
       mGBM(nullptr),
       mConnector(nullptr),
       mMode(nullptr),
@@ -603,7 +624,7 @@ GLuint DisplayOzone::makeShader(GLuint type, const char *src)
     return shader;
 }
 
-void DisplayOzone::drawWithTexture(Buffer *buffer)
+void DisplayOzone::drawWithTexture(const gl::Context *context, Buffer *buffer)
 {
     FunctionsGL *gl    = mFunctionsGL;
     StateManagerGL *sm = getRenderer()->getStateManager();
@@ -727,13 +748,15 @@ void DisplayOzone::drawWithTexture(Buffer *buffer)
     sm->bindTexture(gl::TextureType::_2D, tex);
     gl->vertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     gl->enableVertexAttribArray(0);
-    sm->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawing->getGLFB());
+    GLuint fbo = mDrawing->createGLFB(context);
+    sm->bindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
     gl->drawArrays(GL_TRIANGLE_STRIP, 0, 4);
     gl->drawElements(GL_TRIANGLE_STRIP, 10, GL_UNSIGNED_INT, 0);
     sm->deleteTexture(tex);
+    sm->deleteFramebuffer(fbo);
 }
 
-void DisplayOzone::drawBuffer(Buffer *buffer)
+void DisplayOzone::drawBuffer(const gl::Context *context, Buffer *buffer)
 {
     if (!mDrawing)
     {
@@ -755,16 +778,19 @@ void DisplayOzone::drawBuffer(Buffer *buffer)
         }
 
         StateManagerGL *sm = getRenderer()->getStateManager();
-        sm->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawing->getGLFB());
+
+        GLuint fbo = mDrawing->createGLFB(context);
+        sm->bindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
         sm->setClearColor(gl::ColorF(0, 0, 0, 1));
         sm->setClearDepth(1);
         sm->setScissorTestEnabled(false);
         sm->setColorMask(true, true, true, true);
         sm->setDepthMask(true);
         mFunctionsGL->clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        sm->deleteFramebuffer(fbo);
     }
 
-    drawWithTexture(buffer);
+    drawWithTexture(context, buffer);
     presentScreen();
 }
 

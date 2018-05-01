@@ -22,7 +22,8 @@ class SurfaceOzone : public SurfaceGL
                  DisplayOzone::Buffer *buffer);
     ~SurfaceOzone() override;
 
-    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &state) override;
 
     egl::Error initialize(const egl::Display *display) override;
     egl::Error makeCurrent() override;

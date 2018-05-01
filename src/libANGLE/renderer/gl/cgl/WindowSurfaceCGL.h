@@ -84,7 +84,8 @@ class WindowSurfaceCGL : public SurfaceGL
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
-    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &state) override;
 
   private:
     SwapLayer *mSwapLayer;
@@ -96,7 +97,6 @@ class WindowSurfaceCGL : public SurfaceGL
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
 
-    GLuint mFramebuffer;
     GLuint mDSRenderbuffer;
 };
 

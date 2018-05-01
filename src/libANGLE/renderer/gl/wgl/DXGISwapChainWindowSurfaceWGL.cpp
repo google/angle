@@ -48,7 +48,6 @@ DXGISwapChainWindowSurfaceWGL::DXGISwapChainWindowSurfaceWGL(const egl::SurfaceS
       mColorRenderbufferID(0),
       mRenderbufferBufferHandle(nullptr),
       mDepthRenderbufferID(0),
-      mFramebufferID(0),
       mTextureID(0),
       mTextureHandle(nullptr),
       mWidth(0),
@@ -105,9 +104,11 @@ egl::Error DXGISwapChainWindowSurfaceWGL::initialize(const egl::Display *display
     mSwapChainFlags    = 0;
     mDepthBufferFormat = GL_DEPTH24_STENCIL8;
 
-    mFunctionsGL->genFramebuffers(1, &mFramebufferID);
     mFunctionsGL->genRenderbuffers(1, &mColorRenderbufferID);
+    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mColorRenderbufferID);
+
     mFunctionsGL->genRenderbuffers(1, &mDepthRenderbufferID);
+    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mDepthRenderbufferID);
 
     return createSwapChain();
 }
@@ -268,9 +269,34 @@ EGLint DXGISwapChainWindowSurfaceWGL::getSwapBehavior() const
 }
 
 FramebufferImpl *DXGISwapChainWindowSurfaceWGL::createDefaultFramebuffer(
+    const gl::Context *context,
     const gl::FramebufferState &data)
 {
-    return new FramebufferGL(data, mFramebufferID, true);
+    const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    GLuint framebufferID = 0;
+    stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebufferID);
+    functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                       mColorRenderbufferID);
+
+    if (mDepthBufferFormat != GL_NONE)
+    {
+        const gl::InternalFormat &depthStencilFormatInfo =
+            gl::GetSizedInternalFormatInfo(mDepthBufferFormat);
+        if (depthStencilFormatInfo.depthBits > 0)
+        {
+            functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                               mDepthRenderbufferID);
+        }
+        if (depthStencilFormatInfo.stencilBits > 0)
+        {
+            functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+                                               GL_RENDERBUFFER, mDepthRenderbufferID);
+        }
+    }
+
+    return new FramebufferGL(data, framebufferID, true);
 }
 
 HDC DXGISwapChainWindowSurfaceWGL::getDC() const
@@ -470,7 +496,6 @@ egl::Error DXGISwapChainWindowSurfaceWGL::createSwapChain()
                                   << gl::FmtHR(result);
     }
 
-    mFunctionsGL->genRenderbuffers(1, &mColorRenderbufferID);
     mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mColorRenderbufferID);
     mRenderbufferBufferHandle =
         mFunctionsWGL->dxRegisterObjectNV(mDeviceHandle, colorBuffer, mColorRenderbufferID,
@@ -500,11 +525,6 @@ egl::Error DXGISwapChainWindowSurfaceWGL::createSwapChain()
         return error;
     }
 
-    ASSERT(mFramebufferID != 0);
-    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    mFunctionsGL->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
-                                          mColorRenderbufferID);
-
     if (mDepthBufferFormat != GL_NONE)
     {
         ASSERT(mDepthRenderbufferID != 0);
@@ -512,19 +532,6 @@ egl::Error DXGISwapChainWindowSurfaceWGL::createSwapChain()
         mFunctionsGL->renderbufferStorage(GL_RENDERBUFFER, mDepthBufferFormat,
                                           static_cast<GLsizei>(mWidth),
                                           static_cast<GLsizei>(mHeight));
-
-        const gl::InternalFormat &depthStencilFormatInfo =
-            gl::GetSizedInternalFormatInfo(mDepthBufferFormat);
-        if (depthStencilFormatInfo.depthBits > 0)
-        {
-            mFunctionsGL->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                                  GL_RENDERBUFFER, mDepthRenderbufferID);
-        }
-        if (depthStencilFormatInfo.stencilBits > 0)
-        {
-            mFunctionsGL->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
-                                                  GL_RENDERBUFFER, mDepthRenderbufferID);
-        }
     }
 
     mFirstSwap = true;

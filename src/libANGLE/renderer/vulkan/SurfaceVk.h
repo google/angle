@@ -27,7 +27,8 @@ class OffscreenSurfaceVk : public SurfaceImpl
     ~OffscreenSurfaceVk() override;
 
     egl::Error initialize(const egl::Display *display) override;
-    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &state) override;
     egl::Error swap(const gl::Context *context) override;
     egl::Error postSubBuffer(const gl::Context *context,
                              EGLint x,
@@ -74,7 +75,8 @@ class WindowSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
     void destroy(const egl::Display *display) override;
 
     egl::Error initialize(const egl::Display *display) override;
-    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &state) override;
     egl::Error swap(const gl::Context *context) override;
     egl::Error postSubBuffer(const gl::Context *context,
                              EGLint x,

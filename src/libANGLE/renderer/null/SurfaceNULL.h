@@ -22,7 +22,8 @@ class SurfaceNULL : public SurfaceImpl
     ~SurfaceNULL() override;
 
     egl::Error initialize(const egl::Display *display) override;
-    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &state) override;
     egl::Error swap(const gl::Context *context) override;
     egl::Error postSubBuffer(const gl::Context *context,
                              EGLint x,

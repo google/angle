@@ -424,12 +424,8 @@ Framebuffer *FramebufferManager::AllocateNewObject(rx::GLImplFactory *factory,
 // static
 void FramebufferManager::DeleteObject(const Context *context, Framebuffer *framebuffer)
 {
-    // Default framebuffer are owned by their respective Surface
-    if (framebuffer->id() != 0)
-    {
-        framebuffer->onDestroy(context);
-        delete framebuffer;
-    }
+    framebuffer->onDestroy(context);
+    delete framebuffer;
 }
 
 GLuint FramebufferManager::createFramebuffer()

@@ -24,6 +24,7 @@ struct Format;
 
 namespace gl
 {
+class Context;
 class FramebufferState;
 }
 
@@ -47,7 +48,8 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual void destroy(const egl::Display *display) {}
 
     virtual egl::Error initialize(const egl::Display *display)                           = 0;
-    virtual FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) = 0;
+    virtual FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                                      const gl::FramebufferState &state) = 0;
     virtual egl::Error swap(const gl::Context *context)                                  = 0;
     virtual egl::Error swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects);
     virtual egl::Error postSubBuffer(const gl::Context *context,

@@ -63,7 +63,8 @@ class D3DTextureSurfaceWGL : public SurfaceWGL
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
-    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &data) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &data) override;
 
     HDC getDC() const override;
 
@@ -95,7 +96,6 @@ class D3DTextureSurfaceWGL : public SurfaceWGL
 
     GLuint mColorRenderbufferID;
     GLuint mDepthStencilRenderbufferID;
-    GLuint mFramebufferID;
 };
 }  // namespace rx
 

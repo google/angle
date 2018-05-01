@@ -26,7 +26,8 @@ SurfaceGL::~SurfaceGL()
 {
 }
 
-FramebufferImpl *SurfaceGL::createDefaultFramebuffer(const gl::FramebufferState &data)
+FramebufferImpl *SurfaceGL::createDefaultFramebuffer(const gl::Context *context,
+                                                     const gl::FramebufferState &data)
 {
     return new FramebufferGL(data, 0, true);
 }

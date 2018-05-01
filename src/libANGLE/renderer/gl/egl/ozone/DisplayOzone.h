@@ -75,17 +75,19 @@ class DisplayOzone final : public DisplayEGL
         bool initialize(int32_t width, int32_t height);
         void reset();
         bool resize(int32_t width, int32_t height);
-        FramebufferGL *framebufferGL(const gl::FramebufferState &state);
-        void present();
+        GLuint createGLFB(const gl::Context *context);
+        FramebufferGL *framebufferGL(const gl::Context *context, const gl::FramebufferState &state);
+        void present(const gl::Context *context);
         uint32_t getDRMFB();
         void bindTexImage();
         GLuint getTexture();
         int32_t getWidth() const { return mWidth; }
         int32_t getHeight() const { return mHeight; }
-        GLuint getGLFB() const { return mGLFB; }
         const NativeWindow *getNative() const { return mNative; }
 
       private:
+        bool createRenderbuffers();
+
         DisplayOzone *mDisplay;
         const NativeWindow *mNative;
         int mWidth;
@@ -103,7 +105,6 @@ class DisplayOzone final : public DisplayEGL
         EGLImageKHR mImage;
         GLuint mColorBuffer;
         GLuint mDSBuffer;
-        GLuint mGLFB;
         GLuint mTexture;
     };
 
@@ -148,9 +149,8 @@ class DisplayOzone final : public DisplayEGL
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
     GLuint makeShader(GLuint type, const char *src);
-    void drawBuffer(Buffer *buffer);
-    void drawWithBlit(Buffer *buffer);
-    void drawWithTexture(Buffer *buffer);
+    void drawBuffer(const gl::Context *context, Buffer *buffer);
+    void drawWithTexture(const gl::Context *context, Buffer *buffer);
     void flushGL();
     bool hasUsableScreen(int fd);
     void presentScreen();
@@ -160,19 +160,6 @@ class DisplayOzone final : public DisplayEGL
                                 unsigned int tv_usec,
                                 void *data);
     void pageFlipHandler(unsigned int sequence, uint64_t tv);
-
-    // TODO(fjhenigman) Implement swap control.  The following stuff will be used for that.
-    enum class SwapControl
-    {
-        ABSENT,
-        EXT,
-        MESA,
-        SGI,
-    };
-    SwapControl mSwapControl;
-    int mMinSwapInterval;
-    int mMaxSwapInterval;
-    int mCurrentSwapInterval;
 
     gbm_device *mGBM;
     drmModeConnectorPtr mConnector;

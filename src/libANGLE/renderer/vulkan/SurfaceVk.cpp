@@ -66,7 +66,8 @@ egl::Error OffscreenSurfaceVk::initialize(const egl::Display *display)
     return egl::NoError();
 }
 
-FramebufferImpl *OffscreenSurfaceVk::createDefaultFramebuffer(const gl::FramebufferState &state)
+FramebufferImpl *OffscreenSurfaceVk::createDefaultFramebuffer(const gl::Context *context,
+                                                              const gl::FramebufferState &state)
 {
     // Use a user FBO for an offscreen RT.
     return FramebufferVk::CreateUserFBO(state);
@@ -442,7 +443,8 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     return vk::NoError();
 }
 
-FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::FramebufferState &state)
+FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Context *context,
+                                                           const gl::FramebufferState &state)
 {
     return FramebufferVk::CreateDefaultFBO(state, this);
 }

@@ -29,7 +29,8 @@ egl::Error SurfaceNULL::initialize(const egl::Display *display)
     return egl::NoError();
 }
 
-FramebufferImpl *SurfaceNULL::createDefaultFramebuffer(const gl::FramebufferState &state)
+FramebufferImpl *SurfaceNULL::createDefaultFramebuffer(const gl::Context *context,
+                                                       const gl::FramebufferState &state)
 {
     return new FramebufferNULL(state);
 }

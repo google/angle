@@ -1577,7 +1577,6 @@ class Context final : angle::NonCopyable
     bool mRobustAccess;
     egl::Surface *mCurrentSurface;
     egl::Display *mCurrentDisplay;
-    Framebuffer *mSurfacelessFramebuffer;
     bool mWebGLContext;
     bool mExtensionsEnabled;
     MemoryProgramCache *mMemoryProgramCache;

@@ -632,9 +632,9 @@ Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id
     }
 }
 
-Framebuffer::Framebuffer(const egl::Display *display, egl::Surface *surface)
+Framebuffer::Framebuffer(const Context *context, egl::Surface *surface)
     : mState(),
-      mImpl(surface->getImplementation()->createDefaultFramebuffer(mState)),
+      mImpl(surface->getImplementation()->createDefaultFramebuffer(context, mState)),
       mCachedStatus(GL_FRAMEBUFFER_COMPLETE),
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
@@ -642,9 +642,7 @@ Framebuffer::Framebuffer(const egl::Display *display, egl::Surface *surface)
     ASSERT(mImpl != nullptr);
     mDirtyColorAttachmentBindings.emplace_back(this, DIRTY_BIT_COLOR_ATTACHMENT_0);
 
-    const Context *proxyContext = display->getProxyContext();
-
-    setAttachmentImpl(proxyContext, GL_FRAMEBUFFER_DEFAULT, GL_BACK, ImageIndex(), surface,
+    setAttachmentImpl(context, GL_FRAMEBUFFER_DEFAULT, GL_BACK, ImageIndex(), surface,
                       FramebufferAttachment::kDefaultNumViews,
                       FramebufferAttachment::kDefaultBaseViewIndex,
                       FramebufferAttachment::kDefaultMultiviewLayout,
@@ -652,7 +650,7 @@ Framebuffer::Framebuffer(const egl::Display *display, egl::Surface *surface)
 
     if (surface->getConfig()->depthSize > 0)
     {
-        setAttachmentImpl(proxyContext, GL_FRAMEBUFFER_DEFAULT, GL_DEPTH, ImageIndex(), surface,
+        setAttachmentImpl(context, GL_FRAMEBUFFER_DEFAULT, GL_DEPTH, ImageIndex(), surface,
                           FramebufferAttachment::kDefaultNumViews,
                           FramebufferAttachment::kDefaultBaseViewIndex,
                           FramebufferAttachment::kDefaultMultiviewLayout,
@@ -661,7 +659,7 @@ Framebuffer::Framebuffer(const egl::Display *display, egl::Surface *surface)
 
     if (surface->getConfig()->stencilSize > 0)
     {
-        setAttachmentImpl(proxyContext, GL_FRAMEBUFFER_DEFAULT, GL_STENCIL, ImageIndex(), surface,
+        setAttachmentImpl(context, GL_FRAMEBUFFER_DEFAULT, GL_STENCIL, ImageIndex(), surface,
                           FramebufferAttachment::kDefaultNumViews,
                           FramebufferAttachment::kDefaultBaseViewIndex,
                           FramebufferAttachment::kDefaultMultiviewLayout,
