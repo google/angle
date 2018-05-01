@@ -161,8 +161,7 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
         ANGLE_TRY(mBuffer.init(device, createInfo));
 
         ANGLE_TRY(AllocateBufferMemory(renderer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &mBuffer,
-                                       &mMemory, &sizeToAllocate));
-        mSize = sizeToAllocate;
+                                       &mMemory, &mSize));
 
         ANGLE_TRY(mMemory.map(device, 0, mSize, 0, &mMappedMemory));
         mNextWriteOffset = 0;
@@ -189,7 +188,6 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
     *ptrOut    = mMappedMemory + mNextWriteOffset;
     *offsetOut = mNextWriteOffset;
     mNextWriteOffset += static_cast<uint32_t>(sizeToAllocate);
-
     return NoError();
 }
 
