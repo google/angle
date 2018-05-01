@@ -22,6 +22,30 @@
       "revId": "8ab70881d5d4265057246fdaef23a07ed6f58b64",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64fda156_7683c275",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1945,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-01T14:52:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "316f224f_7cdfa5f6",
+      "range": {
+        "startLine": 1945,
+        "startChar": 4,
+        "endLine": 1945,
+        "endChar": 27
+      },
+      "revId": "8ab70881d5d4265057246fdaef23a07ed6f58b64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
