@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f1c095d7_fe7c49e5",
+        "filename": "samples/gles1/HelloTriangle.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e66c863a_cc614924",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 11
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1c18ffb_65cbebdd",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "e6c2b0a7_cf87f593",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1562,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1c18ffb_65cbebdd",
+      "range": {
+        "startLine": 1562,
+        "startChar": 4,
+        "endLine": 1562,
+        "endChar": 18
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31e1f17c_d0205d34",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "426661c1_6da8eada",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31e1f17c_d0205d34",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cdf162a0_6dc68be8",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -79,6 +145,24 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d51c011_ca4f6d15",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cdf162a0_6dc68be8",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "f43cdeb4_ec57b140",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92dba354_fa3a585e",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 35
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2534657d_df96ea15",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -128,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "13a7dcf0_80a82cb6",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2534657d_df96ea15",
+      "range": {
+        "startLine": 43,
+        "startChar": 37,
+        "endLine": 43,
+        "endChar": 73
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d80cbbcf_e7f21ac2",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -142,6 +274,24 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f2787bd_96946e1a",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d80cbbcf_e7f21ac2",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -185,6 +335,48 @@
     },
     {
       "key": {
+        "uuid": "85ab8df9_a931a644",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bcf767ab_4e3f5017",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 73
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a061e7c9_a7900392",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "413dc5da_8d671121",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b4501a8c_c5f9c839",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -208,6 +400,30 @@
     },
     {
       "key": {
+        "uuid": "4dfbd168_b0dbaba2",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4501a8c_c5f9c839",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 0
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8746f03_fa7b88fa",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -222,6 +438,24 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f413559_d1431e68",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Visual Studio doesn\u0027t like long strings; also, it\u0027s built into a std::string to avoid passing # elements of array into compileShader()",
+      "parentUuid": "a8746f03_fa7b88fa",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -248,6 +482,30 @@
     },
     {
       "key": {
+        "uuid": "ef1d8414_20c32d98",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0048dd9e_3d87a636",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 40
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a5400db_1db0ccdd",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -262,6 +520,24 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ed05189_6299e0b6",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a5400db_1db0ccdd",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -288,6 +564,30 @@
     },
     {
       "key": {
+        "uuid": "8e4c9be1_c8be690f",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad3fd003_466a42db",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 92
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa5ff72f_4874a476",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -302,6 +602,24 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4829b57b_0390f36a",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa5ff72f_4874a476",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -328,6 +646,30 @@
     },
     {
       "key": {
+        "uuid": "c3b75b8c_dd360e2e",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "029718f0_4df785c3",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 34
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfc64577_72f6452f",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -342,6 +684,24 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fad744eb_9746d12f",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Currently, the GLSL code contains both 2D and Cube samplers, so we will need to always separate them.",
+      "parentUuid": "dfc64577_72f6452f",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -368,6 +728,30 @@
     },
     {
       "key": {
+        "uuid": "dc947abe_85de16b0",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58efafcc_ec76b3ab",
+      "range": {
+        "startLine": 135,
+        "startChar": 8,
+        "endLine": 142,
+        "endChar": 62
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f6ffe9d_46d4f7d2",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -388,6 +772,30 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cec757f_efd52900",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f6ffe9d_46d4f7d2",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 5
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -414,6 +822,30 @@
     },
     {
       "key": {
+        "uuid": "8cf7f30b_1cc94067",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e73481ab_cd659e1d",
+      "range": {
+        "startLine": 194,
+        "startChar": 8,
+        "endLine": 200,
+        "endChar": 97
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2cb2af9_2d05cc6f",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -437,6 +869,30 @@
     },
     {
       "key": {
+        "uuid": "a099ba51_93276000",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "I still prefer the single call to uniformMatrix4fv; introduced a new typedef to make things clearer.",
+      "parentUuid": "f2cb2af9_2d05cc6f",
+      "range": {
+        "startLine": 205,
+        "startChar": 19,
+        "endLine": 205,
+        "endChar": 65
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dda413ab_405f9277",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 4
@@ -451,6 +907,24 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6ea08a5_2c230c3f",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dda413ab_405f9277",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -477,6 +951,30 @@
     },
     {
       "key": {
+        "uuid": "798d7a99_c99143de",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4225309_3a8ef14d",
+      "range": {
+        "startLine": 246,
+        "startChar": 7,
+        "endLine": 258,
+        "endChar": 0
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c4d3d45_aae36687",
         "filename": "src/libANGLE/GLES1Renderer.h",
         "patchSetId": 4
@@ -497,6 +995,30 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbfd56fa_e6cfd94a",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c4d3d45_aae36687",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 37
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -523,6 +1045,30 @@
     },
     {
       "key": {
+        "uuid": "98438f83_45a2db7d",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Does that guarantee that the pointers of textureMatrices[i][j] are all 16 * sizeof(float) apart? glUniformMatrix4fv is being called with count \u003d kTextureUnitCount on these matrices. I prefer the flat array though.\n\nhttps://stackoverflow.com/questions/9762662/is-the-data-in-nested-stdarrays-guaranteed-to-be-contiguous/9762712#9762712:\n\n\"No, contiguity is not guaranteed in this case.\n\nstd::array is guaranteed to be an aggregate, and is specified in such a way that the underlying array used for storage must be the first data member of the type.\n\nHowever, there is no requirement that sizeof(array\u003cT, N\u003e) \u003d\u003d sizeof(T) * N, nor is there any requirement that there are no unnamed padding bytes at the end of the object or that std::array has no data members other than the underlying array storage. (Though, an implementation that included additional data members would be, at best, unusual.)\"\n\nHowever, making it a POD (float[16] aka Mat4Uniform) seems to work.",
+      "parentUuid": "7219c53d_3fba70ed",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 45
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f198ead5_32f2a412",
         "filename": "src/libANGLE/GLES1Renderer.h",
         "patchSetId": 4
@@ -546,6 +1092,30 @@
     },
     {
       "key": {
+        "uuid": "98b24aa7_104ebc9c",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f198ead5_32f2a412",
+      "range": {
+        "startLine": 70,
+        "startChar": 19,
+        "endLine": 70,
+        "endChar": 22
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4eb9b3c_d69c8b62",
         "filename": "src/libANGLE/GLES1Renderer.h",
         "patchSetId": 4
@@ -560,6 +1130,24 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6724ff0_d23e2bd3",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Eventually, yes, for simpler abstractions in the shader / performance. A prereq is to hide buffer objects that are private to the GLES1Renderer from the user. The user is allowed to use glBindBuffer to create any buffer object that doesn\u0027t exist already from the perspective of the user, so we would need a map of public-\u003eprivate buffers.",
+      "parentUuid": "d4eb9b3c_d69c8b62",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -580,6 +1168,24 @@
     },
     {
       "key": {
+        "uuid": "f83259d6_fc1194c2",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done (removed mDrawState)",
+      "parentUuid": "e4d6ce90_a58ecf68",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b8a93972_8e66f61e",
         "filename": "src/libANGLE/GLES1Shaders.h",
         "patchSetId": 4
@@ -591,6 +1197,24 @@
       "writtenOn": "2018-04-27T19:46:40Z",
       "side": 1,
       "message": "Maybe these could use internal enums instead of GL enums?",
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ee273df_58fdbd22",
+        "filename": "src/libANGLE/GLES1Shaders.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Hmm, I\u0027m thinking that it could be more risky to explicitly list internal enum values here since the way they are generated might change in the future and we\u0027d have to maintain two places where internal enums are listed, both in the autogenerated code and here. Currently, if we use GL enums, we just need to copy the GL definitions and use ToGLenum. What do you think?",
+      "parentUuid": "b8a93972_8e66f61e",
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -620,6 +1244,30 @@
     },
     {
       "key": {
+        "uuid": "95b18b6b_4005832d",
+        "filename": "src/libANGLE/GLES1Shaders.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94b7914b_cd7b0b86",
+      "range": {
+        "startLine": 235,
+        "startChar": 33,
+        "endLine": 235,
+        "endChar": 35
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82a3f9ec_a203434d",
         "filename": "src/tests/gl_tests/gles1/BasicDrawTest.cpp",
         "patchSetId": 4
@@ -640,6 +1288,30 @@
       "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "895b4fb8_2c9d9ff5",
+        "filename": "src/tests/gl_tests/gles1/BasicDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-01T16:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82a3f9ec_a203434d",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "72d365e0baa1b79d1156263340f4a6b6c9e1cdc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
