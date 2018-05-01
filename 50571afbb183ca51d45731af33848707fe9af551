@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d260078d_a0aad87d",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-01T14:36:21Z",
+      "side": 1,
+      "message": "May want to spell out what happens with extension entry points that already have OES, EXT or ANGLE suffixes.",
+      "range": {
+        "startLine": 54,
+        "startChar": 25,
+        "endLine": 54,
+        "endChar": 37
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
