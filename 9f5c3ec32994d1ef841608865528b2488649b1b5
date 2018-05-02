@@ -46,6 +46,30 @@
       "revId": "9f5c3ec32994d1ef841608865528b2488649b1b5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecc9763c_b06dcfe8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T15:44:51Z",
+      "side": 1,
+      "message": "Using the map would be great but the pipeline desc is carefully packed to be exactly 256 bytes. We can use a custom map that only has two shader types. I split this off into a separate prior change since it was a bit heavy.",
+      "parentUuid": "27a1b020_cc48e7e0",
+      "range": {
+        "startLine": 637,
+        "startChar": 21,
+        "endLine": 637,
+        "endChar": 22
+      },
+      "revId": "9f5c3ec32994d1ef841608865528b2488649b1b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
