@@ -132,6 +132,11 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
         options |= SH_CLAMP_FRAG_DEPTH;
     }
 
+    if (mWorkarounds.rewriteRepeatedAssignToSwizzled)
+    {
+        options |= SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED;
+    }
+
     if (mMultiviewImplementationType == MultiviewImplementationTypeGL::NV_VIEWPORT_ARRAY2)
     {
         options |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;

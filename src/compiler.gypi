@@ -154,6 +154,8 @@
             'compiler/translator/tree_ops/RemoveUnreferencedVariables.h',
             'compiler/translator/tree_ops/RewriteDoWhile.cpp',
             'compiler/translator/tree_ops/RewriteDoWhile.h',
+            'compiler/translator/tree_ops/RewriteRepeatedAssignToSwizzled.cpp',
+            'compiler/translator/tree_ops/RewriteRepeatedAssignToSwizzled.h',
             'compiler/translator/tree_ops/RewriteTexelFetchOffset.cpp',
             'compiler/translator/tree_ops/RewriteTexelFetchOffset.h',
             'compiler/translator/tree_ops/RewriteUnaryMinusOperatorFloat.cpp',

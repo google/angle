@@ -1161,6 +1161,10 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     // 390 are known to be affected. Versions after that are expected not to be affected.
     workarounds->clampFragDepth = IsNvidia(vendor);
 
+    // TODO(oetuaho): Make this specific to the affected driver versions. Versions since 397.31 are
+    // not affected.
+    workarounds->rewriteRepeatedAssignToSwizzled = IsNvidia(vendor);
+
 #if defined(ANGLE_PLATFORM_ANDROID)
     // TODO(jmadill): Narrow workaround range for specific devices.
     workarounds->reapplyUBOBindingsAfterUsingBinaryProgram = true;

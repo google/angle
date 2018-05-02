@@ -4253,6 +4253,39 @@ TEST_P(GLSLTest_ES31, ExceedCombinedShaderOutputResourcesInVSAndFS)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that assigning an assignment expression to a swizzled vector field in a user-defined
+// function works correctly.
+TEST_P(GLSLTest_ES3, AssignAssignmentToSwizzled)
+{
+    const std::string &fragmentShader =
+        R"(#version 300 es
+
+        precision highp float;
+        out vec4 my_FragColor;
+
+        uniform float uzero;
+
+        vec3 fun(float s, float v)
+        {
+            vec3 r = vec3(0);
+            if (s < 1.0) {
+                r.x = r.y = r.z = v;
+                return r;
+            }
+            return r;
+        }
+
+        void main()
+        {
+            my_FragColor.a = 1.0;
+            my_FragColor.rgb = fun(uzero, 1.0);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,

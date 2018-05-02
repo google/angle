@@ -147,6 +147,11 @@ struct WorkaroundsGL
     // On some NVIDIA drivers gl_FragDepth is not clamped correctly when rendering to a floating
     // point depth buffer. Clamp it in the translated shader to fix this.
     bool clampFragDepth = false;
+
+    // On some NVIDIA drivers before version 397.31 repeated assignment to swizzled values inside a
+    // GLSL user-defined function have incorrect results. Rewrite this type of statements to fix
+    // this.
+    bool rewriteRepeatedAssignToSwizzled = false;
 };
 
 inline WorkaroundsGL::WorkaroundsGL() = default;
