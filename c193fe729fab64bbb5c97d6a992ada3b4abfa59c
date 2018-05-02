@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "a048ff85_a3cfe5be",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-05-02T07:42:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfaa8fe1_abe08edd",
+      "range": {
+        "startLine": 58,
+        "startChar": 9,
+        "endLine": 58,
+        "endChar": 19
+      },
+      "revId": "c193fe729fab64bbb5c97d6a992ada3b4abfa59c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "112b43de_72cd3e8a",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 6
@@ -93,6 +117,30 @@
       "revId": "c193fe729fab64bbb5c97d6a992ada3b4abfa59c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a99e324a_e3f396f2",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-05-02T07:42:53Z",
+      "side": 1,
+      "message": "Done, changed them back to the old names.",
+      "parentUuid": "112b43de_72cd3e8a",
+      "range": {
+        "startLine": 458,
+        "startChar": 54,
+        "endLine": 458,
+        "endChar": 79
+      },
+      "revId": "c193fe729fab64bbb5c97d6a992ada3b4abfa59c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
