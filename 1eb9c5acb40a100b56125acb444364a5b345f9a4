@@ -141,6 +141,30 @@
       "revId": "1eb9c5acb40a100b56125acb444364a5b345f9a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cbf10d8_0fe612ef",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-02T20:08:23Z",
+      "side": 1,
+      "message": "No it was garbage even after clear and rendering. The GL driver did some weird scissoring or I don\u0027t know what.",
+      "parentUuid": "273326d5_34216956",
+      "range": {
+        "startLine": 401,
+        "startChar": 20,
+        "endLine": 401,
+        "endChar": 26
+      },
+      "revId": "1eb9c5acb40a100b56125acb444364a5b345f9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
