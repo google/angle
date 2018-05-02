@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "06a83e60_6e009913",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-02T16:57:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95990a36_52e253e0",
+      "range": {
+        "startLine": 43,
+        "startChar": 28,
+        "endLine": 43,
+        "endChar": 34
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5ce64345_5e94c90d",
         "filename": "extensions/EGL_ANGLE_explicit_context.txt",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "50571afbb183ca51d45731af33848707fe9af551",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "080892b2_a65a9f3c",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-02T16:57:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ce64345_5e94c90d",
+      "range": {
+        "startLine": 53,
+        "startChar": 14,
+        "endLine": 53,
+        "endChar": 19
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "88a185a4_10025213",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-02T16:57:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d260078d_a0aad87d",
+      "range": {
+        "startLine": 54,
+        "startChar": 25,
+        "endLine": 54,
+        "endChar": 37
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d783546_beea36e9",
         "filename": "extensions/EGL_ANGLE_explicit_context.txt",
         "patchSetId": 9
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "5307ba2f_d02ed743",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-02T16:57:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d783546_beea36e9",
+      "range": {
+        "startLine": 54,
+        "startChar": 18,
+        "endLine": 56,
+        "endChar": 19
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "101edaf9_e9d84d53",
         "filename": "extensions/EGL_ANGLE_explicit_context.txt",
         "patchSetId": 9
@@ -105,6 +201,30 @@
       "writtenOn": "2018-05-02T13:12:55Z",
       "side": 1,
       "message": "if you need to add a GL version of EGL_NO_CONTEXT here we can do that.",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 8
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d77c14b_637efba7",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-02T16:57:48Z",
+      "side": 1,
+      "message": "I think I\u0027m going to go without - I will add ASSERT(context !\u003d nullptr) in the ANGLE entry point, which serves the same purpose. A nullptr context will be a no op in release mode though. I\u0027m unsure if it would helpful to have it the release case.",
+      "parentUuid": "101edaf9_e9d84d53",
       "range": {
         "startLine": 60,
         "startChar": 4,
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "4c1c6f99_c890d926",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-02T16:57:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3a10f6e_e390dfbb",
+      "range": {
+        "startLine": 64,
+        "startChar": 46,
+        "endLine": 64,
+        "endChar": 61
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "873c15e6_48605b5a",
         "filename": "extensions/EGL_ANGLE_explicit_context.txt",
         "patchSetId": 9
@@ -160,6 +304,30 @@
       "revId": "50571afbb183ca51d45731af33848707fe9af551",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "787e610e_effd55d2",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-02T16:57:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "873c15e6_48605b5a",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 72,
+        "endChar": 0
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
