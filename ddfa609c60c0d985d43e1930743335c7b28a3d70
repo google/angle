@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f322918d_328afa62",
+        "filename": "include/GLES2/gl2ext_angle.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T17:23:07Z",
+      "side": 1,
+      "message": "I\u0027m not sure if we need these stubs. If we do, we\u0027ll need to split them into GLES 1.1 and GLES 2.0/3.0/3.1 entry points and keep them separated to fix the clampx problem.",
+      "parentUuid": "d4037e93_7aa7adbd",
+      "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "91098d66_d2c65de5",
         "filename": "include/GLES2/gl2ext_angle.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2018-05-02T15:29:12Z",
       "side": 1,
       "message": "Had to put in this line to get it compiling. GLclampx is defined in gl.h, but not in gl2.h. The alternative to defining it here would be to declare glSampleCoveragexContextANGLE over in glext_angle.h, but I thought it would be better to keep the declarations all in one spot.",
+      "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02388bc1_fc0ef1e3",
+        "filename": "include/GLES2/gl2ext_angle.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T17:23:07Z",
+      "side": 1,
+      "message": "See above. Can with live without these? If not, as suggested above.",
+      "parentUuid": "91098d66_d2c65de5",
       "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,52 @@
     },
     {
       "key": {
+        "uuid": "2e255f1d_a44a7f4f",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T17:23:07Z",
+      "side": 1,
+      "message": "I don\u0027t think I would consider this a normal extension. I would just handle it as an option to the generator (True/False).",
+      "range": {
+        "startLine": 27,
+        "startChar": 3,
+        "endLine": 27,
+        "endChar": 32
+      },
+      "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ced5b0f_c9ee54d6",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T17:23:07Z",
+      "side": 1,
+      "message": "maybe instead we could actually validate that context \u003d\u003d current context instead of adding this hasBeenCurrent property",
+      "range": {
+        "startLine": 326,
+        "startChar": 37,
+        "endLine": 326,
+        "endChar": 70
+      },
+      "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7186c74e_35fb1de6",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 1
@@ -64,6 +146,24 @@
       "writtenOn": "2018-05-02T15:29:12Z",
       "side": 1,
       "message": "I was thinking this file could benefit from auto generation. I couldn\u0027t figure out the reasoning for which extensions are included here i.e. blitFramebufferANGLE is, however copyTextureCHROMIUM isn\u0027t. If I knew the scheme I could write it up in generate_entry_points.py.",
+      "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "710020a9_1ffa4d6f",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2578,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T17:23:07Z",
+      "side": 1,
+      "message": "Yeah, we should probably auto generate this file before finishing this extension and fix this up. It\u0027s probably just an oversight.",
+      "parentUuid": "7186c74e_35fb1de6",
       "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -87,6 +187,24 @@
     },
     {
       "key": {
+        "uuid": "ca489d15_d20e8406",
+        "filename": "src/libGLESv2/libGLESv2.def",
+        "patchSetId": 1
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T17:23:07Z",
+      "side": 1,
+      "message": "It\u0027s just a bug... we should auto-generate everything. We should probably do this before landing this CL as well.",
+      "parentUuid": "f37425c5_c8a950ef",
+      "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d0e0f598_e9c67d77",
         "filename": "src/libGLESv2/libGLESv2.def",
         "patchSetId": 1
@@ -98,6 +216,24 @@
       "writtenOn": "2018-05-02T15:29:12Z",
       "side": 1,
       "message": "I don\u0027t like that I can\u0027t #ifdef out the ContextANGLE functions - If someone undefine EGL_ANGLE_explicit_context it in ANGLE - they\u0027re going to have to delete these to get things compiling. Couldn\u0027t come up with a good alternative.",
+      "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63c23127_baf6a8fa",
+        "filename": "src/libGLESv2/libGLESv2.def",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T17:23:07Z",
+      "side": 1,
+      "message": "I don\u0027t think we should ifdef them out. Just always include them. The only alternative is using dynamic linking.",
+      "parentUuid": "d0e0f598_e9c67d77",
       "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
