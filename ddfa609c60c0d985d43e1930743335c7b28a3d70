@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "e6bc84f2_c13dddd6",
+        "filename": "include/GLES2/gl2ext_angle.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-02T22:02:15Z",
+      "side": 1,
+      "message": "So I personally can live without them - however it\u0027s going to cause problems for anyone that wants to use the extension with eglGetProcAddress. I\u0027m thinking I will spread the declarations over the appropriate files.",
+      "parentUuid": "02388bc1_fc0ef1e3",
+      "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "da280e81_954ad937",
         "filename": "include/GLES2/gl2ext_angle.h",
         "patchSetId": 1
@@ -123,6 +141,30 @@
       "writtenOn": "2018-05-02T17:23:07Z",
       "side": 1,
       "message": "maybe instead we could actually validate that context \u003d\u003d current context instead of adding this hasBeenCurrent property",
+      "range": {
+        "startLine": 326,
+        "startChar": 37,
+        "endLine": 326,
+        "endChar": 70
+      },
+      "revId": "ddfa609c60c0d985d43e1930743335c7b28a3d70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ba70104_30985205",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-02T22:02:15Z",
+      "side": 1,
+      "message": "This is something I thought about for awhile already - and I couldn\u0027t come up with a thread safe way to get the current context to validate against - since the context is only stored in TLS, I\u0027d have to query TLS and defeat the purpose of the extension.\n\nI added hasBeenCurrent() because this at least guarantees the context has been initialized.",
+      "parentUuid": "1ced5b0f_c9ee54d6",
       "range": {
         "startLine": 326,
         "startChar": 37,
