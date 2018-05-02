@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "87df17f7_dbe2800d",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-02T20:04:28Z",
+      "side": 1,
+      "message": "No idea.",
+      "parentUuid": "cb85dce8_cfb5fc1c",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 24
+      },
+      "revId": "1eb9c5acb40a100b56125acb444364a5b345f9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8f3a2974_e238cc1a",
         "filename": "src/tests/test_utils/ANGLETest.h",
         "patchSetId": 1
@@ -69,6 +93,30 @@
       "revId": "1eb9c5acb40a100b56125acb444364a5b345f9a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d64096c_e772f1c9",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-02T20:04:28Z",
+      "side": 1,
+      "message": "Done. We still need to show the window the first time or OpenGL drivers tend to keep garbage in the default framebuffer.",
+      "parentUuid": "45ecad42_d61f6f54",
+      "range": {
+        "startLine": 401,
+        "startChar": 20,
+        "endLine": 401,
+        "endChar": 26
+      },
+      "revId": "1eb9c5acb40a100b56125acb444364a5b345f9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
