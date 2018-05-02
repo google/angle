@@ -39,6 +39,30 @@
       "revId": "6d858040225ac9fd459f8e77d68ae947f07a10e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "435fa4c3_f1d8e6f1",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-02T16:36:13Z",
+      "side": 1,
+      "message": "Vulkan was first introduced in 24.\nWhat other components that need a newer SDK?",
+      "parentUuid": "232d004c_783dc985",
+      "range": {
+        "startLine": 12,
+        "startChar": 40,
+        "endLine": 12,
+        "endChar": 42
+      },
+      "revId": "6d858040225ac9fd459f8e77d68ae947f07a10e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
