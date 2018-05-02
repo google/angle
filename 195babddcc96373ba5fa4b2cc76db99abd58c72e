@@ -1,0 +1,389 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77cc4e74_c18c8cf1",
+        "filename": "samples/gles1/HelloTriangle.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "nit: just 2018",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3078ead_e45c6db5",
+        "filename": "samples/gles1/SimpleTexture2D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f2279ea_f5423cf5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "isn\u0027t this automatic? I think you can omit.",
+      "range": {
+        "startLine": 509,
+        "startChar": 0,
+        "endLine": 512,
+        "endChar": 5
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "116dc864_876ef581",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "nit: these were at one point sorted, can you fix?",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 20
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "750e7c62_50d04fc3",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "nit: probably don\u0027t need auto here",
+      "range": {
+        "startLine": 636,
+        "startChar": 10,
+        "endLine": 636,
+        "endChar": 15
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54f8856e_c2103065",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 637,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "what is this comment for?",
+      "range": {
+        "startLine": 637,
+        "startChar": 4,
+        "endLine": 637,
+        "endChar": 13
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbd98d5f_c0a20184",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "again for simple types (assuming this is one) better to not use auto. keep it for templated types.",
+      "range": {
+        "startLine": 646,
+        "startChar": 9,
+        "endLine": 646,
+        "endChar": 14
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b535a2a6_faf5bac8",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "same, and so on",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 27
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "824aab21_0570dcdc",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "you could probably just pass in the context here.",
+      "range": {
+        "startLine": 36,
+        "startChar": 21,
+        "endLine": 36,
+        "endChar": 35
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c41151e5_62bc9b30",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "same, and so on",
+      "range": {
+        "startLine": 46,
+        "startChar": 10,
+        "endLine": 46,
+        "endChar": 15
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "595e8806_6f7faff0",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "these programs are going to be exposed to the app. I wonder if it\u0027s possible to make an \"ID-less\" program that isn\u0027t stored in the resource manager. Maybe we can figure out how to do this.",
+      "range": {
+        "startLine": 175,
+        "startChar": 25,
+        "endLine": 175,
+        "endChar": 38
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4dbce94c_4ca86ae8",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "you should instead return a gl::Error here, and pass the resulting program as an out parameter - though I think maybe we should be using gl::Program objects instead of ids somehow, and make the programs \"ID-less\" (internal only)",
+      "range": {
+        "startLine": 197,
+        "startChar": 11,
+        "endLine": 197,
+        "endChar": 87
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9d0ee68_2bf3d3ec",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "extra space",
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77d5ccb2_bfb44724",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "this should probably be handled through gl::Error and ANGLE_TRY",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 230,
+        "endChar": 5
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ec6cf16_7096827f",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "also just 2018",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "280ab601_2366902c",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "is it possible to not store the Context/State and instead pass them in? just wondering.",
+      "range": {
+        "startLine": 29,
+        "startChar": 18,
+        "endLine": 29,
+        "endChar": 34
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a11e8a32_e7633662",
+        "filename": "src/libANGLE/GLES1Shaders.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:27:13Z",
+      "side": 1,
+      "message": "this isn\u0027t really a header file... better to call it \".inc\" instead of \".h\". Also still needs the license at the top.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 51
+      },
+      "revId": "195babddcc96373ba5fa4b2cc76db99abd58c72e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
