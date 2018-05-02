@@ -238,7 +238,9 @@ Extensions::Extensions()
       textureRectangle(false),
       geometryShader(false),
       pointSizeArray(false),
-      textureCubeMap(false)
+      textureCubeMap(false),
+      explicitContextGles1(false),
+      explicitContext(false)
 {
 }
 
@@ -832,6 +834,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_program_cache_control"] = esOnlyExtension(&Extensions::programCacheControl);
         map["GL_ANGLE_texture_rectangle"] = enableableExtension(&Extensions::textureRectangle);
         map["GL_EXT_geometry_shader"] = enableableExtension(&Extensions::geometryShader);
+        map["GL_ANGLE_explicit_context_gles1"] = enableableExtension(&Extensions::explicitContextGles1);
+        map["GL_ANGLE_explicit_context"] = enableableExtension(&Extensions::explicitContext);
         // GLES1 extensinos
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArray);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMap);
@@ -1391,7 +1395,8 @@ ClientExtensions::ClientExtensions()
       deviceCreationD3D11(false),
       x11Visual(false),
       experimentalPresentPath(false),
-      clientGetAllProcAddresses(false)
+      clientGetAllProcAddresses(false),
+      explicitContext(false)
 {
 }
 
@@ -1416,6 +1421,7 @@ std::vector<std::string> ClientExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_x11_visual",                  x11Visual,                 &extensionStrings);
     InsertExtensionString("EGL_ANGLE_experimental_present_path",   experimentalPresentPath,   &extensionStrings);
     InsertExtensionString("EGL_KHR_client_get_all_proc_addresses", clientGetAllProcAddresses, &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_explicit_context",            explicitContext,           &extensionStrings);
     // clang-format on
 
     return extensionStrings;

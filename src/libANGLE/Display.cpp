@@ -522,8 +522,9 @@ Error Display::initialize()
     }
 
     mProxyContext.reset(nullptr);
-    gl::Context *proxyContext = new gl::Context(mImplementation, nullptr, nullptr, nullptr, nullptr,
-                                                egl::AttributeMap(), mDisplayExtensions);
+    gl::Context *proxyContext =
+        new gl::Context(mImplementation, nullptr, nullptr, nullptr, nullptr, egl::AttributeMap(),
+                        mDisplayExtensions, GetClientExtensions());
     mProxyContext.reset(proxyContext);
 
     mInitialized = true;
@@ -793,7 +794,7 @@ Error Display::createContext(const Config *configuration,
 
     gl::Context *context =
         new gl::Context(mImplementation, configuration, shareContext, shareTextures, cachePointer,
-                        attribs, mDisplayExtensions);
+                        attribs, mDisplayExtensions, GetClientExtensions());
 
     ASSERT(context != nullptr);
     mContextSet.insert(context);
@@ -1015,6 +1016,7 @@ static ClientExtensions GenerateClientExtensions()
 #endif
 
     extensions.clientGetAllProcAddresses = true;
+    extensions.explicitContext           = true;
 
     return extensions;
 }

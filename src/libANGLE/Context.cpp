@@ -265,7 +265,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
                  TextureManager *shareTextures,
                  MemoryProgramCache *memoryProgramCache,
                  const egl::AttributeMap &attribs,
-                 const egl::DisplayExtensions &displayExtensions)
+                 const egl::DisplayExtensions &displayExtensions,
+                 const egl::ClientExtensions &clientExtensions)
     : mState(reinterpret_cast<ContextID>(this),
              shareContext ? &shareContext->mState : nullptr,
              shareTextures,
@@ -304,7 +305,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     mImplementation->setMemoryProgramCache(memoryProgramCache);
 
     bool robustResourceInit = GetRobustResourceInit(attribs);
-    initCaps(displayExtensions, robustResourceInit);
+    initCaps(displayExtensions, clientExtensions, robustResourceInit);
     initWorkarounds();
 
     mGLState.initialize(this, GetDebug(attribs), GetBindGeneratesResource(attribs),
@@ -3020,6 +3021,7 @@ bool Context::hasActiveTransformFeedback(GLuint program) const
 }
 
 Extensions Context::generateSupportedExtensions(const egl::DisplayExtensions &displayExtensions,
+                                                const egl::ClientExtensions &clientExtensions,
                                                 bool robustResourceInit) const
 {
     Extensions supportedExtensions = mImplementation->getNativeExtensions();
@@ -3087,14 +3089,26 @@ Extensions Context::generateSupportedExtensions(const egl::DisplayExtensions &di
     // Enable the cache control query unconditionally.
     supportedExtensions.programCacheControl = true;
 
+    // Enable EGL_ANGLE_explicit_context subextensions
+    if (clientExtensions.explicitContext)
+    {
+        // GL_ANGLE_explicit_context_gles1
+        supportedExtensions.explicitContextGles1 = true;
+        // GL_ANGLE_explicit_context
+        supportedExtensions.explicitContext = true;
+    }
+
     return supportedExtensions;
 }
 
-void Context::initCaps(const egl::DisplayExtensions &displayExtensions, bool robustResourceInit)
+void Context::initCaps(const egl::DisplayExtensions &displayExtensions,
+                       const egl::ClientExtensions &clientExtensions,
+                       bool robustResourceInit)
 {
     mCaps = mImplementation->getNativeCaps();
 
-    mSupportedExtensions = generateSupportedExtensions(displayExtensions, robustResourceInit);
+    mSupportedExtensions =
+        generateSupportedExtensions(displayExtensions, clientExtensions, robustResourceInit);
     mExtensions          = mSupportedExtensions;
 
     mLimitations = mImplementation->getNativeLimitations();

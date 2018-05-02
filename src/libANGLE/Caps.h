@@ -410,6 +410,12 @@ struct Extensions
     bool pointSizeArray;
     // GL_OES_texture_cube_map
     bool textureCubeMap;
+
+    // EGL_ANGLE_explicit_context GL subextensions
+    // GL_ANGLE_explicit_context_gles1
+    bool explicitContextGles1;
+    // GL_ANGLE_explicit_context
+    bool explicitContext;
 };
 
 struct ExtensionInfo
@@ -823,6 +829,9 @@ struct ClientExtensions
 
     // EGL_KHR_client_get_all_proc_addresses
     bool clientGetAllProcAddresses;
+
+    // EGL_ANGLE_explicit_context
+    bool explicitContext;
 };
 
 }  // namespace egl

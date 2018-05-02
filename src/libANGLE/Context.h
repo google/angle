@@ -72,7 +72,8 @@ class Context final : angle::NonCopyable
             TextureManager *shareTextures,
             MemoryProgramCache *memoryProgramCache,
             const egl::AttributeMap &attribs,
-            const egl::DisplayExtensions &displayExtensions);
+            const egl::DisplayExtensions &displayExtensions,
+            const egl::ClientExtensions &clientExtensions);
 
     egl::Error onDestroy(const egl::Display *display);
     ~Context();
@@ -1493,8 +1494,11 @@ class Context final : angle::NonCopyable
     void initExtensionStrings();
 
     Extensions generateSupportedExtensions(const egl::DisplayExtensions &displayExtensions,
+                                           const egl::ClientExtensions &clientExtensions,
                                            bool robustResourceInit) const;
-    void initCaps(const egl::DisplayExtensions &displayExtensions, bool robustResourceInit);
+    void initCaps(const egl::DisplayExtensions &displayExtensions,
+                  const egl::ClientExtensions &clientExtensions,
+                  bool robustResourceInit);
     void updateCaps();
     void initWorkarounds();
 
