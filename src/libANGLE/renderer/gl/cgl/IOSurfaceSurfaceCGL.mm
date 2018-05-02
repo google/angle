@@ -136,7 +136,9 @@ egl::Error IOSurfaceSurfaceCGL::querySurfacePointerANGLE(EGLint attribute, void 
     return egl::NoError();
 }
 
-egl::Error IOSurfaceSurfaceCGL::bindTexImage(gl::Texture *texture, EGLint buffer)
+egl::Error IOSurfaceSurfaceCGL::bindTexImage(const gl::Context *context,
+                                             gl::Texture *texture,
+                                             EGLint buffer)
 {
     const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
     GLuint textureID           = textureGL->getTextureID();
@@ -155,7 +157,7 @@ egl::Error IOSurfaceSurfaceCGL::bindTexImage(gl::Texture *texture, EGLint buffer
     return egl::NoError();
 }
 
-egl::Error IOSurfaceSurfaceCGL::releaseTexImage(EGLint buffer)
+egl::Error IOSurfaceSurfaceCGL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     gl::Error error = mRenderer->flush();
     if (error.isError())

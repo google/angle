@@ -92,12 +92,14 @@ egl::Error OffscreenSurfaceVk::querySurfacePointerANGLE(EGLint /*attribute*/, vo
     return egl::EglBadCurrentSurface();
 }
 
-egl::Error OffscreenSurfaceVk::bindTexImage(gl::Texture * /*texture*/, EGLint /*buffer*/)
+egl::Error OffscreenSurfaceVk::bindTexImage(const gl::Context * /*context*/,
+                                            gl::Texture * /*texture*/,
+                                            EGLint /*buffer*/)
 {
     return egl::NoError();
 }
 
-egl::Error OffscreenSurfaceVk::releaseTexImage(EGLint /*buffer*/)
+egl::Error OffscreenSurfaceVk::releaseTexImage(const gl::Context * /*context*/, EGLint /*buffer*/)
 {
     return egl::NoError();
 }
@@ -521,12 +523,14 @@ egl::Error WindowSurfaceVk::querySurfacePointerANGLE(EGLint attribute, void **va
     return egl::EglBadCurrentSurface();
 }
 
-egl::Error WindowSurfaceVk::bindTexImage(gl::Texture *texture, EGLint buffer)
+egl::Error WindowSurfaceVk::bindTexImage(const gl::Context *context,
+                                         gl::Texture *texture,
+                                         EGLint buffer)
 {
     return egl::NoError();
 }
 
-egl::Error WindowSurfaceVk::releaseTexImage(EGLint buffer)
+egl::Error WindowSurfaceVk::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     return egl::NoError();
 }

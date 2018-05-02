@@ -130,7 +130,8 @@ Error Surface::destroyImpl(const Display *display)
     {
         if (mImplementation)
         {
-            ANGLE_TRY(mImplementation->releaseTexImage(EGL_BACK_BUFFER));
+            ANGLE_TRY(
+                mImplementation->releaseTexImage(display->getProxyContext(), EGL_BACK_BUFFER));
         }
         auto glErr = mTexture->releaseTexImageFromSurface(display->getProxyContext());
         if (glErr.isError())
@@ -385,7 +386,7 @@ EGLint Surface::getHeight() const
 Error Surface::bindTexImage(const gl::Context *context, gl::Texture *texture, EGLint buffer)
 {
     ASSERT(!mTexture.get());
-    ANGLE_TRY(mImplementation->bindTexImage(texture, buffer));
+    ANGLE_TRY(mImplementation->bindTexImage(context, texture, buffer));
 
     auto glErr = texture->bindTexImageFromSurface(context, this);
     if (glErr.isError())
@@ -401,7 +402,7 @@ Error Surface::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     ASSERT(context);
 
-    ANGLE_TRY(mImplementation->releaseTexImage(buffer));
+    ANGLE_TRY(mImplementation->releaseTexImage(context, buffer));
 
     ASSERT(mTexture.get());
     auto glErr = mTexture->releaseTexImageFromSurface(context);

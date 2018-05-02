@@ -426,7 +426,9 @@ egl::Error D3DTextureSurfaceWGL::querySurfacePointerANGLE(EGLint attribute, void
     return egl::NoError();
 }
 
-egl::Error D3DTextureSurfaceWGL::bindTexImage(gl::Texture *texture, EGLint buffer)
+egl::Error D3DTextureSurfaceWGL::bindTexImage(const gl::Context *context,
+                                              gl::Texture *texture,
+                                              EGLint buffer)
 {
     ASSERT(mBoundObjectTextureHandle == nullptr);
 
@@ -451,7 +453,7 @@ egl::Error D3DTextureSurfaceWGL::bindTexImage(gl::Texture *texture, EGLint buffe
     return egl::NoError();
 }
 
-egl::Error D3DTextureSurfaceWGL::releaseTexImage(EGLint buffer)
+egl::Error D3DTextureSurfaceWGL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     ASSERT(mBoundObjectTextureHandle != nullptr);
     if (!mFunctionsWGL->dxUnlockObjectsNV(mDeviceHandle, 1, &mBoundObjectTextureHandle))

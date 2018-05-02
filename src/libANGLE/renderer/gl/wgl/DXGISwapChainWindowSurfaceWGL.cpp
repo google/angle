@@ -181,7 +181,9 @@ egl::Error DXGISwapChainWindowSurfaceWGL::querySurfacePointerANGLE(EGLint attrib
     return egl::NoError();
 }
 
-egl::Error DXGISwapChainWindowSurfaceWGL::bindTexImage(gl::Texture *texture, EGLint buffer)
+egl::Error DXGISwapChainWindowSurfaceWGL::bindTexImage(const gl::Context *context,
+                                                       gl::Texture *texture,
+                                                       EGLint buffer)
 {
     ASSERT(mTextureHandle == nullptr);
 
@@ -220,7 +222,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::bindTexImage(gl::Texture *texture, EGL
     return egl::NoError();
 }
 
-egl::Error DXGISwapChainWindowSurfaceWGL::releaseTexImage(EGLint buffer)
+egl::Error DXGISwapChainWindowSurfaceWGL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     ASSERT(mTextureHandle != nullptr);
 

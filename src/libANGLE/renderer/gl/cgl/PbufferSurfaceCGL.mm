@@ -100,13 +100,15 @@ egl::Error PbufferSurfaceCGL::querySurfacePointerANGLE(EGLint attribute, void **
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceCGL::bindTexImage(gl::Texture *texture, EGLint buffer)
+egl::Error PbufferSurfaceCGL::bindTexImage(const gl::Context *context,
+                                           gl::Texture *texture,
+                                           EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceCGL::releaseTexImage(EGLint buffer)
+egl::Error PbufferSurfaceCGL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::NoError();

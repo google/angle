@@ -288,13 +288,15 @@ egl::Error WindowSurfaceCGL::querySurfacePointerANGLE(EGLint attribute, void **v
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::bindTexImage(gl::Texture *texture, EGLint buffer)
+egl::Error WindowSurfaceCGL::bindTexImage(const gl::Context *context,
+                                          gl::Texture *texture,
+                                          EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::releaseTexImage(EGLint buffer)
+egl::Error WindowSurfaceCGL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_SUCCESS);

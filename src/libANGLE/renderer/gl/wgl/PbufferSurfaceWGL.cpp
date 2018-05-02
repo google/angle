@@ -146,7 +146,9 @@ static int GetWGLBufferBindTarget(EGLint buffer)
     }
 }
 
-egl::Error PbufferSurfaceWGL::bindTexImage(gl::Texture *texture, EGLint buffer)
+egl::Error PbufferSurfaceWGL::bindTexImage(const gl::Context *context,
+                                           gl::Texture *texture,
+                                           EGLint buffer)
 {
     if (!mFunctionsWGL->bindTexImageARB(mPbuffer, GetWGLBufferBindTarget(buffer)))
     {
@@ -158,7 +160,7 @@ egl::Error PbufferSurfaceWGL::bindTexImage(gl::Texture *texture, EGLint buffer)
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceWGL::releaseTexImage(EGLint buffer)
+egl::Error PbufferSurfaceWGL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     if (!mFunctionsWGL->releaseTexImageARB(mPbuffer, GetWGLBufferBindTarget(buffer)))
     {

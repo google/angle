@@ -30,8 +30,10 @@ class SurfaceNULL : public SurfaceImpl
                              EGLint width,
                              EGLint height) override;
     egl::Error querySurfacePointerANGLE(EGLint attribute, void **value) override;
-    egl::Error bindTexImage(gl::Texture *texture, EGLint buffer) override;
-    egl::Error releaseTexImage(EGLint buffer) override;
+    egl::Error bindTexImage(const gl::Context *context,
+                            gl::Texture *texture,
+                            EGLint buffer) override;
+    egl::Error releaseTexImage(const gl::Context *context, EGLint buffer) override;
     egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) override;
     void setSwapInterval(EGLint interval) override;
 

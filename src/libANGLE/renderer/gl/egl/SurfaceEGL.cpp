@@ -65,7 +65,7 @@ egl::Error SurfaceEGL::querySurfacePointerANGLE(EGLint attribute, void **value)
     return egl::EglBadSurface();
 }
 
-egl::Error SurfaceEGL::bindTexImage(gl::Texture *texture, EGLint buffer)
+egl::Error SurfaceEGL::bindTexImage(const gl::Context *context, gl::Texture *texture, EGLint buffer)
 {
     EGLBoolean success = mEGL->bindTexImage(mSurface, buffer);
     if (success == EGL_FALSE)
@@ -75,7 +75,7 @@ egl::Error SurfaceEGL::bindTexImage(gl::Texture *texture, EGLint buffer)
     return egl::NoError();
 }
 
-egl::Error SurfaceEGL::releaseTexImage(EGLint buffer)
+egl::Error SurfaceEGL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     EGLBoolean success = mEGL->releaseTexImage(mSurface, buffer);
     if (success == EGL_FALSE)

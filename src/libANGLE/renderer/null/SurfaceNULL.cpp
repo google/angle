@@ -54,12 +54,14 @@ egl::Error SurfaceNULL::querySurfacePointerANGLE(EGLint attribute, void **value)
     return egl::NoError();
 }
 
-egl::Error SurfaceNULL::bindTexImage(gl::Texture *texture, EGLint buffer)
+egl::Error SurfaceNULL::bindTexImage(const gl::Context *context,
+                                     gl::Texture *texture,
+                                     EGLint buffer)
 {
     return egl::NoError();
 }
 
-egl::Error SurfaceNULL::releaseTexImage(EGLint buffer)
+egl::Error SurfaceNULL::releaseTexImage(const gl::Context *context, EGLint buffer)
 {
     return egl::NoError();
 }
