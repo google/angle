@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "cb85dce8_cfb5fc1c",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T15:14:35Z",
+      "side": 1,
+      "message": "Wondering why this was necessary?",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 24
+      },
+      "revId": "1eb9c5acb40a100b56125acb444364a5b345f9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8f3a2974_e238cc1a",
         "filename": "src/tests/test_utils/ANGLETest.h",
         "patchSetId": 1
@@ -13,6 +36,30 @@
       "writtenOn": "2018-05-02T14:54:54Z",
       "side": 1,
       "message": "We could group the windows by something other than the platform type and merge all non-vk platforms together so we only have two windows.",
+      "range": {
+        "startLine": 401,
+        "startChar": 20,
+        "endLine": 401,
+        "endChar": 26
+      },
+      "revId": "1eb9c5acb40a100b56125acb444364a5b345f9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45ecad42_d61f6f54",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T15:14:35Z",
+      "side": 1,
+      "message": "+1. You could also default the windows to hidden on Windows platforms.",
+      "parentUuid": "8f3a2974_e238cc1a",
       "range": {
         "startLine": 401,
         "startChar": 20,
