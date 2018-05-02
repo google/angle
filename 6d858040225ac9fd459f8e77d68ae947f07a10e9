@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf34a4cb_17ffb0cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-02T16:14:03Z",
+      "side": 1,
+      "message": "You need \"Bug: angleproject:####\" here.\nCan reuse Courtney\u0027s bug number.",
+      "revId": "6d858040225ac9fd459f8e77d68ae947f07a10e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "232d004c_783dc985",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-02T16:14:03Z",
+      "side": 1,
+      "message": "P only had DP release, is this OK? Maybe 27?",
+      "range": {
+        "startLine": 12,
+        "startChar": 40,
+        "endLine": 12,
+        "endChar": 42
+      },
+      "revId": "6d858040225ac9fd459f8e77d68ae947f07a10e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
