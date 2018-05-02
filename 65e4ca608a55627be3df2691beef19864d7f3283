@@ -22,6 +22,30 @@
       "revId": "65e4ca608a55627be3df2691beef19864d7f3283",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cdd014d_5b25702a",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T15:15:48Z",
+      "side": 1,
+      "message": "In logging.h:\n\nhttps://cs.chromium.org/chromium/src/base/logging.h?type\u003dcs\u0026q\u003deat_stream_parameters\u0026sq\u003dpackage:chromium\u0026l\u003d476\n\nYeah the compiler seems happy to optimize out the pipe to nullptr.",
+      "parentUuid": "1864c42e_03b5f103",
+      "range": {
+        "startLine": 258,
+        "startChar": 54,
+        "endLine": 258,
+        "endChar": 69
+      },
+      "revId": "65e4ca608a55627be3df2691beef19864d7f3283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
