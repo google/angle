@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "95990a36_52e253e0",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:12:55Z",
+      "side": 1,
+      "message": "nit: use OpenGL ES instead of GL ES",
+      "range": {
+        "startLine": 43,
+        "startChar": 28,
+        "endLine": 43,
+        "endChar": 34
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ce64345_5e94c90d",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:12:55Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 53,
+        "startChar": 14,
+        "endLine": 53,
+        "endChar": 19
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d260078d_a0aad87d",
         "filename": "extensions/EGL_ANGLE_explicit_context.txt",
         "patchSetId": 9
@@ -18,6 +64,98 @@
         "startChar": 25,
         "endLine": 54,
         "endChar": 37
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d783546_beea36e9",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:12:55Z",
+      "side": 1,
+      "message": "stop after \"made available.\" add \"The new entry point has the form:\n\n\u003creturn value\u003e gl\u003centry point name\u003eContextANGLE(GLeglContextANGLE context, \u003centry point parameters\u003e)\"\n\nOr something like that. Just makes it easier to see visually.",
+      "range": {
+        "startLine": 54,
+        "startChar": 18,
+        "endLine": 56,
+        "endChar": 19
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "101edaf9_e9d84d53",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:12:55Z",
+      "side": 1,
+      "message": "if you need to add a GL version of EGL_NO_CONTEXT here we can do that.",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 8
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3a10f6e_e390dfbb",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:12:55Z",
+      "side": 1,
+      "message": "nit: remove glx prefix.",
+      "range": {
+        "startLine": 64,
+        "startChar": 46,
+        "endLine": 64,
+        "endChar": 61
+      },
+      "revId": "50571afbb183ca51d45731af33848707fe9af551",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "873c15e6_48605b5a",
+        "filename": "extensions/EGL_ANGLE_explicit_context.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T13:12:55Z",
+      "side": 1,
+      "message": "xContextANGLE is a bit informal. How about\n\n\"Calls made with an explicit context\"",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 72,
+        "endChar": 0
       },
       "revId": "50571afbb183ca51d45731af33848707fe9af551",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
