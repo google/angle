@@ -63,6 +63,30 @@
       "revId": "6d858040225ac9fd459f8e77d68ae947f07a10e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7595b563_a9219619",
+        "filename": "AndroidManifest.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-05-02T19:49:23Z",
+      "side": 1,
+      "message": "Our custom builds are against the lastest SDK which is 28. Having this set in the manifest makes Android Studio use symbols for 28 by default which matches for all of the framework files that we haven\u0027t modified. In Android Studio the P SDK is tied to v28, but it is currently just a preview release.\nGiven that it simplifies the Android Studio debug environment and a quick review of the \"targetSdkVersion\" description (below) it seems reasonable to me to update this value in the tree.\n\nSnippet on targetSdkVersion from https://developer.android.com/guide/topics/manifest/uses-sdk-element:\nThis attribute informs the system that you have tested against the target version and the system should not enable any compatibility behaviors to maintain your app\u0027s forward-compatibility with the target version. The application is still able to run on older versions (down to minSdkVersion).",
+      "parentUuid": "435fa4c3_f1d8e6f1",
+      "range": {
+        "startLine": 12,
+        "startChar": 40,
+        "endLine": 12,
+        "endChar": 42
+      },
+      "revId": "6d858040225ac9fd459f8e77d68ae947f07a10e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
