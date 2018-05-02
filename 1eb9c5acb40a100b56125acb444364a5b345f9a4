@@ -117,6 +117,30 @@
       "revId": "1eb9c5acb40a100b56125acb444364a5b345f9a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "273326d5_34216956",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-02T20:06:44Z",
+      "side": 1,
+      "message": "Thinking about it.. the garbage/non garbage may be the result of us assuming that the default backbuffer starts cleared. Maybe our tests are actually relying on this undefined behaviour?",
+      "parentUuid": "6d64096c_e772f1c9",
+      "range": {
+        "startLine": 401,
+        "startChar": 20,
+        "endLine": 401,
+        "endChar": 26
+      },
+      "revId": "1eb9c5acb40a100b56125acb444364a5b345f9a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
