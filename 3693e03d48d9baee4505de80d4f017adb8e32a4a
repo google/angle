@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1ee94df_f4011d50",
+        "filename": "src/compiler/translator/tree_ops/RewriteRepeatedAssignToSwizzled.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-03T17:40:34Z",
+      "side": 1,
+      "message": "Note: this won\u0027t work for assignments in if conditions and loop.",
+      "revId": "3693e03d48d9baee4505de80d4f017adb8e32a4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
