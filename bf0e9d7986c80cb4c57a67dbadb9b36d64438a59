@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "acc26186_3bc8077c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-03T07:50:09Z",
+      "side": 1,
+      "message": "Disable avoid1BitAlphaTextureFormats workaround on Intel.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 52
+      },
+      "revId": "bf0e9d7986c80cb4c57a67dbadb9b36d64438a59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7b72185_8058c259",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-03T07:50:09Z",
+      "side": 1,
+      "message": "Do you think is it better to organize the sentences like below?\n\nWe introduced avoid1BitAlphaTextureFormats workaround since some old Intel drivers have bug that 1-bit alpha always round up when converting from float to unsigned int. The workaround using rgba8 instead of *a1 did resolve some problems in that time. However, this workaround brings new issue that 1-bit alpha can only represent 0 and 1 integers. 8 bits alpha covers from 0 to 255 which can have some intermediate states. But 1-bit alpha can\u0027t have those intermediate states. For example, if we expect to render to a rgb5_a1 framebuffer, the expected alpha value should be 0 or 1. We actually get a value between 0 and 255 which is not correct. This is also why below deqp case fails. The current Intel drivers seem that have fixed the old driver bug. At least, we can\u0027t reproduce it at our side without this workaround. So we suggest to disable this workaround for Intel drivers.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 18
+      },
+      "revId": "bf0e9d7986c80cb4c57a67dbadb9b36d64438a59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
