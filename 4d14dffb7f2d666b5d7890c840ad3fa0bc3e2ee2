@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ad521a9_cfbb741f",
+        "filename": "src/libGLESv2/libGLESv2_autogen.def",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T18:44:38Z",
+      "side": 1,
+      "message": "whoops, I noticed one bug - we seem to skip an ordinal between each group. Maybe try removing the \"+1\" you added?",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 58
+      },
+      "revId": "4d14dffb7f2d666b5d7890c840ad3fa0bc3e2ee2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
