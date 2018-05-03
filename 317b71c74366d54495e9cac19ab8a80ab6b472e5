@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "59e1aeb6_244a179b",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-03T18:27:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbefcb01_5b43be77",
+      "range": {
+        "startLine": 149,
+        "startChar": 13,
+        "endLine": 149,
+        "endChar": 28
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6fcb93e3_a9bf751b",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8bf1095_225a0df8",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-03T18:27:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6fcb93e3_a9bf751b",
+      "range": {
+        "startLine": 153,
+        "startChar": 52,
+        "endLine": 153,
+        "endChar": 55
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5343aa01_3093e99f",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-03T18:27:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "990e7a0d_fb368cc4",
+      "range": {
+        "startLine": 162,
+        "startChar": 42,
+        "endLine": 162,
+        "endChar": 72
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "848c0e2e_a44483b0",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2018-05-03T12:31:06Z",
       "side": 1,
       "message": "can\u0027t we get the defs and command names from the existing info without having to go back to the xml?",
+      "range": {
+        "startLine": 403,
+        "startChar": 1,
+        "endLine": 403,
+        "endChar": 54
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd00497a_dbdd3a2a",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-03T18:27:11Z",
+      "side": 1,
+      "message": "integrated get_libgles_entry_points into get_entry_points, which solves this.",
+      "parentUuid": "848c0e2e_a44483b0",
       "range": {
         "startLine": 403,
         "startChar": 1,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "37302744_bfdbe1d4",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-03T18:27:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad1c25a2_234f0b69",
+      "range": {
+        "startLine": 469,
+        "startChar": 33,
+        "endLine": 469,
+        "endChar": 42
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "150c994a_9009991c",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 1
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "c3a04a7c_e4bc0284",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-03T18:27:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "150c994a_9009991c",
+      "range": {
+        "startLine": 480,
+        "startChar": 33,
+        "endLine": 480,
+        "endChar": 42
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a794b2a8_60110a80",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 1
@@ -183,6 +327,30 @@
       "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95e2de7d_965fe459",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-03T18:27:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a794b2a8_60110a80",
+      "range": {
+        "startLine": 563,
+        "startChar": 4,
+        "endLine": 563,
+        "endChar": 63
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -229,6 +397,30 @@
       "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc78b07d_3fd28454",
+        "filename": "src/libGLESv2/libGLESv2.def",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-03T18:27:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "530daf58_a5bfa69e",
+      "range": {
+        "startLine": 6,
+        "startChar": 4,
+        "endLine": 6,
+        "endChar": 54
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
