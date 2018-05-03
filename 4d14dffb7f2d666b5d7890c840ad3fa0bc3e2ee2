@@ -22,6 +22,30 @@
       "revId": "4d14dffb7f2d666b5d7890c840ad3fa0bc3e2ee2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "debb3ce3_37050964",
+        "filename": "src/libGLESv2/libGLESv2_autogen.def",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-03T19:30:20Z",
+      "side": 1,
+      "message": "Nice catch. Added ordinal_start that gets maintained throughout. When comments for version/extension get added, we can\u0027t use len() without complicating it with regex matching.",
+      "parentUuid": "3ad521a9_cfbb741f",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 58
+      },
+      "revId": "4d14dffb7f2d666b5d7890c840ad3fa0bc3e2ee2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
