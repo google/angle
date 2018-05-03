@@ -183,6 +183,36 @@ struct Extensions
     // Implies that TextureCaps for GL_ETC1_RGB8_OES exist
     bool compressedETC1RGB8Texture;
 
+    // OES_compressed_ETC2_RGB8_texture
+    bool compressedETC2RGB8Texture;
+
+    // OES_compressed_ETC2_sRGB8_texture
+    bool compressedETC2sRGB8Texture;
+
+    // OES_compressed_ETC2_punchthroughA_RGBA8_texture
+    bool compressedETC2PunchthroughARGB8Texture;
+
+    // OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture
+    bool compressedETC2PunchthroughAsRGB8AlphaTexture;
+
+    // OES_compressed_ETC2_RGBA8_texture
+    bool compressedETC2RGBA8Texture;
+
+    // OES_compressed_ETC2_sRGB8_alpha8_texture
+    bool compressedETC2sRGB8Alpha8Texture;
+
+    // OES_compressed_EAC_R11_unsigned_texture
+    bool compressedEACR11UnsignedTexture;
+
+    // OES_compressed_EAC_R11_signed_texture
+    bool compressedEACR11SignedTexture;
+
+    // OES_compressed_EAC_RG11_unsigned_texture
+    bool compressedEACRG11UnsignedTexture;
+
+    // OES_compressed_EAC_RG11_signed_texture
+    bool compressedEACRG11SignedTexture;
+
     // GL_EXT_sRGB
     // Implies that TextureCaps for GL_SRGB8_ALPHA8 and GL_SRGB8 exist
     // TODO: Don't advertise this extension in ES3

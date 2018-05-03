@@ -160,6 +160,16 @@ Extensions::Extensions()
       textureCompressionASTCHDR(false),
       textureCompressionASTCLDR(false),
       compressedETC1RGB8Texture(false),
+      compressedETC2RGB8Texture(false),
+      compressedETC2sRGB8Texture(false),
+      compressedETC2PunchthroughARGB8Texture(false),
+      compressedETC2PunchthroughAsRGB8AlphaTexture(false),
+      compressedETC2RGBA8Texture(false),
+      compressedETC2sRGB8Alpha8Texture(false),
+      compressedEACR11UnsignedTexture(false),
+      compressedEACR11SignedTexture(false),
+      compressedEACRG11UnsignedTexture(false),
+      compressedEACRG11SignedTexture(false),
       sRGB(false),
       depthTextures(false),
       depth32(false),
@@ -492,6 +502,106 @@ static bool DetermineETC1RGB8TextureSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
 }
 
+// Check for OES_compressed_ETC2_RGB8_texture
+static bool DetermineETC2RGB8TextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_RGB8_ETC2,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
+// Check for OES_compressed_ETC2_sRGB8_texture
+static bool DetermineETC2sRGB8TextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_SRGB8_ETC2,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
+// Check for OES_compressed_ETC2_punchthroughA_RGBA8_texture
+static bool DetermineETC2PunchthroughARGB8TextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
+// Check for OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture
+static bool DetermineETC2PunchthroughAsRGB8AlphaTextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
+// Check for OES_compressed_ETC2_RGBA8_texture
+static bool DetermineETC2RGBA8TextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_RGBA8_ETC2_EAC,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
+// Check for OES_compressed_ETC2_sRGB8_alpha8_texture
+static bool DetermineETC2sRGB8Alpha8TextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
+// Check for OES_compressed_EAC_R11_unsigned_texture
+static bool DetermineEACR11UnsignedTextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_R11_EAC,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
+// Check for OES_compressed_EAC_R11_signed_texture
+static bool DetermineEACR11SignedTextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_SIGNED_R11_EAC,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
+// Check for OES_compressed_EAC_RG11_unsigned_texture
+static bool DetermineEACRG11UnsignedTextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_RG11_EAC,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
+// Check for OES_compressed_EAC_RG11_signed_texture
+static bool DetermineEACRG11SignedTextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_SIGNED_RG11_EAC,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
 // Check for GL_ANGLE_texture_compression_dxt5
 static bool DetermineSRGBTextureSupport(const TextureCapsMap &textureCaps)
 {
@@ -591,6 +701,18 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     textureCompressionASTCHDR  = DetermineASTCTextureSupport(textureCaps);
     textureCompressionASTCLDR  = textureCompressionASTCHDR;
     compressedETC1RGB8Texture  = DetermineETC1RGB8TextureSupport(textureCaps);
+    compressedETC2RGB8Texture  = DetermineETC2RGB8TextureSupport(textureCaps);
+    compressedETC2sRGB8Texture = DetermineETC2sRGB8TextureSupport(textureCaps);
+    compressedETC2PunchthroughARGB8Texture =
+        DetermineETC2PunchthroughARGB8TextureSupport(textureCaps);
+    compressedETC2PunchthroughAsRGB8AlphaTexture =
+        DetermineETC2PunchthroughAsRGB8AlphaTextureSupport(textureCaps);
+    compressedETC2RGBA8Texture       = DetermineETC2RGBA8TextureSupport(textureCaps);
+    compressedETC2sRGB8Alpha8Texture = DetermineETC2sRGB8Alpha8TextureSupport(textureCaps);
+    compressedEACR11UnsignedTexture  = DetermineEACR11UnsignedTextureSupport(textureCaps);
+    compressedEACR11SignedTexture    = DetermineEACR11SignedTextureSupport(textureCaps);
+    compressedEACRG11UnsignedTexture = DetermineEACRG11UnsignedTextureSupport(textureCaps);
+    compressedEACRG11SignedTexture   = DetermineEACRG11SignedTextureSupport(textureCaps);
     sRGB                       = DetermineSRGBTextureSupport(textureCaps);
     depthTextures              = DetermineDepthTextureSupport(textureCaps);
     depth32                    = DetermineDepth32Support(textureCaps);
@@ -640,6 +762,16 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_KHR_texture_compression_astc_hdr"] = enableableExtension(&Extensions::textureCompressionASTCHDR);
         map["GL_KHR_texture_compression_astc_ldr"] = enableableExtension(&Extensions::textureCompressionASTCLDR);
         map["GL_OES_compressed_ETC1_RGB8_texture"] = enableableExtension(&Extensions::compressedETC1RGB8Texture);
+        map["OES_compressed_ETC2_RGB8_texture"] = enableableExtension(&Extensions::compressedETC2RGB8Texture);
+        map["OES_compressed_ETC2_sRGB8_texture"] = enableableExtension(&Extensions::compressedETC2sRGB8Texture);
+        map["OES_compressed_ETC2_punchthroughA_RGBA8_texture"] = enableableExtension(&Extensions::compressedETC2PunchthroughARGB8Texture);
+        map["OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture"] = enableableExtension(&Extensions::compressedETC2PunchthroughAsRGB8AlphaTexture);
+        map["OES_compressed_ETC2_RGBA8_texture"] = enableableExtension(&Extensions::compressedETC2RGBA8Texture);
+        map["OES_compressed_ETC2_sRGB8_alpha8_texture"] = enableableExtension(&Extensions::compressedETC2sRGB8Alpha8Texture);
+        map["OES_compressed_EAC_R11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACR11UnsignedTexture);
+        map["OES_compressed_EAC_R11_signed_texture"] = enableableExtension(&Extensions::compressedEACR11SignedTexture);
+        map["OES_compressed_EAC_RG11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACRG11UnsignedTexture);
+        map["OES_compressed_EAC_RG11_signed_texture"] = enableableExtension(&Extensions::compressedEACRG11SignedTexture);
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextures);
         map["GL_OES_depth32"] = esOnlyExtension(&Extensions::depth32);

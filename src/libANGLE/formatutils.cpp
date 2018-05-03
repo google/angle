@@ -758,17 +758,17 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddLUMAFormat(&map, GL_LUMINANCE_ALPHA32F_EXT, true, 32, 32, GL_LUMINANCE_ALPHA, GL_FLOAT,          GL_FLOAT,               RequireExtAndExt<&Extensions::textureStorage, &Extensions::textureFloat>,     NeverSupported, RequireExt<&Extensions::textureFloatLinear>);
 
     // Compressed formats, From ES 3.0.1 spec, table 3.16
-    //                       | Internal format                             |W |H | BS |CC| Format | Type            | SRGB | Supported      | Renderable    | Filterable    |
-    AddCompressedFormat(&map, GL_COMPRESSED_R11_EAC,                        4, 4,  64, 1, GL_RED,  GL_UNSIGNED_BYTE, false, RequireES<3, 0>, NeverSupported, AlwaysSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_SIGNED_R11_EAC,                 4, 4,  64, 1, GL_RED,  GL_UNSIGNED_BYTE, false, RequireES<3, 0>, NeverSupported, AlwaysSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_RG11_EAC,                       4, 4, 128, 2, GL_RG,   GL_UNSIGNED_BYTE, false, RequireES<3, 0>, NeverSupported, AlwaysSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_SIGNED_RG11_EAC,                4, 4, 128, 2, GL_RG,   GL_UNSIGNED_BYTE, false, RequireES<3, 0>, NeverSupported, AlwaysSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_RGB8_ETC2,                      4, 4,  64, 3, GL_RGB,  GL_UNSIGNED_BYTE, false, RequireES<3, 0>, NeverSupported, AlwaysSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_SRGB8_ETC2,                     4, 4,  64, 3, GL_RGB,  GL_UNSIGNED_BYTE, true,  RequireES<3, 0>, NeverSupported, AlwaysSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  4, 4,  64, 3, GL_RGB,  GL_UNSIGNED_BYTE, false, RequireES<3, 0>, NeverSupported, AlwaysSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, 4, 4,  64, 3, GL_RGB,  GL_UNSIGNED_BYTE, true,  RequireES<3, 0>, NeverSupported, AlwaysSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_RGBA8_ETC2_EAC,                 4, 4, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, false, RequireES<3, 0>, NeverSupported, AlwaysSupported);
-    AddCompressedFormat(&map, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          4, 4, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, true,  RequireES<3, 0>, NeverSupported, AlwaysSupported);
+    //                       | Internal format                             |W |H | BS |CC| Format | Type            | SRGB | Supported                                                                       | Renderable    | Filterable    |
+    AddCompressedFormat(&map, GL_COMPRESSED_R11_EAC,                        4, 4,  64, 1, GL_RED,  GL_UNSIGNED_BYTE, false, RequireESOrExt<3, 0, &Extensions::compressedEACR11UnsignedTexture>,               NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_SIGNED_R11_EAC,                 4, 4,  64, 1, GL_RED,  GL_UNSIGNED_BYTE, false, RequireESOrExt<3, 0, &Extensions::compressedEACR11SignedTexture>,                 NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_RG11_EAC,                       4, 4, 128, 2, GL_RG,   GL_UNSIGNED_BYTE, false, RequireESOrExt<3, 0, &Extensions::compressedEACRG11UnsignedTexture>,              NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_SIGNED_RG11_EAC,                4, 4, 128, 2, GL_RG,   GL_UNSIGNED_BYTE, false, RequireESOrExt<3, 0, &Extensions::compressedEACRG11SignedTexture>,                NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_RGB8_ETC2,                      4, 4,  64, 3, GL_RGB,  GL_UNSIGNED_BYTE, false, RequireESOrExt<3, 0, &Extensions::compressedETC2RGB8Texture>,                     NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_SRGB8_ETC2,                     4, 4,  64, 3, GL_RGB,  GL_UNSIGNED_BYTE, true,  RequireESOrExt<3, 0, &Extensions::compressedETC2sRGB8Texture>,                    NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,  4, 4,  64, 3, GL_RGB,  GL_UNSIGNED_BYTE, false, RequireESOrExt<3, 0, &Extensions::compressedETC2PunchthroughARGB8Texture>,        NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, 4, 4,  64, 3, GL_RGB,  GL_UNSIGNED_BYTE, true,  RequireESOrExt<3, 0, &Extensions::compressedETC2PunchthroughAsRGB8AlphaTexture>, NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_RGBA8_ETC2_EAC,                 4, 4, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, false, RequireESOrExt<3, 0, &Extensions::compressedETC2RGBA8Texture>,                    NeverSupported, AlwaysSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,          4, 4, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, true,  RequireESOrExt<3, 0, &Extensions::compressedETC2sRGB8Alpha8Texture>,              NeverSupported, AlwaysSupported);
 
     // From GL_EXT_texture_compression_dxt1
     //                       | Internal format                   |W |H | BS |CC| Format | Type            | SRGB | Supported                                         | Renderable    | Filterable    |
