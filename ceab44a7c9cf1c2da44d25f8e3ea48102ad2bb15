@@ -16,6 +16,57 @@
       "revId": "ceab44a7c9cf1c2da44d25f8e3ea48102ad2bb15",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd84aea0_3d2337e0",
+        "filename": "cr-buildbucket.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-05-03T12:42:37Z",
+      "side": 1,
+      "message": "I believe this should use properties, not properties_j, since x86 is a string: https://cs.chromium.org/chromium/infra/appengine/cr-buildbucket/proto/project_config.proto?q\u003dproperties_j\u0026sq\u003dpackage:chromium\u0026l\u003d102\u0026dr\u003dC (alternatively, if you want to use properties_j throughout, \"target_cpu:\\\"x86\\\"\" probably has the same effect).",
+      "revId": "ceab44a7c9cf1c2da44d25f8e3ea48102ad2bb15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f97b23a8_e8e21f5f",
+        "filename": "cr-buildbucket.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-05-03T12:42:37Z",
+      "side": 1,
+      "message": "likewise\n\nx64 is gn\u0027s default target_cpu, so I\u0027m not sure if you want to explicitly set this.",
+      "revId": "ceab44a7c9cf1c2da44d25f8e3ea48102ad2bb15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b55d7045_027ce660",
+        "filename": "luci-milo.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2018-05-03T12:42:37Z",
+      "side": 1,
+      "message": "Oh, does it work this way round too? I thought the |-separated path goes in the category, and short_name contains only the last part of the path (cf https://chromium-review.googlesource.com/c/chromium/src/+/1013021) -- but maybe both work.",
+      "revId": "ceab44a7c9cf1c2da44d25f8e3ea48102ad2bb15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
