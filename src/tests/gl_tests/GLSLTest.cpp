@@ -4103,6 +4103,36 @@ TEST_P(GLSLTest_ES3, VaryingStaticallyUsedButNotActiveInFragmentShader)
     ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
 }
 
+// Test nesting floor() calls with a large multiplier inside.
+TEST_P(GLSLTest_ES3, NestedFloorWithLargeMultiplierInside)
+{
+    // D3D11 seems to ignore the floor() calls in this particular case, so one of the corners ends
+    // up red. http://crbug.com/838885
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    const std::string &fragmentShader =
+        R"(#version 300 es
+        precision highp float;
+        out vec4 my_FragColor;
+        void main()
+        {
+            vec2 coord = gl_FragCoord.xy / 500.0;
+            my_FragColor = vec4(1, 0, 0, 1);
+            if (coord.y + 0.1 > floor(1e-6 * floor(coord.x*4e5)))
+            {
+                my_FragColor = vec4(0, 1, 0, 1);
+            }
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragmentShader);
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    // Verify that all the corners of the rendered result are green.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, getWindowHeight() - 1, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
