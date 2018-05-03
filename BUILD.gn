@@ -86,6 +86,10 @@ config("internal_config") {
       defines += [ "ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS=1" ]
     }
   }
+
+  if (angle_enable_trace) {
+    defines += [ "ANGLE_ENABLE_DEBUG_TRACE=1" ]
+  }
 }
 
 config("extra_warnings") {

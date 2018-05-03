@@ -10,8 +10,8 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_CONTEXT11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_CONTEXT11_H_
 
+#include <stack>
 #include "libANGLE/renderer/ContextImpl.h"
-
 #include "libANGLE/renderer/d3d/ContextD3D.h"
 
 namespace rx
@@ -177,6 +177,7 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
 
     Renderer11 *mRenderer;
     IncompleteTextureSet mIncompleteTextures;
+    std::stack<std::string> mMarkerStack;
 };
 }  // namespace rx
 

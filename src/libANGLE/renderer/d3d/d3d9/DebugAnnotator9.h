@@ -18,10 +18,14 @@ class DebugAnnotator9 : public angle::LoggingAnnotator
 {
   public:
     DebugAnnotator9() {}
-    void beginEvent(const wchar_t *eventName) override;
-    void endEvent() override;
-    void setMarker(const wchar_t *markerName) override;
+    void beginEvent(const char *eventName, const char *eventMessage) override;
+    void endEvent(const char *eventName) override;
+    void setMarker(const char *markerName) override;
     bool getStatus() override;
+
+  private:
+    static constexpr size_t kMaxMessageLength = 256;
+    wchar_t mWCharMessage[kMaxMessageLength];
 };
 
 }

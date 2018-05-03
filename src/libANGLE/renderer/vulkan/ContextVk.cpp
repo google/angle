@@ -32,6 +32,8 @@
 #include "libANGLE/renderer/vulkan/TransformFeedbackVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 
+#include "third_party/trace_event/trace_event.h"
+
 namespace rx
 {
 
@@ -122,6 +124,7 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mViewport{},
       mScissor{}
 {
+    TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
 
@@ -189,6 +192,7 @@ angle::Result ContextVk::getIncompleteTexture(const gl::Context *context,
 
 angle::Result ContextVk::initialize()
 {
+    TRACE_EVENT0("gpu.angle", "ContextVk::initialize");
     // Note that this may reserve more sets than strictly necessary for a particular layout.
     ANGLE_TRY(mDynamicDescriptorPools[kUniformsDescriptorSetIndex].init(
         this, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, GetUniformBufferDescriptorCount()));

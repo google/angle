@@ -123,7 +123,7 @@ inline const unsigned char *DefaultGetTraceCategoryEnabledFlag(PlatformMethods *
 // - name is the name of the event. Also used to match BEGIN/END and
 //   START/FINISH pairs.
 // - id optionally allows events of the same name to be distinguished from
-//   each other. For example, to trace the consutruction and destruction of
+//   each other. For example, to trace the construction and destruction of
 //   objects, specify the pointer as the id parameter.
 // - timestamp should be a time value returned from monotonicallyIncreasingTime.
 // - numArgs specifies the number of elements in argNames, argTypes, and

@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_CONTEXT9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_CONTEXT9_H_
 
+#include <stack>
 #include "libANGLE/renderer/d3d/ContextD3D.h"
 
 namespace rx
@@ -162,6 +163,7 @@ class Context9 : public ContextD3D
   private:
     Renderer9 *mRenderer;
     IncompleteTextureSet mIncompleteTextures;
+    std::stack<std::string> mMarkerStack;
 };
 
 }  // namespace rx
