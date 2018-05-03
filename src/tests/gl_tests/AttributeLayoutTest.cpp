@@ -6,10 +6,9 @@
 // AttributeLayoutTest:
 //   Test various layouts of vertex attribute data:
 //   - in memory, in buffer object, or combination of both
-//   - float, integer, or combination of both
 //   - sequential or interleaved
+//   - various combinations of data types
 
-#include <array>
 #include <vector>
 
 #include "test_utils/ANGLETest.h"
@@ -22,7 +21,7 @@ namespace
 
 // Test will draw these four triangles.
 // clang-format off
-const GLfloat triangleData[] = {
+constexpr double kTriangleData[] = {
     // xy       rgb
     0,0,        1,1,0,
     -1,+1,      1,1,0,
@@ -42,7 +41,29 @@ const GLfloat triangleData[] = {
 };
 // clang-format on
 
-constexpr size_t kNumVertices = ArraySize(triangleData) / 5;
+constexpr size_t kNumVertices = ArraySize(kTriangleData) / 5;
+
+// Vertex data source description.
+class VertexData
+{
+  public:
+    VertexData(int dimension, const double *data, unsigned offset, unsigned stride)
+        : mDimension(dimension), mData(data), mOffset(offset), mStride(stride)
+    {
+    }
+    int getDimension() const { return mDimension; }
+    double getValue(unsigned vertexNumber, int component) const
+    {
+        return mData[mOffset + mStride * vertexNumber + component];
+    }
+
+  private:
+    int mDimension;
+    const double *mData;
+    // offset and stride in doubles
+    unsigned mOffset;
+    unsigned mStride;
+};
 
 // A container for one or more vertex attributes.
 class Container
@@ -51,18 +72,7 @@ class Container
     static constexpr size_t kSize = 1024;
 
     void open(void) { memset(mMemory, 0xff, kSize); }
-
-    void fill(size_t numItem, size_t itemSize, const char *src, unsigned offset, unsigned stride)
-    {
-        while (numItem--)
-        {
-            ASSERT(offset + itemSize <= kSize);
-            memcpy(mMemory + offset, src, itemSize);
-            src += itemSize;
-            offset += stride;
-        }
-    }
-
+    void *getDestination(size_t offset) { return mMemory + offset; }
     virtual void close(void) {}
     virtual ~Container() {}
     virtual const char *getAddress() = 0;
@@ -97,62 +107,109 @@ class Buffer : public Container
     GLBuffer mBuffer;
 };
 
-// clang-format off
-template<class Type> struct GLType {};
-template<> struct GLType<GLbyte  > { static constexpr GLenum kGLType = GL_BYTE; };
-template<> struct GLType<GLubyte > { static constexpr GLenum kGLType = GL_UNSIGNED_BYTE; };
-template<> struct GLType<GLshort > { static constexpr GLenum kGLType = GL_SHORT; };
-template<> struct GLType<GLushort> { static constexpr GLenum kGLType = GL_UNSIGNED_SHORT; };
-template<> struct GLType<GLfloat > { static constexpr GLenum kGLType = GL_FLOAT; };
-// clang-format on
-
-// Encapsulates the data for one vertex attribute, where it lives, and how it is layed out.
-class Attrib
+// Encapsulate the storage, layout, format and data of a vertex attribute.
+struct Attrib
 {
-  public:
-    template <class T>
-    Attrib(std::shared_ptr<Container> container, unsigned offset, unsigned stride, const T &data)
-        : mContainer(container),
-          mOffset(offset),
-          mStride(stride),
-          mData(reinterpret_cast<const char *>(data.data())),
-          mDimension(data.size() / kNumVertices),
-          mAttribSize(mDimension * sizeof(typename T::value_type)),
-          mGLType(GLType<typename T::value_type>::kGLType)
-    {
-        // Compiler complains about unused variable without these.
-        (void)GLType<GLbyte>::kGLType;
-        (void)GLType<GLubyte>::kGLType;
-        (void)GLType<GLshort>::kGLType;
-        (void)GLType<GLushort>::kGLType;
-        (void)GLType<GLfloat>::kGLType;
-    }
-
     void openContainer(void) const { mContainer->open(); }
+
     void fillContainer(void) const
     {
-        mContainer->fill(kNumVertices, mAttribSize, mData, mOffset, mStride);
+        for (unsigned i = 0; i < kNumVertices; ++i)
+        {
+            for (int j = 0; j < mData.getDimension(); ++j)
+            {
+                size_t destOffset = mOffset + mStride * i + mCTypeSize * j;
+                if (destOffset + mCTypeSize > Container::kSize)
+                    FAIL() << "test case does not fit container";
+
+                double value = mData.getValue(i, j);
+                if (mGLType == GL_FIXED)
+                    value *= 1 << 16;
+                else if (mNormalized)
+                {
+                    if (value < mMinIn || value > mMaxIn)
+                        FAIL() << "test data does not fit format";
+                    value = (value - mMinIn) * mScale + mMinOut;
+                }
+
+                mStore(value, mContainer->getDestination(destOffset));
+            }
+        }
     }
+
     void closeContainer(void) const { mContainer->close(); }
 
     void enable(unsigned index) const
     {
         glBindBuffer(GL_ARRAY_BUFFER, mContainer->getBuffer());
-        glVertexAttribPointer(index, static_cast<int>(mDimension), mGLType, GL_FALSE, mStride,
+        glVertexAttribPointer(index, mData.getDimension(), mGLType, mNormalized, mStride,
                               mContainer->getAddress() + mOffset);
+        EXPECT_GL_NO_ERROR();
         glEnableVertexAttribArray(index);
     }
 
     bool inClientMemory(void) const { return mContainer->getAddress() != nullptr; }
 
-  protected:
     std::shared_ptr<Container> mContainer;
     unsigned mOffset;
     unsigned mStride;
-    const char *mData;
-    size_t mDimension;
-    size_t mAttribSize;
+    const VertexData &mData;
+    void (*mStore)(double value, void *dest);
     GLenum mGLType;
+    GLboolean mNormalized;
+    size_t mCTypeSize;
+    double mMinIn;
+    double mMaxIn;
+    double mMinOut;
+    double mScale;
+};
+
+// Change type and store.
+template <class T>
+void Store(double value, void *dest)
+{
+    T v = value;
+    memcpy(dest, &v, sizeof(v));
+}
+
+// Function object that makes Attrib structs according to a vertex format.
+template <class CType, GLenum GLType, bool Normalized>
+class Format
+{
+    static_assert(!(Normalized && GLType == GL_FLOAT), "Normalized float does not make sense.");
+
+  public:
+    Format(bool es3) : mES3(es3) {}
+
+    Attrib operator()(std::shared_ptr<Container> container,
+                      unsigned offset,
+                      unsigned stride,
+                      const VertexData &data) const
+    {
+        double minIn    = 0;
+        double maxIn    = 1;
+        double minOut   = std::numeric_limits<CType>::min();
+        double rangeOut = std::numeric_limits<CType>::max() - minOut;
+
+        if (std::is_signed<CType>::value)
+        {
+            minIn = -1;
+            maxIn = +1;
+            if (mES3)
+            {
+                minOut += 1;
+                rangeOut -= 1;
+            }
+        }
+
+        return {
+            container,  offset,        stride, data,  Store<CType>, GLType,
+            Normalized, sizeof(CType), minIn,  maxIn, minOut,       rangeOut / (maxIn - minIn),
+        };
+    }
+
+  protected:
+    const bool mES3;
 };
 
 typedef std::vector<Attrib> TestCase;
@@ -160,31 +217,21 @@ typedef std::vector<Attrib> TestCase;
 void PrepareTestCase(const TestCase &tc)
 {
     for (const Attrib &a : tc)
-    {
         a.openContainer();
-    }
     for (const Attrib &a : tc)
-    {
         a.fillContainer();
-    }
     for (const Attrib &a : tc)
-    {
         a.closeContainer();
-    }
     unsigned i = 0;
     for (const Attrib &a : tc)
-    {
         a.enable(i++);
-    }
 }
-
-template <class Type, size_t Dimension>
-using VertexData = std::array<Type, Dimension * kNumVertices>;
 
 class AttributeLayoutTest : public ANGLETest
 {
   protected:
-    AttributeLayoutTest() : mProgram(0)
+    AttributeLayoutTest()
+        : mProgram(0), mCoord(2, kTriangleData, 0, 5), mColor(3, kTriangleData, 2, 5)
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -194,7 +241,6 @@ class AttributeLayoutTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void PrepareVertexData(void);
     void GetTestCases(void);
 
     void SetUp() override
@@ -229,7 +275,6 @@ class AttributeLayoutTest : public ANGLETest
 
         glGenBuffers(1, &mIndexBuffer);
 
-        PrepareVertexData();
         GetTestCases();
     }
 
@@ -294,63 +339,54 @@ class AttributeLayoutTest : public ANGLETest
 
     std::vector<TestCase> mTestCases;
 
-    VertexData<GLfloat, 2> mCoord;
-    VertexData<GLfloat, 3> mColor;
-    VertexData<GLbyte, 3> mBColor;
+    VertexData mCoord;
+    VertexData mColor;
 };
 const GLushort AttributeLayoutTest::mIndices[kNumVertices] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
-void AttributeLayoutTest::PrepareVertexData(void)
-{
-    mCoord.fill(0);
-    mColor.fill(0);
-    mBColor.fill(0);
-
-    for (unsigned i = 0; i < kNumVertices; ++i)
-    {
-        GLfloat x = triangleData[i * 5 + 0];
-        GLfloat y = triangleData[i * 5 + 1];
-        GLfloat r = triangleData[i * 5 + 2];
-        GLfloat g = triangleData[i * 5 + 3];
-        GLfloat b = triangleData[i * 5 + 4];
-
-        mCoord[i * 2 + 0] = x;
-        mCoord[i * 2 + 1] = y;
-
-        mColor[i * 3 + 0] = r;
-        mColor[i * 3 + 1] = g;
-        mColor[i * 3 + 2] = b;
-
-        mBColor[i * 3 + 0] = r;
-        mBColor[i * 3 + 1] = g;
-        mBColor[i * 3 + 2] = b;
-    }
-}
-
 void AttributeLayoutTest::GetTestCases(void)
 {
+    const bool es3 = getClientMajorVersion() >= 3;
+
+    Format<GLfloat, GL_FLOAT, false> Float(es3);
+    Format<GLint, GL_FIXED, false> Fixed(es3);
+
+    Format<GLbyte, GL_BYTE, false> SByte(es3);
+    Format<GLubyte, GL_UNSIGNED_BYTE, false> UByte(es3);
+    Format<GLshort, GL_SHORT, false> SShort(es3);
+    Format<GLushort, GL_UNSIGNED_SHORT, false> UShort(es3);
+    Format<GLint, GL_INT, false> SInt(es3);
+    Format<GLuint, GL_UNSIGNED_INT, false> UInt(es3);
+
+    Format<GLbyte, GL_BYTE, true> NormSByte(es3);
+    Format<GLubyte, GL_UNSIGNED_BYTE, true> NormUByte(es3);
+    Format<GLshort, GL_SHORT, true> NormSShort(es3);
+    Format<GLushort, GL_UNSIGNED_SHORT, true> NormUShort(es3);
+    Format<GLint, GL_INT, true> NormSInt(es3);
+    Format<GLuint, GL_UNSIGNED_INT, true> NormUInt(es3);
+
     std::shared_ptr<Container> M0 = std::make_shared<Memory>();
     std::shared_ptr<Container> M1 = std::make_shared<Memory>();
     std::shared_ptr<Container> B0 = std::make_shared<Buffer>();
     std::shared_ptr<Container> B1 = std::make_shared<Buffer>();
 
     // 0. two buffers
-    mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(B1, 0, 12, mColor)});
+    mTestCases.push_back({Float(B0, 0, 8, mCoord), Float(B1, 0, 12, mColor)});
 
     // 1. two memory
-    mTestCases.push_back({Attrib(M0, 0, 8, mCoord), Attrib(M1, 0, 12, mColor)});
+    mTestCases.push_back({Float(M0, 0, 8, mCoord), Float(M1, 0, 12, mColor)});
 
     // 2. one memory, sequential
-    mTestCases.push_back({Attrib(M0, 0, 8, mCoord), Attrib(M0, 96, 12, mColor)});
+    mTestCases.push_back({Float(M0, 0, 8, mCoord), Float(M0, 96, 12, mColor)});
 
     // 3. one memory, interleaved
-    mTestCases.push_back({Attrib(M0, 0, 20, mCoord), Attrib(M0, 8, 20, mColor)});
+    mTestCases.push_back({Float(M0, 0, 20, mCoord), Float(M0, 8, 20, mColor)});
 
     // 4. buffer and memory
-    mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(M0, 0, 12, mColor)});
+    mTestCases.push_back({Float(B0, 0, 8, mCoord), Float(M0, 0, 12, mColor)});
 
     // 5. stride != size
-    mTestCases.push_back({Attrib(B0, 0, 16, mCoord), Attrib(B1, 0, 12, mColor)});
+    mTestCases.push_back({Float(B0, 0, 16, mCoord), Float(B1, 0, 12, mColor)});
 
     if (IsVulkan())
     {
@@ -359,16 +395,31 @@ void AttributeLayoutTest::GetTestCases(void)
     }
 
     // 6. one buffer, sequential
-    mTestCases.push_back({Attrib(B0, 0, 8, mCoord), Attrib(B0, 96, 12, mColor)});
+    mTestCases.push_back({Float(B0, 0, 8, mCoord), Float(B0, 96, 12, mColor)});
 
     // 7. one buffer, interleaved
-    mTestCases.push_back({Attrib(B0, 0, 20, mCoord), Attrib(B0, 8, 20, mColor)});
+    mTestCases.push_back({Float(B0, 0, 20, mCoord), Float(B0, 8, 20, mColor)});
 
     // 8. memory and buffer, float and integer
-    mTestCases.push_back({Attrib(M0, 0, 8, mCoord), Attrib(B0, 0, 12, mBColor)});
+    mTestCases.push_back({Float(M0, 0, 8, mCoord), SByte(B0, 0, 12, mColor)});
 
     // 9. buffer and memory, unusual offset and stride
-    mTestCases.push_back({Attrib(B0, 11, 13, mCoord), Attrib(M0, 23, 17, mColor)});
+    mTestCases.push_back({Float(B0, 11, 13, mCoord), Float(M0, 23, 17, mColor)});
+
+    // 10-13. remaining ES2 types
+    mTestCases.push_back({Fixed(M0, 0, 20, mCoord), UByte(M0, 16, 20, mColor)});
+    mTestCases.push_back({SShort(M0, 0, 20, mCoord), UShort(M0, 8, 20, mColor)});
+    mTestCases.push_back({NormSByte(M0, 0, 8, mCoord), NormUByte(M0, 4, 8, mColor)});
+    mTestCases.push_back({NormSShort(M0, 0, 20, mCoord), NormUShort(M0, 8, 20, mColor)});
+
+    // 14-15. remaining ES3 types
+    if (es3)
+    {
+        mTestCases.push_back({SInt(M0, 0, 40, mCoord), UInt(M0, 16, 40, mColor)});
+        if (!IsAndroid())
+            mTestCases.push_back(
+                {NormSInt(M0, 0, 40, mCoord), NormUInt(M0, 16, 40, mColor)});  // anglebug.com/2641
+    }
 }
 
 class AttributeLayoutNonIndexed : public AttributeLayoutTest
