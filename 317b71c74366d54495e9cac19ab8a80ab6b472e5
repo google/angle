@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fbefcb01_5b43be77",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "just {year} is sufficient.",
+      "range": {
+        "startLine": 149,
+        "startChar": 13,
+        "endLine": 149,
+        "endChar": 28
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fcb93e3_a9bf751b",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "can probably just remove the 2.0 part.",
+      "range": {
+        "startLine": 153,
+        "startChar": 52,
+        "endLine": 153,
+        "endChar": 55
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "990e7a0d_fb368cc4",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "probably should include the license here too.",
+      "range": {
+        "startLine": 162,
+        "startChar": 42,
+        "endLine": 162,
+        "endChar": 72
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "848c0e2e_a44483b0",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "can\u0027t we get the defs and command names from the existing info without having to go back to the xml?",
+      "range": {
+        "startLine": 403,
+        "startChar": 1,
+        "endLine": 403,
+        "endChar": 54
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51d4948f_832cbaa1",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "does this continue get hit? wondering what case that is. maybe a comment here.",
+      "range": {
+        "startLine": 411,
+        "startChar": 0,
+        "endLine": 412,
+        "endChar": 20
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad1c25a2_234f0b69",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "this should be renamed _autogen.cpp",
+      "range": {
+        "startLine": 469,
+        "startChar": 33,
+        "endLine": 469,
+        "endChar": 42
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "150c994a_9009991c",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "if possible we should also rename this _autogen.def (if there aren\u0027t naming restrictions)",
+      "range": {
+        "startLine": 480,
+        "startChar": 33,
+        "endLine": 480,
+        "endChar": 42
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a794b2a8_60110a80",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "maybe here we can just add defs or decls to a global list for consumption later?",
+      "range": {
+        "startLine": 563,
+        "startChar": 4,
+        "endLine": 563,
+        "endChar": 63
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31f4025f_c6104da0",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3869,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "can you apply sorting to your list before generation?",
+      "range": {
+        "startLine": 3869,
+        "startChar": 17,
+        "endLine": 3869,
+        "endChar": 46
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "530daf58_a5bfa69e",
+        "filename": "src/libGLESv2/libGLESv2.def",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-03T12:31:06Z",
+      "side": 1,
+      "message": "I see, they\u0027re sorted within the API version. that seems okay - how about we keep this file sorted this way, but add small comments lines with the API version/extension? if that\u0027s not hard to do in the generator, in the extension/api version info generation step.",
+      "range": {
+        "startLine": 6,
+        "startChar": 4,
+        "endLine": 6,
+        "endChar": 54
+      },
+      "revId": "317b71c74366d54495e9cac19ab8a80ab6b472e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
