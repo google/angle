@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97546df1_47ea2dfe",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2786,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-03T17:29:23Z",
+      "side": 1,
+      "message": "I think the graphics and compute code paths could be unified in this function by just iterating on all stages instead of only graphics stages. This would involve renaming ValidateGraphicsInterfaceBlocks to ValidateInterfaceBlocksMatch and adding an early out in that function if there\u0027s only one shader stage.",
+      "revId": "6328217529d2650539f254a7cc17d0810fc8a922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c97e1910_2158d440",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2800,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-03T17:29:23Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this stay BLOCK_BUFFER?",
+      "range": {
+        "startLine": 2800,
+        "startChar": 57,
+        "endLine": 2800,
+        "endChar": 70
+      },
+      "revId": "6328217529d2650539f254a7cc17d0810fc8a922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6813dd97_68dd3bd9",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-03T17:29:23Z",
+      "side": 1,
+      "message": "This could be done by iterating over all shader types. flattenUniformsAndCheckCapsForShader error string handling would need to be fixed though.",
+      "revId": "6328217529d2650539f254a7cc17d0810fc8a922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8592e9ab_86e6bd99",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-03T17:29:23Z",
+      "side": 1,
+      "message": "nit: Could be done with a loop on all stages.",
+      "revId": "6328217529d2650539f254a7cc17d0810fc8a922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
