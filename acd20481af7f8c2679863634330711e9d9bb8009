@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d474c240_57c0373f",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1213,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-04T20:22:13Z",
+      "side": 1,
+      "message": "Can we have a quote of the extension that explains why this is not subImageable?",
+      "revId": "acd20481af7f8c2679863634330711e9d9bb8009",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
