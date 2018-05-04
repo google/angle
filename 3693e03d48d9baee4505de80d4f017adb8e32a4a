@@ -16,6 +16,24 @@
       "revId": "3693e03d48d9baee4505de80d4f017adb8e32a4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75cf65a9_37f8a3d5",
+        "filename": "src/compiler/translator/tree_ops/RewriteRepeatedAssignToSwizzled.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-05-04T07:52:55Z",
+      "side": 1,
+      "message": "Documented this. The bug is already fixed in newest drivers, so I think the effort to address all possible corner cases isn\u0027t really warranted.",
+      "parentUuid": "f1ee94df_f4011d50",
+      "revId": "3693e03d48d9baee4505de80d4f017adb8e32a4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
