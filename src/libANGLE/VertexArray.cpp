@@ -24,6 +24,7 @@ VertexArrayState::VertexArrayState(size_t maxAttribs, size_t maxAttribBindings)
     for (size_t i = 0; i < maxAttribs; i++)
     {
         mVertexAttributes.emplace_back(static_cast<GLuint>(i));
+        mBindingToAttributeMasks[i].set(i);
     }
 }
 
@@ -39,6 +40,31 @@ gl::AttributesMask VertexArrayState::getEnabledClientMemoryAttribsMask() const
 bool VertexArrayState::hasEnabledNullPointerClientArray() const
 {
     return (mNullPointerClientMemoryAttribsMask & mEnabledAttributesMask).any();
+}
+
+AttributesMask VertexArrayState::getBindingToAttributeMasks(GLuint bindingIndex) const
+{
+    ASSERT(bindingIndex < MAX_VERTEX_ATTRIB_BINDINGS);
+    return mBindingToAttributeMasks[bindingIndex];
+}
+
+// Set an attribute using a new binding.
+void VertexArrayState::setAttribBinding(size_t attribIndex, GLuint newBindingIndex)
+{
+    ASSERT(attribIndex < MAX_VERTEX_ATTRIBS && newBindingIndex < MAX_VERTEX_ATTRIB_BINDINGS);
+
+    // Update the binding-attribute map.
+    const GLuint oldBindingIndex = mVertexAttributes[attribIndex].bindingIndex;
+    ASSERT(oldBindingIndex != newBindingIndex);
+
+    ASSERT(mBindingToAttributeMasks[oldBindingIndex].test(attribIndex) &&
+           !mBindingToAttributeMasks[newBindingIndex].test(attribIndex));
+
+    mBindingToAttributeMasks[oldBindingIndex].reset(attribIndex);
+    mBindingToAttributeMasks[newBindingIndex].set(attribIndex);
+
+    // Set the attribute using the new binding.
+    mVertexAttributes[attribIndex].bindingIndex = newBindingIndex;
 }
 
 // VertexArray implementation.
@@ -185,11 +211,11 @@ void VertexArray::setVertexAttribBinding(const Context *context,
     {
         // In ES 3.0 contexts, the binding cannot change, hence the code below is unreachable.
         ASSERT(context->getClientVersion() >= ES_3_1);
-        mState.mVertexAttributes[attribIndex].bindingIndex = bindingIndex;
+
+        mState.setAttribBinding(attribIndex, bindingIndex);
 
         setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_BINDING);
     }
-    mState.mVertexAttributes[attribIndex].bindingIndex = static_cast<GLuint>(bindingIndex);
 }
 
 void VertexArray::setVertexBindingDivisor(size_t bindingIndex, GLuint divisor)

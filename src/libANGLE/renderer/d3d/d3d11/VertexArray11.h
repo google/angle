@@ -60,7 +60,6 @@ class VertexArray11 : public VertexArrayImpl
 
   private:
     void updateVertexAttribStorage(StateManager11 *stateManager,
-                                   size_t dirtyBit,
                                    size_t attribIndex);
     gl::Error updateDirtyAttribs(const gl::Context *context,
                                  const gl::AttributesMask &activeDirtyAttribs);
@@ -74,9 +73,6 @@ class VertexArray11 : public VertexArrayImpl
 
     // The mask of attributes marked as dynamic.
     gl::AttributesMask mDynamicAttribsMask;
-
-    // Mask applied to dirty bits on syncState. If a bit is on, it is relevant.
-    gl::VertexArray::DirtyBits mRelevantDirtyBitsMask;
 
     // A set of attributes we know are dirty, and need to be re-translated.
     gl::AttributesMask mAttribsToTranslate;
