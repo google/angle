@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "141655ba_25d78995",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1561,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-04T19:46:07Z",
+      "side": 1,
+      "message": "new policy is to file issues for all TODOs - can you file one and record it here?",
+      "range": {
+        "startLine": 1561,
+        "startChar": 8,
+        "endLine": 1561,
+        "endChar": 18
+      },
+      "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82fd0be4_ac82b81a",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1571,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-04T19:46:07Z",
+      "side": 1,
+      "message": "probably should remove this. the TODO should be to move the existing code to angle::Format",
+      "range": {
+        "startLine": 1562,
+        "startChar": 0,
+        "endLine": 1571,
+        "endChar": 5
+      },
+      "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42a6108a_e1ac9906",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-04T19:46:07Z",
+      "side": 1,
+      "message": "nit: caps ID",
+      "range": {
+        "startLine": 309,
+        "startChar": 18,
+        "endLine": 309,
+        "endChar": 35
+      },
+      "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c3f4138_497d00c3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1266,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-04T19:46:07Z",
+      "side": 1,
+      "message": "can probably add it to the vulkan table in this cl too.",
+      "range": {
+        "startLine": 1266,
+        "startChar": 12,
+        "endLine": 1266,
+        "endChar": 56
+      },
+      "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
