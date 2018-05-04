@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a0d9b11_dd68df51",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-04T15:41:47Z",
+      "side": 1,
+      "message": "I think the problem is that deinitialize is being called in the context destructor.  There is an onDestroyMethod you should use instead.",
+      "range": {
+        "startLine": 509,
+        "startChar": 0,
+        "endLine": 512,
+        "endChar": 5
+      },
+      "revId": "1a7c0725678f8f8e79e384cc3f38c00fa331a4df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
