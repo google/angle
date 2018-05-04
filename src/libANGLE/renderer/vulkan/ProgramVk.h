@@ -118,7 +118,7 @@ class ProgramVk : public ProgramImpl
     // or Textures.
     const gl::RangeUI &getUsedDescriptorSetRange() const;
 
-    vk::Error updateTexturesDescriptorSet(ContextVk *contextVk);
+    gl::Error updateTexturesDescriptorSet(const gl::Context *context);
     void invalidateTextures();
 
     // For testing only.

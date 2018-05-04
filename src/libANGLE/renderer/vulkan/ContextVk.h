@@ -160,10 +160,14 @@ class ContextVk : public ContextImpl
     const VkClearValue &getClearDepthStencilValue() const;
     VkColorComponentFlags getClearColorMask() const;
     const VkRect2D &getScissor() const { return mPipelineDesc->getScissor(); }
+    gl::Error getIncompleteTexture(const gl::Context *context,
+                                   gl::TextureType type,
+                                   gl::Texture **textureOut);
 
   private:
     gl::Error initPipeline();
-    gl::Error setupDraw(const gl::DrawCallParams &drawCallParams,
+    gl::Error setupDraw(const gl::Context *context,
+                        const gl::DrawCallParams &drawCallParams,
                         vk::CommandGraphNode **drawNodeOut,
                         bool *newCommandBufferOut);
 
@@ -189,6 +193,8 @@ class ContextVk : public ContextImpl
     VkClearValue mClearColorValue;
     VkClearValue mClearDepthStencilValue;
     VkColorComponentFlags mClearColorMask;
+
+    IncompleteTextureSet mIncompleteTextures;
 };
 }  // namespace rx
 

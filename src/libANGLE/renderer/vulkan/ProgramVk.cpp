@@ -825,13 +825,14 @@ const gl::RangeUI &ProgramVk::getUsedDescriptorSetRange() const
     return mUsedDescriptorSetRange;
 }
 
-vk::Error ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
+gl::Error ProgramVk::updateTexturesDescriptorSet(const gl::Context *context)
 {
     if (mState.getSamplerBindings().empty() || !mDirtyTextures)
     {
-        return vk::NoError();
+        return gl::NoError();
     }
 
+    ContextVk *contextVk = GetImplAs<ContextVk>(context);
     ANGLE_TRY(allocateDescriptorSet(contextVk, vk::TextureIndex));
 
     ASSERT(mUsedDescriptorSetRange.contains(1));
@@ -852,11 +853,15 @@ vk::Error ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
         // TODO(jmadill): Sampler arrays
         ASSERT(samplerBinding.boundTextureUnits.size() == 1);
 
-        GLuint textureUnit         = samplerBinding.boundTextureUnits[0];
-        const gl::Texture *texture = completeTextures[textureUnit];
+        GLuint textureUnit   = samplerBinding.boundTextureUnits[0];
+        gl::Texture *texture = completeTextures[textureUnit];
 
-        // TODO(jmadill): Incomplete textures handling.
-        ASSERT(texture);
+        if (texture == nullptr)
+        {
+            // If we have an incomplete texture, fetch it from our renderer.
+            ANGLE_TRY(
+                contextVk->getIncompleteTexture(context, samplerBinding.textureType, &texture));
+        }
 
         TextureVk *textureVk   = vk::GetImpl(texture);
         const vk::ImageHelper &image = textureVk->getImage();
@@ -889,7 +894,7 @@ vk::Error ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
     vkUpdateDescriptorSets(device, imageCount, writeDescriptorInfo.data(), 0, nullptr);
 
     mDirtyTextures = false;
-    return vk::NoError();
+    return gl::NoError();
 }
 
 void ProgramVk::invalidateTextures()

@@ -1029,4 +1029,5 @@ vk::ShaderLibrary *RendererVk::getShaderLibrary()
 {
     return &mShaderLibrary;
 }
+
 }  // namespace rx

@@ -209,6 +209,8 @@ Error DynamicBuffer::flush(VkDevice device)
 
 void DynamicBuffer::release(RendererVk *renderer)
 {
+    releaseRetainedBuffers(renderer);
+
     mAlignment           = 0;
     Serial currentSerial = renderer->getCurrentQueueSerial();
     renderer->releaseObject(currentSerial, &mBuffer);
@@ -794,6 +796,16 @@ void ImageHelper::clearDepthStencil(VkImageAspectFlags aspectFlags,
     };
 
     commandBuffer->clearDepthStencilImage(mImage, mCurrentLayout, depthStencil, 1, &clearRange);
+}
+
+gl::Extents ImageHelper::getSize(const gl::ImageIndex &index) const
+{
+    ASSERT(mExtents.depth == 1);
+    GLint mipLevel = index.getLevelIndex();
+    // Level 0 should be the size of the extents, after that every time you increase a level
+    // you shrink the extents by half.
+    return gl::Extents(std::max(1, mExtents.width >> mipLevel),
+                       std::max(1, mExtents.height >> mipLevel), mExtents.depth);
 }
 
 // static

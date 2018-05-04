@@ -193,7 +193,6 @@
 2161 VULKAN : dEQP-GLES2.functional.texture.mipmap.2d.generate.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.generate.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.specification.basic_copytex* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.texture.completeness.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.texture.vertex.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.fragment_ops.random.* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.fragment_ops.interaction.* = SKIP

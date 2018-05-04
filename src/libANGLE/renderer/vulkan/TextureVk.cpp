@@ -238,9 +238,12 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 
     if (mImage.valid())
     {
-        const gl::ImageDesc &desc  = mState.getImageDesc(index);
         const vk::Format &vkFormat = renderer->getFormat(formatInfo.sizedInternalFormat);
-        if (desc.size != size || mImage.getFormat() != vkFormat)
+
+        // Calculate the expected size for the index we are defining. If the size is different from
+        // the given size, or the format is different, we are redefining the image so we must
+        // release it.
+        if (mImage.getFormat() != vkFormat || size != mImage.getSize(index))
         {
             releaseImage(context, renderer);
         }
