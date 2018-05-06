@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10ba6c8d_ec9afd32",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 953,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-06T14:05:51Z",
+      "side": 1,
+      "message": "I think we should probably not use ASSERT in angle_end2end_tests. I forget the specifics, something to do with logging not working properly. Can You use FAIL or pipe to cerr instead?",
+      "range": {
+        "startLine": 953,
+        "startChar": 8,
+        "endLine": 953,
+        "endChar": 22
+      },
+      "revId": "52c86277ce04214cbeaf17bcf69784bdc2301780",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
