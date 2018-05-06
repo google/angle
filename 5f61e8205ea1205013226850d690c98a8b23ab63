@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d9c3543_33d93a86",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-06T14:36:52Z",
+      "side": 1,
+      "message": "probably call this onDestroy to be consistent.",
+      "range": {
+        "startLine": 442,
+        "startChar": 24,
+        "endLine": 442,
+        "endChar": 36
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de4f9ee8_a115c772",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-06T14:36:52Z",
+      "side": 1,
+      "message": "git cl format.",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 443,
+        "endChar": 5
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6301b687_2d1df283",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-06T14:36:52Z",
+      "side": 1,
+      "message": "maybe this should be part of GLES1 State?",
+      "range": {
+        "startLine": 633,
+        "startChar": 24,
+        "endLine": 633,
+        "endChar": 58
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31dfb2e7_9d385976",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-06T14:36:52Z",
+      "side": 1,
+      "message": "you can put this include in an anonymous namespace block in this file.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 36
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56e08ffb_ec895404",
+        "filename": "src/libANGLE/GLES1Shaders.inc",
+        "patchSetId": 11
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-06T14:36:52Z",
+      "side": 1,
+      "message": "these const can be constexpr",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 5
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "041d1ffd_367a1ad6",
+        "filename": "src/libANGLE/GLES1Shaders.inc",
+        "patchSetId": 11
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-06T14:36:52Z",
+      "side": 1,
+      "message": "couple extra whitespace lines in this file you can remove",
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1706c5f_fab3dac9",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-06T14:36:52Z",
+      "side": 1,
+      "message": "ASSERT unit is in range?",
+      "range": {
+        "startLine": 317,
+        "startChar": 11,
+        "endLine": 317,
+        "endChar": 32
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11e1e48f_5a008cbe",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1783,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-06T14:36:52Z",
+      "side": 1,
+      "message": "if you\u0027re not doing the internal programs with this patch, is it possible to remove these?",
+      "range": {
+        "startLine": 1782,
+        "startChar": 0,
+        "endLine": 1783,
+        "endChar": 15
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
