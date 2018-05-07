@@ -1926,11 +1926,11 @@ const TConstantUnion *TIntermConstantUnion::FoldBinary(TOperator op,
                                 if (lhs < 0 || divisor < 0)
                                 {
                                     // ESSL 3.00.6 section 5.9: Results of modulus are undefined
-                                    // when
-                                    // either one of the operands is negative.
+                                    // when either one of the operands is negative.
                                     diagnostics->warning(line,
                                                          "Negative modulus operator operand "
-                                                         "encountered during constant folding",
+                                                         "encountered during constant folding. "
+                                                         "Results are undefined.",
                                                          "%");
                                     resultArray[i].setIConst(0);
                                 }

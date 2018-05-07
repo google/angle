@@ -1645,3 +1645,19 @@ TEST_F(ConstantFoldingExpressionTest, LargeFloatToUint)
     ASSERT_TRUE(constantFoundInAST(3221225472u));
     ASSERT_FALSE(hasWarning());
 }
+
+// Test that folding % with a negative dividend generates a warning.
+TEST_F(ConstantFoldingExpressionTest, IntegerModulusNegativeDividend)
+{
+    const std::string &intString = "(-5) % 3";
+    evaluateInt(intString);
+    ASSERT_TRUE(hasWarning());
+}
+
+// Test that folding % with a negative divisor generates a warning.
+TEST_F(ConstantFoldingExpressionTest, IntegerModulusNegativeDivisor)
+{
+    const std::string &intString = "5 % (-3)";
+    evaluateInt(intString);
+    ASSERT_TRUE(hasWarning());
+}
