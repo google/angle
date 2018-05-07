@@ -313,7 +313,7 @@ void ContextNULL::onMakeCurrent(const gl::Context *context)
 {
 }
 
-const gl::Caps &ContextNULL::getNativeCaps() const
+gl::Caps ContextNULL::getNativeCaps() const
 {
     return mCaps;
 }

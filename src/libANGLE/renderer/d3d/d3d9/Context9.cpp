@@ -274,7 +274,7 @@ void Context9::onMakeCurrent(const gl::Context *context)
 {
 }
 
-const gl::Caps &Context9::getNativeCaps() const
+gl::Caps Context9::getNativeCaps() const
 {
     return mRenderer->getNativeCaps();
 }

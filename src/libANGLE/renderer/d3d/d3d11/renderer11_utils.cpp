@@ -929,45 +929,68 @@ size_t GetMaximumComputeTextureUnits(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
-size_t GetMaximumImageUnits(D3D_FEATURE_LEVEL featureLevel)
+void SetUAVRelatedResourceLimits(D3D_FEATURE_LEVEL featureLevel, gl::Caps *caps)
 {
-    switch (featureLevel)
-    {
-        case D3D_FEATURE_LEVEL_11_1:
-        case D3D_FEATURE_LEVEL_11_0:
-            // TODO(xinghua.cao@intel.com): Get a more accurate limit. For now using
-            // the minimum requirement for GLES 3.1.
-            return 4;
-        default:
-            return 0;
-    }
-}
+    ASSERT(caps);
 
-size_t GetMaximumComputeImageUniforms(D3D_FEATURE_LEVEL featureLevel)
-{
-    switch (featureLevel)
-    {
-        case D3D_FEATURE_LEVEL_11_1:
-        case D3D_FEATURE_LEVEL_11_0:
-            // TODO(xinghua.cao@intel.com): Get a more accurate limit. For now using
-            // the minimum requirement for GLES 3.1.
-            return 4;
-        default:
-            return 0;
-    }
-}
+    GLuint reservedUAVsForAtomicCounterBuffers = 0u;
 
-size_t GetMaximumCombinedShaderOutputResources(D3D_FEATURE_LEVEL featureLevel)
-{
+    // For pixel shaders, the render targets and unordered access views share the same resource
+    // slots when being written out.
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476465(v=vs.85).aspx
+    GLuint maxNumRTVsAndUAVs = 0u;
+
     switch (featureLevel)
     {
-        // TODO(jiawei.shao@intel.com): Get a more accurate limit. For now using the minimum
-        // requirement for GLES 3.1.
         case D3D_FEATURE_LEVEL_11_1:
+            // Currently we allocate 4 UAV slots for atomic counter buffers on feature level 11_1.
+            reservedUAVsForAtomicCounterBuffers = 4u;
+            maxNumRTVsAndUAVs                   = D3D11_1_UAV_SLOT_COUNT;
+            break;
         case D3D_FEATURE_LEVEL_11_0:
-            return 4;
+            // Currently we allocate 1 UAV slot for atomic counter buffers on feature level 11_0.
+            reservedUAVsForAtomicCounterBuffers = 1u;
+            maxNumRTVsAndUAVs                   = D3D11_PS_CS_UAV_REGISTER_COUNT;
+            break;
         default:
-            return 0;
+            return;
+    }
+
+    // Set limits on atomic counter buffers in fragment shaders and compute shaders.
+    caps->maxCombinedAtomicCounterBuffers = reservedUAVsForAtomicCounterBuffers;
+    caps->maxComputeAtomicCounterBuffers  = reservedUAVsForAtomicCounterBuffers;
+    caps->maxFragmentAtomicCounterBuffers = reservedUAVsForAtomicCounterBuffers;
+    caps->maxAtomicCounterBufferBindings  = reservedUAVsForAtomicCounterBuffers;
+
+    // Allocate the remaining slots for images and shader storage blocks.
+    // The maximum number of fragment shader outputs depends on the current context version, so we
+    // will not set it here. See comments in Context11::initialize().
+    caps->maxCombinedShaderOutputResources =
+        maxNumRTVsAndUAVs - reservedUAVsForAtomicCounterBuffers;
+
+    // Set limits on images and shader storage blocks in fragment shaders and compute shaders.
+    caps->maxCombinedShaderStorageBlocks                   = caps->maxCombinedShaderOutputResources;
+    caps->maxShaderStorageBlocks[gl::ShaderType::Compute]  = caps->maxCombinedShaderOutputResources;
+    caps->maxShaderStorageBlocks[gl::ShaderType::Fragment] = caps->maxCombinedShaderOutputResources;
+    caps->maxShaderStorageBufferBindings                   = caps->maxCombinedShaderOutputResources;
+
+    caps->maxImageUnits            = caps->maxCombinedShaderOutputResources;
+    caps->maxCombinedImageUniforms = caps->maxCombinedShaderOutputResources;
+    caps->maxComputeImageUniforms  = caps->maxCombinedShaderOutputResources;
+    caps->maxFragmentImageUniforms = caps->maxCombinedShaderOutputResources;
+
+    // On feature level 11_1, UAVs are also available in vertex shaders and geometry shaders.
+    if (featureLevel == D3D_FEATURE_LEVEL_11_1)
+    {
+        caps->maxVertexAtomicCounterBuffers   = caps->maxCombinedAtomicCounterBuffers;
+        caps->maxGeometryAtomicCounterBuffers = caps->maxCombinedAtomicCounterBuffers;
+
+        caps->maxVertexImageUniforms = caps->maxCombinedShaderOutputResources;
+        caps->maxShaderStorageBlocks[gl::ShaderType::Vertex] =
+            caps->maxCombinedShaderOutputResources;
+        caps->maxGeometryImageUniforms = caps->maxCombinedShaderOutputResources;
+        caps->maxShaderStorageBlocks[gl::ShaderType::Geometry] =
+            caps->maxCombinedShaderOutputResources;
     }
 }
 
@@ -1409,11 +1432,8 @@ void GenerateCaps(ID3D11Device *device,
         static_cast<GLuint>(GetMaximumComputeUniformBlocks(featureLevel));
     caps->maxShaderTextureImageUnits[gl::ShaderType::Compute] =
         static_cast<GLuint>(GetMaximumComputeTextureUnits(featureLevel));
-    caps->maxImageUnits = static_cast<GLuint>(GetMaximumImageUnits(featureLevel));
-    caps->maxComputeImageUniforms =
-        static_cast<GLuint>(GetMaximumComputeImageUniforms(featureLevel));
-    caps->maxCombinedShaderOutputResources =
-        static_cast<GLuint>(GetMaximumCombinedShaderOutputResources(featureLevel));
+
+    SetUAVRelatedResourceLimits(featureLevel, caps);
 
     // Aggregate shader limits
     caps->maxUniformBufferBindings = caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] +

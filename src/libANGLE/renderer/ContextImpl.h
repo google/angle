@@ -150,7 +150,7 @@ class ContextImpl : public GLImplFactory
     virtual void onMakeCurrent(const gl::Context *context) = 0;
 
     // Native capabilities, unmodified by gl::Context.
-    virtual const gl::Caps &getNativeCaps() const                  = 0;
+    virtual gl::Caps getNativeCaps() const                         = 0;
     virtual const gl::TextureCapsMap &getNativeTextureCaps() const = 0;
     virtual const gl::Extensions &getNativeExtensions() const      = 0;
     virtual const gl::Limitations &getNativeLimitations() const    = 0;

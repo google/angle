@@ -386,7 +386,7 @@ void ContextGL::onMakeCurrent(const gl::Context *context)
     ANGLE_SWALLOW_ERR(mRenderer->getStateManager()->onMakeCurrent(context));
 }
 
-const gl::Caps &ContextGL::getNativeCaps() const
+gl::Caps ContextGL::getNativeCaps() const
 {
     return mRenderer->getNativeCaps();
 }

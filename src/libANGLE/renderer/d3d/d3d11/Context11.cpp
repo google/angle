@@ -423,9 +423,30 @@ void Context11::onMakeCurrent(const gl::Context *context)
     ANGLE_SWALLOW_ERR(mRenderer->getStateManager()->onMakeCurrent(context));
 }
 
-const gl::Caps &Context11::getNativeCaps() const
+gl::Caps Context11::getNativeCaps() const
 {
-    return mRenderer->getNativeCaps();
+    gl::Caps caps = mRenderer->getNativeCaps();
+
+    // For pixel shaders, the render targets and unordered access views share the same resource
+    // slots, so the maximum number of fragment shader outputs depends on the current context
+    // version:
+    // - If current context is ES 3.0 and below, we use D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT(8)
+    //   as the value of max draw buffers because UAVs are not used.
+    // - If current context is ES 3.1 and the feature level is 11_0, the RTVs and UAVs share 8
+    //   slots. As ES 3.1 requires at least 1 atomic counter buffer in compute shaders, the value
+    //   of max combined shader output resources is limited to 7, thus only 7 RTV slots can be
+    //   used simultaneously.
+    // - If current context is ES 3.1 and the feature level is 11_1, the RTVs and UAVs share 64
+    //   slots. Currently we allocate 60 slots for combined shader output resources, so we can use
+    //   at most D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT(8) RTVs simultaneously.
+    if (mState.getClientVersion() >= gl::ES_3_1 &&
+        mRenderer->getRenderer11DeviceCaps().featureLevel == D3D_FEATURE_LEVEL_11_0)
+    {
+        caps.maxDrawBuffers      = caps.maxCombinedShaderOutputResources;
+        caps.maxColorAttachments = caps.maxCombinedShaderOutputResources;
+    }
+
+    return caps;
 }
 
 const gl::TextureCapsMap &Context11::getNativeTextureCaps() const
