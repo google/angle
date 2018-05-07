@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "182d40bc_f3920e21",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1561,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-07T03:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "141655ba_25d78995",
+      "range": {
+        "startLine": 1561,
+        "startChar": 8,
+        "endLine": 1561,
+        "endChar": 18
+      },
+      "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82fd0be4_ac82b81a",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70e6b126_c5fb039d",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1571,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-07T03:14:38Z",
+      "side": 1,
+      "message": "per our discussion, we implement this function via the new one, until this one is deleted.\nsee https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d2531",
+      "parentUuid": "82fd0be4_ac82b81a",
+      "range": {
+        "startLine": 1562,
+        "startChar": 0,
+        "endLine": 1571,
+        "endChar": 5
+      },
+      "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "c05bf81e_55b3e1e9",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-07T03:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42a6108a_e1ac9906",
+      "range": {
+        "startLine": 309,
+        "startChar": 18,
+        "endLine": 309,
+        "endChar": 35
+      },
+      "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c3f4138_497d00c3",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
         "patchSetId": 2
@@ -91,6 +163,30 @@
       "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32b3b166_3042c9cf",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1266,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-07T03:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c3f4138_497d00c3",
+      "range": {
+        "startLine": 1266,
+        "startChar": 12,
+        "endLine": 1266,
+        "endChar": 56
+      },
+      "revId": "0778892f4ecc225379d4e320ac808acfba6c62f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
