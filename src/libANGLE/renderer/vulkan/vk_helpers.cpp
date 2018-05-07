@@ -281,7 +281,8 @@ DynamicDescriptorPool::~DynamicDescriptorPool()
 
 void DynamicDescriptorPool::destroy(RendererVk *rendererVk)
 {
-    ASSERT(mCurrentDescriptorSetPool.valid());
+    // It's possible that mCurrentDescriptorSetPool is not valid if the owning context was never
+    // made current/initialized
     mCurrentDescriptorSetPool.destroy(rendererVk->getDevice());
 }
 
