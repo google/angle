@@ -138,7 +138,7 @@ Error Surface::destroyImpl(const Display *display)
         {
             return Error(EGL_BAD_SURFACE);
         }
-        mTexture.set(nullptr, nullptr);
+        mTexture.set(display->getProxyContext(), nullptr);
     }
 
     if (mState.defaultFramebuffer)

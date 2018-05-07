@@ -75,8 +75,14 @@ FramebufferImpl *ContextGL::createFramebuffer(const gl::FramebufferState &data)
 
 TextureImpl *ContextGL::createTexture(const gl::TextureState &state)
 {
-    return new TextureGL(state, getFunctions(), getWorkaroundsGL(), getStateManager(),
-                         mRenderer->getBlitter());
+    const FunctionsGL *functions = getFunctions();
+    StateManagerGL *stateManager = getStateManager();
+
+    GLuint texture = 0;
+    functions->genTextures(1, &texture);
+    stateManager->bindTexture(state.getType(), texture);
+
+    return new TextureGL(state, texture);
 }
 
 RenderbufferImpl *ContextGL::createRenderbuffer(const gl::RenderbufferState &state)
