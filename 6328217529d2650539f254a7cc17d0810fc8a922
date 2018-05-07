@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2a72cbe1_60fec06a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2786,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-07T04:20:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97546df1_47ea2dfe",
+      "revId": "6328217529d2650539f254a7cc17d0810fc8a922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c97e1910_2158d440",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 5
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "8174fa63_5eff2005",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2800,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-07T04:20:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c97e1910_2158d440",
+      "range": {
+        "startLine": 2800,
+        "startChar": 57,
+        "endLine": 2800,
+        "endChar": 70
+      },
+      "revId": "6328217529d2650539f254a7cc17d0810fc8a922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6813dd97_68dd3bd9",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 5
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "2319736f_4618d710",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-07T04:20:26Z",
+      "side": 1,
+      "message": "I will do it in Part II to make this patch simpler.",
+      "parentUuid": "6813dd97_68dd3bd9",
+      "revId": "6328217529d2650539f254a7cc17d0810fc8a922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8592e9ab_86e6bd99",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 5
@@ -70,6 +130,24 @@
       "writtenOn": "2018-05-03T17:29:23Z",
       "side": 1,
       "message": "nit: Could be done with a loop on all stages.",
+      "revId": "6328217529d2650539f254a7cc17d0810fc8a922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a181aca_fb0dd18a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-07T04:20:26Z",
+      "side": 1,
+      "message": "Yes. I will do it in the patch that refactors StateManager11.cpp where mSamplerMetadata*S will be put into a ShaderMap.",
+      "parentUuid": "8592e9ab_86e6bd99",
       "revId": "6328217529d2650539f254a7cc17d0810fc8a922",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
