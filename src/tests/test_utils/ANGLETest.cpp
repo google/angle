@@ -238,21 +238,7 @@ ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
     // Default debug layers to enabled in tests.
     mEGLWindow->setDebugLayersEnabled(true);
 
-    // Workaround for NVIDIA not being able to share OpenGL and Vulkan contexts.
-    EGLint renderer      = params.getRenderer();
-    bool needsWindowSwap = mLastRendererType.valid() &&
-                           ((renderer != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE) !=
-                            (mLastRendererType.value() != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE));
-
-    if (needsWindowSwap)
-    {
-        DestroyTestWindow();
-        if (!InitTestWindow())
-        {
-            std::cerr << "Failed to create ANGLE test window.";
-        }
-    }
-    mLastRendererType = renderer;
+    mCurrentRenderer = params.getRenderer();
 }
 
 ANGLETestBase::~ANGLETestBase()
@@ -277,12 +263,14 @@ void ANGLETestBase::ANGLETestSetUp()
     mPlatformContext.ignoreMessages = false;
     mPlatformContext.currentTest    = this;
 
+    OSWindow *osWindow = getOSWindow();
+
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
     bool needSwap = false;
-    if (mOSWindow->getWidth() != mWidth || mOSWindow->getHeight() != mHeight)
+    if (osWindow->getWidth() != mWidth || osWindow->getHeight() != mHeight)
     {
-        if (!mOSWindow->resize(mWidth, mHeight))
+        if (!osWindow->resize(mWidth, mHeight))
         {
             FAIL() << "Failed to resize ANGLE test window.";
         }
@@ -296,7 +284,7 @@ void ANGLETestBase::ANGLETestSetUp()
     mPlatformMethods.context                = &mPlatformContext;
     mEGLWindow->setPlatformMethods(&mPlatformMethods);
 
-    if (!mEGLWindow->initializeDisplayAndSurface(mOSWindow))
+    if (!mEGLWindow->initializeDisplayAndSurface(osWindow))
     {
         FAIL() << "egl display or surface init failed.";
     }
@@ -340,7 +328,8 @@ void ANGLETestBase::ANGLETestTearDown()
         FAIL() << "egl error during swap.";
     }
 
-    mOSWindow->messageLoop();
+    OSWindow *osWindow = getOSWindow();
+    osWindow->messageLoop();
 
     if (!destroyEGLContext())
     {
@@ -349,7 +338,7 @@ void ANGLETestBase::ANGLETestTearDown()
 
     // Check for quit message
     Event myEvent;
-    while (mOSWindow->popEvent(&myEvent))
+    while (osWindow->popEvent(&myEvent))
     {
         if (myEvent.Type == Event::EVENT_CLOSED)
         {
@@ -790,6 +779,11 @@ bool ANGLETestBase::eglDeviceExtensionEnabled(EGLDeviceEXT device, const std::st
     return CheckExtensionExists(eglQueryDeviceStringEXT(device, EGL_EXTENSIONS), extName);
 }
 
+void ANGLETestBase::setWindowVisible(bool isVisible)
+{
+    getOSWindow()->setVisible(isVisible);
+}
+
 void ANGLETestBase::setWindowWidth(int width)
 {
     mWidth = width;
@@ -936,36 +930,47 @@ bool ANGLETestBase::destroyEGLContext()
     return true;
 }
 
-// static
-bool ANGLETestBase::InitTestWindow()
+OSWindow *ANGLETestBase::getOSWindow()
 {
-    mOSWindow = CreateOSWindow();
-    if (!mOSWindow->initialize("ANGLE_TEST", 128, 128))
-    {
-        return false;
+    // We only need to separate the Vulkan renderer from others
+    int rendererIndex = 0;
+    if (mCurrentRenderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE) {
+        rendererIndex = 1;
     }
 
-    mOSWindow->setVisible(true);
+    // The same renderer can always reuse a window.
+    auto it = mOSWindows.find(rendererIndex);
+    if (it != mOSWindows.end())
+    {
+        return it->second;
+    }
 
-    return true;
+    // Create a new window for this renderer, tagged with the renderer name
+    OSWindow *osWindow = CreateOSWindow();
+    std::string name   = "ANGLE_TEST";
+    if (!osWindow->initialize(name, 128, 128))
+    {
+        std::cerr << "Failed to initialize test window" << std::endl;
+        return nullptr;
+    }
+    osWindow->setVisible(true);
+
+    mOSWindows[rendererIndex] = osWindow;
+    return osWindow;
 }
 
 // static
-bool ANGLETestBase::DestroyTestWindow()
+void ANGLETestBase::DestroyTestWindows()
 {
-    if (mOSWindow)
+    for (auto it : mOSWindows)
     {
-        mOSWindow->destroy();
-        delete mOSWindow;
-        mOSWindow = nullptr;
+        OSWindow *osWindow = it.second;
+        std::cerr << "Unexpected nullptr OSWindow" << std::endl;
+        osWindow->destroy();
+        delete osWindow;
     }
 
-    return true;
-}
-
-void ANGLETestBase::SetWindowVisible(bool isVisible)
-{
-    mOSWindow->setVisible(isVisible);
+    mOSWindows.clear();
 }
 
 ANGLETest::ANGLETest() : ANGLETestBase(GetParam())
@@ -1141,18 +1146,9 @@ ANGLETestBase::ScopedIgnorePlatformMessages::~ScopedIgnorePlatformMessages()
     mTest->mPlatformContext.ignoreMessages = false;
 }
 
-OSWindow *ANGLETestBase::mOSWindow = nullptr;
-Optional<EGLint> ANGLETestBase::mLastRendererType;
-
-void ANGLETestEnvironment::SetUp()
-{
-    if (!ANGLETestBase::InitTestWindow())
-    {
-        FAIL() << "Failed to create ANGLE test window.";
-    }
-}
+std::map<EGLint, OSWindow *> ANGLETestBase::mOSWindows;
 
 void ANGLETestEnvironment::TearDown()
 {
-    ANGLETestBase::DestroyTestWindow();
+    ANGLETestBase::DestroyTestWindows();
 }

@@ -247,9 +247,7 @@ class ANGLETestBase
     virtual ~ANGLETestBase();
 
   public:
-    static bool InitTestWindow();
-    static bool DestroyTestWindow();
-    static void SetWindowVisible(bool isVisible);
+    static void DestroyTestWindows();
     static bool eglDisplayExtensionEnabled(EGLDisplay display, const std::string &extName);
 
     virtual void overrideWorkaroundsD3D(angle::WorkaroundsD3D *workaroundsD3D) {}
@@ -313,6 +311,7 @@ class ANGLETestBase
     static bool eglClientExtensionEnabled(const std::string &extName);
     static bool eglDeviceExtensionEnabled(EGLDeviceEXT device, const std::string &extName);
 
+    void setWindowVisible(bool isVisible);
     void setWindowWidth(int width);
     void setWindowHeight(int height);
     void setConfigRedBits(int bits);
@@ -350,7 +349,7 @@ class ANGLETestBase
 
     void ignoreD3D11SDKLayersWarnings();
 
-    static OSWindow *GetOSWindow() { return mOSWindow; }
+    OSWindow *getOSWindow();
 
     GLuint get2DTexturedQuadProgram();
 
@@ -396,10 +395,10 @@ class ANGLETestBase
 
     bool mDeferContextInit;
 
-    static OSWindow *mOSWindow;
-
-    // Workaround for NVIDIA not being able to share a window with OpenGL and Vulkan.
-    static Optional<EGLint> mLastRendererType;
+    // Using the same window for both Vulkan and OpenGL crashes on the NVIDIA driver so we use one
+    // OS window lazily-created per group of renderer.
+    EGLint mCurrentRenderer;
+    static std::map<int, OSWindow *> mOSWindows;
 };
 
 class ANGLETest : public ANGLETestBase, public ::testing::TestWithParam<angle::PlatformParameters>
@@ -415,7 +414,6 @@ class ANGLETest : public ANGLETestBase, public ::testing::TestWithParam<angle::P
 class ANGLETestEnvironment : public testing::Environment
 {
   public:
-    void SetUp() override;
     void TearDown() override;
 };
 
