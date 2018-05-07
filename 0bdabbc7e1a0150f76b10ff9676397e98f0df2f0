@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "085ec721_a2ac2098",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-07T19:35:06Z",
+      "side": 1,
+      "message": "EGLThreadTest uses a bunch of Windows APIs and doesn\u0027t use our test fixture.  I\u0027d rather not refactor it now.",
+      "parentUuid": "bfbfb1fe_cd75260d",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 20
+      },
+      "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c50cebe0_cd8314a8",
         "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30e3d6c0_949a2953",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-07T19:35:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c50cebe0_cd8314a8",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 45
+      },
+      "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e5eea9f0_0b9dbbb1",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-07T19:35:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20f52291_f17c07b8",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 45
+      },
+      "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25b1cdd8_c33ae506",
         "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "052c42bc_42dfb894",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-07T19:35:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25b1cdd8_c33ae506",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 60
+      },
+      "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "959b06e4_405909d0",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-07T19:35:06Z",
+      "side": 1,
+      "message": "The lambda references a bunch of local variables (mutex, egl objects) that would need to be passed around or used with std::bind, makes things a bit messy.",
+      "parentUuid": "ce2631b0_ffb07306",
+      "range": {
+        "startLine": 95,
+        "startChar": 37,
+        "endLine": 95,
+        "endChar": 41
+      },
+      "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce81bd45_b86cb4f4",
         "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
         "patchSetId": 3
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "b531fc6a_4baa3bc3",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-07T19:35:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce81bd45_b86cb4f4",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 60
+      },
+      "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b892d236_a04cdcd2",
         "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
         "patchSetId": 3
@@ -160,6 +304,30 @@
       "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "031657a9_123e74dd",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-07T19:35:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b892d236_a04cdcd2",
+      "range": {
+        "startLine": 156,
+        "startChar": 0,
+        "endLine": 160,
+        "endChar": 1
+      },
+      "revId": "0bdabbc7e1a0150f76b10ff9676397e98f0df2f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
