@@ -677,6 +677,8 @@
         ],
         'libangle_gl_wgl_sources':
         [
+            'libANGLE/renderer/gl/wgl/ContextWGL.cpp',
+            'libANGLE/renderer/gl/wgl/ContextWGL.h',
             'libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp',
             'libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.h',
             'libANGLE/renderer/gl/wgl/DisplayWGL.cpp',
@@ -687,6 +689,8 @@
             'libANGLE/renderer/gl/wgl/FunctionsWGL.h',
             'libANGLE/renderer/gl/wgl/PbufferSurfaceWGL.cpp',
             'libANGLE/renderer/gl/wgl/PbufferSurfaceWGL.h',
+            'libANGLE/renderer/gl/wgl/RendererWGL.cpp',
+            'libANGLE/renderer/gl/wgl/RendererWGL.h',
             'libANGLE/renderer/gl/wgl/SurfaceWGL.h',
             'libANGLE/renderer/gl/wgl/WindowSurfaceWGL.cpp',
             'libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h',

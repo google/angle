@@ -17,6 +17,7 @@ namespace rx
 {
 
 class FunctionsWGL;
+class RendererWGL;
 
 class DisplayWGL : public DisplayGL
 {
@@ -70,6 +71,8 @@ class DisplayWGL : public DisplayGL
 
     gl::Version getMaxSupportedESVersion() const override;
 
+    void destroyNativeContext(HGLRC context);
+
   private:
     egl::Error initializeImpl(egl::Display *display);
     void destroy();
@@ -84,11 +87,12 @@ class DisplayWGL : public DisplayGL
     HGLRC initializeContextAttribs(const egl::AttributeMap &eglAttributes) const;
     HGLRC createContextAttribs(const gl::Version &version, int profileMask) const;
 
-    egl::Error createRenderer(std::shared_ptr<RendererGL> *outRenderer, HGLRC *outContext);
+    egl::Error createRenderer(std::shared_ptr<RendererWGL> *outRenderer);
 
-    std::shared_ptr<RendererGL> mRenderer;
+    std::shared_ptr<RendererWGL> mRenderer;
 
     HDC mCurrentDC;
+    HGLRC mCurrentGLRC;
 
     HMODULE mOpenGLModule;
 
@@ -103,7 +107,6 @@ class DisplayWGL : public DisplayGL
     HWND mWindow;
     HDC mDeviceContext;
     int mPixelFormat;
-    HGLRC mWGLContext;
 
     bool mUseDXGISwapChains;
     bool mHasDXInterop;

@@ -10,15 +10,18 @@
 
 #include "common/debug.h"
 #include "libANGLE/Config.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "libANGLE/renderer/gl/wgl/ContextWGL.h"
 #include "libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/DXGISwapChainWindowSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/FunctionsWGL.h"
 #include "libANGLE/renderer/gl/wgl/PbufferSurfaceWGL.h"
+#include "libANGLE/renderer/gl/wgl/RendererWGL.h"
 #include "libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
 
@@ -63,6 +66,7 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
     : DisplayGL(state),
       mRenderer(nullptr),
       mCurrentDC(nullptr),
+      mCurrentGLRC(nullptr),
       mOpenGLModule(nullptr),
       mFunctionsWGL(nullptr),
       mHasWGLCreateContextRobustness(false),
@@ -71,7 +75,6 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
       mWindow(nullptr),
       mDeviceContext(nullptr),
       mPixelFormat(0),
-      mWGLContext(nullptr),
       mUseDXGISwapChains(false),
       mHasDXInterop(false),
       mDxgiModule(nullptr),
@@ -248,7 +251,7 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
                << "Failed to set the pixel format on the intermediate OpenGL window.";
     }
 
-    ANGLE_TRY(createRenderer(&mRenderer, &mWGLContext));
+    ANGLE_TRY(createRenderer(&mRenderer));
     const FunctionsGL *functionsGL = mRenderer->getFunctions();
 
     mHasRobustness = functionsGL->getGraphicsResetStatus != nullptr;
@@ -317,22 +320,18 @@ void DisplayWGL::destroy()
 {
     releaseD3DDevice(mD3D11DeviceHandle);
 
+    mRenderer.reset();
+
     if (mFunctionsWGL)
     {
         if (mDeviceContext)
         {
             mFunctionsWGL->makeCurrent(mDeviceContext, nullptr);
         }
-        if (mWGLContext)
-        {
-            mFunctionsWGL->deleteContext(mWGLContext);
-        }
     }
     mCurrentDC = nullptr;
-    mWGLContext = nullptr;
 
     SafeDelete(mFunctionsWGL);
-    mRenderer.reset();
 
     if (mDeviceContext)
     {
@@ -441,7 +440,7 @@ SurfaceImpl *DisplayWGL::createPixmapSurface(const egl::SurfaceState &state,
 
 ContextImpl *DisplayWGL::createContext(const gl::ContextState &state)
 {
-    return new ContextGL(state, mRenderer);
+    return new ContextWGL(state, mRenderer);
 }
 
 DeviceImpl *DisplayWGL::createDevice()
@@ -665,19 +664,29 @@ egl::Error DisplayWGL::makeCurrent(egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {
+    HDC newDC = mCurrentDC;
     if (drawSurface)
     {
         SurfaceWGL *drawSurfaceWGL = GetImplAs<SurfaceWGL>(drawSurface);
-        HDC dc                     = drawSurfaceWGL->getDC();
-        if (dc != mCurrentDC)
+        newDC                      = drawSurfaceWGL->getDC();
+    }
+
+    HGLRC newContext = mCurrentGLRC;
+    if (context)
+    {
+        ContextWGL *contextWGL = GetImplAs<ContextWGL>(context);
+        newContext             = contextWGL->getContext();
+    }
+
+    if (newDC != mCurrentDC || newContext != mCurrentGLRC)
+    {
+        if (!mFunctionsWGL->makeCurrent(newDC, newContext))
         {
-            if (!mFunctionsWGL->makeCurrent(dc, mWGLContext))
-            {
-                // TODO(geofflang): What error type here?
-                return egl::EglContextLost() << "Failed to make the WGL context current.";
-            }
-            mCurrentDC = dc;
+            // TODO(geofflang): What error type here?
+            return egl::EglContextLost() << "Failed to make the WGL context current.";
         }
+        mCurrentDC   = newDC;
+        mCurrentGLRC = newContext;
     }
 
     return DisplayGL::makeCurrent(drawSurface, readSurface, context);
@@ -734,6 +743,11 @@ void DisplayWGL::releaseD3DDevice(HANDLE deviceHandle)
 gl::Version DisplayWGL::getMaxSupportedESVersion() const
 {
     return mRenderer->getMaxSupportedESVersion();
+}
+
+void DisplayWGL::destroyNativeContext(HGLRC context)
+{
+    mFunctionsWGL->deleteContext(context);
 }
 
 HGLRC DisplayWGL::initializeContextAttribs(const egl::AttributeMap &eglAttributes) const
@@ -812,7 +826,7 @@ HGLRC DisplayWGL::createContextAttribs(const gl::Version &version, int profileMa
     return mFunctionsWGL->createContextAttribsARB(mDeviceContext, nullptr, &attribs[0]);
 }
 
-egl::Error DisplayWGL::createRenderer(std::shared_ptr<RendererGL> *outRenderer, HGLRC *outContext)
+egl::Error DisplayWGL::createRenderer(std::shared_ptr<RendererWGL> *outRenderer)
 {
     HGLRC context = nullptr;
     if (mFunctionsWGL->createContextAttribsARB)
@@ -838,13 +852,13 @@ egl::Error DisplayWGL::createRenderer(std::shared_ptr<RendererGL> *outRenderer, 
         return egl::EglNotInitialized() << "Failed to make the intermediate WGL context current.";
     }
     mCurrentDC = mDeviceContext;
+    mCurrentGLRC = context;
 
     std::unique_ptr<FunctionsGL> functionsGL(
         new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress));
     functionsGL->initialize(mDisplayAttributes);
 
-    outRenderer->reset(new RendererGL(std::move(functionsGL), mDisplayAttributes));
-    *outContext = context;
+    outRenderer->reset(new RendererWGL(std::move(functionsGL), mDisplayAttributes, this, context));
 
     return egl::NoError();
 }

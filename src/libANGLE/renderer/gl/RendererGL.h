@@ -45,7 +45,7 @@ class RendererGL : angle::NonCopyable
 {
   public:
     RendererGL(std::unique_ptr<FunctionsGL> functions, const egl::AttributeMap &attribMap);
-    ~RendererGL();
+    virtual ~RendererGL();
 
     gl::Error flush();
     gl::Error finish();
