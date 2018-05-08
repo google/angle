@@ -46,6 +46,53 @@
       "revId": "f0b123b810dc54397e1461204fe4a1f92a2749f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b59c894b_e223839e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-08T15:59:16Z",
+      "side": 1,
+      "message": "Oh, right. Good point. Maybe instead you can encapsulate the code in the if (!mImage.valid()) block in ensureImageInitialized, and pass in a vk::Format/gl::Extents/levelCount, and call that from here and from ensureInit.",
+      "parentUuid": "a63c4bbb_d243c5f9",
+      "range": {
+        "startLine": 331,
+        "startChar": 5,
+        "endLine": 331,
+        "endChar": 25
+      },
+      "revId": "f0b123b810dc54397e1461204fe4a1f92a2749f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a6306d2_776b19b2",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-08T15:59:16Z",
+      "side": 1,
+      "message": "this is the code I was thinking of.\n\nAlthough, didn\u0027t we fix multiple mip levels of a texture? It looks as though we always create an image with one mip level. Now I\u0027m confused.",
+      "range": {
+        "startLine": 433,
+        "startChar": 25,
+        "endLine": 433,
+        "endChar": 29
+      },
+      "revId": "f0b123b810dc54397e1461204fe4a1f92a2749f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
