@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ec88eb4c_201b359d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-08T18:43:24Z",
+      "side": 1,
+      "message": "Notice here I had to make a fix and initialize to alpha\u003d1.0f because the test in --gtest_filter\u003d*Texture2DTest.TexStorage/ES2_VULKAN was expecting that on a freshly initialized image",
+      "range": {
+        "startLine": 560,
+        "startChar": 4,
+        "endLine": 560,
+        "endChar": 48
+      },
+      "revId": "a71efdf13c1dd55dbbfb4e55f25b4d5da3c09d59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
