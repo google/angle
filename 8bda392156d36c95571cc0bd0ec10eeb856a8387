@@ -2,6 +2,121 @@
   "comments": [
     {
       "key": {
+        "uuid": "0abfee36_aeb1acb7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-05-08T03:14:18Z",
+      "side": 1,
+      "message": "To be accurate, RTVs also share the slots. right?",
+      "range": {
+        "startLine": 18,
+        "startChar": 8,
+        "endLine": 18,
+        "endChar": 65
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed90a461_e66e8d95",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-05-08T03:14:18Z",
+      "side": 1,
+      "message": "Remove or figure a new word.",
+      "range": {
+        "startLine": 24,
+        "startChar": 61,
+        "endLine": 24,
+        "endChar": 66
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "702f2970_30e19398",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-05-08T03:14:18Z",
+      "side": 1,
+      "message": "combined.",
+      "range": {
+        "startLine": 26,
+        "startChar": 3,
+        "endLine": 26,
+        "endChar": 10
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a465e45_d5db60b1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-05-08T03:14:18Z",
+      "side": 1,
+      "message": "\u0027upper\u0027 context is not informative. Either find a new articulate word or simply remove it.",
+      "range": {
+        "startLine": 127,
+        "startChar": 16,
+        "endLine": 127,
+        "endChar": 29
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32775b36_f2e3ca02",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-05-08T03:14:18Z",
+      "side": 1,
+      "message": "ditto.",
+      "range": {
+        "startLine": 133,
+        "startChar": 16,
+        "endLine": 133,
+        "endChar": 29
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8a3c288d_f99a75bf",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 2
@@ -17,6 +132,29 @@
         "startLine": 972,
         "startChar": 0,
         "endLine": 974,
+        "endChar": 82
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41feaa35_0da77bdd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-05-08T03:14:18Z",
+      "side": 1,
+      "message": "Should we initialize the other bindings here as well?",
+      "range": {
+        "startLine": 975,
+        "startChar": 4,
+        "endLine": 975,
         "endChar": 82
       },
       "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
