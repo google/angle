@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6ed002f_855e3e90",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-08T19:01:02Z",
+      "side": 1,
+      "message": "nit: views",
+      "range": {
+        "startLine": 532,
+        "startChar": 21,
+        "endLine": 532,
+        "endChar": 37
+      },
+      "revId": "da53b0025981a8347ddeeb7d69559d92b324f53f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f78d818_116f9ee2",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-08T19:01:02Z",
+      "side": 1,
+      "message": "can it have a name that indicates the use? Something like getCommandBufferForWrite. Also should be private.",
+      "range": {
+        "startLine": 108,
+        "startChar": 14,
+        "endLine": 108,
+        "endChar": 30
+      },
+      "revId": "da53b0025981a8347ddeeb7d69559d92b324f53f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7827d50f_91923e01",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-08T19:01:02Z",
+      "side": 1,
+      "message": "this should probably not be public either.",
+      "range": {
+        "startLine": 153,
+        "startChar": 14,
+        "endLine": 153,
+        "endChar": 30
+      },
+      "revId": "da53b0025981a8347ddeeb7d69559d92b324f53f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
