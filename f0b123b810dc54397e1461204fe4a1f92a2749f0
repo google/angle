@@ -22,6 +22,30 @@
       "revId": "f0b123b810dc54397e1461204fe4a1f92a2749f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a63c4bbb_d243c5f9",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-08T15:50:08Z",
+      "side": 1,
+      "message": "We can\u0027t, the frontend implementation of setStorage sets the image desc after calling setStorage on textureVk, so ensureImageInitialized fails because the extents is still 0X0 at the time of this call.\n\nSuggestion?",
+      "parentUuid": "926d63b6_434defd0",
+      "range": {
+        "startLine": 331,
+        "startChar": 5,
+        "endLine": 331,
+        "endChar": 25
+      },
+      "revId": "f0b123b810dc54397e1461204fe4a1f92a2749f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
