@@ -33,6 +33,7 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     // TODO(jmadill): Support full mapBufferRange extension.
     outExtensions->mapBuffer      = true;
     outExtensions->mapBufferRange = true;
+    outExtensions->textureStorage = true;
 
     // TODO(lucferron): Eventually remove everything above this line in this function as the caps
     // get implemented.

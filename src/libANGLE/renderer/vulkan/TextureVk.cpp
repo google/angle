@@ -322,14 +322,41 @@ gl::Error TextureVk::copySubImage(const gl::Context *context,
     return gl::InternalError();
 }
 
+vk::Error TextureVk::getCommandBufferForWrite(RendererVk *renderer,
+                                              vk::CommandBuffer **outCommandBuffer)
+{
+    const VkDevice device = renderer->getDevice();
+    updateQueueSerial(renderer->getCurrentQueueSerial());
+    if (!hasChildlessWritingNode())
+    {
+        beginWriteResource(renderer, outCommandBuffer);
+    }
+    else
+    {
+        vk::CommandGraphNode *node = getCurrentWritingNode();
+        *outCommandBuffer          = node->getOutsideRenderPassCommands();
+        if (!(*outCommandBuffer)->valid())
+        {
+            ANGLE_TRY(node->beginOutsideRenderPassRecording(device, renderer->getCommandPool(),
+                                                            outCommandBuffer));
+        }
+    }
+    return vk::NoError();
+}
+
 gl::Error TextureVk::setStorage(const gl::Context *context,
                                 gl::TextureType type,
                                 size_t levels,
                                 GLenum internalFormat,
                                 const gl::Extents &size)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ContextVk *contextVk             = GetAs<ContextVk>(context->getImplementation());
+    RendererVk *renderer             = contextVk->getRenderer();
+    const vk::Format &format         = renderer->getFormat(internalFormat);
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
+    ANGLE_TRY(initImage(renderer, format, size, static_cast<uint32_t>(levels), commandBuffer));
+    return gl::NoError();
 }
 
 gl::Error TextureVk::setEGLImageTarget(const gl::Context *context,
@@ -378,7 +405,7 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                                const gl::ImageIndex &imageIndex,
                                                FramebufferAttachmentRenderTarget **rtOut)
 {
-    // TODO(jmadill): Handle cube textures. http://anglebug.com/2318
+    // TODO(jmadill): Handle cube textures. http://anglebug.com/2470
     ASSERT(imageIndex.getType() == gl::TextureType::_2D);
 
     // Non-zero mip level attachments are an ES 3.0 feature.
@@ -400,56 +427,18 @@ vk::Error TextureVk::ensureImageInitialized(RendererVk *renderer)
         return vk::NoError();
     }
 
-    VkDevice device                  = renderer->getDevice();
     vk::CommandBuffer *commandBuffer = nullptr;
-
-    updateQueueSerial(renderer->getCurrentQueueSerial());
-    if (!hasChildlessWritingNode())
-    {
-        beginWriteResource(renderer, &commandBuffer);
-    }
-    else
-    {
-        vk::CommandGraphNode *node = getCurrentWritingNode();
-        commandBuffer              = node->getOutsideRenderPassCommands();
-        if (!commandBuffer->valid())
-        {
-            ANGLE_TRY(node->beginOutsideRenderPassRecording(device, renderer->getCommandPool(),
-                                                            &commandBuffer));
-        }
-    }
+    ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
 
     if (!mImage.valid())
     {
         const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
-        const gl::Extents &extents         = baseLevelDesc.size;
         const vk::Format &format =
             renderer->getFormat(baseLevelDesc.format.info->sizedInternalFormat);
-
-        VkImageUsageFlags usage =
-            (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-             VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
-
+        const gl::Extents &extents = baseLevelDesc.size;
         const uint32_t levelCount = getLevelCount();
-        ANGLE_TRY(mImage.init(device, mState.getType(), extents, format, 1, usage, levelCount));
 
-        VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-
-        ANGLE_TRY(mImage.initMemory(device, renderer->getMemoryProperties(), flags));
-
-        gl::SwizzleState mappedSwizzle;
-        MapSwizzleState(format.internalFormat, mState.getSwizzleState(), &mappedSwizzle);
-
-        // TODO(jmadill): Separate imageviews for RenderTargets and Sampling.
-        ANGLE_TRY(mImage.initImageView(device, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
-                                       mappedSwizzle, &mMipmapImageView, levelCount));
-        ANGLE_TRY(mImage.initImageView(device, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
-                                       mappedSwizzle, &mBaseLevelImageView, 1));
-
-        // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
-
-        VkClearColorValue black = {{0}};
-        mImage.clearColor(black, commandBuffer);
+        ANGLE_TRY(initImage(renderer, format, extents, levelCount, commandBuffer));
     }
 
     ANGLE_TRY(mPixelBuffer.flushUpdatesToImage(renderer, &mImage, commandBuffer));
@@ -538,6 +527,39 @@ const vk::Sampler &TextureVk::getSampler() const
 {
     ASSERT(mSampler.valid());
     return mSampler;
+}
+
+vk::Error TextureVk::initImage(RendererVk *renderer,
+                               const vk::Format &format,
+                               const gl::Extents &extents,
+                               const uint32_t levelCount,
+                               vk::CommandBuffer *commandBuffer)
+{
+    const VkDevice device = renderer->getDevice();
+
+    const VkImageUsageFlags usage =
+        (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+         VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+
+    ANGLE_TRY(mImage.init(device, mState.getType(), extents, format, 1, usage, levelCount));
+
+    const VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+
+    ANGLE_TRY(mImage.initMemory(device, renderer->getMemoryProperties(), flags));
+
+    gl::SwizzleState mappedSwizzle;
+    MapSwizzleState(format.internalFormat, mState.getSwizzleState(), &mappedSwizzle);
+
+    // TODO(jmadill): Separate imageviews for RenderTargets and Sampling.
+    ANGLE_TRY(mImage.initImageView(device, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
+                                   mappedSwizzle, &mMipmapImageView, levelCount));
+    ANGLE_TRY(mImage.initImageView(device, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
+                                   mappedSwizzle, &mBaseLevelImageView, 1));
+
+    // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
+    VkClearColorValue black = {{0}};
+    mImage.clearColor(black, commandBuffer);
+    return vk::NoError();
 }
 
 void TextureVk::releaseImage(const gl::Context *context, RendererVk *renderer)

@@ -1398,7 +1398,10 @@ TEST_P(TextureCubeTest, CubeMapFBO)
 // Test that glTexSubImage2D works properly when glTexStorage2DEXT has initialized the image with a default color.
 TEST_P(Texture2DTest, TexStorage)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
+    // TODO(lucferron): Follow up to clear with opaque black in TextureVk::initImageAndViews.
+    // http://anglebug.com/2536
+    ANGLE_SKIP_TEST_IF(IsVulkan() ||
+                       getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
 
     int width = getWindowWidth();
     int height = getWindowHeight();
@@ -1558,6 +1561,10 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGB)
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGBA)
 {
+    // TODO(lucferron): copySubImage isn't implemented yet.
+    // http://anglebug.com/2501
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Ignore SDK layers messages on D3D11 FL 9.3 (http://anglebug.com/1284)
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
