@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0389e221_aeed6af3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-08T08:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0abfee36_aeb1acb7",
+      "range": {
+        "startLine": 18,
+        "startChar": 8,
+        "endLine": 18,
+        "endChar": 65
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed90a461_e66e8d95",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ec026bc_bc223cb8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-08T08:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed90a461_e66e8d95",
+      "range": {
+        "startLine": 24,
+        "startChar": 61,
+        "endLine": 24,
+        "endChar": 66
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "79cb92f0_e5d323a6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-08T08:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "702f2970_30e19398",
+      "range": {
+        "startLine": 26,
+        "startChar": 3,
+        "endLine": 26,
+        "endChar": 10
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a465e45_d5db60b1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "c642efbd_e7cdd783",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-08T08:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a465e45_d5db60b1",
+      "range": {
+        "startLine": 127,
+        "startChar": 16,
+        "endLine": 127,
+        "endChar": 29
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32775b36_f2e3ca02",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
         "patchSetId": 2
@@ -114,6 +210,30 @@
       "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90cb57d0_1df40d00",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-08T08:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32775b36_f2e3ca02",
+      "range": {
+        "startLine": 133,
+        "startChar": 16,
+        "endLine": 133,
+        "endChar": 29
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -164,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "fd9c95cd_4d969386",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 974,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-08T08:47:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "60d62e57_d535fe14",
+      "range": {
+        "startLine": 972,
+        "startChar": 0,
+        "endLine": 974,
+        "endChar": 82
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41feaa35_0da77bdd",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 2
@@ -175,6 +319,30 @@
       "writtenOn": "2018-05-08T03:14:18Z",
       "side": 1,
       "message": "Should we initialize the other bindings here as well?",
+      "range": {
+        "startLine": 975,
+        "startChar": 4,
+        "endLine": 975,
+        "endChar": 82
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad7ad07b_b2aca4bb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-08T08:47:41Z",
+      "side": 1,
+      "message": "I suggest we set the maximum number of atomic counters in another patch. How do you think about that?",
+      "parentUuid": "41feaa35_0da77bdd",
       "range": {
         "startLine": 975,
         "startChar": 4,
@@ -207,6 +375,30 @@
       "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02f69362_70327108",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 986,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-08T08:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63b18b84_892b82a4",
+      "range": {
+        "startLine": 986,
+        "startChar": 54,
+        "endLine": 986,
+        "endChar": 85
+      },
+      "revId": "8bda392156d36c95571cc0bd0ec10eeb856a8387",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
