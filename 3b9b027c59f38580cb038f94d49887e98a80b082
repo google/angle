@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8854f9c9_c239ab4a",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-08T17:17:21Z",
+      "side": 0,
+      "message": "I think this would be a good thing to split to a smaller prior CL",
+      "range": {
+        "startLine": 703,
+        "startChar": 5,
+        "endLine": 703,
+        "endChar": 61
+      },
+      "revId": "3b9b027c59f38580cb038f94d49887e98a80b082",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
