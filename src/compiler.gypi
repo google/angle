@@ -85,6 +85,7 @@
             'compiler/translator/SymbolTable.cpp',
             'compiler/translator/SymbolTable.h',
             'compiler/translator/SymbolTable_autogen.cpp',
+            'compiler/translator/SymbolTable_autogen.h',
             'compiler/translator/SymbolUniqueId.cpp',
             'compiler/translator/SymbolUniqueId.h',
             'compiler/translator/Types.cpp',
