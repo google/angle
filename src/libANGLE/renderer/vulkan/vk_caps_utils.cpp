@@ -105,9 +105,9 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     // Uniforms are implemented using a uniform buffer, so the max number of uniforms we can
     // support is the max buffer range divided by the size of a single uniform (4X float).
     outCaps->maxVertexUniformVectors      = maxUniformVectors;
-    outCaps->maxVertexUniformComponents   = maxUniformComponents;
+    outCaps->maxShaderUniformComponents[gl::ShaderType::Vertex]   = maxUniformComponents;
     outCaps->maxFragmentUniformVectors    = maxUniformVectors;
-    outCaps->maxFragmentUniformComponents = maxUniformComponents;
+    outCaps->maxShaderUniformComponents[gl::ShaderType::Fragment] = maxUniformComponents;
 
     // TODO(jmadill): this is an ES 3.0 property and we can skip implementing it for now.
     // This is maxDescriptorSetUniformBuffers minus the number of uniform buffers we

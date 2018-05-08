@@ -958,8 +958,10 @@ void SetUAVRelatedResourceLimits(D3D_FEATURE_LEVEL featureLevel, gl::Caps *caps)
 
     // Set limits on atomic counter buffers in fragment shaders and compute shaders.
     caps->maxCombinedAtomicCounterBuffers = reservedUAVsForAtomicCounterBuffers;
-    caps->maxComputeAtomicCounterBuffers  = reservedUAVsForAtomicCounterBuffers;
-    caps->maxFragmentAtomicCounterBuffers = reservedUAVsForAtomicCounterBuffers;
+    caps->maxShaderAtomicCounterBuffers[gl::ShaderType::Compute] =
+        reservedUAVsForAtomicCounterBuffers;
+    caps->maxShaderAtomicCounterBuffers[gl::ShaderType::Fragment] =
+        reservedUAVsForAtomicCounterBuffers;
     caps->maxAtomicCounterBufferBindings  = reservedUAVsForAtomicCounterBuffers;
 
     // Allocate the remaining slots for images and shader storage blocks.
@@ -976,19 +978,23 @@ void SetUAVRelatedResourceLimits(D3D_FEATURE_LEVEL featureLevel, gl::Caps *caps)
 
     caps->maxImageUnits            = caps->maxCombinedShaderOutputResources;
     caps->maxCombinedImageUniforms = caps->maxCombinedShaderOutputResources;
-    caps->maxComputeImageUniforms  = caps->maxCombinedShaderOutputResources;
-    caps->maxFragmentImageUniforms = caps->maxCombinedShaderOutputResources;
+    caps->maxShaderImageUniforms[gl::ShaderType::Compute]  = caps->maxCombinedShaderOutputResources;
+    caps->maxShaderImageUniforms[gl::ShaderType::Fragment] = caps->maxCombinedShaderOutputResources;
 
     // On feature level 11_1, UAVs are also available in vertex shaders and geometry shaders.
     if (featureLevel == D3D_FEATURE_LEVEL_11_1)
     {
-        caps->maxVertexAtomicCounterBuffers   = caps->maxCombinedAtomicCounterBuffers;
-        caps->maxGeometryAtomicCounterBuffers = caps->maxCombinedAtomicCounterBuffers;
+        caps->maxShaderAtomicCounterBuffers[gl::ShaderType::Vertex] =
+            caps->maxCombinedAtomicCounterBuffers;
+        caps->maxShaderAtomicCounterBuffers[gl::ShaderType::Geometry] =
+            caps->maxCombinedAtomicCounterBuffers;
 
-        caps->maxVertexImageUniforms = caps->maxCombinedShaderOutputResources;
+        caps->maxShaderImageUniforms[gl::ShaderType::Vertex] =
+            caps->maxCombinedShaderOutputResources;
         caps->maxShaderStorageBlocks[gl::ShaderType::Vertex] =
             caps->maxCombinedShaderOutputResources;
-        caps->maxGeometryImageUniforms = caps->maxCombinedShaderOutputResources;
+        caps->maxShaderImageUniforms[gl::ShaderType::Geometry] =
+            caps->maxCombinedShaderOutputResources;
         caps->maxShaderStorageBlocks[gl::ShaderType::Geometry] =
             caps->maxCombinedShaderOutputResources;
     }
@@ -1392,7 +1398,7 @@ void GenerateCaps(ID3D11Device *device,
     {
         caps->maxVertexUniformVectors -= 1;
     }
-    caps->maxVertexUniformComponents = caps->maxVertexUniformVectors * 4;
+    caps->maxShaderUniformComponents[gl::ShaderType::Vertex] = caps->maxVertexUniformVectors * 4;
     caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] =
         static_cast<GLuint>(GetMaximumVertexUniformBlocks(featureLevel));
     caps->maxVertexOutputComponents =
@@ -1411,7 +1417,8 @@ void GenerateCaps(ID3D11Device *device,
     // Fragment shader limits
     caps->maxFragmentUniformVectors =
         static_cast<GLuint>(GetMaximumPixelUniformVectors(featureLevel));
-    caps->maxFragmentUniformComponents = caps->maxFragmentUniformVectors * 4;
+    caps->maxShaderUniformComponents[gl::ShaderType::Fragment] =
+        caps->maxFragmentUniformVectors * 4;
     caps->maxShaderUniformBlocks[gl::ShaderType::Fragment] =
         static_cast<GLuint>(GetMaximumPixelUniformBlocks(featureLevel));
     caps->maxFragmentInputComponents =
@@ -1426,7 +1433,7 @@ void GenerateCaps(ID3D11Device *device,
     caps->maxComputeWorkGroupSize  = GetMaxComputeWorkGroupSize(featureLevel);
     caps->maxComputeWorkGroupInvocations =
         static_cast<GLuint>(GetMaxComputeWorkGroupInvocations(featureLevel));
-    caps->maxComputeUniformComponents =
+    caps->maxShaderUniformComponents[gl::ShaderType::Compute] =
         static_cast<GLuint>(GetMaximumComputeUniformVectors(featureLevel)) * 4;
     caps->maxShaderUniformBlocks[gl::ShaderType::Compute] =
         static_cast<GLuint>(GetMaximumComputeUniformBlocks(featureLevel));
@@ -1451,17 +1458,15 @@ void GenerateCaps(ID3D11Device *device,
 
     caps->maxCombinedUniformBlocks = caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] +
                                      caps->maxShaderUniformBlocks[gl::ShaderType::Fragment];
-    caps->maxCombinedVertexUniformComponents =
-        (static_cast<GLint64>(caps->maxShaderUniformBlocks[gl::ShaderType::Vertex]) *
-         static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +
-        static_cast<GLint64>(caps->maxVertexUniformComponents);
-    caps->maxCombinedFragmentUniformComponents =
-        (static_cast<GLint64>(caps->maxShaderUniformBlocks[gl::ShaderType::Fragment]) *
-         static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +
-        static_cast<GLint64>(caps->maxFragmentUniformComponents);
-    caps->maxCombinedComputeUniformComponents = static_cast<GLuint>(
-        caps->maxShaderUniformBlocks[gl::ShaderType::Compute] * (caps->maxUniformBlockSize / 4) +
-        caps->maxComputeUniformComponents);
+
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        caps->maxCombinedShaderUniformComponents[shaderType] =
+            static_cast<GLint64>(caps->maxShaderUniformBlocks[shaderType]) *
+                static_cast<GLint64>(caps->maxUniformBlockSize / 4) +
+            static_cast<GLint64>(caps->maxShaderUniformComponents[shaderType]);
+    }
+
     caps->maxVaryingComponents =
         static_cast<GLuint>(GetMaximumVertexOutputVectors(featureLevel)) * 4;
     caps->maxVaryingVectors            = static_cast<GLuint>(GetMaximumVertexOutputVectors(featureLevel));
