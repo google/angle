@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe578502_676be17c",
+        "filename": "samples/gles1/SimpleTexture2D.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "you can probably default init this to zero.",
+      "range": {
+        "startLine": 80,
+        "startChar": 11,
+        "endLine": 80,
+        "endChar": 19
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc8b6214_c58e4e84",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "instead of Context *gl, can we use const Context *context? or \"Context *context\".",
+      "range": {
+        "startLine": 44,
+        "startChar": 29,
+        "endLine": 44,
+        "endChar": 42
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4e99bee_34c0b913",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "same here, and so forth.",
+      "range": {
+        "startLine": 64,
+        "startChar": 36,
+        "endLine": 64,
+        "endChar": 47
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21147ddd_ac695625",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "didn\u0027t see, if this isn\u0027t called outside of this file, can you make it a private helper function?",
+      "range": {
+        "startLine": 214,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 0
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d6774bf_29f8542f",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "use a const \u0026 - don\u0027t copy",
+      "range": {
+        "startLine": 259,
+        "startChar": 4,
+        "endLine": 259,
+        "endChar": 15
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d0ec379_487a68d6",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "seems more like an InternalError. You can pipe the error text directly to InternalError() instead of fprintf stderr and ERR()",
+      "range": {
+        "startLine": 281,
+        "startChar": 15,
+        "endLine": 281,
+        "endChar": 27
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "105c1dce_78290ed4",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "same comments.",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 325,
+        "endChar": 30
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f66d9740_607c9cb2",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "nit sure this saves much, can probably just use mProgramState directly.",
+      "range": {
+        "startLine": 371,
+        "startChar": 4,
+        "endLine": 371,
+        "endChar": 52
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58f22230_3869993b",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "if I understand correctly, we only have one internal program ever?",
+      "range": {
+        "startLine": 423,
+        "startChar": 13,
+        "endLine": 423,
+        "endChar": 27
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73321d39_93c0a28d",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T20:11:26Z",
+      "side": 1,
+      "message": "is it possible to store this by value? if not, can we use std::unique_ptr?",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 25
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
