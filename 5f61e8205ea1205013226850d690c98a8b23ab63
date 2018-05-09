@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f8d39d29_f6857e77",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-09T16:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d9c3543_33d93a86",
+      "range": {
+        "startLine": 442,
+        "startChar": 24,
+        "endLine": 442,
+        "endChar": 36
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de4f9ee8_a115c772",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 11
@@ -45,6 +69,30 @@
       "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f39828f9_c6d0a826",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-09T16:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de4f9ee8_a115c772",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 443,
+        "endChar": 5
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8cef5375_2f5bf3b7",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-09T16:11:34Z",
+      "side": 1,
+      "message": "Hmm, this relies on Context\u0027s choice of emulated vertex attribute array indices to set, so I think it is OK remaining a function that queries GLES1 state\u0027s public interface instead of being integrated into GLES1 state. Changed the name to emphasize that it\u0027s part of the emulated renderer layer.",
+      "parentUuid": "6301b687_2d1df283",
+      "range": {
+        "startLine": 633,
+        "startChar": 24,
+        "endLine": 633,
+        "endChar": 58
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31dfb2e7_9d385976",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 11
@@ -91,6 +163,30 @@
       "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfbc862e_9943cff3",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-09T16:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31dfb2e7_9d385976",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 36
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "99f8169f_b92cc9e5",
+        "filename": "src/libANGLE/GLES1Shaders.inc",
+        "patchSetId": 11
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-09T16:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56e08ffb_ec895404",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 5
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "041d1ffd_367a1ad6",
         "filename": "src/libANGLE/GLES1Shaders.inc",
         "patchSetId": 11
@@ -131,6 +251,24 @@
       "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "990e7946_649c69fa",
+        "filename": "src/libANGLE/GLES1Shaders.inc",
+        "patchSetId": 11
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-09T16:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "041d1ffd_367a1ad6",
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -154,6 +292,30 @@
       "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19fa396d_6179eb80",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-09T16:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1706c5f_fab3dac9",
+      "range": {
+        "startLine": 317,
+        "startChar": 11,
+        "endLine": 317,
+        "endChar": 32
+      },
+      "revId": "5f61e8205ea1205013226850d690c98a8b23ab63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
