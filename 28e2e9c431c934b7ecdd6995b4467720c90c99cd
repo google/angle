@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e38ec291_37484537",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T12:59:34Z",
+      "side": 1,
+      "message": "could you mention in the description this is a problem with emulating RGB8 with RGBA8?",
+      "range": {
+        "startLine": 9,
+        "startChar": 22,
+        "endLine": 9,
+        "endChar": 0
+      },
+      "revId": "28e2e9c431c934b7ecdd6995b4467720c90c99cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06deb395_d8fc39d9",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T12:59:34Z",
+      "side": 1,
+      "message": "Also could you handle GL_RGB8 here and make sure the alpha channel in the imageview always ends up 1.0?",
+      "range": {
+        "startLine": 26,
+        "startChar": 12,
+        "endLine": 26,
+        "endChar": 26
+      },
+      "revId": "28e2e9c431c934b7ecdd6995b4467720c90c99cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
