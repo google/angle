@@ -84,7 +84,9 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     gl::Error syncState(const gl::Context *context,
                         const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
-    gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
+    gl::Error getSamplePosition(const gl::Context *context,
+                                size_t index,
+                                GLfloat *xy) const override;
 
     const vk::RenderPassDesc &getRenderPassDesc();
     gl::Error getCommandGraphNodeForDraw(ContextVk *contextVk, vk::CommandGraphNode **nodeOut);

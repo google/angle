@@ -715,7 +715,9 @@ gl::Error FramebufferVk::clearWithDraw(ContextVk *contextVk, VkColorComponentFla
     return gl::NoError();
 }
 
-gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const
+gl::Error FramebufferVk::getSamplePosition(const gl::Context *context,
+                                           size_t index,
+                                           GLfloat *xy) const
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "getSamplePosition is unimplemented.";

@@ -216,7 +216,7 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
     // This method calls checkStatus.
     int getSamples(const Context *context);
 
-    Error getSamplePosition(size_t index, GLfloat *xy) const;
+    Error getSamplePosition(const Context *context, size_t index, GLfloat *xy) const;
 
     GLint getDefaultWidth() const;
     GLint getDefaultHeight() const;

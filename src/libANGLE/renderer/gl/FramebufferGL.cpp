@@ -588,7 +588,9 @@ Error FramebufferGL::blit(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error FramebufferGL::getSamplePosition(size_t index, GLfloat *xy) const
+gl::Error FramebufferGL::getSamplePosition(const gl::Context *context,
+                                           size_t index,
+                                           GLfloat *xy) const
 {
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->getMultisamplefv(GL_SAMPLE_POSITION, static_cast<GLuint>(index), xy);
