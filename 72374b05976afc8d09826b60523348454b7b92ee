@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "a38011ad_a01b875b",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T18:57:06Z",
+      "side": 1,
+      "message": "I would probably just make this call through into GLES1State. Not a big deal, but I think the code would look better with it there. We don\u0027t have a clear separation of responsibilities between State objects and the GL base objects (TextureState/Texture), other than that State can\u0027t be modified except by the base object (Context).",
+      "parentUuid": "b285d217_3a041135",
+      "range": {
+        "startLine": 633,
+        "startChar": 24,
+        "endLine": 633,
+        "endChar": 60
+      },
+      "revId": "72374b05976afc8d09826b60523348454b7b92ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fb08e198_2ceb8317",
         "filename": "src/libANGLE/Context_gles_1_0.cpp",
         "patchSetId": 12
