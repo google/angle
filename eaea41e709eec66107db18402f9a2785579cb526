@@ -22,6 +22,30 @@
       "revId": "eaea41e709eec66107db18402f9a2785579cb526",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "859a208d_ab41e177",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-09T19:37:24Z",
+      "side": 1,
+      "message": "Sorry I saw that after I clicked submit.\n\nThe output of AllocateBufferMemory should not override the sizeToAllocate, it should only override mSize, otherwise everytime we\u0027ll allocate the next buffer, the current size will be \u003d\u003d previous allocated size and we\u0027ll always allocate a new buffer every time. This is the current behavior that I broken with a previous CL here:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/1024380",
+      "parentUuid": "71fdd2c5_4f9a593b",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 71
+      },
+      "revId": "eaea41e709eec66107db18402f9a2785579cb526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
