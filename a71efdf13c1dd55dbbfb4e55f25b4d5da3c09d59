@@ -46,6 +46,30 @@
       "revId": "a71efdf13c1dd55dbbfb4e55f25b4d5da3c09d59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c8f3851_43622d0a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-09T11:04:09Z",
+      "side": 1,
+      "message": "Just reverted the change for now, we talked offline and concluded the change was ok, but should be done separately.",
+      "parentUuid": "591648b2_841f56a3",
+      "range": {
+        "startLine": 560,
+        "startChar": 4,
+        "endLine": 560,
+        "endChar": 48
+      },
+      "revId": "a71efdf13c1dd55dbbfb4e55f25b4d5da3c09d59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
