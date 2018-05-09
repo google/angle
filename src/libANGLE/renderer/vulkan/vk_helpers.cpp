@@ -7,6 +7,7 @@
 //   Helper utilitiy classes that manage Vulkan resources.
 
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
@@ -145,9 +146,7 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
             mMappedMemory = nullptr;
         }
 
-        Serial currentSerial = renderer->getCurrentQueueSerial();
-        renderer->releaseObject(currentSerial, &mBuffer);
-        renderer->releaseObject(currentSerial, &mMemory);
+        mRetainedBuffers.emplace_back(std::move(mBuffer), std::move(mMemory));
 
         VkBufferCreateInfo createInfo;
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -216,8 +215,28 @@ void DynamicBuffer::release(RendererVk *renderer)
     renderer->releaseObject(currentSerial, &mMemory);
 }
 
+void DynamicBuffer::releaseRetainedBuffers(RendererVk *renderer)
+{
+    for (BufferAndMemory &toFree : mRetainedBuffers)
+    {
+        Serial currentSerial = renderer->getCurrentQueueSerial();
+        renderer->releaseObject(currentSerial, &toFree.buffer);
+        renderer->releaseObject(currentSerial, &toFree.memory);
+    }
+
+    mRetainedBuffers.clear();
+}
+
 void DynamicBuffer::destroy(VkDevice device)
 {
+    for (BufferAndMemory &toFree : mRetainedBuffers)
+    {
+        toFree.buffer.destroy(device);
+        toFree.memory.destroy(device);
+    }
+
+    mRetainedBuffers.clear();
+
     mAlignment = 0;
     mBuffer.destroy(device);
     mMemory.destroy(device);
@@ -351,6 +370,8 @@ gl::Error LineLoopHelper::getIndexBufferForDrawArrays(RendererVk *renderer,
     uint32_t *indices    = nullptr;
     size_t allocateBytes = sizeof(uint32_t) * (drawCallParams.vertexCount() + 1);
     uint32_t offset      = 0;
+
+    mDynamicIndexBuffer.releaseRetainedBuffers(renderer);
     ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            &offset, nullptr));
@@ -387,6 +408,8 @@ gl::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *render
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (indexCount + 1);
+
+    mDynamicIndexBuffer.releaseRetainedBuffers(renderer);
     ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            &destinationOffset, nullptr));

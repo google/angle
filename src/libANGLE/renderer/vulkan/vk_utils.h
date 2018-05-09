@@ -640,8 +640,13 @@ Error AllocateBufferMemory(RendererVk *renderer,
                            DeviceMemory *deviceMemoryOut,
                            size_t *requiredSizeOut);
 
-struct BufferAndMemory final : private angle::NonCopyable
+struct BufferAndMemory final : angle::NonCopyable
 {
+    BufferAndMemory();
+    BufferAndMemory(Buffer &&buffer, DeviceMemory &&deviceMemory);
+    BufferAndMemory(BufferAndMemory &&other);
+    BufferAndMemory &operator=(BufferAndMemory &&other);
+
     Buffer buffer;
     DeviceMemory memory;
 };

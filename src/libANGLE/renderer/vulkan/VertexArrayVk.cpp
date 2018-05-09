@@ -58,7 +58,6 @@ VertexArrayVk::~VertexArrayVk()
 void VertexArrayVk::destroy(const gl::Context *context)
 {
     VkDevice device = vk::GetImpl(context)->getRenderer()->getDevice();
-
     mDynamicVertexData.destroy(device);
     mDynamicIndexData.destroy(device);
     mLineLoopHelper.destroy(device);
@@ -108,6 +107,7 @@ gl::Error VertexArrayVk::streamVertexData(RendererVk *renderer,
     }
 
     ANGLE_TRY(mDynamicVertexData.flush(renderer->getDevice()));
+    mDynamicVertexData.releaseRetainedBuffers(renderer);
     return gl::NoError();
 }
 
@@ -139,7 +139,7 @@ gl::Error VertexArrayVk::streamIndexData(RendererVk *renderer,
         memcpy(dst, drawCallParams.indices(), amount);
     }
     ANGLE_TRY(mDynamicIndexData.flush(renderer->getDevice()));
-
+    mDynamicIndexData.releaseRetainedBuffers(renderer);
     mCurrentElementArrayBufferOffset = offset;
     return gl::NoError();
 }

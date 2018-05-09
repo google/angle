@@ -313,6 +313,25 @@ bool Error::isError() const
     return (mResult != VK_SUCCESS);
 }
 
+BufferAndMemory::BufferAndMemory() = default;
+
+BufferAndMemory::BufferAndMemory(Buffer &&buffer, DeviceMemory &&deviceMemory)
+    : buffer(std::move(buffer)), memory(std::move(deviceMemory))
+{
+}
+
+BufferAndMemory::BufferAndMemory(BufferAndMemory &&other)
+    : buffer(std::move(other.buffer)), memory(std::move(other.memory))
+{
+}
+
+BufferAndMemory &BufferAndMemory::operator=(BufferAndMemory &&other)
+{
+    buffer = std::move(other.buffer);
+    memory = std::move(other.memory);
+    return *this;
+}
+
 // CommandPool implementation.
 CommandPool::CommandPool()
 {

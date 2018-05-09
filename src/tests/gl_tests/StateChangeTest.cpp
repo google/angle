@@ -1576,6 +1576,60 @@ TEST_P(SimpleStateChangeTest, DeleteFramebufferInUse)
     ASSERT_GL_NO_ERROR();
 }
 
+// This test was made to reproduce a specific issue with our Vulkan backend where were releasing
+// buffers too early. The test has 2 textures, we first create a texture and update it with
+// multiple updates, but we don't use it right away, we instead draw using another texture
+// then we bind the first texture and draw with it.
+TEST_P(SimpleStateChangeTest, DynamicAllocationOfMemoryForTextures)
+{
+    constexpr int kSize = 64;
+
+    GLuint program = get2DTexturedQuadProgram();
+    glUseProgram(program);
+
+    std::vector<GLColor> greenPixels(kSize * kSize, GLColor::green);
+    std::vector<GLColor> redPixels(kSize * kSize, GLColor::red);
+    GLTexture texture1;
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    for (int i = 0; i < 100; i++)
+    {
+        // We do this a lot of time to make sure we use multiple buffers in the vulkan backend.
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kSize, kSize, GL_RGBA, GL_UNSIGNED_BYTE,
+                        greenPixels.data());
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture texture2;
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, redPixels.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Setup the vertex array to draw a quad.
+    GLint positionLocation = glGetAttribLocation(program, "position");
+    setupQuadVertexBuffer(1.0f, 1.0f);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Draw quad with texture 2 while texture 1 has "staged" changes that have not been flushed yet.
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // If we now try to draw with texture1, we should trigger the issue.
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Tests deleting a Framebuffer that is in use.
 TEST_P(SimpleStateChangeTest, RedefineFramebufferInUse)
 {
