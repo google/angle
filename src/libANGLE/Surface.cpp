@@ -119,7 +119,7 @@ Error Surface::destroyImpl(const Display *display)
 {
     if (mState.defaultFramebuffer)
     {
-        mState.defaultFramebuffer->destroyDefault(display);
+        mState.defaultFramebuffer->onDestroy(display->getProxyContext());
     }
     if (mImplementation)
     {

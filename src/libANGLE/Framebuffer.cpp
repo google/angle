@@ -700,11 +700,6 @@ void Framebuffer::onDestroy(const Context *context)
     mImpl->destroy(context);
 }
 
-void Framebuffer::destroyDefault(const egl::Display *display)
-{
-    mImpl->destroyDefault(display);
-}
-
 void Framebuffer::setLabel(const std::string &label)
 {
     mState.mLabel = label;

@@ -35,7 +35,6 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
 
     ~FramebufferVk() override;
     void destroy(const gl::Context *context) override;
-    void destroyDefault(const egl::Display *display) override;
 
     gl::Error discard(const gl::Context *context, size_t count, const GLenum *attachments) override;
     gl::Error invalidate(const gl::Context *context,

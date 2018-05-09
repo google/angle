@@ -530,8 +530,6 @@ Error Display::terminate()
 
     mMemoryProgramCache.clear();
 
-    mProxyContext.reset(nullptr);
-
     while (!mContextSet.empty())
     {
         ANGLE_TRY(destroyContext(*mContextSet.begin()));
@@ -554,6 +552,9 @@ Error Display::terminate()
     {
         ANGLE_TRY(destroySurface(*mState.surfaceSet.begin()));
     }
+
+    // Allow the EGL objects that are being deleted to use the proxy context.
+    mProxyContext.reset(nullptr);
 
     mConfigSet.clear();
 
