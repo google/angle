@@ -93,6 +93,30 @@
       "revId": "c50dd3b9c56779edd5340922750723ce63aa05b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57be29d5_8b7d6046",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-09T22:31:36Z",
+      "side": 1,
+      "message": "The expression of an assertion is not evalutated in release builds unless the gn flag dcheck_always_on is set, we only turn that on for our bots",
+      "parentUuid": "91201afe_2d4f6863",
+      "range": {
+        "startLine": 364,
+        "startChar": 37,
+        "endLine": 364,
+        "endChar": 70
+      },
+      "revId": "c50dd3b9c56779edd5340922750723ce63aa05b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
