@@ -20,10 +20,7 @@ namespace rx
 class SurfaceEGL : public SurfaceGL
 {
   public:
-    SurfaceEGL(const egl::SurfaceState &state,
-               const FunctionsEGL *egl,
-               EGLConfig config,
-               RendererGL *renderer);
+    SurfaceEGL(const egl::SurfaceState &state, const FunctionsEGL *egl, EGLConfig config);
     ~SurfaceEGL() override;
 
     egl::Error makeCurrent() override;

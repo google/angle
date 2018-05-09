@@ -16,9 +16,8 @@ namespace rx
 
 PbufferSurfaceEGL::PbufferSurfaceEGL(const egl::SurfaceState &state,
                                      const FunctionsEGL *egl,
-                                     EGLConfig config,
-                                     RendererGL *renderer)
-    : SurfaceEGL(state, egl, config, renderer)
+                                     EGLConfig config)
+    : SurfaceEGL(state, egl, config)
 {
 }
 

@@ -307,10 +307,7 @@ uint32_t DisplayOzone::Buffer::getDRMFB()
 
 FramebufferGL *DisplayOzone::Buffer::framebufferGL(const gl::FramebufferState &state)
 {
-    return new FramebufferGL(
-        mGLFB, state, mDisplay->mFunctionsGL, mDisplay->getRenderer()->getWorkarounds(),
-        mDisplay->getRenderer()->getBlitter(), mDisplay->getRenderer()->getMultiviewClearer(),
-        mDisplay->getRenderer()->getStateManager());
+    return new FramebufferGL(state, mGLFB, true);
 }
 
 void DisplayOzone::Buffer::present()
@@ -861,7 +858,7 @@ SurfaceImpl *DisplayOzone::createWindowSurface(const egl::SurfaceState &state,
     {
         return nullptr;
     }
-    return new SurfaceOzone(state, getRenderer(), buffer);
+    return new SurfaceOzone(state, buffer);
 }
 
 SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
@@ -875,7 +872,7 @@ SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
     {
         return nullptr;
     }
-    return new SurfaceOzone(state, getRenderer(), buffer);
+    return new SurfaceOzone(state, buffer);
 }
 
 SurfaceImpl *DisplayOzone::createPbufferFromClientBuffer(const egl::SurfaceState &state,

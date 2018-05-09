@@ -13,14 +13,8 @@
 namespace rx
 {
 
-SurfaceEGL::SurfaceEGL(const egl::SurfaceState &state,
-                       const FunctionsEGL *egl,
-                       EGLConfig config,
-                       RendererGL *renderer)
-    : SurfaceGL(state, renderer),
-      mEGL(egl),
-      mConfig(config),
-      mSurface(EGL_NO_SURFACE)
+SurfaceEGL::SurfaceEGL(const egl::SurfaceState &state, const FunctionsEGL *egl, EGLConfig config)
+    : SurfaceGL(state), mEGL(egl), mConfig(config), mSurface(EGL_NO_SURFACE)
 {
 }
 

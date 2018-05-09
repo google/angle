@@ -385,14 +385,13 @@ SurfaceImpl *DisplayWGL::createWindowSurface(const egl::SurfaceState &state,
             return nullptr;
         }
 
-        return new DXGISwapChainWindowSurfaceWGL(state, getRenderer(), window, mD3D11Device,
-                                                 mD3D11DeviceHandle, mDeviceContext, mFunctionsGL,
-                                                 mFunctionsWGL, orientation);
+        return new DXGISwapChainWindowSurfaceWGL(state, getRenderer()->getStateManager(), window,
+                                                 mD3D11Device, mD3D11DeviceHandle, mDeviceContext,
+                                                 mFunctionsGL, mFunctionsWGL, orientation);
     }
     else
     {
-        return new WindowSurfaceWGL(state, getRenderer(), window, mPixelFormat, mFunctionsWGL,
-                                    orientation);
+        return new WindowSurfaceWGL(state, window, mPixelFormat, mFunctionsWGL, orientation);
     }
 }
 
@@ -405,8 +404,8 @@ SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::SurfaceState &state,
     EGLenum textureFormat = static_cast<EGLenum>(attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE));
     EGLenum textureTarget = static_cast<EGLenum>(attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE));
 
-    return new PbufferSurfaceWGL(state, getRenderer(), width, height, textureFormat, textureTarget,
-                                 largest, mPixelFormat, mDeviceContext, mFunctionsWGL);
+    return new PbufferSurfaceWGL(state, width, height, textureFormat, textureTarget, largest,
+                                 mPixelFormat, mDeviceContext, mFunctionsWGL);
 }
 
 SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::SurfaceState &state,
@@ -420,8 +419,9 @@ SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::SurfaceState &
         return nullptr;
     }
 
-    return new D3DTextureSurfaceWGL(state, getRenderer(), buftype, clientBuffer, this,
-                                    mDeviceContext, mD3D11Device, mFunctionsGL, mFunctionsWGL);
+    return new D3DTextureSurfaceWGL(state, getRenderer()->getStateManager(), buftype, clientBuffer,
+                                    this, mDeviceContext, mD3D11Device, mFunctionsGL,
+                                    mFunctionsWGL);
 }
 
 SurfaceImpl *DisplayWGL::createPixmapSurface(const egl::SurfaceState &state,

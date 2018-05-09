@@ -1043,7 +1043,8 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Context *context)
         const gl::State &glState     = context->getGLState();
         FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(glState.getDrawFramebuffer());
         auto activeOutputs = glState.getProgram()->getState().getActiveOutputVariables();
-        framebufferGL->maskOutInactiveOutputDrawBuffers(GL_DRAW_FRAMEBUFFER, activeOutputs);
+        framebufferGL->maskOutInactiveOutputDrawBuffers(context, GL_DRAW_FRAMEBUFFER,
+                                                        activeOutputs);
     }
 
     ASSERT(

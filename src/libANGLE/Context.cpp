@@ -432,7 +432,11 @@ Context::Context(rx::EGLImplFactory *implFactory,
 egl::Error Context::onDestroy(const egl::Display *display)
 {
     // Delete the Surface first to trigger a finish() in Vulkan.
-    SafeDelete(mSurfacelessFramebuffer);
+    if (mSurfacelessFramebuffer)
+    {
+        mSurfacelessFramebuffer->onDestroy(this);
+        SafeDelete(mSurfacelessFramebuffer);
+    }
 
     ANGLE_TRY(releaseSurface(display));
 

@@ -23,24 +23,10 @@ struct WorkaroundsGL;
 class FramebufferGL : public FramebufferImpl
 {
   public:
-    FramebufferGL(const gl::FramebufferState &data,
-                  const FunctionsGL *functions,
-                  StateManagerGL *stateManager,
-                  const WorkaroundsGL &workarounds,
-                  BlitGL *blitter,
-                  ClearMultiviewGL *multiviewClearer,
-                  bool isDefault);
-    // Constructor called when we need to create a FramebufferGL from an
-    // existing framebuffer name, for example for the default framebuffer
-    // on the Mac EGL CGL backend.
-    FramebufferGL(GLuint id,
-                  const gl::FramebufferState &data,
-                  const FunctionsGL *functions,
-                  const WorkaroundsGL &workarounds,
-                  BlitGL *blitter,
-                  ClearMultiviewGL *multiviewClearer,
-                  StateManagerGL *stateManager);
+    FramebufferGL(const gl::FramebufferState &data, GLuint id, bool isDefault);
     ~FramebufferGL() override;
+
+    void destroy(const gl::Context *context) override;
 
     gl::Error discard(const gl::Context *context, size_t count, const GLenum *attachments) override;
     gl::Error invalidate(const gl::Context *context,
@@ -97,7 +83,9 @@ class FramebufferGL : public FramebufferImpl
     GLuint getFramebufferID() const;
     bool isDefault() const;
 
-    void maskOutInactiveOutputDrawBuffers(GLenum binding, gl::DrawBufferMask maxSet);
+    void maskOutInactiveOutputDrawBuffers(const gl::Context *context,
+                                          GLenum binding,
+                                          gl::DrawBufferMask maxSet);
 
   private:
     void syncClearState(const gl::Context *context, GLbitfield mask);
@@ -122,12 +110,6 @@ class FramebufferGL : public FramebufferImpl
                                   const gl::PixelPackState &pack,
                                   GLubyte *pixels,
                                   bool readLastRowSeparately) const;
-
-    const FunctionsGL *mFunctions;
-    StateManagerGL *mStateManager;
-    const WorkaroundsGL &mWorkarounds;
-    BlitGL *mBlitter;
-    ClearMultiviewGL *mMultiviewClearer;
 
     GLuint mFramebufferID;
     bool mIsDefault;

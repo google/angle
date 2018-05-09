@@ -19,6 +19,8 @@ struct BlockMemberInfo;
 
 namespace rx
 {
+class BlitGL;
+class ClearMultiviewGL;
 class FunctionsGL;
 class RendererGL;
 class StateManagerGL;
@@ -193,6 +195,8 @@ class ContextGL : public ContextImpl
     const FunctionsGL *getFunctions() const;
     StateManagerGL *getStateManager();
     const WorkaroundsGL &getWorkaroundsGL() const;
+    BlitGL *getBlitter() const;
+    ClearMultiviewGL *getMultiviewClearer() const;
 
     gl::Error dispatchCompute(const gl::Context *context,
                               GLuint numGroupsX,

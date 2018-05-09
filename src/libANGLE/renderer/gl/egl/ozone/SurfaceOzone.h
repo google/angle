@@ -19,7 +19,6 @@ class SurfaceOzone : public SurfaceGL
 {
   public:
     SurfaceOzone(const egl::SurfaceState &state,
-                 RendererGL *renderer,
                  DisplayOzone::Buffer *buffer);
     ~SurfaceOzone() override;
 

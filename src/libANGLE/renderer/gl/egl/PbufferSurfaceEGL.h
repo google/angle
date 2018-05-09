@@ -20,10 +20,7 @@ namespace rx
 class PbufferSurfaceEGL : public SurfaceEGL
 {
   public:
-    PbufferSurfaceEGL(const egl::SurfaceState &state,
-                      const FunctionsEGL *egl,
-                      EGLConfig config,
-                      RendererGL *renderer);
+    PbufferSurfaceEGL(const egl::SurfaceState &state, const FunctionsEGL *egl, EGLConfig config);
     ~PbufferSurfaceEGL() override;
 
     egl::Error initialize(const egl::Display *display) override;

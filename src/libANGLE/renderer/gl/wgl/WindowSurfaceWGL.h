@@ -22,7 +22,6 @@ class WindowSurfaceWGL : public SurfaceWGL
 {
   public:
     WindowSurfaceWGL(const egl::SurfaceState &state,
-                     RendererGL *renderer,
                      EGLNativeWindowType window,
                      int pixelFormat,
                      const FunctionsWGL *functions,

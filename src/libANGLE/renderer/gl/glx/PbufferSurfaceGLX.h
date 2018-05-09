@@ -21,7 +21,6 @@ class PbufferSurfaceGLX : public SurfaceGLX
 {
   public:
     PbufferSurfaceGLX(const egl::SurfaceState &state,
-                      RendererGL *renderer,
                       EGLint width,
                       EGLint height,
                       bool largest,

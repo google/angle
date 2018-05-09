@@ -27,7 +27,7 @@ class DXGISwapChainWindowSurfaceWGL : public SurfaceWGL
 {
   public:
     DXGISwapChainWindowSurfaceWGL(const egl::SurfaceState &state,
-                                  RendererGL *renderer,
+                                  StateManagerGL *stateManager,
                                   EGLNativeWindowType window,
                                   ID3D11Device *device,
                                   HANDLE deviceHandle,
@@ -72,8 +72,6 @@ class DXGISwapChainWindowSurfaceWGL : public SurfaceWGL
     EGLNativeWindowType mWindow;
 
     StateManagerGL *mStateManager;
-    const WorkaroundsGL &mWorkarounds;
-    RendererGL *mRenderer;
     const FunctionsGL *mFunctionsGL;
     const FunctionsWGL *mFunctionsWGL;
 

@@ -17,9 +17,8 @@ namespace rx
 WindowSurfaceEGL::WindowSurfaceEGL(const egl::SurfaceState &state,
                                    const FunctionsEGL *egl,
                                    EGLConfig config,
-                                   EGLNativeWindowType window,
-                                   RendererGL *renderer)
-    : SurfaceEGL(state, egl, config, renderer), mWindow(window)
+                                   EGLNativeWindowType window)
+    : SurfaceEGL(state, egl, config), mWindow(window)
 {
 }
 

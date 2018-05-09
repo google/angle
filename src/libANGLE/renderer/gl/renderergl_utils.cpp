@@ -14,9 +14,11 @@
 #include "common/mathutil.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Workarounds.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
@@ -1249,6 +1251,31 @@ bool UseTexImage3D(gl::TextureType textureType)
 {
     return textureType == gl::TextureType::_2DArray || textureType == gl::TextureType::_3D;
 }
+}
+
+const FunctionsGL *GetFunctionsGL(const gl::Context *context)
+{
+    return GetImplAs<ContextGL>(context)->getFunctions();
+}
+
+StateManagerGL *GetStateManagerGL(const gl::Context *context)
+{
+    return GetImplAs<ContextGL>(context)->getStateManager();
+}
+
+BlitGL *GetBlitGL(const gl::Context *context)
+{
+    return GetImplAs<ContextGL>(context)->getBlitter();
+}
+
+ClearMultiviewGL *GetMultiviewClearer(const gl::Context *context)
+{
+    return GetImplAs<ContextGL>(context)->getMultiviewClearer();
+}
+
+const WorkaroundsGL &GetWorkaroundsGL(const gl::Context *context)
+{
+    return GetImplAs<ContextGL>(context)->getWorkaroundsGL();
 }
 
 bool CanMapBufferForRead(const FunctionsGL *functions)

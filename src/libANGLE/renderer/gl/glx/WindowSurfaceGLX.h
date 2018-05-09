@@ -25,7 +25,6 @@ class WindowSurfaceGLX : public SurfaceGLX
     WindowSurfaceGLX(const egl::SurfaceState &state,
                      const FunctionsGLX &glx,
                      DisplayGLX *glxDisplay,
-                     RendererGL *renderer,
                      Window window,
                      Display *display,
                      glx::FBConfig fbConfig);

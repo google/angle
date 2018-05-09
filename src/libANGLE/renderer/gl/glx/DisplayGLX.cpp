@@ -359,8 +359,7 @@ SurfaceImpl *DisplayGLX::createWindowSurface(const egl::SurfaceState &state,
     ASSERT(configIdToGLXConfig.count(state.config->configID) > 0);
     glx::FBConfig fbConfig = configIdToGLXConfig[state.config->configID];
 
-    return new WindowSurfaceGLX(state, mGLX, this, getRenderer(), window, mGLX.getDisplay(),
-                                fbConfig);
+    return new WindowSurfaceGLX(state, mGLX, this, window, mGLX.getDisplay(), fbConfig);
 }
 
 SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::SurfaceState &state,
@@ -373,7 +372,7 @@ SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::SurfaceState &state,
     EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
     bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
 
-    return new PbufferSurfaceGLX(state, getRenderer(), width, height, largest, mGLX, fbConfig);
+    return new PbufferSurfaceGLX(state, width, height, largest, mGLX, fbConfig);
 }
 
 SurfaceImpl *DisplayGLX::createPbufferFromClientBuffer(const egl::SurfaceState &state,

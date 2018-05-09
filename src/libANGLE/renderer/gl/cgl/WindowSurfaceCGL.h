@@ -25,6 +25,7 @@ namespace rx
 class DisplayCGL;
 class FramebufferGL;
 class FunctionsGL;
+class RendererGL;
 class StateManagerGL;
 struct WorkaroundsGL;
 
@@ -94,8 +95,6 @@ class WindowSurfaceCGL : public SurfaceGL
     CGLContextObj mContext;
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
-    RendererGL *mRenderer;
-    const WorkaroundsGL &mWorkarounds;
 
     GLuint mFramebuffer;
     GLuint mDSRenderbuffer;

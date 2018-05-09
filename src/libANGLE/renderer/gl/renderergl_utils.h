@@ -30,7 +30,10 @@ struct Workarounds;
 
 namespace rx
 {
+class BlitGL;
+class ClearMultiviewGL;
 class FunctionsGL;
+class StateManagerGL;
 struct WorkaroundsGL;
 enum class MultiviewImplementationTypeGL
 {
@@ -40,6 +43,13 @@ enum class MultiviewImplementationTypeGL
 
 VendorID GetVendorID(const FunctionsGL *functions);
 std::string GetDriverVersion(const FunctionsGL *functions);
+
+// Helpers for extracting the GL helper objects out of a context
+const FunctionsGL *GetFunctionsGL(const gl::Context *context);
+StateManagerGL *GetStateManagerGL(const gl::Context *context);
+BlitGL *GetBlitGL(const gl::Context *context);
+ClearMultiviewGL *GetMultiviewClearer(const gl::Context *context);
+const WorkaroundsGL &GetWorkaroundsGL(const gl::Context *context);
 
 namespace nativegl_gl
 {

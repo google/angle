@@ -230,7 +230,7 @@ egl::Error GetD3DTextureInfo(EGLenum buftype,
 }  // anonymous namespace
 
 D3DTextureSurfaceWGL::D3DTextureSurfaceWGL(const egl::SurfaceState &state,
-                                           RendererGL *renderer,
+                                           StateManagerGL *stateManager,
                                            EGLenum buftype,
                                            EGLClientBuffer clientBuffer,
                                            DisplayWGL *display,
@@ -238,14 +238,12 @@ D3DTextureSurfaceWGL::D3DTextureSurfaceWGL(const egl::SurfaceState &state,
                                            ID3D11Device *displayD3D11Device,
                                            const FunctionsGL *functionsGL,
                                            const FunctionsWGL *functionsWGL)
-    : SurfaceWGL(state, renderer),
+    : SurfaceWGL(state),
       mBuftype(buftype),
       mClientBuffer(clientBuffer),
-      mRenderer(renderer),
       mDisplayD3D11Device(displayD3D11Device),
       mDisplay(display),
-      mStateManager(renderer->getStateManager()),
-      mWorkarounds(renderer->getWorkarounds()),
+      mStateManager(stateManager),
       mFunctionsGL(functionsGL),
       mFunctionsWGL(functionsWGL),
       mDeviceContext(deviceContext),
@@ -500,9 +498,7 @@ EGLint D3DTextureSurfaceWGL::getSwapBehavior() const
 
 FramebufferImpl *D3DTextureSurfaceWGL::createDefaultFramebuffer(const gl::FramebufferState &data)
 {
-    return new FramebufferGL(mFramebufferID, data, mFunctionsGL, mWorkarounds,
-                             mRenderer->getBlitter(), mRenderer->getMultiviewClearer(),
-                             mStateManager);
+    return new FramebufferGL(data, mFramebufferID, true);
 }
 
 HDC D3DTextureSurfaceWGL::getDC() const

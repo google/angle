@@ -23,7 +23,7 @@ namespace rx
 {
 
 DXGISwapChainWindowSurfaceWGL::DXGISwapChainWindowSurfaceWGL(const egl::SurfaceState &state,
-                                                             RendererGL *renderer,
+                                                             StateManagerGL *stateManager,
                                                              EGLNativeWindowType window,
                                                              ID3D11Device *device,
                                                              HANDLE deviceHandle,
@@ -31,11 +31,9 @@ DXGISwapChainWindowSurfaceWGL::DXGISwapChainWindowSurfaceWGL(const egl::SurfaceS
                                                              const FunctionsGL *functionsGL,
                                                              const FunctionsWGL *functionsWGL,
                                                              EGLint orientation)
-    : SurfaceWGL(state, renderer),
+    : SurfaceWGL(state),
       mWindow(window),
-      mStateManager(renderer->getStateManager()),
-      mWorkarounds(renderer->getWorkarounds()),
-      mRenderer(renderer),
+      mStateManager(stateManager),
       mFunctionsGL(functionsGL),
       mFunctionsWGL(functionsWGL),
       mDevice(device),
@@ -272,9 +270,7 @@ EGLint DXGISwapChainWindowSurfaceWGL::getSwapBehavior() const
 FramebufferImpl *DXGISwapChainWindowSurfaceWGL::createDefaultFramebuffer(
     const gl::FramebufferState &data)
 {
-    return new FramebufferGL(mFramebufferID, data, mFunctionsGL, mWorkarounds,
-                             mRenderer->getBlitter(), mRenderer->getMultiviewClearer(),
-                             mStateManager);
+    return new FramebufferGL(data, mFramebufferID, true);
 }
 
 HDC DXGISwapChainWindowSurfaceWGL::getDC() const
