@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa0708fb_b4c3fad6",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T16:54:17Z",
+      "side": 1,
+      "message": "I think this can be an anonymous static helper function. I don\u0027t see it using anything in Context.",
+      "range": {
+        "startLine": 628,
+        "startChar": 0,
+        "endLine": 631,
+        "endChar": 1
+      },
+      "revId": "72374b05976afc8d09826b60523348454b7b92ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2820df74_54cb35d2",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T16:54:17Z",
+      "side": 1,
+      "message": "maybe I\u0027m being dumb but I don\u0027t see anything in here that uses data from Context- can it be implemented in GLES1State? Even vertexArrayIndex could be a member of GLES1State.",
+      "range": {
+        "startLine": 633,
+        "startChar": 24,
+        "endLine": 633,
+        "endChar": 60
+      },
+      "revId": "72374b05976afc8d09826b60523348454b7b92ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb08e198_2ceb8317",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-09T16:54:17Z",
+      "side": 1,
+      "message": "I believe you can use a range-for loop here.",
+      "range": {
+        "startLine": 644,
+        "startChar": 3,
+        "endLine": 644,
+        "endChar": 90
+      },
+      "revId": "72374b05976afc8d09826b60523348454b7b92ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
