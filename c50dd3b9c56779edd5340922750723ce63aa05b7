@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a47e6f66_5925d39c",
+        "filename": "include/GLES2/gl2ext_angle.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-09T18:49:01Z",
+      "side": 1,
+      "message": "I\u0027m guessing that this section came from some auto-generation.  Should we generate a separate file and include it here?  This won\u0027t be maintainable otherwise I think.",
+      "range": {
+        "startLine": 552,
+        "startChar": 0,
+        "endLine": 552,
+        "endChar": 93
+      },
+      "revId": "c50dd3b9c56779edd5340922750723ce63aa05b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2cef58a_0e4c4c27",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-09T18:49:01Z",
+      "side": 1,
+      "message": "I think this should be ASSERT(context \u003d\u003d GetValidGlobalContext())\n\nI think we decided that the context has to be current else it is undefined behaviour.",
+      "range": {
+        "startLine": 364,
+        "startChar": 37,
+        "endLine": 364,
+        "endChar": 70
+      },
+      "revId": "c50dd3b9c56779edd5340922750723ce63aa05b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
