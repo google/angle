@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "fa1e8853_7aaba812",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-09T19:04:05Z",
+      "side": 1,
+      "message": "Got it; what if those call through into GLES1Renderer instead, which will then be the canonical place where the attribute array indices are defined? It would clean things up out of Context, and I guess I\u0027d still prefer there\u0027d be some separation of responsibilities between GLES1 state and renderer at least.",
+      "parentUuid": "a38011ad_a01b875b",
+      "range": {
+        "startLine": 633,
+        "startChar": 24,
+        "endLine": 633,
+        "endChar": 60
+      },
+      "revId": "72374b05976afc8d09826b60523348454b7b92ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fb08e198_2ceb8317",
         "filename": "src/libANGLE/Context_gles_1_0.cpp",
         "patchSetId": 12
