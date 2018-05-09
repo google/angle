@@ -43,6 +43,12 @@ void MapSwizzleState(GLenum internalFormat,
             swizzleStateOut->swizzleBlue  = GL_ZERO;
             swizzleStateOut->swizzleAlpha = swizzleState.swizzleRed;
             break;
+        case GL_RGB8:
+            swizzleStateOut->swizzleRed   = swizzleState.swizzleRed;
+            swizzleStateOut->swizzleGreen = swizzleState.swizzleGreen;
+            swizzleStateOut->swizzleBlue  = swizzleState.swizzleBlue;
+            swizzleStateOut->swizzleAlpha = GL_ONE;
+            break;
         default:
             *swizzleStateOut = swizzleState;
             break;
@@ -557,7 +563,7 @@ vk::Error TextureVk::initImage(RendererVk *renderer,
                                    mappedSwizzle, &mBaseLevelImageView, 1));
 
     // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
-    VkClearColorValue black = {{0}};
+    VkClearColorValue black = {{0, 0, 0, 1.0f}};
     mImage.clearColor(black, commandBuffer);
     return vk::NoError();
 }

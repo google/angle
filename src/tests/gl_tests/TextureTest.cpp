@@ -1398,10 +1398,7 @@ TEST_P(TextureCubeTest, CubeMapFBO)
 // Test that glTexSubImage2D works properly when glTexStorage2DEXT has initialized the image with a default color.
 TEST_P(Texture2DTest, TexStorage)
 {
-    // TODO(lucferron): Follow up to clear with opaque black in TextureVk::initImageAndViews.
-    // http://anglebug.com/2536
-    ANGLE_SKIP_TEST_IF(IsVulkan() ||
-                       getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
 
     int width = getWindowWidth();
     int height = getWindowHeight();
