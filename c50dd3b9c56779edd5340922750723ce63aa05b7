@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a6a996b8_2783f0bd",
+        "filename": "include/GLES2/gl2ext_angle.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-09T21:48:11Z",
+      "side": 1,
+      "message": "Yeah, these were generated. I\u0027m happy to do autogeneration of these, but I\u0027d be breaking current style for extensions by including a new file. If that\u0027s fine, I\u0027ll go ahead.",
+      "parentUuid": "a47e6f66_5925d39c",
+      "range": {
+        "startLine": 552,
+        "startChar": 0,
+        "endLine": 552,
+        "endChar": 93
+      },
+      "revId": "c50dd3b9c56779edd5340922750723ce63aa05b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d2cef58a_0e4c4c27",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2018-05-09T18:49:01Z",
       "side": 1,
       "message": "I think this should be ASSERT(context \u003d\u003d GetValidGlobalContext())\n\nI think we decided that the context has to be current else it is undefined behaviour.",
+      "range": {
+        "startLine": 364,
+        "startChar": 37,
+        "endLine": 364,
+        "endChar": 70
+      },
+      "revId": "c50dd3b9c56779edd5340922750723ce63aa05b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91201afe_2d4f6863",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-09T21:48:11Z",
+      "side": 1,
+      "message": "Maybe I\u0027m reading the code wrong here - but an ASSERT in ANGLE is going to evaluate the expression in Release mode, right? GetValidGlobalContext() does a TLS lookup, which would be killing the performance benefit of the extension.\n\nWe did agree that a non-current context caused undefined behavior. My interpretation of this would be that it would go unchecked. \n\nI added in this hasBeenCurrent() check as a seperate behavior, because it was not compute intensive and would prevent an uninitialized context from being passed. If you\u0027re on the fence, I have no issue removing it.",
+      "parentUuid": "d2cef58a_0e4c4c27",
       "range": {
         "startLine": 364,
         "startChar": 37,
