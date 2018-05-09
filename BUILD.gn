@@ -104,6 +104,7 @@ config("extra_warnings") {
       # Remove when crbug.com/428099 is resolved.
       "-Winconsistent-missing-override",
       "-Wunneeded-internal-declaration",
+      "-Wnon-virtual-dtor",
     ]
   }
 }
