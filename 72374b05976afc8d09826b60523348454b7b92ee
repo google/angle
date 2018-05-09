@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "b285d217_3a041135",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-09T18:44:59Z",
+      "side": 1,
+      "message": "Right, they could. Here, though, I\u0027m trying to separate the parts that are only needed to render GLES1 given the state, versus the GLES1 state itself.\n\nFor instance, if we change up the texture coord array index base from 4 to 0 (and switch the other ones around), the set of items that comprise GLES1 context state (GLES1State.cpp) per the spec\u0027s state tables is still the same; it would be rendered differently in terms of how that state is translated to vertex attribute array indexes, which seems to me the responsibility of Context and GLES1Renderer, and not GLES1State.\n\nWhat do you think?",
+      "parentUuid": "2820df74_54cb35d2",
+      "range": {
+        "startLine": 633,
+        "startChar": 24,
+        "endLine": 633,
+        "endChar": 60
+      },
+      "revId": "72374b05976afc8d09826b60523348454b7b92ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fb08e198_2ceb8317",
         "filename": "src/libANGLE/Context_gles_1_0.cpp",
         "patchSetId": 12
