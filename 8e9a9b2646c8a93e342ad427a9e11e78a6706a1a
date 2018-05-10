@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "94496230_1a359bc5",
+        "filename": "samples/gles1/SimpleTexture2D.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe578502_676be17c",
+      "range": {
+        "startLine": 80,
+        "startChar": 11,
+        "endLine": 80,
+        "endChar": 19
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc8b6214_c58e4e84",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 15
@@ -45,6 +69,30 @@
       "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b22db391_c4dde3b9",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc8b6214_c58e4e84",
+      "range": {
+        "startLine": 44,
+        "startChar": 29,
+        "endLine": 44,
+        "endChar": 42
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "ba14484e_5d946fd0",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4e99bee_34c0b913",
+      "range": {
+        "startLine": 64,
+        "startChar": 36,
+        "endLine": 64,
+        "endChar": 47
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21147ddd_ac695625",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 15
@@ -82,6 +154,30 @@
       "writtenOn": "2018-05-09T20:11:26Z",
       "side": 1,
       "message": "didn\u0027t see, if this isn\u0027t called outside of this file, can you make it a private helper function?",
+      "range": {
+        "startLine": 214,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 0
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc810437_10b09e47",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "This is called in Context_gles_1_0.cpp, where we have a similar function that calls through into this class.",
+      "parentUuid": "21147ddd_ac695625",
       "range": {
         "startLine": 214,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "79cebb78_96146b49",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d6774bf_29f8542f",
+      "range": {
+        "startLine": 259,
+        "startChar": 4,
+        "endLine": 259,
+        "endChar": 15
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d0ec379_487a68d6",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 15
@@ -137,6 +257,30 @@
       "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b363655a_7e8e0a92",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d0ec379_487a68d6",
+      "range": {
+        "startLine": 281,
+        "startChar": 15,
+        "endLine": 281,
+        "endChar": 27
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "65482a2d_0506568d",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "105c1dce_78290ed4",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 325,
+        "endChar": 30
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f66d9740_607c9cb2",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 15
@@ -183,6 +351,30 @@
       "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b71bb48b_84518e8a",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f66d9740_607c9cb2",
+      "range": {
+        "startLine": 371,
+        "startChar": 4,
+        "endLine": 371,
+        "endChar": 52
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "5c09dc88_18c0f046",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "That\u0027s correct; we\u0027ll define everything in one ubershader for simplicitly and having a one stop shop where everything is laid out.\n\nI actually expect it to be at least predictable, if not good, in performance since although there will be branches galore, most of the time only small, coherent slices of it run at a time; almost all the branching is determined by uniform variables or the current GL state directly, with exception of per pixel things upcoming like alpha test, clip plane, and logic op where there will be more divergence. Bonus: No jank from compiling multiple shaders / complexity of maintaining shader cache. Let\u0027s see how far we can push it :)",
+      "parentUuid": "58f22230_3869993b",
+      "range": {
+        "startLine": 423,
+        "startChar": 13,
+        "endLine": 423,
+        "endChar": 27
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73321d39_93c0a28d",
         "filename": "src/libANGLE/GLES1Renderer.h",
         "patchSetId": 15
@@ -229,6 +445,30 @@
       "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c249bef_d93c0267",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-10T06:32:16Z",
+      "side": 1,
+      "message": "Looks a bit difficult if we want to keep the destructor as protected (and after tripping over release(), I totally agree with leaving it protected). Plus it looks like the raw pointer is the convention used in other places like ContextState. Making it a raw pointer here also allows us to not have to pull in the ResourceManager header into another header file itself.",
+      "parentUuid": "73321d39_93c0a28d",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 25
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
