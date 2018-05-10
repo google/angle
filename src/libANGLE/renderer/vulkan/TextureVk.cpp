@@ -146,6 +146,84 @@ gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
     return gl::NoError();
 }
 
+gl::Error PixelBuffer::stageSubresourceUpdateFromImage(ContextVk *contextVk,
+                                                       vk::CommandBuffer *commandBuffer,
+                                                       const gl::ImageIndex &index,
+                                                       const gl::Rectangle &sourceArea,
+                                                       const gl::Offset dstOffset,
+                                                       const gl::Extents dstExtent,
+                                                       const gl::InternalFormat &formatInfo,
+                                                       GLenum type,
+                                                       vk::ImageHelper &srcImageHelper)
+{
+    // If the extents and offset is outside the source image, we need to clip.
+    gl::Rectangle clippedRectangle;
+    if (!ClipRectangle(sourceArea,
+                       gl::Rectangle(0, 0, srcImageHelper.getExtents().width,
+                                     srcImageHelper.getExtents().height),
+                       &clippedRectangle))
+    {
+        // Empty source area, nothing to do.
+        return gl::NoError();
+    }
+
+    // 1- obtain a buffer handle to copy to
+    RendererVk *renderer = contextVk->getRenderer();
+
+    const vk::Format &vkFormat         = renderer->getFormat(formatInfo.sizedInternalFormat);
+    const angle::Format &storageFormat = vkFormat.textureFormat();
+
+    size_t outputRowPitch   = storageFormat.pixelBytes * clippedRectangle.width;
+    size_t outputDepthPitch = outputRowPitch * clippedRectangle.height;
+
+    VkBuffer bufferHandle = VK_NULL_HANDLE;
+
+    uint8_t *stagingPointer = nullptr;
+    bool newBufferAllocated = false;
+    uint32_t stagingOffset  = 0;
+    size_t allocationSize   = outputDepthPitch * 1;
+    mStagingBuffer.allocate(renderer, allocationSize, &stagingPointer, &bufferHandle,
+                            &stagingOffset, &newBufferAllocated);
+
+    // 2- copy the source image region to the pixel buffer.
+    VkBufferImageCopy copyToBuffer;
+    copyToBuffer.bufferOffset                    = static_cast<VkDeviceSize>(stagingOffset);
+    copyToBuffer.bufferRowLength                 = clippedRectangle.width;
+    copyToBuffer.bufferImageHeight               = clippedRectangle.height;
+    copyToBuffer.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    copyToBuffer.imageSubresource.mipLevel       = 0;
+    copyToBuffer.imageSubresource.baseArrayLayer = 0;
+    copyToBuffer.imageSubresource.layerCount     = 1;
+    copyToBuffer.imageOffset.x                   = clippedRectangle.x;
+    copyToBuffer.imageOffset.y                   = clippedRectangle.y;
+    copyToBuffer.imageOffset.z                   = 0;
+    copyToBuffer.imageExtent.width               = clippedRectangle.width;
+    copyToBuffer.imageExtent.height              = clippedRectangle.height;
+    copyToBuffer.imageExtent.depth               = 1;
+
+    srcImageHelper.changeLayoutWithStages(
+        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
+
+    commandBuffer->copyImageToBuffer(srcImageHelper.getImage(), srcImageHelper.getCurrentLayout(),
+                                     bufferHandle, 1, &copyToBuffer);
+
+    VkBufferImageCopy copyToImage;
+    copyToImage.bufferOffset                    = static_cast<VkDeviceSize>(stagingOffset);
+    copyToImage.bufferRowLength                 = clippedRectangle.width;
+    copyToImage.bufferImageHeight               = clippedRectangle.height;
+    copyToImage.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    copyToImage.imageSubresource.mipLevel       = index.getLevelIndex();
+    copyToImage.imageSubresource.baseArrayLayer = index.hasLayer() ? index.getLayerIndex() : 0;
+    copyToImage.imageSubresource.layerCount     = index.getLayerCount();
+    gl_vk::GetOffset(dstOffset, &copyToImage.imageOffset);
+    gl_vk::GetExtent(dstExtent, &copyToImage.imageExtent);
+
+    // 3- enqueue the destination image subresource update
+    mSubresourceUpdates.emplace_back(bufferHandle, copyToImage);
+    return gl::NoError();
+}
+
 vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
                                            vk::ImageHelper *image,
                                            vk::CommandBuffer *commandBuffer)
