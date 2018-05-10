@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1fc23e5_697727da",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 778,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T19:06:47Z",
+      "side": 1,
+      "message": "instead of calling getExtents, use mExtents directly.",
+      "range": {
+        "startLine": 778,
+        "startChar": 11,
+        "endLine": 778,
+        "endChar": 21
+      },
+      "revId": "5ec48c2395aecf24aeccc0512b65118864f4ef50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5db10f30_6383aac2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T19:06:47Z",
+      "side": 1,
+      "message": "this can be const.",
+      "range": {
+        "startLine": 219,
+        "startChar": 16,
+        "endLine": 219,
+        "endChar": 23
+      },
+      "revId": "5ec48c2395aecf24aeccc0512b65118864f4ef50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
