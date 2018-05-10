@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "075ccec2_9cf84aae",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-10T18:44:46Z",
+      "side": 1,
+      "message": "Probably not necessary, maybe a comment about destinations only being one layer instead.",
+      "range": {
+        "startLine": 184,
+        "startChar": 46,
+        "endLine": 184,
+        "endChar": 50
+      },
+      "revId": "edafcdd5bd5ae1745215af8b7f51bb45d3d8ab08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab6de2ed_813529cf",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-10T18:44:46Z",
+      "side": 1,
+      "message": "From reading the docs it\u0027s unclear if this is in bytes or pixels.  The docs also say you can set these to 0 to specifiy tightly packed data based on the imageExtent, it looks like that could work here.",
+      "range": {
+        "startLine": 191,
+        "startChar": 51,
+        "endLine": 191,
+        "endChar": 73
+      },
+      "revId": "edafcdd5bd5ae1745215af8b7f51bb45d3d8ab08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b87dd149_0b807814",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-10T18:44:46Z",
+      "side": 1,
+      "message": "Think these can be 0 too.",
+      "range": {
+        "startLine": 213,
+        "startChar": 50,
+        "endLine": 213,
+        "endChar": 72
+      },
+      "revId": "edafcdd5bd5ae1745215af8b7f51bb45d3d8ab08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
