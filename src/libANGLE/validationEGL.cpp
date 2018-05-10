@@ -1270,7 +1270,7 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
     return NoError();
 }
 
-Error ValidateMakeCurrent(Display *display, EGLSurface draw, EGLSurface read, gl::Context *context)
+Error ValidateMakeCurrent(Display *display, Surface *draw, Surface *read, gl::Context *context)
 {
     if (context == EGL_NO_CONTEXT && (draw != EGL_NO_SURFACE || read != EGL_NO_SURFACE))
     {
@@ -1326,32 +1326,26 @@ Error ValidateMakeCurrent(Display *display, EGLSurface draw, EGLSurface read, gl
         return EglContextLost();
     }
 
-    Surface *drawSurface = static_cast<Surface *>(draw);
     if (draw != EGL_NO_SURFACE)
     {
-        ANGLE_TRY(ValidateSurface(display, drawSurface));
+        ANGLE_TRY(ValidateSurface(display, draw));
     }
 
-    Surface *readSurface = static_cast<Surface *>(read);
     if (read != EGL_NO_SURFACE)
     {
-        ANGLE_TRY(ValidateSurface(display, readSurface));
-    }
-
-    if (readSurface)
-    {
-        ANGLE_TRY(ValidateCompatibleConfigs(display, readSurface->getConfig(), readSurface,
-                                            context->getConfig(), readSurface->getType()));
+        ANGLE_TRY(ValidateSurface(display, read));
+        ANGLE_TRY(ValidateCompatibleConfigs(display, read->getConfig(), read, context->getConfig(),
+                                            read->getType()));
     }
 
     if (draw != read)
     {
         UNIMPLEMENTED();  // FIXME
 
-        if (drawSurface)
+        if (draw)
         {
-            ANGLE_TRY(ValidateCompatibleConfigs(display, drawSurface->getConfig(), drawSurface,
-                                                context->getConfig(), drawSurface->getType()));
+            ANGLE_TRY(ValidateCompatibleConfigs(display, draw->getConfig(), draw,
+                                                context->getConfig(), draw->getType()));
         }
     }
     return NoError();
