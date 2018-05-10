@@ -139,7 +139,21 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     VkColorComponentFlags colorMaskFlags = contextVk->getClearColorMask();
     if (clearColor && (mActiveColorComponents & colorMaskFlags) != mActiveColorComponents)
     {
-        return clearWithDraw(contextVk, colorMaskFlags);
+        ANGLE_TRY(clearWithDraw(contextVk, colorMaskFlags));
+
+        // Stencil clears must be handled separately. The only way to write out a stencil value from
+        // a fragment shader in Vulkan is with VK_EXT_shader_stencil_export. Support for this
+        // extension is sparse. Hence, we call into the RenderPass clear path. We similarly clear
+        // depth to keep the code simple, but depth clears could be combined with the masked color
+        // clears as an optimization.
+
+        if (clearDepth || clearStencil)
+        {
+            // Masked stencil clears are currently not implemented.
+            // TODO(jmadill): Masked stencil clear. http://anglebug.com/2540
+            ANGLE_TRY(clearWithClearAttachments(contextVk, false, clearDepth, clearStencil));
+        }
+        return gl::NoError();
     }
 
     // If we clear the depth OR the stencil but not both, and we have a packed depth stencil
@@ -152,6 +166,9 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         // With scissor test enabled, we clear very differently and we don't need to access
         // the image inside each attachment we can just use clearCmdAttachments with our
         // scissor region instead.
+
+        // Masked stencil clears are currently not implemented.
+        // TODO(jmadill): Masked stencil clear. http://anglebug.com/2540
         ANGLE_TRY(clearWithClearAttachments(contextVk, clearColor, clearDepth, clearStencil));
         return gl::NoError();
     }

@@ -7,6 +7,7 @@
 #include "test_utils/ANGLETest.h"
 
 #include "random_utils.h"
+#include "shader_utils.h"
 #include "test_utils/gl_raii.h"
 
 using namespace angle;
@@ -398,6 +399,8 @@ class ScissoredClearTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
     }
 };
 
@@ -427,6 +430,97 @@ TEST_P(ScissoredClearTest, BasicScissoredColorClear)
     EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::red) << "out-of-scissor area should be red";
     EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::red) << "out-of-scissor area should be red";
     EXPECT_PIXEL_COLOR_EQ(whalf, hhalf, GLColor::green) << "in-scissor area should be green";
+}
+
+// Tests combined scissored color+depth clear.
+TEST_P(ScissoredClearTest, ScissoredColorAndDepthClear)
+{
+    const int w     = getWindowWidth();
+    const int h     = getWindowHeight();
+    const int whalf = w >> 1;
+    const int hhalf = h >> 1;
+
+    // Clear whole region to red/1.0f.
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClearDepthf(1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Enable scissor and clear to green/0.5f.
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(whalf / 2, hhalf / 2, whalf, whalf);
+    glClearColor(0.0, 1.0, 0.0, 1.0);
+    glClearDepthf(0.5f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Check the four corners for the original clear color, and the middle for the scissored clear
+    // color.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "out-of-scissor area should be red";
+    EXPECT_PIXEL_COLOR_EQ(w - 1, 0, GLColor::red) << "out-of-scissor area should be red";
+    EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::red) << "out-of-scissor area should be red";
+    EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::red) << "out-of-scissor area should be red";
+    EXPECT_PIXEL_COLOR_EQ(whalf, hhalf, GLColor::green) << "in-scissor area should be green";
+
+    // Draw blue with depth 0.5f and depth test enabled - verify only the middle changes.
+    glDisable(GL_SCISSOR_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_EQUAL);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Blue());
+
+    // OpenGL uses a depth range of [-1,1] so pass in a z value of 0 to get 0.5 depth.
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "out-of-scissor area should be red";
+    EXPECT_PIXEL_COLOR_EQ(w - 1, 0, GLColor::red) << "out-of-scissor area should be red";
+    EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::red) << "out-of-scissor area should be red";
+    EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::red) << "out-of-scissor area should be red";
+    EXPECT_PIXEL_COLOR_EQ(whalf, hhalf, GLColor::blue) << "in-scissor area should be blue";
+}
+
+// Tests combined color+depth clear.
+TEST_P(ClearTest, MaskedColorAndDepthClear)
+{
+    // Possible Intel driver bug on Intel 630.
+    // TODO(jmadill): Re-enable when possible. http://anglebug.com/2547
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsVulkan());
+
+    // Flaky on Android Nexus 5x, possible driver bug.
+    // TODO(jmadill): Re-enable when possible. http://anglebug.com/2548
+    ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsAndroid());
+
+    // Clear to a random color and 1.0 depth.
+    Vector4 color1(0.1f, 0.2f, 0.3f, 0.4f);
+    GLColor color1RGB(color1);
+
+    glClearColor(color1[0], color1[1], color1[2], color1[3]);
+    glClearDepthf(1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify color and was cleared correctly.
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, color1RGB, 1);
+
+    // Use a color mask to clear to a second color and 0.5 depth.
+    Vector4 color2(0.2f, 0.4f, 0.6f, 0.8f);
+    GLColor color2RGB(color2);
+    glClearColor(color2[0], color2[1], color2[2], color2[3]);
+    glClearDepthf(0.5f);
+    glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_FALSE);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify second clear mask worked as expected.
+    GLColor color2Masked(color2RGB[0], color1RGB[1], color2RGB[2], color1RGB[3]);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, color2Masked);
+
+    // We use a small shader to verify depth.
+    ANGLE_GL_PROGRAM(depthTestProgram, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Blue());
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_EQUAL);
+    drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
