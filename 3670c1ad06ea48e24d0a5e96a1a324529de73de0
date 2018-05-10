@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c923f222_03e855d7",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-10T17:44:28Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand, why would we need graph stuff here and we don\u0027t in the other stage function?",
+      "parentUuid": "346e38d7_6e3133fa",
+      "range": {
+        "startLine": 149,
+        "startChar": 23,
+        "endLine": 149,
+        "endChar": 54
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c00e5b5e_0cc1e438",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 1
@@ -71,6 +95,54 @@
     },
     {
       "key": {
+        "uuid": "59ecc39f_4c450495",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-10T17:44:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c00e5b5e_0cc1e438",
+      "range": {
+        "startLine": 188,
+        "startChar": 19,
+        "endLine": 188,
+        "endChar": 25
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6ef0a53_caffee8a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-10T17:44:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5f41615_690a957f",
+      "range": {
+        "startLine": 188,
+        "startChar": 28,
+        "endLine": 188,
+        "endChar": 53
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c663da14_78255b3c",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 1
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "1b7fde00_7a769d70",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-10T17:44:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c663da14_78255b3c",
+      "range": {
+        "startLine": 222,
+        "startChar": 10,
+        "endLine": 222,
+        "endChar": 77
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c60b43d5_847faba7",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 1
@@ -114,6 +210,30 @@
       "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "415921a9_da4e4d97",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-10T17:44:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c60b43d5_847faba7",
+      "range": {
+        "startLine": 439,
+        "startChar": 37,
+        "endLine": 443,
+        "endChar": 71
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
