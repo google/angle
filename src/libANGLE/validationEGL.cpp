@@ -2255,7 +2255,7 @@ Error ValidateGetSyncValuesCHROMIUM(const Display *display,
     return NoError();
 }
 
-Error ValidateSwapBuffersWithDamageEXT(const Display *display,
+Error ValidateSwapBuffersWithDamageKHR(const Display *display,
                                        const Surface *surface,
                                        EGLint *rects,
                                        EGLint n_rects)
@@ -2270,7 +2270,7 @@ Error ValidateSwapBuffersWithDamageEXT(const Display *display,
     {
         // It is out of spec what happens when calling an extension function when the extension is
         // not available. EGL_BAD_DISPLAY seems like a reasonable error.
-        return EglBadDisplay() << "EGL_EXT_swap_buffers_with_damage is not available.";
+        return EglBadDisplay() << "EGL_KHR_swap_buffers_with_damage is not available.";
     }
 
     if (surface == EGL_NO_SURFACE)

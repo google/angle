@@ -43,6 +43,16 @@ egl::Error SurfaceEGL::swap(const gl::Context *context)
     return egl::NoError();
 }
 
+egl::Error SurfaceEGL::swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects)
+{
+    EGLBoolean success = mEGL->swapBuffersWithDamageKHR(mSurface, rects, n_rects);
+    if (success == EGL_FALSE)
+    {
+        return egl::Error(mEGL->getError(), "eglSwapBuffersWithDamageKHR failed");
+    }
+    return egl::NoError();
+}
+
 egl::Error SurfaceEGL::postSubBuffer(const gl::Context *context,
                                      EGLint x,
                                      EGLint y,

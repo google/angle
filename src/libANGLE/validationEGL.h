@@ -104,7 +104,7 @@ Error ValidateGetSyncValuesCHROMIUM(const Display *display,
                                     const EGLuint64KHR *msc,
                                     const EGLuint64KHR *sbc);
 
-Error ValidateSwapBuffersWithDamageEXT(const Display *display,
+Error ValidateSwapBuffersWithDamageKHR(const Display *display,
                                        const Surface *surface,
                                        EGLint *rects,
                                        EGLint n_rects);

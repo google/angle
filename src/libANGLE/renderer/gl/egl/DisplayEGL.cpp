@@ -104,6 +104,7 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
         mEGL->hasExtension("EGL_EXT_create_context_robustness");
 
     outExtensions->postSubBuffer = false;  // Since SurfaceEGL::postSubBuffer is not implemented
+    outExtensions->swapBuffersWithDamage = mEGL->hasExtension("EGL_KHR_swap_buffers_with_damage");
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;

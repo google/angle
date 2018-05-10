@@ -92,7 +92,7 @@ ProcEntry g_procTable[] = {
     {"eglStreamPostD3DTextureANGLE", P(egl::StreamPostD3DTextureANGLE)},
     {"eglSurfaceAttrib", P(egl::SurfaceAttrib)},
     {"eglSwapBuffers", P(egl::SwapBuffers)},
-    {"eglSwapBuffersWithDamageEXT", P(egl::SwapBuffersWithDamageEXT)},
+    {"eglSwapBuffersWithDamageKHR", P(egl::SwapBuffersWithDamageKHR)},
     {"eglSwapInterval", P(egl::SwapInterval)},
     {"eglTerminate", P(egl::Terminate)},
     {"eglWaitClient", P(egl::WaitClient)},

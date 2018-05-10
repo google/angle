@@ -822,8 +822,8 @@
         "eglGetSyncValuesCHROMIUM"
     ],
 
-    "EGL_EXT_swap_buffers_with_damage": [
-        "eglSwapBuffersWithDamageEXT"
+    "EGL_KHR_swap_buffers_with_damage": [
+        "eglSwapBuffersWithDamageKHR"
     ],
 
     "EGL_ANGLE_program_cache_control": [

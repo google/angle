@@ -754,10 +754,10 @@ EGLBoolean EGLAPIENTRY GetSyncValuesCHROMIUM(EGLDisplay dpy,
     return EGL_TRUE;
 }
 
-ANGLE_EXPORT EGLBoolean SwapBuffersWithDamageEXT(EGLDisplay dpy,
-                                                 EGLSurface surface,
-                                                 EGLint *rects,
-                                                 EGLint n_rects)
+EGLBoolean EGLAPIENTRY SwapBuffersWithDamageKHR(EGLDisplay dpy,
+                                                EGLSurface surface,
+                                                EGLint *rects,
+                                                EGLint n_rects)
 {
     EVENT(
         "(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint *rects = 0x%0.8p, EGLint "
@@ -768,7 +768,7 @@ ANGLE_EXPORT EGLBoolean SwapBuffersWithDamageEXT(EGLDisplay dpy,
     Display *display    = static_cast<Display *>(dpy);
     Surface *eglSurface = static_cast<Surface *>(surface);
 
-    Error error = ValidateSwapBuffersWithDamageEXT(display, eglSurface, rects, n_rects);
+    Error error = ValidateSwapBuffersWithDamageKHR(display, eglSurface, rects, n_rects);
     if (error.isError())
     {
         thread->setError(error);

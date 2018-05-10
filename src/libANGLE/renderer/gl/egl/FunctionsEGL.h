@@ -75,6 +75,8 @@ class FunctionsEGL
     EGLint clientWaitSyncKHR(EGLSyncKHR sync, EGLint flags, EGLTimeKHR timeout);
     EGLBoolean getSyncAttribKHR(EGLSyncKHR sync, EGLint attribute, EGLint *value);
 
+    EGLBoolean swapBuffersWithDamageKHR(EGLSurface surface, EGLint *rects, EGLint n_rects) const;
+
   private:
     // So as to isolate from angle we do not include angleutils.h and cannot
     // use angle::NonCopyable so we replicated it here instead.
