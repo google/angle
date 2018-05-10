@@ -1318,11 +1318,6 @@ void Program::unlink()
     mInfoLog.reset();
 }
 
-bool Program::isLinked() const
-{
-    return mLinked;
-}
-
 bool Program::hasLinkedShaderStage(ShaderType shaderType) const
 {
     ASSERT(shaderType != ShaderType::InvalidEnum);
@@ -1757,17 +1752,6 @@ const VariableLocation &Program::getUniformLocation(GLint location) const
 {
     ASSERT(location >= 0 && static_cast<size_t>(location) < mState.mUniformLocations.size());
     return mState.mUniformLocations[location];
-}
-
-const std::vector<VariableLocation> &Program::getUniformLocations() const
-{
-    return mState.mUniformLocations;
-}
-
-const LinkedUniform &Program::getUniformByIndex(GLuint index) const
-{
-    ASSERT(index < static_cast<size_t>(mState.mUniforms.size()));
-    return mState.mUniforms[index];
 }
 
 const BufferVariable &Program::getBufferVariableByIndex(GLuint index) const

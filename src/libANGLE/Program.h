@@ -404,10 +404,10 @@ class ProgramState final : angle::NonCopyable
     RangeUI mAtomicCounterUniformRange;
 
     // An array of the samplers that are used by the program
-    std::vector<gl::SamplerBinding> mSamplerBindings;
+    std::vector<SamplerBinding> mSamplerBindings;
 
     // An array of the images that are used by the program
-    std::vector<gl::ImageBinding> mImageBindings;
+    std::vector<ImageBinding> mImageBindings;
 
     // Names and mapped names of output variables that are arrays include [0] in the end, similarly
     // to uniforms.
@@ -494,8 +494,8 @@ class Program final : angle::NonCopyable, public LabeledObject
                               GLint components,
                               const GLfloat *coeffs);
 
-    Error link(const gl::Context *context);
-    bool isLinked() const;
+    Error link(const Context *context);
+    bool isLinked() const { return mLinked; }
 
     bool hasLinkedShaderStage(ShaderType shaderType) const;
 
@@ -552,8 +552,16 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool isValidUniformLocation(GLint location) const;
     const LinkedUniform &getUniformByLocation(GLint location) const;
     const VariableLocation &getUniformLocation(GLint location) const;
-    const std::vector<VariableLocation> &getUniformLocations() const;
-    const LinkedUniform &getUniformByIndex(GLuint index) const;
+    const std::vector<VariableLocation> &getUniformLocations() const
+    {
+        return mState.mUniformLocations;
+    }
+
+    const LinkedUniform &getUniformByIndex(GLuint index) const
+    {
+        ASSERT(index < static_cast<size_t>(mState.mUniforms.size()));
+        return mState.mUniforms[index];
+    }
 
     const BufferVariable &getBufferVariableByIndex(GLuint index) const;
 
@@ -632,7 +640,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     void validate(const Caps &caps);
     bool validateSamplers(InfoLog *infoLog, const Caps &caps);
     bool isValidated() const;
-    bool samplesFromTexture(const gl::State &state, GLuint textureID) const;
+    bool samplesFromTexture(const State &state, GLuint textureID) const;
 
     const AttributesMask &getActiveAttribLocationsMask() const
     {
@@ -735,7 +743,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkValidateFragmentInputBindings(const Context *context, InfoLog &infoLog) const;
 
     bool linkValidateBuiltInVaryings(const Context *context, InfoLog &infoLog) const;
-    bool linkValidateTransformFeedback(const gl::Context *context,
+    bool linkValidateTransformFeedback(const Context *context,
                                        InfoLog &infoLog,
                                        const ProgramMergedVaryings &linkedVaryings,
                                        const Caps &caps) const;

@@ -49,7 +49,7 @@ void VertexBinding::setBuffer(const gl::Context *context, Buffer *bufferIn, bool
         mBuffer->onBindingChanged(context, true, BufferBinding::Array);
 }
 
-void VertexBinding::onContainerBindingChanged(const Context *context, bool bound)
+void VertexBinding::onContainerBindingChanged(const Context *context, bool bound) const
 {
     if (mBuffer.get())
         mBuffer->onBindingChanged(context, bound, BufferBinding::Array);
@@ -69,11 +69,6 @@ void VertexBinding::updateCachedBufferSizeMinusOffset()
     {
         mCachedBufferSizeMinusOffset = 0;
     }
-}
-
-GLuint64 VertexBinding::getCachedBufferSizeMinusOffset() const
-{
-    return mCachedBufferSizeMinusOffset;
 }
 
 VertexAttribute::VertexAttribute(GLuint bindingIndex)

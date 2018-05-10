@@ -2096,7 +2096,7 @@ bool ValidateUniformCommonBase(Context *context,
     const auto &uniform = program->getUniformByIndex(uniformLocation.index);
 
     // attempting to write an array to a non-array uniform is an INVALID_OPERATION
-    if (!uniform.isArray() && count > 1)
+    if (count > 1 && !uniform.isArray())
     {
         context->handleError(InvalidOperation());
         return false;

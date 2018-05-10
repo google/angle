@@ -39,11 +39,15 @@ class VertexBinding final : angle::NonCopyable
     const BindingPointer<Buffer> &getBuffer() const { return mBuffer; }
     void setBuffer(const gl::Context *context, Buffer *bufferIn, bool containerIsBound);
 
-    void onContainerBindingChanged(const Context *context, bool bound);
+    void onContainerBindingChanged(const Context *context, bool bound) const;
+
+    GLuint64 getCachedBufferSizeMinusOffset() const
+    {
+        return mCachedBufferSizeMinusOffset;
+    }
 
     // Called from VertexArray.
     void updateCachedBufferSizeMinusOffset();
-    GLuint64 getCachedBufferSizeMinusOffset() const;
 
   private:
     GLuint mStride;
