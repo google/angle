@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "346e38d7_6e3133fa",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T17:30:19Z",
+      "side": 1,
+      "message": "this function doesn\u0027t handle any command graph stuff - you\u0027ll need to make sure the RW stuff is set up properly.",
+      "range": {
+        "startLine": 149,
+        "startChar": 23,
+        "endLine": 149,
+        "endChar": 54
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c00e5b5e_0cc1e438",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T17:30:19Z",
+      "side": 1,
+      "message": "source image region",
+      "range": {
+        "startLine": 188,
+        "startChar": 19,
+        "endLine": 188,
+        "endChar": 25
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5f41615_690a957f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T17:30:19Z",
+      "side": 1,
+      "message": "the pixel buffer",
+      "range": {
+        "startLine": 188,
+        "startChar": 28,
+        "endLine": 188,
+        "endChar": 53
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c663da14_78255b3c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T17:30:19Z",
+      "side": 1,
+      "message": "enqueue the destination image subresource update",
+      "range": {
+        "startLine": 222,
+        "startChar": 10,
+        "endLine": 222,
+        "endChar": 77
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c60b43d5_847faba7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T17:30:19Z",
+      "side": 1,
+      "message": "use the same ordering of arguments as the Vulkan command.",
+      "range": {
+        "startLine": 439,
+        "startChar": 37,
+        "endLine": 443,
+        "endChar": 71
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
