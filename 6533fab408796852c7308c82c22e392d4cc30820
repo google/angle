@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a9316e2b_d4ed989a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T14:36:50Z",
+      "side": 1,
+      "message": "nit: you can probably go \n\nmRetainedBuffers.emplace_back(std::move(mBuffer), std::move(mMemory));",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 55
+      },
+      "revId": "6533fab408796852c7308c82c22e392d4cc30820",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "857976a5_2756b92f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T14:36:50Z",
+      "side": 1,
+      "message": "put functions before data, also define the functions in the cpp. also you don\u0027t need all of these, probably only keep one of them. the last one if possible. also define an assignment op.",
+      "range": {
+        "startLine": 648,
+        "startChar": 0,
+        "endLine": 663,
+        "endChar": 5
+      },
+      "revId": "6533fab408796852c7308c82c22e392d4cc30820",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
