@@ -36,6 +36,11 @@ ShaderGL::ShaderGL(const gl::ShaderState &data,
 
 ShaderGL::~ShaderGL()
 {
+    ASSERT(mShaderID == 0);
+}
+
+void ShaderGL::destroy(const gl::Context *context)
+{
     if (mShaderID != 0)
     {
         mFunctions->deleteShader(mShaderID);
@@ -43,7 +48,8 @@ ShaderGL::~ShaderGL()
     }
 }
 
-ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sourceStream,
+ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(const gl::Context *context,
+                                                         std::stringstream *sourceStream,
                                                          std::string * /*sourcePath*/)
 {
     // Reset the previous state
@@ -146,7 +152,9 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
     return options;
 }
 
-bool ShaderGL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog)
+bool ShaderGL::postTranslateCompile(const gl::Context *context,
+                                    gl::Compiler *compiler,
+                                    std::string *infoLog)
 {
     // Translate the ESSL into GLSL
     const char *translatedSourceCString = mData.getTranslatedSource().c_str();
@@ -188,7 +196,7 @@ bool ShaderGL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog
     return true;
 }
 
-std::string ShaderGL::getDebugInfo() const
+std::string ShaderGL::getDebugInfo(const gl::Context *context) const
 {
     return mData.getTranslatedSource();
 }
