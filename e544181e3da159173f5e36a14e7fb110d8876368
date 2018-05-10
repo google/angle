@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "40a3915d_85cee55c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-10T17:37:41Z",
+      "side": 1,
+      "message": "Nice, all better now",
+      "parentUuid": "fed0c782_2dd7afee",
+      "range": {
+        "startLine": 472,
+        "startChar": 11,
+        "endLine": 472,
+        "endChar": 30
+      },
+      "revId": "e544181e3da159173f5e36a14e7fb110d8876368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6dd0bb0_837350dc",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 10
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "bb5ebb22_2640a32d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-10T17:37:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6dd0bb0_837350dc",
+      "range": {
+        "startLine": 65,
+        "startChar": 64,
+        "endLine": 65,
+        "endChar": 77
+      },
+      "revId": "e544181e3da159173f5e36a14e7fb110d8876368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5194d376_02f7ba9e",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 10
@@ -91,6 +139,30 @@
       "revId": "e544181e3da159173f5e36a14e7fb110d8876368",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8e8095a_6f92a02d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-10T17:37:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5194d376_02f7ba9e",
+      "range": {
+        "startLine": 256,
+        "startChar": 20,
+        "endLine": 256,
+        "endChar": 48
+      },
+      "revId": "e544181e3da159173f5e36a14e7fb110d8876368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
