@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "374721c9_fff5d6fd",
+        "filename": "include/GLES2/gl2ext_angle.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T21:20:57Z",
+      "side": 1,
+      "message": "Yeah, I think you can generate them into \u0027something_autogen.inc\u0027 files and #include the inc files inline here.",
+      "parentUuid": "a6a996b8_2783f0bd",
+      "range": {
+        "startLine": 552,
+        "startChar": 0,
+        "endLine": 552,
+        "endChar": 93
+      },
+      "revId": "c50dd3b9c56779edd5340922750723ce63aa05b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d2cef58a_0e4c4c27",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 10
