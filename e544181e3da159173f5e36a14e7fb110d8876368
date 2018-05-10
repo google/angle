@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7efc8eec_2818f372",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 864,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T17:05:55Z",
+      "side": 1,
+      "message": "it\u0027s too bad we need to do this in two places. I\u0027ll have to clean this up later.",
+      "range": {
+        "startLine": 859,
+        "startChar": 0,
+        "endLine": 864,
+        "endChar": 9
+      },
+      "revId": "e544181e3da159173f5e36a14e7fb110d8876368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fed0c782_2dd7afee",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T17:05:55Z",
+      "side": 1,
+      "message": "maybe for now let\u0027s keep this set in the ContextVk, this will simplify some of the new code additions like clenaup().\n\nAlso pass in nullptr for the multisample initializer instead of making the stub just to keep things simple for now. you can leave the comment there, although you need to file an issue if you\u0027re going to use TODO (or leave out the TODO and keep it a comment)",
+      "range": {
+        "startLine": 472,
+        "startChar": 11,
+        "endLine": 472,
+        "endChar": 30
+      },
+      "revId": "e544181e3da159173f5e36a14e7fb110d8876368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6dd0bb0_837350dc",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T17:05:55Z",
+      "side": 1,
+      "message": "you can ASSERT that extents.depth \u003d\u003d 1. We\u0027ll need more specific handling for 3D/2D_Array",
+      "range": {
+        "startLine": 65,
+        "startChar": 64,
+        "endLine": 65,
+        "endChar": 77
+      },
+      "revId": "e544181e3da159173f5e36a14e7fb110d8876368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5194d376_02f7ba9e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T17:05:55Z",
+      "side": 1,
+      "message": "maybe make this a method on vk::ImageHelper -\u003e getSize(const ImageIndex \u0026)",
+      "range": {
+        "startLine": 256,
+        "startChar": 20,
+        "endLine": 256,
+        "endChar": 48
+      },
+      "revId": "e544181e3da159173f5e36a14e7fb110d8876368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
