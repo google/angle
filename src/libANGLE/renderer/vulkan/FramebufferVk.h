@@ -71,7 +71,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                          GLenum format,
                          GLenum type,
                          void *pixels) override;
-
+    RenderTargetVk *getColorReadRenderTarget();
     gl::Error blit(const gl::Context *context,
                    const gl::Rectangle &sourceArea,
                    const gl::Rectangle &destArea,
@@ -119,6 +119,13 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     vk::BufferAndMemory mMaskedClearUniformBuffer;
     VkDescriptorSet mMaskedClearDescriptorSet;
 };
+
+gl::Error ReadPixelsFromRenderTarget(const gl::Context *context,
+                                     const gl::Rectangle &area,
+                                     const PackPixelsParams &packPixelsParams,
+                                     RenderTargetVk *renderTarget,
+                                     vk::CommandBuffer *commandBuffer,
+                                     void *pixels);
 
 }  // namespace rx
 
