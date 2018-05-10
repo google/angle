@@ -425,6 +425,30 @@
     },
     {
       "key": {
+        "uuid": "a847d1c4_e5bed127",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T23:00:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5c09dc88_18c0f046",
+      "range": {
+        "startLine": 423,
+        "startChar": 13,
+        "endLine": 423,
+        "endChar": 27
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73321d39_93c0a28d",
         "filename": "src/libANGLE/GLES1Renderer.h",
         "patchSetId": 15
@@ -460,6 +484,30 @@
       "side": 1,
       "message": "Looks a bit difficult if we want to keep the destructor as protected (and after tripping over release(), I totally agree with leaving it protected). Plus it looks like the raw pointer is the convention used in other places like ContextState. Making it a raw pointer here also allows us to not have to pull in the ResourceManager header into another header file itself.",
       "parentUuid": "73321d39_93c0a28d",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 25
+      },
+      "revId": "8e9a9b2646c8a93e342ad427a9e11e78a6706a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "043d6d80_f1f20a1c",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T23:00:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6c249bef_d93c0267",
       "range": {
         "startLine": 68,
         "startChar": 4,

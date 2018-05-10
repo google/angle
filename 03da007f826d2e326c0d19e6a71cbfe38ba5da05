@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "280f6c42_3b6a6b77",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T23:00:41Z",
+      "side": 1,
+      "message": "if this is static, should be CapsCamelCase",
+      "range": {
+        "startLine": 616,
+        "startChar": 13,
+        "endLine": 616,
+        "endChar": 31
+      },
+      "revId": "03da007f826d2e326c0d19e6a71cbfe38ba5da05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51cc1121_a1fe5ddd",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T23:00:41Z",
+      "side": 1,
+      "message": "tiny nit: can remove these whitespace lines",
+      "revId": "03da007f826d2e326c0d19e6a71cbfe38ba5da05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d196497d_ea47b907",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-10T23:00:41Z",
+      "side": 1,
+      "message": "tiny nit: use // anonymous namespace",
+      "range": {
+        "startLine": 28,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 15
+      },
+      "revId": "03da007f826d2e326c0d19e6a71cbfe38ba5da05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
