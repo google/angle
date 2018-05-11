@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3bc065ad_009358fc",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-11T16:11:46Z",
+      "side": 1,
+      "message": "I think if we go ahead with this design (based on other discussions), we should update these to take a client version parameter and implement the logic of this patch that way. \n\nThe const reference can be removed, these structures are copied into gl::Context anyways.",
+      "range": {
+        "startLine": 153,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 71
+      },
+      "revId": "922bcb1c30c6910ca99816d499aef9cb3b1bda31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0e12e2c2_6be1c151",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
         "patchSetId": 6
