@@ -357,14 +357,17 @@ gl::Error VertexArrayVk::drawArrays(const gl::Context *context,
 
     ANGLE_TRY(onDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
 
+    // Note: Vertex indexes can be arbitrarily large.
+    uint32_t clampedVertexCount = drawCallParams.getClampedVertexCount<uint32_t>();
+
     if (drawCallParams.mode() != GL_LINE_LOOP)
     {
-        commandBuffer->draw(drawCallParams.vertexCount(), 1, drawCallParams.firstVertex(), 0);
+        commandBuffer->draw(clampedVertexCount, 1, drawCallParams.firstVertex(), 0);
         return gl::NoError();
     }
 
     // Handle GL_LINE_LOOP drawArrays.
-    int lastVertex = drawCallParams.firstVertex() + drawCallParams.vertexCount();
+    size_t lastVertex = static_cast<size_t>(drawCallParams.firstVertex() + clampedVertexCount);
     if (!mLineLoopBufferFirstIndex.valid() || !mLineLoopBufferLastIndex.valid() ||
         mLineLoopBufferFirstIndex != drawCallParams.firstVertex() ||
         mLineLoopBufferLastIndex != lastVertex)
@@ -380,7 +383,7 @@ gl::Error VertexArrayVk::drawArrays(const gl::Context *context,
     commandBuffer->bindIndexBuffer(mCurrentElementArrayBufferHandle,
                                    mCurrentElementArrayBufferOffset, VK_INDEX_TYPE_UINT32);
 
-    vk::LineLoopHelper::Draw(drawCallParams.vertexCount(), commandBuffer);
+    vk::LineLoopHelper::Draw(clampedVertexCount, commandBuffer);
 
     return gl::NoError();
 }

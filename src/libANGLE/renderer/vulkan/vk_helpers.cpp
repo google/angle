@@ -379,8 +379,11 @@ gl::Error LineLoopHelper::getIndexBufferForDrawArrays(RendererVk *renderer,
                                            &offset, nullptr));
     *offsetOut = static_cast<VkDeviceSize>(offset);
 
+    uint32_t clampedVertexCount = drawCallParams.getClampedVertexCount<uint32_t>();
+
+    // Note: there could be an overflow in this addition.
     uint32_t unsignedFirstVertex = static_cast<uint32_t>(drawCallParams.firstVertex());
-    uint32_t vertexCount         = (drawCallParams.vertexCount() + unsignedFirstVertex);
+    uint32_t vertexCount         = (clampedVertexCount + unsignedFirstVertex);
     for (uint32_t vertexIndex = unsignedFirstVertex; vertexIndex < vertexCount; vertexIndex++)
     {
         *indices++ = vertexIndex;
@@ -469,9 +472,10 @@ void LineLoopHelper::destroy(VkDevice device)
 }
 
 // static
-void LineLoopHelper::Draw(int count, CommandBuffer *commandBuffer)
+void LineLoopHelper::Draw(uint32_t count, CommandBuffer *commandBuffer)
 {
     // Our first index is always 0 because that's how we set it up in createIndexBuffer*.
+    // Note: this could theoretically overflow and wrap to zero.
     commandBuffer->drawIndexed(count + 1, 1, 0, 0, 0);
 }
 

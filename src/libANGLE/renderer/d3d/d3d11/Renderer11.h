@@ -342,7 +342,7 @@ class Renderer11 : public RendererD3D
     // function.
     gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(const gl::VertexAttribute &attrib,
                                                            const gl::VertexBinding &binding,
-                                                           GLsizei count,
+                                                           size_t count,
                                                            GLsizei instances) const override;
 
     gl::Error readFromAttachment(const gl::Context *context,
@@ -460,13 +460,13 @@ class Renderer11 : public RendererD3D
     angle::WorkaroundsD3D generateWorkarounds() const override;
 
     gl::Error drawLineLoop(const gl::Context *context,
-                           GLsizei count,
+                           GLuint count,
                            GLenum type,
                            const void *indices,
                            int baseVertex,
                            int instances);
     gl::Error drawTriangleFan(const gl::Context *context,
-                              GLsizei count,
+                              GLuint count,
                               GLenum type,
                               const void *indices,
                               int baseVertex,

@@ -152,7 +152,7 @@ class LineLoopHelper final : public vk::CommandGraphResource
 
     void destroy(VkDevice device);
 
-    static void Draw(int count, CommandBuffer *commandBuffer);
+    static void Draw(uint32_t count, CommandBuffer *commandBuffer);
 
   private:
     DynamicBuffer mDynamicIndexBuffer;

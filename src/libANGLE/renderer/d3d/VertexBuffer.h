@@ -45,7 +45,7 @@ class VertexBuffer : angle::NonCopyable
                                             const gl::VertexBinding &binding,
                                             GLenum currentValueType,
                                             GLint start,
-                                            GLsizei count,
+                                            size_t count,
                                             GLsizei instances,
                                             unsigned int offset,
                                             const uint8_t *sourceData) = 0;
@@ -110,14 +110,14 @@ class StreamingVertexBufferInterface : public VertexBufferInterface
                                     const gl::VertexBinding &binding,
                                     GLenum currentValueType,
                                     GLint start,
-                                    GLsizei count,
+                                    size_t count,
                                     GLsizei instances,
                                     unsigned int *outStreamOffset,
                                     const uint8_t *sourceData);
 
     gl::Error reserveVertexSpace(const gl::VertexAttribute &attribute,
                                  const gl::VertexBinding &binding,
-                                 GLsizei count,
+                                 size_t count,
                                  GLsizei instances);
 
   private:

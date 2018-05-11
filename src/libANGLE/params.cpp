@@ -100,7 +100,7 @@ GLint DrawCallParams::firstVertex() const
     return mFirstVertex;
 }
 
-GLsizei DrawCallParams::vertexCount() const
+size_t DrawCallParams::vertexCount() const
 {
     ASSERT(!isDrawElements() || mIndexRange.valid());
     return mVertexCount;
@@ -179,7 +179,7 @@ Error DrawCallParams::ensureIndexRangeResolved(const Context *context) const
 
     const IndexRange &indexRange = mIndexRange.value();
     mFirstVertex                 = mBaseVertex + static_cast<GLint>(indexRange.start);
-    mVertexCount                 = static_cast<GLsizei>(indexRange.vertexCount());
+    mVertexCount                 = indexRange.vertexCount();
 
     return NoError();
 }

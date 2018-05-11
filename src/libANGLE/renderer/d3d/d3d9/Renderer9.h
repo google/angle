@@ -346,7 +346,7 @@ class Renderer9 : public RendererD3D
     // function.
     gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(const gl::VertexAttribute &attrib,
                                                            const gl::VertexBinding &binding,
-                                                           GLsizei count,
+                                                           size_t count,
                                                            GLsizei instances) const override;
 
     gl::Error copyToRenderTarget(IDirect3DSurface9 *dest,

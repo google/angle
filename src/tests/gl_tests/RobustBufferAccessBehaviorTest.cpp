@@ -258,6 +258,46 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Covers drawing with a very large vertex range which overflows GLsizei. http://crbug.com/842028
+TEST_P(RobustBufferAccessBehaviorTest, VeryLargeVertexCountWithDynamicVertexData)
+{
+    ANGLE_SKIP_TEST_IF(!initExtension());
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_element_index_uint"));
+
+    constexpr GLsizei kIndexCount           = 32;
+    std::array<GLuint, kIndexCount> indices = {{}};
+    for (GLsizei index = 0; index < kIndexCount; ++index)
+    {
+        indices[index] = ((std::numeric_limits<GLuint>::max() - 2) / kIndexCount) * index;
+    }
+
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(),
+                 GL_STATIC_DRAW);
+
+    std::array<GLfloat, 256> vertexData = {{}};
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(GLfloat), vertexData.data(),
+                 GL_DYNAMIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+
+    GLint attribLoc = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, attribLoc);
+
+    glVertexAttribPointer(attribLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(attribLoc);
+    ASSERT_GL_NO_ERROR();
+
+    glDrawElements(GL_TRIANGLES, kIndexCount, GL_UNSIGNED_INT, nullptr);
+
+    // This may or may not generate an error, but it should not crash.
+}
+
 ANGLE_INSTANTIATE_TEST(RobustBufferAccessBehaviorTest,
                        ES2_D3D9(),
                        ES2_D3D11_FL9_3(),

@@ -120,8 +120,8 @@ class VertexArrayVk : public VertexArrayImpl
     vk::DynamicBuffer mDynamicIndexData;
 
     vk::LineLoopHelper mLineLoopHelper;
-    Optional<int> mLineLoopBufferFirstIndex;
-    Optional<int> mLineLoopBufferLastIndex;
+    Optional<GLint> mLineLoopBufferFirstIndex;
+    Optional<size_t> mLineLoopBufferLastIndex;
     bool mDirtyLineLoopTranslation;
 
     // Cache variable for determining whether or not to store new dependencies in the node.

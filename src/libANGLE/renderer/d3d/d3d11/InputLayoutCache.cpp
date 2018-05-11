@@ -246,11 +246,12 @@ gl::Error InputLayoutCache::createInputLayout(
         // As per the spec for ANGLE_instanced_arrays, not all attributes can be instanced
         // simultaneously, so a non-instanced element must exist.
 
-        GLsizei numIndicesPerInstance = 0;
+        UINT numIndicesPerInstance = 0;
         if (drawCallParams.instances() > 0)
         {
             // This requires that the index range is resolved.
-            numIndicesPerInstance = drawCallParams.vertexCount();
+            // Note: Vertex indexes can be arbitrarily large.
+            numIndicesPerInstance = drawCallParams.getClampedVertexCount<UINT>();
         }
 
         for (size_t elementIndex = 0; elementIndex < inputElementCount; ++elementIndex)
