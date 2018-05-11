@@ -361,10 +361,8 @@ EGLPlatformParameters OPENGL(EGLint major, EGLint minor)
 
 EGLPlatformParameters OPENGL_NULL()
 {
-    return EGLPlatformParameters(
-        EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE,
-        0, 0,
-        EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, EGL_DONT_CARE, EGL_DONT_CARE,
+                                 EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
 }
 
 EGLPlatformParameters OPENGLES()
