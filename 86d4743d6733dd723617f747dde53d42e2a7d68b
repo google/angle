@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "578c5635_35c6a79b",
+        "filename": "samples/gles1/HelloTriangle.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-11T16:50:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "874bc8be_1236bef5",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 20
+      },
+      "revId": "86d4743d6733dd723617f747dde53d42e2a7d68b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c735cc21_0f7d7db0",
         "filename": "src/libANGLE/GLES1Renderer.h",
         "patchSetId": 17
@@ -39,6 +63,24 @@
       "revId": "86d4743d6733dd723617f747dde53d42e2a7d68b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bb93cd5_6e377d1d",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-11T16:50:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c735cc21_0f7d7db0",
+      "revId": "86d4743d6733dd723617f747dde53d42e2a7d68b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "17482ee3_b37bd167",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-11T16:50:25Z",
+      "side": 1,
+      "message": "I ran into an interesting case when I tried making them constexpr int k***Index \u003d \u003cliteral\u003e; here and removing the defs in the cpp; a link error when accessing the unordered map. Casting those to GLint seemed to have fixed it, plus it looks like those don\u0027t need to be public anymore too.",
+      "parentUuid": "3e7f2c8d_8ec4f9dc",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 20
+      },
+      "revId": "86d4743d6733dd723617f747dde53d42e2a7d68b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fbeda9d0_97e6c9ef",
         "filename": "src/libANGLE/GLES1Shaders.inc",
         "patchSetId": 17
@@ -85,6 +151,30 @@
       "revId": "86d4743d6733dd723617f747dde53d42e2a7d68b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0739c276_734c19fe",
+        "filename": "src/libANGLE/GLES1Shaders.inc",
+        "patchSetId": 17
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-11T16:50:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbeda9d0_97e6c9ef",
+      "range": {
+        "startLine": 170,
+        "startChar": 36,
+        "endLine": 170,
+        "endChar": 37
+      },
+      "revId": "86d4743d6733dd723617f747dde53d42e2a7d68b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "bd16a783_60134bfe",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2685,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-11T16:50:25Z",
+      "side": 1,
+      "message": "Done; since the program validation is the common path let\u0027s keep it inline for now and eat the indent level.",
+      "parentUuid": "04becd47_f0c2f8fb",
+      "range": {
+        "startLine": 2681,
+        "startChar": 4,
+        "endLine": 2685,
+        "endChar": 5
+      },
+      "revId": "86d4743d6733dd723617f747dde53d42e2a7d68b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19caf11c_10ace9a3",
         "filename": "src/tests/gles1_conformance_tests/ConformanceTests.cpp",
         "patchSetId": 17
@@ -125,6 +239,24 @@
       "revId": "86d4743d6733dd723617f747dde53d42e2a7d68b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2df6d0f6_4a6a62ac",
+        "filename": "src/tests/gles1_conformance_tests/ConformanceTests.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-11T16:50:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "19caf11c_10ace9a3",
+      "revId": "86d4743d6733dd723617f747dde53d42e2a7d68b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
