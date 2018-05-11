@@ -49,6 +49,75 @@
     },
     {
       "key": {
+        "uuid": "2d7658a4_948f1706",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-11T21:06:00Z",
+      "side": 1,
+      "message": "Don\u0027t need this.",
+      "range": {
+        "startLine": 471,
+        "startChar": 30,
+        "endLine": 471,
+        "endChar": 49
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "780081ee_1694aec7",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-11T21:06:00Z",
+      "side": 1,
+      "message": "Maybe change the type to unsigned int here and through the whole chain?",
+      "range": {
+        "startLine": 489,
+        "startChar": 77,
+        "endLine": 489,
+        "endChar": 84
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1244128e_69d7bdef",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-11T21:06:00Z",
+      "side": 1,
+      "message": "I think this goes in the end to VertexCopyFunction, and in the ones I\u0027ve looked at the type was size_t, so it makes sense to keep size_t through the whole call chain.",
+      "range": {
+        "startLine": 537,
+        "startChar": 20,
+        "endLine": 537,
+        "endChar": 27
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1b755f6c_3818f48f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
         "patchSetId": 2
@@ -96,6 +165,52 @@
     },
     {
       "key": {
+        "uuid": "2f6869f9_0d3b0465",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1475,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-11T21:06:00Z",
+      "side": 1,
+      "message": "You should probably change the type in drawLineLoop to UINT",
+      "range": {
+        "startLine": 1475,
+        "startChar": 37,
+        "endLine": 1475,
+        "endChar": 55
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9418f580_1ec949b1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1481,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-11T21:06:00Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 1481,
+        "startChar": 40,
+        "endLine": 1481,
+        "endChar": 58
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "311173d8_c20e9659",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 2
@@ -140,6 +255,29 @@
       "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b33f84ea_4286c60a",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-11T21:06:00Z",
+      "side": 1,
+      "message": "Type here is int, should probably make it at least uint32_t, if not size_t.",
+      "range": {
+        "startLine": 386,
+        "startChar": 29,
+        "endLine": 386,
+        "endChar": 47
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
