@@ -58,7 +58,7 @@ class MockBufferFactoryD3D : public rx::BufferFactoryD3D
     MOCK_CONST_METHOD4(getVertexSpaceRequired,
                        gl::ErrorOrResult<unsigned int>(const gl::VertexAttribute &,
                                                        const gl::VertexBinding &,
-                                                       GLsizei,
+                                                       size_t,
                                                        GLsizei));
 
     // Dependency injection

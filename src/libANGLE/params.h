@@ -98,7 +98,7 @@ class DrawCallParams final : angle::NonCopyable
     // This value is the sum of 'baseVertex' and the first indexed vertex for DrawElements calls.
     GLint firstVertex() const;
 
-    GLsizei vertexCount() const;
+    size_t vertexCount() const;
     GLsizei indexCount() const;
     GLint baseVertex() const;
     GLenum type() const;
@@ -113,6 +113,9 @@ class DrawCallParams final : angle::NonCopyable
     // ensureIndexRangeResolved must be called first.
     const IndexRange &getIndexRange() const;
 
+    template <typename T>
+    T getClampedVertexCount() const;
+
     template <EntryPoint EP, typename... ArgsT>
     static void Factory(DrawCallParams *objBuffer, ArgsT... args);
 
@@ -122,7 +125,7 @@ class DrawCallParams final : angle::NonCopyable
     GLenum mMode;
     mutable Optional<IndexRange> mIndexRange;
     mutable GLint mFirstVertex;
-    mutable GLsizei mVertexCount;
+    mutable size_t mVertexCount;
     GLint mIndexCount;
     GLint mBaseVertex;
     GLenum mType;
@@ -130,6 +133,13 @@ class DrawCallParams final : angle::NonCopyable
     GLsizei mInstances;
     const void *mIndirect;
 };
+
+template <typename T>
+T DrawCallParams::getClampedVertexCount() const
+{
+    constexpr size_t kMax = static_cast<size_t>(std::numeric_limits<T>::max());
+    return static_cast<T>(mVertexCount > kMax ? kMax : mVertexCount);
+}
 
 // Entry point funcs essentially re-map different entry point parameter arrays into
 // the format the parameter type class expects. For example, for HasIndexRange, for the

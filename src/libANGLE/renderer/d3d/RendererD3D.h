@@ -92,7 +92,7 @@ class BufferFactoryD3D : angle::NonCopyable
     virtual gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(
         const gl::VertexAttribute &attrib,
         const gl::VertexBinding &binding,
-        GLsizei count,
+        size_t count,
         GLsizei instances) const = 0;
 };
 

@@ -2998,7 +2998,7 @@ GLenum Renderer9::getVertexComponentType(gl::VertexFormatType vertexFormatType) 
 
 gl::ErrorOrResult<unsigned int> Renderer9::getVertexSpaceRequired(const gl::VertexAttribute &attrib,
                                                                   const gl::VertexBinding &binding,
-                                                                  GLsizei count,
+                                                                  size_t count,
                                                                   GLsizei instances) const
 {
     if (!attrib.enabled)
