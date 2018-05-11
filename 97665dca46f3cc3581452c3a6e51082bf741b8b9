@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "edadee6b_af1e7dea",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-11T23:21:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d7658a4_948f1706",
+      "range": {
+        "startLine": 471,
+        "startChar": 30,
+        "endLine": 471,
+        "endChar": 49
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "780081ee_1694aec7",
         "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
         "patchSetId": 2
@@ -95,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "515841d8_6aa82ebe",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-11T23:21:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "780081ee_1694aec7",
+      "range": {
+        "startLine": 489,
+        "startChar": 77,
+        "endLine": 489,
+        "endChar": 84
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1244128e_69d7bdef",
         "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
         "patchSetId": 2
@@ -115,6 +163,30 @@
       "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03360c3b_5a0ece76",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-11T23:21:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1244128e_69d7bdef",
+      "range": {
+        "startLine": 537,
+        "startChar": 20,
+        "endLine": 537,
+        "endChar": 27
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -188,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "633fb6b5_cb33a167",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1475,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-11T23:21:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f6869f9_0d3b0465",
+      "range": {
+        "startLine": 1475,
+        "startChar": 37,
+        "endLine": 1475,
+        "endChar": 55
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9418f580_1ec949b1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -208,6 +304,30 @@
       "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "363fac9c_c78d2825",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1481,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-11T23:21:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9418f580_1ec949b1",
+      "range": {
+        "startLine": 1481,
+        "startChar": 40,
+        "endLine": 1481,
+        "endChar": 58
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -278,6 +398,30 @@
       "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4096695_b0684573",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-11T23:21:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b33f84ea_4286c60a",
+      "range": {
+        "startLine": 386,
+        "startChar": 29,
+        "endLine": 386,
+        "endChar": 47
+      },
+      "revId": "97665dca46f3cc3581452c3a6e51082bf741b8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
