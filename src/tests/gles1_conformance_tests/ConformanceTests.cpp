@@ -173,21 +173,25 @@ TEST_P(GLES1ConformanceTest, AtnPos)
 
 TEST_P(GLES1ConformanceTest, BClear)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, BClearExec());
 }
 
 TEST_P(GLES1ConformanceTest, BColor)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, BColorExec());
 }
 
 TEST_P(GLES1ConformanceTest, BCorner)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, BCornerExec());
 }
 
 TEST_P(GLES1ConformanceTest, Blend)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, BlendExec());
 }
 
@@ -199,6 +203,7 @@ TEST_P(GLES1ConformanceTest, Clip)
 
 TEST_P(GLES1ConformanceTest, ColRamp)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, ColRampExec());
 }
 
@@ -234,6 +239,7 @@ TEST_P(GLES1ConformanceTest, DifMatPos)
 
 TEST_P(GLES1ConformanceTest, Dither)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, DitherExec());
 }
 
@@ -269,11 +275,13 @@ TEST_P(GLES1ConformanceTest, LineAntiAlias)
 
 TEST_P(GLES1ConformanceTest, LineHV)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, LineHVExec());
 }
 
 TEST_P(GLES1ConformanceTest, LineRaster)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, LineRasterExec());
 }
 
@@ -309,11 +317,13 @@ TEST_P(GLES1ConformanceTest, MipSelect)
 
 TEST_P(GLES1ConformanceTest, Mask)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MaskExec());
 }
 
 TEST_P(GLES1ConformanceTest, MatrixStack)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MatrixStackExec());
 }
 
@@ -349,11 +359,13 @@ TEST_P(GLES1ConformanceTest, PointRaster)
 
 TEST_P(GLES1ConformanceTest, PolyCull)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, PolyCullExec());
 }
 
 TEST_P(GLES1ConformanceTest, ReadFormat)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, ReadFormatExec());
 }
 
@@ -365,16 +377,19 @@ TEST_P(GLES1ConformanceTest, RescaleNormal)
 
 TEST_P(GLES1ConformanceTest, Scissor)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, ScissorExec());
 }
 
 TEST_P(GLES1ConformanceTest, SPClear)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SPClearExec());
 }
 
 TEST_P(GLES1ConformanceTest, SPCorner)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SPCornerExec());
 }
 
@@ -410,11 +425,13 @@ TEST_P(GLES1ConformanceTest, SpecNorm)
 
 TEST_P(GLES1ConformanceTest, SPFunc)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SPFuncExec());
 }
 
 TEST_P(GLES1ConformanceTest, SPOp)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SPOpExec());
 }
 
@@ -456,21 +473,25 @@ TEST_P(GLES1ConformanceTest, TextureEdgeClamp)
 
 TEST_P(GLES1ConformanceTest, TriRaster)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, TriRasterExec());
 }
 
 TEST_P(GLES1ConformanceTest, TriTile)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, TriTileExec());
 }
 
 TEST_P(GLES1ConformanceTest, VertexOrder)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, VertexOrderExec());
 }
 
 TEST_P(GLES1ConformanceTest, ViewportClamp)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, ViewportClampExec());
 }
 
@@ -482,6 +503,7 @@ TEST_P(GLES1ConformanceTest, XForm)
 
 TEST_P(GLES1ConformanceTest, XFormMix)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, XFormMixExec());
 }
 
@@ -505,21 +527,25 @@ TEST_P(GLES1ConformanceTest, XFormHomogenous)
 
 TEST_P(GLES1ConformanceTest, ZBClear)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, ZBClearExec());
 }
 
 TEST_P(GLES1ConformanceTest, ZBFunc)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, ZBFuncExec());
 }
 
 TEST_P(GLES1ConformanceTest, DrawTex)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, DrawTexExec());
 }
 
 TEST_P(GLES1ConformanceTest, MatrixQuery)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MatrixQueryExec());
 }
 
@@ -549,6 +575,7 @@ TEST_P(GLES1ConformanceTest, UserClip)
 
 TEST_P(GLES1ConformanceTest, MatrixGetTest)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MatrixGetTestExec());
 }
 
@@ -566,6 +593,7 @@ TEST_P(GLES1ConformanceTest, TexCombine)
 
 TEST_P(GLES1ConformanceTest, MatrixPalette)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MatrixPaletteExec());
 }
 

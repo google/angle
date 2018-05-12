@@ -11,8 +11,6 @@
 #include "common/mathutil.h"
 #include "common/utilities.h"
 
-#include "libANGLE/GLES1Renderer.h"
-
 namespace
 {
 
@@ -609,18 +607,22 @@ void Context::texGenxv(GLenum coord, GLenum pname, const GLint *params)
 
 int Context::vertexArrayIndex(ClientVertexArrayType type) const
 {
-    return mGLES1Renderer->vertexArrayIndex(type, &mGLState);
-}
-
-// static
-int Context::TexCoordArrayIndex(unsigned int unit)
-{
-    return GLES1Renderer::TexCoordArrayIndex(unit);
-}
-
-AttributesMask Context::getVertexArraysAttributeMask() const
-{
-    return mGLES1Renderer->getVertexArraysAttributeMask(&mGLState);
+    switch (type)
+    {
+        case ClientVertexArrayType::Vertex:
+            return 0;
+        case ClientVertexArrayType::Normal:
+            return 1;
+        case ClientVertexArrayType::Color:
+            return 2;
+        case ClientVertexArrayType::PointSize:
+            return 3;
+        case ClientVertexArrayType::TextureCoord:
+            return 4 + mGLState.gles1().getClientTextureUnit();
+        default:
+            UNREACHABLE();
+            return 0;
+    }
 }
 
 // static

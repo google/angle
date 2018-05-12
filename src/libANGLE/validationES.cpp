@@ -117,10 +117,7 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
     const auto &vertexAttribs  = vao->getVertexAttributes();
     const auto &vertexBindings = vao->getVertexBindings();
 
-    bool isGLES1 = context->getClientVersion() < Version(2, 0);
-
-    const AttributesMask &activeAttribs = ((isGLES1 ? context->getVertexArraysAttributeMask()
-                                                    : program->getActiveAttribLocationsMask()) &
+    const AttributesMask &activeAttribs = (program->getActiveAttribLocationsMask() &
                                            vao->getEnabledAttributesMask() & ~clientAttribs);
 
     for (size_t attributeIndex : activeAttribs)
@@ -129,7 +126,7 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
         ASSERT(attrib.enabled);
 
         const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
-        ASSERT(isGLES1 || program->isAttribLocationActive(attributeIndex));
+        ASSERT(program->isAttribLocationActive(attributeIndex));
 
         GLint maxVertexElement = maxVertex;
         GLuint divisor         = binding.getDivisor();
@@ -2678,150 +2675,140 @@ bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count)
         return false;
     }
 
-    // If we are running GLES1, there is no current program.
-    if (context->getClientVersion() >= Version(2, 0))
+    gl::Program *program = state.getProgram();
+    if (!program)
     {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotBound);
+        return false;
+    }
 
-        gl::Program *program = state.getProgram();
-        if (!program)
+    // In OpenGL ES spec for UseProgram at section 7.3, trying to render without
+    // vertex shader stage or fragment shader stage is a undefined behaviour.
+    // But ANGLE should clearly generate an INVALID_OPERATION error instead of
+    // produce undefined result.
+    if (!program->hasLinkedShaderStage(ShaderType::Vertex) ||
+        !program->hasLinkedShaderStage(ShaderType::Fragment))
+    {
+        context->handleError(InvalidOperation() << "It is a undefined behaviour to render without "
+                                                   "vertex shader stage or fragment shader stage.");
+        return false;
+    }
+
+    if (!program->validateSamplers(nullptr, context->getCaps()))
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
+
+    if (extensions.multiview)
+    {
+        const int programNumViews     = program->usesMultiview() ? program->getNumViews() : 1;
+        const int framebufferNumViews = framebuffer->getNumViews();
+        if (framebufferNumViews != programNumViews)
         {
-            ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotBound);
+            context->handleError(InvalidOperation() << "The number of views in the active program "
+                                                       "and draw framebuffer does not match.");
             return false;
         }
 
-        // In OpenGL ES spec for UseProgram at section 7.3, trying to render without
-        // vertex shader stage or fragment shader stage is a undefined behaviour.
-        // But ANGLE should clearly generate an INVALID_OPERATION error instead of
-        // produce undefined result.
-        if (!program->hasLinkedShaderStage(ShaderType::Vertex) ||
-            !program->hasLinkedShaderStage(ShaderType::Fragment))
+        const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
+        if (transformFeedbackObject != nullptr && transformFeedbackObject->isActive() &&
+            framebufferNumViews > 1)
         {
             context->handleError(InvalidOperation()
-                                 << "It is a undefined behaviour to render without "
-                                    "vertex shader stage or fragment shader stage.");
+                                 << "There is an active transform feedback object "
+                                    "when the number of views in the active draw "
+                                    "framebuffer is greater than 1.");
             return false;
         }
 
-        if (!program->validateSamplers(nullptr, context->getCaps()))
+        if (extensions.disjointTimerQuery && framebufferNumViews > 1 &&
+            state.isQueryActive(QueryType::TimeElapsed))
         {
-            context->handleError(InvalidOperation());
+            context->handleError(InvalidOperation() << "There is an active query for target "
+                                                       "GL_TIME_ELAPSED_EXT when the number of "
+                                                       "views in the active draw framebuffer is "
+                                                       "greater than 1.");
+            return false;
+        }
+    }
+
+    // Do geometry shader specific validations
+    if (program->hasLinkedShaderStage(ShaderType::Geometry))
+    {
+        if (!IsCompatibleDrawModeWithGeometryShader(mode,
+                                                    program->getGeometryShaderInputPrimitiveType()))
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                 IncompatibleDrawModeAgainstGeometryShader);
+            return false;
+        }
+    }
+
+    // Uniform buffer validation
+    for (unsigned int uniformBlockIndex = 0;
+         uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
+    {
+        const gl::InterfaceBlock &uniformBlock = program->getUniformBlockByIndex(uniformBlockIndex);
+        GLuint blockBinding                    = program->getUniformBlockBinding(uniformBlockIndex);
+        const OffsetBindingPointer<Buffer> &uniformBuffer =
+            state.getIndexedUniformBuffer(blockBinding);
+
+        if (uniformBuffer.get() == nullptr)
+        {
+            // undefined behaviour
+            context->handleError(
+                InvalidOperation()
+                << "It is undefined behaviour to have a used but unbound uniform buffer.");
             return false;
         }
 
-        if (extensions.multiview)
+        size_t uniformBufferSize = GetBoundBufferAvailableSize(uniformBuffer);
+        if (uniformBufferSize < uniformBlock.dataSize)
         {
-            const int programNumViews     = program->usesMultiview() ? program->getNumViews() : 1;
-            const int framebufferNumViews = framebuffer->getNumViews();
-            if (framebufferNumViews != programNumViews)
-            {
-                context->handleError(InvalidOperation()
-                                     << "The number of views in the active program "
-                                        "and draw framebuffer does not match.");
-                return false;
-            }
-
-            const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
-            if (transformFeedbackObject != nullptr && transformFeedbackObject->isActive() &&
-                framebufferNumViews > 1)
-            {
-                context->handleError(InvalidOperation()
-                                     << "There is an active transform feedback object "
-                                        "when the number of views in the active draw "
-                                        "framebuffer is greater than 1.");
-                return false;
-            }
-
-            if (extensions.disjointTimerQuery && framebufferNumViews > 1 &&
-                state.isQueryActive(QueryType::TimeElapsed))
-            {
-                context->handleError(InvalidOperation()
-                                     << "There is an active query for target "
-                                        "GL_TIME_ELAPSED_EXT when the number of "
-                                        "views in the active draw framebuffer is "
-                                        "greater than 1.");
-                return false;
-            }
+            // undefined behaviour
+            context->handleError(
+                InvalidOperation()
+                << "It is undefined behaviour to use a uniform buffer that is too small.");
+            return false;
         }
 
-        // Do geometry shader specific validations
-        if (program->hasLinkedShaderStage(ShaderType::Geometry))
+        if (extensions.webglCompatibility &&
+            uniformBuffer->isBoundForTransformFeedbackAndOtherUse())
         {
-            if (!IsCompatibleDrawModeWithGeometryShader(
-                    mode, program->getGeometryShaderInputPrimitiveType()))
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(),
-                                     IncompatibleDrawModeAgainstGeometryShader);
-                return false;
-            }
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                 UniformBufferBoundForTransformFeedback);
+            return false;
+        }
+    }
+
+    // Do some additonal WebGL-specific validation
+    if (extensions.webglCompatibility)
+    {
+        const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
+        if (transformFeedbackObject != nullptr && transformFeedbackObject->isActive() &&
+            transformFeedbackObject->buffersBoundForOtherUse())
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), TransformFeedbackBufferDoubleBound);
+            return false;
+        }
+        // Detect rendering feedback loops for WebGL.
+        if (framebuffer->formsRenderingFeedbackLoopWith(state))
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), FeedbackLoop);
+            return false;
         }
 
-        // Uniform buffer validation
-        for (unsigned int uniformBlockIndex = 0;
-             uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
+        // Detect that the vertex shader input types match the attribute types
+        if (!ValidateVertexShaderAttributeTypeMatch(context))
         {
-            const gl::InterfaceBlock &uniformBlock =
-                program->getUniformBlockByIndex(uniformBlockIndex);
-            GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
-            const OffsetBindingPointer<Buffer> &uniformBuffer =
-                state.getIndexedUniformBuffer(blockBinding);
-
-            if (uniformBuffer.get() == nullptr)
-            {
-                // undefined behaviour
-                context->handleError(
-                    InvalidOperation()
-                    << "It is undefined behaviour to have a used but unbound uniform buffer.");
-                return false;
-            }
-
-            size_t uniformBufferSize = GetBoundBufferAvailableSize(uniformBuffer);
-            if (uniformBufferSize < uniformBlock.dataSize)
-            {
-                // undefined behaviour
-                context->handleError(
-                    InvalidOperation()
-                    << "It is undefined behaviour to use a uniform buffer that is too small.");
-                return false;
-            }
-
-            if (extensions.webglCompatibility &&
-                uniformBuffer->isBoundForTransformFeedbackAndOtherUse())
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(),
-                                     UniformBufferBoundForTransformFeedback);
-                return false;
-            }
+            return false;
         }
 
-        // Do some additonal WebGL-specific validation
-        if (extensions.webglCompatibility)
+        // Detect that the color buffer types match the fragment shader output types
+        if (!ValidateFragmentShaderColorBufferTypeMatch(context))
         {
-            const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
-            if (transformFeedbackObject != nullptr && transformFeedbackObject->isActive() &&
-                transformFeedbackObject->buffersBoundForOtherUse())
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(),
-                                     TransformFeedbackBufferDoubleBound);
-                return false;
-            }
-            // Detect rendering feedback loops for WebGL.
-            if (framebuffer->formsRenderingFeedbackLoopWith(state))
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(), FeedbackLoop);
-                return false;
-            }
-
-            // Detect that the vertex shader input types match the attribute types
-            if (!ValidateVertexShaderAttributeTypeMatch(context))
-            {
-                return false;
-            }
-
-            // Detect that the color buffer types match the fragment shader output types
-            if (!ValidateFragmentShaderColorBufferTypeMatch(context))
-            {
-                return false;
-            }
+            return false;
         }
     }
 
