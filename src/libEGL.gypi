@@ -25,6 +25,7 @@
             ],
             'sources':
             [
+                'libEGL/libEGL.def',
                 '<@(libegl_sources)',
             ],
             'conditions':

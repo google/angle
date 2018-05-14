@@ -612,8 +612,8 @@ shared_library("libGLESv2${angle_libs_suffix}") {
   }
 
   if (is_win) {
-    ldflags =
-        [ "/DEF:" + rebase_path("src/libGLESv2/libGLESv2.def", root_build_dir) ]
+    ldflags = [ "/DEF:" + rebase_path("src/libGLESv2/libGLESv2_autogen.def",
+                                      root_build_dir) ]
   }
 
   if (is_mac && !is_component_build) {
