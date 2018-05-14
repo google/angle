@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "d7b9d1b6_bc630890",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "There\u0027s only two things this function uses / may use from the Framebuffer class:\n\n1. mRenderTargetCache.getColorRead(mState)\n2. stagingImage might be replaced with a PixelBuffer for readBack.\n\nWe don\u0027t need to worry about 2. just yet, so can you replace this readPixels overload with a static helper function that takes a RenderTargetVk * as well as the other parameters? it doesn\u0027t even need to be a member of FramebufferVk, but you can leave it defined as a global function in this file.",
+      "range": {
+        "startLine": 297,
+        "startChar": 25,
+        "endLine": 297,
+        "endChar": 35
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e9a3f47_fb8ab528",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "this might be easier with the above change if it instead returns a RenderTargetVk",
+      "range": {
+        "startLine": 350,
+        "startChar": 32,
+        "endLine": 350,
+        "endChar": 49
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "653a1120_47824680",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "maybe add an ASSERT the image is valid (and the RT)",
+      "range": {
+        "startLine": 352,
+        "startChar": 11,
+        "endLine": 352,
+        "endChar": 29
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "29d91e3f_57ad55d3",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
         "patchSetId": 5
@@ -25,6 +94,168 @@
     },
     {
       "key": {
+        "uuid": "410869d8_f7d9c998",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "Might be changed with other comments, but also, prefer not to overload and use unique names. style guide has some mild advice on this but better to generally prefer not to overload:\n\nhttps://google.github.io/styleguide/cppguide.html#Function_Overloading",
+      "parentUuid": "29d91e3f_57ad55d3",
+      "range": {
+        "startLine": 74,
+        "startChar": 14,
+        "endLine": 74,
+        "endChar": 24
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "853dbf29_82674d05",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "with other comments - this can instead be a parameter to the function, as a RenderTargetVk. You can use the RenderTargetVk instead of the FramebufferVk argument.",
+      "range": {
+        "startLine": 158,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 73
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68c617e2_95b0ec83",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "see other comments - this can be a call to a static helper function instead of a member call",
+      "range": {
+        "startLine": 210,
+        "startChar": 18,
+        "endLine": 210,
+        "endChar": 32
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe6a81fd_8712b3ce",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "rather than rename here, better to rename the local modified copies to keep the member function definition have the same names as the declaration.",
+      "range": {
+        "startLine": 408,
+        "startChar": 52,
+        "endLine": 408,
+        "endChar": 66
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5be785bd_f8cc245d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "you can pull the RenderTargetVk here.",
+      "range": {
+        "startLine": 425,
+        "startChar": 19,
+        "endLine": 425,
+        "endChar": 44
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53630d2d_78695e12",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "use vk::GetImpl",
+      "range": {
+        "startLine": 425,
+        "startChar": 47,
+        "endLine": 425,
+        "endChar": 80
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67fac63b_56cdcd08",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "for offset and extents it is probably better to pass by const \u0026",
+      "range": {
+        "startLine": 41,
+        "startChar": 56,
+        "endLine": 41,
+        "endChar": 63
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "84e813fb_b8ff974c",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 5
@@ -36,6 +267,30 @@
       "writtenOn": "2018-05-14T19:16:23Z",
       "side": 1,
       "message": "We usually pass these by pointer",
+      "range": {
+        "startLine": 44,
+        "startChar": 52,
+        "endLine": 44,
+        "endChar": 67
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7e922df_70684a04",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T20:01:31Z",
+      "side": 1,
+      "message": "see other comments - can move to an approach that uses RenderTargetVk instead (also by pointer)",
+      "parentUuid": "84e813fb_b8ff974c",
       "range": {
         "startLine": 44,
         "startChar": 52,
