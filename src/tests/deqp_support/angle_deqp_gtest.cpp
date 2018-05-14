@@ -25,29 +25,29 @@ namespace
 {
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-const char *g_CaseListRelativePath =
+const char *gCaseListRelativePath =
     "/../../sdcard/chromium_tests_root/third_party/deqp/src/android/cts/master/";
 #else
-const char *g_CaseListRelativePath = "/../../third_party/deqp/src/android/cts/master/";
+const char *gCaseListRelativePath = "/../../third_party/deqp/src/android/cts/master/";
 #endif
 
-const char *g_TestExpectationsSearchPaths[] = {
+const char *gTestExpectationsSearchPaths[] = {
     "/../../src/tests/deqp_support/", "/../../third_party/angle/src/tests/deqp_support/",
     "/deqp_support/", "/../../sdcard/chromium_tests_root/third_party/angle/src/tests/deqp_support/",
 };
 
-const char *g_CaseListFiles[] = {
+const char *gCaseListFiles[] = {
     "gles2-master.txt", "gles3-master.txt", "gles31-master.txt", "egl-master.txt",
 };
 
-const char *g_TestExpectationsFiles[] = {
+const char *gTestExpectationsFiles[] = {
     "deqp_gles2_test_expectations.txt", "deqp_gles3_test_expectations.txt",
     "deqp_gles31_test_expectations.txt", "deqp_egl_test_expectations.txt",
 };
 
 using APIInfo = std::pair<const char *, gpu::GPUTestConfig::API>;
 
-const APIInfo g_eglDisplayAPIs[] = {
+const APIInfo gEGLDisplayAPIs[] = {
     {"angle-d3d9", gpu::GPUTestConfig::kAPID3D9},
     {"angle-d3d11", gpu::GPUTestConfig::kAPID3D11},
     {"angle-gl", gpu::GPUTestConfig::kAPIGLDesktop},
@@ -56,15 +56,15 @@ const APIInfo g_eglDisplayAPIs[] = {
     {"angle-vulkan", gpu::GPUTestConfig::kAPIVulkan},
 };
 
-const char *g_deqpEGLString = "--deqp-egl-display-type=";
-const char *g_angleEGLString = "--use-angle=";
+const char *gdEQPEGLString  = "--deqp-egl-display-type=";
+const char *gANGLEEGLString = "--use-angle=";
 
-const APIInfo *g_initAPI = nullptr;
+const APIInfo *gInitAPI = nullptr;
 
-constexpr const char *g_deqpEGLConfigNameString = "--deqp-gl-config-name=";
+constexpr const char *gdEQPEGLConfigNameString = "--deqp-gl-config-name=";
 
 // Default the config to RGBA8
-const char *g_eglConfigName = "rgba8888d24s8";
+const char *gEGLConfigName = "rgba8888d24s8";
 
 // Returns the default API for a platform.
 const char *GetDefaultAPIName()
@@ -82,7 +82,7 @@ const char *GetDefaultAPIName()
 
 const APIInfo *FindAPIInfo(const std::string &arg)
 {
-    for (auto &displayAPI : g_eglDisplayAPIs)
+    for (auto &displayAPI : gEGLDisplayAPIs)
     {
         if (arg == displayAPI.first)
         {
@@ -109,10 +109,10 @@ void Die()
 Optional<std::string> FindTestExpectationsPath(const std::string &exeDir,
                                                       size_t testModuleIndex)
 {
-    for (const char *testPath : g_TestExpectationsSearchPaths)
+    for (const char *testPath : gTestExpectationsSearchPaths)
     {
         std::stringstream testExpectationsPathStr;
-        testExpectationsPathStr << exeDir << testPath << g_TestExpectationsFiles[testModuleIndex];
+        testExpectationsPathStr << exeDir << testPath << gTestExpectationsFiles[testModuleIndex];
 
         std::string path = testExpectationsPathStr.str();
         std::ifstream inFile(path.c_str());
@@ -188,7 +188,7 @@ void dEQPCaseList::initialize()
     std::string exeDir = angle::GetExecutableDirectory();
 
     std::stringstream caseListPathStr;
-    caseListPathStr << exeDir << g_CaseListRelativePath << g_CaseListFiles[mTestModuleIndex];
+    caseListPathStr << exeDir << gCaseListRelativePath << gCaseListFiles[mTestModuleIndex];
     std::string caseListPath = caseListPathStr.str();
 
     Optional<std::string> testExpectationsPath = FindTestExpectationsPath(exeDir, mTestModuleIndex);
@@ -217,9 +217,9 @@ void dEQPCaseList::initialize()
     }
 
     // Set the API from the command line, or using the default platform API.
-    if (g_initAPI)
+    if (gInitAPI)
     {
-        mTestConfig.set_api(g_initAPI->second);
+        mTestConfig.set_api(gInitAPI->second);
     }
     else
     {
@@ -283,7 +283,7 @@ class dEQPTest : public testing::TestWithParam<size_t>
     static void TearDownTestCase();
 
   protected:
-    void runTest()
+    void runTest() const
     {
         const auto &caseInfo = GetCaseList().getCaseInfo(GetParam());
         std::cout << caseInfo.mDEQPName << std::endl;
@@ -333,13 +333,13 @@ void dEQPTest<TestModuleIndex>::SetUpTestCase()
     argv.push_back("");
 
     // Add init api.
-    const char *targetApi    = g_initAPI ? g_initAPI->first : GetDefaultAPIName();
-    std::string apiArgString = std::string(g_deqpEGLString) + targetApi;
+    const char *targetApi    = gInitAPI ? gInitAPI->first : GetDefaultAPIName();
+    std::string apiArgString = std::string(gdEQPEGLString) + targetApi;
     argv.push_back(apiArgString.c_str());
 
     // Add config name
-    const char *targetConfigName = g_eglConfigName;
-    std::string configArgString  = std::string(g_deqpEGLConfigNameString) + targetConfigName;
+    const char *targetConfigName = gEGLConfigName;
+    std::string configArgString  = std::string(gdEQPEGLConfigNameString) + targetConfigName;
     argv.push_back(configArgString.c_str());
 
     // Init the platform.
@@ -403,7 +403,7 @@ void HandleDisplayType(const char *displayTypeString)
 {
     std::stringstream argStream;
 
-    if (g_initAPI)
+    if (gInitAPI)
     {
         std::cout << "Cannot specify two EGL displays!" << std::endl;
         exit(1);
@@ -417,9 +417,9 @@ void HandleDisplayType(const char *displayTypeString)
     argStream << displayTypeString;
     std::string arg = argStream.str();
 
-    g_initAPI = FindAPIInfo(arg);
+    gInitAPI = FindAPIInfo(arg);
 
-    if (!g_initAPI)
+    if (!gInitAPI)
     {
         std::cout << "Unknown ANGLE back-end API: " << displayTypeString << std::endl;
         exit(1);
@@ -428,7 +428,7 @@ void HandleDisplayType(const char *displayTypeString)
 
 void HandleEGLConfigName(const char *configNameString)
 {
-    g_eglConfigName = configNameString;
+    gEGLConfigName = configNameString;
 }
 
 void DeleteArg(int *argc, int argIndex, char **argv)
@@ -450,20 +450,20 @@ void InitTestHarness(int *argc, char **argv)
     int argIndex = 0;
     while (argIndex < *argc)
     {
-        if (strncmp(argv[argIndex], g_deqpEGLString, strlen(g_deqpEGLString)) == 0)
+        if (strncmp(argv[argIndex], gdEQPEGLString, strlen(gdEQPEGLString)) == 0)
         {
-            HandleDisplayType(argv[argIndex] + strlen(g_deqpEGLString));
+            HandleDisplayType(argv[argIndex] + strlen(gdEQPEGLString));
             DeleteArg(argc, argIndex, argv);
         }
-        else if (strncmp(argv[argIndex], g_angleEGLString, strlen(g_angleEGLString)) == 0)
+        else if (strncmp(argv[argIndex], gANGLEEGLString, strlen(gANGLEEGLString)) == 0)
         {
-            HandleDisplayType(argv[argIndex] + strlen(g_angleEGLString));
+            HandleDisplayType(argv[argIndex] + strlen(gANGLEEGLString));
             DeleteArg(argc, argIndex, argv);
         }
-        else if (strncmp(argv[argIndex], g_deqpEGLConfigNameString,
-                         strlen(g_deqpEGLConfigNameString)) == 0)
+        else if (strncmp(argv[argIndex], gdEQPEGLConfigNameString,
+                         strlen(gdEQPEGLConfigNameString)) == 0)
         {
-            HandleEGLConfigName(argv[argIndex] + strlen(g_deqpEGLConfigNameString));
+            HandleEGLConfigName(argv[argIndex] + strlen(gdEQPEGLConfigNameString));
             DeleteArg(argc, argIndex, argv);
         }
         else
