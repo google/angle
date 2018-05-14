@@ -3583,7 +3583,8 @@ gl::ErrorOrResult<unsigned int> Renderer11::getVertexSpaceRequired(
     const unsigned int divisor = binding.getDivisor();
     if (instances == 0 || divisor == 0)
     {
-        elementCount = count;
+        // This could be a clipped cast.
+        elementCount = gl::clampCast<unsigned int>(count);
     }
     else
     {

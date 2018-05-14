@@ -92,7 +92,7 @@ gl::Error VertexBufferInterface::setBufferSize(unsigned int size)
 gl::ErrorOrResult<unsigned int> VertexBufferInterface::getSpaceRequired(
     const gl::VertexAttribute &attrib,
     const gl::VertexBinding &binding,
-    GLsizei count,
+    size_t count,
     GLsizei instances) const
 {
     unsigned int spaceRequired = 0;
