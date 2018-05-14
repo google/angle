@@ -224,7 +224,9 @@ ANGLE_LIBTESTER_EXPORT bool deqp_libtester_run(const char *caseName)
             switch (result.getCode())
             {
                 case QP_TEST_RESULT_PASS:
+                    return true;
                 case QP_TEST_RESULT_NOT_SUPPORTED:
+                    std::cout << "Not supported! " << result.getDescription() << std::endl;
                     return true;
                 case QP_TEST_RESULT_QUALITY_WARNING:
                     std::cout << "Quality warning! " << result.getDescription() << std::endl;
