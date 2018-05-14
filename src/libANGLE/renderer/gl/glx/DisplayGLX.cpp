@@ -330,6 +330,11 @@ void DisplayGLX::terminate()
     mGLX.terminate();
 
     SafeDelete(mFunctionsGL);
+
+    if (mUsesNewXDisplay)
+    {
+        XCloseDisplay(mXDisplay);
+    }
 }
 
 egl::Error DisplayGLX::makeCurrent(egl::Surface *drawSurface,
