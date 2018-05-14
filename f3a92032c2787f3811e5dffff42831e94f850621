@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ff4c2fc_2e24b8d1",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1273,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T15:52:02Z",
+      "side": 0,
+      "message": "I think we might want to auto-generate these at some point - I think we will want to generalize the packed GLenum logic into a parameter transformation layer. For now LGTM",
+      "range": {
+        "startLine": 1273,
+        "startChar": 5,
+        "endLine": 1273,
+        "endChar": 99
+      },
+      "revId": "f3a92032c2787f3811e5dffff42831e94f850621",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
