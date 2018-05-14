@@ -101,6 +101,11 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY SwapBuffersWithDamageKHR(EGLDisplay dpy,
                                                              EGLint *rects,
                                                              EGLint n_rects);
 
+// EGL_ANDROID_presentation_time
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY PresentationTimeANDROID(EGLDisplay dpy,
+                                                            EGLSurface surface,
+                                                            EGLnsecsANDROID time);
+
 //
 ANGLE_EXPORT EGLint EGLAPIENTRY ProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib);
 ANGLE_EXPORT void EGLAPIENTRY ProgramCacheQueryANGLE(EGLDisplay dpy,

@@ -105,6 +105,7 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     outExtensions->postSubBuffer = false;  // Since SurfaceEGL::postSubBuffer is not implemented
     outExtensions->swapBuffersWithDamage = mEGL->hasExtension("EGL_KHR_swap_buffers_with_damage");
+    outExtensions->presentationTime      = mEGL->hasExtension("EGL_ANDROID_presentation_time");
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;

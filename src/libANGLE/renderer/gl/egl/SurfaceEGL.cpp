@@ -63,6 +63,16 @@ egl::Error SurfaceEGL::postSubBuffer(const gl::Context *context,
     return egl::EglBadSurface();
 }
 
+egl::Error SurfaceEGL::setPresentationTime(EGLnsecsANDROID time)
+{
+    EGLBoolean success = mEGL->presentationTimeANDROID(mSurface, time);
+    if (success == EGL_FALSE)
+    {
+        return egl::Error(mEGL->getError(), "eglPresentationTimeANDROID failed");
+    }
+    return egl::NoError();
+}
+
 egl::Error SurfaceEGL::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNIMPLEMENTED();

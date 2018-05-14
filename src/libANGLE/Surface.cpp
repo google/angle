@@ -257,6 +257,11 @@ Error Surface::postSubBuffer(const gl::Context *context,
     return mImplementation->postSubBuffer(context, x, y, width, height);
 }
 
+Error Surface::setPresentationTime(EGLnsecsANDROID time)
+{
+    return mImplementation->setPresentationTime(time);
+}
+
 Error Surface::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     return mImplementation->querySurfacePointerANGLE(attribute, value);

@@ -65,6 +65,7 @@ EXPORTS
     eglProgramCacheResizeANGLE                  @71
     eglCreatePlatformWindowSurfaceEXT           @72
     eglCreatePlatformPixmapSurfaceEXT           @73
+    eglPresentationTimeANDROID                  @74
 
     ; 1.5 entry points
     eglCreateSync                               @38

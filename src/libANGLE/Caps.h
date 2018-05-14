@@ -770,6 +770,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_create_context_extensions_enabled
     bool createContextExtensionsEnabled;
+
+    // EGL_ANDROID_presentation_time
+    bool presentationTime;
 };
 
 struct DeviceExtensions

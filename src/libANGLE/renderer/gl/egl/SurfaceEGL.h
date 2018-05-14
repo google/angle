@@ -31,6 +31,7 @@ class SurfaceEGL : public SurfaceGL
                              EGLint y,
                              EGLint width,
                              EGLint height) override;
+    egl::Error setPresentationTime(EGLnsecsANDROID time) override;
     egl::Error querySurfacePointerANGLE(EGLint attribute, void **value) override;
     egl::Error bindTexImage(const gl::Context *context,
                             gl::Texture *texture,

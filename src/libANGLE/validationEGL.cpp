@@ -2293,6 +2293,24 @@ Error ValidateSwapBuffersWithDamageKHR(const Display *display,
     return NoError();
 }
 
+Error ValidatePresentationTimeANDROID(const Display *display,
+                                      const Surface *surface,
+                                      EGLnsecsANDROID time)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().presentationTime)
+    {
+        // It is out of spec what happens when calling an extension function when the extension is
+        // not available. EGL_BAD_DISPLAY seems like a reasonable error.
+        return EglBadDisplay() << "EGL_ANDROID_presentation_time is not available.";
+    }
+
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    return NoError();
+}
+
 Error ValidateGetConfigAttrib(const Display *display, const Config *config, EGLint attribute)
 {
     ANGLE_TRY(ValidateConfig(display, config));

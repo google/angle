@@ -77,6 +77,8 @@ class FunctionsEGL
 
     EGLBoolean swapBuffersWithDamageKHR(EGLSurface surface, EGLint *rects, EGLint n_rects) const;
 
+    EGLBoolean presentationTimeANDROID(EGLSurface surface, EGLnsecsANDROID time) const;
+
   private:
     // So as to isolate from angle we do not include angleutils.h and cannot
     // use angle::NonCopyable so we replicated it here instead.

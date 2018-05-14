@@ -55,6 +55,7 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
                                      EGLint y,
                                      EGLint width,
                                      EGLint height) = 0;
+    virtual egl::Error setPresentationTime(EGLnsecsANDROID time);
     virtual egl::Error querySurfacePointerANGLE(EGLint attribute, void **value) = 0;
     virtual egl::Error bindTexImage(const gl::Context *context,
                                     gl::Texture *texture,

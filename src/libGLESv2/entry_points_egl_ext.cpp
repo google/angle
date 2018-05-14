@@ -833,6 +833,24 @@ EGLBoolean EGLAPIENTRY SwapBuffersWithDamageKHR(EGLDisplay dpy,
     return EGL_TRUE;
 }
 
+EGLBoolean EGLAPIENTRY PresentationTimeANDROID(EGLDisplay dpy,
+                                               EGLSurface surface,
+                                               EGLnsecsANDROID time)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLnsecsANDROID time = %d)",
+          dpy, surface, time);
+    Thread *thread = GetCurrentThread();
+
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = static_cast<Surface *>(surface);
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidatePresentationTimeANDROID(display, eglSurface, time),
+                         EGL_FALSE);
+    ANGLE_EGL_TRY_RETURN(thread, eglSurface->setPresentationTime(time), EGL_FALSE);
+
+    return EGL_TRUE;
+}
+
 EGLint EGLAPIENTRY ProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLenum attrib = 0x%X)", dpy, attrib);

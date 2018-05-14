@@ -25,4 +25,10 @@ egl::Error SurfaceImpl::swapWithDamage(const gl::Context *context, EGLint *rects
     return egl::EglBadSurface() << "swapWithDamage implementation missing.";
 }
 
+egl::Error SurfaceImpl::setPresentationTime(EGLnsecsANDROID time)
+{
+    UNREACHABLE();
+    return egl::EglBadSurface() << "setPresentationTime implementation missing.";
+}
+
 }  // namespace rx

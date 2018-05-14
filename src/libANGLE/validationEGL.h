@@ -109,6 +109,10 @@ Error ValidateSwapBuffersWithDamageKHR(const Display *display,
                                        EGLint *rects,
                                        EGLint n_rects);
 
+Error ValidatePresentationTimeANDROID(const Display *display,
+                                      const Surface *surface,
+                                      EGLnsecsANDROID time);
+
 Error ValidateGetConfigAttrib(const Display *display, const Config *config, EGLint attribute);
 Error ValidateChooseConfig(const Display *display,
                            const AttributeMap &attribs,

@@ -62,6 +62,7 @@ class Surface : public gl::FramebufferAttachmentObject
                         EGLint y,
                         EGLint width,
                         EGLint height);
+    Error setPresentationTime(EGLnsecsANDROID time);
     Error querySurfacePointerANGLE(EGLint attribute, void **value);
     Error bindTexImage(const gl::Context *context, gl::Texture *texture, EGLint buffer);
     Error releaseTexImage(const gl::Context *context, EGLint buffer);
