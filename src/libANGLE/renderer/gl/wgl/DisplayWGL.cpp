@@ -111,7 +111,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
     WNDCLASSA intermediateClassDesc = { 0 };
     intermediateClassDesc.style = CS_OWNDC;
-    intermediateClassDesc.lpfnWndProc = DefWindowProc;
+    intermediateClassDesc.lpfnWndProc = DefWindowProcA;
     intermediateClassDesc.cbClsExtra = 0;
     intermediateClassDesc.cbWndExtra = 0;
     intermediateClassDesc.hInstance = GetModuleHandle(nullptr);
