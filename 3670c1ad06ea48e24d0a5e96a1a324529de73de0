@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "459a3067_3f4af2fb",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-14T19:49:10Z",
+      "side": 1,
+      "message": "Meaning the function that calls this might have to do some kind of write/read operation. Probably in a later patch.",
+      "parentUuid": "c923f222_03e855d7",
+      "range": {
+        "startLine": 149,
+        "startChar": 23,
+        "endLine": 149,
+        "endChar": 54
+      },
+      "revId": "3670c1ad06ea48e24d0a5e96a1a324529de73de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c00e5b5e_0cc1e438",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 1
