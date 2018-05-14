@@ -38,7 +38,7 @@ const gl::InternalFormat &GetReadAttachmentInfo(const gl::Context *context,
         renderTarget->image->getFormat().textureFormat().fboImplementationInternalFormat;
     return gl::GetSizedInternalFormatInfo(implFormat);
 }
-}  // anonymous namespace
+}  // anonymous namespace<
 
 // static
 FramebufferVk *FramebufferVk::CreateUserFBO(const gl::FramebufferState &state)
@@ -276,12 +276,33 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
                                     GLenum type,
                                     void *pixels)
 {
+    // Clip read area to framebuffer.
+    const gl::Extents &fbSize = getState().getReadAttachment()->getSize();
+    const gl::Rectangle fbRect(0, 0, fbSize.width, fbSize.height);
+    gl::Rectangle clippedArea;
+    if (!ClipRectangle(area, fbRect, &clippedArea))
+    {
+        // nothing to read
+        return gl::NoError();
+    }
+
     const gl::State &glState = context->getGLState();
     RenderTargetVk *renderTarget = getColorReadRenderTarget();
     ASSERT(renderTarget);
 
-    const angle::Format &angleFormat = renderTarget->image->getFormat().textureFormat();
-    GLuint outputPitch               = angleFormat.pixelBytes * area.width;
+    const gl::PixelPackState &packState       = context->getGLState().getPackState();
+    const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
+
+    GLuint outputPitch = 0;
+    ANGLE_TRY_RESULT(
+        sizedFormatInfo.computeRowPitch(type, area.width, packState.alignment, packState.rowLength),
+        outputPitch);
+    GLuint outputSkipBytes = 0;
+    ANGLE_TRY_RESULT(sizedFormatInfo.computeSkipBytes(outputPitch, 0, packState, false),
+                     outputSkipBytes);
+
+    outputSkipBytes += (clippedArea.x - area.x) * sizedFormatInfo.pixelBytes +
+                       (clippedArea.y - area.y) * outputPitch;
 
     PackPixelsParams params;
     params.area        = area;
@@ -293,7 +314,8 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(beginWriteResource(vk::GetImpl(context)->getRenderer(), &commandBuffer));
-    return ReadPixelsFromRenderTarget(context, area, params, renderTarget, commandBuffer, pixels);
+    return ReadPixelsFromRenderTarget(context, clippedArea, params, renderTarget, commandBuffer,
+                                      reinterpret_cast<uint8_t *>(pixels) + outputSkipBytes);
 }
 
 RenderTargetVk *FramebufferVk::getColorReadRenderTarget()

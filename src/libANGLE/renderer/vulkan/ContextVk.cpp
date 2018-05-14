@@ -520,7 +520,8 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_UNPACK_BUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_PACK_STATE:
-                WARN() << "DIRTY_BIT_PACK_STATE unimplemented";
+                // This is a no-op, its only important to use the right pack state when we do
+                // call readPixels later on.
                 break;
             case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
                 WARN() << "DIRTY_BIT_PACK_BUFFER_BINDING unimplemented";
