@@ -187,24 +187,34 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromRenderTarget(const gl::Context 
     mStagingBuffer.allocate(renderer, allocationSize, &stagingPointer, &bufferHandle,
                             &stagingOffset, &newBufferAllocated);
 
+    PackPixelsParams params;
+    params.area        = sourceArea;
+    params.format      = formatInfo.internalFormat;
+    params.type        = formatInfo.type;
+    params.outputPitch = static_cast<GLuint>(outputRowPitch);
+    params.packBuffer  = nullptr;
+    params.pack        = gl::PixelPackState();
+
     // 2- copy the source image region to the pixel buffer using a cpu readback
     if (loadFunction.requiresConversion)
     {
-        // TODO(lucferron): This needs additional work, we will read into a temp buffer and then
-        // use the loadFunction to read the data to our PixelBuffer.
-        // http://anglebug.com/2501
-        UNIMPLEMENTED();
+        // When a conversion is required, we need to use the loadFunction to read from a temporary
+        // buffer instead so its an even slower path.
+        size_t bufferSize = storageFormat.pixelBytes * sourceArea.width * sourceArea.height;
+        angle::MemoryBuffer *memoryBuffer = nullptr;
+        ANGLE_TRY(context->getScratchBuffer(bufferSize, &memoryBuffer));
+
+        // Read into the scratch buffer
+        ANGLE_TRY(ReadPixelsFromRenderTarget(context, sourceArea, params, renderTarget,
+                                             commandBuffer, memoryBuffer->data()));
+
+        // Load from scratch buffer to our pixel buffer
+        loadFunction.loadFunction(sourceArea.width, sourceArea.height, 1, memoryBuffer->data(),
+                                  outputRowPitch, 0, stagingPointer, outputRowPitch, 0);
     }
     else
     {
-        PackPixelsParams params;
-        params.area        = sourceArea;
-        params.format      = formatInfo.internalFormat;
-        params.type        = formatInfo.type;
-        params.outputPitch = static_cast<GLuint>(outputRowPitch);
-        params.packBuffer  = nullptr;
-        params.pack        = gl::PixelPackState();
-
+        // We read directly from the framebuffer into our pixel buffer.
         ANGLE_TRY(ReadPixelsFromRenderTarget(context, sourceArea, params, renderTarget,
                                              commandBuffer, stagingPointer));
     }
