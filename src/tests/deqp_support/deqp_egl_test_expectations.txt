@@ -155,6 +155,50 @@
 1340 WIN : dEQP-EGL.functional.resize.back_buffer.* = SKIP
 1340 WIN : dEQP-EGL.functional.resize.pixel_density.* = SKIP
 
+// Linux failures
+2546 LINUX : dEQP-EGL.functional.color_clears.multi_thread.* = FAIL
+2546 LINUX : dEQP-EGL.functional.get_proc_address.extension.egl_ext_platform_base = FAIL
+2546 LINUX : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
+2546 LINUX : dEQP-EGL.functional.negative_api.choose_config = FAIL
+2546 LINUX : dEQP-EGL.functional.negative_api.swap_interval = FAIL
+2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
+2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_no_depth_no_stencil = FAIL
+2546 LINUX : dEQP-EGL.functional.thread_cleanup.single_context_single_surface = FAIL
+
+// Android failures
+2546 ANDROID : dEQP-EGL.functional.buffer_age.no_preserve.resize_before_swap.* = FAIL
+2546 ANDROID : dEQP-EGL.functional.buffer_age.preserve.* = FAIL
+2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_blue_value = FAIL
+2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_green_value = FAIL
+2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_and_sort.transparent_red_value = FAIL
+2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_blue_value = FAIL
+2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_green_value = FAIL
+2546 ANDROID : dEQP-EGL.functional.choose_config.simple.selection_only.transparent_red_value = FAIL
+2546 ANDROID : dEQP-EGL.functional.color_clears.multi_context.* = FAIL
+2546 ANDROID : dEQP-EGL.functional.color_clears.multi_thread.* = FAIL
+2546 ANDROID : dEQP-EGL.functional.color_clears.single_context.* = FAIL
+2546 ANDROID : dEQP-EGL.functional.negative_api.choose_config = FAIL
+2546 ANDROID : dEQP-EGL.functional.negative_api.copy_buffers = FAIL
+2546 ANDROID : dEQP-EGL.functional.negative_api.swap_interval = FAIL
+2546 ANDROID : dEQP-EGL.functional.query_context.get_current_context.rgba8888_pbuffer = FAIL
+2546 ANDROID : dEQP-EGL.functional.query_context.get_current_context.rgba8888_window = FAIL
+2546 ANDROID : dEQP-EGL.functional.query_context.get_current_display.rgba8888_pbuffer = FAIL
+2546 ANDROID : dEQP-EGL.functional.query_context.get_current_display.rgba8888_window = FAIL
+2546 ANDROID : dEQP-EGL.functional.query_context.get_current_surface.rgba8888_pbuffer = FAIL
+2546 ANDROID : dEQP-EGL.functional.query_context.get_current_surface.rgba8888_window = FAIL
+2546 ANDROID : dEQP-EGL.functional.query_context.query_context.rgba8888_pbuffer = FAIL
+2546 ANDROID : dEQP-EGL.functional.query_context.query_context.rgba8888_window = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.multi_context.gles2.rgba8888_pbuffer = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.multi_context.gles2.rgba8888_window = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba8888_pbuffer = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.multi_context.gles2_gles3.rgba8888_window = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.multi_context.gles3.rgba8888_pbuffer = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.multi_context.gles3.rgba8888_window = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.single_context.gles2.rgba8888_pbuffer = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.single_context.gles2.rgba8888_window = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.single_context.gles3.rgba8888_pbuffer = FAIL
+2546 ANDROID : dEQP-EGL.functional.render.single_context.gles3.rgba8888_window = FAIL
+
 // ES 1 tests
 2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
 2306 WIN MAC LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1* = FAIL
