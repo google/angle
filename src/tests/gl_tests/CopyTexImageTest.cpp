@@ -352,7 +352,8 @@ ANGLE_INSTANTIATE_TEST(CopyTexImageTest,
                        ES2_D3D11(EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE),
                        ES2_OPENGL(),
                        ES2_OPENGL(3, 3),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(CopyTexImageTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 }

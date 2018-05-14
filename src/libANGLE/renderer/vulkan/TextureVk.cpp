@@ -408,8 +408,13 @@ gl::Error TextureVk::copyImage(const gl::Context *context,
                                GLenum internalFormat,
                                gl::Framebuffer *source)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    gl::Extents newImageSize(sourceArea.width, sourceArea.height, 1);
+    const gl::InternalFormat &internalFormatInfo =
+        gl::GetInternalFormatInfo(internalFormat, GL_UNSIGNED_BYTE);
+    ANGLE_TRY(setImage(context, index, internalFormat, newImageSize, internalFormatInfo.format,
+                       internalFormatInfo.type, gl::PixelUnpackState(), nullptr));
+    return copySubImageImpl(context, index, gl::Offset(0, 0, 0), sourceArea, internalFormatInfo,
+                            source);
 }
 
 gl::Error TextureVk::copySubImage(const gl::Context *context,
@@ -417,6 +422,17 @@ gl::Error TextureVk::copySubImage(const gl::Context *context,
                                   const gl::Offset &destOffset,
                                   const gl::Rectangle &sourceArea,
                                   gl::Framebuffer *source)
+{
+    const gl::InternalFormat &currentFormat = *mState.getBaseLevelDesc().format.info;
+    return copySubImageImpl(context, index, destOffset, sourceArea, currentFormat, source);
+}
+
+gl::Error TextureVk::copySubImageImpl(const gl::Context *context,
+                                      const gl::ImageIndex &index,
+                                      const gl::Offset &destOffset,
+                                      const gl::Rectangle &sourceArea,
+                                      const gl::InternalFormat &internalFormat,
+                                      gl::Framebuffer *source)
 {
     gl::Extents fbSize = source->getReadColorbuffer()->getSize();
     gl::Rectangle clippedSourceArea;
@@ -431,9 +447,8 @@ gl::Error TextureVk::copySubImage(const gl::Context *context,
 
     ContextVk *contextVk = vk::GetImpl(context);
 
-    FramebufferVk *framebufferVk            = vk::GetImpl(source);
-    RenderTargetVk *renderTarget            = framebufferVk->getColorReadRenderTarget();
-    const gl::InternalFormat &currentFormat = *mState.getBaseLevelDesc().format.info;
+    FramebufferVk *framebufferVk = vk::GetImpl(source);
+    RenderTargetVk *renderTarget = framebufferVk->getColorReadRenderTarget();
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(framebufferVk->beginWriteResource(contextVk->getRenderer(), &commandBuffer));
@@ -444,7 +459,7 @@ gl::Error TextureVk::copySubImage(const gl::Context *context,
     // when its supported.
     ANGLE_TRY(mPixelBuffer.stageSubresourceUpdateFromRenderTarget(
         context, index, clippedSourceArea, modifiedDestOffset,
-        gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), currentFormat,
+        gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
         commandBuffer, renderTarget));
 
     vk::CommandGraphNode *writingNode = getNewWritingNode(contextVk->getRenderer());
