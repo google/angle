@@ -109,6 +109,15 @@ config("extra_warnings") {
   }
 }
 
+# This config adds build-ids to the associated library.
+# -Wl is a special option that indicates that clang should pass the associated
+# option --build-id to the linker. This will cause a build-id section to be added
+# to the associated library. The build-id makes it possible for a debugger to
+# find the right symbol file to use.
+config("build_id_config") {
+  ldflags = [ "-Wl,--build-id" ]
+}
+
 if (is_win) {
   copy("copy_compiler_dll") {
     sources = [
@@ -611,6 +620,7 @@ shared_library("libGLESv2${angle_libs_suffix}") {
 
   if (is_android) {
     configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
+    configs += [ ":build_id_config" ]
   }
 
   if (is_win) {
@@ -678,6 +688,7 @@ shared_library("libGLESv1_CM${angle_libs_suffix}") {
 
   if (is_android) {
     configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
+    configs += [ ":build_id_config" ]
   }
 
   if (is_mac && !is_component_build) {
@@ -740,6 +751,7 @@ shared_library("libEGL${angle_libs_suffix}") {
 
   if (is_android) {
     configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
+    configs += [ ":build_id_config" ]
   }
   configs -= angle_undefine_configs
   configs += [
