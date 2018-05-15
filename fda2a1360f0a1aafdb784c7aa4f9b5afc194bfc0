@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c3165fa_fccae844",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-15T19:52:34Z",
+      "side": 1,
+      "message": "We should generate an error when the return value from snprintf is greater than the buffer size, otherwise it probably run no tests.",
+      "range": {
+        "startLine": 447,
+        "startChar": 4,
+        "endLine": 447,
+        "endChar": 12
+      },
+      "revId": "fda2a1360f0a1aafdb784c7aa4f9b5afc194bfc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a815e1c_fe55b01b",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-15T19:52:34Z",
+      "side": 1,
+      "message": "As it stands, this will overwrite the previous argument if one existed.  I\u0027m not sure what dEQP does if you give it multiple --deqp-case flags right now.",
+      "range": {
+        "startLine": 489,
+        "startChar": 12,
+        "endLine": 489,
+        "endChar": 91
+      },
+      "revId": "fda2a1360f0a1aafdb784c7aa4f9b5afc194bfc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
