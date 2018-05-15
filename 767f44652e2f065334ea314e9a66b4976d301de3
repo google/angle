@@ -22,6 +22,30 @@
       "revId": "767f44652e2f065334ea314e9a66b4976d301de3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dd1ae24_67622c16",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-15T13:17:33Z",
+      "side": 1,
+      "message": "This was a mistranslation. Fixed.",
+      "parentUuid": "f4e554d3_21da9244",
+      "range": {
+        "startLine": 29,
+        "startChar": 44,
+        "endLine": 29,
+        "endChar": 46
+      },
+      "revId": "767f44652e2f065334ea314e9a66b4976d301de3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
