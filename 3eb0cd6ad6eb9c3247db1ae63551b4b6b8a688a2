@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8478d15f_390e84d4",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:10:17Z",
+      "side": 1,
+      "message": "can we not replace this with the ANGLE_TRY semantic?",
+      "range": {
+        "startLine": 524,
+        "startChar": 12,
+        "endLine": 529,
+        "endChar": 13
+      },
+      "revId": "3eb0cd6ad6eb9c3247db1ae63551b4b6b8a688a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
