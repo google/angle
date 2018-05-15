@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "99e2f0f7_866965af",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "Can\u0027t get rid of FramebufferVk since I need it to do beginWriteResource, so I ended up passing the CommandBuffer and the RenderTargetvk",
+      "parentUuid": "d7b9d1b6_bc630890",
+      "range": {
+        "startLine": 297,
+        "startChar": 25,
+        "endLine": 297,
+        "endChar": 35
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e9a3f47_fb8ab528",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "eaf44e4e_8bc17c5d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e9a3f47_fb8ab528",
+      "range": {
+        "startLine": 350,
+        "startChar": 32,
+        "endLine": 350,
+        "endChar": 49
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "653a1120_47824680",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 5
@@ -68,6 +116,30 @@
       "revId": "5b624e83b08077e049bb549ad020483673c6c526",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dadf062_dcb5bb02",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "653a1120_47824680",
+      "range": {
+        "startLine": 352,
+        "startChar": 11,
+        "endLine": 352,
+        "endChar": 29
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -118,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "c7b7e45e_aa733524",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "How about ReadPixelsFromRenderTarget?",
+      "parentUuid": "410869d8_f7d9c998",
+      "range": {
+        "startLine": 74,
+        "startChar": 14,
+        "endLine": 74,
+        "endChar": 24
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "853dbf29_82674d05",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 5
@@ -138,6 +234,30 @@
       "revId": "5b624e83b08077e049bb549ad020483673c6c526",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7502cdd_30ae434e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "853dbf29_82674d05",
+      "range": {
+        "startLine": 158,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 73
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -164,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "eb34282e_10bb524c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68c617e2_95b0ec83",
+      "range": {
+        "startLine": 210,
+        "startChar": 18,
+        "endLine": 210,
+        "endChar": 32
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe6a81fd_8712b3ce",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 5
@@ -184,6 +328,30 @@
       "revId": "5b624e83b08077e049bb549ad020483673c6c526",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09a1396b_273127eb",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe6a81fd_8712b3ce",
+      "range": {
+        "startLine": 408,
+        "startChar": 52,
+        "endLine": 408,
+        "endChar": 66
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -233,6 +401,54 @@
     },
     {
       "key": {
+        "uuid": "ae278b04_834265e9",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5be785bd_f8cc245d",
+      "range": {
+        "startLine": 425,
+        "startChar": 19,
+        "endLine": 425,
+        "endChar": 44
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8cf4d3d2_3206c3bf",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53630d2d_78695e12",
+      "range": {
+        "startLine": 425,
+        "startChar": 47,
+        "endLine": 425,
+        "endChar": 80
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67fac63b_56cdcd08",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 5
@@ -253,6 +469,30 @@
       "revId": "5b624e83b08077e049bb549ad020483673c6c526",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18aa50ef_4df69ed0",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67fac63b_56cdcd08",
+      "range": {
+        "startLine": 41,
+        "startChar": 56,
+        "endLine": 41,
+        "endChar": 63
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -300,6 +540,30 @@
       "revId": "5b624e83b08077e049bb549ad020483673c6c526",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f82d0725_db402174",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-15T13:23:50Z",
+      "side": 1,
+      "message": "See other comment, ended up passing RenderTargetVk + CommandBuffer",
+      "parentUuid": "c7e922df_70684a04",
+      "range": {
+        "startLine": 44,
+        "startChar": 52,
+        "endLine": 44,
+        "endChar": 67
+      },
+      "revId": "5b624e83b08077e049bb549ad020483673c6c526",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
