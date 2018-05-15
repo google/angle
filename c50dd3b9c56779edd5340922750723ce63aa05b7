@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "589a2bf7_5100b66a",
+        "filename": "include/GLES2/gl2ext_angle.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-15T15:04:46Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "374721c9_fff5d6fd",
+      "range": {
+        "startLine": 552,
+        "startChar": 0,
+        "endLine": 552,
+        "endChar": 93
+      },
+      "revId": "c50dd3b9c56779edd5340922750723ce63aa05b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d2cef58a_0e4c4c27",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 10
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "The expression of an assertion is not evalutated in release builds unless the gn flag dcheck_always_on is set, we only turn that on for our bots",
       "parentUuid": "91201afe_2d4f6863",
+      "range": {
+        "startLine": 364,
+        "startChar": 37,
+        "endLine": 364,
+        "endChar": 70
+      },
+      "revId": "c50dd3b9c56779edd5340922750723ce63aa05b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60926bc7_ebedb3ef",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-15T15:04:46Z",
+      "side": 1,
+      "message": "Okay. Thanks. Made the change.",
+      "parentUuid": "57be29d5_8b7d6046",
       "range": {
         "startLine": 364,
         "startChar": 37,
