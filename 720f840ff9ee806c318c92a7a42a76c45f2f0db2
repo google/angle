@@ -178,6 +178,30 @@
       "revId": "720f840ff9ee806c318c92a7a42a76c45f2f0db2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25a19df3_112d110a",
+        "filename": "src/tests/gl_tests/ExplicitContextTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-16T20:03:54Z",
+      "side": 1,
+      "message": "OK, no, sgtm.",
+      "parentUuid": "269575bf_b0cf132e",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 91
+      },
+      "revId": "720f840ff9ee806c318c92a7a42a76c45f2f0db2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
