@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "370a752b_c722ccc1",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-16T01:03:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3bc065ad_009358fc",
+      "range": {
+        "startLine": 153,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 71
+      },
+      "revId": "922bcb1c30c6910ca99816d499aef9cb3b1bda31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e12e2c2_6be1c151",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2018-05-11T13:42:37Z",
       "side": 1,
       "message": "can you try setting this in renderer11_utils\u0027s generate caps?",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 0
+      },
+      "revId": "922bcb1c30c6910ca99816d499aef9cb3b1bda31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7c30000_cc4ec463",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-16T01:03:08Z",
+      "side": 1,
+      "message": "Context11::getNativeCaps gets caps through Renderer11::getNativeCaps. I find that sometimes we cannot get GL version when we call generateCaps in Renderer11::getNativeCaps.\n\nFor example, when Renderer11::generateCaps() is called in egl::Initialize(), we cannot get GL version.\n(egl::Initialize -\u003e Display::initialize -\u003e DisplayD3D::generateConfigs -\u003e Renderer11::generateConfigs -\u003e RendererD3D::getNativeCaps)",
+      "parentUuid": "0e12e2c2_6be1c151",
       "range": {
         "startLine": 122,
         "startChar": 0,
