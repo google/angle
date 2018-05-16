@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92e55213_7f7e1a95",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-16T14:51:44Z",
+      "side": 1,
+      "message": "this should probably be private.",
+      "range": {
+        "startLine": 116,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 56
+      },
+      "revId": "ea42bda77954320f422cdc0afa12c7dbdd6a824a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
