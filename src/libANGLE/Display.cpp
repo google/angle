@@ -526,11 +526,6 @@ Error Display::initialize()
 
 Error Display::terminate()
 {
-    if (!mInitialized)
-    {
-        return NoError();
-    }
-
     ANGLE_TRY(makeCurrent(nullptr, nullptr, nullptr));
 
     mMemoryProgramCache.clear();
