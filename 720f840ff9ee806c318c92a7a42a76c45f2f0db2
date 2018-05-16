@@ -154,6 +154,30 @@
       "revId": "720f840ff9ee806c318c92a7a42a76c45f2f0db2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "269575bf_b0cf132e",
+        "filename": "src/tests/gl_tests/ExplicitContextTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-16T19:55:00Z",
+      "side": 1,
+      "message": "The main purpose of this test was to verify that some ContextANGLE functions exist in the autogen\u0027d g_procTable[]. And we can verify that at least some of the function pointers exist. I don\u0027t require it in any way, but I thought it would be nice to have.",
+      "parentUuid": "d7ccae88_13be3554",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 91
+      },
+      "revId": "720f840ff9ee806c318c92a7a42a76c45f2f0db2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
