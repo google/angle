@@ -123,7 +123,8 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     mWindowClass = RegisterClassA(&intermediateClassDesc);
     if (!mWindowClass)
     {
-        return egl::EglNotInitialized() << "Failed to register intermediate OpenGL window class.";
+        return egl::EglNotInitialized() << "Failed to register intermediate OpenGL window class, "
+                                        << gl::FmtErr(HRESULT_CODE(GetLastError()));
     }
 
     HWND dummyWindow = CreateWindowExA(0,
