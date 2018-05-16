@@ -22,6 +22,30 @@
       "revId": "6b5c47db803cdec2964912cec9e979eaf65c43e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25b6b04e_8e81337e",
+        "filename": "DEPS.chromium",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-05-16T17:57:52Z",
+      "side": 1,
+      "message": "Yes, I accidentally grabbed the SHA1 from the LunarG gerrit system on the last commit instead of getting the git SHA1. Confusion that occurs when merging a GitHub repo w/ gerrit IDs on some commits into a gerrit-based system.",
+      "parentUuid": "a4f4f976_0608e290",
+      "range": {
+        "startLine": 28,
+        "startChar": 22,
+        "endLine": 28,
+        "endChar": 63
+      },
+      "revId": "6b5c47db803cdec2964912cec9e979eaf65c43e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
