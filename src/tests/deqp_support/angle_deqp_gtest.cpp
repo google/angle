@@ -7,8 +7,9 @@
 //   dEQP and GoogleTest integration logic. Calls through to the random
 //   order executor.
 
-#include <fstream>
 #include <stdint.h>
+#include <array>
+#include <fstream>
 
 #include <gtest/gtest.h>
 
@@ -23,6 +24,15 @@
 
 namespace
 {
+std::string DrawElementsToGoogleTestName(const std::string &dEQPName)
+{
+    std::string gTestName = dEQPName.substr(dEQPName.find('.') + 1);
+    std::replace(gTestName.begin(), gTestName.end(), '.', '_');
+
+    // Occurs in some luminance tests
+    gTestName.erase(std::remove(gTestName.begin(), gTestName.end(), '-'), gTestName.end());
+    return gTestName;
+}
 
 #if defined(ANGLE_PLATFORM_ANDROID)
 const char *gCaseListRelativePath =
@@ -58,6 +68,9 @@ const APIInfo gEGLDisplayAPIs[] = {
 
 const char *gdEQPEGLString  = "--deqp-egl-display-type=";
 const char *gANGLEEGLString = "--use-angle=";
+const char *gdEQPCaseString = "--deqp-case=";
+
+std::array<char, 500> gCaseStringBuffer;
 
 const APIInfo *gInitAPI = nullptr;
 
@@ -241,13 +254,9 @@ void dEQPCaseList::initialize()
         std::string dEQPName = angle::TrimString(inString, angle::kWhitespaceASCII);
         if (dEQPName.empty())
             continue;
-        std::string gTestName = dEQPName.substr(dEQPName.find('.') + 1);
+        std::string gTestName = DrawElementsToGoogleTestName(dEQPName);
         if (gTestName.empty())
             continue;
-        std::replace(gTestName.begin(), gTestName.end(), '.', '_');
-
-        // Occurs in some luminance tests
-        gTestName.erase(std::remove(gTestName.begin(), gTestName.end(), '-'), gTestName.end());
 
         int expectation = mTestExpectationsParser.GetTestExpectation(dEQPName, mTestConfig);
         if (expectation != gpu::GPUTestExpectationsParser::kGpuTestSkip)
@@ -431,6 +440,24 @@ void HandleEGLConfigName(const char *configNameString)
     gEGLConfigName = configNameString;
 }
 
+// The --deqp-case flag takes a case expression that is parsed into a --gtest_filter. It converts
+// the "dEQP" style names (functional.thing.*) into "GoogleTest" style names (functional_thing_*).
+// Currently it does not handle multiple tests and multiple filters in different arguments.
+void HandleCaseName(const char *caseString, int *argc, int argIndex, char **argv)
+{
+    std::string googleTestName = DrawElementsToGoogleTestName(caseString);
+    gCaseStringBuffer.fill(0);
+    int bytesWritten = snprintf(gCaseStringBuffer.data(), gCaseStringBuffer.size() - 1,
+                                "--gtest_filter=*%s", googleTestName.c_str());
+    if (bytesWritten <= 0 || static_cast<size_t>(bytesWritten) >= gCaseStringBuffer.size() - 1)
+    {
+        std::cout << "Error parsing test case string: " << caseString;
+        exit(1);
+    }
+
+    argv[argIndex] = gCaseStringBuffer.data();
+}
+
 void DeleteArg(int *argc, int argIndex, char **argv)
 {
     (*argc)--;
@@ -465,6 +492,11 @@ void InitTestHarness(int *argc, char **argv)
         {
             HandleEGLConfigName(argv[argIndex] + strlen(gdEQPEGLConfigNameString));
             DeleteArg(argc, argIndex, argv);
+        }
+        else if (strncmp(argv[argIndex], gdEQPCaseString, strlen(gdEQPCaseString)) == 0)
+        {
+            HandleCaseName(argv[argIndex] + strlen(gdEQPCaseString), argc, argIndex, argv);
+            argIndex++;
         }
         else
         {
