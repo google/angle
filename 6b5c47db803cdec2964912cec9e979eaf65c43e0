@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4f4f976_0608e290",
+        "filename": "DEPS.chromium",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-16T17:47:41Z",
+      "side": 1,
+      "message": "tobin can you double-check this?\n\n$ git show Id6b3a7845ae194a18cc01b0f9d2fa6b178867b76\nfatal: ambiguous argument \u0027Id6b3a7845ae194a18cc01b0f9d2fa6b178867b76\u0027: unknown revision or path not in the working tree.",
+      "range": {
+        "startLine": 28,
+        "startChar": 22,
+        "endLine": 28,
+        "endChar": 63
+      },
+      "revId": "6b5c47db803cdec2964912cec9e979eaf65c43e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
