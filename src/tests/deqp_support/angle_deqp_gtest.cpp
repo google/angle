@@ -381,31 +381,31 @@ void dEQPTest<TestModuleIndex>::TearDownTestCase()
     deqp_libtester_shutdown_platform();
 }
 
-#define ANGLE_INSTANTIATE_DEQP_TEST_CASE(DEQP_TEST, N)                          \
-    class DEQP_TEST : public dEQPTest<N>                                        \
-    {                                                                           \
-    };                                                                          \
-    TEST_P(DEQP_TEST, Default) { runTest(); }                                   \
-                                                                                \
-    INSTANTIATE_TEST_CASE_P(, DEQP_TEST, DEQP_TEST::GetTestingRange(),          \
-                            [](const testing::TestParamInfo<size_t> &info) {    \
-                                return DEQP_TEST::GetCaseGTestName(info.param); \
+#define ANGLE_INSTANTIATE_DEQP_TEST_CASE(API, N)                             \
+    class dEQP : public dEQPTest<N>                                          \
+    {                                                                        \
+    };                                                                       \
+    TEST_P(dEQP, API) { runTest(); }                                         \
+                                                                             \
+    INSTANTIATE_TEST_CASE_P(, dEQP, dEQP::GetTestingRange(),                 \
+                            [](const testing::TestParamInfo<size_t> &info) { \
+                                return dEQP::GetCaseGTestName(info.param);   \
                             })
 
 #ifdef ANGLE_DEQP_GLES2_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES2, 0);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES2, 0);
 #endif
 
 #ifdef ANGLE_DEQP_GLES3_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES3, 1);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES3, 1);
 #endif
 
 #ifdef ANGLE_DEQP_GLES31_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES31, 2);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES31, 2);
 #endif
 
 #ifdef ANGLE_DEQP_EGL_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_EGL, 3);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(EGL, 3);
 #endif
 
 void HandleDisplayType(const char *displayTypeString)
