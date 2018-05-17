@@ -260,6 +260,23 @@ void dEQPCaseList::initialize()
     }
 }
 
+bool TestPassed(TestResult result)
+{
+    switch (result)
+    {
+        case TestResult::Pass:
+            return true;
+        case TestResult::Fail:
+            return false;
+        case TestResult::NotSupported:
+            return true;
+        case TestResult::Exception:
+            return false;
+        default:
+            return false;
+    }
+}
+
 template <size_t TestModuleIndex>
 class dEQPTest : public testing::TestWithParam<size_t>
 {
@@ -288,18 +305,26 @@ class dEQPTest : public testing::TestWithParam<size_t>
   protected:
     void runTest() const
     {
+        if (sExceptions > 1)
+        {
+            std::cout << "Too many exceptions, skipping all remaining tests." << std::endl;
+            return;
+        }
+
         const auto &caseInfo = GetCaseList().getCaseInfo(GetParam());
         std::cout << caseInfo.mDEQPName << std::endl;
 
-        bool result = deqp_libtester_run(caseInfo.mDEQPName.c_str());
+        TestResult result = deqp_libtester_run(caseInfo.mDEQPName.c_str());
+
+        bool testPassed = TestPassed(result);
 
         if (caseInfo.mExpectation == gpu::GPUTestExpectationsParser::kGpuTestPass)
         {
-            EXPECT_TRUE(result);
-            sPasses += (result ? 1u : 0u);
-            sFails += (!result ? 1u : 0u);
+            EXPECT_TRUE(testPassed);
+            sPasses += (testPassed ? 1u : 0u);
+            sFails += (!testPassed ? 1u : 0u);
         }
-        else if (result)
+        else if (testPassed)
         {
             std::cout << "Test expected to fail but passed!" << std::endl;
             sUnexpectedPasses++;
@@ -308,11 +333,17 @@ class dEQPTest : public testing::TestWithParam<size_t>
         {
             sFails++;
         }
+
+        if (result == TestResult::Exception)
+        {
+            sExceptions++;
+        }
     }
 
     static unsigned int sPasses;
     static unsigned int sFails;
     static unsigned int sUnexpectedPasses;
+    static unsigned int sExceptions;
 };
 
 template <size_t TestModuleIndex>
@@ -321,6 +352,8 @@ template <size_t TestModuleIndex>
 unsigned int dEQPTest<TestModuleIndex>::sFails = 0;
 template <size_t TestModuleIndex>
 unsigned int dEQPTest<TestModuleIndex>::sUnexpectedPasses = 0;
+template <size_t TestModuleIndex>
+unsigned int dEQPTest<TestModuleIndex>::sExceptions = 0;
 
 // static
 template <size_t TestModuleIndex>

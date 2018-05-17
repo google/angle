@@ -205,7 +205,7 @@ ANGLE_LIBTESTER_EXPORT void deqp_libtester_shutdown_platform()
     g_platform = nullptr;
 }
 
-ANGLE_LIBTESTER_EXPORT bool deqp_libtester_run(const char *caseName)
+ANGLE_LIBTESTER_EXPORT TestResult deqp_libtester_run(const char *caseName)
 {
     const char *emptyString = "";
     if (g_platform == nullptr && !deqp_libtester_init_platform(1, &emptyString))
@@ -224,18 +224,18 @@ ANGLE_LIBTESTER_EXPORT bool deqp_libtester_run(const char *caseName)
             switch (result.getCode())
             {
                 case QP_TEST_RESULT_PASS:
-                    return true;
+                    return TestResult::Pass;
                 case QP_TEST_RESULT_NOT_SUPPORTED:
                     std::cout << "Not supported! " << result.getDescription() << std::endl;
-                    return true;
+                    return TestResult::NotSupported;
                 case QP_TEST_RESULT_QUALITY_WARNING:
                     std::cout << "Quality warning! " << result.getDescription() << std::endl;
-                    return true;
+                    return TestResult::Pass;
                 case QP_TEST_RESULT_COMPATIBILITY_WARNING:
                     std::cout << "Compatiblity warning! " << result.getDescription() << std::endl;
-                    return true;
+                    return TestResult::Pass;
                 default:
-                    return false;
+                    return TestResult::Fail;
             }
         }
         else
@@ -246,7 +246,8 @@ ANGLE_LIBTESTER_EXPORT bool deqp_libtester_run(const char *caseName)
     catch (const std::exception &e)
     {
         std::cout << "Exception running test: " << e.what() << std::endl;
+        return TestResult::Exception;
     }
 
-    return false;
+    return TestResult::Fail;
 }
