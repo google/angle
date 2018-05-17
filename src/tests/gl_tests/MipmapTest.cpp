@@ -520,6 +520,10 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
 // In particular, on D3D11 Feature Level 9_3 it ensures that both the zero LOD workaround texture AND the 'normal' texture are copied during conversion.
 TEST_P(MipmapTest, GenerateMipmapFromInitDataThenRender)
 {
+    // TODO(lucferron): Figure out why we clear all levels when trying to clear level 0.
+    // http://anglebug.com/2502
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Pass in initial data so the texture is blue.
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelZeroBlueInitData);
@@ -574,6 +578,10 @@ TEST_P(MipmapTest, GenerateMipmapFromInitDataThenRender)
 // The test ensures that the zero-level texture is correctly copied into the mipped texture before the mipmaps are generated.
 TEST_P(MipmapTest, GenerateMipmapFromRenderedImage)
 {
+    // TODO(lucferron): Figure out why this test is failing only on Intel Linux.
+    // http://anglebug.com/2502
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel());
+
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     // Clear the texture to blue.
     clearTextureLevel0(GL_TEXTURE_2D, mTexture2D, 0.0f, 0.0f, 1.0f, 1.0f);
@@ -602,6 +610,10 @@ TEST_P(MipmapTest, GenerateMipmapFromRenderedImage)
 // TODO: This test hits a texture rebind bug in the D3D11 renderer. Fix this.
 TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 {
+    // TODO(lucferron): Figure out why we clear all levels when trying to clear level 0.
+    // http://anglebug.com/2502
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // TODO(geofflang): Figure out why this is broken on AMD OpenGL
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
@@ -689,6 +701,10 @@ TEST_P(MipmapTest, MipMapGenerationD3D9Bug)
 // works as expected. It tests enabling/disabling mipmaps, generating mipmaps, and rendering to level zero.
 TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
 {
+    // TODO(lucferron): Implement mipmaps generation for cube textures
+    // http://anglebug.com/2502
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
 
     // Draw. Since the negative-Y face's is blue, this should be blue.
@@ -727,6 +743,10 @@ TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
 // This test ensures that rendering to level-zero of a TextureCube works as expected.
 TEST_P(MipmapTest, TextureCubeRenderToLevelZero)
 {
+    // TODO(lucferron): Implement mipmaps generation for cube textures
+    // http://anglebug.com/2502
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
 
     // Draw. Since the negative-Y face's is blue, this should be blue.
@@ -1148,5 +1168,6 @@ ANGLE_INSTANTIATE_TEST(MipmapTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(MipmapTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
