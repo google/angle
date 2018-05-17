@@ -22,6 +22,30 @@
       "revId": "be964b2bd7134673921cfa5289e79c0e534a4e18",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee944842_7957574b",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-17T16:50:38Z",
+      "side": 1,
+      "message": "The -Wl indicates to clang that it should pass \"--build-id\" to the linker.\nclang doesn\u0027t use it otherwise.",
+      "parentUuid": "85807ca4_03a94274",
+      "range": {
+        "startLine": 611,
+        "startChar": 16,
+        "endLine": 611,
+        "endChar": 32
+      },
+      "revId": "be964b2bd7134673921cfa5289e79c0e534a4e18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
