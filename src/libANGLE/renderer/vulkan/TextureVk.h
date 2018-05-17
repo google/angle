@@ -21,7 +21,7 @@ namespace rx
 class PixelBuffer final : angle::NonCopyable
 {
   public:
-    PixelBuffer();
+    PixelBuffer(RendererVk *renderer);
     ~PixelBuffer();
 
     void release(RendererVk *renderer);
@@ -68,7 +68,7 @@ class PixelBuffer final : angle::NonCopyable
 class TextureVk : public TextureImpl, public vk::CommandGraphResource
 {
   public:
-    TextureVk(const gl::TextureState &state);
+    TextureVk(const gl::TextureState &state, RendererVk *renderer);
     ~TextureVk() override;
     gl::Error onDestroy(const gl::Context *context) override;
 

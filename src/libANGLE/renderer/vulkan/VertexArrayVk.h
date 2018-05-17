@@ -32,7 +32,7 @@ class DynamicBuffer;
 class VertexArrayVk : public VertexArrayImpl
 {
   public:
-    VertexArrayVk(const gl::VertexArrayState &state);
+    VertexArrayVk(const gl::VertexArrayState &state, RendererVk *renderer);
     ~VertexArrayVk() override;
 
     void destroy(const gl::Context *context) override;

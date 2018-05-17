@@ -62,11 +62,12 @@ constexpr size_t kStagingBufferSize = 1024 * 16;
 }  // anonymous namespace
 
 // StagingStorage implementation.
-PixelBuffer::PixelBuffer() : mStagingBuffer(kStagingBufferFlags, kStagingBufferSize)
+PixelBuffer::PixelBuffer(RendererVk *renderer)
+    : mStagingBuffer(kStagingBufferFlags, kStagingBufferSize)
 {
     // vkCmdCopyBufferToImage must have an offset that is a multiple of 4.
     // https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkBufferImageCopy.html
-    mStagingBuffer.init(4);
+    mStagingBuffer.init(4, renderer);
 }
 
 PixelBuffer::~PixelBuffer()
@@ -287,7 +288,8 @@ PixelBuffer::SubresourceUpdate::SubresourceUpdate(VkBuffer bufferHandleIn,
 PixelBuffer::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other) = default;
 
 // TextureVk implementation.
-TextureVk::TextureVk(const gl::TextureState &state) : TextureImpl(state)
+TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
+    : TextureImpl(state), mPixelBuffer(renderer)
 {
     mRenderTarget.image     = &mImage;
     mRenderTarget.imageView = &mBaseLevelImageView;

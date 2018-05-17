@@ -35,7 +35,7 @@ class DynamicBuffer : angle::NonCopyable
     ~DynamicBuffer();
 
     // Init is called after the buffer creation so that the alignment can be specified later.
-    void init(size_t alignment);
+    void init(size_t alignment, RendererVk *renderer);
 
     bool valid();
 
@@ -129,7 +129,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
 class LineLoopHelper final : public vk::CommandGraphResource
 {
   public:
-    LineLoopHelper();
+    LineLoopHelper(RendererVk *renderer);
     ~LineLoopHelper();
 
     gl::Error getIndexBufferForDrawArrays(RendererVk *renderer,
