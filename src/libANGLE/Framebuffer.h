@@ -89,6 +89,7 @@ class FramebufferState final : angle::NonCopyable
     GLint getDefaultHeight() const { return mDefaultHeight; };
     GLint getDefaultSamples() const { return mDefaultSamples; };
     bool getDefaultFixedSampleLocations() const { return mDefaultFixedSampleLocations; };
+    GLint getDefaultLayers() const { return mDefaultLayers; }
 
     bool hasDepth() const;
     bool hasStencil() const;
@@ -120,6 +121,7 @@ class FramebufferState final : angle::NonCopyable
     GLint mDefaultHeight;
     GLint mDefaultSamples;
     bool mDefaultFixedSampleLocations;
+    GLint mDefaultLayers;
 
     // It's necessary to store all this extra state so we can restore attachments
     // when DEPTH_STENCIL/DEPTH/STENCIL is unbound in WebGL 1.
@@ -221,10 +223,12 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
     GLint getDefaultHeight() const;
     GLint getDefaultSamples() const;
     bool getDefaultFixedSampleLocations() const;
+    GLint getDefaultLayers() const;
     void setDefaultWidth(GLint defaultWidth);
     void setDefaultHeight(GLint defaultHeight);
     void setDefaultSamples(GLint defaultSamples);
     void setDefaultFixedSampleLocations(bool defaultFixedSampleLocations);
+    void setDefaultLayers(GLint defaultLayers);
 
     void invalidateCompletenessCache();
 
@@ -293,6 +297,7 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
         DIRTY_BIT_DEFAULT_HEIGHT,
         DIRTY_BIT_DEFAULT_SAMPLES,
         DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS,
+        DIRTY_BIT_DEFAULT_LAYERS,
         DIRTY_BIT_UNKNOWN,
         DIRTY_BIT_MAX = DIRTY_BIT_UNKNOWN
     };

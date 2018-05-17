@@ -1268,6 +1268,9 @@ void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, G
         case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
             *params = ConvertToGLBoolean(framebuffer->getDefaultFixedSampleLocations());
             break;
+        case GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT:
+            *params = framebuffer->getDefaultLayers();
+            break;
         default:
             UNREACHABLE();
             break;
@@ -1373,6 +1376,9 @@ void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint para
             break;
         case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
             framebuffer->setDefaultFixedSampleLocations(ConvertToBool(param));
+            break;
+        case GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT:
+            framebuffer->setDefaultLayers(param);
             break;
         default:
             UNREACHABLE();

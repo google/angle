@@ -89,6 +89,8 @@ ERRMSG(InvalidFormat, "Invalid format.");
 ERRMSG(InvalidFramebufferTarget, "Invalid framebuffer target.");
 ERRMSG(InvalidFramebufferTextureLevel, "Mipmap level must be 0 when attaching a texture.");
 ERRMSG(InvalidFramebufferAttachmentParameter, "Invalid parameter name for framebuffer attachment.");
+ERRMSG(InvalidFramebufferLayer,
+       "Framebuffer layer cannot be less than 0 or greater than GL_MAX_FRAMEBUFFER_LAYERS_EXT.");
 ERRMSG(InvalidImageUnit,
        "Image unit cannot be greater than or equal to the value of MAX_IMAGE_UNITS.");
 ERRMSG(InvalidInternalFormat, "Invalid internal format.");

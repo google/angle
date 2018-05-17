@@ -689,6 +689,10 @@ gl::Error FramebufferGL::syncState(const gl::Context *context,
                     GL_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS,
                     gl::ConvertToGLBoolean(mState.getDefaultFixedSampleLocations()));
                 break;
+            case Framebuffer::DIRTY_BIT_DEFAULT_LAYERS:
+                functions->framebufferParameteri(GL_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT,
+                                                 mState.getDefaultLayers());
+                break;
             default:
             {
                 ASSERT(Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0 &&

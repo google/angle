@@ -261,6 +261,7 @@ FramebufferState::FramebufferState()
       mDefaultHeight(0),
       mDefaultSamples(0),
       mDefaultFixedSampleLocations(GL_FALSE),
+      mDefaultLayers(0),
       mWebGLDepthStencilConsistent(true)
 {
     ASSERT(mDrawBufferStates.size() > 0);
@@ -277,6 +278,7 @@ FramebufferState::FramebufferState(const Caps &caps)
       mDefaultHeight(0),
       mDefaultSamples(0),
       mDefaultFixedSampleLocations(GL_FALSE),
+      mDefaultLayers(0),
       mWebGLDepthStencilConsistent(true)
 {
     ASSERT(mDrawBufferStates.size() > 0);
@@ -1901,6 +1903,11 @@ bool Framebuffer::getDefaultFixedSampleLocations() const
     return mState.getDefaultFixedSampleLocations();
 }
 
+GLint Framebuffer::getDefaultLayers() const
+{
+    return mState.getDefaultLayers();
+}
+
 void Framebuffer::setDefaultWidth(GLint defaultWidth)
 {
     mState.mDefaultWidth = defaultWidth;
@@ -1927,6 +1934,12 @@ void Framebuffer::setDefaultFixedSampleLocations(bool defaultFixedSampleLocation
     mState.mDefaultFixedSampleLocations = defaultFixedSampleLocations;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS);
     invalidateCompletenessCache();
+}
+
+void Framebuffer::setDefaultLayers(GLint defaultLayers)
+{
+    mState.mDefaultLayers = defaultLayers;
+    mDirtyBits.set(DIRTY_BIT_DEFAULT_LAYERS);
 }
 
 GLsizei Framebuffer::getNumViews() const

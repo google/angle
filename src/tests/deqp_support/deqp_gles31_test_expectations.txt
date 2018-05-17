@@ -49,7 +49,8 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.image_load_store.* = SKIP
 
 // TODO(jiawei.shao@intel.com): Implement FramebufferTextureEXT entry point defined in OpenGL ES 3.1 extension GL_EXT_geometry_shader
-1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.framebuffer_* = SKIP
+1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.framebuffer_attachment_layered = SKIP
+1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.framebuffer_incomplete_layer_targets = SKIP
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.layered.* = SKIP
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.invocation_per_layer_* = SKIP
 1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.multiple_layers_per_invocation_* = SKIP

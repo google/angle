@@ -1176,6 +1176,21 @@ bool ValidateFramebufferParameteri(Context *context, GLenum target, GLenum pname
         {
             break;
         }
+        case GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT:
+        {
+            if (!context->getExtensions().geometryShader)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), GeometryShaderExtensionNotEnabled);
+                return false;
+            }
+            GLint maxLayers = context->getCaps().maxFramebufferLayers;
+            if (param < 0 || param > maxLayers)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidFramebufferLayer);
+                return false;
+            }
+            break;
+        }
         default:
         {
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
@@ -1213,6 +1228,13 @@ bool ValidateGetFramebufferParameteriv(Context *context, GLenum target, GLenum p
         case GL_FRAMEBUFFER_DEFAULT_HEIGHT:
         case GL_FRAMEBUFFER_DEFAULT_SAMPLES:
         case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
+            break;
+        case GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT:
+            if (!context->getExtensions().geometryShader)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), GeometryShaderExtensionNotEnabled);
+                return false;
+            }
             break;
         default:
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
