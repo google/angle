@@ -137,19 +137,16 @@ class GLES1ConformanceTest : public ANGLETest
 
 TEST_P(GLES1ConformanceTest, AmbLight)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, AmbLightExec());
 }
 
 TEST_P(GLES1ConformanceTest, AmbMat)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, AmbMatExec());
 }
 
 TEST_P(GLES1ConformanceTest, AmbScene)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, AmbSceneExec());
 }
 
@@ -161,13 +158,11 @@ TEST_P(GLES1ConformanceTest, APFunc)
 
 TEST_P(GLES1ConformanceTest, AtnConst)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, AtnConstExec());
 }
 
 TEST_P(GLES1ConformanceTest, AtnPos)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, AtnPosExec());
 }
 
@@ -193,7 +188,6 @@ TEST_P(GLES1ConformanceTest, Blend)
 
 TEST_P(GLES1ConformanceTest, Clip)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, ClipExec());
 }
 
@@ -210,25 +204,21 @@ TEST_P(GLES1ConformanceTest, CopyTex)
 
 TEST_P(GLES1ConformanceTest, DifLight)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, DifLightExec());
 }
 
 TEST_P(GLES1ConformanceTest, DifMat)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, DifMatExec());
 }
 
 TEST_P(GLES1ConformanceTest, DifMatNorm)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, DifMatNormExec());
 }
 
 TEST_P(GLES1ConformanceTest, DifMatPos)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, DifMatPosExec());
 }
 
@@ -245,7 +235,6 @@ TEST_P(GLES1ConformanceTest, DivZero)
 
 TEST_P(GLES1ConformanceTest, EmitMat)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, EmitMatExec());
 }
 
@@ -380,31 +369,26 @@ TEST_P(GLES1ConformanceTest, SPCorner)
 
 TEST_P(GLES1ConformanceTest, SpecExp)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SpecExpExec());
 }
 
 TEST_P(GLES1ConformanceTest, SpecExpNorm)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SpecExpNormExec());
 }
 
 TEST_P(GLES1ConformanceTest, SpecLight)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SpecLightExec());
 }
 
 TEST_P(GLES1ConformanceTest, SpecMat)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SpecMatExec());
 }
 
 TEST_P(GLES1ConformanceTest, SpecNorm)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SpecNormExec());
 }
 
@@ -420,19 +404,16 @@ TEST_P(GLES1ConformanceTest, SPOp)
 
 TEST_P(GLES1ConformanceTest, SpotPos)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SpotPosExec());
 }
 
 TEST_P(GLES1ConformanceTest, SpotExpPos)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SpotExpPosExec());
 }
 
 TEST_P(GLES1ConformanceTest, SpotExpDir)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, SpotExpDirExec());
 }
 
@@ -487,7 +468,6 @@ TEST_P(GLES1ConformanceTest, XFormMix)
 
 TEST_P(GLES1ConformanceTest, XFormNormal)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, XFormNormalExec());
 }
 

@@ -85,27 +85,18 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
         }
     }
 
+    // Matrices
     {
         angle::Mat4 proj = gles1State.mProjectionMatrices.back();
-        if (mProgramState.projMatrixLoc != -1)
-        {
-            programObject->setUniformMatrix4fv(mProgramState.projMatrixLoc, 1, GL_FALSE,
-                                               proj.data());
-        }
+        setUniformMatrix4fv(programObject, mProgramState.projMatrixLoc, 1, GL_FALSE, proj.data());
 
         angle::Mat4 modelview = gles1State.mModelviewMatrices.back();
-        if (mProgramState.modelviewMatrixLoc != -1)
-        {
-            programObject->setUniformMatrix4fv(mProgramState.modelviewMatrixLoc, 1, GL_FALSE,
-                                               modelview.data());
-        }
+        setUniformMatrix4fv(programObject, mProgramState.modelviewMatrixLoc, 1, GL_FALSE,
+                            modelview.data());
 
         angle::Mat4 modelviewInvTr = modelview.transpose().inverse();
-        if (mProgramState.modelviewInvTrLoc != -1)
-        {
-            programObject->setUniformMatrix4fv(mProgramState.modelviewInvTrLoc, 1, GL_FALSE,
-                                               modelviewInvTr.data());
-        }
+        setUniformMatrix4fv(programObject, mProgramState.modelviewInvTrLoc, 1, GL_FALSE,
+                            modelviewInvTr.data());
 
         Mat4Uniform *textureMatrixBuffer = uniformBuffers.textureMatrices.data();
 
@@ -115,13 +106,11 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
             memcpy(textureMatrixBuffer + i, textureMatrix.data(), sizeof(Mat4Uniform));
         }
 
-        if (mProgramState.textureMatrixLoc != -1)
-        {
-            programObject->setUniformMatrix4fv(mProgramState.textureMatrixLoc, 4, GL_FALSE,
-                                               (float *)uniformBuffers.textureMatrices.data());
-        }
+        setUniformMatrix4fv(programObject, mProgramState.textureMatrixLoc, kTexUnitCount, GL_FALSE,
+                            (float *)uniformBuffers.textureMatrices.data());
     }
 
+    // Texturing
     {
         std::array<GLint, kTexUnitCount> &tex2DEnables   = uniformBuffers.tex2DEnables;
         std::array<GLint, kTexUnitCount> &texCubeEnables = uniformBuffers.texCubeEnables;
@@ -151,23 +140,87 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
                 !texCubeEnables[i] && (gles1State.isTextureTargetEnabled(i, TextureType::_2D));
         }
 
-        if (mProgramState.enableTexture2DLoc != -1)
+        setUniform1iv(programObject, mProgramState.enableTexture2DLoc, kTexUnitCount,
+                      tex2DEnables.data());
+        setUniform1iv(programObject, mProgramState.enableTextureCubeMapLoc, kTexUnitCount,
+                      texCubeEnables.data());
+    }
+
+    // Shading, materials, and lighting
+    {
+        setUniform1i(programObject, mProgramState.shadeModelFlatLoc,
+                     gles1State.mShadeModel == ShadingModel::Flat);
+        setUniform1i(programObject, mProgramState.enableLightingLoc,
+                     glState->getEnableFeature(GL_LIGHTING));
+        setUniform1i(programObject, mProgramState.enableRescaleNormalLoc,
+                     glState->getEnableFeature(GL_RESCALE_NORMAL));
+        setUniform1i(programObject, mProgramState.enableNormalizeLoc,
+                     glState->getEnableFeature(GL_NORMALIZE));
+        setUniform1i(programObject, mProgramState.enableColorMaterialLoc,
+                     glState->getEnableFeature(GL_COLOR_MATERIAL));
+
+        const auto &material = gles1State.mMaterial;
+
+        setUniform4fv(programObject, mProgramState.materialAmbientLoc, 1, material.ambient.data());
+        setUniform4fv(programObject, mProgramState.materialDiffuseLoc, 1, material.diffuse.data());
+        setUniform4fv(programObject, mProgramState.materialSpecularLoc, 1,
+                      material.specular.data());
+        setUniform4fv(programObject, mProgramState.materialEmissiveLoc, 1,
+                      material.emissive.data());
+        setUniform1f(programObject, mProgramState.materialSpecularExponentLoc,
+                     material.specularExponent);
+
+        const auto &lightModel = gles1State.mLightModel;
+
+        setUniform4fv(programObject, mProgramState.lightModelSceneAmbientLoc, 1,
+                      lightModel.color.data());
+
+        // TODO (lfy@google.com): Implement two-sided lighting model
+        // gl->uniform1i(mProgramState.lightModelTwoSidedLoc, lightModel.twoSided);
+
+        for (int i = 0; i < kLightCount; i++)
         {
-            programObject->setUniform1iv(mProgramState.enableTexture2DLoc, kTexUnitCount,
-                                         tex2DEnables.data());
-        }
-        if (mProgramState.enableTextureCubeMapLoc != -1)
-        {
-            programObject->setUniform1iv(mProgramState.enableTextureCubeMapLoc, kTexUnitCount,
-                                         texCubeEnables.data());
+            const auto &light              = gles1State.mLights[i];
+            uniformBuffers.lightEnables[i] = light.enabled;
+            memcpy(uniformBuffers.lightAmbients.data() + i, light.ambient.data(),
+                   sizeof(Vec4Uniform));
+            memcpy(uniformBuffers.lightDiffuses.data() + i, light.diffuse.data(),
+                   sizeof(Vec4Uniform));
+            memcpy(uniformBuffers.lightSpeculars.data() + i, light.specular.data(),
+                   sizeof(Vec4Uniform));
+            memcpy(uniformBuffers.lightPositions.data() + i, light.position.data(),
+                   sizeof(Vec4Uniform));
+            memcpy(uniformBuffers.lightDirections.data() + i, light.direction.data(),
+                   sizeof(Vec3Uniform));
+            uniformBuffers.spotlightExponents[i]    = light.spotlightExponent;
+            uniformBuffers.spotlightCutoffAngles[i] = light.spotlightCutoffAngle;
+            uniformBuffers.attenuationConsts[i]     = light.attenuationConst;
+            uniformBuffers.attenuationLinears[i]    = light.attenuationLinear;
+            uniformBuffers.attenuationQuadratics[i] = light.attenuationQuadratic;
         }
 
-        GLint flatShading = gles1State.mShadeModel == ShadingModel::Flat;
-
-        if (mProgramState.shadeModelFlatLoc != -1)
-        {
-            programObject->setUniform1iv(mProgramState.shadeModelFlatLoc, 1, &flatShading);
-        }
+        setUniform1iv(programObject, mProgramState.lightEnablesLoc, kLightCount,
+                      uniformBuffers.lightEnables.data());
+        setUniform4fv(programObject, mProgramState.lightAmbientsLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.lightAmbients.data());
+        setUniform4fv(programObject, mProgramState.lightDiffusesLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.lightDiffuses.data());
+        setUniform4fv(programObject, mProgramState.lightSpecularsLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.lightSpeculars.data());
+        setUniform4fv(programObject, mProgramState.lightPositionsLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.lightPositions.data());
+        setUniform3fv(programObject, mProgramState.lightDirectionsLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.lightDirections.data());
+        setUniform1fv(programObject, mProgramState.lightSpotlightExponentsLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.spotlightExponents.data());
+        setUniform1fv(programObject, mProgramState.lightSpotlightCutoffAnglesLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.spotlightCutoffAngles.data());
+        setUniform1fv(programObject, mProgramState.lightAttenuationConstsLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.attenuationConsts.data());
+        setUniform1fv(programObject, mProgramState.lightAttenuationLinearsLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.attenuationLinears.data());
+        setUniform1fv(programObject, mProgramState.lightAttenuationQuadraticsLoc, kLightCount,
+                      (GLfloat *)uniformBuffers.attenuationQuadratics.data());
     }
 
     // None of those are changes in sampler, so there is no need to set the GL_PROGRAM dirty.
@@ -377,34 +430,124 @@ Error GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
             programObject->getUniformLocation(sscube.str().c_str());
     }
 
-    mProgramState.shadeModelFlatLoc = programObject->getUniformLocation("shade_model_flat");
-
     mProgramState.enableTexture2DLoc = programObject->getUniformLocation("enable_texture_2d");
     mProgramState.enableTextureCubeMapLoc =
         programObject->getUniformLocation("enable_texture_cube_map");
+
+    mProgramState.shadeModelFlatLoc = programObject->getUniformLocation("shade_model_flat");
+    mProgramState.enableLightingLoc = programObject->getUniformLocation("enable_lighting");
+    mProgramState.enableRescaleNormalLoc =
+        programObject->getUniformLocation("enable_rescale_normal");
+    mProgramState.enableNormalizeLoc = programObject->getUniformLocation("enable_normalize");
+    mProgramState.enableColorMaterialLoc =
+        programObject->getUniformLocation("enable_color_material");
+
+    mProgramState.materialAmbientLoc  = programObject->getUniformLocation("material_ambient");
+    mProgramState.materialDiffuseLoc  = programObject->getUniformLocation("material_diffuse");
+    mProgramState.materialSpecularLoc = programObject->getUniformLocation("material_specular");
+    mProgramState.materialEmissiveLoc = programObject->getUniformLocation("material_emissive");
+    mProgramState.materialSpecularExponentLoc =
+        programObject->getUniformLocation("material_specular_exponent");
+
+    mProgramState.lightModelSceneAmbientLoc =
+        programObject->getUniformLocation("light_model_scene_ambient");
+    mProgramState.lightModelTwoSidedLoc =
+        programObject->getUniformLocation("light_model_two_sided");
+
+    mProgramState.lightEnablesLoc    = programObject->getUniformLocation("light_enables");
+    mProgramState.lightAmbientsLoc   = programObject->getUniformLocation("light_ambients");
+    mProgramState.lightDiffusesLoc   = programObject->getUniformLocation("light_diffuses");
+    mProgramState.lightSpecularsLoc  = programObject->getUniformLocation("light_speculars");
+    mProgramState.lightPositionsLoc  = programObject->getUniformLocation("light_positions");
+    mProgramState.lightDirectionsLoc = programObject->getUniformLocation("light_directions");
+    mProgramState.lightSpotlightExponentsLoc =
+        programObject->getUniformLocation("light_spotlight_exponents");
+    mProgramState.lightSpotlightCutoffAnglesLoc =
+        programObject->getUniformLocation("light_spotlight_cutoff_angles");
+    mProgramState.lightAttenuationConstsLoc =
+        programObject->getUniformLocation("light_attenuation_consts");
+    mProgramState.lightAttenuationLinearsLoc =
+        programObject->getUniformLocation("light_attenuation_linears");
+    mProgramState.lightAttenuationQuadraticsLoc =
+        programObject->getUniformLocation("light_attenuation_quadratics");
 
     glState->setProgram(context, programObject);
 
     for (int i = 0; i < kTexUnitCount; i++)
     {
-
-        if (mProgramState.tex2DSamplerLocs[i] != -1)
-        {
-            GLint val = i;
-            programObject->setUniform1iv(mProgramState.tex2DSamplerLocs[i], 1, &val);
-        }
-
-        if (mProgramState.texCubeSamplerLocs[i] != -1)
-        {
-            GLint val = i + kTexUnitCount;
-            programObject->setUniform1iv(mProgramState.texCubeSamplerLocs[i], 1, &val);
-        }
+        setUniform1i(programObject, mProgramState.tex2DSamplerLocs[i], i);
+        setUniform1i(programObject, mProgramState.texCubeSamplerLocs[i], i + kTexUnitCount);
     }
 
     glState->setObjectDirty(GL_PROGRAM);
 
     mRendererProgramInitialized = true;
     return NoError();
+}
+
+void GLES1Renderer::setUniform1i(Program *programObject, GLint loc, GLint value)
+{
+    if (loc == -1)
+        return;
+    programObject->setUniform1iv(loc, 1, &value);
+}
+
+void GLES1Renderer::setUniform1iv(Program *programObject,
+                                  GLint loc,
+                                  GLint count,
+                                  const GLint *value)
+{
+    if (loc == -1)
+        return;
+    programObject->setUniform1iv(loc, count, value);
+}
+
+void GLES1Renderer::setUniformMatrix4fv(Program *programObject,
+                                        GLint loc,
+                                        GLint count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    if (loc == -1)
+        return;
+    programObject->setUniformMatrix4fv(loc, count, transpose, value);
+}
+
+void GLES1Renderer::setUniform4fv(Program *programObject,
+                                  GLint loc,
+                                  GLint count,
+                                  const GLfloat *value)
+{
+    if (loc == -1)
+        return;
+    programObject->setUniform4fv(loc, count, value);
+}
+
+void GLES1Renderer::setUniform3fv(Program *programObject,
+                                  GLint loc,
+                                  GLint count,
+                                  const GLfloat *value)
+{
+    if (loc == -1)
+        return;
+    programObject->setUniform3fv(loc, count, value);
+}
+
+void GLES1Renderer::setUniform1f(Program *programObject, GLint loc, GLfloat value)
+{
+    if (loc == -1)
+        return;
+    programObject->setUniform1fv(loc, 1, &value);
+}
+
+void GLES1Renderer::setUniform1fv(Program *programObject,
+                                  GLint loc,
+                                  GLint count,
+                                  const GLfloat *value)
+{
+    if (loc == -1)
+        return;
+    programObject->setUniform1fv(loc, count, value);
 }
 
 }  // namespace gl

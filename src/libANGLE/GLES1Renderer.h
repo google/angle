@@ -43,6 +43,8 @@ class GLES1Renderer final : angle::NonCopyable
 
   private:
     using Mat4Uniform = float[16];
+    using Vec4Uniform = float[4];
+    using Vec3Uniform = float[3];
 
     Shader *getShader(GLuint handle) const;
     Program *getProgram(GLuint handle) const;
@@ -59,7 +61,20 @@ class GLES1Renderer final : angle::NonCopyable
                       GLuint *programOut);
     Error initializeRendererProgram(Context *context, State *glState);
 
+    void setUniform1i(Program *programObject, GLint loc, GLint value);
+    void setUniform1iv(Program *programObject, GLint loc, GLint count, const GLint *value);
+    void setUniformMatrix4fv(Program *programObject,
+                             GLint loc,
+                             GLint count,
+                             GLboolean transpose,
+                             const GLfloat *value);
+    void setUniform4fv(Program *programObject, GLint loc, GLint count, const GLfloat *value);
+    void setUniform3fv(Program *programObject, GLint loc, GLint count, const GLfloat *value);
+    void setUniform1f(Program *programObject, GLint loc, GLfloat value);
+    void setUniform1fv(Program *programObject, GLint loc, GLint count, const GLfloat *value);
+
     static constexpr int kTexUnitCount = 4;
+    static constexpr int kLightCount   = 8;
 
     static constexpr int kVertexAttribIndex           = 0;
     static constexpr int kNormalAttribIndex           = 1;
@@ -79,13 +94,39 @@ class GLES1Renderer final : angle::NonCopyable
         GLint textureMatrixLoc;
         GLint modelviewInvTrLoc;
 
-        std::array<GLint, kTexUnitCount> tex2DSamplerLocs;
-        std::array<GLint, kTexUnitCount> texCubeSamplerLocs;
-
+        // Shading, materials, and lighting
         GLint shadeModelFlatLoc;
+        GLint enableLightingLoc;
+        GLint enableRescaleNormalLoc;
+        GLint enableNormalizeLoc;
+        GLint enableColorMaterialLoc;
 
+        GLint materialAmbientLoc;
+        GLint materialDiffuseLoc;
+        GLint materialSpecularLoc;
+        GLint materialEmissiveLoc;
+        GLint materialSpecularExponentLoc;
+
+        GLint lightModelSceneAmbientLoc;
+        GLint lightModelTwoSidedLoc;
+
+        GLint lightEnablesLoc;
+        GLint lightAmbientsLoc;
+        GLint lightDiffusesLoc;
+        GLint lightSpecularsLoc;
+        GLint lightPositionsLoc;
+        GLint lightDirectionsLoc;
+        GLint lightSpotlightExponentsLoc;
+        GLint lightSpotlightCutoffAnglesLoc;
+        GLint lightAttenuationConstsLoc;
+        GLint lightAttenuationLinearsLoc;
+        GLint lightAttenuationQuadraticsLoc;
+
+        // Texturing
         GLint enableTexture2DLoc;
         GLint enableTextureCubeMapLoc;
+        std::array<GLint, kTexUnitCount> tex2DSamplerLocs;
+        std::array<GLint, kTexUnitCount> texCubeSamplerLocs;
     };
 
     struct GLES1UniformBuffers
@@ -93,6 +134,19 @@ class GLES1Renderer final : angle::NonCopyable
         std::array<Mat4Uniform, kTexUnitCount> textureMatrices;
         std::array<GLint, kTexUnitCount> tex2DEnables;
         std::array<GLint, kTexUnitCount> texCubeEnables;
+
+        // Lighting
+        std::array<GLint, kLightCount> lightEnables;
+        std::array<Vec4Uniform, kLightCount> lightAmbients;
+        std::array<Vec4Uniform, kLightCount> lightDiffuses;
+        std::array<Vec4Uniform, kLightCount> lightSpeculars;
+        std::array<Vec4Uniform, kLightCount> lightPositions;
+        std::array<Vec3Uniform, kLightCount> lightDirections;
+        std::array<GLfloat, kLightCount> spotlightExponents;
+        std::array<GLfloat, kLightCount> spotlightCutoffAngles;
+        std::array<GLfloat, kLightCount> attenuationConsts;
+        std::array<GLfloat, kLightCount> attenuationLinears;
+        std::array<GLfloat, kLightCount> attenuationQuadratics;
     };
 
     GLES1UniformBuffers mUniformBuffers;

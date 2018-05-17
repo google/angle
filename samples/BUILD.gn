@@ -185,6 +185,12 @@ angle_sample("gles1_simple_texture_2d") {
   ]
 }
 
+angle_sample("gles1_simple_lighting") {
+  sources = [
+    "gles1/SimpleLighting.cpp",
+  ]
+}
+
 group("all") {
   testonly = true
   deps = [

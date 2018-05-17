@@ -25,6 +25,9 @@ uniform mat4 modelview;
 uniform mat4 modelview_invtr;
 uniform mat4 texture_matrix[4];
 
+uniform bool enable_rescale_normal;
+uniform bool enable_normalize;
+
 out vec4 pos_varying;
 out vec3 normal_varying;
 out vec4 color_varying;
@@ -40,6 +43,20 @@ void main()
     pos_varying = modelview * pos;
     mat3 mvInvTr3 = mat3(modelview_invtr);
     normal_varying = mvInvTr3 * normal;
+
+    if (enable_rescale_normal) {
+        float rescale = 1.0;
+        vec3 rescaleVec = vec3(mvInvTr3[2]);
+        float len = length(rescaleVec);
+        if (len > 0.0) {
+            rescale = 1.0 / len;
+        }
+        normal_varying *= rescale;
+    }
+
+    if (enable_normalize) {
+        normal_varying = normalize(normal_varying);
+    }
 
     color_varying = color;
     color_varying_flat = color;
@@ -145,10 +162,6 @@ uniform samplerCube tex_cube_sampler2;
 uniform sampler2D tex_sampler3;
 uniform samplerCube tex_cube_sampler3;
 
-// Global enables, alpha func, logic op ////////////////////////////////////////
-
-uniform bool shade_model_flat;
-
 // Vertex attributes////////////////////////////////////////////////////////////
 
 in vec4 pos_varying;
@@ -160,6 +173,33 @@ in vec4 texcoord0_varying;
 in vec4 texcoord1_varying;
 in vec4 texcoord2_varying;
 in vec4 texcoord3_varying;
+
+// Shading: flat shading, lighting, and materials///////////////////////////////
+
+uniform bool shade_model_flat;
+uniform bool enable_lighting;
+uniform bool enable_color_material;
+
+uniform vec4 material_ambient;
+uniform vec4 material_diffuse;
+uniform vec4 material_specular;
+uniform vec4 material_emissive;
+uniform float material_specular_exponent;
+
+uniform vec4 light_model_scene_ambient;
+uniform bool light_model_two_sided;
+
+uniform bool light_enables[kMaxLights];
+uniform vec4 light_ambients[kMaxLights];
+uniform vec4 light_diffuses[kMaxLights];
+uniform vec4 light_speculars[kMaxLights];
+uniform vec4 light_positions[kMaxLights];
+uniform vec3 light_directions[kMaxLights];
+uniform float light_spotlight_exponents[kMaxLights];
+uniform float light_spotlight_cutoff_angles[kMaxLights];
+uniform float light_attenuation_consts[kMaxLights];
+uniform float light_attenuation_linears[kMaxLights];
+uniform float light_attenuation_quadratics[kMaxLights];
 
 // Outgoing fragment////////////////////////////////////////////////////////////
 
@@ -237,6 +277,100 @@ vec4 getColor(int unit, vec4 vertexColor)
     return getTextureColor(unit);
 }
 
+float posDot(vec3 a, vec3 b) {
+    return max(dot(a, b), 0.0);
+}
+
+vec4 doLighting(vec4 currentFragment) {
+    vec4 materialAmbientActual = material_ambient;
+    vec4 materialDiffuseActual = material_diffuse;
+
+    if (enable_color_material || enable_texture_2d[0] || enable_texture_cube_map[0]) {
+        materialAmbientActual = currentFragment;
+        materialDiffuseActual = currentFragment;
+    }
+
+    vec4 lightingResult = material_emissive +
+               materialAmbientActual * light_model_scene_ambient;
+
+    for (int i = 0; i < kMaxLights; i++) {
+
+        if (!light_enables[i]) continue;
+
+        vec4 lightAmbient = light_ambients[i];
+        vec4 lightDiffuse = light_diffuses[i];
+        vec4 lightSpecular = light_speculars[i];
+        vec4 lightPos = light_positions[i];
+        vec3 lightDir = light_directions[i];
+        float attConst = light_attenuation_consts[i];
+        float attLinear = light_attenuation_linears[i];
+        float attQuadratic = light_attenuation_quadratics[i];
+        float spotAngle = light_spotlight_cutoff_angles[i];
+        float spotExponent = light_spotlight_exponents[i];
+
+        vec3 toLight;
+        if (lightPos.w == 0.0) {
+            toLight = lightPos.xyz;
+        } else {
+            toLight = (lightPos.xyz / lightPos.w - pos_varying.xyz);
+        }
+
+        float lightDist = length(toLight);
+        vec3 h = normalize(toLight) + vec3(0.0, 0.0, 1.0);
+        float ndotL = posDot(normal_varying, normalize(toLight));
+        float ndoth = posDot(normal_varying, normalize(h));
+
+        float specAtt;
+
+        if (ndotL != 0.0) {
+            specAtt = 1.0;
+        } else {
+            specAtt = 0.0;
+        }
+
+        float att;
+
+        if (lightPos.w != 0.0) {
+            float attDenom = (attConst + attLinear * lightDist +
+                              attQuadratic * lightDist * lightDist);
+            att = 1.0 / attDenom;
+        } else {
+            att = 1.0;
+        }
+
+        float spot;
+
+        float spotAngleCos = cos(radians(spotAngle));
+        vec3 toSurfaceDir = -normalize(toLight);
+        float spotDot = posDot(toSurfaceDir, normalize(lightDir));
+
+        if (spotAngle == 180.0 || lightPos.w == 0.0) {
+            spot = 1.0;
+        } else {
+            if (spotDot < spotAngleCos) {
+                spot = 0.0;
+            } else {
+                spot = pow(spotDot, spotExponent);
+            }
+        }
+
+        vec4 contrib = materialAmbientActual * lightAmbient;
+        contrib += ndotL * materialDiffuseActual * lightDiffuse;
+        if (ndoth > 0.0 && material_specular_exponent > 0.0) {
+            contrib += specAtt * pow(ndoth, material_specular_exponent) *
+                                 material_specular * lightSpecular;
+        } else {
+            if (ndoth > 0.0) {
+                contrib += specAtt * material_specular * lightSpecular;
+            }
+        }
+        contrib *= att * spot;
+        lightingResult += contrib;
+    }
+
+    return lightingResult;
+}
+
 )";
 
 constexpr char kGLES1DrawFShaderMain[] = R"(
@@ -256,6 +390,10 @@ void main()
 
     // Unit 0 only for now
     currentFragment = getColor(0, vertex_color);
+
+    if (enable_lighting) {
+        currentFragment = doLighting(currentFragment);
+    }
 
     frag_color = currentFragment;
 }
