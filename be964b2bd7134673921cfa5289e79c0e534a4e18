@@ -118,6 +118,30 @@
       "revId": "be964b2bd7134673921cfa5289e79c0e534a4e18",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f99d82b_e299605b",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-17T17:22:04Z",
+      "side": 1,
+      "message": "Courtney, what Jamie meant is something similar to:\nconfig(\"external_config\") {\n  include_dirs \u003d [ \"include\" ]\n}\nabove.",
+      "parentUuid": "2e527ce5_ebe07072",
+      "range": {
+        "startLine": 611,
+        "startChar": 16,
+        "endLine": 611,
+        "endChar": 32
+      },
+      "revId": "be964b2bd7134673921cfa5289e79c0e534a4e18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
