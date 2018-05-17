@@ -45,6 +45,30 @@
       "revId": "1ffbd0d0ac475fc862af54253b4773b08b335f94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "326441b0_605f947f",
+        "filename": "BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-17T18:13:57Z",
+      "side": 1,
+      "message": "Not sure, maybe b/c of the trailing ,?",
+      "parentUuid": "abe9c2e0_6c7abefa",
+      "range": {
+        "startLine": 621,
+        "startChar": 8,
+        "endLine": 621,
+        "endChar": 23
+      },
+      "revId": "1ffbd0d0ac475fc862af54253b4773b08b335f94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
