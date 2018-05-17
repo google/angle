@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85807ca4_03a94274",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-17T16:37:07Z",
+      "side": 1,
+      "message": "is this one or two flags? Not familiar with the -W flag.",
+      "range": {
+        "startLine": 611,
+        "startChar": 16,
+        "endLine": 611,
+        "endChar": 32
+      },
+      "revId": "be964b2bd7134673921cfa5289e79c0e534a4e18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
