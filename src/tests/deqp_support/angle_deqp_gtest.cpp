@@ -14,9 +14,9 @@
 #include <gtest/gtest.h>
 
 #include "angle_deqp_libtester.h"
+#include "common/Optional.h"
 #include "common/angleutils.h"
 #include "common/debug.h"
-#include "common/Optional.h"
 #include "common/platform.h"
 #include "common/string_utils.h"
 #include "gpu_test_expectations_parser.h"
@@ -119,8 +119,7 @@ void Die()
     exit(EXIT_FAILURE);
 }
 
-Optional<std::string> FindTestExpectationsPath(const std::string &exeDir,
-                                                      size_t testModuleIndex)
+Optional<std::string> FindTestExpectationsPath(const std::string &exeDir, size_t testModuleIndex)
 {
     for (const char *testPath : gTestExpectationsSearchPaths)
     {
@@ -146,12 +145,8 @@ class dEQPCaseList
 
     struct CaseInfo
     {
-        CaseInfo(const std::string &dEQPName,
-                 const std::string &gTestName,
-                 int expectation)
-            : mDEQPName(dEQPName),
-              mGTestName(gTestName),
-              mExpectation(expectation)
+        CaseInfo(const std::string &dEQPName, const std::string &gTestName, int expectation)
+            : mDEQPName(dEQPName), mGTestName(gTestName), mExpectation(expectation)
         {
         }
 
@@ -184,8 +179,7 @@ class dEQPCaseList
 };
 
 dEQPCaseList::dEQPCaseList(size_t testModuleIndex)
-    : mTestModuleIndex(testModuleIndex),
-      mInitialized(false)
+    : mTestModuleIndex(testModuleIndex), mInitialized(false)
 {
 }
 
@@ -322,9 +316,9 @@ class dEQPTest : public testing::TestWithParam<size_t>
 };
 
 template <size_t TestModuleIndex>
-unsigned int dEQPTest<TestModuleIndex>::sPasses           = 0;
+unsigned int dEQPTest<TestModuleIndex>::sPasses = 0;
 template <size_t TestModuleIndex>
-unsigned int dEQPTest<TestModuleIndex>::sFails            = 0;
+unsigned int dEQPTest<TestModuleIndex>::sFails = 0;
 template <size_t TestModuleIndex>
 unsigned int dEQPTest<TestModuleIndex>::sUnexpectedPasses = 0;
 
@@ -467,7 +461,7 @@ void DeleteArg(int *argc, int argIndex, char **argv)
     }
 }
 
-} // anonymous namespace
+}  // anonymous namespace
 
 // Called from main() to process command-line arguments.
 namespace angle
