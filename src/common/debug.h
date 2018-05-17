@@ -267,12 +267,12 @@ std::ostream &FmtHexInt(std::ostream &os, T value)
 #endif
 
 #if defined(ANGLE_TRACE_ENABLED) || defined(ANGLE_ENABLE_ASSERTS)
-#define UNIMPLEMENTED()                                                                      \
-    {                                                                                        \
-        ERR() << "\t! Unimplemented: " << __FUNCTION__ << "(" << __FILE__ << ":" << __LINE__ \
-              << ")";                                                                        \
-        ASSERT(NOASSERT_UNIMPLEMENTED);                                                      \
-    }                                                                                        \
+#define UNIMPLEMENTED()                                                                       \
+    {                                                                                         \
+        WARN() << "\t! Unimplemented: " << __FUNCTION__ << "(" << __FILE__ << ":" << __LINE__ \
+               << ")";                                                                        \
+        ASSERT(NOASSERT_UNIMPLEMENTED);                                                       \
+    }                                                                                         \
     ANGLE_EMPTY_STATEMENT
 
 // A macro for code which is not expected to be reached under valid assumptions
