@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "114047b6_f186c274",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-17T18:00:37Z",
+      "side": 1,
+      "message": "You should add it inside is_android condition, I think.\nDon\u0027t think msvs supports this flag.",
+      "range": {
+        "startLine": 641,
+        "startChar": 6,
+        "endLine": 641,
+        "endChar": 21
+      },
+      "revId": "2349b9b635650a137e59e84d91c576ac6d8bb3b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
