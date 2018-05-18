@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b90c25d_1d2676b0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-18T14:57:38Z",
+      "side": 1,
+      "message": "Isn\u0027t that part of the geometry shader work instead?",
+      "revId": "de1efbff7decbe0eef8ddc020501dd501f13abe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
