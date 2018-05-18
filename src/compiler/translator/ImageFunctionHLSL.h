@@ -43,9 +43,21 @@ class ImageFunctionHLSL final : angle::NonCopyable
             STORE
         };
 
+        enum class DataType
+        {
+            NONE,
+            FLOAT4,
+            UINT4,
+            INT4,
+            UNORM_FLOAT4,
+            SNORM_FLOAT4
+        };
+
         TString name() const;
 
         bool operator<(const ImageFunction &rhs) const;
+
+        DataType getDataType(TLayoutImageInternalFormat format) const;
 
         const char *getReturnType() const;
 
@@ -53,20 +65,23 @@ class ImageFunctionHLSL final : angle::NonCopyable
         TLayoutImageInternalFormat imageInternalFormat;
         bool readonly;
         Method method;
+        DataType type;
     };
 
+    static ImmutableString GetImageReference(TInfoSinkBase &out,
+                                             const ImageFunctionHLSL::ImageFunction &imageFunction);
     static void OutputImageFunctionArgumentList(
         TInfoSinkBase &out,
         const ImageFunctionHLSL::ImageFunction &imageFunction);
     static void OutputImageSizeFunctionBody(TInfoSinkBase &out,
                                             const ImageFunctionHLSL::ImageFunction &imageFunction,
-                                            const TString &imageReference);
+                                            const ImmutableString &imageReference);
     static void OutputImageLoadFunctionBody(TInfoSinkBase &out,
                                             const ImageFunctionHLSL::ImageFunction &imageFunction,
-                                            const TString &imageReference);
+                                            const ImmutableString &imageReference);
     static void OutputImageStoreFunctionBody(TInfoSinkBase &out,
                                              const ImageFunctionHLSL::ImageFunction &imageFunction,
-                                             const TString &imageReference);
+                                             const ImmutableString &imageReference);
     using ImageFunctionSet = std::set<ImageFunction>;
     ImageFunctionSet mUsesImage;
 };

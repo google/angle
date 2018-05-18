@@ -7,24 +7,48 @@
 //
 
 #include "compiler/translator/ImageFunctionHLSL.h"
+#include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/UtilsHLSL.h"
 
 namespace sh
 {
 
 // static
+ImmutableString ImageFunctionHLSL::GetImageReference(
+    TInfoSinkBase &out,
+    const ImageFunctionHLSL::ImageFunction &imageFunction)
+{
+    static const ImmutableString kImageIndexStr("[index]");
+    if (imageFunction.readonly)
+    {
+        static const ImmutableString kReadonlyImagesStr("readonlyImages");
+        ImmutableString suffix(
+            TextureGroupSuffix(imageFunction.image, imageFunction.imageInternalFormat));
+        out << "    const uint index = imageIndex - readonlyImageIndexOffset" << suffix.data()
+            << ";\n";
+        ImmutableStringBuilder imageRefBuilder(kReadonlyImagesStr.length() + suffix.length() +
+                                               kImageIndexStr.length());
+        imageRefBuilder << kReadonlyImagesStr << suffix << kImageIndexStr;
+        return imageRefBuilder;
+    }
+    else
+    {
+        static const ImmutableString kImagesStr("images");
+        ImmutableString suffix(
+            RWTextureGroupSuffix(imageFunction.image, imageFunction.imageInternalFormat));
+        out << "    const uint index = imageIndex - imageIndexOffset" << suffix.data() << ";\n";
+        ImmutableStringBuilder imageRefBuilder(kImagesStr.length() + suffix.length() +
+                                               kImageIndexStr.length());
+        imageRefBuilder << kImagesStr << suffix << kImageIndexStr;
+        return imageRefBuilder;
+    }
+}
+
 void ImageFunctionHLSL::OutputImageFunctionArgumentList(
     TInfoSinkBase &out,
     const ImageFunctionHLSL::ImageFunction &imageFunction)
 {
-    if (imageFunction.readonly)
-    {
-        out << TextureString(imageFunction.image, imageFunction.imageInternalFormat) << " tex";
-    }
-    else
-    {
-        out << RWTextureString(imageFunction.image, imageFunction.imageInternalFormat) << " tex";
-    }
+    out << "uint imageIndex";
 
     if (imageFunction.method == ImageFunctionHLSL::ImageFunction::Method::LOAD ||
         imageFunction.method == ImageFunctionHLSL::ImageFunction::Method::STORE)
@@ -84,7 +108,7 @@ void ImageFunctionHLSL::OutputImageFunctionArgumentList(
 void ImageFunctionHLSL::OutputImageSizeFunctionBody(
     TInfoSinkBase &out,
     const ImageFunctionHLSL::ImageFunction &imageFunction,
-    const TString &imageReference)
+    const ImmutableString &imageReference)
 {
     if (IsImage3D(imageFunction.image) || IsImage2DArray(imageFunction.image) ||
         IsImageCube(imageFunction.image))
@@ -115,7 +139,7 @@ void ImageFunctionHLSL::OutputImageSizeFunctionBody(
 void ImageFunctionHLSL::OutputImageLoadFunctionBody(
     TInfoSinkBase &out,
     const ImageFunctionHLSL::ImageFunction &imageFunction,
-    const TString &imageReference)
+    const ImmutableString &imageReference)
 {
     if (IsImage3D(imageFunction.image) || IsImage2DArray(imageFunction.image) ||
         IsImageCube(imageFunction.image))
@@ -134,7 +158,7 @@ void ImageFunctionHLSL::OutputImageLoadFunctionBody(
 void ImageFunctionHLSL::OutputImageStoreFunctionBody(
     TInfoSinkBase &out,
     const ImageFunctionHLSL::ImageFunction &imageFunction,
-    const TString &imageReference)
+    const ImmutableString &imageReference)
 {
     if (IsImage3D(imageFunction.image) || IsImage2DArray(imageFunction.image) ||
         IsImage2D(imageFunction.image) || IsImageCube(imageFunction.image))
@@ -173,6 +197,36 @@ TString ImageFunctionHLSL::ImageFunction::name() const
     }
 
     return name;
+}
+
+ImageFunctionHLSL::ImageFunction::DataType ImageFunctionHLSL::ImageFunction::getDataType(
+    TLayoutImageInternalFormat format) const
+{
+    switch (format)
+    {
+        case EiifRGBA32F:
+        case EiifRGBA16F:
+        case EiifR32F:
+            return ImageFunction::DataType::FLOAT4;
+        case EiifRGBA32UI:
+        case EiifRGBA16UI:
+        case EiifRGBA8UI:
+        case EiifR32UI:
+            return ImageFunction::DataType::UINT4;
+        case EiifRGBA32I:
+        case EiifRGBA16I:
+        case EiifRGBA8I:
+        case EiifR32I:
+            return ImageFunction::DataType::INT4;
+        case EiifRGBA8:
+            return ImageFunction::DataType::UNORM_FLOAT4;
+        case EiifRGBA8_SNORM:
+            return ImageFunction::DataType::SNORM_FLOAT4;
+        default:
+            UNREACHABLE();
+    }
+
+    return ImageFunction::DataType::NONE;
 }
 
 const char *ImageFunctionHLSL::ImageFunction::getReturnType() const
@@ -235,8 +289,8 @@ const char *ImageFunctionHLSL::ImageFunction::getReturnType() const
 
 bool ImageFunctionHLSL::ImageFunction::operator<(const ImageFunction &rhs) const
 {
-    return std::tie(image, imageInternalFormat, readonly, method) <
-           std::tie(rhs.image, rhs.imageInternalFormat, rhs.readonly, rhs.method);
+    return std::tie(image, type, method, readonly) <
+           std::tie(rhs.image, rhs.type, rhs.method, rhs.readonly);
 }
 
 TString ImageFunctionHLSL::useImageFunction(const ImmutableString &name,
@@ -249,6 +303,7 @@ TString ImageFunctionHLSL::useImageFunction(const ImmutableString &name,
     imageFunction.image               = type;
     imageFunction.imageInternalFormat = imageInternalFormat;
     imageFunction.readonly            = readonly;
+    imageFunction.type                = imageFunction.getDataType(imageInternalFormat);
 
     if (name == "imageSize")
     {
@@ -281,8 +336,7 @@ void ImageFunctionHLSL::imageFunctionHeader(TInfoSinkBase &out)
         out << ")\n"
                "{\n";
 
-        TString imageReference("tex");
-
+        ImmutableString imageReference = GetImageReference(out, imageFunction);
         if (imageFunction.method == ImageFunction::Method::SIZE)
         {
             OutputImageSizeFunctionBody(out, imageFunction, imageReference);

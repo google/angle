@@ -202,8 +202,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
 
     unsigned int firstUniformRegister =
         ((compileOptions & SH_SKIP_D3D_CONSTANT_REGISTER_ZERO) != 0) ? 1u : 0u;
-    mUniformHLSL =
-        new UniformHLSL(shaderType, mStructureHLSL, outputType, uniforms, firstUniformRegister);
+    mUniformHLSL = new UniformHLSL(mStructureHLSL, outputType, uniforms, firstUniformRegister);
 
     if (mOutputType == SH_HLSL_3_0_OUTPUT)
     {
