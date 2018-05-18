@@ -45,6 +45,40 @@
       "revId": "241a2a0b456efaf270890073b88277451f68af76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dda91f93_f901f22d",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-18T15:04:02Z",
+      "side": 1,
+      "message": "Instead of memcpys, maybe we could have static Color Color::FromData(const float*)?\n\nSame thing for void Color::WriteTo(float*) or something similar?",
+      "revId": "241a2a0b456efaf270890073b88277451f68af76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79154e51_275d10d1",
+        "filename": "src/libANGLE/GLES1State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-18T15:04:02Z",
+      "side": 1,
+      "message": "I assume these will be used by validation functions too or they would be static to GLES1State.cpp? Can we have the entry-point code too in this CL?",
+      "revId": "241a2a0b456efaf270890073b88277451f68af76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
