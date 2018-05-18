@@ -149,6 +149,8 @@ class GLES1State final : angle::NonCopyable
     MatrixStack &currentMatrixStack();
     const MatrixStack &currentMatrixStack() const;
 
+    const angle::Mat4 &getModelviewMatrix() const;
+
     void loadMatrix(const angle::Mat4 &m);
     void multMatrix(const angle::Mat4 &m);
 
@@ -156,6 +158,16 @@ class GLES1State final : angle::NonCopyable
     bool isClientStateEnabled(ClientVertexArrayType clientState) const;
     bool isTexCoordArrayEnabled(unsigned int unit) const;
     bool isTextureTargetEnabled(unsigned int unit, const TextureType type) const;
+
+    LightModelParameters &lightModelParameters();
+    const LightModelParameters &lightModelParameters() const;
+
+    LightParameters &lightParameters(unsigned int light);
+    const LightParameters &lightParameters(unsigned int light) const;
+
+    MaterialParameters &materialParameters();
+    const MaterialParameters &materialParameters() const;
+    bool isColorMaterialEnabled() const;
 
   private:
     friend class State;
