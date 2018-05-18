@@ -22,6 +22,30 @@
       "revId": "3eb0cd6ad6eb9c3247db1ae63551b4b6b8a688a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5bcf091_a5eda8e0",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-18T18:19:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8478d15f_390e84d4",
+      "range": {
+        "startLine": 524,
+        "startChar": 12,
+        "endLine": 529,
+        "endChar": 13
+      },
+      "revId": "3eb0cd6ad6eb9c3247db1ae63551b4b6b8a688a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
