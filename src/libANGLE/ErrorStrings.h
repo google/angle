@@ -94,6 +94,11 @@ ERRMSG(InvalidFramebufferLayer,
 ERRMSG(InvalidImageUnit,
        "Image unit cannot be greater than or equal to the value of MAX_IMAGE_UNITS.");
 ERRMSG(InvalidInternalFormat, "Invalid internal format.");
+ERRMSG(InvalidLight, "Invalid light.");
+ERRMSG(InvalidLightModelParameter, "Invalid light model parameter.");
+ERRMSG(InvalidLightParameter, "Invalid light parameter.");
+ERRMSG(InvalidMaterialFace, "Invalid material face.");
+ERRMSG(InvalidMaterialParameter, "Invalid material parameter.");
 ERRMSG(InvalidMatrixMode, "Invalid matrix mode.");
 ERRMSG(InvalidMemoryBarrierBit, "Invalid memory barrier bit.");
 ERRMSG(InvalidMipLevel, "Level of detail outside of range.");
@@ -140,6 +145,8 @@ ERRMSG(InvalidVertexPointerType, "Invalid type for built-in vertex attribute.");
 ERRMSG(InvalidWidth, "Invalid width.");
 ERRMSG(InvalidWrapModeTexture, "Invalid wrap mode for texture type.");
 ERRMSG(LevelNotZero, "Texture level must be zero.");
+ERRMSG(LightParameterOutOfRange, "Light parameter out of range.");
+ERRMSG(MaterialParameterOutOfRange, "Material parameter out of range.");
 ERRMSG(MatrixStackOverflow, "Current matrix stack is full.");
 ERRMSG(MatrixStackUnderflow, "Current matrix stack has only a single matrix.");
 ERRMSG(MismatchedByteCountType, "Buffer size does not align with data type.");

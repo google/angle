@@ -34,10 +34,10 @@
     void getClipPlanef(GLenum plane, GLfloat *equation);                                   \
     void getClipPlanex(GLenum plane, GLfixed *equation);                                   \
     void getFixedv(GLenum pname, GLfixed *params);                                         \
-    void getLightfv(GLenum light, GLenum pname, GLfloat *params);                          \
-    void getLightxv(GLenum light, GLenum pname, GLfixed *params);                          \
-    void getMaterialfv(GLenum face, GLenum pname, GLfloat *params);                        \
-    void getMaterialxv(GLenum face, GLenum pname, GLfixed *params);                        \
+    void getLightfv(GLenum light, LightParameter pnamePacked, GLfloat *params);            \
+    void getLightxv(GLenum light, LightParameter pnamePacked, GLfixed *params);            \
+    void getMaterialfv(GLenum face, MaterialParameter pnamePacked, GLfloat *params);       \
+    void getMaterialxv(GLenum face, MaterialParameter pnamePacked, GLfixed *params);       \
     void getTexEnvfv(GLenum target, GLenum pname, GLfloat *params);                        \
     void getTexEnviv(GLenum target, GLenum pname, GLint *params);                          \
     void getTexEnvxv(GLenum target, GLenum pname, GLfixed *params);                        \
@@ -46,19 +46,19 @@
     void lightModelfv(GLenum pname, const GLfloat *params);                                \
     void lightModelx(GLenum pname, GLfixed param);                                         \
     void lightModelxv(GLenum pname, const GLfixed *param);                                 \
-    void lightf(GLenum light, GLenum pname, GLfloat param);                                \
-    void lightfv(GLenum light, GLenum pname, const GLfloat *params);                       \
-    void lightx(GLenum light, GLenum pname, GLfixed param);                                \
-    void lightxv(GLenum light, GLenum pname, const GLfixed *params);                       \
+    void lightf(GLenum light, LightParameter pnamePacked, GLfloat param);                  \
+    void lightfv(GLenum light, LightParameter pnamePacked, const GLfloat *params);         \
+    void lightx(GLenum light, LightParameter pnamePacked, GLfixed param);                  \
+    void lightxv(GLenum light, LightParameter pnamePacked, const GLfixed *params);         \
     void lineWidthx(GLfixed width);                                                        \
     void loadIdentity();                                                                   \
     void loadMatrixf(const GLfloat *m);                                                    \
     void loadMatrixx(const GLfixed *m);                                                    \
     void logicOp(GLenum opcode);                                                           \
-    void materialf(GLenum face, GLenum pname, GLfloat param);                              \
-    void materialfv(GLenum face, GLenum pname, const GLfloat *params);                     \
-    void materialx(GLenum face, GLenum pname, GLfixed param);                              \
-    void materialxv(GLenum face, GLenum pname, const GLfixed *param);                      \
+    void materialf(GLenum face, MaterialParameter pnamePacked, GLfloat param);             \
+    void materialfv(GLenum face, MaterialParameter pnamePacked, const GLfloat *params);    \
+    void materialx(GLenum face, MaterialParameter pnamePacked, GLfixed param);             \
+    void materialxv(GLenum face, MaterialParameter pnamePacked, const GLfixed *param);     \
     void matrixMode(MatrixType modePacked);                                                \
     void multMatrixf(const GLfloat *m);                                                    \
     void multMatrixx(const GLfixed *m);                                                    \

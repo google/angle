@@ -15,6 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
+#include "libANGLE/GLES1State.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Sampler.h"
@@ -1743,6 +1744,282 @@ ClientVertexArrayType ParamToVertexArrayType(GLenum param)
         default:
             UNREACHABLE();
             return ClientVertexArrayType::InvalidEnum;
+    }
+}
+
+void SetLightModelParameters(GLES1State *state, GLenum pname, const GLfloat *params)
+{
+    LightModelParameters &lightModel = state->lightModelParameters();
+
+    switch (pname)
+    {
+        case GL_LIGHT_MODEL_AMBIENT:
+            lightModel.color = ColorF::fromData(params);
+            break;
+        case GL_LIGHT_MODEL_TWO_SIDE:
+            lightModel.twoSided = *params == 1.0f ? true : false;
+            break;
+        default:
+            break;
+    }
+}
+
+void GetLightModelParameters(const GLES1State *state, GLenum pname, GLfloat *params)
+{
+    const LightModelParameters &lightModel = state->lightModelParameters();
+
+    switch (pname)
+    {
+        case GL_LIGHT_MODEL_TWO_SIDE:
+            *params = lightModel.twoSided ? 1.0f : 0.0f;
+            break;
+        case GL_LIGHT_MODEL_AMBIENT:
+            lightModel.color.writeData(params);
+            break;
+        default:
+            break;
+    }
+}
+
+bool IsLightModelTwoSided(const GLES1State *state)
+{
+    return state->lightModelParameters().twoSided;
+}
+
+void SetLightParameters(GLES1State *state,
+                        GLenum light,
+                        LightParameter pname,
+                        const GLfloat *params)
+{
+    uint32_t lightIndex = light - GL_LIGHT0;
+
+    LightParameters &lightParams = state->lightParameters(lightIndex);
+
+    switch (pname)
+    {
+        case LightParameter::Ambient:
+            lightParams.ambient = ColorF::fromData(params);
+            break;
+        case LightParameter::Diffuse:
+            lightParams.diffuse = ColorF::fromData(params);
+            break;
+        case LightParameter::Specular:
+            lightParams.specular = ColorF::fromData(params);
+            break;
+        case LightParameter::Position:
+        {
+            angle::Mat4 mv = state->getModelviewMatrix();
+            angle::Vector4 transformedPos =
+                mv.product(angle::Vector4(params[0], params[1], params[2], params[3]));
+            lightParams.position[0] = transformedPos[0];
+            lightParams.position[1] = transformedPos[1];
+            lightParams.position[2] = transformedPos[2];
+            lightParams.position[3] = transformedPos[3];
+        }
+        break;
+        case LightParameter::SpotDirection:
+        {
+            angle::Mat4 mv = state->getModelviewMatrix();
+            angle::Vector4 transformedPos =
+                mv.product(angle::Vector4(params[0], params[1], params[2], 0.0f));
+            lightParams.direction[0] = transformedPos[0];
+            lightParams.direction[1] = transformedPos[1];
+            lightParams.direction[2] = transformedPos[2];
+        }
+        break;
+        case LightParameter::SpotExponent:
+            lightParams.spotlightExponent = *params;
+            break;
+        case LightParameter::SpotCutoff:
+            lightParams.spotlightCutoffAngle = *params;
+            break;
+        case LightParameter::ConstantAttenuation:
+            lightParams.attenuationConst = *params;
+            break;
+        case LightParameter::LinearAttenuation:
+            lightParams.attenuationLinear = *params;
+            break;
+        case LightParameter::QuadraticAttenuation:
+            lightParams.attenuationQuadratic = *params;
+            break;
+        default:
+            return;
+    }
+}
+
+void GetLightParameters(const GLES1State *state,
+                        GLenum light,
+                        LightParameter pname,
+                        GLfloat *params)
+{
+    uint32_t lightIndex                = light - GL_LIGHT0;
+    const LightParameters &lightParams = state->lightParameters(lightIndex);
+
+    switch (pname)
+    {
+        case LightParameter::Ambient:
+            lightParams.ambient.writeData(params);
+            break;
+        case LightParameter::Diffuse:
+            lightParams.diffuse.writeData(params);
+            break;
+        case LightParameter::Specular:
+            lightParams.specular.writeData(params);
+            break;
+        case LightParameter::Position:
+            memcpy(params, lightParams.position.data(), 4 * sizeof(GLfloat));
+            break;
+        case LightParameter::SpotDirection:
+            memcpy(params, lightParams.direction.data(), 3 * sizeof(GLfloat));
+            break;
+        case LightParameter::SpotExponent:
+            *params = lightParams.spotlightExponent;
+            break;
+        case LightParameter::SpotCutoff:
+            *params = lightParams.spotlightCutoffAngle;
+            break;
+        case LightParameter::ConstantAttenuation:
+            *params = lightParams.attenuationConst;
+            break;
+        case LightParameter::LinearAttenuation:
+            *params = lightParams.attenuationLinear;
+            break;
+        case LightParameter::QuadraticAttenuation:
+            *params = lightParams.attenuationQuadratic;
+            break;
+        default:
+            break;
+    }
+}
+
+void SetMaterialParameters(GLES1State *state,
+                           GLenum face,
+                           MaterialParameter pname,
+                           const GLfloat *params)
+{
+    MaterialParameters &material = state->materialParameters();
+    switch (pname)
+    {
+        case MaterialParameter::Ambient:
+            material.ambient = ColorF::fromData(params);
+            break;
+        case MaterialParameter::Diffuse:
+            material.diffuse = ColorF::fromData(params);
+            break;
+        case MaterialParameter::AmbientAndDiffuse:
+            material.ambient = ColorF::fromData(params);
+            material.diffuse = ColorF::fromData(params);
+            break;
+        case MaterialParameter::Specular:
+            material.specular = ColorF::fromData(params);
+            break;
+        case MaterialParameter::Emission:
+            material.emissive = ColorF::fromData(params);
+            break;
+        case MaterialParameter::Shininess:
+            material.specularExponent = *params;
+            break;
+        default:
+            return;
+    }
+}
+
+void GetMaterialParameters(const GLES1State *state,
+                           GLenum face,
+                           MaterialParameter pname,
+                           GLfloat *params)
+{
+    const ColorF &currentColor         = state->getCurrentColor();
+    const MaterialParameters &material = state->materialParameters();
+    const bool colorMaterialEnabled    = state->isColorMaterialEnabled();
+
+    switch (pname)
+    {
+        case MaterialParameter::Ambient:
+            if (colorMaterialEnabled)
+            {
+                currentColor.writeData(params);
+            }
+            else
+            {
+                material.ambient.writeData(params);
+            }
+            break;
+        case MaterialParameter::Diffuse:
+            if (colorMaterialEnabled)
+            {
+                currentColor.writeData(params);
+            }
+            else
+            {
+                material.diffuse.writeData(params);
+            }
+            break;
+        case MaterialParameter::Specular:
+            material.specular.writeData(params);
+            break;
+        case MaterialParameter::Emission:
+            material.emissive.writeData(params);
+            break;
+        case MaterialParameter::Shininess:
+            *params = material.specularExponent;
+            break;
+        default:
+            return;
+    }
+}
+
+unsigned int GetLightModelParameterCount(GLenum pname)
+{
+    switch (pname)
+    {
+        case GL_LIGHT_MODEL_AMBIENT:
+            return 4;
+        case GL_LIGHT_MODEL_TWO_SIDE:
+            return 1;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+unsigned int GetLightParameterCount(LightParameter pname)
+{
+    switch (pname)
+    {
+        case LightParameter::Ambient:
+        case LightParameter::Diffuse:
+        case LightParameter::Specular:
+        case LightParameter::Position:
+            return 4;
+        case LightParameter::SpotDirection:
+            return 3;
+        case LightParameter::SpotExponent:
+        case LightParameter::SpotCutoff:
+        case LightParameter::ConstantAttenuation:
+        case LightParameter::LinearAttenuation:
+        case LightParameter::QuadraticAttenuation:
+            return 1;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+unsigned int GetMaterialParameterCount(MaterialParameter pname)
+{
+    switch (pname)
+    {
+        case MaterialParameter::Ambient:
+        case MaterialParameter::Diffuse:
+        case MaterialParameter::Specular:
+        case MaterialParameter::Emission:
+            return 4;
+        case MaterialParameter::Shininess:
+            return 1;
+        default:
+            UNREACHABLE();
+            return 0;
     }
 }
 

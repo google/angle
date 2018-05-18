@@ -59,10 +59,10 @@ bool ValidateGetBufferParameteriv(Context *context, GLenum target, GLenum pname,
 bool ValidateGetClipPlanef(Context *context, GLenum plane, GLfloat *equation);
 bool ValidateGetClipPlanex(Context *context, GLenum plane, GLfixed *equation);
 bool ValidateGetFixedv(Context *context, GLenum pname, GLfixed *params);
-bool ValidateGetLightfv(Context *context, GLenum light, GLenum pname, GLfloat *params);
-bool ValidateGetLightxv(Context *context, GLenum light, GLenum pname, GLfixed *params);
-bool ValidateGetMaterialfv(Context *context, GLenum face, GLenum pname, GLfloat *params);
-bool ValidateGetMaterialxv(Context *context, GLenum face, GLenum pname, GLfixed *params);
+bool ValidateGetLightfv(Context *context, GLenum light, LightParameter pname, GLfloat *params);
+bool ValidateGetLightxv(Context *context, GLenum light, LightParameter pname, GLfixed *params);
+bool ValidateGetMaterialfv(Context *context, GLenum face, MaterialParameter pname, GLfloat *params);
+bool ValidateGetMaterialxv(Context *context, GLenum face, MaterialParameter pname, GLfixed *params);
 bool ValidateGetPointerv(Context *context, GLenum pname, void **params);
 bool ValidateGetTexEnvfv(Context *context, GLenum target, GLenum pname, GLfloat *params);
 bool ValidateGetTexEnviv(Context *context, GLenum target, GLenum pname, GLint *params);
@@ -72,19 +72,25 @@ bool ValidateLightModelf(Context *context, GLenum pname, GLfloat param);
 bool ValidateLightModelfv(Context *context, GLenum pname, const GLfloat *params);
 bool ValidateLightModelx(Context *context, GLenum pname, GLfixed param);
 bool ValidateLightModelxv(Context *context, GLenum pname, const GLfixed *param);
-bool ValidateLightf(Context *context, GLenum light, GLenum pname, GLfloat param);
-bool ValidateLightfv(Context *context, GLenum light, GLenum pname, const GLfloat *params);
-bool ValidateLightx(Context *context, GLenum light, GLenum pname, GLfixed param);
-bool ValidateLightxv(Context *context, GLenum light, GLenum pname, const GLfixed *params);
+bool ValidateLightf(Context *context, GLenum light, LightParameter pname, GLfloat param);
+bool ValidateLightfv(Context *context, GLenum light, LightParameter pname, const GLfloat *params);
+bool ValidateLightx(Context *context, GLenum light, LightParameter pname, GLfixed param);
+bool ValidateLightxv(Context *context, GLenum light, LightParameter pname, const GLfixed *params);
 bool ValidateLineWidthx(Context *context, GLfixed width);
 bool ValidateLoadIdentity(Context *context);
 bool ValidateLoadMatrixf(Context *context, const GLfloat *m);
 bool ValidateLoadMatrixx(Context *context, const GLfixed *m);
 bool ValidateLogicOp(Context *context, GLenum opcode);
-bool ValidateMaterialf(Context *context, GLenum face, GLenum pname, GLfloat param);
-bool ValidateMaterialfv(Context *context, GLenum face, GLenum pname, const GLfloat *params);
-bool ValidateMaterialx(Context *context, GLenum face, GLenum pname, GLfixed param);
-bool ValidateMaterialxv(Context *context, GLenum face, GLenum pname, const GLfixed *param);
+bool ValidateMaterialf(Context *context, GLenum face, MaterialParameter pname, GLfloat param);
+bool ValidateMaterialfv(Context *context,
+                        GLenum face,
+                        MaterialParameter pname,
+                        const GLfloat *params);
+bool ValidateMaterialx(Context *context, GLenum face, MaterialParameter pname, GLfixed param);
+bool ValidateMaterialxv(Context *context,
+                        GLenum face,
+                        MaterialParameter pname,
+                        const GLfixed *param);
 bool ValidateMatrixMode(Context *context, MatrixType mode);
 bool ValidateMultMatrixf(Context *context, const GLfloat *m);
 bool ValidateMultMatrixx(Context *context, const GLfixed *m);
