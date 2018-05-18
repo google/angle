@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "cf6b125d_74e42eb0",
+        "filename": "include/GLES/glext_angle.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T17:14:12Z",
+      "side": 1,
+      "message": "I would name them, say GL_ANGLE_explicit_context and GL_ANGLE_explicit_context_gles1. I would expose the extension in the Context if it is enabled in the display. Maybe forget about the enum to keep it simple.",
+      "parentUuid": "aa6bec53_05fa969f",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 45
+      },
+      "revId": "a36bad643f25fb75f471fce3f590d503d49595af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2259d7d4_b4a41b3a",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 18
