@@ -751,4 +751,28 @@ bool IsOutputVulkan(ShShaderOutput output)
     return output == SH_GLSL_VULKAN_OUTPUT;
 }
 
+bool IsInShaderStorageBlock(TIntermTyped *node)
+{
+    TIntermBinary *binaryNode   = nullptr;
+    TIntermSwizzle *swizzleNode = node->getAsSwizzleNode();
+    if (swizzleNode)
+    {
+        binaryNode = swizzleNode->getOperand()->getAsBinaryNode();
+        if (binaryNode)
+        {
+            return IsInShaderStorageBlock(binaryNode->getLeft());
+        }
+    }
+    binaryNode = node->getAsBinaryNode();
+
+    if (binaryNode)
+    {
+        return IsInShaderStorageBlock(binaryNode->getLeft());
+    }
+
+    const TType &type = node->getType();
+
+    return type.getQualifier() == EvqBuffer;
+}
+
 }  // namespace sh

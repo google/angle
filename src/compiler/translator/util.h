@@ -25,6 +25,7 @@ namespace sh
 {
 class TIntermBlock;
 class TSymbolTable;
+class TIntermTyped;
 
 float NumericLexFloat32OutOfRangeToInfinity(const std::string &str);
 
@@ -62,6 +63,8 @@ bool IsOutputESSL(ShShaderOutput output);
 bool IsOutputGLSL(ShShaderOutput output);
 bool IsOutputHLSL(ShShaderOutput output);
 bool IsOutputVulkan(ShShaderOutput output);
+
+bool IsInShaderStorageBlock(TIntermTyped *node);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_UTIL_H_

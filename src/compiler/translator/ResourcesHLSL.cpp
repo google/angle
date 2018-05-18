@@ -102,7 +102,7 @@ ResourcesHLSL::ResourcesHLSL(StructureHLSL *structureHLSL,
     : mUniformRegister(firstUniformRegister),
       mUniformBlockRegister(0),
       mTextureRegister(0),
-      mRWTextureRegister(0),
+      mUAVRegister(0),
       mSamplerCount(0),
       mStructureHLSL(structureHLSL),
       mOutputType(outputType),
@@ -148,7 +148,7 @@ unsigned int ResourcesHLSL::assignUniformRegister(const TType &type,
     }
     else if (IsImage(type.getBasicType()))
     {
-        registerIndex = mRWTextureRegister;
+        registerIndex = mUAVRegister;
     }
     else
     {
@@ -166,7 +166,7 @@ unsigned int ResourcesHLSL::assignUniformRegister(const TType &type,
     }
     else if (IsImage(type.getBasicType()))
     {
-        mRWTextureRegister += registerCount;
+        mUAVRegister += registerCount;
     }
     else
     {
@@ -553,6 +553,40 @@ TString ResourcesHLSL::uniformBlocksHeader(
     return (interfaceBlocks.empty() ? "" : ("// Uniform Blocks\n\n" + interfaceBlocks));
 }
 
+TString ResourcesHLSL::shaderStorageBlocksHeader(
+    const ReferencedInterfaceBlocks &referencedInterfaceBlocks)
+{
+    TString interfaceBlocks;
+
+    for (const auto &interfaceBlockReference : referencedInterfaceBlocks)
+    {
+        const TInterfaceBlock &interfaceBlock = *interfaceBlockReference.second->block;
+        const TVariable *instanceVariable     = interfaceBlockReference.second->instanceVariable;
+
+        unsigned int activeRegister                                  = mUAVRegister;
+        mShaderStorageBlockRegisterMap[interfaceBlock.name().data()] = activeRegister;
+
+        if (instanceVariable != nullptr && instanceVariable->getType().isArray())
+        {
+            unsigned int instanceArraySize = instanceVariable->getType().getOutermostArraySize();
+            for (unsigned int arrayIndex = 0; arrayIndex < instanceArraySize; arrayIndex++)
+            {
+                interfaceBlocks += shaderStorageBlockString(
+                    interfaceBlock, instanceVariable, activeRegister + arrayIndex, arrayIndex);
+            }
+            mUAVRegister += instanceArraySize;
+        }
+        else
+        {
+            interfaceBlocks += shaderStorageBlockString(interfaceBlock, instanceVariable,
+                                                        activeRegister, GL_INVALID_INDEX);
+            mUAVRegister += 1u;
+        }
+    }
+
+    return (interfaceBlocks.empty() ? "" : ("// Shader Storage Blocks\n\n" + interfaceBlocks));
+}
+
 TString ResourcesHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
                                           const TVariable *instanceVariable,
                                           unsigned int registerIndex,
@@ -569,7 +603,7 @@ TString ResourcesHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
     if (instanceVariable != nullptr)
     {
         hlsl += "    " + InterfaceBlockStructName(interfaceBlock) + " " +
-                UniformBlockInstanceString(instanceVariable->name(), arrayIndex) + ";\n";
+                InterfaceBlockInstanceString(instanceVariable->name(), arrayIndex) + ";\n";
     }
     else
     {
@@ -582,8 +616,28 @@ TString ResourcesHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
     return hlsl;
 }
 
-TString ResourcesHLSL::UniformBlockInstanceString(const ImmutableString &instanceName,
-                                                  unsigned int arrayIndex)
+TString ResourcesHLSL::shaderStorageBlockString(const TInterfaceBlock &interfaceBlock,
+                                                const TVariable *instanceVariable,
+                                                unsigned int registerIndex,
+                                                unsigned int arrayIndex)
+{
+    TString hlsl;
+    if (instanceVariable != nullptr)
+    {
+        hlsl += "RWByteAddressBuffer " +
+                InterfaceBlockInstanceString(instanceVariable->name(), arrayIndex) +
+                ": register(u" + str(registerIndex) + ");\n";
+    }
+    else
+    {
+        hlsl += "RWByteAddressBuffer " + Decorate(interfaceBlock.name()) + ": register(u" +
+                str(registerIndex) + ");\n";
+    }
+    return hlsl;
+}
+
+TString ResourcesHLSL::InterfaceBlockInstanceString(const ImmutableString &instanceName,
+                                                    unsigned int arrayIndex)
 {
     if (arrayIndex != GL_INVALID_INDEX)
     {

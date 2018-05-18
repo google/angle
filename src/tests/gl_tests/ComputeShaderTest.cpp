@@ -1803,6 +1803,185 @@ TEST_P(ComputeShaderTest, LoadImageThenStore)
     EXPECT_EQ(100u, outputValue);
 }
 
+// Test that scalar buffer variables are supported.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksScalar)
+{
+    const char kCSSource[] =
+        R"(#version 310 es
+        layout(local_size_x=1) in;
+        layout(std140, binding = 0) buffer blockA {
+            uvec3 uv;
+            float f;
+        } instanceA;
+        layout(std140, binding = 1) buffer blockB {
+            vec2 v;
+            uint u[3];
+            float f;
+        };
+        void main()
+        {
+            f = instanceA.f;
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that vector buffer variables are supported.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksVector)
+{
+    const char kCSSource[] =
+        R"(#version 310 es
+        layout(local_size_x=1) in;
+        layout(std140, binding = 0) buffer blockA {
+            vec2 f;
+        } instanceA;
+        layout(std140, binding = 1) buffer blockB {
+            vec3 f;
+        };
+        void main()
+        {
+            f[1] = instanceA.f[0];
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that matrix buffer variables are supported.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksMatrix)
+{
+    const char kCSSource[] =
+        R"(#version 310 es
+        layout(local_size_x=1) in;
+        layout(std140, binding = 0) buffer blockA {
+            mat3x4 m;
+        } instanceA;
+        layout(std140, binding = 1) buffer blockB {
+            mat3x4 m;
+        };
+        void main()
+        {
+            m[0][1] = instanceA.m[0][1];
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that scalar array buffer variables are supported.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksScalarArray)
+{
+    const char kCSSource[] =
+        R"(#version 310 es
+        layout(local_size_x=8) in;
+        layout(std140, binding = 0) buffer blockA {
+            float f[8];
+        } instanceA;
+        layout(std140, binding = 1) buffer blockB {
+            float f[8];
+        };
+        void main()
+        {
+            f[gl_LocalInvocationIndex] = instanceA.f[gl_LocalInvocationIndex];
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that vector array buffer variables are supported.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksVectorArray)
+{
+    const char kCSSource[] =
+        R"(#version 310 es
+        layout(local_size_x=4) in;
+        layout(std140, binding = 0) buffer blockA {
+            vec2 v[4];
+        } instanceA;
+        layout(std140, binding = 1) buffer blockB {
+            vec4 v[4];
+        };
+        void main()
+        {
+            v[0][gl_LocalInvocationIndex] = instanceA.v[gl_LocalInvocationIndex][1];
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that matrix array buffer variables are supported.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksMatrixArray)
+{
+    const char kCSSource[] =
+        R"(#version 310 es
+        layout(local_size_x=8) in;
+        layout(std140, binding = 0) buffer blockA {
+            float v1[5];
+            mat4 m[8];
+        } instanceA;
+        layout(std140, binding = 1) buffer blockB {
+            vec2 v1[3];
+            mat4 m[8];
+        };
+        void main()
+        {
+            float data = instanceA.m[gl_LocalInvocationIndex][0][0];
+            m[gl_LocalInvocationIndex][gl_LocalInvocationIndex][gl_LocalInvocationIndex] = data;
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that shader storage blocks only in assignment right is supported.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksInAssignmentRight)
+{
+    const char kCSSource[] =
+        R"(#version 310 es
+        layout(local_size_x=8) in;
+        layout(std140, binding = 0) buffer blockA {
+            float data[8];
+        } instanceA;
+        layout(r32f, binding = 0) writeonly uniform highp image2D imageOut;
+
+        void main()
+        {
+            float data = 1.0;
+            data = instanceA.data[gl_LocalInvocationIndex];
+            imageStore(imageOut, ivec2(gl_LocalInvocationID.xy), vec4(data));
+        }
+        )";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that shader storage blocks with unsized array are supported.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksWithUnsizedArray)
+{
+    const char kCSSource[] =
+        R"(#version 310 es
+        layout(local_size_x=8) in;
+        layout(std140, binding = 0) buffer blockA {
+            float v[];
+        } instanceA;
+        layout(std140, binding = 0) buffer blockB {
+            float v[];
+        } instanceB[1];
+
+        void main()
+        {
+            float data = instanceA.v[gl_LocalInvocationIndex];
+            instanceB[0].v[gl_LocalInvocationIndex * 2u + 1u] = data;
+        }
+        )";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)

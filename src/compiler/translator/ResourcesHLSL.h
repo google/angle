@@ -38,10 +38,11 @@ class ResourcesHLSL : angle::NonCopyable
     void samplerMetadataUniforms(TInfoSinkBase &out, const char *reg);
 
     TString uniformBlocksHeader(const ReferencedInterfaceBlocks &referencedInterfaceBlocks);
+    TString shaderStorageBlocksHeader(const ReferencedInterfaceBlocks &referencedInterfaceBlocks);
 
     // Used for direct index references
-    static TString UniformBlockInstanceString(const ImmutableString &instanceName,
-                                              unsigned int arrayIndex);
+    static TString InterfaceBlockInstanceString(const ImmutableString &instanceName,
+                                                unsigned int arrayIndex);
 
     const std::map<std::string, unsigned int> &getUniformBlockRegisterMap() const
     {
@@ -57,6 +58,11 @@ class ResourcesHLSL : angle::NonCopyable
                                const TVariable *instanceVariable,
                                unsigned int registerIndex,
                                unsigned int arrayIndex);
+
+    TString shaderStorageBlockString(const TInterfaceBlock &interfaceBlock,
+                                     const TVariable *instanceVariable,
+                                     unsigned int registerIndex,
+                                     unsigned int arrayIndex);
     TString uniformBlockMembersString(const TInterfaceBlock &interfaceBlock,
                                       TLayoutBlockStorage blockStorage);
     TString uniformBlockStructString(const TInterfaceBlock &interfaceBlock);
@@ -104,13 +110,14 @@ class ResourcesHLSL : angle::NonCopyable
     unsigned int mUniformRegister;
     unsigned int mUniformBlockRegister;
     unsigned int mTextureRegister;
-    unsigned int mRWTextureRegister;
+    unsigned int mUAVRegister;
     unsigned int mSamplerCount;
     StructureHLSL *mStructureHLSL;
     ShShaderOutput mOutputType;
 
     const std::vector<Uniform> &mUniforms;
     std::map<std::string, unsigned int> mUniformBlockRegisterMap;
+    std::map<std::string, unsigned int> mShaderStorageBlockRegisterMap;
     std::map<std::string, unsigned int> mUniformRegisterMap;
 };
 }

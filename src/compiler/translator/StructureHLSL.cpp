@@ -174,7 +174,7 @@ TString Std140PaddingHelper::postPaddingString(const TType &type, bool useHLSLRo
         return "";
     }
 
-    int numComponents     = 0;
+    int numComponents           = 0;
     const TStructure *structure = type.getStruct();
 
     if (type.isMatrix())

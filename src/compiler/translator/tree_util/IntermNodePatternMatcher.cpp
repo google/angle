@@ -12,6 +12,7 @@
 
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {
@@ -45,6 +46,12 @@ bool ContainsVectorNode(const TIntermSequence &sequence)
 
 IntermNodePatternMatcher::IntermNodePatternMatcher(const unsigned int mask) : mMask(mask)
 {
+}
+
+// static
+bool IntermNodePatternMatcher::IsDynamicIndexingOfNonSSBOVectorOrMatrix(TIntermBinary *node)
+{
+    return IsDynamicIndexingOfVectorOrMatrix(node) && !IsInShaderStorageBlock(node->getLeft());
 }
 
 // static

@@ -58,6 +58,16 @@
 1951 D3D11 : dEQP-GLES31.functional.ssbo.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.layout_binding.image.* = SKIP
 1951 D3D11 : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.* = SKIP
+// This case is skipped since it uses atomic counter builtin functions which haven't been implemented.
+1729 D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = SKIP
+// Below cases are skipped since it uses variable * ssbo.matrix as the expression which haven't been implemented,
+// that will result the code entering unreachable.
+1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.ssbo_block.ssbo_block_interface_matching_tests = SKIP
+1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.ssbo_block.ssbo_using_shared_qualifier_tests = SKIP
+1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.ssbo_block.ssbo_block_interface_matching_tests = SKIP
+1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.ssbo_block.ssbo_using_shared_qualifier_tests = SKIP
+1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.ssbo_block.ssbo_block_interface_matching_tests = SKIP
+1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.ssbo_block.ssbo_using_shared_qualifier_tests = SKIP
 
 // D3D11 Failing Tests
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_shared_memory_size_* = FAIL
@@ -80,7 +90,6 @@
 1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_3 = FAIL
 1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_9 = FAIL
 1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_10 = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = FAIL
 1442 D3D11 : dEQP-GLES31.functional.layout_binding.ubo.* = FAIL
 1663 D3D11 : dEQP-GLES31.functional.draw_indirect.compute_interop.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_constants.core.max_vertex_attribs = FAIL
