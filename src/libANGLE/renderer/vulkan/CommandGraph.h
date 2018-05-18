@@ -33,6 +33,13 @@ class CommandGraphResource
 
     Serial getQueueSerial() const;
 
+    // Sets up dependency relations. 'this' resource is the resource being written to.
+    void addWriteDependency(CommandGraphResource *writingResource);
+
+    // Sets up dependency relations. 'this' resource is the resource being read.
+    void addReadDependency(CommandGraphResource *readingResource);
+
+  protected:
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
     Error beginWriteResource(RendererVk *renderer, CommandBuffer **commandBufferOut);
@@ -63,12 +70,6 @@ class CommandGraphResource
 
     // Called when 'this' object changes, but we'd like to start a new command buffer later.
     void onResourceChanged(RendererVk *renderer);
-
-    // Sets up dependency relations. 'this' resource is the resource being written to.
-    void addWriteDependency(CommandGraphResource *writingResource);
-
-    // Sets up dependency relations. 'this' resource is the resource being read.
-    void addReadDependency(CommandGraphResource *readingResource);
 
   private:
     void onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial);
