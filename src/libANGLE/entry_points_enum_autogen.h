@@ -172,6 +172,7 @@ enum class EntryPoint
     FramebufferRenderbufferOES,
     FramebufferTexture2D,
     FramebufferTexture2DOES,
+    FramebufferTextureEXT,
     FramebufferTextureLayer,
     FramebufferTextureMultiviewLayeredANGLE,
     FramebufferTextureMultiviewSideBySideANGLE,

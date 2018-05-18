@@ -2924,6 +2924,29 @@ void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs)
     }
 }
 
+// GL_EXT_geometry_shader
+void GL_APIENTRY FramebufferTextureEXT(GLenum target,
+                                       GLenum attachment,
+                                       GLuint texture,
+                                       GLint level)
+{
+    EVENT("(GLenum target = 0x%X, GLenum attachment = 0x%X, GLuint texture = %u, GLint level = %d)",
+          target, attachment, texture, level);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::FramebufferTextureEXT>(target, attachment, texture,
+                                                                 level);
+
+        if (context->skipValidation() ||
+            ValidateFramebufferTextureEXT(context, target, attachment, texture, level))
+        {
+            context->framebufferTexture(target, attachment, texture, level);
+        }
+    }
+}
+
 // GL_EXT_map_buffer_range
 void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length)
 {
@@ -7324,6 +7347,30 @@ void GL_APIENTRY FramebufferTexture2DOESContextANGLE(GLeglContext ctx,
                                             level))
         {
             context->framebufferTexture2D(target, attachment, textargetPacked, texture, level);
+        }
+    }
+}
+
+void GL_APIENTRY FramebufferTextureEXTContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLenum attachment,
+                                                   GLuint texture,
+                                                   GLint level)
+{
+    EVENT("(GLenum target = 0x%X, GLenum attachment = 0x%X, GLuint texture = %u, GLint level = %d)",
+          target, attachment, texture, level);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::FramebufferTextureEXT>(target, attachment, texture,
+                                                                 level);
+
+        if (context->skipValidation() ||
+            ValidateFramebufferTextureEXT(context, target, attachment, texture, level))
+        {
+            context->framebufferTexture(target, attachment, texture, level);
         }
     }
 }

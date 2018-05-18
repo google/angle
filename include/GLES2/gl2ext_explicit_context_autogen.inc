@@ -168,6 +168,7 @@ typedef void (GL_APIENTRYP PFNGLEGLIMAGETARGETTEXTURE2DOESCONTEXTANGLE)(GLeglCon
 typedef void (GL_APIENTRYP PFNGLENDQUERYEXTCONTEXTANGLE)(GLeglContext ctx, GLenum target);
 typedef void (GL_APIENTRYP PFNGLFINISHFENCENVCONTEXTANGLE)(GLeglContext ctx, GLuint fence);
 typedef void (GL_APIENTRYP PFNGLFLUSHMAPPEDBUFFERRANGEEXTCONTEXTANGLE)(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length);
+typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREEXTCONTEXTANGLE)(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level);
 typedef void (GL_APIENTRYP PFNGLGENFENCESNVCONTEXTANGLE)(GLeglContext ctx, GLsizei n, GLuint *fences);
 typedef void (GL_APIENTRYP PFNGLGENQUERIESEXTCONTEXTANGLE)(GLeglContext ctx, GLsizei n, GLuint *ids);
 typedef void (GL_APIENTRYP PFNGLGENVERTEXARRAYSOESCONTEXTANGLE)(GLeglContext ctx, GLsizei n, GLuint *arrays);
@@ -468,6 +469,7 @@ GL_APICALL void GL_APIENTRY glEGLImageTargetTexture2DOESContextANGLE(GLeglContex
 GL_APICALL void GL_APIENTRY glEndQueryEXTContextANGLE(GLeglContext ctx, GLenum target);
 GL_APICALL void GL_APIENTRY glFinishFenceNVContextANGLE(GLeglContext ctx, GLuint fence);
 GL_APICALL void GL_APIENTRY glFlushMappedBufferRangeEXTContextANGLE(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length);
+GL_APICALL void GL_APIENTRY glFramebufferTextureEXTContextANGLE(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level);
 GL_APICALL void GL_APIENTRY glGenFencesNVContextANGLE(GLeglContext ctx, GLsizei n, GLuint *fences);
 GL_APICALL void GL_APIENTRY glGenQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids);
 GL_APICALL void GL_APIENTRY glGenVertexArraysOESContextANGLE(GLeglContext ctx, GLsizei n, GLuint *arrays);

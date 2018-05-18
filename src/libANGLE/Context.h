@@ -1374,6 +1374,8 @@ class Context final : angle::NonCopyable
     void memoryBarrier(GLbitfield barriers);
     void memoryBarrierByRegion(GLbitfield barriers);
 
+    void framebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level);
+
     // Consumes the error.
     void handleError(const Error &error) const;
 

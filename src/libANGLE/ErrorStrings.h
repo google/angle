@@ -126,6 +126,7 @@ ERRMSG(InvalidStencil, "Invalid stencil.");
 ERRMSG(InvalidStencilBitMask, "Invalid stencil bit mask.");
 ERRMSG(InvalidTarget, "Invalid target.");
 ERRMSG(InvalidTextureFilterParam, "Texture filter not recognized.");
+ERRMSG(InvalidTextureName, "Not a valid texture object name.");
 ERRMSG(InvalidTextureRange, "Cannot be less than 0 or greater than maximum number of textures.");
 ERRMSG(InvalidTextureTarget, "Invalid or unsupported texture target.");
 ERRMSG(InvalidTextureWrap, "Texture wrap mode not recognized.");

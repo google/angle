@@ -355,6 +355,13 @@ bool ValidateMemoryBarrierByRegion(Context *context, GLbitfield barriers);
 
 bool ValidateSampleMaski(Context *context, GLuint maskNumber, GLbitfield mask);
 
+// GL_EXT_geometry_shader
+bool ValidateFramebufferTextureEXT(Context *context,
+                                   GLenum target,
+                                   GLenum attachment,
+                                   GLuint texture,
+                                   GLint level);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES31_H_

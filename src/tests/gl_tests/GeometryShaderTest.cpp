@@ -699,6 +699,52 @@ TEST_P(GeometryShaderTest, ReferencedByGeometryShader)
     }
 }
 
+// Verify correct errors can be reported when we use illegal parameters on FramebufferTextureEXT.
+TEST_P(GeometryShaderTest, NegativeFramebufferTextureEXT)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_3D, tex);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 32, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // [EXT_geometry_shader] Section 9.2.8, "Attaching Texture Images to a Framebuffer"
+    // An INVALID_ENUM error is generated if <target> is not DRAW_FRAMEBUFFER, READ_FRAMEBUFFER, or
+    // FRAMEBUFFER.
+    glFramebufferTextureEXT(GL_TEXTURE_2D, GL_COLOR_ATTACHMENT0, tex, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // An INVALID_ENUM error is generated if <attachment> is not one of the attachments in Table
+    // 9.1.
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_TEXTURE_2D, tex, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // An INVALID_OPERATION error is generated if zero is bound to <target>.
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // An INVALID_VALUE error is generated if <texture> is not the name of a texture object, or if
+    // <level> is not a supported texture level for <texture>.
+    GLuint tex2;
+    glGenTextures(1, &tex2);
+    glDeleteTextures(1, &tex2);
+    ASSERT_FALSE(glIsTexture(tex2));
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2, 0);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    GLint max3DSize;
+    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DSize);
+    GLint max3DLevel = std::log2(max3DSize);
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, max3DLevel + 1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
 ANGLE_INSTANTIATE_TEST(GeometryShaderTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_D3D11());
 ANGLE_INSTANTIATE_TEST(GeometryShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 }

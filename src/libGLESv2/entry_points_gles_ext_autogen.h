@@ -594,6 +594,12 @@ ANGLE_EXPORT void GL_APIENTRY QueryCounterEXT(GLuint id, GLenum target);
 // GL_EXT_draw_buffers
 ANGLE_EXPORT void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs);
 
+// GL_EXT_geometry_shader
+ANGLE_EXPORT void GL_APIENTRY FramebufferTextureEXT(GLenum target,
+                                                    GLenum attachment,
+                                                    GLuint texture,
+                                                    GLint level);
+
 // GL_EXT_map_buffer_range
 ANGLE_EXPORT void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target,
                                                         GLintptr offset,
@@ -1265,6 +1271,11 @@ ANGLE_EXPORT void GL_APIENTRY FramebufferTexture2DOESContextANGLE(GLeglContext c
                                                                   GLenum textarget,
                                                                   GLuint texture,
                                                                   GLint level);
+ANGLE_EXPORT void GL_APIENTRY FramebufferTextureEXTContextANGLE(GLeglContext ctx,
+                                                                GLenum target,
+                                                                GLenum attachment,
+                                                                GLuint texture,
+                                                                GLint level);
 ANGLE_EXPORT void GL_APIENTRY FramebufferTextureLayerContextANGLE(GLeglContext ctx,
                                                                   GLenum target,
                                                                   GLenum attachment,

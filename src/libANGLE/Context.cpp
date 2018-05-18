@@ -3688,6 +3688,12 @@ void Context::framebufferTextureMultiviewSideBySide(GLenum target,
     mGLState.setObjectDirty(target);
 }
 
+// TODO(jiawei.shao@intel.com): implement framebufferTextureEXT
+void Context::framebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::drawBuffers(GLsizei n, const GLenum *bufs)
 {
     Framebuffer *framebuffer = mGLState.getDrawFramebuffer();

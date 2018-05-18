@@ -1965,4 +1965,51 @@ bool ValidateSampleMaski(Context *context, GLuint maskNumber, GLbitfield mask)
     return true;
 }
 
+bool ValidateFramebufferTextureEXT(Context *context,
+                                   GLenum target,
+                                   GLenum attachment,
+                                   GLuint texture,
+                                   GLint level)
+{
+    if (!context->getExtensions().geometryShader)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), GeometryShaderExtensionNotEnabled);
+        return false;
+    }
+
+    if (texture != 0)
+    {
+        gl::Texture *tex = context->getTexture(texture);
+
+        // [EXT_geometry_shader] Section 9.2.8 "Attaching Texture Images to a Framebuffer"
+        // An INVALID_VALUE error is generated if <texture> is not the name of a texture object.
+        // We put this validation before ValidateFramebufferTextureBase because it is an
+        // INVALID_OPERATION error for both FramebufferTexture2D and FramebufferTextureLayer:
+        // [OpenGL ES 3.1] Chapter 9.2.8 (FramebufferTexture2D)
+        // An INVALID_OPERATION error is generated if texture is not zero, and does not name an
+        // existing texture object of type matching textarget.
+        // [OpenGL ES 3.1 Chapter 9.2.8 (FramebufferTextureLayer)
+        // An INVALID_OPERATION error is generated if texture is non-zero and is not the name of a
+        // three-dimensional or two-dimensional array texture.
+        if (tex == nullptr)
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureName);
+            return false;
+        }
+
+        if (!ValidMipLevel(context, tex->getType(), level))
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidMipLevel);
+            return false;
+        }
+    }
+
+    if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl
