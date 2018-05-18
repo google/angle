@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86e650d9_df57afd9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-18T18:39:25Z",
+      "side": 1,
+      "message": "nit:use std::max",
+      "range": {
+        "startLine": 362,
+        "startChar": 29,
+        "endLine": 364,
+        "endChar": 75
+      },
+      "revId": "b5d51805414fd4b478d0b5a763edd2ce110b8405",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
