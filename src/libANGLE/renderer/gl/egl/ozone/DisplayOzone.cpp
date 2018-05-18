@@ -459,7 +459,7 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
     // with a .1 suffix) while Angle only installs libEGL.so.
     FunctionsEGLDL *egl = new FunctionsEGLDL();
     mEGL = egl;
-    ANGLE_TRY(egl->initialize(display->getNativeDisplayId(), "libEGL.so.1"));
+    ANGLE_TRY(egl->initialize(display->getNativeDisplayId(), "libEGL.so.1", nullptr));
 
     const char *necessaryExtensions[] = {
         "EGL_KHR_image_base", "EGL_EXT_image_dma_buf_import", "EGL_KHR_surfaceless_context",

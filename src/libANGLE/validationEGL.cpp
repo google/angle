@@ -304,6 +304,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
         Optional<EGLAttrib> majorVersion;
         Optional<EGLAttrib> minorVersion;
         Optional<EGLAttrib> deviceType;
+        Optional<EGLAttrib> eglHandle;
 
         for (const auto &curAttrib : attribMap)
         {
@@ -400,6 +401,13 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                     }
                     break;
 
+                case EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE:
+                    if (value != EGL_DONT_CARE)
+                    {
+                        eglHandle = value;
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -459,6 +467,13 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                 return EglBadAttribute() << "EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE currently "
                                             "only supports Vulkan 1.0.";
             }
+        }
+
+        if (eglHandle.valid() && platformType != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE &&
+            platformType != EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE)
+        {
+            return EglBadAttribute() << "EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE requires a "
+                                        "device type of EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE.";
         }
     }
     else if (platform == EGL_PLATFORM_DEVICE_EXT)

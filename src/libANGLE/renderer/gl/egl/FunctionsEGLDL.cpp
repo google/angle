@@ -32,8 +32,18 @@ FunctionsEGLDL::~FunctionsEGLDL()
 {
 }
 
-egl::Error FunctionsEGLDL::initialize(EGLNativeDisplayType nativeDisplay, const char *libName)
+egl::Error FunctionsEGLDL::initialize(EGLNativeDisplayType nativeDisplay,
+                                      const char *libName,
+                                      void *eglHandle)
 {
+
+    if (eglHandle)
+    {
+        // If the handle is provided, use it.
+        // Caller has already dlopened the vendor library.
+        nativeEGLHandle = eglHandle;
+    }
+
     if (!nativeEGLHandle)
     {
         nativeEGLHandle = dlopen(libName, RTLD_NOW);

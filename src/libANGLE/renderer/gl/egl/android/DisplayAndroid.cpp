@@ -11,11 +11,11 @@
 #include "common/debug.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
-#include "libANGLE/renderer/gl/renderergl_utils.h"
-#include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
 #include "libANGLE/renderer/gl/egl/FunctionsEGLDL.h"
 #include "libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h"
 #include "libANGLE/renderer/gl/egl/WindowSurfaceEGL.h"
+#include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace
 {
@@ -45,7 +45,9 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
 {
     FunctionsEGLDL *egl = new FunctionsEGLDL();
     mEGL = egl;
-    ANGLE_TRY(egl->initialize(display->getNativeDisplayId(), GetEGLPath()));
+    void *eglHandle     = reinterpret_cast<void *>(display->getAttributeMap().get(
+        EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE, 0));
+    ANGLE_TRY(egl->initialize(display->getNativeDisplayId(), GetEGLPath(), eglHandle));
 
     gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
     ASSERT(eglVersion >= gl::Version(1, 4));

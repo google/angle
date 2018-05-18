@@ -10,6 +10,7 @@ Contributors
 
     Shannon Woods, Google
     Geoff Lang, Google
+    Courtney Goeltzenleuchter, Google
 
 Contacts
 
@@ -21,7 +22,7 @@ Status
 
 Version
 
-    Version 3, 2014-11-26
+    Version 4, 2018-05-17
 
 Number
 
@@ -37,7 +38,9 @@ Dependencies
 
 Overview
 
-    This extension enables selection of OpenGL display types.
+    This extension enables selection of OpenGL display types and,
+    for OpenGL ES display types, allows the application to pass
+    in a handle to the EGL library to use.
 
 New Types
 
@@ -54,6 +57,10 @@ New Tokens
         EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE               0x320D
         EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE             0x320E
 
+    Accepted as an attribute name in the <attrib_list> argument of
+    eglGetPlatformDisplayEXT:
+        EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE                0x3480
+
 Additions to the EGL Specification
 
     None.
@@ -69,6 +76,13 @@ New Behavior
     API, EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE and
     EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE can be used.
 
+    To pass in a handle to the system EGL library, use the attribute
+    EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE. If EGL_PLATFORM_ANGLE_TYPE_ANGLE
+    is not equal to EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, an
+    EGL_BAD_ATTRIBUTE is generated. If the handle provided with
+    EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE is not a valid EGL handle,
+    behaviour is undefined.
+
 Issues
 
     None
@@ -82,3 +96,5 @@ Revision History
         EGL_ANGLE_platform_angle spec to EGL_ANGLE_platform_angle_opengl.
     Version 3, 2014-11-26 (Geoff Lang)
       - Updated enum values.
+    Version 4, 2018-05-17 (Courtney Goeltzenleuchter)
+      - Add attribute for specifying underlying EGL library.
