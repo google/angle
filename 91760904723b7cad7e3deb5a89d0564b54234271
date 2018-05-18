@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f735f24_184d288d",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-18T20:30:05Z",
+      "side": 1,
+      "message": "nit: I don\u0027t like extra nesting, could you just reuse \"error\" in the block below?",
+      "range": {
+        "startLine": 466,
+        "startChar": 4,
+        "endLine": 466,
+        "endChar": 5
+      },
+      "revId": "91760904723b7cad7e3deb5a89d0564b54234271",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
