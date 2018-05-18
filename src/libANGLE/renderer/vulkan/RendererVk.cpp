@@ -820,9 +820,9 @@ vk::Error RendererVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
                                                  renderPassOut);
 }
 
-vk::CommandGraphNode *RendererVk::allocateCommandNode()
+vk::CommandGraph *RendererVk::getCommandGraph()
 {
-    return mCommandGraph.allocateNode();
+    return &mCommandGraph;
 }
 
 vk::Error RendererVk::flushCommandGraph(const gl::Context *context, vk::CommandBuffer *commandBatch)

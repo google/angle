@@ -129,7 +129,7 @@ class RendererVk : angle::NonCopyable
 
     // This should only be called from ResourceVk.
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
-    vk::CommandGraphNode *allocateCommandNode();
+    vk::CommandGraph *getCommandGraph();
 
     const vk::PipelineLayout &getGraphicsPipelineLayout() const;
     const std::vector<vk::DescriptorSetLayout> &getGraphicsDescriptorSetLayouts() const;

@@ -390,7 +390,7 @@ gl::Error FramebufferVk::syncState(const gl::Context *context,
     renderer->releaseResource(*this, &mFramebuffer);
 
     // Will freeze the current set of dependencies on this FBO. The next time we render we will
-    // create a new vk::CommandGraphNode.
+    // create a new entry in the command graph.
     onResourceChanged(renderer);
 
     contextVk->invalidateCurrentPipeline();

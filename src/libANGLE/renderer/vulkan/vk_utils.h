@@ -82,7 +82,6 @@ enum class TextureDimension
 
 namespace vk
 {
-class CommandGraphNode;
 struct Format;
 
 template <typename T>

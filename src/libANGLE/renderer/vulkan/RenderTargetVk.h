@@ -20,7 +20,6 @@ namespace rx
 namespace vk
 {
 class CommandBuffer;
-class CommandGraphNode;
 class CommandGraphResource;
 struct Format;
 class ImageHelper;
