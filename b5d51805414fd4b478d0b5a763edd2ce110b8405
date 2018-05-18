@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "f1ddc11c_57e79c67",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T18:45:18Z",
+      "side": 1,
+      "message": "how about instead of passing the nonCoherentAtomSize around we just pass around the limits, or physical device properties? this is a bit more general. even passing the RendererVk itself seems reasonable.",
+      "range": {
+        "startLine": 679,
+        "startChar": 25,
+        "endLine": 679,
+        "endChar": 96
+      },
+      "revId": "b5d51805414fd4b478d0b5a763edd2ce110b8405",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "571f9ae0_8c1b10c2",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T18:45:18Z",
+      "side": 1,
+      "message": "prefer moving init in headers to the cpp",
+      "range": {
+        "startLine": 129,
+        "startChar": 27,
+        "endLine": 129,
+        "endChar": 33
+      },
+      "revId": "b5d51805414fd4b478d0b5a763edd2ce110b8405",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "86e650d9_df57afd9",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 7
