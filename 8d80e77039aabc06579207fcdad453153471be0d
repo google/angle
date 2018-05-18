@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de868f6c_e837fac8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T19:00:20Z",
+      "side": 1,
+      "message": "maybe a quick one-liner explaining the method of the change would be useful for posterity.",
+      "revId": "8d80e77039aabc06579207fcdad453153471be0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0f3b6e9_43dbb6d0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T19:00:20Z",
+      "side": 1,
+      "message": "nit: can you just use mRenderer here?",
+      "range": {
+        "startLine": 678,
+        "startChar": 32,
+        "endLine": 678,
+        "endChar": 45
+      },
+      "revId": "8d80e77039aabc06579207fcdad453153471be0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "007b71a7_4fa35d9a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T19:00:20Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 693,
+        "startChar": 36,
+        "endLine": 693,
+        "endChar": 49
+      },
+      "revId": "8d80e77039aabc06579207fcdad453153471be0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ce2fd7f_80559995",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T19:00:20Z",
+      "side": 1,
+      "message": "how about we refactor init to take two parameters, minAlignment and the Renderer, and we do the computation inside there? There\u0027s some world in which a user forgets to check the limits when initting a new DynamicBuffer. This would force it.",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 95
+      },
+      "revId": "8d80e77039aabc06579207fcdad453153471be0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
