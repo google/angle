@@ -93,6 +93,30 @@
       "revId": "922bcb1c30c6910ca99816d499aef9cb3b1bda31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc69b26f_09055fd1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-18T18:46:16Z",
+      "side": 1,
+      "message": "I think we can leave the getNativeCaps in RendererD3D but change the ContextImpl interface to pass a GL version.\n\nContext11 can then call mRenderer-\u003egetNativeCaps, modify them and return them.",
+      "parentUuid": "c7c30000_cc4ec463",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 0
+      },
+      "revId": "922bcb1c30c6910ca99816d499aef9cb3b1bda31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
