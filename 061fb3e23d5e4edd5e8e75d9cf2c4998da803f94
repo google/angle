@@ -22,6 +22,30 @@
       "revId": "061fb3e23d5e4edd5e8e75d9cf2c4998da803f94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd9c544e_0c22b90a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-18T19:02:57Z",
+      "side": 1,
+      "message": "This actually tracks the last allocation offset and we keep 2 more variables to track where\u0027s the last place we invalidated and where\u0027s the last place we\u0027ve flushed. This looks correct to me.",
+      "parentUuid": "11c4cac9_31b479f4",
+      "range": {
+        "startLine": 221,
+        "startChar": 23,
+        "endLine": 221,
+        "endChar": 39
+      },
+      "revId": "061fb3e23d5e4edd5e8e75d9cf2c4998da803f94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
