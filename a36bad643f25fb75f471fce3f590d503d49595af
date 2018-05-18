@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "aa6bec53_05fa969f",
+        "filename": "include/GLES/glext_angle.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-18T16:12:11Z",
+      "side": 1,
+      "message": "Sounds good to me, but unsure about this part: \n\"The extensions could query some state on the Context that would return GL_TRUE/GL_FALSE if the explicit EPs are supported. (in ANGLE probably always true)\"\n\nWhat did you have in mind here? The client would be able to use glGetString to query the subextensions. Do you think there should be more than that?\n\nAlso, any preferences on naming for the GLES2+ subextension? Is GL_ANGLE_EXPLICIT_CONTEXT_GLES2_PLUS fine?",
+      "parentUuid": "cfce56c2_6c5533e8",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 45
+      },
+      "revId": "a36bad643f25fb75f471fce3f590d503d49595af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2259d7d4_b4a41b3a",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 18
