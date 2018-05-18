@@ -206,8 +206,8 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromRenderTarget(const gl::Context 
         ANGLE_TRY(context->getScratchBuffer(bufferSize, &memoryBuffer));
 
         // Read into the scratch buffer
-        ANGLE_TRY(ReadPixelsFromRenderTarget(context, sourceArea, params, renderTarget,
-                                             commandBuffer, memoryBuffer->data()));
+        ANGLE_TRY(ReadPixelsFromRenderTarget(context, sourceArea, params, mStagingBuffer,
+                                             renderTarget, commandBuffer, memoryBuffer->data()));
 
         // Load from scratch buffer to our pixel buffer
         loadFunction.loadFunction(sourceArea.width, sourceArea.height, 1, memoryBuffer->data(),
@@ -216,8 +216,8 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromRenderTarget(const gl::Context 
     else
     {
         // We read directly from the framebuffer into our pixel buffer.
-        ANGLE_TRY(ReadPixelsFromRenderTarget(context, sourceArea, params, renderTarget,
-                                             commandBuffer, stagingPointer));
+        ANGLE_TRY(ReadPixelsFromRenderTarget(context, sourceArea, params, mStagingBuffer,
+                                             renderTarget, commandBuffer, stagingPointer));
     }
 
     // 3- enqueue the destination image subresource update

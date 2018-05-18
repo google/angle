@@ -52,6 +52,9 @@ class DynamicBuffer : angle::NonCopyable
     // After a sequence of writes, call flush to ensure the data is visible to the device.
     Error flush(VkDevice device);
 
+    // After a sequence of writes, call invalidate to ensure the data is visible to the host.
+    Error invalidate(VkDevice device);
+
     // This releases resources when they might currently be in use.
     void release(RendererVk *renderer);
 
@@ -73,6 +76,7 @@ class DynamicBuffer : angle::NonCopyable
     DeviceMemory mMemory;
     uint32_t mNextWriteOffset;
     uint32_t mLastFlushOffset;
+    uint32_t mLastInvalidatedOffset;
     size_t mSize;
     size_t mAlignment;
     uint8_t *mMappedMemory;

@@ -99,6 +99,7 @@ DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize)
       mMinSize(minSize),
       mNextWriteOffset(0),
       mLastFlushOffset(0),
+      mLastInvalidatedOffset(0),
       mSize(0),
       mAlignment(0),
       mMappedMemory(nullptr)
@@ -167,6 +168,7 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
         ANGLE_TRY(mMemory.map(device, 0, mSize, 0, &mMappedMemory));
         mNextWriteOffset = 0;
         mLastFlushOffset = 0;
+        mLastInvalidatedOffset = 0;
 
         if (newBufferAllocatedOut != nullptr)
         {
@@ -205,6 +207,23 @@ Error DynamicBuffer::flush(VkDevice device)
         ANGLE_VK_TRY(vkFlushMappedMemoryRanges(device, 1, &range));
 
         mLastFlushOffset = mNextWriteOffset;
+    }
+    return NoError();
+}
+
+Error DynamicBuffer::invalidate(VkDevice device)
+{
+    if (mNextWriteOffset > mLastInvalidatedOffset)
+    {
+        VkMappedMemoryRange range;
+        range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        range.pNext  = nullptr;
+        range.memory = mMemory.getHandle();
+        range.offset = mLastInvalidatedOffset;
+        range.size   = mNextWriteOffset - mLastInvalidatedOffset;
+        ANGLE_VK_TRY(vkInvalidateMappedMemoryRanges(device, 1, &range));
+
+        mLastInvalidatedOffset = mNextWriteOffset;
     }
     return NoError();
 }
