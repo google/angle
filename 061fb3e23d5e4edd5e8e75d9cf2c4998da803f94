@@ -46,6 +46,30 @@
       "revId": "061fb3e23d5e4edd5e8e75d9cf2c4998da803f94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4858c0d5_0c705b72",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T19:05:41Z",
+      "side": 1,
+      "message": "Good catch. We should rename mNextWriteOffset to something that\u0027s like mNextAllocationOffset. Also this fix doesn\u0027t fix reading and writing to the same DynamicBuffer. This isn\u0027t something we need right now. It\u0027s not clear if we\u0027ll ever need it. So how about we store an enum (or bitfield) of access types (Read/Write) in init and then we ASSERT we only call invalidate on Read and flush on Write. Something like enum DynamicBufferUsage.",
+      "parentUuid": "11c4cac9_31b479f4",
+      "range": {
+        "startLine": 221,
+        "startChar": 23,
+        "endLine": 221,
+        "endChar": 39
+      },
+      "revId": "061fb3e23d5e4edd5e8e75d9cf2c4998da803f94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
