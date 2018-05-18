@@ -22,6 +22,30 @@
       "revId": "2a927ac3bd2c569672d39a975fd5b3ad68854609",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f16ebbce_24321ab2",
+        "filename": "include/GLES/glext_explicit_context_autogen.inc",
+        "patchSetId": 20
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-05-18T21:44:58Z",
+      "side": 1,
+      "message": "This is the end of GL_GLEXT_PROTOTYPES. ifdef\u0027d on L135. The glext.h extensions didn\u0027t close with a comment, so I followed the style here.",
+      "parentUuid": "34c0c90f_25de2233",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 260,
+        "endChar": 6
+      },
+      "revId": "2a927ac3bd2c569672d39a975fd5b3ad68854609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
