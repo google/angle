@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cfce56c2_6c5533e8",
+        "filename": "include/GLES/glext_angle.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T14:41:39Z",
+      "side": 1,
+      "message": "How about we define a different guard for the GLES 1.0 extensions and GLES 2+ extension? Define two sub extensions for the GLES 1.x and 2+ specs, in addition to your EGL extension. This would clean up the include guard problem, and would make a matching GL extension set for the EGL extension, which is standard practice. The extensions could query some state on the Context that would return GL_TRUE/GL_FALSE if the explicit EPs are supported. (in ANGLE probably always true)",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 45
+      },
+      "revId": "a36bad643f25fb75f471fce3f590d503d49595af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2259d7d4_b4a41b3a",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T14:41:39Z",
+      "side": 1,
+      "message": "same nit as below",
+      "range": {
+        "startLine": 585,
+        "startChar": 6,
+        "endLine": 585,
+        "endChar": 22
+      },
+      "revId": "a36bad643f25fb75f471fce3f590d503d49595af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37c545f2_cc00c1ce",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T14:41:39Z",
+      "side": 1,
+      "message": "nit: spacing. also you can omit the ()",
+      "range": {
+        "startLine": 768,
+        "startChar": 4,
+        "endLine": 768,
+        "endChar": 6
+      },
+      "revId": "a36bad643f25fb75f471fce3f590d503d49595af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fd30893_1eb4dc04",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T14:41:39Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 802,
+        "startChar": 0,
+        "endLine": 802,
+        "endChar": 39
+      },
+      "revId": "a36bad643f25fb75f471fce3f590d503d49595af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90f3488c_3c5dcd63",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 1449,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-18T14:41:39Z",
+      "side": 1,
+      "message": "I think you can remove this.",
+      "range": {
+        "startLine": 1449,
+        "startChar": 3,
+        "endLine": 1449,
+        "endChar": 59
+      },
+      "revId": "a36bad643f25fb75f471fce3f590d503d49595af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
