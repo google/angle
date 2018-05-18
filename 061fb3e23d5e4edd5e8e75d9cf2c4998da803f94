@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11c4cac9_31b479f4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-18T18:11:15Z",
+      "side": 1,
+      "message": "I don\u0027t read through this code, but I\u0027m a bit suspicious about this name, as it\u0027s also used in flush. I\u0027d think we need to distinguish between GPU writes and CPU writes somehow.",
+      "range": {
+        "startLine": 221,
+        "startChar": 23,
+        "endLine": 221,
+        "endChar": 39
+      },
+      "revId": "061fb3e23d5e4edd5e8e75d9cf2c4998da803f94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
