@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "d0ba1133_9713c9c6",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-18T18:07:43Z",
+      "side": 1,
+      "message": "Can you refactor these into queryutils.h with simple getters/setters for the LightParameters objects in GLES1State?  Same for the MaterialState.  We\u0027re trying to separate these objects a bit more from the GL API with it\u0027s giant enum switches.",
+      "range": {
+        "startLine": 328,
+        "startChar": 17,
+        "endLine": 328,
+        "endChar": 35
+      },
+      "revId": "241a2a0b456efaf270890073b88277451f68af76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "879471a5_6baf3b2a",
         "filename": "src/libANGLE/GLES1State.cpp",
         "patchSetId": 1
