@@ -78,11 +78,10 @@ config("internal_config") {
     "EGL_EGLEXT_PROTOTYPES",
   ]
 
-  if (current_cpu == "x86" || current_cpu == "arm") {
-    defines += [ "ANGLE_IS_32_BIT_CPU" ]
-  }
-  if (current_cpu == "x64" || current_cpu == "arm64") {
+  if (angle_64bit_current_cpu) {
     defines += [ "ANGLE_IS_64_BIT_CPU" ]
+  } else {
+    defines += [ "ANGLE_IS_32_BIT_CPU" ]
   }
 }
 
@@ -531,10 +530,12 @@ static_library("libANGLE") {
       sources += rebase_path(gles_gypi.libangle_gl_egl_dl_sources, ".", "src")
       sources +=
           rebase_path(gles_gypi.libangle_gl_egl_android_sources, ".", "src")
-      libs += [
-        "android",
-        "log",
-      ]
+      if (ndk_supports_nativewindow) {
+        libs += [ "nativewindow" ]
+      } else {
+        libs += [ "android" ]
+      }
+      libs += [ "log" ]
     }
     if (ozone_platform_gbm) {
       configs += [ ":libdrm" ]
@@ -840,9 +841,10 @@ foreach(is_shared_library,
       sources += rebase_path(util_gypi.util_win32_sources, ".", "util")
     }
 
+    libs = []
     if (is_linux) {
       sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
-      libs = [
+      libs += [
         "rt",
         "dl",
       ]
@@ -850,7 +852,7 @@ foreach(is_shared_library,
 
     if (is_mac) {
       sources += rebase_path(util_gypi.util_osx_sources, ".", "util")
-      libs = [
+      libs += [
         "AppKit.framework",
         "QuartzCore.framework",
       ]
@@ -869,10 +871,12 @@ foreach(is_shared_library,
       set_sources_assignment_filter([])
       sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
       sources += rebase_path(util_gypi.util_android_sources, ".", "util")
-      libs = [
-        "android",
-        "log",
-      ]
+      if (ndk_supports_nativewindow) {
+        libs += [ "nativewindow" ]
+      } else {
+        libs += [ "android" ]
+      }
+      libs += [ "log" ]
     }
 
     if (use_ozone) {
@@ -932,9 +936,9 @@ if (is_android) {
   android_apk("angle_apk") {
     if (build_apk_secondary_abi && android_64bit_target_cpu) {
       secondary_abi_shared_libraries = [
-        "//third_party/angle:libGLESv2${angle_libs_suffix}($android_secondary_abi_toolchain)",
         "//third_party/angle:libEGL${angle_libs_suffix}($android_secondary_abi_toolchain)",
         "//third_party/angle:libGLESv1_CM${angle_libs_suffix}($android_secondary_abi_toolchain)",
+        "//third_party/angle:libGLESv2${angle_libs_suffix}($android_secondary_abi_toolchain)",
       ]
     }
 
@@ -947,9 +951,9 @@ if (is_android) {
     apk_name = "AngleLibraries"
     uncompress_shared_libraries = true
     shared_libraries = [
-      "//third_party/angle:libGLESv2${angle_libs_suffix}",
       "//third_party/angle:libEGL${angle_libs_suffix}",
       "//third_party/angle:libGLESv1_CM${angle_libs_suffix}",
+      "//third_party/angle:libGLESv2${angle_libs_suffix}",
     ]
   }
 }

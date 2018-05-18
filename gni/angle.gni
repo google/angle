@@ -25,12 +25,28 @@ if (build_with_chromium) {
 data_dir = "angledata"
 
 declare_args() {
+  if (current_cpu == "arm64" || current_cpu == "x64" ||
+      current_cpu == "mips64el") {
+    angle_64bit_current_cpu = true
+  } else if (current_cpu == "arm" || current_cpu == "x86" ||
+             current_cpu == "mipsel") {
+    angle_64bit_current_cpu = false
+  } else {
+    assert(false, "Unknown current CPU: $current_cpu")
+  }
+}
+
+declare_args() {
   if (!is_android) {
     ndk_supports_vulkan = false
+    ndk_supports_nativewindow = false
   } else {
     ndk_supports_vulkan =
-        (current_cpu == "arm" && android32_ndk_api_level >= 24) ||
-        (current_cpu == "arm64" && android64_ndk_api_level >= 24)
+        (!angle_64bit_current_cpu && android32_ndk_api_level >= 24) ||
+        (angle_64bit_current_cpu && android64_ndk_api_level >= 24)
+    ndk_supports_nativewindow =
+        (!angle_64bit_current_cpu && android32_ndk_api_level >= 26) ||
+        (angle_64bit_current_cpu && android64_ndk_api_level >= 26)
   }
   angle_shared_libvulkan = false
   angle_libs_suffix = ""
