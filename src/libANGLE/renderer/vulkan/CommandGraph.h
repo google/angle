@@ -73,10 +73,6 @@ class CommandGraphResource
     // Sets up dependency relations. 'this' resource is the resource being read.
     void addReadDependency(CommandGraphResource *readingResource);
 
-    // Returns false if the resource is not in use, and clears any current read/write nodes.
-    // TODO(jmadill): Remove this. http://anglebug.com/2539
-    bool checkResourceInUseAndRefreshDeps(RendererVk *renderer);
-
   private:
     void onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial);
 

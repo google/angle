@@ -278,23 +278,7 @@ void CommandGraphResource::addReadDependency(CommandGraphResource *readingResour
     mCurrentReadingNodes.push_back(readingNode);
 }
 
-bool CommandGraphResource::checkResourceInUseAndRefreshDeps(RendererVk *renderer)
-{
-    if (!renderer->isResourceInUse(*this) ||
-        (renderer->getCurrentQueueSerial() > mStoredQueueSerial))
-    {
-        mCurrentReadingNodes.clear();
-        mCurrentWritingNode = nullptr;
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
 // CommandGraphNode implementation.
-
 CommandGraphNode::CommandGraphNode()
     : mRenderPassClearValues{}, mHasChildren(false), mVisitedState(VisitedState::Unvisited)
 {
