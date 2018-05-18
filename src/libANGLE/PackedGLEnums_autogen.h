@@ -144,6 +144,28 @@ template <>
 HintSetting FromGLenum<HintSetting>(GLenum from);
 GLenum ToGLenum(HintSetting from);
 
+enum class LightParameter : uint8_t
+{
+    Ambient              = 0,
+    AmbientAndDiffuse    = 1,
+    ConstantAttenuation  = 2,
+    Diffuse              = 3,
+    LinearAttenuation    = 4,
+    Position             = 5,
+    QuadraticAttenuation = 6,
+    Specular             = 7,
+    SpotCutoff           = 8,
+    SpotDirection        = 9,
+    SpotExponent         = 10,
+
+    InvalidEnum = 11,
+    EnumCount   = 11,
+};
+
+template <>
+LightParameter FromGLenum<LightParameter>(GLenum from);
+GLenum ToGLenum(LightParameter from);
+
 enum class LogicalOperation : uint8_t
 {
     And          = 0,
@@ -170,6 +192,23 @@ enum class LogicalOperation : uint8_t
 template <>
 LogicalOperation FromGLenum<LogicalOperation>(GLenum from);
 GLenum ToGLenum(LogicalOperation from);
+
+enum class MaterialParameter : uint8_t
+{
+    Ambient           = 0,
+    AmbientAndDiffuse = 1,
+    Diffuse           = 2,
+    Emission          = 3,
+    Shininess         = 4,
+    Specular          = 5,
+
+    InvalidEnum = 6,
+    EnumCount   = 6,
+};
+
+template <>
+MaterialParameter FromGLenum<MaterialParameter>(GLenum from);
+GLenum ToGLenum(MaterialParameter from);
 
 enum class MatrixType : uint8_t
 {

@@ -328,6 +328,70 @@ GLenum ToGLenum(HintSetting from)
 }
 
 template <>
+LightParameter FromGLenum<LightParameter>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_AMBIENT:
+            return LightParameter::Ambient;
+        case GL_AMBIENT_AND_DIFFUSE:
+            return LightParameter::AmbientAndDiffuse;
+        case GL_CONSTANT_ATTENUATION:
+            return LightParameter::ConstantAttenuation;
+        case GL_DIFFUSE:
+            return LightParameter::Diffuse;
+        case GL_LINEAR_ATTENUATION:
+            return LightParameter::LinearAttenuation;
+        case GL_POSITION:
+            return LightParameter::Position;
+        case GL_QUADRATIC_ATTENUATION:
+            return LightParameter::QuadraticAttenuation;
+        case GL_SPECULAR:
+            return LightParameter::Specular;
+        case GL_SPOT_CUTOFF:
+            return LightParameter::SpotCutoff;
+        case GL_SPOT_DIRECTION:
+            return LightParameter::SpotDirection;
+        case GL_SPOT_EXPONENT:
+            return LightParameter::SpotExponent;
+        default:
+            return LightParameter::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(LightParameter from)
+{
+    switch (from)
+    {
+        case LightParameter::Ambient:
+            return GL_AMBIENT;
+        case LightParameter::AmbientAndDiffuse:
+            return GL_AMBIENT_AND_DIFFUSE;
+        case LightParameter::ConstantAttenuation:
+            return GL_CONSTANT_ATTENUATION;
+        case LightParameter::Diffuse:
+            return GL_DIFFUSE;
+        case LightParameter::LinearAttenuation:
+            return GL_LINEAR_ATTENUATION;
+        case LightParameter::Position:
+            return GL_POSITION;
+        case LightParameter::QuadraticAttenuation:
+            return GL_QUADRATIC_ATTENUATION;
+        case LightParameter::Specular:
+            return GL_SPECULAR;
+        case LightParameter::SpotCutoff:
+            return GL_SPOT_CUTOFF;
+        case LightParameter::SpotDirection:
+            return GL_SPOT_DIRECTION;
+        case LightParameter::SpotExponent:
+            return GL_SPOT_EXPONENT;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
 LogicalOperation FromGLenum<LogicalOperation>(GLenum from)
 {
     switch (from)
@@ -405,6 +469,50 @@ GLenum ToGLenum(LogicalOperation from)
             return GL_SET;
         case LogicalOperation::Xor:
             return GL_XOR;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
+MaterialParameter FromGLenum<MaterialParameter>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_AMBIENT:
+            return MaterialParameter::Ambient;
+        case GL_AMBIENT_AND_DIFFUSE:
+            return MaterialParameter::AmbientAndDiffuse;
+        case GL_DIFFUSE:
+            return MaterialParameter::Diffuse;
+        case GL_EMISSION:
+            return MaterialParameter::Emission;
+        case GL_SHININESS:
+            return MaterialParameter::Shininess;
+        case GL_SPECULAR:
+            return MaterialParameter::Specular;
+        default:
+            return MaterialParameter::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(MaterialParameter from)
+{
+    switch (from)
+    {
+        case MaterialParameter::Ambient:
+            return GL_AMBIENT;
+        case MaterialParameter::AmbientAndDiffuse:
+            return GL_AMBIENT_AND_DIFFUSE;
+        case MaterialParameter::Diffuse:
+            return GL_DIFFUSE;
+        case MaterialParameter::Emission:
+            return GL_EMISSION;
+        case MaterialParameter::Shininess:
+            return GL_SHININESS;
+        case MaterialParameter::Specular:
+            return GL_SPECULAR;
         default:
             UNREACHABLE();
             return 0;

@@ -176,5 +176,28 @@
         "Color" : "GL_COLOR_ARRAY",
         "PointSize" : "GL_POINT_SIZE_ARRAY_OES",
         "TextureCoord" : "GL_TEXTURE_COORD_ARRAY"
+    },
+    "MaterialParameter":
+    {
+        "Ambient" : "GL_AMBIENT",
+        "Diffuse" : "GL_DIFFUSE",
+        "AmbientAndDiffuse" : "GL_AMBIENT_AND_DIFFUSE",
+        "Specular" : "GL_SPECULAR",
+        "Emission" : "GL_EMISSION",
+        "Shininess" : "GL_SHININESS"
+    },
+    "LightParameter":
+    {
+        "Ambient" : "GL_AMBIENT",
+        "Diffuse" : "GL_DIFFUSE",
+        "AmbientAndDiffuse" : "GL_AMBIENT_AND_DIFFUSE",
+        "Specular" : "GL_SPECULAR",
+        "Position" : "GL_POSITION",
+        "SpotDirection" : "GL_SPOT_DIRECTION",
+        "SpotExponent" : "GL_SPOT_EXPONENT",
+        "SpotCutoff" : "GL_SPOT_CUTOFF",
+        "ConstantAttenuation" : "GL_CONSTANT_ATTENUATION",
+        "LinearAttenuation" : "GL_LINEAR_ATTENUATION",
+        "QuadraticAttenuation" : "GL_QUADRATIC_ATTENUATION"
     }
 }
