@@ -153,7 +153,7 @@ gl::Error FramebufferNULL::readPixels(const gl::Context *context,
         rowBytes);
 
     GLuint skipBytes = 0;
-    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, 0, packState, false), skipBytes);
+    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(type, rowBytes, 0, packState, false), skipBytes);
     pixels += skipBytes;
 
     // Skip OOB region up to first in bounds pixel

@@ -264,7 +264,7 @@ gl::Error FramebufferD3D::readPixels(const gl::Context *context,
                                                      packState.rowLength),
                      outputPitch);
     GLuint outputSkipBytes = 0;
-    ANGLE_TRY_RESULT(sizedFormatInfo.computeSkipBytes(outputPitch, 0, packState, false),
+    ANGLE_TRY_RESULT(sizedFormatInfo.computeSkipBytes(type, outputPitch, 0, packState, false),
                      outputSkipBytes);
     outputSkipBytes +=
         (area.x - origArea.x) * sizedFormatInfo.pixelBytes + (area.y - origArea.y) * outputPitch;

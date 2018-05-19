@@ -71,7 +71,8 @@ struct InternalFormat
 
     ErrorOrResult<GLuint> computeCompressedImageSize(const Extents &size) const;
 
-    ErrorOrResult<GLuint> computeSkipBytes(GLuint rowPitch,
+    ErrorOrResult<GLuint> computeSkipBytes(GLenum formatType,
+                                           GLuint rowPitch,
                                            GLuint depthPitch,
                                            const PixelStoreStateBase &state,
                                            bool is3D) const;
