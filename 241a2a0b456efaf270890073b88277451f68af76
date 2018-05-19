@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e6f3bad6_50888039",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-19T00:17:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7205c96c_c36399ad",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 57
+      },
+      "revId": "241a2a0b456efaf270890073b88277451f68af76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0ba1133_9713c9c6",
         "filename": "src/libANGLE/GLES1State.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-05-18T18:07:43Z",
       "side": 1,
       "message": "Can you refactor these into queryutils.h with simple getters/setters for the LightParameters objects in GLES1State?  Same for the MaterialState.  We\u0027re trying to separate these objects a bit more from the GL API with it\u0027s giant enum switches.",
+      "range": {
+        "startLine": 328,
+        "startChar": 17,
+        "endLine": 328,
+        "endChar": 35
+      },
+      "revId": "241a2a0b456efaf270890073b88277451f68af76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82487a31_764f503e",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-19T00:17:57Z",
+      "side": 1,
+      "message": "Ack; future patch set. Will fold this CL into the entry points and add end2end tests as well.",
+      "parentUuid": "d0ba1133_9713c9c6",
       "range": {
         "startLine": 328,
         "startChar": 17,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "3e2438fe_99f0a1a3",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-19T00:17:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "879471a5_6baf3b2a",
+      "range": {
+        "startLine": 334,
+        "startChar": 4,
+        "endLine": 334,
+        "endChar": 9
+      },
+      "revId": "241a2a0b456efaf270890073b88277451f68af76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dda91f93_f901f22d",
         "filename": "src/libANGLE/GLES1State.cpp",
         "patchSetId": 1
@@ -82,6 +154,24 @@
       "writtenOn": "2018-05-18T15:04:02Z",
       "side": 1,
       "message": "Instead of memcpys, maybe we could have static Color Color::FromData(const float*)?\n\nSame thing for void Color::WriteTo(float*) or something similar?",
+      "revId": "241a2a0b456efaf270890073b88277451f68af76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90295e83_d103732e",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-19T00:17:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dda91f93_f901f22d",
       "revId": "241a2a0b456efaf270890073b88277451f68af76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
