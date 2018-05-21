@@ -22,6 +22,30 @@
       "revId": "d35e300849ea6e8c815fee0ca4f9bf2b28746644",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "176d8954_eba1151a",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-21T15:42:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f63764db_c2b804f4",
+      "range": {
+        "startLine": 81,
+        "startChar": 60,
+        "endLine": 82,
+        "endChar": 35
+      },
+      "revId": "d35e300849ea6e8c815fee0ca4f9bf2b28746644",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
