@@ -16,6 +16,24 @@
       "revId": "de1efbff7decbe0eef8ddc020501dd501f13abe5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebe0317a_f4cf9d27",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-21T00:43:12Z",
+      "side": 1,
+      "message": "Not yet. The geometry shader layered rendering is expected to work after the implementation of FramebufferTextureEXT, which will be added in the next patch.",
+      "parentUuid": "3b90c25d_1d2676b0",
+      "revId": "de1efbff7decbe0eef8ddc020501dd501f13abe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
