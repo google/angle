@@ -405,6 +405,11 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                       VkDeviceSize dstOffset,
                       VkDeviceSize dataSize,
                       const void *data);
+    void pushConstants(const PipelineLayout &layout,
+                       VkShaderStageFlags flag,
+                       uint32_t offset,
+                       uint32_t size,
+                       const void *data);
 };
 
 class Image final : public WrappedObject<Image, VkImage>

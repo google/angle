@@ -596,6 +596,16 @@ void CommandBuffer::updateBuffer(const vk::Buffer &buffer,
     vkCmdUpdateBuffer(mHandle, buffer.getHandle(), dstOffset, dataSize, data);
 }
 
+void CommandBuffer::pushConstants(const PipelineLayout &layout,
+                                  VkShaderStageFlags flag,
+                                  uint32_t offset,
+                                  uint32_t size,
+                                  const void *data)
+{
+    ASSERT(valid() && layout.valid());
+    vkCmdPushConstants(mHandle, layout.getHandle(), flag, offset, size, data);
+}
+
 // Image implementation.
 Image::Image()
 {

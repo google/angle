@@ -23,7 +23,7 @@ namespace vk
 enum class InternalShaderID
 {
     FullScreenQuad_vert,
-    UniformColor_frag,
+    PushConstantColor_frag,
     EnumCount
 };
 

@@ -116,10 +116,6 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     VkColorComponentFlags mActiveColorComponents;
     gl::DrawBufferMask mActiveColorComponentMasks[4];
 
-    // For use in masked clear.
-    vk::BufferAndMemory mMaskedClearUniformBuffer;
-    VkDescriptorSet mMaskedClearDescriptorSet;
-
     vk::DynamicBuffer mReadPixelsBuffer;
 };
 

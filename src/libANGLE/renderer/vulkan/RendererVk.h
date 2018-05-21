@@ -135,8 +135,7 @@ class RendererVk : angle::NonCopyable
     const std::vector<vk::DescriptorSetLayout> &getGraphicsDescriptorSetLayouts() const;
 
     // Used in internal shaders.
-    vk::Error getInternalUniformPipelineLayout(const vk::PipelineLayout **pipelineLayoutOut);
-    const vk::DescriptorSetLayout &getInternalUniformDescriptorSetLayout() const;
+    vk::Error getInternalPushConstantPipelineLayout(const vk::PipelineLayout **pipelineLayoutOut);
 
     // Issues a new serial for linked shader modules. Used in the pipeline cache.
     Serial issueShaderSerial();
@@ -203,7 +202,7 @@ class RendererVk : angle::NonCopyable
     std::vector<vk::DescriptorSetLayout> mGraphicsDescriptorSetLayouts;
 
     // Used for internal shaders.
-    vk::PipelineLayout mInternalUniformPipelineLayout;
+    vk::PipelineLayout mInternalPushConstantPipelineLayout;
 
     // Internal shader library.
     vk::ShaderLibrary mShaderLibrary;

@@ -220,7 +220,7 @@ RendererVk::~RendererVk()
     }
 
     mGraphicsPipelineLayout.destroy(mDevice);
-    mInternalUniformPipelineLayout.destroy(mDevice);
+    mInternalPushConstantPipelineLayout.destroy(mDevice);
 
     mRenderPassCache.destroy(mDevice);
     mPipelineCache.destroy(mDevice);
@@ -952,30 +952,30 @@ vk::Error RendererVk::initGraphicsPipelineLayout()
     return vk::NoError();
 }
 
-const vk::DescriptorSetLayout &RendererVk::getInternalUniformDescriptorSetLayout() const
+vk::Error RendererVk::getInternalPushConstantPipelineLayout(
+    const vk::PipelineLayout **pipelineLayoutOut)
 {
-    return mGraphicsDescriptorSetLayouts[0];
-}
-
-vk::Error RendererVk::getInternalUniformPipelineLayout(const vk::PipelineLayout **pipelineLayoutOut)
-{
-    *pipelineLayoutOut = &mInternalUniformPipelineLayout;
-    if (mInternalUniformPipelineLayout.valid())
+    *pipelineLayoutOut = &mInternalPushConstantPipelineLayout;
+    if (mInternalPushConstantPipelineLayout.valid())
     {
         return vk::NoError();
     }
 
-    // Here we use the knowledge that the "graphics" descriptor set has uniform blocks at offset 0.
+    VkPushConstantRange pushConstantRange;
+    pushConstantRange.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+    pushConstantRange.offset     = 0;
+    pushConstantRange.size       = sizeof(VkClearColorValue);
+
     VkPipelineLayoutCreateInfo createInfo;
     createInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     createInfo.pNext                  = nullptr;
     createInfo.flags                  = 0;
-    createInfo.setLayoutCount         = 1;
-    createInfo.pSetLayouts            = mGraphicsDescriptorSetLayouts[0].ptr();
-    createInfo.pushConstantRangeCount = 0;
-    createInfo.pPushConstantRanges    = nullptr;
+    createInfo.setLayoutCount         = 0;
+    createInfo.pSetLayouts            = nullptr;
+    createInfo.pushConstantRangeCount = 1;
+    createInfo.pPushConstantRanges    = &pushConstantRange;
 
-    ANGLE_TRY(mInternalUniformPipelineLayout.init(mDevice, createInfo));
+    ANGLE_TRY(mInternalPushConstantPipelineLayout.init(mDevice, createInfo));
 
     return vk::NoError();
 }

@@ -480,10 +480,6 @@ TEST_P(ScissoredClearTest, ScissoredColorAndDepthClear)
 // Tests combined color+depth clear.
 TEST_P(ClearTest, MaskedColorAndDepthClear)
 {
-    // Possible Intel driver bug on Intel 630.
-    // TODO(jmadill): Re-enable when possible. http://anglebug.com/2547
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsVulkan());
-
     // Flaky on Android Nexus 5x, possible driver bug.
     // TODO(jmadill): Re-enable when possible. http://anglebug.com/2548
     ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsAndroid());

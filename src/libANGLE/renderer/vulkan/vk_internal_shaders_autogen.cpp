@@ -21,10 +21,10 @@ namespace priv
 namespace
 {
 #include "libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/UniformColor.frag.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/PushConstantColor.frag.inc"
 
 constexpr ShaderBlob kShaderBlobs[] = {{kFullScreenQuad_vert, sizeof(kFullScreenQuad_vert)},
-                                       {kUniformColor_frag, sizeof(kUniformColor_frag)}};
+                                       {kPushConstantColor_frag, sizeof(kPushConstantColor_frag)}};
 }  // anonymous namespace
 
 const ShaderBlob &GetInternalShaderBlob(InternalShaderID shaderID)
