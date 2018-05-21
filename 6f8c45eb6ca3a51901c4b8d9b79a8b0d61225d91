@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "268aafcd_876366f1",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:12:03Z",
+      "side": 1,
+      "message": "\"the application\" rather than \"the system\"",
+      "range": {
+        "startLine": 42,
+        "startChar": 28,
+        "endLine": 42,
+        "endChar": 34
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5068c140_c9dced90",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:12:03Z",
+      "side": 1,
+      "message": "this should be for \"OpenGL ES display types\", not Android.",
+      "range": {
+        "startLine": 41,
+        "startChar": 61,
+        "endLine": 43,
+        "endChar": 19
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f80e73e_5dd6427a",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:12:03Z",
+      "side": 1,
+      "message": "Accepted as an attribute name in the \u003cattrib_list\u003e argument of\n    eglGetPlatformDisplayEXT",
+      "range": {
+        "startLine": 60,
+        "startChar": 3,
+        "endLine": 60,
+        "endChar": 32
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc086b1e_c1f71c84",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:12:03Z",
+      "side": 1,
+      "message": "should rephrase this - To pass in a handle to the system EGL library, use the attribute EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE. If EGL_PLATFORM_ANGLE_TYPE_ANGLE is not equal to EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, an EGL_BAD_ATTRIBUTE is generated.",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 82,
+        "endChar": 34
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5c32286_ea3fcd6a",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:12:03Z",
+      "side": 1,
+      "message": "EGL right, not OpenGL?",
+      "range": {
+        "startLine": 98,
+        "startChar": 48,
+        "endLine": 98,
+        "endChar": 55
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
