@@ -40,5 +40,5 @@ default_args = {
   use_custom_libcxx = false
   clang_use_chrome_plugins = false
   build_angle_deqp_tests = true
-  use_sysroot = false
+  use_sysroot = true
 }

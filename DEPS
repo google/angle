@@ -127,7 +127,20 @@ hooks = [
                 '-s', '{root}/buildtools/linux64/gn.sha1',
     ],
   },
-
+  {
+    'name': 'sysroot_x86',
+    'pattern': '.',
+    'condition': 'checkout_linux and (checkout_x86 or checkout_x64)',
+    'action': ['python', '{root}/build/linux/sysroot_scripts/install-sysroot.py',
+               '--arch=x86'],
+  },
+  {
+    'name': 'sysroot_x64',
+    'pattern': '.',
+    'condition': 'checkout_linux and checkout_x64',
+    'action': ['python', '{root}/build/linux/sysroot_scripts/install-sysroot.py',
+               '--arch=x64'],
+  },
   {
     # Update the Windows toolchain if necessary.  Must run before 'clang' below.
     'name': 'win_toolchain',
