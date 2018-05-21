@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e35fd441_bc40c92e",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-21T13:57:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "268aafcd_876366f1",
+      "range": {
+        "startLine": 42,
+        "startChar": 28,
+        "endLine": 42,
+        "endChar": 34
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5068c140_c9dced90",
         "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f9e2328_8661579e",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-21T13:57:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5068c140_c9dced90",
+      "range": {
+        "startLine": 41,
+        "startChar": 61,
+        "endLine": 43,
+        "endChar": 19
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "76235c1b_5c67c601",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-21T13:57:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f80e73e_5dd6427a",
+      "range": {
+        "startLine": 60,
+        "startChar": 3,
+        "endLine": 60,
+        "endChar": 32
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc086b1e_c1f71c84",
         "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
         "patchSetId": 1
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "a307878a_f577fa48",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-21T13:57:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc086b1e_c1f71c84",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 82,
+        "endChar": 34
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5c32286_ea3fcd6a",
         "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
         "patchSetId": 1
@@ -114,6 +210,30 @@
       "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3ed6b56_a3e867e9",
+        "filename": "extensions/EGL_ANGLE_platform_angle_opengl.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-21T13:57:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5c32286_ea3fcd6a",
+      "range": {
+        "startLine": 98,
+        "startChar": 48,
+        "endLine": 98,
+        "endChar": 55
+      },
+      "revId": "6f8c45eb6ca3a51901c4b8d9b79a8b0d61225d91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
