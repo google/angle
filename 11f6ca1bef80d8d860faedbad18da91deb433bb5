@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8026ad82_66627830",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:19:57Z",
+      "side": 1,
+      "message": "bug tag?",
+      "revId": "11f6ca1bef80d8d860faedbad18da91deb433bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37fada47_c0b5f0fd",
+        "filename": "include/EGL/eglext_angle.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:19:57Z",
+      "side": 1,
+      "message": "this should be under the OpenGL extension?",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 50
+      },
+      "revId": "11f6ca1bef80d8d860faedbad18da91deb433bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "140a1fa3_673587a8",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:19:57Z",
+      "side": 1,
+      "message": "I think you should query this as EGLAttrib here instead of intrptr_t.",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 13
+      },
+      "revId": "11f6ca1bef80d8d860faedbad18da91deb433bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ef7c6b7_6a1ec458",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:19:57Z",
+      "side": 1,
+      "message": "instead of including the header here, just forward declare the type, and include the header in the cpp to reduce include proliferation.",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 34
+      },
+      "revId": "11f6ca1bef80d8d860faedbad18da91deb433bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e370e7ea_1dbca7c5",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:19:57Z",
+      "side": 1,
+      "message": "missing git cl format.",
+      "range": {
+        "startLine": 49,
+        "startChar": 75,
+        "endLine": 49,
+        "endChar": 104
+      },
+      "revId": "11f6ca1bef80d8d860faedbad18da91deb433bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e5092f7_95de29ee",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-21T12:19:57Z",
+      "side": 1,
+      "message": "see the comments I made in the spec here - you should validate this is for the OpenGL ES back-end. but, it might be valid to specify this handle first then opengl es second, so you might need to set a flag here and validate outside of the loop.",
+      "range": {
+        "startLine": 409,
+        "startChar": 20,
+        "endLine": 409,
+        "endChar": 66
+      },
+      "revId": "11f6ca1bef80d8d860faedbad18da91deb433bb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
