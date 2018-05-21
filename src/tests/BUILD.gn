@@ -53,6 +53,11 @@ if (build_with_chromium) {
       "//third_party/googletest/src/googlemock/include",
       "//third_party/googletest/src/googletest/include",
     ]
+    if (is_clang) {
+      # TODO: Can remove this if/when the issue is fixed.
+      # https://github.com/google/googletest/issues/533
+      cflags = [ "-Wno-inconsistent-missing-override" ]
+    }
   }
 
   static_library("angle_internal_gmock") {

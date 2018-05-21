@@ -9,13 +9,13 @@ vars = {
 deps = {
 
   '{root}/build':
-    '{chromium_git}/chromium/src/build.git@2f3b6e8ce9e783b2a09496d70eef2974506a41c8',
+    '{chromium_git}/chromium/src/build.git@b944b99e72923c5a6699235ed858e725db21f81f',
 
   '{root}/buildtools':
-    '{chromium_git}/chromium/buildtools.git@461b345a815c1c745ac0534a6a4bd52d123abe68',
+    '{chromium_git}/chromium/buildtools.git@94288c26d2ffe3aec9848c147839afee597acefd',
 
   '{root}/testing':
-    '{chromium_git}/chromium/src/testing@6dfa36ab2e5143fa2f7353e3af5d2935af2e61f7',
+    '{chromium_git}/chromium/src/testing@4d706fd80be9e8989aec5235540e7b46d0672826',
 
   # Cherry is a dEQP management GUI written in Go. We use it for viewing test results.
   '{root}/third_party/cherry':
@@ -28,7 +28,7 @@ deps = {
     '{android_git}/platform/external/shaderc/glslang@2edde6665d9a56ead5ea0e55b4e64d9a803e6164',
 
   '{root}/third_party/googletest/src':
-    '{chromium_git}/external/github.com/google/googletest.git@d175c8bf823e709d570772b038757fadf63bc632',
+    '{chromium_git}/external/github.com/google/googletest.git@145d05750b15324899473340c8dd5af50d125d33',
 
   '{root}/third_party/libpng/src':
     '{android_git}/platform/external/libpng@094e181e79a3d6c23fd005679025058b7df1ad6c',
@@ -43,13 +43,13 @@ deps = {
     '{android_git}/platform/external/vulkan-validation-layers@88e43c8f9a750839a5d6d3f90098505bad3a98a1',
 
   '{root}/third_party/zlib':
-    '{chromium_git}/chromium/src/third_party/zlib@24ab14872e8e068ba08cc31cc3d43bcc6d5cb832',
+    '{chromium_git}/chromium/src/third_party/zlib@da0819d6c816a61be6fcb2fcf9b74246f0f8b808',
 
   '{root}/tools/clang':
-    '{chromium_git}/chromium/src/tools/clang.git@e70074db10b27867e6c873adc3ac7e5f9ee0ff6e',
+    '{chromium_git}/chromium/src/tools/clang.git@c893c7eec4706f8c7fc244ee254b1dadd8f8d158',
 
   '{root}/tools/gyp':
-    '{chromium_git}/external/gyp@5e2b3ddde7cda5eb6bc09a5546a76b00e49d888f',
+    '{chromium_git}/external/gyp@4d467626b0b9f59a85fb81ca4d7ea9eca99b9d8f',
 }
 
 hooks = [
@@ -140,7 +140,7 @@ hooks = [
     # Note: On Win, this should run after win_toolchain, as it may use it.
     'name': 'clang',
     'pattern': '.',
-    'action': ['python', '{root}/tools/clang/scripts/update.py', '--if-needed'],
+    'action': ['python', '{root}/tools/clang/scripts/update.py'],
   },
 
   # Pull rc binaries using checked-in hashes.
