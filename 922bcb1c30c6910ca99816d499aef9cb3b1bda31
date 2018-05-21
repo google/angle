@@ -117,6 +117,30 @@
       "revId": "922bcb1c30c6910ca99816d499aef9cb3b1bda31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7baca070_30a33830",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-21T02:48:47Z",
+      "side": 1,
+      "message": "I find we don\u0027t need to pass a GL version because we can get it in Context11 by mState.getClientVersion().\n\nCould you take a look at Context11::getNativeCaps in Patchset 7?",
+      "parentUuid": "bc69b26f_09055fd1",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 0
+      },
+      "revId": "922bcb1c30c6910ca99816d499aef9cb3b1bda31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
