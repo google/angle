@@ -74,9 +74,8 @@ class DynamicBuffer : angle::NonCopyable
     size_t mMinSize;
     Buffer mBuffer;
     DeviceMemory mMemory;
-    uint32_t mNextWriteOffset;
-    uint32_t mLastFlushOffset;
-    uint32_t mLastInvalidatedOffset;
+    uint32_t mNextAllocationOffset;
+    uint32_t mLastFlushOrInvalidateOffset;
     size_t mSize;
     size_t mAlignment;
     uint8_t *mMappedMemory;

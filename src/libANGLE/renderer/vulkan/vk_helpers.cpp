@@ -97,9 +97,8 @@ uint32_t GetImageLayerCount(gl::TextureType textureType)
 DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize)
     : mUsage(usage),
       mMinSize(minSize),
-      mNextWriteOffset(0),
-      mLastFlushOffset(0),
-      mLastInvalidatedOffset(0),
+      mNextAllocationOffset(0),
+      mLastFlushOrInvalidateOffset(0),
       mSize(0),
       mAlignment(0),
       mMappedMemory(nullptr)
@@ -135,7 +134,7 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
 
     size_t sizeToAllocate = roundUp(sizeInBytes, mAlignment);
 
-    angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextWriteOffset;
+    angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextAllocationOffset;
     checkedNextWriteOffset += sizeToAllocate;
 
     if (!checkedNextWriteOffset.IsValid() || checkedNextWriteOffset.ValueOrDie() > mSize)
@@ -166,9 +165,8 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
                                        &mMemory, &mSize));
 
         ANGLE_TRY(mMemory.map(device, 0, mSize, 0, &mMappedMemory));
-        mNextWriteOffset = 0;
-        mLastFlushOffset = 0;
-        mLastInvalidatedOffset = 0;
+        mNextAllocationOffset        = 0;
+        mLastFlushOrInvalidateOffset = 0;
 
         if (newBufferAllocatedOut != nullptr)
         {
@@ -188,42 +186,42 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
     }
 
     ASSERT(mMappedMemory);
-    *ptrOut    = mMappedMemory + mNextWriteOffset;
-    *offsetOut = mNextWriteOffset;
-    mNextWriteOffset += static_cast<uint32_t>(sizeToAllocate);
+    *ptrOut    = mMappedMemory + mNextAllocationOffset;
+    *offsetOut = mNextAllocationOffset;
+    mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
     return NoError();
 }
 
 Error DynamicBuffer::flush(VkDevice device)
 {
-    if (mNextWriteOffset > mLastFlushOffset)
+    if (mNextAllocationOffset > mLastFlushOrInvalidateOffset)
     {
         VkMappedMemoryRange range;
         range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
         range.pNext  = nullptr;
         range.memory = mMemory.getHandle();
-        range.offset = mLastFlushOffset;
-        range.size   = mNextWriteOffset - mLastFlushOffset;
+        range.offset = mLastFlushOrInvalidateOffset;
+        range.size   = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
         ANGLE_VK_TRY(vkFlushMappedMemoryRanges(device, 1, &range));
 
-        mLastFlushOffset = mNextWriteOffset;
+        mLastFlushOrInvalidateOffset = mNextAllocationOffset;
     }
     return NoError();
 }
 
 Error DynamicBuffer::invalidate(VkDevice device)
 {
-    if (mNextWriteOffset > mLastInvalidatedOffset)
+    if (mNextAllocationOffset > mLastFlushOrInvalidateOffset)
     {
         VkMappedMemoryRange range;
         range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
         range.pNext  = nullptr;
         range.memory = mMemory.getHandle();
-        range.offset = mLastInvalidatedOffset;
-        range.size   = mNextWriteOffset - mLastInvalidatedOffset;
+        range.offset = mLastFlushOrInvalidateOffset;
+        range.size   = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
         ANGLE_VK_TRY(vkInvalidateMappedMemoryRanges(device, 1, &range));
 
-        mLastInvalidatedOffset = mNextWriteOffset;
+        mLastFlushOrInvalidateOffset = mNextAllocationOffset;
     }
     return NoError();
 }
