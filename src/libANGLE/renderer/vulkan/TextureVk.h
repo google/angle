@@ -35,14 +35,13 @@ class PixelBuffer final : angle::NonCopyable
                                      GLenum type,
                                      const uint8_t *pixels);
 
-    gl::Error stageSubresourceUpdateFromRenderTarget(const gl::Context *context,
-                                                     const gl::ImageIndex &index,
-                                                     const gl::Rectangle &sourceArea,
-                                                     const gl::Offset &dstOffset,
-                                                     const gl::Extents &dstExtent,
-                                                     const gl::InternalFormat &formatInfo,
-                                                     vk::CommandBuffer *commandBuffer,
-                                                     RenderTargetVk *renderTarget);
+    gl::Error stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
+                                                    const gl::ImageIndex &index,
+                                                    const gl::Rectangle &sourceArea,
+                                                    const gl::Offset &dstOffset,
+                                                    const gl::Extents &dstExtent,
+                                                    const gl::InternalFormat &formatInfo,
+                                                    FramebufferVk *framebufferVk);
 
     vk::Error flushUpdatesToImage(RendererVk *renderer,
                                   vk::ImageHelper *image,

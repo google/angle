@@ -148,19 +148,18 @@ gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
     return gl::NoError();
 }
 
-gl::Error PixelBuffer::stageSubresourceUpdateFromRenderTarget(const gl::Context *context,
-                                                              const gl::ImageIndex &index,
-                                                              const gl::Rectangle &sourceArea,
-                                                              const gl::Offset &dstOffset,
-                                                              const gl::Extents &dstExtent,
-                                                              const gl::InternalFormat &formatInfo,
-                                                              vk::CommandBuffer *commandBuffer,
-                                                              RenderTargetVk *renderTarget)
+gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
+                                                             const gl::ImageIndex &index,
+                                                             const gl::Rectangle &sourceArea,
+                                                             const gl::Offset &dstOffset,
+                                                             const gl::Extents &dstExtent,
+                                                             const gl::InternalFormat &formatInfo,
+                                                             FramebufferVk *framebufferVk)
 {
     // If the extents and offset is outside the source image, we need to clip.
     gl::Rectangle clippedRectangle;
-    const gl::Extents imageExtents = renderTarget->image->getExtents();
-    if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, imageExtents.width, imageExtents.height),
+    const gl::Extents readExtents = framebufferVk->getReadImageExtents();
+    if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, readExtents.width, readExtents.height),
                        &clippedRectangle))
     {
         // Empty source area, nothing to do.
@@ -206,8 +205,7 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromRenderTarget(const gl::Context 
         ANGLE_TRY(context->getScratchBuffer(bufferSize, &memoryBuffer));
 
         // Read into the scratch buffer
-        ANGLE_TRY(ReadPixelsFromRenderTarget(context, sourceArea, params, mStagingBuffer,
-                                             renderTarget, commandBuffer, memoryBuffer->data()));
+        ANGLE_TRY(framebufferVk->readPixelsImpl(context, sourceArea, params, memoryBuffer->data()));
 
         // Load from scratch buffer to our pixel buffer
         loadFunction.loadFunction(sourceArea.width, sourceArea.height, 1, memoryBuffer->data(),
@@ -216,8 +214,7 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromRenderTarget(const gl::Context 
     else
     {
         // We read directly from the framebuffer into our pixel buffer.
-        ANGLE_TRY(ReadPixelsFromRenderTarget(context, sourceArea, params, mStagingBuffer,
-                                             renderTarget, commandBuffer, stagingPointer));
+        ANGLE_TRY(framebufferVk->readPixelsImpl(context, sourceArea, params, stagingPointer));
     }
 
     // 3- enqueue the destination image subresource update
@@ -450,19 +447,15 @@ gl::Error TextureVk::copySubImageImpl(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
 
     FramebufferVk *framebufferVk = vk::GetImpl(source);
-    RenderTargetVk *renderTarget = framebufferVk->getColorReadRenderTarget();
-
-    vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(framebufferVk->beginWriteResource(contextVk->getRenderer(), &commandBuffer));
 
     // For now, favor conformance. We do a CPU readback that does the conversion, and then stage the
     // change to the pixel buffer.
     // Eventually we can improve this easily by implementing vkCmdBlitImage to do the conversion
     // when its supported.
-    ANGLE_TRY(mPixelBuffer.stageSubresourceUpdateFromRenderTarget(
+    ANGLE_TRY(mPixelBuffer.stageSubresourceUpdateFromFramebuffer(
         context, index, clippedSourceArea, modifiedDestOffset,
         gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
-        commandBuffer, renderTarget));
+        framebufferVk));
 
     vk::CommandGraphNode *writingNode = getNewWritingNode(contextVk->getRenderer());
     framebufferVk->onReadResource(writingNode, contextVk->getRenderer()->getCurrentQueueSerial());

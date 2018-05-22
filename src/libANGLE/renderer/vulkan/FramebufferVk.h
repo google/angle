@@ -72,7 +72,6 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                          GLenum format,
                          GLenum type,
                          void *pixels) override;
-    RenderTargetVk *getColorReadRenderTarget();
     gl::Error blit(const gl::Context *context,
                    const gl::Rectangle &sourceArea,
                    const gl::Rectangle &destArea,
@@ -91,6 +90,14 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     const vk::RenderPassDesc &getRenderPassDesc();
     gl::Error getCommandGraphNodeForDraw(ContextVk *contextVk, vk::CommandGraphNode **nodeOut);
 
+    // Internal helper function for readPixels operations.
+    gl::Error readPixelsImpl(const gl::Context *context,
+                             const gl::Rectangle &area,
+                             const PackPixelsParams &packPixelsParams,
+                             void *pixels);
+
+    const gl::Extents &getReadImageExtents() const;
+
   private:
     FramebufferVk(const gl::FramebufferState &state);
     FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer);
@@ -103,6 +110,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                                         bool clearStencil);
     gl::Error clearWithDraw(ContextVk *contextVk, VkColorComponentFlags colorMaskFlags);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
+    RenderTargetVk *getColorReadRenderTarget() const;
 
     WindowSurfaceVk *mBackbuffer;
 
@@ -118,15 +126,6 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
 
     vk::DynamicBuffer mReadPixelsBuffer;
 };
-
-gl::Error ReadPixelsFromRenderTarget(const gl::Context *context,
-                                     const gl::Rectangle &area,
-                                     const PackPixelsParams &packPixelsParams,
-                                     vk::DynamicBuffer &dynamicBuffer,
-                                     RenderTargetVk *renderTarget,
-                                     vk::CommandBuffer *commandBuffer,
-                                     void *pixels);
-
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_FRAMEBUFFERVK_H_
