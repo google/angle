@@ -149,6 +149,18 @@ vk::Error AllocateBufferOrImageMemory(VkDevice device,
 }
 }  // anonymous namespace
 
+uint32_t GetImageLayerCount(gl::TextureType textureType)
+{
+    if (textureType == gl::TextureType::CubeMap)
+    {
+        return gl::CUBE_FACE_COUNT;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
 const char *g_VkLoaderLayersPathEnv = "VK_LAYER_PATH";
 const char *g_VkICDPathEnv          = "VK_ICD_FILENAMES";
 

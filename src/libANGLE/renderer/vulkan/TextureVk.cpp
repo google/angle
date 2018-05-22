@@ -316,6 +316,7 @@ gl::Error PixelBuffer::stageSubresourceUpdateAndGetData(RendererVk *renderer,
 
 gl::Error TextureVk::generateMipmapLevels(ContextVk *contextVk,
                                           const angle::Format &sourceFormat,
+                                          GLuint layer,
                                           GLuint firstMipLevel,
                                           GLuint maxMipLevel,
                                           const size_t sourceWidth,
@@ -345,7 +346,7 @@ gl::Error TextureVk::generateMipmapLevels(ContextVk *contextVk,
 
         ANGLE_TRY(mPixelBuffer.stageSubresourceUpdateAndGetData(
             renderer, mipAllocationSize,
-            gl::ImageIndex::MakeFromType(mState.getType(), currentMipLevel, 0, 1), mipLevelExtents,
+            gl::ImageIndex::MakeFromType(mState.getType(), currentMipLevel, layer), mipLevelExtents,
             gl::Offset(), &destData));
 
         // Generate the mipmap into that new buffer
@@ -591,10 +592,8 @@ gl::Error TextureVk::setImageExternal(const gl::Context *context,
 
 gl::Error TextureVk::generateMipmap(const gl::Context *context)
 {
-    ContextVk *contextVk             = vk::GetImpl(context);
-    vk::CommandBuffer *commandBuffer = nullptr;
-    RendererVk *renderer             = contextVk->getRenderer();
-    getCommandBufferForWrite(renderer, &commandBuffer);
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
 
     // Some data is pending, or the image has not been defined at all yet
     if (!mImage.valid())
@@ -614,22 +613,36 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
 
     // Before we loop to generate all the next levels, we can get the source level and copy it to a
     // buffer.
-    const angle::Format &angleFormat   = mImage.getFormat().textureFormat();
-    VkBuffer baseLevelBufferHandle     = VK_NULL_HANDLE;
-    uint8_t *baseLevelBuffer           = nullptr;
+    const angle::Format &angleFormat = mImage.getFormat().textureFormat();
+    uint32_t imageLayerCount         = GetImageLayerCount(mState.getType());
+
     bool newBufferAllocated            = false;
-    uint32_t baseLevelBufferOffset     = 0;
     const gl::Extents baseLevelExtents = mImage.getExtents();
     GLuint sourceRowPitch              = baseLevelExtents.width * angleFormat.pixelBytes;
     size_t baseLevelAllocationSize     = sourceRowPitch * baseLevelExtents.height;
 
-    ANGLE_TRY(mPixelBuffer.allocate(renderer, baseLevelAllocationSize, &baseLevelBuffer,
-                                    &baseLevelBufferHandle, &baseLevelBufferOffset,
-                                    &newBufferAllocated));
+    vk::CommandBuffer *commandBuffer = nullptr;
+    getCommandBufferForWrite(renderer, &commandBuffer);
 
+    // Requirement of the copyImageToBuffer, the source image must be in SRC_OPTIMAL layout.
+    mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
+
+    size_t totalAllocationSize = baseLevelAllocationSize * imageLayerCount;
+
+    VkBuffer copyBufferHandle;
+    uint8_t *baseLevelBuffers;
+    uint32_t copyBaseOffset;
+
+    // Allocate enough memory to copy every level 0 image (one for each layer of the texture).
+    ANGLE_TRY(mPixelBuffer.allocate(renderer, totalAllocationSize, &baseLevelBuffers,
+                                    &copyBufferHandle, &copyBaseOffset, &newBufferAllocated));
+
+    // Do only one copy for all layers at once.
     VkBufferImageCopy region;
     region.bufferImageHeight               = baseLevelExtents.height;
-    region.bufferOffset                    = static_cast<VkDeviceSize>(baseLevelBufferOffset);
+    region.bufferOffset                    = static_cast<VkDeviceSize>(copyBaseOffset);
     region.bufferRowLength                 = baseLevelExtents.width;
     region.imageExtent.width               = baseLevelExtents.width;
     region.imageExtent.height              = baseLevelExtents.height;
@@ -639,15 +652,11 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
     region.imageOffset.z                   = 0;
     region.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     region.imageSubresource.baseArrayLayer = 0;
-    region.imageSubresource.layerCount     = 1;
+    region.imageSubresource.layerCount     = imageLayerCount;
     region.imageSubresource.mipLevel       = mState.getEffectiveBaseLevel();
 
-    mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
-
-    commandBuffer->copyImageToBuffer(mImage.getImage(), mImage.getCurrentLayout(),
-                                     baseLevelBufferHandle, 1, &region);
+    commandBuffer->copyImageToBuffer(mImage.getImage(), mImage.getCurrentLayout(), copyBufferHandle,
+                                     1, &region);
 
     ANGLE_TRY(renderer->finish(context));
 
@@ -657,9 +666,15 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
     // We now have the base level available to be manipulated in the baseLevelBuffer pointer.
     // Generate all the missing mipmaps with the slow path. We can optimize with vkCmdBlitImage
     // later.
-    ANGLE_TRY(generateMipmapLevels(contextVk, angleFormat, mState.getEffectiveBaseLevel() + 1,
-                                   mState.getMipmapMaxLevel(), baseLevelExtents.width,
-                                   baseLevelExtents.height, sourceRowPitch, baseLevelBuffer));
+    // For each layer, use the copied data to generate all the mips.
+    for (GLuint layer = 0; layer < imageLayerCount; layer++)
+    {
+        size_t bufferOffset = layer * baseLevelAllocationSize;
+        ANGLE_TRY(generateMipmapLevels(
+            contextVk, angleFormat, layer, mState.getEffectiveBaseLevel() + 1,
+            mState.getMipmapMaxLevel(), baseLevelExtents.width, baseLevelExtents.height,
+            sourceRowPitch, baseLevelBuffers + bufferOffset));
+    }
 
     return gl::NoError();
 }

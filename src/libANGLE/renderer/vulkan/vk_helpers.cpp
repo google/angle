@@ -80,17 +80,6 @@ VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType)
     }
 }
 
-uint32_t GetImageLayerCount(gl::TextureType textureType)
-{
-    if (textureType == gl::TextureType::CubeMap)
-    {
-        return gl::CUBE_FACE_COUNT;
-    }
-    else
-    {
-        return 1;
-    }
-}
 }  // anonymous namespace
 
 // DynamicBuffer implementation.

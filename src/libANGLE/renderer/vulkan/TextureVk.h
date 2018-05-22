@@ -177,6 +177,7 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
   private:
     gl::Error generateMipmapLevels(ContextVk *contextVk,
                                    const angle::Format &sourceFormat,
+                                   GLuint layer,
                                    GLuint firstMipLevel,
                                    GLuint maxMipLevel,
                                    size_t sourceWidth,

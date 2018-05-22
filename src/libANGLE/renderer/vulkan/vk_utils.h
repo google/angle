@@ -69,6 +69,8 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
                                   const char *const **enabledLayerNames,
                                   uint32_t *enabledLayerCount);
 
+uint32_t GetImageLayerCount(gl::TextureType textureType);
+
 extern const char *g_VkLoaderLayersPathEnv;
 extern const char *g_VkICDPathEnv;
 
