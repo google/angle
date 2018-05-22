@@ -81,9 +81,6 @@ class CommandGraphResource
     // Returns true if this node has a current writing node with no children.
     bool hasChildlessWritingNode() const;
 
-    // Allocates a new write node and calls onWriteResource internally.
-    CommandGraphNode *getNewWritingNode(RendererVk *renderer);
-
     // Checks if we're in a RenderPass without children.
     bool hasStartedRenderPass() const;
 

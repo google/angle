@@ -157,13 +157,6 @@ bool CommandGraphResource::hasChildlessWritingNode() const
     return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
 }
 
-CommandGraphNode *CommandGraphResource::getNewWritingNode(RendererVk *renderer)
-{
-    CommandGraphNode *newCommands = renderer->getCommandGraph()->allocateNode();
-    onWriteImpl(newCommands, renderer->getCurrentQueueSerial());
-    return newCommands;
-}
-
 bool CommandGraphResource::hasStartedWriteResource() const
 {
     return hasChildlessWritingNode() &&
@@ -173,12 +166,11 @@ bool CommandGraphResource::hasStartedWriteResource() const
 Error CommandGraphResource::beginWriteResource(RendererVk *renderer,
                                                CommandBuffer **commandBufferOut)
 {
-    CommandGraphNode *commands = getNewWritingNode(renderer);
+    onResourceChanged(renderer);
 
     VkDevice device = renderer->getDevice();
-    ANGLE_TRY(commands->beginOutsideRenderPassRecording(device, renderer->getCommandPool(),
-                                                        commandBufferOut));
-    return NoError();
+    return mCurrentWritingNode->beginOutsideRenderPassRecording(device, renderer->getCommandPool(),
+                                                                commandBufferOut);
 }
 
 Error CommandGraphResource::appendWriteResource(RendererVk *renderer,
@@ -247,7 +239,8 @@ Error CommandGraphResource::beginRenderPass(RendererVk *renderer,
 
 void CommandGraphResource::onResourceChanged(RendererVk *renderer)
 {
-    getNewWritingNode(renderer);
+    CommandGraphNode *newCommands = renderer->getCommandGraph()->allocateNode();
+    onWriteImpl(newCommands, renderer->getCurrentQueueSerial());
 }
 
 void CommandGraphResource::addWriteDependency(CommandGraphResource *writingResource)
