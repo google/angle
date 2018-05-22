@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d598f512_687082f2",
+        "filename": ".gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-22T14:05:19Z",
+      "side": 1,
+      "message": "you need to keep the old dotfile settings too!",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 38
+      },
+      "revId": "373d4a61225724e4cad0794b38e1bc578801085f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "218140ef_d7bf21b8",
+        "filename": ".gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-22T14:05:19Z",
+      "side": 1,
+      "message": "this would become angle_dotfile_settings.exec_blah + build_dotfile_settings.exec_blah + [... (wrapped to 100 characters if possible)",
+      "range": {
+        "startLine": 29,
+        "startChar": 24,
+        "endLine": 29,
+        "endChar": 46
+      },
+      "revId": "373d4a61225724e4cad0794b38e1bc578801085f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
