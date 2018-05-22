@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcd1ce6c_fdb05070",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-22T15:10:01Z",
+      "side": 1,
+      "message": "This could be put inside blocks started after the case statements like so:\n\n  case LightParam::Position:\n    {   \n      angle::Mat4 mv \u003d mModelviewMatrices.back(); \n      angle::Vector4 transformedPos \u003d mv.product(angle::Vector4(params[0], params[1], params[2], params[3]));\n      // stuff\n    }",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 339,
+        "endChar": 47
+      },
+      "revId": "f1ccfb9a2b1f6af245b2aabbb14fb693d3c78dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "276ccc73_6bbf6769",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-22T15:10:01Z",
+      "side": 1,
+      "message": "We avoid C style casts. Here a ternary would work instead.",
+      "range": {
+        "startLine": 445,
+        "startChar": 22,
+        "endLine": 445,
+        "endChar": 29
+      },
+      "revId": "f1ccfb9a2b1f6af245b2aabbb14fb693d3c78dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d3404b5_0d4d023c",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-22T15:10:01Z",
+      "side": 1,
+      "message": "This is an interesting approach, I don\u0027t think we have dual getter/setter validation yet, but this looks fine.",
+      "revId": "f1ccfb9a2b1f6af245b2aabbb14fb693d3c78dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
