@@ -65,6 +65,29 @@
     },
     {
       "key": {
+        "uuid": "a43a79f2_a1305f8b",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-22T14:31:51Z",
+      "side": 1,
+      "message": "Instead of passing the attribute map, I would grab the handle here and pass it in directly.  This allows FunctionsEGL to not care about these extensions.",
+      "range": {
+        "startLine": 50,
+        "startChar": 69,
+        "endLine": 50,
+        "endChar": 94
+      },
+      "revId": "66ea9a4112343e782757cbe5f97d8de89592c859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "36c4ee82_106279a2",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 16
