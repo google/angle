@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12a81c79_598f3745",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-22T19:15:53Z",
+      "side": 1,
+      "message": "This condition should be more complex.\nPlease define ndk_supports_nativewindow similar to ndk_supports_vulkan in angle.gni and use it here and in other places.",
+      "range": {
+        "startLine": 522,
+        "startChar": 10,
+        "endLine": 522,
+        "endChar": 72
+      },
+      "revId": "ee21a5967c8a20475f9adb52d614334630394bed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a279186_8e118b4e",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-22T19:15:53Z",
+      "side": 1,
+      "message": "Since you\u0027re modifying this file anyway, could you move libGLESv2 to be after libGLESv1 in this list?",
+      "range": {
+        "startLine": 925,
+        "startChar": 23,
+        "endLine": 925,
+        "endChar": 38
+      },
+      "revId": "ee21a5967c8a20475f9adb52d614334630394bed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e1e6417_dbd44611",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 940,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-22T19:15:53Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 940,
+        "startChar": 21,
+        "endLine": 940,
+        "endChar": 36
+      },
+      "revId": "ee21a5967c8a20475f9adb52d614334630394bed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
