@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d80707a1_26f0b932",
+        "filename": "src/libANGLE/GLES1State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-22T15:20:21Z",
+      "side": 1,
+      "message": "Would be nice to have these in queryutils.h",
+      "range": {
+        "startLine": 333,
+        "startChar": 17,
+        "endLine": 333,
+        "endChar": 35
+      },
+      "revId": "f1ccfb9a2b1f6af245b2aabbb14fb693d3c78dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fcd1ce6c_fdb05070",
         "filename": "src/libANGLE/GLES1State.cpp",
         "patchSetId": 5
