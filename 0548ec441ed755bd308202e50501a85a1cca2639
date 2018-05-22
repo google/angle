@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b45af432_7d16aef4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-22T09:22:52Z",
+      "side": 1,
+      "message": "From the description, I can\u0027t see why indices can solve the problem that you mentioned. Please add more description that why indices can solve this issue to help reviewers understand the change you made.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 70
+      },
+      "revId": "0548ec441ed755bd308202e50501a85a1cca2639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f413349c_98ae1779",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-22T09:22:52Z",
+      "side": 1,
+      "message": "This function is very similar with outputHLSLImageUniformGroup. Most of the code should be reused.",
+      "range": {
+        "startLine": 266,
+        "startChar": 18,
+        "endLine": 266,
+        "endChar": 53
+      },
+      "revId": "0548ec441ed755bd308202e50501a85a1cca2639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3e670c0_9630b1d6",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-22T09:22:52Z",
+      "side": 1,
+      "message": "should be removed?",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 71
+      },
+      "revId": "0548ec441ed755bd308202e50501a85a1cca2639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
