@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e11e8a01_8216e84e",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-22T11:54:03Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "revId": "66ea9a4112343e782757cbe5f97d8de89592c859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f7d7d27_048c0b41",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-22T11:54:03Z",
+      "side": 1,
+      "message": "nit: closing namespace comment.",
+      "range": {
+        "startLine": 19,
+        "startChar": 1,
+        "endLine": 19,
+        "endChar": 0
+      },
+      "revId": "66ea9a4112343e782757cbe5f97d8de89592c859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e093c8a_86927454",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-22T11:54:03Z",
+      "side": 1,
+      "message": "you probably don\u0027t actually need this header here",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 34
+      },
+      "revId": "66ea9a4112343e782757cbe5f97d8de89592c859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36c4ee82_106279a2",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-22T11:54:03Z",
+      "side": 1,
+      "message": "instead of storing this bool, you can check eglHandle.valid()",
+      "range": {
+        "startLine": 409,
+        "startChar": 24,
+        "endLine": 409,
+        "endChar": 44
+      },
+      "revId": "66ea9a4112343e782757cbe5f97d8de89592c859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dd4a8d8_861b58e7",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-22T11:54:03Z",
+      "side": 1,
+      "message": "do you need more validation? seems okay with what you have below. maybe can remove the TODO",
+      "range": {
+        "startLine": 411,
+        "startChar": 20,
+        "endLine": 411,
+        "endChar": 66
+      },
+      "revId": "66ea9a4112343e782757cbe5f97d8de89592c859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
