@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa56a69e_50e86186",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-22T17:36:37Z",
+      "side": 1,
+      "message": "is \u0027active\u0027 really what we want?  not \u0027active \u0026 enabled?\u0027",
+      "revId": "c77ec07be31339fa86acaddb5d7019f551b2cdbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

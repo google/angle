@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5f4f95b_2512ea1f",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-22T17:36:37Z",
+      "side": 0,
+      "message": "why no \"invalidatePipeline \u003d true\" in this case?",
+      "revId": "534b00dbda3eb6668a937b60f506d01c676c3b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb9b6742_4ac17eeb",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-22T17:36:37Z",
+      "side": 0,
+      "message": "simpler to keep the packed representation up to date as we go, instead flagging dirt and doing it later?",
+      "revId": "534b00dbda3eb6668a937b60f506d01c676c3b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "781fa948_5ce88463",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-22T17:36:37Z",
+      "side": 0,
+      "message": "is this the right thing to use in the bind calls?  if this draw has a lower max than the previous one, maybe we ought to unset the higher bindings?",
+      "revId": "534b00dbda3eb6668a937b60f506d01c676c3b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67c81fef_91902912",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-22T17:36:37Z",
+      "side": 0,
+      "message": "as previously mentioned, we can\u0027t get here if there are any client attribs.\nupdateArrayBufferReadDependencies() might be needed but isn\u0027t called.",
+      "revId": "534b00dbda3eb6668a937b60f506d01c676c3b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49df4aad_3dd36326",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-22T17:36:37Z",
+      "side": 0,
+      "message": "does this refer to vkCmdBindIndexBuffer?  does vulkan forget that binding when you do a non-indexed draw?",
+      "revId": "534b00dbda3eb6668a937b60f506d01c676c3b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a041b2ff_d2ce66c0",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-22T17:36:37Z",
+      "side": 0,
+      "message": "it looks like line loops are implemented as an indexed draw, so I guess the reason for this is tied to the answer to the previous question...",
+      "revId": "534b00dbda3eb6668a937b60f506d01c676c3b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
