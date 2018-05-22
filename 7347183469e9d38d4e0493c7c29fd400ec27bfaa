@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d4f8c66_ef434c9f",
+        "filename": ".gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-22T15:23:43Z",
+      "side": 1,
+      "message": "I believe you can remove these two",
+      "range": {
+        "startLine": 32,
+        "startChar": 3,
+        "endLine": 33,
+        "endChar": 52
+      },
+      "revId": "7347183469e9d38d4e0493c7c29fd400ec27bfaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da770fdf_6183e6c1",
+        "filename": ".gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-22T15:23:43Z",
+      "side": 1,
+      "message": "I *think* you can remove this.",
+      "range": {
+        "startLine": 39,
+        "startChar": 26,
+        "endLine": 39,
+        "endChar": 64
+      },
+      "revId": "7347183469e9d38d4e0493c7c29fd400ec27bfaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
