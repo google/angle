@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82c5dec9_073432be",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-23T14:20:05Z",
+      "side": 1,
+      "message": "The multiple versions of this code can be moved after the switch over the shader type.",
+      "revId": "436b60907dbb5380e18da49b48cab9de5ec6f269",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
