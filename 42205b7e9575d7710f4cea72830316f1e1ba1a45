@@ -16,6 +16,24 @@
       "revId": "42205b7e9575d7710f4cea72830316f1e1ba1a45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "081d7939_4d24167c",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-23T18:08:32Z",
+      "side": 1,
+      "message": "Good idea, done.  The whole file seemed to get formatted in the process though :/",
+      "parentUuid": "98922f05_ccaac0ce",
+      "revId": "42205b7e9575d7710f4cea72830316f1e1ba1a45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
