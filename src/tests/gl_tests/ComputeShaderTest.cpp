@@ -1278,6 +1278,33 @@ TEST_P(ComputeShaderTest, ExceedCombinedShaderOutputResourcesInCS)
     EXPECT_EQ(0u, computeProgram);
 }
 
+// Test that uniform block with struct member in compute shader is supported.
+TEST_P(ComputeShaderTest, UniformBlockWithStructMember)
+{
+    const std::string csSource =
+        R"(#version 310 es
+        layout(local_size_x=8) in;
+        layout(rgba8) uniform highp readonly image2D mImage2DInput;
+        layout(rgba8) uniform highp writeonly image2D mImage2DOutput;
+        struct S {
+          ivec3 a;
+          ivec2 b;
+        };
+
+        layout(std140, binding=0) uniform blockName {
+            S bd;
+        } instanceName;
+        void main()
+        {
+            ivec2 t1 = instanceName.bd.b;
+            vec4 result2d = imageLoad(mImage2DInput, t1);
+            imageStore(mImage2DOutput, ivec2(gl_LocalInvocationID.xy), result2d);
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)
