@@ -76,8 +76,7 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
       mDxgiModule(nullptr),
       mD3d11Module(nullptr),
       mD3D11DeviceHandle(nullptr),
-      mD3D11Device(nullptr),
-      mDisplay(nullptr)
+      mD3D11Device(nullptr)
 {
 }
 
@@ -87,8 +86,18 @@ DisplayWGL::~DisplayWGL()
 
 egl::Error DisplayWGL::initialize(egl::Display *display)
 {
-    mDisplay = display;
+    egl::Error error = initializeImpl(display);
+    if (error.isError())
+    {
+        destroy();
+        return error;
+    }
 
+    return DisplayGL::initialize(display);
+}
+
+egl::Error DisplayWGL::initializeImpl(egl::Display *display)
+{
     mOpenGLModule = LoadLibraryA("opengl32.dll");
     if (!mOpenGLModule)
     {
@@ -105,7 +114,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     const LPSTR idcArrow = MAKEINTRESOURCEA(32512);
 
     std::ostringstream stream;
-    stream << "ANGLE DisplayWGL " << gl::FmtHex(mDisplay) << " Intermediate Window Class";
+    stream << "ANGLE DisplayWGL " << gl::FmtHex(display) << " Intermediate Window Class";
     std::string className = stream.str();
 
     WNDCLASSA intermediateClassDesc = { 0 };
@@ -122,22 +131,15 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     mWindowClass = RegisterClassA(&intermediateClassDesc);
     if (!mWindowClass)
     {
-        return egl::EglNotInitialized() << "Failed to register intermediate OpenGL window class, "
-                                        << gl::FmtErr(HRESULT_CODE(GetLastError()));
+        return egl::EglNotInitialized()
+               << "Failed to register intermediate OpenGL window class \"" << className.c_str()
+               << "\":" << gl::FmtErr(HRESULT_CODE(GetLastError()));
     }
 
-    HWND dummyWindow = CreateWindowExA(0,
-                                       reinterpret_cast<const char *>(mWindowClass),
-                                       "ANGLE Dummy Window",
-                                       WS_OVERLAPPEDWINDOW,
-                                       CW_USEDEFAULT,
-                                       CW_USEDEFAULT,
-                                       CW_USEDEFAULT,
-                                       CW_USEDEFAULT,
-                                       nullptr,
-                                       nullptr,
-                                       nullptr,
-                                       nullptr);
+    HWND dummyWindow =
+        CreateWindowExA(0, reinterpret_cast<const char *>(mWindowClass), "ANGLE Dummy Window",
+                        WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                        CW_USEDEFAULT, nullptr, nullptr, nullptr, nullptr);
     if (!dummyWindow)
     {
         return egl::EglNotInitialized() << "Failed to create dummy OpenGL window.";
@@ -201,18 +203,10 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     }
 
     // Create the real intermediate context and windows
-    mWindow = CreateWindowExA(0,
-                              reinterpret_cast<const char *>(mWindowClass),
-                              "ANGLE Intermediate Window",
-                              WS_OVERLAPPEDWINDOW,
-                              CW_USEDEFAULT,
-                              CW_USEDEFAULT,
-                              CW_USEDEFAULT,
-                              CW_USEDEFAULT,
-                              nullptr,
-                              nullptr,
-                              nullptr,
-                              nullptr);
+    mWindow = CreateWindowExA(0, reinterpret_cast<const char *>(mWindowClass),
+                              "ANGLE Intermediate Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
+                              CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr,
+                              nullptr, nullptr);
     if (!mWindow)
     {
         return egl::EglNotInitialized() << "Failed to create intermediate OpenGL window.";
@@ -253,7 +247,6 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
     if (mFunctionsWGL->createContextAttribsARB)
     {
-
         mWGLContext = initializeContextAttribs(displayAttributes);
     }
 
@@ -326,34 +319,63 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         }
     }
 
-    return DisplayGL::initialize(display);
+    return egl::NoError();
 }
 
 void DisplayWGL::terminate()
 {
     DisplayGL::terminate();
+    destroy();
+}
 
+void DisplayWGL::destroy()
+{
     releaseD3DDevice(mD3D11DeviceHandle);
 
-    mFunctionsWGL->makeCurrent(mDeviceContext, nullptr);
+    if (mFunctionsWGL)
+    {
+        if (mDeviceContext)
+        {
+            mFunctionsWGL->makeCurrent(mDeviceContext, nullptr);
+        }
+        if (mWGLContext)
+        {
+            mFunctionsWGL->deleteContext(mWGLContext);
+        }
+    }
     mCurrentDC = nullptr;
-    mFunctionsWGL->deleteContext(mWGLContext);
     mWGLContext = nullptr;
-
-    ReleaseDC(mWindow, mDeviceContext);
-    mDeviceContext = nullptr;
-
-    DestroyWindow(mWindow);
-    mWindow = nullptr;
-
-    UnregisterClassA(reinterpret_cast<const char *>(mWindowClass), nullptr);
-    mWindowClass = NULL;
 
     SafeDelete(mFunctionsWGL);
     SafeDelete(mFunctionsGL);
 
-    FreeLibrary(mOpenGLModule);
-    mOpenGLModule = nullptr;
+    if (mDeviceContext)
+    {
+        ReleaseDC(mWindow, mDeviceContext);
+        mDeviceContext = nullptr;
+    }
+
+    if (mWindow)
+    {
+        DestroyWindow(mWindow);
+        mWindow = nullptr;
+    }
+
+    if (mWindowClass)
+    {
+        if (!UnregisterClassA(reinterpret_cast<const char *>(mWindowClass),
+                              GetModuleHandle(nullptr)))
+        {
+            WARN() << "Failed to unregister OpenGL window class: " << gl::FmtHex(mWindowClass);
+        }
+        mWindowClass = NULL;
+    }
+
+    if (mOpenGLModule)
+    {
+        FreeLibrary(mOpenGLModule);
+        mOpenGLModule = nullptr;
+    }
 
     SafeRelease(mD3D11Device);
 
@@ -400,7 +422,7 @@ SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::SurfaceState &state,
 {
     EGLint width          = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
     EGLint height         = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
-    bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
+    bool largest          = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
     EGLenum textureFormat = static_cast<EGLenum>(attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE));
     EGLenum textureTarget = static_cast<EGLenum>(attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE));
 
@@ -456,10 +478,10 @@ egl::ConfigSet DisplayWGL::generateConfigs()
     bool supportsES3 = maxVersion >= gl::Version(3, 0);
 
     PIXELFORMATDESCRIPTOR pixelFormatDescriptor;
-    DescribePixelFormat(mDeviceContext, mPixelFormat, sizeof(pixelFormatDescriptor), &pixelFormatDescriptor);
+    DescribePixelFormat(mDeviceContext, mPixelFormat, sizeof(pixelFormatDescriptor),
+                        &pixelFormatDescriptor);
 
-    auto getAttrib = [this](int attrib)
-    {
+    auto getAttrib = [this](int attrib) {
         return wgl::QueryWGLFormatAttrib(mDeviceContext, mPixelFormat, attrib, mFunctionsWGL);
     };
 
@@ -467,35 +489,36 @@ egl::ConfigSet DisplayWGL::generateConfigs()
         mUseDXGISwapChains ? EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE : 0;
 
     egl::Config config;
-    config.renderTargetFormat = GL_RGBA8; // TODO: use the bit counts to determine the format
-    config.depthStencilFormat = GL_DEPTH24_STENCIL8; // TODO: use the bit counts to determine the format
-    config.bufferSize = pixelFormatDescriptor.cColorBits;
-    config.redSize = pixelFormatDescriptor.cRedBits;
-    config.greenSize = pixelFormatDescriptor.cGreenBits;
-    config.blueSize = pixelFormatDescriptor.cBlueBits;
-    config.luminanceSize = 0;
-    config.alphaSize = pixelFormatDescriptor.cAlphaBits;
-    config.alphaMaskSize = 0;
-    config.bindToTextureRGB   = (getAttrib(WGL_BIND_TO_TEXTURE_RGB_ARB) == TRUE);
-    config.bindToTextureRGBA  = (getAttrib(WGL_BIND_TO_TEXTURE_RGBA_ARB) == TRUE);
-    config.colorBufferType = EGL_RGB_BUFFER;
-    config.configCaveat = EGL_NONE;
-    config.conformant = EGL_OPENGL_ES2_BIT | (supportsES3 ? EGL_OPENGL_ES3_BIT_KHR : 0);
-    config.depthSize = pixelFormatDescriptor.cDepthBits;
-    config.level = 0;
+    config.renderTargetFormat = GL_RGBA8;  // TODO: use the bit counts to determine the format
+    config.depthStencilFormat =
+        GL_DEPTH24_STENCIL8;  // TODO: use the bit counts to determine the format
+    config.bufferSize        = pixelFormatDescriptor.cColorBits;
+    config.redSize           = pixelFormatDescriptor.cRedBits;
+    config.greenSize         = pixelFormatDescriptor.cGreenBits;
+    config.blueSize          = pixelFormatDescriptor.cBlueBits;
+    config.luminanceSize     = 0;
+    config.alphaSize         = pixelFormatDescriptor.cAlphaBits;
+    config.alphaMaskSize     = 0;
+    config.bindToTextureRGB  = (getAttrib(WGL_BIND_TO_TEXTURE_RGB_ARB) == TRUE);
+    config.bindToTextureRGBA = (getAttrib(WGL_BIND_TO_TEXTURE_RGBA_ARB) == TRUE);
+    config.colorBufferType   = EGL_RGB_BUFFER;
+    config.configCaveat      = EGL_NONE;
+    config.conformant        = EGL_OPENGL_ES2_BIT | (supportsES3 ? EGL_OPENGL_ES3_BIT_KHR : 0);
+    config.depthSize         = pixelFormatDescriptor.cDepthBits;
+    config.level             = 0;
     config.matchNativePixmap = EGL_NONE;
-    config.maxPBufferWidth    = getAttrib(WGL_MAX_PBUFFER_WIDTH_ARB);
-    config.maxPBufferHeight   = getAttrib(WGL_MAX_PBUFFER_HEIGHT_ARB);
-    config.maxPBufferPixels   = getAttrib(WGL_MAX_PBUFFER_PIXELS_ARB);
-    config.maxSwapInterval = maxSwapInterval;
-    config.minSwapInterval = minSwapInterval;
-    config.nativeRenderable = EGL_TRUE; // Direct rendering
-    config.nativeVisualID = 0;
-    config.nativeVisualType = EGL_NONE;
-    config.renderableType = EGL_OPENGL_ES2_BIT | (supportsES3 ? EGL_OPENGL_ES3_BIT_KHR : 0);
-    config.sampleBuffers = 0; // FIXME: enumerate multi-sampling
-    config.samples = 0;
-    config.stencilSize = pixelFormatDescriptor.cStencilBits;
+    config.maxPBufferWidth   = getAttrib(WGL_MAX_PBUFFER_WIDTH_ARB);
+    config.maxPBufferHeight  = getAttrib(WGL_MAX_PBUFFER_HEIGHT_ARB);
+    config.maxPBufferPixels  = getAttrib(WGL_MAX_PBUFFER_PIXELS_ARB);
+    config.maxSwapInterval   = maxSwapInterval;
+    config.minSwapInterval   = minSwapInterval;
+    config.nativeRenderable  = EGL_TRUE;  // Direct rendering
+    config.nativeVisualID    = 0;
+    config.nativeVisualType  = EGL_NONE;
+    config.renderableType    = EGL_OPENGL_ES2_BIT | (supportsES3 ? EGL_OPENGL_ES3_BIT_KHR : 0);
+    config.sampleBuffers     = 0;  // FIXME: enumerate multi-sampling
+    config.samples           = 0;
+    config.stencilSize       = pixelFormatDescriptor.cStencilBits;
     config.surfaceType =
         ((pixelFormatDescriptor.dwFlags & PFD_DRAW_TO_WINDOW) ? EGL_WINDOW_BIT : 0) |
         ((getAttrib(WGL_DRAW_TO_PBUFFER_ARB) == TRUE) ? EGL_PBUFFER_BIT : 0) |
@@ -504,10 +527,10 @@ egl::ConfigSet DisplayWGL::generateConfigs()
     config.optimalOrientation = optimalSurfaceOrientation;
     config.colorComponentType = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
 
-    config.transparentType = EGL_NONE;
-    config.transparentRedValue = 0;
+    config.transparentType       = EGL_NONE;
+    config.transparentRedValue   = 0;
     config.transparentGreenValue = 0;
-    config.transparentBlueValue = 0;
+    config.transparentBlueValue  = 0;
 
     configs.add(config);
 
@@ -543,7 +566,7 @@ egl::Error DisplayWGL::validateClientBuffer(const egl::Config *configuration,
     {
         case EGL_D3D_TEXTURE_ANGLE:
         case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
-            ANGLE_TRY(const_cast<DisplayWGL*>(this)->initializeD3DDevice());
+            ANGLE_TRY(const_cast<DisplayWGL *>(this)->initializeD3DDevice());
             return D3DTextureSurfaceWGL::ValidateD3DTextureClientBuffer(buftype, clientBuffer,
                                                                         mD3D11Device);
 
@@ -554,7 +577,7 @@ egl::Error DisplayWGL::validateClientBuffer(const egl::Config *configuration,
 
 std::string DisplayWGL::getVendorString() const
 {
-    //UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return "";
 }
 

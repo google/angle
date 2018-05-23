@@ -67,6 +67,9 @@ class DisplayWGL : public DisplayGL
     void releaseD3DDevice(HANDLE handle);
 
   private:
+    egl::Error initializeImpl(egl::Display *display);
+    void destroy();
+
     const FunctionsGL *getFunctionsGL() const override;
 
     egl::Error initializeD3DDevice();
@@ -108,8 +111,6 @@ class DisplayWGL : public DisplayGL
         size_t refCount;
     };
     std::map<IUnknown *, D3DObjectHandle> mRegisteredD3DDevices;
-
-    egl::Display *mDisplay;
 };
 
 }
