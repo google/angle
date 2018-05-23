@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55e6392a_9a2f6cc9",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-23T14:16:41Z",
+      "side": 1,
+      "message": "Note to self: Packed enums might change values between commits of ANGLE but should be save to use as a disk cache data because the cache is invalidated between ANGLE versions anyway.",
+      "revId": "b5331bc3623e06e0ce522dc2130a6bea6884de3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a12c7f8_612dca5d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-23T14:16:41Z",
+      "side": 1,
+      "message": "I think we should switch on drawMode and test geometryShaderInputPrimitiveType inside the cases.",
+      "revId": "b5331bc3623e06e0ce522dc2130a6bea6884de3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "492e7da8_abc145ea",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-23T14:16:41Z",
+      "side": 1,
+      "message": "Same here",
+      "revId": "b5331bc3623e06e0ce522dc2130a6bea6884de3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
