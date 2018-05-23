@@ -235,6 +235,30 @@
       "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a84fd096_7c448764",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T19:56:58Z",
+      "side": 1,
+      "message": "Not sure if it\u0027s a good alternative, but you could have something like\nvoid *eglHandle \u003d display-\u003egetAttributeMap().contains(EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE) ? display-\u003egetAttributeMap().get(EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE) : nullptr;\nJamie, Geoff, any thoughts?",
+      "parentUuid": "1b5b7830_558649d1",
+      "range": {
+        "startLine": 48,
+        "startChar": 94,
+        "endLine": 48,
+        "endChar": 98
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
