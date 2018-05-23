@@ -22,6 +22,30 @@
       "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81d5e0f7_57586384",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T18:22:26Z",
+      "side": 1,
+      "message": "As I mentioned in the other CL, please also modify DisplayOzone accordingly.",
+      "parentUuid": "d23ea1ac_979482c0",
+      "range": {
+        "startLine": 30,
+        "startChar": 26,
+        "endLine": 30,
+        "endChar": 35
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
