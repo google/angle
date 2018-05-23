@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d23ea1ac_979482c0",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-23T17:50:15Z",
+      "side": 1,
+      "message": "nit: this can be void*",
+      "range": {
+        "startLine": 30,
+        "startChar": 26,
+        "endLine": 30,
+        "endChar": 35
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
