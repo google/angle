@@ -174,11 +174,10 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mSurface(VK_NULL_HANDLE),
       mInstance(VK_NULL_HANDLE),
       mSwapchain(VK_NULL_HANDLE),
-      mColorRenderTarget(),
-      mDepthStencilRenderTarget(),
+      mColorRenderTarget(nullptr, nullptr, this),
+      mDepthStencilRenderTarget(&mDepthStencilImage, &mDepthStencilImageView, this),
       mCurrentSwapchainImageIndex(0)
 {
-    mColorRenderTarget.resource = this;
 }
 
 WindowSurfaceVk::~WindowSurfaceVk()
@@ -437,10 +436,6 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         ANGLE_TRY(mDepthStencilImage.initImageView(device, gl::TextureType::_2D, aspect,
                                                    gl::SwizzleState(), &mDepthStencilImageView, 1));
 
-        mDepthStencilRenderTarget.resource  = this;
-        mDepthStencilRenderTarget.image     = &mDepthStencilImage;
-        mDepthStencilRenderTarget.imageView = &mDepthStencilImageView;
-
         // TODO(jmadill): Figure out how to pass depth/stencil image views to the RenderTargetVk.
     }
 
@@ -501,8 +496,7 @@ vk::Error WindowSurfaceVk::nextSwapchainImage(RendererVk *renderer)
     std::swap(image.imageAcquiredSemaphore, mAcquireNextImageSemaphore);
 
     // Update RenderTarget pointers.
-    mColorRenderTarget.image     = &image.image;
-    mColorRenderTarget.imageView = &image.imageView;
+    mColorRenderTarget.updateSwapchainImage(&image.image, &image.imageView);
 
     return vk::NoError();
 }
@@ -549,12 +543,12 @@ void WindowSurfaceVk::setSwapInterval(EGLint interval)
 
 EGLint WindowSurfaceVk::getWidth() const
 {
-    return static_cast<EGLint>(mColorRenderTarget.image->getExtents().width);
+    return static_cast<EGLint>(mColorRenderTarget.getImageExtents().width);
 }
 
 EGLint WindowSurfaceVk::getHeight() const
 {
-    return static_cast<EGLint>(mColorRenderTarget.image->getExtents().height);
+    return static_cast<EGLint>(mColorRenderTarget.getImageExtents().height);
 }
 
 EGLint WindowSurfaceVk::isPostSubBufferSupported() const
@@ -601,7 +595,7 @@ gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
 
     VkFramebufferCreateInfo framebufferInfo;
 
-    const gl::Extents &extents            = mColorRenderTarget.image->getExtents();
+    const gl::Extents &extents            = mColorRenderTarget.getImageExtents();
     std::array<VkImageView, 2> imageViews = {{VK_NULL_HANDLE, mDepthStencilImageView.getHandle()}};
 
     framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

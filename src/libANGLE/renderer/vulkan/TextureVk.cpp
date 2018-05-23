@@ -286,11 +286,8 @@ PixelBuffer::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other
 
 // TextureVk implementation.
 TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
-    : TextureImpl(state), mPixelBuffer(renderer)
+    : TextureImpl(state), mRenderTarget(&mImage, &mBaseLevelImageView, this), mPixelBuffer(renderer)
 {
-    mRenderTarget.image     = &mImage;
-    mRenderTarget.imageView = &mBaseLevelImageView;
-    mRenderTarget.resource  = this;
 }
 
 TextureVk::~TextureVk()

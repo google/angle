@@ -13,27 +13,57 @@
 #include <vulkan/vulkan.h>
 
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 namespace rx
 {
 namespace vk
 {
+class CommandGraphNode;
 class CommandGraphResource;
+struct Format;
 class ImageHelper;
 class ImageView;
+class RenderPassDesc;
 }  // namespace vk
 
 // This is a very light-weight class that does not own to the resources it points to.
 // It's meant only to copy across some information from a FramebufferAttachment to the
-// business rendering logic.
+// business rendering logic. It stores Images and ImageView by pointer for performance.
 class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 {
   public:
-    RenderTargetVk();
+    RenderTargetVk(vk::ImageHelper *image,
+                   vk::ImageView *imageView,
+                   vk::CommandGraphResource *resource);
+    ~RenderTargetVk();
 
-    vk::ImageHelper *image;
-    vk::ImageView *imageView;
-    vk::CommandGraphResource *resource;
+    // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
+    void onColorDraw(Serial currentSerial,
+                     vk::CommandGraphNode *writingNode,
+                     vk::RenderPassDesc *renderPassDesc);
+    void onDepthStencilDraw(Serial currentSerial,
+                            vk::CommandGraphNode *writingNode,
+                            vk::RenderPassDesc *renderPassDesc);
+
+    const vk::ImageHelper &getImage() const;
+
+    vk::ImageHelper *getImageForWrite(Serial currentSerial,
+                                      vk::CommandGraphNode *writingNode) const;
+    vk::ImageView *getImageView() const;
+    vk::CommandGraphResource *getResource() const;
+
+    const vk::Format &getImageFormat() const;
+    const gl::Extents &getImageExtents() const;
+
+    // Special mutator for Surface RenderTargets. Allows the Framebuffer to keep a single
+    // RenderTargetVk pointer.
+    void updateSwapchainImage(vk::ImageHelper *image, vk::ImageView *imageView);
+
+  private:
+    vk::ImageHelper *mImage;
+    vk::ImageView *mImageView;
+    vk::CommandGraphResource *mResource;
 };
 
 }  // namespace rx

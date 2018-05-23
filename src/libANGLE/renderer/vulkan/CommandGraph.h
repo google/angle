@@ -107,12 +107,8 @@ class CommandGraphNode final : angle::NonCopyable
     // storeRenderPassInfo and append*RenderTarget store info relevant to the RenderPass.
     void storeRenderPassInfo(const Framebuffer &framebuffer,
                              const gl::Rectangle renderArea,
+                             const vk::RenderPassDesc &renderPassDesc,
                              const std::vector<VkClearValue> &clearValues);
-
-    // storeRenderPassInfo and append*RenderTarget store info relevant to the RenderPass.
-    // Note: RenderTargets must be added in order, with the depth/stencil being added last.
-    void appendColorRenderTarget(Serial serial, RenderTargetVk *colorRenderTarget);
-    void appendDepthStencilRenderTarget(Serial serial, RenderTargetVk *depthStencilRenderTarget);
 
     // Dependency commands order node execution in the command graph.
     // Once a node has commands that must happen after it, recording is stopped and the node is
