@@ -499,7 +499,7 @@ Format Format::Invalid()
 std::ostream &operator<<(std::ostream &os, const Format &fmt)
 {
     // TODO(ynovikov): return string representation when available
-    return FmtHexShort(os, fmt.info->sizedInternalFormat);
+    return FmtHex(os, fmt.info->sizedInternalFormat);
 }
 
 bool InternalFormat::operator==(const InternalFormat &other) const

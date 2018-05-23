@@ -127,39 +127,52 @@ std::ostream &FmtHex(std::ostream &os, T value)
 
     return os;
 }
-}  // namespace priv
-
-#if defined(ANGLE_PLATFORM_WINDOWS)
-class FmtHR
-{
-  public:
-    explicit FmtHR(HRESULT hresult) : mHR(hresult) {}
-  private:
-    HRESULT mHR;
-    friend std::ostream &operator<<(std::ostream &os, const FmtHR &fmt);
-};
-
-class FmtErr
-{
-  public:
-    explicit FmtErr(DWORD err) : mErr(err) {}
-
-  private:
-    DWORD mErr;
-    friend std::ostream &operator<<(std::ostream &os, const FmtErr &fmt);
-};
-#endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
 template <typename T>
-std::ostream &FmtHexShort(std::ostream &os, T value)
+std::ostream &FmtHexAutoSized(std::ostream &os, T value)
 {
-    return priv::FmtHex<4>(os, value);
+    constexpr int N = sizeof(T) * 2;
+    return priv::FmtHex<N>(os, value);
 }
 
 template <typename T>
-std::ostream &FmtHexInt(std::ostream &os, T value)
+class FmtHexHelper
 {
-    return priv::FmtHex<8>(os, value);
+  public:
+    FmtHexHelper(const char *prefix, T value) : mPrefix(prefix), mValue(value) {}
+    explicit FmtHexHelper(T value) : mPrefix(nullptr), mValue(value) {}
+
+  private:
+    const char *mPrefix;
+    T mValue;
+
+    friend std::ostream &operator<<(std::ostream &os, const FmtHexHelper &fmt)
+    {
+        if (fmt.mPrefix)
+        {
+            os << fmt.mPrefix;
+        }
+        return FmtHexAutoSized(os, fmt.mValue);
+    }
+};
+
+}  // namespace priv
+
+template <typename T>
+priv::FmtHexHelper<T> FmtHex(T value)
+{
+    return priv::FmtHexHelper<T>(value);
+}
+
+#if defined(ANGLE_PLATFORM_WINDOWS)
+priv::FmtHexHelper<HRESULT> FmtHR(HRESULT value);
+priv::FmtHexHelper<DWORD> FmtErr(DWORD value);
+#endif  // defined(ANGLE_PLATFORM_WINDOWS)
+
+template <typename T>
+std::ostream &FmtHex(std::ostream &os, T value)
+{
+    return priv::FmtHexAutoSized(os, value);
 }
 
 // A few definitions of macros that don't generate much code. These are used

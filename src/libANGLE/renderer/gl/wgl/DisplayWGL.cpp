@@ -105,8 +105,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     const LPSTR idcArrow = MAKEINTRESOURCEA(32512);
 
     std::ostringstream stream;
-    stream << "ANGLE DisplayWGL " << std::internal << std::setw(10) << std::setfill('0') << mDisplay
-           << " Intermediate Window Class";
+    stream << "ANGLE DisplayWGL " << gl::FmtHex(mDisplay) << " Intermediate Window Class";
     std::string className = stream.str();
 
     WNDCLASSA intermediateClassDesc = { 0 };
