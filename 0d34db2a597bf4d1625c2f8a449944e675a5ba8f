@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8026fc8f_9be13dd9",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-23T12:29:45Z",
+      "side": 1,
+      "message": "I would think when I read \"onRenderColor\" that this would be called when we\u0027re actually rendering something, but we are currently executing the \"getCommandNodeForDraw\" which is just getting a node in theory.\n\nIts hard to understand why we are telling that target that we are currently rendering, when in fact we are getting a node according to the current function name. Can we rename one or the other, or both for this to be more easily understandable?",
+      "range": {
+        "startLine": 773,
+        "startChar": 27,
+        "endLine": 773,
+        "endChar": 40
+      },
+      "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34ea4984_afbe5f17",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-23T12:29:45Z",
+      "side": 1,
+      "message": "I do not understand that we are calling \"getImageForWrite\", but we are not writing to this image, we are actually copying it to a buffer.",
+      "range": {
+        "startLine": 821,
+        "startChar": 21,
+        "endLine": 821,
+        "endChar": 29
+      },
+      "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6234cb7c_7e0fa75e",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-23T12:29:45Z",
+      "side": 1,
+      "message": "If we are receiving pointer to objects and storing them, should we not be using shared_ptrs to be safe?",
+      "range": {
+        "startLine": 18,
+        "startChar": 31,
+        "endLine": 20,
+        "endChar": 65
+      },
+      "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44946aeb_b74b6607",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-23T12:29:45Z",
+      "side": 1,
+      "message": "Should we call this \"updateSwapchainImage\" simply?",
+      "range": {
+        "startLine": 499,
+        "startChar": 23,
+        "endLine": 499,
+        "endChar": 43
+      },
+      "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
