@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fcc9e21_d14f5c91",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-23T22:42:16Z",
+      "side": 1,
+      "message": "nit: Can we have a comment about how resizing renderbuffers here will update them in all framebuffers in which they are used?",
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
