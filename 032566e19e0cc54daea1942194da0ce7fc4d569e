@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5845b529_32ce6beb",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/PushConstantColor.frag",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-05-23T05:14:46Z",
+      "side": 1,
+      "message": "\u0027location\u0027 is only available for default block uniform variables according to the ESSL spec. So I think it\u0027s not applicable to push constants.",
+      "parentUuid": "35e7a75b_94b3a4cb",
+      "range": {
+        "startLine": 10,
+        "startChar": 7,
+        "endLine": 10,
+        "endChar": 20
+      },
+      "revId": "032566e19e0cc54daea1942194da0ce7fc4d569e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c8298f16_540ce254",
         "filename": "src/libANGLE/renderer/vulkan/shaders/src/PushConstantColor.frag",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "032566e19e0cc54daea1942194da0ce7fc4d569e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f65d491c_d34d92fe",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/PushConstantColor.frag",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-05-23T05:14:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8298f16_540ce254",
+      "range": {
+        "startLine": 12,
+        "startChar": 2,
+        "endLine": 12,
+        "endChar": 19
+      },
+      "revId": "032566e19e0cc54daea1942194da0ce7fc4d569e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
