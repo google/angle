@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de59b3e8_43376760",
+        "filename": "extensions/ANGLE_explicit_context_gles1.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-23T16:38:19Z",
+      "side": 1,
+      "message": "Needs _gles1 suffix",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "72aac562fc5d0052b1ec3b905ec49a7c2c560894",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
