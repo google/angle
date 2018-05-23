@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a7ee86f_c112b2c9",
+        "filename": "src/common/gen_packed_gl_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-23T13:54:21Z",
+      "side": 1,
+      "message": "That\u0027s a cool idea!",
+      "revId": "c7a6e2d79cd55614d30a5785fb3eef92b5a639a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a962213_272417ff",
+        "filename": "src/common/gen_packed_gl_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-23T13:54:21Z",
+      "side": 1,
+      "message": "Maybe this can be done for all enums. It would change the ordering of existing enums but the code shouldn\u0027t rely on that anyway. This would remove the need to detect (ordered)",
+      "revId": "c7a6e2d79cd55614d30a5785fb3eef92b5a639a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
