@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22706d50_3db2eb84",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-23T14:25:12Z",
+      "side": 1,
+      "message": "Comment above each of these negative cases with what they test?",
+      "revId": "e8c773f4b41e3f3a07e7b132e457415d770f41c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
