@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "82b25e4e_f3fb8ff4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-23T00:45:57Z",
+      "side": 1,
+      "message": "Is it better to add an example of this in the commit message and a test in angle_end2end_test for reviewer and your further work.",
+      "revId": "0548ec441ed755bd308202e50501a85a1cca2639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f413349c_98ae1779",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 1
