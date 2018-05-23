@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "51be6ee1_e5c556e2",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T18:33:08Z",
+      "side": 1,
+      "message": "Sorry, probably can\u0027t be static.",
+      "parentUuid": "939e1433_70f0d180",
+      "range": {
+        "startLine": 42,
+        "startChar": 46,
+        "endLine": 42,
+        "endChar": 53
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "139659cd_38688cbc",
         "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
         "patchSetId": 11
