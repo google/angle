@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "558e2ae6_25eddc91",
+        "filename": "src/common/gen_packed_gl_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-23T17:33:24Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "3a7ee86f_c112b2c9",
+      "revId": "c7a6e2d79cd55614d30a5785fb3eef92b5a639a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a962213_272417ff",
         "filename": "src/common/gen_packed_gl_enums.py",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "c7a6e2d79cd55614d30a5785fb3eef92b5a639a0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5582fc3_293d1298",
+        "filename": "src/common/gen_packed_gl_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-23T17:33:24Z",
+      "side": 1,
+      "message": "Agree, done. Also sorted the non-ordered enums alphabetically in the JSON.",
+      "parentUuid": "1a962213_272417ff",
+      "revId": "c7a6e2d79cd55614d30a5785fb3eef92b5a639a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
