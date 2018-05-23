@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "939e1433_70f0d180",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T18:31:45Z",
+      "side": 1,
+      "message": "This code in not Android-specific, please rephrase or mention that eglHandle will not be null only on Android. You can also add a static_assert about that if you want.",
+      "range": {
+        "startLine": 42,
+        "startChar": 46,
+        "endLine": 42,
+        "endChar": 53
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "139659cd_38688cbc",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T18:31:45Z",
+      "side": 1,
+      "message": "Not needed anymore.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 0
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d23ea1ac_979482c0",
         "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
         "patchSetId": 11
@@ -42,6 +88,29 @@
         "startChar": 26,
         "endLine": 30,
         "endChar": 35
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb9b38b1_21d1edee",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T18:31:45Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "range": {
+        "startLine": 48,
+        "startChar": 94,
+        "endLine": 48,
+        "endChar": 98
       },
       "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
