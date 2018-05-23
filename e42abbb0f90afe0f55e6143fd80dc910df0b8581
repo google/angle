@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33af86fa_c28f5f9c",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T18:50:44Z",
+      "side": 1,
+      "message": "angle",
+      "range": {
+        "startLine": 81,
+        "startChar": 6,
+        "endLine": 81,
+        "endChar": 13
+      },
+      "revId": "e42abbb0f90afe0f55e6143fd80dc910df0b8581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
