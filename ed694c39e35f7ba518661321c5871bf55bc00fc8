@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33905b8b_37b9378f",
+        "filename": "BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T17:29:32Z",
+      "side": 1,
+      "message": "!android_64bit_current_cpu\nEven better if you change the order and have 32 bit in the else case.",
+      "range": {
+        "startLine": 81,
+        "startChar": 6,
+        "endLine": 81,
+        "endChar": 32
+      },
+      "revId": "ed694c39e35f7ba518661321c5871bf55bc00fc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b27783a_2bf0438a",
+        "filename": "gni/angle.gni",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T17:29:32Z",
+      "side": 1,
+      "message": "There is a limitation that you can\u0027t use a variable that you define in the same declare_args().\nYou need to create a separate declare_args() above, where you just define angle_64bit_current_cpu.",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 28
+      },
+      "revId": "ed694c39e35f7ba518661321c5871bf55bc00fc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7d24491_f2a73119",
+        "filename": "gni/angle.gni",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-23T17:29:32Z",
+      "side": 1,
+      "message": "nit: Could you please use boolean style checks, like !angle_64bit_current_cpu?",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 41
+      },
+      "revId": "ed694c39e35f7ba518661321c5871bf55bc00fc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
