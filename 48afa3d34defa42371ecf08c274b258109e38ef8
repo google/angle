@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4943e85d_38c192cf",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-23T19:13:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51be6ee1_e5c556e2",
+      "range": {
+        "startLine": 42,
+        "startChar": 46,
+        "endLine": 42,
+        "endChar": 53
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "139659cd_38688cbc",
         "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
         "patchSetId": 11
@@ -69,6 +93,30 @@
       "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ca832cf_3e19d196",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-23T19:13:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "139659cd_38688cbc",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 0
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -119,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "b8fab69b_2453ed69",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGLDL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-23T19:13:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d23ea1ac_979482c0",
+      "range": {
+        "startLine": 30,
+        "startChar": 26,
+        "endLine": 30,
+        "endChar": 35
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb9b38b1_21d1edee",
         "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
         "patchSetId": 11
@@ -139,6 +211,30 @@
       "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b5b7830_558649d1",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-23T19:13:22Z",
+      "side": 1,
+      "message": "nullptr gets compiler error. Value needs to be an EGLAttrib.\n\nI went with nullptr and reinterpret_case\u003cEGLAttrib\u003e to make the compiler happy.\nAlternatives?",
+      "parentUuid": "bb9b38b1_21d1edee",
+      "range": {
+        "startLine": 48,
+        "startChar": 94,
+        "endLine": 48,
+        "endChar": 98
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
