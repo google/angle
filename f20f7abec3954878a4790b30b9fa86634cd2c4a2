@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8d0d414d_adb5b9c6",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T23:56:37Z",
+      "side": 1,
+      "message": "It\u0027s not clear to me. I saw this but wanted to keep it refactoring only. Didn\u0027t do this but if you feel strongly can amend.",
+      "parentUuid": "71b8d363_3b044e74",
+      "range": {
+        "startLine": 559,
+        "startChar": 12,
+        "endLine": 559,
+        "endChar": 23
+      },
+      "revId": "f20f7abec3954878a4790b30b9fa86634cd2c4a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e0b27f18_252732af",
         "filename": "src/libANGLE/MemoryProgramCache.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "f20f7abec3954878a4790b30b9fa86634cd2c4a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cca01fe_0b4b008e",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T23:56:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0b27f18_252732af",
+      "range": {
+        "startLine": 242,
+        "startChar": 55,
+        "endLine": 242,
+        "endChar": 62
+      },
+      "revId": "f20f7abec3954878a4790b30b9fa86634cd2c4a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b2afa8bd_a2c10f60",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T23:56:37Z",
+      "side": 1,
+      "message": "It could cause issues for other users of the translator. I think we should try to keep the public API of the translator relatively stable.",
+      "parentUuid": "8c91c615_19383d76",
+      "range": {
+        "startLine": 430,
+        "startChar": 24,
+        "endLine": 430,
+        "endChar": 59
+      },
+      "revId": "f20f7abec3954878a4790b30b9fa86634cd2c4a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66c5f489_43c79f92",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "f20f7abec3954878a4790b30b9fa86634cd2c4a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ef6b505_fb97c670",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T23:56:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "66c5f489_43c79f92",
+      "range": {
+        "startLine": 1256,
+        "startChar": 4,
+        "endLine": 1256,
+        "endChar": 10
+      },
+      "revId": "f20f7abec3954878a4790b30b9fa86634cd2c4a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
