@@ -303,8 +303,8 @@ void ShaderConstants11::markDirty()
 
 bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data, const gl::Texture &texture)
 {
-    bool dirty             = false;
-    unsigned int baseLevel = texture.getTextureState().getEffectiveBaseLevel();
+    bool dirty               = false;
+    unsigned int baseLevel   = texture.getTextureState().getEffectiveBaseLevel();
     gl::TextureTarget target = (texture.getType() == gl::TextureType::CubeMap)
                                    ? gl::kCubeMapTextureTargetMin
                                    : gl::NonCubeTextureTypeToTarget(texture.getType());
@@ -509,29 +509,29 @@ gl::Error ShaderConstants11::updateBuffer(Renderer11 *renderer,
         case gl::ShaderType::Vertex:
             dirty = mShaderConstantsDirty[gl::ShaderType::Vertex] ||
                     (mNumActiveVSSamplers < numSamplers);
-            dataSize                = sizeof(Vertex);
-            data                    = reinterpret_cast<const uint8_t *>(&mVertex);
-            samplerData             = reinterpret_cast<const uint8_t *>(mSamplerMetadataVS.data());
+            dataSize    = sizeof(Vertex);
+            data        = reinterpret_cast<const uint8_t *>(&mVertex);
+            samplerData = reinterpret_cast<const uint8_t *>(mSamplerMetadataVS.data());
             mShaderConstantsDirty.set(gl::ShaderType::Vertex, false);
-            mNumActiveVSSamplers    = numSamplers;
+            mNumActiveVSSamplers = numSamplers;
             break;
         case gl::ShaderType::Fragment:
             dirty = mShaderConstantsDirty[gl::ShaderType::Fragment] ||
                     (mNumActivePSSamplers < numSamplers);
-            dataSize                = sizeof(Pixel);
-            data                    = reinterpret_cast<const uint8_t *>(&mPixel);
-            samplerData             = reinterpret_cast<const uint8_t *>(mSamplerMetadataPS.data());
+            dataSize    = sizeof(Pixel);
+            data        = reinterpret_cast<const uint8_t *>(&mPixel);
+            samplerData = reinterpret_cast<const uint8_t *>(mSamplerMetadataPS.data());
             mShaderConstantsDirty.set(gl::ShaderType::Fragment, false);
-            mNumActivePSSamplers    = numSamplers;
+            mNumActivePSSamplers = numSamplers;
             break;
         case gl::ShaderType::Compute:
             dirty = mShaderConstantsDirty[gl::ShaderType::Compute] ||
                     (mNumActiveCSSamplers < numSamplers);
-            dataSize                = sizeof(Compute);
-            data                    = reinterpret_cast<const uint8_t *>(&mCompute);
-            samplerData             = reinterpret_cast<const uint8_t *>(mSamplerMetadataCS.data());
+            dataSize    = sizeof(Compute);
+            data        = reinterpret_cast<const uint8_t *>(&mCompute);
+            samplerData = reinterpret_cast<const uint8_t *>(mSamplerMetadataCS.data());
             mShaderConstantsDirty.set(gl::ShaderType::Compute, false);
-            mNumActiveCSSamplers    = numSamplers;
+            mNumActiveCSSamplers = numSamplers;
             break;
         default:
             UNREACHABLE();
@@ -551,8 +551,7 @@ gl::Error ShaderConstants11::updateBuffer(Renderer11 *renderer,
         renderer->mapResource(driverConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapping));
 
     memcpy(mapping.pData, data, dataSize);
-    memcpy(reinterpret_cast<uint8_t *>(mapping.pData) + dataSize,
-           samplerData,
+    memcpy(reinterpret_cast<uint8_t *>(mapping.pData) + dataSize, samplerData,
            sizeof(SamplerMetadata) * numSamplers);
 
     renderer->getDeviceContext()->Unmap(driverConstantBuffer.get(), 0);
@@ -582,7 +581,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mCurrentInputLayout(),
       mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0),
       mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
-      mLastAppliedDrawMode(GL_INVALID_INDEX),
+      mLastAppliedDrawMode(gl::PrimitiveMode::InvalidEnum),
       mCurrentMinimumDrawCount(0),
       mDirtySwizzles(false),
       mAppliedIB(nullptr),
@@ -661,7 +660,7 @@ void StateManager11::setShaderResourceInternal(gl::ShaderType shaderType,
     if (record.view != reinterpret_cast<uintptr_t>(srv))
     {
         ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-        ID3D11ShaderResourceView *srvPtr = srv ? srv->get() : nullptr;
+        ID3D11ShaderResourceView *srvPtr   = srv ? srv->get() : nullptr;
         switch (shaderType)
         {
             case gl::ShaderType::Vertex:
@@ -1177,7 +1176,7 @@ gl::Error StateManager11::syncDepthStencilState(const gl::State &glState)
     }
     if (!modifiedGLState.stencilTest)
     {
-        modifiedGLState.stencilWritemask = 0;
+        modifiedGLState.stencilWritemask     = 0;
         modifiedGLState.stencilBackWritemask = 0;
     }
 
@@ -1211,7 +1210,7 @@ gl::Error StateManager11::syncRasterizerState(const gl::Context *context,
 {
     // TODO: Remove pointDrawMode and multiSample from gl::RasterizerState.
     gl::RasterizerState rasterState = context->getGLState().getRasterizerState();
-    rasterState.pointDrawMode       = (drawCallParams.mode() == GL_POINTS);
+    rasterState.pointDrawMode       = (drawCallParams.mode() == gl::PrimitiveMode::Points);
     rasterState.multiSample         = mCurRasterState.multiSample;
 
     ID3D11RasterizerState *dxRasterState = nullptr;
@@ -1273,8 +1272,8 @@ void StateManager11::syncScissorRectangle(const gl::Rectangle &scissor, bool ena
         mRenderer->getDeviceContext()->RSSetScissorRects(numRectangles, rectangles.data());
     }
 
-    mCurScissorRect      = scissor;
-    mCurScissorEnabled   = enabled;
+    mCurScissorRect    = scissor;
+    mCurScissorEnabled = enabled;
 }
 
 void StateManager11::syncViewport(const gl::Context *context)
@@ -1451,7 +1450,7 @@ void StateManager11::invalidateBoundViews()
 
 void StateManager11::invalidateVertexBuffer()
 {
-    unsigned int limit = std::min<unsigned int>(mRenderer->getNativeCaps().maxVertexAttributes,
+    unsigned int limit      = std::min<unsigned int>(mRenderer->getNativeCaps().maxVertexAttributes,
                                                 gl::MAX_VERTEX_ATTRIBS);
     mDirtyVertexBufferRange = gl::RangeUI(0, limit);
     invalidateInputLayout();
@@ -1895,12 +1894,12 @@ gl::Error StateManager11::syncCurrentValueAttribs(const gl::State &glState)
         if (vertexAttributes[attribIndex].enabled)
             continue;
 
-        const auto *attrib                   = &vertexAttributes[attribIndex];
-        const auto &currentValue             = glState.getVertexAttribCurrentValue(attribIndex);
+        const auto *attrib                      = &vertexAttributes[attribIndex];
+        const auto &currentValue                = glState.getVertexAttribCurrentValue(attribIndex);
         TranslatedAttribute *currentValueAttrib = &mCurrentValueAttribs[attribIndex];
-        currentValueAttrib->currentValueType = currentValue.Type;
-        currentValueAttrib->attribute        = attrib;
-        currentValueAttrib->binding          = &vertexBindings[attrib->bindingIndex];
+        currentValueAttrib->currentValueType    = currentValue.Type;
+        currentValueAttrib->attribute           = attrib;
+        currentValueAttrib->binding             = &vertexBindings[attrib->bindingIndex];
 
         mDirtyVertexBufferRange.extend(static_cast<unsigned int>(attribIndex));
 
@@ -2052,7 +2051,7 @@ gl::Error StateManager11::updateState(const gl::Context *context,
         mLastAppliedDrawMode = drawCallParams.mode();
         mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
 
-        bool pointDrawMode = (drawCallParams.mode() == GL_POINTS);
+        bool pointDrawMode = (drawCallParams.mode() == gl::PrimitiveMode::Points);
         if (pointDrawMode != mCurRasterState.pointDrawMode)
         {
             mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
@@ -2667,7 +2666,7 @@ gl::Error StateManager11::setTextureForImage(const gl::Context *context,
 // 6. An internal shader was used.             -> triggered in StateManager11::set*Shader.
 // 7. Drawing with/without point sprites.      -> checked in StateManager11::updateState.
 // TODO(jmadill): Use dirty bits for transform feedback.
-gl::Error StateManager11::syncProgram(const gl::Context *context, GLenum drawMode)
+gl::Error StateManager11::syncProgram(const gl::Context *context, gl::PrimitiveMode drawMode)
 {
     Context11 *context11 = GetImplAs<Context11>(context);
     ANGLE_TRY(context11->triggerDrawCallProgramRecompilation(context, drawMode));
@@ -2777,7 +2776,7 @@ gl::Error StateManager11::applyVertexBuffers(const gl::Context *context,
     bool programUsesInstancedPointSprites =
         programD3D->usesPointSize() && programD3D->usesInstancedPointSpriteEmulation();
     bool instancedPointSpritesActive =
-        programUsesInstancedPointSprites && (drawCallParams.mode() == GL_POINTS);
+        programUsesInstancedPointSprites && (drawCallParams.mode() == gl::PrimitiveMode::Points);
 
     // Note that if we use instance emulation, we reserve the first buffer slot.
     size_t reservedBuffers = GetReservedBufferCount(programUsesInstancedPointSprites);
@@ -3053,7 +3052,7 @@ gl::Error StateManager11::generateSwizzlesForShader(const gl::Context *context, 
     for (unsigned int i = 0; i < samplerRange; i++)
     {
         gl::TextureType textureType = programD3D->getSamplerTextureType(type, i);
-        GLint textureUnit  = programD3D->getSamplerMapping(type, i, context->getCaps());
+        GLint textureUnit           = programD3D->getSamplerMapping(type, i, context->getCaps());
         if (textureUnit != -1)
         {
             gl::Texture *texture = glState.getSamplerTexture(textureUnit, textureType);
@@ -3451,13 +3450,13 @@ void StateManager11::ConstantBufferObserver::reset()
 
 void StateManager11::syncPrimitiveTopology(const gl::State &glState,
                                            ProgramD3D *programD3D,
-                                           GLenum currentDrawMode)
+                                           gl::PrimitiveMode currentDrawMode)
 {
     D3D11_PRIMITIVE_TOPOLOGY primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
     switch (currentDrawMode)
     {
-        case GL_POINTS:
+        case gl::PrimitiveMode::Points:
         {
             bool usesPointSize = programD3D->usesPointSize();
 
@@ -3485,30 +3484,30 @@ void StateManager11::syncPrimitiveTopology(const gl::State &glState,
             mCurrentMinimumDrawCount = 1;
             break;
         }
-        case GL_LINES:
+        case gl::PrimitiveMode::Lines:
             primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
             mCurrentMinimumDrawCount = 2;
             break;
-        case GL_LINE_LOOP:
+        case gl::PrimitiveMode::LineLoop:
             primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
             mCurrentMinimumDrawCount = 2;
             break;
-        case GL_LINE_STRIP:
+        case gl::PrimitiveMode::LineStrip:
             primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
             mCurrentMinimumDrawCount = 2;
             break;
-        case GL_TRIANGLES:
+        case gl::PrimitiveMode::Triangles:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
             mCurrentMinimumDrawCount =
                 CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
             break;
-        case GL_TRIANGLE_STRIP:
+        case gl::PrimitiveMode::TriangleStrip:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
             mCurrentMinimumDrawCount =
                 CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
             break;
         // emulate fans via rewriting index buffer
-        case GL_TRIANGLE_FAN:
+        case gl::PrimitiveMode::TriangleFan:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
             mCurrentMinimumDrawCount =
                 CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;

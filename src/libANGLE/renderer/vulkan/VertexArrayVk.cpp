@@ -98,7 +98,7 @@ gl::Error VertexArrayVk::streamVertexData(RendererVk *renderer,
         const size_t firstByte = drawCallParams.firstVertex() * binding.getStride();
         const size_t lastByte =
             lastVertex * binding.getStride() + gl::ComputeVertexAttributeTypeSize(attrib);
-        uint8_t *dst = nullptr;
+        uint8_t *dst    = nullptr;
         uint32_t offset = 0;
         ANGLE_TRY(mDynamicVertexData.allocate(
             renderer, lastByte, &dst, &mCurrentArrayBufferHandles[attribIndex], &offset, nullptr));
@@ -361,7 +361,7 @@ gl::Error VertexArrayVk::drawArrays(const gl::Context *context,
     // Note: Vertex indexes can be arbitrarily large.
     uint32_t clampedVertexCount = drawCallParams.getClampedVertexCount<uint32_t>();
 
-    if (drawCallParams.mode() != GL_LINE_LOOP)
+    if (drawCallParams.mode() != gl::PrimitiveMode::LineLoop)
     {
         commandBuffer->draw(clampedVertexCount, 1, drawCallParams.firstVertex(), 0);
         return gl::NoError();
@@ -398,7 +398,7 @@ gl::Error VertexArrayVk::drawElements(const gl::Context *context,
     vk::CommandBuffer *commandBuffer = drawNode->getInsideRenderPassCommands();
     ASSERT(commandBuffer->valid());
 
-    if (drawCallParams.mode() != GL_LINE_LOOP)
+    if (drawCallParams.mode() != gl::PrimitiveMode::LineLoop)
     {
         ANGLE_TRY(onIndexedDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
         commandBuffer->drawIndexed(drawCallParams.indexCount(), 1, 0, 0, 0);
@@ -491,7 +491,8 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
 {
     ANGLE_TRY(onDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
 
-    if (!mState.getElementArrayBuffer().get() && drawCallParams.mode() != GL_LINE_LOOP)
+    if (!mState.getElementArrayBuffer().get() &&
+        drawCallParams.mode() != gl::PrimitiveMode::LineLoop)
     {
         ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
         ANGLE_TRY(streamIndexData(renderer, drawCallParams));

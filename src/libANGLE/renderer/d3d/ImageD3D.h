@@ -38,7 +38,7 @@ class ImageD3D : angle::NonCopyable
 {
   public:
     ImageD3D();
-    virtual ~ImageD3D() {};
+    virtual ~ImageD3D(){};
 
     GLsizei getWidth() const { return mWidth; }
     GLsizei getHeight() const { return mHeight; }
@@ -61,7 +61,7 @@ class ImageD3D : angle::NonCopyable
                                const gl::PixelUnpackState &unpack,
                                GLenum type,
                                const void *input,
-                               bool applySkipImages) = 0;
+                               bool applySkipImages)        = 0;
     virtual gl::Error loadCompressedData(const gl::Context *context,
                                          const gl::Box &area,
                                          const void *input) = 0;
@@ -87,7 +87,7 @@ class ImageD3D : angle::NonCopyable
 
     virtual gl::Error copyFromTexStorage(const gl::Context *context,
                                          const gl::ImageIndex &imageIndex,
-                                         TextureStorage *source) = 0;
+                                         TextureStorage *source)         = 0;
     virtual gl::Error copyFromFramebuffer(const gl::Context *context,
                                           const gl::Offset &destOffset,
                                           const gl::Rectangle &sourceArea,
@@ -103,7 +103,6 @@ class ImageD3D : angle::NonCopyable
 
     bool mDirty;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_D3D_IMAGED3D_H_
+#endif  // LIBANGLE_RENDERER_D3D_IMAGED3D_H_

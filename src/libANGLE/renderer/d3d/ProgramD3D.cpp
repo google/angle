@@ -135,27 +135,27 @@ bool ExpandMatrix(T *target, const GLfloat *value)
     return true;
 }
 
-gl::PrimitiveType GetGeometryShaderTypeFromDrawMode(GLenum drawMode)
+gl::PrimitiveType GetGeometryShaderTypeFromDrawMode(gl::PrimitiveMode drawMode)
 {
     switch (drawMode)
     {
         // Uses the point sprite geometry shader.
-        case GL_POINTS:
+        case gl::PrimitiveMode::Points:
             return gl::PRIMITIVE_POINTS;
 
         // All line drawing uses the same geometry shader.
-        case GL_LINES:
-        case GL_LINE_STRIP:
-        case GL_LINE_LOOP:
+        case gl::PrimitiveMode::Lines:
+        case gl::PrimitiveMode::LineStrip:
+        case gl::PrimitiveMode::LineLoop:
             return gl::PRIMITIVE_LINES;
 
         // The triangle fan primitive is emulated with strips in D3D11.
-        case GL_TRIANGLES:
-        case GL_TRIANGLE_FAN:
+        case gl::PrimitiveMode::Triangles:
+        case gl::PrimitiveMode::TriangleFan:
             return gl::PRIMITIVE_TRIANGLES;
 
         // Special case for triangle strips.
-        case GL_TRIANGLE_STRIP:
+        case gl::PrimitiveMode::TriangleStrip:
             return gl::PRIMITIVE_TRIANGLE_STRIP;
 
         default:
@@ -668,13 +668,13 @@ bool ProgramD3D::usesGeometryShaderForPointSpriteEmulation() const
     return usesPointSpriteEmulation() && !usesInstancedPointSpriteEmulation();
 }
 
-bool ProgramD3D::usesGeometryShader(GLenum drawMode) const
+bool ProgramD3D::usesGeometryShader(gl::PrimitiveMode drawMode) const
 {
     if (mHasANGLEMultiviewEnabled && !mRenderer->canSelectViewInVertexShader())
     {
         return true;
     }
-    if (drawMode != GL_POINTS)
+    if (drawMode != gl::PrimitiveMode::Points)
     {
         return mUsesFlatInterpolation;
     }
@@ -1356,7 +1356,7 @@ gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(ShaderExecutableD3
 }
 
 gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *context,
-                                                            GLenum drawMode,
+                                                            gl::PrimitiveMode drawMode,
                                                             ShaderExecutableD3D **outExecutable,
                                                             gl::InfoLog *infoLog)
 {
@@ -1497,10 +1497,10 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
     {
         // Auto-generate the geometry shader here, if we expect to be using point rendering in
         // D3D11.
-        if (mProgram->usesGeometryShader(GL_POINTS))
+        if (mProgram->usesGeometryShader(gl::PrimitiveMode::Points))
         {
-            ANGLE_TRY(mProgram->getGeometryExecutableForPrimitiveType(mContext, GL_POINTS, &mResult,
-                                                                      &mInfoLog));
+            ANGLE_TRY(mProgram->getGeometryExecutableForPrimitiveType(
+                mContext, gl::PrimitiveMode::Points, &mResult, &mInfoLog));
         }
 
         return gl::NoError();
@@ -1562,7 +1562,7 @@ gl::LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context,
     const ShaderD3D *vertexShaderD3D =
         GetImplAs<ShaderD3D>(mState.getAttachedShader(gl::ShaderType::Vertex));
 
-    if (usesGeometryShader(GL_POINTS) && pointGS)
+    if (usesGeometryShader(gl::PrimitiveMode::Points) && pointGS)
     {
         // Geometry shaders are currently only used internally, so there is no corresponding shader
         // object at the interface level. For now the geometry shader debug info is prepended to
@@ -1585,7 +1585,7 @@ gl::LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context,
     }
 
     return (defaultVertexExecutable && defaultPixelExecutable &&
-            (!usesGeometryShader(GL_POINTS) || pointGS));
+            (!usesGeometryShader(gl::PrimitiveMode::Points) || pointGS));
 }
 
 gl::LinkResult ProgramD3D::compileComputeExecutable(const gl::Context *context,
@@ -2280,8 +2280,8 @@ void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
                                 uint8_t *targetData,
                                 GLenum uniformType)
 {
-    D3DUniform *targetUniform = mD3DUniforms[locationInfo.index];
-    const int components      = targetUniform->typeInfo.componentCount;
+    D3DUniform *targetUniform             = mD3DUniforms[locationInfo.index];
+    const int components                  = targetUniform->typeInfo.componentCount;
     const unsigned int arrayElementOffset = locationInfo.arrayIndex;
 
     if (targetUniform->typeInfo.type == uniformType)
@@ -2789,7 +2789,7 @@ bool ProgramD3D::hasVertexExecutableForCachedInputLayout()
     return mCachedVertexExecutableIndex.valid();
 }
 
-bool ProgramD3D::hasGeometryExecutableForPrimitiveType(GLenum drawMode)
+bool ProgramD3D::hasGeometryExecutableForPrimitiveType(gl::PrimitiveMode drawMode)
 {
     if (!usesGeometryShader(drawMode))
     {

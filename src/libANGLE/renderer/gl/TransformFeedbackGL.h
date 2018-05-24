@@ -25,7 +25,7 @@ class TransformFeedbackGL : public TransformFeedbackImpl
                         StateManagerGL *stateManager);
     ~TransformFeedbackGL() override;
 
-    void begin(GLenum primitiveMode) override;
+    void begin(gl::PrimitiveMode primitiveMode) override;
     void end() override;
     void pause() override;
     void resume() override;
@@ -36,7 +36,7 @@ class TransformFeedbackGL : public TransformFeedbackImpl
 
     GLuint getTransformFeedbackID() const;
 
-    void syncActiveState(bool active, GLenum primitiveMode) const;
+    void syncActiveState(bool active, gl::PrimitiveMode primitiveMode) const;
     void syncPausedState(bool paused) const;
 
   private:
@@ -48,7 +48,6 @@ class TransformFeedbackGL : public TransformFeedbackImpl
     mutable bool mIsActive;
     mutable bool mIsPaused;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_GL_TRANSFORMFEEDBACKGL_H_
+#endif  // LIBANGLE_RENDERER_GL_TRANSFORMFEEDBACKGL_H_

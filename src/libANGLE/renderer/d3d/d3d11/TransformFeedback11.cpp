@@ -30,7 +30,7 @@ TransformFeedback11::~TransformFeedback11()
 {
 }
 
-void TransformFeedback11::begin(GLenum primitiveMode)
+void TransformFeedback11::begin(gl::PrimitiveMode primitiveMode)
 {
     // Reset all the cached offsets to the binding offsets
     mIsDirty = true;

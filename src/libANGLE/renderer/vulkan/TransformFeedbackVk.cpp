@@ -23,7 +23,7 @@ TransformFeedbackVk::~TransformFeedbackVk()
 {
 }
 
-void TransformFeedbackVk::begin(GLenum primitiveMode)
+void TransformFeedbackVk::begin(gl::PrimitiveMode primitiveMode)
 {
     UNIMPLEMENTED();
 }

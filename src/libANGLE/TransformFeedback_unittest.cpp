@@ -6,6 +6,7 @@
 
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/TransformFeedback.h"
@@ -61,8 +62,8 @@ class TransformFeedbackTest : public testing::Test
     }
 
     rx::MockGLFactory mMockFactory;
-    rx::MockTransformFeedbackImpl* mImpl;
-    gl::TransformFeedback* mFeedback;
+    rx::MockTransformFeedbackImpl *mImpl;
+    gl::TransformFeedback *mFeedback;
     gl::Caps mCaps;
 };
 
@@ -71,10 +72,10 @@ TEST_F(TransformFeedbackTest, SideEffectsOfStartAndStop)
     testing::InSequence seq;
 
     EXPECT_FALSE(mFeedback->isActive());
-    EXPECT_CALL(*mImpl, begin(GL_TRIANGLES));
-    mFeedback->begin(nullptr, GL_TRIANGLES, nullptr);
+    EXPECT_CALL(*mImpl, begin(gl::PrimitiveMode::Triangles));
+    mFeedback->begin(nullptr, gl::PrimitiveMode::Triangles, nullptr);
     EXPECT_TRUE(mFeedback->isActive());
-    EXPECT_EQ(static_cast<GLenum>(GL_TRIANGLES), mFeedback->getPrimitiveMode());
+    EXPECT_EQ(gl::PrimitiveMode::Triangles, mFeedback->getPrimitiveMode());
     EXPECT_CALL(*mImpl, end());
     mFeedback->end(nullptr);
     EXPECT_FALSE(mFeedback->isActive());
@@ -85,8 +86,8 @@ TEST_F(TransformFeedbackTest, SideEffectsOfPauseAndResume)
     testing::InSequence seq;
 
     EXPECT_FALSE(mFeedback->isActive());
-    EXPECT_CALL(*mImpl, begin(GL_TRIANGLES));
-    mFeedback->begin(nullptr, GL_TRIANGLES, nullptr);
+    EXPECT_CALL(*mImpl, begin(gl::PrimitiveMode::Triangles));
+    mFeedback->begin(nullptr, gl::PrimitiveMode::Triangles, nullptr);
     EXPECT_FALSE(mFeedback->isPaused());
     EXPECT_CALL(*mImpl, pause());
     mFeedback->pause();

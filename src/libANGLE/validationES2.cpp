@@ -5764,13 +5764,13 @@ bool ValidateViewport(Context *context, GLint x, GLint y, GLsizei width, GLsizei
     return true;
 }
 
-bool ValidateDrawArrays(Context *context, GLenum mode, GLint first, GLsizei count)
+bool ValidateDrawArrays(Context *context, PrimitiveMode mode, GLint first, GLsizei count)
 {
     return ValidateDrawArraysCommon(context, mode, first, count, 1);
 }
 
 bool ValidateDrawElements(Context *context,
-                          GLenum mode,
+                          PrimitiveMode mode,
                           GLsizei count,
                           GLenum type,
                           const void *indices)

@@ -282,7 +282,7 @@ class StateManager11 final : angle::NonCopyable
     void checkPresentPath(const gl::Context *context);
 
     gl::Error syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer);
-    gl::Error syncProgram(const gl::Context *context, GLenum drawMode);
+    gl::Error syncProgram(const gl::Context *context, gl::PrimitiveMode drawMode);
 
     gl::Error syncTextures(const gl::Context *context);
     gl::Error applyTextures(const gl::Context *context, gl::ShaderType shaderType);
@@ -346,7 +346,7 @@ class StateManager11 final : angle::NonCopyable
     bool setPrimitiveTopologyInternal(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology);
     void syncPrimitiveTopology(const gl::State &glState,
                                ProgramD3D *programD3D,
-                               GLenum currentDrawMode);
+                               gl::PrimitiveMode currentDrawMode);
 
     // Not handled by an internal dirty bit because it isn't synced on drawArrays calls.
     gl::Error applyIndexBuffer(const gl::Context *context,
@@ -486,7 +486,7 @@ class StateManager11 final : angle::NonCopyable
 
     // Currently applied primitive topology
     D3D11_PRIMITIVE_TOPOLOGY mCurrentPrimitiveTopology;
-    GLenum mLastAppliedDrawMode;
+    gl::PrimitiveMode mLastAppliedDrawMode;
     GLsizei mCurrentMinimumDrawCount;
 
     // Currently applied shaders

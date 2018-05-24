@@ -55,7 +55,6 @@ class Query final : public RefCountObject, public LabeledObject
 
     std::string mLabel;
 };
-
 }
 
-#endif   // LIBANGLE_QUERY_H_
+#endif  // LIBANGLE_QUERY_H_

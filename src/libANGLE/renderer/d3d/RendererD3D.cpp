@@ -54,9 +54,9 @@ void RendererD3D::cleanup()
     mIncompleteTextures.onDestroy(mDisplay->getProxyContext());
 }
 
-bool RendererD3D::skipDraw(const gl::State &glState, GLenum drawMode)
+bool RendererD3D::skipDraw(const gl::State &glState, gl::PrimitiveMode drawMode)
 {
-    if (drawMode == GL_POINTS)
+    if (drawMode == gl::PrimitiveMode::Points)
     {
         bool usesPointSize = GetImplAs<ProgramD3D>(glState.getProgram())->usesPointSize();
 
@@ -194,10 +194,10 @@ Serial RendererD3D::generateSerial()
     return mSerialFactory.generate();
 }
 
-bool InstancedPointSpritesActive(ProgramD3D *programD3D, GLenum mode)
+bool InstancedPointSpritesActive(ProgramD3D *programD3D, gl::PrimitiveMode mode)
 {
     return programD3D->usesPointSize() && programD3D->usesInstancedPointSpriteEmulation() &&
-           mode == GL_POINTS;
+           mode == gl::PrimitiveMode::Points;
 }
 
 gl::Error RendererD3D::initRenderTarget(RenderTargetD3D *renderTarget)
@@ -223,7 +223,7 @@ void RendererD3D::onDirtyUniformBlockBinding(GLuint /*uniformBlockIndex*/)
 
 unsigned int GetBlendSampleMask(const gl::State &glState, int samples)
 {
-    unsigned int mask   = 0;
+    unsigned int mask = 0;
     if (glState.isSampleCoverageEnabled())
     {
         GLfloat coverageValue = glState.getSampleCoverageValue();

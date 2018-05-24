@@ -20,9 +20,9 @@
 #include <string>
 #include <vector>
 
+#include "common/Optional.h"
 #include "common/angleutils.h"
 #include "common/mathutil.h"
-#include "common/Optional.h"
 
 #include "libANGLE/Constants.h"
 #include "libANGLE/Debug.h"
@@ -50,7 +50,7 @@ class InfoLog;
 class Buffer;
 class Framebuffer;
 
-extern const char * const g_fakepath;
+extern const char *const g_fakepath;
 
 enum class LinkMismatchError
 {
@@ -93,11 +93,7 @@ class InfoLog : angle::NonCopyable
     class StreamHelper : angle::NonCopyable
     {
       public:
-        StreamHelper(StreamHelper &&rhs)
-            : mStream(rhs.mStream)
-        {
-            rhs.mStream = nullptr;
-        }
+        StreamHelper(StreamHelper &&rhs) : mStream(rhs.mStream) { rhs.mStream = nullptr; }
 
         StreamHelper &operator=(StreamHelper &&rhs)
         {
@@ -124,11 +120,7 @@ class InfoLog : angle::NonCopyable
       private:
         friend class InfoLog;
 
-        StreamHelper(std::stringstream *stream)
-            : mStream(stream)
-        {
-            ASSERT(stream);
-        }
+        StreamHelper(std::stringstream *stream) : mStream(stream) { ASSERT(stream); }
 
         std::stringstream *mStream;
     };
@@ -427,8 +419,8 @@ class ProgramState final : angle::NonCopyable
     int mNumViews;
 
     // GL_EXT_geometry_shader.
-    GLenum mGeometryShaderInputPrimitiveType;
-    GLenum mGeometryShaderOutputPrimitiveType;
+    PrimitiveMode mGeometryShaderInputPrimitiveType;
+    PrimitiveMode mGeometryShaderOutputPrimitiveType;
     int mGeometryShaderInvocations;
     int mGeometryShaderMaxVertices;
 
@@ -585,15 +577,42 @@ class Program final : angle::NonCopyable, public LabeledObject
     void setUniform2uiv(GLint location, GLsizei count, const GLuint *v);
     void setUniform3uiv(GLint location, GLsizei count, const GLuint *v);
     void setUniform4uiv(GLint location, GLsizei count, const GLuint *v);
-    void setUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    void setUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    void setUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    void setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    void setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    void setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    void setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    void setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-    void setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void setUniformMatrix2fv(GLint location,
+                             GLsizei count,
+                             GLboolean transpose,
+                             const GLfloat *value);
+    void setUniformMatrix3fv(GLint location,
+                             GLsizei count,
+                             GLboolean transpose,
+                             const GLfloat *value);
+    void setUniformMatrix4fv(GLint location,
+                             GLsizei count,
+                             GLboolean transpose,
+                             const GLfloat *value);
+    void setUniformMatrix2x3fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix3x2fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix2x4fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix4x2fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix3x4fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
+    void setUniformMatrix4x3fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value);
 
     void getUniformfv(const Context *context, GLint location, GLfloat *params) const;
     void getUniformiv(const Context *context, GLint location, GLint *params) const;
@@ -623,8 +642,15 @@ class Program final : angle::NonCopyable, public LabeledObject
     const InterfaceBlock &getUniformBlockByIndex(GLuint index) const;
     const InterfaceBlock &getShaderStorageBlockByIndex(GLuint index) const;
 
-    void setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode);
-    void getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name) const;
+    void setTransformFeedbackVaryings(GLsizei count,
+                                      const GLchar *const *varyings,
+                                      GLenum bufferMode);
+    void getTransformFeedbackVarying(GLuint index,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLsizei *size,
+                                     GLenum *type,
+                                     GLchar *name) const;
     GLsizei getTransformFeedbackVaryingCount() const;
     GLsizei getTransformFeedbackVaryingMaxLength() const;
     GLenum getTransformFeedbackBufferMode() const;
@@ -658,11 +684,11 @@ class Program final : angle::NonCopyable, public LabeledObject
         return mState.mComputeShaderLocalSize;
     }
 
-    GLenum getGeometryShaderInputPrimitiveType() const
+    PrimitiveMode getGeometryShaderInputPrimitiveType() const
     {
         return mState.mGeometryShaderInputPrimitiveType;
     }
-    GLenum getGeometryShaderOutputPrimitiveType() const
+    PrimitiveMode getGeometryShaderOutputPrimitiveType() const
     {
         return mState.mGeometryShaderOutputPrimitiveType;
     }
@@ -806,7 +832,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     ProgramBindings mFragmentInputBindings;
 
     bool mLinked;
-    bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
+    bool mDeleteStatus;  // Flag to indicate that the program can be deleted when no longer in use
 
     unsigned int mRefCount;
 
@@ -821,4 +847,4 @@ class Program final : angle::NonCopyable, public LabeledObject
 };
 }  // namespace gl
 
-#endif   // LIBANGLE_PROGRAM_H_
+#endif  // LIBANGLE_PROGRAM_H_

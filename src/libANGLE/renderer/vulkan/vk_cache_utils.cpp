@@ -643,10 +643,10 @@ void PipelineDesc::updateShaders(Serial vertexSerial, Serial fragmentSerial)
 
 void PipelineDesc::updateViewport(const gl::Rectangle &viewport, float nearPlane, float farPlane)
 {
-    mViewport.x        = static_cast<float>(viewport.x);
-    mViewport.y        = static_cast<float>(viewport.y);
-    mViewport.width    = static_cast<float>(viewport.width);
-    mViewport.height   = static_cast<float>(viewport.height);
+    mViewport.x      = static_cast<float>(viewport.x);
+    mViewport.y      = static_cast<float>(viewport.y);
+    mViewport.width  = static_cast<float>(viewport.width);
+    mViewport.height = static_cast<float>(viewport.height);
     updateDepthRange(nearPlane, farPlane);
 }
 
@@ -665,7 +665,7 @@ void PipelineDesc::updateVertexInputInfo(const VertexInputBindings &bindings,
     mVertexInputAttribs  = attribs;
 }
 
-void PipelineDesc::updateTopology(GLenum drawMode)
+void PipelineDesc::updateTopology(gl::PrimitiveMode drawMode)
 {
     mInputAssemblyInfo.topology = static_cast<uint32_t>(gl_vk::GetPrimitiveTopology(drawMode));
 }

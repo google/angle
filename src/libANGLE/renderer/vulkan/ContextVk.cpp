@@ -53,7 +53,7 @@ constexpr VkColorComponentFlags kAllColorChannelsMask =
 ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     : ContextImpl(state),
       mRenderer(renderer),
-      mCurrentDrawMode(GL_NONE),
+      mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
       mDynamicDescriptorPool(),
       mTexturesDirty(false),
       mVertexArrayBindingHasChanged(false),
@@ -167,7 +167,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 
     if (!graphNode->getInsideRenderPassCommands()->valid())
     {
-        mTexturesDirty    = true;
+        mTexturesDirty       = true;
         *newCommandBufferOut = true;
         ANGLE_TRY(graphNode->beginInsideRenderPassRecording(mRenderer, &commandBuffer));
     }
@@ -218,7 +218,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 
     // Bind the graphics descriptor sets.
     // TODO(jmadill): Handle multiple command buffers.
-    const auto &descriptorSets = programVk->getDescriptorSets();
+    const auto &descriptorSets   = programVk->getDescriptorSets();
     const gl::RangeUI &usedRange = programVk->getUsedDescriptorSetRange();
     if (!usedRange.empty())
     {
@@ -235,7 +235,10 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
+gl::Error ContextVk::drawArrays(const gl::Context *context,
+                                gl::PrimitiveMode mode,
+                                GLint first,
+                                GLsizei count)
 {
     const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
 
@@ -251,7 +254,7 @@ gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint f
 }
 
 gl::Error ContextVk::drawArraysInstanced(const gl::Context *context,
-                                         GLenum mode,
+                                         gl::PrimitiveMode mode,
                                          GLint first,
                                          GLsizei count,
                                          GLsizei instanceCount)
@@ -261,7 +264,7 @@ gl::Error ContextVk::drawArraysInstanced(const gl::Context *context,
 }
 
 gl::Error ContextVk::drawElements(const gl::Context *context,
-                                  GLenum mode,
+                                  gl::PrimitiveMode mode,
                                   GLsizei count,
                                   GLenum type,
                                   const void *indices)
@@ -281,7 +284,7 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
 }
 
 gl::Error ContextVk::drawElementsInstanced(const gl::Context *context,
-                                           GLenum mode,
+                                           gl::PrimitiveMode mode,
                                            GLsizei count,
                                            GLenum type,
                                            const void *indices,
@@ -292,7 +295,7 @@ gl::Error ContextVk::drawElementsInstanced(const gl::Context *context,
 }
 
 gl::Error ContextVk::drawRangeElements(const gl::Context *context,
-                                       GLenum mode,
+                                       gl::PrimitiveMode mode,
                                        GLuint start,
                                        GLuint end,
                                        GLsizei count,
@@ -308,7 +311,7 @@ VkDevice ContextVk::getDevice() const
 }
 
 gl::Error ContextVk::drawArraysIndirect(const gl::Context *context,
-                                        GLenum mode,
+                                        gl::PrimitiveMode mode,
                                         const void *indirect)
 {
     UNIMPLEMENTED();
@@ -316,7 +319,7 @@ gl::Error ContextVk::drawArraysIndirect(const gl::Context *context,
 }
 
 gl::Error ContextVk::drawElementsIndirect(const gl::Context *context,
-                                          GLenum mode,
+                                          gl::PrimitiveMode mode,
                                           GLenum type,
                                           const void *indirect)
 {

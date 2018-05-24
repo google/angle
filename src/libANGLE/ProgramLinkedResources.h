@@ -228,11 +228,11 @@ class InterfaceBlockLinker : angle::NonCopyable
                                        int blockIndex,
                                        const sh::BlockMemberInfo &memberInfo,
                                        int topLevelArraySize,
-                                       ShaderType shaderType) const             = 0;
-    virtual size_t getCurrentBlockMemberIndex() const                           = 0;
+                                       ShaderType shaderType) const = 0;
+    virtual size_t getCurrentBlockMemberIndex() const               = 0;
     virtual void updateBlockMemberActiveImpl(const std::string &fullName,
                                              ShaderType shaderType,
-                                             bool active) const                 = 0;
+                                             bool active) const     = 0;
 
     ShaderMap<const std::vector<sh::InterfaceBlock> *> mShaderBlocks;
 

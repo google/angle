@@ -22,7 +22,7 @@ constexpr ParamTypeInfo DrawCallParams::TypeInfo;
 
 // DrawCallParams implementation.
 // Called by DrawArrays.
-DrawCallParams::DrawCallParams(GLenum mode,
+DrawCallParams::DrawCallParams(PrimitiveMode mode,
                                GLint firstVertex,
                                GLsizei vertexCount,
                                GLsizei instances)
@@ -39,7 +39,7 @@ DrawCallParams::DrawCallParams(GLenum mode,
 }
 
 // Called by DrawElements.
-DrawCallParams::DrawCallParams(GLenum mode,
+DrawCallParams::DrawCallParams(PrimitiveMode mode,
                                GLint indexCount,
                                GLenum type,
                                const void *indices,
@@ -58,7 +58,7 @@ DrawCallParams::DrawCallParams(GLenum mode,
 }
 
 // Called by DrawArraysIndirect.
-DrawCallParams::DrawCallParams(GLenum mode, const void *indirect)
+DrawCallParams::DrawCallParams(PrimitiveMode mode, const void *indirect)
     : mMode(mode),
       mFirstVertex(0),
       mVertexCount(0),
@@ -72,7 +72,7 @@ DrawCallParams::DrawCallParams(GLenum mode, const void *indirect)
 }
 
 // Called by DrawElementsIndirect.
-DrawCallParams::DrawCallParams(GLenum mode, GLenum type, const void *indirect)
+DrawCallParams::DrawCallParams(PrimitiveMode mode, GLenum type, const void *indirect)
     : mMode(mode),
       mFirstVertex(0),
       mVertexCount(0),
@@ -85,7 +85,7 @@ DrawCallParams::DrawCallParams(GLenum mode, GLenum type, const void *indirect)
 {
 }
 
-GLenum DrawCallParams::mode() const
+PrimitiveMode DrawCallParams::mode() const
 {
     return mMode;
 }

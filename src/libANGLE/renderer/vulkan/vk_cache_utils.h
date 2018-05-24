@@ -280,7 +280,7 @@ class PipelineDesc final
                                const VertexInputAttributes &attribs);
 
     // Input assembly info
-    void updateTopology(GLenum drawMode);
+    void updateTopology(gl::PrimitiveMode drawMode);
 
     // Raster states
     void updateCullMode(const gl::RasterizerState &rasterState);

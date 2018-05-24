@@ -46,4 +46,4 @@ class Compiler final : public RefCountObjectNoID
 
 }  // namespace gl
 
-#endif // LIBANGLE_COMPILER_H_
+#endif  // LIBANGLE_COMPILER_H_

@@ -149,8 +149,8 @@ vk::Error AllocateBufferOrImageMemory(VkDevice device,
 }
 }  // anonymous namespace
 
-const char *g_VkLoaderLayersPathEnv    = "VK_LAYER_PATH";
-const char *g_VkICDPathEnv             = "VK_ICD_FILENAMES";
+const char *g_VkLoaderLayersPathEnv = "VK_LAYER_PATH";
+const char *g_VkICDPathEnv          = "VK_ICD_FILENAMES";
 
 const char *VulkanResultString(VkResult result)
 {
@@ -1251,23 +1251,23 @@ VkRect2D GetRect(const gl::Rectangle &source)
             {static_cast<uint32_t>(source.width), static_cast<uint32_t>(source.height)}};
 }
 
-VkPrimitiveTopology GetPrimitiveTopology(GLenum mode)
+VkPrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode)
 {
     switch (mode)
     {
-        case GL_TRIANGLES:
+        case gl::PrimitiveMode::Triangles:
             return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-        case GL_POINTS:
+        case gl::PrimitiveMode::Points:
             return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
-        case GL_LINES:
+        case gl::PrimitiveMode::Lines:
             return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-        case GL_LINE_STRIP:
+        case gl::PrimitiveMode::LineStrip:
             return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
-        case GL_TRIANGLE_FAN:
+        case gl::PrimitiveMode::TriangleFan:
             return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN;
-        case GL_TRIANGLE_STRIP:
+        case gl::PrimitiveMode::TriangleStrip:
             return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-        case GL_LINE_LOOP:
+        case gl::PrimitiveMode::LineLoop:
             return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
         default:
             UNREACHABLE();

@@ -34,7 +34,7 @@ namespace rx
 
 namespace
 {
-bool DrawCallHasStreamingVertexArrays(const gl::Context *context, GLenum mode)
+bool DrawCallHasStreamingVertexArrays(const gl::Context *context, gl::PrimitiveMode mode)
 {
     const gl::State &glState           = context->getGLState();
     const gl::VertexArray *vertexArray = glState.getVertexArray();
@@ -42,8 +42,8 @@ bool DrawCallHasStreamingVertexArrays(const gl::Context *context, GLenum mode)
     // Direct drawing doesn't support dynamic attribute storage since it needs the first and count
     // to translate when applyVertexBuffer. GL_LINE_LOOP and GL_TRIANGLE_FAN are not supported
     // either since we need to simulate them in D3D.
-    if (vertexArray11->hasActiveDynamicAttrib(context) || mode == GL_LINE_LOOP ||
-        mode == GL_TRIANGLE_FAN)
+    if (vertexArray11->hasActiveDynamicAttrib(context) || mode == gl::PrimitiveMode::LineLoop ||
+        mode == gl::PrimitiveMode::TriangleFan)
     {
         return true;
     }
@@ -234,7 +234,10 @@ gl::Error Context11::finish(const gl::Context *context)
     return mRenderer->finish();
 }
 
-gl::Error Context11::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
+gl::Error Context11::drawArrays(const gl::Context *context,
+                                gl::PrimitiveMode mode,
+                                GLint first,
+                                GLsizei count)
 {
     const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
     ASSERT(!drawCallParams.isDrawElements() && !drawCallParams.isDrawIndirect());
@@ -243,7 +246,7 @@ gl::Error Context11::drawArrays(const gl::Context *context, GLenum mode, GLint f
 }
 
 gl::Error Context11::drawArraysInstanced(const gl::Context *context,
-                                         GLenum mode,
+                                         gl::PrimitiveMode mode,
                                          GLint first,
                                          GLsizei count,
                                          GLsizei instanceCount)
@@ -255,7 +258,7 @@ gl::Error Context11::drawArraysInstanced(const gl::Context *context,
 }
 
 gl::Error Context11::drawElements(const gl::Context *context,
-                                  GLenum mode,
+                                  gl::PrimitiveMode mode,
                                   GLsizei count,
                                   GLenum type,
                                   const void *indices)
@@ -267,7 +270,7 @@ gl::Error Context11::drawElements(const gl::Context *context,
 }
 
 gl::Error Context11::drawElementsInstanced(const gl::Context *context,
-                                           GLenum mode,
+                                           gl::PrimitiveMode mode,
                                            GLsizei count,
                                            GLenum type,
                                            const void *indices,
@@ -280,7 +283,7 @@ gl::Error Context11::drawElementsInstanced(const gl::Context *context,
 }
 
 gl::Error Context11::drawRangeElements(const gl::Context *context,
-                                       GLenum mode,
+                                       gl::PrimitiveMode mode,
                                        GLuint start,
                                        GLuint end,
                                        GLsizei count,
@@ -294,7 +297,7 @@ gl::Error Context11::drawRangeElements(const gl::Context *context,
 }
 
 gl::Error Context11::drawArraysIndirect(const gl::Context *context,
-                                        GLenum mode,
+                                        gl::PrimitiveMode mode,
                                         const void *indirect)
 {
     if (DrawCallHasStreamingVertexArrays(context, mode))
@@ -316,7 +319,7 @@ gl::Error Context11::drawArraysIndirect(const gl::Context *context,
 }
 
 gl::Error Context11::drawElementsIndirect(const gl::Context *context,
-                                          GLenum mode,
+                                          gl::PrimitiveMode mode,
                                           GLenum type,
                                           const void *indirect)
 {
@@ -455,7 +458,7 @@ gl::Error Context11::dispatchComputeIndirect(const gl::Context *context, GLintpt
 }
 
 gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *context,
-                                                         GLenum drawMode)
+                                                         gl::PrimitiveMode drawMode)
 {
     const auto &glState    = context->getGLState();
     const auto *va11       = GetImplAs<VertexArray11>(glState.getVertexArray());

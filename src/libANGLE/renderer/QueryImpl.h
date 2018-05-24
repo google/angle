@@ -20,15 +20,15 @@ class QueryImpl : angle::NonCopyable
 {
   public:
     explicit QueryImpl(gl::QueryType type) { mType = type; }
-    virtual ~QueryImpl() { }
+    virtual ~QueryImpl() {}
 
-    virtual gl::Error begin() = 0;
-    virtual gl::Error end() = 0;
-    virtual gl::Error queryCounter() = 0;
-    virtual gl::Error getResult(GLint *params) = 0;
-    virtual gl::Error getResult(GLuint *params) = 0;
-    virtual gl::Error getResult(GLint64 *params) = 0;
-    virtual gl::Error getResult(GLuint64 *params) = 0;
+    virtual gl::Error begin()                            = 0;
+    virtual gl::Error end()                              = 0;
+    virtual gl::Error queryCounter()                     = 0;
+    virtual gl::Error getResult(GLint *params)           = 0;
+    virtual gl::Error getResult(GLuint *params)          = 0;
+    virtual gl::Error getResult(GLint64 *params)         = 0;
+    virtual gl::Error getResult(GLuint64 *params)        = 0;
     virtual gl::Error isResultAvailable(bool *available) = 0;
 
     gl::QueryType getType() const { return mType; }
@@ -36,7 +36,6 @@ class QueryImpl : angle::NonCopyable
   private:
     gl::QueryType mType;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_QUERYIMPL_H_
+#endif  // LIBANGLE_RENDERER_QUERYIMPL_H_

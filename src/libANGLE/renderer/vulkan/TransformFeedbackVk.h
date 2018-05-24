@@ -21,7 +21,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl
     TransformFeedbackVk(const gl::TransformFeedbackState &state);
     ~TransformFeedbackVk() override;
 
-    void begin(GLenum primitiveMode) override;
+    void begin(gl::PrimitiveMode primitiveMode) override;
     void end() override;
     void pause() override;
     void resume() override;

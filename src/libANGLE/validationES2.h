@@ -577,12 +577,12 @@ bool ValidateVertexAttrib4f(Context *context,
 bool ValidateVertexAttrib4fv(Context *context, GLuint index, const GLfloat *values);
 bool ValidateViewport(Context *context, GLint x, GLint y, GLsizei width, GLsizei height);
 bool ValidateDrawElements(Context *context,
-                          GLenum mode,
+                          PrimitiveMode mode,
                           GLsizei count,
                           GLenum type,
                           const void *indices);
 
-bool ValidateDrawArrays(Context *context, GLenum mode, GLint first, GLsizei count);
+bool ValidateDrawArrays(Context *context, PrimitiveMode mode, GLint first, GLsizei count);
 
 bool ValidateGetFramebufferAttachmentParameteriv(Context *context,
                                                  GLenum target,

@@ -35,38 +35,38 @@ class ContextVk : public ContextImpl
 
     // Drawing methods.
     gl::Error drawArrays(const gl::Context *context,
-                         GLenum mode,
+                         gl::PrimitiveMode mode,
                          GLint first,
                          GLsizei count) override;
     gl::Error drawArraysInstanced(const gl::Context *context,
-                                  GLenum mode,
+                                  gl::PrimitiveMode mode,
                                   GLint first,
                                   GLsizei count,
                                   GLsizei instanceCount) override;
 
     gl::Error drawElements(const gl::Context *context,
-                           GLenum mode,
+                           gl::PrimitiveMode mode,
                            GLsizei count,
                            GLenum type,
                            const void *indices) override;
     gl::Error drawElementsInstanced(const gl::Context *context,
-                                    GLenum mode,
+                                    gl::PrimitiveMode mode,
                                     GLsizei count,
                                     GLenum type,
                                     const void *indices,
                                     GLsizei instances) override;
     gl::Error drawRangeElements(const gl::Context *context,
-                                GLenum mode,
+                                gl::PrimitiveMode mode,
                                 GLuint start,
                                 GLuint end,
                                 GLsizei count,
                                 GLenum type,
                                 const void *indices) override;
     gl::Error drawArraysIndirect(const gl::Context *context,
-                                 GLenum mode,
+                                 gl::PrimitiveMode mode,
                                  const void *indirect) override;
     gl::Error drawElementsIndirect(const gl::Context *context,
-                                   GLenum mode,
+                                   gl::PrimitiveMode mode,
                                    GLenum type,
                                    const void *indirect) override;
 
@@ -175,7 +175,7 @@ class ContextVk : public ContextImpl
 
     RendererVk *mRenderer;
     vk::PipelineAndSerial *mCurrentPipeline;
-    GLenum mCurrentDrawMode;
+    gl::PrimitiveMode mCurrentDrawMode;
 
     // Keep a cached pipeline description structure that can be used to query the pipeline cache.
     // Kept in a pointer so allocations can be aligned, and structs can be portably packed.

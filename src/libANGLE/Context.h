@@ -534,23 +534,23 @@ class Context final : angle::NonCopyable
     void clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values);
     void clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
 
-    void drawArrays(GLenum mode, GLint first, GLsizei count);
-    void drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount);
+    void drawArrays(PrimitiveMode mode, GLint first, GLsizei count);
+    void drawArraysInstanced(PrimitiveMode mode, GLint first, GLsizei count, GLsizei instanceCount);
 
-    void drawElements(GLenum mode, GLsizei count, GLenum type, const void *indices);
-    void drawElementsInstanced(GLenum mode,
+    void drawElements(PrimitiveMode mode, GLsizei count, GLenum type, const void *indices);
+    void drawElementsInstanced(PrimitiveMode mode,
                                GLsizei count,
                                GLenum type,
                                const void *indices,
                                GLsizei instances);
-    void drawRangeElements(GLenum mode,
+    void drawRangeElements(PrimitiveMode mode,
                            GLuint start,
                            GLuint end,
                            GLsizei count,
                            GLenum type,
                            const void *indices);
-    void drawArraysIndirect(GLenum mode, const void *indirect);
-    void drawElementsIndirect(GLenum mode, GLenum type, const void *indirect);
+    void drawArraysIndirect(PrimitiveMode mode, const void *indirect);
+    void drawElementsIndirect(PrimitiveMode mode, GLenum type, const void *indirect);
 
     void blitFramebuffer(GLint srcX0,
                          GLint srcY0,
@@ -868,7 +868,7 @@ class Context final : angle::NonCopyable
                          GLbitfield access);
     void flushMappedBufferRange(BufferBinding target, GLintptr offset, GLsizeiptr length);
 
-    void beginTransformFeedback(GLenum primitiveMode);
+    void beginTransformFeedback(PrimitiveMode primitiveMode);
 
     bool hasActiveTransformFeedback(GLuint program) const;
 

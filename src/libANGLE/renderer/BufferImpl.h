@@ -49,14 +49,14 @@ class BufferImpl : public angle::Subject
                                   BufferImpl *source,
                                   GLintptr sourceOffset,
                                   GLintptr destOffset,
-                                  GLsizeiptr size) = 0;
+                                  GLsizeiptr size)                                  = 0;
     virtual gl::Error map(const gl::Context *context, GLenum access, void **mapPtr) = 0;
     virtual gl::Error mapRange(const gl::Context *context,
                                size_t offset,
                                size_t length,
                                GLbitfield access,
-                               void **mapPtr) = 0;
-    virtual gl::Error unmap(const gl::Context *context, GLboolean *result) = 0;
+                               void **mapPtr)                                       = 0;
+    virtual gl::Error unmap(const gl::Context *context, GLboolean *result)          = 0;
 
     virtual gl::Error getIndexRange(const gl::Context *context,
                                     GLenum type,

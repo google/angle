@@ -132,9 +132,12 @@ class Blit9 : angle::NonCopyable
     IUnknown *mCompiledShaders[SHADER_COUNT];
 
     template <class D3DShaderType>
-    gl::Error setShader(ShaderId source, const char *profile,
-                        gl::Error (Renderer9::*createShader)(const DWORD *, size_t length, D3DShaderType **outShader),
-                        HRESULT (WINAPI IDirect3DDevice9::*setShader)(D3DShaderType*));
+    gl::Error setShader(ShaderId source,
+                        const char *profile,
+                        gl::Error (Renderer9::*createShader)(const DWORD *,
+                                                             size_t length,
+                                                             D3DShaderType **outShader),
+                        HRESULT (WINAPI IDirect3DDevice9::*setShader)(D3DShaderType *));
 
     gl::Error setVertexShader(ShaderId shader);
     gl::Error setPixelShader(ShaderId shader);
@@ -146,7 +149,6 @@ class Blit9 : angle::NonCopyable
     IDirect3DSurface9 *mSavedRenderTarget;
     IDirect3DSurface9 *mSavedDepthStencil;
 };
-
 }
 
-#endif   // LIBANGLE_RENDERER_D3D_D3D9_BLIT9_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D9_BLIT9_H_

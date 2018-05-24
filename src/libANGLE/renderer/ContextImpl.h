@@ -41,39 +41,39 @@ class ContextImpl : public GLImplFactory
 
     // Drawing methods.
     virtual gl::Error drawArrays(const gl::Context *context,
-                                 GLenum mode,
+                                 gl::PrimitiveMode mode,
                                  GLint first,
-                                 GLsizei count) = 0;
+                                 GLsizei count)                  = 0;
     virtual gl::Error drawArraysInstanced(const gl::Context *context,
-                                          GLenum mode,
+                                          gl::PrimitiveMode mode,
                                           GLint first,
                                           GLsizei count,
                                           GLsizei instanceCount) = 0;
 
     virtual gl::Error drawElements(const gl::Context *context,
-                                   GLenum mode,
+                                   gl::PrimitiveMode mode,
                                    GLsizei count,
                                    GLenum type,
-                                   const void *indices) = 0;
+                                   const void *indices)        = 0;
     virtual gl::Error drawElementsInstanced(const gl::Context *context,
-                                            GLenum mode,
+                                            gl::PrimitiveMode mode,
                                             GLsizei count,
                                             GLenum type,
                                             const void *indices,
                                             GLsizei instances) = 0;
     virtual gl::Error drawRangeElements(const gl::Context *context,
-                                        GLenum mode,
+                                        gl::PrimitiveMode mode,
                                         GLuint start,
                                         GLuint end,
                                         GLsizei count,
                                         GLenum type,
-                                        const void *indices) = 0;
+                                        const void *indices)   = 0;
 
     virtual gl::Error drawArraysIndirect(const gl::Context *context,
-                                         GLenum mode,
-                                         const void *indirect) = 0;
+                                         gl::PrimitiveMode mode,
+                                         const void *indirect)   = 0;
     virtual gl::Error drawElementsIndirect(const gl::Context *context,
-                                           GLenum mode,
+                                           gl::PrimitiveMode mode,
                                            GLenum type,
                                            const void *indirect) = 0;
 
@@ -133,7 +133,7 @@ class ContextImpl : public GLImplFactory
     // EXT_debug_marker
     virtual void insertEventMarker(GLsizei length, const char *marker) = 0;
     virtual void pushGroupMarker(GLsizei length, const char *marker)   = 0;
-    virtual void popGroupMarker() = 0;
+    virtual void popGroupMarker()                                      = 0;
 
     // KHR_debug
     virtual void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message) = 0;
@@ -160,7 +160,7 @@ class ContextImpl : public GLImplFactory
     virtual gl::Error dispatchCompute(const gl::Context *context,
                                       GLuint numGroupsX,
                                       GLuint numGroupsY,
-                                      GLuint numGroupsZ) = 0;
+                                      GLuint numGroupsZ)                                     = 0;
     virtual gl::Error dispatchComputeIndirect(const gl::Context *context, GLintptr indirect) = 0;
 
     virtual gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers)         = 0;

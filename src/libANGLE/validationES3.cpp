@@ -1253,7 +1253,7 @@ bool ValidateClearBuffer(Context *context)
 }
 
 bool ValidateDrawRangeElements(Context *context,
-                               GLenum mode,
+                               PrimitiveMode mode,
                                GLuint start,
                                GLuint end,
                                GLsizei count,
@@ -2122,7 +2122,7 @@ bool ValidateDeleteVertexArrays(Context *context, GLint n, const GLuint *)
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
+bool ValidateBeginTransformFeedback(Context *context, PrimitiveMode primitiveMode)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -2131,9 +2131,9 @@ bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
     }
     switch (primitiveMode)
     {
-        case GL_TRIANGLES:
-        case GL_LINES:
-        case GL_POINTS:
+        case PrimitiveMode::Triangles:
+        case PrimitiveMode::Lines:
+        case PrimitiveMode::Points:
             break;
 
         default:
@@ -2782,7 +2782,7 @@ bool ValidateGetSynciv(Context *context,
 }
 
 bool ValidateDrawElementsInstanced(Context *context,
-                                   GLenum mode,
+                                   PrimitiveMode mode,
                                    GLsizei count,
                                    GLenum type,
                                    const void *indices,
@@ -3456,7 +3456,7 @@ bool ValidateUniformBlockBinding(Context *context,
 }
 
 bool ValidateDrawArraysInstanced(Context *context,
-                                 GLenum mode,
+                                 PrimitiveMode mode,
                                  GLint first,
                                  GLsizei count,
                                  GLsizei primcount)

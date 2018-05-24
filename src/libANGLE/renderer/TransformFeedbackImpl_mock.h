@@ -25,7 +25,7 @@ class MockTransformFeedbackImpl : public TransformFeedbackImpl
     }
     ~MockTransformFeedbackImpl() { destructor(); }
 
-    MOCK_METHOD1(begin, void(GLenum primitiveMode));
+    MOCK_METHOD1(begin, void(gl::PrimitiveMode));
     MOCK_METHOD0(end, void());
     MOCK_METHOD0(pause, void());
     MOCK_METHOD0(resume, void());
@@ -35,7 +35,6 @@ class MockTransformFeedbackImpl : public TransformFeedbackImpl
 
     MOCK_METHOD0(destructor, void());
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_TRANSFORMFEEDBACKIMPLMOCK_H_
+#endif  // LIBANGLE_RENDERER_TRANSFORMFEEDBACKIMPLMOCK_H_

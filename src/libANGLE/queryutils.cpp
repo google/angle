@@ -1023,10 +1023,10 @@ void QueryProgramiv(const Context *context, const Program *program, GLenum pname
             *params = program->getActiveAtomicCounterBufferCount();
             break;
         case GL_GEOMETRY_LINKED_INPUT_TYPE_EXT:
-            *params = program->getGeometryShaderInputPrimitiveType();
+            *params = ToGLenum(program->getGeometryShaderInputPrimitiveType());
             break;
         case GL_GEOMETRY_LINKED_OUTPUT_TYPE_EXT:
-            *params = program->getGeometryShaderOutputPrimitiveType();
+            *params = ToGLenum(program->getGeometryShaderOutputPrimitiveType());
             break;
         case GL_GEOMETRY_LINKED_VERTICES_OUT_EXT:
             *params = program->getGeometryShaderMaxVertices();

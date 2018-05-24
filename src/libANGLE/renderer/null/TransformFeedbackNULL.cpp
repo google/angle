@@ -23,7 +23,7 @@ TransformFeedbackNULL::~TransformFeedbackNULL()
 {
 }
 
-void TransformFeedbackNULL::begin(GLenum primitiveMode)
+void TransformFeedbackNULL::begin(gl::PrimitiveMode primitiveMode)
 {
 }
 

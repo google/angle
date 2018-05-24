@@ -141,13 +141,16 @@ gl::Error Context9::finish(const gl::Context *context)
     return mRenderer->finish();
 }
 
-gl::Error Context9::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
+gl::Error Context9::drawArrays(const gl::Context *context,
+                               gl::PrimitiveMode mode,
+                               GLint first,
+                               GLsizei count)
 {
     return mRenderer->genericDrawArrays(context, mode, first, count, 0);
 }
 
 gl::Error Context9::drawArraysInstanced(const gl::Context *context,
-                                        GLenum mode,
+                                        gl::PrimitiveMode mode,
                                         GLint first,
                                         GLsizei count,
                                         GLsizei instanceCount)
@@ -156,7 +159,7 @@ gl::Error Context9::drawArraysInstanced(const gl::Context *context,
 }
 
 gl::Error Context9::drawElements(const gl::Context *context,
-                                 GLenum mode,
+                                 gl::PrimitiveMode mode,
                                  GLsizei count,
                                  GLenum type,
                                  const void *indices)
@@ -165,7 +168,7 @@ gl::Error Context9::drawElements(const gl::Context *context,
 }
 
 gl::Error Context9::drawElementsInstanced(const gl::Context *context,
-                                          GLenum mode,
+                                          gl::PrimitiveMode mode,
                                           GLsizei count,
                                           GLenum type,
                                           const void *indices,
@@ -175,7 +178,7 @@ gl::Error Context9::drawElementsInstanced(const gl::Context *context,
 }
 
 gl::Error Context9::drawRangeElements(const gl::Context *context,
-                                      GLenum mode,
+                                      gl::PrimitiveMode mode,
                                       GLuint start,
                                       GLuint end,
                                       GLsizei count,
@@ -186,7 +189,7 @@ gl::Error Context9::drawRangeElements(const gl::Context *context,
 }
 
 gl::Error Context9::drawArraysIndirect(const gl::Context *context,
-                                       GLenum mode,
+                                       gl::PrimitiveMode mode,
                                        const void *indirect)
 {
     UNREACHABLE();
@@ -194,7 +197,7 @@ gl::Error Context9::drawArraysIndirect(const gl::Context *context,
 }
 
 gl::Error Context9::drawElementsIndirect(const gl::Context *context,
-                                         GLenum mode,
+                                         gl::PrimitiveMode mode,
                                          GLenum type,
                                          const void *indirect)
 {

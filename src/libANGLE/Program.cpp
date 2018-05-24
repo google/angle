@@ -660,8 +660,7 @@ void InfoLog::appendSanitized(const char *message)
         {
             msg.erase(found, strlen(g_fakepath));
         }
-    }
-    while (found != std::string::npos);
+    } while (found != std::string::npos);
 
     *mLazyStream << message << std::endl;
 }
@@ -792,8 +791,8 @@ ProgramState::ProgramState()
       mBinaryRetrieveableHint(false),
       mNumViews(-1),
       // [GL_EXT_geometry_shader] Table 20.22
-      mGeometryShaderInputPrimitiveType(GL_TRIANGLES),
-      mGeometryShaderOutputPrimitiveType(GL_TRIANGLE_STRIP),
+      mGeometryShaderInputPrimitiveType(PrimitiveMode::Triangles),
+      mGeometryShaderOutputPrimitiveType(PrimitiveMode::TriangleStrip),
       mGeometryShaderInvocations(1),
       mGeometryShaderMaxVertices(0)
 {
@@ -1306,9 +1305,9 @@ void Program::unlink()
     mState.mComputeShaderLocalSize.fill(1);
     mState.mSamplerBindings.clear();
     mState.mImageBindings.clear();
-    mState.mNumViews = -1;
-    mState.mGeometryShaderInputPrimitiveType  = GL_TRIANGLES;
-    mState.mGeometryShaderOutputPrimitiveType = GL_TRIANGLE_STRIP;
+    mState.mNumViews                          = -1;
+    mState.mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
+    mState.mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
     mState.mGeometryShaderInvocations         = 1;
     mState.mGeometryShaderMaxVertices         = 0;
 
@@ -1376,15 +1375,15 @@ Error Program::saveBinary(const Context *context,
             *length = 0;
         }
 
-        // TODO: This should be moved to the validation layer but computing the size of the binary before saving
-        // it causes the save to happen twice.  It may be possible to write the binary to a separate buffer, validate
-        // sizes and then copy it.
+        // TODO: This should be moved to the validation layer but computing the size of the binary
+        // before saving it causes the save to happen twice.  It may be possible to write the binary
+        // to a separate buffer, validate sizes and then copy it.
         return InternalError();
     }
 
     if (binary)
     {
-        char *ptr = reinterpret_cast<char*>(binary);
+        char *ptr = reinterpret_cast<char *>(binary);
 
         memcpy(ptr, streamState, streamLength);
         ptr += streamLength;
@@ -1863,55 +1862,82 @@ void Program::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
     mProgram->setUniform4uiv(location, clampedCount, v);
 }
 
-void Program::setUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *v)
+void Program::setUniformMatrix2fv(GLint location,
+                                  GLsizei count,
+                                  GLboolean transpose,
+                                  const GLfloat *v)
 {
     GLsizei clampedCount = clampMatrixUniformCount<2, 2>(location, count, transpose, v);
     mProgram->setUniformMatrix2fv(location, clampedCount, transpose, v);
 }
 
-void Program::setUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *v)
+void Program::setUniformMatrix3fv(GLint location,
+                                  GLsizei count,
+                                  GLboolean transpose,
+                                  const GLfloat *v)
 {
     GLsizei clampedCount = clampMatrixUniformCount<3, 3>(location, count, transpose, v);
     mProgram->setUniformMatrix3fv(location, clampedCount, transpose, v);
 }
 
-void Program::setUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *v)
+void Program::setUniformMatrix4fv(GLint location,
+                                  GLsizei count,
+                                  GLboolean transpose,
+                                  const GLfloat *v)
 {
     GLsizei clampedCount = clampMatrixUniformCount<4, 4>(location, count, transpose, v);
     mProgram->setUniformMatrix4fv(location, clampedCount, transpose, v);
 }
 
-void Program::setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *v)
+void Program::setUniformMatrix2x3fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *v)
 {
     GLsizei clampedCount = clampMatrixUniformCount<2, 3>(location, count, transpose, v);
     mProgram->setUniformMatrix2x3fv(location, clampedCount, transpose, v);
 }
 
-void Program::setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *v)
+void Program::setUniformMatrix2x4fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *v)
 {
     GLsizei clampedCount = clampMatrixUniformCount<2, 4>(location, count, transpose, v);
     mProgram->setUniformMatrix2x4fv(location, clampedCount, transpose, v);
 }
 
-void Program::setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *v)
+void Program::setUniformMatrix3x2fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *v)
 {
     GLsizei clampedCount = clampMatrixUniformCount<3, 2>(location, count, transpose, v);
     mProgram->setUniformMatrix3x2fv(location, clampedCount, transpose, v);
 }
 
-void Program::setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *v)
+void Program::setUniformMatrix3x4fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *v)
 {
     GLsizei clampedCount = clampMatrixUniformCount<3, 4>(location, count, transpose, v);
     mProgram->setUniformMatrix3x4fv(location, clampedCount, transpose, v);
 }
 
-void Program::setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *v)
+void Program::setUniformMatrix4x2fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *v)
 {
     GLsizei clampedCount = clampMatrixUniformCount<4, 2>(location, count, transpose, v);
     mProgram->setUniformMatrix4x2fv(location, clampedCount, transpose, v);
 }
 
-void Program::setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *v)
+void Program::setUniformMatrix4x3fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *v)
 {
     GLsizei clampedCount = clampMatrixUniformCount<4, 3>(location, count, transpose, v);
     mProgram->setUniformMatrix4x3fv(location, clampedCount, transpose, v);
@@ -2168,7 +2194,9 @@ GLuint Program::getShaderStorageBlockBinding(GLuint shaderStorageBlockIndex) con
     return mState.getShaderStorageBlockBinding(shaderStorageBlockIndex);
 }
 
-void Program::setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode)
+void Program::setTransformFeedbackVaryings(GLsizei count,
+                                           const GLchar *const *varyings,
+                                           GLenum bufferMode)
 {
     mState.mTransformFeedbackVaryingNames.resize(count);
     for (GLsizei i = 0; i < count; i++)
@@ -2179,7 +2207,12 @@ void Program::setTransformFeedbackVaryings(GLsizei count, const GLchar *const *v
     mState.mTransformFeedbackBufferMode = bufferMode;
 }
 
-void Program::getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name) const
+void Program::getTransformFeedbackVarying(GLuint index,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLsizei *size,
+                                          GLenum *type,
+                                          GLchar *name) const
 {
     if (mLinked)
     {
@@ -2250,7 +2283,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
     Shader *computeShader  = mState.mAttachedShaders[ShaderType::Compute];
     Shader *geometryShader = mState.mAttachedShaders[ShaderType::Geometry];
 
-    bool isComputeShaderAttached  = (computeShader != nullptr);
+    bool isComputeShaderAttached = (computeShader != nullptr);
     bool isGraphicsShaderAttached =
         (vertexShader != nullptr || fragmentShader != nullptr || geometryShader != nullptr);
     // Check whether we both have a compute and non-compute shaders attached.
@@ -2329,7 +2362,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
             }
             ASSERT(geometryShader->getType() == ShaderType::Geometry);
 
-            Optional<GLenum> inputPrimitive =
+            Optional<PrimitiveMode> inputPrimitive =
                 geometryShader->getGeometryShaderInputPrimitiveType(context);
             if (!inputPrimitive.valid())
             {
@@ -2337,7 +2370,7 @@ bool Program::linkValidateShaders(const Context *context, InfoLog &infoLog)
                 return false;
             }
 
-            Optional<GLenum> outputPrimitive =
+            Optional<PrimitiveMode> outputPrimitive =
                 geometryShader->getGeometryShaderOutputPrimitiveType(context);
             if (!outputPrimitive.valid())
             {
@@ -2612,13 +2645,13 @@ bool Program::linkAtomicCounterBuffers()
 {
     for (unsigned int index : mState.mAtomicCounterUniformRange)
     {
-        auto &uniform = mState.mUniforms[index];
+        auto &uniform                      = mState.mUniforms[index];
         uniform.blockInfo.offset           = uniform.offset;
         uniform.blockInfo.arrayStride      = (uniform.isArray() ? 4 : 0);
         uniform.blockInfo.matrixStride     = 0;
         uniform.blockInfo.isRowMajorMatrix = false;
 
-        bool found    = false;
+        bool found = false;
         for (unsigned int bufferIndex = 0; bufferIndex < mState.mAtomicCounterBuffers.size();
              ++bufferIndex)
         {
@@ -2668,7 +2701,7 @@ bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
         // In GLSL ES 1.00.17 we only do aliasing checks for active attributes.
         mState.mAttributes = vertexShader->getActiveAttributes(context);
     }
-    GLuint maxAttribs          = data.getCaps().maxVertexAttributes;
+    GLuint maxAttribs = data.getCaps().maxVertexAttributes;
 
     // TODO(jmadill): handle aliasing robustly
     if (mState.mAttributes.size() > maxAttribs)

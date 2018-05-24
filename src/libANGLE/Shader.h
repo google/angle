@@ -17,8 +17,8 @@
 #include <string>
 #include <vector>
 
-#include "angle_gl.h"
 #include <GLSLANG/ShaderLang.h>
+#include "angle_gl.h"
 
 #include "common/Optional.h"
 #include "common/angleutils.h"
@@ -104,8 +104,8 @@ class ShaderState final : angle::NonCopyable
     int mNumViews;
 
     // Geometry Shader.
-    Optional<GLenum> mGeometryShaderInputPrimitiveType;
-    Optional<GLenum> mGeometryShaderOutputPrimitiveType;
+    Optional<PrimitiveMode> mGeometryShaderInputPrimitiveType;
+    Optional<PrimitiveMode> mGeometryShaderOutputPrimitiveType;
     Optional<GLint> mGeometryShaderMaxVertices;
     int mGeometryShaderInvocations;
 
@@ -180,8 +180,8 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
     int getNumViews(const Context *context);
 
-    Optional<GLenum> getGeometryShaderInputPrimitiveType(const Context *context);
-    Optional<GLenum> getGeometryShaderOutputPrimitiveType(const Context *context);
+    Optional<PrimitiveMode> getGeometryShaderInputPrimitiveType(const Context *context);
+    Optional<PrimitiveMode> getGeometryShaderOutputPrimitiveType(const Context *context);
     int getGeometryShaderInvocations(const Context *context);
     Optional<GLint> getGeometryShaderMaxVertices(const Context *context);
 
@@ -204,8 +204,8 @@ class Shader final : angle::NonCopyable, public LabeledObject
     const gl::Limitations &mRendererLimitations;
     const GLuint mHandle;
     const ShaderType mType;
-    unsigned int mRefCount;     // Number of program objects this shader is attached to
-    bool mDeleteStatus;         // Flag to indicate that the shader can be deleted when no longer in use
+    unsigned int mRefCount;  // Number of program objects this shader is attached to
+    bool mDeleteStatus;  // Flag to indicate that the shader can be deleted when no longer in use
     std::string mInfoLog;
 
     // We keep a reference to the translator in order to defer compiles while preserving settings.
@@ -219,4 +219,4 @@ bool CompareShaderVar(const sh::ShaderVariable &x, const sh::ShaderVariable &y);
 const char *GetShaderTypeString(ShaderType type);
 }  // namespace gl
 
-#endif   // LIBANGLE_SHADER_H_
+#endif  // LIBANGLE_SHADER_H_

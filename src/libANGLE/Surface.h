@@ -174,9 +174,9 @@ class Surface : public gl::FramebufferAttachmentObject
     TextureFormat mTextureFormat;
     EGLenum mTextureTarget;
 
-    EGLint mPixelAspectRatio;      // Display aspect ratio
-    EGLenum mRenderBuffer;         // Render buffer
-    EGLenum mSwapBehavior;         // Buffer swap behavior
+    EGLint mPixelAspectRatio;  // Display aspect ratio
+    EGLenum mRenderBuffer;     // Render buffer
+    EGLenum mSwapBehavior;     // Buffer swap behavior
 
     EGLint mOrientation;
 
@@ -246,4 +246,4 @@ using SurfacePointer = angle::UniqueObjectPointerBase<Surface, SurfaceDeleter>;
 
 }  // namespace egl
 
-#endif   // LIBANGLE_SURFACE_H_
+#endif  // LIBANGLE_SURFACE_H_

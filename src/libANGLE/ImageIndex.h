@@ -115,4 +115,4 @@ class ImageIndexIterator
 };
 }  // namespace gl
 
-#endif // LIBANGLE_IMAGE_INDEX_H_
+#endif  // LIBANGLE_IMAGE_INDEX_H_

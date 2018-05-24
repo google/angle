@@ -5,6 +5,9 @@
     "glAlphaFuncx": {
         "func": "AlphaTestFunc"
     },
+    "glBeginTransformFeedback": {
+        "primitiveMode": "PrimitiveMode"
+    },
     "glBeginQuery": {
         "target": "QueryType"
     },
@@ -84,6 +87,33 @@
     },
     "glDisableClientState": {
         "array": "ClientVertexArrayType"
+    },
+    "glDrawArrays": {
+        "mode": "PrimitiveMode"
+    },
+    "glDrawArraysIndirect": {
+        "mode": "PrimitiveMode"
+    },
+    "glDrawArraysInstanced": {
+        "mode": "PrimitiveMode"
+    },
+    "glDrawArraysInstancedANGLE": {
+        "mode": "PrimitiveMode"
+    },
+    "glDrawElements": {
+        "mode": "PrimitiveMode"
+    },
+    "glDrawElementsIndirect": {
+        "mode": "PrimitiveMode"
+    },
+    "glDrawElementsInstanced": {
+        "mode": "PrimitiveMode"
+    },
+    "glDrawElementsInstancedANGLE": {
+        "mode": "PrimitiveMode"
+    },
+    "glDrawRangeElements": {
+        "mode": "PrimitiveMode"
     },
     "glEGLImageTargetTexture2DOES": {
         "target": "TextureType"

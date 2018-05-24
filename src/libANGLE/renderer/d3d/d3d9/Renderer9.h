@@ -130,13 +130,13 @@ class Renderer9 : public RendererD3D
                          int index,
                          gl::Texture *texture);
 
-    gl::Error updateState(const gl::Context *context, GLenum drawMode);
+    gl::Error updateState(const gl::Context *context, gl::PrimitiveMode drawMode);
 
     void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
     void setViewport(const gl::Rectangle &viewport,
                      float zNear,
                      float zFar,
-                     GLenum drawMode,
+                     gl::PrimitiveMode drawMode,
                      GLenum frontFace,
                      bool ignoreViewport);
 
@@ -144,9 +144,11 @@ class Renderer9 : public RendererD3D
                                 const RenderTarget9 *colorRenderTarget,
                                 const RenderTarget9 *depthStencilRenderTarget);
     gl::Error applyUniforms(ProgramD3D *programD3D);
-    bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
+    bool applyPrimitiveType(gl::PrimitiveMode primitiveType,
+                            GLsizei elementCount,
+                            bool usesPointSize);
     gl::Error applyVertexBuffer(const gl::Context *context,
-                                GLenum mode,
+                                gl::PrimitiveMode mode,
                                 GLint first,
                                 GLsizei count,
                                 GLsizei instances,
@@ -154,7 +156,7 @@ class Renderer9 : public RendererD3D
     gl::Error applyIndexBuffer(const gl::Context *context,
                                const void *indices,
                                GLsizei count,
-                               GLenum mode,
+                               gl::PrimitiveMode mode,
                                GLenum type,
                                TranslatedIndexData *indexInfo);
 
@@ -362,13 +364,13 @@ class Renderer9 : public RendererD3D
     StateManager9 *getStateManager() { return &mStateManager; }
 
     gl::Error genericDrawArrays(const gl::Context *context,
-                                GLenum mode,
+                                gl::PrimitiveMode mode,
                                 GLint first,
                                 GLsizei count,
                                 GLsizei instances);
 
     gl::Error genericDrawElements(const gl::Context *context,
-                                  GLenum mode,
+                                  gl::PrimitiveMode mode,
                                   GLsizei count,
                                   GLenum type,
                                   const void *indices,
@@ -390,18 +392,18 @@ class Renderer9 : public RendererD3D
 
   private:
     gl::Error drawArraysImpl(const gl::Context *context,
-                             GLenum mode,
+                             gl::PrimitiveMode mode,
                              GLint startVertex,
                              GLsizei count,
                              GLsizei instances);
     gl::Error drawElementsImpl(const gl::Context *context,
-                               GLenum mode,
+                               gl::PrimitiveMode mode,
                                GLsizei count,
                                GLenum type,
                                const void *indices,
                                GLsizei instances);
 
-    gl::Error applyShaders(const gl::Context *context, GLenum drawMode);
+    gl::Error applyShaders(const gl::Context *context, gl::PrimitiveMode drawMode);
 
     gl::Error applyTextures(const gl::Context *context);
     gl::Error applyTextures(const gl::Context *context, gl::ShaderType shaderType);
@@ -413,7 +415,7 @@ class Renderer9 : public RendererD3D
 
     angle::WorkaroundsD3D generateWorkarounds() const override;
 
-    gl::Error setBlendDepthRasterStates(const gl::Context *context, GLenum drawMode);
+    gl::Error setBlendDepthRasterStates(const gl::Context *context, gl::PrimitiveMode drawMode);
 
     void release();
 

@@ -28,6 +28,7 @@ namespace gl
 class Buffer;
 class Texture;
 
+// TODO(jmadill): Remove this.
 enum PrimitiveType
 {
     PRIMITIVE_POINTS,

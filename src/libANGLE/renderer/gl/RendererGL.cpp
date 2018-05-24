@@ -176,8 +176,8 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
 {
     ASSERT(mFunctions);
     nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
-    mStateManager = new StateManagerGL(mFunctions, getNativeCaps(), getNativeExtensions());
-    mBlitter      = new BlitGL(functions, mWorkarounds, mStateManager);
+    mStateManager     = new StateManagerGL(mFunctions, getNativeCaps(), getNativeExtensions());
+    mBlitter          = new BlitGL(functions, mWorkarounds, mStateManager);
     mMultiviewClearer = new ClearMultiviewGL(functions, mStateManager);
 
     bool hasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||
@@ -245,7 +245,7 @@ gl::Error RendererGL::finish()
 }
 
 gl::Error RendererGL::drawArrays(const gl::Context *context,
-                                 GLenum mode,
+                                 gl::PrimitiveMode mode,
                                  GLint first,
                                  GLsizei count)
 {
@@ -256,17 +256,17 @@ gl::Error RendererGL::drawArrays(const gl::Context *context,
     ANGLE_TRY(mStateManager->setDrawArraysState(context, first, count, instanceCount));
     if (!usesMultiview)
     {
-        mFunctions->drawArrays(mode, first, count);
+        mFunctions->drawArrays(ToGLenum(mode), first, count);
     }
     else
     {
-        mFunctions->drawArraysInstanced(mode, first, count, instanceCount);
+        mFunctions->drawArraysInstanced(ToGLenum(mode), first, count, instanceCount);
     }
     return gl::NoError();
 }
 
 gl::Error RendererGL::drawArraysInstanced(const gl::Context *context,
-                                          GLenum mode,
+                                          gl::PrimitiveMode mode,
                                           GLint first,
                                           GLsizei count,
                                           GLsizei instanceCount)
@@ -279,12 +279,12 @@ gl::Error RendererGL::drawArraysInstanced(const gl::Context *context,
     }
 
     ANGLE_TRY(mStateManager->setDrawArraysState(context, first, count, adjustedInstanceCount));
-    mFunctions->drawArraysInstanced(mode, first, count, adjustedInstanceCount);
+    mFunctions->drawArraysInstanced(ToGLenum(mode), first, count, adjustedInstanceCount);
     return gl::NoError();
 }
 
 gl::Error RendererGL::drawElements(const gl::Context *context,
-                                   GLenum mode,
+                                   gl::PrimitiveMode mode,
                                    GLsizei count,
                                    GLenum type,
                                    const void *indices)
@@ -292,23 +292,23 @@ gl::Error RendererGL::drawElements(const gl::Context *context,
     const gl::Program *program  = context->getGLState().getProgram();
     const bool usesMultiview    = program->usesMultiview();
     const GLsizei instanceCount = usesMultiview ? program->getNumViews() : 0;
-    const void *drawIndexPtr = nullptr;
+    const void *drawIndexPtr    = nullptr;
 
     ANGLE_TRY(mStateManager->setDrawElementsState(context, count, type, indices, instanceCount,
                                                   &drawIndexPtr));
     if (!usesMultiview)
     {
-        mFunctions->drawElements(mode, count, type, drawIndexPtr);
+        mFunctions->drawElements(ToGLenum(mode), count, type, drawIndexPtr);
     }
     else
     {
-        mFunctions->drawElementsInstanced(mode, count, type, drawIndexPtr, instanceCount);
+        mFunctions->drawElementsInstanced(ToGLenum(mode), count, type, drawIndexPtr, instanceCount);
     }
     return gl::NoError();
 }
 
 gl::Error RendererGL::drawElementsInstanced(const gl::Context *context,
-                                            GLenum mode,
+                                            gl::PrimitiveMode mode,
                                             GLsizei count,
                                             GLenum type,
                                             const void *indices,
@@ -324,12 +324,13 @@ gl::Error RendererGL::drawElementsInstanced(const gl::Context *context,
 
     ANGLE_TRY(mStateManager->setDrawElementsState(context, count, type, indices,
                                                   adjustedInstanceCount, &drawIndexPointer));
-    mFunctions->drawElementsInstanced(mode, count, type, drawIndexPointer, adjustedInstanceCount);
+    mFunctions->drawElementsInstanced(ToGLenum(mode), count, type, drawIndexPointer,
+                                      adjustedInstanceCount);
     return gl::NoError();
 }
 
 gl::Error RendererGL::drawRangeElements(const gl::Context *context,
-                                        GLenum mode,
+                                        gl::PrimitiveMode mode,
                                         GLuint start,
                                         GLuint end,
                                         GLsizei count,
@@ -345,31 +346,32 @@ gl::Error RendererGL::drawRangeElements(const gl::Context *context,
                                                   &drawIndexPointer));
     if (!usesMultiview)
     {
-        mFunctions->drawRangeElements(mode, start, end, count, type, drawIndexPointer);
+        mFunctions->drawRangeElements(ToGLenum(mode), start, end, count, type, drawIndexPointer);
     }
     else
     {
-        mFunctions->drawElementsInstanced(mode, count, type, drawIndexPointer, instanceCount);
+        mFunctions->drawElementsInstanced(ToGLenum(mode), count, type, drawIndexPointer,
+                                          instanceCount);
     }
     return gl::NoError();
 }
 
 gl::Error RendererGL::drawArraysIndirect(const gl::Context *context,
-                                         GLenum mode,
+                                         gl::PrimitiveMode mode,
                                          const void *indirect)
 {
     ANGLE_TRY(mStateManager->setDrawIndirectState(context));
-    mFunctions->drawArraysIndirect(mode, indirect);
+    mFunctions->drawArraysIndirect(ToGLenum(mode), indirect);
     return gl::NoError();
 }
 
 gl::Error RendererGL::drawElementsIndirect(const gl::Context *context,
-                                           GLenum mode,
+                                           gl::PrimitiveMode mode,
                                            GLenum type,
                                            const void *indirect)
 {
     ANGLE_TRY(mStateManager->setDrawIndirectState(context));
-    mFunctions->drawElementsIndirect(mode, type, indirect);
+    mFunctions->drawElementsIndirect(ToGLenum(mode), type, indirect);
     return gl::NoError();
 }
 

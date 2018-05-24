@@ -504,7 +504,7 @@ egl::ConfigSet Renderer9::generateConfigs()
                     config.bindToTextureRGB   = (colorBufferFormatInfo.format == GL_RGB);
                     config.bindToTextureRGBA  = (colorBufferFormatInfo.format == GL_RGBA ||
                                                 colorBufferFormatInfo.format == GL_BGRA_EXT);
-                    config.colorBufferType = EGL_RGB_BUFFER;
+                    config.colorBufferType    = EGL_RGB_BUFFER;
                     // Mark as slow if blits to the back-buffer won't be straight forward
                     config.configCaveat =
                         (currentDisplayMode.Format == d3d9ColorBufferFormatInfo.renderFormat)
@@ -1041,7 +1041,7 @@ gl::Error Renderer9::setTexture(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
+gl::Error Renderer9::updateState(const gl::Context *context, gl::PrimitiveMode drawMode)
 {
     const auto &glState = context->getGLState();
 
@@ -1066,7 +1066,7 @@ gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
     // Since framebuffer->getSamples will return the original samples which may be different with
     // the sample counts that we set in render target view, here we use renderTarget->getSamples to
     // get the actual samples.
-    GLsizei samples           = 0;
+    GLsizei samples                                       = 0;
     const gl::FramebufferAttachment *firstColorAttachment = framebuffer->getFirstColorbuffer();
     if (firstColorAttachment)
     {
@@ -1076,7 +1076,7 @@ gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
         samples = renderTarget->getSamples();
     }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
-    rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
+    rasterizer.pointDrawMode       = (drawMode == gl::PrimitiveMode::Points);
     rasterizer.multiSample         = (samples != 0);
 
     ANGLE_TRY(setBlendDepthRasterStates(context, drawMode));
@@ -1091,15 +1091,16 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
     mStateManager.setScissorState(scissor, enabled);
 }
 
-gl::Error Renderer9::setBlendDepthRasterStates(const gl::Context *context, GLenum drawMode)
+gl::Error Renderer9::setBlendDepthRasterStates(const gl::Context *context,
+                                               gl::PrimitiveMode drawMode)
 {
-    const auto &glState  = context->getGLState();
+    const auto &glState              = context->getGLState();
     gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
     ASSERT(!drawFramebuffer->hasAnyDirtyBit());
     // Since framebuffer->getSamples will return the original samples which may be different with
     // the sample counts that we set in render target view, here we use renderTarget->getSamples to
     // get the actual samples.
-    GLsizei samples           = 0;
+    GLsizei samples                                       = 0;
     const gl::FramebufferAttachment *firstColorAttachment = drawFramebuffer->getFirstColorbuffer();
     if (firstColorAttachment)
     {
@@ -1109,7 +1110,7 @@ gl::Error Renderer9::setBlendDepthRasterStates(const gl::Context *context, GLenu
         samples = renderTarget->getSamples();
     }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
-    rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
+    rasterizer.pointDrawMode       = (drawMode == gl::PrimitiveMode::Points);
     rasterizer.multiSample         = (samples != 0);
 
     unsigned int mask = GetBlendSampleMask(glState, samples);
@@ -1119,43 +1120,43 @@ gl::Error Renderer9::setBlendDepthRasterStates(const gl::Context *context, GLenu
 void Renderer9::setViewport(const gl::Rectangle &viewport,
                             float zNear,
                             float zFar,
-                            GLenum drawMode,
+                            gl::PrimitiveMode drawMode,
                             GLenum frontFace,
                             bool ignoreViewport)
 {
     mStateManager.setViewportState(viewport, zNear, zFar, drawMode, frontFace, ignoreViewport);
 }
 
-bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize)
+bool Renderer9::applyPrimitiveType(gl::PrimitiveMode mode, GLsizei count, bool usesPointSize)
 {
     switch (mode)
     {
-        case GL_POINTS:
+        case gl::PrimitiveMode::Points:
             mPrimitiveType  = D3DPT_POINTLIST;
             mPrimitiveCount = count;
             break;
-        case GL_LINES:
+        case gl::PrimitiveMode::Lines:
             mPrimitiveType  = D3DPT_LINELIST;
             mPrimitiveCount = count / 2;
             break;
-        case GL_LINE_LOOP:
+        case gl::PrimitiveMode::LineLoop:
             mPrimitiveType = D3DPT_LINESTRIP;
             mPrimitiveCount =
                 count - 1;  // D3D doesn't support line loops, so we draw the last line separately
             break;
-        case GL_LINE_STRIP:
+        case gl::PrimitiveMode::LineStrip:
             mPrimitiveType  = D3DPT_LINESTRIP;
             mPrimitiveCount = count - 1;
             break;
-        case GL_TRIANGLES:
+        case gl::PrimitiveMode::Triangles:
             mPrimitiveType  = D3DPT_TRIANGLELIST;
             mPrimitiveCount = count / 3;
             break;
-        case GL_TRIANGLE_STRIP:
+        case gl::PrimitiveMode::TriangleStrip:
             mPrimitiveType  = D3DPT_TRIANGLESTRIP;
             mPrimitiveCount = count - 2;
             break;
-        case GL_TRIANGLE_FAN:
+        case gl::PrimitiveMode::TriangleFan:
             mPrimitiveType  = D3DPT_TRIANGLEFAN;
             mPrimitiveCount = count - 2;
             break;
@@ -1203,9 +1204,9 @@ gl::Error Renderer9::getNullColorRenderTarget(const gl::Context *context,
 
     SafeDelete(oldest->renderTarget);
     oldest->renderTarget = GetAs<RenderTarget9>(nullRenderTarget);
-    oldest->lruCount = ++mMaxNullColorbufferLRU;
-    oldest->width    = size.width;
-    oldest->height   = size.height;
+    oldest->lruCount     = ++mMaxNullColorbufferLRU;
+    oldest->width        = size.width;
+    oldest->height       = size.height;
 
     *outColorRenderTarget = oldest->renderTarget;
     return gl::NoError();
@@ -1297,7 +1298,7 @@ gl::Error Renderer9::applyRenderTarget(const gl::Context *context,
 }
 
 gl::Error Renderer9::applyVertexBuffer(const gl::Context *context,
-                                       GLenum mode,
+                                       gl::PrimitiveMode mode,
                                        GLint first,
                                        GLsizei count,
                                        GLsizei instances,
@@ -1319,7 +1320,7 @@ gl::Error Renderer9::applyVertexBuffer(const gl::Context *context,
 gl::Error Renderer9::applyIndexBuffer(const gl::Context *context,
                                       const void *indices,
                                       GLsizei count,
-                                      GLenum mode,
+                                      gl::PrimitiveMode mode,
                                       GLenum type,
                                       TranslatedIndexData *indexInfo)
 {
@@ -1348,7 +1349,7 @@ gl::Error Renderer9::applyIndexBuffer(const gl::Context *context,
 }
 
 gl::Error Renderer9::drawArraysImpl(const gl::Context *context,
-                                    GLenum mode,
+                                    gl::PrimitiveMode mode,
                                     GLint startVertex,
                                     GLsizei count,
                                     GLsizei instances)
@@ -1357,7 +1358,7 @@ gl::Error Renderer9::drawArraysImpl(const gl::Context *context,
 
     startScene();
 
-    if (mode == GL_LINE_LOOP)
+    if (mode == gl::PrimitiveMode::LineLoop)
     {
         return drawLineLoop(context, count, GL_NONE, nullptr, 0, nullptr);
     }
@@ -1393,7 +1394,7 @@ gl::Error Renderer9::drawArraysImpl(const gl::Context *context,
 }
 
 gl::Error Renderer9::drawElementsImpl(const gl::Context *context,
-                                      GLenum mode,
+                                      gl::PrimitiveMode mode,
                                       GLsizei count,
                                       GLenum type,
                                       const void *indices,
@@ -1418,11 +1419,11 @@ gl::Error Renderer9::drawElementsImpl(const gl::Context *context,
     gl::VertexArray *vao           = context->getGLState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
-    if (mode == GL_POINTS)
+    if (mode == gl::PrimitiveMode::Points)
     {
         return drawIndexedPoints(context, count, type, indices, minIndex, elementArrayBuffer);
     }
-    else if (mode == GL_LINE_LOOP)
+    else if (mode == gl::PrimitiveMode::LineLoop)
     {
         return drawLineLoop(context, count, type, indices, minIndex, elementArrayBuffer);
     }
@@ -1753,7 +1754,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     return gl::NoError();
 }
 
-gl::Error Renderer9::applyShaders(const gl::Context *context, GLenum drawMode)
+gl::Error Renderer9::applyShaders(const gl::Context *context, gl::PrimitiveMode drawMode)
 {
     const gl::State &state = context->getContextState().getState();
     // This method is called single-threaded.
@@ -3063,7 +3064,7 @@ Renderer9::CurSamplerState::CurSamplerState()
 }
 
 gl::Error Renderer9::genericDrawElements(const gl::Context *context,
-                                         GLenum mode,
+                                         gl::PrimitiveMode mode,
                                          GLsizei count,
                                          GLenum type,
                                          const void *indices,
@@ -3095,7 +3096,7 @@ gl::Error Renderer9::genericDrawElements(const gl::Context *context,
 }
 
 gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
-                                       GLenum mode,
+                                       gl::PrimitiveMode mode,
                                        GLint first,
                                        GLsizei count,
                                        GLsizei instances)

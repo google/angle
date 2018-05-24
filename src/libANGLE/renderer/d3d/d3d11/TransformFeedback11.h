@@ -27,7 +27,7 @@ class TransformFeedback11 : public TransformFeedbackImpl
     TransformFeedback11(const gl::TransformFeedbackState &state, Renderer11 *renderer);
     ~TransformFeedback11() override;
 
-    void begin(GLenum primitiveMode) override;
+    void begin(gl::PrimitiveMode primitiveMode) override;
     void end() override;
     void pause() override;
     void resume() override;

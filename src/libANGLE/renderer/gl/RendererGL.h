@@ -52,34 +52,39 @@ class RendererGL : angle::NonCopyable
     gl::Error flush();
     gl::Error finish();
 
-    gl::Error drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count);
+    gl::Error drawArrays(const gl::Context *context,
+                         gl::PrimitiveMode mode,
+                         GLint first,
+                         GLsizei count);
     gl::Error drawArraysInstanced(const gl::Context *context,
-                                  GLenum mode,
+                                  gl::PrimitiveMode mode,
                                   GLint first,
                                   GLsizei count,
                                   GLsizei instanceCount);
 
     gl::Error drawElements(const gl::Context *context,
-                           GLenum mode,
+                           gl::PrimitiveMode mode,
                            GLsizei count,
                            GLenum type,
                            const void *indices);
     gl::Error drawElementsInstanced(const gl::Context *context,
-                                    GLenum mode,
+                                    gl::PrimitiveMode mode,
                                     GLsizei count,
                                     GLenum type,
                                     const void *indices,
                                     GLsizei instances);
     gl::Error drawRangeElements(const gl::Context *context,
-                                GLenum mode,
+                                gl::PrimitiveMode mode,
                                 GLuint start,
                                 GLuint end,
                                 GLsizei count,
                                 GLenum type,
                                 const void *indices);
-    gl::Error drawArraysIndirect(const gl::Context *context, GLenum mode, const void *indirect);
+    gl::Error drawArraysIndirect(const gl::Context *context,
+                                 gl::PrimitiveMode mode,
+                                 const void *indirect);
     gl::Error drawElementsIndirect(const gl::Context *context,
-                                   GLenum mode,
+                                   gl::PrimitiveMode mode,
                                    GLenum type,
                                    const void *indirect);
 

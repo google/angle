@@ -65,8 +65,8 @@ gl::Error Framebuffer9::clearImpl(const gl::Context *context, const ClearParamet
 
     const gl::State &glState = context->getGLState();
     float nearZ              = glState.getNearPlane();
-    float farZ = glState.getFarPlane();
-    mRenderer->setViewport(glState.getViewport(), nearZ, farZ, GL_TRIANGLES,
+    float farZ               = glState.getFarPlane();
+    mRenderer->setViewport(glState.getViewport(), nearZ, farZ, gl::PrimitiveMode::Triangles,
                            glState.getRasterizerState().frontFace, true);
 
     mRenderer->setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
@@ -98,7 +98,8 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Context *context,
 
     if (desc.MultiSampleType != D3DMULTISAMPLE_NONE)
     {
-        UNIMPLEMENTED();   // FIXME: Requires resolve using StretchRect into non-multisampled render target
+        UNIMPLEMENTED();  // FIXME: Requires resolve using StretchRect into non-multisampled render
+                          // target
         SafeRelease(surface);
         return gl::OutOfMemory()
                << "ReadPixels is unimplemented for multisampled framebuffer attachments.";
@@ -167,9 +168,9 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Context *context,
     }
 
     RECT rect;
-    rect.left = gl::clamp(area.x, 0L, static_cast<LONG>(desc.Width));
-    rect.top = gl::clamp(area.y, 0L, static_cast<LONG>(desc.Height));
-    rect.right = gl::clamp(area.x + area.width, 0L, static_cast<LONG>(desc.Width));
+    rect.left   = gl::clamp(area.x, 0L, static_cast<LONG>(desc.Width));
+    rect.top    = gl::clamp(area.y, 0L, static_cast<LONG>(desc.Height));
+    rect.right  = gl::clamp(area.x + area.width, 0L, static_cast<LONG>(desc.Width));
     rect.bottom = gl::clamp(area.y + area.height, 0L, static_cast<LONG>(desc.Height));
 
     D3DLOCKED_RECT lock;
@@ -249,25 +250,25 @@ gl::Error Framebuffer9::blitImpl(const gl::Context *context,
         ASSERT(drawRenderTarget);
 
         // The getSurface calls do an AddRef so save them until after no errors are possible
-        IDirect3DSurface9* readSurface = readRenderTarget->getSurface();
+        IDirect3DSurface9 *readSurface = readRenderTarget->getSurface();
         ASSERT(readSurface);
 
-        IDirect3DSurface9* drawSurface = drawRenderTarget->getSurface();
+        IDirect3DSurface9 *drawSurface = drawRenderTarget->getSurface();
         ASSERT(drawSurface);
 
         gl::Extents srcSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
         gl::Extents dstSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
 
         RECT srcRect;
-        srcRect.left = sourceArea.x;
-        srcRect.right = sourceArea.x + sourceArea.width;
-        srcRect.top = sourceArea.y;
+        srcRect.left   = sourceArea.x;
+        srcRect.right  = sourceArea.x + sourceArea.width;
+        srcRect.top    = sourceArea.y;
         srcRect.bottom = sourceArea.y + sourceArea.height;
 
         RECT dstRect;
-        dstRect.left = destArea.x;
-        dstRect.right = destArea.x + destArea.width;
-        dstRect.top = destArea.y;
+        dstRect.left   = destArea.x;
+        dstRect.right  = destArea.x + destArea.width;
+        dstRect.top    = destArea.y;
         dstRect.bottom = destArea.y + destArea.height;
 
         // Clip the rectangles to the scissor rectangle
@@ -339,7 +340,8 @@ gl::Error Framebuffer9::blitImpl(const gl::Context *context,
             srcRect.bottom = srcSize.height;
         }
 
-        HRESULT result = device->StretchRect(readSurface, &srcRect, drawSurface, &dstRect, D3DTEXF_NONE);
+        HRESULT result =
+            device->StretchRect(readSurface, &srcRect, drawSurface, &dstRect, D3DTEXF_NONE);
 
         SafeRelease(readSurface);
         SafeRelease(drawSurface);
@@ -375,13 +377,14 @@ gl::Error Framebuffer9::blitImpl(const gl::Context *context,
         ASSERT(drawDepthStencil);
 
         // The getSurface calls do an AddRef so save them until after no errors are possible
-        IDirect3DSurface9* readSurface = readDepthStencil->getSurface();
+        IDirect3DSurface9 *readSurface = readDepthStencil->getSurface();
         ASSERT(readDepthStencil);
 
-        IDirect3DSurface9* drawSurface = drawDepthStencil->getSurface();
+        IDirect3DSurface9 *drawSurface = drawDepthStencil->getSurface();
         ASSERT(drawDepthStencil);
 
-        HRESULT result = device->StretchRect(readSurface, nullptr, drawSurface, nullptr, D3DTEXF_NONE);
+        HRESULT result =
+            device->StretchRect(readSurface, nullptr, drawSurface, nullptr, D3DTEXF_NONE);
 
         SafeRelease(readSurface);
         SafeRelease(drawSurface);
@@ -397,7 +400,7 @@ gl::Error Framebuffer9::blitImpl(const gl::Context *context,
 
 GLenum Framebuffer9::getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const
 {
-    RenderTarget9 *renderTarget9 = GetAs<RenderTarget9>(renderTarget);
+    RenderTarget9 *renderTarget9         = GetAs<RenderTarget9>(renderTarget);
     const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(renderTarget9->getD3DFormat());
     return d3dFormatInfo.info().glInternalFormat;
 }

@@ -65,9 +65,12 @@ bool ValidateGetMultisamplefvRobustANGLE(Context *context,
                                          GLsizei *length,
                                          GLfloat *val);
 
-bool ValidateDrawIndirectBase(Context *context, GLenum mode, const void *indirect);
-bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indirect);
-bool ValidateDrawElementsIndirect(Context *context, GLenum mode, GLenum type, const void *indirect);
+bool ValidateDrawIndirectBase(Context *context, PrimitiveMode mode, const void *indirect);
+bool ValidateDrawArraysIndirect(Context *context, PrimitiveMode mode, const void *indirect);
+bool ValidateDrawElementsIndirect(Context *context,
+                                  PrimitiveMode mode,
+                                  GLenum type,
+                                  const void *indirect);
 
 bool ValidateProgramUniform1i(Context *context, GLuint program, GLint location, GLint v0);
 bool ValidateProgramUniform2i(Context *context, GLuint program, GLint location, GLint v0, GLint v1);

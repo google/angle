@@ -2060,7 +2060,7 @@ void Context::texParameterIuivRobust(TextureType target,
     UNIMPLEMENTED();
 }
 
-void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
+void Context::drawArrays(PrimitiveMode mode, GLint first, GLsizei count)
 {
     // No-op if zero count
     if (count == 0)
@@ -2073,7 +2073,10 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(), count, 1);
 }
 
-void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
+void Context::drawArraysInstanced(PrimitiveMode mode,
+                                  GLint first,
+                                  GLsizei count,
+                                  GLsizei instanceCount)
 {
     // No-op if zero count
     if (count == 0 || instanceCount == 0)
@@ -2088,7 +2091,7 @@ void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsiz
                                      instanceCount);
 }
 
-void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)
+void Context::drawElements(PrimitiveMode mode, GLsizei count, GLenum type, const void *indices)
 {
     // No-op if zero count
     if (count == 0)
@@ -2100,7 +2103,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *
     ANGLE_CONTEXT_TRY(mImplementation->drawElements(this, mode, count, type, indices));
 }
 
-void Context::drawElementsInstanced(GLenum mode,
+void Context::drawElementsInstanced(PrimitiveMode mode,
                                     GLsizei count,
                                     GLenum type,
                                     const void *indices,
@@ -2117,7 +2120,7 @@ void Context::drawElementsInstanced(GLenum mode,
         mImplementation->drawElementsInstanced(this, mode, count, type, indices, instances));
 }
 
-void Context::drawRangeElements(GLenum mode,
+void Context::drawRangeElements(PrimitiveMode mode,
                                 GLuint start,
                                 GLuint end,
                                 GLsizei count,
@@ -2135,13 +2138,13 @@ void Context::drawRangeElements(GLenum mode,
         mImplementation->drawRangeElements(this, mode, start, end, count, type, indices));
 }
 
-void Context::drawArraysIndirect(GLenum mode, const void *indirect)
+void Context::drawArraysIndirect(PrimitiveMode mode, const void *indirect)
 {
     ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(mImplementation->drawArraysIndirect(this, mode, indirect));
 }
 
-void Context::drawElementsIndirect(GLenum mode, GLenum type, const void *indirect)
+void Context::drawElementsIndirect(PrimitiveMode mode, GLenum type, const void *indirect)
 {
     ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(mImplementation->drawElementsIndirect(this, mode, type, indirect));
@@ -2999,7 +3002,7 @@ size_t Context::getRequestableExtensionStringCount() const
     return mRequestableExtensionStrings.size();
 }
 
-void Context::beginTransformFeedback(GLenum primitiveMode)
+void Context::beginTransformFeedback(PrimitiveMode primitiveMode)
 {
     TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
     ASSERT(transformFeedback != nullptr);
@@ -3109,7 +3112,7 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions,
 
     mSupportedExtensions =
         generateSupportedExtensions(displayExtensions, clientExtensions, robustResourceInit);
-    mExtensions          = mSupportedExtensions;
+    mExtensions = mSupportedExtensions;
 
     mLimitations = mImplementation->getNativeLimitations();
 

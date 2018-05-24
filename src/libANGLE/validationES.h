@@ -272,39 +272,39 @@ bool ValidateCopyTexImageParametersBase(Context *context,
                                         GLint border,
                                         Format *textureFormatOut);
 
-bool ValidateDrawBase(Context *context, GLenum mode, GLsizei count);
+bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count);
 bool ValidateDrawArraysCommon(Context *context,
-                              GLenum mode,
+                              PrimitiveMode mode,
                               GLint first,
                               GLsizei count,
                               GLsizei primcount);
 bool ValidateDrawArraysInstancedBase(Context *context,
-                                     GLenum mode,
+                                     PrimitiveMode mode,
                                      GLint first,
                                      GLsizei count,
                                      GLsizei primcount);
 bool ValidateDrawArraysInstancedANGLE(Context *context,
-                                      GLenum mode,
+                                      PrimitiveMode mode,
                                       GLint first,
                                       GLsizei count,
                                       GLsizei primcount);
 
-bool ValidateDrawElementsBase(Context *context, GLenum mode, GLenum type);
+bool ValidateDrawElementsBase(Context *context, PrimitiveMode mode, GLenum type);
 bool ValidateDrawElementsCommon(Context *context,
-                                GLenum mode,
+                                PrimitiveMode mode,
                                 GLsizei count,
                                 GLenum type,
                                 const void *indices,
                                 GLsizei primcount);
 
 bool ValidateDrawElementsInstancedCommon(Context *context,
-                                         GLenum mode,
+                                         PrimitiveMode mode,
                                          GLsizei count,
                                          GLenum type,
                                          const void *indices,
                                          GLsizei primcount);
 bool ValidateDrawElementsInstancedANGLE(Context *context,
-                                        GLenum mode,
+                                        PrimitiveMode mode,
                                         GLsizei count,
                                         GLenum type,
                                         const void *indices,
@@ -680,8 +680,8 @@ bool ValidateFramebufferNotMultisampled(Context *context, Framebuffer *framebuff
 bool ValidateMultitextureUnit(Context *context, GLenum texture);
 
 bool ValidateTransformFeedbackPrimitiveMode(const Context *context,
-                                            GLenum transformFeedbackPrimitiveMode,
-                                            GLenum renderPrimitiveMode);
+                                            PrimitiveMode transformFeedbackPrimitiveMode,
+                                            PrimitiveMode renderPrimitiveMode);
 
 // Utility macro for handling implementation methods inside Validation.
 #define ANGLE_HANDLE_VALIDATION_ERR(X) \

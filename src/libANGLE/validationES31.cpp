@@ -410,7 +410,7 @@ bool ValidateGetBooleani_vRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateDrawIndirectBase(Context *context, GLenum mode, const void *indirect)
+bool ValidateDrawIndirectBase(Context *context, PrimitiveMode mode, const void *indirect)
 {
     if (context->getClientVersion() < ES_3_1)
     {
@@ -468,10 +468,10 @@ bool ValidateDrawIndirectBase(Context *context, GLenum mode, const void *indirec
     return true;
 }
 
-bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indirect)
+bool ValidateDrawArraysIndirect(Context *context, PrimitiveMode mode, const void *indirect)
 {
-    const State &state                          = context->getGLState();
-    TransformFeedback *curTransformFeedback     = state.getCurrentTransformFeedback();
+    const State &state                      = context->getGLState();
+    TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
     if (curTransformFeedback && curTransformFeedback->isActive() &&
         !curTransformFeedback->isPaused())
     {
@@ -516,16 +516,19 @@ bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indir
     return true;
 }
 
-bool ValidateDrawElementsIndirect(Context *context, GLenum mode, GLenum type, const void *indirect)
+bool ValidateDrawElementsIndirect(Context *context,
+                                  PrimitiveMode mode,
+                                  GLenum type,
+                                  const void *indirect)
 {
     if (!ValidateDrawElementsBase(context, mode, type))
     {
         return false;
     }
 
-    const State &state             = context->getGLState();
-    const VertexArray *vao         = state.getVertexArray();
-    Buffer *elementArrayBuffer     = vao->getElementArrayBuffer().get();
+    const State &state         = context->getGLState();
+    const VertexArray *vao     = state.getVertexArray();
+    Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
     if (!elementArrayBuffer)
     {
         context->handleError(InvalidOperation() << "zero is bound to ELEMENT_ARRAY_BUFFER");

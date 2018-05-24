@@ -36,7 +36,7 @@ TransformFeedbackGL::~TransformFeedbackGL()
     mTransformFeedbackID = 0;
 }
 
-void TransformFeedbackGL::begin(GLenum primitiveMode)
+void TransformFeedbackGL::begin(gl::PrimitiveMode primitiveMode)
 {
     mStateManager->onTransformFeedbackStateChange();
 }
@@ -46,7 +46,7 @@ void TransformFeedbackGL::end()
     mStateManager->onTransformFeedbackStateChange();
 
     // Immediately end the transform feedback so that the results are visible.
-    syncActiveState(false, GL_NONE);
+    syncActiveState(false, gl::PrimitiveMode::InvalidEnum);
 }
 
 void TransformFeedbackGL::pause()
@@ -97,7 +97,7 @@ GLuint TransformFeedbackGL::getTransformFeedbackID() const
     return mTransformFeedbackID;
 }
 
-void TransformFeedbackGL::syncActiveState(bool active, GLenum primitiveMode) const
+void TransformFeedbackGL::syncActiveState(bool active, gl::PrimitiveMode primitiveMode) const
 {
     if (mIsActive != active)
     {
@@ -107,7 +107,8 @@ void TransformFeedbackGL::syncActiveState(bool active, GLenum primitiveMode) con
         mStateManager->bindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedbackID);
         if (mIsActive)
         {
-            mFunctions->beginTransformFeedback(primitiveMode);
+            ASSERT(primitiveMode != gl::PrimitiveMode::InvalidEnum);
+            mFunctions->beginTransformFeedback(gl::ToGLenum(primitiveMode));
         }
         else
         {
@@ -133,5 +134,4 @@ void TransformFeedbackGL::syncPausedState(bool paused) const
         }
     }
 }
-
 }

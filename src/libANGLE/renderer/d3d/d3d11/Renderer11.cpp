@@ -422,8 +422,8 @@ Renderer11::Renderer11(egl::Display *display)
       mScratchMemoryBuffer(ScratchMemoryBufferLifetime),
       mAnnotator(nullptr)
 {
-    mLineLoopIB       = nullptr;
-    mTriangleFanIB    = nullptr;
+    mLineLoopIB    = nullptr;
+    mTriangleFanIB = nullptr;
 
     mBlit          = nullptr;
     mPixelTransfer = nullptr;
@@ -432,13 +432,13 @@ Renderer11::Renderer11(egl::Display *display)
 
     mTrim = nullptr;
 
-    mRenderer11DeviceCaps.supportsClearView             = false;
-    mRenderer11DeviceCaps.supportsConstantBufferOffsets = false;
+    mRenderer11DeviceCaps.supportsClearView                      = false;
+    mRenderer11DeviceCaps.supportsConstantBufferOffsets          = false;
     mRenderer11DeviceCaps.supportsVpRtIndexWriteFromVertexShader = false;
-    mRenderer11DeviceCaps.supportsDXGI1_2               = false;
-    mRenderer11DeviceCaps.B5G6R5support                 = 0;
-    mRenderer11DeviceCaps.B4G4R4A4support               = 0;
-    mRenderer11DeviceCaps.B5G5R5A1support               = 0;
+    mRenderer11DeviceCaps.supportsDXGI1_2                        = false;
+    mRenderer11DeviceCaps.B5G6R5support                          = 0;
+    mRenderer11DeviceCaps.B4G4R4A4support                        = 0;
+    mRenderer11DeviceCaps.B5G5R5A1support                        = 0;
 
     mD3d11Module          = nullptr;
     mDxgiModule           = nullptr;
@@ -529,12 +529,12 @@ Renderer11::Renderer11(egl::Display *display)
 
         // Also set EGL_PLATFORM_ANGLE_ANGLE variables, in case they're used elsewhere in ANGLE
         // mAvailableFeatureLevels defaults to empty
-        mRequestedDriverType    = D3D_DRIVER_TYPE_UNKNOWN;
+        mRequestedDriverType = D3D_DRIVER_TYPE_UNKNOWN;
     }
 
     const EGLenum presentPath = static_cast<EGLenum>(attributes.get(
         EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE, EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE));
-    mPresentPathFastEnabled = (presentPath == EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE);
+    mPresentPathFastEnabled   = (presentPath == EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE);
 
 // The D3D11 renderer must choose the D3D9 debug annotator because the D3D11 interface
 // method ID3DUserDefinedAnnotation::GetStatus on desktop builds doesn't work with the Graphics
@@ -940,7 +940,7 @@ void Renderer11::populateRenderer11DeviceCaps()
 
     if (getWorkarounds().disableB5G6R5Support)
     {
-        mRenderer11DeviceCaps.B5G6R5support = 0;
+        mRenderer11DeviceCaps.B5G6R5support    = 0;
         mRenderer11DeviceCaps.B5G6R5maxSamples = 0;
     }
     else
@@ -1080,9 +1080,9 @@ egl::ConfigSet Renderer11::generateConfigs()
                 config.bindToTextureRGBA = (((colorBufferFormatInfo.format == GL_RGBA) ||
                                              (colorBufferFormatInfo.format == GL_BGRA_EXT)) &&
                                             (sampleCount <= 1));
-                config.colorBufferType = EGL_RGB_BUFFER;
-                config.configCaveat    = EGL_NONE;
-                config.configID        = static_cast<EGLint>(configs.size() + 1);
+                config.colorBufferType   = EGL_RGB_BUFFER;
+                config.configCaveat      = EGL_NONE;
+                config.configID          = static_cast<EGLint>(configs.size() + 1);
 
                 // PresentPathFast may not be conformant
                 config.conformant = 0;
@@ -1470,13 +1470,13 @@ gl::Error Renderer11::drawArrays(const gl::Context *context, const gl::DrawCallP
         return gl::NoError();
     }
 
-    if (params.mode() == GL_LINE_LOOP)
+    if (params.mode() == gl::PrimitiveMode::LineLoop)
     {
         return drawLineLoop(context, clampedVertexCount, GL_NONE, nullptr, 0,
                             adjustedInstanceCount);
     }
 
-    if (params.mode() == GL_TRIANGLE_FAN)
+    if (params.mode() == gl::PrimitiveMode::TriangleFan)
     {
         return drawTriangleFan(context, clampedVertexCount, GL_NONE, nullptr, 0,
                                adjustedInstanceCount);
@@ -1485,7 +1485,7 @@ gl::Error Renderer11::drawArrays(const gl::Context *context, const gl::DrawCallP
     bool useInstancedPointSpriteEmulation =
         programD3D->usesPointSize() && getWorkarounds().useInstancedPointSpriteEmulation;
 
-    if (params.mode() != GL_POINTS || !useInstancedPointSpriteEmulation)
+    if (params.mode() != gl::PrimitiveMode::Points || !useInstancedPointSpriteEmulation)
     {
         if (adjustedInstanceCount == 0)
         {
@@ -1547,13 +1547,13 @@ gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCal
     const gl::Program *program    = glState.getProgram();
     GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, params.instances());
 
-    if (params.mode() == GL_LINE_LOOP)
+    if (params.mode() == gl::PrimitiveMode::LineLoop)
     {
         return drawLineLoop(context, params.indexCount(), params.type(), params.indices(),
                             baseVertex, adjustedInstanceCount);
     }
 
-    if (params.mode() == GL_TRIANGLE_FAN)
+    if (params.mode() == gl::PrimitiveMode::TriangleFan)
     {
         return drawTriangleFan(context, params.indexCount(), params.type(), params.indices(),
                                baseVertex, adjustedInstanceCount);
@@ -1561,7 +1561,8 @@ gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCal
 
     const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
 
-    if (params.mode() != GL_POINTS || !programD3D->usesInstancedPointSpriteEmulation())
+    if (params.mode() != gl::PrimitiveMode::Points ||
+        !programD3D->usesInstancedPointSpriteEmulation())
     {
         if (adjustedInstanceCount == 0)
         {
@@ -1717,9 +1718,9 @@ gl::Error Renderer11::drawLineLoop(const gl::Context *context,
 
     ANGLE_TRY(mLineLoopIB->unmapBuffer());
 
-    IndexBuffer11 *indexBuffer   = GetAs<IndexBuffer11>(mLineLoopIB->getIndexBuffer());
+    IndexBuffer11 *indexBuffer          = GetAs<IndexBuffer11>(mLineLoopIB->getIndexBuffer());
     const d3d11::Buffer &d3dIndexBuffer = indexBuffer->getBuffer();
-    DXGI_FORMAT indexFormat      = indexBuffer->getIndexFormat();
+    DXGI_FORMAT indexFormat             = indexBuffer->getIndexFormat();
 
     mStateManager.setIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset);
 
@@ -1800,9 +1801,9 @@ gl::Error Renderer11::drawTriangleFan(const gl::Context *context,
 
     ANGLE_TRY(mTriangleFanIB->unmapBuffer());
 
-    IndexBuffer11 *indexBuffer   = GetAs<IndexBuffer11>(mTriangleFanIB->getIndexBuffer());
+    IndexBuffer11 *indexBuffer          = GetAs<IndexBuffer11>(mTriangleFanIB->getIndexBuffer());
     const d3d11::Buffer &d3dIndexBuffer = indexBuffer->getBuffer();
-    DXGI_FORMAT indexFormat      = indexBuffer->getIndexFormat();
+    DXGI_FORMAT indexFormat             = indexBuffer->getIndexFormat();
 
     mStateManager.setIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset);
 
@@ -3023,7 +3024,7 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
     ASSERT(rt11->getTexture().valid());
 
     const TextureHelper11 &textureHelper = rt11->getTexture();
-    unsigned int sourceSubResource = rt11->getSubresourceIndex();
+    unsigned int sourceSubResource       = rt11->getSubresourceIndex();
 
     const gl::Extents &texSize = textureHelper.getExtents();
 
@@ -3122,7 +3123,7 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
     // tracking in the 'pixelBuffer' members, causing leaks. Instead we must use
     // pixelBuffer.set() twice, which performs the addRef/release correctly
     gl::PixelPackState invertTexturePack;
-    invertTexturePack.alignment = pack.alignment;
+    invertTexturePack.alignment       = pack.alignment;
     invertTexturePack.reverseRowOrder = !pack.reverseRowOrder;
 
     PackPixelsParams packParams(safeArea, format, type, outputPitch, invertTexturePack, packBuffer,
@@ -3178,7 +3179,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Context *context,
     }
 
     const TextureHelper11 &drawTexture = drawRenderTarget11->getTexture();
-    unsigned int drawSubresource    = drawRenderTarget11->getSubresourceIndex();
+    unsigned int drawSubresource       = drawRenderTarget11->getSubresourceIndex();
 
     RenderTarget11 *readRenderTarget11 = GetAs<RenderTarget11>(readRenderTarget);
     if (!readRenderTarget11)
@@ -3188,7 +3189,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Context *context,
     }
 
     TextureHelper11 readTexture;
-    unsigned int readSubresource      = 0;
+    unsigned int readSubresource = 0;
     d3d11::SharedSRV readSRV;
 
     if (readRenderTarget->isMultisampled())
