@@ -42,6 +42,48 @@
     },
     {
       "key": {
+        "uuid": "09f37146_0d4584d7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-24T13:15:27Z",
+      "side": 1,
+      "message": "Hi, jiawei, current code cannot support user defined function with image parameter, so it cannot be tested if add this case. It is better to add this case when implementing to support user defined function with image parameter.",
+      "parentUuid": "82b25e4e_f3fb8ff4",
+      "revId": "0548ec441ed755bd308202e50501a85a1cca2639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48efaf95_84ce2241",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-24T13:15:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b45af432_7d16aef4",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 70
+      },
+      "revId": "0548ec441ed755bd308202e50501a85a1cca2639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f413349c_98ae1779",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 1
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "3742a64d_f03ae046",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-24T13:15:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f413349c_98ae1779",
+      "range": {
+        "startLine": 266,
+        "startChar": 18,
+        "endLine": 266,
+        "endChar": 53
+      },
+      "revId": "0548ec441ed755bd308202e50501a85a1cca2639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3e670c0_9630b1d6",
         "filename": "src/compiler/translator/UniformHLSL.h",
         "patchSetId": 1
@@ -85,6 +151,30 @@
       "revId": "0548ec441ed755bd308202e50501a85a1cca2639",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dd0803e_9cca87c4",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-24T13:15:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3e670c0_9630b1d6",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 71
+      },
+      "revId": "0548ec441ed755bd308202e50501a85a1cca2639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
