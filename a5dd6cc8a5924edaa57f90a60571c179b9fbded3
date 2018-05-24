@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "e2726c14_d609f1ff",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T21:40:07Z",
+      "side": 1,
+      "message": "I kinda feel like this is a bit too high level for a PixelBuffer - how much work can we do in TextureVk without making the API awkward?",
+      "range": {
+        "startLine": 278,
+        "startChar": 10,
+        "endLine": 278,
+        "endChar": 38
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "564c2d28_e02c7c7d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T21:40:07Z",
+      "side": 1,
+      "message": "would it be possible to land the first couple patches of the refactor before landing this patch stack? I\u0027m having trouble maintaining the stack through the conflicts.",
+      "range": {
+        "startLine": 596,
+        "startChar": 4,
+        "endLine": 596,
+        "endChar": 28
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0756ec77_5696defa",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 12
@@ -87,6 +133,29 @@
         "startChar": 4,
         "endLine": 545,
         "endChar": 18
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a37042a8_d1d70783",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T21:40:07Z",
+      "side": 1,
+      "message": "can you file a separate bug for this and we can send it to Intel for triage once this lands?",
+      "range": {
+        "startLine": 582,
+        "startChar": 0,
+        "endLine": 583,
+        "endChar": 31
       },
       "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
