@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9800c893_21190846",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T18:35:05Z",
+      "side": 1,
+      "message": "how hard would it be to just store the Framebuffer in the Context and trigger an onMakeCurrent(surface) function instead?",
+      "range": {
+        "startLine": 548,
+        "startChar": 8,
+        "endLine": 548,
+        "endChar": 66
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9fcc9e21_d14f5c91",
         "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
         "patchSetId": 33
