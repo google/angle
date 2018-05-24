@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "226e2e13_48624580",
+        "filename": "DEPS",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-05-24T20:33:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e45537e_5f2473ae",
+      "revId": "093a43fdc00c71f94069415c5f204200cccf2e78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2c24d8f_8aa2f6d4",
         "filename": "third_party/vulkan-loader/BUILD.gn",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "093a43fdc00c71f94069415c5f204200cccf2e78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a09749ad_bbbc6bf3",
+        "filename": "third_party/vulkan-loader/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-05-24T20:33:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2c24d8f_8aa2f6d4",
+      "revId": "093a43fdc00c71f94069415c5f204200cccf2e78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5456bfe4_71acbe32",
+        "filename": "third_party/vulkan-loader/src",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-05-24T20:33:12Z",
+      "side": 1,
+      "message": "Added new src folders to .gitignore.\nAdded README.angle files and updated dotfile_settings.gni.",
+      "parentUuid": "03702047_fff2bc3a",
+      "revId": "093a43fdc00c71f94069415c5f204200cccf2e78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "35f2a105_69cc4093",
         "filename": "third_party/vulkan-tools/BUILD.gn",
         "patchSetId": 2
@@ -64,6 +118,30 @@
       "writtenOn": "2018-05-24T17:50:48Z",
       "side": 1,
       "message": "I think we try to get more code re-use. it\u0027s a bit trickier with the new layout. Do any of the new repos depend upon one another? maybe we can make a template that can be shared if say the loader is included in the other two. Otherwise we can look at putting it in angle.gni.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 1
+      },
+      "revId": "093a43fdc00c71f94069415c5f204200cccf2e78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f578067_d6912f91",
+        "filename": "third_party/vulkan-tools/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-05-24T20:33:12Z",
+      "side": 1,
+      "message": "The Vulkan-Headers repo is a submodule of all three repos. The Vulkan-ValidationLayers repo depends on some files from the Vulkan-Loader repo.",
+      "parentUuid": "35f2a105_69cc4093",
       "range": {
         "startLine": 40,
         "startChar": 0,
