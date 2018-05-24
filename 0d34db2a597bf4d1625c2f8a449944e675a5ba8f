@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ebee3722_ec236449",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T19:05:58Z",
+      "side": 1,
+      "message": "This gets renamed to getCommandBufferForDraw. Rendering/Drawing are the same thing but I renamed this to onColorDraw to use the same word to make it extra clear.",
+      "parentUuid": "8026fc8f_9be13dd9",
+      "range": {
+        "startLine": 773,
+        "startChar": 27,
+        "endLine": 773,
+        "endChar": 40
+      },
+      "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34ea4984_afbe5f17",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 11
@@ -45,6 +69,53 @@
       "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "102a301b_16941ede",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T19:05:58Z",
+      "side": 1,
+      "message": "Because it is changing the layout. See below. Agree it\u0027s not clear. Maybe we can fix this in a follow-up? I left a comment and TODO here.",
+      "parentUuid": "34ea4984_afbe5f17",
+      "range": {
+        "startLine": 821,
+        "startChar": 21,
+        "endLine": 821,
+        "endChar": 29
+      },
+      "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c49a402_aeec159a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 849,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T19:05:58Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 849,
+        "startChar": 4,
+        "endLine": 849,
+        "endChar": 12
+      },
+      "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "9b2cec1a_f499e8e6",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T19:05:58Z",
+      "side": 1,
+      "message": "Oh, no, we could never use shared_ptr because of performance. I added a comment.",
+      "parentUuid": "6234cb7c_7e0fa75e",
+      "range": {
+        "startLine": 18,
+        "startChar": 31,
+        "endLine": 20,
+        "endChar": 65
+      },
+      "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44946aeb_b74b6607",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 11
@@ -91,6 +186,30 @@
       "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "512827eb_15c400fe",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T19:05:58Z",
+      "side": 1,
+      "message": "sure, done.",
+      "parentUuid": "44946aeb_b74b6607",
+      "range": {
+        "startLine": 499,
+        "startChar": 23,
+        "endLine": 499,
+        "endChar": 43
+      },
+      "revId": "0d34db2a597bf4d1625c2f8a449944e675a5ba8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
