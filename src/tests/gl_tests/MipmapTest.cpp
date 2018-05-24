@@ -520,9 +520,9 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
 // In particular, on D3D11 Feature Level 9_3 it ensures that both the zero LOD workaround texture AND the 'normal' texture are copied during conversion.
 TEST_P(MipmapTest, GenerateMipmapFromInitDataThenRender)
 {
-    // TODO(lucferron): Figure out why we clear all levels when trying to clear level 0.
+    // TODO(lucferron): Figure out why this test is failing only on Intel Linux.
     // http://anglebug.com/2502
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel());
 
     // Pass in initial data so the texture is blue.
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -610,9 +610,9 @@ TEST_P(MipmapTest, GenerateMipmapFromRenderedImage)
 // TODO: This test hits a texture rebind bug in the D3D11 renderer. Fix this.
 TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 {
-    // TODO(lucferron): Figure out why we clear all levels when trying to clear level 0.
+    // TODO(lucferron): Figure out why this test is failing only on Intel Linux.
     // http://anglebug.com/2502
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel());
 
     // TODO(geofflang): Figure out why this is broken on AMD OpenGL
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
@@ -701,8 +701,7 @@ TEST_P(MipmapTest, MipMapGenerationD3D9Bug)
 // works as expected. It tests enabling/disabling mipmaps, generating mipmaps, and rendering to level zero.
 TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
 {
-    // TODO(lucferron): Implement mipmaps generation for cube textures
-    // http://anglebug.com/2502
+    // TODO(jmadill): Cube map attachments http://anglebug.com/2470
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
@@ -743,8 +742,7 @@ TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
 // This test ensures that rendering to level-zero of a TextureCube works as expected.
 TEST_P(MipmapTest, TextureCubeRenderToLevelZero)
 {
-    // TODO(lucferron): Implement mipmaps generation for cube textures
-    // http://anglebug.com/2502
+    // TODO(jmadill): Cube map attachments http://anglebug.com/2470
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);

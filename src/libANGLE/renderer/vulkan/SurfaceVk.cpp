@@ -401,7 +401,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
                                    gl::SwizzleState(), &member.imageView, 1);
 
         // Set transfer dest layout, and clear the image to black.
-        member.image.clearColor(transparentBlack, commandBuffer);
+        member.image.clearColor(transparentBlack, 0, 1, commandBuffer);
 
         ANGLE_TRY(member.imageAcquiredSemaphore.init(device));
         ANGLE_TRY(member.commandsCompleteSemaphore.init(device));

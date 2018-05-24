@@ -210,7 +210,8 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
         ASSERT(colorRenderTarget);
         vk::ImageHelper *image = colorRenderTarget->getImageForWrite(currentSerial, this);
-        image->clearColor(clearColorValue, commandBuffer);
+        GLint mipLevelToClear  = (attachment->type() == GL_TEXTURE) ? attachment->mipLevel() : 0;
+        image->clearColor(clearColorValue, mipLevelToClear, 1, commandBuffer);
     }
 
     return gl::NoError();

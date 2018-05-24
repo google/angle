@@ -219,7 +219,10 @@ class ImageHelper final : angle::NonCopyable
                                 VkPipelineStageFlags dstStageMask,
                                 CommandBuffer *commandBuffer);
 
-    void clearColor(const VkClearColorValue &color, CommandBuffer *commandBuffer);
+    void clearColor(const VkClearColorValue &color,
+                    uint32_t mipLevel,
+                    uint32_t levelCount,
+                    CommandBuffer *commandBuffer);
 
     void clearDepthStencil(VkImageAspectFlags aspectFlags,
                            const VkClearDepthStencilValue &depthStencil,

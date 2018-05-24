@@ -855,7 +855,7 @@ vk::Error TextureVk::initImage(RendererVk *renderer,
 
     // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
     VkClearColorValue black = {{0, 0, 0, 1.0f}};
-    mImage.clearColor(black, commandBuffer);
+    mImage.clearColor(black, 0, levelCount, commandBuffer);
     return vk::NoError();
 }
 
