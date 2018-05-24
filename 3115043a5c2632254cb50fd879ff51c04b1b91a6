@@ -22,6 +22,30 @@
       "revId": "3115043a5c2632254cb50fd879ff51c04b1b91a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eafc3182_f288e8b5",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T23:26:54Z",
+      "side": 1,
+      "message": "We don\u0027t have access to the EGL header here. Added comment and static assert.",
+      "parentUuid": "80adb01e_5d6d029e",
+      "range": {
+        "startLine": 52,
+        "startChar": 76,
+        "endLine": 52,
+        "endChar": 78
+      },
+      "revId": "3115043a5c2632254cb50fd879ff51c04b1b91a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
