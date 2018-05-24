@@ -1079,8 +1079,7 @@ gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
 
-    unsigned int mask = GetBlendSampleMask(glState, samples);
-    ANGLE_TRY(setBlendDepthRasterStates(context, mask));
+    ANGLE_TRY(setBlendDepthRasterStates(context, drawMode));
 
     mStateManager.resetDirtyBits();
 
