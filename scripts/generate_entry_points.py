@@ -589,7 +589,7 @@ def write_glext_explicit_context_inc(version, ptrs, protos):
         function_pointers = ptrs,
         function_prototypes = protos)
 
-    path = path_to("..\include\GLES{}".format(folder_version),
+    path = path_to("../include/GLES{}".format(folder_version),
         "gl{}ext_explicit_context_autogen.inc".format(version))
 
     with open(path, "w") as out:
