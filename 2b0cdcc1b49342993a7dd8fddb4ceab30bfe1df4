@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "76751879_96973e2f",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-24T17:30:31Z",
+      "side": 1,
+      "message": "This breaks code generation on non-Windows platforms, btw:\n\nlfy-macbookpro2:angle lfy$ git reset --hard 2b0cdcc1b49342993a7dd8fddb4ceab30bfe1df4\nHEAD is now at 2b0cdcc1b Implement EGL_ANGLE_explicit_context\nlfy-macbookpro2:angle lfy$ python scripts/generate_entry_points.py \nTraceback (most recent call last):\n  File \"scripts/generate_entry_points.py\", line 835, in \u003cmodule\u003e\n    write_glext_explicit_context_inc(version, \"\\n\".join(glext_ptrs), \"\\n\".join(glext_protos))\n  File \"scripts/generate_entry_points.py\", line 595, in write_glext_explicit_context_inc\n    with open(path, \"w\") as out:\nIOError: [Errno 2] No such file or directory: \u0027scripts/../src/..\\\\include\\\\GLES2/gl2ext_explicit_context_autogen.inc\u0027",
+      "range": {
+        "startLine": 592,
+        "startChar": 0,
+        "endLine": 592,
+        "endChar": 39
+      },
+      "revId": "2b0cdcc1b49342993a7dd8fddb4ceab30bfe1df4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4dde492b_72c21837",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 21
