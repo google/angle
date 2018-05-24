@@ -22,6 +22,30 @@
       "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "226d507d_aaf430dd",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T21:10:41Z",
+      "side": 1,
+      "message": "I don\u0027t think that gives the same behaviour. I think this is similar to our discussion in the doc. There\u0027s value in having begin vs append because otherwise we\u0027d be repeated onResourceChanged() append() in many places. Note that begin forces a new node, while append does not.",
+      "parentUuid": "53dc6e70_faf8aaf5",
+      "range": {
+        "startLine": 46,
+        "startChar": 10,
+        "endLine": 46,
+        "endChar": 29
+      },
+      "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
