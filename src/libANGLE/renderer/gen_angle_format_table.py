@@ -233,11 +233,17 @@ def gen_enum_string(all_angle):
         enum_data += ',\n    ' + format_id
     return enum_data
 
+case_template = """        case {gl_format}:
+            return Format::ID::{angle_format};
+"""
+
 def gen_map_switch_string(gl_to_angle):
     switch_data = '';
     for gl_format in sorted(gl_to_angle.keys()):
         angle_format = gl_to_angle[gl_format]
-        switch_data += "        case " + gl_format + ":\nreturn Format::ID::" + angle_format + ";\n"
+        switch_data += case_template.format(
+            gl_format=gl_format,
+            angle_format=angle_format)
     switch_data += "        default:\n"
     switch_data += "            return Format::ID::NONE;"
     return switch_data;

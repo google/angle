@@ -242,6 +242,8 @@ if any_dirty:
         args += ['git.bat']
     else:
         args += ['git']
-    args += ['cl', 'format']
+    # The diff can be so large the arguments to clang-format can break the Windows command
+    # line length limits. Work around this by calling git cl format with --full.
+    args += ['cl', 'format', '--full']
     print('Calling git cl format')
     subprocess.call(args)

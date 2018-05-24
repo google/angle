@@ -100,7 +100,7 @@ enum class {enum_name} : uint8_t
     EnumCount = {max_value},
 }};
 
-template<>
+template <>
 {enum_name} From{api_enum_name}<{enum_name}>({api_enum_name} from);
 {api_enum_name} To{api_enum_name}({enum_name} from);
 """
@@ -155,22 +155,25 @@ namespace {namespace}
 """
 
 enum_implementation_template = """
-template<>
+template <>
 {enum_name} From{api_enum_name}<{enum_name}>({api_enum_name} from)
 {{
-    switch(from)
+    switch (from)
     {{
 {from_glenum_cases}
-        default: return {enum_name}::InvalidEnum;
+        default:
+            return {enum_name}::InvalidEnum;
     }}
 }}
 
 {api_enum_name} To{api_enum_name}({enum_name} from)
 {{
-    switch(from)
+    switch (from)
     {{
 {to_glenum_cases}
-        default: UNREACHABLE(); return 0;
+        default:
+            UNREACHABLE();
+            return 0;
     }}
 }}
 """
@@ -183,8 +186,8 @@ def write_cpp(enums, path_prefix, file_name, data_source_name, namespace, api_en
         to_glenum_cases = []
         for value in enum.values:
             qualified_name = enum.name + '::' + value.name
-            from_glenum_cases.append('        case ' + value.gl_name + ': return ' + qualified_name + ';')
-            to_glenum_cases.append('        case ' + qualified_name + ': return ' + value.gl_name + ';')
+            from_glenum_cases.append('        case ' + value.gl_name + ':\n            return ' + qualified_name + ';')
+            to_glenum_cases.append('        case ' + qualified_name + ':\n            return ' + value.gl_name + ';')
 
         content.append(enum_implementation_template.format(
             enum_name = enum.name,
