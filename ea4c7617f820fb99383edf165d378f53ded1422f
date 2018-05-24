@@ -22,6 +22,30 @@
       "revId": "ea4c7617f820fb99383edf165d378f53ded1422f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2ff0e77_25e58fb1",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T21:11:30Z",
+      "side": 1,
+      "message": "I agonized over this for a long time. Can you please suggest something?",
+      "parentUuid": "f41d58c4_465aa047",
+      "range": {
+        "startLine": 212,
+        "startChar": 27,
+        "endLine": 212,
+        "endChar": 48
+      },
+      "revId": "ea4c7617f820fb99383edf165d378f53ded1422f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
