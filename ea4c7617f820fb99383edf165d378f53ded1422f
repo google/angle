@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f41d58c4_465aa047",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-24T20:11:26Z",
+      "side": 1,
+      "message": "Can you rework the name of that? If I call a function that returns a state like \"isSomething\" or \"canSomething\" I don\u0027t expect it to change the internal state of the object I\u0027m calling.",
+      "range": {
+        "startLine": 212,
+        "startChar": 27,
+        "endLine": 212,
+        "endChar": 48
+      },
+      "revId": "ea4c7617f820fb99383edf165d378f53ded1422f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
