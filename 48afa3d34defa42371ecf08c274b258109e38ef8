@@ -283,6 +283,30 @@
       "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a28c7b65_322d269b",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-05-24T15:14:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5eca6cf_36839ebd",
+      "range": {
+        "startLine": 48,
+        "startChar": 94,
+        "endLine": 48,
+        "endChar": 98
+      },
+      "revId": "48afa3d34defa42371ecf08c274b258109e38ef8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
