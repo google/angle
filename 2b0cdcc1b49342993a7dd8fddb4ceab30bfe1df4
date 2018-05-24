@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4dde492b_72c21837",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 21
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-24T17:23:04Z",
+      "side": 1,
+      "message": "This file was not added in this CL.",
+      "range": {
+        "startLine": 126,
+        "startChar": 11,
+        "endLine": 126,
+        "endChar": 46
+      },
+      "revId": "2b0cdcc1b49342993a7dd8fddb4ceab30bfe1df4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66a1288a_9831c1d0",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 21
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-24T17:23:04Z",
+      "side": 1,
+      "message": "Same with this one.",
+      "range": {
+        "startLine": 130,
+        "startChar": 12,
+        "endLine": 130,
+        "endChar": 47
+      },
+      "revId": "2b0cdcc1b49342993a7dd8fddb4ceab30bfe1df4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
