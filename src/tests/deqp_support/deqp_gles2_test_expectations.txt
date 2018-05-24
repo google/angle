@@ -200,6 +200,7 @@
 2605 VULKAN ANDROID : dEQP-GLES2.functional.state_query.rbo.renderbuffer_component_size_depth = SKIP
 2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.random = SKIP
 2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.supported = SKIP
+2609 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.* = SKIP
 
 // Windows Linux and Mac failures
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL

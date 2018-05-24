@@ -313,6 +313,13 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     VkCommandBuffer releaseHandle();
     void destroy(VkDevice device, const CommandPool &commandPool);
     Error init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo);
+    void blitImage(const Image &srcImage,
+                   VkImageLayout srcImageLayout,
+                   const Image &dstImage,
+                   VkImageLayout dstImageLayout,
+                   uint32_t regionCount,
+                   VkImageBlit *pRegions,
+                   VkFilter filter);
     using WrappedObject::operator=;
 
     Error begin(const VkCommandBufferBeginInfo &info);

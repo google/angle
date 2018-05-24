@@ -384,6 +384,19 @@ Error CommandBuffer::init(VkDevice device, const VkCommandBufferAllocateInfo &cr
     return NoError();
 }
 
+void CommandBuffer::blitImage(const Image &srcImage,
+                              VkImageLayout srcImageLayout,
+                              const Image &dstImage,
+                              VkImageLayout dstImageLayout,
+                              uint32_t regionCount,
+                              VkImageBlit *pRegions,
+                              VkFilter filter)
+{
+    ASSERT(valid());
+    vkCmdBlitImage(mHandle, srcImage.getHandle(), srcImageLayout, dstImage.getHandle(),
+                   dstImageLayout, regionCount, pRegions, filter);
+}
+
 Error CommandBuffer::begin(const VkCommandBufferBeginInfo &info)
 {
     ASSERT(valid());

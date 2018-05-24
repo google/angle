@@ -175,15 +175,19 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     vk::Error ensureImageInitialized(RendererVk *renderer);
 
   private:
-    gl::Error generateMipmapLevels(ContextVk *contextVk,
-                                   const angle::Format &sourceFormat,
-                                   GLuint layer,
-                                   GLuint firstMipLevel,
-                                   GLuint maxMipLevel,
-                                   size_t sourceWidth,
-                                   size_t sourceHeight,
-                                   size_t sourceRowPitch,
-                                   uint8_t *sourceData);
+    void generateMipmapWithBlit(RendererVk *renderer);
+
+    gl::Error generateMipmapWithCPU(const gl::Context *context);
+
+    gl::Error generateMipmapLevelsWithCPU(ContextVk *contextVk,
+                                          const angle::Format &sourceFormat,
+                                          GLuint layer,
+                                          GLuint firstMipLevel,
+                                          GLuint maxMipLevel,
+                                          size_t sourceWidth,
+                                          size_t sourceHeight,
+                                          size_t sourceRowPitch,
+                                          uint8_t *sourceData);
 
     gl::Error copySubImageImpl(const gl::Context *context,
                                const gl::ImageIndex &index,

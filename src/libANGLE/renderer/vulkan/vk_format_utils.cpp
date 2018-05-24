@@ -41,6 +41,11 @@ void FillTextureFormatCaps(const VkFormatProperties &formatProperties,
         HasFormatFeatureBits(VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, formatProperties);
 }
 
+}  // anonymous namespace
+
+namespace vk
+{
+
 void GetFormatProperties(VkPhysicalDevice physicalDevice,
                          VkFormat vkFormat,
                          VkFormatProperties *propertiesOut)
@@ -63,10 +68,7 @@ void GetFormatProperties(VkPhysicalDevice physicalDevice,
         *propertiesOut = formatProperties;
     }
 }
-}  // anonymous namespace
 
-namespace vk
-{
 bool HasFullFormatSupport(VkPhysicalDevice physicalDevice, VkFormat vkFormat)
 {
     VkFormatProperties formatProperties;

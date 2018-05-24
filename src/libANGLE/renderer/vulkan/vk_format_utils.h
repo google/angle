@@ -28,6 +28,10 @@ namespace rx
 namespace vk
 {
 
+void GetFormatProperties(VkPhysicalDevice physicalDevice,
+                         VkFormat vkFormat,
+                         VkFormatProperties *propertiesOut);
+
 struct Format final : private angle::NonCopyable
 {
     Format();
