@@ -16,6 +16,29 @@
       "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43812960_0de62a52",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-24T01:49:58Z",
+      "side": 1,
+      "message": "Creating a new framebuffer every frame will be slow, I think.\nMaybe DisplayOzone should just stop using FramebufferGL and will call GL functions directly.",
+      "range": {
+        "startLine": 749,
+        "startChar": 27,
+        "endLine": 749,
+        "endChar": 37
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
