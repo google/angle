@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4f2cc61_fedc32c2",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-24T16:49:44Z",
+      "side": 1,
+      "message": "Do we have plans to make this a UBO or use dirty bits?",
+      "revId": "624d34d537ade87c13dbb77dca8a690ad4b8517e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7867a00a_7c17c485",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-24T16:49:44Z",
+      "side": 1,
+      "message": "Can this be TODO(lfy@google.com) with prose instead of commented out code?",
+      "revId": "624d34d537ade87c13dbb77dca8a690ad4b8517e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
