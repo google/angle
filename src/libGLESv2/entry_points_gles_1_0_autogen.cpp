@@ -408,12 +408,11 @@ void GL_APIENTRY GetLightfv(GLenum light, GLenum pname, GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        context->gatherParams<EntryPoint::GetLightfv>(light, pnamePacked, params);
+        context->gatherParams<EntryPoint::GetLightfv>(light, pname, params);
 
-        if (context->skipValidation() || ValidateGetLightfv(context, light, pnamePacked, params))
+        if (context->skipValidation() || ValidateGetLightfv(context, light, pname, params))
         {
-            context->getLightfv(light, pnamePacked, params);
+            context->getLightfv(light, pname, params);
         }
     }
 }
@@ -426,12 +425,11 @@ void GL_APIENTRY GetLightxv(GLenum light, GLenum pname, GLfixed *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        context->gatherParams<EntryPoint::GetLightxv>(light, pnamePacked, params);
+        context->gatherParams<EntryPoint::GetLightxv>(light, pname, params);
 
-        if (context->skipValidation() || ValidateGetLightxv(context, light, pnamePacked, params))
+        if (context->skipValidation() || ValidateGetLightxv(context, light, pname, params))
         {
-            context->getLightxv(light, pnamePacked, params);
+            context->getLightxv(light, pname, params);
         }
     }
 }
@@ -444,12 +442,11 @@ void GL_APIENTRY GetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        context->gatherParams<EntryPoint::GetMaterialfv>(face, pnamePacked, params);
+        context->gatherParams<EntryPoint::GetMaterialfv>(face, pname, params);
 
-        if (context->skipValidation() || ValidateGetMaterialfv(context, face, pnamePacked, params))
+        if (context->skipValidation() || ValidateGetMaterialfv(context, face, pname, params))
         {
-            context->getMaterialfv(face, pnamePacked, params);
+            context->getMaterialfv(face, pname, params);
         }
     }
 }
@@ -462,12 +459,11 @@ void GL_APIENTRY GetMaterialxv(GLenum face, GLenum pname, GLfixed *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        context->gatherParams<EntryPoint::GetMaterialxv>(face, pnamePacked, params);
+        context->gatherParams<EntryPoint::GetMaterialxv>(face, pname, params);
 
-        if (context->skipValidation() || ValidateGetMaterialxv(context, face, pnamePacked, params))
+        if (context->skipValidation() || ValidateGetMaterialxv(context, face, pname, params))
         {
-            context->getMaterialxv(face, pnamePacked, params);
+            context->getMaterialxv(face, pname, params);
         }
     }
 }
@@ -629,12 +625,11 @@ void GL_APIENTRY Lightf(GLenum light, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        context->gatherParams<EntryPoint::Lightf>(light, pnamePacked, param);
+        context->gatherParams<EntryPoint::Lightf>(light, pname, param);
 
-        if (context->skipValidation() || ValidateLightf(context, light, pnamePacked, param))
+        if (context->skipValidation() || ValidateLightf(context, light, pname, param))
         {
-            context->lightf(light, pnamePacked, param);
+            context->lightf(light, pname, param);
         }
     }
 }
@@ -647,12 +642,11 @@ void GL_APIENTRY Lightfv(GLenum light, GLenum pname, const GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        context->gatherParams<EntryPoint::Lightfv>(light, pnamePacked, params);
+        context->gatherParams<EntryPoint::Lightfv>(light, pname, params);
 
-        if (context->skipValidation() || ValidateLightfv(context, light, pnamePacked, params))
+        if (context->skipValidation() || ValidateLightfv(context, light, pname, params))
         {
-            context->lightfv(light, pnamePacked, params);
+            context->lightfv(light, pname, params);
         }
     }
 }
@@ -664,12 +658,11 @@ void GL_APIENTRY Lightx(GLenum light, GLenum pname, GLfixed param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        context->gatherParams<EntryPoint::Lightx>(light, pnamePacked, param);
+        context->gatherParams<EntryPoint::Lightx>(light, pname, param);
 
-        if (context->skipValidation() || ValidateLightx(context, light, pnamePacked, param))
+        if (context->skipValidation() || ValidateLightx(context, light, pname, param))
         {
-            context->lightx(light, pnamePacked, param);
+            context->lightx(light, pname, param);
         }
     }
 }
@@ -682,12 +675,11 @@ void GL_APIENTRY Lightxv(GLenum light, GLenum pname, const GLfixed *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        LightParameter pnamePacked = FromGLenum<LightParameter>(pname);
-        context->gatherParams<EntryPoint::Lightxv>(light, pnamePacked, params);
+        context->gatherParams<EntryPoint::Lightxv>(light, pname, params);
 
-        if (context->skipValidation() || ValidateLightxv(context, light, pnamePacked, params))
+        if (context->skipValidation() || ValidateLightxv(context, light, pname, params))
         {
-            context->lightxv(light, pnamePacked, params);
+            context->lightxv(light, pname, params);
         }
     }
 }
@@ -779,12 +771,11 @@ void GL_APIENTRY Materialf(GLenum face, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        context->gatherParams<EntryPoint::Materialf>(face, pnamePacked, param);
+        context->gatherParams<EntryPoint::Materialf>(face, pname, param);
 
-        if (context->skipValidation() || ValidateMaterialf(context, face, pnamePacked, param))
+        if (context->skipValidation() || ValidateMaterialf(context, face, pname, param))
         {
-            context->materialf(face, pnamePacked, param);
+            context->materialf(face, pname, param);
         }
     }
 }
@@ -797,12 +788,11 @@ void GL_APIENTRY Materialfv(GLenum face, GLenum pname, const GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        context->gatherParams<EntryPoint::Materialfv>(face, pnamePacked, params);
+        context->gatherParams<EntryPoint::Materialfv>(face, pname, params);
 
-        if (context->skipValidation() || ValidateMaterialfv(context, face, pnamePacked, params))
+        if (context->skipValidation() || ValidateMaterialfv(context, face, pname, params))
         {
-            context->materialfv(face, pnamePacked, params);
+            context->materialfv(face, pname, params);
         }
     }
 }
@@ -814,12 +804,11 @@ void GL_APIENTRY Materialx(GLenum face, GLenum pname, GLfixed param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        context->gatherParams<EntryPoint::Materialx>(face, pnamePacked, param);
+        context->gatherParams<EntryPoint::Materialx>(face, pname, param);
 
-        if (context->skipValidation() || ValidateMaterialx(context, face, pnamePacked, param))
+        if (context->skipValidation() || ValidateMaterialx(context, face, pname, param))
         {
-            context->materialx(face, pnamePacked, param);
+            context->materialx(face, pname, param);
         }
     }
 }
@@ -832,12 +821,11 @@ void GL_APIENTRY Materialxv(GLenum face, GLenum pname, const GLfixed *param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        MaterialParameter pnamePacked = FromGLenum<MaterialParameter>(pname);
-        context->gatherParams<EntryPoint::Materialxv>(face, pnamePacked, param);
+        context->gatherParams<EntryPoint::Materialxv>(face, pname, param);
 
-        if (context->skipValidation() || ValidateMaterialxv(context, face, pnamePacked, param))
+        if (context->skipValidation() || ValidateMaterialxv(context, face, pname, param))
         {
-            context->materialxv(face, pnamePacked, param);
+            context->materialxv(face, pname, param);
         }
     }
 }

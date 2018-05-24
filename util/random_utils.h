@@ -29,13 +29,11 @@ class ANGLE_EXPORT RNG
 
     void reseed(unsigned int newSeed);
 
-    bool randomBool(float probTrue = 0.5f);
     int randomInt();
     int randomIntBetween(int min, int max);
     unsigned int randomUInt();
     float randomFloat();
     float randomFloatBetween(float min, float max);
-    float randomFloatNonnegative();
     float randomNegativeOneToOne();
 
   private:
@@ -59,4 +57,4 @@ inline void FillVectorWithRandomUBytes(std::vector<uint8_t> *data)
 
 }  // namespace angle
 
-#endif  // UTIL_RANDOM_UTILS_H
+#endif // UTIL_RANDOM_UTILS_H

@@ -1682,9 +1682,6 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
         case GL_MAX_TEXTURE_STACK_DEPTH:
             *params = mCaps.maxTextureMatrixStackDepth;
             break;
-        case GL_MAX_LIGHTS:
-            *params = mCaps.maxLights;
-            break;
         // GLES1 emulation: Vertex attribute queries
         case GL_VERTEX_ARRAY_BUFFER_BINDING:
         case GL_NORMAL_ARRAY_BUFFER_BINDING:
@@ -7061,7 +7058,6 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             case GL_MAX_MODELVIEW_STACK_DEPTH:
             case GL_MAX_PROJECTION_STACK_DEPTH:
             case GL_MAX_TEXTURE_STACK_DEPTH:
-            case GL_MAX_LIGHTS:
             case GL_VERTEX_ARRAY_STRIDE:
             case GL_NORMAL_ARRAY_STRIDE:
             case GL_COLOR_ARRAY_STRIDE:
@@ -7089,7 +7085,6 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
                 return true;
             case GL_CURRENT_COLOR:
             case GL_CURRENT_TEXTURE_COORDS:
-            case GL_LIGHT_MODEL_AMBIENT:
                 *type      = GL_FLOAT;
                 *numParams = 4;
                 return true;
@@ -7102,10 +7097,6 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             case GL_TEXTURE_MATRIX:
                 *type      = GL_FLOAT;
                 *numParams = 16;
-                return true;
-            case GL_LIGHT_MODEL_TWO_SIDE:
-                *type      = GL_BOOL;
-                *numParams = 1;
                 return true;
         }
     }

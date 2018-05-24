@@ -21,15 +21,6 @@ struct Color
     const T *data() const { return &red; }
     T *ptr() { return &red; }
 
-    static Color fromData(const T *data) { return Color(data[0], data[1], data[2], data[3]); }
-    void writeData(T *data) const
-    {
-        data[0] = red;
-        data[1] = green;
-        data[2] = blue;
-        data[3] = alpha;
-    }
-
     T red;
     T green;
     T blue;

@@ -786,28 +786,7 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_TEXTURE_CUBE_MAP:
             mGLES1State.mTexUnitEnables[mActiveSampler].set(TextureType::CubeMap, enabled);
             break;
-        case GL_LIGHTING:
-            mGLES1State.mLightingEnabled = enabled;
-            break;
-        case GL_LIGHT0:
-        case GL_LIGHT1:
-        case GL_LIGHT2:
-        case GL_LIGHT3:
-        case GL_LIGHT4:
-        case GL_LIGHT5:
-        case GL_LIGHT6:
-        case GL_LIGHT7:
-            mGLES1State.mLights[feature - GL_LIGHT0].enabled = enabled;
-            break;
-        case GL_NORMALIZE:
-            mGLES1State.mNormalizeEnabled = enabled;
-            break;
-        case GL_RESCALE_NORMAL:
-            mGLES1State.mRescaleNormalEnabled = enabled;
-            break;
-        case GL_COLOR_MATERIAL:
-            mGLES1State.mColorMaterialEnabled = enabled;
-            break;
+
         default:
             UNREACHABLE();
     }
@@ -877,23 +856,6 @@ bool State::getEnableFeature(GLenum feature) const
             return mGLES1State.mTexUnitEnables[mActiveSampler].test(TextureType::_2D);
         case GL_TEXTURE_CUBE_MAP:
             return mGLES1State.mTexUnitEnables[mActiveSampler].test(TextureType::CubeMap);
-        case GL_LIGHTING:
-            return mGLES1State.mLightingEnabled;
-        case GL_LIGHT0:
-        case GL_LIGHT1:
-        case GL_LIGHT2:
-        case GL_LIGHT3:
-        case GL_LIGHT4:
-        case GL_LIGHT5:
-        case GL_LIGHT6:
-        case GL_LIGHT7:
-            return mGLES1State.mLights[feature - GL_LIGHT0].enabled;
-        case GL_NORMALIZE:
-            return mGLES1State.mNormalizeEnabled;
-        case GL_RESCALE_NORMAL:
-            return mGLES1State.mRescaleNormalEnabled;
-        case GL_COLOR_MATERIAL:
-            return mGLES1State.mColorMaterialEnabled;
         default:
             UNREACHABLE();
             return false;
@@ -1937,9 +1899,7 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
         case GL_PROGRAM_CACHE_ENABLED_ANGLE:
             *params = mProgramBinaryCacheEnabled ? GL_TRUE : GL_FALSE;
             break;
-        case GL_LIGHT_MODEL_TWO_SIDE:
-            *params = IsLightModelTwoSided(&mGLES1State);
-            break;
+
         default:
             UNREACHABLE();
             break;
@@ -2032,9 +1992,6 @@ void State::getFloatv(GLenum pname, GLfloat *params)
         case GL_TEXTURE_MATRIX:
             memcpy(params, mGLES1State.mTextureMatrices[mActiveSampler].back().data(),
                    16 * sizeof(GLfloat));
-            break;
-        case GL_LIGHT_MODEL_AMBIENT:
-            GetLightModelParameters(&mGLES1State, pname, params);
             break;
         default:
             UNREACHABLE();

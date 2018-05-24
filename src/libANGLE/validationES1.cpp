@@ -11,8 +11,6 @@
 #include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/ErrorStrings.h"
-#include "libANGLE/GLES1State.h"
-#include "libANGLE/queryutils.h"
 #include "libANGLE/validationES.h"
 
 #define ANGLE_VALIDATE_IS_GLES1(context)                              \
@@ -147,173 +145,6 @@ bool ValidateBuiltinVertexAttributeCommon(Context *context,
     }
 
     return true;
-}
-
-bool ValidateLightCaps(Context *context, GLenum light)
-{
-    if (light < GL_LIGHT0 || light >= GL_LIGHT0 + context->getCaps().maxLights)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidLight);
-        return false;
-    }
-
-    return true;
-}
-
-bool ValidateLightCommon(Context *context,
-                         GLenum light,
-                         LightParameter pname,
-                         const GLfloat *params)
-{
-
-    ANGLE_VALIDATE_IS_GLES1(context);
-
-    if (!ValidateLightCaps(context, light))
-    {
-        return false;
-    }
-
-    switch (pname)
-    {
-        case LightParameter::Ambient:
-        case LightParameter::Diffuse:
-        case LightParameter::Specular:
-        case LightParameter::Position:
-        case LightParameter::SpotDirection:
-            return true;
-        case LightParameter::SpotExponent:
-            if (params[0] < 0.0f || params[0] > 128.0f)
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidValue(), LightParameterOutOfRange);
-                return false;
-            }
-            return true;
-        case LightParameter::SpotCutoff:
-            if (params[0] == 180.0f)
-            {
-                return true;
-            }
-            if (params[0] < 0.0f || params[0] > 90.0f)
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidValue(), LightParameterOutOfRange);
-                return false;
-            }
-            return true;
-        case LightParameter::ConstantAttenuation:
-        case LightParameter::LinearAttenuation:
-        case LightParameter::QuadraticAttenuation:
-            if (params[0] < 0.0f)
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidValue(), LightParameterOutOfRange);
-                return false;
-            }
-            return true;
-        default:
-            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidLightParameter);
-            return false;
-    }
-}
-
-bool ValidateLightSingleComponent(Context *context,
-                                  GLenum light,
-                                  LightParameter pname,
-                                  GLfloat param)
-{
-    if (!ValidateLightCommon(context, light, pname, &param))
-    {
-        return false;
-    }
-
-    if (GetLightParameterCount(pname) > 1)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidLightParameter);
-        return false;
-    }
-
-    return true;
-}
-
-bool ValidateMaterialCommon(Context *context,
-                            GLenum face,
-                            MaterialParameter pname,
-                            const GLfloat *params)
-{
-    ANGLE_VALIDATE_IS_GLES1(context);
-
-    if (face != GL_FRONT_AND_BACK)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMaterialFace);
-        return false;
-    }
-
-    switch (pname)
-    {
-        case MaterialParameter::Ambient:
-        case MaterialParameter::Diffuse:
-        case MaterialParameter::Specular:
-        case MaterialParameter::Emission:
-            return true;
-        case MaterialParameter::Shininess:
-            if (params[0] < 0.0f || params[0] > 128.0f)
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidValue(), MaterialParameterOutOfRange);
-                return false;
-            }
-            return true;
-        default:
-            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMaterialParameter);
-            return false;
-    }
-}
-
-bool ValidateMaterialSingleComponent(Context *context,
-                                     GLenum face,
-                                     MaterialParameter pname,
-                                     GLfloat param)
-{
-    if (!ValidateMaterialCommon(context, face, pname, &param))
-    {
-        return false;
-    }
-
-    if (GetMaterialParameterCount(pname) > 1)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMaterialParameter);
-        return false;
-    }
-
-    return true;
-}
-
-bool ValidateLightModelCommon(Context *context, GLenum pname)
-{
-    ANGLE_VALIDATE_IS_GLES1(context);
-    switch (pname)
-    {
-        case GL_LIGHT_MODEL_AMBIENT:
-        case GL_LIGHT_MODEL_TWO_SIDE:
-            return true;
-        default:
-            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidLightModelParameter);
-            return false;
-    }
-}
-
-bool ValidateLightModelSingleComponent(Context *context, GLenum pname)
-{
-    if (!ValidateLightModelCommon(context, pname))
-    {
-        return false;
-    }
-
-    switch (pname)
-    {
-        case GL_LIGHT_MODEL_TWO_SIDE:
-            return true;
-        default:
-            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidLightModelParameter);
-            return false;
-    }
 }
 
 }  // namespace gl
@@ -493,28 +324,28 @@ bool ValidateGetFixedv(Context *context, GLenum pname, GLfixed *params)
     return true;
 }
 
-bool ValidateGetLightfv(Context *context, GLenum light, LightParameter pname, GLfloat *params)
+bool ValidateGetLightfv(Context *context, GLenum light, GLenum pname, GLfloat *params)
 {
-    GLfloat dummyParams[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-    return ValidateLightCommon(context, light, pname, dummyParams);
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateGetLightxv(Context *context, GLenum light, LightParameter pname, GLfixed *params)
+bool ValidateGetLightxv(Context *context, GLenum light, GLenum pname, GLfixed *params)
 {
-    GLfloat dummyParams[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-    return ValidateLightCommon(context, light, pname, dummyParams);
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateGetMaterialfv(Context *context, GLenum face, MaterialParameter pname, GLfloat *params)
+bool ValidateGetMaterialfv(Context *context, GLenum face, GLenum pname, GLfloat *params)
 {
-    GLfloat dummyParams[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-    return ValidateMaterialCommon(context, face, pname, dummyParams);
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateGetMaterialxv(Context *context, GLenum face, MaterialParameter pname, GLfixed *params)
+bool ValidateGetMaterialxv(Context *context, GLenum face, GLenum pname, GLfixed *params)
 {
-    GLfloat dummyParams[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-    return ValidateMaterialCommon(context, face, pname, dummyParams);
+    UNIMPLEMENTED();
+    return true;
 }
 
 bool ValidateGetPointerv(Context *context, GLenum pname, void **params)
@@ -560,48 +391,50 @@ bool ValidateGetTexParameterxv(Context *context, TextureType target, GLenum pnam
 
 bool ValidateLightModelf(Context *context, GLenum pname, GLfloat param)
 {
-    return ValidateLightModelSingleComponent(context, pname);
+    UNIMPLEMENTED();
+    return true;
 }
 
 bool ValidateLightModelfv(Context *context, GLenum pname, const GLfloat *params)
 {
-    return ValidateLightModelCommon(context, pname);
+    UNIMPLEMENTED();
+    return true;
 }
 
 bool ValidateLightModelx(Context *context, GLenum pname, GLfixed param)
 {
-    return ValidateLightModelSingleComponent(context, pname);
+    UNIMPLEMENTED();
+    return true;
 }
 
 bool ValidateLightModelxv(Context *context, GLenum pname, const GLfixed *param)
 {
-    return ValidateLightModelCommon(context, pname);
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateLightf(Context *context, GLenum light, LightParameter pname, GLfloat param)
+bool ValidateLightf(Context *context, GLenum light, GLenum pname, GLfloat param)
 {
-    return ValidateLightSingleComponent(context, light, pname, param);
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateLightfv(Context *context, GLenum light, LightParameter pname, const GLfloat *params)
+bool ValidateLightfv(Context *context, GLenum light, GLenum pname, const GLfloat *params)
 {
-    return ValidateLightCommon(context, light, pname, params);
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateLightx(Context *context, GLenum light, LightParameter pname, GLfixed param)
+bool ValidateLightx(Context *context, GLenum light, GLenum pname, GLfixed param)
 {
-    return ValidateLightSingleComponent(context, light, pname, FixedToFloat(param));
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateLightxv(Context *context, GLenum light, LightParameter pname, const GLfixed *params)
+bool ValidateLightxv(Context *context, GLenum light, GLenum pname, const GLfixed *params)
 {
-    GLfloat paramsf[4];
-    for (unsigned int i = 0; i < GetLightParameterCount(pname); i++)
-    {
-        paramsf[i] = FixedToFloat(params[i]);
-    }
-
-    return ValidateLightCommon(context, light, pname, paramsf);
+    UNIMPLEMENTED();
+    return true;
 }
 
 bool ValidateLineWidthx(Context *context, GLfixed width)
@@ -634,37 +467,28 @@ bool ValidateLogicOp(Context *context, GLenum opcode)
     return true;
 }
 
-bool ValidateMaterialf(Context *context, GLenum face, MaterialParameter pname, GLfloat param)
+bool ValidateMaterialf(Context *context, GLenum face, GLenum pname, GLfloat param)
 {
-    return ValidateMaterialSingleComponent(context, face, pname, param);
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateMaterialfv(Context *context,
-                        GLenum face,
-                        MaterialParameter pname,
-                        const GLfloat *params)
+bool ValidateMaterialfv(Context *context, GLenum face, GLenum pname, const GLfloat *params)
 {
-    return ValidateMaterialCommon(context, face, pname, params);
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateMaterialx(Context *context, GLenum face, MaterialParameter pname, GLfixed param)
+bool ValidateMaterialx(Context *context, GLenum face, GLenum pname, GLfixed param)
 {
-    return ValidateMaterialSingleComponent(context, face, pname, FixedToFloat(param));
+    UNIMPLEMENTED();
+    return true;
 }
 
-bool ValidateMaterialxv(Context *context,
-                        GLenum face,
-                        MaterialParameter pname,
-                        const GLfixed *params)
+bool ValidateMaterialxv(Context *context, GLenum face, GLenum pname, const GLfixed *param)
 {
-    GLfloat paramsf[4];
-
-    for (unsigned int i = 0; i < GetMaterialParameterCount(pname); i++)
-    {
-        paramsf[i] = FixedToFloat(params[i]);
-    }
-
-    return ValidateMaterialCommon(context, face, pname, paramsf);
+    UNIMPLEMENTED();
+    return true;
 }
 
 bool ValidateMatrixMode(Context *context, MatrixType mode)

@@ -240,11 +240,6 @@ GLES1State::MatrixStack &GLES1State::currentMatrixStack()
     }
 }
 
-const angle::Mat4 &GLES1State::getModelviewMatrix() const
-{
-    return mModelviewMatrices.back();
-}
-
 const GLES1State::MatrixStack &GLES1State::currentMatrixStack() const
 {
     switch (mMatrixMode)
@@ -326,41 +321,6 @@ bool GLES1State::isTexCoordArrayEnabled(unsigned int unit) const
 bool GLES1State::isTextureTargetEnabled(unsigned int unit, const TextureType type) const
 {
     return mTexUnitEnables[unit].test(type);
-}
-
-LightModelParameters &GLES1State::lightModelParameters()
-{
-    return mLightModel;
-}
-
-const LightModelParameters &GLES1State::lightModelParameters() const
-{
-    return mLightModel;
-}
-
-LightParameters &GLES1State::lightParameters(unsigned int light)
-{
-    return mLights[light];
-}
-
-const LightParameters &GLES1State::lightParameters(unsigned int light) const
-{
-    return mLights[light];
-}
-
-MaterialParameters &GLES1State::materialParameters()
-{
-    return mMaterial;
-}
-
-const MaterialParameters &GLES1State::materialParameters() const
-{
-    return mMaterial;
-}
-
-bool GLES1State::isColorMaterialEnabled() const
-{
-    return mColorMaterialEnabled;
 }
 
 }  // namespace gl

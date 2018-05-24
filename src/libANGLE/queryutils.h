@@ -22,7 +22,6 @@ class Context;
 class Error;
 class Sync;
 class Framebuffer;
-class GLES1State;
 class Program;
 class Renderbuffer;
 class Sampler;
@@ -145,35 +144,8 @@ void QueryProgramInterfaceiv(const Program *program,
                              GLenum programInterface,
                              GLenum pname,
                              GLint *params);
-// GLES1 emulation
 
 ClientVertexArrayType ParamToVertexArrayType(GLenum param);
-
-void SetLightParameters(GLES1State *state,
-                        GLenum light,
-                        LightParameter pname,
-                        const GLfloat *params);
-void GetLightParameters(const GLES1State *state,
-                        GLenum light,
-                        LightParameter pname,
-                        GLfloat *params);
-
-void SetLightModelParameters(GLES1State *state, GLenum pname, const GLfloat *params);
-void GetLightModelParameters(const GLES1State *state, GLenum pname, GLfloat *params);
-bool IsLightModelTwoSided(const GLES1State *state);
-
-void SetMaterialParameters(GLES1State *state,
-                           GLenum face,
-                           MaterialParameter pname,
-                           const GLfloat *params);
-void GetMaterialParameters(const GLES1State *state,
-                           GLenum face,
-                           MaterialParameter pname,
-                           GLfloat *params);
-
-unsigned int GetLightModelParameterCount(GLenum pname);
-unsigned int GetLightParameterCount(LightParameter pname);
-unsigned int GetMaterialParameterCount(MaterialParameter pname);
 
 }  // namespace gl
 

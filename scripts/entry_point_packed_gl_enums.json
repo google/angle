@@ -136,18 +136,6 @@
     "glGetBufferPointervRobustANGLE": {
         "target": "BufferBinding"
     },
-    "glGetLightfv": {
-        "pname" : "LightParameter"
-    },
-    "glGetLightxv": {
-        "pname" : "LightParameter"
-    },
-    "glGetMaterialfv": {
-        "pname" : "MaterialParameter"
-    },
-    "glGetMaterialxv": {
-        "pname" : "MaterialParameter"
-    },
     "glGetQueryiv": {
         "target": "QueryType"
     },
@@ -190,18 +178,6 @@
     "glGetTexParameterxv": {
         "target": "TextureType"
     },
-    "glLightf" : {
-        "pname" : "LightParameter"
-    },
-    "glLightfv" : {
-        "pname" : "LightParameter"
-    },
-    "glLightx" : {
-        "pname" : "LightParameter"
-    },
-    "glLightxv" : {
-        "pname" : "LightParameter"
-    },
     "glMapBuffer": {
         "target": "BufferBinding"
     },
@@ -213,18 +189,6 @@
     },
     "glMapBufferRangeEXT": {
         "target": "BufferBinding"
-    },
-    "glMaterialf": {
-        "pname": "MaterialParameter"
-    },
-    "glMaterialfv": {
-        "pname": "MaterialParameter"
-    },
-    "glMaterialx": {
-        "pname": "MaterialParameter"
-    },
-    "glMaterialxv": {
-        "pname": "MaterialParameter"
     },
     "glMatrixMode": {
         "mode": "MatrixType"
