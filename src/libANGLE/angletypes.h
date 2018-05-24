@@ -10,11 +10,11 @@
 #define LIBANGLE_ANGLETYPES_H_
 
 #include "common/Color.h"
+#include "common/PackedEnums.h"
 #include "common/bitset_utils.h"
 #include "common/vector_utils.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/PackedEnums.h"
 #include "libANGLE/RefCountObject.h"
 
 #include <stdint.h>

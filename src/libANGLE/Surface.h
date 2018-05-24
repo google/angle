@@ -13,11 +13,11 @@
 
 #include <EGL/egl.h>
 
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/PackedEnums.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/SurfaceImpl.h"

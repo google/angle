@@ -15,10 +15,10 @@
 #include <vulkan/vulkan.h>
 
 #include "common/Optional.h"
+#include "common/PackedEnums.h"
 #include "common/debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Observer.h"
-#include "libANGLE/PackedEnums.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
 #define ANGLE_GL_OBJECTS_X(PROC) \

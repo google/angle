@@ -9,11 +9,11 @@
 #ifndef LIBANGLE_RENDERER_BUFFERIMPL_H_
 #define LIBANGLE_RENDERER_BUFFERIMPL_H_
 
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "common/mathutil.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Observer.h"
-#include "libANGLE/PackedEnums.h"
 
 #include <stdint.h>
 

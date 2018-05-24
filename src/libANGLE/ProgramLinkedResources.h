@@ -12,8 +12,8 @@
 #define LIBANGLE_UNIFORMLINKER_H_
 
 #include "angle_gl.h"
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
-#include "libANGLE/PackedEnums.h"
 #include "libANGLE/VaryingPacking.h"
 
 #include <functional>

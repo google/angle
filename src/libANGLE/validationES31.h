@@ -9,7 +9,7 @@
 #ifndef LIBANGLE_VALIDATION_ES31_H_
 #define LIBANGLE_VALIDATION_ES31_H_
 
-#include "libANGLE/PackedEnums.h"
+#include "common/PackedEnums.h"
 
 #include <GLES3/gl31.h>
 

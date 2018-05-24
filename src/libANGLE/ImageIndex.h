@@ -9,8 +9,8 @@
 #ifndef LIBANGLE_IMAGE_INDEX_H_
 #define LIBANGLE_IMAGE_INDEX_H_
 
+#include "common/PackedEnums.h"
 #include "common/mathutil.h"
-#include "libANGLE/PackedEnums.h"
 
 #include "angle_gl.h"
 

@@ -10,8 +10,8 @@
 #define LIBANGLE_QUERYUTILS_H_
 
 #include "angle_gl.h"
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
-#include "libANGLE/PackedEnums.h"
 
 #include <EGL/egl.h>
 

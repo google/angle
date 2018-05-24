@@ -9,10 +9,9 @@
 #ifndef LIBANGLE_RENDERER_QUERYIMPL_H_
 #define LIBANGLE_RENDERER_QUERYIMPL_H_
 
-
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/PackedEnums.h"
 
 namespace rx
 {

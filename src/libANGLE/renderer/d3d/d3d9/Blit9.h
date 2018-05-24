@@ -9,9 +9,9 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_BLIT9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_BLIT9_H_
 
+#include "common/PackedEnums.h"
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/PackedEnums.h"
 
 namespace gl
 {

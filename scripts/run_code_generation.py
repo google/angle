@@ -134,16 +134,16 @@ generators = {
     },
     'packed enum': {
         'inputs': [
-            'src/libANGLE/packed_gl_enums.json',
-            'src/libANGLE/packed_egl_enums.json',
+            'src/common/packed_gl_enums.json',
+            'src/common/packed_egl_enums.json',
         ],
         'outputs': [
-            'src/libANGLE/PackedEGLEnums_autogen.cpp',
-            'src/libANGLE/PackedEGLEnums_autogen.h',
-            'src/libANGLE/PackedGLEnums_autogen.cpp',
-            'src/libANGLE/PackedGLEnums_autogen.h',
+            'src/common/PackedEGLEnums_autogen.cpp',
+            'src/common/PackedEGLEnums_autogen.h',
+            'src/common/PackedGLEnums_autogen.cpp',
+            'src/common/PackedGLEnums_autogen.h',
         ],
-        'script': 'src/libANGLE/gen_packed_gl_enums.py',
+        'script': 'src/common/gen_packed_gl_enums.py',
     },
     'proc table': {
         'inputs': [

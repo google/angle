@@ -71,8 +71,8 @@ header_template = """// GENERATED FILE - DO NOT EDIT.
 //   Declares ANGLE-specific enums classes for {api_enum_name}s and functions operating
 //   on them.
 
-#ifndef LIBANGLE_{include_guard}_
-#define LIBANGLE_{include_guard}_
+#ifndef COMMON_{include_guard}_
+#define COMMON_{include_guard}_
 
 #include <angle_gl.h>
 #include <EGL/egl.h>
@@ -88,7 +88,7 @@ Enum From{api_enum_name}({api_enum_name} from);
 {content}
 }}  // namespace {namespace}
 
-#endif // LIBANGLE_{include_guard}_
+#endif // COMMON_{include_guard}_
 """
 
 enum_declaration_template = """
@@ -146,7 +146,7 @@ cpp_template = """// GENERATED FILE - DO NOT EDIT.
 //   on them.
 
 #include "common/debug.h"
-#include "libANGLE/{header_name}"
+#include "common/{header_name}"
 
 namespace {namespace}
 {{

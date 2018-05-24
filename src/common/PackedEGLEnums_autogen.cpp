@@ -9,7 +9,7 @@
 //   Implements ANGLE-specific enums classes for EGLenums and functions operating
 //   on them.
 
-#include "libANGLE/PackedEGLEnums_autogen.h"
+#include "common/PackedEGLEnums_autogen.h"
 #include "common/debug.h"
 
 namespace egl

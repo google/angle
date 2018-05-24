@@ -6,7 +6,7 @@
 //   Declares ANGLE-specific enums classes for GLEnum and functions operating
 //   on them.
 
-#include "libANGLE/PackedEnums.h"
+#include "common/PackedEnums.h"
 
 #include "common/utilities.h"
 

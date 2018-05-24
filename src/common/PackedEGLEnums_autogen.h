@@ -9,8 +9,8 @@
 //   Declares ANGLE-specific enums classes for EGLenums and functions operating
 //   on them.
 
-#ifndef LIBANGLE_PACKEDEGLENUMS_AUTOGEN_H_
-#define LIBANGLE_PACKEDEGLENUMS_AUTOGEN_H_
+#ifndef COMMON_PACKEDEGLENUMS_AUTOGEN_H_
+#define COMMON_PACKEDEGLENUMS_AUTOGEN_H_
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -40,4 +40,4 @@ EGLenum ToEGLenum(TextureFormat from);
 
 }  // namespace egl
 
-#endif  // LIBANGLE_PACKEDEGLENUMS_AUTOGEN_H_
+#endif  // COMMON_PACKEDEGLENUMS_AUTOGEN_H_

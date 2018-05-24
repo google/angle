@@ -11,8 +11,8 @@
 #define LIBANGLE_COMPILER_H_
 
 #include "GLSLANG/ShaderLang.h"
+#include "common/PackedEnums.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/PackedEnums.h"
 #include "libANGLE/RefCountObject.h"
 
 namespace rx

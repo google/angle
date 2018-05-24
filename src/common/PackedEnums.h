@@ -6,11 +6,11 @@
 //   Declares ANGLE-specific enums classes for GLEnum and functions operating
 //   on them.
 
-#ifndef LIBANGLE_PACKEDGLENUMS_H_
-#define LIBANGLE_PACKEDGLENUMS_H_
+#ifndef COMMON_PACKEDGLENUMS_H_
+#define COMMON_PACKEDGLENUMS_H_
 
-#include "libANGLE/PackedEGLEnums_autogen.h"
-#include "libANGLE/PackedGLEnums_autogen.h"
+#include "common/PackedEGLEnums_autogen.h"
+#include "common/PackedGLEnums_autogen.h"
 
 #include <array>
 #include <bitset>
@@ -194,4 +194,4 @@ gl::TextureTarget EGLImageTargetToTextureTarget(EGLenum eglTarget);
 gl::TextureType EGLTextureTargetToTextureType(EGLenum eglTarget);
 }  // namespace egl_gl
 
-#endif  // LIBANGLE_PACKEDGLENUMS_H_
+#endif  // COMMON_PACKEDGLENUMS_H_

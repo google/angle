@@ -9,9 +9,9 @@
 #ifndef LIBANGLE_QUERY_H_
 #define LIBANGLE_QUERY_H_
 
+#include "common/PackedEnums.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/PackedEnums.h"
 #include "libANGLE/RefCountObject.h"
 
 #include "common/angleutils.h"

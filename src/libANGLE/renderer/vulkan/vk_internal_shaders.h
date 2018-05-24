@@ -9,7 +9,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_INTERNAL_SHADERS_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_INTERNAL_SHADERS_H_
 
-#include "libANGLE/PackedEnums.h"
+#include "common/PackedEnums.h"
 #include "libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 

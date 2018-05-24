@@ -9,10 +9,10 @@
 #ifndef LIBANGLE_VALIDATION_ES_H_
 #define LIBANGLE_VALIDATION_ES_H_
 
+#include "common/PackedEnums.h"
 #include "common/mathutil.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
-#include "libANGLE/PackedEnums.h"
 
 #include <GLES2/gl2.h>
 #include <GLES3/gl3.h>

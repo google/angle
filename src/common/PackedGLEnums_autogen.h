@@ -9,8 +9,8 @@
 //   Declares ANGLE-specific enums classes for GLenums and functions operating
 //   on them.
 
-#ifndef LIBANGLE_PACKEDGLENUMS_AUTOGEN_H_
-#define LIBANGLE_PACKEDGLENUMS_AUTOGEN_H_
+#ifndef COMMON_PACKEDGLENUMS_AUTOGEN_H_
+#define COMMON_PACKEDGLENUMS_AUTOGEN_H_
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -395,4 +395,4 @@ GLenum ToGLenum(VertexArrayType from);
 
 }  // namespace gl
 
-#endif  // LIBANGLE_PACKEDGLENUMS_AUTOGEN_H_
+#endif  // COMMON_PACKEDGLENUMS_AUTOGEN_H_

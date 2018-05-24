@@ -13,8 +13,8 @@
 
 #include "common/debug.h"
 
+#include "common/PackedEnums.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/PackedEnums.h"
 
 namespace gl
 {

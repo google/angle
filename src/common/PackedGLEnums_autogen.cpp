@@ -9,7 +9,7 @@
 //   Implements ANGLE-specific enums classes for GLenums and functions operating
 //   on them.
 
-#include "libANGLE/PackedGLEnums_autogen.h"
+#include "common/PackedGLEnums_autogen.h"
 #include "common/debug.h"
 
 namespace gl
