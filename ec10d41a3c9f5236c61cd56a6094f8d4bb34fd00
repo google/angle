@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53dc6e70_faf8aaf5",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-24T20:08:03Z",
+      "side": 1,
+      "message": "This will automatically call beginWriteResource if it is not started writing, in that case, why not make begin a private method and only call this one all the time?\n\nIt could also be renamed \"writeResource\" simply and we wouldn\u0027t have to care if we have to append or begin at all.",
+      "range": {
+        "startLine": 46,
+        "startChar": 10,
+        "endLine": 46,
+        "endChar": 29
+      },
+      "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
