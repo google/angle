@@ -22,6 +22,30 @@
       "revId": "25ade3362ead4d37051121e5523e0e4c452e5490",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f8ba81f_7a65c855",
+        "filename": "samples/gles1/SimpleLighting.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-24T16:42:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5505a51_411a5bf4",
+      "range": {
+        "startLine": 96,
+        "startChar": 36,
+        "endLine": 96,
+        "endChar": 43
+      },
+      "revId": "25ade3362ead4d37051121e5523e0e4c452e5490",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
