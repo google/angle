@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b5505a51_411a5bf4",
+        "filename": "samples/gles1/SimpleLighting.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-24T15:10:25Z",
+      "side": 1,
+      "message": "nit: static_cast or use .0f on the constants to the right",
+      "range": {
+        "startLine": 96,
+        "startChar": 36,
+        "endLine": 96,
+        "endChar": 43
+      },
+      "revId": "25ade3362ead4d37051121e5523e0e4c452e5490",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
