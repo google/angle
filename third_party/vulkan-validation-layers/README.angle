@@ -1,17 +1,19 @@
-Name: Vulkan Ecosystem Components
-Short Name: Vulkan Layers SDK
+Name: Khronos Vulkan Validation Layers Components
+Short Name: Vulkan Layers
 Version: N/A
-URL: https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers
-SOURCE CODE: git clone https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers.git
-Date: 06/07/2016
-Revision: d9da90d92748c37962766868f8b0354637672c2a
+URL: https://github.com/KhronosGroup/Vulkan-ValidationLayers
+SOURCE CODE: git clone https://github.com/KhronosGroup/Vulkan-ValidationLayers.git
+Date: 05/24/2018
+Revision: 0fe5bfe66443b288ccf19b3d4c523af7e080672c
 Security Critical: no
 License: Apache 2.0
 License File: LICENSE.txt
 
 Description:
-The Vulkan Ecosystem Components consist of the Vulkan loader and Validation Layers SDK. The layers help
-validate Vulkan programs at runtime for development, and the loader is a utility for loading the Vulkan
-entry points and hooking them into the correct layers. These are essential for developing Vulkan
-applications.
+The Khronos Vulkan Validation Layers Components consist of the Vulkan
+Validation Layers. The layers help validate Vulkan programs at runtime
+for development. When enabled the Vulkan loader will hook the layers
+into the Vulkan APIs so that they evaluate Vulkan API calls and flag
+the incorrect use of the API with callbacks. The layers are essential
+for developing Vulkan applications.
 

@@ -2,6 +2,10 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+# BUILD settings for Vulkan Validation Layers
+# Validation repo is at
+# https://github.com/KhronosGroup/Vulkan-ValidationLayers
+
 import("../../gni/angle.gni")
 
 vulkan_undefine_configs = []
@@ -12,7 +16,8 @@ if (is_win) {
   ]
 }
 
-raw_vulkan_layers_dir = rebase_path("src", root_build_dir)
+raw_vulkan_headers_dir =
+    rebase_path("$angle_root/third_party/vulkan-headers/src", root_build_dir)
 
 vulkan_gen_dir = "$target_gen_dir/angle/vulkan"
 raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir, root_build_dir)
@@ -39,16 +44,6 @@ helper_script_and_deps = [
   [
     "vulkan_gen_layer_dispatch_table_h",
     "vk_layer_dispatch_table.h",
-    "loader_extension_generator.py",
-  ],
-  [
-    "vulkan_gen_loader_extensions_c",
-    "vk_loader_extensions.c",
-    "loader_extension_generator.py",
-  ],
-  [
-    "vulkan_gen_loader_extensions_h",
-    "vk_loader_extensions.h",
     "loader_extension_generator.py",
   ],
   [
@@ -91,33 +86,51 @@ helper_script_and_deps = [
     "unique_objects_wrappers.h",
     "unique_objects_generator.py",
   ],
-  [
-    "vulkan_mock_icd_cpp",
-    "mock_icd.cpp",
-    "mock_icd_generator.py",
-  ],
-  [
-    "vulkan_mock_icd_h",
-    "mock_icd.h",
-    "mock_icd_generator.py",
-  ],
 ]
+
+# Python scripts needed for codegen, copy them to a temp dir
+# so that all dependencies are together
+copy("python_gen_deps") {
+  sources = [
+    "$angle_root/third_party/vulkan-headers/src/registry/cgenerator.py",
+    "$angle_root/third_party/vulkan-headers/src/registry/generator.py",
+    "$angle_root/third_party/vulkan-headers/src/registry/reg.py",
+    "$angle_root/third_party/vulkan-headers/src/registry/vk.xml",
+    "src/layers/vk_validation_error_messages.h",
+    "src/scripts/common_codegen.py",
+    "src/scripts/dispatch_table_helper_generator.py",
+    "src/scripts/helper_file_generator.py",
+    "src/scripts/loader_extension_generator.py",
+    "src/scripts/lvl_genvk.py",
+    "src/scripts/object_tracker_generator.py",
+    "src/scripts/parameter_validation_generator.py",
+    "src/scripts/threading_generator.py",
+    "src/scripts/unique_objects_generator.py",
+    "src/scripts/vuid_mapping.py",
+  ]
+  outputs = [
+    "$vulkan_gen_dir/{{source_file_part}}",
+  ]
+}
 
 foreach(script_and_dep, helper_script_and_deps) {
   target_name = script_and_dep[0]
   file = script_and_dep[1]
   dep = script_and_dep[2]
   target("action", target_name) {
-    script = "src/scripts/lvl_genvk.py"
+    public_deps = [
+      ":python_gen_deps",
+    ]
+    script = "$vulkan_gen_dir/lvl_genvk.py"
     inputs = [
-      "src/scripts/$dep",
-      "src/scripts/cgenerator.py",
-      "src/scripts/common_codegen.py",
-      "src/scripts/generator.py",
-      "src/scripts/reg.py",
-      "src/scripts/vuid_mapping.py",
-      "src/layers/vk_validation_error_messages.h",
-      "src/scripts/vk.xml",
+      "$vulkan_gen_dir/$dep",
+      "$vulkan_gen_dir/cgenerator.py",
+      "$vulkan_gen_dir/common_codegen.py",
+      "$vulkan_gen_dir/generator.py",
+      "$vulkan_gen_dir/reg.py",
+      "$vulkan_gen_dir/vuid_mapping.py",
+      "$vulkan_gen_dir/vk_validation_error_messages.h",
+      "$vulkan_gen_dir/vk.xml",
     ]
     outputs = [
       "$vulkan_gen_dir/$file",
@@ -126,31 +139,17 @@ foreach(script_and_dep, helper_script_and_deps) {
       "-o",
       raw_vulkan_gen_dir,
       "-registry",
-      "$raw_vulkan_layers_dir/scripts/vk.xml",
+      "$raw_vulkan_headers_dir/registry/vk.xml",
+      "-scripts",
+      "$raw_vulkan_headers_dir/registry",
       "$file",
       "-quiet",
     ]
   }
 }
 
-config("vulkan_headers_config") {
-  include_dirs = [ "src/include" ]
-}
-
-# Vulkan headers only, no compiled sources.
-source_set("vulkan_headers") {
-  sources = [
-    "src/include/vulkan/vk_icd.h",
-    "src/include/vulkan/vk_layer.h",
-    "src/include/vulkan/vk_platform.h",
-    "src/include/vulkan/vk_sdk_platform.h",
-    "src/include/vulkan/vulkan.h",
-    "src/include/vulkan/vulkan.hpp",
-  ]
-  public_configs = [ ":vulkan_headers_config" ]
-}
-
-raw_spirv_tools_dir = rebase_path("../spirv-tools/src", root_build_dir)
+raw_spirv_tools_dir =
+    rebase_path("$angle_root/third_party/spirv-tools/src", root_build_dir)
 
 spirv_git_is_present = exec_script("$angle_root/src/commit_id.py",
                                    [
@@ -198,7 +197,7 @@ config("vulkan_generated_files_config") {
 group("vulkan_generate_helper_files") {
   public_deps = [
     ":spirv_tools_external_revision_generate",
-    ":vulkan_headers",
+    "$angle_root/third_party/vulkan-headers:vulkan_headers",
   ]
   public_configs = [ ":vulkan_generated_files_config" ]
   foreach(script_and_dep, helper_script_and_deps) {
@@ -227,6 +226,7 @@ config("vulkan_config") {
     ]
     libs = [ "vulkan" ]
   }
+  defines += [ "API_NAME=\"Vulkan\"" ]
 }
 
 config("vulkan_internal_config") {
@@ -240,97 +240,6 @@ config("vulkan_internal_config") {
       "FALLBACK_CONFIG_DIRS=\"/etc/xdg\"",
       "FALLBACK_DATA_DIRS=\"/usr/local/share:/usr/share\"",
     ]
-  }
-}
-
-# Vulkan loader
-# -------------
-
-config("vulkan_loader_config") {
-  include_dirs = [
-    vulkan_gen_dir,
-    "src/include",
-    "src/loader",
-  ]
-  defines = [
-    "ANGLE_VK_DATA_DIR=\"$data_dir\"",
-    "ANGLE_VK_ICD_JSON=\"$data_dir/VkICD_mock_icd.json\"",
-    "API_NAME=\"Vulkan\"",
-  ]
-
-  if (is_win) {
-    cflags = [ "/wd4201" ]
-  }
-  if (is_linux) {
-    # assume secure_getenv() is available
-    defines += [ "HAVE_SECURE_GETENV" ]
-  }
-}
-
-if (!is_android) {
-  if (angle_shared_libvulkan) {
-    library_type = "shared_library"
-  } else {
-    library_type = "static_library"
-  }
-
-  target(library_type, "libvulkan") {
-    sources = [
-      "src/loader/cJSON.c",
-      "src/loader/cJSON.h",
-      "src/loader/debug_utils.c",
-      "src/loader/debug_utils.h",
-      "src/loader/dev_ext_trampoline.c",
-      "src/loader/extension_manual.c",
-      "src/loader/extension_manual.h",
-      "src/loader/gpa_helper.h",
-      "src/loader/loader.c",
-      "src/loader/loader.h",
-      "src/loader/murmurhash.c",
-      "src/loader/murmurhash.h",
-      "src/loader/phys_dev_ext.c",
-      "src/loader/trampoline.c",
-
-      # TODO(jmadill): Use assembler where available.
-      "src/loader/unknown_ext_chain.c",
-      "src/loader/vk_loader_platform.h",
-      "src/loader/wsi.c",
-      "src/loader/wsi.h",
-    ]
-    if (is_win) {
-      sources += [
-        "src/loader/dirent_on_windows.c",
-        "src/loader/dirent_on_windows.h",
-      ]
-      if (!is_clang) {
-        cflags = [
-          "/wd4054",  # Type cast from function pointer
-          "/wd4055",  # Type cast from data pointer
-          "/wd4100",  # Unreferenced formal parameter
-          "/wd4152",  # Nonstandard extension used (pointer conversion)
-          "/wd4201",  # Nonstandard extension used: nameless struct/union
-          "/wd4214",  # Nonstandard extension used: bit field types other than int
-          "/wd4232",  # Nonstandard extension used: address of dllimport is not static
-          "/wd4305",  # Type cast truncation
-          "/wd4706",  # Assignment within conditional expression
-          "/wd4996",  # Unsafe stdlib function
-        ]
-      }
-    }
-    deps = [
-      ":vulkan_generate_helper_files",
-    ]
-    public_deps = [
-      ":vulkan_headers",
-    ]
-    configs -= [ "//build/config/compiler:chromium_code" ]
-    configs += [ "//build/config/compiler:no_chromium_code" ]
-    configs += [ ":vulkan_internal_config" ]
-    public_configs = [
-      ":vulkan_config",
-      ":vulkan_loader_config",
-    ]
-    configs -= vulkan_undefine_configs
   }
 }
 
@@ -354,8 +263,8 @@ source_set("vulkan_layer_table") {
   configs -= [ "//build/config/compiler:chromium_code" ]
   configs += [ "//build/config/compiler:no_chromium_code" ]
   sources = [
-    "$target_gen_dir/angle/vulkan/vk_dispatch_table_helper.h",
-    "$target_gen_dir/angle/vulkan/vk_enum_string_helper.h",
+    "$vulkan_gen_dir/vk_dispatch_table_helper.h",
+    "$vulkan_gen_dir/vk_enum_string_helper.h",
     "src/layers/vk_layer_table.cpp",
     "src/layers/vk_layer_table.h",
   ]
@@ -434,6 +343,7 @@ layers = [
 ]
 
 if (!is_android) {
+  raw_vulkan_layers_dir = rebase_path("src", root_build_dir)
   vulkan_gen_json_files_outputs = [
     "$root_out_dir/$data_dir/VkLayer_core_validation.json",
     "$root_out_dir/$data_dir/VkLayer_object_tracker.json",
@@ -473,61 +383,6 @@ if (!is_android) {
     data = vulkan_gen_json_files_outputs
     args += [ rebase_path("$root_out_dir/$data_dir", root_build_dir) ]
   }
-
-  # Vulkan Mock ICD
-  # ---------------
-  group("vulkan_generate_mock_icd_files") {
-    public_deps = [
-      ":vulkan_generate_helper_files",
-      ":vulkan_mock_icd_cpp",
-      ":vulkan_mock_icd_h",
-    ]
-  }
-
-  mock_icd_sources = [
-    "$vulkan_gen_dir/mock_icd.cpp",
-    "$vulkan_gen_dir/mock_icd.h",
-  ]
-
-  shared_library("VkICD_mock_icd") {
-    configs -= vulkan_undefine_configs
-    public_configs = [ ":vulkan_config" ]
-    deps = [ ":vulkan_generate_mock_icd_files" ]
-    data_deps = [
-      ":vulkan_gen_icd_json_file",
-    ]
-    sources = mock_icd_sources
-    if (is_win) {
-      sources += [ "src/icd/VkICD_mock_icd.def" ]
-    }
-    configs -= [ "//build/config/compiler:chromium_code" ]
-    configs += [ "//build/config/compiler:no_chromium_code" ]
-  }
-
-  action("vulkan_gen_icd_json_file") {
-    script = "$angle_root/scripts/generate_vulkan_layers_json.py"
-    if (is_win) {
-      sources = [
-        "src/icd/windows/VkICD_mock_icd.json",
-      ]
-      args = [ "$raw_vulkan_layers_dir/icd/windows" ]
-    }
-    if (is_linux) {
-      sources = [
-        "src/icd/linux/VkICD_mock_icd.json",
-      ]
-      args = [ "$raw_vulkan_layers_dir/icd/linux" ]
-    }
-
-    # The layer JSON files are part of the necessary data deps.
-    outputs = [
-      "$root_out_dir/$data_dir/VkICD_mock_icd.json",
-    ]
-    data = [
-      "$root_out_dir/$data_dir/VkICD_mock_icd.json",
-    ]
-    args += [ rebase_path("$root_out_dir/$data_dir", root_build_dir) ]
-  }
 }
 
 source_set("vulkan_layer_utils") {
@@ -543,7 +398,6 @@ source_set("vulkan_layer_utils") {
   ]
   public_configs = [
     ":vulkan_config",
-    ":vulkan_loader_config",
     ":vulkan_internal_config",
   ]
   configs -= [ "//build/config/compiler:chromium_code" ]
@@ -555,12 +409,12 @@ source_set("vulkan_layer_utils") {
 }
 
 config("vulkan_core_validation_config") {
-  include_dirs = [ "../glslang/src" ]
+  include_dirs = [ "$angle_root/third_party/glslang/src" ]
 }
 
 source_set("vulkan_core_validation_glslang") {
   public_deps = [
-    "../spirv-tools:spirv_tools",
+    "$angle_root/third_party/spirv-tools:spirv_tools",
   ]
   public_configs = [ ":vulkan_core_validation_config" ]
 }

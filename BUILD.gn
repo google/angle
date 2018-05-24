@@ -433,7 +433,7 @@ if (angle_enable_vulkan) {
       "$angle_root/third_party/glslang:glslang",
     ]
     public_deps = [
-      "$angle_root/third_party/vulkan-validation-layers:vulkan_headers",
+      "$angle_root/third_party/vulkan-headers:vulkan_headers",
     ]
     public_configs = [
       "$angle_root/third_party/glslang:glslang_config",
@@ -441,12 +441,10 @@ if (angle_enable_vulkan) {
     ]
     data_deps = []
     if (!is_android) {
-      deps += [ "$angle_root/third_party/vulkan-validation-layers:libvulkan" ]
-      data_deps +=
-          [ "$angle_root/third_party/vulkan-validation-layers:VkICD_mock_icd" ]
-      public_configs += [
-        "$angle_root/third_party/vulkan-validation-layers:vulkan_loader_config",
-      ]
+      deps += [ "$angle_root/third_party/vulkan-loader:libvulkan" ]
+      data_deps += [ "$angle_root/third_party/vulkan-tools:VkICD_mock_icd" ]
+      public_configs +=
+          [ "$angle_root/third_party/vulkan-loader:vulkan_loader_config" ]
     }
 
     if (angle_enable_vulkan_validation_layers) {
@@ -561,8 +559,7 @@ static_library("libANGLE") {
           rebase_path(gles_gypi.libangle_vulkan_android_sources, ".", "src")
     }
     deps += [ ":angle_vulkan" ]
-    public_deps +=
-        [ "$angle_root/third_party/vulkan-validation-layers:vulkan_headers" ]
+    public_deps += [ "$angle_root/third_party/vulkan-headers:vulkan_headers" ]
 
     # Include generated shaders.
     import("src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.gni")
