@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b7111534_fcc06e27",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T21:41:20Z",
+      "side": 1,
+      "message": "This is a streaming buffer/dynamic buffer size - it handles multiple updates.",
+      "parentUuid": "23577a76_088dafd5",
+      "range": {
+        "startLine": 24,
+        "startChar": 17,
+        "endLine": 24,
+        "endChar": 48
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e2726c14_d609f1ff",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 12
