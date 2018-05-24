@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11b4c582_8a5758aa",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T21:17:04Z",
+      "side": 1,
+      "message": "This file doesn\u0027t exist in https://github.com/KhronosGroup/Vulkan-ValidationLayers/tree/master/scripts\n\nLook at the output of the failing compile step and it references this file. Does this work for you locally?",
+      "range": {
+        "startLine": 94,
+        "startChar": 6,
+        "endLine": 94,
+        "endChar": 34
+      },
+      "revId": "cdcbed42c3eb01bf83067832084e14ceea9c7efd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
