@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d1c727b3_7a9e0479",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-24T16:57:40Z",
+      "side": 1,
+      "message": "Sounds good, I think we might need a ringbuffer UBO if we want perf but we can see that later.",
+      "parentUuid": "571b1543_70254cf8",
+      "revId": "624d34d537ade87c13dbb77dca8a690ad4b8517e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7867a00a_7c17c485",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 8
