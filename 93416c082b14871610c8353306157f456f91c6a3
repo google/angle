@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51701b93_edb00f41",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-24T23:05:10Z",
+      "side": 1,
+      "message": "This looks like performance improvement and not simple removal :)\nMaybe update the comment?",
+      "range": {
+        "startLine": 480,
+        "startChar": 4,
+        "endLine": 480,
+        "endChar": 43
+      },
+      "revId": "93416c082b14871610c8353306157f456f91c6a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
