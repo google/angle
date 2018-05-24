@@ -28,51 +28,37 @@
 #include "tcuANGLENativeDisplayFactory.h"
 #include "tcuNullContextFactory.hpp"
 
+static_assert(EGL_DONT_CARE == -1, "Unexpected value for EGL_DONT_CARE");
+
 namespace tcu
 {
-
 ANGLEPlatform::ANGLEPlatform()
 {
     angle::SetLowPriorityProcess();
 
 #if (DE_OS == DE_OS_WIN32)
     {
-        std::vector<eglw::EGLAttrib> d3d11Attribs;
-        d3d11Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
-        d3d11Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
-        d3d11Attribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
-        d3d11Attribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
-        d3d11Attribs.push_back(EGL_NONE);
+        std::vector<eglw::EGLAttrib> d3d11Attribs = initAttribs(
+            EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 
-        auto *d3d11Factory = new ANGLENativeDisplayFactory(
-            "angle-d3d11", "ANGLE D3D11 Display", d3d11Attribs, &mEvents);
+        auto *d3d11Factory = new ANGLENativeDisplayFactory("angle-d3d11", "ANGLE D3D11 Display",
+                                                           d3d11Attribs, &mEvents);
         m_nativeDisplayFactoryRegistry.registerFactory(d3d11Factory);
     }
 
     {
-        std::vector<eglw::EGLAttrib> d3d9Attribs;
-        d3d9Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
-        d3d9Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE);
-        d3d9Attribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
-        d3d9Attribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
-        d3d9Attribs.push_back(EGL_NONE);
+        std::vector<eglw::EGLAttrib> d3d9Attribs = initAttribs(
+            EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
 
-        auto *d3d9Factory = new ANGLENativeDisplayFactory(
-            "angle-d3d9", "ANGLE D3D9 Display", d3d9Attribs, &mEvents);
+        auto *d3d9Factory = new ANGLENativeDisplayFactory("angle-d3d9", "ANGLE D3D9 Display",
+                                                          d3d9Attribs, &mEvents);
         m_nativeDisplayFactoryRegistry.registerFactory(d3d9Factory);
     }
 
     {
-        std::vector<eglw::EGLAttrib> d3d1193Attribs;
-        d3d1193Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
-        d3d1193Attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
-        d3d1193Attribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
-        d3d1193Attribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
-        d3d1193Attribs.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
-        d3d1193Attribs.push_back(9);
-        d3d1193Attribs.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
-        d3d1193Attribs.push_back(3);
-        d3d1193Attribs.push_back(EGL_NONE);
+        std::vector<eglw::EGLAttrib> d3d1193Attribs =
+            initAttribs(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
+                        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE, 9, 3);
 
         auto *d3d1193Factory = new ANGLENativeDisplayFactory(
             "angle-d3d11-fl93", "ANGLE D3D11 FL9_3 Display", d3d1193Attribs, &mEvents);
@@ -82,34 +68,26 @@ ANGLEPlatform::ANGLEPlatform()
 
 #if defined(ANGLE_USE_OZONE) || (DE_OS == DE_OS_ANDROID) || (DE_OS == DE_OS_WIN32)
     {
-        std::vector<eglw::EGLAttrib> glesAttribs;
-        glesAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
-        glesAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE);
-        glesAttribs.push_back(EGL_NONE);
+        std::vector<eglw::EGLAttrib> glesAttribs =
+            initAttribs(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE);
 
-        auto *glesFactory = new ANGLENativeDisplayFactory(
-            "angle-gles", "ANGLE OpenGL ES Display", glesAttribs, &mEvents);
+        auto *glesFactory = new ANGLENativeDisplayFactory("angle-gles", "ANGLE OpenGL ES Display",
+                                                          glesAttribs, &mEvents);
         m_nativeDisplayFactoryRegistry.registerFactory(glesFactory);
     }
 #endif
 
     {
-        std::vector<eglw::EGLAttrib> glAttribs;
-        glAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
-        glAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
-        glAttribs.push_back(EGL_NONE);
+        std::vector<eglw::EGLAttrib> glAttribs = initAttribs(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);
 
-        auto *glFactory = new ANGLENativeDisplayFactory(
-            "angle-gl", "ANGLE OpenGL Display", glAttribs, &mEvents);
+        auto *glFactory =
+            new ANGLENativeDisplayFactory("angle-gl", "ANGLE OpenGL Display", glAttribs, &mEvents);
         m_nativeDisplayFactoryRegistry.registerFactory(glFactory);
     }
 
 #if (DE_OS == DE_OS_ANDROID) || (DE_OS == DE_OS_WIN32) || (DE_OS == DE_OS_UNIX)
     {
-        std::vector<eglw::EGLAttrib> vkAttribs;
-        vkAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
-        vkAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
-        vkAttribs.push_back(EGL_NONE);
+        std::vector<eglw::EGLAttrib> vkAttribs = initAttribs(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
 
         auto *vkFactory = new ANGLENativeDisplayFactory("angle-vulkan", "ANGLE Vulkan Display",
                                                         vkAttribs, &mEvents);
@@ -118,13 +96,10 @@ ANGLEPlatform::ANGLEPlatform()
 #endif
 
     {
-        std::vector<eglw::EGLAttrib> nullAttribs;
-        nullAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
-        nullAttribs.push_back(EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE);
-        nullAttribs.push_back(EGL_NONE);
+        std::vector<eglw::EGLAttrib> nullAttribs = initAttribs(EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE);
 
-        auto *nullFactory = new ANGLENativeDisplayFactory(
-            "angle-null", "ANGLE NULL Display", nullAttribs, &mEvents);
+        auto *nullFactory = new ANGLENativeDisplayFactory("angle-null", "ANGLE NULL Display",
+                                                          nullAttribs, &mEvents);
         m_nativeDisplayFactoryRegistry.registerFactory(nullFactory);
     }
 
@@ -143,7 +118,38 @@ bool ANGLEPlatform::processEvents()
     return !mEvents.quitSignaled();
 }
 
-} // tcu
+std::vector<eglw::EGLAttrib> ANGLEPlatform::initAttribs(eglw::EGLAttrib type,
+                                                        eglw::EGLAttrib deviceType,
+                                                        eglw::EGLAttrib majorVersion,
+                                                        eglw::EGLAttrib minorVersion)
+{
+    std::vector<eglw::EGLAttrib> attribs;
+
+    attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
+    attribs.push_back(type);
+
+    if (deviceType != EGL_DONT_CARE)
+    {
+        attribs.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
+        attribs.push_back(deviceType);
+    }
+
+    if (majorVersion != EGL_DONT_CARE)
+    {
+        attribs.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
+        attribs.push_back(majorVersion);
+    }
+
+    if (minorVersion != EGL_DONT_CARE)
+    {
+        attribs.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
+        attribs.push_back(minorVersion);
+    }
+
+    attribs.push_back(EGL_NONE);
+    return attribs;
+}
+}  // namespace tcu
 
 // Create platform
 tcu::Platform *createPlatform()
