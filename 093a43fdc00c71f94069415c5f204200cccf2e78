@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e45537e_5f2473ae",
+        "filename": "DEPS",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T17:50:48Z",
+      "side": 1,
+      "message": "Also you need to update DEPS.chromium",
+      "revId": "093a43fdc00c71f94069415c5f204200cccf2e78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2c24d8f_8aa2f6d4",
+        "filename": "third_party/vulkan-loader/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T17:50:48Z",
+      "side": 1,
+      "message": "please also include a file-level comment with short description",
+      "revId": "093a43fdc00c71f94069415c5f204200cccf2e78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03702047_fff2bc3a",
+        "filename": "third_party/vulkan-loader/src",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T17:50:48Z",
+      "side": 1,
+      "message": "what\u0027s this? I think src/ folders should be in .gitignore.\n\nAlso you should add README.angle files to the new repos.\n\nAlso you might need to add more stuff to exec script whitelist via dotfile_settings.gni. Not sure if you tried building.",
+      "revId": "093a43fdc00c71f94069415c5f204200cccf2e78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35f2a105_69cc4093",
+        "filename": "third_party/vulkan-tools/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-24T17:50:48Z",
+      "side": 1,
+      "message": "I think we try to get more code re-use. it\u0027s a bit trickier with the new layout. Do any of the new repos depend upon one another? maybe we can make a template that can be shared if say the loader is included in the other two. Otherwise we can look at putting it in angle.gni.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 1
+      },
+      "revId": "093a43fdc00c71f94069415c5f204200cccf2e78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
