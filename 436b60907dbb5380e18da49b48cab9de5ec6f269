@@ -16,6 +16,24 @@
       "revId": "436b60907dbb5380e18da49b48cab9de5ec6f269",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0209d4a_08300401",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-24T06:56:40Z",
+      "side": 1,
+      "message": "Done. And keep the if-else style not the switch-case for shader type in this patch. I tried to change to switch in patch set 2. But it will cause the indentation alignment and make it hard to see the change I made to fix the struct block bug in compute shader. So I plan to put the \u0027switch\u0027 change to another patch to make the review easier if you think it\u0027s necessary.",
+      "parentUuid": "82c5dec9_073432be",
+      "revId": "436b60907dbb5380e18da49b48cab9de5ec6f269",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
