@@ -477,7 +477,8 @@ class ProgramD3D : public ProgramImpl
 
     std::vector<std::unique_ptr<VertexExecutable>> mVertexExecutables;
     std::vector<std::unique_ptr<PixelExecutable>> mPixelExecutables;
-    std::vector<std::unique_ptr<ShaderExecutableD3D>> mGeometryExecutables;
+    angle::PackedEnumMap<gl::PrimitiveMode, std::unique_ptr<ShaderExecutableD3D>>
+        mGeometryExecutables;
     std::unique_ptr<ShaderExecutableD3D> mComputeExecutable;
 
     gl::ShaderMap<std::string> mShaderHLSL;

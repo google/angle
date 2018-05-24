@@ -135,32 +135,32 @@ bool ExpandMatrix(T *target, const GLfloat *value)
     return true;
 }
 
-gl::PrimitiveType GetGeometryShaderTypeFromDrawMode(gl::PrimitiveMode drawMode)
+gl::PrimitiveMode GetGeometryShaderTypeFromDrawMode(gl::PrimitiveMode drawMode)
 {
     switch (drawMode)
     {
         // Uses the point sprite geometry shader.
         case gl::PrimitiveMode::Points:
-            return gl::PRIMITIVE_POINTS;
+            return gl::PrimitiveMode::Points;
 
         // All line drawing uses the same geometry shader.
         case gl::PrimitiveMode::Lines:
         case gl::PrimitiveMode::LineStrip:
         case gl::PrimitiveMode::LineLoop:
-            return gl::PRIMITIVE_LINES;
+            return gl::PrimitiveMode::Lines;
 
         // The triangle fan primitive is emulated with strips in D3D11.
         case gl::PrimitiveMode::Triangles:
         case gl::PrimitiveMode::TriangleFan:
-            return gl::PRIMITIVE_TRIANGLES;
+            return gl::PrimitiveMode::Triangles;
 
         // Special case for triangle strips.
         case gl::PrimitiveMode::TriangleStrip:
-            return gl::PRIMITIVE_TRIANGLE_STRIP;
+            return gl::PrimitiveMode::TriangleStrip;
 
         default:
             UNREACHABLE();
-            return gl::PRIMITIVE_TYPE_MAX;
+            return gl::PrimitiveMode::InvalidEnum;
     }
 }
 
@@ -639,7 +639,6 @@ ProgramD3D::ProgramD3D(const gl::ProgramState &state, RendererD3D *renderer)
     : ProgramImpl(state),
       mRenderer(renderer),
       mDynamicHLSL(nullptr),
-      mGeometryExecutables(gl::PRIMITIVE_TYPE_MAX),
       mComputeExecutable(nullptr),
       mUsesPointSize(false),
       mUsesFlatInterpolation(false),
@@ -1043,8 +1042,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
         stream->skip(pixelShaderSize);
     }
 
-    for (unsigned int geometryExeIndex = 0; geometryExeIndex < gl::PRIMITIVE_TYPE_MAX;
-         ++geometryExeIndex)
+    for (auto &geometryExe : mGeometryExecutables)
     {
         unsigned int geometryShaderSize = stream->readInt<unsigned int>();
         if (geometryShaderSize == 0)
@@ -1065,7 +1063,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
             return false;
         }
 
-        mGeometryExecutables[geometryExeIndex].reset(geometryExecutable);
+        geometryExe.reset(geometryExecutable);
 
         stream->skip(geometryShaderSize);
     }
@@ -1371,7 +1369,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *c
         return gl::NoError();
     }
 
-    gl::PrimitiveType geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
+    gl::PrimitiveMode geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
 
     if (mGeometryExecutables[geometryShaderType])
     {
@@ -2797,7 +2795,7 @@ bool ProgramD3D::hasGeometryExecutableForPrimitiveType(gl::PrimitiveMode drawMod
         return true;
     }
 
-    gl::PrimitiveType geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
+    gl::PrimitiveMode geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
     return mGeometryExecutables[geometryShaderType].get() != nullptr;
 }
 

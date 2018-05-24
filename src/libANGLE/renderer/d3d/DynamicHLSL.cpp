@@ -1015,7 +1015,7 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
 }
 
 std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Context *context,
-                                                    gl::PrimitiveType primitiveType,
+                                                    gl::PrimitiveMode primitiveType,
                                                     const gl::ProgramState &programData,
                                                     const bool useViewScale,
                                                     const bool hasANGLEMultiviewEnabled,
@@ -1027,7 +1027,7 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Context *context,
 
     std::stringstream shaderStream;
 
-    const bool pointSprites   = (primitiveType == PRIMITIVE_POINTS) && pointSpriteEmulation;
+    const bool pointSprites = (primitiveType == gl::PrimitiveMode::Points) && pointSpriteEmulation;
     const bool usesPointCoord = preambleString.find("gl_PointCoord") != std::string::npos;
 
     const char *inputPT  = nullptr;
@@ -1037,7 +1037,7 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Context *context,
 
     switch (primitiveType)
     {
-        case PRIMITIVE_POINTS:
+        case gl::PrimitiveMode::Points:
             inputPT         = "point";
             inputSize       = 1;
 
@@ -1054,18 +1054,18 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Context *context,
 
             break;
 
-        case PRIMITIVE_LINES:
-        case PRIMITIVE_LINE_STRIP:
-        case PRIMITIVE_LINE_LOOP:
+        case gl::PrimitiveMode::Lines:
+        case gl::PrimitiveMode::LineStrip:
+        case gl::PrimitiveMode::LineLoop:
             inputPT         = "line";
             outputPT        = "Line";
             inputSize       = 2;
             maxVertexOutput = 2;
             break;
 
-        case PRIMITIVE_TRIANGLES:
-        case PRIMITIVE_TRIANGLE_STRIP:
-        case PRIMITIVE_TRIANGLE_FAN:
+        case gl::PrimitiveMode::Triangles:
+        case gl::PrimitiveMode::TriangleStrip:
+        case gl::PrimitiveMode::TriangleFan:
             inputPT         = "triangle";
             outputPT        = "Triangle";
             inputSize       = 3;
@@ -1133,7 +1133,7 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Context *context,
                  << "[maxvertexcount(" << maxVertexOutput << ")]\n"
                  << "void main(" << inputPT << " GS_INPUT input[" << inputSize << "], ";
 
-    if (primitiveType == PRIMITIVE_TRIANGLE_STRIP)
+    if (primitiveType == gl::PrimitiveMode::TriangleStrip)
     {
         shaderStream << "uint primitiveID : SV_PrimitiveID, ";
     }
@@ -1142,7 +1142,7 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Context *context,
                  << "{\n"
                  << "    GS_OUTPUT output = (GS_OUTPUT)0;\n";
 
-    if (primitiveType == PRIMITIVE_TRIANGLE_STRIP)
+    if (primitiveType == gl::PrimitiveMode::TriangleStrip)
     {
         shaderStream << "    uint lastVertexIndex = (primitiveID % 2 == 0 ? 2 : 1);\n";
     }

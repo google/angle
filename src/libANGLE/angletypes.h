@@ -28,21 +28,6 @@ namespace gl
 class Buffer;
 class Texture;
 
-// TODO(jmadill): Remove this.
-enum PrimitiveType
-{
-    PRIMITIVE_POINTS,
-    PRIMITIVE_LINES,
-    PRIMITIVE_LINE_STRIP,
-    PRIMITIVE_LINE_LOOP,
-    PRIMITIVE_TRIANGLES,
-    PRIMITIVE_TRIANGLE_STRIP,
-    PRIMITIVE_TRIANGLE_FAN,
-    PRIMITIVE_TYPE_MAX,
-};
-
-PrimitiveType GetPrimitiveType(GLenum drawMode);
-
 struct Rectangle
 {
     Rectangle() : x(0), y(0), width(0), height(0) {}

@@ -14,31 +14,6 @@
 
 namespace gl
 {
-
-PrimitiveType GetPrimitiveType(PrimitiveMode drawMode)
-{
-    switch (drawMode)
-    {
-        case PrimitiveMode::Points:
-            return PRIMITIVE_POINTS;
-        case PrimitiveMode::Lines:
-            return PRIMITIVE_LINES;
-        case PrimitiveMode::LineStrip:
-            return PRIMITIVE_LINE_STRIP;
-        case PrimitiveMode::LineLoop:
-            return PRIMITIVE_LINE_LOOP;
-        case PrimitiveMode::Triangles:
-            return PRIMITIVE_TRIANGLES;
-        case gl::PrimitiveMode::TriangleStrip:
-            return PRIMITIVE_TRIANGLE_STRIP;
-        case gl::PrimitiveMode::TriangleFan:
-            return PRIMITIVE_TRIANGLE_FAN;
-        default:
-            UNREACHABLE();
-            return PRIMITIVE_TYPE_MAX;
-    }
-}
-
 RasterizerState::RasterizerState()
 {
     memset(this, 0, sizeof(RasterizerState));
