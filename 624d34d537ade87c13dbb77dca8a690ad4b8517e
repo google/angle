@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "571b1543_70254cf8",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-24T16:55:12Z",
+      "side": 1,
+      "message": "Yes, I\u0027m thinking of something like this:\n\n1. come up with some basic performance tests of how bad we are doing with this\n2. private buffer objects\n3. Make it a UBO and only write the changed things",
+      "parentUuid": "f4f2cc61_fedc32c2",
+      "revId": "624d34d537ade87c13dbb77dca8a690ad4b8517e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7867a00a_7c17c485",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 8
@@ -33,6 +51,24 @@
       "revId": "624d34d537ade87c13dbb77dca8a690ad4b8517e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94478342_a04ac26d",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-05-24T16:55:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7867a00a_7c17c485",
+      "revId": "624d34d537ade87c13dbb77dca8a690ad4b8517e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
