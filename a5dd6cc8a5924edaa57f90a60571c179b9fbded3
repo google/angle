@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "5208f8ce_b713300b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T14:46:01Z",
+      "side": 1,
+      "message": "That\u0027s pretty much what I ended up doing, I had to create a new more general function in PixelBuffer to be able to accept a VkBuffer and offset directly. Now the mipmap logic is only in TextureVk and nothing is spilled over in the pixel buffer.",
+      "parentUuid": "01d3257d_53610b83",
+      "range": {
+        "startLine": 278,
+        "startChar": 10,
+        "endLine": 278,
+        "endChar": 38
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "564c2d28_e02c7c7d",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 12
