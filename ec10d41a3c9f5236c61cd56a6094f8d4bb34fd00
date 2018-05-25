@@ -46,6 +46,30 @@
       "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74fb258f_7c193181",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T11:43:58Z",
+      "side": 1,
+      "message": "I don\u0027t see the argument for not merging them, but you seem to understand something I don\u0027t on that. It would be nice to understand why its actually needed to have one vs the other? I do understand the fact that right now, one starts a new node forcibly while the other one tries to append, however, the only time we need to start a new node, is in that framebuffer function. \n\nIf we would only have \"writeResource\" and an event (a function call to the graph) to indicate that we need to actually start a new node the next time someone calls write, we would have everything we need, and you wouldn\u0027t need the \"onResourceChanged\" anymore since you would be able to call it yourself inside \"writeResource\" when needed.\n\nThe API surface would become smaller and easier to understand with 2 APIs instead of 3.\n\nIf this can\u0027t work, can you explain why this idea does not work?",
+      "parentUuid": "226d507d_aaf430dd",
+      "range": {
+        "startLine": 46,
+        "startChar": 10,
+        "endLine": 46,
+        "endChar": 29
+      },
+      "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
