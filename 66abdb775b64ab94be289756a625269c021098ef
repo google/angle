@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d63e277b_133aee44",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-25T14:51:03Z",
+      "side": 1,
+      "message": "Is there a reason we don\u0027t have a renderer-global upload buffer? It would reduce the number of allocations and avoid having logic for the lifetime of staging buffers in multiple places.",
+      "revId": "66abdb775b64ab94be289756a625269c021098ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
