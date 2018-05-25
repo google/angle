@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "cc14778c_b0ab213b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T13:18:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b7111534_fcc06e27",
+      "range": {
+        "startLine": 24,
+        "startChar": 17,
+        "endLine": 24,
+        "endChar": 48
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2726c14_d609f1ff",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 12
@@ -60,6 +84,30 @@
       "writtenOn": "2018-05-24T21:40:07Z",
       "side": 1,
       "message": "I kinda feel like this is a bit too high level for a PixelBuffer - how much work can we do in TextureVk without making the API awkward?",
+      "range": {
+        "startLine": 278,
+        "startChar": 10,
+        "endLine": 278,
+        "endChar": 38
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01d3257d_53610b83",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T13:18:45Z",
+      "side": 1,
+      "message": "I could use the mipmapsBuffer I created to allocate the memory, and then pass the mipmaps I generate to the stageSubresourceUpdate function. The entire logic of generating mipmaps would be consolidated in TextureVk that way. Sounds good?",
+      "parentUuid": "e2726c14_d609f1ff",
       "range": {
         "startLine": 278,
         "startChar": 10,
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "ac0a0e65_cb009e0f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T13:18:45Z",
+      "side": 1,
+      "message": "Sure I don\u0027t mind.",
+      "parentUuid": "564c2d28_e02c7c7d",
+      "range": {
+        "startLine": 596,
+        "startChar": 4,
+        "endLine": 596,
+        "endChar": 28
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0756ec77_5696defa",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 12
@@ -115,6 +187,30 @@
       "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcc1f500_baed06a7",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T13:18:45Z",
+      "side": 1,
+      "message": "When I implement the GPU path, it will be decided inside this function. At this point I can always create 2 private functions : one for cpu and one for gpu that would be called from inside generateMipmaps depending on the caps.",
+      "parentUuid": "0756ec77_5696defa",
+      "range": {
+        "startLine": 46,
+        "startChar": 14,
+        "endLine": 46,
+        "endChar": 29
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -141,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "92fe83bb_b3766132",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T13:18:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d138665_aa2b47b8",
+      "range": {
+        "startLine": 48,
+        "startChar": 37,
+        "endLine": 48,
+        "endChar": 45
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "698bea58_0af7ae48",
         "filename": "src/tests/gl_tests/MipmapTest.cpp",
         "patchSetId": 12
@@ -164,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "fa905191_1caa02dd",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T13:18:45Z",
+      "side": 1,
+      "message": "Nope!",
+      "parentUuid": "698bea58_0af7ae48",
+      "range": {
+        "startLine": 545,
+        "startChar": 4,
+        "endLine": 545,
+        "endChar": 18
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a37042a8_d1d70783",
         "filename": "src/tests/gl_tests/MipmapTest.cpp",
         "patchSetId": 12
@@ -184,6 +328,30 @@
       "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9f05a85_052f9252",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T13:18:45Z",
+      "side": 1,
+      "message": "I would prefer to debug it a little bit myself before opening a separate bug. I will do it if I can\u0027t see anything wrong on our end when I debug on an Intel GPU on linux.",
+      "parentUuid": "a37042a8_d1d70783",
+      "range": {
+        "startLine": 582,
+        "startChar": 0,
+        "endLine": 583,
+        "endChar": 31
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
