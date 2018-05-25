@@ -34,6 +34,24 @@
       "revId": "66abdb775b64ab94be289756a625269c021098ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4f66274_77242a45",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-25T15:21:02Z",
+      "side": 1,
+      "message": "Sorry about that, I should have been more clear that it was a general comment but not for this CL in particular.",
+      "parentUuid": "770281ea_53a44ecc",
+      "revId": "66abdb775b64ab94be289756a625269c021098ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
