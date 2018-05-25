@@ -16,6 +16,24 @@
       "revId": "66abdb775b64ab94be289756a625269c021098ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "770281ea_53a44ecc",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-25T15:19:34Z",
+      "side": 1,
+      "message": "Can we discuss this idea outside the scope of this CL? This is the pattern that is being used through the backend for now and I don\u0027t want to reinvent the world for this specific feature.\n\nI think it might be a good idea to do what you say however, but as a separate effort, completely dissociated from this CL.",
+      "parentUuid": "d63e277b_133aee44",
+      "revId": "66abdb775b64ab94be289756a625269c021098ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
