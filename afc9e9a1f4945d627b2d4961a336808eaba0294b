@@ -246,6 +246,30 @@
     },
     {
       "key": {
+        "uuid": "3e7e7ff8_9557dd36",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-27T00:33:19Z",
+      "side": 1,
+      "message": "I said ```Buffers in DisplayOzone don\u0027t need the \"create a new framebuffer every time\" treatment...\u0027\u0027\u0027\nI\u0027m not 100% sure that\u0027s true, because I don\u0027t really understand what is motivating your change.  But those buffers/FBOs can be created once, have the same lifetime as the containing DisplayOzone object, and only ever be used with the context DisplayOzone::mContext.  There may be some issue with multiple displays and/or threading I\u0027m not aware of.  I see no need to bother with supporting multiple ozone displays at this time, if that helps.",
+      "parentUuid": "163f1cef_e87a52d0",
+      "range": {
+        "startLine": 749,
+        "startChar": 27,
+        "endLine": 749,
+        "endChar": 37
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b054f248_6cb785cb",
         "filename": "src/libANGLE/renderer/null/SurfaceNULL.cpp",
         "patchSetId": 33
