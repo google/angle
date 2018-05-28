@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e9cd5dc_3579aa3d",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-28T18:21:08Z",
+      "side": 1,
+      "message": "Are the mLocalSize validated against a per-dimension maximum before? We should make sure there is no overflow here.",
+      "revId": "5d175c28f29666c462aafde56ef0a6a9ab508acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
