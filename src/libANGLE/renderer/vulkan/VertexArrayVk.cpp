@@ -191,14 +191,16 @@ gl::Error VertexArrayVk::syncState(const gl::Context *context,
                     BufferVk *bufferVk                 = vk::GetImpl(bufferGL);
                     mCurrentElementArrayBufferResource = bufferVk;
                     mCurrentElementArrayBufferHandle   = bufferVk->getVkBuffer().getHandle();
-                    mCurrentElementArrayBufferOffset   = 0;
                 }
                 else
                 {
                     mCurrentElementArrayBufferResource = nullptr;
                     mCurrentElementArrayBufferHandle   = VK_NULL_HANDLE;
-                    mCurrentElementArrayBufferOffset   = 0;
                 }
+
+                mCurrentElementArrayBufferOffset = 0;
+                mLineLoopBufferFirstIndex.reset();
+                mLineLoopBufferLastIndex.reset();
                 mIndexBufferDirty         = true;
                 mDirtyLineLoopTranslation = true;
                 break;
