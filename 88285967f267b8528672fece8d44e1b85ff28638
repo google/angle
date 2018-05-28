@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "81212a6a_7b97523c",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-28T16:10:25Z",
+      "side": 1,
+      "message": "Maybe this could return an ImmutableString directly.",
+      "revId": "88285967f267b8528672fece8d44e1b85ff28638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3ecc919_936ecb70",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-28T16:10:25Z",
+      "side": 1,
+      "message": "I think all these could be const or maybe even static as they don\u0027t use any members of UniformsHLSL.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 75
+      },
+      "revId": "88285967f267b8528672fece8d44e1b85ff28638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
