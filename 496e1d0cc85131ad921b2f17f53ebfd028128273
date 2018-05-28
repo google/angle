@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "d49c689d_713e6129",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-28T18:20:02Z",
+      "side": 1,
+      "message": "Yep! LGTM",
+      "parentUuid": "b930eded_ef4d8848",
+      "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28d5adf7_5311209b",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 8
