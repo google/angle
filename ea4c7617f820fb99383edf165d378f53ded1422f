@@ -46,6 +46,30 @@
       "revId": "ea4c7617f820fb99383edf165d378f53ded1422f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b337b14_3adbbac8",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-28T18:06:44Z",
+      "side": 1,
+      "message": "I can see why, when a function accomplish 2 behaviors, it becomes difficult to name it. If we would call this multiple times, updateQueueSerial would also be called multiple times, would it matter at all from the user of this class perspective? If not, we can leave it like that since it becomes 100% implementation detail. \n\nIf not, I would leave it \"updateQueueSerial\" like it was, but I would return that boolean from it and explain it in the comment. Its always preferable to explain the side effect of a method call from its name rather than the opposite.",
+      "parentUuid": "c2ff0e77_25e58fb1",
+      "range": {
+        "startLine": 212,
+        "startChar": 27,
+        "endLine": 212,
+        "endChar": 48
+      },
+      "revId": "ea4c7617f820fb99383edf165d378f53ded1422f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
