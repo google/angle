@@ -239,6 +239,30 @@
     },
     {
       "key": {
+        "uuid": "e95dcc81_fb8313ee",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-28T18:10:05Z",
+      "side": 1,
+      "message": "Go ahead :) I won\u0027t push today after all with all the unexpected bot failures (not due to my CL, current infra troubles)",
+      "parentUuid": "28b37f6f_1f382293",
+      "range": {
+        "startLine": 596,
+        "startChar": 4,
+        "endLine": 596,
+        "endChar": 28
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0756ec77_5696defa",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 12
