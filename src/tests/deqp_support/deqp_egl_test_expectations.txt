@@ -199,6 +199,17 @@
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_no_depth_no_stencil = FAIL
 
+// Mac failures
+2546 MAC : dEQP-EGL.functional.get_proc_address.extension.egl_ext_platform_base = FAIL
+2546 MAC : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
+2546 MAC : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
+2546 MAC : dEQP-EGL.functional.negative_api.choose_config = FAIL
+2546 MAC : dEQP-EGL.functional.negative_api.copy_buffers = FAIL
+2546 MAC : dEQP-EGL.functional.negative_api.swap_interval = FAIL
+2546 MAC : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
+2546 MAC : dEQP-EGL.functional.color_clears.multi_thread.* = SKIP
+2546 MAC : dEQP-EGL.functional.thread_cleanup.* = SKIP
+
 // Android failures
 2546 ANDROID : dEQP-EGL.functional.multithread.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.render.multi_thread.* = SKIP
