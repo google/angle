@@ -22,6 +22,30 @@
       "revId": "15c7e9f5c62fd2de6e9dffe629cae881e63b6f34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fe405e7_5ead38f0",
+        "filename": "src/tests/deqp_support/deqp_egl_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T20:16:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91a27703_32f95aa0",
+      "range": {
+        "startLine": 204,
+        "startChar": 89,
+        "endLine": 204,
+        "endChar": 94
+      },
+      "revId": "15c7e9f5c62fd2de6e9dffe629cae881e63b6f34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
