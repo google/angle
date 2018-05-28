@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "94f79352_4d121310",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 33
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T18:54:13Z",
+      "side": 1,
+      "message": "I elaborated: GL framebuffer objects are not shared between contexts so if we have multiple native contexts then we can\u0027t use the same gl::Framebuffer between them.",
+      "parentUuid": "07e2c675_47e65d81",
+      "range": {
+        "startLine": 9,
+        "startChar": 66,
+        "endLine": 9,
+        "endChar": 74
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "295647bf_b8a2aedb",
         "filename": "/COMMIT_MSG",
         "patchSetId": 33
@@ -45,6 +69,30 @@
       "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "802d1144_1e586f38",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 33
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T18:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "295647bf_b8a2aedb",
+      "range": {
+        "startLine": 13,
+        "startChar": 9,
+        "endLine": 13,
+        "endChar": 15
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "3b457cc0_750aaee0",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T18:54:13Z",
+      "side": 1,
+      "message": "The choices I had here were:\n\n 1) A cache of default framebuffers for each context-surface pair that has been made current.  This has the added complexity of keeping the cache trimmed and deleting each framebuffer object when either the context or surface was deleted.  The cache would probably have to be owned by the display.\n\n 2) Each context has a default framebuffer object that is somehow mutated by the surface when MakeCurrent is called.  This would either mean that we create a new FramebufferImpl (still would need an allocation) or have some generic impl that every surface on that backend would create and could mutate.\n\n 3) Re-create the Framebuffer and FramebufferImpl objects on calls to MakeCurrent.  Requires allocating the tracking objects (not GPU resources) on each makeCurrent call.\n\nI found #3 to be the simplest approach by far, trading some CPU performance on MakeCurrent calls for design simplicity.  MakeCurrent isn\u0027t expected to be blazing fast and I can still evaluate caching approaches on top of this afterwards if it turns out to be a problem.",
+      "parentUuid": "be234c21_1e0b407a",
+      "range": {
+        "startLine": 548,
+        "startChar": 8,
+        "endLine": 548,
+        "endChar": 66
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "141b16ec_8c3e5261",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 33
@@ -115,6 +187,30 @@
       "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee04f3b5_51abe6b0",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T18:54:13Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "141b16ec_8c3e5261",
+      "range": {
+        "startLine": 135,
+        "startChar": 73,
+        "endLine": 135,
+        "endChar": 80
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -141,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "4eee3840_d31dccf5",
+        "filename": "src/libANGLE/renderer/gl/SurfaceGL.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T18:54:13Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9263addd_b417a369",
+      "range": {
+        "startLine": 29,
+        "startChar": 72,
+        "endLine": 29,
+        "endChar": 79
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97e44da0_c6e7de12",
         "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
         "patchSetId": 33
@@ -158,6 +278,24 @@
     },
     {
       "key": {
+        "uuid": "a225d26c_403f0eca",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T18:54:13Z",
+      "side": 1,
+      "message": "No, it was fine before because it re-bound them to the framebuffer.  The new design doesn\u0027t doesn\u0027t know the IDs of the framebuffers they are bound to (but doesn\u0027t need to now).",
+      "parentUuid": "97e44da0_c6e7de12",
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fcc9e21_d14f5c91",
         "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
         "patchSetId": 33
@@ -172,6 +310,24 @@
       "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0bc9a26_f6df27bb",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T18:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9fcc9e21_d14f5c91",
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -270,6 +426,30 @@
     },
     {
       "key": {
+        "uuid": "e5b2e502_1764a769",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T18:54:13Z",
+      "side": 1,
+      "message": "Agreed that we could refactor this a bit to reduce GL object churn and support both use cases.  \n\nI\u0027m going to make the commit message more descriptive of the problem but the main goal here is to remove the assumption that there is only ever one native gl context.  This assumption was baked pretty heavily into some of our EGL code that emulates default framebuffers and because framebuffer objects are not shared between contexts, even in the same share group, I either had to do additional state tracking or churn through some GL objects like this at the cost of some non-critical performance.",
+      "parentUuid": "3e7e7ff8_9557dd36",
+      "range": {
+        "startLine": 749,
+        "startChar": 27,
+        "endLine": 749,
+        "endChar": 37
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b054f248_6cb785cb",
         "filename": "src/libANGLE/renderer/null/SurfaceNULL.cpp",
         "patchSetId": 33
@@ -290,6 +470,30 @@
       "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cafcda92_82cbf342",
+        "filename": "src/libANGLE/renderer/null/SurfaceNULL.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T18:54:13Z",
+      "side": 1,
+      "message": "We do in some places but I\u0027m a fan of smaller diffs later if we ever use the parameters.",
+      "parentUuid": "b054f248_6cb785cb",
+      "range": {
+        "startLine": 32,
+        "startChar": 74,
+        "endLine": 32,
+        "endChar": 81
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
