@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "688260a8_ca71260b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-28T14:54:03Z",
+      "side": 1,
+      "message": "Would you mind very much if I pushed at least that one? I\u0027m not about to push all of them at all, just this first one.\n\nI think it will be much easier for you to merge that single change into your stack versus me having to understand all of your refactor to merge the graph changes into mine.",
+      "parentUuid": "ac0a0e65_cb009e0f",
+      "range": {
+        "startLine": 596,
+        "startChar": 4,
+        "endLine": 596,
+        "endChar": 28
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0756ec77_5696defa",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 12
