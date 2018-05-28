@@ -24,6 +24,14 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface s
 
 // EGL_EXT_platform_base
 ANGLE_EXPORT EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_display, const EGLint *attrib_list);
+ANGLE_EXPORT EGLSurface EGLAPIENTRY CreatePlatformWindowSurfaceEXT(EGLDisplay dpy,
+                                                                   EGLConfig config,
+                                                                   void *native_window,
+                                                                   const EGLint *attrib_list);
+ANGLE_EXPORT EGLSurface EGLAPIENTRY CreatePlatformPixmapSurfaceEXT(EGLDisplay dpy,
+                                                                   EGLConfig config,
+                                                                   void *native_pixmap,
+                                                                   const EGLint *attrib_list);
 
 // EGL_EXT_device_query
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY QueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribute, EGLAttrib *value);

@@ -63,6 +63,8 @@ EXPORTS
     eglProgramCachePopulateANGLE                @69
     eglProgramCacheQueryANGLE                   @70
     eglProgramCacheResizeANGLE                  @71
+    eglCreatePlatformWindowSurfaceEXT           @72
+    eglCreatePlatformPixmapSurfaceEXT           @73
 
     ; 1.5 entry points
     eglCreateSync                               @38

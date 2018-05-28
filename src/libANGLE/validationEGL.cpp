@@ -2344,6 +2344,36 @@ Error ValidateGetPlatformDisplayEXT(EGLenum platform,
     return ValidateGetPlatformDisplayCommon(platform, native_display, attribMap);
 }
 
+Error ValidateCreatePlatformWindowSurfaceEXT(const Display *display,
+                                             const Config *configuration,
+                                             void *nativeWindow,
+                                             const AttributeMap &attributes)
+{
+    if (!Display::GetClientExtensions().platformBase)
+    {
+        return EglBadAccess() << "EGL_EXT_platform_base not supported";
+    }
+
+    ANGLE_TRY(ValidateConfig(display, configuration));
+
+    return EglBadDisplay() << "ValidateCreatePlatformWindowSurfaceEXT unimplemented.";
+}
+
+Error ValidateCreatePlatformPixmapSurfaceEXT(const Display *display,
+                                             const Config *configuration,
+                                             void *nativePixmap,
+                                             const AttributeMap &attributes)
+{
+    if (!Display::GetClientExtensions().platformBase)
+    {
+        return EglBadAccess() << "EGL_EXT_platform_base not supported";
+    }
+
+    ANGLE_TRY(ValidateConfig(display, configuration));
+
+    return EglBadDisplay() << "ValidateCreatePlatformPixmapSurfaceEXT unimplemented.";
+}
+
 Error ValidateProgramCacheGetAttribANGLE(const Display *display, EGLenum attrib)
 {
     ANGLE_TRY(ValidateDisplay(display));

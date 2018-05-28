@@ -40,7 +40,9 @@ ProcEntry g_procTable[] = {
     {"eglCreatePbufferSurface", P(egl::CreatePbufferSurface)},
     {"eglCreatePixmapSurface", P(egl::CreatePixmapSurface)},
     {"eglCreatePlatformPixmapSurface", P(egl::CreatePlatformPixmapSurface)},
+    {"eglCreatePlatformPixmapSurfaceEXT", P(egl::CreatePlatformPixmapSurfaceEXT)},
     {"eglCreatePlatformWindowSurface", P(egl::CreatePlatformWindowSurface)},
+    {"eglCreatePlatformWindowSurfaceEXT", P(egl::CreatePlatformWindowSurfaceEXT)},
     {"eglCreateStreamKHR", P(egl::CreateStreamKHR)},
     {"eglCreateStreamProducerD3DTextureANGLE", P(egl::CreateStreamProducerD3DTextureANGLE)},
     {"eglCreateSync", P(egl::CreateSync)},
@@ -1231,5 +1233,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1163;
+size_t g_numProcs = 1165;
 }  // namespace egl

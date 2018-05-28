@@ -149,7 +149,6 @@
 1340 WIN : dEQP-EGL.functional.negative_api.swap_interval = FAIL
 2382 WIN : dEQP-EGL.functional.native_color_mapping.native_window.* = SKIP
 1340 WIN : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
-1340 WIN : dEQP-EGL.functional.get_proc_address.extension.egl_ext_platform_base = FAIL
 1340 WIN : dEQP-EGL.functional.preserve_swap.preserve.no_read_before_swap.* = SKIP
 1340 WIN : dEQP-EGL.functional.preserve_swap.preserve.read_before_swap.* = SKIP
 1340 WIN : dEQP-EGL.functional.resize.back_buffer.* = SKIP
@@ -191,7 +190,6 @@
 2546 LINUX : dEQP-EGL.functional.render.single_context.gles2.rgba8888_pixmap = SKIP
 2546 LINUX : dEQP-EGL.functional.render.single_context.gles3.rgba8888_pixmap = SKIP
 2546 LINUX : dEQP-EGL.functional.thread_cleanup.* = SKIP
-2546 LINUX : dEQP-EGL.functional.get_proc_address.extension.egl_ext_platform_base = FAIL
 2546 LINUX : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
 2546 LINUX : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
 2546 LINUX : dEQP-EGL.functional.negative_api.choose_config = FAIL
@@ -200,7 +198,6 @@
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_no_depth_no_stencil = FAIL
 
 // Mac failures
-2546 MAC : dEQP-EGL.functional.get_proc_address.extension.egl_ext_platform_base = FAIL
 2546 MAC : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
 2546 MAC : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
 2546 MAC : dEQP-EGL.functional.negative_api.choose_config = FAIL
@@ -221,7 +218,6 @@
 2546 ANDROID : dEQP-EGL.functional.color_clears.multi_context.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.color_clears.multi_thread.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.color_clears.single_context.* = FAIL
-2546 ANDROID : dEQP-EGL.functional.get_proc_address.extension.egl_ext_platform_base = FAIL
 2546 ANDROID : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.negative_api.choose_config = FAIL

@@ -164,6 +164,54 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
     }
 }
 
+EGLSurface EGLAPIENTRY CreatePlatformWindowSurfaceEXT(EGLDisplay dpy,
+                                                      EGLConfig config,
+                                                      void *native_window,
+                                                      const EGLint *attrib_list)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, void *native_window = 0x%0.8p, "
+        "const EGLint *attrib_list = 0x%0.8p)",
+        dpy, config, native_window, attrib_list);
+    Thread *thread = GetCurrentThread();
+
+    Display *display        = static_cast<Display *>(dpy);
+    Config *configuration   = static_cast<Config *>(config);
+    AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
+
+    ANGLE_EGL_TRY_RETURN(
+        thread,
+        ValidateCreatePlatformWindowSurfaceEXT(display, configuration, native_window, attributes),
+        EGL_NO_SURFACE);
+
+    thread->setError(EglBadDisplay() << "CreatePlatformWindowSurfaceEXT unimplemented.");
+    return EGL_NO_SURFACE;
+}
+
+EGLSurface EGLAPIENTRY CreatePlatformPixmapSurfaceEXT(EGLDisplay dpy,
+                                                      EGLConfig config,
+                                                      void *native_pixmap,
+                                                      const EGLint *attrib_list)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, void *native_pixmap = 0x%0.8p, "
+        "const EGLint *attrib_list = 0x%0.8p)",
+        dpy, config, native_pixmap, attrib_list);
+    Thread *thread = GetCurrentThread();
+
+    Display *display        = static_cast<Display *>(dpy);
+    Config *configuration   = static_cast<Config *>(config);
+    AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
+
+    ANGLE_EGL_TRY_RETURN(
+        thread,
+        ValidateCreatePlatformPixmapSurfaceEXT(display, configuration, native_pixmap, attributes),
+        EGL_NO_SURFACE);
+
+    thread->setError(EglBadDisplay() << "CreatePlatformPixmapSurfaceEXT unimplemented.");
+    return EGL_NO_SURFACE;
+}
+
 // EGL_EXT_device_query
 EGLBoolean EGLAPIENTRY QueryDeviceAttribEXT(EGLDeviceEXT device, EGLint attribute, EGLAttrib *value)
 {

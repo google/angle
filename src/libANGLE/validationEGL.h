@@ -129,6 +129,14 @@ Error ValidateGetPlatformDisplay(EGLenum platform,
 Error ValidateGetPlatformDisplayEXT(EGLenum platform,
                                     void *native_display,
                                     const EGLint *attrib_list);
+Error ValidateCreatePlatformWindowSurfaceEXT(const Display *display,
+                                             const Config *configuration,
+                                             void *nativeWindow,
+                                             const AttributeMap &attributes);
+Error ValidateCreatePlatformPixmapSurfaceEXT(const Display *display,
+                                             const Config *configuration,
+                                             void *nativePixmap,
+                                             const AttributeMap &attributes);
 
 Error ValidateProgramCacheGetAttribANGLE(const Display *display, EGLenum attrib);
 

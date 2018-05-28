@@ -776,7 +776,9 @@
     ],
 
     "EGL_EXT_platform_base": [
-        "eglGetPlatformDisplayEXT"
+        "eglGetPlatformDisplayEXT",
+        "eglCreatePlatformWindowSurfaceEXT",
+        "eglCreatePlatformPixmapSurfaceEXT"
     ],
 
     "EGL_EXT_device_query": [

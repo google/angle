@@ -242,6 +242,22 @@ EGLDisplay EGLAPIENTRY eglGetPlatformDisplayEXT(EGLenum platform, void *native_d
     return egl::GetPlatformDisplayEXT(platform, native_display, attrib_list);
 }
 
+EGLSurface EGLAPIENTRY eglCreatePlatformWindowSurfaceEXT(EGLDisplay dpy,
+                                                         EGLConfig config,
+                                                         void *native_window,
+                                                         const EGLint *attrib_list)
+{
+    return egl::CreatePlatformWindowSurfaceEXT(dpy, config, native_window, attrib_list);
+}
+
+EGLSurface EGLAPIENTRY eglCreatePlatformPixmapSurfaceEXT(EGLDisplay dpy,
+                                                         EGLConfig config,
+                                                         void *native_pixmap,
+                                                         const EGLint *attrib_list)
+{
+    return egl::CreatePlatformPixmapSurfaceEXT(dpy, config, native_pixmap, attrib_list);
+}
+
 EGLBoolean EGLAPIENTRY eglQueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribute, EGLAttrib *value)
 {
     return egl::QueryDisplayAttribEXT(dpy, attribute, value);
