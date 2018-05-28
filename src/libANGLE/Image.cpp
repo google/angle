@@ -187,7 +187,7 @@ gl::Error Image::orphanSibling(const gl::Context *context, ImageSibling *sibling
     return gl::NoError();
 }
 
-const gl::Format &Image::getFormat() const
+gl::Format Image::getFormat() const
 {
     return mState.source->getAttachmentFormat(GL_NONE, mState.imageIndex);
 }

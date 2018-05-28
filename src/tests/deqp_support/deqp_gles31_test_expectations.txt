@@ -48,13 +48,6 @@
 // test expectations parser doesn't support having FAIL for GL and SKIP for D3D with the same test filter.
 1442 OPENGL D3D11 : dEQP-GLES31.functional.image_load_store.* = SKIP
 
-// TODO(jiawei.shao@intel.com): Implement FramebufferTextureEXT entry point defined in OpenGL ES 3.1 extension GL_EXT_geometry_shader
-1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.framebuffer_attachment_layered = SKIP
-1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.framebuffer_incomplete_layer_targets = SKIP
-1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.layered.* = SKIP
-1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.invocation_per_layer_* = SKIP
-1941 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.multiple_layers_per_invocation_* = SKIP
-
 1442 D3D11 : dEQP-GLES31.functional.compute* = SKIP
 1729 D3D11 : dEQP-GLES31.functional.atomic_counter.* = SKIP
 1951 D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = SKIP
@@ -1558,9 +1551,8 @@
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.conversion.* = FAIL
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.emit.* = FAIL
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.varying.* = FAIL
-1941 D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.geometry_* = FAIL
-1941 D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.invocation_output_* = FAIL
-1941 D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.draw_* = FAIL
+1941 D3D11 : dEQP-GLES31.functional.geometry_shading.layered.* = FAIL
+1941 D3D11 : dEQP-GLES31.functional.geometry_shading.instanced.* = FAIL
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.input.* = FAIL
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.negative.* = FAIL
 1941 D3D11 : dEQP-GLES31.functional.geometry_shading.vertex_transform_feedback.* = FAIL

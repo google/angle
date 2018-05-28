@@ -375,8 +375,10 @@ class Texture final : public egl::ImageSibling, public LabeledObject
 
     // FramebufferAttachmentObject implementation
     Extents getAttachmentSize(const ImageIndex &imageIndex) const override;
-    const Format &getAttachmentFormat(GLenum binding, const ImageIndex &imageIndex) const override;
+    Format getAttachmentFormat(GLenum binding, const ImageIndex &imageIndex) const override;
     GLsizei getAttachmentSamples(const ImageIndex &imageIndex) const override;
+
+    bool getAttachmentFixedSampleLocations(const ImageIndex &imageIndex) const;
 
     // GLES1 emulation
     void setCrop(const gl::Rectangle& rect);

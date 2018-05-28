@@ -57,6 +57,14 @@ void BindFramebufferAttachment(const FunctionsGL *functions,
                                                 ToGLenum(texture->getType()),
                                                 textureGL->getTextureID(), attachment->mipLevel());
             }
+            else if (attachment->isLayered())
+            {
+                TextureType textureType = texture->getType();
+                ASSERT(textureType == TextureType::_2DArray || textureType == TextureType::_3D ||
+                       textureType == TextureType::CubeMap);
+                functions->framebufferTexture(GL_FRAMEBUFFER, attachmentPoint,
+                                              textureGL->getTextureID(), attachment->mipLevel());
+            }
             else if (texture->getType() == TextureType::CubeMap)
             {
                 functions->framebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint,

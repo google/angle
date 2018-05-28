@@ -2191,7 +2191,7 @@ gl::Error TextureD3D_Cube::updateStorageFaceLevel(const gl::Context *context,
     if (image->isDirty())
     {
         gl::TextureTarget faceTarget = gl::CubeFaceIndexToTextureTarget(faceIndex);
-        gl::ImageIndex index = gl::ImageIndex::MakeCube(faceTarget, level);
+        gl::ImageIndex index         = gl::ImageIndex::MakeCubeMapFace(faceTarget, level);
         gl::Box region(0, 0, 0, image->getWidth(), image->getHeight(), 1);
         ANGLE_TRY(commitRegion(context, index, region));
     }
@@ -2239,7 +2239,7 @@ gl::ImageIndexIterator TextureD3D_Cube::imageIterator() const
 gl::ImageIndex TextureD3D_Cube::getImageIndex(GLint mip, GLint layer) const
 {
     // The "layer" of the image index corresponds to the cube face
-    return gl::ImageIndex::MakeCube(gl::CubeFaceIndexToTextureTarget(layer), mip);
+    return gl::ImageIndex::MakeCubeMapFace(gl::CubeFaceIndexToTextureTarget(layer), mip);
 }
 
 bool TextureD3D_Cube::isValidIndex(const gl::ImageIndex &index) const

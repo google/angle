@@ -224,12 +224,12 @@ const ImageDesc &TextureState::getBaseLevelDesc() const
     return getImageDesc(getBaseImageTarget(), getEffectiveBaseLevel());
 }
 
-void TextureState::setCrop(const gl::Rectangle& rect)
+void TextureState::setCrop(const gl::Rectangle &rect)
 {
     mCropRect = rect;
 }
 
-const gl::Rectangle& TextureState::getCrop() const
+const gl::Rectangle &TextureState::getCrop() const
 {
     return mCropRect;
 }
@@ -510,8 +510,18 @@ void TextureState::setImageDesc(TextureTarget target, size_t level, const ImageD
     }
 }
 
+// Note that an ImageIndex that represents an entire level of a cube map corresponds to 6
+// ImageDescs, so if the cube map is cube complete, we return the ImageDesc of the first cube
+// face, and we don't allow using this function when the cube map is not cube complete.
 const ImageDesc &TextureState::getImageDesc(const ImageIndex &imageIndex) const
 {
+    if (imageIndex.isEntireLevelCubeMap())
+    {
+        ASSERT(isCubeComplete());
+        const GLint levelIndex = imageIndex.getLevelIndex();
+        return getImageDesc(kCubeMapTextureTargetMin, levelIndex);
+    }
+
     return getImageDesc(imageIndex.getTarget(), imageIndex.getLevelIndex());
 }
 
@@ -1386,25 +1396,72 @@ Error Texture::setEGLImageTarget(const Context *context, TextureType type, egl::
 
 Extents Texture::getAttachmentSize(const ImageIndex &imageIndex) const
 {
+    // As an ImageIndex that represents an entire level of a cube map corresponds to 6 ImageDescs,
+    // we only allow querying ImageDesc on a complete cube map, and this ImageDesc is exactly the
+    // one that belongs to the first face of the cube map.
+    if (imageIndex.isEntireLevelCubeMap())
+    {
+        // A cube map texture is cube complete if the following conditions all hold true:
+        // - The levelbase arrays of each of the six texture images making up the cube map have
+        //   identical, positive, and square dimensions.
+        if (!mState.isCubeComplete())
+        {
+            return Extents();
+        }
+    }
+
     return mState.getImageDesc(imageIndex).size;
 }
 
-const Format &Texture::getAttachmentFormat(GLenum /*binding*/, const ImageIndex &imageIndex) const
+Format Texture::getAttachmentFormat(GLenum /*binding*/, const ImageIndex &imageIndex) const
 {
+    // As an ImageIndex that represents an entire level of a cube map corresponds to 6 ImageDescs,
+    // we only allow querying ImageDesc on a complete cube map, and this ImageDesc is exactly the
+    // one that belongs to the first face of the cube map.
+    if (imageIndex.isEntireLevelCubeMap())
+    {
+        // A cube map texture is cube complete if the following conditions all hold true:
+        // - The levelbase arrays were each specified with the same effective internal format.
+        if (!mState.isCubeComplete())
+        {
+            return Format::Invalid();
+        }
+    }
     return mState.getImageDesc(imageIndex).format;
 }
 
 GLsizei Texture::getAttachmentSamples(const ImageIndex &imageIndex) const
 {
-    return getSamples(imageIndex.getTarget(), 0);
+    // We do not allow querying TextureTarget by an ImageIndex that represents an entire level of a
+    // cube map (See comments in function TextureTypeToTarget() in ImageIndex.cpp).
+    if (imageIndex.isEntireLevelCubeMap())
+    {
+        return 0;
+    }
+
+    return getSamples(imageIndex.getTarget(), imageIndex.getLevelIndex());
 }
 
-void Texture::setCrop(const gl::Rectangle& rect)
+bool Texture::getAttachmentFixedSampleLocations(const ImageIndex &imageIndex) const
+{
+    // We do not allow querying TextureTarget by an ImageIndex that represents an entire level of a
+    // cube map (See comments in function TextureTypeToTarget() in ImageIndex.cpp).
+    if (imageIndex.isEntireLevelCubeMap())
+    {
+        return true;
+    }
+
+    // ES3.1 (section 9.4) requires that the value of TEXTURE_FIXED_SAMPLE_LOCATIONS should be
+    // the same for all attached textures.
+    return getFixedSampleLocations(imageIndex.getTarget(), imageIndex.getLevelIndex());
+}
+
+void Texture::setCrop(const gl::Rectangle &rect)
 {
     mState.setCrop(rect);
 }
 
-const gl::Rectangle& Texture::getCrop() const
+const gl::Rectangle &Texture::getCrop() const
 {
     return mState.getCrop();
 }
@@ -1510,6 +1567,21 @@ Error Texture::ensureInitialized(const Context *context)
 
 InitState Texture::initState(const ImageIndex &imageIndex) const
 {
+    // As an ImageIndex that represents an entire level of a cube map corresponds to 6 ImageDescs,
+    // we need to check all the related ImageDescs.
+    if (imageIndex.isEntireLevelCubeMap())
+    {
+        const GLint levelIndex = imageIndex.getLevelIndex();
+        for (TextureTarget cubeFaceTarget : AllCubeFaceTextureTargets())
+        {
+            if (mState.getImageDesc(cubeFaceTarget, levelIndex).initState == InitState::MayNeedInit)
+            {
+                return InitState::MayNeedInit;
+            }
+        }
+        return InitState::Initialized;
+    }
+
     return mState.getImageDesc(imageIndex).initState;
 }
 
@@ -1520,9 +1592,22 @@ InitState Texture::initState() const
 
 void Texture::setInitState(const ImageIndex &imageIndex, InitState initState)
 {
-    ImageDesc newDesc = mState.getImageDesc(imageIndex);
-    newDesc.initState = initState;
-    mState.setImageDesc(imageIndex.getTarget(), imageIndex.getLevelIndex(), newDesc);
+    // As an ImageIndex that represents an entire level of a cube map corresponds to 6 ImageDescs,
+    // we need to update all the related ImageDescs.
+    if (imageIndex.isEntireLevelCubeMap())
+    {
+        const GLint levelIndex = imageIndex.getLevelIndex();
+        for (TextureTarget cubeFaceTarget : AllCubeFaceTextureTargets())
+        {
+            setInitState(ImageIndex::MakeCubeMapFace(cubeFaceTarget, levelIndex), initState);
+        }
+    }
+    else
+    {
+        ImageDesc newDesc = mState.getImageDesc(imageIndex);
+        newDesc.initState = initState;
+        mState.setImageDesc(imageIndex.getTarget(), imageIndex.getLevelIndex(), newDesc);
+    }
 }
 
 Error Texture::ensureSubImageInitialized(const Context *context,
@@ -1537,8 +1622,8 @@ Error Texture::ensureSubImageInitialized(const Context *context,
 
     // Pre-initialize the texture contents if necessary.
     // TODO(jmadill): Check if area overlaps the entire texture.
-    ImageIndex imageIndex  = ImageIndex::MakeFromTarget(target, static_cast<GLint>(level));
-    const auto &desc       = mState.getImageDesc(imageIndex);
+    ImageIndex imageIndex = ImageIndex::MakeFromTarget(target, static_cast<GLint>(level));
+    const auto &desc      = mState.getImageDesc(imageIndex);
     if (desc.initState == InitState::MayNeedInit)
     {
         ASSERT(mState.mInitState == InitState::MayNeedInit);

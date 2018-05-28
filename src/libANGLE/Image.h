@@ -82,7 +82,7 @@ class Image final : public gl::RefCountObject
     gl::Error onDestroy(const gl::Context *context) override;
     ~Image() override;
 
-    const gl::Format &getFormat() const;
+    gl::Format getFormat() const;
     size_t getWidth() const;
     size_t getHeight() const;
     size_t getSamples() const;

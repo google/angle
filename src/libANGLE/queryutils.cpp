@@ -952,6 +952,10 @@ void QueryFramebufferAttachmentParameteriv(const Context *context,
         }
         break;
 
+        case GL_FRAMEBUFFER_ATTACHMENT_LAYERED_EXT:
+            *params = attachmentObject->isLayered();
+            break;
+
         default:
             UNREACHABLE();
             break;

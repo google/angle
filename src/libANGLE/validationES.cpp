@@ -4127,6 +4127,14 @@ bool ValidateGetFramebufferAttachmentParameterivBase(Context *context,
             }
             break;
 
+        case GL_FRAMEBUFFER_ATTACHMENT_LAYERED_EXT:
+            if (!context->getExtensions().geometryShader)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), GeometryShaderExtensionNotEnabled);
+                return false;
+            }
+            break;
+
         default:
             context->handleError(InvalidEnum());
             return false;

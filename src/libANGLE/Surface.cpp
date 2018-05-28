@@ -424,7 +424,7 @@ gl::Extents Surface::getAttachmentSize(const gl::ImageIndex & /*target*/) const
     return gl::Extents(getWidth(), getHeight(), 1);
 }
 
-const gl::Format &Surface::getAttachmentFormat(GLenum binding, const gl::ImageIndex &target) const
+gl::Format Surface::getAttachmentFormat(GLenum binding, const gl::ImageIndex &target) const
 {
     return (binding == GL_BACK ? mColorFormat : mDSFormat);
 }

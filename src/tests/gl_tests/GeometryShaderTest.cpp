@@ -745,6 +745,101 @@ TEST_P(GeometryShaderTest, NegativeFramebufferTextureEXT)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
+// Verify CheckFramebufferStatus can work correctly on layered depth and stencil attachments.
+TEST_P(GeometryShaderTest, LayeredFramebufferCompletenessWithDepthAttachment)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    GLint maxFramebufferLayers;
+    glGetIntegerv(GL_MAX_FRAMEBUFFER_LAYERS_EXT, &maxFramebufferLayers);
+
+    constexpr GLint kTexLayers = 2;
+    ASSERT_LT(kTexLayers, maxFramebufferLayers);
+
+    GLTexture layeredColorTex;
+    glBindTexture(GL_TEXTURE_3D, layeredColorTex);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 32, 32, kTexLayers, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    // [EXT_geometry_shader] section 9.4.1, "Framebuffer Completeness"
+    // If any framebuffer attachment is layered, all populated attachments must be layered.
+    // {FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT }
+    GLTexture layeredDepthStencilTex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, layeredDepthStencilTex);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH24_STENCIL8, 32, 32, kTexLayers, 0,
+                 GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+
+    // 1. Color attachment is layered, while depth attachment is not layered.
+    GLFramebuffer fbo1;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, layeredColorTex, 0);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, layeredDepthStencilTex, 0, 0);
+    GLenum status1 = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT, status1);
+
+    // 2. Color attachment is not layered, while depth attachment is layered.
+    GLFramebuffer fbo2;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, layeredColorTex, 0, 0);
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, layeredDepthStencilTex, 0);
+    GLenum status2 = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT, status2);
+
+    // 3. Color attachment is not layered, while stencil attachment is layered.
+    GLFramebuffer fbo3;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo3);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, layeredColorTex, 0, 0);
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, layeredDepthStencilTex, 0);
+    GLenum status3 = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT, status3);
+
+    // [EXT_geometry_shader] section 9.4.1, "Framebuffer Completeness"
+    // If <image> is a three-dimensional texture or a two-dimensional array texture and the
+    // attachment is layered, the depth or layer count, respectively, of the texture is less than or
+    // equal to the value of MAX_FRAMEBUFFER_LAYERS_EXT.
+    GLint maxArrayTextureLayers;
+    glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxArrayTextureLayers);
+    GLint depthTexLayer4 = maxFramebufferLayers + 1;
+    ANGLE_SKIP_TEST_IF(maxArrayTextureLayers < depthTexLayer4);
+
+    // Use a depth attachment whose layer count exceeds MAX_FRAMEBUFFER_LAYERS
+    GLTexture depthTex4;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, depthTex4);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH24_STENCIL8, 32, 32, depthTexLayer4, 0,
+                 GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+    GLFramebuffer fbo4;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo4);
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTex4, 0);
+    GLenum status4 = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT, status4);
+}
+
+// Verify correct errors can be reported when we use layered cube map attachments on a framebuffer.
+TEST_P(GeometryShaderTest, NegativeLayeredFramebufferCompletenessWithCubeMapTextures)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_geometry_shader"));
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0);
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT, status);
+
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT, status);
+}
+
 ANGLE_INSTANTIATE_TEST(GeometryShaderTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_D3D11());
 ANGLE_INSTANTIATE_TEST(GeometryShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 }
