@@ -388,10 +388,12 @@ void AttributeLayoutTest::GetTestCases(void)
     // 5. stride != size
     mTestCases.push_back({Float(B0, 0, 16, mCoord), Float(B1, 0, 12, mColor)});
 
-    // 6-7. normalized byte/short
+    // 6-9. byte/short
     if (IsVulkan() && (IsAndroid() || (IsWindows() && IsAMD())))
     {
         // empty test cases preserve the numbering
+        mTestCases.push_back({});
+        mTestCases.push_back({});
         mTestCases.push_back({});
         mTestCases.push_back({});
     }
@@ -399,6 +401,8 @@ void AttributeLayoutTest::GetTestCases(void)
     {
         // TODO(fjhenigman): Enable these once vertex format conversion is implemented.
         // anglebug.com/2405
+        mTestCases.push_back({SByte(M0, 0, 20, mCoord), UByte(M0, 10, 20, mColor)});
+        mTestCases.push_back({SShort(M0, 0, 20, mCoord), UShort(M0, 8, 20, mColor)});
         mTestCases.push_back({NormSByte(M0, 0, 8, mCoord), NormUByte(M0, 4, 8, mColor)});
         mTestCases.push_back({NormSShort(M0, 0, 20, mCoord), NormUShort(M0, 8, 20, mColor)});
     }
@@ -411,23 +415,19 @@ void AttributeLayoutTest::GetTestCases(void)
         return;
     }
 
-    // 8. one buffer, sequential
-    mTestCases.push_back({Float(B0, 0, 8, mCoord), Float(B0, 96, 12, mColor)});
+    // 10. one buffer, sequential
+    mTestCases.push_back({Fixed(B0, 0, 8, mCoord), Float(B0, 96, 12, mColor)});
 
-    // 9. one buffer, interleaved
-    mTestCases.push_back({Float(B0, 0, 20, mCoord), Float(B0, 8, 20, mColor)});
+    // 11. one buffer, interleaved
+    mTestCases.push_back({Fixed(B0, 0, 20, mCoord), Float(B0, 8, 20, mColor)});
 
-    // 10. memory and buffer, float and integer
+    // 12. memory and buffer, float and integer
     mTestCases.push_back({Float(M0, 0, 8, mCoord), SByte(B0, 0, 12, mColor)});
 
-    // 11. buffer and memory, unusual offset and stride
+    // 13. buffer and memory, unusual offset and stride
     mTestCases.push_back({Float(B0, 11, 13, mCoord), Float(M0, 23, 17, mColor)});
 
-    // 12-13. unnormalized
-    mTestCases.push_back({Fixed(M0, 0, 20, mCoord), UByte(M0, 16, 20, mColor)});
-    mTestCases.push_back({SShort(M0, 0, 20, mCoord), UShort(M0, 8, 20, mColor)});
-
-    // 14-15. remaining ES3 types
+    // 14-15. remaining ES3 formats
     if (es3)
     {
         mTestCases.push_back({SInt(M0, 0, 40, mCoord), UInt(M0, 16, 40, mColor)});
@@ -468,42 +468,21 @@ class AttributeLayoutBufferIndexed : public AttributeLayoutTest
 TEST_P(AttributeLayoutNonIndexed, Test)
 {
     Run(true);
-
-    if (IsWindows() && IsAMD() && IsOpenGL())
-    {
-        std::cout << "test skipped on Windows ATI OpenGL: non-indexed non-zero vertex start"
-                  << std::endl;
-        return;
-    }
-
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
     Run(false);
 }
 
 TEST_P(AttributeLayoutMemoryIndexed, Test)
 {
     Run(true);
-
-    if (IsWindows() && IsAMD() && (IsOpenGL() || GetParam() == ES2_D3D11_FL9_3()))
-    {
-        std::cout << "test skipped on Windows ATI OpenGL and D3D11_9_3: indexed non-zero vertex start"
-                  << std::endl;
-        return;
-    }
-
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && (IsOpenGL() || IsD3D11_FL93()));
     Run(false);
 }
 
 TEST_P(AttributeLayoutBufferIndexed, Test)
 {
     Run(true);
-
-    if (IsWindows() && IsAMD() && (IsOpenGL() || GetParam() == ES2_D3D11_FL9_3()))
-    {
-        std::cout << "test skipped on Windows ATI OpenGL and D3D11_9_3: indexed non-zero vertex start"
-                  << std::endl;
-        return;
-    }
-
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && (IsOpenGL() || IsD3D11_FL93()));
     Run(false);
 }
 
