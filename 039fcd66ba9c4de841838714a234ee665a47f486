@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef5c5f37_16f7fd90",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-28T19:09:55Z",
+      "side": 1,
+      "message": "nit: brackets for clarity?",
+      "range": {
+        "startLine": 216,
+        "startChar": 32,
+        "endLine": 216,
+        "endChar": 93
+      },
+      "revId": "039fcd66ba9c4de841838714a234ee665a47f486",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "239e78ad_dd861ddd",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-28T19:09:55Z",
+      "side": 1,
+      "message": "took me a second to parse this - maybe say TODO(me): Cube map attachments. http://anglebug.com/##",
+      "range": {
+        "startLine": 738,
+        "startChar": 22,
+        "endLine": 738,
+        "endChar": 83
+      },
+      "revId": "039fcd66ba9c4de841838714a234ee665a47f486",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
