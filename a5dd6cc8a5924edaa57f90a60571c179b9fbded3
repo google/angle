@@ -215,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "28b37f6f_1f382293",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-28T18:04:12Z",
+      "side": 1,
+      "message": "Not a problem but would you mind if I had a chance to review the CL? Not a big deal but wouldn\u0027t mind a chance to look it over.",
+      "parentUuid": "688260a8_ca71260b",
+      "range": {
+        "startLine": 596,
+        "startChar": 4,
+        "endLine": 596,
+        "endChar": 28
+      },
+      "revId": "a5dd6cc8a5924edaa57f90a60571c179b9fbded3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0756ec77_5696defa",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 12
