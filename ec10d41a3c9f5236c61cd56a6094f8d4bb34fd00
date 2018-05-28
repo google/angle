@@ -70,6 +70,122 @@
       "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d869173_4e41e197",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-28T17:46:42Z",
+      "side": 1,
+      "message": "Sure. It\u0027s a pretty simple argument.\n\n1) we definitely need append so we can have the ability to merge command buffers. this is for performance.\n2) we use beginWriteResource in probably 10-15 places in the code now. 10-15 instances is enough that we can wrap \"onResourceChanged(); appendWriteResource();\" into a helper function.\n3) beginWriteResource is that helper function. In a later patch it becomes exactly that.",
+      "parentUuid": "74fb258f_7c193181",
+      "range": {
+        "startLine": 46,
+        "startChar": 10,
+        "endLine": 46,
+        "endChar": 29
+      },
+      "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61c40eab_bf3aa3ab",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-28T17:46:42Z",
+      "side": 1,
+      "message": "here\u0027s an example of onResourceChanged",
+      "range": {
+        "startLine": 394,
+        "startChar": 4,
+        "endLine": 394,
+        "endChar": 21
+      },
+      "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57022dbe_a637a717",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-28T17:46:42Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 500,
+        "startChar": 4,
+        "endLine": 500,
+        "endChar": 21
+      },
+      "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5aaabb20_7ac262c7",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-28T17:46:42Z",
+      "side": 1,
+      "message": "this will call append.",
+      "range": {
+        "startLine": 506,
+        "startChar": 14,
+        "endLine": 506,
+        "endChar": 37
+      },
+      "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4aa01cd9_80cdb69f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-28T17:46:42Z",
+      "side": 1,
+      "message": "here\u0027s another onResourceChanged then append - the reason it\u0027s nice to have this is because we are recording both inside and outside the RenderPass.",
+      "range": {
+        "startLine": 585,
+        "startChar": 4,
+        "endLine": 585,
+        "endChar": 21
+      },
+      "revId": "ec10d41a3c9f5236c61cd56a6094f8d4bb34fd00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
