@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "b930eded_ef4d8848",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-28T18:03:58Z",
+      "side": 1,
+      "message": "Actually, I think its even better now with a single region copy that contains all the layers at once with a single allocate call.",
+      "parentUuid": "09d34f7b_ecabb2c0",
+      "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28d5adf7_5311209b",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 8
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Actually I can\u0027t as described in the comment above: \n\n\"// We specifically need to do this in 2 loops because we can\u0027t call renderer-\u003efinish multiple\n // times, and renderer-\u003efinish need to be called before we do call\n // generateMipmapLevels(...)\"",
       "parentUuid": "28d5adf7_5311209b",
+      "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fc2aae2e_f4c98ca2",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-28T18:03:58Z",
+      "side": 1,
+      "message": "That doesn\u0027t apply anymore with the single allocation call.",
+      "parentUuid": "220a1c91_65e06be1",
       "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
