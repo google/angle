@@ -9,9 +9,9 @@
 #ifndef LIBANGLE_FORMATUTILS_H_
 #define LIBANGLE_FORMATUTILS_H_
 
+#include <stdint.h>
 #include <cstddef>
 #include <ostream>
-#include <stdint.h>
 
 #include "angle_gl.h"
 #include "libANGLE/Caps.h"
@@ -41,7 +41,8 @@ struct Type
     Type();
 
     GLuint bytes;
-    GLuint bytesShift; // Bit shift by this value to effectively divide/multiply by "bytes" in a more optimal way
+    GLuint bytesShift;  // Bit shift by this value to effectively divide/multiply by "bytes" in a
+                        // more optimal way
     bool specialInterpretation;
 };
 const Type &GetTypeInfo(GLenum type);
@@ -78,9 +79,9 @@ struct InternalFormat
                                            bool is3D) const;
 
     ErrorOrResult<GLuint> computePackUnpackEndByte(GLenum formatType,
-                                                       const Extents &size,
-                                                       const PixelStoreStateBase &state,
-                                                       bool is3D) const;
+                                                   const Extents &size,
+                                                   const PixelStoreStateBase &state,
+                                                   bool is3D) const;
 
     bool isLUMA() const;
     GLenum getReadPixelsFormat() const;
@@ -307,7 +308,15 @@ struct VertexFormat : private angle::NonCopyable
     bool pureInteger;
 };
 
-VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint components, bool pureInteger);
+angle::Format::ID GetVertexFormatID(GLenum type,
+                                    GLboolean normalized,
+                                    GLuint components,
+                                    bool pureInteger);
+angle::Format::ID GetVertexFormatID(const VertexAttribute &attrib);
+VertexFormatType GetVertexFormatType(GLenum type,
+                                     GLboolean normalized,
+                                     GLuint components,
+                                     bool pureInteger);
 VertexFormatType GetVertexFormatType(const VertexAttribute &attrib);
 VertexFormatType GetVertexFormatType(const VertexAttribute &attrib, GLenum currentValueType);
 const VertexFormat &GetVertexFormatFromType(VertexFormatType vertexFormatType);
@@ -327,4 +336,4 @@ bool ValidES3CopyConversion(GLenum textureFormat, GLenum framebufferFormat);
 
 }  // namespace gl
 
-#endif // LIBANGLE_FORMATUTILS_H_
+#endif  // LIBANGLE_FORMATUTILS_H_

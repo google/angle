@@ -670,6 +670,21 @@ struct R10G10B10A2
 };
 static_assert(sizeof(R10G10B10A2) == 4, "R10G10B10A2 struct not 32-bits.");
 
+struct R10G10B10A2S
+{
+    int32_t R : 10;
+    int32_t G : 10;
+    int32_t B : 10;
+    int32_t A : 2;
+
+    static void readColor(gl::ColorF *dst, const R10G10B10A2S *src);
+    static void readColor(gl::ColorI *dst, const R10G10B10A2S *src);
+    static void writeColor(R10G10B10A2S *dst, const gl::ColorF *src);
+    static void writeColor(R10G10B10A2S *dst, const gl::ColorI *src);
+    static void average(R10G10B10A2S *dst, const R10G10B10A2S *src1, const R10G10B10A2S *src2);
+};
+static_assert(sizeof(R10G10B10A2S) == 4, "R10G10B10A2S struct not 32-bits.");
+
 struct R9G9B9E5
 {
     uint32_t R : 9;

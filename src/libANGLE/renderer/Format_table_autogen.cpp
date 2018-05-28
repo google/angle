@@ -97,64 +97,104 @@ constexpr Format g_formatInfoTable[] = {
     { Format::ID::L32_FLOAT, GL_LUMINANCE32F_EXT, GL_LUMINANCE32F_EXT, GenerateMip<L32F>, NoCopyFunctions, ReadColor<L32F, GLfloat>, WriteColor<L32F, GLfloat>, GL_FLOAT, 0, 0, 0, 0, 0, 0, 0, false },
     { Format::ID::L8A8_UNORM, GL_LUMINANCE8_ALPHA8_EXT, GL_LUMINANCE8_ALPHA8_EXT, GenerateMip<L8A8>, NoCopyFunctions, ReadColor<L8A8, GLfloat>, WriteColor<L8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 8, 0, 0, 1, false },
     { Format::ID::L8_UNORM, GL_LUMINANCE8_EXT, GL_LUMINANCE8_EXT, GenerateMip<L8>, NoCopyFunctions, ReadColor<L8, GLfloat>, WriteColor<L8, GLfloat>, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, false },
+    { Format::ID::R10G10B10A2_SINT, GL_RGB10_A2_SINT_ANGLEX, GL_RGB10_A2_SINT_ANGLEX, GenerateMip<R10G10B10A2S>, NoCopyFunctions, ReadColor<R10G10B10A2S, GLint>, WriteColor<R10G10B10A2S, GLint>, GL_INT, 10, 10, 10, 2, 0, 0, 4, false },
+    { Format::ID::R10G10B10A2_SNORM, GL_RGB10_A2_SNORM_ANGLEX, GL_RGB10_A2_SNORM_ANGLEX, GenerateMip<R10G10B10A2S>, NoCopyFunctions, ReadColor<R10G10B10A2S, GLfloat>, WriteColor<R10G10B10A2S, GLfloat>, GL_SIGNED_NORMALIZED, 10, 10, 10, 2, 0, 0, 4, false },
+    { Format::ID::R10G10B10A2_SSCALED, GL_RGB10_A2_SSCALED_ANGLEX, GL_RGB10_A2_SSCALED_ANGLEX, GenerateMip<R10G10B10A2S>, NoCopyFunctions, ReadColor<R10G10B10A2S, GLint>, WriteColor<R10G10B10A2S, GLint>, GL_INT, 10, 10, 10, 2, 0, 0, 4, false },
     { Format::ID::R10G10B10A2_UINT, GL_RGB10_A2UI, GL_RGB10_A2UI, GenerateMip<R10G10B10A2>, NoCopyFunctions, ReadColor<R10G10B10A2, GLuint>, WriteColor<R10G10B10A2, GLuint>, GL_UNSIGNED_INT, 10, 10, 10, 2, 0, 0, 4, false },
     { Format::ID::R10G10B10A2_UNORM, GL_RGB10_A2, GL_RGB10_A2, GenerateMip<R10G10B10A2>, NoCopyFunctions, ReadColor<R10G10B10A2, GLfloat>, WriteColor<R10G10B10A2, GLfloat>, GL_UNSIGNED_NORMALIZED, 10, 10, 10, 2, 0, 0, 4, false },
+    { Format::ID::R10G10B10A2_USCALED, GL_RGB10_A2_USCALED_ANGLEX, GL_RGB10_A2_USCALED_ANGLEX, GenerateMip<R10G10B10A2>, NoCopyFunctions, ReadColor<R10G10B10A2, GLuint>, WriteColor<R10G10B10A2, GLuint>, GL_UNSIGNED_INT, 10, 10, 10, 2, 0, 0, 4, false },
     { Format::ID::R11G11B10_FLOAT, GL_R11F_G11F_B10F, GL_R11F_G11F_B10F, GenerateMip<R11G11B10F>, NoCopyFunctions, ReadColor<R11G11B10F, GLfloat>, WriteColor<R11G11B10F, GLfloat>, GL_FLOAT, 11, 11, 10, 0, 0, 0, 4, false },
     { Format::ID::R16G16B16A16_FLOAT, GL_RGBA16F, GL_RGBA16F, GenerateMip<R16G16B16A16F>, NoCopyFunctions, ReadColor<R16G16B16A16F, GLfloat>, WriteColor<R16G16B16A16F, GLfloat>, GL_FLOAT, 16, 16, 16, 16, 0, 0, 8, false },
     { Format::ID::R16G16B16A16_SINT, GL_RGBA16I, GL_RGBA16I, GenerateMip<R16G16B16A16S>, NoCopyFunctions, ReadColor<R16G16B16A16S, GLint>, WriteColor<R16G16B16A16S, GLint>, GL_INT, 16, 16, 16, 16, 0, 0, 8, false },
     { Format::ID::R16G16B16A16_SNORM, GL_RGBA16_SNORM_EXT, GL_RGBA16_SNORM_EXT, GenerateMip<R16G16B16A16S>, NoCopyFunctions, ReadColor<R16G16B16A16S, GLfloat>, WriteColor<R16G16B16A16S, GLfloat>, GL_SIGNED_NORMALIZED, 16, 16, 16, 16, 0, 0, 8, false },
+    { Format::ID::R16G16B16A16_SSCALED, GL_RGBA16_SSCALED_ANGLEX, GL_RGBA16_SSCALED_ANGLEX, GenerateMip<R16G16B16A16S>, NoCopyFunctions, ReadColor<R16G16B16A16S, GLint>, WriteColor<R16G16B16A16S, GLint>, GL_INT, 16, 16, 16, 16, 0, 0, 8, false },
     { Format::ID::R16G16B16A16_UINT, GL_RGBA16UI, GL_RGBA16UI, GenerateMip<R16G16B16A16>, NoCopyFunctions, ReadColor<R16G16B16A16, GLuint>, WriteColor<R16G16B16A16, GLuint>, GL_UNSIGNED_INT, 16, 16, 16, 16, 0, 0, 8, false },
     { Format::ID::R16G16B16A16_UNORM, GL_RGBA16_EXT, GL_RGBA16_EXT, GenerateMip<R16G16B16A16>, NoCopyFunctions, ReadColor<R16G16B16A16, GLfloat>, WriteColor<R16G16B16A16, GLfloat>, GL_UNSIGNED_NORMALIZED, 16, 16, 16, 16, 0, 0, 8, false },
+    { Format::ID::R16G16B16A16_USCALED, GL_RGBA16_USCALED_ANGLEX, GL_RGBA16_USCALED_ANGLEX, GenerateMip<R16G16B16A16>, NoCopyFunctions, ReadColor<R16G16B16A16, GLuint>, WriteColor<R16G16B16A16, GLuint>, GL_UNSIGNED_INT, 16, 16, 16, 16, 0, 0, 8, false },
     { Format::ID::R16G16B16_FLOAT, GL_RGB16F, GL_RGB16F, GenerateMip<R16G16B16F>, NoCopyFunctions, ReadColor<R16G16B16F, GLfloat>, WriteColor<R16G16B16F, GLfloat>, GL_FLOAT, 16, 16, 16, 0, 0, 0, 6, false },
     { Format::ID::R16G16B16_SINT, GL_RGB16I, GL_RGB16I, GenerateMip<R16G16B16S>, NoCopyFunctions, ReadColor<R16G16B16S, GLint>, WriteColor<R16G16B16S, GLint>, GL_INT, 16, 16, 16, 0, 0, 0, 6, false },
     { Format::ID::R16G16B16_SNORM, GL_RGB16_SNORM_EXT, GL_RGB16_SNORM_EXT, GenerateMip<R16G16B16S>, NoCopyFunctions, ReadColor<R16G16B16S, GLfloat>, WriteColor<R16G16B16S, GLfloat>, GL_SIGNED_NORMALIZED, 16, 16, 16, 0, 0, 0, 6, false },
+    { Format::ID::R16G16B16_SSCALED, GL_RGB16_SSCALED_ANGLEX, GL_RGB16_SSCALED_ANGLEX, GenerateMip<R16G16B16S>, NoCopyFunctions, ReadColor<R16G16B16S, GLint>, WriteColor<R16G16B16S, GLint>, GL_INT, 16, 16, 16, 0, 0, 0, 6, false },
     { Format::ID::R16G16B16_UINT, GL_RGB16UI, GL_RGB16UI, GenerateMip<R16G16B16>, NoCopyFunctions, ReadColor<R16G16B16, GLuint>, WriteColor<R16G16B16, GLuint>, GL_UNSIGNED_INT, 16, 16, 16, 0, 0, 0, 6, false },
     { Format::ID::R16G16B16_UNORM, GL_RGB16_EXT, GL_RGB16_EXT, GenerateMip<R16G16B16>, NoCopyFunctions, ReadColor<R16G16B16, GLfloat>, WriteColor<R16G16B16, GLfloat>, GL_UNSIGNED_NORMALIZED, 16, 16, 16, 0, 0, 0, 6, false },
+    { Format::ID::R16G16B16_USCALED, GL_RGB16_USCALED_ANGLEX, GL_RGB16_USCALED_ANGLEX, GenerateMip<R16G16B16>, NoCopyFunctions, ReadColor<R16G16B16, GLuint>, WriteColor<R16G16B16, GLuint>, GL_UNSIGNED_INT, 16, 16, 16, 0, 0, 0, 6, false },
     { Format::ID::R16G16_FLOAT, GL_RG16F, GL_RG16F, GenerateMip<R16G16F>, NoCopyFunctions, ReadColor<R16G16F, GLfloat>, WriteColor<R16G16F, GLfloat>, GL_FLOAT, 16, 16, 0, 0, 0, 0, 4, false },
     { Format::ID::R16G16_SINT, GL_RG16I, GL_RG16I, GenerateMip<R16G16S>, NoCopyFunctions, ReadColor<R16G16S, GLint>, WriteColor<R16G16S, GLint>, GL_INT, 16, 16, 0, 0, 0, 0, 4, false },
     { Format::ID::R16G16_SNORM, GL_RG16_SNORM_EXT, GL_RG16_SNORM_EXT, GenerateMip<R16G16S>, NoCopyFunctions, ReadColor<R16G16S, GLfloat>, WriteColor<R16G16S, GLfloat>, GL_SIGNED_NORMALIZED, 16, 16, 0, 0, 0, 0, 4, false },
+    { Format::ID::R16G16_SSCALED, GL_RG16_SSCALED_ANGLEX, GL_RG16_SSCALED_ANGLEX, GenerateMip<R16G16S>, NoCopyFunctions, ReadColor<R16G16S, GLint>, WriteColor<R16G16S, GLint>, GL_INT, 16, 16, 0, 0, 0, 0, 4, false },
     { Format::ID::R16G16_UINT, GL_RG16UI, GL_RG16UI, GenerateMip<R16G16>, NoCopyFunctions, ReadColor<R16G16, GLuint>, WriteColor<R16G16, GLuint>, GL_UNSIGNED_INT, 16, 16, 0, 0, 0, 0, 4, false },
     { Format::ID::R16G16_UNORM, GL_RG16_EXT, GL_RG16_EXT, GenerateMip<R16G16>, NoCopyFunctions, ReadColor<R16G16, GLfloat>, WriteColor<R16G16, GLfloat>, GL_UNSIGNED_NORMALIZED, 16, 16, 0, 0, 0, 0, 4, false },
+    { Format::ID::R16G16_USCALED, GL_RG16_USCALED_ANGLEX, GL_RG16_USCALED_ANGLEX, GenerateMip<R16G16>, NoCopyFunctions, ReadColor<R16G16, GLuint>, WriteColor<R16G16, GLuint>, GL_UNSIGNED_INT, 16, 16, 0, 0, 0, 0, 4, false },
     { Format::ID::R16_FLOAT, GL_R16F, GL_R16F, GenerateMip<R16F>, NoCopyFunctions, ReadColor<R16F, GLfloat>, WriteColor<R16F, GLfloat>, GL_FLOAT, 16, 0, 0, 0, 0, 0, 2, false },
     { Format::ID::R16_SINT, GL_R16I, GL_R16I, GenerateMip<R16S>, NoCopyFunctions, ReadColor<R16S, GLint>, WriteColor<R16S, GLint>, GL_INT, 16, 0, 0, 0, 0, 0, 2, false },
     { Format::ID::R16_SNORM, GL_R16_SNORM_EXT, GL_R16_SNORM_EXT, GenerateMip<R16S>, NoCopyFunctions, ReadColor<R16S, GLfloat>, WriteColor<R16S, GLfloat>, GL_SIGNED_NORMALIZED, 16, 0, 0, 0, 0, 0, 2, false },
+    { Format::ID::R16_SSCALED, GL_R16_SSCALED_ANGLEX, GL_R16_SSCALED_ANGLEX, GenerateMip<R16S>, NoCopyFunctions, ReadColor<R16S, GLint>, WriteColor<R16S, GLint>, GL_INT, 16, 0, 0, 0, 0, 0, 2, false },
     { Format::ID::R16_UINT, GL_R16UI, GL_R16UI, GenerateMip<R16>, NoCopyFunctions, ReadColor<R16, GLuint>, WriteColor<R16, GLuint>, GL_UNSIGNED_INT, 16, 0, 0, 0, 0, 0, 2, false },
     { Format::ID::R16_UNORM, GL_R16_EXT, GL_R16_EXT, GenerateMip<R16>, NoCopyFunctions, ReadColor<R16, GLfloat>, WriteColor<R16, GLfloat>, GL_UNSIGNED_NORMALIZED, 16, 0, 0, 0, 0, 0, 2, false },
+    { Format::ID::R16_USCALED, GL_R16_USCALED_ANGLEX, GL_R16_USCALED_ANGLEX, GenerateMip<R16>, NoCopyFunctions, ReadColor<R16, GLuint>, WriteColor<R16, GLuint>, GL_UNSIGNED_INT, 16, 0, 0, 0, 0, 0, 2, false },
+    { Format::ID::R32G32B32A32_FIXED, GL_RGBA32_FIXED_ANGLEX, GL_RGBA32_FIXED_ANGLEX, GenerateMip<R32G32B32A32F>, NoCopyFunctions, ReadColor<R32G32B32A32F, GLfloat>, WriteColor<R32G32B32A32F, GLfloat>, GL_FLOAT, 32, 32, 32, 32, 0, 0, 16, false },
     { Format::ID::R32G32B32A32_FLOAT, GL_RGBA32F, GL_RGBA32F, GenerateMip<R32G32B32A32F>, NoCopyFunctions, ReadColor<R32G32B32A32F, GLfloat>, WriteColor<R32G32B32A32F, GLfloat>, GL_FLOAT, 32, 32, 32, 32, 0, 0, 16, false },
     { Format::ID::R32G32B32A32_SINT, GL_RGBA32I, GL_RGBA32I, GenerateMip<R32G32B32A32S>, NoCopyFunctions, ReadColor<R32G32B32A32S, GLint>, WriteColor<R32G32B32A32S, GLint>, GL_INT, 32, 32, 32, 32, 0, 0, 16, false },
+    { Format::ID::R32G32B32A32_SNORM, GL_RGBA32_SNORM_ANGLEX, GL_RGBA32_SNORM_ANGLEX, GenerateMip<R32G32B32A32S>, NoCopyFunctions, ReadColor<R32G32B32A32S, GLfloat>, WriteColor<R32G32B32A32S, GLfloat>, GL_SIGNED_NORMALIZED, 32, 32, 32, 32, 0, 0, 16, false },
+    { Format::ID::R32G32B32A32_SSCALED, GL_RGBA32_SSCALED_ANGLEX, GL_RGBA32_SSCALED_ANGLEX, GenerateMip<R32G32B32A32S>, NoCopyFunctions, ReadColor<R32G32B32A32S, GLint>, WriteColor<R32G32B32A32S, GLint>, GL_INT, 32, 32, 32, 32, 0, 0, 16, false },
     { Format::ID::R32G32B32A32_UINT, GL_RGBA32UI, GL_RGBA32UI, GenerateMip<R32G32B32A32>, NoCopyFunctions, ReadColor<R32G32B32A32, GLuint>, WriteColor<R32G32B32A32, GLuint>, GL_UNSIGNED_INT, 32, 32, 32, 32, 0, 0, 16, false },
+    { Format::ID::R32G32B32A32_UNORM, GL_RGBA32_UNORM_ANGLEX, GL_RGBA32_UNORM_ANGLEX, GenerateMip<R32G32B32A32>, NoCopyFunctions, ReadColor<R32G32B32A32, GLfloat>, WriteColor<R32G32B32A32, GLfloat>, GL_UNSIGNED_NORMALIZED, 32, 32, 32, 32, 0, 0, 16, false },
+    { Format::ID::R32G32B32A32_USCALED, GL_RGBA32_USCALED_ANGLEX, GL_RGBA32_USCALED_ANGLEX, GenerateMip<R32G32B32A32>, NoCopyFunctions, ReadColor<R32G32B32A32, GLuint>, WriteColor<R32G32B32A32, GLuint>, GL_UNSIGNED_INT, 32, 32, 32, 32, 0, 0, 16, false },
+    { Format::ID::R32G32B32_FIXED, GL_RGB32_FIXED_ANGLEX, GL_RGB32_FIXED_ANGLEX, GenerateMip<R32G32B32F>, NoCopyFunctions, ReadColor<R32G32B32F, GLfloat>, WriteColor<R32G32B32F, GLfloat>, GL_FLOAT, 32, 32, 32, 0, 0, 0, 12, false },
     { Format::ID::R32G32B32_FLOAT, GL_RGB32F, GL_RGB32F, GenerateMip<R32G32B32F>, NoCopyFunctions, ReadColor<R32G32B32F, GLfloat>, WriteColor<R32G32B32F, GLfloat>, GL_FLOAT, 32, 32, 32, 0, 0, 0, 12, false },
     { Format::ID::R32G32B32_SINT, GL_RGB32I, GL_RGB32I, GenerateMip<R32G32B32S>, NoCopyFunctions, ReadColor<R32G32B32S, GLint>, WriteColor<R32G32B32S, GLint>, GL_INT, 32, 32, 32, 0, 0, 0, 12, false },
+    { Format::ID::R32G32B32_SNORM, GL_RGB32_SNORM_ANGLEX, GL_RGB32_SNORM_ANGLEX, GenerateMip<R32G32B32S>, NoCopyFunctions, ReadColor<R32G32B32S, GLfloat>, WriteColor<R32G32B32S, GLfloat>, GL_SIGNED_NORMALIZED, 32, 32, 32, 0, 0, 0, 12, false },
+    { Format::ID::R32G32B32_SSCALED, GL_RGB32_SSCALED_ANGLEX, GL_RGB32_SSCALED_ANGLEX, GenerateMip<R32G32B32S>, NoCopyFunctions, ReadColor<R32G32B32S, GLint>, WriteColor<R32G32B32S, GLint>, GL_INT, 32, 32, 32, 0, 0, 0, 12, false },
     { Format::ID::R32G32B32_UINT, GL_RGB32UI, GL_RGB32UI, GenerateMip<R32G32B32>, NoCopyFunctions, ReadColor<R32G32B32, GLuint>, WriteColor<R32G32B32, GLuint>, GL_UNSIGNED_INT, 32, 32, 32, 0, 0, 0, 12, false },
+    { Format::ID::R32G32B32_UNORM, GL_RGB32_UNORM_ANGLEX, GL_RGB32_UNORM_ANGLEX, GenerateMip<R32G32B32>, NoCopyFunctions, ReadColor<R32G32B32, GLfloat>, WriteColor<R32G32B32, GLfloat>, GL_UNSIGNED_NORMALIZED, 32, 32, 32, 0, 0, 0, 12, false },
+    { Format::ID::R32G32B32_USCALED, GL_RGB32_USCALED_ANGLEX, GL_RGB32_USCALED_ANGLEX, GenerateMip<R32G32B32>, NoCopyFunctions, ReadColor<R32G32B32, GLuint>, WriteColor<R32G32B32, GLuint>, GL_UNSIGNED_INT, 32, 32, 32, 0, 0, 0, 12, false },
+    { Format::ID::R32G32_FIXED, GL_RG32_FIXED_ANGLEX, GL_RG32_FIXED_ANGLEX, GenerateMip<R32G32F>, NoCopyFunctions, ReadColor<R32G32F, GLfloat>, WriteColor<R32G32F, GLfloat>, GL_FLOAT, 32, 32, 0, 0, 0, 0, 8, false },
     { Format::ID::R32G32_FLOAT, GL_RG32F, GL_RG32F, GenerateMip<R32G32F>, NoCopyFunctions, ReadColor<R32G32F, GLfloat>, WriteColor<R32G32F, GLfloat>, GL_FLOAT, 32, 32, 0, 0, 0, 0, 8, false },
     { Format::ID::R32G32_SINT, GL_RG32I, GL_RG32I, GenerateMip<R32G32S>, NoCopyFunctions, ReadColor<R32G32S, GLint>, WriteColor<R32G32S, GLint>, GL_INT, 32, 32, 0, 0, 0, 0, 8, false },
+    { Format::ID::R32G32_SNORM, GL_RG32_SNORM_ANGLEX, GL_RG32_SNORM_ANGLEX, GenerateMip<R32G32S>, NoCopyFunctions, ReadColor<R32G32S, GLfloat>, WriteColor<R32G32S, GLfloat>, GL_SIGNED_NORMALIZED, 32, 32, 0, 0, 0, 0, 8, false },
+    { Format::ID::R32G32_SSCALED, GL_RG32_SSCALED_ANGLEX, GL_RG32_SSCALED_ANGLEX, GenerateMip<R32G32S>, NoCopyFunctions, ReadColor<R32G32S, GLint>, WriteColor<R32G32S, GLint>, GL_INT, 32, 32, 0, 0, 0, 0, 8, false },
     { Format::ID::R32G32_UINT, GL_RG32UI, GL_RG32UI, GenerateMip<R32G32>, NoCopyFunctions, ReadColor<R32G32, GLuint>, WriteColor<R32G32, GLuint>, GL_UNSIGNED_INT, 32, 32, 0, 0, 0, 0, 8, false },
+    { Format::ID::R32G32_UNORM, GL_RG32_UNORM_ANGLEX, GL_RG32_UNORM_ANGLEX, GenerateMip<R32G32>, NoCopyFunctions, ReadColor<R32G32, GLfloat>, WriteColor<R32G32, GLfloat>, GL_UNSIGNED_NORMALIZED, 32, 32, 0, 0, 0, 0, 8, false },
+    { Format::ID::R32G32_USCALED, GL_RG32_USCALED_ANGLEX, GL_RG32_USCALED_ANGLEX, GenerateMip<R32G32>, NoCopyFunctions, ReadColor<R32G32, GLuint>, WriteColor<R32G32, GLuint>, GL_UNSIGNED_INT, 32, 32, 0, 0, 0, 0, 8, false },
+    { Format::ID::R32_FIXED, GL_R32_FIXED_ANGLEX, GL_R32_FIXED_ANGLEX, GenerateMip<R32F>, NoCopyFunctions, ReadColor<R32F, GLfloat>, WriteColor<R32F, GLfloat>, GL_FLOAT, 32, 0, 0, 0, 0, 0, 4, false },
     { Format::ID::R32_FLOAT, GL_R32F, GL_R32F, GenerateMip<R32F>, NoCopyFunctions, ReadColor<R32F, GLfloat>, WriteColor<R32F, GLfloat>, GL_FLOAT, 32, 0, 0, 0, 0, 0, 4, false },
     { Format::ID::R32_SINT, GL_R32I, GL_R32I, GenerateMip<R32S>, NoCopyFunctions, ReadColor<R32S, GLint>, WriteColor<R32S, GLint>, GL_INT, 32, 0, 0, 0, 0, 0, 4, false },
+    { Format::ID::R32_SNORM, GL_R32_SNORM_ANGLEX, GL_R32_SNORM_ANGLEX, GenerateMip<R32S>, NoCopyFunctions, ReadColor<R32S, GLfloat>, WriteColor<R32S, GLfloat>, GL_SIGNED_NORMALIZED, 32, 0, 0, 0, 0, 0, 4, false },
+    { Format::ID::R32_SSCALED, GL_R32_SSCALED_ANGLEX, GL_R32_SSCALED_ANGLEX, GenerateMip<R32S>, NoCopyFunctions, ReadColor<R32S, GLint>, WriteColor<R32S, GLint>, GL_INT, 32, 0, 0, 0, 0, 0, 4, false },
     { Format::ID::R32_UINT, GL_R32UI, GL_R32UI, GenerateMip<R32>, NoCopyFunctions, ReadColor<R32, GLuint>, WriteColor<R32, GLuint>, GL_UNSIGNED_INT, 32, 0, 0, 0, 0, 0, 4, false },
+    { Format::ID::R32_UNORM, GL_R32_UNORM_ANGLEX, GL_R32_UNORM_ANGLEX, GenerateMip<R32>, NoCopyFunctions, ReadColor<R32, GLfloat>, WriteColor<R32, GLfloat>, GL_UNSIGNED_NORMALIZED, 32, 0, 0, 0, 0, 0, 4, false },
+    { Format::ID::R32_USCALED, GL_R32_USCALED_ANGLEX, GL_R32_USCALED_ANGLEX, GenerateMip<R32>, NoCopyFunctions, ReadColor<R32, GLuint>, WriteColor<R32, GLuint>, GL_UNSIGNED_INT, 32, 0, 0, 0, 0, 0, 4, false },
     { Format::ID::R4G4B4A4_UNORM, GL_RGBA4, GL_RGBA4, GenerateMip<R4G4B4A4>, NoCopyFunctions, ReadColor<R4G4B4A4, GLfloat>, WriteColor<R4G4B4A4, GLfloat>, GL_UNSIGNED_NORMALIZED, 4, 4, 4, 4, 0, 0, 2, false },
     { Format::ID::R5G5B5A1_UNORM, GL_RGB5_A1, GL_RGB5_A1, GenerateMip<R5G5B5A1>, NoCopyFunctions, ReadColor<R5G5B5A1, GLfloat>, WriteColor<R5G5B5A1, GLfloat>, GL_UNSIGNED_NORMALIZED, 5, 5, 5, 1, 0, 0, 2, false },
     { Format::ID::R5G6B5_UNORM, GL_RGB565, GL_RGB565, GenerateMip<R5G6B5>, NoCopyFunctions, ReadColor<R5G6B5, GLfloat>, WriteColor<R5G6B5, GLfloat>, GL_UNSIGNED_NORMALIZED, 5, 6, 5, 0, 0, 0, 2, false },
     { Format::ID::R8G8B8A8_SINT, GL_RGBA8I, GL_RGBA8I, GenerateMip<R8G8B8A8S>, NoCopyFunctions, ReadColor<R8G8B8A8S, GLint>, WriteColor<R8G8B8A8S, GLint>, GL_INT, 8, 8, 8, 8, 0, 0, 4, false },
     { Format::ID::R8G8B8A8_SNORM, GL_RGBA8_SNORM, GL_RGBA8_SNORM, GenerateMip<R8G8B8A8S>, NoCopyFunctions, ReadColor<R8G8B8A8S, GLfloat>, WriteColor<R8G8B8A8S, GLfloat>, GL_SIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0, 4, false },
+    { Format::ID::R8G8B8A8_SSCALED, GL_RGBA8_SSCALED_ANGLEX, GL_RGBA8_SSCALED_ANGLEX, GenerateMip<R8G8B8A8S>, NoCopyFunctions, ReadColor<R8G8B8A8S, GLint>, WriteColor<R8G8B8A8S, GLint>, GL_INT, 8, 8, 8, 8, 0, 0, 4, false },
     { Format::ID::R8G8B8A8_TYPELESS, GL_RGBA8, GL_RGBA8, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLfloat>, WriteColor<R8G8B8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0, 4, false },
     { Format::ID::R8G8B8A8_TYPELESS_SRGB, GL_SRGB8_ALPHA8, GL_SRGB8_ALPHA8, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLfloat>, WriteColor<R8G8B8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0, 4, false },
     { Format::ID::R8G8B8A8_UINT, GL_RGBA8UI, GL_RGBA8UI, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLuint>, WriteColor<R8G8B8A8, GLuint>, GL_UNSIGNED_INT, 8, 8, 8, 8, 0, 0, 4, false },
     { Format::ID::R8G8B8A8_UNORM, GL_RGBA8, GL_RGBA8, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLfloat>, WriteColor<R8G8B8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0, 4, false },
     { Format::ID::R8G8B8A8_UNORM_SRGB, GL_SRGB8_ALPHA8, GL_SRGB8_ALPHA8, GenerateMip<R8G8B8A8SRGB>, NoCopyFunctions, ReadColor<R8G8B8A8SRGB, GLfloat>, WriteColor<R8G8B8A8SRGB, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0, 4, false },
+    { Format::ID::R8G8B8A8_USCALED, GL_RGBA8_USCALED_ANGLEX, GL_RGBA8_USCALED_ANGLEX, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLuint>, WriteColor<R8G8B8A8, GLuint>, GL_UNSIGNED_INT, 8, 8, 8, 8, 0, 0, 4, false },
     { Format::ID::R8G8B8_SINT, GL_RGB8I, GL_RGB8I, GenerateMip<R8G8B8S>, NoCopyFunctions, ReadColor<R8G8B8S, GLint>, WriteColor<R8G8B8S, GLint>, GL_INT, 8, 8, 8, 0, 0, 0, 3, false },
     { Format::ID::R8G8B8_SNORM, GL_RGB8_SNORM, GL_RGB8_SNORM, GenerateMip<R8G8B8S>, NoCopyFunctions, ReadColor<R8G8B8S, GLfloat>, WriteColor<R8G8B8S, GLfloat>, GL_SIGNED_NORMALIZED, 8, 8, 8, 0, 0, 0, 3, false },
+    { Format::ID::R8G8B8_SSCALED, GL_RGB8_SSCALED_ANGLEX, GL_RGB8_SSCALED_ANGLEX, GenerateMip<R8G8B8S>, NoCopyFunctions, ReadColor<R8G8B8S, GLint>, WriteColor<R8G8B8S, GLint>, GL_INT, 8, 8, 8, 0, 0, 0, 3, false },
     { Format::ID::R8G8B8_UINT, GL_RGB8UI, GL_RGB8UI, GenerateMip<R8G8B8>, NoCopyFunctions, ReadColor<R8G8B8, GLuint>, WriteColor<R8G8B8, GLuint>, GL_UNSIGNED_INT, 8, 8, 8, 0, 0, 0, 3, false },
     { Format::ID::R8G8B8_UNORM, GL_RGB8, GL_RGB8, GenerateMip<R8G8B8>, NoCopyFunctions, ReadColor<R8G8B8, GLfloat>, WriteColor<R8G8B8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 0, 0, 0, 3, false },
     { Format::ID::R8G8B8_UNORM_SRGB, GL_SRGB8, GL_SRGB8, GenerateMip<R8G8B8>, NoCopyFunctions, ReadColor<R8G8B8, GLfloat>, WriteColor<R8G8B8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 0, 0, 0, 3, false },
+    { Format::ID::R8G8B8_USCALED, GL_RGB8_USCALED_ANGLEX, GL_RGB8_USCALED_ANGLEX, GenerateMip<R8G8B8>, NoCopyFunctions, ReadColor<R8G8B8, GLuint>, WriteColor<R8G8B8, GLuint>, GL_UNSIGNED_INT, 8, 8, 8, 0, 0, 0, 3, false },
     { Format::ID::R8G8_SINT, GL_RG8I, GL_RG8I, GenerateMip<R8G8S>, NoCopyFunctions, ReadColor<R8G8S, GLint>, WriteColor<R8G8S, GLint>, GL_INT, 8, 8, 0, 0, 0, 0, 2, false },
     { Format::ID::R8G8_SNORM, GL_RG8_SNORM, GL_RG8_SNORM, GenerateMip<R8G8S>, NoCopyFunctions, ReadColor<R8G8S, GLfloat>, WriteColor<R8G8S, GLfloat>, GL_SIGNED_NORMALIZED, 8, 8, 0, 0, 0, 0, 2, false },
+    { Format::ID::R8G8_SSCALED, GL_RG8_SSCALED_ANGLEX, GL_RG8_SSCALED_ANGLEX, GenerateMip<R8G8S>, NoCopyFunctions, ReadColor<R8G8S, GLint>, WriteColor<R8G8S, GLint>, GL_INT, 8, 8, 0, 0, 0, 0, 2, false },
     { Format::ID::R8G8_UINT, GL_RG8UI, GL_RG8UI, GenerateMip<R8G8>, NoCopyFunctions, ReadColor<R8G8, GLuint>, WriteColor<R8G8, GLuint>, GL_UNSIGNED_INT, 8, 8, 0, 0, 0, 0, 2, false },
     { Format::ID::R8G8_UNORM, GL_RG8, GL_RG8, GenerateMip<R8G8>, NoCopyFunctions, ReadColor<R8G8, GLfloat>, WriteColor<R8G8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 0, 0, 0, 0, 2, false },
+    { Format::ID::R8G8_USCALED, GL_RG8_USCALED_ANGLEX, GL_RG8_USCALED_ANGLEX, GenerateMip<R8G8>, NoCopyFunctions, ReadColor<R8G8, GLuint>, WriteColor<R8G8, GLuint>, GL_UNSIGNED_INT, 8, 8, 0, 0, 0, 0, 2, false },
     { Format::ID::R8_SINT, GL_R8I, GL_R8I, GenerateMip<R8S>, NoCopyFunctions, ReadColor<R8S, GLint>, WriteColor<R8S, GLint>, GL_INT, 8, 0, 0, 0, 0, 0, 1, false },
     { Format::ID::R8_SNORM, GL_R8_SNORM, GL_R8_SNORM, GenerateMip<R8S>, NoCopyFunctions, ReadColor<R8S, GLfloat>, WriteColor<R8S, GLfloat>, GL_SIGNED_NORMALIZED, 8, 0, 0, 0, 0, 0, 1, false },
+    { Format::ID::R8_SSCALED, GL_R8_SSCALED_ANGLEX, GL_R8_SSCALED_ANGLEX, GenerateMip<R8S>, NoCopyFunctions, ReadColor<R8S, GLint>, WriteColor<R8S, GLint>, GL_INT, 8, 0, 0, 0, 0, 0, 1, false },
     { Format::ID::R8_UINT, GL_R8UI, GL_R8UI, GenerateMip<R8>, NoCopyFunctions, ReadColor<R8, GLuint>, WriteColor<R8, GLuint>, GL_UNSIGNED_INT, 8, 0, 0, 0, 0, 0, 1, false },
     { Format::ID::R8_UNORM, GL_R8, GL_R8, GenerateMip<R8>, NoCopyFunctions, ReadColor<R8, GLfloat>, WriteColor<R8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 0, 0, 0, 0, 0, 1, false },
+    { Format::ID::R8_USCALED, GL_R8_USCALED_ANGLEX, GL_R8_USCALED_ANGLEX, GenerateMip<R8>, NoCopyFunctions, ReadColor<R8, GLuint>, WriteColor<R8, GLuint>, GL_UNSIGNED_INT, 8, 0, 0, 0, 0, 0, 1, false },
     { Format::ID::R9G9B9E5_SHAREDEXP, GL_RGB9_E5, GL_RGB9_E5, GenerateMip<R9G9B9E5>, NoCopyFunctions, ReadColor<R9G9B9E5, GLfloat>, WriteColor<R9G9B9E5, GLfloat>, GL_FLOAT, 9, 9, 9, 0, 0, 0, 3, false },
     { Format::ID::S8_UINT, GL_STENCIL_INDEX8, GL_STENCIL_INDEX8, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_INT, 0, 0, 0, 0, 0, 8, 1, false },
     // clang-format on
@@ -323,12 +363,26 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R16_UNORM;
         case GL_R16_SNORM_EXT:
             return Format::ID::R16_SNORM;
+        case GL_R16_SSCALED_ANGLEX:
+            return Format::ID::R16_SSCALED;
+        case GL_R16_USCALED_ANGLEX:
+            return Format::ID::R16_USCALED;
         case GL_R32F:
             return Format::ID::R32_FLOAT;
         case GL_R32I:
             return Format::ID::R32_SINT;
         case GL_R32UI:
             return Format::ID::R32_UINT;
+        case GL_R32_FIXED_ANGLEX:
+            return Format::ID::R32_FIXED;
+        case GL_R32_SNORM_ANGLEX:
+            return Format::ID::R32_SNORM;
+        case GL_R32_SSCALED_ANGLEX:
+            return Format::ID::R32_SSCALED;
+        case GL_R32_UNORM_ANGLEX:
+            return Format::ID::R32_UNORM;
+        case GL_R32_USCALED_ANGLEX:
+            return Format::ID::R32_USCALED;
         case GL_R8:
             return Format::ID::R8_UNORM;
         case GL_R8I:
@@ -337,6 +391,10 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R8_UINT;
         case GL_R8_SNORM:
             return Format::ID::R8_SNORM;
+        case GL_R8_SSCALED_ANGLEX:
+            return Format::ID::R8_SSCALED;
+        case GL_R8_USCALED_ANGLEX:
+            return Format::ID::R8_USCALED;
         case GL_RG16F:
             return Format::ID::R16G16_FLOAT;
         case GL_RG16I:
@@ -347,12 +405,26 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R16G16_UNORM;
         case GL_RG16_SNORM_EXT:
             return Format::ID::R16G16_SNORM;
+        case GL_RG16_SSCALED_ANGLEX:
+            return Format::ID::R16G16_SSCALED;
+        case GL_RG16_USCALED_ANGLEX:
+            return Format::ID::R16G16_USCALED;
         case GL_RG32F:
             return Format::ID::R32G32_FLOAT;
         case GL_RG32I:
             return Format::ID::R32G32_SINT;
         case GL_RG32UI:
             return Format::ID::R32G32_UINT;
+        case GL_RG32_FIXED_ANGLEX:
+            return Format::ID::R32G32_FIXED;
+        case GL_RG32_SNORM_ANGLEX:
+            return Format::ID::R32G32_SNORM;
+        case GL_RG32_SSCALED_ANGLEX:
+            return Format::ID::R32G32_SSCALED;
+        case GL_RG32_UNORM_ANGLEX:
+            return Format::ID::R32G32_UNORM;
+        case GL_RG32_USCALED_ANGLEX:
+            return Format::ID::R32G32_USCALED;
         case GL_RG8:
             return Format::ID::R8G8_UNORM;
         case GL_RG8I:
@@ -361,12 +433,24 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R8G8_UINT;
         case GL_RG8_SNORM:
             return Format::ID::R8G8_SNORM;
+        case GL_RG8_SSCALED_ANGLEX:
+            return Format::ID::R8G8_SSCALED;
+        case GL_RG8_USCALED_ANGLEX:
+            return Format::ID::R8G8_USCALED;
         case GL_RGB:
             return Format::ID::R8G8B8_UNORM;
         case GL_RGB10_A2:
             return Format::ID::R10G10B10A2_UNORM;
         case GL_RGB10_A2UI:
             return Format::ID::R10G10B10A2_UINT;
+        case GL_RGB10_A2_SINT_ANGLEX:
+            return Format::ID::R10G10B10A2_SINT;
+        case GL_RGB10_A2_SNORM_ANGLEX:
+            return Format::ID::R10G10B10A2_SNORM;
+        case GL_RGB10_A2_SSCALED_ANGLEX:
+            return Format::ID::R10G10B10A2_SSCALED;
+        case GL_RGB10_A2_USCALED_ANGLEX:
+            return Format::ID::R10G10B10A2_USCALED;
         case GL_RGB16F:
             return Format::ID::R16G16B16_FLOAT;
         case GL_RGB16I:
@@ -377,12 +461,26 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R16G16B16_UNORM;
         case GL_RGB16_SNORM_EXT:
             return Format::ID::R16G16B16_SNORM;
+        case GL_RGB16_SSCALED_ANGLEX:
+            return Format::ID::R16G16B16_SSCALED;
+        case GL_RGB16_USCALED_ANGLEX:
+            return Format::ID::R16G16B16_USCALED;
         case GL_RGB32F:
             return Format::ID::R32G32B32_FLOAT;
         case GL_RGB32I:
             return Format::ID::R32G32B32_SINT;
         case GL_RGB32UI:
             return Format::ID::R32G32B32_UINT;
+        case GL_RGB32_FIXED_ANGLEX:
+            return Format::ID::R32G32B32_FIXED;
+        case GL_RGB32_SNORM_ANGLEX:
+            return Format::ID::R32G32B32_SNORM;
+        case GL_RGB32_SSCALED_ANGLEX:
+            return Format::ID::R32G32B32_SSCALED;
+        case GL_RGB32_UNORM_ANGLEX:
+            return Format::ID::R32G32B32_UNORM;
+        case GL_RGB32_USCALED_ANGLEX:
+            return Format::ID::R32G32B32_USCALED;
         case GL_RGB565:
             return Format::ID::R5G6B5_UNORM;
         case GL_RGB5_A1:
@@ -395,6 +493,10 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R8G8B8_UINT;
         case GL_RGB8_SNORM:
             return Format::ID::R8G8B8_SNORM;
+        case GL_RGB8_SSCALED_ANGLEX:
+            return Format::ID::R8G8B8_SSCALED;
+        case GL_RGB8_USCALED_ANGLEX:
+            return Format::ID::R8G8B8_USCALED;
         case GL_RGB9_E5:
             return Format::ID::R9G9B9E5_SHAREDEXP;
         case GL_RGBA:
@@ -409,12 +511,26 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R16G16B16A16_UNORM;
         case GL_RGBA16_SNORM_EXT:
             return Format::ID::R16G16B16A16_SNORM;
+        case GL_RGBA16_SSCALED_ANGLEX:
+            return Format::ID::R16G16B16A16_SSCALED;
+        case GL_RGBA16_USCALED_ANGLEX:
+            return Format::ID::R16G16B16A16_USCALED;
         case GL_RGBA32F:
             return Format::ID::R32G32B32A32_FLOAT;
         case GL_RGBA32I:
             return Format::ID::R32G32B32A32_SINT;
         case GL_RGBA32UI:
             return Format::ID::R32G32B32A32_UINT;
+        case GL_RGBA32_FIXED_ANGLEX:
+            return Format::ID::R32G32B32A32_FIXED;
+        case GL_RGBA32_SNORM_ANGLEX:
+            return Format::ID::R32G32B32A32_SNORM;
+        case GL_RGBA32_SSCALED_ANGLEX:
+            return Format::ID::R32G32B32A32_SSCALED;
+        case GL_RGBA32_UNORM_ANGLEX:
+            return Format::ID::R32G32B32A32_UNORM;
+        case GL_RGBA32_USCALED_ANGLEX:
+            return Format::ID::R32G32B32A32_USCALED;
         case GL_RGBA4:
             return Format::ID::R4G4B4A4_UNORM;
         case GL_RGBA8:
@@ -425,10 +541,14 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
             return Format::ID::R8G8B8A8_UINT;
         case GL_RGBA8_SNORM:
             return Format::ID::R8G8B8A8_SNORM;
+        case GL_RGBA8_SSCALED_ANGLEX:
+            return Format::ID::R8G8B8A8_SSCALED;
         case GL_RGBA8_TYPELESS_ANGLEX:
             return Format::ID::R8G8B8A8_TYPELESS;
         case GL_RGBA8_TYPELESS_SRGB_ANGLEX:
             return Format::ID::R8G8B8A8_TYPELESS_SRGB;
+        case GL_RGBA8_USCALED_ANGLEX:
+            return Format::ID::R8G8B8A8_USCALED;
         case GL_SRGB8:
             return Format::ID::R8G8B8_UNORM_SRGB;
         case GL_SRGB8_ALPHA8:

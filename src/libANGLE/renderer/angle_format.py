@@ -60,9 +60,15 @@ def get_component_type(format_id):
         return "unorm"
     elif "FLOAT" in format_id:
         return "float"
+    elif "FIXED" in format_id:
+        return "float"
     elif "UINT" in format_id:
         return "uint"
     elif "SINT" in format_id:
+        return "int"
+    elif "USCALED" in format_id:
+        return "uint"
+    elif "SSCALED" in format_id:
         return "int"
     elif format_id == "NONE":
         return "none"

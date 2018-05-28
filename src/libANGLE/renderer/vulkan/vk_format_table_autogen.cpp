@@ -695,11 +695,27 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             // This format is not implemented in Vulkan.
             break;
 
+        case angle::Format::ID::R10G10B10A2_SINT:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R10G10B10A2_SNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R10G10B10A2_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R10G10B10A2_UINT:
             // This format is not implemented in Vulkan.
             break;
 
         case angle::Format::ID::R10G10B10A2_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R10G10B10A2_USCALED:
             // This format is not implemented in Vulkan.
             break;
 
@@ -740,6 +756,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R16G16B16A16_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R16G16B16A16_UINT:
         {
             internalFormat          = GL_RGBA16UI;
@@ -761,6 +781,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R16G16B16A16_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R16G16B16_FLOAT:
         {
@@ -795,6 +819,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R16G16B16_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R16G16B16_UINT:
         {
             internalFormat          = GL_RGB16UI;
@@ -816,6 +844,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R16G16B16_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R16G16_FLOAT:
         {
@@ -850,6 +882,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R16G16_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R16G16_UINT:
         {
             internalFormat          = GL_RG16UI;
@@ -871,6 +907,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R16G16_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R16_FLOAT:
         {
@@ -905,6 +945,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R16_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R16_UINT:
         {
             internalFormat          = GL_R16UI;
@@ -926,6 +970,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R16_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32G32B32A32_FIXED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R32G32B32A32_FLOAT:
         {
@@ -949,6 +1001,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R32G32B32A32_SNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32G32B32A32_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R32G32B32A32_UINT:
         {
             internalFormat          = GL_RGBA32UI;
@@ -959,6 +1019,18 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R32G32B32A32_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32G32B32A32_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32G32B32_FIXED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R32G32B32_FLOAT:
         {
@@ -982,6 +1054,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R32G32B32_SNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32G32B32_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R32G32B32_UINT:
         {
             internalFormat          = GL_RGB32UI;
@@ -992,6 +1072,18 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R32G32B32_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32G32B32_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32G32_FIXED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R32G32_FLOAT:
         {
@@ -1015,6 +1107,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R32G32_SNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32G32_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R32G32_UINT:
         {
             internalFormat          = GL_RG32UI;
@@ -1025,6 +1125,18 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R32G32_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32G32_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32_FIXED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R32_FLOAT:
         {
@@ -1048,6 +1160,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R32_SNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R32_UINT:
         {
             internalFormat          = GL_R32UI;
@@ -1058,6 +1178,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R32_UNORM:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::Format::ID::R32_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R4G4B4A4_UNORM:
         {
@@ -1114,6 +1242,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R8G8B8A8_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R8G8B8A8_TYPELESS:
             // This format is not implemented in Vulkan.
             break;
@@ -1148,6 +1280,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             // This format is not implemented in Vulkan.
             break;
 
+        case angle::Format::ID::R8G8B8A8_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R8G8B8_SINT:
         {
             internalFormat          = GL_RGB8I;
@@ -1169,6 +1305,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R8G8B8_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R8G8B8_UINT:
         {
@@ -1196,6 +1336,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             // This format is not implemented in Vulkan.
             break;
 
+        case angle::Format::ID::R8G8B8_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R8G8_SINT:
         {
             internalFormat          = GL_RG8I;
@@ -1217,6 +1361,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R8G8_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R8G8_UINT:
         {
@@ -1240,6 +1388,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R8G8_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R8_SINT:
         {
             internalFormat          = GL_R8I;
@@ -1262,6 +1414,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
         }
 
+        case angle::Format::ID::R8_SSCALED:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::Format::ID::R8_UINT:
         {
             internalFormat          = GL_R8UI;
@@ -1283,6 +1439,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             dataInitializerFunction = nullptr;
             break;
         }
+
+        case angle::Format::ID::R8_USCALED:
+            // This format is not implemented in Vulkan.
+            break;
 
         case angle::Format::ID::R9G9B9E5_SHAREDEXP:
             // This format is not implemented in Vulkan.

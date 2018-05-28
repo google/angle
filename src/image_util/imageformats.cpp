@@ -1673,6 +1673,46 @@ void R10G10B10A2::average(R10G10B10A2 *dst, const R10G10B10A2 *src1, const R10G1
     dst->A = gl::average(src1->A, src2->A);
 }
 
+void R10G10B10A2S::readColor(gl::ColorI *dst, const R10G10B10A2S *src)
+{
+    dst->red   = src->R;
+    dst->green = src->G;
+    dst->blue  = src->B;
+    dst->alpha = src->A;
+}
+
+void R10G10B10A2S::readColor(gl::ColorF *dst, const R10G10B10A2S *src)
+{
+    dst->red   = gl::normalizedToFloat<10>(src->R);
+    dst->green = gl::normalizedToFloat<10>(src->G);
+    dst->blue  = gl::normalizedToFloat<10>(src->B);
+    dst->alpha = gl::normalizedToFloat<2>(src->A);
+}
+
+void R10G10B10A2S::writeColor(R10G10B10A2S *dst, const gl::ColorI *src)
+{
+    dst->R = static_cast<int32_t>(src->red);
+    dst->G = static_cast<int32_t>(src->green);
+    dst->B = static_cast<int32_t>(src->blue);
+    dst->A = static_cast<int32_t>(src->alpha);
+}
+
+void R10G10B10A2S::writeColor(R10G10B10A2S *dst, const gl::ColorF *src)
+{
+    dst->R = gl::floatToNormalized<10, int32_t>(src->red);
+    dst->G = gl::floatToNormalized<10, int32_t>(src->green);
+    dst->B = gl::floatToNormalized<10, int32_t>(src->blue);
+    dst->A = gl::floatToNormalized<2, int32_t>(src->alpha);
+}
+
+void R10G10B10A2S::average(R10G10B10A2S *dst, const R10G10B10A2S *src1, const R10G10B10A2S *src2)
+{
+    dst->R = gl::average(src1->R, src2->R);
+    dst->G = gl::average(src1->G, src2->G);
+    dst->B = gl::average(src1->B, src2->B);
+    dst->A = gl::average(src1->A, src2->A);
+}
+
 void R9G9B9E5::readColor(gl::ColorF *dst, const R9G9B9E5 *src)
 {
     gl::convert999E5toRGBFloats(gl::bitCast<uint32_t>(*src), &dst->red, &dst->green, &dst->blue);

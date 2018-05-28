@@ -17,9 +17,9 @@ using namespace angle;
 namespace gl
 {
 
-// ES2 requires that format is equal to internal format at all glTex*Image2D entry points and the implementation
-// can decide the true, sized, internal format. The ES2FormatMap determines the internal format for all valid
-// format and type combinations.
+// ES2 requires that format is equal to internal format at all glTex*Image2D entry points and the
+// implementation can decide the true, sized, internal format. The ES2FormatMap determines the
+// internal format for all valid format and type combinations.
 GLenum GetSizedFormatInternal(GLenum format, GLenum type);
 
 namespace
@@ -44,10 +44,7 @@ bool FormatType::operator<(const FormatType &other) const
     return type < other.type;
 }
 
-Type::Type()
-    : bytes(0),
-      bytesShift(0),
-      specialInterpretation(false)
+Type::Type() : bytes(0), bytesShift(0), specialInterpretation(false)
 {
 }
 
@@ -55,7 +52,7 @@ static Type GenTypeInfo(GLuint bytes, bool specialInterpretation)
 {
     Type info;
     info.bytes = bytes;
-    GLuint i = 0;
+    GLuint i   = 0;
     while ((1u << i) < bytes)
     {
         ++i;
@@ -66,7 +63,7 @@ static Type GenTypeInfo(GLuint bytes, bool specialInterpretation)
     return info;
 }
 
-bool operator<(const Type& a, const Type& b)
+bool operator<(const Type &a, const Type &b)
 {
     return memcmp(&a, &b, sizeof(Type)) < 0;
 }
@@ -541,21 +538,21 @@ void AddRGBAFormat(InternalFormatInfoMap *map,
     formatInfo.sized          = sized;
     formatInfo.sizedInternalFormat =
         sized ? internalFormat : GetSizedFormatInternal(internalFormat, type);
-    formatInfo.redBits = red;
-    formatInfo.greenBits = green;
-    formatInfo.blueBits = blue;
-    formatInfo.alphaBits = alpha;
+    formatInfo.redBits    = red;
+    formatInfo.greenBits  = green;
+    formatInfo.blueBits   = blue;
+    formatInfo.alphaBits  = alpha;
     formatInfo.sharedBits = shared;
     formatInfo.pixelBytes = (red + green + blue + alpha + shared) / 8;
     formatInfo.componentCount =
         ((red > 0) ? 1 : 0) + ((green > 0) ? 1 : 0) + ((blue > 0) ? 1 : 0) + ((alpha > 0) ? 1 : 0);
-    formatInfo.format = format;
-    formatInfo.type = type;
-    formatInfo.componentType = componentType;
-    formatInfo.colorEncoding = (srgb ? GL_SRGB : GL_LINEAR);
+    formatInfo.format         = format;
+    formatInfo.type           = type;
+    formatInfo.componentType  = componentType;
+    formatInfo.colorEncoding  = (srgb ? GL_SRGB : GL_LINEAR);
     formatInfo.textureSupport = textureSupport;
-    formatInfo.renderSupport = renderSupport;
-    formatInfo.filterSupport = filterSupport;
+    formatInfo.renderSupport  = renderSupport;
+    formatInfo.filterSupport  = filterSupport;
 
     InsertFormatInfo(map, formatInfo);
 }
@@ -577,17 +574,17 @@ static void AddLUMAFormat(InternalFormatInfoMap *map,
     formatInfo.sized          = sized;
     formatInfo.sizedInternalFormat =
         sized ? internalFormat : GetSizedFormatInternal(internalFormat, type);
-    formatInfo.luminanceBits = luminance;
-    formatInfo.alphaBits = alpha;
-    formatInfo.pixelBytes = (luminance + alpha) / 8;
+    formatInfo.luminanceBits  = luminance;
+    formatInfo.alphaBits      = alpha;
+    formatInfo.pixelBytes     = (luminance + alpha) / 8;
     formatInfo.componentCount = ((luminance > 0) ? 1 : 0) + ((alpha > 0) ? 1 : 0);
-    formatInfo.format = format;
-    formatInfo.type = type;
-    formatInfo.componentType = componentType;
-    formatInfo.colorEncoding = GL_LINEAR;
+    formatInfo.format         = format;
+    formatInfo.type           = type;
+    formatInfo.componentType  = componentType;
+    formatInfo.colorEncoding  = GL_LINEAR;
     formatInfo.textureSupport = textureSupport;
-    formatInfo.renderSupport = renderSupport;
-    formatInfo.filterSupport = filterSupport;
+    formatInfo.renderSupport  = renderSupport;
+    formatInfo.filterSupport  = filterSupport;
 
     InsertFormatInfo(map, formatInfo);
 }
@@ -610,17 +607,17 @@ void AddDepthStencilFormat(InternalFormatInfoMap *map,
     formatInfo.sized          = sized;
     formatInfo.sizedInternalFormat =
         sized ? internalFormat : GetSizedFormatInternal(internalFormat, type);
-    formatInfo.depthBits = depthBits;
-    formatInfo.stencilBits = stencilBits;
-    formatInfo.pixelBytes = (depthBits + stencilBits + unusedBits) / 8;
+    formatInfo.depthBits      = depthBits;
+    formatInfo.stencilBits    = stencilBits;
+    formatInfo.pixelBytes     = (depthBits + stencilBits + unusedBits) / 8;
     formatInfo.componentCount = ((depthBits > 0) ? 1 : 0) + ((stencilBits > 0) ? 1 : 0);
-    formatInfo.format = format;
-    formatInfo.type = type;
-    formatInfo.componentType = componentType;
-    formatInfo.colorEncoding = GL_LINEAR;
+    formatInfo.format         = format;
+    formatInfo.type           = type;
+    formatInfo.componentType  = componentType;
+    formatInfo.colorEncoding  = GL_LINEAR;
     formatInfo.textureSupport = textureSupport;
-    formatInfo.renderSupport = renderSupport;
-    formatInfo.filterSupport = filterSupport;
+    formatInfo.renderSupport  = renderSupport;
+    formatInfo.filterSupport  = filterSupport;
 
     InsertFormatInfo(map, formatInfo);
 }
@@ -642,18 +639,18 @@ void AddCompressedFormat(InternalFormatInfoMap *map,
     formatInfo.internalFormat        = internalFormat;
     formatInfo.sized                 = true;
     formatInfo.sizedInternalFormat   = internalFormat;
-    formatInfo.compressedBlockWidth = compressedBlockWidth;
+    formatInfo.compressedBlockWidth  = compressedBlockWidth;
     formatInfo.compressedBlockHeight = compressedBlockHeight;
-    formatInfo.pixelBytes = compressedBlockSize / 8;
-    formatInfo.componentCount = componentCount;
-    formatInfo.format = format;
-    formatInfo.type = type;
-    formatInfo.componentType = GL_UNSIGNED_NORMALIZED;
-    formatInfo.colorEncoding = (srgb ? GL_SRGB : GL_LINEAR);
-    formatInfo.compressed = true;
-    formatInfo.textureSupport = textureSupport;
-    formatInfo.renderSupport = renderSupport;
-    formatInfo.filterSupport = filterSupport;
+    formatInfo.pixelBytes            = compressedBlockSize / 8;
+    formatInfo.componentCount        = componentCount;
+    formatInfo.format                = format;
+    formatInfo.type                  = type;
+    formatInfo.componentType         = GL_UNSIGNED_NORMALIZED;
+    formatInfo.colorEncoding         = (srgb ? GL_SRGB : GL_LINEAR);
+    formatInfo.compressed            = true;
+    formatInfo.textureSupport        = textureSupport;
+    formatInfo.renderSupport         = renderSupport;
+    formatInfo.filterSupport         = filterSupport;
 
     InsertFormatInfo(map, formatInfo);
 }
@@ -970,51 +967,51 @@ const Type &GetTypeInfo(GLenum type)
 {
     switch (type)
     {
-      case GL_UNSIGNED_BYTE:
-      case GL_BYTE:
+        case GL_UNSIGNED_BYTE:
+        case GL_BYTE:
         {
             static const Type info = GenTypeInfo(1, false);
             return info;
         }
-      case GL_UNSIGNED_SHORT:
-      case GL_SHORT:
-      case GL_HALF_FLOAT:
-      case GL_HALF_FLOAT_OES:
+        case GL_UNSIGNED_SHORT:
+        case GL_SHORT:
+        case GL_HALF_FLOAT:
+        case GL_HALF_FLOAT_OES:
         {
             static const Type info = GenTypeInfo(2, false);
             return info;
         }
-      case GL_UNSIGNED_INT:
-      case GL_INT:
-      case GL_FLOAT:
+        case GL_UNSIGNED_INT:
+        case GL_INT:
+        case GL_FLOAT:
         {
             static const Type info = GenTypeInfo(4, false);
             return info;
         }
-      case GL_UNSIGNED_SHORT_5_6_5:
-      case GL_UNSIGNED_SHORT_4_4_4_4:
-      case GL_UNSIGNED_SHORT_5_5_5_1:
-      case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
-      case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
+        case GL_UNSIGNED_SHORT_5_6_5:
+        case GL_UNSIGNED_SHORT_4_4_4_4:
+        case GL_UNSIGNED_SHORT_5_5_5_1:
+        case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
+        case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
         {
             static const Type info = GenTypeInfo(2, true);
             return info;
         }
-      case GL_UNSIGNED_INT_2_10_10_10_REV:
-      case GL_UNSIGNED_INT_24_8:
-      case GL_UNSIGNED_INT_10F_11F_11F_REV:
-      case GL_UNSIGNED_INT_5_9_9_9_REV:
+        case GL_UNSIGNED_INT_2_10_10_10_REV:
+        case GL_UNSIGNED_INT_24_8:
+        case GL_UNSIGNED_INT_10F_11F_11F_REV:
+        case GL_UNSIGNED_INT_5_9_9_9_REV:
         {
             ASSERT(GL_UNSIGNED_INT_24_8_OES == GL_UNSIGNED_INT_24_8);
             static const Type info = GenTypeInfo(4, true);
             return info;
         }
-      case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
+        case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
         {
             static const Type info = GenTypeInfo(8, true);
             return info;
         }
-      default:
+        default:
         {
             static const Type defaultInfo;
             return defaultInfo;
@@ -1077,9 +1074,9 @@ GLuint InternalFormat::computePixelBytes(GLenum formatType) const
 }
 
 ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
-                                                          GLsizei width,
-                                                          GLint alignment,
-                                                          GLint rowLength) const
+                                                      GLsizei width,
+                                                      GLint alignment,
+                                                      GLint rowLength) const
 {
     // Compressed images do not use pack/unpack parameters.
     if (compressed)
@@ -1112,11 +1109,11 @@ ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLsizei height,
 }
 
 ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLenum formatType,
-                                                            GLsizei width,
-                                                            GLsizei height,
-                                                            GLint alignment,
-                                                            GLint rowLength,
-                                                            GLint imageHeight) const
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLint alignment,
+                                                        GLint rowLength,
+                                                        GLint imageHeight) const
 {
     GLuint rowPitch = 0;
     ANGLE_TRY_RESULT(computeRowPitch(formatType, width, alignment, rowLength), rowPitch);
@@ -1162,11 +1159,10 @@ ErrorOrResult<GLuint> InternalFormat::computeSkipBytes(GLenum formatType,
     return skipBytes.ValueOrDie();
 }
 
-ErrorOrResult<GLuint> InternalFormat::computePackUnpackEndByte(
-    GLenum formatType,
-    const Extents &size,
-    const PixelStoreStateBase &state,
-    bool is3D) const
+ErrorOrResult<GLuint> InternalFormat::computePackUnpackEndByte(GLenum formatType,
+                                                               const Extents &size,
+                                                               const PixelStoreStateBase &state,
+                                                               bool is3D) const
 {
     GLuint rowPitch = 0;
     ANGLE_TRY_RESULT(computeRowPitch(formatType, size.width, state.alignment, state.rowLength),
@@ -1279,7 +1275,10 @@ AttributeType GetAttributeType(GLenum enumValue)
     }
 }
 
-VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint components, bool pureInteger)
+angle::Format::ID GetVertexFormatID(GLenum type,
+                                    GLboolean normalized,
+                                    GLuint components,
+                                    bool pureInteger)
 {
     switch (type)
     {
@@ -1288,32 +1287,32 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
             {
                 case 1:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SBYTE1_INT;
+                        return angle::Format::ID::R8_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SBYTE1_NORM;
-                    return VERTEX_FORMAT_SBYTE1;
+                        return angle::Format::ID::R8_SNORM;
+                    return angle::Format::ID::R8_SSCALED;
                 case 2:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SBYTE2_INT;
+                        return angle::Format::ID::R8G8_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SBYTE2_NORM;
-                    return VERTEX_FORMAT_SBYTE2;
+                        return angle::Format::ID::R8G8_SNORM;
+                    return angle::Format::ID::R8G8_SSCALED;
                 case 3:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SBYTE3_INT;
+                        return angle::Format::ID::R8G8B8_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SBYTE3_NORM;
-                    return VERTEX_FORMAT_SBYTE3;
+                        return angle::Format::ID::R8G8B8_SNORM;
+                    return angle::Format::ID::R8G8B8_SSCALED;
                 case 4:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SBYTE4_INT;
+                        return angle::Format::ID::R8G8B8A8_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SBYTE4_NORM;
-                    return VERTEX_FORMAT_SBYTE4;
+                        return angle::Format::ID::R8G8B8A8_SNORM;
+                    return angle::Format::ID::R8G8B8A8_SSCALED;
                 default:
                     UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-                    return VERTEX_FORMAT_INVALID;
+                    return angle::Format::ID::NONE;
 #endif
             }
         case GL_UNSIGNED_BYTE:
@@ -1321,32 +1320,32 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
             {
                 case 1:
                     if (pureInteger)
-                        return VERTEX_FORMAT_UBYTE1_INT;
+                        return angle::Format::ID::R8_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_UBYTE1_NORM;
-                    return VERTEX_FORMAT_UBYTE1;
+                        return angle::Format::ID::R8_UNORM;
+                    return angle::Format::ID::R8_USCALED;
                 case 2:
                     if (pureInteger)
-                        return VERTEX_FORMAT_UBYTE2_INT;
+                        return angle::Format::ID::R8G8_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_UBYTE2_NORM;
-                    return VERTEX_FORMAT_UBYTE2;
+                        return angle::Format::ID::R8G8_UNORM;
+                    return angle::Format::ID::R8G8_USCALED;
                 case 3:
                     if (pureInteger)
-                        return VERTEX_FORMAT_UBYTE3_INT;
+                        return angle::Format::ID::R8G8B8_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_UBYTE3_NORM;
-                    return VERTEX_FORMAT_UBYTE3;
+                        return angle::Format::ID::R8G8B8_UNORM;
+                    return angle::Format::ID::R8G8B8_USCALED;
                 case 4:
                     if (pureInteger)
-                        return VERTEX_FORMAT_UBYTE4_INT;
+                        return angle::Format::ID::R8G8B8A8_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_UBYTE4_NORM;
-                    return VERTEX_FORMAT_UBYTE4;
+                        return angle::Format::ID::R8G8B8A8_UNORM;
+                    return angle::Format::ID::R8G8B8A8_USCALED;
                 default:
                     UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-                    return VERTEX_FORMAT_INVALID;
+                    return angle::Format::ID::NONE;
 #endif
             }
         case GL_SHORT:
@@ -1354,32 +1353,32 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
             {
                 case 1:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SSHORT1_INT;
+                        return angle::Format::ID::R16_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SSHORT1_NORM;
-                    return VERTEX_FORMAT_SSHORT1;
+                        return angle::Format::ID::R16_SNORM;
+                    return angle::Format::ID::R16_SSCALED;
                 case 2:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SSHORT2_INT;
+                        return angle::Format::ID::R16G16_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SSHORT2_NORM;
-                    return VERTEX_FORMAT_SSHORT2;
+                        return angle::Format::ID::R16G16_SNORM;
+                    return angle::Format::ID::R16G16_SSCALED;
                 case 3:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SSHORT3_INT;
+                        return angle::Format::ID::R16G16B16_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SSHORT3_NORM;
-                    return VERTEX_FORMAT_SSHORT3;
+                        return angle::Format::ID::R16G16B16_SNORM;
+                    return angle::Format::ID::R16G16B16_SSCALED;
                 case 4:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SSHORT4_INT;
+                        return angle::Format::ID::R16G16B16A16_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SSHORT4_NORM;
-                    return VERTEX_FORMAT_SSHORT4;
+                        return angle::Format::ID::R16G16B16A16_SNORM;
+                    return angle::Format::ID::R16G16B16A16_SSCALED;
                 default:
                     UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-                    return VERTEX_FORMAT_INVALID;
+                    return angle::Format::ID::NONE;
 #endif
             }
         case GL_UNSIGNED_SHORT:
@@ -1387,32 +1386,32 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
             {
                 case 1:
                     if (pureInteger)
-                        return VERTEX_FORMAT_USHORT1_INT;
+                        return angle::Format::ID::R16_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_USHORT1_NORM;
-                    return VERTEX_FORMAT_USHORT1;
+                        return angle::Format::ID::R16_UNORM;
+                    return angle::Format::ID::R16_USCALED;
                 case 2:
                     if (pureInteger)
-                        return VERTEX_FORMAT_USHORT2_INT;
+                        return angle::Format::ID::R16G16_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_USHORT2_NORM;
-                    return VERTEX_FORMAT_USHORT2;
+                        return angle::Format::ID::R16G16_UNORM;
+                    return angle::Format::ID::R16G16_USCALED;
                 case 3:
                     if (pureInteger)
-                        return VERTEX_FORMAT_USHORT3_INT;
+                        return angle::Format::ID::R16G16B16_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_USHORT3_NORM;
-                    return VERTEX_FORMAT_USHORT3;
+                        return angle::Format::ID::R16G16B16_UNORM;
+                    return angle::Format::ID::R16G16B16_USCALED;
                 case 4:
                     if (pureInteger)
-                        return VERTEX_FORMAT_USHORT4_INT;
+                        return angle::Format::ID::R16G16B16A16_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_USHORT4_NORM;
-                    return VERTEX_FORMAT_USHORT4;
+                        return angle::Format::ID::R16G16B16A16_UNORM;
+                    return angle::Format::ID::R16G16B16A16_USCALED;
                 default:
                     UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-                    return VERTEX_FORMAT_INVALID;
+                    return angle::Format::ID::NONE;
 #endif
             }
         case GL_INT:
@@ -1420,32 +1419,32 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
             {
                 case 1:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SINT1_INT;
+                        return angle::Format::ID::R32_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SINT1_NORM;
-                    return VERTEX_FORMAT_SINT1;
+                        return angle::Format::ID::R32_SNORM;
+                    return angle::Format::ID::R32_SSCALED;
                 case 2:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SINT2_INT;
+                        return angle::Format::ID::R32G32_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SINT2_NORM;
-                    return VERTEX_FORMAT_SINT2;
+                        return angle::Format::ID::R32G32_SNORM;
+                    return angle::Format::ID::R32G32_SSCALED;
                 case 3:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SINT3_INT;
+                        return angle::Format::ID::R32G32B32_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SINT3_NORM;
-                    return VERTEX_FORMAT_SINT3;
+                        return angle::Format::ID::R32G32B32_SNORM;
+                    return angle::Format::ID::R32G32B32_SSCALED;
                 case 4:
                     if (pureInteger)
-                        return VERTEX_FORMAT_SINT4_INT;
+                        return angle::Format::ID::R32G32B32A32_SINT;
                     if (normalized)
-                        return VERTEX_FORMAT_SINT4_NORM;
-                    return VERTEX_FORMAT_SINT4;
+                        return angle::Format::ID::R32G32B32A32_SNORM;
+                    return angle::Format::ID::R32G32B32A32_SSCALED;
                 default:
                     UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-                    return VERTEX_FORMAT_INVALID;
+                    return angle::Format::ID::NONE;
 #endif
             }
         case GL_UNSIGNED_INT:
@@ -1453,102 +1452,300 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
             {
                 case 1:
                     if (pureInteger)
-                        return VERTEX_FORMAT_UINT1_INT;
+                        return angle::Format::ID::R32_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_UINT1_NORM;
-                    return VERTEX_FORMAT_UINT1;
+                        return angle::Format::ID::R32_UNORM;
+                    return angle::Format::ID::R32_USCALED;
                 case 2:
                     if (pureInteger)
-                        return VERTEX_FORMAT_UINT2_INT;
+                        return angle::Format::ID::R32G32_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_UINT2_NORM;
-                    return VERTEX_FORMAT_UINT2;
+                        return angle::Format::ID::R32G32_UNORM;
+                    return angle::Format::ID::R32G32_USCALED;
                 case 3:
                     if (pureInteger)
-                        return VERTEX_FORMAT_UINT3_INT;
+                        return angle::Format::ID::R32G32B32_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_UINT3_NORM;
-                    return VERTEX_FORMAT_UINT3;
+                        return angle::Format::ID::R32G32B32_UNORM;
+                    return angle::Format::ID::R32G32B32_USCALED;
                 case 4:
                     if (pureInteger)
-                        return VERTEX_FORMAT_UINT4_INT;
+                        return angle::Format::ID::R32G32B32A32_UINT;
                     if (normalized)
-                        return VERTEX_FORMAT_UINT4_NORM;
-                    return VERTEX_FORMAT_UINT4;
+                        return angle::Format::ID::R32G32B32A32_UNORM;
+                    return angle::Format::ID::R32G32B32A32_USCALED;
                 default:
                     UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-                    return VERTEX_FORMAT_INVALID;
+                    return angle::Format::ID::NONE;
 #endif
             }
         case GL_FLOAT:
             switch (components)
             {
                 case 1:
-                    return VERTEX_FORMAT_FLOAT1;
+                    return angle::Format::ID::R32_FLOAT;
                 case 2:
-                    return VERTEX_FORMAT_FLOAT2;
+                    return angle::Format::ID::R32G32_FLOAT;
                 case 3:
-                    return VERTEX_FORMAT_FLOAT3;
+                    return angle::Format::ID::R32G32B32_FLOAT;
                 case 4:
-                    return VERTEX_FORMAT_FLOAT4;
+                    return angle::Format::ID::R32G32B32A32_FLOAT;
                 default:
                     UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-                    return VERTEX_FORMAT_INVALID;
+                    return angle::Format::ID::NONE;
 #endif
             }
         case GL_HALF_FLOAT:
             switch (components)
             {
                 case 1:
-                    return VERTEX_FORMAT_HALF1;
+                    return angle::Format::ID::R16_FLOAT;
                 case 2:
-                    return VERTEX_FORMAT_HALF2;
+                    return angle::Format::ID::R16G16_FLOAT;
                 case 3:
-                    return VERTEX_FORMAT_HALF3;
+                    return angle::Format::ID::R16G16B16_FLOAT;
                 case 4:
-                    return VERTEX_FORMAT_HALF4;
+                    return angle::Format::ID::R16G16B16A16_FLOAT;
                 default:
                     UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-                    return VERTEX_FORMAT_INVALID;
+                    return angle::Format::ID::NONE;
 #endif
             }
         case GL_FIXED:
             switch (components)
             {
                 case 1:
-                    return VERTEX_FORMAT_FIXED1;
+                    return angle::Format::ID::R32_FIXED;
                 case 2:
-                    return VERTEX_FORMAT_FIXED2;
+                    return angle::Format::ID::R32G32_FIXED;
                 case 3:
-                    return VERTEX_FORMAT_FIXED3;
+                    return angle::Format::ID::R32G32B32_FIXED;
                 case 4:
-                    return VERTEX_FORMAT_FIXED4;
+                    return angle::Format::ID::R32G32B32A32_FIXED;
                 default:
                     UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-                    return VERTEX_FORMAT_INVALID;
+                    return angle::Format::ID::NONE;
 #endif
             }
         case GL_INT_2_10_10_10_REV:
             if (pureInteger)
-                return VERTEX_FORMAT_SINT210_INT;
+                return angle::Format::ID::R10G10B10A2_SINT;
             if (normalized)
-                return VERTEX_FORMAT_SINT210_NORM;
-            return VERTEX_FORMAT_SINT210;
+                return angle::Format::ID::R10G10B10A2_SNORM;
+            return angle::Format::ID::R10G10B10A2_SSCALED;
         case GL_UNSIGNED_INT_2_10_10_10_REV:
             if (pureInteger)
-                return VERTEX_FORMAT_UINT210_INT;
+                return angle::Format::ID::R10G10B10A2_UINT;
             if (normalized)
-                return VERTEX_FORMAT_UINT210_NORM;
-            return VERTEX_FORMAT_UINT210;
+                return angle::Format::ID::R10G10B10A2_UNORM;
+            return angle::Format::ID::R10G10B10A2_USCALED;
         default:
             UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN
-            return VERTEX_FORMAT_INVALID;
+            return angle::Format::ID::NONE;
 #endif
+    }
+}
+
+angle::Format::ID GetVertexFormatID(const VertexAttribute &attrib)
+{
+    return GetVertexFormatID(attrib.type, attrib.normalized, attrib.size, attrib.pureInteger);
+}
+
+// TODO(fjhenigman): Do away with VertexFormatType; use angle::Format::ID instead. anglebug.com/2531
+VertexFormatType GetVertexFormatType(GLenum type,
+                                     GLboolean normalized,
+                                     GLuint components,
+                                     bool pureInteger)
+{
+    switch (GetVertexFormatID(type, normalized, components, pureInteger))
+    {
+        case angle::Format::ID::R8_SINT:
+            return VERTEX_FORMAT_SBYTE1_INT;
+        case angle::Format::ID::R8_SNORM:
+            return VERTEX_FORMAT_SBYTE1_NORM;
+        case angle::Format::ID::R8_SSCALED:
+            return VERTEX_FORMAT_SBYTE1;
+        case angle::Format::ID::R8G8_SINT:
+            return VERTEX_FORMAT_SBYTE2_INT;
+        case angle::Format::ID::R8G8_SNORM:
+            return VERTEX_FORMAT_SBYTE2_NORM;
+        case angle::Format::ID::R8G8_SSCALED:
+            return VERTEX_FORMAT_SBYTE2;
+        case angle::Format::ID::R8G8B8_SINT:
+            return VERTEX_FORMAT_SBYTE3_INT;
+        case angle::Format::ID::R8G8B8_SNORM:
+            return VERTEX_FORMAT_SBYTE3_NORM;
+        case angle::Format::ID::R8G8B8_SSCALED:
+            return VERTEX_FORMAT_SBYTE3;
+        case angle::Format::ID::R8G8B8A8_SINT:
+            return VERTEX_FORMAT_SBYTE4_INT;
+        case angle::Format::ID::R8G8B8A8_SNORM:
+            return VERTEX_FORMAT_SBYTE4_NORM;
+        case angle::Format::ID::R8G8B8A8_SSCALED:
+            return VERTEX_FORMAT_SBYTE4;
+        case angle::Format::ID::R8_UINT:
+            return VERTEX_FORMAT_UBYTE1_INT;
+        case angle::Format::ID::R8_UNORM:
+            return VERTEX_FORMAT_UBYTE1_NORM;
+        case angle::Format::ID::R8_USCALED:
+            return VERTEX_FORMAT_UBYTE1;
+        case angle::Format::ID::R8G8_UINT:
+            return VERTEX_FORMAT_UBYTE2_INT;
+        case angle::Format::ID::R8G8_UNORM:
+            return VERTEX_FORMAT_UBYTE2_NORM;
+        case angle::Format::ID::R8G8_USCALED:
+            return VERTEX_FORMAT_UBYTE2;
+        case angle::Format::ID::R8G8B8_UINT:
+            return VERTEX_FORMAT_UBYTE3_INT;
+        case angle::Format::ID::R8G8B8_UNORM:
+            return VERTEX_FORMAT_UBYTE3_NORM;
+        case angle::Format::ID::R8G8B8_USCALED:
+            return VERTEX_FORMAT_UBYTE3;
+        case angle::Format::ID::R8G8B8A8_UINT:
+            return VERTEX_FORMAT_UBYTE4_INT;
+        case angle::Format::ID::R8G8B8A8_UNORM:
+            return VERTEX_FORMAT_UBYTE4_NORM;
+        case angle::Format::ID::R8G8B8A8_USCALED:
+            return VERTEX_FORMAT_UBYTE4;
+        case angle::Format::ID::R16_SINT:
+            return VERTEX_FORMAT_SSHORT1_INT;
+        case angle::Format::ID::R16_SNORM:
+            return VERTEX_FORMAT_SSHORT1_NORM;
+        case angle::Format::ID::R16_SSCALED:
+            return VERTEX_FORMAT_SSHORT1;
+        case angle::Format::ID::R16G16_SINT:
+            return VERTEX_FORMAT_SSHORT2_INT;
+        case angle::Format::ID::R16G16_SNORM:
+            return VERTEX_FORMAT_SSHORT2_NORM;
+        case angle::Format::ID::R16G16_SSCALED:
+            return VERTEX_FORMAT_SSHORT2;
+        case angle::Format::ID::R16G16B16_SINT:
+            return VERTEX_FORMAT_SSHORT3_INT;
+        case angle::Format::ID::R16G16B16_SNORM:
+            return VERTEX_FORMAT_SSHORT3_NORM;
+        case angle::Format::ID::R16G16B16_SSCALED:
+            return VERTEX_FORMAT_SSHORT3;
+        case angle::Format::ID::R16G16B16A16_SINT:
+            return VERTEX_FORMAT_SSHORT4_INT;
+        case angle::Format::ID::R16G16B16A16_SNORM:
+            return VERTEX_FORMAT_SSHORT4_NORM;
+        case angle::Format::ID::R16G16B16A16_SSCALED:
+            return VERTEX_FORMAT_SSHORT4;
+        case angle::Format::ID::R16_UINT:
+            return VERTEX_FORMAT_USHORT1_INT;
+        case angle::Format::ID::R16_UNORM:
+            return VERTEX_FORMAT_USHORT1_NORM;
+        case angle::Format::ID::R16_USCALED:
+            return VERTEX_FORMAT_USHORT1;
+        case angle::Format::ID::R16G16_UINT:
+            return VERTEX_FORMAT_USHORT2_INT;
+        case angle::Format::ID::R16G16_UNORM:
+            return VERTEX_FORMAT_USHORT2_NORM;
+        case angle::Format::ID::R16G16_USCALED:
+            return VERTEX_FORMAT_USHORT2;
+        case angle::Format::ID::R16G16B16_UINT:
+            return VERTEX_FORMAT_USHORT3_INT;
+        case angle::Format::ID::R16G16B16_UNORM:
+            return VERTEX_FORMAT_USHORT3_NORM;
+        case angle::Format::ID::R16G16B16_USCALED:
+            return VERTEX_FORMAT_USHORT3;
+        case angle::Format::ID::R16G16B16A16_UINT:
+            return VERTEX_FORMAT_USHORT4_INT;
+        case angle::Format::ID::R16G16B16A16_UNORM:
+            return VERTEX_FORMAT_USHORT4_NORM;
+        case angle::Format::ID::R16G16B16A16_USCALED:
+            return VERTEX_FORMAT_USHORT4;
+        case angle::Format::ID::R32_SINT:
+            return VERTEX_FORMAT_SINT1_INT;
+        case angle::Format::ID::R32_SNORM:
+            return VERTEX_FORMAT_SINT1_NORM;
+        case angle::Format::ID::R32_SSCALED:
+            return VERTEX_FORMAT_SINT1;
+        case angle::Format::ID::R32G32_SINT:
+            return VERTEX_FORMAT_SINT2_INT;
+        case angle::Format::ID::R32G32_SNORM:
+            return VERTEX_FORMAT_SINT2_NORM;
+        case angle::Format::ID::R32G32_SSCALED:
+            return VERTEX_FORMAT_SINT2;
+        case angle::Format::ID::R32G32B32_SINT:
+            return VERTEX_FORMAT_SINT3_INT;
+        case angle::Format::ID::R32G32B32_SNORM:
+            return VERTEX_FORMAT_SINT3_NORM;
+        case angle::Format::ID::R32G32B32_SSCALED:
+            return VERTEX_FORMAT_SINT3;
+        case angle::Format::ID::R32G32B32A32_SINT:
+            return VERTEX_FORMAT_SINT4_INT;
+        case angle::Format::ID::R32G32B32A32_SNORM:
+            return VERTEX_FORMAT_SINT4_NORM;
+        case angle::Format::ID::R32G32B32A32_SSCALED:
+            return VERTEX_FORMAT_SINT4;
+        case angle::Format::ID::R32_UINT:
+            return VERTEX_FORMAT_UINT1_INT;
+        case angle::Format::ID::R32_UNORM:
+            return VERTEX_FORMAT_UINT1_NORM;
+        case angle::Format::ID::R32_USCALED:
+            return VERTEX_FORMAT_UINT1;
+        case angle::Format::ID::R32G32_UINT:
+            return VERTEX_FORMAT_UINT2_INT;
+        case angle::Format::ID::R32G32_UNORM:
+            return VERTEX_FORMAT_UINT2_NORM;
+        case angle::Format::ID::R32G32_USCALED:
+            return VERTEX_FORMAT_UINT2;
+        case angle::Format::ID::R32G32B32_UINT:
+            return VERTEX_FORMAT_UINT3_INT;
+        case angle::Format::ID::R32G32B32_UNORM:
+            return VERTEX_FORMAT_UINT3_NORM;
+        case angle::Format::ID::R32G32B32_USCALED:
+            return VERTEX_FORMAT_UINT3;
+        case angle::Format::ID::R32G32B32A32_UINT:
+            return VERTEX_FORMAT_UINT4_INT;
+        case angle::Format::ID::R32G32B32A32_UNORM:
+            return VERTEX_FORMAT_UINT4_NORM;
+        case angle::Format::ID::R32G32B32A32_USCALED:
+            return VERTEX_FORMAT_UINT4;
+        case angle::Format::ID::R32_FLOAT:
+            return VERTEX_FORMAT_FLOAT1;
+        case angle::Format::ID::R32G32_FLOAT:
+            return VERTEX_FORMAT_FLOAT2;
+        case angle::Format::ID::R32G32B32_FLOAT:
+            return VERTEX_FORMAT_FLOAT3;
+        case angle::Format::ID::R32G32B32A32_FLOAT:
+            return VERTEX_FORMAT_FLOAT4;
+        case angle::Format::ID::R16_FLOAT:
+            return VERTEX_FORMAT_HALF1;
+        case angle::Format::ID::R16G16_FLOAT:
+            return VERTEX_FORMAT_HALF2;
+        case angle::Format::ID::R16G16B16_FLOAT:
+            return VERTEX_FORMAT_HALF3;
+        case angle::Format::ID::R16G16B16A16_FLOAT:
+            return VERTEX_FORMAT_HALF4;
+        case angle::Format::ID::R32_FIXED:
+            return VERTEX_FORMAT_FIXED1;
+        case angle::Format::ID::R32G32_FIXED:
+            return VERTEX_FORMAT_FIXED2;
+        case angle::Format::ID::R32G32B32_FIXED:
+            return VERTEX_FORMAT_FIXED3;
+        case angle::Format::ID::R32G32B32A32_FIXED:
+            return VERTEX_FORMAT_FIXED4;
+        case angle::Format::ID::R10G10B10A2_SINT:
+            return VERTEX_FORMAT_SINT210_INT;
+        case angle::Format::ID::R10G10B10A2_SNORM:
+            return VERTEX_FORMAT_SINT210_NORM;
+        case angle::Format::ID::R10G10B10A2_SSCALED:
+            return VERTEX_FORMAT_SINT210;
+        case angle::Format::ID::R10G10B10A2_UINT:
+            return VERTEX_FORMAT_UINT210_INT;
+        case angle::Format::ID::R10G10B10A2_UNORM:
+            return VERTEX_FORMAT_UINT210_NORM;
+        case angle::Format::ID::R10G10B10A2_USCALED:
+            return VERTEX_FORMAT_UINT210;
+        default:
+            return VERTEX_FORMAT_INVALID;
     }
 }
 
@@ -2153,14 +2350,14 @@ bool ValidES3InternalFormat(GLenum internalFormat)
     return internalFormat != GL_NONE && formatMap.find(internalFormat) != formatMap.end();
 }
 
-VertexFormat::VertexFormat(GLenum typeIn, GLboolean normalizedIn, GLuint componentsIn, bool pureIntegerIn)
-    : type(typeIn),
-      normalized(normalizedIn),
-      components(componentsIn),
-      pureInteger(pureIntegerIn)
+VertexFormat::VertexFormat(GLenum typeIn,
+                           GLboolean normalizedIn,
+                           GLuint componentsIn,
+                           bool pureIntegerIn)
+    : type(typeIn), normalized(normalizedIn), components(componentsIn), pureInteger(pureIntegerIn)
 {
     // float -> !normalized
-    ASSERT(!(type == GL_FLOAT || type == GL_HALF_FLOAT || type == GL_FIXED) || normalized == GL_FALSE);
+    ASSERT(!(type == GL_FLOAT || type == GL_HALF_FLOAT || type == GL_FIXED) ||
+           normalized == GL_FALSE);
 }
-
 }
