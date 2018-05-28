@@ -16,6 +16,41 @@
       "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09d34f7b_ecabb2c0",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T16:43:18Z",
+      "side": 1,
+      "message": "the FixedVector type would be perfect for this.",
+      "parentUuid": "c382c315_7d4caa01",
+      "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28d5adf7_5311209b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-28T16:43:18Z",
+      "side": 1,
+      "message": "Can this be done in the above loop with the invalidation done before?",
+      "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
