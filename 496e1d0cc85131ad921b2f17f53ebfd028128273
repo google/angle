@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c382c315_7d4caa01",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-28T15:44:35Z",
+      "side": 1,
+      "message": "Could it be possible to do a single allocation in mMipmaps buffer even when the layer count is 6, and submit a single vkCmdCopyImageToBuffer with all six copies at different offsets?\n\nAlso the copies could be put in an std::array\u003cVkBufferImageCopy, 6\u003e that might only have the first element initialized.",
+      "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
