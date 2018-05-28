@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fda16f2b_d45769db",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-28T21:10:15Z",
+      "side": 1,
+      "message": "It\u0027s our style not to use the get function if the variable is accessible?\nSeems to me it would be preferable to use the function if possible, because abstraction.\nI imagine the same code is produced either way.",
+      "range": {
+        "startLine": 253,
+        "startChar": 46,
+        "endLine": 253,
+        "endChar": 64
+      },
+      "revId": "cc7e3b4804602426d59b22caf22984e568788edf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
