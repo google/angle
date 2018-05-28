@@ -51,6 +51,24 @@
       "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "220a1c91_65e06be1",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-28T17:05:36Z",
+      "side": 1,
+      "message": "Actually I can\u0027t as described in the comment above: \n\n\"// We specifically need to do this in 2 loops because we can\u0027t call renderer-\u003efinish multiple\n // times, and renderer-\u003efinish need to be called before we do call\n // generateMipmapLevels(...)\"",
+      "parentUuid": "28d5adf7_5311209b",
+      "revId": "496e1d0cc85131ad921b2f17f53ebfd028128273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
