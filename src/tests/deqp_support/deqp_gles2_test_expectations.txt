@@ -178,9 +178,28 @@
 1489 GLES ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.l8_nicest = FAIL
 1489 GLES ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.la88_fastest = FAIL
 1489 GLES ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.la88_nicest = FAIL
+
 // Android Vulkan backend only failures
 2549 VULKAN ANDROID : dEQP-GLES2.functional.fragment_ops.depth_stencil.* = SKIP
 2550 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.interpolation.* = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_none_none_rbo = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_none_rbo_rbo = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.rbo_none_none_rbo = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.rbo_none_rbo_rbo = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.tex_none_none_rbo = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.tex_none_rbo_rbo = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.color0.stencil_index8 = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.stencil.stencil_index8 = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_rbo_rgb565_stencil_index8 = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_rbo_rgba4_stencil_index8 = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer_* = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.resize.rbo_rgb565_stencil_index8 = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.resize.rbo_rgba4_stencil_index8 = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.stencil.* = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.stencil_clear.* = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.state_query.rbo.renderbuffer_component_size_depth = SKIP
+2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.random = SKIP
+2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.supported = SKIP
 
 // Windows Linux and Mac failures
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.srgb8 = FAIL
