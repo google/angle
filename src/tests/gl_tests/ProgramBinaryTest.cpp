@@ -235,6 +235,17 @@ TEST_P(ProgramBinaryTest, CallProgramBinaryBeforeLink)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that unlinked programs have a binary size of 0
+TEST_P(ProgramBinaryTest, ZeroSizedUnlinkedBinary)
+{
+    ANGLE_SKIP_TEST_IF(!supported());
+
+    ANGLE_GL_EMPTY_PROGRAM(program);
+    GLsizei length = 0;
+    glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &length);
+    ASSERT_EQ(0, length);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(ProgramBinaryTest,
                        ES2_D3D9(),

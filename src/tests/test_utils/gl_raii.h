@@ -101,6 +101,8 @@ class GLProgram
 
     ~GLProgram() { glDeleteProgram(mHandle); }
 
+    void makeEmpty() { mHandle = glCreateProgram(); }
+
     void makeCompute(const std::string &computeShader)
     {
         mHandle = CompileComputeProgram(computeShader);
@@ -151,6 +153,11 @@ class GLProgram
     GLuint mHandle;
 };
 }  // namespace priv
+
+#define ANGLE_GL_EMPTY_PROGRAM(name) \
+    priv::GLProgram name;            \
+    name.makeEmpty();                \
+    ASSERT_TRUE(name.valid());
 
 #define ANGLE_GL_PROGRAM(name, vertex, fragment) \
     priv::GLProgram name;                        \

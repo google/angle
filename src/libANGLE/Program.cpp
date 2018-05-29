@@ -1401,6 +1401,11 @@ Error Program::saveBinary(const Context *context,
 
 GLint Program::getBinaryLength(const Context *context) const
 {
+    if (!mLinked)
+    {
+        return 0;
+    }
+
     GLint length;
     Error error = saveBinary(context, nullptr, nullptr, std::numeric_limits<GLint>::max(), &length);
     if (error.isError())
