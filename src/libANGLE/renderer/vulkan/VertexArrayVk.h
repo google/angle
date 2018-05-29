@@ -45,7 +45,7 @@ class VertexArrayVk : public VertexArrayImpl
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const;
     const gl::AttribArray<VkDeviceSize> &getCurrentArrayBufferOffsets() const;
 
-    void updateDrawDependencies(vk::CommandGraphNode *readingNode,
+    void updateDrawDependencies(vk::CommandGraphResource *drawFramebuffer,
                                 const gl::AttributesMask &activeAttribsMask,
                                 vk::CommandGraphResource *elementArrayBufferOverride,
                                 Serial serial,
@@ -57,13 +57,13 @@ class VertexArrayVk : public VertexArrayImpl
     gl::Error drawArrays(const gl::Context *context,
                          RendererVk *renderer,
                          const gl::DrawCallParams &drawCallParams,
-                         vk::CommandGraphNode *drawNode,
-                         bool newCommandBuffer);
+                         vk::CommandBuffer *commandBuffer,
+                         bool shouldApplyVertexArray);
     gl::Error drawElements(const gl::Context *context,
                            RendererVk *renderer,
                            const gl::DrawCallParams &drawCallParams,
-                           vk::CommandGraphNode *drawNode,
-                           bool newCommandBuffer);
+                           vk::CommandBuffer *commandBuffer,
+                           bool shouldApplyVertexArray);
 
   private:
     // This will update any dirty packed input descriptions, regardless if they're used by the
@@ -76,11 +76,12 @@ class VertexArrayVk : public VertexArrayImpl
                                const gl::VertexBinding &binding,
                                const gl::VertexAttribute &attrib);
 
-    void updateArrayBufferReadDependencies(vk::CommandGraphNode *drawNode,
+    void updateArrayBufferReadDependencies(vk::CommandGraphResource *drawFramebuffer,
                                            const gl::AttributesMask &activeAttribsMask,
                                            Serial serial);
 
-    void updateElementArrayBufferReadDependency(vk::CommandGraphNode *drawNode, Serial serial);
+    void updateElementArrayBufferReadDependency(vk::CommandGraphResource *drawFramebuffer,
+                                                Serial serial);
 
     gl::Error streamVertexData(RendererVk *renderer,
                                const gl::AttributesMask &attribsToStream,
@@ -91,12 +92,12 @@ class VertexArrayVk : public VertexArrayImpl
     gl::Error onDraw(const gl::Context *context,
                      RendererVk *renderer,
                      const gl::DrawCallParams &drawCallParams,
-                     vk::CommandGraphNode *drawNode,
+                     vk::CommandBuffer *commandBuffer,
                      bool newCommandBuffer);
     gl::Error onIndexedDraw(const gl::Context *context,
                             RendererVk *renderer,
                             const gl::DrawCallParams &drawCallParams,
-                            vk::CommandGraphNode *drawNode,
+                            vk::CommandBuffer *commandBuffer,
                             bool newCommandBuffer);
 
     void syncDirtyAttrib(const gl::VertexAttribute &attrib,

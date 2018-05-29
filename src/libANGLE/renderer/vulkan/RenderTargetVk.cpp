@@ -26,30 +26,31 @@ RenderTargetVk::~RenderTargetVk()
 {
 }
 
-void RenderTargetVk::onColorDraw(Serial currentSerial,
-                                 vk::CommandGraphNode *writingNode,
+void RenderTargetVk::onColorDraw(vk::CommandGraphResource *framebufferVk,
+                                 vk::CommandBuffer *commandBuffer,
                                  vk::RenderPassDesc *renderPassDesc)
 {
-    ASSERT(writingNode->getOutsideRenderPassCommands()->valid());
+    ASSERT(commandBuffer->valid());
+    ASSERT(!mImage->getFormat().textureFormat().hasDepthOrStencilBits());
 
     // Store the attachment info in the renderPassDesc.
     renderPassDesc->packColorAttachment(*mImage);
 
     // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
-    mImage->changeLayoutWithStages(
-        VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        writingNode->getOutsideRenderPassCommands());
+    mImage->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT,
+                                   VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                   VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, commandBuffer);
 
-    // Set up dependencies between the new graph node and other current nodes in the resource.
-    mResource->onWriteResource(writingNode, currentSerial);
+    // Set up dependencies between the RT resource and the Framebuffer.
+    mResource->addWriteDependency(framebufferVk);
 }
 
-void RenderTargetVk::onDepthStencilDraw(Serial currentSerial,
-                                        vk::CommandGraphNode *writingNode,
+void RenderTargetVk::onDepthStencilDraw(vk::CommandGraphResource *framebufferVk,
+                                        vk::CommandBuffer *commandBuffer,
                                         vk::RenderPassDesc *renderPassDesc)
 {
-    ASSERT(writingNode->getOutsideRenderPassCommands()->valid());
+    ASSERT(commandBuffer->valid());
     ASSERT(mImage->getFormat().textureFormat().hasDepthOrStencilBits());
 
     // Store the attachment info in the renderPassDesc.
@@ -62,11 +63,10 @@ void RenderTargetVk::onDepthStencilDraw(Serial currentSerial,
 
     mImage->changeLayoutWithStages(aspectFlags, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
                                    VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                   VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
-                                   writingNode->getOutsideRenderPassCommands());
+                                   VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, commandBuffer);
 
-    // Set up dependencies between the new graph node and other current nodes in the resource.
-    mResource->onWriteResource(writingNode, currentSerial);
+    // Set up dependencies between the RT resource and the Framebuffer.
+    mResource->addWriteDependency(framebufferVk);
 }
 
 const vk::ImageHelper &RenderTargetVk::getImage() const
@@ -106,10 +106,10 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageView 
 }
 
 vk::ImageHelper *RenderTargetVk::getImageForWrite(Serial currentSerial,
-                                                  vk::CommandGraphNode *writingNode) const
+                                                  vk::CommandGraphResource *writingResource) const
 {
     ASSERT(mImage && mImage->valid());
-    mResource->onWriteResource(writingNode, currentSerial);
+    mResource->addWriteDependency(writingResource);
     return mImage;
 }
 

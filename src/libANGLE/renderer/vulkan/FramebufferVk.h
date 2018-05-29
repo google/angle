@@ -88,7 +88,9 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                                 GLfloat *xy) const override;
 
     const vk::RenderPassDesc &getRenderPassDesc();
-    gl::Error getCommandGraphNodeForDraw(ContextVk *contextVk, vk::CommandGraphNode **nodeOut);
+    gl::Error getCommandBufferForDraw(ContextVk *contextVk,
+                                      vk::CommandBuffer **commandBufferOut,
+                                      vk::RecordingMode *modeOut);
 
     // Internal helper function for readPixels operations.
     gl::Error readPixelsImpl(const gl::Context *context,

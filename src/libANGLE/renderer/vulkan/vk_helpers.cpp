@@ -448,8 +448,7 @@ gl::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *render
     vk::CommandBuffer *commandBuffer;
     beginWriteResource(renderer, &commandBuffer);
 
-    Serial currentSerial = renderer->getCurrentQueueSerial();
-    elementArrayBufferVk->onReadResource(getCurrentWritingNode(), currentSerial);
+    elementArrayBufferVk->addReadDependency(this);
     commandBuffer->copyBuffer(elementArrayBufferVk->getVkBuffer().getHandle(), *bufferHandleOut, 2,
                               copies.data());
 

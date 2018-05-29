@@ -57,9 +57,7 @@ CommandGraphResource::CommandGraphResource() : mCurrentWritingNode(nullptr)
 {
 }
 
-CommandGraphResource::~CommandGraphResource()
-{
-}
+CommandGraphResource::~CommandGraphResource() = default;
 
 void CommandGraphResource::updateQueueSerial(Serial queueSerial)
 {
@@ -83,16 +81,17 @@ bool CommandGraphResource::hasChildlessWritingNode() const
     return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
 }
 
-CommandGraphNode *CommandGraphResource::getCurrentWritingNode()
-{
-    return mCurrentWritingNode;
-}
-
 CommandGraphNode *CommandGraphResource::getNewWritingNode(RendererVk *renderer)
 {
     CommandGraphNode *newCommands = renderer->allocateCommandNode();
-    onWriteResource(newCommands, renderer->getCurrentQueueSerial());
+    onWriteImpl(newCommands, renderer->getCurrentQueueSerial());
     return newCommands;
+}
+
+bool CommandGraphResource::hasStartedWriteResource() const
+{
+    return hasChildlessWritingNode() &&
+           mCurrentWritingNode->getOutsideRenderPassCommands()->valid();
 }
 
 Error CommandGraphResource::beginWriteResource(RendererVk *renderer,
@@ -106,9 +105,75 @@ Error CommandGraphResource::beginWriteResource(RendererVk *renderer,
     return NoError();
 }
 
-void CommandGraphResource::onWriteResource(CommandGraphNode *writingNode, Serial serial)
+Error CommandGraphResource::appendWriteResource(RendererVk *renderer,
+                                                CommandBuffer **commandBufferOut)
 {
-    updateQueueSerial(serial);
+    if (!hasChildlessWritingNode())
+    {
+        return beginWriteResource(renderer, commandBufferOut);
+    }
+
+    CommandBuffer *outsideRenderPassCommands = mCurrentWritingNode->getOutsideRenderPassCommands();
+    if (!outsideRenderPassCommands->valid())
+    {
+        ANGLE_TRY(mCurrentWritingNode->beginOutsideRenderPassRecording(
+            renderer->getDevice(), renderer->getCommandPool(), commandBufferOut));
+    }
+    else
+    {
+        *commandBufferOut = outsideRenderPassCommands;
+    }
+
+    return NoError();
+}
+
+void CommandGraphResource::appendToRenderPass(class CommandBuffer **commandBufferOut) const
+{
+    ASSERT(hasStartedRenderPass());
+    *commandBufferOut = mCurrentWritingNode->getInsideRenderPassCommands();
+}
+
+bool CommandGraphResource::hasStartedRenderPass() const
+{
+    return hasChildlessWritingNode() && mCurrentWritingNode->getInsideRenderPassCommands()->valid();
+}
+
+const gl::Rectangle &CommandGraphResource::getRenderPassRenderArea() const
+{
+    ASSERT(hasStartedRenderPass());
+    return mCurrentWritingNode->getRenderPassRenderArea();
+}
+
+Error CommandGraphResource::beginRenderPass(RendererVk *renderer,
+                                            const Framebuffer &framebuffer,
+                                            const gl::Rectangle &renderArea,
+                                            const RenderPassDesc &renderPassDesc,
+                                            const std::vector<VkClearValue> &clearValues,
+                                            CommandBuffer **commandBufferOut) const
+{
+    // Hard-code RenderPass to clear the first render target to the current clear value.
+    // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
+    mCurrentWritingNode->storeRenderPassInfo(framebuffer, renderArea, renderPassDesc, clearValues);
+
+    return mCurrentWritingNode->beginInsideRenderPassRecording(renderer, commandBufferOut);
+}
+
+void CommandGraphResource::onResourceChanged(RendererVk *renderer)
+{
+    getNewWritingNode(renderer);
+}
+
+void CommandGraphResource::addWriteDependency(CommandGraphResource *writingResource)
+{
+    CommandGraphNode *writingNode = writingResource->mCurrentWritingNode;
+    ASSERT(writingNode);
+
+    onWriteImpl(writingNode, writingResource->getQueueSerial());
+}
+
+void CommandGraphResource::onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial)
+{
+    updateQueueSerial(currentSerial);
 
     // Make sure any open reads and writes finish before we execute 'writingNode'.
     if (!mCurrentReadingNodes.empty())
@@ -125,14 +190,15 @@ void CommandGraphResource::onWriteResource(CommandGraphNode *writingNode, Serial
     mCurrentWritingNode = writingNode;
 }
 
-void CommandGraphResource::onReadResource(CommandGraphNode *readingNode, Serial serial)
+void CommandGraphResource::addReadDependency(CommandGraphResource *readingResource)
 {
-    updateQueueSerial(serial);
+    updateQueueSerial(readingResource->getQueueSerial());
+
+    CommandGraphNode *readingNode = readingResource->mCurrentWritingNode;
+    ASSERT(readingNode);
 
     if (hasChildlessWritingNode())
     {
-        ASSERT(mStoredQueueSerial == serial);
-
         // Ensure 'readingNode' happens after the current writing node.
         CommandGraphNode::SetHappensBeforeDependency(mCurrentWritingNode, readingNode);
     }
@@ -158,7 +224,8 @@ bool CommandGraphResource::checkResourceInUseAndRefreshDeps(RendererVk *renderer
 
 // CommandGraphNode implementation.
 
-CommandGraphNode::CommandGraphNode() : mHasChildren(false), mVisitedState(VisitedState::Unvisited)
+CommandGraphNode::CommandGraphNode()
+    : mRenderPassClearValues{}, mHasChildren(false), mVisitedState(VisitedState::Unvisited)
 {
 }
 
@@ -370,9 +437,7 @@ const gl::Rectangle &CommandGraphNode::getRenderPassRenderArea() const
 }
 
 // CommandGraph implementation.
-CommandGraph::CommandGraph()
-{
-}
+CommandGraph::CommandGraph() = default;
 
 CommandGraph::~CommandGraph()
 {

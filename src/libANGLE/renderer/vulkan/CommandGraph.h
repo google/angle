@@ -33,29 +33,58 @@ class CommandGraphResource
     void updateQueueSerial(Serial queueSerial);
     Serial getQueueSerial() const;
 
-    // Returns true if this node has a current writing node with no children.
-    bool hasChildlessWritingNode() const;
-
-    // Returns the active write node.
-    CommandGraphNode *getCurrentWritingNode();
-
-    // Allocates a new write node and calls onWriteResource internally.
-    CommandGraphNode *getNewWritingNode(RendererVk *renderer);
-
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
     Error beginWriteResource(RendererVk *renderer, CommandBuffer **commandBufferOut);
 
-    // Sets up dependency relations. 'writingNode' will modify 'this' ResourceVk.
-    void onWriteResource(CommandGraphNode *writingNode, Serial serial);
+    // Check if we have started writing outside a RenderPass.
+    bool hasStartedWriteResource() const;
 
-    // Sets up dependency relations. 'readingNode' will read from 'this' ResourceVk.
-    void onReadResource(CommandGraphNode *readingNode, Serial serial);
+    // Starts rendering to an existing command buffer for the resource.
+    // The started command buffer will render outside of a RenderPass.
+    // Calls beginWriteResource if we have not yet started writing.
+    Error appendWriteResource(RendererVk *renderer, CommandBuffer **commandBufferOut);
+
+    // Begins a command buffer on the current graph node for in-RenderPass rendering.
+    // Currently only called from FramebufferVk::getCommandBufferForDraw.
+    Error beginRenderPass(RendererVk *renderer,
+                          const Framebuffer &framebuffer,
+                          const gl::Rectangle &renderArea,
+                          const RenderPassDesc &renderPassDesc,
+                          const std::vector<VkClearValue> &clearValues,
+                          CommandBuffer **commandBufferOut) const;
+
+    // Checks if we're in a RenderPass.
+    bool hasStartedRenderPass() const;
+
+    // Returns a started command buffer if we've already called beginRenderPass.
+    void appendToRenderPass(CommandBuffer **commandBufferOut) const;
+
+    // Accessor for RenderPass RenderArea.
+    const gl::Rectangle &getRenderPassRenderArea() const;
+
+    // Called when 'this' object changes, but we'd like to start a new command buffer later.
+    void onResourceChanged(RendererVk *renderer);
+
+    // Sets up dependency relations. 'this' resource is the resource being written to.
+    void addWriteDependency(CommandGraphResource *writingResource);
+
+    // Sets up dependency relations. 'this' resource is the resource being read.
+    void addReadDependency(CommandGraphResource *readingResource);
 
     // Returns false if the resource is not in use, and clears any current read/write nodes.
+    // TODO(jmadill): Remove this. http://anglebug.com/2539
     bool checkResourceInUseAndRefreshDeps(RendererVk *renderer);
 
   private:
+    void onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial);
+
+    // Returns true if this node has a current writing node with no children.
+    bool hasChildlessWritingNode() const;
+
+    // Allocates a new write node and calls onWriteResource internally.
+    CommandGraphNode *getNewWritingNode(RendererVk *renderer);
+
     Serial mStoredQueueSerial;
     std::vector<CommandGraphNode *> mCurrentReadingNodes;
     CommandGraphNode *mCurrentWritingNode;

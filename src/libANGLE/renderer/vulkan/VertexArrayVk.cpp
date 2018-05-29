@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 
@@ -269,7 +270,7 @@ const gl::AttribArray<VkDeviceSize> &VertexArrayVk::getCurrentArrayBufferOffsets
     return mCurrentArrayBufferOffsets;
 }
 
-void VertexArrayVk::updateArrayBufferReadDependencies(vk::CommandGraphNode *readingNode,
+void VertexArrayVk::updateArrayBufferReadDependencies(vk::CommandGraphResource *drawFramebuffer,
                                                       const gl::AttributesMask &activeAttribsMask,
                                                       Serial serial)
 {
@@ -277,17 +278,18 @@ void VertexArrayVk::updateArrayBufferReadDependencies(vk::CommandGraphNode *read
     for (size_t attribIndex : activeAttribsMask)
     {
         if (mCurrentArrayBufferResources[attribIndex])
-            mCurrentArrayBufferResources[attribIndex]->onReadResource(readingNode, serial);
+            mCurrentArrayBufferResources[attribIndex]->addReadDependency(drawFramebuffer);
     }
 }
 
-void VertexArrayVk::updateElementArrayBufferReadDependency(vk::CommandGraphNode *readingNode,
-                                                           Serial serial)
+void VertexArrayVk::updateElementArrayBufferReadDependency(
+    vk::CommandGraphResource *drawFramebuffer,
+    Serial serial)
 {
     // Handle the bound element array buffer.
     if (mCurrentElementArrayBufferResource)
     {
-        mCurrentElementArrayBufferResource->onReadResource(readingNode, serial);
+        mCurrentElementArrayBufferResource->addReadDependency(drawFramebuffer);
     }
 }
 
@@ -350,13 +352,12 @@ void VertexArrayVk::updatePackedInputInfo(uint32_t attribIndex,
 gl::Error VertexArrayVk::drawArrays(const gl::Context *context,
                                     RendererVk *renderer,
                                     const gl::DrawCallParams &drawCallParams,
-                                    vk::CommandGraphNode *drawNode,
+                                    vk::CommandBuffer *commandBuffer,
                                     bool newCommandBuffer)
 {
-    vk::CommandBuffer *commandBuffer = drawNode->getInsideRenderPassCommands();
     ASSERT(commandBuffer->valid());
 
-    ANGLE_TRY(onDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
+    ANGLE_TRY(onDraw(context, renderer, drawCallParams, commandBuffer, newCommandBuffer));
 
     // Note: Vertex indexes can be arbitrarily large.
     uint32_t clampedVertexCount = drawCallParams.getClampedVertexCount<uint32_t>();
@@ -392,15 +393,15 @@ gl::Error VertexArrayVk::drawArrays(const gl::Context *context,
 gl::Error VertexArrayVk::drawElements(const gl::Context *context,
                                       RendererVk *renderer,
                                       const gl::DrawCallParams &drawCallParams,
-                                      vk::CommandGraphNode *drawNode,
+                                      vk::CommandBuffer *commandBuffer,
                                       bool newCommandBuffer)
 {
-    vk::CommandBuffer *commandBuffer = drawNode->getInsideRenderPassCommands();
     ASSERT(commandBuffer->valid());
 
     if (drawCallParams.mode() != gl::PrimitiveMode::LineLoop)
     {
-        ANGLE_TRY(onIndexedDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
+        ANGLE_TRY(
+            onIndexedDraw(context, renderer, drawCallParams, commandBuffer, newCommandBuffer));
         commandBuffer->drawIndexed(drawCallParams.indexCount(), 1, 0, 0, 0);
         return gl::NoError();
     }
@@ -428,7 +429,7 @@ gl::Error VertexArrayVk::drawElements(const gl::Context *context,
         }
     }
 
-    ANGLE_TRY(onIndexedDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
+    ANGLE_TRY(onIndexedDraw(context, renderer, drawCallParams, commandBuffer, newCommandBuffer));
     vk::LineLoopHelper::Draw(drawCallParams.indexCount(), commandBuffer);
 
     return gl::NoError();
@@ -437,7 +438,7 @@ gl::Error VertexArrayVk::drawElements(const gl::Context *context,
 gl::Error VertexArrayVk::onDraw(const gl::Context *context,
                                 RendererVk *renderer,
                                 const gl::DrawCallParams &drawCallParams,
-                                vk::CommandGraphNode *drawNode,
+                                vk::CommandBuffer *commandBuffer,
                                 bool newCommandBuffer)
 {
     const gl::State &state                  = context->getGLState();
@@ -453,7 +454,6 @@ gl::Error VertexArrayVk::onDraw(const gl::Context *context,
         {
             ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
             ANGLE_TRY(streamVertexData(renderer, attribsToStream, drawCallParams));
-            vk::CommandBuffer *commandBuffer = drawNode->getInsideRenderPassCommands();
             commandBuffer->bindVertexBuffers(0, maxAttrib, mCurrentArrayBufferHandles.data(),
                                              mCurrentArrayBufferOffsets.data());
         }
@@ -462,10 +462,11 @@ gl::Error VertexArrayVk::onDraw(const gl::Context *context,
     {
         if (maxAttrib > 0)
         {
-            vk::CommandBuffer *commandBuffer = drawNode->getInsideRenderPassCommands();
             commandBuffer->bindVertexBuffers(0, maxAttrib, mCurrentArrayBufferHandles.data(),
                                              mCurrentArrayBufferOffsets.data());
-            updateArrayBufferReadDependencies(drawNode, activeAttribs,
+
+            vk::CommandGraphResource *drawFramebuffer = vk::GetImpl(state.getDrawFramebuffer());
+            updateArrayBufferReadDependencies(drawFramebuffer, activeAttribs,
                                               renderer->getCurrentQueueSerial());
         }
 
@@ -486,17 +487,16 @@ gl::Error VertexArrayVk::onDraw(const gl::Context *context,
 gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
                                        RendererVk *renderer,
                                        const gl::DrawCallParams &drawCallParams,
-                                       vk::CommandGraphNode *drawNode,
+                                       vk::CommandBuffer *commandBuffer,
                                        bool newCommandBuffer)
 {
-    ANGLE_TRY(onDraw(context, renderer, drawCallParams, drawNode, newCommandBuffer));
+    ANGLE_TRY(onDraw(context, renderer, drawCallParams, commandBuffer, newCommandBuffer));
 
     if (!mState.getElementArrayBuffer().get() &&
         drawCallParams.mode() != gl::PrimitiveMode::LineLoop)
     {
         ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
         ANGLE_TRY(streamIndexData(renderer, drawCallParams));
-        vk::CommandBuffer *commandBuffer = drawNode->getInsideRenderPassCommands();
         commandBuffer->bindIndexBuffer(mCurrentElementArrayBufferHandle,
                                        mCurrentElementArrayBufferOffset,
                                        gl_vk::GetIndexType(drawCallParams.type()));
@@ -511,11 +511,13 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
                    << "Unsigned byte translation is not implemented for indices in a buffer object";
         }
 
-        vk::CommandBuffer *commandBuffer = drawNode->getInsideRenderPassCommands();
         commandBuffer->bindIndexBuffer(mCurrentElementArrayBufferHandle,
                                        mCurrentElementArrayBufferOffset,
                                        gl_vk::GetIndexType(drawCallParams.type()));
-        updateElementArrayBufferReadDependency(drawNode, renderer->getCurrentQueueSerial());
+
+        const gl::State &glState                  = context->getGLState();
+        vk::CommandGraphResource *drawFramebuffer = vk::GetImpl(glState.getDrawFramebuffer());
+        updateElementArrayBufferReadDependency(drawFramebuffer, renderer->getCurrentQueueSerial());
         mIndexBufferDirty = false;
 
         // If we've had a drawArrays call with a line loop before, we want to make sure this is

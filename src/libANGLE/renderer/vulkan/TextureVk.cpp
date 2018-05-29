@@ -342,7 +342,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     }
 
     // Create a new graph node to store image initialization commands.
-    getNewWritingNode(renderer);
+    onResourceChanged(renderer);
 
     // Handle initial data.
     if (pixels)
@@ -369,7 +369,7 @@ gl::Error TextureVk::setSubImage(const gl::Context *context,
         gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels));
 
     // Create a new graph node to store image initialization commands.
-    getNewWritingNode(contextVk->getRenderer());
+    onResourceChanged(contextVk->getRenderer());
 
     return gl::NoError();
 }
@@ -442,7 +442,7 @@ gl::Error TextureVk::copySubImageImpl(const gl::Context *context,
                                         destOffset.y + sourceArea.y - sourceArea.y, 0);
 
     ContextVk *contextVk = vk::GetImpl(context);
-
+    RendererVk *renderer         = contextVk->getRenderer();
     FramebufferVk *framebufferVk = vk::GetImpl(source);
 
     // For now, favor conformance. We do a CPU readback that does the conversion, and then stage the
@@ -454,30 +454,16 @@ gl::Error TextureVk::copySubImageImpl(const gl::Context *context,
         gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
         framebufferVk));
 
-    vk::CommandGraphNode *writingNode = getNewWritingNode(contextVk->getRenderer());
-    framebufferVk->onReadResource(writingNode, contextVk->getRenderer()->getCurrentQueueSerial());
+    onResourceChanged(renderer);
+    framebufferVk->addReadDependency(this);
     return gl::NoError();
 }
 
 vk::Error TextureVk::getCommandBufferForWrite(RendererVk *renderer,
-                                              vk::CommandBuffer **outCommandBuffer)
+                                              vk::CommandBuffer **commandBufferOut)
 {
-    const VkDevice device = renderer->getDevice();
     updateQueueSerial(renderer->getCurrentQueueSerial());
-    if (!hasChildlessWritingNode())
-    {
-        beginWriteResource(renderer, outCommandBuffer);
-    }
-    else
-    {
-        vk::CommandGraphNode *node = getCurrentWritingNode();
-        *outCommandBuffer          = node->getOutsideRenderPassCommands();
-        if (!(*outCommandBuffer)->valid())
-        {
-            ANGLE_TRY(node->beginOutsideRenderPassRecording(device, renderer->getCommandPool(),
-                                                            outCommandBuffer));
-        }
-    }
+    ANGLE_TRY(beginWriteResource(renderer, commandBufferOut));
     return vk::NoError();
 }
 

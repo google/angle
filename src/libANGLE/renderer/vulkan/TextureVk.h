@@ -171,7 +171,7 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
                         const uint32_t levelCount,
                         vk::CommandBuffer *commandBuffer);
     void releaseImage(const gl::Context *context, RendererVk *renderer);
-    vk::Error getCommandBufferForWrite(RendererVk *renderer, vk::CommandBuffer **outCommandBuffer);
+    vk::Error getCommandBufferForWrite(RendererVk *renderer, vk::CommandBuffer **commandBufferOut);
     uint32_t getLevelCount() const;
 
     vk::ImageHelper mImage;
