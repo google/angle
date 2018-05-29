@@ -192,7 +192,7 @@
 2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer.stencil.stencil_index8 = SKIP
 2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_rbo_rgb565_stencil_index8 = SKIP
 2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_rbo_rgba4_stencil_index8 = SKIP
-2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer_* = SKIP
+2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.* = SKIP
 2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.resize.rbo_rgb565_stencil_index8 = SKIP
 2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.resize.rbo_rgba4_stencil_index8 = SKIP
 2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.stencil.* = SKIP
