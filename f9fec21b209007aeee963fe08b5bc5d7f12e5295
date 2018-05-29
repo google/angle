@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4215690_c1637b11",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 756,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-29T07:17:45Z",
+      "side": 1,
+      "message": "kTexLayers",
+      "range": {
+        "startLine": 756,
+        "startChar": 20,
+        "endLine": 756,
+        "endChar": 30
+      },
+      "revId": "f9fec21b209007aeee963fe08b5bc5d7f12e5295",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00371b87_48ed9a4a",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-29T07:17:45Z",
+      "side": 1,
+      "message": "Maybe you can combine them to one depthStencilTex",
+      "range": {
+        "startLine": 767,
+        "startChar": 0,
+        "endLine": 775,
+        "endChar": 66
+      },
+      "revId": "f9fec21b209007aeee963fe08b5bc5d7f12e5295",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dc200af_e8fe7533",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-29T07:17:45Z",
+      "side": 1,
+      "message": "Your description 3 is color is layered and stencil attachment is not layered. But it seems that your implementation is color is not layered, stencil is layered.",
+      "range": {
+        "startLine": 798,
+        "startChar": 0,
+        "endLine": 799,
+        "endChar": 82
+      },
+      "revId": "f9fec21b209007aeee963fe08b5bc5d7f12e5295",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7810984_5a0f5ec4",
+        "filename": "src/tests/gl_tests/GeometryShaderTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-05-29T07:17:45Z",
+      "side": 1,
+      "message": "This line is not needed?",
+      "range": {
+        "startLine": 821,
+        "startChar": 2,
+        "endLine": 821,
+        "endChar": 86
+      },
+      "revId": "f9fec21b209007aeee963fe08b5bc5d7f12e5295",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
