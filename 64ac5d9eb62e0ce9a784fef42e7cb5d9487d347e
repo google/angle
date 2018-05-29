@@ -34,6 +34,24 @@
       "revId": "64ac5d9eb62e0ce9a784fef42e7cb5d9487d347e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53045ce0_02d8ee60",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-29T20:25:17Z",
+      "side": 0,
+      "message": "I don\u0027t remember exactly what the issue was.  I suppose ANGLE was storing an ID/wrapper for the default framebuffer and if that changed here the two would no longer agree.  If so that won\u0027t happen with your CL right?\nAnyway I wouldn\u0027t worry about it if tests pass.",
+      "parentUuid": "8882e9fa_ebbd2ac6",
+      "revId": "64ac5d9eb62e0ce9a784fef42e7cb5d9487d347e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
