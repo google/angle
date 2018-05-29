@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e1c2d3a8_98526802",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-29T20:16:51Z",
+      "side": 1,
+      "message": "The bots are not finding any problems with it",
+      "parentUuid": "8f28277c_6a5c3e6a",
+      "range": {
+        "startLine": 656,
+        "startChar": 11,
+        "endLine": 658,
+        "endChar": 62
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88893537_9baa53af",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 17
@@ -45,6 +69,30 @@
       "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13e183a9_8bae4a15",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-29T20:16:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88893537_9baa53af",
+      "range": {
+        "startLine": 180,
+        "startChar": 14,
+        "endLine": 180,
+        "endChar": 35
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "31bafc68_65f2b2fb",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-29T20:16:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16b120b1_497d4db0",
+      "range": {
+        "startLine": 182,
+        "startChar": 14,
+        "endLine": 182,
+        "endChar": 41
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a95db3eb_749b35f4",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 17
@@ -91,6 +163,30 @@
       "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b03a587_53f09c55",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-29T20:16:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a95db3eb_749b35f4",
+      "range": {
+        "startLine": 391,
+        "startChar": 30,
+        "endLine": 391,
+        "endChar": 34
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "d8bebf96_386ccd5d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-29T20:16:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b4dfceb_627fc3e9",
+      "range": {
+        "startLine": 424,
+        "startChar": 39,
+        "endLine": 424,
+        "endChar": 60
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b72f1d3c_15fa11d6",
         "filename": "src/tests/gl_tests/MipmapTest.cpp",
         "patchSetId": 17
@@ -137,6 +257,30 @@
       "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b185389d_2c8b9181",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-29T20:16:51Z",
+      "side": 1,
+      "message": "Yes",
+      "parentUuid": "b72f1d3c_15fa11d6",
+      "range": {
+        "startLine": 525,
+        "startChar": 4,
+        "endLine": 525,
+        "endChar": 48
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
