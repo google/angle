@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f9d72e8_5da6cfb0",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-29T22:08:07Z",
+      "side": 1,
+      "message": "Should have been \".\" here, sample name:\ndEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.rebind_rbo_rgba4_stencil_index8",
+      "range": {
+        "startLine": 195,
+        "startChar": 77,
+        "endLine": 195,
+        "endChar": 78
+      },
+      "revId": "95cce74a62665c2fb69f6ac1726cb76c13083d16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
