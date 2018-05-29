@@ -128,8 +128,8 @@ static inline void InsertFormatMapping(InternalFormatInfoMap *map, GLenum intern
     formatInfo.glInfo.renderbuffer = desktopRender;
     formatInfo.glInfo.framebufferAttachment = desktopRender;
     formatInfo.glesInfo.texture = esTexture;
-    formatInfo.glesInfo.filter = esTexture;
-    formatInfo.glesInfo.renderbuffer = esFilter;
+    formatInfo.glesInfo.filter = esFilter;
+    formatInfo.glesInfo.renderbuffer = esRender;
     formatInfo.glesInfo.framebufferAttachment = esRender;
     map->insert(std::make_pair(internalFormat, formatInfo));
 }
