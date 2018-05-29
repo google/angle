@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "079e8c69_c92522e7",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-05-29T17:53:24Z",
+      "side": 1,
+      "message": "I guess we don\u0027t have a TRY macro for this pattern.  Would such a thing be possible and useful?",
+      "range": {
+        "startLine": 799,
+        "startChar": 4,
+        "endLine": 804,
+        "endChar": 5
+      },
+      "revId": "6edf652f7aec3d314349dbf96f706ea56d3a7579",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
