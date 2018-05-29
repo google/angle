@@ -29,6 +29,7 @@
             '<(angle_path)/src/tests/perf_tests/DrawElementsPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/DynamicPromotionPerfTest.cpp',
             '<(angle_path)/src/tests/perf_tests/EGLInitializePerf.cpp',
+            '<(angle_path)/src/tests/perf_tests/ResultPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/IndexConversionPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/InstancingPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/InterleavedAttributeData.cpp',
