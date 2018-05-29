@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "377ea2cb_989dca6f",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-29T10:47:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81212a6a_7b97523c",
+      "revId": "88285967f267b8528672fece8d44e1b85ff28638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3ecc919_936ecb70",
         "filename": "src/compiler/translator/UniformHLSL.h",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2018-05-28T16:10:25Z",
       "side": 1,
       "message": "I think all these could be const or maybe even static as they don\u0027t use any members of UniformsHLSL.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 75
+      },
+      "revId": "88285967f267b8528672fece8d44e1b85ff28638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "142e1e6e_2d6ee214",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-29T10:47:12Z",
+      "side": 1,
+      "message": "These functions had called assignUniformRegister, which would change some members of UniformHLSL.",
+      "parentUuid": "b3ecc919_936ecb70",
       "range": {
         "startLine": 89,
         "startChar": 0,
