@@ -16,6 +16,24 @@
       "revId": "5d175c28f29666c462aafde56ef0a6a9ab508acf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16bd8532_67e85647",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-29T06:26:01Z",
+      "side": 1,
+      "message": "Hi, Corentin, thank you for your comments. If use \"unsigned int\", there may be overflow on linux platform, because gl_MaxComputeWorkGroupSize is big on linux platform (my dev machine is [1792, 1792, 1792]). Need to use \"uint64_t\" instead \"unsigned int\".\n\nThe mLocalSize had validated against a per-dimension maximum in TParseContext::parseGlobalLayoutQualifier, compare per-dimension against gl_MaxComputeWorkGroupSize.\n\nIf statement here \"mState.mLocalSize.isDeclared()\" has ensured that mState.mLocalSize[0]/[1]/[2] are positive vaule. Because at least one of local_size_x/local_size_y/local_size_z had been specified a positive value, and if others had not been specified, they would be assigned to 1 (default value) in TParseContext::getComputeShaderLocalSize().",
+      "parentUuid": "2e9cd5dc_3579aa3d",
+      "revId": "5d175c28f29666c462aafde56ef0a6a9ab508acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
