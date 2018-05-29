@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "df744e5e_0bcb234f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T20:27:34Z",
+      "side": 1,
+      "message": "Thanks for the explanation. How hard would it be to code up #2, using some kind of impl method notifier rather than creating a new impl object? Just curious - I think Rafael at least cares about MakeCurrent performance.",
+      "parentUuid": "f1a64b2e_c4ddd94b",
+      "range": {
+        "startLine": 548,
+        "startChar": 8,
+        "endLine": 548,
+        "endChar": 66
+      },
+      "revId": "afc9e9a1f4945d627b2d4961a336808eaba0294b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "141b16ec_8c3e5261",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 33
