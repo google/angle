@@ -34,6 +34,24 @@
       "revId": "5d175c28f29666c462aafde56ef0a6a9ab508acf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ef1ee64_2f8ea791",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-29T15:45:14Z",
+      "side": 1,
+      "message": "Hey Xinghua, the reason why checking overflows here is important is because they are user-provided constants that we cannot trust. Using a uint64_t prevents overflows on your machine but may not help on others where gl_MaxComputeWorkGroupSize is even bigger. I\u0027d suggest keeping a uint32_t for the computation but using the safe_math utilities to check for overflows: https://cs.chromium.org/chromium/src/third_party/angle/src/common/third_party/base/anglebase/numerics/safe_math.h?sq\u003dpackage:chromium\u0026g\u003d0",
+      "parentUuid": "16bd8532_67e85647",
+      "revId": "5d175c28f29666c462aafde56ef0a6a9ab508acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
