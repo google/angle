@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "40cb943f_59c38c08",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T17:04:54Z",
+      "side": 1,
+      "message": "is this getting the buffer or a pointer to host data (e.g. AndGetData)?",
+      "range": {
+        "startLine": 346,
+        "startChar": 31,
+        "endLine": 346,
+        "endChar": 65
+      },
+      "revId": "a30d34c9a30b4faebfc2c93257decabd8e0ac10d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90516e66_38e0a410",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T17:04:54Z",
+      "side": 1,
+      "message": "remove extra blank line?",
+      "range": {
+        "startLine": 380,
+        "startChar": 0,
+        "endLine": 381,
+        "endChar": 4
+      },
+      "revId": "a30d34c9a30b4faebfc2c93257decabd8e0ac10d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cde5014_a5cdf7bf",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T17:04:54Z",
+      "side": 1,
+      "message": "\"This will use\"",
+      "range": {
+        "startLine": 53,
+        "startChar": 7,
+        "endLine": 53,
+        "endChar": 21
+      },
+      "revId": "a30d34c9a30b4faebfc2c93257decabd8e0ac10d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
