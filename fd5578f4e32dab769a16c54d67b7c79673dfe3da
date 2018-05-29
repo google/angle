@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f28277c_6a5c3e6a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T19:09:23Z",
+      "side": 1,
+      "message": "is this ok on AMD? No barriers needed?",
+      "range": {
+        "startLine": 656,
+        "startChar": 11,
+        "endLine": 658,
+        "endChar": 62
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88893537_9baa53af",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T19:09:23Z",
+      "side": 1,
+      "message": "naming nit: \"generateMipmapWithCPU\" (you can add CPU to resharper\u0027s exceptions list)",
+      "range": {
+        "startLine": 180,
+        "startChar": 14,
+        "endLine": 180,
+        "endChar": 35
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16b120b1_497d4db0",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T19:09:23Z",
+      "side": 1,
+      "message": "naming nit: also \"WithCPU\"",
+      "range": {
+        "startLine": 182,
+        "startChar": 14,
+        "endLine": 182,
+        "endChar": 41
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a95db3eb_749b35f4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T19:09:23Z",
+      "side": 1,
+      "message": "nit: uint32_t to mirror spec",
+      "range": {
+        "startLine": 391,
+        "startChar": 30,
+        "endLine": 391,
+        "endChar": 34
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b4dfceb_627fc3e9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T19:09:23Z",
+      "side": 1,
+      "message": "leave this as const \u0026",
+      "range": {
+        "startLine": 424,
+        "startChar": 39,
+        "endLine": 424,
+        "endChar": 60
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b72f1d3c_15fa11d6",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-29T19:09:23Z",
+      "side": 1,
+      "message": "was this detected on the bots?",
+      "range": {
+        "startLine": 525,
+        "startChar": 4,
+        "endLine": 525,
+        "endChar": 48
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
