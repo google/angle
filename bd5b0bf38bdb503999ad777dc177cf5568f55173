@@ -105,6 +105,24 @@
     },
     {
       "key": {
+        "uuid": "c4f626eb_e3aaeff5",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-30T15:10:36Z",
+      "side": 1,
+      "message": "Ah, maybe this could be affecting the Intel configs.",
+      "parentUuid": "822bdb3e_459a02f2",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2c3e78de_97b6d4a8",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 21
