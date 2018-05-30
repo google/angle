@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be76d3f2_05f97320",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:15:25Z",
+      "side": 1,
+      "message": "Computations using CheckedNumeric and regular numbers will automatically become checked numeric computations (you just need to be careful of associativity). Also the std:: prefix isn\u0027t required. So this could become (with other comments for this patch):\n\n  angle::CheckedNumeric\u003cuint32_t\u003e checked_local_size_product(mState.mLocalSize[0]);\n  checked_local_size_product *\u003d mState.mLocalSize[1];\n  checked_local_size_product *\u003d mState.mLocalSize[2];\n\n  if (!checked_local_size_product.IsValid()) {return error about overflow}\n  if (checked_local_size_product.ValueOrDie() \u003e theCaps) { return error about the caps }",
+      "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b27c91e_e66ba1ed",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:15:25Z",
+      "side": 1,
+      "message": "CheckedNumeric \"remembers\" if one of the intermediate computations overflowed so we only need to check the result.",
+      "range": {
+        "startLine": 408,
+        "startChar": 21,
+        "endLine": 408,
+        "endChar": 45
+      },
+      "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e43a77e_b18a4edf",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:15:25Z",
+      "side": 1,
+      "message": "Can we have the check for overflow return a different error message?",
+      "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7671dcb8_b79dba5e",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:15:25Z",
+      "side": 1,
+      "message": "this should be ValueOrDie",
+      "range": {
+        "startLine": 409,
+        "startChar": 35,
+        "endLine": 409,
+        "endChar": 46
+      },
+      "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
