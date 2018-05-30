@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f30e5f33_a088daed",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:30:02Z",
+      "side": 1,
+      "message": "Maybe this could be done at the end of the function for all shader types together, if a shader stage isn\u0027t used the computation would produce a 0 anyway.",
+      "revId": "cc1424ce8dde431cb1a2c19b34be4311633ed55f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
