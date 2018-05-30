@@ -36,8 +36,8 @@ void BufferVk::destroy(const gl::Context *context)
 
 void BufferVk::release(RendererVk *renderer)
 {
-    renderer->releaseResource(*this, &mBuffer);
-    renderer->releaseResource(*this, &mBufferMemory);
+    renderer->releaseObject(getStoredQueueSerial(), &mBuffer);
+    renderer->releaseObject(getStoredQueueSerial(), &mBufferMemory);
 }
 
 gl::Error BufferVk::setData(const gl::Context *context,
@@ -190,7 +190,7 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
     VkDevice device      = contextVk->getDevice();
 
     // Use map when available.
-    if (renderer->isResourceInUse(*this))
+    if (isResourceInUse(renderer))
     {
         vk::StagingBuffer stagingBuffer;
         ANGLE_TRY(stagingBuffer.init(contextVk, static_cast<VkDeviceSize>(size),
@@ -230,7 +230,7 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
 
         // Immediately release staging buffer.
         // TODO(jmadill): Staging buffer re-use.
-        renderer->releaseObject(getQueueSerial(), &stagingBuffer);
+        renderer->releaseObject(getStoredQueueSerial(), &stagingBuffer);
     }
     else
     {

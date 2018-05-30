@@ -22,7 +22,6 @@
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
-#include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
@@ -793,11 +792,6 @@ GlslangWrapper *RendererVk::getGlslangWrapper()
 Serial RendererVk::getCurrentQueueSerial() const
 {
     return mCurrentQueueSerial;
-}
-
-bool RendererVk::isResourceInUse(const vk::CommandGraphResource &resource)
-{
-    return isSerialInUse(resource.getQueueSerial());
 }
 
 bool RendererVk::isSerialInUse(Serial serial)

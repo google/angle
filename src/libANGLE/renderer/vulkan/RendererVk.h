@@ -74,15 +74,7 @@ class RendererVk : angle::NonCopyable
 
     Serial getCurrentQueueSerial() const;
 
-    bool isResourceInUse(const vk::CommandGraphResource &resource);
     bool isSerialInUse(Serial serial);
-
-    template <typename T>
-    void releaseResource(const vk::CommandGraphResource &resource, T *object)
-    {
-        Serial resourceSerial = resource.getQueueSerial();
-        releaseObject(resourceSerial, object);
-    }
 
     template <typename T>
     void releaseObject(Serial resourceSerial, T *object)

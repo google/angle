@@ -142,7 +142,12 @@ void CommandGraphResource::updateQueueSerial(Serial queueSerial)
     }
 }
 
-Serial CommandGraphResource::getQueueSerial() const
+bool CommandGraphResource::isResourceInUse(RendererVk *renderer) const
+{
+    return renderer->isSerialInUse(mStoredQueueSerial);
+}
+
+Serial CommandGraphResource::getStoredQueueSerial() const
 {
     return mStoredQueueSerial;
 }
@@ -250,7 +255,7 @@ void CommandGraphResource::addWriteDependency(CommandGraphResource *writingResou
     CommandGraphNode *writingNode = writingResource->mCurrentWritingNode;
     ASSERT(writingNode);
 
-    onWriteImpl(writingNode, writingResource->getQueueSerial());
+    onWriteImpl(writingNode, writingResource->getStoredQueueSerial());
 }
 
 void CommandGraphResource::onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial)
@@ -274,7 +279,7 @@ void CommandGraphResource::onWriteImpl(CommandGraphNode *writingNode, Serial cur
 
 void CommandGraphResource::addReadDependency(CommandGraphResource *readingResource)
 {
-    updateQueueSerial(readingResource->getQueueSerial());
+    updateQueueSerial(readingResource->getStoredQueueSerial());
 
     CommandGraphNode *readingNode = readingResource->mCurrentWritingNode;
     ASSERT(readingNode);

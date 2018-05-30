@@ -31,7 +31,8 @@ class CommandGraphResource
     CommandGraphResource();
     virtual ~CommandGraphResource();
 
-    Serial getQueueSerial() const;
+    // Returns true if the resource is in use by the renderer.
+    bool isResourceInUse(RendererVk *renderer) const;
 
     // Sets up dependency relations. 'this' resource is the resource being written to.
     void addWriteDependency(CommandGraphResource *writingResource);
@@ -70,6 +71,9 @@ class CommandGraphResource
 
     // Called when 'this' object changes, but we'd like to start a new command buffer later.
     void onResourceChanged(RendererVk *renderer);
+
+    // Get the current queue serial for this resource. Only used to release resources.
+    Serial getStoredQueueSerial() const;
 
   private:
     void onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial);

@@ -392,7 +392,7 @@ gl::Error TextureVk::onDestroy(const gl::Context *context)
     RendererVk *renderer = contextVk->getRenderer();
 
     releaseImage(context, renderer);
-    renderer->releaseResource(*this, &mSampler);
+    renderer->releaseObject(getStoredQueueSerial(), &mSampler);
 
     mPixelBuffer.release(renderer);
     return gl::NoError();
@@ -752,7 +752,7 @@ gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::Di
     if (mSampler.valid())
     {
         RendererVk *renderer = contextVk->getRenderer();
-        renderer->releaseResource(*this, &mSampler);
+        renderer->releaseObject(getStoredQueueSerial(), &mSampler);
     }
 
     const gl::SamplerState &samplerState = mState.getSamplerState();
@@ -861,8 +861,8 @@ vk::Error TextureVk::initImage(RendererVk *renderer,
 void TextureVk::releaseImage(const gl::Context *context, RendererVk *renderer)
 {
     mImage.release(renderer->getCurrentQueueSerial(), renderer);
-    renderer->releaseResource(*this, &mBaseLevelImageView);
-    renderer->releaseResource(*this, &mMipmapImageView);
+    renderer->releaseObject(getStoredQueueSerial(), &mBaseLevelImageView);
+    renderer->releaseObject(getStoredQueueSerial(), &mMipmapImageView);
     onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 }
 
