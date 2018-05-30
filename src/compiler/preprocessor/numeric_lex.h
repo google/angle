@@ -51,10 +51,17 @@ bool numeric_lex_int(const std::string &str, IntType *value)
 template <typename FloatType>
 bool numeric_lex_float(const std::string &str, FloatType *value)
 {
-    // Some platforms have issues with the usage of std::locale and std::stringstream and cause
-    // crashes. Usage of strtod appears to be safe.
-    *value = static_cast<FloatType>(strtod(str.c_str(), nullptr));
-    return errno != ERANGE && std::isfinite(*value);
+    std::istringstream stream(str);
+
+// Android NDK forbids access to locales by always throwing instead of only accepting the C locale.
+#if !defined(ANGLE_PLATFORM_ANDROID)
+    // Force "C" locale so that decimal character is always '.', and not dependent on the current
+    // locale.
+    stream.imbue(std::locale::classic());
+#endif
+
+    stream >> (*value);
+    return !stream.fail() && std::isfinite(*value);
 }
 
 }  // namespace pp

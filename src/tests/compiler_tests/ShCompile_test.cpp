@@ -7,9 +7,11 @@
 //   Test the sh::Compile interface with different parameters.
 //
 
-#include "angle_gl.h"
-#include "gtest/gtest.h"
+#include <clocale>
 #include "GLSLANG/ShaderLang.h"
+#include "angle_gl.h"
+#include "common/platform.h"
+#include "gtest/gtest.h"
 
 class ShCompileTest : public testing::Test
 {
@@ -36,13 +38,16 @@ class ShCompileTest : public testing::Test
 
     void testCompile(const char **shaderStrings, int stringCount, bool expectation)
     {
-        bool success                  = sh::Compile(mCompiler, shaderStrings, stringCount, 0);
+        ShCompileOptions options      = SH_OBJECT_CODE;
+        bool success                  = sh::Compile(mCompiler, shaderStrings, stringCount, options);
         const std::string &compileLog = sh::GetInfoLog(mCompiler);
         EXPECT_EQ(expectation, success) << compileLog;
     }
 
   private:
     ShBuiltInResources mResources;
+
+  public:
     ShHandle mCompiler;
 };
 
@@ -80,4 +85,42 @@ TEST_F(ShCompileTest, TokensSplitInShaderStrings)
                                    shaderString3.c_str()};
 
     testCompile(shaderStrings, 3, true);
+}
+
+// Parsing floats in shaders can run afoul of locale settings.
+// In de_DE, `strtof("1.9")` will yield `1.0f`. (It's expecting "1,9")
+TEST_F(ShCompileTest, DecimalSepLocale)
+{
+    const auto defaultLocale = setlocale(LC_NUMERIC, nullptr);
+
+    const auto fnSetLocale = [](const char *const name) {
+        return bool(setlocale(LC_NUMERIC, name));
+    };
+
+    const bool setLocaleToDe =
+        fnSetLocale("de_DE") || fnSetLocale("de-DE");  // Windows doesn't like de_DE.
+
+// These configs don't support de_DE: android_angle_vk[32,64]_rel_ng, linux_angle_rel_ng
+// Just allow those platforms to quietly fail, but require other platforms to succeed.
+#if defined(ANGLE_PLATFORM_ANDROID) || defined(ANGLE_PLATFORM_LINUX)
+    if (!setLocaleToDe)
+    {
+        return;
+    }
+#endif
+    ASSERT_TRUE(setLocaleToDe);
+
+    const char kSource[] = R"(
+        void main()
+        {
+            gl_FragColor = vec4(1.9);
+        })";
+    const char *parts[] = {kSource};
+    testCompile(parts, 1, true);
+
+    const auto &translated = sh::GetObjectCode(mCompiler);
+    // printf("%s\n", translated.data());
+    EXPECT_NE(translated.find("1.9"), std::string::npos);
+
+    fnSetLocale(defaultLocale);
 }
