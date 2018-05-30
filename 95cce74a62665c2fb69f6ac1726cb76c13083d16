@@ -22,6 +22,30 @@
       "revId": "95cce74a62665c2fb69f6ac1726cb76c13083d16",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da50a318_41234279",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2018-05-30T19:40:47Z",
+      "side": 0,
+      "message": "I can\u0027t access the bug where those are collated. I don\u0027t think Firefox has seen any issues here, so I\u0027m very curious what\u0027s going on for you. \u003clocale\u003e even predates c++11, so it really really should work. If you don\u0027t have a solution for it, I\u0027m game to add a configurable define, but I don\u0027t want to bake the platform logic inline. Absent crashes on our side, I would like to do the standard method.\n\nIt\u0027s also not exactly attractive to replace the correct approach with a likely-buggy approach that causes mysterious rendering issues.",
+      "parentUuid": "160166a7_763ad85f",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 51
+      },
+      "revId": "95cce74a62665c2fb69f6ac1726cb76c13083d16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
