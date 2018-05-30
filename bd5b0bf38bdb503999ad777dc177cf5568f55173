@@ -87,6 +87,24 @@
     },
     {
       "key": {
+        "uuid": "822bdb3e_459a02f2",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:08:59Z",
+      "side": 1,
+      "message": "What we could do is make sure the whole image is in TRANSFER_SRC at the end, it would only require a single extra pipeline barrier for the bottom-most mip level.",
+      "parentUuid": "6e12c969_3002b207",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2c3e78de_97b6d4a8",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 21
