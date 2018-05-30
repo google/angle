@@ -238,8 +238,6 @@
 2593 VULKAN : dEQP-GLES2.functional.shaders.invariance.mediump.loop_4 = SKIP
 2594 VULKAN : dEQP-GLES2.functional.shaders.fragdata.valid_static_index = SKIP
 2595 VULKAN : dEQP-GLES2.functional.shaders.random.all_features.fragment* = SKIP
-2596 VULKAN : dEQP-GLES2.functional.texture.completeness.2d.extra_level = SKIP
-2596 VULKAN : dEQP-GLES2.functional.texture.completeness.cube.extra_level = SKIP
 2597 VULKAN : dEQP-GLES2.functional.fbo.render.color_clear.* = SKIP
 2597 VULKAN : dEQP-GLES2.functional.fbo.render.stencil_clear.tex2d_rgb_stencil_index8 = SKIP
 2597 VULKAN : dEQP-GLES2.functional.fbo.render.color.* = SKIP

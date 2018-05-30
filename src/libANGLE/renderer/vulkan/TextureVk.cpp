@@ -83,6 +83,20 @@ void PixelBuffer::release(RendererVk *renderer)
     mStagingBuffer.release(renderer);
 }
 
+void PixelBuffer::removeStagedUpdates(const gl::ImageIndex &index)
+{
+    // Find any staged updates for this index and removes them from the pending list.
+    uint32_t levelIndex    = static_cast<uint32_t>(index.getLevelIndex());
+    uint32_t layerIndex    = static_cast<uint32_t>(index.getLayerIndex());
+    auto removeIfStatement = [levelIndex, layerIndex](SubresourceUpdate &update) {
+        return update.copyRegion.imageSubresource.mipLevel == levelIndex &&
+               update.copyRegion.imageSubresource.baseArrayLayer == layerIndex;
+    };
+    mSubresourceUpdates.erase(
+        std::remove_if(mSubresourceUpdates.begin(), mSubresourceUpdates.end(), removeIfStatement),
+        mSubresourceUpdates.end());
+}
+
 gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
                                               const gl::ImageIndex &index,
                                               const gl::Extents &extents,
@@ -250,6 +264,7 @@ gl::Error PixelBuffer::allocate(RendererVk *renderer,
 }
 
 vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
+                                           uint32_t levelCount,
                                            vk::ImageHelper *image,
                                            vk::CommandBuffer *commandBuffer)
 {
@@ -260,9 +275,21 @@ vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
 
     ANGLE_TRY(mStagingBuffer.flush(renderer->getDevice()));
 
+    std::vector<SubresourceUpdate> updatesToKeep;
+
     for (const SubresourceUpdate &update : mSubresourceUpdates)
     {
         ASSERT(update.bufferHandle != VK_NULL_HANDLE);
+
+        const uint32_t updateMipLevel = update.copyRegion.imageSubresource.mipLevel;
+        // It's possible we've accumulated updates that are no longer applicable if the image has
+        // never been flushed but the image description has changed. Check if this level exist for
+        // this image.
+        if (updateMipLevel >= levelCount)
+        {
+            updatesToKeep.emplace_back(update);
+            continue;
+        }
 
         // Conservatively flush all writes to the image. We could use a more restricted barrier.
         // Do not move this above the for loop, otherwise multiple updates can have race conditions
@@ -276,8 +303,18 @@ vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
                                          image->getCurrentLayout(), 1, &update.copyRegion);
     }
 
-    mSubresourceUpdates.clear();
-    mStagingBuffer.releaseRetainedBuffers(renderer);
+    // Only remove the updates that were actually applied to the image.
+    mSubresourceUpdates = std::move(updatesToKeep);
+
+    if (mSubresourceUpdates.empty())
+    {
+        mStagingBuffer.releaseRetainedBuffers(renderer);
+    }
+    else
+    {
+        WARN() << "Internal Vulkan bufffer could not be released. This is likely due to having "
+                  "extra images defined in the Texture.";
+    }
 
     return vk::NoError();
 }
@@ -412,6 +449,10 @@ gl::Error TextureVk::setImage(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
+
+    // If there is any staged changes for this index, we can remove them since we're going to
+    // override them with this call.
+    mPixelBuffer.removeStagedUpdates(index);
 
     // Convert internalFormat to sized internal format.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
@@ -720,6 +761,8 @@ gl::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
 
     ANGLE_TRY(renderer->finish(context));
 
+    const uint32_t levelCount = getLevelCount();
+
     // We now have the base level available to be manipulated in the baseLevelBuffer pointer.
     // Generate all the missing mipmaps with the slow path. We can optimize with vkCmdBlitImage
     // later.
@@ -734,7 +777,7 @@ gl::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
             sourceRowPitch, baseLevelBuffers + bufferOffset));
     }
 
-    mPixelBuffer.flushUpdatesToImage(renderer, &mImage, commandBuffer);
+    mPixelBuffer.flushUpdatesToImage(renderer, levelCount, &mImage, commandBuffer);
     return gl::NoError();
 }
 
@@ -828,18 +871,19 @@ vk::Error TextureVk::ensureImageInitialized(RendererVk *renderer)
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
 
+    const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
+    const gl::Extents &baseLevelExtents = baseLevelDesc.size;
+    const uint32_t levelCount           = getLevelCount();
+
     if (!mImage.valid())
     {
-        const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
         const vk::Format &format =
             renderer->getFormat(baseLevelDesc.format.info->sizedInternalFormat);
-        const gl::Extents &extents = baseLevelDesc.size;
-        const uint32_t levelCount = getLevelCount();
 
-        ANGLE_TRY(initImage(renderer, format, extents, levelCount, commandBuffer));
+        ANGLE_TRY(initImage(renderer, format, baseLevelExtents, levelCount, commandBuffer));
     }
 
-    ANGLE_TRY(mPixelBuffer.flushUpdatesToImage(renderer, &mImage, commandBuffer));
+    ANGLE_TRY(mPixelBuffer.flushUpdatesToImage(renderer, levelCount, &mImage, commandBuffer));
     return vk::NoError();
 }
 

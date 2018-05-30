@@ -60,8 +60,8 @@ class MipmapTest : public BaseMipmapTest
           mTextureCube(0),
           mLevelZeroBlueInitData(nullptr),
           mLevelZeroWhiteInitData(nullptr),
-          mLevelOneInitData(nullptr),
-          mLevelTwoInitData(nullptr),
+          mLevelOneGreenInitData(nullptr),
+          mLevelTwoRedInitData(nullptr),
           mOffscreenFramebuffer(0)
     {
         setWindowWidth(128);
@@ -138,8 +138,10 @@ class MipmapTest : public BaseMipmapTest
 
         mLevelZeroBlueInitData = createRGBInitData(getWindowWidth(), getWindowHeight(), 0, 0, 255); // Blue
         mLevelZeroWhiteInitData = createRGBInitData(getWindowWidth(), getWindowHeight(), 255, 255, 255); // White
-        mLevelOneInitData = createRGBInitData((getWindowWidth() / 2), (getWindowHeight() / 2), 0, 255, 0);   // Green
-        mLevelTwoInitData = createRGBInitData((getWindowWidth() / 4), (getWindowHeight() / 4), 255, 0, 0);   // Red
+        mLevelOneGreenInitData =
+            createRGBInitData((getWindowWidth() / 2), (getWindowHeight() / 2), 0, 255, 0);  // Green
+        mLevelTwoRedInitData =
+            createRGBInitData((getWindowWidth() / 4), (getWindowHeight() / 4), 255, 0, 0);  // Red
 
         glGenFramebuffers(1, &mOffscreenFramebuffer);
         glGenTextures(1, &mTexture2D);
@@ -177,8 +179,8 @@ class MipmapTest : public BaseMipmapTest
 
         SafeDeleteArray(mLevelZeroBlueInitData);
         SafeDeleteArray(mLevelZeroWhiteInitData);
-        SafeDeleteArray(mLevelOneInitData);
-        SafeDeleteArray(mLevelTwoInitData);
+        SafeDeleteArray(mLevelOneGreenInitData);
+        SafeDeleteArray(mLevelTwoRedInitData);
 
         ANGLETest::TearDown();
     }
@@ -219,8 +221,8 @@ class MipmapTest : public BaseMipmapTest
 
     GLubyte* mLevelZeroBlueInitData;
     GLubyte* mLevelZeroWhiteInitData;
-    GLubyte* mLevelOneInitData;
-    GLubyte* mLevelTwoInitData;
+    GLubyte *mLevelOneGreenInitData;
+    GLubyte *mLevelTwoRedInitData;
 
   private:
     GLuint mOffscreenFramebuffer;
@@ -444,7 +446,8 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
     }
 
     // Pass in level one init data.
-    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGB, getWindowWidth() / 2, getWindowHeight() / 2, 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelOneInitData);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGB, getWindowWidth() / 2, getWindowHeight() / 2, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, mLevelOneGreenInitData);
     ASSERT_GL_NO_ERROR();
 
     // Draw a full-sized quad, and check it's blue.
@@ -467,7 +470,8 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::black);
 
     // Pass in level two init data.
-    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGB, getWindowWidth() / 4, getWindowHeight() / 4, 0, GL_RGB, GL_UNSIGNED_BYTE, mLevelTwoInitData);
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGB, getWindowWidth() / 4, getWindowHeight() / 4, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, mLevelTwoRedInitData);
     ASSERT_GL_NO_ERROR();
 
     // Draw a full-sized quad, and check it's blue.
@@ -657,6 +661,80 @@ TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
 
     // Render a small textured quad. This would force minification if mips were enabled, but they're not. Therefore, this should be green.
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::green);
+}
+
+// This test defines a valid mipchain manually, with an extra level that's unused on the first few
+// draws. Later on, it redefines the whole mipchain but this time, uses the last mip that was
+// already uploaded before. The test expects that mip to be usable.
+TEST_P(MipmapTest, DefineValidExtraLevelAndUseItLater)
+{
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    GLubyte *levels[] = {mLevelZeroBlueInitData, mLevelOneGreenInitData, mLevelTwoRedInitData};
+
+    int maxLevel = 1 + floor(log2(std::max(getWindowWidth(), getWindowHeight())));
+
+    for (int i = 0; i < maxLevel; i++)
+    {
+        glTexImage2D(GL_TEXTURE_2D, i, GL_RGB, getWindowWidth() >> i, getWindowHeight() >> i, 0,
+                     GL_RGB, GL_UNSIGNED_BYTE, levels[i % 3]);
+    }
+
+    // Define an extra level that won't be used for now
+    GLubyte *magentaExtraLevelData =
+        createRGBInitData(getWindowWidth() * 2, getWindowHeight() * 2, 255, 0, 255);
+    glTexImage2D(GL_TEXTURE_2D, maxLevel, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 magentaExtraLevelData);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Enable mipmaps.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+
+    // Draw a full-sized quad using mip 0, and check it's blue.
+    clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::blue);
+
+    // Draw a full-sized quad using mip 1, and check it's green.
+    clearAndDrawQuad(m2DProgram, getWindowWidth() / 2, getWindowHeight() / 2);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::green);
+
+    // Draw a full-sized quad using mip 2, and check it's red.
+    clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::red);
+
+    // Draw a full-sized quad using the last mip, and check it's green.
+    clearAndDrawQuad(m2DProgram, 1, 1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Now redefine everything above level 8 to be a mipcomplete chain again.
+    GLubyte *levelDoubleSizeYellowInitData =
+        createRGBInitData(getWindowWidth() * 2, getWindowHeight() * 2, 255, 255, 0);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth() * 2, getWindowHeight() * 2, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, levelDoubleSizeYellowInitData);  // 256
+
+    for (int i = 0; i < maxLevel - 1; i++)
+    {
+        glTexImage2D(GL_TEXTURE_2D, i + 1, GL_RGB, getWindowWidth() >> i, getWindowHeight() >> i, 0,
+                     GL_RGB, GL_UNSIGNED_BYTE, levels[i % 3]);
+    }
+
+    // At this point we have a valid mip chain, the last level being magenta if we draw 1x1 pixel.
+    clearAndDrawQuad(m2DProgram, 1, 1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+
+    // Draw a full-sized quad using mip 0, and check it's yellow.
+    clearAndDrawQuad(m2DProgram, getWindowWidth() * 2, getWindowHeight() * 2);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::yellow);
+
+    // Draw a full-sized quad using mip 1, and check it's blue.
+    clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+
+    // Draw a full-sized quad using mip 2, and check it's green.
+    clearAndDrawQuad(m2DProgram, getWindowWidth() / 2, getWindowHeight() / 2);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::green);
 }
 
