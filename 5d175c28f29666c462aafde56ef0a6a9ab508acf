@@ -52,6 +52,24 @@
       "revId": "5d175c28f29666c462aafde56ef0a6a9ab508acf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3adac8be_b5354fa4",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-30T13:13:51Z",
+      "side": 1,
+      "message": "Yes, you are right. Need to check for overflows instead to use uint64_t type here.\nI had modified code, but I cannot ensure that the code is succinct enough, please take a look again, thank you.",
+      "parentUuid": "3ef1ee64_2f8ea791",
+      "revId": "5d175c28f29666c462aafde56ef0a6a9ab508acf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
