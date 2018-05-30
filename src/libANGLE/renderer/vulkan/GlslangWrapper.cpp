@@ -150,8 +150,14 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     {
         const auto &varying        = *varyingReg.packedVarying;
 
-        std::string locationString = "location = " + Str(varyingReg.registerRow) +
-                                     ", component = " + Str(varyingReg.registerColumn);
+        std::string locationString = "location = " + Str(varyingReg.registerRow);
+        if (varyingReg.registerColumn > 0)
+        {
+            ASSERT(!varying.varying->isStruct());
+            ASSERT(!gl::IsMatrixType(varying.varying->type));
+            locationString += ", component = " + Str(varyingReg.registerColumn);
+        }
+
         InsertLayoutSpecifierString(&vertexSource, varying.varying->name, locationString);
         InsertLayoutSpecifierString(&fragmentSource, varying.varying->name, locationString);
 
