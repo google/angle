@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "672c581a_f5574367",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-30T13:53:51Z",
+      "side": 1,
+      "message": "OK, I wasn\u0027t sure if that\u0027s why Intel was failing. For Intel-specific failures they\u0027ve been quite helpful in resolving them if I file a separate issue and cc yunchao.he / yang.gu.",
+      "parentUuid": "e1c2d3a8_98526802",
+      "range": {
+        "startLine": 656,
+        "startChar": 11,
+        "endLine": 658,
+        "endChar": 62
+      },
+      "revId": "fd5578f4e32dab769a16c54d67b7c79673dfe3da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88893537_9baa53af",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
         "patchSetId": 17
