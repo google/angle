@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "107d3f08_100a8491",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-30T17:16:18Z",
+      "side": 1,
+      "message": "Done. It was a bad copy paste from the CPU impl",
+      "parentUuid": "202f8b6a_dcab27fc",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba575e1a_1946a952",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 21
@@ -33,6 +51,24 @@
       "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82ab2b27_6a9c9d17",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-30T17:16:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba575e1a_1946a952",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ab4be5fb_d69a39b5",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-30T17:16:18Z",
+      "side": 1,
+      "message": "Nice, this is working well.",
+      "parentUuid": "33bffd5d_a12c1980",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe9d10e7_751ff348",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 21
@@ -67,6 +121,24 @@
       "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "141dc33f_ceb0a70e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-30T17:16:18Z",
+      "side": 1,
+      "message": "Nice, this is working well.",
+      "parentUuid": "fe9d10e7_751ff348",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -141,6 +213,24 @@
     },
     {
       "key": {
+        "uuid": "7f17484e_79aea46a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-30T17:16:18Z",
+      "side": 1,
+      "message": "This \u0027updateLayout\u0027 is not really changing the layout at all. Its only changing the internal state of the ImageHelper class so that the next call to changeImageLayoutWithStages will use \"UNDEFINED\" as the oldLayout, which is always valid if you don\u0027t know in which layout the image currently is. I added the changeLayout Corentin suggested to put it back officially in SRC_OPTIMAL so at least we will have consistency in the ImageHelper state vs what the image actually is.",
+      "parentUuid": "779239b9_767afa1e",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2c3e78de_97b6d4a8",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 21
@@ -158,6 +248,24 @@
     },
     {
       "key": {
+        "uuid": "633a1431_d71f66ad",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-30T17:16:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2c3e78de_97b6d4a8",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "177f4774_1ef86744",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 21
@@ -172,6 +280,24 @@
       "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c84c8092_2f5b953d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-30T17:16:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "177f4774_1ef86744",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
