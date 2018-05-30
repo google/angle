@@ -46,6 +46,30 @@
       "revId": "95cce74a62665c2fb69f6ac1726cb76c13083d16",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89a18a76_d8a9baa4",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-30T19:51:14Z",
+      "side": 0,
+      "message": "AFAIK (I can\u0027t check until I get back into the office tomorrow) the crashes were all on Android M.  According to this bug (https://issuetracker.google.com/issues/36974962) Android doesn\u0027t support any C locales to begin with so it should do the right thing without setting one.",
+      "parentUuid": "da50a318_41234279",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 51
+      },
+      "revId": "95cce74a62665c2fb69f6ac1726cb76c13083d16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
