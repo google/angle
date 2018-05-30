@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fd53401_ddc90e7b",
+        "filename": "src/common/PackedEnums.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T17:01:59Z",
+      "side": 1,
+      "message": "This is generally useful, can it be renamed IsCubeMapFaceTarget and can the changes related to it be landed before the FramebufferTextureEXT CL?",
+      "revId": "f9a3fe4a37ef43db9fe86ce7f42d5b87166e8d73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3698e7f8_17a774c3",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3704,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T17:01:59Z",
+      "side": 1,
+      "message": "Assuming we don\u0027t change the TextureTarget enum, this switch could use ImageIndex::MakeFromType.",
+      "revId": "f9a3fe4a37ef43db9fe86ce7f42d5b87166e8d73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ecc7f70_ecd3ed91",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3728,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T17:01:59Z",
+      "side": 1,
+      "message": "Can the layered property be set here instead maybe? Geoff WDYT?",
+      "revId": "f9a3fe4a37ef43db9fe86ce7f42d5b87166e8d73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
