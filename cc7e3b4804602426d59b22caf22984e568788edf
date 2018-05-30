@@ -46,6 +46,30 @@
       "revId": "cc7e3b4804602426d59b22caf22984e568788edf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebc99307_26017f45",
+        "filename": "src/libANGLE/renderer/vulkan/CommandGraph.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-30T23:56:04Z",
+      "side": 1,
+      "message": "Done. This was a product of a temporary refactor. It can affect performance, but wouldn\u0027t be hard to optimize by inlining getStoredQueueSerial().",
+      "parentUuid": "3343ede8_a95b1743",
+      "range": {
+        "startLine": 253,
+        "startChar": 46,
+        "endLine": 253,
+        "endChar": 64
+      },
+      "revId": "cc7e3b4804602426d59b22caf22984e568788edf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
