@@ -179,6 +179,8 @@ Error CommandGraphResource::beginWriteResource(RendererVk *renderer,
 Error CommandGraphResource::appendWriteResource(RendererVk *renderer,
                                                 CommandBuffer **commandBufferOut)
 {
+    updateQueueSerial(renderer->getCurrentQueueSerial());
+
     if (!hasChildlessWritingNode())
     {
         return beginWriteResource(renderer, commandBufferOut);
@@ -198,10 +200,19 @@ Error CommandGraphResource::appendWriteResource(RendererVk *renderer,
     return NoError();
 }
 
-void CommandGraphResource::appendToRenderPass(class CommandBuffer **commandBufferOut) const
+bool CommandGraphResource::appendToStartedRenderPass(RendererVk *renderer,
+                                                     CommandBuffer **commandBufferOut)
 {
-    ASSERT(hasStartedRenderPass());
-    *commandBufferOut = mCurrentWritingNode->getInsideRenderPassCommands();
+    updateQueueSerial(renderer->getCurrentQueueSerial());
+    if (hasStartedRenderPass())
+    {
+        *commandBufferOut = mCurrentWritingNode->getInsideRenderPassCommands();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool CommandGraphResource::hasStartedRenderPass() const

@@ -31,7 +31,6 @@ class CommandGraphResource
     CommandGraphResource();
     virtual ~CommandGraphResource();
 
-    void updateQueueSerial(Serial queueSerial);
     Serial getQueueSerial() const;
 
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
@@ -55,11 +54,9 @@ class CommandGraphResource
                           const std::vector<VkClearValue> &clearValues,
                           CommandBuffer **commandBufferOut) const;
 
-    // Checks if we're in a RenderPass.
-    bool hasStartedRenderPass() const;
-
-    // Returns a started command buffer if we've already called beginRenderPass.
-    void appendToRenderPass(CommandBuffer **commandBufferOut) const;
+    // Checks if we're in a RenderPass, returning true if so. Updates serial internally.
+    // Returns the started command buffer in commandBufferOut.
+    bool appendToStartedRenderPass(RendererVk *renderer, CommandBuffer **commandBufferOut);
 
     // Accessor for RenderPass RenderArea.
     const gl::Rectangle &getRenderPassRenderArea() const;
@@ -81,6 +78,13 @@ class CommandGraphResource
 
     // Allocates a new write node and calls onWriteResource internally.
     CommandGraphNode *getNewWritingNode(RendererVk *renderer);
+
+    // Checks if we're in a RenderPass without children.
+    bool hasStartedRenderPass() const;
+
+    // Updates the in-use serial tracked for this resource. Will clear dependencies if the resource
+    // was not used in this set of command nodes.
+    void updateQueueSerial(Serial queueSerial);
 
     Serial mStoredQueueSerial;
     std::vector<CommandGraphNode *> mCurrentReadingNodes;

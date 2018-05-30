@@ -553,7 +553,6 @@ gl::Error TextureVk::copySubImageImpl(const gl::Context *context,
 vk::Error TextureVk::getCommandBufferForWrite(RendererVk *renderer,
                                               vk::CommandBuffer **commandBufferOut)
 {
-    updateQueueSerial(renderer->getCurrentQueueSerial());
     ANGLE_TRY(appendWriteResource(renderer, commandBufferOut));
     return vk::NoError();
 }

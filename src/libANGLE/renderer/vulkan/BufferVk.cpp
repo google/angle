@@ -192,8 +192,6 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
     // Use map when available.
     if (renderer->isResourceInUse(*this))
     {
-        updateQueueSerial(renderer->getCurrentQueueSerial());
-
         vk::StagingBuffer stagingBuffer;
         ANGLE_TRY(stagingBuffer.init(contextVk, static_cast<VkDeviceSize>(size),
                                      vk::StagingUsage::Write));
