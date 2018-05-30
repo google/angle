@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9afe3c0e_db0d373c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-30T19:09:02Z",
+      "side": 1,
+      "message": "you can omit block - I know it\u0027s in the message but it doesn\u0027t make sense here. You can\u0027t have an interface block varying.",
+      "range": {
+        "startLine": 7,
+        "startChar": 38,
+        "endLine": 7,
+        "endChar": 44
+      },
+      "revId": "b21f52b080888b0576b712b8adae74dafb3ca7df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
