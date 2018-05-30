@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "202f8b6a_dcab27fc",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:08:06Z",
+      "side": 1,
+      "message": "This comment doesn\u0027t match what\u0027s done, I don\u0027t see a copy into a buffer.",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba575e1a_1946a952",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:08:06Z",
+      "side": 1,
+      "message": "This assumes the first mipLevel is in TRANSFER_DST_OPTIMAL, this might not be the case in general.",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33bffd5d_a12c1980",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:08:06Z",
+      "side": 1,
+      "message": "There could be a single imageBarrier for the same mip across all layers.",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe9d10e7_751ff348",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:08:06Z",
+      "side": 1,
+      "message": "Maybe we can do a single copy command for the same mip of all layers too thanks to layerCount here?",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e12c969_3002b207",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:08:06Z",
+      "side": 1,
+      "message": "This is incorrect because a pipeline barrier from VK_IMAGE_LAYOUT_UNDEFINED is free to discard / jumble the content of the VkImage. Essentially it tells the driver, here\u0027s a bunch of uninitialized memory so during layout transitions don\u0027t do any of the texture re-swizzling, only the rest such as extra allocations necessary.",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c3e78de_97b6d4a8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:08:06Z",
+      "side": 1,
+      "message": "This slightly unrelated addition LGTM.",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "177f4774_1ef86744",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:08:06Z",
+      "side": 1,
+      "message": "Idea for a different CL: make the raw vulkan format properties cached since they are already all queried on backend start.",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
