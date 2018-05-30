@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "593ffd1f_e7d51ab0",
+        "filename": "src/tests/compiler_tests/ShCompile_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-30T13:45:39Z",
+      "side": 1,
+      "message": "I am not sure which file is best (maybe a new file) but you want to inherit from MatchOutputCodeTest. Also an angle_end2end_test in GLSLTest would be very helpful.",
+      "range": {
+        "startLine": 15,
+        "startChar": 28,
+        "endLine": 15,
+        "endChar": 42
+      },
+      "revId": "e0cecc8b9d2b54751bd7c40a262ab46883825215",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
