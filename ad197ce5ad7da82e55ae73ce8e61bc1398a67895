@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fbc641d_26f286b0",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-05-30T02:06:56Z",
+      "side": 1,
+      "message": "I use Optional here to align with other variables in this function.",
+      "range": {
+        "startLine": 1047,
+        "startChar": 0,
+        "endLine": 1048,
+        "endChar": 58
+      },
+      "revId": "ad197ce5ad7da82e55ae73ce8e61bc1398a67895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
