@@ -70,6 +70,30 @@
       "revId": "95cce74a62665c2fb69f6ac1726cb76c13083d16",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b55e5d4_395fad93",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-30T19:54:59Z",
+      "side": 0,
+      "message": "https://stackoverflow.com/questions/24628645/comma-separation-in-output/24629137#24629137\n\nThere are some solutions in there that do things more manually.",
+      "parentUuid": "89a18a76_d8a9baa4",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 51
+      },
+      "revId": "95cce74a62665c2fb69f6ac1726cb76c13083d16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
