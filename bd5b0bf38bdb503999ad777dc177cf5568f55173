@@ -123,6 +123,24 @@
     },
     {
       "key": {
+        "uuid": "779239b9_767afa1e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-30T15:17:58Z",
+      "side": 1,
+      "message": "Yep that should be it, see https://github.com/mesa3d/mesa/blob/master/src/intel/vulkan/genX_cmd_buffer.c#L971",
+      "parentUuid": "c4f626eb_e3aaeff5",
+      "revId": "bd5b0bf38bdb503999ad777dc177cf5568f55173",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2c3e78de_97b6d4a8",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 21
