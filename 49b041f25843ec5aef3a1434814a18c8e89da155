@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03c67c99_2c703294",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-30T19:41:12Z",
+      "side": 1,
+      "message": "good diagnosis, but I wonder if we can better solve this by forcefully removing any subresource updates that are queued for images that are redefinied. On a setImage call, call a method in PixelBuffer that erases any SubresourceUpdates for the respecified mip/layer.",
+      "range": {
+        "startLine": 265,
+        "startChar": 0,
+        "endLine": 277,
+        "endChar": 0
+      },
+      "revId": "49b041f25843ec5aef3a1434814a18c8e89da155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
