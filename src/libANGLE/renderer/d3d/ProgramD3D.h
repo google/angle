@@ -296,6 +296,8 @@ class ProgramD3D : public ProgramImpl
     const std::vector<D3DUniform *> &getD3DUniforms() const { return mD3DUniforms; }
     void markUniformsClean();
 
+    const gl::ProgramState &getState() const { return mState; }
+
   private:
     // These forward-declared tasks are used for multi-thread shader compiles.
     class GetExecutableTask;

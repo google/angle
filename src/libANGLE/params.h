@@ -99,7 +99,12 @@ class DrawCallParams final : angle::NonCopyable
     // This value is the sum of 'baseVertex' and the first indexed vertex for DrawElements calls.
     GLint firstVertex() const;
 
-    size_t vertexCount() const;
+    size_t vertexCount() const
+    {
+        ASSERT(!isDrawElements() || mIndexRange.valid());
+        return mVertexCount;
+    }
+
     GLsizei indexCount() const;
     GLint baseVertex() const;
     GLenum type() const;

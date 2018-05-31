@@ -14,9 +14,9 @@
 #include "common/debug.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace rx
 {
@@ -44,11 +44,11 @@ void RenderStateCache::clear()
 
 // static
 d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *context,
-                                                        FramebufferD3D *framebufferD3D,
+                                                        Framebuffer11 *framebuffer11,
                                                         const gl::BlendState &blendState)
 {
     d3d11::BlendStateKey key;
-    const gl::AttachmentList &colorbuffers = framebufferD3D->getColorAttachmentsForRender(context);
+    const gl::AttachmentList &colorbuffers = framebuffer11->getColorAttachmentsForRender(context);
     const UINT8 blendStateMask =
         gl_d3d11::ConvertColorMask(blendState.colorMaskRed, blendState.colorMaskGreen,
                                    blendState.colorMaskBlue, blendState.colorMaskAlpha);

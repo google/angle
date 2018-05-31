@@ -215,7 +215,8 @@ class State : public angle::ObserverInterface, angle::NonCopyable
 
     // Transform feedback object (not buffer) binding manipulation
     void setTransformFeedbackBinding(const Context *context, TransformFeedback *transformFeedback);
-    TransformFeedback *getCurrentTransformFeedback() const;
+    TransformFeedback *getCurrentTransformFeedback() const { return mTransformFeedback.get(); }
+
     bool isTransformFeedbackActiveUnpaused() const;
     bool removeTransformFeedbackBinding(const Context *context, GLuint transformFeedback);
 

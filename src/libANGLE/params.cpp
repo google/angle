@@ -100,12 +100,6 @@ GLint DrawCallParams::firstVertex() const
     return mFirstVertex;
 }
 
-size_t DrawCallParams::vertexCount() const
-{
-    ASSERT(!isDrawElements() || mIndexRange.valid());
-    return mVertexCount;
-}
-
 GLsizei DrawCallParams::indexCount() const
 {
     ASSERT(isDrawElements());

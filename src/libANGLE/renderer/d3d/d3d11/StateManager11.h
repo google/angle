@@ -248,6 +248,8 @@ class StateManager11 final : angle::NonCopyable
     GLsizei getCurrentMinimumDrawCount() const { return mCurrentMinimumDrawCount; }
     VertexDataManager *getVertexDataManager() { return &mVertexDataManager; }
 
+    ProgramD3D *getProgramD3D() const { return mProgramD3D; }
+
   private:
     template <typename SRVType>
     void setShaderResourceInternal(gl::ShaderType shaderType,

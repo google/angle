@@ -1327,14 +1327,9 @@ void State::setTransformFeedbackBinding(const Context *context,
     mDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING);
 }
 
-TransformFeedback *State::getCurrentTransformFeedback() const
-{
-    return mTransformFeedback.get();
-}
-
 bool State::isTransformFeedbackActiveUnpaused() const
 {
-    TransformFeedback *curTransformFeedback = getCurrentTransformFeedback();
+    TransformFeedback *curTransformFeedback = mTransformFeedback.get();
     return curTransformFeedback && curTransformFeedback->isActive() &&
            !curTransformFeedback->isPaused();
 }

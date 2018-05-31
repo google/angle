@@ -18,11 +18,6 @@
 
 #include <unordered_map>
 
-namespace gl
-{
-class Framebuffer;
-}
-
 namespace std
 {
 template <>
@@ -61,7 +56,7 @@ struct hash<gl::SamplerState>
 
 namespace rx
 {
-class FramebufferD3D;
+class Framebuffer11;
 class Renderer11;
 
 class RenderStateCache : angle::NonCopyable
@@ -73,7 +68,7 @@ class RenderStateCache : angle::NonCopyable
     void clear();
 
     static d3d11::BlendStateKey GetBlendStateKey(const gl::Context *context,
-                                                 FramebufferD3D *framebufferD3D,
+                                                 Framebuffer11 *framebuffer11,
                                                  const gl::BlendState &blendState);
     gl::Error getBlendState(Renderer11 *renderer,
                             const d3d11::BlendStateKey &key,

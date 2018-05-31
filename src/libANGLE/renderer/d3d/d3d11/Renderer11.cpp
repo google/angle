@@ -368,17 +368,17 @@ bool IsArrayRTV(ID3D11RenderTargetView *rtv)
     return false;
 }
 
-int GetAdjustedInstanceCount(const gl::Program *program, int instanceCount)
+GLsizei GetAdjustedInstanceCount(const ProgramD3D *program, GLsizei instanceCount)
 {
-    if (!program->usesMultiview())
+    if (!program->getState().usesMultiview())
     {
         return instanceCount;
     }
     if (instanceCount == 0)
     {
-        return program->getNumViews();
+        return program->getState().getNumViews();
     }
-    return program->getNumViews() * instanceCount;
+    return program->getState().getNumViews() * instanceCount;
 }
 
 const uint32_t ScratchMemoryBufferLifetime = 1000;
@@ -1401,6 +1401,59 @@ void *Renderer11::getD3DDevice()
     return reinterpret_cast<void *>(mDevice);
 }
 
+gl::Error Renderer11::drawWithGeometryShaderAndTransformFeedback(const gl::Context *context,
+                                                                 gl::PrimitiveMode mode,
+                                                                 UINT instanceCount,
+                                                                 UINT vertexCount)
+{
+    const gl::State &glState = context->getGLState();
+    ProgramD3D *programD3D   = mStateManager.getProgramD3D();
+
+    // Since we use a geometry if-and-only-if we rewrite vertex streams, transform feedback
+    // won't get the correct output. To work around this, draw with *only* the stream out
+    // first (no pixel shader) to feed the stream out buffers and then draw again with the
+    // geometry shader + pixel shader to rasterize the primitives.
+    mStateManager.setPixelShader(nullptr);
+
+    if (instanceCount > 0)
+    {
+        mDeviceContext->DrawInstanced(vertexCount, instanceCount, 0, 0);
+    }
+    else
+    {
+        mDeviceContext->Draw(vertexCount, 0);
+    }
+
+    rx::ShaderExecutableD3D *pixelExe = nullptr;
+    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, nullptr));
+
+    // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
+    if (!pixelExe || glState.getRasterizerState().rasterizerDiscard)
+    {
+        return gl::NoError();
+    }
+
+    mStateManager.setPixelShader(&GetAs<ShaderExecutable11>(pixelExe)->getPixelShader());
+
+    // Retrieve the geometry shader.
+    rx::ShaderExecutableD3D *geometryExe = nullptr;
+    ANGLE_TRY(
+        programD3D->getGeometryExecutableForPrimitiveType(context, mode, &geometryExe, nullptr));
+
+    mStateManager.setGeometryShader(&GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader());
+
+    if (instanceCount > 0)
+    {
+        mDeviceContext->DrawInstanced(vertexCount, instanceCount, 0, 0);
+    }
+    else
+    {
+        mDeviceContext->Draw(vertexCount, 0);
+    }
+
+    return gl::NoError();
+}
+
 gl::Error Renderer11::drawArrays(const gl::Context *context, const gl::DrawCallParams &params)
 {
     if (params.vertexCount() < static_cast<size_t>(mStateManager.getCurrentMinimumDrawCount()))
@@ -1408,122 +1461,79 @@ gl::Error Renderer11::drawArrays(const gl::Context *context, const gl::DrawCallP
         return gl::NoError();
     }
 
-    const auto &glState = context->getGLState();
-    if (glState.isTransformFeedbackActiveUnpaused())
-    {
-        ANGLE_TRY(markTransformFeedbackUsage(context));
-    }
-
-    gl::Program *program = glState.getProgram();
-    ASSERT(program != nullptr);
-    GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, params.instances());
-    ProgramD3D *programD3D        = GetImplAs<ProgramD3D>(program);
+    ProgramD3D *programD3D        = mStateManager.getProgramD3D();
+    GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(programD3D, params.instances());
 
     // Note: vertex indexes can be arbitrarily large.
     UINT clampedVertexCount = params.getClampedVertexCount<UINT>();
 
-    if (programD3D->usesGeometryShader(params.mode()) &&
-        glState.isTransformFeedbackActiveUnpaused())
+    const auto &glState = context->getGLState();
+    if (glState.getCurrentTransformFeedback() && glState.isTransformFeedbackActiveUnpaused())
     {
-        // Since we use a geometry if-and-only-if we rewrite vertex streams, transform feedback
-        // won't get the correct output. To work around this, draw with *only* the stream out
-        // first (no pixel shader) to feed the stream out buffers and then draw again with the
-        // geometry shader + pixel shader to rasterize the primitives.
-        mStateManager.setPixelShader(nullptr);
+        ANGLE_TRY(markTransformFeedbackUsage(context));
 
-        if (adjustedInstanceCount > 0)
+        if (programD3D->usesGeometryShader(params.mode()))
         {
-            mDeviceContext->DrawInstanced(clampedVertexCount, adjustedInstanceCount, 0, 0);
+            return drawWithGeometryShaderAndTransformFeedback(
+                context, params.mode(), adjustedInstanceCount, clampedVertexCount);
         }
-        else
-        {
-            mDeviceContext->Draw(clampedVertexCount, 0);
-        }
-
-        rx::ShaderExecutableD3D *pixelExe = nullptr;
-        ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, nullptr));
-
-        // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
-        if (!pixelExe || glState.getRasterizerState().rasterizerDiscard)
-        {
-            return gl::NoError();
-        }
-
-        mStateManager.setPixelShader(&GetAs<ShaderExecutable11>(pixelExe)->getPixelShader());
-
-        // Retrieve the geometry shader.
-        rx::ShaderExecutableD3D *geometryExe = nullptr;
-        ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(context, params.mode(),
-                                                                    &geometryExe, nullptr));
-
-        mStateManager.setGeometryShader(
-            &GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader());
-
-        if (adjustedInstanceCount > 0)
-        {
-            mDeviceContext->DrawInstanced(clampedVertexCount, adjustedInstanceCount, 0, 0);
-        }
-        else
-        {
-            mDeviceContext->Draw(clampedVertexCount, 0);
-        }
-        return gl::NoError();
     }
 
-    if (params.mode() == gl::PrimitiveMode::LineLoop)
+    switch (params.mode())
     {
-        return drawLineLoop(context, clampedVertexCount, GL_NONE, nullptr, 0,
-                            adjustedInstanceCount);
+        case gl::PrimitiveMode::LineLoop:
+            return drawLineLoop(context, clampedVertexCount, GL_NONE, nullptr, 0,
+                                adjustedInstanceCount);
+        case gl::PrimitiveMode::TriangleFan:
+            return drawTriangleFan(context, clampedVertexCount, GL_NONE, nullptr, 0,
+                                   adjustedInstanceCount);
+        case gl::PrimitiveMode::Points:
+            if (getWorkarounds().useInstancedPointSpriteEmulation)
+            {
+                // This code should not be reachable by multi-view programs.
+                ASSERT(programD3D->getState().usesMultiview() == false);
+
+                // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
+                // Emulating instanced point sprites for FL9_3 requires the topology to be
+                // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
+                if (adjustedInstanceCount == 0)
+                {
+                    mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, 0, 0);
+                    return gl::NoError();
+                }
+
+                // If pointsprite emulation is used with glDrawArraysInstanced then we need to take
+                // a less efficent code path. Instanced rendering of emulated pointsprites requires
+                // a loop to draw each batch of points. An offset into the instanced data buffer is
+                // calculated and applied on each iteration to ensure all instances are rendered
+                // correctly. Each instance being rendered requires the inputlayout cache to reapply
+                // buffers and offsets.
+                for (GLsizei i = 0; i < params.instances(); i++)
+                {
+                    ANGLE_TRY(mStateManager.updateVertexOffsetsForPointSpritesEmulation(
+                        params.baseVertex(), i));
+                    mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, 0, 0);
+                }
+
+                // This required by updateVertexOffsets... above but is outside of the loop for
+                // speed.
+                mStateManager.invalidateVertexBuffer();
+                return gl::NoError();
+            }
+            break;
+        default:
+            break;
     }
 
-    if (params.mode() == gl::PrimitiveMode::TriangleFan)
-    {
-        return drawTriangleFan(context, clampedVertexCount, GL_NONE, nullptr, 0,
-                               adjustedInstanceCount);
-    }
-
-    bool useInstancedPointSpriteEmulation =
-        programD3D->usesPointSize() && getWorkarounds().useInstancedPointSpriteEmulation;
-
-    if (params.mode() != gl::PrimitiveMode::Points || !useInstancedPointSpriteEmulation)
-    {
-        if (adjustedInstanceCount == 0)
-        {
-            mDeviceContext->Draw(clampedVertexCount, 0);
-        }
-        else
-        {
-            mDeviceContext->DrawInstanced(clampedVertexCount, adjustedInstanceCount, 0, 0);
-        }
-        return gl::NoError();
-    }
-
-    // This code should not be reachable by multi-view programs.
-    ASSERT(program->usesMultiview() == false);
-
-    // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
-    // Emulating instanced point sprites for FL9_3 requires the topology to be
-    // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
+    // "Normal" draw case.
     if (adjustedInstanceCount == 0)
     {
-        mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, 0, 0);
-        return gl::NoError();
+        mDeviceContext->Draw(clampedVertexCount, 0);
     }
-
-    // If pointsprite emulation is used with glDrawArraysInstanced then we need to take a less
-    // efficent code path. Instanced rendering of emulated pointsprites requires a loop to draw each
-    // batch of points. An offset into the instanced data buffer is calculated and applied on each
-    // iteration to ensure all instances are rendered correctly. Each instance being rendered
-    // requires the inputlayout cache to reapply buffers and offsets.
-    for (GLsizei i = 0; i < params.instances(); i++)
+    else
     {
-        ANGLE_TRY(
-            mStateManager.updateVertexOffsetsForPointSpritesEmulation(params.baseVertex(), i));
-        mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, 0, 0);
+        mDeviceContext->DrawInstanced(clampedVertexCount, adjustedInstanceCount, 0, 0);
     }
-
-    // This required by updateVertexOffsets... above but is outside of the loop for speed.
-    mStateManager.invalidateVertexBuffer();
     return gl::NoError();
 }
 
@@ -1544,8 +1554,8 @@ gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCal
     int startVertex = static_cast<int>(params.firstVertex() - params.baseVertex());
     int baseVertex  = -startVertex;
 
-    const gl::Program *program    = glState.getProgram();
-    GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, params.instances());
+    const ProgramD3D *programD3D  = mStateManager.getProgramD3D();
+    GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(programD3D, params.instances());
 
     if (params.mode() == gl::PrimitiveMode::LineLoop)
     {
@@ -1558,8 +1568,6 @@ gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCal
         return drawTriangleFan(context, params.indexCount(), params.type(), params.indices(),
                                baseVertex, adjustedInstanceCount);
     }
-
-    const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
 
     if (params.mode() != gl::PrimitiveMode::Points ||
         !programD3D->usesInstancedPointSpriteEmulation())
@@ -1577,7 +1585,7 @@ gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCal
     }
 
     // This code should not be reachable by multi-view programs.
-    ASSERT(program->usesMultiview() == false);
+    ASSERT(programD3D->getState().usesMultiview() == false);
 
     // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
     // Emulating instanced point sprites for FL9_3 requires the topology to be
