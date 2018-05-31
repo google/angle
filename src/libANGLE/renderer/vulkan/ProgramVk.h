@@ -125,6 +125,12 @@ class ProgramVk : public ProgramImpl
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
 
   private:
+    template <int cols, int rows>
+    void setUniformMatrixfv(GLint location,
+                            GLsizei count,
+                            GLboolean transpose,
+                            const GLfloat *value);
+
     vk::Error reset(ContextVk *contextVk);
     vk::Error allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex);
     gl::Error initDefaultUniformBlocks(const gl::Context *glContext);

@@ -159,26 +159,6 @@ bool FindFlatInterpolationVarying(const gl::Context *context,
     return false;
 }
 
-// Helper method to de-tranpose a matrix uniform for an API query.
-void GetMatrixUniform(GLint columns, GLint rows, GLfloat *dataOut, const GLfloat *source)
-{
-    for (GLint col = 0; col < columns; ++col)
-    {
-        for (GLint row = 0; row < rows; ++row)
-        {
-            GLfloat *outptr      = dataOut + ((col * rows) + row);
-            const GLfloat *inptr = source + ((row * 4) + col);
-            *outptr              = *inptr;
-        }
-    }
-}
-
-template <typename NonFloatT>
-void GetMatrixUniform(GLint columns, GLint rows, NonFloatT *dataOut, const NonFloatT *source)
-{
-    UNREACHABLE();
-}
-
 class UniformBlockInfo final : angle::NonCopyable
 {
   public:
@@ -2722,8 +2702,7 @@ void ProgramD3D::getUniformInternal(GLint location, DestT *dataOut) const
 
     if (gl::IsMatrixType(uniform.type))
     {
-        GetMatrixUniform(gl::VariableColumnCount(uniform.type), gl::VariableRowCount(uniform.type),
-                         dataOut, reinterpret_cast<const DestT *>(srcPointer));
+        GetMatrixUniform(uniform.type, dataOut, reinterpret_cast<const DestT *>(srcPointer), true);
     }
     else
     {

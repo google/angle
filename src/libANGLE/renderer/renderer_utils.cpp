@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/Format.h"
 
 #include <string.h>
+#include "common/utilities.h"
 
 namespace rx
 {
@@ -654,6 +655,31 @@ bool SetFloatUniformMatrix(unsigned int arrayElementOffset,
     }
 
     return dirty;
+}
+
+template void GetMatrixUniform<GLint>(GLenum, GLint *, const GLint *, bool);
+template void GetMatrixUniform<GLuint>(GLenum, GLuint *, const GLuint *, bool);
+
+void GetMatrixUniform(GLenum type, GLfloat *dataOut, const GLfloat *source, bool transpose)
+{
+    int columns = gl::VariableColumnCount(type);
+    int rows    = gl::VariableRowCount(type);
+    for (GLint col = 0; col < columns; ++col)
+    {
+        for (GLint row = 0; row < rows; ++row)
+        {
+            GLfloat *outptr = dataOut + ((col * rows) + row);
+            const GLfloat *inptr =
+                transpose ? source + ((row * 4) + col) : source + ((col * 4) + row);
+            *outptr = *inptr;
+        }
+    }
+}
+
+template <typename NonFloatT>
+void GetMatrixUniform(GLenum type, NonFloatT *dataOut, const NonFloatT *source, bool transpose)
+{
+    UNREACHABLE();
 }
 
 }  // namespace rx
