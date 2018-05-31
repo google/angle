@@ -22,6 +22,30 @@
       "revId": "49b041f25843ec5aef3a1434814a18c8e89da155",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1db7330_b39ff0d6",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-31T12:22:23Z",
+      "side": 1,
+      "message": "So every time we will call \"setImage\", we will re-iterate on each subresourceUpdate we have saved so far, to find the one to remove. It seems wasteful to me if you are going to have a setImage call for each mipLevel of  each layer of a cube, we will do a lot more iterations than necessary.\n\nThe way I do it here does not increase the iteration count at all,I thought we would prefer that in terms of performance.\n\nStill want me to do it the way you suggested?",
+      "parentUuid": "03c67c99_2c703294",
+      "range": {
+        "startLine": 265,
+        "startChar": 0,
+        "endLine": 277,
+        "endChar": 0
+      },
+      "revId": "49b041f25843ec5aef3a1434814a18c8e89da155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
