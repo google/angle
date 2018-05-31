@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebdf774a_a691fb1e",
+        "filename": "src/libANGLE/GLES1Shaders.inc",
+        "patchSetId": 1
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-31T14:20:03Z",
+      "side": 1,
+      "message": "nit: needs one more indent.",
+      "range": {
+        "startLine": 410,
+        "startChar": 0,
+        "endLine": 411,
+        "endChar": 14
+      },
+      "revId": "069facabc09f3a4646ee65804e9a63b90b9d543c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
