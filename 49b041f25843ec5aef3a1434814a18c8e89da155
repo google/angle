@@ -94,6 +94,30 @@
       "revId": "49b041f25843ec5aef3a1434814a18c8e89da155",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "539b26ab_a08cd7b7",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-05-31T19:25:42Z",
+      "side": 1,
+      "message": "I have added this removing of the extra updates and it works, but it does not solve the \"extra_level\" case.\n\nThe problem is not always that we\u0027re keeping old updates in place, the main problem I was trying to solve here was when someone tries to update a level that *should* not exist.\n\nYou can now look at the updated version with the problem solved differently (as discussed offline)",
+      "parentUuid": "d2281e11_bdc134fd",
+      "range": {
+        "startLine": 265,
+        "startChar": 0,
+        "endLine": 277,
+        "endChar": 0
+      },
+      "revId": "49b041f25843ec5aef3a1434814a18c8e89da155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
