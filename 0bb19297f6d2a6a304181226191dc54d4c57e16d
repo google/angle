@@ -114,6 +114,29 @@
       "revId": "0bb19297f6d2a6a304181226191dc54d4c57e16d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b738222_44012481",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-31T15:23:28Z",
+      "side": 1,
+      "message": "nit: this could use a new name.  Maybe SetUniformMatrixData.  A comment above stating that the return value represents if the data was updated or not would be good too.",
+      "range": {
+        "startLine": 262,
+        "startChar": 5,
+        "endLine": 262,
+        "endChar": 27
+      },
+      "revId": "0bb19297f6d2a6a304181226191dc54d4c57e16d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
