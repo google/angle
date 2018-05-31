@@ -94,7 +94,7 @@ class DrawCallParams final : angle::NonCopyable
     // Called by DrawElementsIndirect.
     DrawCallParams(PrimitiveMode mode, GLenum type, const void *indirect);
 
-    PrimitiveMode mode() const;
+    PrimitiveMode mode() const { return mMode; }
 
     // This value is the sum of 'baseVertex' and the first indexed vertex for DrawElements calls.
     GLint firstVertex() const;
@@ -113,7 +113,8 @@ class DrawCallParams final : angle::NonCopyable
     const void *indirect() const;
 
     Error ensureIndexRangeResolved(const Context *context) const;
-    bool isDrawElements() const;
+    bool isDrawElements() const { return (mType != GL_NONE); }
+
     bool isDrawIndirect() const;
 
     // ensureIndexRangeResolved must be called first.

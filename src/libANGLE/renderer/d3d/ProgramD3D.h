@@ -288,7 +288,8 @@ class ProgramD3D : public ProgramImpl
     bool hasGeometryExecutableForPrimitiveType(gl::PrimitiveMode drawMode);
     bool hasPixelExecutableForCachedOutputLayout();
 
-    bool anyShaderUniformsDirty() const;
+    bool anyShaderUniformsDirty() const { return mShaderUniformsDirty.any(); }
+
     bool areShaderUniformsDirty(gl::ShaderType shaderType) const
     {
         return mShaderUniformsDirty[shaderType];

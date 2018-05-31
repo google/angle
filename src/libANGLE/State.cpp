@@ -1184,11 +1184,6 @@ Framebuffer *State::getReadFramebuffer() const
     return mReadFramebuffer;
 }
 
-Framebuffer *State::getDrawFramebuffer() const
-{
-    return mDrawFramebuffer;
-}
-
 bool State::removeReadFramebufferBinding(GLuint framebuffer)
 {
     if (mReadFramebuffer != nullptr && mReadFramebuffer->id() == framebuffer)
@@ -1232,12 +1227,6 @@ GLuint State::getVertexArrayId() const
 {
     ASSERT(mVertexArray != nullptr);
     return mVertexArray->id();
-}
-
-VertexArray *State::getVertexArray() const
-{
-    ASSERT(mVertexArray != nullptr);
-    return mVertexArray;
 }
 
 bool State::removeVertexArrayBinding(const Context *context, GLuint vertexArray)
@@ -1307,11 +1296,6 @@ void State::setProgram(const Context *context, Program *newProgram)
         mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
         mDirtyBits.set(DIRTY_BIT_PROGRAM_BINDING);
     }
-}
-
-Program *State::getProgram() const
-{
-    return mProgram;
 }
 
 void State::setTransformFeedbackBinding(const Context *context,

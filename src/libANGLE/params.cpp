@@ -85,11 +85,6 @@ DrawCallParams::DrawCallParams(PrimitiveMode mode, GLenum type, const void *indi
 {
 }
 
-PrimitiveMode DrawCallParams::mode() const
-{
-    return mMode;
-}
-
 GLint DrawCallParams::firstVertex() const
 {
     // In some cases we can know the first vertex will be fixed at zero, if we're on the "fast
@@ -130,11 +125,6 @@ GLsizei DrawCallParams::instances() const
 const void *DrawCallParams::indirect() const
 {
     return mIndirect;
-}
-
-bool DrawCallParams::isDrawElements() const
-{
-    return (mType != GL_NONE);
 }
 
 bool DrawCallParams::isDrawIndirect() const

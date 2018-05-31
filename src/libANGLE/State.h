@@ -199,19 +199,25 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     void setDrawFramebufferBinding(Framebuffer *framebuffer);
     Framebuffer *getTargetFramebuffer(GLenum target) const;
     Framebuffer *getReadFramebuffer() const;
-    Framebuffer *getDrawFramebuffer() const;
+    Framebuffer *getDrawFramebuffer() const { return mDrawFramebuffer; }
+
     bool removeReadFramebufferBinding(GLuint framebuffer);
     bool removeDrawFramebufferBinding(GLuint framebuffer);
 
     // Vertex array object binding manipulation
     void setVertexArrayBinding(const Context *context, VertexArray *vertexArray);
     GLuint getVertexArrayId() const;
-    VertexArray *getVertexArray() const;
+    VertexArray *getVertexArray() const
+    {
+        ASSERT(mVertexArray != nullptr);
+        return mVertexArray;
+    }
+
     bool removeVertexArrayBinding(const Context *context, GLuint vertexArray);
 
     // Program binding manipulation
     void setProgram(const Context *context, Program *newProgram);
-    Program *getProgram() const;
+    Program *getProgram() const { return mProgram; }
 
     // Transform feedback object (not buffer) binding manipulation
     void setTransformFeedbackBinding(const Context *context, TransformFeedback *transformFeedback);
@@ -250,7 +256,6 @@ class State : public angle::ObserverInterface, angle::NonCopyable
 
     // Vertex attrib manipulation
     void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);
-    void setElementArrayBuffer(const Context *context, Buffer *buffer);
     void setVertexAttribf(GLuint index, const GLfloat values[4]);
     void setVertexAttribu(GLuint index, const GLuint values[4]);
     void setVertexAttribi(GLuint index, const GLint values[4]);

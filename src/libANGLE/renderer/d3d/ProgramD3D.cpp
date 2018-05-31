@@ -2711,11 +2711,6 @@ bool ProgramD3D::hasPixelExecutableForCachedOutputLayout()
     return mCachedPixelExecutableIndex.valid();
 }
 
-bool ProgramD3D::anyShaderUniformsDirty() const
-{
-    return mShaderUniformsDirty.any();
-}
-
 template <typename DestT>
 void ProgramD3D::getUniformInternal(GLint location, DestT *dataOut) const
 {
