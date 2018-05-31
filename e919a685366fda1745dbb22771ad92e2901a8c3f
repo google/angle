@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4518fbce_dbe7e7bb",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1337,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-31T00:40:06Z",
+      "side": 0,
+      "message": "Why change here?",
+      "range": {
+        "startLine": 1337,
+        "startChar": 46,
+        "endLine": 1337,
+        "endChar": 73
+      },
+      "revId": "e919a685366fda1745dbb22771ad92e2901a8c3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

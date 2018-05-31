@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5bed5bb2_a919ea7d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1521,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-31T00:40:06Z",
+      "side": 1,
+      "message": "I think you are missing return gl::NoError() here.",
+      "range": {
+        "startLine": 1521,
+        "startChar": 12,
+        "endLine": 1521,
+        "endChar": 13
+      },
+      "revId": "ff060c86294dd506abf7f0b0f7a1360f662c3b61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
