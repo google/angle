@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "56fa4f44_355135dc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-31T15:25:21Z",
+      "side": 1,
+      "message": "Yep, the front-end Framebuffer can never by null. Once it\u0027s set here it\u0027s always valid.",
+      "parentUuid": "a61249b9_515dda9e",
+      "range": {
+        "startLine": 1003,
+        "startChar": 33,
+        "endLine": 1003,
+        "endChar": 85
+      },
+      "revId": "e919a685366fda1745dbb22771ad92e2901a8c3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cb35292_77baf665",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 9
@@ -69,6 +93,30 @@
       "revId": "e919a685366fda1745dbb22771ad92e2901a8c3f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fb4eddd_7a4a127a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-31T15:25:21Z",
+      "side": 1,
+      "message": "Done. I used the cached pointers in many more places. I left a few Framebuffer calls using the front-end. Mainly the issue is not exposing as many helper queries in the Impl objects.",
+      "parentUuid": "3cb35292_77baf665",
+      "range": {
+        "startLine": 1044,
+        "startChar": 49,
+        "endLine": 1044,
+        "endChar": 65
+      },
+      "revId": "e919a685366fda1745dbb22771ad92e2901a8c3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
