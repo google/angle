@@ -68,6 +68,8 @@ void main()
 
     vec4 vertexPos = projection * modelview * pos;
     gl_Position = vertexPos;
+
+    gl_PointSize = pointsize;
 }
 )";
 
@@ -78,6 +80,7 @@ precision highp float;
 // Defines for GL constants
 #define kMaxLights                           8
 #define kMaxTexUnits                         4
+#define kMaxClipPlanes                       6
 
 #define kModulate                       0x2100
 #define kDecal                          0x2101
@@ -206,6 +209,12 @@ uniform float light_spotlight_cutoff_angles[kMaxLights];
 uniform float light_attenuation_consts[kMaxLights];
 uniform float light_attenuation_linears[kMaxLights];
 uniform float light_attenuation_quadratics[kMaxLights];
+
+// User clip plane /////////////////////////////////////////////////////////////
+
+uniform bool enable_clip_planes;
+uniform bool clip_plane_enables[kMaxClipPlanes];
+uniform vec4 clip_planes[kMaxClipPlanes];
 
 // Outgoing fragment////////////////////////////////////////////////////////////
 
@@ -414,11 +423,30 @@ bool doAlphaTest(vec4 currentFragment)
     return shouldPassAlpha;
 }
 
+bool doClipPlaneTest() {
+    bool res = true;
+
+    for (int i = 0; i < kMaxClipPlanes; i++) {
+        if (clip_plane_enables[i]) {
+            float dist = dot(clip_planes[i].xyz, pos_varying.xyz) + clip_planes[i].w;
+            res = res && (dist >= 0.0);
+        }
+    }
+
+    return res;
+}
+
 )";
 
 constexpr char kGLES1DrawFShaderMain[] = R"(
 void main()
 {
+    if (enable_clip_planes) {
+        if (!doClipPlaneTest()) {
+            discard;
+        }
+    }
+
     vec4 currentFragment;
     vec4 vertex_color;
 

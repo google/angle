@@ -1683,6 +1683,9 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
         case GL_MAX_LIGHTS:
             *params = mCaps.maxLights;
             break;
+        case GL_MAX_CLIP_PLANES:
+            *params = mCaps.maxClipPlanes;
+            break;
         // GLES1 emulation: Vertex attribute queries
         case GL_VERTEX_ARRAY_BUFFER_BINDING:
         case GL_NORMAL_ARRAY_BUFFER_BINDING:
@@ -7064,6 +7067,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             case GL_MAX_PROJECTION_STACK_DEPTH:
             case GL_MAX_TEXTURE_STACK_DEPTH:
             case GL_MAX_LIGHTS:
+            case GL_MAX_CLIP_PLANES:
             case GL_VERTEX_ARRAY_STRIDE:
             case GL_NORMAL_ARRAY_STRIDE:
             case GL_COLOR_ARRAY_STRIDE:

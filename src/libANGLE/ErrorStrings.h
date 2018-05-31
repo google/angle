@@ -66,6 +66,7 @@ ERRMSG(InvalidBufferTypes, "Invalid buffer target enum.");
 ERRMSG(InvalidBufferUsage, "Invalid buffer usage enum.");
 ERRMSG(InvalidClearMask, "Invalid mask bits.");
 ERRMSG(InvalidClientState, "Invalid client vertex array type.");
+ERRMSG(InvalidClipPlane, "Invalid clip plane.");
 ERRMSG(InvalidCombinedImageUnit,
        "Specified unit must be in [GL_TEXTURE0, GL_TEXTURE0 + GL_MAX_COMBINED_IMAGE_UNITS)");
 ERRMSG(InvalidConstantColor,

@@ -52,6 +52,7 @@
             '<(angle_path)/src/tests/gl_tests/gles1/BasicDrawTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/ClientActiveTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/ClientStateEnable.cpp',
+            '<(angle_path)/src/tests/gl_tests/gles1/ClipPlaneTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/CurrentColorTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/CurrentNormalTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/CurrentTextureCoordsTest.cpp',

@@ -114,6 +114,12 @@ struct PointParameters
     GLfloat pointSize;
 };
 
+struct ClipPlaneParameters
+{
+    bool enabled;
+    angle::Vector4 equation;
+};
+
 class Context;
 class GLES1Renderer;
 class State;
@@ -171,6 +177,9 @@ class GLES1State final : angle::NonCopyable
 
     void setShadeModel(ShadingModel model);
 
+    void setClipPlane(unsigned int plane, const GLfloat *equation);
+    void getClipPlane(unsigned int plane, GLfloat *equation) const;
+
   private:
     friend class State;
     friend class GLES1Renderer;
@@ -190,7 +199,6 @@ class GLES1State final : angle::NonCopyable
     std::vector<bool> mTexCoordArrayEnabled;
 
     // Table 6.7-6.16 (IsEnabled)
-    std::vector<bool> mClipPlaneEnabled;
     bool mLineSmoothEnabled;
     bool mPointSmoothEnabled;
     bool mPointSpriteEnabled;
@@ -242,7 +250,7 @@ class GLES1State final : angle::NonCopyable
     LogicalOperation mLogicOp;
 
     // Table 6.7
-    std::vector<angle::Vector4> mClipPlanes;
+    std::vector<ClipPlaneParameters> mClipPlanes;
 
     // Table 6.19
     HintSetting mLineSmoothHint;

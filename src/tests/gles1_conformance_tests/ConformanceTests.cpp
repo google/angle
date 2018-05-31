@@ -455,7 +455,6 @@ TEST_P(GLES1ConformanceTest, ViewportClamp)
 
 TEST_P(GLES1ConformanceTest, XForm)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, XFormExec());
 }
 
@@ -471,13 +470,11 @@ TEST_P(GLES1ConformanceTest, XFormNormal)
 
 TEST_P(GLES1ConformanceTest, XFormViewport)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, XFormViewportExec());
 }
 
 TEST_P(GLES1ConformanceTest, XFormHomogenous)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, XFormHomogenousExec());
 }
 
@@ -521,7 +518,6 @@ TEST_P(GLES1ConformanceTest, PointSprite)
 
 TEST_P(GLES1ConformanceTest, UserClip)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, UserClipExec());
 }
 

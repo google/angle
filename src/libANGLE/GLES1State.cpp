@@ -137,9 +137,7 @@ void GLES1State::initialize(const Context *context, const State *state)
 
     mLogicOp = LogicalOperation::Copy;
 
-    mClipPlaneEnabled.resize(caps.maxClipPlanes, false);
-
-    mClipPlanes.resize(caps.maxClipPlanes, angle::Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+    mClipPlanes.resize(caps.maxClipPlanes, {false, angle::Vector4(0.0f, 0.0f, 0.0f, 0.0f)});
 
     mPointParameters.pointSizeMin                = 0.1f;
     mPointParameters.pointSizeMax                = 100.0f;
@@ -366,6 +364,24 @@ bool GLES1State::isColorMaterialEnabled() const
 void GLES1State::setShadeModel(ShadingModel model)
 {
     mShadeModel = model;
+}
+
+void GLES1State::setClipPlane(unsigned int plane, const GLfloat *equation)
+{
+    assert(plane < mClipPlanes.size());
+    mClipPlanes[plane].equation[0] = equation[0];
+    mClipPlanes[plane].equation[1] = equation[1];
+    mClipPlanes[plane].equation[2] = equation[2];
+    mClipPlanes[plane].equation[3] = equation[3];
+}
+
+void GLES1State::getClipPlane(unsigned int plane, GLfloat *equation) const
+{
+    assert(plane < mClipPlanes.size());
+    equation[0] = mClipPlanes[plane].equation[0];
+    equation[1] = mClipPlanes[plane].equation[1];
+    equation[2] = mClipPlanes[plane].equation[2];
+    equation[3] = mClipPlanes[plane].equation[3];
 }
 
 }  // namespace gl

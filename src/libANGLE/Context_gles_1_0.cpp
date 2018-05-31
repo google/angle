@@ -62,12 +62,17 @@ void Context::clientActiveTexture(GLenum texture)
 
 void Context::clipPlanef(GLenum p, const GLfloat *eqn)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setClipPlane(p - GL_CLIP_PLANE0, eqn);
 }
 
 void Context::clipPlanex(GLenum plane, const GLfixed *equation)
 {
-    UNIMPLEMENTED();
+    const GLfloat equationf[4] = {
+        FixedToFloat(equation[0]), FixedToFloat(equation[1]), FixedToFloat(equation[2]),
+        FixedToFloat(equation[3]),
+    };
+
+    mGLState.gles1().setClipPlane(plane - GL_CLIP_PLANE0, equationf);
 }
 
 void Context::color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
@@ -145,12 +150,19 @@ void Context::frustumx(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n, GL
 
 void Context::getClipPlanef(GLenum plane, GLfloat *equation)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().getClipPlane(plane - GL_CLIP_PLANE0, equation);
 }
 
 void Context::getClipPlanex(GLenum plane, GLfixed *equation)
 {
-    UNIMPLEMENTED();
+    GLfloat equationf[4] = {};
+
+    mGLState.gles1().getClipPlane(plane - GL_CLIP_PLANE0, equationf);
+
+    for (int i = 0; i < 4; i++)
+    {
+        equation[i] = FloatToFixed(equationf[i]);
+    }
 }
 
 void Context::getFixedv(GLenum pname, GLfixed *params)

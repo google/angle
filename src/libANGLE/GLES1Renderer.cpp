@@ -107,7 +107,7 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
         }
 
         setUniformMatrix4fv(programObject, mProgramState.textureMatrixLoc, kTexUnitCount, GL_FALSE,
-                            (float *)uniformBuffers.textureMatrices.data());
+                            reinterpret_cast<float *>(uniformBuffers.textureMatrices.data()));
     }
 
     // Texturing
@@ -211,25 +211,43 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
         setUniform1iv(programObject, mProgramState.lightEnablesLoc, kLightCount,
                       uniformBuffers.lightEnables.data());
         setUniform4fv(programObject, mProgramState.lightAmbientsLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.lightAmbients.data());
+                      reinterpret_cast<float *>(uniformBuffers.lightAmbients.data()));
         setUniform4fv(programObject, mProgramState.lightDiffusesLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.lightDiffuses.data());
+                      reinterpret_cast<float *>(uniformBuffers.lightDiffuses.data()));
         setUniform4fv(programObject, mProgramState.lightSpecularsLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.lightSpeculars.data());
+                      reinterpret_cast<float *>(uniformBuffers.lightSpeculars.data()));
         setUniform4fv(programObject, mProgramState.lightPositionsLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.lightPositions.data());
+                      reinterpret_cast<float *>(uniformBuffers.lightPositions.data()));
         setUniform3fv(programObject, mProgramState.lightDirectionsLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.lightDirections.data());
+                      reinterpret_cast<float *>(uniformBuffers.lightDirections.data()));
         setUniform1fv(programObject, mProgramState.lightSpotlightExponentsLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.spotlightExponents.data());
+                      reinterpret_cast<float *>(uniformBuffers.spotlightExponents.data()));
         setUniform1fv(programObject, mProgramState.lightSpotlightCutoffAnglesLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.spotlightCutoffAngles.data());
+                      reinterpret_cast<float *>(uniformBuffers.spotlightCutoffAngles.data()));
         setUniform1fv(programObject, mProgramState.lightAttenuationConstsLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.attenuationConsts.data());
+                      reinterpret_cast<float *>(uniformBuffers.attenuationConsts.data()));
         setUniform1fv(programObject, mProgramState.lightAttenuationLinearsLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.attenuationLinears.data());
+                      reinterpret_cast<float *>(uniformBuffers.attenuationLinears.data()));
         setUniform1fv(programObject, mProgramState.lightAttenuationQuadraticsLoc, kLightCount,
-                      (GLfloat *)uniformBuffers.attenuationQuadratics.data());
+                      reinterpret_cast<float *>(uniformBuffers.attenuationQuadratics.data()));
+    }
+
+    // Clip planes
+    {
+        bool enableClipPlanes = false;
+        for (int i = 0; i < kClipPlaneCount; i++)
+        {
+            uniformBuffers.clipPlaneEnables[i] = glState->getEnableFeature(GL_CLIP_PLANE0 + i);
+            enableClipPlanes = enableClipPlanes || uniformBuffers.clipPlaneEnables[i];
+            gles1State.getClipPlane(
+                i, reinterpret_cast<float *>(uniformBuffers.clipPlanes.data() + i));
+        }
+
+        setUniform1i(programObject, mProgramState.enableClipPlanesLoc, enableClipPlanes);
+        setUniform1iv(programObject, mProgramState.clipPlaneEnablesLoc, kClipPlaneCount,
+                      uniformBuffers.clipPlaneEnables.data());
+        setUniform4fv(programObject, mProgramState.clipPlanesLoc, kClipPlaneCount,
+                      reinterpret_cast<float *>(uniformBuffers.clipPlanes.data()));
     }
 
     // None of those are changes in sampler, so there is no need to set the GL_PROGRAM dirty.
@@ -483,6 +501,10 @@ Error GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
         programObject->getUniformLocation("light_attenuation_linears");
     mProgramState.lightAttenuationQuadraticsLoc =
         programObject->getUniformLocation("light_attenuation_quadratics");
+
+    mProgramState.enableClipPlanesLoc = programObject->getUniformLocation("enable_clip_planes");
+    mProgramState.clipPlaneEnablesLoc = programObject->getUniformLocation("clip_plane_enables");
+    mProgramState.clipPlanesLoc       = programObject->getUniformLocation("clip_planes");
 
     glState->setProgram(context, programObject);
 

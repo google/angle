@@ -73,8 +73,9 @@ class GLES1Renderer final : angle::NonCopyable
     void setUniform1f(Program *programObject, GLint loc, GLfloat value);
     void setUniform1fv(Program *programObject, GLint loc, GLint count, const GLfloat *value);
 
-    static constexpr int kTexUnitCount = 4;
-    static constexpr int kLightCount   = 8;
+    static constexpr int kTexUnitCount   = 4;
+    static constexpr int kLightCount     = 8;
+    static constexpr int kClipPlaneCount = 6;
 
     static constexpr int kVertexAttribIndex           = 0;
     static constexpr int kNormalAttribIndex           = 1;
@@ -132,6 +133,11 @@ class GLES1Renderer final : angle::NonCopyable
         GLint enableTextureCubeMapLoc;
         std::array<GLint, kTexUnitCount> tex2DSamplerLocs;
         std::array<GLint, kTexUnitCount> texCubeSamplerLocs;
+
+        // Clip planes
+        GLint enableClipPlanesLoc;
+        GLint clipPlaneEnablesLoc;
+        GLint clipPlanesLoc;
     };
 
     struct GLES1UniformBuffers
@@ -152,6 +158,10 @@ class GLES1Renderer final : angle::NonCopyable
         std::array<GLfloat, kLightCount> attenuationConsts;
         std::array<GLfloat, kLightCount> attenuationLinears;
         std::array<GLfloat, kLightCount> attenuationQuadratics;
+
+        // Clip planes
+        std::array<GLint, kClipPlaneCount> clipPlaneEnables;
+        std::array<Vec4Uniform, kClipPlaneCount> clipPlanes;
     };
 
     GLES1UniformBuffers mUniformBuffers;

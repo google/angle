@@ -316,6 +316,19 @@ bool ValidateLightModelSingleComponent(Context *context, GLenum pname)
     }
 }
 
+bool ValidateClipPlaneCommon(Context *context, GLenum plane)
+{
+    ANGLE_VALIDATE_IS_GLES1(context);
+
+    if (plane < GL_CLIP_PLANE0 || plane >= GL_CLIP_PLANE0 + context->getCaps().maxClipPlanes)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidClipPlane);
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl
 
 namespace gl
@@ -351,16 +364,14 @@ bool ValidateClientActiveTexture(Context *context, GLenum texture)
     return ValidateMultitextureUnit(context, texture);
 }
 
-bool ValidateClipPlanef(Context *context, GLenum p, const GLfloat *eqn)
+bool ValidateClipPlanef(Context *context, GLenum plane, const GLfloat *eqn)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateClipPlaneCommon(context, plane);
 }
 
 bool ValidateClipPlanex(Context *context, GLenum plane, const GLfixed *equation)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateClipPlaneCommon(context, plane);
 }
 
 bool ValidateColor4f(Context *context, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
@@ -477,14 +488,12 @@ bool ValidateGetBufferParameteriv(Context *context, GLenum target, GLenum pname,
 
 bool ValidateGetClipPlanef(Context *context, GLenum plane, GLfloat *equation)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateClipPlaneCommon(context, plane);
 }
 
 bool ValidateGetClipPlanex(Context *context, GLenum plane, GLfixed *equation)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateClipPlaneCommon(context, plane);
 }
 
 bool ValidateGetFixedv(Context *context, GLenum pname, GLfixed *params)
