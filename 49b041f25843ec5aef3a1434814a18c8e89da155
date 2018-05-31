@@ -70,6 +70,30 @@
       "revId": "49b041f25843ec5aef3a1434814a18c8e89da155",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2281e11_bdc134fd",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-31T15:28:23Z",
+      "side": 1,
+      "message": "I agree with this approach of removing the updates when the image is redefined.  It\u0027s possible that it could still pass this check and copy needlessly.",
+      "parentUuid": "926d4820_c9b9b8d8",
+      "range": {
+        "startLine": 265,
+        "startChar": 0,
+        "endLine": 277,
+        "endChar": 0
+      },
+      "revId": "49b041f25843ec5aef3a1434814a18c8e89da155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
