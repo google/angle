@@ -83,7 +83,7 @@ bool ImageIndex::has3DLayer() const
 {
     // It's quicker to check != CubeMap than calling usesTex3D, which checks multiple types. This
     // ASSERT validates the check gives the same result.
-    ASSERT(!hasLayer() || (mType != TextureType::CubeMap == usesTex3D()));
+    ASSERT(!hasLayer() || ((mType != TextureType::CubeMap) == usesTex3D()));
     return (hasLayer() && mType != TextureType::CubeMap);
 }
 
