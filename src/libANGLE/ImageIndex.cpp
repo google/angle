@@ -121,7 +121,7 @@ ImageIndex ImageIndex::MakeRectangle(GLint levelIndex)
 
 ImageIndex ImageIndex::MakeCube(TextureTarget target, GLint levelIndex)
 {
-    ASSERT(TextureTargetToType(target) == TextureType::CubeMap);
+    ASSERT(IsCubeMapFaceTarget(target));
     return ImageIndex(TextureType::CubeMap, levelIndex, TextureTargetToLayer(target), 1);
 }
 

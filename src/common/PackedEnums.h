@@ -142,6 +142,7 @@ TextureTarget NonCubeTextureTypeToTarget(TextureType type);
 
 TextureTarget CubeFaceIndexToTextureTarget(size_t face);
 size_t CubeMapTextureTargetToFaceIndex(TextureTarget target);
+bool IsCubeMapFaceTarget(TextureTarget target);
 
 constexpr TextureTarget kCubeMapTextureTargetMin = TextureTarget::CubeMapPositiveX;
 constexpr TextureTarget kCubeMapTextureTargetMax = TextureTarget::CubeMapNegativeZ;

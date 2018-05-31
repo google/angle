@@ -35,7 +35,7 @@ namespace
 
 size_t GetLevelInfoIndex(gl::TextureTarget target, size_t level)
 {
-    return gl::TextureTargetToType(target) == gl::TextureType::CubeMap
+    return gl::IsCubeMapFaceTarget(target)
                ? ((level * 6) + gl::CubeMapTextureTargetToFaceIndex(target))
                : level;
 }

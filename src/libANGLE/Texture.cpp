@@ -33,9 +33,8 @@ bool IsPointSampled(const SamplerState &samplerState)
 
 size_t GetImageDescIndex(TextureTarget target, size_t level)
 {
-    return TextureTargetToType(target) == TextureType::CubeMap
-               ? (level * 6 + CubeMapTextureTargetToFaceIndex(target))
-               : level;
+    return IsCubeMapFaceTarget(target) ? (level * 6 + CubeMapTextureTargetToFaceIndex(target))
+                                       : level;
 }
 
 InitState DetermineInitState(const Context *context, const uint8_t *pixels)

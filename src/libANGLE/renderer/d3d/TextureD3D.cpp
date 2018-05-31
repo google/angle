@@ -1589,7 +1589,7 @@ ImageD3D *TextureD3D_Cube::getImage(int level, int layer) const
 ImageD3D *TextureD3D_Cube::getImage(const gl::ImageIndex &index) const
 {
     ASSERT(index.getLevelIndex() < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(gl::TextureTargetToType(index.getTarget()) == gl::TextureType::CubeMap);
+    ASSERT(gl::IsCubeMapFaceTarget(index.getTarget()));
     return mImageArray[index.cubeMapFaceIndex()][index.getLevelIndex()].get();
 }
 
@@ -1803,7 +1803,7 @@ gl::Error TextureD3D_Cube::copyTexture(const gl::Context *context,
                                        bool unpackUnmultiplyAlpha,
                                        const gl::Texture *source)
 {
-    ASSERT(gl::TextureTargetToType(index.getTarget()) == gl::TextureType::CubeMap);
+    ASSERT(gl::IsCubeMapFaceTarget(index.getTarget()));
 
     gl::TextureTarget sourceTarget = NonCubeTextureTypeToTarget(source->getType());
 
@@ -1861,7 +1861,7 @@ gl::Error TextureD3D_Cube::copySubTexture(const gl::Context *context,
                                           bool unpackUnmultiplyAlpha,
                                           const gl::Texture *source)
 {
-    ASSERT(gl::TextureTargetToType(index.getTarget()) == gl::TextureType::CubeMap);
+    ASSERT(gl::IsCubeMapFaceTarget(index.getTarget()));
 
     GLint faceIndex = index.cubeMapFaceIndex();
 
@@ -2008,7 +2008,7 @@ gl::Error TextureD3D_Cube::getRenderTarget(const gl::Context *context,
                                            const gl::ImageIndex &index,
                                            RenderTargetD3D **outRT)
 {
-    ASSERT(gl::TextureTargetToType(index.getTarget()) == gl::TextureType::CubeMap);
+    ASSERT(gl::IsCubeMapFaceTarget(index.getTarget()));
 
     // ensure the underlying texture is created
     ANGLE_TRY(ensureRenderTarget(context));
@@ -2245,8 +2245,8 @@ gl::ImageIndex TextureD3D_Cube::getImageIndex(GLint mip, GLint layer) const
 bool TextureD3D_Cube::isValidIndex(const gl::ImageIndex &index) const
 {
     return (mTexStorage && index.getType() == gl::TextureType::CubeMap &&
-            gl::TextureTargetToType(index.getTarget()) == gl::TextureType::CubeMap &&
-            index.getLevelIndex() >= 0 && index.getLevelIndex() < mTexStorage->getLevelCount());
+            gl::IsCubeMapFaceTarget(index.getTarget()) && index.getLevelIndex() >= 0 &&
+            index.getLevelIndex() < mTexStorage->getLevelCount());
 }
 
 void TextureD3D_Cube::markAllImagesDirty()

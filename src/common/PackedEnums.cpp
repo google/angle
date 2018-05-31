@@ -42,6 +42,11 @@ TextureType TextureTargetToType(TextureTarget target)
     }
 }
 
+bool IsCubeMapFaceTarget(TextureTarget target)
+{
+    return TextureTargetToType(target) == TextureType::CubeMap;
+}
+
 TextureTarget NonCubeTextureTypeToTarget(TextureType type)
 {
     switch (type)
@@ -94,7 +99,7 @@ TextureTarget CubeFaceIndexToTextureTarget(size_t face)
 
 size_t CubeMapTextureTargetToFaceIndex(TextureTarget target)
 {
-    ASSERT(TextureTargetToType(target) == TextureType::CubeMap);
+    ASSERT(IsCubeMapFaceTarget(target));
     return static_cast<uint8_t>(target) - static_cast<uint8_t>(TextureTarget::CubeMapPositiveX);
 }
 
