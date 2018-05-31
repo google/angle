@@ -163,6 +163,30 @@
       "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a3ce623_189b92f7",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-05-31T14:14:36Z",
+      "side": 1,
+      "message": "That\u0027s how CheckedNumeric suggest it should be used. I assume the reason is that it provides defense: if code is moved around such that we no longer have a check for IsValid before, then the code will crash instead of proceeding with the garbage value.",
+      "parentUuid": "8b4db3e8_3788a377",
+      "range": {
+        "startLine": 409,
+        "startChar": 35,
+        "endLine": 409,
+        "endChar": 46
+      },
+      "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
