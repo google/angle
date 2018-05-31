@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a61249b9_515dda9e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-05-31T14:12:11Z",
+      "side": 1,
+      "message": "No, it looks like they are only null until the first draw call and stay non-null forever after that.",
+      "parentUuid": "5029fca4_cde026cf",
+      "range": {
+        "startLine": 1003,
+        "startChar": 33,
+        "endLine": 1003,
+        "endChar": 85
+      },
+      "revId": "e919a685366fda1745dbb22771ad92e2901a8c3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3cb35292_77baf665",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 9
