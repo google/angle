@@ -22,6 +22,30 @@
       "revId": "e919a685366fda1745dbb22771ad92e2901a8c3f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abffbaab_6a7df465",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1337,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-31T15:30:46Z",
+      "side": 0,
+      "message": "Just refactoring. I tend to use the member variables when they are in scope.",
+      "parentUuid": "4518fbce_dbe7e7bb",
+      "range": {
+        "startLine": 1337,
+        "startChar": 46,
+        "endLine": 1337,
+        "endChar": 73
+      },
+      "revId": "e919a685366fda1745dbb22771ad92e2901a8c3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
