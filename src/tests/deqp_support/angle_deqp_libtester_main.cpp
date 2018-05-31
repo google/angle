@@ -45,14 +45,13 @@ tcu::TestPackageRoot *g_root = nullptr;
 tcu::RandomOrderExecutor *g_executor = nullptr;
 
 const char *g_dEQPDataSearchDirs[] = {
-    "data",
-    "third_party/deqp/data",
-    "../third_party/deqp/src/data",
-    "deqp_support/data",
-    "third_party/deqp/src/data",
-    "../../third_party/deqp/src/data",
     "../../../third_party/deqp/src/data",
-    "../../sdcard/chromium_tests_root/third_party/deqp/src/data",
+    "../../sdcard/chromium_tests_root/third_party/angle/third_party/deqp/src/data",
+    "../../third_party/angle/third_party/deqp/src/data",
+    "../../third_party/deqp/src/data",
+    "../third_party/deqp/src/data",
+    "data",
+    "third_party/deqp/src/data",
 };
 
 // TODO(jmadill): upstream to dEQP?

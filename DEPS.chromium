@@ -29,7 +29,7 @@ vars = {
 }
 
 deps = {
-  'src/third_party/deqp/src':
+  'src/third_party/angle/third_party/deqp/src':
     Var('android_git') + '/platform/external/deqp@' + Var('deqp_revision'),
 
   'src/third_party/angle/third_party/glslang/src':

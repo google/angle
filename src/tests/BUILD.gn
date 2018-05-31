@@ -520,23 +520,26 @@ if (build_angle_gles1_conform_tests) {
 
 # TODO(jmadill): Other platforms.
 if (build_angle_deqp_tests) {
-  deqp_gypi = exec_script("//build/gypi_to_gn.py",
-                          [
-                            rebase_path("deqp.gypi"),
-                            "--replace=<(angle_path)=.",
-                            "--replace=<(deqp_path)=//third_party/deqp/src",
-                          ],
-                          "scope",
-                          [ "deqp.gypi" ])
+  deqp_gypi =
+      exec_script("//build/gypi_to_gn.py",
+                  [
+                    rebase_path("deqp.gypi"),
+                    "--replace=<(angle_path)=.",
+                    "--replace=<(deqp_path)=$angle_root/third_party/deqp/src",
+                  ],
+                  "scope",
+                  [ "deqp.gypi" ])
 
   config("angle_deqp_support") {
     include_dirs = rebase_path(deqp_gypi.deqp_include_dirs, ".", "../..")
     if (is_win && !is_clang) {
-      include_dirs += [ "../deqp/src/framework/platform/win32" ]
+      include_dirs +=
+          [ "$angle_root/third_party/deqp/src/framework/platform/win32" ]
       cflags = deqp_gypi.deqp_win_cflags
     }
     if (is_android) {
-      include_dirs += [ "../../../deqp/src/framework/platform/android" ]
+      include_dirs +=
+          [ "$angle_root/third_party/deqp/src/framework/platform/android" ]
     }
     defines = deqp_gypi.deqp_defines
     defines += [ "_MBCS" ]
@@ -746,8 +749,8 @@ if (build_angle_deqp_tests) {
 
       data = [
         "deqp_support/deqp_${api_name}_test_expectations.txt",
-        "../../../deqp/src/android/cts/master/${api_name}-master.txt",
-        "../../../deqp/src/data/",
+        "$angle_root/third_party/deqp/src/android/cts/master/${api_name}-master.txt",
+        "$angle_root/third_party/deqp/src/data/",
       ]
 
       if (is_linux && !is_component_build) {
