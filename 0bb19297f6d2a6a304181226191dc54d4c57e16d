@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1dd71f05_644e6857",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2291,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-31T15:22:33Z",
+      "side": 1,
+      "message": "don\u0027t copy this.",
+      "range": {
+        "startLine": 2291,
+        "startChar": 14,
+        "endLine": 2291,
+        "endChar": 31
+      },
+      "revId": "0bb19297f6d2a6a304181226191dc54d4c57e16d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "321a267d_2bc46fe4",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-31T15:22:33Z",
+      "side": 1,
+      "message": "these constexpr values should all be kBlah...",
+      "range": {
+        "startLine": 261,
+        "startChar": 18,
+        "endLine": 261,
+        "endChar": 31
+      },
+      "revId": "0bb19297f6d2a6a304181226191dc54d4c57e16d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c6c1a46_8761ff61",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-31T15:22:33Z",
+      "side": 1,
+      "message": "nit: ANGLE_ prefix",
+      "range": {
+        "startLine": 609,
+        "startChar": 8,
+        "endLine": 609,
+        "endChar": 43
+      },
+      "revId": "0bb19297f6d2a6a304181226191dc54d4c57e16d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6339bf9_ef8becd0",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-31T15:22:33Z",
+      "side": 1,
+      "message": "this comment is out of scope. Also backwards for Vulkan. In the D3D code invert the GLboolean condition.",
+      "range": {
+        "startLine": 644,
+        "startChar": 8,
+        "endLine": 644,
+        "endChar": 94
+      },
+      "revId": "0bb19297f6d2a6a304181226191dc54d4c57e16d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c34ff8c6_c5c3b7d1",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-31T15:22:33Z",
+      "side": 1,
+      "message": "\"Impl\" denotes a private function usually. Can you rename this? Maybe just SetFloatUniformMatrix",
+      "range": {
+        "startLine": 262,
+        "startChar": 5,
+        "endLine": 262,
+        "endChar": 27
+      },
+      "revId": "0bb19297f6d2a6a304181226191dc54d4c57e16d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
