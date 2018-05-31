@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5029fca4_cde026cf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-31T00:16:58Z",
+      "side": 1,
+      "message": "It is not clear to me if the cached values will ever be reset to their original nullptr values. Will that happen if app calls glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0)?",
+      "range": {
+        "startLine": 1003,
+        "startChar": 33,
+        "endLine": 1003,
+        "endChar": 85
+      },
+      "revId": "e919a685366fda1745dbb22771ad92e2901a8c3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3cb35292_77baf665",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-05-31T00:16:58Z",
+      "side": 1,
+      "message": "Is it possible to use mProgramD3D here?\nIn general, I see that not all calls to getProgram(), getVertexArray(), getDrawFramebuffer() were replaces with the cached values. Is that because the cache would be out of sync for other places?",
+      "range": {
+        "startLine": 1044,
+        "startChar": 49,
+        "endLine": 1044,
+        "endChar": 65
+      },
+      "revId": "e919a685366fda1745dbb22771ad92e2901a8c3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
