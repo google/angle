@@ -94,6 +94,11 @@ class GLES1Renderer final : angle::NonCopyable
         GLint textureMatrixLoc;
         GLint modelviewInvTrLoc;
 
+        // Alpha test
+        GLint enableAlphaTestLoc;
+        GLint alphaFuncLoc;
+        GLint alphaTestRefLoc;
+
         // Shading, materials, and lighting
         GLint shadeModelFlatLoc;
         GLint enableLightingLoc;

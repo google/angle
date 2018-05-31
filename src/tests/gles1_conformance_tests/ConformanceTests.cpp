@@ -152,7 +152,6 @@ TEST_P(GLES1ConformanceTest, AmbScene)
 
 TEST_P(GLES1ConformanceTest, APFunc)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, APFuncExec());
 }
 
@@ -320,7 +319,6 @@ TEST_P(GLES1ConformanceTest, MustPass)
 
 TEST_P(GLES1ConformanceTest, PackedPixels)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, PackedPixelsExec());
 }
 

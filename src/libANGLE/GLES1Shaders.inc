@@ -174,6 +174,12 @@ in vec4 texcoord1_varying;
 in vec4 texcoord2_varying;
 in vec4 texcoord3_varying;
 
+// Alpha test///////////////////////////////////////////////////////////////////
+
+uniform bool enable_alpha_test;
+uniform int alpha_func;
+uniform float alpha_test_ref;
+
 // Shading: flat shading, lighting, and materials///////////////////////////////
 
 uniform bool shade_model_flat;
@@ -371,6 +377,43 @@ vec4 doLighting(vec4 currentFragment) {
     return lightingResult;
 }
 
+bool doAlphaTest(vec4 currentFragment)
+{
+    bool shouldPassAlpha = false;
+    float incAlpha = currentFragment.a;
+
+    switch (alpha_func)
+    {
+        case kNever:
+            shouldPassAlpha = false;
+            break;
+        case kLess:
+            shouldPassAlpha = incAlpha < alpha_test_ref;
+            break;
+        case kLequal:
+            shouldPassAlpha = incAlpha <= alpha_test_ref;
+            break;
+        case kEqual:
+            shouldPassAlpha = incAlpha == alpha_test_ref;
+            break;
+        case kGequal:
+            shouldPassAlpha = incAlpha >= alpha_test_ref;
+            break;
+        case kGreater:
+            shouldPassAlpha = incAlpha > alpha_test_ref;
+            break;
+        case kNotequal:
+            shouldPassAlpha = incAlpha != alpha_test_ref;
+            break;
+        case kAlways:
+        default:
+            shouldPassAlpha = true;
+            break;
+    }
+
+    return shouldPassAlpha;
+}
+
 )";
 
 constexpr char kGLES1DrawFShaderMain[] = R"(
@@ -393,6 +436,11 @@ void main()
 
     if (enable_lighting) {
         currentFragment = doLighting(currentFragment);
+    }
+
+    if (enable_alpha_test && !doAlphaTest(currentFragment))
+    {
+        discard;
     }
 
     frag_color = currentFragment;

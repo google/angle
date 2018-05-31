@@ -146,6 +146,15 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
                       texCubeEnables.data());
     }
 
+    // Alpha test
+    {
+        setUniform1i(programObject, mProgramState.enableAlphaTestLoc,
+                     glState->getEnableFeature(GL_ALPHA_TEST));
+        setUniform1i(programObject, mProgramState.alphaFuncLoc,
+                     ToGLenum(gles1State.mAlphaTestFunc));
+        setUniform1f(programObject, mProgramState.alphaTestRefLoc, gles1State.mAlphaTestRef);
+    }
+
     // Shading, materials, and lighting
     {
         setUniform1i(programObject, mProgramState.shadeModelFlatLoc,
@@ -433,6 +442,10 @@ Error GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
     mProgramState.enableTexture2DLoc = programObject->getUniformLocation("enable_texture_2d");
     mProgramState.enableTextureCubeMapLoc =
         programObject->getUniformLocation("enable_texture_cube_map");
+
+    mProgramState.enableAlphaTestLoc = programObject->getUniformLocation("enable_alpha_test");
+    mProgramState.alphaFuncLoc       = programObject->getUniformLocation("alpha_func");
+    mProgramState.alphaTestRefLoc    = programObject->getUniformLocation("alpha_test_ref");
 
     mProgramState.shadeModelFlatLoc = programObject->getUniformLocation("shade_model_flat");
     mProgramState.enableLightingLoc = programObject->getUniformLocation("enable_lighting");
