@@ -2413,6 +2413,9 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         case GL_MATRIX_MODE:
             *params = ToGLenum(mGLES1State.mMatrixMode);
             break;
+        case GL_SHADE_MODEL:
+            *params = ToGLenum(mGLES1State.mShadeModel);
+            break;
         default:
             UNREACHABLE();
             break;

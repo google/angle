@@ -12778,11 +12778,12 @@ void GL_APIENTRY ShadeModelContextANGLE(GLeglContext ctx, GLenum mode)
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::ShadeModel>(mode);
+        ShadingModel modePacked = FromGLenum<ShadingModel>(mode);
+        context->gatherParams<EntryPoint::ShadeModel>(modePacked);
 
-        if (context->skipValidation() || ValidateShadeModel(context, mode))
+        if (context->skipValidation() || ValidateShadeModel(context, modePacked))
         {
-            context->shadeModel(mode);
+            context->shadeModel(modePacked);
         }
     }
 }

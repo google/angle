@@ -363,4 +363,9 @@ bool GLES1State::isColorMaterialEnabled() const
     return mColorMaterialEnabled;
 }
 
+void GLES1State::setShadeModel(ShadingModel model)
+{
+    mShadeModel = model;
+}
+
 }  // namespace gl

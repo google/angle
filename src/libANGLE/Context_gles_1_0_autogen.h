@@ -83,7 +83,7 @@
     void sampleCoveragex(GLclampx value, GLboolean invert);                                \
     void scalef(GLfloat x, GLfloat y, GLfloat z);                                          \
     void scalex(GLfixed x, GLfixed y, GLfixed z);                                          \
-    void shadeModel(GLenum mode);                                                          \
+    void shadeModel(ShadingModel modePacked);                                              \
     void texCoordPointer(GLint size, GLenum type, GLsizei stride, const void *pointer);    \
     void texEnvf(GLenum target, GLenum pname, GLfloat param);                              \
     void texEnvfv(GLenum target, GLenum pname, const GLfloat *params);                     \

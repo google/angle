@@ -127,6 +127,7 @@ ERRMSG(InvalidSampleMaskNumber,
 ERRMSG(InvalidSampler, "Sampler is not valid");
 ERRMSG(InvalidShaderName, "Shader object expected.");
 ERRMSG(InvalidShaderType, "Invalid shader type.");
+ERRMSG(InvalidShadingModel, "Invalid shading model.");
 ERRMSG(InvalidStencil, "Invalid stencil.");
 ERRMSG(InvalidStencilBitMask, "Invalid stencil bit mask.");
 ERRMSG(InvalidTarget, "Invalid target.");

@@ -191,6 +191,12 @@ angle_sample("gles1_simple_lighting") {
   ]
 }
 
+angle_sample("gles1_flat_shading") {
+  sources = [
+    "gles1/FlatShading.cpp",
+  ]
+}
+
 group("all") {
   testonly = true
   deps = [

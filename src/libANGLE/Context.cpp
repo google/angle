@@ -7091,6 +7091,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             case GL_POINT_SIZE_ARRAY_STRIDE_OES:
             case GL_POINT_SIZE_ARRAY_TYPE_OES:
             case GL_POINT_SIZE_ARRAY_BUFFER_BINDING_OES:
+            case GL_SHADE_MODEL:
                 *type      = GL_INT;
                 *numParams = 1;
                 return true;

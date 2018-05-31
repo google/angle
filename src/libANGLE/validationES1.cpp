@@ -862,10 +862,18 @@ bool ValidateScalex(Context *context, GLfixed x, GLfixed y, GLfixed z)
     return true;
 }
 
-bool ValidateShadeModel(Context *context, GLenum mode)
+bool ValidateShadeModel(Context *context, ShadingModel mode)
 {
-    UNIMPLEMENTED();
-    return true;
+    ANGLE_VALIDATE_IS_GLES1(context);
+    switch (mode)
+    {
+        case ShadingModel::Flat:
+        case ShadingModel::Smooth:
+            return true;
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidShadingModel);
+            return false;
+    }
 }
 
 bool ValidateTexCoordPointer(Context *context,

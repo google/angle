@@ -451,9 +451,9 @@ void Context::scalex(GLfixed x, GLfixed y, GLfixed z)
         angle::Mat4::Scale(angle::Vector3(FixedToFloat(x), FixedToFloat(y), FixedToFloat(z))));
 }
 
-void Context::shadeModel(GLenum mode)
+void Context::shadeModel(ShadingModel model)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setShadeModel(model);
 }
 
 void Context::texCoordPointer(GLint size, GLenum type, GLsizei stride, const void *ptr)

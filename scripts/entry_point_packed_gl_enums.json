@@ -262,6 +262,9 @@
     "glQueryCounterEXT": {
         "target": "QueryType"
     },
+    "glShadeModel": {
+        "mode": "ShadingModel"
+    },
     "glTexImage2D": {
         "target": "TextureTarget"
     },

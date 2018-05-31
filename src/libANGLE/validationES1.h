@@ -137,7 +137,7 @@ bool ValidateRotatex(Context *context, GLfixed angle, GLfixed x, GLfixed y, GLfi
 bool ValidateSampleCoveragex(Context *context, GLclampx value, GLboolean invert);
 bool ValidateScalef(Context *context, GLfloat x, GLfloat y, GLfloat z);
 bool ValidateScalex(Context *context, GLfixed x, GLfixed y, GLfixed z);
-bool ValidateShadeModel(Context *context, GLenum mode);
+bool ValidateShadeModel(Context *context, ShadingModel mode);
 bool ValidateTexCoordPointer(Context *context,
                              GLint size,
                              GLenum type,

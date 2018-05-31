@@ -169,6 +169,8 @@ class GLES1State final : angle::NonCopyable
     const MaterialParameters &materialParameters() const;
     bool isColorMaterialEnabled() const;
 
+    void setShadeModel(ShadingModel model);
+
   private:
     friend class State;
     friend class GLES1Renderer;
