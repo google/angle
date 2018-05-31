@@ -98,6 +98,8 @@ class ProgramImpl : angle::NonCopyable
     {
     }
 
+    const gl::ProgramState &getState() const { return mState; }
+
   protected:
     const gl::ProgramState &mState;
 };

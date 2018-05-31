@@ -252,7 +252,8 @@ bool IsClearBufferMaskedOut(const Context *context, GLenum buffer)
 
 // This constructor is only used for default framebuffers.
 FramebufferState::FramebufferState()
-    : mLabel(),
+    : mId(0),
+      mLabel(),
       mColorAttachments(1),
       mDrawBufferStates(1, GL_BACK),
       mReadBufferState(GL_BACK),
@@ -268,8 +269,9 @@ FramebufferState::FramebufferState()
     mEnabledDrawBuffers.set(0);
 }
 
-FramebufferState::FramebufferState(const Caps &caps)
-    : mLabel(),
+FramebufferState::FramebufferState(const Caps &caps, GLuint id)
+    : mId(id),
+      mLabel(),
       mColorAttachments(caps.maxColorAttachments),
       mDrawBufferStates(caps.maxDrawBuffers, GL_NONE),
       mReadBufferState(GL_COLOR_ATTACHMENT0_EXT),
@@ -281,6 +283,7 @@ FramebufferState::FramebufferState(const Caps &caps)
       mDefaultLayers(0),
       mWebGLDepthStencilConsistent(true)
 {
+    ASSERT(mId != 0);
     ASSERT(mDrawBufferStates.size() > 0);
     mDrawBufferStates[0] = GL_COLOR_ATTACHMENT0_EXT;
 }
@@ -613,14 +616,12 @@ Box FramebufferState::getDimensions() const
 }
 
 Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id)
-    : mState(caps),
+    : mState(caps, id),
       mImpl(factory->createFramebuffer(mState)),
-      mId(id),
       mCachedStatus(),
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
 {
-    ASSERT(mId != 0);
     ASSERT(mImpl != nullptr);
     ASSERT(mState.mColorAttachments.size() == static_cast<size_t>(caps.maxColorAttachments));
 
@@ -634,7 +635,6 @@ Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id
 Framebuffer::Framebuffer(const egl::Display *display, egl::Surface *surface)
     : mState(),
       mImpl(surface->getImplementation()->createDefaultFramebuffer(mState)),
-      mId(0),
       mCachedStatus(GL_FRAMEBUFFER_COMPLETE),
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
@@ -673,7 +673,6 @@ Framebuffer::Framebuffer(const egl::Display *display, egl::Surface *surface)
 Framebuffer::Framebuffer(rx::GLImplFactory *factory)
     : mState(),
       mImpl(factory->createFramebuffer(mState)),
-      mId(0),
       mCachedStatus(GL_FRAMEBUFFER_UNDEFINED_OES),
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
@@ -972,7 +971,7 @@ bool Framebuffer::usingExtendedDrawBuffers() const
 
 void Framebuffer::invalidateCompletenessCache()
 {
-    if (mId != 0)
+    if (mState.mId != 0)
     {
         mCachedStatus.reset();
     }
@@ -983,7 +982,7 @@ GLenum Framebuffer::checkStatus(const Context *context)
     // The default framebuffer is always complete except when it is surfaceless in which
     // case it is always unsupported. We return early because the default framebuffer may
     // not be subject to the same rules as application FBOs. ie, it could have 0x0 size.
-    if (mId == 0)
+    if (mState.mId == 0)
     {
         ASSERT(mCachedStatus.valid());
         ASSERT(mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE ||
@@ -1017,7 +1016,7 @@ GLenum Framebuffer::checkStatusWithGLFrontEnd(const Context *context)
 {
     const ContextState &state = context->getContextState();
 
-    ASSERT(mId != 0);
+    ASSERT(mState.mId != 0);
 
     bool hasAttachments = false;
     Optional<unsigned int> colorbufferSize;
@@ -1762,7 +1761,7 @@ void Framebuffer::onSubjectStateChange(const Context *context,
 
     // Only reset the cached status if this is not the default framebuffer.  The default framebuffer
     // will still use this channel to mark itself dirty.
-    if (mId != 0)
+    if (mState.mId != 0)
     {
         // TOOD(jmadill): Make this only update individual attachments to do less work.
         mCachedStatus.reset();
@@ -1799,7 +1798,7 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
     const Program *program = state.getProgram();
 
     // TODO(jmadill): Default framebuffer feedback loops.
-    if (mId == 0)
+    if (mState.mId == 0)
     {
         return false;
     }
@@ -1861,7 +1860,7 @@ bool Framebuffer::formsCopyingFeedbackLoopWith(GLuint copyTextureID,
                                                GLint copyTextureLevel,
                                                GLint copyTextureLayer) const
 {
-    if (mId == 0)
+    if (mState.mId == 0)
     {
         // It seems impossible to form a texture copying feedback loop with the default FBO.
         return false;

@@ -53,7 +53,7 @@ class FramebufferState final : angle::NonCopyable
 {
   public:
     FramebufferState();
-    explicit FramebufferState(const Caps &caps);
+    explicit FramebufferState(const Caps &caps, GLuint id);
     ~FramebufferState();
 
     const std::string &getLabel();
@@ -99,6 +99,8 @@ class FramebufferState final : angle::NonCopyable
     const std::vector<Offset> *getViewportOffsets() const;
     GLint getBaseViewIndex() const;
 
+    GLuint id() const { return mId; }
+
   private:
     const FramebufferAttachment *getWebGLDepthStencilAttachment() const;
     const FramebufferAttachment *getWebGLDepthAttachment() const;
@@ -106,6 +108,7 @@ class FramebufferState final : angle::NonCopyable
 
     friend class Framebuffer;
 
+    GLuint mId;
     std::string mLabel;
 
     std::vector<FramebufferAttachment> mColorAttachments;
@@ -152,7 +155,7 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
 
     rx::FramebufferImpl *getImplementation() const { return mImpl; }
 
-    GLuint id() const { return mId; }
+    GLuint id() const { return mState.mId; }
 
     void setAttachment(const Context *context,
                        GLenum type,
@@ -386,7 +389,6 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
 
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;
-    GLuint mId;
 
     Optional<GLenum> mCachedStatus;
     std::vector<angle::ObserverBinding> mDirtyColorAttachmentBindings;

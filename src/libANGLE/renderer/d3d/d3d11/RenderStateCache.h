@@ -61,6 +61,7 @@ struct hash<gl::SamplerState>
 
 namespace rx
 {
+class FramebufferD3D;
 class Renderer11;
 
 class RenderStateCache : angle::NonCopyable
@@ -72,7 +73,7 @@ class RenderStateCache : angle::NonCopyable
     void clear();
 
     static d3d11::BlendStateKey GetBlendStateKey(const gl::Context *context,
-                                                 const gl::Framebuffer *framebuffer,
+                                                 FramebufferD3D *framebufferD3D,
                                                  const gl::BlendState &blendState);
     gl::Error getBlendState(Renderer11 *renderer,
                             const d3d11::BlendStateKey &key,

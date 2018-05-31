@@ -44,11 +44,10 @@ void RenderStateCache::clear()
 
 // static
 d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *context,
-                                                        const gl::Framebuffer *framebuffer,
+                                                        FramebufferD3D *framebufferD3D,
                                                         const gl::BlendState &blendState)
 {
     d3d11::BlendStateKey key;
-    FramebufferD3D *framebufferD3D         = GetImplAs<FramebufferD3D>(framebuffer);
     const gl::AttachmentList &colorbuffers = framebufferD3D->getColorAttachmentsForRender(context);
     const UINT8 blendStateMask =
         gl_d3d11::ConvertColorMask(blendState.colorMaskRed, blendState.colorMaskGreen,

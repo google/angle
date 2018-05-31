@@ -18,14 +18,15 @@
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
 #include "libANGLE/renderer/d3d/d3d11/Query11.h"
-#include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace rx
 {
 class Buffer11;
+class Framebuffer11;
 struct RenderTargetDesc;
 struct Renderer11DeviceCaps;
+class VertexArray11;
 
 class ShaderConstants11 : angle::NonCopyable
 {
@@ -261,11 +262,10 @@ class StateManager11 final : angle::NonCopyable
     bool unsetConflictingSRVs(gl::ShaderType shaderType,
                               uintptr_t resource,
                               const gl::ImageIndex *index);
-    void unsetConflictingAttachmentResources(const gl::FramebufferAttachment *attachment,
+    void unsetConflictingAttachmentResources(const gl::FramebufferAttachment &attachment,
                                              ID3D11Resource *resource);
 
     gl::Error syncBlendState(const gl::Context *context,
-                             const gl::Framebuffer *framebuffer,
                              const gl::BlendState &blendState,
                              const gl::ColorF &blendColor,
                              unsigned int sampleMask);
@@ -281,7 +281,7 @@ class StateManager11 final : angle::NonCopyable
 
     void checkPresentPath(const gl::Context *context);
 
-    gl::Error syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer);
+    gl::Error syncFramebuffer(const gl::Context *context);
     gl::Error syncProgram(const gl::Context *context, gl::PrimitiveMode drawMode);
 
     gl::Error syncTextures(const gl::Context *context);
@@ -308,16 +308,17 @@ class StateManager11 final : angle::NonCopyable
     gl::Error clearUAVs(gl::ShaderType shaderType, size_t rangeStart, size_t rangeEnd);
     void handleMultiviewDrawFramebufferChange(const gl::Context *context);
 
-    gl::Error syncCurrentValueAttribs(const gl::State &glState);
+    gl::Error syncCurrentValueAttribs(
+        const std::vector<gl::VertexAttribCurrentValueData> &currentValues);
 
     gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
     gl::Error generateSwizzlesForShader(const gl::Context *context, gl::ShaderType type);
     gl::Error generateSwizzles(const gl::Context *context);
 
-    gl::Error applyDriverUniforms(const ProgramD3D &programD3D);
-    gl::Error applyUniforms(ProgramD3D *programD3D);
+    gl::Error applyDriverUniforms();
+    gl::Error applyUniforms();
 
-    gl::Error syncUniformBuffers(const gl::Context *context, ProgramD3D *programD3D);
+    gl::Error syncUniformBuffers(const gl::Context *context);
     gl::Error syncTransformFeedbackBuffers(const gl::Context *context);
 
     // These are currently only called internally.
@@ -344,9 +345,7 @@ class StateManager11 final : angle::NonCopyable
                                  UINT offset);
     void applyVertexBufferChanges();
     bool setPrimitiveTopologyInternal(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology);
-    void syncPrimitiveTopology(const gl::State &glState,
-                               ProgramD3D *programD3D,
-                               gl::PrimitiveMode currentDrawMode);
+    void syncPrimitiveTopology(const gl::State &glState, gl::PrimitiveMode currentDrawMode);
 
     // Not handled by an internal dirty bit because it isn't synced on drawArrays calls.
     gl::Error applyIndexBuffer(const gl::Context *context,
@@ -575,6 +574,11 @@ class StateManager11 final : angle::NonCopyable
     Serial mAppliedTFSerial;
 
     Serial mEmptySerial;
+
+    // These objects are cached to avoid having to query the impls.
+    ProgramD3D *mProgramD3D;
+    VertexArray11 *mVertexArray11;
+    Framebuffer11 *mFramebuffer11;
 };
 
 }  // namespace rx
