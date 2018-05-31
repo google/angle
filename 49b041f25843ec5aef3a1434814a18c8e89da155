@@ -46,6 +46,30 @@
       "revId": "49b041f25843ec5aef3a1434814a18c8e89da155",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "926d4820_c9b9b8d8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-05-31T13:51:11Z",
+      "side": 1,
+      "message": "I think so. You do scan the list of updates a few extra times. If that really becomes a problem we can optimize it by indexing the updates list by level. setImage is a \"heavy\" operation though so a few extra instructions on this path aren\u0027t that much a problem.\n\nFWIW my way also has the benefit of not updating twice if the user specifies the same image twice. That\u0027s pretty marginal though.",
+      "parentUuid": "b1db7330_b39ff0d6",
+      "range": {
+        "startLine": 265,
+        "startChar": 0,
+        "endLine": 277,
+        "endChar": 0
+      },
+      "revId": "49b041f25843ec5aef3a1434814a18c8e89da155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
