@@ -225,6 +225,66 @@ void WriteFloatColor(const gl::ColorF &color,
     colorWriteFunction(reinterpret_cast<const uint8_t *>(&color), destPixelData);
 }
 
+template <typename T, int cols, int rows>
+bool TransposeExpandMatrix(T *target, const GLfloat *value)
+{
+    constexpr int targetWidth  = 4;
+    constexpr int targetHeight = rows;
+    constexpr int srcWidth     = rows;
+    constexpr int srcHeight    = cols;
+
+    constexpr int copyWidth  = std::min(targetHeight, srcWidth);
+    constexpr int copyHeight = std::min(targetWidth, srcHeight);
+
+    T staging[targetWidth * targetHeight] = {0};
+
+    for (int x = 0; x < copyWidth; x++)
+    {
+        for (int y = 0; y < copyHeight; y++)
+        {
+            staging[x * targetWidth + y] = static_cast<T>(value[y * srcWidth + x]);
+        }
+    }
+
+    if (memcmp(target, staging, targetWidth * targetHeight * sizeof(T)) == 0)
+    {
+        return false;
+    }
+
+    memcpy(target, staging, targetWidth * targetHeight * sizeof(T));
+    return true;
+}
+
+template <typename T, int cols, int rows>
+bool ExpandMatrix(T *target, const GLfloat *value)
+{
+    constexpr int kTargetWidth  = 4;
+    constexpr int kTargetHeight = rows;
+    constexpr int kSrcWidth     = cols;
+    constexpr int kSrcHeight    = rows;
+
+    constexpr int kCopyWidth  = std::min(kTargetWidth, kSrcWidth);
+    constexpr int kCopyHeight = std::min(kTargetHeight, kSrcHeight);
+
+    T staging[kTargetWidth * kTargetHeight] = {0};
+
+    for (int y = 0; y < kCopyHeight; y++)
+    {
+        for (int x = 0; x < kCopyWidth; x++)
+        {
+            staging[y * kTargetWidth + x] = static_cast<T>(value[y * kSrcWidth + x]);
+        }
+    }
+
+    if (memcmp(target, staging, kTargetWidth * kTargetHeight * sizeof(T)) == 0)
+    {
+        return false;
+    }
+
+    memcpy(target, staging, kTargetWidth * kTargetHeight * sizeof(T));
+    return true;
+}
+
 }  // anonymous namespace
 
 PackPixelsParams::PackPixelsParams()
@@ -544,6 +604,56 @@ gl::Error IncompleteTextureSet::getIncompleteTexture(
     mIncompleteTextures[type].set(context, t.release());
     *textureOut = mIncompleteTextures[type].get();
     return gl::NoError();
+}
+
+#define ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(cols, rows)                            \
+    template bool SetFloatUniformMatrix<cols, rows>(unsigned int, unsigned int, GLsizei, \
+                                                    GLboolean, const GLfloat *, uint8_t *)
+
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(2, 2);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(3, 3);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(4, 4);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(2, 3);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(3, 2);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(2, 4);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(4, 2);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(3, 4);
+ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC(4, 3);
+
+#undef ANGLE_INSTANTIATE_SET_UNIFORM_MATRIX_FUNC
+
+template <int cols, int rows>
+bool SetFloatUniformMatrix(unsigned int arrayElementOffset,
+                           unsigned int elementCount,
+                           GLsizei countIn,
+                           GLboolean transpose,
+                           const GLfloat *value,
+                           uint8_t *targetData)
+{
+    unsigned int count =
+        std::min(elementCount - arrayElementOffset, static_cast<unsigned int>(countIn));
+
+    const unsigned int targetMatrixStride = (4 * rows);
+    GLfloat *target                       = reinterpret_cast<GLfloat *>(
+        targetData + arrayElementOffset * sizeof(GLfloat) * targetMatrixStride);
+
+    bool dirty = false;
+
+    for (unsigned int i = 0; i < count; i++)
+    {
+        if (transpose == GL_FALSE)
+        {
+            dirty = ExpandMatrix<GLfloat, cols, rows>(target, value) || dirty;
+        }
+        else
+        {
+            dirty = TransposeExpandMatrix<GLfloat, cols, rows>(target, value) || dirty;
+        }
+        target += targetMatrixStride;
+        value += cols * rows;
+    }
+
+    return dirty;
 }
 
 }  // namespace rx

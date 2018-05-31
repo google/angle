@@ -26,6 +26,7 @@
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/ShaderExecutableD3D.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 using namespace angle;
 
@@ -73,66 +74,6 @@ void GetDefaultOutputLayoutFromShader(
         outputLayoutOut->push_back(GL_COLOR_ATTACHMENT0 +
                                    static_cast<unsigned int>(shaderOutputVars[0].outputIndex));
     }
-}
-
-template <typename T, int cols, int rows>
-bool TransposeExpandMatrix(T *target, const GLfloat *value)
-{
-    constexpr int targetWidth  = 4;
-    constexpr int targetHeight = rows;
-    constexpr int srcWidth     = rows;
-    constexpr int srcHeight    = cols;
-
-    constexpr int copyWidth  = std::min(targetHeight, srcWidth);
-    constexpr int copyHeight = std::min(targetWidth, srcHeight);
-
-    T staging[targetWidth * targetHeight] = {0};
-
-    for (int x = 0; x < copyWidth; x++)
-    {
-        for (int y = 0; y < copyHeight; y++)
-        {
-            staging[x * targetWidth + y] = static_cast<T>(value[y * srcWidth + x]);
-        }
-    }
-
-    if (memcmp(target, staging, targetWidth * targetHeight * sizeof(T)) == 0)
-    {
-        return false;
-    }
-
-    memcpy(target, staging, targetWidth * targetHeight * sizeof(T));
-    return true;
-}
-
-template <typename T, int cols, int rows>
-bool ExpandMatrix(T *target, const GLfloat *value)
-{
-    constexpr int targetWidth  = 4;
-    constexpr int targetHeight = rows;
-    constexpr int srcWidth     = cols;
-    constexpr int srcHeight    = rows;
-
-    constexpr int copyWidth  = std::min(targetWidth, srcWidth);
-    constexpr int copyHeight = std::min(targetHeight, srcHeight);
-
-    T staging[targetWidth * targetHeight] = {0};
-
-    for (int y = 0; y < copyHeight; y++)
-    {
-        for (int x = 0; x < copyWidth; x++)
-        {
-            staging[y * targetWidth + x] = static_cast<T>(value[y * srcWidth + x]);
-        }
-    }
-
-    if (memcmp(target, staging, targetWidth * targetHeight * sizeof(T)) == 0)
-    {
-        return false;
-    }
-
-    memcpy(target, staging, targetWidth * targetHeight * sizeof(T));
-    return true;
 }
 
 gl::PrimitiveMode GetGeometryShaderTypeFromDrawMode(gl::PrimitiveMode drawMode)
@@ -1903,7 +1844,7 @@ void ProgramD3D::setUniformMatrix2fv(GLint location,
                                      GLboolean transpose,
                                      const GLfloat *value)
 {
-    setUniformMatrixfvInternal<2, 2>(location, count, transpose, value, GL_FLOAT_MAT2);
+    setUniformMatrixfvInternal<2, 2>(location, count, transpose, value);
 }
 
 void ProgramD3D::setUniformMatrix3fv(GLint location,
@@ -1911,7 +1852,7 @@ void ProgramD3D::setUniformMatrix3fv(GLint location,
                                      GLboolean transpose,
                                      const GLfloat *value)
 {
-    setUniformMatrixfvInternal<3, 3>(location, count, transpose, value, GL_FLOAT_MAT3);
+    setUniformMatrixfvInternal<3, 3>(location, count, transpose, value);
 }
 
 void ProgramD3D::setUniformMatrix4fv(GLint location,
@@ -1919,7 +1860,7 @@ void ProgramD3D::setUniformMatrix4fv(GLint location,
                                      GLboolean transpose,
                                      const GLfloat *value)
 {
-    setUniformMatrixfvInternal<4, 4>(location, count, transpose, value, GL_FLOAT_MAT4);
+    setUniformMatrixfvInternal<4, 4>(location, count, transpose, value);
 }
 
 void ProgramD3D::setUniformMatrix2x3fv(GLint location,
@@ -1927,7 +1868,7 @@ void ProgramD3D::setUniformMatrix2x3fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfvInternal<2, 3>(location, count, transpose, value, GL_FLOAT_MAT2x3);
+    setUniformMatrixfvInternal<2, 3>(location, count, transpose, value);
 }
 
 void ProgramD3D::setUniformMatrix3x2fv(GLint location,
@@ -1935,7 +1876,7 @@ void ProgramD3D::setUniformMatrix3x2fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfvInternal<3, 2>(location, count, transpose, value, GL_FLOAT_MAT3x2);
+    setUniformMatrixfvInternal<3, 2>(location, count, transpose, value);
 }
 
 void ProgramD3D::setUniformMatrix2x4fv(GLint location,
@@ -1943,7 +1884,7 @@ void ProgramD3D::setUniformMatrix2x4fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfvInternal<2, 4>(location, count, transpose, value, GL_FLOAT_MAT2x4);
+    setUniformMatrixfvInternal<2, 4>(location, count, transpose, value);
 }
 
 void ProgramD3D::setUniformMatrix4x2fv(GLint location,
@@ -1951,7 +1892,7 @@ void ProgramD3D::setUniformMatrix4x2fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfvInternal<4, 2>(location, count, transpose, value, GL_FLOAT_MAT4x2);
+    setUniformMatrixfvInternal<4, 2>(location, count, transpose, value);
 }
 
 void ProgramD3D::setUniformMatrix3x4fv(GLint location,
@@ -1959,7 +1900,7 @@ void ProgramD3D::setUniformMatrix3x4fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfvInternal<3, 4>(location, count, transpose, value, GL_FLOAT_MAT3x4);
+    setUniformMatrixfvInternal<3, 4>(location, count, transpose, value);
 }
 
 void ProgramD3D::setUniformMatrix4x3fv(GLint location,
@@ -1967,7 +1908,7 @@ void ProgramD3D::setUniformMatrix4x3fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfvInternal<4, 3>(location, count, transpose, value, GL_FLOAT_MAT4x3);
+    setUniformMatrixfvInternal<4, 3>(location, count, transpose, value);
 }
 
 void ProgramD3D::setUniform1iv(GLint location, GLsizei count, const GLint *v)
@@ -2341,60 +2282,26 @@ void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, G
 }
 
 template <int cols, int rows>
-bool ProgramD3D::setUniformMatrixfvImpl(GLint location,
-                                        GLsizei countIn,
-                                        GLboolean transpose,
-                                        const GLfloat *value,
-                                        uint8_t *targetData,
-                                        GLenum targetUniformType)
-{
-    D3DUniform *targetUniform = getD3DUniformFromLocation(location);
-
-    unsigned int elementCount       = targetUniform->getArraySizeProduct();
-    unsigned int arrayElementOffset = mState.getUniformLocations()[location].arrayIndex;
-    unsigned int count =
-        std::min(elementCount - arrayElementOffset, static_cast<unsigned int>(countIn));
-
-    const unsigned int targetMatrixStride = (4 * rows);
-    GLfloat *target                       = reinterpret_cast<GLfloat *>(
-        targetData + arrayElementOffset * sizeof(GLfloat) * targetMatrixStride);
-
-    bool dirty = false;
-
-    for (unsigned int i = 0; i < count; i++)
-    {
-        // Internally store matrices as transposed versions to accomodate HLSL matrix indexing
-        if (transpose == GL_FALSE)
-        {
-            dirty = TransposeExpandMatrix<GLfloat, cols, rows>(target, value) || dirty;
-        }
-        else
-        {
-            dirty = ExpandMatrix<GLfloat, cols, rows>(target, value) || dirty;
-        }
-        target += targetMatrixStride;
-        value += cols * rows;
-    }
-
-    return dirty;
-}
-
-template <int cols, int rows>
 void ProgramD3D::setUniformMatrixfvInternal(GLint location,
                                             GLsizei countIn,
                                             GLboolean transpose,
-                                            const GLfloat *value,
-                                            GLenum targetUniformType)
+                                            const GLfloat *value)
 {
     D3DUniform *targetUniform = getD3DUniformFromLocation(location);
+    const gl::VariableLocation &uniformLocation = mState.getUniformLocations()[location];
+    unsigned int arrayElementOffset             = uniformLocation.arrayIndex;
+    unsigned int elementCount                   = targetUniform->getArraySizeProduct();
+
+    // Internally store matrices as transposed versions to accomodate HLSL matrix indexing
+    transpose = !transpose;
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         if (targetUniform->mShaderData[shaderType])
         {
-            if (setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
-                                                   targetUniform->mShaderData[shaderType],
-                                                   targetUniformType))
+            if (SetFloatUniformMatrix<cols, rows>(arrayElementOffset, elementCount, countIn,
+                                                  transpose, value,
+                                                  targetUniform->mShaderData[shaderType]))
             {
                 mShaderUniformsDirty.set(shaderType);
             }

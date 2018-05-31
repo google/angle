@@ -437,19 +437,10 @@ class ProgramD3D : public ProgramImpl
     void setUniformInternal(GLint location, GLsizei count, const T *v, GLenum uniformType);
 
     template <int cols, int rows>
-    bool setUniformMatrixfvImpl(GLint location,
-                                GLsizei count,
-                                GLboolean transpose,
-                                const GLfloat *value,
-                                uint8_t *targetData,
-                                GLenum targetUniformType);
-
-    template <int cols, int rows>
     void setUniformMatrixfvInternal(GLint location,
                                     GLsizei count,
                                     GLboolean transpose,
-                                    const GLfloat *value,
-                                    GLenum targetUniformType);
+                                    const GLfloat *value);
 
     gl::LinkResult compileProgramExecutables(const gl::Context *context, gl::InfoLog &infoLog);
     gl::LinkResult compileComputeExecutable(const gl::Context *context, gl::InfoLog &infoLog);
