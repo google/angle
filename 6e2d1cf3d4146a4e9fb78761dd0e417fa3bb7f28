@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a437442_8b1c96c4",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-31T09:16:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be76d3f2_05f97320",
+      "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b27c91e_e66ba1ed",
         "filename": "src/libANGLE/Shader.cpp",
         "patchSetId": 5
@@ -59,6 +77,48 @@
     },
     {
       "key": {
+        "uuid": "32c13e6d_de3db269",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-31T09:16:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e43a77e_b18a4edf",
+      "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c9de324_18e84e64",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-31T09:16:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b27c91e_e66ba1ed",
+      "range": {
+        "startLine": 408,
+        "startChar": 21,
+        "endLine": 408,
+        "endChar": 45
+      },
+      "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7671dcb8_b79dba5e",
         "filename": "src/libANGLE/Shader.cpp",
         "patchSetId": 5
@@ -70,6 +130,30 @@
       "writtenOn": "2018-05-30T15:15:25Z",
       "side": 1,
       "message": "this should be ValueOrDie",
+      "range": {
+        "startLine": 409,
+        "startChar": 35,
+        "endLine": 409,
+        "endChar": 46
+      },
+      "revId": "6e2d1cf3d4146a4e9fb78761dd0e417fa3bb7f28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b4db3e8_3788a377",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-05-31T09:16:37Z",
+      "side": 1,
+      "message": "Already called \"IsValid()\" to checkout result whether was valid, why still need to call ValueOrDie here?",
+      "parentUuid": "7671dcb8_b79dba5e",
       "range": {
         "startLine": 409,
         "startChar": 35,
