@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5cbb590c_b6189049",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:30:37Z",
+      "side": 1,
+      "message": "Nevermind, I see you\u0027re already looking at this. We\u0027ll need the other CL to land first.",
+      "parentUuid": "17bf563c_f76c9fa6",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 13
+      },
+      "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "73c8702a_a20e845e",
         "filename": "DEPS",
         "patchSetId": 1
