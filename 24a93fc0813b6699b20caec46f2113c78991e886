@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "273da6ae_461554ab",
+        "filename": "DEPS",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:41:06Z",
+      "side": 1,
+      "message": "did you mean to remove all the root scoping? kinda confused as how this is supposed to work.",
+      "range": {
+        "startLine": 26,
+        "startChar": 3,
+        "endLine": 26,
+        "endChar": 8
+      },
+      "revId": "24a93fc0813b6699b20caec46f2113c78991e886",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
