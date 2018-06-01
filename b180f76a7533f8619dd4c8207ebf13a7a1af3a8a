@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29895777_e86265e4",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2711,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:21:32Z",
+      "side": 1,
+      "message": "don\u0027t use bool and GLboolean interchangeably. when converting from GLboolean to bool, compare with GL_TRUE or GL_FALSE. When you don\u0027t need to use GLboolean, just use bool.",
+      "range": {
+        "startLine": 2711,
+        "startChar": 79,
+        "endLine": 2711,
+        "endChar": 83
+      },
+      "revId": "b180f76a7533f8619dd4c8207ebf13a7a1af3a8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d9c07c8_d9fc7c3f",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 497,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:21:32Z",
+      "side": 1,
+      "message": "maybe we can just pass the type to GetMatrixUniform and have it call col/row count.",
+      "range": {
+        "startLine": 496,
+        "startChar": 25,
+        "endLine": 497,
+        "endChar": 65
+      },
+      "revId": "b180f76a7533f8619dd4c8207ebf13a7a1af3a8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eee731a4_a929b1f2",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:21:32Z",
+      "side": 1,
+      "message": "nice that this incidentally probably fixes the transpose (although untested)",
+      "range": {
+        "startLine": 570,
+        "startChar": 45,
+        "endLine": 570,
+        "endChar": 54
+      },
+      "revId": "b180f76a7533f8619dd4c8207ebf13a7a1af3a8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
