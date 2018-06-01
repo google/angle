@@ -1417,6 +1417,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     // Notification for a state change in a Texture.
     void onTextureChange(const Texture *texture);
 
+    bool hasBeenCurrent() const { return mHasBeenCurrent; }
     egl::Display *getCurrentDisplay() const { return mCurrentDisplay; }
     egl::Surface *getCurrentDrawSurface() const { return mCurrentSurface; }
     egl::Surface *getCurrentReadSurface() const { return mCurrentSurface; }

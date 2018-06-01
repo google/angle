@@ -160,7 +160,7 @@
 2546 WIN : dEQP-EGL.functional.reusable_sync.invalid.* = SKIP
 2546 WIN : dEQP-EGL.functional.color_clears.multi_thread.* = FAIL
 2546 WIN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
-2546 WIN : dEQP-EGL.functional.thread_cleanup.* = FAIL
+2546 WIN : dEQP-EGL.functional.thread_cleanup.* = SKIP
 
 // Linux failures
 2546 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1.rgba8888_pixmap = SKIP

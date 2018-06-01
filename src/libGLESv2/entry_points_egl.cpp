@@ -116,7 +116,7 @@ EGLBoolean EGLAPIENTRY Terminate(EGLDisplay dpy)
         thread->setCurrent(nullptr);
     }
 
-    Error error = display->terminate();
+    Error error = display->terminate(thread);
     if (error.isError())
     {
         thread->setError(error, GetDebug(), "eglTerminate", GetDisplayIfValid(display));
@@ -471,17 +471,19 @@ EGLBoolean EGLAPIENTRY DestroyContext(EGLDisplay dpy, EGLContext ctx)
         return EGL_FALSE;
     }
 
-    if (context == thread->getContext())
-    {
-        thread->setCurrent(nullptr);
-    }
+    bool contextWasCurrent = context == thread->getContext();
 
-    error = display->destroyContext(context);
+    error = display->destroyContext(thread, context);
     if (error.isError())
     {
         thread->setError(error, GetDebug(), "eglDestroyContext",
                          GetContextIfValid(display, context));
         return EGL_FALSE;
+    }
+
+    if (contextWasCurrent)
+    {
+        thread->setCurrent(nullptr);
     }
 
     thread->setSuccess();
