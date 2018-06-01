@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "cca7554c_027c434f",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1167909
+      },
+      "writtenOn": "2018-06-01T18:35:09Z",
+      "side": 1,
+      "message": "So, besides that other CL, nothing else is needed?",
+      "parentUuid": "5cbb590c_b6189049",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 13
+      },
+      "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "73c8702a_a20e845e",
         "filename": "DEPS",
         "patchSetId": 1
@@ -69,6 +93,30 @@
       "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61278bac_f4d0318d",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1167909
+      },
+      "writtenOn": "2018-06-01T18:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73c8702a_a20e845e",
+      "range": {
+        "startLine": 195,
+        "startChar": 13,
+        "endLine": 195,
+        "endChar": 18
+      },
+      "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "14e4394d_c09f857e",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1167909
+      },
+      "writtenOn": "2018-06-01T18:35:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74aa0a9d_30a30bba",
+      "range": {
+        "startLine": 215,
+        "startChar": 5,
+        "endLine": 215,
+        "endChar": 12
+      },
+      "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d50d14b5_152049e2",
         "filename": "DEPS",
         "patchSetId": 1
@@ -106,6 +178,30 @@
       "writtenOn": "2018-06-01T18:24:28Z",
       "side": 1,
       "message": "I think we want to only recurse these if we are not build with chromium - is that possible?",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 12
+      },
+      "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ded1cbbf_86d3af54",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1167909
+      },
+      "writtenOn": "2018-06-01T18:35:09Z",
+      "side": 1,
+      "message": "Not right now.",
+      "parentUuid": "d50d14b5_152049e2",
       "range": {
         "startLine": 220,
         "startChar": 0,
