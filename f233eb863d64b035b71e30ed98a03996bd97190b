@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fee12fa8_ae4211ae",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-01T19:36:57Z",
+      "side": 1,
+      "message": "nit: reinterpret_cast here and below.",
+      "range": {
+        "startLine": 242,
+        "startChar": 39,
+        "endLine": 242,
+        "endChar": 48
+      },
+      "revId": "f233eb863d64b035b71e30ed98a03996bd97190b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
