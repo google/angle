@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff26f1d9_9e1dee0d",
+        "filename": "DEPS",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T20:38:55Z",
+      "side": 1,
+      "message": "just realized we forgot to update these constants to use the \"revision\" variables at the top.\n\nBTW - are revision variables compatible with the new gclient dep update feature you added? or does the revision have to be hard-coded in the url.",
+      "range": {
+        "startLine": 77,
+        "startChar": 69,
+        "endLine": 77,
+        "endChar": 109
+      },
+      "revId": "8ae09b0e2f3a5f82b37c47b95ea68adf54977454",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
