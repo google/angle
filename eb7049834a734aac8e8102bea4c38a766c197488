@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17bf563c_f76c9fa6",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:24:28Z",
+      "side": 1,
+      "message": "this would have been a better name. But the ship has sailed. For now it\u0027ll be a bit difficult to fix this. If you want to pursue that I recommend doing it in a separate series of patches. You can ping me offline.",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 13
+      },
+      "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73c8702a_a20e845e",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:24:28Z",
+      "side": 1,
+      "message": "I think this needs the condition too.",
+      "range": {
+        "startLine": 195,
+        "startChar": 13,
+        "endLine": 195,
+        "endChar": 18
+      },
+      "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74aa0a9d_30a30bba",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:24:28Z",
+      "side": 1,
+      "message": "this can have the condition too.",
+      "range": {
+        "startLine": 215,
+        "startChar": 5,
+        "endLine": 215,
+        "endChar": 12
+      },
+      "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d50d14b5_152049e2",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:24:28Z",
+      "side": 1,
+      "message": "I think we want to only recurse these if we are not build with chromium - is that possible?",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 12
+      },
+      "revId": "eb7049834a734aac8e8102bea4c38a766c197488",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
