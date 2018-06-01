@@ -180,6 +180,9 @@ class GLES1State final : angle::NonCopyable
     void setClipPlane(unsigned int plane, const GLfloat *equation);
     void getClipPlane(unsigned int plane, GLfloat *equation) const;
 
+    FogParameters &fogParameters();
+    const FogParameters &fogParameters() const;
+
   private:
     friend class State;
     friend class GLES1Renderer;

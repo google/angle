@@ -228,7 +228,6 @@ TEST_P(GLES1ConformanceTest, Dither)
 
 TEST_P(GLES1ConformanceTest, DivZero)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, DivZeroExec());
 }
 
@@ -239,13 +238,11 @@ TEST_P(GLES1ConformanceTest, EmitMat)
 
 TEST_P(GLES1ConformanceTest, FogExp)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, FogExpExec());
 }
 
 TEST_P(GLES1ConformanceTest, FogLin)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, FogLinExec());
 }
 

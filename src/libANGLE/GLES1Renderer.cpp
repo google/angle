@@ -232,6 +232,17 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
                       reinterpret_cast<float *>(uniformBuffers.attenuationQuadratics.data()));
     }
 
+    // Fog
+    {
+        const FogParameters &fog = gles1State.fogParameters();
+        setUniform1i(programObject, mProgramState.fogEnableLoc, glState->getEnableFeature(GL_FOG));
+        setUniform1i(programObject, mProgramState.fogModeLoc, ToGLenum(fog.mode));
+        setUniform1f(programObject, mProgramState.fogDensityLoc, fog.density);
+        setUniform1f(programObject, mProgramState.fogStartLoc, fog.start);
+        setUniform1f(programObject, mProgramState.fogEndLoc, fog.end);
+        setUniform4fv(programObject, mProgramState.fogColorLoc, 1, fog.color.data());
+    }
+
     // Clip planes
     {
         bool enableClipPlanes = false;
@@ -501,6 +512,13 @@ Error GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
         programObject->getUniformLocation("light_attenuation_linears");
     mProgramState.lightAttenuationQuadraticsLoc =
         programObject->getUniformLocation("light_attenuation_quadratics");
+
+    mProgramState.fogEnableLoc  = programObject->getUniformLocation("enable_fog");
+    mProgramState.fogModeLoc    = programObject->getUniformLocation("fog_mode");
+    mProgramState.fogDensityLoc = programObject->getUniformLocation("fog_density");
+    mProgramState.fogStartLoc   = programObject->getUniformLocation("fog_start");
+    mProgramState.fogEndLoc     = programObject->getUniformLocation("fog_end");
+    mProgramState.fogColorLoc   = programObject->getUniformLocation("fog_color");
 
     mProgramState.enableClipPlanesLoc = programObject->getUniformLocation("enable_clip_planes");
     mProgramState.clipPlaneEnablesLoc = programObject->getUniformLocation("clip_plane_enables");

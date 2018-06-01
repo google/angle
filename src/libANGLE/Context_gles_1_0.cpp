@@ -118,22 +118,44 @@ void Context::enableClientState(ClientVertexArrayType clientState)
 
 void Context::fogf(GLenum pname, GLfloat param)
 {
-    UNIMPLEMENTED();
+    SetFogParameters(&mGLState.gles1(), pname, &param);
 }
 
 void Context::fogfv(GLenum pname, const GLfloat *params)
 {
-    UNIMPLEMENTED();
+    SetFogParameters(&mGLState.gles1(), pname, params);
 }
 
 void Context::fogx(GLenum pname, GLfixed param)
 {
-    UNIMPLEMENTED();
+    if (GetFogParameterCount(pname) == 1)
+    {
+        GLfloat paramf = pname == GL_FOG_MODE ? FixedToEnum(param) : FixedToFloat(param);
+        fogf(pname, paramf);
+    }
+    else
+    {
+        UNREACHABLE();
+    }
 }
 
-void Context::fogxv(GLenum pname, const GLfixed *param)
+void Context::fogxv(GLenum pname, const GLfixed *params)
 {
-    UNIMPLEMENTED();
+    int paramCount = GetFogParameterCount(pname);
+
+    if (paramCount > 0)
+    {
+        GLfloat paramsf[4];
+        for (int i = 0; i < paramCount; i++)
+        {
+            paramsf[i] = pname == GL_FOG_MODE ? FixedToEnum(params[i]) : FixedToFloat(params[i]);
+        }
+        fogfv(pname, paramsf);
+    }
+    else
+    {
+        UNREACHABLE();
+    }
 }
 
 void Context::frustumf(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat n, GLfloat f)

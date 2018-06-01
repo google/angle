@@ -7091,12 +7091,17 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
                 *numParams = 1;
                 return true;
             case GL_ALPHA_TEST_REF:
+            case GL_FOG_DENSITY:
+            case GL_FOG_START:
+            case GL_FOG_END:
+            case GL_FOG_MODE:
                 *type      = GL_FLOAT;
                 *numParams = 1;
                 return true;
             case GL_CURRENT_COLOR:
             case GL_CURRENT_TEXTURE_COORDS:
             case GL_LIGHT_MODEL_AMBIENT:
+            case GL_FOG_COLOR:
                 *type      = GL_FLOAT;
                 *numParams = 4;
                 return true;

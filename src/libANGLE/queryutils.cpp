@@ -1978,7 +1978,6 @@ unsigned int GetLightModelParameterCount(GLenum pname)
         case GL_LIGHT_MODEL_TWO_SIDE:
             return 1;
         default:
-            UNREACHABLE();
             return 0;
     }
 }
@@ -2001,7 +2000,6 @@ unsigned int GetLightParameterCount(LightParameter pname)
         case LightParameter::QuadraticAttenuation:
             return 1;
         default:
-            UNREACHABLE();
             return 0;
     }
 }
@@ -2018,9 +2016,79 @@ unsigned int GetMaterialParameterCount(MaterialParameter pname)
         case MaterialParameter::Shininess:
             return 1;
         default:
-            UNREACHABLE();
             return 0;
     }
+}
+
+void SetFogParameters(GLES1State *state, GLenum pname, const GLfloat *params)
+{
+    FogParameters &fog = state->fogParameters();
+    switch (pname)
+    {
+        case GL_FOG_MODE:
+            fog.mode = FromGLenum<FogMode>(static_cast<GLenum>(params[0]));
+            break;
+        case GL_FOG_DENSITY:
+            fog.density = params[0];
+            break;
+        case GL_FOG_START:
+            fog.start = params[0];
+            break;
+        case GL_FOG_END:
+            fog.end = params[0];
+            break;
+        case GL_FOG_COLOR:
+            fog.color = ColorF::fromData(params);
+            break;
+        default:
+            return;
+    }
+}
+
+void GetFogParameters(const GLES1State *state, GLenum pname, GLfloat *params)
+{
+    const FogParameters &fog = state->fogParameters();
+    switch (pname)
+    {
+        case GL_FOG_MODE:
+            params[0] = static_cast<GLfloat>(ToGLenum(fog.mode));
+            break;
+        case GL_FOG_DENSITY:
+            params[0] = fog.density;
+            break;
+        case GL_FOG_START:
+            params[0] = fog.start;
+            break;
+        case GL_FOG_END:
+            params[0] = fog.end;
+            break;
+        case GL_FOG_COLOR:
+            fog.color.writeData(params);
+            break;
+        default:
+            return;
+    }
+}
+
+unsigned int GetFogParameterCount(GLenum pname)
+{
+    switch (pname)
+    {
+        case GL_FOG_MODE:
+        case GL_FOG_DENSITY:
+        case GL_FOG_START:
+        case GL_FOG_END:
+            return 1;
+        case GL_FOG_COLOR:
+            return 4;
+        default:
+            return 0;
+    }
+}
+
+GLenum FixedToEnum(GLfixed val)
+{
+    return static_cast<GLenum>(val);
 }
 
 }  // namespace gl

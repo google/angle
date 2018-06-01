@@ -210,6 +210,15 @@ uniform float light_attenuation_consts[kMaxLights];
 uniform float light_attenuation_linears[kMaxLights];
 uniform float light_attenuation_quadratics[kMaxLights];
 
+// Fog /////////////////////////////////////////////////////////////////////////
+
+uniform bool enable_fog;
+uniform int fog_mode;
+uniform float fog_density;
+uniform float fog_start;
+uniform float fog_end;
+uniform vec4 fog_color;
+
 // User clip plane /////////////////////////////////////////////////////////////
 
 uniform bool enable_clip_planes;
@@ -436,6 +445,28 @@ bool doClipPlaneTest() {
     return res;
 }
 
+vec4 doFog(vec4 currentFragment) {
+
+    float eyeDist = -pos_varying.z / pos_varying.w;
+    float f = 1.0;
+    switch (fog_mode) {
+        case kExp:
+            f = exp(-fog_density * eyeDist);
+            break;
+        case kExp2:
+            f = exp(-(pow(fog_density * eyeDist, 2.0)));
+            break;
+        case kLinear:
+            f = (fog_end - eyeDist) / (fog_end - fog_start);
+            break;
+        default:
+            break;
+    }
+
+    vec4 result = f * currentFragment + (1.0 - f) * fog_color;
+    return result;
+}
+
 )";
 
 constexpr char kGLES1DrawFShaderMain[] = R"(
@@ -464,6 +495,10 @@ void main()
 
     if (enable_lighting) {
         currentFragment = doLighting(currentFragment);
+    }
+
+    if (enable_fog) {
+        currentFragment = doFog(currentFragment);
     }
 
     if (enable_alpha_test && !doAlphaTest(currentFragment))

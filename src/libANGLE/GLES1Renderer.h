@@ -95,6 +95,12 @@ class GLES1Renderer final : angle::NonCopyable
         GLint textureMatrixLoc;
         GLint modelviewInvTrLoc;
 
+        // Texturing
+        GLint enableTexture2DLoc;
+        GLint enableTextureCubeMapLoc;
+        std::array<GLint, kTexUnitCount> tex2DSamplerLocs;
+        std::array<GLint, kTexUnitCount> texCubeSamplerLocs;
+
         // Alpha test
         GLint enableAlphaTestLoc;
         GLint alphaFuncLoc;
@@ -128,11 +134,13 @@ class GLES1Renderer final : angle::NonCopyable
         GLint lightAttenuationLinearsLoc;
         GLint lightAttenuationQuadraticsLoc;
 
-        // Texturing
-        GLint enableTexture2DLoc;
-        GLint enableTextureCubeMapLoc;
-        std::array<GLint, kTexUnitCount> tex2DSamplerLocs;
-        std::array<GLint, kTexUnitCount> texCubeSamplerLocs;
+        // Fog
+        GLint fogEnableLoc;
+        GLint fogModeLoc;
+        GLint fogDensityLoc;
+        GLint fogStartLoc;
+        GLint fogEndLoc;
+        GLint fogColorLoc;
 
         // Clip planes
         GLint enableClipPlanesLoc;

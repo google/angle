@@ -809,6 +809,9 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_CLIP_PLANE5:
             mGLES1State.mClipPlanes[feature - GL_CLIP_PLANE0].enabled = enabled;
             break;
+        case GL_FOG:
+            mGLES1State.mFogEnabled = enabled;
+            break;
         default:
             UNREACHABLE();
     }
@@ -902,6 +905,9 @@ bool State::getEnableFeature(GLenum feature) const
         case GL_CLIP_PLANE4:
         case GL_CLIP_PLANE5:
             return mGLES1State.mClipPlanes[feature - GL_CLIP_PLANE0].enabled;
+        case GL_FOG:
+            return mGLES1State.mFogEnabled;
+            break;
         default:
             UNREACHABLE();
             return false;
@@ -2022,6 +2028,13 @@ void State::getFloatv(GLenum pname, GLfloat *params)
             break;
         case GL_LIGHT_MODEL_AMBIENT:
             GetLightModelParameters(&mGLES1State, pname, params);
+            break;
+        case GL_FOG_MODE:
+        case GL_FOG_DENSITY:
+        case GL_FOG_START:
+        case GL_FOG_END:
+        case GL_FOG_COLOR:
+            GetFogParameters(&mGLES1State, pname, params);
             break;
         default:
             UNREACHABLE();

@@ -329,6 +329,45 @@ bool ValidateClipPlaneCommon(Context *context, GLenum plane)
     return true;
 }
 
+bool ValidateFogCommon(Context *context, GLenum pname, const GLfloat *params)
+{
+    ANGLE_VALIDATE_IS_GLES1(context);
+
+    switch (pname)
+    {
+        case GL_FOG_MODE:
+        {
+            GLenum modeParam = static_cast<GLenum>(params[0]);
+            switch (modeParam)
+            {
+                case GL_EXP:
+                case GL_EXP2:
+                case GL_LINEAR:
+                    return true;
+                default:
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidFogMode);
+                    return false;
+            }
+        }
+        break;
+        case GL_FOG_START:
+        case GL_FOG_END:
+        case GL_FOG_COLOR:
+            break;
+        case GL_FOG_DENSITY:
+            if (params[0] < 0.0f)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidFogDensity);
+                return false;
+            }
+            break;
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidFogParameter);
+            return false;
+    }
+    return true;
+}
+
 }  // namespace gl
 
 namespace gl
@@ -426,26 +465,31 @@ bool ValidateEnableClientState(Context *context, ClientVertexArrayType arrayType
 
 bool ValidateFogf(Context *context, GLenum pname, GLfloat param)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateFogCommon(context, pname, &param);
 }
 
 bool ValidateFogfv(Context *context, GLenum pname, const GLfloat *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateFogCommon(context, pname, params);
 }
 
 bool ValidateFogx(Context *context, GLenum pname, GLfixed param)
 {
-    UNIMPLEMENTED();
-    return true;
+    GLfloat asFloat = FixedToFloat(param);
+    return ValidateFogCommon(context, pname, &asFloat);
 }
 
-bool ValidateFogxv(Context *context, GLenum pname, const GLfixed *param)
+bool ValidateFogxv(Context *context, GLenum pname, const GLfixed *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    unsigned int paramCount = GetFogParameterCount(pname);
+    GLfloat paramsf[4]      = {};
+
+    for (unsigned int i = 0; i < paramCount; i++)
+    {
+        paramsf[i] = FixedToFloat(params[i]);
+    }
+
+    return ValidateFogCommon(context, pname, paramsf);
 }
 
 bool ValidateFrustumf(Context *context,

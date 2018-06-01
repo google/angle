@@ -817,6 +817,7 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_CLIP_PLANE3:
         case GL_CLIP_PLANE4:
         case GL_CLIP_PLANE5:
+        case GL_FOG:
             return context->getClientVersion() < Version(2, 0);
         case GL_POINT_SIZE_ARRAY_OES:
             return context->getClientVersion() < Version(2, 0) &&

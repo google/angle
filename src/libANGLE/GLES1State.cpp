@@ -384,4 +384,14 @@ void GLES1State::getClipPlane(unsigned int plane, GLfloat *equation) const
     equation[3] = mClipPlanes[plane].equation[3];
 }
 
+FogParameters &GLES1State::fogParameters()
+{
+    return mFog;
+}
+
+const FogParameters &GLES1State::fogParameters() const
+{
+    return mFog;
+}
+
 }  // namespace gl
