@@ -22,6 +22,30 @@
       "revId": "8ae09b0e2f3a5f82b37c47b95ea68adf54977454",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2e3ede8_9d88b8db",
+        "filename": "DEPS",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1167909
+      },
+      "writtenOn": "2018-06-01T21:06:32Z",
+      "side": 1,
+      "message": "It looks at the url. If it finds a variable it returns the value of that variable, otherwise it returns whatever it found after \u0027@\u0027.",
+      "parentUuid": "ff26f1d9_9e1dee0d",
+      "range": {
+        "startLine": 77,
+        "startChar": 69,
+        "endLine": 77,
+        "endChar": 109
+      },
+      "revId": "8ae09b0e2f3a5f82b37c47b95ea68adf54977454",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
