@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a9702ed7_70f5bd8c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T16:25:27Z",
+      "side": 1,
+      "message": "nit: probably use \u003e\u003d levelCount",
+      "range": {
+        "startLine": 288,
+        "startChar": 27,
+        "endLine": 288,
+        "endChar": 45
+      },
+      "revId": "94150b78fbbcc10394b337c5a367312336ffb721",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d3b1422_b78b5473",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T16:25:27Z",
+      "side": 1,
+      "message": "can you put this into a for loop instead? the tests shouldn\u0027t really assume the window has a specific size. you can use a small function or array to get the init data. You can use % potentially.",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 688,
+        "endChar": 65
+      },
+      "revId": "94150b78fbbcc10394b337c5a367312336ffb721",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99ebdf26_69b33986",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T16:25:27Z",
+      "side": 1,
+      "message": "I would probably use a value computed from the window size rather than hard-code it.",
+      "range": {
+        "startLine": 693,
+        "startChar": 32,
+        "endLine": 693,
+        "endChar": 33
+      },
+      "revId": "94150b78fbbcc10394b337c5a367312336ffb721",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2346994c_54c175f5",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 736,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T16:25:27Z",
+      "side": 1,
+      "message": "same comment here",
+      "range": {
+        "startLine": 718,
+        "startChar": 0,
+        "endLine": 736,
+        "endChar": 0
+      },
+      "revId": "94150b78fbbcc10394b337c5a367312336ffb721",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
