@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2713fe25_4e72fb3f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T12:10:01Z",
+      "side": 1,
+      "message": "can you remove the size checking? the level count should give the right limitation, I think.",
+      "range": {
+        "startLine": 292,
+        "startChar": 12,
+        "endLine": 293,
+        "endChar": 70
+      },
+      "revId": "0404d167b1613e1639d55fed4f728165e6c1bd30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ec6eb38_a20a94be",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T12:10:01Z",
+      "side": 1,
+      "message": "I think you can mSubresourceUpdates \u003d std::move(updatesToKeep).",
+      "range": {
+        "startLine": 313,
+        "startChar": 24,
+        "endLine": 313,
+        "endChar": 30
+      },
+      "revId": "0404d167b1613e1639d55fed4f728165e6c1bd30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c69f507c_24172585",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T12:10:01Z",
+      "side": 1,
+      "message": "Internal Vulkan bufffer could not be released. This is likely due to having extra images defined in the Texture.",
+      "range": {
+        "startLine": 322,
+        "startChar": 66,
+        "endLine": 323,
+        "endChar": 65
+      },
+      "revId": "0404d167b1613e1639d55fed4f728165e6c1bd30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
