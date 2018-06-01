@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "06d6b814_e891f912",
+        "filename": "DEPS",
+        "patchSetId": 26
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-06-01T19:49:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd9384e6_ce4c8bbf",
+      "range": {
+        "startLine": 46,
+        "startChar": 6,
+        "endLine": 46,
+        "endChar": 108
+      },
+      "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc30e60b_7d8047c8",
         "filename": "third_party/vulkan-tools/BUILD.gn",
         "patchSetId": 26
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "411513b9_c7d92035",
+        "filename": "third_party/vulkan-tools/BUILD.gn",
+        "patchSetId": 26
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-06-01T19:49:47Z",
+      "side": 1,
+      "message": "It\u0027s in both the tool and headers repo. Updated code to refer to it from Vulkan-Headers repo which should be the ultimate long-term source.",
+      "parentUuid": "fc30e60b_7d8047c8",
+      "range": {
+        "startLine": 55,
+        "startChar": 19,
+        "endLine": 55,
+        "endChar": 29
+      },
+      "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e7fa2049_77b281ce",
         "filename": "third_party/vulkan-validation-layers/BUILD.gn",
         "patchSetId": 26
@@ -59,6 +107,30 @@
       "writtenOn": "2018-06-01T17:26:58Z",
       "side": 1,
       "message": "which step generates these files?",
+      "range": {
+        "startLine": 96,
+        "startChar": 5,
+        "endLine": 96,
+        "endChar": 48
+      },
+      "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0758e07_88b36c63",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 26
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-06-01T19:49:47Z",
+      "side": 1,
+      "message": "The helper_scripts generation loop below uses these files out of the gen dir. None of these files are generated, this step just copies them to the generation dir.",
+      "parentUuid": "e7fa2049_77b281ce",
       "range": {
         "startLine": 96,
         "startChar": 5,
