@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e68717b1_e5e3f796",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:29:41Z",
+      "side": 1,
+      "message": "instead of duplicating these between Context and State, you can pass the attibs list to State::State and have it early-init these. Then you can use the mGLState versions everywhere.",
+      "range": {
+        "startLine": 292,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 66
+      },
+      "revId": "aba0fd498c29b9b65011c1f8268806ff6104775e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dcb9dde_71ef1388",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T18:29:41Z",
+      "side": 1,
+      "message": "you can just remove the ASSERT and leave the comment. It\u0027s fine to call destroy if the object is not init.",
+      "range": {
+        "startLine": 284,
+        "startChar": 4,
+        "endLine": 288,
+        "endChar": 5
+      },
+      "revId": "aba0fd498c29b9b65011c1f8268806ff6104775e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
