@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd9384e6_ce4c8bbf",
+        "filename": "DEPS",
+        "patchSetId": 26
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T17:26:58Z",
+      "side": 1,
+      "message": "let\u0027s try to re-use this as a custom variable.",
+      "range": {
+        "startLine": 46,
+        "startChar": 6,
+        "endLine": 46,
+        "endChar": 108
+      },
+      "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc30e60b_7d8047c8",
+        "filename": "third_party/vulkan-tools/BUILD.gn",
+        "patchSetId": 26
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T17:26:58Z",
+      "side": 1,
+      "message": "what\u0027s up here? Is this file baked into some repos and generated in others?",
+      "range": {
+        "startLine": 55,
+        "startChar": 19,
+        "endLine": 55,
+        "endChar": 29
+      },
+      "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7fa2049_77b281ce",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 26
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-01T17:26:58Z",
+      "side": 1,
+      "message": "which step generates these files?",
+      "range": {
+        "startLine": 96,
+        "startChar": 5,
+        "endLine": 96,
+        "endChar": 48
+      },
+      "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
