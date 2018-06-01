@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8c1c3a6_2419e541",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-01T19:41:11Z",
+      "side": 1,
+      "message": "static_cast to float?",
+      "range": {
+        "startLine": 136,
+        "startChar": 24,
+        "endLine": 136,
+        "endChar": 41
+      },
+      "revId": "0522449c68d8b121293464312ad82b1fb3cd01db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c21137a0_bbac3920",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-01T19:41:11Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 158,
+        "startChar": 24,
+        "endLine": 158,
+        "endChar": 41
+      },
+      "revId": "0522449c68d8b121293464312ad82b1fb3cd01db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc9c12db_374c5c07",
+        "filename": "src/libANGLE/GLES1Renderer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-01T19:41:11Z",
+      "side": 1,
+      "message": "Why was this block moved here?",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 0
+      },
+      "revId": "0522449c68d8b121293464312ad82b1fb3cd01db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
