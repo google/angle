@@ -75,7 +75,11 @@ void UpdateBufferBinding(const Context *context,
         (*binding)->onBindingChanged(context, true, target);
 }
 
-State::State()
+State::State(bool debug,
+             bool bindGeneratesResource,
+             bool clientArraysEnabled,
+             bool robustResourceInit,
+             bool programBinaryCacheEnabled)
     : mMaxDrawBuffers(0),
       mMaxCombinedTextureImageUnits(0),
       mDepthClearValue(0),
@@ -91,8 +95,8 @@ State::State()
       mLineWidth(0),
       mGenerateMipmapHint(GL_NONE),
       mFragmentShaderDerivativeHint(GL_NONE),
-      mBindGeneratesResource(true),
-      mClientArraysEnabled(true),
+      mBindGeneratesResource(bindGeneratesResource),
+      mClientArraysEnabled(clientArraysEnabled),
       mNearZ(0),
       mFarZ(0),
       mReadFramebuffer(nullptr),
@@ -101,11 +105,12 @@ State::State()
       mVertexArray(nullptr),
       mActiveSampler(0),
       mPrimitiveRestart(false),
+      mDebug(debug),
       mMultiSampling(false),
       mSampleAlphaToOne(false),
       mFramebufferSRGB(true),
-      mRobustResourceInit(false),
-      mProgramBinaryCacheEnabled(false)
+      mRobustResourceInit(robustResourceInit),
+      mProgramBinaryCacheEnabled(programBinaryCacheEnabled)
 {
 }
 
@@ -113,12 +118,7 @@ State::~State()
 {
 }
 
-void State::initialize(const Context *context,
-                       bool debug,
-                       bool bindGeneratesResource,
-                       bool clientArraysEnabled,
-                       bool robustResourceInit,
-                       bool programBinaryCacheEnabled)
+void State::initialize(const Context *context)
 {
     const Caps &caps                   = context->getCaps();
     const Extensions &extensions       = context->getExtensions();
@@ -157,9 +157,6 @@ void State::initialize(const Context *context,
 
     mGenerateMipmapHint           = GL_DONT_CARE;
     mFragmentShaderDerivativeHint = GL_DONT_CARE;
-
-    mBindGeneratesResource = bindGeneratesResource;
-    mClientArraysEnabled   = clientArraysEnabled;
 
     mLineWidth = 1.0f;
 
@@ -234,7 +231,6 @@ void State::initialize(const Context *context,
 
     mPrimitiveRestart = false;
 
-    mDebug.setOutputEnabled(debug);
     mDebug.setMaxLoggedMessages(extensions.maxDebugLoggedMessages);
 
     mMultiSampling    = true;
@@ -247,9 +243,6 @@ void State::initialize(const Context *context,
     mPathStencilFunc = GL_ALWAYS;
     mPathStencilRef  = 0;
     mPathStencilMask = std::numeric_limits<GLuint>::max();
-
-    mRobustResourceInit        = robustResourceInit;
-    mProgramBinaryCacheEnabled = programBinaryCacheEnabled;
 
     // GLES1 emulation: Initialize state for GLES1 if version
     // applies

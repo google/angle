@@ -281,6 +281,11 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mSavedArgsType(nullptr),
       mImplementation(implFactory->createContext(mState)),
       mCompiler(),
+      mGLState(GetDebug(attribs),
+               GetBindGeneratesResource(attribs),
+               GetClientArraysEnabled(attribs),
+               GetRobustResourceInit(attribs),
+               memoryProgramCache != nullptr),
       mConfig(config),
       mClientType(EGL_OPENGL_ES_API),
       mHasBeenCurrent(false),
@@ -307,9 +312,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     initCaps(displayExtensions, clientExtensions, robustResourceInit);
     initWorkarounds();
 
-    mGLState.initialize(this, GetDebug(attribs), GetBindGeneratesResource(attribs),
-                        GetClientArraysEnabled(attribs), robustResourceInit,
-                        mMemoryProgramCache != nullptr);
+    mGLState.initialize(this);
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 

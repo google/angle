@@ -38,15 +38,14 @@ struct Caps;
 class State : public angle::ObserverInterface, angle::NonCopyable
 {
   public:
-    State();
+    State(bool debug,
+          bool bindGeneratesResource,
+          bool clientArraysEnabled,
+          bool robustResourceInit,
+          bool programBinaryCacheEnabled);
     ~State() override;
 
-    void initialize(const Context *context,
-                    bool debug,
-                    bool bindGeneratesResource,
-                    bool clientArraysEnabled,
-                    bool robustResourceInit,
-                    bool programBinaryCacheEnabled);
+    void initialize(const Context *context);
     void reset(const Context *context);
 
     // State chunk getters
@@ -517,8 +516,8 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     GLenum mGenerateMipmapHint;
     GLenum mFragmentShaderDerivativeHint;
 
-    bool mBindGeneratesResource;
-    bool mClientArraysEnabled;
+    const bool mBindGeneratesResource;
+    const bool mClientArraysEnabled;
 
     Rectangle mViewport;
     float mNearZ;
@@ -607,10 +606,10 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     bool mFramebufferSRGB;
 
     // GL_ANGLE_robust_resource_intialization
-    bool mRobustResourceInit;
+    const bool mRobustResourceInit;
 
     // GL_ANGLE_program_cache_control
-    bool mProgramBinaryCacheEnabled;
+    const bool mProgramBinaryCacheEnabled;
 
     // GLES1 emulation: state specific to GLES1
     GLES1State mGLES1State;

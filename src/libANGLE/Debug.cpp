@@ -36,8 +36,8 @@ Debug::Group::~Group()
 
 Debug::Group::Group(const Group &other) = default;
 
-Debug::Debug()
-    : mOutputEnabled(false),
+Debug::Debug(bool initialDebugState)
+    : mOutputEnabled(initialDebugState),
       mCallbackFunction(nullptr),
       mCallbackUserParam(nullptr),
       mMessages(),

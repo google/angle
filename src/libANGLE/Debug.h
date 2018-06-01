@@ -30,7 +30,7 @@ class LabeledObject
 class Debug : angle::NonCopyable
 {
   public:
-    Debug();
+    Debug(bool initialDebugState);
     ~Debug();
 
     void setMaxLoggedMessages(GLuint maxLoggedMessages);
