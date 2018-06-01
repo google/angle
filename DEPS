@@ -52,7 +52,7 @@ deps = {
   },
 
   '{angle_root}/third_party/glslang/src': {
-    'url': '{android_git}/platform/external/shaderc/glslang@2edde6665d9a56ead5ea0e55b4e64d9a803e6164',
+    'url': '{android_git}/platform/external/shaderc/glslang@{glslang_revision}',
   },
 
   '{angle_root}/third_party/googletest/src': {
@@ -66,15 +66,15 @@ deps = {
   },
 
   '{angle_root}/third_party/spirv-headers/src': {
-    'url': '{android_git}/platform/external/shaderc/spirv-headers@98b01515724c428d0f0a5d01deffcce0f5f5e61c',
+    'url': '{android_git}/platform/external/shaderc/spirv-headers@{spirv_headers_revision}',
   },
 
   '{angle_root}/third_party/spirv-tools/src': {
-    'url': '{android_git}/platform/external/shaderc/spirv-tools@9996173f363729b3a97309685dbd4d78547a63a7',
+    'url': '{android_git}/platform/external/shaderc/spirv-tools@{spirv_tools_revision}',
   },
 
   '{angle_root}/third_party/vulkan-validation-layers/src': {
-    'url': '{android_git}/platform/external/vulkan-validation-layers@25d5884746a2de7b51a8ef3ec88e1cd8066460e8',
+    'url': '{android_git}/platform/external/vulkan-validation-layers@{vulkan_revision}',
   },
 
   '{angle_root}/third_party/zlib': {
