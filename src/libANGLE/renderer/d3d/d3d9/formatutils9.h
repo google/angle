@@ -16,8 +16,9 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/Format.h"
-#include "libANGLE/renderer/renderer_utils.h"
+#include "libANGLE/renderer/copyvertex.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 namespace rx
 {
