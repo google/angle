@@ -22,6 +22,30 @@
       "revId": "956c0ad733eaf09cbf70f961f325aae9eb1cbee4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7827ff3_04091a4d",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1184734
+      },
+      "writtenOn": "2018-06-02T00:25:22Z",
+      "side": 1,
+      "message": "That\u0027s what cl format wanted. I previously had the comment at the normal indentation.",
+      "parentUuid": "6887736c_b1d610cf",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 11
+      },
+      "revId": "956c0ad733eaf09cbf70f961f325aae9eb1cbee4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
