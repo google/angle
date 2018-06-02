@@ -46,6 +46,29 @@
       "revId": "956c0ad733eaf09cbf70f961f325aae9eb1cbee4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21ba828f_760f18fe",
+        "filename": "src/tests/compiler_tests/ShCompile_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-02T14:46:32Z",
+      "side": 1,
+      "message": "this could be in a protected section above the private section.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 23
+      },
+      "revId": "956c0ad733eaf09cbf70f961f325aae9eb1cbee4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
