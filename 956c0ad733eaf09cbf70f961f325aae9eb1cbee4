@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6887736c_b1d610cf",
+        "filename": "src/compiler/preprocessor/numeric_lex.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-02T00:07:10Z",
+      "side": 1,
+      "message": "think this is missing git cl format, unless it\u0027s doing something weird.",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 11
+      },
+      "revId": "956c0ad733eaf09cbf70f961f325aae9eb1cbee4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
