@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "47e56d62_b0bef9a8",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T21:07:21Z",
+      "side": 1,
+      "message": "yeah, let\u0027s.",
+      "parentUuid": "c8522711_26b7d92d",
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d7d3ec25_750d1c00",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
@@ -35,6 +53,144 @@
         "startChar": 12,
         "endLine": 101,
         "endChar": 96
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a580e67_50b4f710",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T21:07:21Z",
+      "side": 1,
+      "message": "do you think we could do this in syncDirtyAttrib? I forget the details. We were discussing something like that. then maybe you wouldn\u0027t need the separate mStride.",
+      "range": {
+        "startLine": 325,
+        "startChar": 12,
+        "endLine": 325,
+        "endChar": 33
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b381f5a_b2c89395",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T21:07:21Z",
+      "side": 1,
+      "message": "use const vk::Format *",
+      "range": {
+        "startLine": 111,
+        "startChar": 19,
+        "endLine": 111,
+        "endChar": 38
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78547d9d_e85caa7c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T21:07:21Z",
+      "side": 1,
+      "message": "would like to use the generator a bit more here. maybe we can talk offline.",
+      "range": {
+        "startLine": 358,
+        "startChar": 0,
+        "endLine": 389,
+        "endChar": 9
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b859274_b13355d6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T21:07:21Z",
+      "side": 1,
+      "message": "nit: rename to textureLoadFunctions",
+      "range": {
+        "startLine": 54,
+        "startChar": 20,
+        "endLine": 54,
+        "endChar": 33
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a33443bf_e8fe641e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T21:07:21Z",
+      "side": 1,
+      "message": "nit: rename to vertexLoadFunction",
+      "range": {
+        "startLine": 55,
+        "startChar": 23,
+        "endLine": 55,
+        "endChar": 41
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49211edc_1d2d4826",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T21:07:21Z",
+      "side": 1,
+      "message": "nit: vertexLoadRequiresConversion. Maybe combine these two into a mini struct that the switch can return.",
+      "range": {
+        "startLine": 56,
+        "startChar": 9,
+        "endLine": 56,
+        "endChar": 27
       },
       "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
