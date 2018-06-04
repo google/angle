@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9499b306_90d9ba11",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T17:41:18Z",
+      "side": 1,
+      "message": "The full array is not used.  Just declare a single float in the scope that it is used.  Alternatively, is it possible to use GetFogParameterCount to eliminate the switch?",
+      "range": {
+        "startLine": 131,
+        "startChar": 4,
+        "endLine": 131,
+        "endChar": 22
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55a63617_e8de3382",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T17:41:18Z",
+      "side": 1,
+      "message": "Can you add a helper function in queryconversions.h for this?",
+      "range": {
+        "startLine": 136,
+        "startChar": 24,
+        "endLine": 136,
+        "endChar": 65
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "910fcf75_f7069b1a",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T17:41:18Z",
+      "side": 1,
+      "message": "UNREACHABLE?",
+      "range": {
+        "startLine": 148,
+        "startChar": 12,
+        "endLine": 148,
+        "endChar": 19
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4633953a_4c432d30",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T17:41:18Z",
+      "side": 1,
+      "message": "Declare the variables in the switch when they are needed.",
+      "range": {
+        "startLine": 154,
+        "startChar": 4,
+        "endLine": 154,
+        "endChar": 22
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e62c2dbe_d13b2575",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T17:41:18Z",
+      "side": 1,
+      "message": "UNREACHABLE too",
+      "range": {
+        "startLine": 174,
+        "startChar": 12,
+        "endLine": 174,
+        "endChar": 19
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a577d3ab_f0bcaaf7",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T17:41:18Z",
+      "side": 1,
+      "message": "I think this formatting should have been in the previous patch.",
+      "range": {
+        "startLine": 214,
+        "startChar": 44,
+        "endLine": 214,
+        "endChar": 45
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
