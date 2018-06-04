@@ -140,6 +140,30 @@
       "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e82efe5_c0087787",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 26
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T21:18:43Z",
+      "side": 1,
+      "message": "OK. Sorry if I\u0027m being dense. Wasn\u0027t there some step in the cmake that was generating a file to the scripts/ directory?",
+      "parentUuid": "b0758e07_88b36c63",
+      "range": {
+        "startLine": 96,
+        "startChar": 5,
+        "endLine": 96,
+        "endChar": 48
+      },
+      "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
