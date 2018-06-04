@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26cd3073_1bc37f33",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1404,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T18:11:05Z",
+      "side": 1,
+      "message": "I think a few of these functions can be simplified if you add a new mState.getImageDesc that takes an ImageIndex.  You can check if imageIndex.isEntireLevelCubeMap() and return the image desc for the first cube map face else an invalid desc.",
+      "range": {
+        "startLine": 1401,
+        "startChar": 12,
+        "endLine": 1404,
+        "endChar": 38
+      },
+      "revId": "ec47670215928336a69489ec36112a62441d7a8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
