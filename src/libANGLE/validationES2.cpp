@@ -6110,7 +6110,7 @@ bool ValidateGenerateMipmap(Context *context, TextureType target)
     bool formatUnsized = !format.sized;
     bool formatColorRenderableAndFilterable =
         format.filterSupport(context->getClientVersion(), context->getExtensions()) &&
-        format.renderSupport(context->getClientVersion(), context->getExtensions());
+        format.textureAttachmentSupport(context->getClientVersion(), context->getExtensions());
     if (!formatUnsized && !formatColorRenderableAndFilterable)
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), GenerateMipmapNotAllowed);

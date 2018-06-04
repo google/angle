@@ -102,11 +102,12 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
     const nativegl::InternalFormat &formatInfo = nativegl::GetInternalFormatInfo(internalFormat, functions->standard);
     textureCaps.texturable = MeetsRequirements(functions, formatInfo.texture);
     textureCaps.filterable = textureCaps.texturable && MeetsRequirements(functions, formatInfo.filter);
-    textureCaps.renderable = MeetsRequirements(functions, formatInfo.framebufferAttachment);
+    textureCaps.textureAttachment = MeetsRequirements(functions, formatInfo.textureAttachment);
+    textureCaps.renderbuffer      = MeetsRequirements(functions, formatInfo.renderbuffer);
 
     // glGetInternalformativ is not available until version 4.2 but may be available through the 3.0
     // extension GL_ARB_internalformat_query
-    if (textureCaps.renderable && functions->getInternalformativ)
+    if (textureCaps.renderbuffer && functions->getInternalformativ)
     {
         GLenum queryInternalFormat = internalFormat;
 
@@ -1248,7 +1249,7 @@ bool SupportsNativeRendering(const FunctionsGL *functions,
     {
         const nativegl::InternalFormat &nativeInfo =
             nativegl::GetInternalFormatInfo(internalFormat, functions->standard);
-        return nativegl_gl::MeetsRequirements(functions, nativeInfo.framebufferAttachment);
+        return nativegl_gl::MeetsRequirements(functions, nativeInfo.textureAttachment);
     }
 }
 

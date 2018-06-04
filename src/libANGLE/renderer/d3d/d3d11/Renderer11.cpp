@@ -1039,8 +1039,9 @@ egl::ConfigSet Renderer11::generateConfigs()
     {
         const gl::TextureCaps &colorBufferFormatCaps =
             rendererTextureCaps.get(colorBufferInternalFormat);
-        if (!colorBufferFormatCaps.renderable)
+        if (!colorBufferFormatCaps.renderbuffer)
         {
+            ASSERT(!colorBufferFormatCaps.textureAttachment);
             continue;
         }
 
@@ -1048,9 +1049,10 @@ egl::ConfigSet Renderer11::generateConfigs()
         {
             const gl::TextureCaps &depthStencilBufferFormatCaps =
                 rendererTextureCaps.get(depthStencilBufferInternalFormat);
-            if (!depthStencilBufferFormatCaps.renderable &&
+            if (!depthStencilBufferFormatCaps.renderbuffer &&
                 depthStencilBufferInternalFormat != GL_NONE)
             {
+                ASSERT(!depthStencilBufferFormatCaps.textureAttachment);
                 continue;
             }
 

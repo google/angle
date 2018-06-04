@@ -129,8 +129,9 @@ struct InternalFormat
 
     typedef bool (*SupportCheckFunction)(const Version &, const Extensions &);
     SupportCheckFunction textureSupport;
-    SupportCheckFunction renderSupport;
     SupportCheckFunction filterSupport;
+    SupportCheckFunction textureAttachmentSupport;  // glFramebufferTexture2D
+    SupportCheckFunction renderbufferSupport;       // glFramebufferRenderbuffer
 };
 
 // A "Format" wraps an InternalFormat struct, querying it from either a sized internal format or

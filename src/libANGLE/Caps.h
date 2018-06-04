@@ -37,8 +37,11 @@ struct TextureCaps
     // Support for linear or anisotropic filtering
     bool filterable;
 
-    // Support for being used as a framebuffer attachment or renderbuffer format
-    bool renderable;
+    // Support for being used as a framebuffer attachment, i.e. glFramebufferTexture2D
+    bool textureAttachment;
+
+    // Support for being used as a renderbuffer format, i.e. glFramebufferRenderbuffer
+    bool renderbuffer;
 
     // Set of supported sample counts, only guaranteed to be valid in ES3.
     SupportedSampleSet sampleCounts;

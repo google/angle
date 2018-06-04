@@ -49,8 +49,10 @@ struct InternalFormat
 
     SupportRequirement texture;
     SupportRequirement filter;
+    // Texture created with InternalFormat can be used in glFramebufferTexture2D
+    SupportRequirement textureAttachment;
+    // Renderbuffer created with InternalFormat can be used in glFramebufferRenderbuffer
     SupportRequirement renderbuffer;
-    SupportRequirement framebufferAttachment;
 };
 const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, StandardGL standard);
 

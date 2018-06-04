@@ -36,9 +36,10 @@ void FillTextureFormatCaps(const VkFormatProperties &formatProperties,
         HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT, formatProperties);
     outTextureCaps->filterable =
         HasFormatFeatureBits(VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, formatProperties);
-    outTextureCaps->renderable =
+    outTextureCaps->textureAttachment =
         HasFormatFeatureBits(VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, formatProperties) ||
         HasFormatFeatureBits(VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, formatProperties);
+    outTextureCaps->renderbuffer = outTextureCaps->textureAttachment;
 }
 
 }  // anonymous namespace

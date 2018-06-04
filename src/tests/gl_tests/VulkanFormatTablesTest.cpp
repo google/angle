@@ -106,7 +106,8 @@ TEST_P(VulkanFormatTablesTest, TestFormatSupport)
                     params.createFlags, &imageProperties)) == VK_SUCCESS;
 
             bool isRenderable = isRenderableColor || isRenderableDepthStencil;
-            EXPECT_EQ(isRenderable, textureCaps.renderable) << vkFormat.vkTextureFormat;
+            EXPECT_EQ(isRenderable, textureCaps.textureAttachment) << vkFormat.vkTextureFormat;
+            EXPECT_EQ(isRenderable, textureCaps.renderbuffer) << vkFormat.vkTextureFormat;
         }
     }
 }

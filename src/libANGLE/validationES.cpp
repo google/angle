@@ -1187,7 +1187,7 @@ bool ValidateRenderbufferStorageParametersBase(Context *context,
     GLenum convertedInternalFormat = context->getConvertedRenderbufferFormat(internalformat);
 
     const TextureCaps &formatCaps = context->getTextureCaps().get(convertedInternalFormat);
-    if (!formatCaps.renderable)
+    if (!formatCaps.renderbuffer)
     {
         context->handleError(InvalidEnum());
         return false;
@@ -3650,7 +3650,7 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
 
     const TextureCaps &textureCaps =
         context->getTextureCaps().get(imageObject->getFormat().info->sizedInternalFormat);
-    if (!textureCaps.renderable)
+    if (!textureCaps.renderbuffer)
     {
         context->handleError(InvalidOperation()
                              << "EGL image internal format is not supported as a renderbuffer.");
@@ -6339,7 +6339,7 @@ bool ValidateGetInternalFormativBase(Context *context,
     }
 
     const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
-    if (!formatCaps.renderable)
+    if (!formatCaps.renderbuffer)
     {
         context->handleError(InvalidEnum() << "Internal format is not renderable.");
         return false;
