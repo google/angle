@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c8522711_26b7d92d",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-04T17:54:21Z",
+      "side": 1,
+      "message": "can we make this a method in angle::Format?",
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d7d3ec25_750d1c00",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
