@@ -81,7 +81,7 @@ void UpdateDefaultUniformBlock(GLsizei count,
         {
             const int arrayOffset = writeIndex * layoutInfo.arrayStride;
             uint8_t *writePtr     = dst + arrayOffset;
-            const T *readPtr      = v + readIndex;
+            const T *readPtr      = v + (readIndex * componentCount);
             memcpy(writePtr, readPtr, elementSize);
         }
     }
