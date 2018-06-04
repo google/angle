@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "da3e7d64_657fd384",
+        "filename": "src/libANGLE/renderer/copyvertex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-04T17:04:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e6e6916_e2c90bb1",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fdea3049_15110fd3",
         "filename": "src/libANGLE/renderer/copyvertex.h",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "120225ed_60e43be2",
+        "filename": "src/libANGLE/renderer/copyvertex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-04T17:04:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fdea3049_15110fd3",
+      "range": {
+        "startLine": 9,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 49
+      },
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ba57257_80654b56",
         "filename": "src/libANGLE/renderer/copyvertex.h",
         "patchSetId": 2
@@ -62,6 +110,24 @@
       "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67cce8f8_3374f02e",
+        "filename": "src/libANGLE/renderer/copyvertex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-04T17:04:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ba57257_80654b56",
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "0e9b3ee9_bf7e651a",
+        "filename": "src/libANGLE/renderer/copyvertex.inl",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-04T17:04:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41728f62_0ca4b115",
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f8781b2_cad2cd63",
         "filename": "src/libANGLE/renderer/copyvertex.inl",
         "patchSetId": 2
@@ -96,6 +180,24 @@
       "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a943d5ab_678ee5b9",
+        "filename": "src/libANGLE/renderer/copyvertex.inl",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-04T17:04:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f8781b2_cad2cd63",
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
