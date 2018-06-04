@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe56a872_1b7f9f07",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T18:15:47Z",
+      "side": 1,
+      "message": "Can these be using statements instead?\n\n  using Float \u003d Format\u003cGLfloat, GL_FLOAT, false\u003e;\n\nActually, are they referenced anywhere?",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 0
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
