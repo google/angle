@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcc51bc7_2b4a469b",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T17:30:07Z",
+      "side": 1,
+      "message": "Think this missed some formatting",
+      "range": {
+        "startLine": 242,
+        "startChar": 100,
+        "endLine": 242,
+        "endChar": 103
+      },
+      "revId": "4ee7e74b62c0c7e389cb88aa5bbd1d752140db59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91a6cc9f_96a0a0ac",
+        "filename": "src/tests/gl_tests/gles1/ClipPlaneTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-04T17:30:07Z",
+      "side": 1,
+      "message": "nit: casts not neccssary (or use c++ casts)",
+      "range": {
+        "startLine": 96,
+        "startChar": 12,
+        "endLine": 96,
+        "endChar": 19
+      },
+      "revId": "4ee7e74b62c0c7e389cb88aa5bbd1d752140db59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
