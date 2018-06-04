@@ -40,6 +40,7 @@ struct TranslatedAttribute;
 
 namespace gl
 {
+struct UnusedUniform;
 struct Caps;
 class Context;
 class ContextState;
@@ -747,7 +748,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkUniforms(const Context *context,
                       InfoLog &infoLog,
                       const ProgramBindings &uniformLocationBindings,
-                      GLuint *combinedImageUniformsCount);
+                      GLuint *combinedImageUniformsCount,
+                      std::vector<UnusedUniform> *unusedUniforms);
     void linkSamplerAndImageBindings(GLuint *combinedImageUniformsCount);
     bool linkAtomicCounterBuffers();
 

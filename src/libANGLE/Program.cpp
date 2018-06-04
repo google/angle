@@ -1096,8 +1096,16 @@ Error Program::link(const gl::Context *context)
 
     if (mState.mAttachedShaders[ShaderType::Compute])
     {
+        ProgramLinkedResources resources = {
+            {0, PackMode::ANGLE_RELAXED},
+            {&mState.mUniformBlocks, &mState.mUniforms},
+            {&mState.mShaderStorageBlocks, &mState.mBufferVariables},
+            {&mState.mAtomicCounterBuffers},
+            {}};
+
         GLuint combinedImageUniforms = 0u;
-        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings, &combinedImageUniforms))
+        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings, &combinedImageUniforms,
+                          &resources.unusedUniforms))
         {
             return NoError();
         }
@@ -1124,12 +1132,6 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
-        ProgramLinkedResources resources = {
-            {0, PackMode::ANGLE_RELAXED},
-            {&mState.mUniformBlocks, &mState.mUniforms},
-            {&mState.mShaderStorageBlocks, &mState.mBufferVariables},
-            {&mState.mAtomicCounterBuffers}};
-
         InitUniformBlockLinker(context, mState, &resources.uniformBlockLinker);
         InitShaderStorageBlockLinker(context, mState, &resources.shaderStorageBlockLinker);
 
@@ -1141,6 +1143,26 @@ Error Program::link(const gl::Context *context)
     }
     else
     {
+        // Map the varyings to the register file
+        // In WebGL, we use a slightly different handling for packing variables.
+        gl::PackMode packMode = PackMode::ANGLE_RELAXED;
+        if (data.getLimitations().noFlexibleVaryingPacking)
+        {
+            // D3D9 pack mode is strictly more strict than WebGL, so takes priority.
+            packMode = PackMode::ANGLE_NON_CONFORMANT_D3D9;
+        }
+        else if (data.getExtensions().webglCompatibility)
+        {
+            packMode = PackMode::WEBGL_STRICT;
+        }
+
+        ProgramLinkedResources resources = {
+            {data.getCaps().maxVaryingVectors, packMode},
+            {&mState.mUniformBlocks, &mState.mUniforms},
+            {&mState.mShaderStorageBlocks, &mState.mBufferVariables},
+            {&mState.mAtomicCounterBuffers},
+            {}};
+
         if (!linkAttributes(context, mInfoLog))
         {
             return NoError();
@@ -1152,7 +1174,8 @@ Error Program::link(const gl::Context *context)
         }
 
         GLuint combinedImageUniforms = 0u;
-        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings, &combinedImageUniforms))
+        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings, &combinedImageUniforms,
+                          &resources.unusedUniforms))
         {
             return NoError();
         }
@@ -1177,25 +1200,6 @@ Error Program::link(const gl::Context *context)
 
         ASSERT(mState.mAttachedShaders[ShaderType::Vertex]);
         mState.mNumViews = mState.mAttachedShaders[ShaderType::Vertex]->getNumViews(context);
-
-        // Map the varyings to the register file
-        // In WebGL, we use a slightly different handling for packing variables.
-        gl::PackMode packMode = PackMode::ANGLE_RELAXED;
-        if (data.getLimitations().noFlexibleVaryingPacking)
-        {
-            // D3D9 pack mode is strictly more strict than WebGL, so takes priority.
-            packMode = PackMode::ANGLE_NON_CONFORMANT_D3D9;
-        }
-        else if (data.getExtensions().webglCompatibility)
-        {
-            packMode = PackMode::WEBGL_STRICT;
-        }
-
-        ProgramLinkedResources resources = {
-            {data.getCaps().maxVaryingVectors, packMode},
-            {&mState.mUniformBlocks, &mState.mUniforms},
-            {&mState.mShaderStorageBlocks, &mState.mBufferVariables},
-            {&mState.mAtomicCounterBuffers}};
 
         InitUniformBlockLinker(context, mState, &resources.uniformBlockLinker);
         InitShaderStorageBlockLinker(context, mState, &resources.shaderStorageBlockLinker);
@@ -2558,7 +2562,8 @@ bool Program::linkValidateFragmentInputBindings(const Context *context, gl::Info
 bool Program::linkUniforms(const Context *context,
                            InfoLog &infoLog,
                            const ProgramBindings &uniformLocationBindings,
-                           GLuint *combinedImageUniformsCount)
+                           GLuint *combinedImageUniformsCount,
+                           std::vector<UnusedUniform> *unusedUniforms)
 {
     UniformLinker linker(mState);
     if (!linker.link(context, infoLog, uniformLocationBindings))
@@ -2566,7 +2571,7 @@ bool Program::linkUniforms(const Context *context,
         return false;
     }
 
-    linker.getResults(&mState.mUniforms, &mState.mUniformLocations);
+    linker.getResults(&mState.mUniforms, unusedUniforms, &mState.mUniformLocations);
 
     linkSamplerAndImageBindings(combinedImageUniformsCount);
 

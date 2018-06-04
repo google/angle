@@ -216,12 +216,6 @@
 2580 VULKAN : dEQP-GLES2.functional.buffer.write.recreate_store.different_size = SKIP
 2580 VULKAN : dEQP-GLES2.functional.buffer.write.recreate_store.random_* = SKIP
 2580 VULKAN : dEQP-GLES2.functional.buffer.write.random.* = SKIP
-2582 VULKAN : dEQP-GLES2.functional.shaders.linkage.uniform_struct_fragment* = SKIP
-2585 VULKAN : dEQP-GLES2.functional.shaders.qualification_order.variables.valid.* = SKIP
-2587 VULKAN : dEQP-GLES2.functional.shaders.loops.* = SKIP
-2589 VULKAN : dEQP-GLES2.functional.shaders.return.output_write* = SKIP
-2589 VULKAN : dEQP-GLES2.functional.shaders.return.return_in_static_loop* = SKIP
-2590 VULKAN : dEQP-GLES2.functional.shaders.discard.* = SKIP
 2494 VULKAN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_* = SKIP
 2592 VULKAN : dEQP-GLES2.functional.shaders.builtin_variable.depth_range* = SKIP
 2592 VULKAN : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = SKIP
