@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7d3ec25_750d1c00",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-04T12:26:13Z",
+      "side": 1,
+      "message": "nit: Can you get this out into a var?",
+      "range": {
+        "startLine": 101,
+        "startChar": 12,
+        "endLine": 101,
+        "endChar": 96
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
