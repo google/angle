@@ -304,7 +304,6 @@
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.basic_array_assign_partial.array_in_struct.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.unused_uniforms.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.random.* = SKIP
-2600 VULKAN : dEQP-GLES2.functional.state_query.shader.program_validate_status = SKIP
 2600 VULKAN : dEQP-GLES2.functional.state_query.shader.uniform_value_sampler = SKIP
 2601 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP
 2353 VULKAN : dEQP-GLES2.functional.polygon_offset.* = SKIP

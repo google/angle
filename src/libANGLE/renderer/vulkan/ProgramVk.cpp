@@ -397,8 +397,8 @@ gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
 
 GLboolean ProgramVk::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
 {
-    UNIMPLEMENTED();
-    return GLboolean();
+    // No-op. The spec is very vague about the behavior of validation.
+    return GL_TRUE;
 }
 
 template <typename T>
