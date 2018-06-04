@@ -213,7 +213,6 @@
 2580 VULKAN : dEQP-GLES2.functional.buffer.write.recreate_store.random_* = SKIP
 2580 VULKAN : dEQP-GLES2.functional.buffer.write.random.* = SKIP
 2582 VULKAN : dEQP-GLES2.functional.shaders.linkage.uniform_struct_fragment* = SKIP
-2583 VULKAN : dEQP-GLES2.functional.shaders.conversions.scalar_to_matrix.* = SKIP
 2585 VULKAN : dEQP-GLES2.functional.shaders.qualification_order.variables.valid.* = SKIP
 2586 VULKAN : dEQP-GLES2.functional.shaders.indexing.uniform_array.vec2_* = SKIP
 2586 VULKAN : dEQP-GLES2.functional.shaders.indexing.uniform_array.vec3_* = SKIP

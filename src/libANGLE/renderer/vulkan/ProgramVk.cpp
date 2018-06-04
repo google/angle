@@ -581,9 +581,14 @@ void ProgramVk::setUniformMatrixfv(GLint location,
             continue;
         }
 
-        uniformBlock.uniformsDirty = SetFloatUniformMatrix<cols, rows>(
+        bool updated = SetFloatUniformMatrix<cols, rows>(
             locationInfo.arrayIndex, linkedUniform.getArraySizeProduct(), count, transpose, value,
             uniformBlock.uniformData.data() + layoutInfo.offset);
+
+        // If the uniformsDirty flag was true, we don't want to flip it to false here if the
+        // setter did not update any data. We still want the uniform to be included when we'll
+        // update the descriptor sets.
+        uniformBlock.uniformsDirty = uniformBlock.uniformsDirty || updated;
     }
 }
 
