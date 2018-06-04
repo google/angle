@@ -2,6 +2,121 @@
   "comments": [
     {
       "key": {
+        "uuid": "30f2c8d6_fa6ce805",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T19:59:42Z",
+      "side": 1,
+      "message": "constexpr double kTriangleData[]",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 31
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a2f2070_2bbc461f",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T19:59:42Z",
+      "side": 1,
+      "message": "prefer using",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 7
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9279da47_7e3fb755",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T19:59:42Z",
+      "side": 1,
+      "message": "isn\u0027t this just std::numeric_limits\u003cCType\u003e::max() ? or am i missing something.",
+      "range": {
+        "startLine": 77,
+        "startChar": 41,
+        "endLine": 77,
+        "endChar": 71
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02c8387c_106b1a3c",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T19:59:42Z",
+      "side": 1,
+      "message": "how about !kNormalized || !float",
+      "range": {
+        "startLine": 79,
+        "startChar": 17,
+        "endLine": 79,
+        "endChar": 55
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3222a05_e1487163",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T19:59:42Z",
+      "side": 1,
+      "message": "caps for static functions",
+      "range": {
+        "startLine": 81,
+        "startChar": 16,
+        "endLine": 81,
+        "endChar": 23
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fe56a872_1b7f9f07",
         "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
         "patchSetId": 4
@@ -18,6 +133,52 @@
         "startChar": 0,
         "endLine": 110,
         "endChar": 0
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a77098ac_45ba264a",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T19:59:42Z",
+      "side": 1,
+      "message": "What are these exactly? I don\u0027t see them being used. Also can you use slightly more descriptive names? Some contractions are fine but this is a bit too cryptic.",
+      "range": {
+        "startLine": 177,
+        "startChar": 14,
+        "endLine": 177,
+        "endChar": 16
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a98a39e_ac4718e9",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T19:59:42Z",
+      "side": 1,
+      "message": "don\u0027t use ASSERT in tests. use FAIL() \u003c\u003c instead.",
+      "range": {
+        "startLine": 200,
+        "startChar": 16,
+        "endLine": 200,
+        "endChar": 22
       },
       "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
