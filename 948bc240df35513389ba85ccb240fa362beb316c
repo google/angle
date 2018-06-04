@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bbdc6c0c_99204d27",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-04T22:05:57Z",
+      "side": 1,
+      "message": "Yes, it looks like we can use GetFogParameterCount to eliminate the switch.",
+      "parentUuid": "9499b306_90d9ba11",
+      "range": {
+        "startLine": 131,
+        "startChar": 4,
+        "endLine": 131,
+        "endChar": 22
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55a63617_e8de3382",
         "filename": "src/libANGLE/Context_gles_1_0.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "948bc240df35513389ba85ccb240fa362beb316c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54b402c7_f21c83be",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-04T22:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55a63617_e8de3382",
+      "range": {
+        "startLine": 136,
+        "startChar": 24,
+        "endLine": 136,
+        "endChar": 65
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2caad0ea_215ae280",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-04T22:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "910fcf75_f7069b1a",
+      "range": {
+        "startLine": 148,
+        "startChar": 12,
+        "endLine": 148,
+        "endChar": 19
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4633953a_4c432d30",
         "filename": "src/libANGLE/Context_gles_1_0.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "948bc240df35513389ba85ccb240fa362beb316c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ca6c41c_6d6ca09c",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-04T22:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4633953a_4c432d30",
+      "range": {
+        "startLine": 154,
+        "startChar": 4,
+        "endLine": 154,
+        "endChar": 22
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "b5a2531b_6cc2d7c8",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-04T22:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e62c2dbe_d13b2575",
+      "range": {
+        "startLine": 174,
+        "startChar": 12,
+        "endLine": 174,
+        "endChar": 19
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a577d3ab_f0bcaaf7",
         "filename": "src/libANGLE/GLES1Renderer.cpp",
         "patchSetId": 3
@@ -137,6 +257,30 @@
       "revId": "948bc240df35513389ba85ccb240fa362beb316c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a673499b_96c1786d",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-04T22:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a577d3ab_f0bcaaf7",
+      "range": {
+        "startLine": 214,
+        "startChar": 44,
+        "endLine": 214,
+        "endChar": 45
+      },
+      "revId": "948bc240df35513389ba85ccb240fa362beb316c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
