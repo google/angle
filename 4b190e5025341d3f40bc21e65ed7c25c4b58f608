@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e6e6916_e2c90bb1",
+        "filename": "src/libANGLE/renderer/copyvertex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T13:13:01Z",
+      "side": 1,
+      "message": "comment needs updating",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdea3049_15110fd3",
+        "filename": "src/libANGLE/renderer/copyvertex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T13:13:01Z",
+      "side": 1,
+      "message": "you\u0027ll need to update this",
+      "range": {
+        "startLine": 9,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 49
+      },
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ba57257_80654b56",
+        "filename": "src/libANGLE/renderer/copyvertex.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T13:13:01Z",
+      "side": 1,
+      "message": "can we update this to a using \u003d definition?",
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41728f62_0ca4b115",
+        "filename": "src/libANGLE/renderer/copyvertex.inl",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T13:13:01Z",
+      "side": 1,
+      "message": "can we update this to an .inc file to match the style guide:\n\nhttps://google.github.io/styleguide/cppguide.html#Self_contained_Headers",
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f8781b2_cad2cd63",
+        "filename": "src/libANGLE/renderer/copyvertex.inl",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-04T13:13:01Z",
+      "side": 1,
+      "message": "can you add a small file-level comment?",
+      "revId": "4b190e5025341d3f40bc21e65ed7c25c4b58f608",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
