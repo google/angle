@@ -164,6 +164,30 @@
       "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c89f1cf6_7f425464",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 26
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-04T21:45:07Z",
+      "side": 1,
+      "message": "It\u0027s in foreach below, I think. Looks like this file is in Vulkan-Tools repo.",
+      "parentUuid": "7e82efe5_c0087787",
+      "range": {
+        "startLine": 96,
+        "startChar": 5,
+        "endLine": 96,
+        "endChar": 48
+      },
+      "revId": "3f8859667f0d1d120d92ce44045029fe08101a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
