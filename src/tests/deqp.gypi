@@ -135,10 +135,7 @@
             '<(deqp_path)/modules/gles2/functional/es2fBufferWriteTests.hpp',
             '<(deqp_path)/modules/gles2/functional/es2fClippingTests.cpp',
             '<(deqp_path)/modules/gles2/functional/es2fClippingTests.hpp',
-            # Work around a bug in this test by using a local override.
-            # TODO(jmadill): Restore after rolling dEQP.
-            #'<(deqp_path)/modules/gles2/functional/es2fColorClearTest.cpp',
-            '<(angle_path)/src/tests/deqp_support/es2fColorClearTest.cpp',
+            '<(deqp_path)/modules/gles2/functional/es2fColorClearTest.cpp',
             '<(deqp_path)/modules/gles2/functional/es2fColorClearTest.hpp',
             '<(deqp_path)/modules/gles2/functional/es2fDebugMarkerTests.cpp',
             '<(deqp_path)/modules/gles2/functional/es2fDebugMarkerTests.hpp',
@@ -768,6 +765,8 @@
             '<(deqp_path)/modules/gles31/functional/es31fShaderStateQueryTests.hpp',
             '<(deqp_path)/modules/gles31/functional/es31fShaderTextureSizeTests.cpp',
             '<(deqp_path)/modules/gles31/functional/es31fShaderTextureSizeTests.hpp',
+            '<(deqp_path)/modules/gles31/functional/es31fShaderUniformIntegerFunctionTests.cpp',
+            '<(deqp_path)/modules/gles31/functional/es31fShaderUniformIntegerFunctionTests.hpp',
             '<(deqp_path)/modules/gles31/functional/es31fStencilTexturingTests.cpp',
             '<(deqp_path)/modules/gles31/functional/es31fStencilTexturingTests.hpp',
             '<(deqp_path)/modules/gles31/functional/es31fSynchronizationTests.cpp',

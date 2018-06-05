@@ -1569,6 +1569,26 @@
 1941 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.shader_directive.geometry_shader = FAIL
 1941 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.geometry_shader = FAIL
 
+// Crash with a divide by zero exception in BindBufferRange.
+2625 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_23 = SKIP
+2625 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.buffer.bind_buffer_range = SKIP
+2625 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.bind_buffer_range = SKIP
+2625 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.buffer.bind_buffer_range = SKIP
+
+// Recetly added tests failing on D3D11 Windows.
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findLSBMinusOne.highp_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findLSBMinusOne.lowp_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findLSBMinusOne.mediump_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findLSBZero.highp_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findLSBZero.lowp_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findLSBZero.mediump_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findMSBMinusOne.highp_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findMSBMinusOne.lowp_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findMSBMinusOne.mediump_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findMSBZero.highp_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findMSBZero.lowp_compute = FAIL
+2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findMSBZero.mediump_compute = FAIL
+
 // OPENGL Failing Tests
 1665 WIN NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.negative.command_offset_not_in_buffer_unsigned32_wrap = FAIL
 1442 NVIDIA OPENGL : dEQP-GLES31.functional.fbo.no_attachments.maximums.all = FAIL
