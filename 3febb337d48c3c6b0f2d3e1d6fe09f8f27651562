@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "af1becbd_8fc8c19c",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-05T23:05:13Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4b0a029a_34256445",
+      "range": {
+        "startLine": 28,
+        "startChar": 7,
+        "endLine": 28,
+        "endChar": 17
+      },
+      "revId": "3febb337d48c3c6b0f2d3e1d6fe09f8f27651562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8482ff3a_f8c8faea",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "3febb337d48c3c6b0f2d3e1d6fe09f8f27651562",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1fd9deda_f53f3d92",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-05T23:05:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8482ff3a_f8c8faea",
+      "range": {
+        "startLine": 41,
+        "startChar": 9,
+        "endLine": 41,
+        "endChar": 30
+      },
+      "revId": "3febb337d48c3c6b0f2d3e1d6fe09f8f27651562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "ce6a529c_f9489306",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-05T23:05:13Z",
+      "side": 1,
+      "message": "Done. It\u0027s both for FramebufferRenderbuffer and RenderbufferStorage. The only reason you\u0027d want RenderbuffeerStorage is to use it later in FramebufferRenderbuffer, right?",
+      "parentUuid": "1420c112_dd34aaf0",
+      "range": {
+        "startLine": 44,
+        "startChar": 9,
+        "endLine": 44,
+        "endChar": 21
+      },
+      "revId": "3febb337d48c3c6b0f2d3e1d6fe09f8f27651562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ae674878_c0c56038",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 2
@@ -85,6 +157,24 @@
       "revId": "3febb337d48c3c6b0f2d3e1d6fe09f8f27651562",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bbb79c6_b307b838",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-05T23:05:13Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ae674878_c0c56038",
+      "revId": "3febb337d48c3c6b0f2d3e1d6fe09f8f27651562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "5309a15b_3f7d9127",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-05T23:05:13Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d2c97c88_a8f1f1a1",
+      "range": {
+        "startLine": 61,
+        "startChar": 6,
+        "endLine": 61,
+        "endChar": 19
+      },
+      "revId": "3febb337d48c3c6b0f2d3e1d6fe09f8f27651562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf913b47_ea84e32a",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 2
@@ -131,6 +245,30 @@
       "revId": "3febb337d48c3c6b0f2d3e1d6fe09f8f27651562",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec0ddac4_679b8612",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-05T23:05:13Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "cf913b47_ea84e32a",
+      "range": {
+        "startLine": 84,
+        "startChar": 5,
+        "endLine": 84,
+        "endChar": 29
+      },
+      "revId": "3febb337d48c3c6b0f2d3e1d6fe09f8f27651562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
