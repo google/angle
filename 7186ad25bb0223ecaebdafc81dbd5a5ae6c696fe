@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf5e1266_698acaef",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-05T23:12:44Z",
+      "side": 1,
+      "message": "nit: naming",
+      "range": {
+        "startLine": 321,
+        "startChar": 34,
+        "endLine": 321,
+        "endChar": 62
+      },
+      "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4d52687_e2f2c4a9",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-05T23:12:44Z",
+      "side": 1,
+      "message": "sorry for the back and forth, but I think keeping it renderbuffer is clearer.",
+      "range": {
+        "startLine": 44,
+        "startChar": 9,
+        "endLine": 44,
+        "endChar": 31
+      },
+      "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d04657d_8154a340",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-05T23:12:44Z",
+      "side": 1,
+      "message": "nit: split into two checks",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 5
+      },
+      "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
