@@ -16,11 +16,7 @@ namespace rx
 #define EGL_NO_CONFIG ((EGLConfig)0)
 
 DisplayEGL::DisplayEGL(const egl::DisplayState &state)
-    : DisplayGL(state),
-      mEGL(nullptr),
-      mConfig(EGL_NO_CONFIG),
-      mContext(EGL_NO_CONTEXT),
-      mFunctionsGL(nullptr)
+    : DisplayGL(state), mEGL(nullptr), mConfig(EGL_NO_CONFIG), mContext(EGL_NO_CONTEXT)
 {
 }
 
@@ -121,8 +117,4 @@ void DisplayEGL::generateCaps(egl::Caps *outCaps) const
     outCaps->textureNPOT = true;  // Since we request GLES >= 2
 }
 
-const FunctionsGL *DisplayEGL::getFunctionsGL() const
-{
-    return mFunctionsGL;
-}
 }  // namespace rx

@@ -127,6 +127,8 @@ class DisplayOzone final : public DisplayEGL
                                      NativePixmapType nativePixmap,
                                      const egl::AttributeMap &attribs) override;
 
+    ContextImpl *createContext(const gl::ContextState &state) override;
+
     egl::ConfigSet generateConfigs() override;
 
     bool testDeviceLost() override;
@@ -138,6 +140,8 @@ class DisplayOzone final : public DisplayEGL
 
     egl::Error waitClient(const gl::Context *context) const override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) const override;
+
+    gl::Version getMaxSupportedESVersion() const override;
 
     // TODO(fjhenigman) Implement this.
     // Swap interval can be set globally or per drawable.
@@ -160,6 +164,8 @@ class DisplayOzone final : public DisplayEGL
                                 unsigned int tv_usec,
                                 void *data);
     void pageFlipHandler(unsigned int sequence, uint64_t tv);
+
+    std::shared_ptr<RendererGL> mRenderer;
 
     gbm_device *mGBM;
     drmModeConnectorPtr mConnector;

@@ -21,12 +21,11 @@ namespace rx
 PbufferSurfaceCGL::PbufferSurfaceCGL(const egl::SurfaceState &state,
                                      RendererGL *renderer,
                                      EGLint width,
-                                     EGLint height,
-                                     const FunctionsGL *functions)
+                                     EGLint height)
     : SurfaceGL(state),
       mWidth(width),
       mHeight(height),
-      mFunctions(functions),
+      mFunctions(renderer->getFunctions()),
       mStateManager(renderer->getStateManager()),
       mColorRenderbuffer(0),
       mDSRenderbuffer(0)

@@ -23,7 +23,7 @@ namespace rx
 {
 
 DisplayGL::DisplayGL(const egl::DisplayState &state)
-    : DisplayImpl(state), mRenderer(nullptr), mCurrentDrawSurface(nullptr)
+    : DisplayImpl(state), mCurrentDrawSurface(nullptr)
 {
 }
 
@@ -33,20 +33,11 @@ DisplayGL::~DisplayGL()
 
 egl::Error DisplayGL::initialize(egl::Display *display)
 {
-    mRenderer = new RendererGL(getFunctionsGL(), display->getAttributeMap());
-
-    const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
-    if (maxVersion < gl::Version(2, 0))
-    {
-        return egl::EglNotInitialized() << "OpenGL ES 2.0 is not supportable.";
-    }
-
     return egl::NoError();
 }
 
 void DisplayGL::terminate()
 {
-    SafeDelete(mRenderer);
 }
 
 ImageImpl *DisplayGL::createImage(const egl::ImageState &state,
@@ -55,12 +46,6 @@ ImageImpl *DisplayGL::createImage(const egl::ImageState &state,
 {
     UNIMPLEMENTED();
     return nullptr;
-}
-
-ContextImpl *DisplayGL::createContext(const gl::ContextState &state)
-{
-    ASSERT(mRenderer != nullptr);
-    return new ContextGL(state, mRenderer);
 }
 
 StreamProducerImpl *DisplayGL::createStreamProducerD3DTexture(
@@ -101,12 +86,6 @@ egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface, egl::Surface *readS
     {
         return makeCurrentSurfaceless(context);
     }
-}
-
-gl::Version DisplayGL::getMaxSupportedESVersion() const
-{
-    ASSERT(mRenderer != nullptr);
-    return mRenderer->getMaxSupportedESVersion();
 }
 
 void DisplayGL::generateExtensions(egl::DisplayExtensions *outExtensions) const

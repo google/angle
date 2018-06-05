@@ -58,7 +58,6 @@ class WindowSurfaceCGL : public SurfaceGL
     WindowSurfaceCGL(const egl::SurfaceState &state,
                      RendererGL *renderer,
                      EGLNativeWindowType layer,
-                     const FunctionsGL *functions,
                      CGLContextObj context);
     ~WindowSurfaceCGL() override;
 

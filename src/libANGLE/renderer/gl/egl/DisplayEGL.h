@@ -29,13 +29,10 @@ class DisplayEGL : public DisplayGL
     FunctionsEGL *mEGL;
     EGLConfig mConfig;
     EGLContext mContext;
-    FunctionsGL *mFunctionsGL;
 
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
-
-    const FunctionsGL *getFunctionsGL() const override;
 };
 
 }  // namespace rx

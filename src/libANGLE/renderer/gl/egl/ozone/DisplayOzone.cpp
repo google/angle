@@ -22,6 +22,7 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
@@ -121,7 +122,7 @@ DisplayOzone::Buffer::~Buffer()
 {
     reset();
 
-    FunctionsGL *gl = mDisplay->mFunctionsGL;
+    const FunctionsGL *gl = mDisplay->mRenderer->getFunctions();
     gl->deleteRenderbuffers(1, &mColorBuffer);
     mColorBuffer = 0;
     gl->deleteRenderbuffers(1, &mDSBuffer);
@@ -148,7 +149,7 @@ void DisplayOzone::Buffer::reset()
 
     if (mTexture)
     {
-        FunctionsGL *gl = mDisplay->mFunctionsGL;
+        const FunctionsGL *gl = mDisplay->mRenderer->getFunctions();
         gl->deleteTextures(1, &mTexture);
         mTexture = 0;
     }
@@ -211,8 +212,8 @@ bool DisplayOzone::Buffer::resize(int32_t width, int32_t height)
         return false;
     }
 
-    FunctionsGL *gl    = mDisplay->mFunctionsGL;
-    StateManagerGL *sm = mDisplay->getRenderer()->getStateManager();
+    const FunctionsGL *gl = mDisplay->mRenderer->getFunctions();
+    StateManagerGL *sm    = mDisplay->mRenderer->getStateManager();
 
     // Update the storage of the renderbuffers but don't generate new IDs. This will update all
     // framebuffers they are bound to.
@@ -243,15 +244,16 @@ bool DisplayOzone::Buffer::initialize(int width, int height)
 
 void DisplayOzone::Buffer::bindTexImage()
 {
-    mDisplay->mFunctionsGL->eGLImageTargetTexture2DOES(GL_TEXTURE_2D, mImage);
+    const FunctionsGL *gl = mDisplay->mRenderer->getFunctions();
+    gl->eGLImageTargetTexture2DOES(GL_TEXTURE_2D, mImage);
 }
 
 GLuint DisplayOzone::Buffer::getTexture()
 {
     // TODO(fjhenigman) Try not to create a new texture every time.  That already works on Intel
     // and should work on Mali with proper fences.
-    FunctionsGL *gl    = mDisplay->mFunctionsGL;
-    StateManagerGL *sm = mDisplay->getRenderer()->getStateManager();
+    const FunctionsGL *gl = mDisplay->mRenderer->getFunctions();
+    StateManagerGL *sm    = mDisplay->mRenderer->getStateManager();
 
     gl->genTextures(1, &mTexture);
     sm->bindTexture(gl::TextureType::_2D, mTexture);
@@ -332,8 +334,8 @@ void DisplayOzone::Buffer::present(const gl::Context *context)
 
 bool DisplayOzone::Buffer::createRenderbuffers()
 {
-    FunctionsGL *gl    = mDisplay->mFunctionsGL;
-    StateManagerGL *sm = mDisplay->getRenderer()->getStateManager();
+    const FunctionsGL *gl = mDisplay->mRenderer->getFunctions();
+    StateManagerGL *sm    = mDisplay->mRenderer->getStateManager();
 
     gl->genRenderbuffers(1, &mColorBuffer);
     sm->bindRenderbuffer(GL_RENDERBUFFER, mColorBuffer);
@@ -349,6 +351,7 @@ bool DisplayOzone::Buffer::createRenderbuffers()
 
 DisplayOzone::DisplayOzone(const egl::DisplayState &state)
     : DisplayEGL(state),
+      mRenderer(nullptr),
       mGBM(nullptr),
       mConnector(nullptr),
       mMode(nullptr),
@@ -528,8 +531,15 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
         return egl::EglNotInitialized() << "Could not make context current.";
     }
 
-    mFunctionsGL = mEGL->makeFunctionsGL();
-    mFunctionsGL->initialize(display->getAttributeMap());
+    std::unique_ptr<FunctionsGL> functionsGL(mEGL->makeFunctionsGL());
+    functionsGL->initialize(display->getAttributeMap());
+
+    mRenderer.reset(new RendererGL(std::move(functionsGL), display->getAttributeMap()));
+    const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
+    if (maxVersion < gl::Version(2, 0))
+    {
+        return egl::EglNotInitialized() << "OpenGL ES 2.0 is not supportable.";
+    }
 
     return DisplayGL::initialize(display);
 }
@@ -606,7 +616,7 @@ void DisplayOzone::presentScreen()
 
 GLuint DisplayOzone::makeShader(GLuint type, const char *src)
 {
-    FunctionsGL *gl = mFunctionsGL;
+    const FunctionsGL *gl = mRenderer->getFunctions();
     GLuint shader = gl->createShader(type);
     gl->shaderSource(shader, 1, &src, nullptr);
     gl->compileShader(shader);
@@ -626,8 +636,8 @@ GLuint DisplayOzone::makeShader(GLuint type, const char *src)
 
 void DisplayOzone::drawWithTexture(const gl::Context *context, Buffer *buffer)
 {
-    FunctionsGL *gl    = mFunctionsGL;
-    StateManagerGL *sm = getRenderer()->getStateManager();
+    const FunctionsGL *gl = mRenderer->getFunctions();
+    StateManagerGL *sm    = mRenderer->getStateManager();
 
     if (!mProgram)
     {
@@ -777,7 +787,8 @@ void DisplayOzone::drawBuffer(const gl::Context *context, Buffer *buffer)
             }
         }
 
-        StateManagerGL *sm = getRenderer()->getStateManager();
+        const FunctionsGL *gl = mRenderer->getFunctions();
+        StateManagerGL *sm    = mRenderer->getStateManager();
 
         GLuint fbo = mDrawing->createGLFB(context);
         sm->bindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
@@ -786,7 +797,7 @@ void DisplayOzone::drawBuffer(const gl::Context *context, Buffer *buffer)
         sm->setScissorTestEnabled(false);
         sm->setColorMask(true, true, true, true);
         sm->setDepthMask(true);
-        mFunctionsGL->clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        gl->clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         sm->deleteFramebuffer(fbo);
     }
 
@@ -796,7 +807,8 @@ void DisplayOzone::drawBuffer(const gl::Context *context, Buffer *buffer)
 
 void DisplayOzone::flushGL()
 {
-    mFunctionsGL->flush();
+    const FunctionsGL *gl = mRenderer->getFunctions();
+    gl->flush();
     if (mEGL->hasExtension("EGL_KHR_fence_sync"))
     {
         const EGLint attrib[] = {EGL_SYNC_CONDITION_KHR,
@@ -832,11 +844,12 @@ void DisplayOzone::terminate()
 
     if (mProgram)
     {
-        mFunctionsGL->deleteProgram(mProgram);
-        mFunctionsGL->deleteShader(mVertexShader);
-        mFunctionsGL->deleteShader(mFragmentShader);
-        mFunctionsGL->deleteBuffers(1, &mVertexBuffer);
-        mFunctionsGL->deleteBuffers(1, &mIndexBuffer);
+        const FunctionsGL *gl = mRenderer->getFunctions();
+        gl->deleteProgram(mProgram);
+        gl->deleteShader(mVertexShader);
+        gl->deleteShader(mFragmentShader);
+        gl->deleteBuffers(1, &mVertexBuffer);
+        gl->deleteBuffers(1, &mIndexBuffer);
         mProgram = 0;
     }
 
@@ -851,7 +864,7 @@ void DisplayOzone::terminate()
         mContext = nullptr;
     }
 
-    SafeDelete(mFunctionsGL);
+    mRenderer.reset();
 
     if (mEGL)
     {
@@ -918,6 +931,11 @@ SurfaceImpl *DisplayOzone::createPixmapSurface(const egl::SurfaceState &state,
     return nullptr;
 }
 
+ContextImpl *DisplayOzone::createContext(const gl::ContextState &state)
+{
+    return new ContextGL(state, mRenderer);
+}
+
 DeviceImpl *DisplayOzone::createDevice()
 {
     UNIMPLEMENTED();
@@ -971,6 +989,11 @@ egl::Error DisplayOzone::waitNative(const gl::Context *context, EGLint engine) c
 {
     // TODO(fjhenigman) Implement this.
     return egl::NoError();
+}
+
+gl::Version DisplayOzone::getMaxSupportedESVersion() const
+{
+    return mRenderer->getMaxSupportedESVersion();
 }
 
 void DisplayOzone::setSwapInterval(EGLSurface drawable, SwapControlData *data)

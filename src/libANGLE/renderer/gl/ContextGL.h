@@ -29,7 +29,7 @@ struct WorkaroundsGL;
 class ContextGL : public ContextImpl
 {
   public:
-    ContextGL(const gl::ContextState &state, RendererGL *renderer);
+    ContextGL(const gl::ContextState &state, const std::shared_ptr<RendererGL> &renderer);
     ~ContextGL() override;
 
     gl::Error initialize() override;
@@ -208,7 +208,7 @@ class ContextGL : public ContextImpl
     gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
   private:
-    RendererGL *mRenderer;
+    std::shared_ptr<RendererGL> mRenderer;
 };
 
 }  // namespace rx

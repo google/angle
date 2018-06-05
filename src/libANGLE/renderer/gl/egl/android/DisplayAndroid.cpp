@@ -11,6 +11,8 @@
 #include "common/debug.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
+#include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/egl/FunctionsEGLDL.h"
 #include "libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h"
 #include "libANGLE/renderer/gl/egl/WindowSurfaceEGL.h"
@@ -144,8 +146,16 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
     }
     mCurrentSurface = mDummyPbuffer;
 
-    mFunctionsGL = mEGL->makeFunctionsGL();
-    mFunctionsGL->initialize(display->getAttributeMap());
+    std::unique_ptr<FunctionsGL> functionsGL(mEGL->makeFunctionsGL());
+    functionsGL->initialize(display->getAttributeMap());
+
+    mRenderer.reset(new RendererGL(std::move(functionsGL), display->getAttributeMap()));
+
+    const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
+    if (maxVersion < gl::Version(2, 0))
+    {
+        return egl::EglNotInitialized() << "OpenGL ES 2.0 is not supportable.";
+    }
 
     return DisplayGL::initialize(display);
 }
@@ -171,6 +181,7 @@ void DisplayAndroid::terminate()
         }
     }
 
+    mRenderer.reset();
     if (mContext != EGL_NO_CONTEXT)
     {
         success = mEGL->destroyContext(mContext);
@@ -188,7 +199,6 @@ void DisplayAndroid::terminate()
     }
 
     SafeDelete(mEGL);
-    SafeDelete(mFunctionsGL);
 }
 
 SurfaceImpl *DisplayAndroid::createWindowSurface(const egl::SurfaceState &state,
@@ -243,6 +253,11 @@ ImageImpl *DisplayAndroid::createImage(const egl::ImageState &state,
 {
     UNIMPLEMENTED();
     return DisplayGL::createImage(state, target, attribs);
+}
+
+ContextImpl *DisplayAndroid::createContext(const gl::ContextState &state)
+{
+    return new ContextGL(state, mRenderer);
 }
 
 template <typename T>
@@ -453,6 +468,11 @@ egl::Error DisplayAndroid::makeCurrent(egl::Surface *drawSurface,
     }
 
     return DisplayGL::makeCurrent(drawSurface, readSurface, context);
+}
+
+gl::Version DisplayAndroid::getMaxSupportedESVersion() const
+{
+    return mRenderer->getMaxSupportedESVersion();
 }
 
 egl::Error DisplayAndroid::makeCurrentSurfaceless(gl::Context *context)

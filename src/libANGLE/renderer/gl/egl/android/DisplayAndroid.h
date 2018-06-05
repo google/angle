@@ -44,6 +44,8 @@ class DisplayAndroid : public DisplayEGL
                            EGLenum target,
                            const egl::AttributeMap &attribs) override;
 
+    ContextImpl *createContext(const gl::ContextState &state) override;
+
     egl::ConfigSet generateConfigs() override;
 
     bool testDeviceLost() override;
@@ -60,6 +62,8 @@ class DisplayAndroid : public DisplayEGL
                            egl::Surface *readSurface,
                            gl::Context *context) override;
 
+    gl::Version getMaxSupportedESVersion() const override;
+
   private:
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
@@ -72,6 +76,8 @@ class DisplayAndroid : public DisplayEGL
                                     T *value,
                                     const char *extension,
                                     const U &defaultValue) const;
+
+    std::shared_ptr<RendererGL> mRenderer;
 
     std::vector<EGLint> mConfigAttribList;
     std::map<EGLint, EGLint> mConfigIds;

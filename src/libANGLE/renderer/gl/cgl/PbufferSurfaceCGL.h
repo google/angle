@@ -26,8 +26,7 @@ class PbufferSurfaceCGL : public SurfaceGL
     PbufferSurfaceCGL(const egl::SurfaceState &state,
                       RendererGL *renderer,
                       EGLint width,
-                      EGLint height,
-                      const FunctionsGL *functions);
+                      EGLint height);
     ~PbufferSurfaceCGL() override;
 
     egl::Error initialize(const egl::Display *display) override;

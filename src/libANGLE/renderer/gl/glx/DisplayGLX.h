@@ -61,6 +61,8 @@ class DisplayGLX : public DisplayGL
                                      NativePixmapType nativePixmap,
                                      const egl::AttributeMap &attribs) override;
 
+    ContextImpl *createContext(const gl::ContextState &state) override;
+
     egl::ConfigSet generateConfigs() override;
 
     bool testDeviceLost() override;
@@ -74,6 +76,8 @@ class DisplayGLX : public DisplayGL
 
     egl::Error waitClient(const gl::Context *context) const override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) const override;
+
+    gl::Version getMaxSupportedESVersion() const override;
 
     // Synchronizes with the X server, if the display has been opened by ANGLE.
     // Calling this is required at the end of every functions that does buffered
@@ -90,8 +94,6 @@ class DisplayGLX : public DisplayGL
     bool isValidWindowVisualId(unsigned long visualId) const;
 
   private:
-    const FunctionsGL *getFunctionsGL() const override;
-
     egl::Error initializeContext(glx::FBConfig config,
                                  const egl::AttributeMap &eglAttributes,
                                  glx::Context *context);
@@ -107,7 +109,7 @@ class DisplayGLX : public DisplayGL
                                     int profileMask,
                                     glx::Context *context) const;
 
-    FunctionsGL *mFunctionsGL;
+    std::shared_ptr<RendererGL> mRenderer;
 
     std::map<int, glx::FBConfig> configIdToGLXConfig;
 

@@ -164,9 +164,9 @@ static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
 namespace rx
 {
 
-RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &attribMap)
+RendererGL::RendererGL(std::unique_ptr<FunctionsGL> functions, const egl::AttributeMap &attribMap)
     : mMaxSupportedESVersion(0, 0),
-      mFunctions(functions),
+      mFunctions(std::move(functions)),
       mStateManager(nullptr),
       mBlitter(nullptr),
       mMultiviewClearer(nullptr),
@@ -175,10 +175,10 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
       mMultiviewImplementationType(MultiviewImplementationTypeGL::UNSPECIFIED)
 {
     ASSERT(mFunctions);
-    nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
-    mStateManager     = new StateManagerGL(mFunctions, getNativeCaps(), getNativeExtensions());
-    mBlitter          = new BlitGL(functions, mWorkarounds, mStateManager);
-    mMultiviewClearer = new ClearMultiviewGL(functions, mStateManager);
+    nativegl_gl::GenerateWorkarounds(mFunctions.get(), &mWorkarounds);
+    mStateManager = new StateManagerGL(mFunctions.get(), getNativeCaps(), getNativeExtensions());
+    mBlitter      = new BlitGL(mFunctions.get(), mWorkarounds, mStateManager);
+    mMultiviewClearer = new ClearMultiviewGL(mFunctions.get(), mStateManager);
 
     bool hasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||
                           mFunctions->hasGLExtension("GL_KHR_debug") ||
@@ -543,11 +543,6 @@ GLenum RendererGL::getResetStatus()
     return mFunctions->getGraphicsResetStatus();
 }
 
-ContextImpl *RendererGL::createContext(const gl::ContextState &state)
-{
-    return new ContextGL(state, this);
-}
-
 void RendererGL::insertEventMarker(GLsizei length, const char *marker)
 {
 }
@@ -617,8 +612,9 @@ void RendererGL::generateCaps(gl::Caps *outCaps,
                               gl::Extensions *outExtensions,
                               gl::Limitations * /* outLimitations */) const
 {
-    nativegl_gl::GenerateCaps(mFunctions, mWorkarounds, outCaps, outTextureCaps, outExtensions,
-                              &mMaxSupportedESVersion, &mMultiviewImplementationType);
+    nativegl_gl::GenerateCaps(mFunctions.get(), mWorkarounds, outCaps, outTextureCaps,
+                              outExtensions, &mMaxSupportedESVersion,
+                              &mMultiviewImplementationType);
 }
 
 GLint RendererGL::getGPUDisjoint()
@@ -676,7 +672,7 @@ MultiviewImplementationTypeGL RendererGL::getMultiviewImplementationType() const
 void RendererGL::applyNativeWorkarounds(gl::Workarounds *workarounds) const
 {
     ensureCapsInitialized();
-    nativegl_gl::ApplyWorkarounds(mFunctions, workarounds);
+    nativegl_gl::ApplyWorkarounds(mFunctions.get(), workarounds);
 }
 
 gl::Error RendererGL::dispatchCompute(const gl::Context *context,

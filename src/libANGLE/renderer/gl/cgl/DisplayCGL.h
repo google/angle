@@ -39,6 +39,8 @@ class DisplayCGL : public DisplayGL
                                      NativePixmapType nativePixmap,
                                      const egl::AttributeMap &attribs) override;
 
+    ContextImpl *createContext(const gl::ContextState &state) override;
+
     egl::ConfigSet generateConfigs() override;
 
     bool testDeviceLost() override;
@@ -57,17 +59,19 @@ class DisplayCGL : public DisplayGL
     egl::Error waitClient(const gl::Context *context) const override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) const override;
 
+    gl::Version getMaxSupportedESVersion() const override;
+
     CGLContextObj getCGLContext() const;
 
   private:
-    const FunctionsGL *getFunctionsGL() const override;
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
+    std::shared_ptr<RendererGL> mRenderer;
+
     egl::Display *mEGLDisplay;
-    FunctionsGL *mFunctions;
     CGLContextObj mContext;
 };
 

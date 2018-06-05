@@ -41,6 +41,8 @@ class DisplayWGL : public DisplayGL
                                      NativePixmapType nativePixmap,
                                      const egl::AttributeMap &attribs) override;
 
+    ContextImpl *createContext(const gl::ContextState &state) override;
+
     egl::ConfigSet generateConfigs() override;
 
     bool testDeviceLost() override;
@@ -66,11 +68,11 @@ class DisplayWGL : public DisplayGL
     egl::Error registerD3DDevice(IUnknown *device, HANDLE *outHandle);
     void releaseD3DDevice(HANDLE handle);
 
+    gl::Version getMaxSupportedESVersion() const override;
+
   private:
     egl::Error initializeImpl(egl::Display *display);
     void destroy();
-
-    const FunctionsGL *getFunctionsGL() const override;
 
     egl::Error initializeD3DDevice();
 
@@ -82,15 +84,20 @@ class DisplayWGL : public DisplayGL
     HGLRC initializeContextAttribs(const egl::AttributeMap &eglAttributes) const;
     HGLRC createContextAttribs(const gl::Version &version, int profileMask) const;
 
+    egl::Error createRenderer(std::shared_ptr<RendererGL> *outRenderer, HGLRC *outContext);
+
+    std::shared_ptr<RendererGL> mRenderer;
+
     HDC mCurrentDC;
 
     HMODULE mOpenGLModule;
 
     FunctionsWGL *mFunctionsWGL;
-    FunctionsGL *mFunctionsGL;
 
     bool mHasWGLCreateContextRobustness;
     bool mHasRobustness;
+
+    egl::AttributeMap mDisplayAttributes;
 
     ATOM mWindowClass;
     HWND mWindow;

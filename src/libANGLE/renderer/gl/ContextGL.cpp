@@ -31,7 +31,7 @@
 namespace rx
 {
 
-ContextGL::ContextGL(const gl::ContextState &state, RendererGL *renderer)
+ContextGL::ContextGL(const gl::ContextState &state, const std::shared_ptr<RendererGL> &renderer)
     : ContextImpl(state), mRenderer(renderer)
 {
 }

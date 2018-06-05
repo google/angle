@@ -44,10 +44,8 @@ class StateManagerGL;
 class RendererGL : angle::NonCopyable
 {
   public:
-    RendererGL(const FunctionsGL *functions, const egl::AttributeMap &attribMap);
+    RendererGL(std::unique_ptr<FunctionsGL> functions, const egl::AttributeMap &attribMap);
     ~RendererGL();
-
-    ContextImpl *createContext(const gl::ContextState &state);
 
     gl::Error flush();
     gl::Error finish();
@@ -165,7 +163,7 @@ class RendererGL : angle::NonCopyable
     GLint64 getTimestamp();
 
     const gl::Version &getMaxSupportedESVersion() const;
-    const FunctionsGL *getFunctions() const { return mFunctions; }
+    const FunctionsGL *getFunctions() const { return mFunctions.get(); }
     StateManagerGL *getStateManager() const { return mStateManager; }
     const WorkaroundsGL &getWorkarounds() const { return mWorkarounds; }
     BlitGL *getBlitter() const { return mBlitter; }
@@ -196,7 +194,7 @@ class RendererGL : angle::NonCopyable
 
     mutable gl::Version mMaxSupportedESVersion;
 
-    const FunctionsGL *mFunctions;
+    std::unique_ptr<FunctionsGL> mFunctions;
     StateManagerGL *mStateManager;
 
     BlitGL *mBlitter;
