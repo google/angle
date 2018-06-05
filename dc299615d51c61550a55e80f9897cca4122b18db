@@ -129,6 +129,30 @@
     },
     {
       "key": {
+        "uuid": "03f9667f_16453b9a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-05T17:09:19Z",
+      "side": 1,
+      "message": "More details:\n\n * the \"ToFloat\" section should be placed in the table using fallback formats\n * this will require a bit of work on the generator script\n * once you have the table set, you can compute requiresConversion/nativeFormat automatically. if the format is a fallback or override for buffers, then you set this to true, otherwise false.\n * I would suggest using one giant switch for computing the copy format.\n * we can either maintain this manually in this file, or using a json generator.",
+      "parentUuid": "78547d9d_e85caa7c",
+      "range": {
+        "startLine": 358,
+        "startChar": 0,
+        "endLine": 389,
+        "endChar": 9
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9b859274_b13355d6",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 1
