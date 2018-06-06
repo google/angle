@@ -78,16 +78,16 @@
 1442 D3D11 : dEQP-GLES31.functional.state_query.program.compute_work_group_size_get_programiv = FAIL
 1442 D3D11 : dEQP-GLES31.functional.debug.async.case_4_log = SKIP
 1442 D3D11 : dEQP-GLES31.functional.debug.async.case_5_callback = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_2 = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_3 = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_9 = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_10 = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_27 = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_28 = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_2 = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_3 = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_9 = SKIP
-1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_10 = SKIP
+1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_2 = FAIL
+1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_3 = FAIL
+1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_9 = FAIL
+1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_10 = FAIL
+1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_27 = FAIL
+1442 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_28 = FAIL
+1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_2 = FAIL
+1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_3 = FAIL
+1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_9 = FAIL
+1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_10 = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = FAIL
 1442 D3D11 : dEQP-GLES31.functional.layout_binding.ubo.* = FAIL
 1663 D3D11 : dEQP-GLES31.functional.draw_indirect.compute_interop.* = FAIL
@@ -1568,12 +1568,6 @@
 1941 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.shader_directive.geometry_shader = FAIL
 1941 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.shader_directive.geometry_shader = FAIL
 1941 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.geometry_shader = FAIL
-
-// Crash with a divide by zero exception in BindBufferRange.
-2625 D3D11 : dEQP-GLES31.functional.debug.error_filters.case_23 = SKIP
-2625 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.buffer.bind_buffer_range = SKIP
-2625 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.buffer.bind_buffer_range = SKIP
-2625 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.buffer.bind_buffer_range = SKIP
 
 // Recetly added tests failing on D3D11 Windows.
 2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findLSBMinusOne.highp_compute = FAIL

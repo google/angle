@@ -1459,6 +1459,13 @@ void GenerateCaps(ID3D11Device *device,
     caps->maxCombinedUniformBlocks = caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] +
                                      caps->maxShaderUniformBlocks[gl::ShaderType::Fragment];
 
+    // A shader storage block will be translated to a structure in HLSL. So We reference the HLSL
+    // structure packing rules
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632(v=vs.85).aspx. The
+    // resulting size of any structure will always be evenly divisible by sizeof(four-component
+    // vector).
+    caps->shaderStorageBufferOffsetAlignment = 16;
+
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         caps->maxCombinedShaderUniformComponents[shaderType] =
