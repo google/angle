@@ -16,6 +16,29 @@
       "revId": "27f0734a729cfa2091bb822790fbfac838b9bced",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cac72219_ea71bf88",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-06T02:05:00Z",
+      "side": 1,
+      "message": "this is more readable. thanks.",
+      "range": {
+        "startLine": 384,
+        "startChar": 30,
+        "endLine": 384,
+        "endChar": 34
+      },
+      "revId": "27f0734a729cfa2091bb822790fbfac838b9bced",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
