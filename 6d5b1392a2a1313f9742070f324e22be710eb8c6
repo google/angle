@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9a2daba_1b1295d0",
+        "filename": "luci-logdog.cfg",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1141499
+      },
+      "writtenOn": "2018-06-06T01:54:15Z",
+      "side": 1,
+      "message": "why can\u0027t it use chromium-luci-lodgod like infra/infra? IMO, it should use the chromium one for ease of maintenance.",
+      "revId": "6d5b1392a2a1313f9742070f324e22be710eb8c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
