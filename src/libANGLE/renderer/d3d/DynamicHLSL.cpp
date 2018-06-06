@@ -1349,7 +1349,7 @@ void BuiltinVaryingsD3D::updateBuiltins(gl::ShaderType shaderType,
 
     unsigned int reservedSemanticIndex = packing.getMaxSemanticIndex();
 
-    BuiltinInfo *builtins = &mBuiltinInfo[static_cast<size_t>(shaderType)];
+    BuiltinInfo *builtins = &mBuiltinInfo[shaderType];
 
     if (metadata.getRendererMajorShaderModel() >= 4)
     {

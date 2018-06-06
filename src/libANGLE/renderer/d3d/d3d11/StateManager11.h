@@ -124,6 +124,8 @@ class ShaderConstants11 : angle::NonCopyable
     static_assert(sizeof(SamplerMetadata) == 16u,
                   "Sampler metadata struct must be one 4-vec / 16 bytes.");
 
+    static size_t GetShaderConstantsStructSize(gl::ShaderType shaderType);
+
     // Return true if dirty.
     bool updateSamplerMetadata(SamplerMetadata *data, const gl::Texture &texture);
 
@@ -132,12 +134,8 @@ class ShaderConstants11 : angle::NonCopyable
     Compute mCompute;
     gl::ShaderBitSet mShaderConstantsDirty;
 
-    std::vector<SamplerMetadata> mSamplerMetadataVS;
-    int mNumActiveVSSamplers;
-    std::vector<SamplerMetadata> mSamplerMetadataPS;
-    int mNumActivePSSamplers;
-    std::vector<SamplerMetadata> mSamplerMetadataCS;
-    int mNumActiveCSSamplers;
+    gl::ShaderMap<std::vector<SamplerMetadata>> mShaderSamplerMetadata;
+    gl::ShaderMap<int> mNumActiveShaderSamplers;
 };
 
 class StateManager11 final : angle::NonCopyable
@@ -461,9 +459,7 @@ class StateManager11 final : angle::NonCopyable
 
     using SRVCache = ViewCache<ID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC>;
     using UAVCache = ViewCache<ID3D11UnorderedAccessView, D3D11_UNORDERED_ACCESS_VIEW_DESC>;
-    SRVCache mCurVertexSRVs;
-    SRVCache mCurPixelSRVs;
-    SRVCache mCurComputeSRVs;
+    gl::ShaderMap<SRVCache> mCurShaderSRVs;
     UAVCache mCurComputeUAVs;
     SRVCache *getSRVCache(gl::ShaderType shaderType);
 
@@ -491,20 +487,11 @@ class StateManager11 final : angle::NonCopyable
     GLsizei mCurrentMinimumDrawCount;
 
     // Currently applied shaders
-    ResourceSerial mAppliedVertexShader;
-    ResourceSerial mAppliedGeometryShader;
-    ResourceSerial mAppliedPixelShader;
-    ResourceSerial mAppliedComputeShader;
+    gl::ShaderMap<ResourceSerial> mAppliedShaders;
 
     // Currently applied sampler states
-    std::vector<bool> mForceSetVertexSamplerStates;
-    std::vector<gl::SamplerState> mCurVertexSamplerStates;
-
-    std::vector<bool> mForceSetPixelSamplerStates;
-    std::vector<gl::SamplerState> mCurPixelSamplerStates;
-
-    std::vector<bool> mForceSetComputeSamplerStates;
-    std::vector<gl::SamplerState> mCurComputeSamplerStates;
+    gl::ShaderMap<std::vector<bool>> mForceSetShaderSamplerStates;
+    gl::ShaderMap<std::vector<gl::SamplerState>> mCurShaderSamplerStates;
 
     // Special dirty bit for swizzles. Since they use internal shaders, must be done in a pre-pass.
     bool mDirtySwizzles;

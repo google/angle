@@ -244,23 +244,12 @@ void StateManager11::ViewCache<ViewType, DescType>::clear()
 
 StateManager11::SRVCache *StateManager11::getSRVCache(gl::ShaderType shaderType)
 {
-    switch (shaderType)
-    {
-        case gl::ShaderType::Vertex:
-            return &mCurVertexSRVs;
-        case gl::ShaderType::Fragment:
-            return &mCurPixelSRVs;
-        case gl::ShaderType::Compute:
-            return &mCurComputeSRVs;
-        default:
-            UNREACHABLE();
-            return &mCurVertexSRVs;
-    }
+    ASSERT(shaderType != gl::ShaderType::InvalidEnum);
+    return &mCurShaderSRVs[shaderType];
 }
 
 // ShaderConstants11 implementation
-ShaderConstants11::ShaderConstants11()
-    : mNumActiveVSSamplers(0), mNumActivePSSamplers(0), mNumActiveCSSamplers(0)
+ShaderConstants11::ShaderConstants11() : mNumActiveShaderSamplers({})
 {
     mShaderConstantsDirty.set();
 }
@@ -271,33 +260,44 @@ ShaderConstants11::~ShaderConstants11()
 
 void ShaderConstants11::init(const gl::Caps &caps)
 {
-    mSamplerMetadataVS.resize(caps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]);
-    mSamplerMetadataPS.resize(caps.maxShaderTextureImageUnits[gl::ShaderType::Fragment]);
-    mSamplerMetadataCS.resize(caps.maxShaderTextureImageUnits[gl::ShaderType::Compute]);
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        mShaderSamplerMetadata[shaderType].resize(caps.maxShaderTextureImageUnits[shaderType]);
+    }
 }
 
-size_t ShaderConstants11::getRequiredBufferSize(gl::ShaderType shaderType) const
+size_t ShaderConstants11::GetShaderConstantsStructSize(gl::ShaderType shaderType)
 {
     switch (shaderType)
     {
         case gl::ShaderType::Vertex:
-            return sizeof(Vertex) + mSamplerMetadataVS.size() * sizeof(SamplerMetadata);
+            return sizeof(Vertex);
         case gl::ShaderType::Fragment:
-            return sizeof(Pixel) + mSamplerMetadataPS.size() * sizeof(SamplerMetadata);
+            return sizeof(Pixel);
         case gl::ShaderType::Compute:
-            return sizeof(Compute) + mSamplerMetadataCS.size() * sizeof(SamplerMetadata);
+            return sizeof(Compute);
+
+        // TODO(jiawei.shao@intel.com): return geometry shader constant struct size
+        case gl::ShaderType::Geometry:
+            return 0u;
+
         default:
             UNREACHABLE();
-            return 0;
+            return 0u;
     }
+}
+
+size_t ShaderConstants11::getRequiredBufferSize(gl::ShaderType shaderType) const
+{
+    ASSERT(shaderType != gl::ShaderType::InvalidEnum);
+    return GetShaderConstantsStructSize(shaderType) +
+           mShaderSamplerMetadata[shaderType].size() * sizeof(SamplerMetadata);
 }
 
 void ShaderConstants11::markDirty()
 {
     mShaderConstantsDirty.set();
-    mNumActiveVSSamplers = 0;
-    mNumActivePSSamplers = 0;
-    mNumActiveCSSamplers = 0;
+    mNumActiveShaderSamplers.fill(0);
 }
 
 bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data, const gl::Texture &texture)
@@ -463,29 +463,10 @@ void ShaderConstants11::onSamplerChange(gl::ShaderType shaderType,
                                         unsigned int samplerIndex,
                                         const gl::Texture &texture)
 {
-    switch (shaderType)
+    ASSERT(shaderType != gl::ShaderType::InvalidEnum);
+    if (updateSamplerMetadata(&mShaderSamplerMetadata[shaderType][samplerIndex], texture))
     {
-        case gl::ShaderType::Vertex:
-            if (updateSamplerMetadata(&mSamplerMetadataVS[samplerIndex], texture))
-            {
-                mNumActiveVSSamplers = 0;
-            }
-            break;
-        case gl::ShaderType::Fragment:
-            if (updateSamplerMetadata(&mSamplerMetadataPS[samplerIndex], texture))
-            {
-                mNumActivePSSamplers = 0;
-            }
-            break;
-        case gl::ShaderType::Compute:
-            if (updateSamplerMetadata(&mSamplerMetadataCS[samplerIndex], texture))
-            {
-                mNumActiveCSSamplers = 0;
-            }
-            break;
-        default:
-            UNREACHABLE();
-            break;
+        mNumActiveShaderSamplers[shaderType] = 0;
     }
 }
 
@@ -494,43 +475,30 @@ gl::Error ShaderConstants11::updateBuffer(Renderer11 *renderer,
                                           const ProgramD3D &programD3D,
                                           const d3d11::Buffer &driverConstantBuffer)
 {
-    bool dirty                 = false;
-    size_t dataSize            = 0;
-    const uint8_t *data        = nullptr;
-    const uint8_t *samplerData = nullptr;
-
     // Re-upload the sampler meta-data if the current program uses more samplers
     // than we previously uploaded.
-    int numSamplers = programD3D.getUsedSamplerRange(shaderType);
+    const int numSamplers = programD3D.getUsedSamplerRange(shaderType);
 
+    const bool dirty =
+        mShaderConstantsDirty[shaderType] || (mNumActiveShaderSamplers[shaderType] < numSamplers);
+
+    const size_t dataSize = GetShaderConstantsStructSize(shaderType);
+    const uint8_t *samplerData =
+        reinterpret_cast<const uint8_t *>(mShaderSamplerMetadata[shaderType].data());
+    mNumActiveShaderSamplers[shaderType] = numSamplers;
+    mShaderConstantsDirty.set(shaderType, false);
+
+    const uint8_t *data = nullptr;
     switch (shaderType)
     {
         case gl::ShaderType::Vertex:
-            dirty = mShaderConstantsDirty[gl::ShaderType::Vertex] ||
-                    (mNumActiveVSSamplers < numSamplers);
-            dataSize    = sizeof(Vertex);
-            data        = reinterpret_cast<const uint8_t *>(&mVertex);
-            samplerData = reinterpret_cast<const uint8_t *>(mSamplerMetadataVS.data());
-            mShaderConstantsDirty.set(gl::ShaderType::Vertex, false);
-            mNumActiveVSSamplers = numSamplers;
+            data = reinterpret_cast<const uint8_t *>(&mVertex);
             break;
         case gl::ShaderType::Fragment:
-            dirty = mShaderConstantsDirty[gl::ShaderType::Fragment] ||
-                    (mNumActivePSSamplers < numSamplers);
-            dataSize    = sizeof(Pixel);
-            data        = reinterpret_cast<const uint8_t *>(&mPixel);
-            samplerData = reinterpret_cast<const uint8_t *>(mSamplerMetadataPS.data());
-            mShaderConstantsDirty.set(gl::ShaderType::Fragment, false);
-            mNumActivePSSamplers = numSamplers;
+            data = reinterpret_cast<const uint8_t *>(&mPixel);
             break;
         case gl::ShaderType::Compute:
-            dirty = mShaderConstantsDirty[gl::ShaderType::Compute] ||
-                    (mNumActiveCSSamplers < numSamplers);
-            dataSize    = sizeof(Compute);
-            data        = reinterpret_cast<const uint8_t *>(&mCompute);
-            samplerData = reinterpret_cast<const uint8_t *>(mSamplerMetadataCS.data());
-            mShaderConstantsDirty.set(gl::ShaderType::Compute, false);
-            mNumActiveCSSamplers = numSamplers;
+            data = reinterpret_cast<const uint8_t *>(&mCompute);
             break;
         default:
             UNREACHABLE();
@@ -1438,8 +1406,10 @@ void StateManager11::processFramebufferInvalidation(const gl::Context *context)
 
 void StateManager11::invalidateBoundViews()
 {
-    mCurVertexSRVs.clear();
-    mCurPixelSRVs.clear();
+    for (SRVCache &curShaderSRV : mCurShaderSRVs)
+    {
+        curShaderSRV.clear();
+    }
 
     invalidateRenderTarget();
 }
@@ -1728,11 +1698,14 @@ void StateManager11::unsetConflictingAttachmentResources(
 
 gl::Error StateManager11::initialize(const gl::Caps &caps, const gl::Extensions &extensions)
 {
-    mCurVertexSRVs.initialize(caps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]);
-    mCurPixelSRVs.initialize(caps.maxShaderTextureImageUnits[gl::ShaderType::Fragment]);
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        const GLuint maxShaderTextureImageUnits = caps.maxShaderTextureImageUnits[shaderType];
 
-    // TODO(xinghua.cao@intel.com): need to add compute shader texture image units.
-    mCurComputeSRVs.initialize(caps.maxImageUnits);
+        mCurShaderSRVs[shaderType].initialize(maxShaderTextureImageUnits);
+        mForceSetShaderSamplerStates[shaderType].resize(maxShaderTextureImageUnits, true);
+        mCurShaderSamplerStates[shaderType].resize(maxShaderTextureImageUnits);
+    }
 
     mCurComputeUAVs.initialize(caps.maxImageUnits);
 
@@ -1742,17 +1715,6 @@ gl::Error StateManager11::initialize(const gl::Caps &caps, const gl::Extensions 
     mNullUAVs.resize(caps.maxImageUnits, nullptr);
 
     mCurrentValueAttribs.resize(caps.maxVertexAttributes);
-
-    mForceSetVertexSamplerStates.resize(caps.maxShaderTextureImageUnits[gl::ShaderType::Vertex],
-                                        true);
-    mForceSetPixelSamplerStates.resize(caps.maxShaderTextureImageUnits[gl::ShaderType::Fragment],
-                                       true);
-    mForceSetComputeSamplerStates.resize(caps.maxShaderTextureImageUnits[gl::ShaderType::Compute],
-                                         true);
-
-    mCurVertexSamplerStates.resize(caps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]);
-    mCurPixelSamplerStates.resize(caps.maxShaderTextureImageUnits[gl::ShaderType::Fragment]);
-    mCurComputeSamplerStates.resize(caps.maxShaderTextureImageUnits[gl::ShaderType::Compute]);
 
     mShaderConstants.init(caps);
 
@@ -1801,11 +1763,11 @@ gl::Error StateManager11::syncFramebuffer(const gl::Context *context)
     RTVArray framebufferRTVs = {{}};
     const auto &colorRTs     = mFramebuffer11->getCachedColorRenderTargets();
 
-    size_t appliedRTIndex  = 0;
-    bool skipInactiveRTs   = mRenderer->getWorkarounds().mrtPerfWorkaround;
+    size_t appliedRTIndex                   = 0;
+    bool skipInactiveRTs                    = mRenderer->getWorkarounds().mrtPerfWorkaround;
     const auto &drawStates                  = mFramebuffer11->getState().getDrawBufferStates();
     gl::DrawBufferMask activeProgramOutputs = mProgramD3D->getState().getActiveOutputVariables();
-    UINT maxExistingRT = 0;
+    UINT maxExistingRT                      = 0;
     const auto &colorAttachments            = mFramebuffer11->getState().getColorAttachments();
 
     for (size_t rtIndex = 0; rtIndex < colorRTs.size(); ++rtIndex)
@@ -2177,11 +2139,11 @@ void StateManager11::setVertexShader(const d3d11::VertexShader *shader)
 {
     ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
 
-    if (serial != mAppliedVertexShader)
+    if (serial != mAppliedShaders[gl::ShaderType::Vertex])
     {
         ID3D11VertexShader *appliedShader = shader ? shader->get() : nullptr;
         mRenderer->getDeviceContext()->VSSetShader(appliedShader, nullptr, 0);
-        mAppliedVertexShader = serial;
+        mAppliedShaders[gl::ShaderType::Vertex] = serial;
         invalidateShaders();
     }
 }
@@ -2190,11 +2152,11 @@ void StateManager11::setGeometryShader(const d3d11::GeometryShader *shader)
 {
     ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
 
-    if (serial != mAppliedGeometryShader)
+    if (serial != mAppliedShaders[gl::ShaderType::Geometry])
     {
         ID3D11GeometryShader *appliedShader = shader ? shader->get() : nullptr;
         mRenderer->getDeviceContext()->GSSetShader(appliedShader, nullptr, 0);
-        mAppliedGeometryShader = serial;
+        mAppliedShaders[gl::ShaderType::Geometry] = serial;
         invalidateShaders();
     }
 }
@@ -2203,11 +2165,11 @@ void StateManager11::setPixelShader(const d3d11::PixelShader *shader)
 {
     ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
 
-    if (serial != mAppliedPixelShader)
+    if (serial != mAppliedShaders[gl::ShaderType::Fragment])
     {
         ID3D11PixelShader *appliedShader = shader ? shader->get() : nullptr;
         mRenderer->getDeviceContext()->PSSetShader(appliedShader, nullptr, 0);
-        mAppliedPixelShader = serial;
+        mAppliedShaders[gl::ShaderType::Fragment] = serial;
         invalidateShaders();
     }
 }
@@ -2216,11 +2178,11 @@ void StateManager11::setComputeShader(const d3d11::ComputeShader *shader)
 {
     ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
 
-    if (serial != mAppliedComputeShader)
+    if (serial != mAppliedShaders[gl::ShaderType::Compute])
     {
         ID3D11ComputeShader *appliedShader = shader ? shader->get() : nullptr;
         mRenderer->getDeviceContext()->CSSetShader(appliedShader, nullptr, 0);
-        mAppliedComputeShader = serial;
+        mAppliedShaders[gl::ShaderType::Compute] = serial;
         // TODO(jmadill): Dirty bits for compute.
     }
 }
@@ -2360,7 +2322,7 @@ void StateManager11::setSimplePixelTextureAndSampler(const d3d11::SharedSRV &srv
     deviceContext->PSSetSamplers(0, 1, samplerState.getPointer());
 
     mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
-    mForceSetPixelSamplerStates[0] = true;
+    mForceSetShaderSamplerStates[gl::ShaderType::Fragment][0] = true;
 }
 
 void StateManager11::setSimpleScissorRect(const gl::Rectangle &glRect)
@@ -2386,8 +2348,8 @@ void StateManager11::setScissorRectD3D(const D3D11_RECT &d3dRect)
 gl::Error StateManager11::applyTextures(const gl::Context *context, gl::ShaderType shaderType)
 {
     ASSERT(shaderType != gl::ShaderType::Compute);
-    const auto &glState    = context->getGLState();
-    const auto &caps       = context->getCaps();
+    const auto &glState = context->getGLState();
+    const auto &caps    = context->getCaps();
 
     ASSERT(!mProgramD3D->isSamplerMappingDirty());
 
@@ -2428,9 +2390,7 @@ gl::Error StateManager11::applyTextures(const gl::Context *context, gl::ShaderTy
     }
 
     // Set all the remaining textures to NULL
-    size_t samplerCount = (shaderType == gl::ShaderType::Fragment)
-                              ? caps.maxShaderTextureImageUnits[gl::ShaderType::Fragment]
-                              : caps.maxShaderTextureImageUnits[gl::ShaderType::Vertex];
+    size_t samplerCount = caps.maxShaderTextureImageUnits[shaderType];
     ANGLE_TRY(clearSRVs(shaderType, samplerRange, samplerCount));
 
     return gl::NoError();
@@ -2459,69 +2419,45 @@ gl::Error StateManager11::setSamplerState(const gl::Context *context,
 
     auto *deviceContext = mRenderer->getDeviceContext();
 
-    if (type == gl::ShaderType::Fragment)
+    ASSERT(static_cast<unsigned int>(index) <
+           mRenderer->getNativeCaps().maxShaderTextureImageUnits[type]);
+
+    if (mForceSetShaderSamplerStates[type][index] ||
+        memcmp(&samplerState, &mCurShaderSamplerStates[type][index], sizeof(gl::SamplerState)) != 0)
     {
-        ASSERT(static_cast<unsigned int>(index) <
-               mRenderer->getNativeCaps().maxShaderTextureImageUnits[gl::ShaderType::Fragment]);
+        ID3D11SamplerState *dxSamplerState = nullptr;
+        ANGLE_TRY(mRenderer->getSamplerState(samplerState, &dxSamplerState));
 
-        if (mForceSetPixelSamplerStates[index] ||
-            memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
+        ASSERT(dxSamplerState != nullptr);
+
+        switch (type)
         {
-            ID3D11SamplerState *dxSamplerState = nullptr;
-            ANGLE_TRY(mRenderer->getSamplerState(samplerState, &dxSamplerState));
-
-            ASSERT(dxSamplerState != nullptr);
-            deviceContext->PSSetSamplers(index, 1, &dxSamplerState);
-
-            mCurPixelSamplerStates[index] = samplerState;
+            case gl::ShaderType::Vertex:
+                deviceContext->VSSetSamplers(index, 1, &dxSamplerState);
+                break;
+            case gl::ShaderType::Fragment:
+                deviceContext->PSSetSamplers(index, 1, &dxSamplerState);
+                break;
+            case gl::ShaderType::Compute:
+                deviceContext->CSSetSamplers(index, 1, &dxSamplerState);
+                break;
+            case gl::ShaderType::Geometry:
+                deviceContext->GSSetSamplers(index, 1, &dxSamplerState);
+                break;
+            default:
+                UNREACHABLE();
+                break;
         }
 
-        mForceSetPixelSamplerStates[index] = false;
+        mCurShaderSamplerStates[type][index] = samplerState;
     }
-    else if (type == gl::ShaderType::Vertex)
-    {
-        ASSERT(static_cast<unsigned int>(index) <
-               mRenderer->getNativeCaps().maxShaderTextureImageUnits[gl::ShaderType::Vertex]);
 
-        if (mForceSetVertexSamplerStates[index] ||
-            memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
-        {
-            ID3D11SamplerState *dxSamplerState = nullptr;
-            ANGLE_TRY(mRenderer->getSamplerState(samplerState, &dxSamplerState));
-
-            ASSERT(dxSamplerState != nullptr);
-            deviceContext->VSSetSamplers(index, 1, &dxSamplerState);
-
-            mCurVertexSamplerStates[index] = samplerState;
-        }
-
-        mForceSetVertexSamplerStates[index] = false;
-    }
-    else if (type == gl::ShaderType::Compute)
-    {
-        ASSERT(static_cast<unsigned int>(index) <
-               mRenderer->getNativeCaps().maxShaderTextureImageUnits[gl::ShaderType::Compute]);
-
-        if (mForceSetComputeSamplerStates[index] ||
-            memcmp(&samplerState, &mCurComputeSamplerStates[index], sizeof(gl::SamplerState)) != 0)
-        {
-            ID3D11SamplerState *dxSamplerState = nullptr;
-            ANGLE_TRY(mRenderer->getSamplerState(samplerState, &dxSamplerState));
-
-            ASSERT(dxSamplerState != nullptr);
-            deviceContext->CSSetSamplers(index, 1, &dxSamplerState);
-
-            mCurComputeSamplerStates[index] = samplerState;
-        }
-
-        mForceSetComputeSamplerStates[index] = false;
-    }
-    else
-        UNREACHABLE();
+    mForceSetShaderSamplerStates[type][index] = false;
 
     // Sampler metadata that's passed to shaders in uniforms is stored separately from rest of the
     // sampler state since having it in contiguous memory makes it possible to memcpy to a constant
-    // buffer, and it doesn't affect the state set by PSSetSamplers/VSSetSamplers.
+    // buffer, and it doesn't affect the state set by
+    // PSSetSamplers/VSSetSamplers/CSSetSamplers/GSSetSamplers.
     mShaderConstants.onSamplerChange(type, index, *texture);
 
     return gl::NoError();
@@ -2569,8 +2505,8 @@ gl::Error StateManager11::setTexture(const gl::Context *context,
 
 gl::Error StateManager11::syncTexturesForCompute(const gl::Context *context)
 {
-    const auto &glState    = context->getGLState();
-    const auto &caps       = context->getCaps();
+    const auto &glState = context->getGLState();
+    const auto &caps    = context->getCaps();
 
     // TODO(xinghua.cao@intel.com): Implement sampler feature in compute shader.
     unsigned int readonlyImageRange = mProgramD3D->getUsedImageRange(gl::ShaderType::Compute, true);

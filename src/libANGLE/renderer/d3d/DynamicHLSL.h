@@ -98,26 +98,20 @@ class BuiltinVaryingsD3D
     BuiltinVaryingsD3D(const ProgramD3DMetadata &metadata, const gl::VaryingPacking &packing);
     ~BuiltinVaryingsD3D();
 
-    bool usesPointSize() const
-    {
-        return mBuiltinInfo[static_cast<size_t>(gl::ShaderType::Vertex)].glPointSize.enabled;
-    }
+    bool usesPointSize() const { return mBuiltinInfo[gl::ShaderType::Vertex].glPointSize.enabled; }
 
     const BuiltinInfo &operator[](gl::ShaderType shaderType) const
     {
-        return mBuiltinInfo[static_cast<size_t>(shaderType)];
+        return mBuiltinInfo[shaderType];
     }
-    BuiltinInfo &operator[](gl::ShaderType shaderType)
-    {
-        return mBuiltinInfo[static_cast<size_t>(shaderType)];
-    }
+    BuiltinInfo &operator[](gl::ShaderType shaderType) { return mBuiltinInfo[shaderType]; }
 
   private:
     void updateBuiltins(gl::ShaderType shaderType,
                         const ProgramD3DMetadata &metadata,
                         const gl::VaryingPacking &packing);
 
-    std::array<BuiltinInfo, static_cast<size_t>(gl::ShaderType::EnumCount)> mBuiltinInfo;
+    gl::ShaderMap<BuiltinInfo> mBuiltinInfo;
 };
 
 class DynamicHLSL : angle::NonCopyable
