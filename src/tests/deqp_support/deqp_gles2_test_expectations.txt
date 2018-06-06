@@ -113,6 +113,7 @@
 1143 MAC : dEQP-GLES2.functional.shaders.scoping.valid.local_struct_variable_hides_struct_type_* = FAIL
 1143 MAC : dEQP-GLES2.functional.shaders.scoping.valid.function_parameter_hides_struct_type_* = FAIL
 1143 MAC : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.65 = FAIL
+2631 MAC : dEQP-GLES2.functional.shaders.operator.sequence.side_effects.affect_* = FAIL
 
 // Mac Intel specific
 2137 MAC INTEL : dEQP-GLES2.functional.color_clear.complex_rgb = FAIL
@@ -178,6 +179,9 @@
 1489 GLES ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.l8_nicest = FAIL
 1489 GLES ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.la88_fastest = FAIL
 1489 GLES ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.la88_nicest = FAIL
+2631 GLES ANDROID : dEQP-GLES2.functional.shaders.operator.sequence.side_effects.affect_* = FAIL
+2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = FAIL
+2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = FAIL
 
 // Android Vulkan backend only failures
 2549 VULKAN ANDROID : dEQP-GLES2.functional.fragment_ops.depth_stencil.* = SKIP

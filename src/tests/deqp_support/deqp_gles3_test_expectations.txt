@@ -349,6 +349,13 @@
 2137 MAC : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_getfloat = FAIL
 2137 MAC : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_getinteger = FAIL
 2137 MAC : dEQP-GLES3.functional.state_query.integers.compressed_texture_formats_getinteger64 = FAIL
+2349 MAC : dEQP-GLES3.functional.negative_api.texture.bindtexture = FAIL
+2137 MAC : dEQP-GLES3.functional.dither.disabled.* = FAIL
+2137 MAC : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
+2137 MAC : dEQP-GLES3.functional.shaders.arrays.complex_expression.and_short_circuits_* = FAIL
+2137 MAC : dEQP-GLES3.functional.shaders.arrays.complex_expression.or_short_circuits_* = FAIL
+2137 MAC : dEQP-GLES3.functional.shaders.fragdata.valid_static_index = FAIL
+2137 MAC : dEQP-GLES3.functional.shaders.loops.short_circuit.* = FAIL
 
 // Mac AMD failures
 2137 MAC AMD : dEQP-GLES3.functional.clipping.point.wide_point_clip = FAIL
@@ -446,3 +453,12 @@
 1531 ANDROID : dEQP-GLES3.functional.transform_feedback.random.separate.lines.8 = FAIL
 1531 ANDROID : dEQP-GLES3.functional.transform_feedback.random.separate.points.4 = FAIL
 1531 ANDROID : dEQP-GLES3.functional.transform_feedback.random.separate.triangles.4 = FAIL
+2629 ANDROID : dEQP-GLES3.functional.shaders.struct.local.array_member_equality_fragment = SKIP
+2629 ANDROID : dEQP-GLES3.functional.shaders.struct.local.array_member_equality_vertex = SKIP
+2349 ANDROID : dEQP-GLES3.functional.negative_api.texture.bindtexture = FAIL
+2627 ANDROID : dEQP-GLES3.functional.shaders.arrays.complex_expression.and_short_circuits_* = FAIL
+2627 ANDROID : dEQP-GLES3.functional.shaders.arrays.complex_expression.or_short_circuits_* = FAIL
+2628 ANDROID : dEQP-GLES3.functional.shaders.indexing.moredynamic.user_defined_fncall_inout_parameter_fragment = FAIL
+2628 ANDROID : dEQP-GLES3.functional.shaders.indexing.moredynamic.user_defined_fncall_inout_parameter_with_index_with_side_effects_fragment = FAIL
+2628 ANDROID : dEQP-GLES3.functional.shaders.indexing.moredynamic.user_defined_fncall_out_parameter_fragment = FAIL
+2627 ANDROID : dEQP-GLES3.functional.shaders.loops.short_circuit.* = FAIL
