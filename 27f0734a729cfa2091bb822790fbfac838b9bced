@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab39c3f5_dca42fae",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-06T01:19:00Z",
+      "side": 1,
+      "message": "git cl format put in all those spaces.  *shrug*",
+      "revId": "27f0734a729cfa2091bb822790fbfac838b9bced",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

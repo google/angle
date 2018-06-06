@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1090788c_16d4934e",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-06T01:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30f2c8d6_fa6ce805",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 31
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a2f2070_2bbc461f",
         "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "751ddb57_a68178e1",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-06T01:19:00Z",
+      "side": 1,
+      "message": "deleted in next version",
+      "parentUuid": "6a2f2070_2bbc461f",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 7
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "edf3a295_2a43d061",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-06T01:19:00Z",
+      "side": 1,
+      "message": "it is for unsigned, but not for signed",
+      "parentUuid": "9279da47_7e3fb755",
+      "range": {
+        "startLine": 77,
+        "startChar": 41,
+        "endLine": 77,
+        "endChar": 71
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02c8387c_106b1a3c",
         "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2018-06-04T19:59:42Z",
       "side": 1,
       "message": "how about !kNormalized || !float",
+      "range": {
+        "startLine": 79,
+        "startChar": 17,
+        "endLine": 79,
+        "endChar": 55
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d147beb7_b64df68e",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-06T01:19:00Z",
+      "side": 1,
+      "message": "I find that harder to understand.",
+      "parentUuid": "02c8387c_106b1a3c",
       "range": {
         "startLine": 79,
         "startChar": 17,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "6fc38031_3d0c60af",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-06T01:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3222a05_e1487163",
+      "range": {
+        "startLine": 81,
+        "startChar": 16,
+        "endLine": 81,
+        "endChar": 23
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe56a872_1b7f9f07",
         "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
         "patchSetId": 4
@@ -137,6 +257,30 @@
       "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c22a295d_a98f975c",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-06T01:19:00Z",
+      "side": 1,
+      "message": "I\u0027ve done this differently in the next version of this CL.\nMost of them weren\u0027t used yet - my first thought was to change no functionality - but the next version will use them all.",
+      "parentUuid": "fe56a872_1b7f9f07",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 0
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "c530707b_ed6d5a4f",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-06T01:19:00Z",
+      "side": 1,
+      "message": "These are the vertex formats.  See above about usage.  I\u0027ll change N-\u003eNorm and I/S/B-\u003eInt/Short/Byte.\nThe next version moves them to the function where they\u0027re used.",
+      "parentUuid": "a77098ac_45ba264a",
+      "range": {
+        "startLine": 177,
+        "startChar": 14,
+        "endLine": 177,
+        "endChar": 16
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a98a39e_ac4718e9",
         "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
         "patchSetId": 4
@@ -183,6 +351,30 @@
       "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3338fe50_2cc4b356",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-06T01:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a98a39e_ac4718e9",
+      "range": {
+        "startLine": 200,
+        "startChar": 16,
+        "endLine": 200,
+        "endChar": 22
+      },
+      "revId": "e8dc05c409d1832a24fa5a96dcfcb5128a9ccd33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
