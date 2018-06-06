@@ -16,6 +16,24 @@
       "revId": "4bf325e9970a4bcbdba7a641ae2770a9884959b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1318298b_b5ba941f",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-06-06T02:43:56Z",
+      "side": 1,
+      "message": "Yes. RGB9_E5 is a specific internalformat. It is not color-renderable. So an image with this format can not be used as a render target.",
+      "parentUuid": "26595720_243e4200",
+      "revId": "4bf325e9970a4bcbdba7a641ae2770a9884959b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
