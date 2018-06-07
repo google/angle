@@ -68,6 +68,144 @@
       "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d9b0064_a9096a9a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1042,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-07T16:53:21Z",
+      "side": 1,
+      "message": "In renderer9 this is an \u0027or\u0027.  Can you make them the same?  It\u0027s probably even safe to just check one and then assert the other for D3D.",
+      "range": {
+        "startLine": 1042,
+        "startChar": 58,
+        "endLine": 1042,
+        "endChar": 60
+      },
+      "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e19cf955_7d21adf0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-07T16:53:21Z",
+      "side": 1,
+      "message": "nit: we typically don\u0027t use double-assignments, can you split it into two?",
+      "range": {
+        "startLine": 122,
+        "startChar": 4,
+        "endLine": 122,
+        "endChar": 72
+      },
+      "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34ec14b1_15f9124e",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-07T16:53:21Z",
+      "side": 1,
+      "message": "Same comment about the double-assignment.",
+      "range": {
+        "startLine": 362,
+        "startChar": 8,
+        "endLine": 362,
+        "endChar": 88
+      },
+      "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0566bd5b_b60c5686",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-07T16:53:21Z",
+      "side": 1,
+      "message": "Can you add a comment about how this is intentional and why?",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 63
+      },
+      "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0baf677b_9296359b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-07T16:53:21Z",
+      "side": 1,
+      "message": "nit: same comment.",
+      "range": {
+        "startLine": 39,
+        "startChar": 42,
+        "endLine": 39,
+        "endChar": 44
+      },
+      "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6747bf29_635ac575",
+        "filename": "src/tests/gl_tests/D3D11FormatTablesTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-07T16:53:21Z",
+      "side": 1,
+      "message": "gl::FmtHex(internalFormat)",
+      "range": {
+        "startLine": 122,
+        "startChar": 12,
+        "endLine": 122,
+        "endChar": 53
+      },
+      "revId": "7186ad25bb0223ecaebdafc81dbd5a5ae6c696fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
