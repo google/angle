@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b1b967df_eb0c800d",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-07T19:35:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5fd70df4_6b27b300",
+      "range": {
+        "startLine": 507,
+        "startChar": 28,
+        "endLine": 507,
+        "endChar": 40
+      },
+      "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "808cc0eb_b4696f66",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 12
@@ -45,6 +69,30 @@
       "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5534b1c4_350bf620",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-07T19:35:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "808cc0eb_b4696f66",
+      "range": {
+        "startLine": 628,
+        "startChar": 24,
+        "endLine": 628,
+        "endChar": 36
+      },
+      "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b66f070c_59414a2e",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 855,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-07T19:35:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "621471d5_629e9947",
+      "range": {
+        "startLine": 855,
+        "startChar": 28,
+        "endLine": 855,
+        "endChar": 40
+      },
+      "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e67109b5_06e81633",
         "filename": "src/libANGLE/ProgramLinkedResources.h",
         "patchSetId": 12
@@ -91,6 +163,30 @@
       "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30427aa8_9723240e",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-07T19:35:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e67109b5_06e81633",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 21
+      },
+      "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
