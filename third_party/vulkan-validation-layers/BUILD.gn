@@ -492,10 +492,7 @@ if (!is_android) {
   shared_library("VkICD_mock_icd") {
     configs -= vulkan_undefine_configs
     public_configs = [ ":vulkan_config" ]
-    deps = [
-      "//build/config:exe_and_shlib_deps",
-    ]
-    deps += [ ":vulkan_generate_mock_icd_files" ]
+    deps = [ ":vulkan_generate_mock_icd_files" ]
     data_deps = [
       ":vulkan_gen_icd_json_file",
     ]
@@ -609,7 +606,6 @@ foreach(layer_info, layers) {
     deps = [
       ":vulkan_layer_table",
       ":vulkan_layer_utils",
-      "//build/config:exe_and_shlib_deps",
     ]
     if (layer_info[2] != "") {
       deps += [ layer_info[2] ]

@@ -661,7 +661,6 @@ shared_library("libGLESv2${angle_libs_suffix}") {
   deps = [
     ":includes",
     ":libANGLE",
-    "//build/config:exe_and_shlib_deps",
   ]
 }
 
@@ -724,7 +723,6 @@ shared_library("libGLESv1_CM${angle_libs_suffix}") {
   deps = [
     ":includes",
     ":libGLESv2${angle_libs_suffix}",
-    "//build/config:exe_and_shlib_deps",
   ]
 }
 
@@ -784,7 +782,6 @@ shared_library("libEGL${angle_libs_suffix}") {
   deps = [
     ":includes",
     ":libGLESv2${angle_libs_suffix}",
-    "//build/config:exe_and_shlib_deps",
   ]
 }
 
@@ -902,8 +899,6 @@ foreach(is_shared_library,
     if (is_shared_library) {
       defines = [ "LIBANGLE_UTIL_IMPLEMENTATION" ]
 
-      deps += [ "//build/config:exe_and_shlib_deps" ]
-
       if (is_mac && !is_component_build) {
         ldflags = [
           "-install_name",
@@ -927,7 +922,6 @@ executable("angle_shader_translator") {
 
   deps = [
     ":translator",
-    "//build/config:exe_and_shlib_deps",
   ]
 }
 

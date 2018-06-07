@@ -706,7 +706,7 @@ if (build_angle_deqp_tests) {
     shared_library(shared_library_name) {
       deps = [
         ":angle_deqp_libtester",
-        "//build/config:exe_and_shlib_deps",
+
         angle_root + ":angle_util",
       ]
 
