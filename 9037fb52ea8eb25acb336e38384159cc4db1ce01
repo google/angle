@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fd70df4_6b27b300",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-07T18:17:40Z",
+      "side": 1,
+      "message": "you can use mUnusedUniforms.emplace_back(name, isSampler);",
+      "range": {
+        "startLine": 507,
+        "startChar": 28,
+        "endLine": 507,
+        "endChar": 40
+      },
+      "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "808cc0eb_b4696f66",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-07T18:17:40Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 628,
+        "startChar": 24,
+        "endLine": 628,
+        "endChar": 36
+      },
+      "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "621471d5_629e9947",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 855,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-07T18:17:40Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 855,
+        "startChar": 28,
+        "endLine": 855,
+        "endChar": 40
+      },
+      "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e67109b5_06e81633",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-07T18:17:40Z",
+      "side": 1,
+      "message": "nit: alphabetical sort",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 21
+      },
+      "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
