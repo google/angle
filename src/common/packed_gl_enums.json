@@ -130,6 +130,19 @@
         "Modulate": "GL_MODULATE",
         "Replace": "GL_REPLACE"
     },
+    "TextureEnvTarget":
+    {
+        "Env": "GL_TEXTURE_ENV"
+    },
+    "TextureEnvParameter":
+    {
+        "Mode": "GL_TEXTURE_ENV_MODE",
+        "Color": "GL_TEXTURE_ENV_COLOR",
+        "CombineRgb": "GL_COMBINE_RGB",
+        "CombineAlpha": "GL_COMBINE_ALPHA",
+        "RgbScale": "GL_RGB_SCALE",
+        "AlphaScale": "GL_ALPHA_SCALE"
+    },
     "TextureOp":
     {
         "OneMinusSrcAlpha": "GL_ONE_MINUS_SRC_ALPHA",

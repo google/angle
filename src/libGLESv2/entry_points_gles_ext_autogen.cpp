@@ -9306,11 +9306,14 @@ void GL_APIENTRY GetTexEnvfvContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::GetTexEnvfv>(target, pname, params);
+        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        context->gatherParams<EntryPoint::GetTexEnvfv>(targetPacked, pnamePacked, params);
 
-        if (context->skipValidation() || ValidateGetTexEnvfv(context, target, pname, params))
+        if (context->skipValidation() ||
+            ValidateGetTexEnvfv(context, targetPacked, pnamePacked, params))
         {
-            context->getTexEnvfv(target, pname, params);
+            context->getTexEnvfv(targetPacked, pnamePacked, params);
         }
     }
 }
@@ -9327,11 +9330,14 @@ void GL_APIENTRY GetTexEnvivContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::GetTexEnviv>(target, pname, params);
+        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        context->gatherParams<EntryPoint::GetTexEnviv>(targetPacked, pnamePacked, params);
 
-        if (context->skipValidation() || ValidateGetTexEnviv(context, target, pname, params))
+        if (context->skipValidation() ||
+            ValidateGetTexEnviv(context, targetPacked, pnamePacked, params))
         {
-            context->getTexEnviv(target, pname, params);
+            context->getTexEnviv(targetPacked, pnamePacked, params);
         }
     }
 }
@@ -9348,11 +9354,14 @@ void GL_APIENTRY GetTexEnvxvContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::GetTexEnvxv>(target, pname, params);
+        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        context->gatherParams<EntryPoint::GetTexEnvxv>(targetPacked, pnamePacked, params);
 
-        if (context->skipValidation() || ValidateGetTexEnvxv(context, target, pname, params))
+        if (context->skipValidation() ||
+            ValidateGetTexEnvxv(context, targetPacked, pnamePacked, params))
         {
-            context->getTexEnvxv(target, pname, params);
+            context->getTexEnvxv(targetPacked, pnamePacked, params);
         }
     }
 }
@@ -13002,11 +13011,13 @@ void GL_APIENTRY TexEnvfContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::TexEnvf>(target, pname, param);
+        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        context->gatherParams<EntryPoint::TexEnvf>(targetPacked, pnamePacked, param);
 
-        if (context->skipValidation() || ValidateTexEnvf(context, target, pname, param))
+        if (context->skipValidation() || ValidateTexEnvf(context, targetPacked, pnamePacked, param))
         {
-            context->texEnvf(target, pname, param);
+            context->texEnvf(targetPacked, pnamePacked, param);
         }
     }
 }
@@ -13023,11 +13034,14 @@ void GL_APIENTRY TexEnvfvContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::TexEnvfv>(target, pname, params);
+        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        context->gatherParams<EntryPoint::TexEnvfv>(targetPacked, pnamePacked, params);
 
-        if (context->skipValidation() || ValidateTexEnvfv(context, target, pname, params))
+        if (context->skipValidation() ||
+            ValidateTexEnvfv(context, targetPacked, pnamePacked, params))
         {
-            context->texEnvfv(target, pname, params);
+            context->texEnvfv(targetPacked, pnamePacked, params);
         }
     }
 }
@@ -13040,11 +13054,13 @@ void GL_APIENTRY TexEnviContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::TexEnvi>(target, pname, param);
+        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        context->gatherParams<EntryPoint::TexEnvi>(targetPacked, pnamePacked, param);
 
-        if (context->skipValidation() || ValidateTexEnvi(context, target, pname, param))
+        if (context->skipValidation() || ValidateTexEnvi(context, targetPacked, pnamePacked, param))
         {
-            context->texEnvi(target, pname, param);
+            context->texEnvi(targetPacked, pnamePacked, param);
         }
     }
 }
@@ -13061,11 +13077,14 @@ void GL_APIENTRY TexEnvivContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::TexEnviv>(target, pname, params);
+        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        context->gatherParams<EntryPoint::TexEnviv>(targetPacked, pnamePacked, params);
 
-        if (context->skipValidation() || ValidateTexEnviv(context, target, pname, params))
+        if (context->skipValidation() ||
+            ValidateTexEnviv(context, targetPacked, pnamePacked, params))
         {
-            context->texEnviv(target, pname, params);
+            context->texEnviv(targetPacked, pnamePacked, params);
         }
     }
 }
@@ -13079,11 +13098,13 @@ void GL_APIENTRY TexEnvxContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::TexEnvx>(target, pname, param);
+        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        context->gatherParams<EntryPoint::TexEnvx>(targetPacked, pnamePacked, param);
 
-        if (context->skipValidation() || ValidateTexEnvx(context, target, pname, param))
+        if (context->skipValidation() || ValidateTexEnvx(context, targetPacked, pnamePacked, param))
         {
-            context->texEnvx(target, pname, param);
+            context->texEnvx(targetPacked, pnamePacked, param);
         }
     }
 }
@@ -13100,11 +13121,14 @@ void GL_APIENTRY TexEnvxvContextANGLE(GLeglContext ctx,
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::TexEnvxv>(target, pname, params);
+        TextureEnvTarget targetPacked   = FromGLenum<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = FromGLenum<TextureEnvParameter>(pname);
+        context->gatherParams<EntryPoint::TexEnvxv>(targetPacked, pnamePacked, params);
 
-        if (context->skipValidation() || ValidateTexEnvxv(context, target, pname, params))
+        if (context->skipValidation() ||
+            ValidateTexEnvxv(context, targetPacked, pnamePacked, params))
         {
-            context->texEnvxv(target, pname, params);
+            context->texEnvxv(targetPacked, pnamePacked, params);
         }
     }
 }

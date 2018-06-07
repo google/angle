@@ -224,17 +224,17 @@ void Context::getMaterialxv(GLenum face, MaterialParameter pname, GLfixed *param
     }
 }
 
-void Context::getTexEnvfv(GLenum env, GLenum pname, GLfloat *params)
+void Context::getTexEnvfv(TextureEnvTarget env, TextureEnvParameter pname, GLfloat *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getTexEnviv(GLenum env, GLenum pname, GLint *params)
+void Context::getTexEnviv(TextureEnvTarget env, TextureEnvParameter pname, GLint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::getTexEnvxv(GLenum target, GLenum pname, GLfixed *params)
+void Context::getTexEnvxv(TextureEnvTarget target, TextureEnvParameter pname, GLfixed *params)
 {
     UNIMPLEMENTED();
 }
@@ -496,32 +496,32 @@ void Context::texCoordPointer(GLint size, GLenum type, GLsizei stride, const voi
                         stride, ptr);
 }
 
-void Context::texEnvf(GLenum target, GLenum pname, GLfloat param)
+void Context::texEnvf(TextureEnvTarget target, TextureEnvParameter pname, GLfloat param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::texEnvfv(GLenum target, GLenum pname, const GLfloat *params)
+void Context::texEnvfv(TextureEnvTarget target, TextureEnvParameter pname, const GLfloat *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::texEnvi(GLenum target, GLenum pname, GLint param)
+void Context::texEnvi(TextureEnvTarget target, TextureEnvParameter pname, GLint param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::texEnviv(GLenum target, GLenum pname, const GLint *params)
+void Context::texEnviv(TextureEnvTarget target, TextureEnvParameter pname, const GLint *params)
 {
     UNIMPLEMENTED();
 }
 
-void Context::texEnvx(GLenum target, GLenum pname, GLfixed param)
+void Context::texEnvx(TextureEnvTarget target, TextureEnvParameter pname, GLfixed param)
 {
     UNIMPLEMENTED();
 }
 
-void Context::texEnvxv(GLenum target, GLenum pname, const GLfixed *params)
+void Context::texEnvxv(TextureEnvTarget target, TextureEnvParameter pname, const GLfixed *params)
 {
     UNIMPLEMENTED();
 }

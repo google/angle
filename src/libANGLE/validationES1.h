@@ -64,9 +64,18 @@ bool ValidateGetLightxv(Context *context, GLenum light, LightParameter pname, GL
 bool ValidateGetMaterialfv(Context *context, GLenum face, MaterialParameter pname, GLfloat *params);
 bool ValidateGetMaterialxv(Context *context, GLenum face, MaterialParameter pname, GLfixed *params);
 bool ValidateGetPointerv(Context *context, GLenum pname, void **params);
-bool ValidateGetTexEnvfv(Context *context, GLenum target, GLenum pname, GLfloat *params);
-bool ValidateGetTexEnviv(Context *context, GLenum target, GLenum pname, GLint *params);
-bool ValidateGetTexEnvxv(Context *context, GLenum target, GLenum pname, GLfixed *params);
+bool ValidateGetTexEnvfv(Context *context,
+                         TextureEnvTarget target,
+                         TextureEnvParameter pname,
+                         GLfloat *params);
+bool ValidateGetTexEnviv(Context *context,
+                         TextureEnvTarget target,
+                         TextureEnvParameter pname,
+                         GLint *params);
+bool ValidateGetTexEnvxv(Context *context,
+                         TextureEnvTarget target,
+                         TextureEnvParameter pname,
+                         GLfixed *params);
 bool ValidateGetTexParameterxv(Context *context, TextureType target, GLenum pname, GLfixed *params);
 bool ValidateLightModelf(Context *context, GLenum pname, GLfloat param);
 bool ValidateLightModelfv(Context *context, GLenum pname, const GLfloat *params);
@@ -143,12 +152,30 @@ bool ValidateTexCoordPointer(Context *context,
                              GLenum type,
                              GLsizei stride,
                              const void *pointer);
-bool ValidateTexEnvf(Context *context, GLenum target, GLenum pname, GLfloat param);
-bool ValidateTexEnvfv(Context *context, GLenum target, GLenum pname, const GLfloat *params);
-bool ValidateTexEnvi(Context *context, GLenum target, GLenum pname, GLint param);
-bool ValidateTexEnviv(Context *context, GLenum target, GLenum pname, const GLint *params);
-bool ValidateTexEnvx(Context *context, GLenum target, GLenum pname, GLfixed param);
-bool ValidateTexEnvxv(Context *context, GLenum target, GLenum pname, const GLfixed *params);
+bool ValidateTexEnvf(Context *context,
+                     TextureEnvTarget target,
+                     TextureEnvParameter pname,
+                     GLfloat param);
+bool ValidateTexEnvfv(Context *context,
+                      TextureEnvTarget target,
+                      TextureEnvParameter pname,
+                      const GLfloat *params);
+bool ValidateTexEnvi(Context *context,
+                     TextureEnvTarget target,
+                     TextureEnvParameter pname,
+                     GLint param);
+bool ValidateTexEnviv(Context *context,
+                      TextureEnvTarget target,
+                      TextureEnvParameter pname,
+                      const GLint *params);
+bool ValidateTexEnvx(Context *context,
+                     TextureEnvTarget target,
+                     TextureEnvParameter pname,
+                     GLfixed param);
+bool ValidateTexEnvxv(Context *context,
+                      TextureEnvTarget target,
+                      TextureEnvParameter pname,
+                      const GLfixed *params);
 bool ValidateTexParameterx(Context *context, TextureType target, GLenum pname, GLfixed param);
 bool ValidateTexParameterxv(Context *context,
                             TextureType target,

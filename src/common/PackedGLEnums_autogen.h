@@ -328,6 +328,35 @@ template <>
 TextureEnvMode FromGLenum<TextureEnvMode>(GLenum from);
 GLenum ToGLenum(TextureEnvMode from);
 
+enum class TextureEnvParameter : uint8_t
+{
+    Mode         = 0,
+    Color        = 1,
+    CombineRgb   = 2,
+    CombineAlpha = 3,
+    RgbScale     = 4,
+    AlphaScale   = 5,
+
+    InvalidEnum = 6,
+    EnumCount   = 6,
+};
+
+template <>
+TextureEnvParameter FromGLenum<TextureEnvParameter>(GLenum from);
+GLenum ToGLenum(TextureEnvParameter from);
+
+enum class TextureEnvTarget : uint8_t
+{
+    Env = 0,
+
+    InvalidEnum = 1,
+    EnumCount   = 1,
+};
+
+template <>
+TextureEnvTarget FromGLenum<TextureEnvTarget>(GLenum from);
+GLenum ToGLenum(TextureEnvTarget from);
+
 enum class TextureOp : uint8_t
 {
     OneMinusSrcAlpha = 0,

@@ -587,19 +587,28 @@ bool ValidateGetPointerv(Context *context, GLenum pname, void **params)
     }
 }
 
-bool ValidateGetTexEnvfv(Context *context, GLenum target, GLenum pname, GLfloat *params)
+bool ValidateGetTexEnvfv(Context *context,
+                         TextureEnvTarget target,
+                         TextureEnvParameter pname,
+                         GLfloat *params)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateGetTexEnviv(Context *context, GLenum target, GLenum pname, GLint *params)
+bool ValidateGetTexEnviv(Context *context,
+                         TextureEnvTarget target,
+                         TextureEnvParameter pname,
+                         GLint *params)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateGetTexEnvxv(Context *context, GLenum target, GLenum pname, GLfixed *params)
+bool ValidateGetTexEnvxv(Context *context,
+                         TextureEnvTarget target,
+                         TextureEnvParameter pname,
+                         GLfixed *params)
 {
     UNIMPLEMENTED();
     return true;
@@ -939,37 +948,55 @@ bool ValidateTexCoordPointer(Context *context,
                                                 type, stride, pointer);
 }
 
-bool ValidateTexEnvf(Context *context, GLenum target, GLenum pname, GLfloat param)
+bool ValidateTexEnvf(Context *context,
+                     TextureEnvTarget target,
+                     TextureEnvParameter pname,
+                     GLfloat param)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateTexEnvfv(Context *context, GLenum target, GLenum pname, const GLfloat *params)
+bool ValidateTexEnvfv(Context *context,
+                      TextureEnvTarget target,
+                      TextureEnvParameter pname,
+                      const GLfloat *params)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateTexEnvi(Context *context, GLenum target, GLenum pname, GLint param)
+bool ValidateTexEnvi(Context *context,
+                     TextureEnvTarget target,
+                     TextureEnvParameter pname,
+                     GLint param)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateTexEnviv(Context *context, GLenum target, GLenum pname, const GLint *params)
+bool ValidateTexEnviv(Context *context,
+                      TextureEnvTarget target,
+                      TextureEnvParameter pname,
+                      const GLint *params)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateTexEnvx(Context *context, GLenum target, GLenum pname, GLfixed param)
+bool ValidateTexEnvx(Context *context,
+                     TextureEnvTarget target,
+                     TextureEnvParameter pname,
+                     GLfixed param)
 {
     UNIMPLEMENTED();
     return true;
 }
 
-bool ValidateTexEnvxv(Context *context, GLenum target, GLenum pname, const GLfixed *params)
+bool ValidateTexEnvxv(Context *context,
+                      TextureEnvTarget target,
+                      TextureEnvParameter pname,
+                      const GLfixed *params)
 {
     UNIMPLEMENTED();
     return true;

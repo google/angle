@@ -824,6 +824,74 @@ GLenum ToGLenum(TextureEnvMode from)
 }
 
 template <>
+TextureEnvParameter FromGLenum<TextureEnvParameter>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_TEXTURE_ENV_MODE:
+            return TextureEnvParameter::Mode;
+        case GL_TEXTURE_ENV_COLOR:
+            return TextureEnvParameter::Color;
+        case GL_COMBINE_RGB:
+            return TextureEnvParameter::CombineRgb;
+        case GL_COMBINE_ALPHA:
+            return TextureEnvParameter::CombineAlpha;
+        case GL_RGB_SCALE:
+            return TextureEnvParameter::RgbScale;
+        case GL_ALPHA_SCALE:
+            return TextureEnvParameter::AlphaScale;
+        default:
+            return TextureEnvParameter::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(TextureEnvParameter from)
+{
+    switch (from)
+    {
+        case TextureEnvParameter::Mode:
+            return GL_TEXTURE_ENV_MODE;
+        case TextureEnvParameter::Color:
+            return GL_TEXTURE_ENV_COLOR;
+        case TextureEnvParameter::CombineRgb:
+            return GL_COMBINE_RGB;
+        case TextureEnvParameter::CombineAlpha:
+            return GL_COMBINE_ALPHA;
+        case TextureEnvParameter::RgbScale:
+            return GL_RGB_SCALE;
+        case TextureEnvParameter::AlphaScale:
+            return GL_ALPHA_SCALE;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
+TextureEnvTarget FromGLenum<TextureEnvTarget>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_TEXTURE_ENV:
+            return TextureEnvTarget::Env;
+        default:
+            return TextureEnvTarget::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(TextureEnvTarget from)
+{
+    switch (from)
+    {
+        case TextureEnvTarget::Env:
+            return GL_TEXTURE_ENV;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
 TextureOp FromGLenum<TextureOp>(GLenum from)
 {
     switch (from)

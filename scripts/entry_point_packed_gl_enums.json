@@ -187,6 +187,18 @@
     "glGetQueryivRobustANGLE": {
         "target": "QueryType"
     },
+    "glGetTexEnvfv": {
+        "target": "TextureEnvTarget",
+        "pname": "TextureEnvParameter"
+    },
+    "glGetTexEnviv": {
+        "target": "TextureEnvTarget",
+        "pname": "TextureEnvParameter"
+    },
+    "glGetTexEnvxv": {
+        "target": "TextureEnvTarget",
+        "pname": "TextureEnvParameter"
+    },
     "glGetTexLevelParameterfv": {
         "target": "TextureTarget"
     },
@@ -264,6 +276,30 @@
     },
     "glShadeModel": {
         "mode": "ShadingModel"
+    },
+    "glTexEnvf": {
+        "target": "TextureEnvTarget",
+        "pname": "TextureEnvParameter"
+    },
+    "glTexEnvfv": {
+        "target": "TextureEnvTarget",
+        "pname": "TextureEnvParameter"
+    },
+    "glTexEnvi": {
+        "target": "TextureEnvTarget",
+        "pname": "TextureEnvParameter"
+    },
+    "glTexEnviv": {
+        "target": "TextureEnvTarget",
+        "pname": "TextureEnvParameter"
+    },
+    "glTexEnvx": {
+        "target": "TextureEnvTarget",
+        "pname": "TextureEnvParameter"
+    },
+    "glTexEnvxv": {
+        "target": "TextureEnvTarget",
+        "pname": "TextureEnvParameter"
     },
     "glTexImage2D": {
         "target": "TextureTarget"
