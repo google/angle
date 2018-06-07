@@ -1016,6 +1016,61 @@ TEST_P(UniformTestES3, ReturnsOnlyOneArrayElement)
     }
 }
 
+// This test reproduces a regression when Intel windows driver upgrades to 4944. In some situation,
+// when a boolean uniform with false value is used as the if and for condtions, the bug will be
+// triggered. It seems that the shader doesn't get a right 'false' value from the uniform.
+TEST_P(UniformTestES3, BooleanUniformAsIfAndForCondition)
+{
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows());
+    const char kFragShader[] =
+        R"(#version 300 es
+        precision mediump float;
+        uniform bool u;
+        out vec4 result;
+        int sideEffectCounter;
+
+        bool foo() {
+          ++sideEffectCounter;
+          return true;
+        }
+
+        void main() {
+          sideEffectCounter = 0;
+          bool condition = u;
+          if (condition)
+          {
+            condition = foo();
+          }
+          for(int iterations = 0; condition;) {
+            ++iterations;
+            if (iterations >= 10) {
+              break;
+            }
+
+            if (condition)
+            {
+              condition = foo();
+            }
+          }
+
+          bool success = (!u && sideEffectCounter == 0);
+          result = (success) ? vec4(0, 1.0, 0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragShader);
+
+    glUseProgram(program.get());
+
+    GLint uniformLocation = glGetUniformLocation(program, "u");
+    ASSERT_NE(uniformLocation, -1);
+
+    glUniform1i(uniformLocation, GL_FALSE);
+
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 class UniformTestES31 : public ANGLETest
 {
   protected:
