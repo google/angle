@@ -12,6 +12,7 @@
 #include "common/utilities.h"
 
 #include "libANGLE/GLES1Renderer.h"
+#include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
 
 namespace
@@ -130,7 +131,7 @@ void Context::fogx(GLenum pname, GLfixed param)
 {
     if (GetFogParameterCount(pname) == 1)
     {
-        GLfloat paramf = pname == GL_FOG_MODE ? FixedToEnum(param) : FixedToFloat(param);
+        GLfloat paramf = pname == GL_FOG_MODE ? ConvertToGLenum(param) : FixedToFloat(param);
         fogf(pname, paramf);
     }
     else
@@ -148,7 +149,8 @@ void Context::fogxv(GLenum pname, const GLfixed *params)
         GLfloat paramsf[4];
         for (int i = 0; i < paramCount; i++)
         {
-            paramsf[i] = pname == GL_FOG_MODE ? FixedToEnum(params[i]) : FixedToFloat(params[i]);
+            paramsf[i] =
+                pname == GL_FOG_MODE ? ConvertToGLenum(params[i]) : FixedToFloat(params[i]);
         }
         fogfv(pname, paramsf);
     }
@@ -224,19 +226,23 @@ void Context::getMaterialxv(GLenum face, MaterialParameter pname, GLfixed *param
     }
 }
 
-void Context::getTexEnvfv(TextureEnvTarget env, TextureEnvParameter pname, GLfloat *params)
+void Context::getTexEnvfv(TextureEnvTarget target, TextureEnvParameter pname, GLfloat *params)
 {
-    UNIMPLEMENTED();
+    GetTextureEnv(mGLState.getActiveSampler(), &mGLState.gles1(), target, pname, params);
 }
 
-void Context::getTexEnviv(TextureEnvTarget env, TextureEnvParameter pname, GLint *params)
+void Context::getTexEnviv(TextureEnvTarget target, TextureEnvParameter pname, GLint *params)
 {
-    UNIMPLEMENTED();
+    GLfloat paramsf[4];
+    GetTextureEnv(mGLState.getActiveSampler(), &mGLState.gles1(), target, pname, paramsf);
+    ConvertTextureEnvToInt(pname, paramsf, params);
 }
 
 void Context::getTexEnvxv(TextureEnvTarget target, TextureEnvParameter pname, GLfixed *params)
 {
-    UNIMPLEMENTED();
+    GLfloat paramsf[4];
+    GetTextureEnv(mGLState.getActiveSampler(), &mGLState.gles1(), target, pname, paramsf);
+    ConvertTextureEnvToFixed(pname, paramsf, params);
 }
 
 void Context::getTexParameterxv(TextureType target, GLenum pname, GLfixed *params)
@@ -498,32 +504,40 @@ void Context::texCoordPointer(GLint size, GLenum type, GLsizei stride, const voi
 
 void Context::texEnvf(TextureEnvTarget target, TextureEnvParameter pname, GLfloat param)
 {
-    UNIMPLEMENTED();
+    SetTextureEnv(mGLState.getActiveSampler(), &mGLState.gles1(), target, pname, &param);
 }
 
 void Context::texEnvfv(TextureEnvTarget target, TextureEnvParameter pname, const GLfloat *params)
 {
-    UNIMPLEMENTED();
+    SetTextureEnv(mGLState.getActiveSampler(), &mGLState.gles1(), target, pname, params);
 }
 
 void Context::texEnvi(TextureEnvTarget target, TextureEnvParameter pname, GLint param)
 {
-    UNIMPLEMENTED();
+    GLfloat paramsf[4] = {};
+    ConvertTextureEnvFromInt(pname, &param, paramsf);
+    SetTextureEnv(mGLState.getActiveSampler(), &mGLState.gles1(), target, pname, paramsf);
 }
 
 void Context::texEnviv(TextureEnvTarget target, TextureEnvParameter pname, const GLint *params)
 {
-    UNIMPLEMENTED();
+    GLfloat paramsf[4] = {};
+    ConvertTextureEnvFromInt(pname, params, paramsf);
+    SetTextureEnv(mGLState.getActiveSampler(), &mGLState.gles1(), target, pname, paramsf);
 }
 
 void Context::texEnvx(TextureEnvTarget target, TextureEnvParameter pname, GLfixed param)
 {
-    UNIMPLEMENTED();
+    GLfloat paramsf[4] = {};
+    ConvertTextureEnvFromFixed(pname, &param, paramsf);
+    SetTextureEnv(mGLState.getActiveSampler(), &mGLState.gles1(), target, pname, paramsf);
 }
 
 void Context::texEnvxv(TextureEnvTarget target, TextureEnvParameter pname, const GLfixed *params)
 {
-    UNIMPLEMENTED();
+    GLfloat paramsf[4] = {};
+    ConvertTextureEnvFromFixed(pname, params, paramsf);
+    SetTextureEnv(mGLState.getActiveSampler(), &mGLState.gles1(), target, pname, paramsf);
 }
 
 void Context::texParameterx(TextureType target, GLenum pname, GLfixed param)

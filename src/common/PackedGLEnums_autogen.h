@@ -336,9 +336,21 @@ enum class TextureEnvParameter : uint8_t
     CombineAlpha = 3,
     RgbScale     = 4,
     AlphaScale   = 5,
+    Src0Rgb      = 6,
+    Src1Rgb      = 7,
+    Src2Rgb      = 8,
+    Src0Alpha    = 9,
+    Src1Alpha    = 10,
+    Src2Alpha    = 11,
+    Op0Rgb       = 12,
+    Op1Rgb       = 13,
+    Op2Rgb       = 14,
+    Op0Alpha     = 15,
+    Op1Alpha     = 16,
+    Op2Alpha     = 17,
 
-    InvalidEnum = 6,
-    EnumCount   = 6,
+    InvalidEnum = 18,
+    EnumCount   = 18,
 };
 
 template <>

@@ -840,6 +840,30 @@ TextureEnvParameter FromGLenum<TextureEnvParameter>(GLenum from)
             return TextureEnvParameter::RgbScale;
         case GL_ALPHA_SCALE:
             return TextureEnvParameter::AlphaScale;
+        case GL_SRC0_RGB:
+            return TextureEnvParameter::Src0Rgb;
+        case GL_SRC1_RGB:
+            return TextureEnvParameter::Src1Rgb;
+        case GL_SRC2_RGB:
+            return TextureEnvParameter::Src2Rgb;
+        case GL_SRC0_ALPHA:
+            return TextureEnvParameter::Src0Alpha;
+        case GL_SRC1_ALPHA:
+            return TextureEnvParameter::Src1Alpha;
+        case GL_SRC2_ALPHA:
+            return TextureEnvParameter::Src2Alpha;
+        case GL_OPERAND0_RGB:
+            return TextureEnvParameter::Op0Rgb;
+        case GL_OPERAND1_RGB:
+            return TextureEnvParameter::Op1Rgb;
+        case GL_OPERAND2_RGB:
+            return TextureEnvParameter::Op2Rgb;
+        case GL_OPERAND0_ALPHA:
+            return TextureEnvParameter::Op0Alpha;
+        case GL_OPERAND1_ALPHA:
+            return TextureEnvParameter::Op1Alpha;
+        case GL_OPERAND2_ALPHA:
+            return TextureEnvParameter::Op2Alpha;
         default:
             return TextureEnvParameter::InvalidEnum;
     }
@@ -861,6 +885,30 @@ GLenum ToGLenum(TextureEnvParameter from)
             return GL_RGB_SCALE;
         case TextureEnvParameter::AlphaScale:
             return GL_ALPHA_SCALE;
+        case TextureEnvParameter::Src0Rgb:
+            return GL_SRC0_RGB;
+        case TextureEnvParameter::Src1Rgb:
+            return GL_SRC1_RGB;
+        case TextureEnvParameter::Src2Rgb:
+            return GL_SRC2_RGB;
+        case TextureEnvParameter::Src0Alpha:
+            return GL_SRC0_ALPHA;
+        case TextureEnvParameter::Src1Alpha:
+            return GL_SRC1_ALPHA;
+        case TextureEnvParameter::Src2Alpha:
+            return GL_SRC2_ALPHA;
+        case TextureEnvParameter::Op0Rgb:
+            return GL_OPERAND0_RGB;
+        case TextureEnvParameter::Op1Rgb:
+            return GL_OPERAND1_RGB;
+        case TextureEnvParameter::Op2Rgb:
+            return GL_OPERAND2_RGB;
+        case TextureEnvParameter::Op0Alpha:
+            return GL_OPERAND0_ALPHA;
+        case TextureEnvParameter::Op1Alpha:
+            return GL_OPERAND1_ALPHA;
+        case TextureEnvParameter::Op2Alpha:
+            return GL_OPERAND2_ALPHA;
         default:
             UNREACHABLE();
             return 0;

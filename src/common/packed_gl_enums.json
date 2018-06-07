@@ -141,7 +141,19 @@
         "CombineRgb": "GL_COMBINE_RGB",
         "CombineAlpha": "GL_COMBINE_ALPHA",
         "RgbScale": "GL_RGB_SCALE",
-        "AlphaScale": "GL_ALPHA_SCALE"
+        "AlphaScale": "GL_ALPHA_SCALE",
+        "Src0Rgb": "GL_SRC0_RGB",
+        "Src1Rgb": "GL_SRC1_RGB",
+        "Src2Rgb": "GL_SRC2_RGB",
+        "Src0Alpha": "GL_SRC0_ALPHA",
+        "Src1Alpha": "GL_SRC1_ALPHA",
+        "Src2Alpha": "GL_SRC2_ALPHA",
+        "Op0Rgb": "GL_OPERAND0_RGB",
+        "Op1Rgb": "GL_OPERAND1_RGB",
+        "Op2Rgb": "GL_OPERAND2_RGB",
+        "Op0Alpha": "GL_OPERAND0_ALPHA",
+        "Op1Alpha": "GL_OPERAND1_ALPHA",
+        "Op2Alpha": "GL_OPERAND2_ALPHA"
     },
     "TextureOp":
     {

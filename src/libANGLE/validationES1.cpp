@@ -12,6 +12,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/ErrorStrings.h"
 #include "libANGLE/GLES1State.h"
+#include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationES.h"
 
@@ -368,6 +369,172 @@ bool ValidateFogCommon(Context *context, GLenum pname, const GLfloat *params)
     return true;
 }
 
+bool ValidateTexEnvCommon(Context *context,
+                          TextureEnvTarget target,
+                          TextureEnvParameter pname,
+                          const GLfloat *params)
+{
+    ANGLE_VALIDATE_IS_GLES1(context);
+
+    if (target != TextureEnvTarget::Env)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureEnvTarget);
+        return false;
+    }
+
+    switch (pname)
+    {
+        case TextureEnvParameter::Mode:
+        {
+            TextureEnvMode mode = FromGLenum<TextureEnvMode>(ConvertToGLenum(params[0]));
+            switch (mode)
+            {
+                case TextureEnvMode::Add:
+                case TextureEnvMode::Blend:
+                case TextureEnvMode::Combine:
+                case TextureEnvMode::Decal:
+                case TextureEnvMode::Modulate:
+                case TextureEnvMode::Replace:
+                    break;
+                default:
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureEnvMode);
+                    return false;
+            }
+            break;
+        }
+        case TextureEnvParameter::CombineRgb:
+        case TextureEnvParameter::CombineAlpha:
+        {
+            TextureCombine combine = FromGLenum<TextureCombine>(ConvertToGLenum(params[0]));
+            switch (combine)
+            {
+                case TextureCombine::Add:
+                case TextureCombine::AddSigned:
+                case TextureCombine::Interpolate:
+                case TextureCombine::Modulate:
+                case TextureCombine::Replace:
+                case TextureCombine::Subtract:
+                    break;
+                case TextureCombine::Dot3Rgb:
+                case TextureCombine::Dot3Rgba:
+                    if (pname == TextureEnvParameter::CombineAlpha)
+                    {
+                        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombine);
+                        return false;
+                    }
+                    break;
+                default:
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombine);
+                    return false;
+            }
+            break;
+        }
+        case TextureEnvParameter::Src0Rgb:
+        case TextureEnvParameter::Src1Rgb:
+        case TextureEnvParameter::Src2Rgb:
+        case TextureEnvParameter::Src0Alpha:
+        case TextureEnvParameter::Src1Alpha:
+        case TextureEnvParameter::Src2Alpha:
+        {
+            TextureSrc combine = FromGLenum<TextureSrc>(ConvertToGLenum(params[0]));
+            switch (combine)
+            {
+                case TextureSrc::Constant:
+                case TextureSrc::Previous:
+                case TextureSrc::PrimaryColor:
+                case TextureSrc::Texture:
+                    break;
+                default:
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombineSrc);
+                    return false;
+            }
+            break;
+        }
+        case TextureEnvParameter::Op0Rgb:
+        case TextureEnvParameter::Op1Rgb:
+        case TextureEnvParameter::Op2Rgb:
+        case TextureEnvParameter::Op0Alpha:
+        case TextureEnvParameter::Op1Alpha:
+        case TextureEnvParameter::Op2Alpha:
+        {
+            TextureOp operand = FromGLenum<TextureOp>(ConvertToGLenum(params[0]));
+            switch (operand)
+            {
+                case TextureOp::SrcAlpha:
+                case TextureOp::OneMinusSrcAlpha:
+                    break;
+                case TextureOp::SrcColor:
+                case TextureOp::OneMinusSrcColor:
+                    if (pname == TextureEnvParameter::Op0Alpha ||
+                        pname == TextureEnvParameter::Op1Alpha ||
+                        pname == TextureEnvParameter::Op2Alpha)
+                    {
+                        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombine);
+                        return false;
+                    }
+                    break;
+                default:
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombineOp);
+                    return false;
+            }
+            break;
+        }
+        case TextureEnvParameter::RgbScale:
+        case TextureEnvParameter::AlphaScale:
+            if (params[0] != 1.0f && params[0] != 2.0f && params[0] != 4.0f)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureEnvScale);
+                return false;
+            }
+            break;
+        case TextureEnvParameter::Color:
+            break;
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureEnvParameter);
+            return false;
+    }
+    return true;
+}
+
+bool ValidateGetTexEnvCommon(Context *context, TextureEnvTarget target, TextureEnvParameter pname)
+{
+    GLfloat dummy[4] = {};
+    switch (pname)
+    {
+        case TextureEnvParameter::Mode:
+            ConvertPackedEnum(TextureEnvMode::Add, dummy);
+            break;
+        case TextureEnvParameter::CombineRgb:
+        case TextureEnvParameter::CombineAlpha:
+            ConvertPackedEnum(TextureCombine::Add, dummy);
+            break;
+        case TextureEnvParameter::Src0Rgb:
+        case TextureEnvParameter::Src1Rgb:
+        case TextureEnvParameter::Src2Rgb:
+        case TextureEnvParameter::Src0Alpha:
+        case TextureEnvParameter::Src1Alpha:
+        case TextureEnvParameter::Src2Alpha:
+            ConvertPackedEnum(TextureSrc::Constant, dummy);
+            break;
+        case TextureEnvParameter::Op0Rgb:
+        case TextureEnvParameter::Op1Rgb:
+        case TextureEnvParameter::Op2Rgb:
+        case TextureEnvParameter::Op0Alpha:
+        case TextureEnvParameter::Op1Alpha:
+        case TextureEnvParameter::Op2Alpha:
+            ConvertPackedEnum(TextureOp::SrcAlpha, dummy);
+            break;
+        case TextureEnvParameter::RgbScale:
+        case TextureEnvParameter::AlphaScale:
+            dummy[0] = 1.0f;
+            break;
+        default:
+            break;
+    }
+
+    return ValidateTexEnvCommon(context, target, pname, dummy);
+}
+
 }  // namespace gl
 
 namespace gl
@@ -592,8 +759,7 @@ bool ValidateGetTexEnvfv(Context *context,
                          TextureEnvParameter pname,
                          GLfloat *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateGetTexEnvCommon(context, target, pname);
 }
 
 bool ValidateGetTexEnviv(Context *context,
@@ -601,8 +767,7 @@ bool ValidateGetTexEnviv(Context *context,
                          TextureEnvParameter pname,
                          GLint *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateGetTexEnvCommon(context, target, pname);
 }
 
 bool ValidateGetTexEnvxv(Context *context,
@@ -610,8 +775,7 @@ bool ValidateGetTexEnvxv(Context *context,
                          TextureEnvParameter pname,
                          GLfixed *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateGetTexEnvCommon(context, target, pname);
 }
 
 bool ValidateGetTexParameterxv(Context *context, TextureType target, GLenum pname, GLfixed *params)
@@ -953,8 +1117,7 @@ bool ValidateTexEnvf(Context *context,
                      TextureEnvParameter pname,
                      GLfloat param)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateTexEnvCommon(context, target, pname, &param);
 }
 
 bool ValidateTexEnvfv(Context *context,
@@ -962,8 +1125,7 @@ bool ValidateTexEnvfv(Context *context,
                       TextureEnvParameter pname,
                       const GLfloat *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateTexEnvCommon(context, target, pname, params);
 }
 
 bool ValidateTexEnvi(Context *context,
@@ -971,8 +1133,8 @@ bool ValidateTexEnvi(Context *context,
                      TextureEnvParameter pname,
                      GLint param)
 {
-    UNIMPLEMENTED();
-    return true;
+    GLfloat paramf = static_cast<GLfloat>(param);
+    return ValidateTexEnvCommon(context, target, pname, &paramf);
 }
 
 bool ValidateTexEnviv(Context *context,
@@ -980,8 +1142,12 @@ bool ValidateTexEnviv(Context *context,
                       TextureEnvParameter pname,
                       const GLint *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    GLfloat paramsf[4];
+    for (unsigned int i = 0; i < GetTextureEnvParameterCount(pname); i++)
+    {
+        paramsf[i] = static_cast<GLfloat>(params[i]);
+    }
+    return ValidateTexEnvCommon(context, target, pname, paramsf);
 }
 
 bool ValidateTexEnvx(Context *context,
@@ -989,8 +1155,8 @@ bool ValidateTexEnvx(Context *context,
                      TextureEnvParameter pname,
                      GLfixed param)
 {
-    UNIMPLEMENTED();
-    return true;
+    GLfloat paramf = static_cast<GLfloat>(param);
+    return ValidateTexEnvCommon(context, target, pname, &paramf);
 }
 
 bool ValidateTexEnvxv(Context *context,
@@ -998,8 +1164,12 @@ bool ValidateTexEnvxv(Context *context,
                       TextureEnvParameter pname,
                       const GLfixed *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    GLfloat paramsf[4];
+    for (unsigned int i = 0; i < GetTextureEnvParameterCount(pname); i++)
+    {
+        paramsf[i] = static_cast<GLfloat>(params[i]);
+    }
+    return ValidateTexEnvCommon(context, target, pname, paramsf);
 }
 
 bool ValidateTexParameterx(Context *context, TextureType target, GLenum pname, GLfixed param)

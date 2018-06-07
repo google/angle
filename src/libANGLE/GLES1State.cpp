@@ -394,4 +394,16 @@ const FogParameters &GLES1State::fogParameters() const
     return mFog;
 }
 
+TextureEnvironmentParameters &GLES1State::textureEnvironment(unsigned int unit)
+{
+    assert(unit < mTextureEnvironments.size());
+    return mTextureEnvironments[unit];
+}
+
+const TextureEnvironmentParameters &GLES1State::textureEnvironment(unsigned int unit) const
+{
+    assert(unit < mTextureEnvironments.size());
+    return mTextureEnvironments[unit];
+}
+
 }  // namespace gl
