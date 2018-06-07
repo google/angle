@@ -641,6 +641,15 @@ TType GetShaderVariableBasicType(const sh::ShaderVariable &var)
     }
 }
 
+void DeclareGlobalVariable(TIntermBlock *root, const TVariable *variable)
+{
+    TIntermDeclaration *declaration = new TIntermDeclaration();
+    declaration->appendDeclarator(new TIntermSymbol(variable));
+
+    TIntermSequence *globalSequence = root->getSequence();
+    globalSequence->insert(globalSequence->begin(), declaration);
+}
+
 // GLSL ES 1.0.17 4.6.1 The Invariant Qualifier
 bool CanBeInvariantESSL1(TQualifier qualifier)
 {

@@ -23,6 +23,7 @@ bool atoi_clamp(const char *str, unsigned int *value);
 
 namespace sh
 {
+class TIntermBlock;
 class TSymbolTable;
 
 float NumericLexFloat32OutOfRangeToInfinity(const std::string &str);
@@ -50,6 +51,8 @@ TString ArrayString(const TType &type);
 ImmutableString GetTypeName(const TType &type, ShHashFunction64 hashFunction, NameMap *nameMap);
 
 TType GetShaderVariableBasicType(const sh::ShaderVariable &var);
+
+void DeclareGlobalVariable(TIntermBlock *root, const TVariable *variable);
 
 bool IsBuiltinOutputVariable(TQualifier qualifier);
 bool IsBuiltinFragmentInputVariable(TQualifier qualifier);

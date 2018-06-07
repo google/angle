@@ -13,6 +13,15 @@
 
 using namespace angle;
 
+constexpr char kVertexShaderSource[] =
+    R"(attribute vec4 vPosition;
+        uniform float uPointSize;
+        void main()
+        {
+            gl_PointSize = uPointSize;
+            gl_Position  = vPosition;
+        })";
+
 class PointSpritesTest : public ANGLETest
 {
   protected:
@@ -31,6 +40,79 @@ class PointSpritesTest : public ANGLETest
     virtual void SetUp() { ANGLETest::SetUp(); }
 
     float s2p(float s) { return (s + 1.0f) * 0.5f * (GLfloat)windowWidth; }
+
+    void testPointCoordAndPointSizeCompliance(priv::GLProgram program)
+    {
+        glUseProgram(program);
+
+        GLfloat pointSizeRange[2] = {};
+        glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
+
+        GLfloat maxPointSize = pointSizeRange[1];
+
+        ASSERT_TRUE(maxPointSize >= 1);
+        maxPointSize = floorf(maxPointSize);
+        ASSERT_TRUE((int)maxPointSize % 1 == 0);
+
+        maxPointSize       = std::min(maxPointSize, 64.0f);
+        GLfloat pointWidth = maxPointSize / windowWidth;
+        GLint step         = static_cast<GLint>(floorf(maxPointSize / 4));
+        GLint pointStep    = std::max<GLint>(1, step);
+
+        GLint pointSizeLoc = glGetUniformLocation(program, "uPointSize");
+        ASSERT_GL_NO_ERROR();
+
+        glUniform1f(pointSizeLoc, maxPointSize);
+        ASSERT_GL_NO_ERROR();
+
+        GLfloat pixelOffset = ((int)maxPointSize % 2) ? (1.0f / (GLfloat)windowWidth) : 0;
+        GLBuffer vertexObject;
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexObject.get());
+        ASSERT_GL_NO_ERROR();
+
+        GLfloat thePoints[] = {-0.5f + pixelOffset, -0.5f + pixelOffset, 0.5f + pixelOffset,
+                               -0.5f + pixelOffset, -0.5f + pixelOffset, 0.5f + pixelOffset,
+                               0.5f + pixelOffset,  0.5f + pixelOffset};
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(thePoints), thePoints, GL_STATIC_DRAW);
+        ASSERT_GL_NO_ERROR();
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glDrawArrays(GL_POINTS, 0, 4);
+        ASSERT_GL_NO_ERROR();
+
+        for (float py = 0; py < 2; ++py)
+        {
+            for (float px = 0; px < 2; ++px)
+            {
+                float pointX = -0.5f + px + pixelOffset;
+                float pointY = -0.5f + py + pixelOffset;
+                for (int yy = 0; yy < maxPointSize; yy += pointStep)
+                {
+                    for (int xx = 0; xx < maxPointSize; xx += pointStep)
+                    {
+                        // formula for s and t from OpenGL ES 2.0 spec section 3.3
+                        float xw         = s2p(pointX);
+                        float yw         = s2p(pointY);
+                        float u          = xx / maxPointSize * 2 - 1;
+                        float v          = yy / maxPointSize * 2 - 1;
+                        int xf           = static_cast<int>(floorf(s2p(pointX + u * pointWidth)));
+                        int yf           = static_cast<int>(floorf(s2p(pointY + v * pointWidth)));
+                        float s          = 0.5f + (xf + 0.5f - xw) / maxPointSize;
+                        float t          = 0.5f + (yf + 0.5f - yw) / maxPointSize;
+                        GLubyte color[4] = {static_cast<GLubyte>(floorf(s * 255)),
+                                            static_cast<GLubyte>(floorf((1 - t) * 255)), 0, 255};
+                        EXPECT_PIXEL_NEAR(xf, yf, color[0], color[1], color[2], color[3], 4);
+                    }
+                }
+            }
+        }
+    }
 };
 
 // Checks gl_PointCoord and gl_PointSize
@@ -41,98 +123,43 @@ TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
     // http://anglebug.com/1643
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
 
-    // TODO: Point coord not yet implemented in Vulkan.
-    // http://anglebug.com/2457
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
-    const std::string fs =
+    constexpr char fs[] =
         R"(precision mediump float;
         void main()
         {
             gl_FragColor = vec4(gl_PointCoord.x, gl_PointCoord.y, 0, 1);
         })";
 
-    const std::string vs =
-        R"(attribute vec4 vPosition;
-        uniform float uPointSize;
+    ANGLE_GL_PROGRAM(program, kVertexShaderSource, fs);
+
+    testPointCoordAndPointSizeCompliance(program);
+}
+
+// Checks gl_PointCoord and gl_PointSize, but use the gl_PointCoord inside a function.
+// In Vulkan, we need to inject some code into the shader to flip the Y coordinate, and we
+// need to make sure this code injection works even if someone uses gl_PointCoord outside the
+// main function.
+TEST_P(PointSpritesTest, UsingPointCoordInsideFunction)
+{
+    // TODO(jmadill): Investigate potential AMD driver bug.
+    // http://anglebug.com/1643
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
+
+    constexpr char fs[] =
+        R"(precision mediump float;
+        void foo() 
+        {
+            gl_FragColor = vec4(gl_PointCoord.x, gl_PointCoord.y, 0, 1);
+        }
+
         void main()
         {
-            gl_PointSize = uPointSize;
-            gl_Position  = vPosition;
+            foo();
         })";
 
-    ANGLE_GL_PROGRAM(program, vs, fs);
+    ANGLE_GL_PROGRAM(program, kVertexShaderSource, fs);
 
-    glUseProgram(program);
-
-    GLfloat pointSizeRange[2] = {};
-    glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
-
-    GLfloat maxPointSize = pointSizeRange[1];
-
-    ASSERT_TRUE(maxPointSize >= 1);
-    maxPointSize = floorf(maxPointSize);
-    ASSERT_TRUE((int)maxPointSize % 1 == 0);
-
-    maxPointSize       = std::min(maxPointSize, 64.0f);
-    GLfloat pointWidth = maxPointSize / windowWidth;
-    GLint step         = static_cast<GLint>(floorf(maxPointSize / 4));
-    GLint pointStep    = std::max<GLint>(1, step);
-
-    GLint pointSizeLoc = glGetUniformLocation(program, "uPointSize");
-    ASSERT_GL_NO_ERROR();
-
-    glUniform1f(pointSizeLoc, maxPointSize);
-    ASSERT_GL_NO_ERROR();
-
-    GLfloat pixelOffset = ((int)maxPointSize % 2) ? (1.0f / (GLfloat)windowWidth) : 0;
-    GLBuffer vertexObject;
-
-    glBindBuffer(GL_ARRAY_BUFFER, vertexObject.get());
-    ASSERT_GL_NO_ERROR();
-
-    GLfloat thePoints[] = {-0.5f + pixelOffset, -0.5f + pixelOffset, 0.5f + pixelOffset,
-                           -0.5f + pixelOffset, -0.5f + pixelOffset, 0.5f + pixelOffset,
-                           0.5f + pixelOffset,  0.5f + pixelOffset};
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(thePoints), thePoints, GL_STATIC_DRAW);
-    ASSERT_GL_NO_ERROR();
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glDrawArrays(GL_POINTS, 0, 4);
-    ASSERT_GL_NO_ERROR();
-
-    std::string debugText;
-    for (float py = 0; py < 2; ++py)
-    {
-        for (float px = 0; px < 2; ++px)
-        {
-            float pointX = -0.5f + px + pixelOffset;
-            float pointY = -0.5f + py + pixelOffset;
-            for (int yy = 0; yy < maxPointSize; yy += pointStep)
-            {
-                for (int xx = 0; xx < maxPointSize; xx += pointStep)
-                {
-                    // formula for s and t from OpenGL ES 2.0 spec section 3.3
-                    float xw         = s2p(pointX);
-                    float yw         = s2p(pointY);
-                    float u          = xx / maxPointSize * 2 - 1;
-                    float v          = yy / maxPointSize * 2 - 1;
-                    int xf           = static_cast<int>(floorf(s2p(pointX + u * pointWidth)));
-                    int yf           = static_cast<int>(floorf(s2p(pointY + v * pointWidth)));
-                    float s          = 0.5f + (xf + 0.5f - xw) / maxPointSize;
-                    float t          = 0.5f + (yf + 0.5f - yw) / maxPointSize;
-                    GLubyte color[4] = {static_cast<GLubyte>(floorf(s * 255)),
-                                        static_cast<GLubyte>(floorf((1 - t) * 255)), 0, 255};
-                    EXPECT_PIXEL_NEAR(xf, yf, color[0], color[1], color[2], color[3], 4);
-                }
-            }
-        }
-    }
+    testPointCoordAndPointSizeCompliance(program);
 }
 
 // Verify that drawing a point without enabling any attributes succeeds

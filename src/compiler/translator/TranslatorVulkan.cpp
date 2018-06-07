@@ -19,6 +19,8 @@
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
 #include "compiler/translator/util.h"
+#include "tree_util/FindMain.h"
+#include "tree_util/ReplaceVariable.h"
 
 namespace sh
 {
@@ -139,6 +141,68 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
     NameMap *mNameMap;
     bool mInDefaultUniform;
 };
+
+constexpr ImmutableString kFlippedPointCoordName = ImmutableString("flippedPointCoord");
+
+// Declares a new variable to replace gl_PointCoord with a version that is flipping the Y
+// coordinate.
+void FlipGLPointCoordinates(TIntermBlock *root, TSymbolTable *symbolTable)
+{
+    // Create a symbol reference to "gl_PointCoord"
+    const TVariable *pointCoord  = BuiltInVariable::gl_PointCoord();
+    TIntermSymbol *pointCoordRef = new TIntermSymbol(pointCoord);
+
+    // Create a swizzle to "gl_PointCoord.x"
+    TVector<int> swizzleOffsetX;
+    swizzleOffsetX.push_back(0);
+    TIntermSwizzle *pointCoordX = new TIntermSwizzle(pointCoordRef, swizzleOffsetX);
+
+    // Create a swizzle to "gl_PointCoord.y"
+    TVector<int> swizzleOffsetY;
+    swizzleOffsetY.push_back(1);
+    TIntermSwizzle *pointCoordY = new TIntermSwizzle(pointCoordRef, swizzleOffsetY);
+
+    // Create a symbol reference to our new variable that will hold the modified gl_PointCoord.
+    TVariable *replacementVar =
+        new TVariable(symbolTable, kFlippedPointCoordName,
+                      StaticType::Helpers::GetForVecMatHelper<EbtFloat, EbpMedium, EvqGlobal, 1>(2),
+                      SymbolType::UserDefined);
+    DeclareGlobalVariable(root, replacementVar);
+    TIntermSymbol *flippedPointCoordsRef = new TIntermSymbol(replacementVar);
+
+    // Create a constant "-1.0"
+    const TType *constantType             = StaticType::GetBasic<EbtFloat>();
+    TConstantUnion *constantValueMinusOne = new TConstantUnion();
+    constantValueMinusOne->setFConst(-1.0f);
+    TIntermConstantUnion *minusOne = new TIntermConstantUnion(constantValueMinusOne, *constantType);
+
+    // Create a constant "1.0"
+    TConstantUnion *constantValueOne = new TConstantUnion();
+    constantValueOne->setFConst(1.0f);
+    TIntermConstantUnion *one = new TIntermConstantUnion(constantValueOne, *constantType);
+
+    // Create the expression "gl_PointCoord.y * -1.0 + 1.0"
+    TIntermBinary *inverseY = new TIntermBinary(EOpMul, pointCoordY, minusOne);
+    TIntermBinary *plusOne  = new TIntermBinary(EOpAdd, inverseY, one);
+
+    // Create the new vec2 using the modified Y
+    TIntermSequence *sequence = new TIntermSequence();
+    sequence->push_back(pointCoordX);
+    sequence->push_back(plusOne);
+    TIntermAggregate *aggregate =
+        TIntermAggregate::CreateConstructor(BuiltInVariable::gl_PointCoord()->getType(), sequence);
+
+    // Use this new variable instead of gl_PointCoord everywhere.
+    ReplaceVariable(root, pointCoord, replacementVar);
+
+    // Assign this new value to flippedPointCoord
+    TIntermBinary *assignment = new TIntermBinary(EOpInitialize, flippedPointCoordsRef, aggregate);
+
+    // Add this assigment at the beginning of the main function
+    TIntermFunctionDefinition *main = FindMain(root);
+    TIntermSequence *mainSequence   = main->getBody()->getSequence();
+    mainSequence->insert(mainSequence->begin(), assignment);
+}
 
 // This operation performs the viewport depth translation needed by Vulkan. In GL the viewport
 // transformation is slightly different - see the GL 2.0 spec section "2.12.1 Controlling the
@@ -270,6 +334,21 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         if (hasGLFragData)
         {
             sink << "layout(location = 0) out vec4 webgl_FragData[gl_MaxDrawBuffers];\n";
+        }
+
+        // Search for the gl_PointCoord usage, if its used, we need to flip the y coordinate.
+        for (const Varying &inputVarying : inputVaryings)
+        {
+            if (!inputVarying.isBuiltIn())
+            {
+                continue;
+            }
+
+            if (inputVarying.name == "gl_PointCoord")
+            {
+                FlipGLPointCoordinates(root, &getSymbolTable());
+                break;
+            }
         }
     }
     else
