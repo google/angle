@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1506d26f_d19d281b",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-07T18:26:05Z",
+      "side": 1,
+      "message": "I think for std::shared_ptr, you want to pass it by const \u0026. The copy constructor will handle the rest. Otherwise you might be allocating a temporary shared_ptr just for the stack. This is in a few places.",
+      "range": {
+        "startLine": 32,
+        "startChar": 45,
+        "endLine": 32,
+        "endChar": 81
+      },
+      "revId": "7f353e2ccf6403d2653d1e7fa33437fa31ba48b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
