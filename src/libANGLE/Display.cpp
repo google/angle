@@ -16,8 +16,8 @@
 #include <sstream>
 #include <vector>
 
-#include <platform/Platform.h>
 #include <EGL/eglext.h>
+#include <platform/Platform.h>
 
 #include "common/debug.h"
 #include "common/mathutil.h"
@@ -36,23 +36,23 @@
 #include "third_party/trace_event/trace_event.h"
 
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
-#   include "libANGLE/renderer/d3d/DisplayD3D.h"
+#include "libANGLE/renderer/d3d/DisplayD3D.h"
 #endif
 
 #if defined(ANGLE_ENABLE_OPENGL)
-#   if defined(ANGLE_PLATFORM_WINDOWS)
-#       include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
-#   elif defined(ANGLE_USE_X11)
-#       include "libANGLE/renderer/gl/glx/DisplayGLX.h"
-#   elif defined(ANGLE_PLATFORM_APPLE)
-#       include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
-#   elif defined(ANGLE_USE_OZONE)
-#       include "libANGLE/renderer/gl/egl/ozone/DisplayOzone.h"
-#   elif defined(ANGLE_PLATFORM_ANDROID)
-#       include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
-#   else
-#       error Unsupported OpenGL platform.
-#   endif
+#if defined(ANGLE_PLATFORM_WINDOWS)
+#include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
+#elif defined(ANGLE_USE_X11)
+#include "libANGLE/renderer/gl/glx/DisplayGLX.h"
+#elif defined(ANGLE_PLATFORM_APPLE)
+#include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
+#elif defined(ANGLE_USE_OZONE)
+#include "libANGLE/renderer/gl/egl/ozone/DisplayOzone.h"
+#elif defined(ANGLE_PLATFORM_ANDROID)
+#include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
+#else
+#error Unsupported OpenGL platform.
+#endif
 #endif
 
 #if defined(ANGLE_ENABLE_NULL)
@@ -77,7 +77,7 @@ namespace egl
 namespace
 {
 
-typedef std::map<EGLNativeWindowType, Surface*> WindowSurfaceMap;
+typedef std::map<EGLNativeWindowType, Surface *> WindowSurfaceMap;
 // Get a map of all EGL window surfaces to validate that no window has more than one EGL surface
 // associated with it.
 static WindowSurfaceMap *GetWindowSurfaces()
@@ -592,7 +592,7 @@ Error Display::terminate()
     return NoError();
 }
 
-std::vector<const Config*> Display::getConfigs(const egl::AttributeMap &attribs) const
+std::vector<const Config *> Display::getConfigs(const egl::AttributeMap &attribs) const
 {
     return mConfigSet.filter(attribs);
 }
@@ -825,7 +825,8 @@ Error Display::restoreLostDevice()
     {
         if ((*ctx)->isResetNotificationEnabled())
         {
-            // If reset notifications have been requested, application must delete all contexts first
+            // If reset notifications have been requested, application must delete all contexts
+            // first
             return EglContextLost();
         }
     }
@@ -841,7 +842,8 @@ Error Display::destroySurface(Surface *surface)
         ASSERT(windowSurfaces);
 
         bool surfaceRemoved = false;
-        for (WindowSurfaceMap::iterator iter = windowSurfaces->begin(); iter != windowSurfaces->end(); iter++)
+        for (WindowSurfaceMap::iterator iter = windowSurfaces->begin();
+             iter != windowSurfaces->end(); iter++)
         {
             if (iter->second == surface)
             {
@@ -919,7 +921,8 @@ void Display::notifyDeviceLost()
         return;
     }
 
-    for (ContextSet::iterator context = mContextSet.begin(); context != mContextSet.end(); context++)
+    for (ContextSet::iterator context = mContextSet.begin(); context != mContextSet.end();
+         context++)
     {
         (*context)->markContextLost();
     }
@@ -985,8 +988,8 @@ static ClientExtensions GenerateClientExtensions()
     ClientExtensions extensions;
 
     extensions.clientExtensions = true;
-    extensions.platformBase = true;
-    extensions.platformANGLE = true;
+    extensions.platformBase     = true;
+    extensions.platformANGLE    = true;
 
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
     extensions.platformANGLED3D = true;
@@ -1002,8 +1005,8 @@ static ClientExtensions GenerateClientExtensions()
 #endif
 
 #if defined(ANGLE_ENABLE_D3D11)
-    extensions.deviceCreation      = true;
-    extensions.deviceCreationD3D11 = true;
+    extensions.deviceCreation          = true;
+    extensions.deviceCreationD3D11     = true;
     extensions.experimentalPresentPath = true;
 #endif
 
@@ -1027,7 +1030,8 @@ static std::string GenerateExtensionsString(const T &extensions)
     std::vector<std::string> extensionsVector = extensions.getStrings();
 
     std::ostringstream stream;
-    std::copy(extensionsVector.begin(), extensionsVector.end(), std::ostream_iterator<std::string>(stream, " "));
+    std::copy(extensionsVector.begin(), extensionsVector.end(),
+              std::ostream_iterator<std::string>(stream, " "));
     return stream.str();
 }
 
@@ -1051,9 +1055,9 @@ void Display::initDisplayExtensions()
     mDisplayExtensions = mImplementation->getExtensions();
 
     // Some extensions are always available because they are implemented in the EGL layer.
-    mDisplayExtensions.createContext        = true;
-    mDisplayExtensions.createContextNoError = true;
-    mDisplayExtensions.createContextWebGLCompatibility = true;
+    mDisplayExtensions.createContext                      = true;
+    mDisplayExtensions.createContextNoError               = true;
+    mDisplayExtensions.createContextWebGLCompatibility    = true;
     mDisplayExtensions.createContextBindGeneratesResource = true;
     mDisplayExtensions.createContextClientArrays          = true;
     mDisplayExtensions.pixelFormatFloat                   = true;
@@ -1115,8 +1119,7 @@ bool Display::isValidNativeDisplay(EGLNativeDisplayType display)
     }
 
 #if defined(ANGLE_PLATFORM_WINDOWS) && !defined(ANGLE_ENABLE_WINDOWS_STORE)
-    if (display == EGL_SOFTWARE_DISPLAY_ANGLE ||
-        display == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
+    if (display == EGL_SOFTWARE_DISPLAY_ANGLE || display == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
         display == EGL_D3D11_ONLY_DISPLAY_ANGLE)
     {
         return true;

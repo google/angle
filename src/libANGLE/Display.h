@@ -181,7 +181,7 @@ class Display final : angle::NonCopyable
 
     ConfigSet mConfigSet;
 
-    typedef std::set<gl::Context*> ContextSet;
+    typedef std::set<gl::Context *> ContextSet;
     ContextSet mContextSet;
 
     typedef std::set<Image *> ImageSet;
@@ -215,4 +215,4 @@ class Display final : angle::NonCopyable
 
 }  // namespace egl
 
-#endif   // LIBANGLE_DISPLAY_H_
+#endif  // LIBANGLE_DISPLAY_H_

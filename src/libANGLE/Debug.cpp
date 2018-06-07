@@ -312,14 +312,14 @@ void Debug::pushDefaultGroup()
     c0.source   = GL_DONT_CARE;
     c0.type     = GL_DONT_CARE;
     c0.severity = GL_DONT_CARE;
-    c0.enabled = true;
+    c0.enabled  = true;
     g.controls.push_back(std::move(c0));
 
     Control c1;
     c1.source   = GL_DONT_CARE;
     c1.type     = GL_DONT_CARE;
     c1.severity = GL_DEBUG_SEVERITY_LOW;
-    c1.enabled = false;
+    c1.enabled  = false;
     g.controls.push_back(std::move(c1));
 
     mGroups.push_back(std::move(g));

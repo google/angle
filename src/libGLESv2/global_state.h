@@ -26,4 +26,4 @@ Thread *GetCurrentThread();
 
 }  // namespace egl
 
-#endif // LIBGLESV2_GLOBALSTATE_H_
+#endif  // LIBGLESV2_GLOBALSTATE_H_

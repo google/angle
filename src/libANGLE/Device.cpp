@@ -11,8 +11,8 @@
 
 #include <iterator>
 
-#include <platform/Platform.h>
 #include <EGL/eglext.h>
+#include <platform/Platform.h>
 
 #include "common/debug.h"
 #include "common/platform.h"
@@ -31,7 +31,8 @@ static std::string GenerateExtensionsString(const T &extensions)
     std::vector<std::string> extensionsVector = extensions.getStrings();
 
     std::ostringstream stream;
-    std::copy(extensionsVector.begin(), extensionsVector.end(), std::ostream_iterator<std::string>(stream, " "));
+    std::copy(extensionsVector.begin(), extensionsVector.end(),
+              std::ostream_iterator<std::string>(stream, " "));
     return stream.str();
 }
 
@@ -92,8 +93,8 @@ Device::~Device()
 Error Device::getDevice(EGLAttrib *value)
 {
     void *nativeDevice = nullptr;
-    egl::Error error = getImplementation()->getDevice(&nativeDevice);
-    *value = reinterpret_cast<EGLAttrib>(nativeDevice);
+    egl::Error error   = getImplementation()->getDevice(&nativeDevice);
+    *value             = reinterpret_cast<EGLAttrib>(nativeDevice);
     return error;
 }
 
@@ -117,5 +118,4 @@ const std::string &Device::getExtensionString() const
 {
     return mDeviceExtensionString;
 }
-
 }

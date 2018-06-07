@@ -11,8 +11,8 @@
 #define LIBANGLE_DEVICE_H_
 
 #include "common/angleutils.h"
-#include "libANGLE/Error.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/Error.h"
 
 #include <memory>
 
@@ -50,7 +50,6 @@ class Device final : angle::NonCopyable
     DeviceExtensions mDeviceExtensions;
     std::string mDeviceExtensionString;
 };
-
 }
 
-#endif   // LIBANGLE_DEVICE_H_
+#endif  // LIBANGLE_DEVICE_H_

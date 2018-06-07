@@ -715,13 +715,13 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     compressedEACR11SignedTexture    = DetermineEACR11SignedTextureSupport(textureCaps);
     compressedEACRG11UnsignedTexture = DetermineEACRG11UnsignedTextureSupport(textureCaps);
     compressedEACRG11SignedTexture   = DetermineEACRG11SignedTextureSupport(textureCaps);
-    sRGB                       = DetermineSRGBTextureSupport(textureCaps);
-    depthTextures              = DetermineDepthTextureSupport(textureCaps);
-    depth32                    = DetermineDepth32Support(textureCaps);
-    colorBufferFloatRGB        = DetermineColorBufferFloatRGBSupport(textureCaps);
-    colorBufferFloatRGBA       = DetermineColorBufferFloatRGBASupport(textureCaps);
-    colorBufferFloat           = DetermineColorBufferFloatSupport(textureCaps);
-    textureNorm16              = DetermineTextureNorm16Support(textureCaps);
+    sRGB                             = DetermineSRGBTextureSupport(textureCaps);
+    depthTextures                    = DetermineDepthTextureSupport(textureCaps);
+    depth32                          = DetermineDepth32Support(textureCaps);
+    colorBufferFloatRGB              = DetermineColorBufferFloatRGBSupport(textureCaps);
+    colorBufferFloatRGBA             = DetermineColorBufferFloatRGBASupport(textureCaps);
+    colorBufferFloat                 = DetermineColorBufferFloatSupport(textureCaps);
+    textureNorm16                    = DetermineTextureNorm16Support(textureCaps);
 }
 
 const ExtensionInfoMap &GetExtensionInfoMap()
@@ -1054,13 +1054,13 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.fragmentLowpInt.setSimulatedInt(8);
 
         // Table 6.20
-        caps.maxVertexAttributes          = 8;
-        caps.maxVertexUniformVectors      = 128;
-        caps.maxVaryingVectors            = 8;
-        caps.maxCombinedTextureImageUnits = 8;
+        caps.maxVertexAttributes                              = 8;
+        caps.maxVertexUniformVectors                          = 128;
+        caps.maxVaryingVectors                                = 8;
+        caps.maxCombinedTextureImageUnits                     = 8;
         caps.maxShaderTextureImageUnits[ShaderType::Fragment] = 8;
-        caps.maxFragmentUniformVectors    = 16;
-        caps.maxRenderbufferSize          = 1;
+        caps.maxFragmentUniformVectors                        = 16;
+        caps.maxRenderbufferSize                              = 1;
     }
 
     if (clientVersion >= Version(3, 0))
@@ -1100,21 +1100,21 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxServerWaitTimeout = 0;
 
         // Table 6.31
-        caps.maxVertexAttributes        = 16;
+        caps.maxVertexAttributes                            = 16;
         caps.maxShaderUniformComponents[ShaderType::Vertex] = 1024;
-        caps.maxVertexUniformVectors    = 256;
+        caps.maxVertexUniformVectors                        = 256;
         caps.maxShaderUniformBlocks[ShaderType::Vertex]     = 12;
-        caps.maxVertexOutputComponents  = 64;
+        caps.maxVertexOutputComponents                      = 64;
         caps.maxShaderTextureImageUnits[ShaderType::Vertex] = 16;
 
         // Table 6.32
         caps.maxShaderUniformComponents[ShaderType::Fragment] = 896;
-        caps.maxFragmentUniformVectors    = 224;
+        caps.maxFragmentUniformVectors                        = 224;
         caps.maxShaderUniformBlocks[ShaderType::Fragment]     = 12;
-        caps.maxFragmentInputComponents   = 60;
+        caps.maxFragmentInputComponents                       = 60;
         caps.maxShaderTextureImageUnits[ShaderType::Fragment] = 16;
-        caps.minProgramTexelOffset        = -8;
-        caps.maxProgramTexelOffset        = 7;
+        caps.minProgramTexelOffset                            = -8;
+        caps.maxProgramTexelOffset                            = 7;
 
         // Table 6.33
         caps.maxUniformBufferBindings     = 24;
@@ -1154,33 +1154,33 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxShaderAtomicCounterBuffers[ShaderType::Vertex] = 0;
         caps.maxShaderAtomicCounters[ShaderType::Vertex]       = 0;
         caps.maxShaderImageUniforms[ShaderType::Vertex]        = 0;
-        caps.maxShaderStorageBlocks[ShaderType::Vertex] = 0;
+        caps.maxShaderStorageBlocks[ShaderType::Vertex]        = 0;
 
         // Table 20.44
         caps.maxShaderUniformComponents[ShaderType::Fragment]    = 1024;
-        caps.maxFragmentUniformVectors       = 256;
+        caps.maxFragmentUniformVectors                           = 256;
         caps.maxShaderAtomicCounterBuffers[ShaderType::Fragment] = 0;
         caps.maxShaderAtomicCounters[ShaderType::Fragment]       = 0;
         caps.maxShaderImageUniforms[ShaderType::Fragment]        = 0;
-        caps.maxShaderStorageBlocks[ShaderType::Fragment] = 0;
-        caps.minProgramTextureGatherOffset   = 0;
-        caps.maxProgramTextureGatherOffset   = 0;
+        caps.maxShaderStorageBlocks[ShaderType::Fragment]        = 0;
+        caps.minProgramTextureGatherOffset                       = 0;
+        caps.maxProgramTextureGatherOffset                       = 0;
 
         // Table 20.45
-        caps.maxComputeWorkGroupCount       = {{65535, 65535, 65535}};
-        caps.maxComputeWorkGroupSize        = {{128, 128, 64}};
-        caps.maxComputeWorkGroupInvocations = 12;
-        caps.maxShaderUniformBlocks[ShaderType::Compute]     = 12;
-        caps.maxShaderTextureImageUnits[ShaderType::Compute] = 16;
-        caps.maxComputeSharedMemorySize     = 16384;
+        caps.maxComputeWorkGroupCount                           = {{65535, 65535, 65535}};
+        caps.maxComputeWorkGroupSize                            = {{128, 128, 64}};
+        caps.maxComputeWorkGroupInvocations                     = 12;
+        caps.maxShaderUniformBlocks[ShaderType::Compute]        = 12;
+        caps.maxShaderTextureImageUnits[ShaderType::Compute]    = 16;
+        caps.maxComputeSharedMemorySize                         = 16384;
         caps.maxShaderUniformComponents[ShaderType::Compute]    = 1024;
         caps.maxShaderAtomicCounterBuffers[ShaderType::Compute] = 1;
         caps.maxShaderAtomicCounters[ShaderType::Compute]       = 8;
         caps.maxShaderImageUniforms[ShaderType::Compute]        = 4;
-        caps.maxShaderStorageBlocks[ShaderType::Compute] = 4;
+        caps.maxShaderStorageBlocks[ShaderType::Compute]        = 4;
 
         // Table 20.46
-        caps.maxUniformBufferBindings = 36;
+        caps.maxUniformBufferBindings         = 36;
         caps.maxCombinedTextureImageUnits     = 48;
         caps.maxCombinedShaderOutputResources = 4;
 
@@ -1211,16 +1211,16 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
 
         // Table 20.43gs (GL_EXT_geometry_shader)
         caps.maxShaderUniformComponents[ShaderType::Geometry]    = 1024;
-        caps.maxShaderUniformBlocks[ShaderType::Geometry]     = 12;
-        caps.maxGeometryInputComponents       = 64;
-        caps.maxGeometryOutputComponents      = 64;
-        caps.maxGeometryOutputVertices        = 256;
-        caps.maxGeometryTotalOutputComponents = 1024;
-        caps.maxShaderTextureImageUnits[ShaderType::Geometry] = 16;
+        caps.maxShaderUniformBlocks[ShaderType::Geometry]        = 12;
+        caps.maxGeometryInputComponents                          = 64;
+        caps.maxGeometryOutputComponents                         = 64;
+        caps.maxGeometryOutputVertices                           = 256;
+        caps.maxGeometryTotalOutputComponents                    = 1024;
+        caps.maxShaderTextureImageUnits[ShaderType::Geometry]    = 16;
         caps.maxShaderAtomicCounterBuffers[ShaderType::Geometry] = 0;
         caps.maxShaderAtomicCounters[ShaderType::Geometry]       = 0;
-        caps.maxShaderStorageBlocks[ShaderType::Geometry]     = 0;
-        caps.maxGeometryShaderInvocations     = 32;
+        caps.maxShaderStorageBlocks[ShaderType::Geometry]        = 0;
+        caps.maxGeometryShaderInvocations                        = 32;
 
         // Table 20.46 (GL_EXT_geometry_shader)
         caps.maxShaderImageUniforms[ShaderType::Geometry] = 0;

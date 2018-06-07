@@ -586,8 +586,10 @@ Error ValidateStream(const Display *display, const Stream *stream)
     return NoError();
 }
 
-Error ValidateCreateContext(Display *display, Config *configuration, gl::Context *shareContext,
-                            const AttributeMap& attributes)
+Error ValidateCreateContext(Display *display,
+                            Config *configuration,
+                            gl::Context *shareContext,
+                            const AttributeMap &attributes)
 {
     ANGLE_TRY(ValidateConfig(display, configuration));
 
@@ -595,180 +597,184 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
     EGLAttrib clientMajorVersion = 1;
     EGLAttrib clientMinorVersion = 0;
     EGLAttrib contextFlags       = 0;
-    bool resetNotification = false;
-    for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
+    bool resetNotification       = false;
+    for (AttributeMap::const_iterator attributeIter = attributes.begin();
+         attributeIter != attributes.end(); attributeIter++)
     {
         EGLAttrib attribute = attributeIter->first;
         EGLAttrib value     = attributeIter->second;
 
         switch (attribute)
         {
-          case EGL_CONTEXT_CLIENT_VERSION:
-            clientMajorVersion = value;
-            break;
+            case EGL_CONTEXT_CLIENT_VERSION:
+                clientMajorVersion = value;
+                break;
 
-          case EGL_CONTEXT_MINOR_VERSION:
-            clientMinorVersion = value;
-            break;
+            case EGL_CONTEXT_MINOR_VERSION:
+                clientMinorVersion = value;
+                break;
 
-          case EGL_CONTEXT_FLAGS_KHR:
-            contextFlags = value;
-            break;
+            case EGL_CONTEXT_FLAGS_KHR:
+                contextFlags = value;
+                break;
 
-          case EGL_CONTEXT_OPENGL_DEBUG:
-              break;
+            case EGL_CONTEXT_OPENGL_DEBUG:
+                break;
 
-          case EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR:
-            // Only valid for OpenGL (non-ES) contexts
-            return EglBadAttribute();
-
-          case EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT:
-            if (!display->getExtensions().createContextRobustness)
-            {
+            case EGL_CONTEXT_OPENGL_PROFILE_MASK_KHR:
+                // Only valid for OpenGL (non-ES) contexts
                 return EglBadAttribute();
-            }
-            if (value != EGL_TRUE && value != EGL_FALSE)
-            {
-                return EglBadAttribute();
-            }
-            break;
 
-          case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR:
-            return EglBadAttribute() << "EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR is not"
-                                     << " valid for GLES with EGL 1.4 and KHR_create_context. Use"
-                                     << " EXT_create_context_robustness.";
-          case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT:
-            if (!display->getExtensions().createContextRobustness)
-            {
-                return EglBadAttribute();
-            }
-            if (value == EGL_LOSE_CONTEXT_ON_RESET_EXT)
-            {
-                resetNotification = true;
-            }
-            else if (value != EGL_NO_RESET_NOTIFICATION_EXT)
-            {
-                return EglBadAttribute();
-            }
-            break;
+            case EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT:
+                if (!display->getExtensions().createContextRobustness)
+                {
+                    return EglBadAttribute();
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute();
+                }
+                break;
 
-          case EGL_CONTEXT_OPENGL_NO_ERROR_KHR:
-              if (!display->getExtensions().createContextNoError)
-              {
-                  return EglBadAttribute() << "Invalid Context attribute.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute() << "Attribute must be EGL_TRUE or EGL_FALSE.";
-              }
-              break;
+            case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR:
+                return EglBadAttribute()
+                       << "EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR is not"
+                       << " valid for GLES with EGL 1.4 and KHR_create_context. Use"
+                       << " EXT_create_context_robustness.";
+            case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT:
+                if (!display->getExtensions().createContextRobustness)
+                {
+                    return EglBadAttribute();
+                }
+                if (value == EGL_LOSE_CONTEXT_ON_RESET_EXT)
+                {
+                    resetNotification = true;
+                }
+                else if (value != EGL_NO_RESET_NOTIFICATION_EXT)
+                {
+                    return EglBadAttribute();
+                }
+                break;
 
-          case EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE:
-              if (!display->getExtensions().createContextWebGLCompatibility)
-              {
-                  return EglBadAttribute() << "Attribute "
-                                              "EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE requires "
-                                              "EGL_ANGLE_create_context_webgl_compatibility.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute()
-                         << "EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE must be EGL_TRUE or EGL_FALSE.";
-              }
-              break;
+            case EGL_CONTEXT_OPENGL_NO_ERROR_KHR:
+                if (!display->getExtensions().createContextNoError)
+                {
+                    return EglBadAttribute() << "Invalid Context attribute.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "Attribute must be EGL_TRUE or EGL_FALSE.";
+                }
+                break;
 
-          case EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM:
-              if (!display->getExtensions().createContextBindGeneratesResource)
-              {
-                  return EglBadAttribute()
-                         << "Attribute EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM requires "
-                            "EGL_CHROMIUM_create_context_bind_generates_resource.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute() << "EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM "
-                                              "must be EGL_TRUE or EGL_FALSE.";
-              }
-              break;
+            case EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE:
+                if (!display->getExtensions().createContextWebGLCompatibility)
+                {
+                    return EglBadAttribute() << "Attribute "
+                                                "EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE requires "
+                                                "EGL_ANGLE_create_context_webgl_compatibility.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE must be "
+                                                "EGL_TRUE or EGL_FALSE.";
+                }
+                break;
 
-          case EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE:
-              if (!display->getExtensions().displayTextureShareGroup)
-              {
-                  return EglBadAttribute() << "Attribute "
-                                              "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE requires "
-                                              "EGL_ANGLE_display_texture_share_group.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute()
-                         << "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE must be EGL_TRUE or EGL_FALSE.";
-              }
-              if (shareContext &&
-                  (shareContext->usingDisplayTextureShareGroup() != (value == EGL_TRUE)))
-              {
-                  return EglBadAttribute() << "All contexts within a share group must be "
-                                              "created with the same value of "
-                                              "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE.";
-              }
-              break;
+            case EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM:
+                if (!display->getExtensions().createContextBindGeneratesResource)
+                {
+                    return EglBadAttribute()
+                           << "Attribute EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM requires "
+                              "EGL_CHROMIUM_create_context_bind_generates_resource.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM "
+                                                "must be EGL_TRUE or EGL_FALSE.";
+                }
+                break;
 
-          case EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE:
-              if (!display->getExtensions().createContextClientArrays)
-              {
-                  return EglBadAttribute()
-                         << "Attribute EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE requires "
-                            "EGL_ANGLE_create_context_client_arrays.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute() << "EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE must "
-                                              "be EGL_TRUE or EGL_FALSE.";
-              }
-              break;
+            case EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE:
+                if (!display->getExtensions().displayTextureShareGroup)
+                {
+                    return EglBadAttribute() << "Attribute "
+                                                "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE requires "
+                                                "EGL_ANGLE_display_texture_share_group.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE must be "
+                                                "EGL_TRUE or EGL_FALSE.";
+                }
+                if (shareContext &&
+                    (shareContext->usingDisplayTextureShareGroup() != (value == EGL_TRUE)))
+                {
+                    return EglBadAttribute() << "All contexts within a share group must be "
+                                                "created with the same value of "
+                                                "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE.";
+                }
+                break;
 
-          case EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE:
-              if (!display->getExtensions().programCacheControl)
-              {
-                  return EglBadAttribute()
-                         << "Attribute EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE "
-                            "requires EGL_ANGLE_program_cache_control.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute() << "EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE must "
-                                              "be EGL_TRUE or EGL_FALSE.";
-              }
-              break;
+            case EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE:
+                if (!display->getExtensions().createContextClientArrays)
+                {
+                    return EglBadAttribute()
+                           << "Attribute EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE requires "
+                              "EGL_ANGLE_create_context_client_arrays.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE must "
+                                                "be EGL_TRUE or EGL_FALSE.";
+                }
+                break;
 
-          case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-              if (!display->getExtensions().robustResourceInitialization)
-              {
-                  return EglBadAttribute() << "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
-                                              "requires EGL_ANGLE_robust_resource_initialization.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
-                                              "either EGL_TRUE or EGL_FALSE.";
-              }
-              break;
+            case EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE:
+                if (!display->getExtensions().programCacheControl)
+                {
+                    return EglBadAttribute()
+                           << "Attribute EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE "
+                              "requires EGL_ANGLE_program_cache_control.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute()
+                           << "EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE must "
+                              "be EGL_TRUE or EGL_FALSE.";
+                }
+                break;
 
-          case EGL_EXTENSIONS_ENABLED_ANGLE:
-              if (!display->getExtensions().createContextExtensionsEnabled)
-              {
-                  return EglBadAttribute()
-                         << "Attribute EGL_EXTENSIONS_ENABLED_ANGLE "
-                            "requires EGL_ANGLE_create_context_extensions_enabled.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute() << "EGL_EXTENSIONS_ENABLED_ANGLE must be "
-                                              "either EGL_TRUE or EGL_FALSE.";
-              }
-              break;
+            case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+                if (!display->getExtensions().robustResourceInitialization)
+                {
+                    return EglBadAttribute()
+                           << "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                              "requires EGL_ANGLE_robust_resource_initialization.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                                                "either EGL_TRUE or EGL_FALSE.";
+                }
+                break;
 
-          default:
-              return EglBadAttribute() << "Unknown attribute.";
+            case EGL_EXTENSIONS_ENABLED_ANGLE:
+                if (!display->getExtensions().createContextExtensionsEnabled)
+                {
+                    return EglBadAttribute()
+                           << "Attribute EGL_EXTENSIONS_ENABLED_ANGLE "
+                              "requires EGL_ANGLE_create_context_extensions_enabled.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_EXTENSIONS_ENABLED_ANGLE must be "
+                                                "either EGL_TRUE or EGL_FALSE.";
+                }
+                break;
+
+            default:
+                return EglBadAttribute() << "Unknown attribute.";
         }
     }
 
@@ -809,8 +815,8 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
     }
 
     // Note: EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR does not apply to ES
-    const EGLint validContextFlags = (EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR |
-                                      EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR);
+    const EGLint validContextFlags =
+        (EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR | EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR);
     if ((contextFlags & ~validContextFlags) != 0)
     {
         return EglBadAttribute();
@@ -839,8 +845,10 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
     return NoError();
 }
 
-Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWindowType window,
-                                  const AttributeMap& attributes)
+Error ValidateCreateWindowSurface(Display *display,
+                                  Config *config,
+                                  EGLNativeWindowType window,
+                                  const AttributeMap &attributes)
 {
     ANGLE_TRY(ValidateConfig(display, config));
 
@@ -851,93 +859,95 @@ Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWin
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
 
-    for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
+    for (AttributeMap::const_iterator attributeIter = attributes.begin();
+         attributeIter != attributes.end(); attributeIter++)
     {
         EGLAttrib attribute = attributeIter->first;
         EGLAttrib value     = attributeIter->second;
 
         switch (attribute)
         {
-          case EGL_RENDER_BUFFER:
-            switch (value)
-            {
-              case EGL_BACK_BUFFER:
+            case EGL_RENDER_BUFFER:
+                switch (value)
+                {
+                    case EGL_BACK_BUFFER:
+                        break;
+                    case EGL_SINGLE_BUFFER:
+                        return EglBadMatch();  // Rendering directly to front buffer not supported
+                    default:
+                        return EglBadAttribute();
+                }
                 break;
-              case EGL_SINGLE_BUFFER:
-                  return EglBadMatch();  // Rendering directly to front buffer not supported
-              default:
-                  return EglBadAttribute();
-            }
-            break;
 
-          case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
-            if (!displayExtensions.postSubBuffer)
-            {
+            case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
+                if (!displayExtensions.postSubBuffer)
+                {
+                    return EglBadAttribute();
+                }
+                break;
+
+            case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+                if (!displayExtensions.flexibleSurfaceCompatibility)
+                {
+                    return EglBadAttribute();
+                }
+                break;
+
+            case EGL_WIDTH:
+            case EGL_HEIGHT:
+                if (!displayExtensions.windowFixedSize)
+                {
+                    return EglBadAttribute();
+                }
+                if (value < 0)
+                {
+                    return EglBadParameter();
+                }
+                break;
+
+            case EGL_FIXED_SIZE_ANGLE:
+                if (!displayExtensions.windowFixedSize)
+                {
+                    return EglBadAttribute();
+                }
+                break;
+
+            case EGL_SURFACE_ORIENTATION_ANGLE:
+                if (!displayExtensions.surfaceOrientation)
+                {
+                    return EglBadAttribute() << "EGL_ANGLE_surface_orientation is not enabled.";
+                }
+                break;
+
+            case EGL_VG_COLORSPACE:
+                return EglBadMatch();
+
+            case EGL_VG_ALPHA_FORMAT:
+                return EglBadMatch();
+
+            case EGL_DIRECT_COMPOSITION_ANGLE:
+                if (!displayExtensions.directComposition)
+                {
+                    return EglBadAttribute();
+                }
+                break;
+
+            case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+                if (!display->getExtensions().robustResourceInitialization)
+                {
+                    return EglBadAttribute()
+                           << "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                              "requires EGL_ANGLE_robust_resource_initialization.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                                                "either EGL_TRUE or EGL_FALSE.";
+                }
+                break;
+
+            default:
                 return EglBadAttribute();
-            }
-            break;
-
-          case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-              if (!displayExtensions.flexibleSurfaceCompatibility)
-              {
-                  return EglBadAttribute();
-              }
-              break;
-
-          case EGL_WIDTH:
-          case EGL_HEIGHT:
-            if (!displayExtensions.windowFixedSize)
-            {
-                return EglBadAttribute();
-            }
-            if (value < 0)
-            {
-                return EglBadParameter();
-            }
-            break;
-
-          case EGL_FIXED_SIZE_ANGLE:
-            if (!displayExtensions.windowFixedSize)
-            {
-                return EglBadAttribute();
-            }
-            break;
-
-          case EGL_SURFACE_ORIENTATION_ANGLE:
-              if (!displayExtensions.surfaceOrientation)
-              {
-                  return EglBadAttribute() << "EGL_ANGLE_surface_orientation is not enabled.";
-              }
-              break;
-
-          case EGL_VG_COLORSPACE:
-              return EglBadMatch();
-
-          case EGL_VG_ALPHA_FORMAT:
-              return EglBadMatch();
-
-          case EGL_DIRECT_COMPOSITION_ANGLE:
-              if (!displayExtensions.directComposition)
-              {
-                  return EglBadAttribute();
-              }
-              break;
-
-          case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-              if (!display->getExtensions().robustResourceInitialization)
-              {
-                  return EglBadAttribute() << "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
-                                              "requires EGL_ANGLE_robust_resource_initialization.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
-                                              "either EGL_TRUE or EGL_FALSE.";
-              }
-              break;
-
-          default:
-              return EglBadAttribute();
         }
     }
 
@@ -949,86 +959,88 @@ Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWin
     return NoError();
 }
 
-Error ValidateCreatePbufferSurface(Display *display, Config *config, const AttributeMap& attributes)
+Error ValidateCreatePbufferSurface(Display *display, Config *config, const AttributeMap &attributes)
 {
     ANGLE_TRY(ValidateConfig(display, config));
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
 
-    for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
+    for (AttributeMap::const_iterator attributeIter = attributes.begin();
+         attributeIter != attributes.end(); attributeIter++)
     {
         EGLAttrib attribute = attributeIter->first;
         EGLAttrib value     = attributeIter->second;
 
         switch (attribute)
         {
-          case EGL_WIDTH:
-          case EGL_HEIGHT:
-            if (value < 0)
-            {
-                return EglBadParameter();
-            }
-            break;
-
-          case EGL_LARGEST_PBUFFER:
-            break;
-
-          case EGL_TEXTURE_FORMAT:
-            switch (value)
-            {
-              case EGL_NO_TEXTURE:
-              case EGL_TEXTURE_RGB:
-              case EGL_TEXTURE_RGBA:
+            case EGL_WIDTH:
+            case EGL_HEIGHT:
+                if (value < 0)
+                {
+                    return EglBadParameter();
+                }
                 break;
-              default:
-                  return EglBadAttribute();
-            }
-            break;
 
-          case EGL_TEXTURE_TARGET:
-            switch (value)
-            {
-              case EGL_NO_TEXTURE:
-              case EGL_TEXTURE_2D:
+            case EGL_LARGEST_PBUFFER:
                 break;
-              default:
-                  return EglBadAttribute();
-            }
-            break;
 
-          case EGL_MIPMAP_TEXTURE:
-            break;
+            case EGL_TEXTURE_FORMAT:
+                switch (value)
+                {
+                    case EGL_NO_TEXTURE:
+                    case EGL_TEXTURE_RGB:
+                    case EGL_TEXTURE_RGBA:
+                        break;
+                    default:
+                        return EglBadAttribute();
+                }
+                break;
 
-          case EGL_VG_COLORSPACE:
-            break;
+            case EGL_TEXTURE_TARGET:
+                switch (value)
+                {
+                    case EGL_NO_TEXTURE:
+                    case EGL_TEXTURE_2D:
+                        break;
+                    default:
+                        return EglBadAttribute();
+                }
+                break;
 
-          case EGL_VG_ALPHA_FORMAT:
-            break;
+            case EGL_MIPMAP_TEXTURE:
+                break;
 
-          case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-              if (!displayExtensions.flexibleSurfaceCompatibility)
-              {
-                  return EglBadAttribute()
-                         << "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used "
-                            "without EGL_ANGLE_flexible_surface_compatibility support.";
-              }
-              break;
+            case EGL_VG_COLORSPACE:
+                break;
 
-          case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-              if (!display->getExtensions().robustResourceInitialization)
-              {
-                  return EglBadAttribute() << "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
-                                              "requires EGL_ANGLE_robust_resource_initialization.";
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
-                                              "either EGL_TRUE or EGL_FALSE.";
-              }
-              break;
+            case EGL_VG_ALPHA_FORMAT:
+                break;
 
-          default:
-              return EglBadAttribute();
+            case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+                if (!displayExtensions.flexibleSurfaceCompatibility)
+                {
+                    return EglBadAttribute()
+                           << "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used "
+                              "without EGL_ANGLE_flexible_surface_compatibility support.";
+                }
+                break;
+
+            case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+                if (!display->getExtensions().robustResourceInitialization)
+                {
+                    return EglBadAttribute()
+                           << "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                              "requires EGL_ANGLE_robust_resource_initialization.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                                                "either EGL_TRUE or EGL_FALSE.";
+                }
+                break;
+
+            default:
+                return EglBadAttribute();
         }
     }
 
@@ -1048,7 +1060,7 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
         return EglBadMatch();
     }
 
-    if ((textureFormat == EGL_TEXTURE_RGB  && config->bindToTextureRGB != EGL_TRUE) ||
+    if ((textureFormat == EGL_TEXTURE_RGB && config->bindToTextureRGB != EGL_TRUE) ||
         (textureFormat == EGL_TEXTURE_RGBA && config->bindToTextureRGBA != EGL_TRUE))
     {
         return EglBadAttribute();
@@ -1056,7 +1068,8 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
 
     EGLint width  = static_cast<EGLint>(attributes.get(EGL_WIDTH, 0));
     EGLint height = static_cast<EGLint>(attributes.get(EGL_HEIGHT, 0));
-    if (textureFormat != EGL_NO_TEXTURE && !caps.textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
+    if (textureFormat != EGL_NO_TEXTURE && !caps.textureNPOT &&
+        (!gl::isPow2(width) || !gl::isPow2(height)))
     {
         return EglBadMatch();
     }
@@ -1064,8 +1077,11 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
     return NoError();
 }
 
-Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, EGLClientBuffer buffer,
-                                            Config *config, const AttributeMap& attributes)
+Error ValidateCreatePbufferFromClientBuffer(Display *display,
+                                            EGLenum buftype,
+                                            EGLClientBuffer buffer,
+                                            Config *config,
+                                            const AttributeMap &attributes)
 {
     ANGLE_TRY(ValidateConfig(display, config));
 
@@ -1073,45 +1089,46 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
 
     switch (buftype)
     {
-      case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
-        if (!displayExtensions.d3dShareHandleClientBuffer)
-        {
+        case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
+            if (!displayExtensions.d3dShareHandleClientBuffer)
+            {
+                return EglBadParameter();
+            }
+            if (buffer == nullptr)
+            {
+                return EglBadParameter();
+            }
+            break;
+
+        case EGL_D3D_TEXTURE_ANGLE:
+            if (!displayExtensions.d3dTextureClientBuffer)
+            {
+                return EglBadParameter();
+            }
+            if (buffer == nullptr)
+            {
+                return EglBadParameter();
+            }
+            break;
+
+        case EGL_IOSURFACE_ANGLE:
+            if (!displayExtensions.iosurfaceClientBuffer)
+            {
+                return EglBadParameter() << "<buftype> EGL_IOSURFACE_ANGLE requires the "
+                                            "EGL_ANGLE_iosurface_client_buffer extension.";
+            }
+            if (buffer == nullptr)
+            {
+                return EglBadParameter() << "<buffer> must be non null";
+            }
+            break;
+
+        default:
             return EglBadParameter();
-        }
-        if (buffer == nullptr)
-        {
-            return EglBadParameter();
-        }
-        break;
-
-      case EGL_D3D_TEXTURE_ANGLE:
-          if (!displayExtensions.d3dTextureClientBuffer)
-          {
-              return EglBadParameter();
-          }
-          if (buffer == nullptr)
-          {
-              return EglBadParameter();
-          }
-          break;
-
-      case EGL_IOSURFACE_ANGLE:
-          if (!displayExtensions.iosurfaceClientBuffer)
-          {
-              return EglBadParameter() << "<buftype> EGL_IOSURFACE_ANGLE requires the "
-                                          "EGL_ANGLE_iosurface_client_buffer extension.";
-          }
-          if (buffer == nullptr)
-          {
-              return EglBadParameter() << "<buffer> must be non null";
-          }
-          break;
-
-      default:
-          return EglBadParameter();
     }
 
-    for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
+    for (AttributeMap::const_iterator attributeIter = attributes.begin();
+         attributeIter != attributes.end(); attributeIter++)
     {
         EGLAttrib attribute = attributeIter->first;
         EGLAttrib value     = attributeIter->second;
@@ -1121,8 +1138,7 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
             case EGL_WIDTH:
             case EGL_HEIGHT:
                 if (buftype != EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE &&
-                    buftype != EGL_D3D_TEXTURE_ANGLE &&
-                    buftype != EGL_IOSURFACE_ANGLE)
+                    buftype != EGL_D3D_TEXTURE_ANGLE && buftype != EGL_IOSURFACE_ANGLE)
                 {
                     return EglBadParameter()
                            << "Width and Height are not supported for thie <buftype>";
@@ -1252,7 +1268,8 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
         }
 
         const Caps &caps = display->getCaps();
-        if (textureFormat != EGL_NO_TEXTURE && !caps.textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
+        if (textureFormat != EGL_NO_TEXTURE && !caps.textureNPOT &&
+            (!gl::isPow2(width) || !gl::isPow2(height)))
         {
             return EglBadMatch();
         }
@@ -1554,7 +1571,7 @@ Error ValidateCreateImageKHR(const Display *display,
                 return EglBadAccess() << "texture has a surface bound to it.";
             }
 
-            EGLAttrib level    = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
+            EGLAttrib level               = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
             gl::TextureTarget cubeMapFace = egl_gl::EGLCubeMapTargetToCubeMapTarget(target);
             if (texture->getWidth(cubeMapFace, static_cast<size_t>(level)) == 0 ||
                 texture->getHeight(cubeMapFace, static_cast<size_t>(level)) == 0)

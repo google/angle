@@ -39,15 +39,24 @@ Error ValidateContext(const Display *display, const gl::Context *context);
 Error ValidateImage(const Display *display, const Image *image);
 
 // Entry point validation
-Error ValidateCreateContext(Display *display, Config *configuration, gl::Context *shareContext,
-                            const AttributeMap& attributes);
+Error ValidateCreateContext(Display *display,
+                            Config *configuration,
+                            gl::Context *shareContext,
+                            const AttributeMap &attributes);
 
-Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWindowType window,
-                                  const AttributeMap& attributes);
+Error ValidateCreateWindowSurface(Display *display,
+                                  Config *config,
+                                  EGLNativeWindowType window,
+                                  const AttributeMap &attributes);
 
-Error ValidateCreatePbufferSurface(Display *display, Config *config, const AttributeMap& attributes);
-Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, EGLClientBuffer buffer,
-                                            Config *config, const AttributeMap& attributes);
+Error ValidateCreatePbufferSurface(Display *display,
+                                   Config *config,
+                                   const AttributeMap &attributes);
+Error ValidateCreatePbufferFromClientBuffer(Display *display,
+                                            EGLenum buftype,
+                                            EGLClientBuffer buffer,
+                                            Config *config,
+                                            const AttributeMap &attributes);
 
 Error ValidateMakeCurrent(Display *display, Surface *draw, Surface *read, gl::Context *context);
 
@@ -191,4 +200,4 @@ Error ValidateQueryContext(const Display *display,
         }                                          \
     }
 
-#endif // LIBANGLE_VALIDATIONEGL_H_
+#endif  // LIBANGLE_VALIDATIONEGL_H_
