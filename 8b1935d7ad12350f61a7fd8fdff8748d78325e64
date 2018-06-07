@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d3fc363_18de32c0",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1025,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-07T11:28:47Z",
+      "side": 1,
+      "message": "nit: you can use const char kFragShader[]",
+      "range": {
+        "startLine": 1025,
+        "startChar": 4,
+        "endLine": 1025,
+        "endChar": 23
+      },
+      "revId": "8b1935d7ad12350f61a7fd8fdff8748d78325e64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
