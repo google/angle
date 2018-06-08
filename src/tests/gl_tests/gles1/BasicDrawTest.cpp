@@ -69,7 +69,9 @@ TEST_P(BasicDrawTest, EnableDisableTexture)
     // Texturing is disabled; still red;
     drawRedQuad();
 
-    // Texturing enabled; is green.
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Texturing enabled; is green (provided modulate w/ white)
     glEnable(GL_TEXTURE_2D);
     EXPECT_GL_NO_ERROR();
     glDrawArrays(GL_TRIANGLES, 0, 6);

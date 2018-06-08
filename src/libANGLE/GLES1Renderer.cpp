@@ -115,6 +115,8 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
         std::array<GLint, kTexUnitCount> &tex2DEnables   = uniformBuffers.tex2DEnables;
         std::array<GLint, kTexUnitCount> &texCubeEnables = uniformBuffers.texCubeEnables;
 
+        std::vector<int> tex2DFormats = {GL_RGBA, GL_RGBA, GL_RGBA, GL_RGBA};
+
         for (int i = 0; i < kTexUnitCount; i++)
         {
             // GL_OES_cube_map allows only one of TEXTURE_2D / TEXTURE_CUBE_MAP
@@ -138,12 +140,93 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
             texCubeEnables[i] = gles1State.isTextureTargetEnabled(i, TextureType::CubeMap);
             tex2DEnables[i] =
                 !texCubeEnables[i] && (gles1State.isTextureTargetEnabled(i, TextureType::_2D));
+
+            Texture *curr2DTexture = glState->getSamplerTexture(i, TextureType::_2D);
+            if (curr2DTexture)
+            {
+                tex2DFormats[i] = gl::GetUnsizedFormat(
+                    curr2DTexture->getFormat(TextureTarget::_2D, 0).info->internalFormat);
+            }
         }
 
         setUniform1iv(programObject, mProgramState.enableTexture2DLoc, kTexUnitCount,
                       tex2DEnables.data());
         setUniform1iv(programObject, mProgramState.enableTextureCubeMapLoc, kTexUnitCount,
                       texCubeEnables.data());
+
+        setUniform1iv(programObject, mProgramState.textureFormatLoc, kTexUnitCount,
+                      tex2DFormats.data());
+
+        for (int i = 0; i < kTexUnitCount; i++)
+        {
+            const auto &env = gles1State.textureEnvironment(i);
+
+            uniformBuffers.texEnvModes[i]      = ToGLenum(env.mode);
+            uniformBuffers.texCombineRgbs[i]   = ToGLenum(env.combineRgb);
+            uniformBuffers.texCombineAlphas[i] = ToGLenum(env.combineAlpha);
+
+            uniformBuffers.texCombineSrc0Rgbs[i]   = ToGLenum(env.src0Rgb);
+            uniformBuffers.texCombineSrc0Alphas[i] = ToGLenum(env.src0Alpha);
+            uniformBuffers.texCombineSrc1Rgbs[i]   = ToGLenum(env.src1Rgb);
+            uniformBuffers.texCombineSrc1Alphas[i] = ToGLenum(env.src1Alpha);
+            uniformBuffers.texCombineSrc2Rgbs[i]   = ToGLenum(env.src2Rgb);
+            uniformBuffers.texCombineSrc2Alphas[i] = ToGLenum(env.src2Alpha);
+
+            uniformBuffers.texCombineOp0Rgbs[i]   = ToGLenum(env.op0Rgb);
+            uniformBuffers.texCombineOp0Alphas[i] = ToGLenum(env.op0Alpha);
+            uniformBuffers.texCombineOp1Rgbs[i]   = ToGLenum(env.op1Rgb);
+            uniformBuffers.texCombineOp1Alphas[i] = ToGLenum(env.op1Alpha);
+            uniformBuffers.texCombineOp2Rgbs[i]   = ToGLenum(env.op2Rgb);
+            uniformBuffers.texCombineOp2Alphas[i] = ToGLenum(env.op2Alpha);
+
+            uniformBuffers.texEnvColors[i][0] = env.color.red;
+            uniformBuffers.texEnvColors[i][1] = env.color.green;
+            uniformBuffers.texEnvColors[i][2] = env.color.blue;
+            uniformBuffers.texEnvColors[i][3] = env.color.alpha;
+
+            uniformBuffers.texEnvRgbScales[i]   = env.rgbScale;
+            uniformBuffers.texEnvAlphaScales[i] = env.alphaScale;
+        }
+
+        setUniform1iv(programObject, mProgramState.textureEnvModeLoc, kTexUnitCount,
+                      uniformBuffers.texEnvModes.data());
+        setUniform1iv(programObject, mProgramState.combineRgbLoc, kTexUnitCount,
+                      uniformBuffers.texCombineRgbs.data());
+        setUniform1iv(programObject, mProgramState.combineAlphaLoc, kTexUnitCount,
+                      uniformBuffers.texCombineAlphas.data());
+
+        setUniform1iv(programObject, mProgramState.src0rgbLoc, kTexUnitCount,
+                      uniformBuffers.texCombineSrc0Rgbs.data());
+        setUniform1iv(programObject, mProgramState.src0alphaLoc, kTexUnitCount,
+                      uniformBuffers.texCombineSrc0Alphas.data());
+        setUniform1iv(programObject, mProgramState.src1rgbLoc, kTexUnitCount,
+                      uniformBuffers.texCombineSrc1Rgbs.data());
+        setUniform1iv(programObject, mProgramState.src1alphaLoc, kTexUnitCount,
+                      uniformBuffers.texCombineSrc1Alphas.data());
+        setUniform1iv(programObject, mProgramState.src2rgbLoc, kTexUnitCount,
+                      uniformBuffers.texCombineSrc2Rgbs.data());
+        setUniform1iv(programObject, mProgramState.src2alphaLoc, kTexUnitCount,
+                      uniformBuffers.texCombineSrc2Alphas.data());
+
+        setUniform1iv(programObject, mProgramState.op0rgbLoc, kTexUnitCount,
+                      uniformBuffers.texCombineOp0Rgbs.data());
+        setUniform1iv(programObject, mProgramState.op0alphaLoc, kTexUnitCount,
+                      uniformBuffers.texCombineOp0Alphas.data());
+        setUniform1iv(programObject, mProgramState.op1rgbLoc, kTexUnitCount,
+                      uniformBuffers.texCombineOp1Rgbs.data());
+        setUniform1iv(programObject, mProgramState.op1alphaLoc, kTexUnitCount,
+                      uniformBuffers.texCombineOp1Alphas.data());
+        setUniform1iv(programObject, mProgramState.op2rgbLoc, kTexUnitCount,
+                      uniformBuffers.texCombineOp2Rgbs.data());
+        setUniform1iv(programObject, mProgramState.op2alphaLoc, kTexUnitCount,
+                      uniformBuffers.texCombineOp2Alphas.data());
+
+        setUniform4fv(programObject, mProgramState.textureEnvColorLoc, kTexUnitCount,
+                      reinterpret_cast<float *>(uniformBuffers.texEnvColors.data()));
+        setUniform1fv(programObject, mProgramState.rgbScaleLoc, kTexUnitCount,
+                      uniformBuffers.texEnvRgbScales.data());
+        setUniform1fv(programObject, mProgramState.alphaScaleLoc, kTexUnitCount,
+                      uniformBuffers.texEnvAlphaScales.data());
     }
 
     // Alpha test
@@ -423,6 +506,7 @@ Error GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
     fragmentStream << kGLES1DrawFShaderHeader;
     fragmentStream << kGLES1DrawFShaderUniformDefs;
     fragmentStream << kGLES1DrawFShaderFunctions;
+    fragmentStream << kGLES1DrawFShaderMultitexturing;
     fragmentStream << kGLES1DrawFShaderMain;
 
     ANGLE_TRY(compileShader(context, ShaderType::Fragment, fragmentStream.str().c_str(),
@@ -471,6 +555,26 @@ Error GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
     mProgramState.enableTexture2DLoc = programObject->getUniformLocation("enable_texture_2d");
     mProgramState.enableTextureCubeMapLoc =
         programObject->getUniformLocation("enable_texture_cube_map");
+
+    mProgramState.textureFormatLoc   = programObject->getUniformLocation("texture_format");
+    mProgramState.textureEnvModeLoc  = programObject->getUniformLocation("texture_env_mode");
+    mProgramState.combineRgbLoc      = programObject->getUniformLocation("combine_rgb");
+    mProgramState.combineAlphaLoc    = programObject->getUniformLocation("combine_alpha");
+    mProgramState.src0rgbLoc         = programObject->getUniformLocation("src0_rgb");
+    mProgramState.src0alphaLoc       = programObject->getUniformLocation("src0_alpha");
+    mProgramState.src1rgbLoc         = programObject->getUniformLocation("src1_rgb");
+    mProgramState.src1alphaLoc       = programObject->getUniformLocation("src1_alpha");
+    mProgramState.src2rgbLoc         = programObject->getUniformLocation("src2_rgb");
+    mProgramState.src2alphaLoc       = programObject->getUniformLocation("src2_alpha");
+    mProgramState.op0rgbLoc          = programObject->getUniformLocation("op0_rgb");
+    mProgramState.op0alphaLoc        = programObject->getUniformLocation("op0_alpha");
+    mProgramState.op1rgbLoc          = programObject->getUniformLocation("op1_rgb");
+    mProgramState.op1alphaLoc        = programObject->getUniformLocation("op1_alpha");
+    mProgramState.op2rgbLoc          = programObject->getUniformLocation("op2_rgb");
+    mProgramState.op2alphaLoc        = programObject->getUniformLocation("op2_alpha");
+    mProgramState.textureEnvColorLoc = programObject->getUniformLocation("texture_env_color");
+    mProgramState.rgbScaleLoc        = programObject->getUniformLocation("texture_env_rgb_scale");
+    mProgramState.alphaScaleLoc      = programObject->getUniformLocation("texture_env_alpha_scale");
 
     mProgramState.enableAlphaTestLoc = programObject->getUniformLocation("enable_alpha_test");
     mProgramState.alphaFuncLoc       = programObject->getUniformLocation("alpha_func");

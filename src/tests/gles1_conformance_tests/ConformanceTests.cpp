@@ -197,7 +197,6 @@ TEST_P(GLES1ConformanceTest, ColRamp)
 
 TEST_P(GLES1ConformanceTest, CopyTex)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, CopyTexExec());
 }
 
@@ -304,7 +303,6 @@ TEST_P(GLES1ConformanceTest, MatrixStack)
 
 TEST_P(GLES1ConformanceTest, MultiTex)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MultiTexExec());
 }
 
@@ -414,7 +412,6 @@ TEST_P(GLES1ConformanceTest, SpotExpDir)
 
 TEST_P(GLES1ConformanceTest, TexDecal)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, TexDecalExec());
 }
 
@@ -426,7 +423,6 @@ TEST_P(GLES1ConformanceTest, TexPalet)
 
 TEST_P(GLES1ConformanceTest, TextureEdgeClamp)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, TextureEdgeClampExec());
 }
 
@@ -531,7 +527,6 @@ TEST_P(GLES1ConformanceTest, Gets)
 
 TEST_P(GLES1ConformanceTest, TexCombine)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, TexCombineExec());
 }
 

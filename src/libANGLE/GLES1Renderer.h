@@ -101,6 +101,27 @@ class GLES1Renderer final : angle::NonCopyable
         std::array<GLint, kTexUnitCount> tex2DSamplerLocs;
         std::array<GLint, kTexUnitCount> texCubeSamplerLocs;
 
+        GLint textureFormatLoc;
+
+        GLint textureEnvModeLoc;
+        GLint combineRgbLoc;
+        GLint combineAlphaLoc;
+        GLint src0rgbLoc;
+        GLint src0alphaLoc;
+        GLint src1rgbLoc;
+        GLint src1alphaLoc;
+        GLint src2rgbLoc;
+        GLint src2alphaLoc;
+        GLint op0rgbLoc;
+        GLint op0alphaLoc;
+        GLint op1rgbLoc;
+        GLint op1alphaLoc;
+        GLint op2rgbLoc;
+        GLint op2alphaLoc;
+        GLint textureEnvColorLoc;
+        GLint rgbScaleLoc;
+        GLint alphaScaleLoc;
+
         // Alpha test
         GLint enableAlphaTestLoc;
         GLint alphaFuncLoc;
@@ -153,6 +174,26 @@ class GLES1Renderer final : angle::NonCopyable
         std::array<Mat4Uniform, kTexUnitCount> textureMatrices;
         std::array<GLint, kTexUnitCount> tex2DEnables;
         std::array<GLint, kTexUnitCount> texCubeEnables;
+
+        std::array<GLint, kTexUnitCount> texEnvModes;
+        std::array<GLint, kTexUnitCount> texCombineRgbs;
+        std::array<GLint, kTexUnitCount> texCombineAlphas;
+
+        std::array<GLint, kTexUnitCount> texCombineSrc0Rgbs;
+        std::array<GLint, kTexUnitCount> texCombineSrc0Alphas;
+        std::array<GLint, kTexUnitCount> texCombineSrc1Rgbs;
+        std::array<GLint, kTexUnitCount> texCombineSrc1Alphas;
+        std::array<GLint, kTexUnitCount> texCombineSrc2Rgbs;
+        std::array<GLint, kTexUnitCount> texCombineSrc2Alphas;
+        std::array<GLint, kTexUnitCount> texCombineOp0Rgbs;
+        std::array<GLint, kTexUnitCount> texCombineOp0Alphas;
+        std::array<GLint, kTexUnitCount> texCombineOp1Rgbs;
+        std::array<GLint, kTexUnitCount> texCombineOp1Alphas;
+        std::array<GLint, kTexUnitCount> texCombineOp2Rgbs;
+        std::array<GLint, kTexUnitCount> texCombineOp2Alphas;
+        std::array<Vec4Uniform, kTexUnitCount> texEnvColors;
+        std::array<GLfloat, kTexUnitCount> texEnvRgbScales;
+        std::array<GLfloat, kTexUnitCount> texEnvAlphaScales;
 
         // Lighting
         std::array<GLint, kLightCount> lightEnables;
