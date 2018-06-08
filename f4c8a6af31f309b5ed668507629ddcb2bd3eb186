@@ -2,6 +2,190 @@
   "comments": [
     {
       "key": {
+        "uuid": "4ffc2b63_84394f86",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2097,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:50:30Z",
+      "side": 1,
+      "message": "We have a ConvertToGLenum function in queryconversions.h that should cover this.",
+      "range": {
+        "startLine": 2094,
+        "startChar": 0,
+        "endLine": 2097,
+        "endChar": 1
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64d3e016_5344d57d",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2137,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:50:30Z",
+      "side": 1,
+      "message": "What kind of conversion is this supposed to be? Can it be a helper?  Same for the functions below.",
+      "range": {
+        "startLine": 2137,
+        "startChar": 24,
+        "endLine": 2137,
+        "endChar": 55
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88eee4af_2a7363fb",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2143,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:50:30Z",
+      "side": 1,
+      "message": "nit: small for loop?",
+      "range": {
+        "startLine": 2140,
+        "startChar": 13,
+        "endLine": 2143,
+        "endChar": 42
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9142e68f_b476f946",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2176,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:50:30Z",
+      "side": 1,
+      "message": "nit: for loop",
+      "range": {
+        "startLine": 2173,
+        "startChar": 12,
+        "endLine": 2176,
+        "endChar": 47
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ddb004c_319da16d",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2215,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:50:30Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 2212,
+        "startChar": 12,
+        "endLine": 2215,
+        "endChar": 62
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be62f759_6853a657",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2248,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:50:30Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 2245,
+        "startChar": 9,
+        "endLine": 2248,
+        "endChar": 47
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2b6d864_dc578b86",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:50:30Z",
+      "side": 1,
+      "message": "Can you change these to breaks (will need a break at the end of this switch too).  Have a preference for hitting the end of the function for the success case so we can add new validation easily.",
+      "range": {
+        "startLine": 397,
+        "startChar": 20,
+        "endLine": 397,
+        "endChar": 32
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d7181b3_9067a2bf",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:50:30Z",
+      "side": 1,
+      "message": "Would be good to have a helper for this (internal enum or GLenum to float).",
+      "range": {
+        "startLine": 499,
+        "startChar": 23,
+        "endLine": 499,
+        "endChar": 74
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "54e4a3d7_80620e2f",
         "filename": "util/random_utils.h",
         "patchSetId": 1
