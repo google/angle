@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0ee3bcdc_bdea1fa7",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2097,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-08T16:51:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ffc2b63_84394f86",
+      "range": {
+        "startLine": 2094,
+        "startChar": 0,
+        "endLine": 2097,
+        "endChar": 1
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64d3e016_5344d57d",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff414ec6_b914672a",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2137,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-08T16:51:20Z",
+      "side": 1,
+      "message": "This is an intermediate conversion from GLint and other types to GLfloat (or vice versa) when a enum-valued parameter is used. Added a helper function to distinguish that case.",
+      "parentUuid": "64d3e016_5344d57d",
+      "range": {
+        "startLine": 2137,
+        "startChar": 24,
+        "endLine": 2137,
+        "endChar": 55
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "46dc5834_59b20c9b",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2143,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-08T16:51:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88eee4af_2a7363fb",
+      "range": {
+        "startLine": 2140,
+        "startChar": 13,
+        "endLine": 2143,
+        "endChar": 42
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9142e68f_b476f946",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 1
@@ -91,6 +163,30 @@
       "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f1b95ef_9bef8686",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2176,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-08T16:51:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9142e68f_b476f946",
+      "range": {
+        "startLine": 2173,
+        "startChar": 12,
+        "endLine": 2176,
+        "endChar": 47
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "08d0af5b_845b4fd3",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2215,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-08T16:51:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ddb004c_319da16d",
+      "range": {
+        "startLine": 2212,
+        "startChar": 12,
+        "endLine": 2215,
+        "endChar": 62
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "be62f759_6853a657",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 1
@@ -137,6 +257,30 @@
       "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "450e7c31_a1c28ecf",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2248,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-08T16:51:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be62f759_6853a657",
+      "range": {
+        "startLine": 2245,
+        "startChar": 9,
+        "endLine": 2248,
+        "endChar": 47
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "1dce46d1_c5004420",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-08T16:51:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2b6d864_dc578b86",
+      "range": {
+        "startLine": 397,
+        "startChar": 20,
+        "endLine": 397,
+        "endChar": 32
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d7181b3_9067a2bf",
         "filename": "src/libANGLE/validationES1.cpp",
         "patchSetId": 1
@@ -183,6 +351,30 @@
       "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "134d91ae_0db1f5cf",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-08T16:51:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d7181b3_9067a2bf",
+      "range": {
+        "startLine": 499,
+        "startChar": 23,
+        "endLine": 499,
+        "endChar": 74
+      },
+      "revId": "f4c8a6af31f309b5ed668507629ddcb2bd3eb186",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
