@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cbc9ead7_69ea2e55",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-08T09:15:25Z",
+      "side": 1,
+      "message": "nit: you can reference kCubeMapTextureTargetMin directly in the call to getImageDesc. Or maybe I\u0027m missing something?",
+      "revId": "9f79579a80856ce474dc3be21bc9b6a2ed1e356a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
