@@ -56,6 +56,10 @@ float NumericLexFloat32OutOfRangeToInfinity(const std::string &str)
 
     // The exponent offset reflects the position of the decimal point.
     int exponentOffset = -1;
+
+    // This is just a counter for how many decimal digits are written to decimalMantissa.
+    int mantissaDecimalDigits = 0;
+
     while (i < str.length())
     {
         const char c = str[i];
@@ -83,6 +87,7 @@ float NumericLexFloat32OutOfRangeToInfinity(const std::string &str)
             if (decimalMantissa <= (std::numeric_limits<unsigned int>::max() - 9u) / 10u)
             {
                 decimalMantissa = decimalMantissa * 10u + digit;
+                ++mantissaDecimalDigits;
             }
             if (!decimalPointSeen)
             {
@@ -162,12 +167,7 @@ float NumericLexFloat32OutOfRangeToInfinity(const std::string &str)
     double value = decimalMantissa;
 
     // Calculate the exponent offset to normalize the mantissa.
-    int normalizationExponentOffset = 0;
-    while (decimalMantissa >= 10u)
-    {
-        --normalizationExponentOffset;
-        decimalMantissa /= 10u;
-    }
+    int normalizationExponentOffset = 1 - mantissaDecimalDigits;
     // Apply the exponent.
     value *= std::pow(10.0, static_cast<double>(exponent + normalizationExponentOffset));
     if (value > static_cast<double>(std::numeric_limits<float>::max()))
@@ -183,11 +183,7 @@ float NumericLexFloat32OutOfRangeToInfinity(const std::string &str)
 
 bool strtof_clamp(const std::string &str, float *value)
 {
-    // Try the standard float parsing path first.
-    bool success = angle::pp::numeric_lex_float(str, value);
-
-    // If the standard path doesn't succeed, take the path that can handle the following corner
-    // cases:
+    // Custom float parsing that can handle the following corner cases:
     //   1. The decimal mantissa is very small but the exponent is very large, putting the resulting
     //   number inside the float range.
     //   2. The decimal mantissa is very large but the exponent is very small, putting the resulting
@@ -195,8 +191,7 @@ bool strtof_clamp(const std::string &str, float *value)
     //   3. The value is out-of-range and should be evaluated as infinity.
     //   4. The value is too small and should be evaluated as zero.
     // See ESSL 3.00.6 section 4.1.4 for the relevant specification.
-    if (!success)
-        *value = NumericLexFloat32OutOfRangeToInfinity(str);
+    *value = NumericLexFloat32OutOfRangeToInfinity(str);
     return !gl::isInf(*value);
 }
 
