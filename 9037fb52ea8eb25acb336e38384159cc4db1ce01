@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "877d27ed_9a1c0089",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-08T12:03:15Z",
+      "side": 1,
+      "message": "This change is not compiling correctly (its working locally but not when built by the CQ)\n\nhttps://logs.chromium.org/v/?s\u003dangle%2Fbuildbucket%2Fcr-buildbucket.appspot.com%2F8944291083671054720%2F%2B%2Fsteps%2Fcompile_with_ninja%2F0%2Fstdout\n\nI will revert it for now to the way I had  it.",
+      "parentUuid": "b1b967df_eb0c800d",
+      "range": {
+        "startLine": 507,
+        "startChar": 28,
+        "endLine": 507,
+        "endChar": 40
+      },
+      "revId": "9037fb52ea8eb25acb336e38384159cc4db1ce01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "808cc0eb_b4696f66",
         "filename": "src/libANGLE/ProgramLinkedResources.cpp",
         "patchSetId": 12
