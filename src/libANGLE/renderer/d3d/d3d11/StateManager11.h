@@ -316,9 +316,12 @@ class StateManager11 final : angle::NonCopyable
     gl::Error generateSwizzles(const gl::Context *context);
 
     gl::Error applyDriverUniforms();
+    gl::Error applyDriverUniformsForShader(gl::ShaderType shaderType);
     gl::Error applyUniforms();
+    gl::Error applyUniformsForShader(gl::ShaderType shaderType);
 
     gl::Error syncUniformBuffers(const gl::Context *context);
+    gl::Error syncUniformBuffersForShader(const gl::Context *context, gl::ShaderType shaderType);
     gl::Error syncTransformFeedbackBuffers(const gl::Context *context);
 
     // These are currently only called internally.
@@ -513,9 +516,7 @@ class StateManager11 final : angle::NonCopyable
     bool mIsMultiviewEnabled;
 
     // Driver Constants.
-    d3d11::Buffer mDriverConstantBufferVS;
-    d3d11::Buffer mDriverConstantBufferPS;
-    d3d11::Buffer mDriverConstantBufferCS;
+    gl::ShaderMap<d3d11::Buffer> mShaderDriverConstantBuffers;
 
     ResourceSerial mCurrentComputeConstantBuffer;
     ResourceSerial mCurrentGeometryConstantBuffer;
@@ -550,12 +551,10 @@ class StateManager11 final : angle::NonCopyable
                                   angle::SubjectMessage message) override;
 
         void reset();
-        void bindVS(size_t index, Buffer11 *buffer);
-        void bindPS(size_t index, Buffer11 *buffer);
+        void bindToShader(gl::ShaderType shaderType, size_t index, Buffer11 *buffer);
 
       private:
-        std::vector<angle::ObserverBinding> mBindingsVS;
-        std::vector<angle::ObserverBinding> mBindingsPS;
+        gl::ShaderMap<std::vector<angle::ObserverBinding>> mShaderBindings;
     };
     ConstantBufferObserver mConstantBufferObserver;
 

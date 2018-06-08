@@ -299,6 +299,11 @@ class ProgramD3D : public ProgramImpl
 
     const gl::ProgramState &getState() const { return mState; }
 
+    bool hasShaderStage(gl::ShaderType shaderType) const
+    {
+        return mState.getLinkedShaderStages()[shaderType];
+    }
+
   private:
     // These forward-declared tasks are used for multi-thread shader compiles.
     class GetExecutableTask;
