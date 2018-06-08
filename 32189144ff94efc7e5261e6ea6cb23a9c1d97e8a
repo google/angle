@@ -22,6 +22,30 @@
       "revId": "32189144ff94efc7e5261e6ea6cb23a9c1d97e8a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "490e5057_4db537fb",
+        "filename": "src/tests/gl_tests/PointSpritesTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-08T17:44:01Z",
+      "side": 1,
+      "message": "UsingPointCoordInsideFunction I mean",
+      "parentUuid": "5edd5789_727c84b5",
+      "range": {
+        "startLine": 142,
+        "startChar": 25,
+        "endLine": 142,
+        "endChar": 87
+      },
+      "revId": "32189144ff94efc7e5261e6ea6cb23a9c1d97e8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
