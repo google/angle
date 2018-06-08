@@ -149,6 +149,9 @@ class SixteenBppTextureTestES3 : public SixteenBppTextureTest
 // Samples from the texture, renders to it, generates mipmaps etc.
 TEST_P(SixteenBppTextureTest, RGB565Validation)
 {
+    // TODO(lucferron): Diagnose and fix http://anglebug.com/2656
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsAndroid() || (IsWindows() && IsIntel())));
+
     GLuint test;
     memcpy(&test, &GLColor::black, 4);
 
@@ -176,6 +179,10 @@ TEST_P(SixteenBppTextureTest, RGB565Validation)
 // Samples from the texture, renders to it, generates mipmaps etc.
 TEST_P(SixteenBppTextureTest, RGBA5551Validation)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2649
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLushort pixels[4] =
     {
         0xF801, // Red
@@ -202,6 +209,10 @@ TEST_P(SixteenBppTextureTest, RGBA5551Validation)
 // Based on WebGL test conformance/textures/texture-attachment-formats.html
 TEST_P(SixteenBppTextureTest, RGBA5551ClearAlpha)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2649
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLTexture tex;
     GLFramebuffer fbo;
 
@@ -494,7 +505,8 @@ ANGLE_INSTANTIATE_TEST(SixteenBppTextureTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(SixteenBppTextureTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 

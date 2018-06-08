@@ -375,6 +375,9 @@ TEST_P(IndexedPointsTestUInt, VertexWithColorUnsignedIntOffset3)
     runTest(3, false);
 }
 
+// TODO(lucferron): Diagnose and fix the UByte and UShort tests below for Vulkan.
+// http://anglebug.com/2646
+
 // TODO(geofflang): Figure out why this test fails on Intel OpenGL
 ANGLE_INSTANTIATE_TEST(IndexedPointsTestUByte,
                        ES2_D3D11(),
@@ -390,4 +393,5 @@ ANGLE_INSTANTIATE_TEST(IndexedPointsTestUInt,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());

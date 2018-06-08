@@ -160,6 +160,10 @@ TEST_P(BindUniformLocationTest, Compositor)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2642
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     ASSERT_NE(nullptr, mBindUniformLocation);
 
     const std::string vsSource =
@@ -596,7 +600,8 @@ ANGLE_INSTANTIATE_TEST(BindUniformLocationTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(BindUniformLocationES31Test, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES())
 

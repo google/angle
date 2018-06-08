@@ -62,6 +62,10 @@ TEST_P(LinkAndRelinkTest, RenderingProgramFailsWithoutProgramInstalled)
 // However, dispatching compute always fails.
 TEST_P(LinkAndRelinkTest, RenderingProgramFailsWithProgramInstalled)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2648
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     // Install a render program in current GL state via UseProgram, then render.
     // It should succeed.
     const std::string vsSource =
@@ -434,7 +438,8 @@ ANGLE_INSTANTIATE_TEST(LinkAndRelinkTest,
                        ES2_D3D11(),
                        ES3_OPENGL(),
                        ES3_OPENGLES(),
-                       ES3_D3D11());
+                       ES3_D3D11(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(LinkAndRelinkTestES31, ES31_OPENGL(), ES31_OPENGLES());
 
 }  // namespace

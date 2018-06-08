@@ -1339,6 +1339,10 @@ TEST_P(SamplerArrayAsFunctionParameterTest, SamplerArrayAsFunctionParameter)
 // Copy of a test in conformance/textures/texture-mips, to test generate mipmaps
 TEST_P(Texture2DTestWithDrawScale, MipmapsTwice)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2653
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
 
@@ -1381,6 +1385,9 @@ TEST_P(Texture2DTestWithDrawScale, MipmapsTwice)
 // https://code.google.com/p/angleproject/issues/detail?id=849
 TEST_P(TextureCubeTest, CubeMapFBO)
 {
+    // TODO(jmadill): Cube map render targets. http://anglebug.com/2470
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLuint fbo;
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -2933,6 +2940,10 @@ TEST_P(TextureLimitsTest, MaxFragmentTextures)
 // Test rendering with maximum combined texture units.
 TEST_P(TextureLimitsTest, MaxCombinedTextures)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2654
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLint vertexTextures = mMaxVertexTextures;
 
     if (vertexTextures + mMaxFragmentTextures > mMaxCombinedTextures)
@@ -2967,6 +2978,10 @@ TEST_P(TextureLimitsTest, ExcessiveFragmentTextures)
 // Test active vertex textures under the limit, but excessive textures specified.
 TEST_P(TextureLimitsTest, MaxActiveVertexTextures)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2654
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     compileProgramWithTextureCounts("tex", mMaxVertexTextures + 4, mMaxVertexTextures, "tex", 0, 0);
     ASSERT_NE(0u, mProgram);
     ASSERT_GL_NO_ERROR();
@@ -2977,6 +2992,10 @@ TEST_P(TextureLimitsTest, MaxActiveVertexTextures)
 // Test active fragment textures under the limit, but excessive textures specified.
 TEST_P(TextureLimitsTest, MaxActiveFragmentTextures)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2654
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     compileProgramWithTextureCounts("tex", 0, 0, "tex", mMaxFragmentTextures + 4,
                                     mMaxFragmentTextures);
     ASSERT_NE(0u, mProgram);
@@ -3757,13 +3776,15 @@ ANGLE_INSTANTIATE_TEST(TextureCubeTest,
                        ES2_D3D11_FL10_0(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(Texture2DTestWithDrawScale,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(Sampler2DAsFunctionParameterTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -3826,7 +3847,7 @@ ANGLE_INSTANTIATE_TEST(SamplerInStructAndOtherVariableTest,
                        ES2_D3D9(),
                        ES2_OPENGL(),
                        ES2_OPENGLES());
-ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(Texture2DNorm16TestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureCubeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 

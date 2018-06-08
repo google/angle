@@ -153,6 +153,11 @@ TEST_P(D3DImageFormatConversionTest, WriteColorFunctionR8G8B8)
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // Even though this test is only run on Windows (since it includes imageformats.h from the D3D renderer), we can still run the test
 // against OpenGL. This is valuable, since it provides extra validation using a renderer that doesn't use imageformats.h itself.
-ANGLE_INSTANTIATE_TEST(D3DImageFormatConversionTest, ES2_D3D9(), ES2_D3D11(), ES2_D3D11_FL9_3(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(D3DImageFormatConversionTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_OPENGL(),
+                       ES2_VULKAN());
 
 } // namespace

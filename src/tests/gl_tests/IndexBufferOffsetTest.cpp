@@ -118,6 +118,10 @@ class IndexBufferOffsetTest : public ANGLETest
 // Test using an offset for an UInt8 index buffer
 TEST_P(IndexBufferOffsetTest, UInt8Index)
 {
+    // TODO(lucferron): Add support for unsigned byte elements array buffers
+    // http://anglebug.com/2659
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLubyte indexData[] = {0, 1, 2, 1, 2, 3};
     runTest(GL_UNSIGNED_BYTE, 1, indexData);
 }
@@ -125,6 +129,10 @@ TEST_P(IndexBufferOffsetTest, UInt8Index)
 // Test using an offset for an UInt16 index buffer
 TEST_P(IndexBufferOffsetTest, UInt16Index)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2645
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     GLushort indexData[] = {0, 1, 2, 1, 2, 3};
     runTest(GL_UNSIGNED_SHORT, 2, indexData);
 }
@@ -146,4 +154,5 @@ ANGLE_INSTANTIATE_TEST(IndexBufferOffsetTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());

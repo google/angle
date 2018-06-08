@@ -160,6 +160,10 @@ TEST_P(StateChangeTest, FramebufferIncompleteWithTexStorage)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage"));
 
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2651
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -232,6 +236,10 @@ TEST_P(StateChangeTest, FramebufferIncompleteDepthAttachment)
 // Test that Framebuffer completeness caching works when stencil attachments change.
 TEST_P(StateChangeTest, FramebufferIncompleteStencilAttachment)
 {
+    // TODO(lucferron): Figure out why this fails on android and Intel/Windows and fix.
+    // http://anglebug.com/2655
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsAndroid() || (IsIntel() && IsWindows())));
+
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -296,6 +304,10 @@ void main()
 // Tests that using a buffered attribute, then disabling it and using current value, works.
 TEST_P(StateChangeTest, DisablingBufferedVertexAttribute)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2650
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     ANGLE_GL_PROGRAM(program, kSimpleAttributeVS, kSimpleAttributeFS);
     glUseProgram(program);
     GLint attribLoc   = glGetAttribLocation(program, "testAttrib");
@@ -604,6 +616,10 @@ TEST_P(StateChangeRenderTest, RecreateRenderbuffer)
 // Test that recreating a texture with GenerateMipmaps signals the FBO is dirty.
 TEST_P(StateChangeRenderTest, GenerateMipmap)
 {
+    // TODO(lucferron): Diagnose and fix
+    // http://anglebug.com/2652
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
@@ -2041,7 +2057,7 @@ TEST_P(SimpleStateChangeTest, ReleaseShaderInUseThatReadsFromUniforms)
 
 }  // anonymous namespace
 
-ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(LineLoopStateChangeTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -2051,6 +2067,7 @@ ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_OPENGL(),
-                       ES2_D3D11_FL9_3());
+                       ES2_D3D11_FL9_3(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTest, ES2_VULKAN(), ES2_OPENGL());

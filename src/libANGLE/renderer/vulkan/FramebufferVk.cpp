@@ -327,6 +327,9 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
                               GLbitfield mask,
                               GLenum filter)
 {
+    // TODO(lucferron): Implement this
+    // Should enable the BlitFramebufferANGLETest tests in angle_end2end_tests
+    // http://anglebug.com/2643
     UNIMPLEMENTED();
     return gl::InternalError();
 }

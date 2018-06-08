@@ -296,6 +296,8 @@ class InstancingTestPoints : public InstancingTest
 // to D3D, to ensure that slot/stream zero of the input layout doesn't contain per-instance data.
 TEST_P(InstancingTestAllConfigs, AttributeZeroInstanced)
 {
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
+
     const std::string vs =
         "attribute vec3 a_instancePos;\n"
         "attribute vec3 a_position;\n"
@@ -312,6 +314,7 @@ TEST_P(InstancingTestAllConfigs, AttributeZeroInstanced)
 // expected.
 TEST_P(InstancingTestAllConfigs, AttributeZeroNotInstanced)
 {
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_instanced_arrays"));
     const std::string vs =
         "attribute vec3 a_position;\n"
         "attribute vec3 a_instancePos;\n"
@@ -527,6 +530,9 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
 
     glDeleteVertexArrays(1, &vao);
 }
+
+// TODO(lucferron): Diagnose and fix InstancingTestAllConfigs for Vulkan.
+// http://anglebug.com/2647
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against. We test on D3D9 and D3D11 9_3 because they use special codepaths
