@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "97cad15b_ba16d9a6",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-08T11:39:45Z",
+      "side": 1,
+      "message": "Agree. Usually we say we flip the y coordinate. Even though it\u0027s technically correct both ways.",
+      "parentUuid": "a6b3a497_d66089a3",
+      "range": {
+        "startLine": 148,
+        "startChar": 75,
+        "endLine": 148,
+        "endChar": 96
+      },
+      "revId": "b3b42cfa934111a10c3a38a51689e77ed45e96b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "14cf1680_6bce41d6",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 4
@@ -36,6 +60,47 @@
       "writtenOn": "2018-06-08T11:26:24Z",
       "side": 1,
       "message": "What if gl_PointCoord is used outside of main? You probably want to declare the replacement variable in the global scope and then assign the value in the beginning of main().\n\nYou might want to reuse the DeclareGlobalVariable() function from DeclareAndInitBuiltinsForInstancedMultiview.cpp for this.",
+      "revId": "b3b42cfa934111a10c3a38a51689e77ed45e96b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "def461de_69d3952b",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-08T11:39:45Z",
+      "side": 1,
+      "message": "+1. Can you add a test for this?",
+      "parentUuid": "14cf1680_6bce41d6",
+      "revId": "b3b42cfa934111a10c3a38a51689e77ed45e96b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4739a8b_3324da28",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-08T11:39:45Z",
+      "side": 1,
+      "message": "naming nit: FlipGLPointCoord",
+      "range": {
+        "startLine": 349,
+        "startChar": 16,
+        "endLine": 349,
+        "endChar": 36
+      },
       "revId": "b3b42cfa934111a10c3a38a51689e77ed45e96b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
