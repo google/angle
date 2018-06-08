@@ -22,6 +22,30 @@
       "revId": "e1a057e8aa64274f15fa95e282f7b85e9b45365f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f4ef334_29d01919",
+        "filename": "src/libGLESv2/entry_points_egl_ext.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:00:01Z",
+      "side": 0,
+      "message": "Yea, seems that this comment has always been missing.",
+      "parentUuid": "c3c777d5_40512cd1",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 124,
+        "endChar": 0
+      },
+      "revId": "e1a057e8aa64274f15fa95e282f7b85e9b45365f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

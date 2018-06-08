@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f8fd9460_560820fe",
+        "filename": "src/common/PackedEnums.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:00:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5068f464_7d40b307",
+      "range": {
+        "startLine": 194,
+        "startChar": 1,
+        "endLine": 194,
+        "endChar": 0
+      },
+      "revId": "5e50405f6b7774f66fe7d5d7578492c18c35e362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0daac7c3_dad41da5",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 8
@@ -45,6 +69,30 @@
       "revId": "5e50405f6b7774f66fe7d5d7578492c18c35e362",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33d33e31_ee6866dc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:00:01Z",
+      "side": 1,
+      "message": "It is intentional, I\u0027m not sure why it was required but it would not compile otherwise.",
+      "parentUuid": "0daac7c3_dad41da5",
+      "range": {
+        "startLine": 918,
+        "startChar": 0,
+        "endLine": 918,
+        "endChar": 4
+      },
+      "revId": "5e50405f6b7774f66fe7d5d7578492c18c35e362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "45d52049_4432066f",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:00:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "645e96d1_4e0da1f1",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 15
+      },
+      "revId": "5e50405f6b7774f66fe7d5d7578492c18c35e362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13015b7f_51fa5d93",
         "filename": "src/libANGLE/validationEGL.h",
         "patchSetId": 8
@@ -91,6 +163,30 @@
       "revId": "5e50405f6b7774f66fe7d5d7578492c18c35e362",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f067bf7a_69f0d04b",
+        "filename": "src/libANGLE/validationEGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-08T15:00:01Z",
+      "side": 1,
+      "message": "Problem here was that the function names are egl::FuncName.  I think this problem will go away once we auto-generate the entry points.",
+      "parentUuid": "13015b7f_51fa5d93",
+      "range": {
+        "startLine": 214,
+        "startChar": 8,
+        "endLine": 214,
+        "endChar": 21
+      },
+      "revId": "5e50405f6b7774f66fe7d5d7578492c18c35e362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
