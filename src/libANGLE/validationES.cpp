@@ -3055,11 +3055,11 @@ bool ValidateDrawElementsCommon(Context *context,
     if (context->getExtensions().webglCompatibility ||
         !context->getGLState().areClientArraysEnabled())
     {
-        if (!elementArrayBuffer && count > 0)
+        if (!elementArrayBuffer)
         {
             // [WebGL 1.0] Section 6.2 No Client Side Arrays
-            // If drawElements is called with a count greater than zero, and no WebGLBuffer is bound
-            // to the ELEMENT_ARRAY_BUFFER binding point, an INVALID_OPERATION error is generated.
+            // If an indexed draw command (drawElements) is called and no WebGLBuffer is bound to
+            // the ELEMENT_ARRAY_BUFFER binding point, an INVALID_OPERATION error is generated.
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), MustHaveElementArrayBinding);
             return false;
         }

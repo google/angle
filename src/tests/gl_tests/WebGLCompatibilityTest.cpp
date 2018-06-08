@@ -1470,6 +1470,26 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsNonInstanced)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test for drawing with a null index buffer
+TEST_P(WebGLCompatibilityTest, NullIndexBuffer)
+{
+    const std::string &vert =
+        "attribute float a_pos;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_pos, a_pos, a_pos, 1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, essl1_shaders::fs::Red());
+    glUseProgram(program.get());
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glEnableVertexAttribArray(0);
+
+    glDrawElements(GL_TRIANGLES, 0, GL_UNSIGNED_BYTE, 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Test the checks for OOB reads in the vertex buffers, instanced version
 TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
 {

@@ -70,9 +70,9 @@ Additions to the OpenGL ES Specification
 
     Add to the end of section 2.9.2 "Array Indices in Buffer Objects":
 
-    Rendering commands that draw more than 0 primitives using index data when
-    no buffer is bound to the ELEMENT_ARRAY_BUFFER binding point when
-    CLIENT_ARRAYS_ANGLE is TRUE generate an INVALID_OPERATION error.
+    Rendering commands that draw using index data when no buffer is bound to
+    the ELEMENT_ARRAY_BUFFER binding point when CLIENT_ARRAYS_ANGLE is TRUE
+    generate an INVALID_OPERATION error.
 
 New State
 
@@ -95,6 +95,9 @@ Issues
 
 Revision History
 
-    Rev.    Date         Author     Changes
-    ----  -------------  ---------  ----------------------------------------
-      1   Feb 13, 2016   geofflang  Initial version
+    Rev.    Date         Author                 Changes
+    ----  -------------  ---------              ----------------------------------------
+      2   Jun 12, 2018   Brandon Jones (Intel)  Remove primitives > 0 requirement to error
+                                                when doing an indexed draw with no bound
+                                                ELEMENT_ARRAY_BUFFER
+      1   Feb 13, 2016   geofflang              Initial version
