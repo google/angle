@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f7b44ea_71a1be98",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T15:05:15Z",
+      "side": 1,
+      "message": "many",
+      "range": {
+        "startLine": 7,
+        "startChar": 18,
+        "endLine": 7,
+        "endChar": 23
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9761f72_24f52d98",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1372,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T15:05:15Z",
+      "side": 1,
+      "message": "these tests should be modified to skip if no blit extension is found. also they might need to be tweaked for different extensions. the EXT extension behaves slightly different than the ANGLE extension.",
+      "range": {
+        "startLine": 1370,
+        "startChar": 0,
+        "endLine": 1372,
+        "endChar": 27
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae28b880_8d277b7c",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T15:05:15Z",
+      "side": 1,
+      "message": "we have no support for uint_8 indexes right now. we should file an issue for that.",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 35
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cc2e596_6e5b2c2f",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T15:05:15Z",
+      "side": 1,
+      "message": "not sure why this is failing though.",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 35
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba2650b1_112e9cdc",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T15:05:15Z",
+      "side": 1,
+      "message": "none of these tests work - the uint tests are skipped because of a lack of extension.",
+      "range": {
+        "startLine": 378,
+        "startChar": 0,
+        "endLine": 379,
+        "endChar": 27
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a91a72c0_fc68ce19",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T15:05:15Z",
+      "side": 1,
+      "message": "these tests are missing an extension check",
+      "range": {
+        "startLine": 531,
+        "startChar": 0,
+        "endLine": 532,
+        "endChar": 27
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cde7cc9e_1e3054d5",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1388,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T15:05:15Z",
+      "side": 1,
+      "message": "Cube map render targets",
+      "range": {
+        "startLine": 1388,
+        "startChar": 22,
+        "endLine": 1388,
+        "endChar": 42
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
