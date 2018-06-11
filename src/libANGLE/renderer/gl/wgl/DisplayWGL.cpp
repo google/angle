@@ -65,8 +65,7 @@ class FunctionsGLWindows : public FunctionsGL
 DisplayWGL::DisplayWGL(const egl::DisplayState &state)
     : DisplayGL(state),
       mRenderer(nullptr),
-      mCurrentDC(nullptr),
-      mCurrentGLRC(nullptr),
+      mCurrentData(),
       mOpenGLModule(nullptr),
       mFunctionsWGL(nullptr),
       mHasWGLCreateContextRobustness(false),
@@ -329,7 +328,7 @@ void DisplayWGL::destroy()
             mFunctionsWGL->makeCurrent(mDeviceContext, nullptr);
         }
     }
-    mCurrentDC = nullptr;
+    mCurrentData.clear();
 
     SafeDelete(mFunctionsWGL);
 
@@ -664,29 +663,31 @@ egl::Error DisplayWGL::makeCurrent(egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {
-    HDC newDC = mCurrentDC;
+    CurrentNativeContext &currentContext = mCurrentData[std::this_thread::get_id()];
+
+    HDC newDC = currentContext.dc;
     if (drawSurface)
     {
         SurfaceWGL *drawSurfaceWGL = GetImplAs<SurfaceWGL>(drawSurface);
         newDC                      = drawSurfaceWGL->getDC();
     }
 
-    HGLRC newContext = mCurrentGLRC;
+    HGLRC newContext = currentContext.glrc;
     if (context)
     {
         ContextWGL *contextWGL = GetImplAs<ContextWGL>(context);
         newContext             = contextWGL->getContext();
     }
 
-    if (newDC != mCurrentDC || newContext != mCurrentGLRC)
+    if (newDC != currentContext.dc || newContext != currentContext.glrc)
     {
         if (!mFunctionsWGL->makeCurrent(newDC, newContext))
         {
             // TODO(geofflang): What error type here?
             return egl::EglContextLost() << "Failed to make the WGL context current.";
         }
-        mCurrentDC   = newDC;
-        mCurrentGLRC = newContext;
+        currentContext.dc   = newDC;
+        currentContext.glrc = newContext;
     }
 
     return DisplayGL::makeCurrent(drawSurface, readSurface, context);
@@ -851,8 +852,9 @@ egl::Error DisplayWGL::createRenderer(std::shared_ptr<RendererWGL> *outRenderer)
     {
         return egl::EglNotInitialized() << "Failed to make the intermediate WGL context current.";
     }
-    mCurrentDC = mDeviceContext;
-    mCurrentGLRC = context;
+    CurrentNativeContext &currentContext = mCurrentData[std::this_thread::get_id()];
+    currentContext.dc                    = mDeviceContext;
+    currentContext.glrc                  = context;
 
     std::unique_ptr<FunctionsGL> functionsGL(
         new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress));
