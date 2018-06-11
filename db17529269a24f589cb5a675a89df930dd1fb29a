@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ed48669f_638c1492",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T17:18:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6f7b44ea_71a1be98",
+      "range": {
+        "startLine": 7,
+        "startChar": 18,
+        "endLine": 7,
+        "endChar": 23
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9761f72_24f52d98",
         "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
         "patchSetId": 3
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "0b230fd3_31abe4d8",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T17:18:41Z",
+      "side": 1,
+      "message": "I think it already exists and its 2405",
+      "parentUuid": "ae28b880_8d277b7c",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 35
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8cc2e596_6e5b2c2f",
         "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
         "patchSetId": 3
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "7076a381_9a3a7cdf",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T17:18:41Z",
+      "side": 1,
+      "message": "so its ok to open a new bug right? I don\u0027t diagnose at all with this new CL. I just enable everything I can and open bugs for investigations.",
+      "parentUuid": "8cc2e596_6e5b2c2f",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 35
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba2650b1_112e9cdc",
         "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
         "patchSetId": 3
@@ -105,6 +177,30 @@
       "writtenOn": "2018-06-11T15:05:15Z",
       "side": 1,
       "message": "none of these tests work - the uint tests are skipped because of a lack of extension.",
+      "range": {
+        "startLine": 378,
+        "startChar": 0,
+        "endLine": 379,
+        "endChar": 27
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0f34b21_7025a1be",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T17:18:41Z",
+      "side": 1,
+      "message": "ok, but I\u0027m not sure I understand what to do as a result of the comment. Do you just want me to remove the TODO here?",
+      "parentUuid": "ba2650b1_112e9cdc",
       "range": {
         "startLine": 378,
         "startChar": 0,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "7efbb25f_e6b8d1f8",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T17:18:41Z",
+      "side": 1,
+      "message": "on this extension?\n\nGL_ANGLE_instanced_arrays\n\nSomehow, if I add Vulkan to the list here and check this extension, the test still goes through but fails on Vulkan. Is it not supposed to be in the list of available extensions for Vulkan?",
+      "parentUuid": "a91a72c0_fc68ce19",
+      "range": {
+        "startLine": 531,
+        "startChar": 0,
+        "endLine": 532,
+        "endChar": 27
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cde7cc9e_1e3054d5",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 3
@@ -160,6 +280,30 @@
       "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "faa20e5e_e0fe0cce",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1388,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T17:18:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cde7cc9e_1e3054d5",
+      "range": {
+        "startLine": 1388,
+        "startChar": 22,
+        "endLine": 1388,
+        "endChar": 42
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
