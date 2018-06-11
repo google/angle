@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b587f8d9_ad03de33",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-11T11:38:25Z",
+      "side": 1,
+      "message": "Why is this file being included?",
+      "revId": "9f80655f3383ac9802fb897fab2ac942ccee9214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a504b3df_867a174f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-11T11:38:25Z",
+      "side": 1,
+      "message": "This code looks redundant, please clean it up.",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 197,
+        "endChar": 75
+      },
+      "revId": "9f80655f3383ac9802fb897fab2ac942ccee9214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c812ebbe_d988bc7b",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-11T11:38:25Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 343,
+        "startChar": 92,
+        "endLine": 343,
+        "endChar": 93
+      },
+      "revId": "9f80655f3383ac9802fb897fab2ac942ccee9214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4de52f15_96e0db64",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-11T11:38:25Z",
+      "side": 1,
+      "message": "I\u0027d prefer the exact shorter naming Jamie suggested, \"FlipGLPointCoord\" as it clearly refers to the gl_PointCoord variable.",
+      "range": {
+        "startLine": 353,
+        "startChar": 16,
+        "endLine": 353,
+        "endChar": 38
+      },
+      "revId": "9f80655f3383ac9802fb897fab2ac942ccee9214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
