@@ -127,6 +127,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mSamples(-1),
       mDebugLayersEnabled(),
       mContextProgramCacheEnabled(),
+      mContextVirtualization(),
       mPlatformMethods(nullptr)
 {
 }
@@ -203,6 +204,12 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
     {
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE);
         displayAttributes.push_back(mDebugLayersEnabled.value() ? EGL_TRUE : EGL_FALSE);
+    }
+
+    if (mContextVirtualization.valid())
+    {
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_ANGLE);
+        displayAttributes.push_back(mContextVirtualization.value() ? EGL_TRUE : EGL_FALSE);
     }
 
     if (mPlatformMethods)

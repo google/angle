@@ -89,6 +89,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
         mPlatformMethods = platformMethods;
     }
     void setContextProgramCacheEnabled(bool enabled) { mContextProgramCacheEnabled = enabled; }
+    void setContextVirtualization(bool enabled) { mContextVirtualization = enabled; }
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
 
@@ -162,6 +163,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     EGLint mSamples;
     Optional<bool> mDebugLayersEnabled;
     Optional<bool> mContextProgramCacheEnabled;
+    Optional<bool> mContextVirtualization;
     angle::PlatformMethods *mPlatformMethods;
 };
 

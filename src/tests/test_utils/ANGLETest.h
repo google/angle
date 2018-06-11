@@ -341,6 +341,7 @@ class ANGLETestBase
     void setClientArraysEnabled(bool enabled);
     void setRobustResourceInit(bool enabled);
     void setContextProgramCacheEnabled(bool enabled);
+    void setContextVirtualization(bool enabled);
 
     // Some EGL extension tests would like to defer the Context init until the test body.
     void setDeferContextInit(bool enabled);

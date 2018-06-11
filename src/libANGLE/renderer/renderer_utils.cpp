@@ -442,6 +442,20 @@ bool ShouldUseDebugLayers(const egl::AttributeMap &attribs)
 #endif  // defined(ANGLE_ENABLE_ASSERTS)
 }
 
+bool ShouldUseVirtualizedContexts(const egl::AttributeMap &attribs, bool defaultValue)
+{
+    EGLAttrib virtualizedContextRequest =
+        attribs.get(EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_ANGLE, EGL_DONT_CARE);
+    if (defaultValue)
+    {
+        return (virtualizedContextRequest != EGL_FALSE);
+    }
+    else
+    {
+        return (virtualizedContextRequest == EGL_TRUE);
+    }
+}
+
 void CopyImageCHROMIUM(const uint8_t *sourceData,
                        size_t sourceRowPitch,
                        size_t sourcePixelBytes,

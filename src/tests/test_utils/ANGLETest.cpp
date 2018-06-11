@@ -897,6 +897,11 @@ void ANGLETestBase::setContextProgramCacheEnabled(bool enabled)
     mEGLWindow->setContextProgramCacheEnabled(enabled);
 }
 
+void ANGLETestBase::setContextVirtualization(bool enabled)
+{
+    mEGLWindow->setContextVirtualization(enabled);
+}
+
 void ANGLETestBase::setDeferContextInit(bool enabled)
 {
     mDeferContextInit = enabled;

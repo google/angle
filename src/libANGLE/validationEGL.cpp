@@ -409,6 +409,27 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                     }
                     break;
 
+                case EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_ANGLE:
+                    if (!clientExtensions.platformANGLEContextVirtualization)
+                    {
+                        return EglBadAttribute() << "EGL_ANGLE_platform_angle_context_"
+                                                    "virtualization extension not active";
+                    }
+
+                    switch (value)
+                    {
+                        case EGL_DONT_CARE:
+                        case EGL_FALSE:
+                        case EGL_TRUE:
+                            break;
+
+                        default:
+                            return EglBadAttribute() << "Invalid value for "
+                                                        "EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_"
+                                                        "ANGLE attrib";
+                    }
+                    break;
+
                 default:
                     break;
             }

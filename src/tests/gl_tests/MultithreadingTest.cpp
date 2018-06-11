@@ -26,9 +26,10 @@ class MultithreadingTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
+        setContextVirtualization(false);
     }
 
-    bool platformSupportsMultithreading() const { return false; }
+    bool platformSupportsMultithreading() const { return IsOpenGL() && IsWindows(); }
 };
 
 // Test that it's possible to make one context current on different threads
@@ -92,7 +93,7 @@ TEST_P(MultithreadingTest, MakeCurrentMultiContext)
     std::array<std::thread, kThreadCount> threads;
     for (size_t thread = 0; thread < kThreadCount; thread++)
     {
-        threads[thread] = std::thread([&]() {
+        threads[thread] = std::thread([&, thread]() {
             EGLSurface pbuffer= EGL_NO_SURFACE;
             EGLConfig ctx= EGL_NO_CONTEXT;
 
@@ -102,7 +103,6 @@ TEST_P(MultithreadingTest, MakeCurrentMultiContext)
                 // Initialize the pbuffer and context
                 EGLint pbufferAttributes[] = {
                     EGL_WIDTH,          kPBufferSize,     EGL_HEIGHT,         kPBufferSize,
-                    EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGBA, EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
                     EGL_NONE,           EGL_NONE,
                 };
                 pbuffer = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
