@@ -417,8 +417,8 @@ gl::Error VertexArrayVk::drawElements(const gl::Context *context,
         if (!elementArrayBuffer)
         {
             ANGLE_TRY(mLineLoopHelper.getIndexBufferForClientElementArray(
-                renderer, drawCallParams.indices(), indexType, drawCallParams.indexCount(),
-                &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
+                renderer, drawCallParams, &mCurrentElementArrayBufferHandle,
+                &mCurrentElementArrayBufferOffset));
         }
         else
         {
@@ -505,9 +505,10 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
     }
     else if (mIndexBufferDirty || newCommandBuffer)
     {
-        if (drawCallParams.type() == GL_UNSIGNED_BYTE)
+        if (drawCallParams.type() == GL_UNSIGNED_BYTE &&
+            drawCallParams.mode() != gl::PrimitiveMode::LineLoop)
         {
-            // TODO(fjhenigman): Index format translation.
+            // TODO(fjhenigman): Index format translation for non line-loop calls.
             UNIMPLEMENTED();
             return gl::InternalError()
                    << "Unsigned byte translation is not implemented for indices in a buffer object";

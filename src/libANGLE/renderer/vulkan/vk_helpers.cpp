@@ -446,29 +446,43 @@ gl::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *render
     return gl::NoError();
 }
 
-gl::Error LineLoopHelper::getIndexBufferForClientElementArray(RendererVk *renderer,
-                                                              const void *indicesInput,
-                                                              VkIndexType indexType,
-                                                              int indexCount,
-                                                              VkBuffer *bufferHandleOut,
-                                                              VkDeviceSize *bufferOffsetOut)
+gl::Error LineLoopHelper::getIndexBufferForClientElementArray(
+    RendererVk *renderer,
+    const gl::DrawCallParams &drawCallParams,
+    VkBuffer *bufferHandleOut,
+    VkDeviceSize *bufferOffsetOut)
 {
-    // TODO(lucferron): we'll eventually need to support uint8, emulated on 16 since Vulkan only
-    // supports 16 / 32.
-    ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
+    VkIndexType indexType = gl_vk::GetIndexType(drawCallParams.type());
 
     uint8_t *indices = nullptr;
     uint32_t offset  = 0;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
-    size_t allocateBytes = unitSize * (indexCount + 1);
+    size_t allocateBytes = unitSize * (drawCallParams.indexCount() + 1);
     ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            &offset, nullptr));
     *bufferOffsetOut = static_cast<VkDeviceSize>(offset);
 
-    memcpy(indices, indicesInput, unitSize * indexCount);
-    memcpy(indices + unitSize * indexCount, indicesInput, unitSize);
+    if (drawCallParams.type() == GL_UNSIGNED_BYTE)
+    {
+        // Vulkan doesn't support uint8 index types, so we need to emulate it.
+        ASSERT(indexType == VK_INDEX_TYPE_UINT16);
+        uint16_t *indicesDst  = reinterpret_cast<uint16_t *>(indices);
+        const uint8_t *srcPtr = reinterpret_cast<const uint8_t *>(drawCallParams.indices());
+        for (int i = 0; i < drawCallParams.indexCount(); i++)
+        {
+            indicesDst[i] = srcPtr[i];
+        }
+
+        indicesDst[drawCallParams.indexCount()] = srcPtr[0];
+    }
+    else
+    {
+        memcpy(indices, drawCallParams.indices(), unitSize * drawCallParams.indexCount());
+        memcpy(indices + unitSize * drawCallParams.indexCount(), drawCallParams.indices(),
+               unitSize);
+    }
 
     ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
     return gl::NoError();

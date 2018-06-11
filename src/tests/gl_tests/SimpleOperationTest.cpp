@@ -778,19 +778,21 @@ TEST_P(SimpleOperationTest, DrawWith2DTexture)
     EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::yellow);
 }
 
-// Draw a line loop using a drawElement call and client side memory.
-TEST_P(SimpleOperationTest, DrawElementsLineLoopUsingClientSideMemory)
+template <typename T>
+void TestDrawElementsLineLoopUsingClientSideMemory(GLenum indexType,
+                                                   int windowWidth,
+                                                   int windowHeight)
 {
     ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
     glUseProgram(program);
 
     // We expect to draw a square with these 4 vertices with a drawArray call.
     std::vector<Vector3> vertices;
-    CreatePixelCenterWindowCoords({{32, 96}, {32, 32}, {96, 32}, {96, 96}}, getWindowWidth(),
-                                  getWindowHeight(), &vertices);
+    CreatePixelCenterWindowCoords({{32, 96}, {32, 32}, {96, 32}, {96, 96}}, windowWidth,
+                                  windowHeight, &vertices);
 
     // If we use these indices to draw however, we should be drawing an hourglass.
-    std::vector<GLushort> indices{3, 2, 1, 0};
+    std::vector<T> indices{3, 2, 1, 0};
 
     GLint positionLocation = glGetAttribLocation(program, "position");
     ASSERT_NE(-1, positionLocation);
@@ -803,13 +805,13 @@ TEST_P(SimpleOperationTest, DrawElementsLineLoopUsingClientSideMemory)
     glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(positionLocation);
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_SHORT, indices.data());
+    glDrawElements(GL_LINE_LOOP, 4, indexType, indices.data());
     glDisableVertexAttribArray(positionLocation);
 
     ASSERT_GL_NO_ERROR();
 
-    int quarterWidth  = getWindowWidth() / 4;
-    int quarterHeight = getWindowHeight() / 4;
+    int quarterWidth  = windowWidth / 4;
+    int quarterHeight = windowHeight / 4;
 
     // Bottom left
     EXPECT_PIXEL_COLOR_EQ(quarterWidth, quarterHeight, GLColor::green);
@@ -822,6 +824,20 @@ TEST_P(SimpleOperationTest, DrawElementsLineLoopUsingClientSideMemory)
 
     // Verify line is closed between the 2 last vertices
     EXPECT_PIXEL_COLOR_EQ((quarterWidth * 2), quarterHeight, GLColor::green);
+}
+
+// Draw a line loop using a drawElement call and client side memory.
+TEST_P(SimpleOperationTest, DrawElementsLineLoopUsingUShortClientSideMemory)
+{
+    TestDrawElementsLineLoopUsingClientSideMemory<GLushort>(GL_UNSIGNED_SHORT, getWindowWidth(),
+                                                            getWindowHeight());
+}
+
+// Draw a line loop using a drawElement call and client side memory.
+TEST_P(SimpleOperationTest, DrawElementsLineLoopUsingUByteClientSideMemory)
+{
+    TestDrawElementsLineLoopUsingClientSideMemory<GLubyte>(GL_UNSIGNED_BYTE, getWindowWidth(),
+                                                           getWindowHeight());
 }
 
 // Creates a program with a cube texture and renders with it.
