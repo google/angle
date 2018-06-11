@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "2cd8ba78_25cf9cce",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T17:26:44Z",
+      "side": 1,
+      "message": "Yep that\u0027s fine.",
+      "parentUuid": "7076a381_9a3a7cdf",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 35
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba2650b1_112e9cdc",
         "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
         "patchSetId": 3
@@ -213,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "e8783114_c600598f",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T17:26:44Z",
+      "side": 1,
+      "message": "No, just pointing it out. No action needed. You can go \"Ack\" or even just ignore it.",
+      "parentUuid": "c0f34b21_7025a1be",
+      "range": {
+        "startLine": 378,
+        "startChar": 0,
+        "endLine": 379,
+        "endChar": 27
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a91a72c0_fc68ce19",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 3
@@ -257,6 +305,30 @@
       "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9851e993_2a204adc",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T17:26:44Z",
+      "side": 1,
+      "message": "Would require closer investigation. It\u0027s fine to do this in the follow up issue.",
+      "parentUuid": "7efbb25f_e6b8d1f8",
+      "range": {
+        "startLine": 531,
+        "startChar": 0,
+        "endLine": 532,
+        "endChar": 27
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
