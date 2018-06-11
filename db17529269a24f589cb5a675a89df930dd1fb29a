@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7801839c_10ca6ed6",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-11T17:27:24Z",
+      "side": 1,
+      "message": "No, 2405 is for vertex arrays. I\u0027ll file an issue for unsigned byte elements.",
+      "parentUuid": "0b230fd3_31abe4d8",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 35
+      },
+      "revId": "db17529269a24f589cb5a675a89df930dd1fb29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8cc2e596_6e5b2c2f",
         "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
         "patchSetId": 3
