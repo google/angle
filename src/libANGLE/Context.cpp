@@ -3126,8 +3126,10 @@ void Context::initCaps()
         mCaps.maxTextureMatrixStackDepth    = Caps::GlobalMatrixStackDepth;
     }
 
-    // Apply implementation limits
+    // Apply/Verify implementation limits
     LimitCap(&mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
+
+    ASSERT(mCaps.minAliasedPointSize >= 1.0f);
 
     if (getClientVersion() < ES_3_1)
     {

@@ -146,7 +146,7 @@ constexpr ImmutableString kFlippedPointCoordName = ImmutableString("flippedPoint
 
 // Declares a new variable to replace gl_PointCoord with a version that is flipping the Y
 // coordinate.
-void FlipGLPointCoordinates(TIntermBlock *root, TSymbolTable *symbolTable)
+void FlipGLPointCoord(TIntermBlock *root, TSymbolTable *symbolTable)
 {
     // Create a symbol reference to "gl_PointCoord"
     const TVariable *pointCoord  = BuiltInVariable::gl_PointCoord();
@@ -346,7 +346,7 @@ void TranslatorVulkan::translate(TIntermBlock *root,
 
             if (inputVarying.name == "gl_PointCoord")
             {
-                FlipGLPointCoordinates(root, &getSymbolTable());
+                FlipGLPointCoord(root, &getSymbolTable());
                 break;
             }
         }

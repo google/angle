@@ -907,8 +907,8 @@ Caps::Caps()
       maxLODBias(0),
       maxCubeMapTextureSize(0),
       maxRenderbufferSize(0),
-      minAliasedPointSize(0),
-      maxAliasedPointSize(0),
+      minAliasedPointSize(1.0f),
+      maxAliasedPointSize(1.0f),
       minAliasedLineWidth(0),
       maxAliasedLineWidth(0),
 

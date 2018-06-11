@@ -45,7 +45,8 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outCaps->maxLODBias            = physicalDeviceProperties.limits.maxSamplerLodBias;
     outCaps->maxCubeMapTextureSize = physicalDeviceProperties.limits.maxImageDimensionCube;
     outCaps->maxRenderbufferSize   = outCaps->max2DTextureSize;
-    outCaps->minAliasedPointSize   = physicalDeviceProperties.limits.pointSizeRange[0];
+    outCaps->minAliasedPointSize =
+        std::max(1.0f, physicalDeviceProperties.limits.pointSizeRange[0]);
     outCaps->maxAliasedPointSize   = physicalDeviceProperties.limits.pointSizeRange[1];
     outCaps->minAliasedLineWidth   = physicalDeviceProperties.limits.lineWidthRange[0];
     outCaps->maxAliasedLineWidth   = physicalDeviceProperties.limits.lineWidthRange[1];

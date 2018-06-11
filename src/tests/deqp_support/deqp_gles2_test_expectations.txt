@@ -323,4 +323,3 @@
 
 // Vulkan AMD Windows specific failures
 2602 VULKAN WIN AMD : dEQP-GLES2.functional.buffer.write.* = SKIP
-2658 VULKAN WIN AMD : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = SKIP

@@ -352,12 +352,14 @@ void GenerateCaps(const FunctionsGL *functions,
     {
         // Desktop GL core profile deprecated the GL_ALIASED_POINT_SIZE_RANGE query.  Use
         // GL_POINT_SIZE_RANGE instead.
-        caps->minAliasedPointSize = QueryGLFloatRange(functions, GL_POINT_SIZE_RANGE, 0);
+        caps->minAliasedPointSize =
+            std::max(1.0f, QueryGLFloatRange(functions, GL_POINT_SIZE_RANGE, 0));
         caps->maxAliasedPointSize = QueryGLFloatRange(functions, GL_POINT_SIZE_RANGE, 1);
     }
     else
     {
-        caps->minAliasedPointSize = QueryGLFloatRange(functions, GL_ALIASED_POINT_SIZE_RANGE, 0);
+        caps->minAliasedPointSize =
+            std::max(1.0f, QueryGLFloatRange(functions, GL_ALIASED_POINT_SIZE_RANGE, 0));
         caps->maxAliasedPointSize = QueryGLFloatRange(functions, GL_ALIASED_POINT_SIZE_RANGE, 1);
     }
 
