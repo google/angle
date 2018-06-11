@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "078690f7_b30c38ba",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "We should have 2 global consts for these 2 indexes and refer to them with these consts everywhere so nobody ever get confused if 0 is uniforms or 0 is textures and vice-versa",
+      "range": {
+        "startLine": 862,
+        "startChar": 4,
+        "endLine": 863,
+        "endChar": 76
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c0aa687_80cd2a5f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "Isn\u0027t that supposed to be Texture?",
+      "range": {
+        "startLine": 863,
+        "startChar": 30,
+        "endLine": 863,
+        "endChar": 71
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4546f20_4ada5ef6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 111,
+        "startChar": 55,
+        "endLine": 111,
+        "endChar": 68
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9b1e821_13ababca",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1136,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "Auto here does not describe what\u0027s in mPayload",
+      "range": {
+        "startLine": 1136,
+        "startChar": 9,
+        "endLine": 1136,
+        "endChar": 14
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e346a194_4772ed00",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1150,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1150,
+        "startChar": 4,
+        "endLine": 1150,
+        "endChar": 9
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c610e74_bd821d69",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1171,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1171,
+        "startChar": 4,
+        "endLine": 1171,
+        "endChar": 9
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3c56afe_ede87bbe",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1187,
+        "startChar": 9,
+        "endLine": 1187,
+        "endChar": 14
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "708d2115_ecb2fb47",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1201,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1201,
+        "startChar": 4,
+        "endLine": 1201,
+        "endChar": 9
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2629bc59_4f802a78",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1210,
+        "startChar": 15,
+        "endLine": 1210,
+        "endChar": 20
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1b8e054_294865b5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1235,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1235,
+        "startChar": 4,
+        "endLine": 1235,
+        "endChar": 9
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40d930af_0cf4eb3c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:07:02Z",
+      "side": 1,
+      "message": "std::atomic instead ?",
+      "range": {
+        "startLine": 62,
+        "startChar": 13,
+        "endLine": 62,
+        "endChar": 22
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
