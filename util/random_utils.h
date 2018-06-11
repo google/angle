@@ -42,13 +42,13 @@ class ANGLE_EXPORT RNG
     template <class T>
     T &randomSelect(std::vector<T> &elements)
     {
-        return elements[randomIntBetween(0, elements.size() - 1)];
+        return elements[randomIntBetween(0, static_cast<int>(elements.size()) - 1)];
     }
 
     template <class T>
     const T &randomSelect(const std::vector<T> &elements)
     {
-        return elements.at(randomIntBetween(0, elements.size() - 1));
+        return elements.at(randomIntBetween(0, static_cast<int>(elements.size()) - 1));
     }
 
   private:
