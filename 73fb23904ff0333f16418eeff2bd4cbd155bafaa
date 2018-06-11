@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fe77c12_30dd7151",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:13:52Z",
+      "side": 0,
+      "message": "Is it the same bug you are working on to follow-up on all the other sampler2D tests here?",
+      "revId": "73fb23904ff0333f16418eeff2bd4cbd155bafaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
