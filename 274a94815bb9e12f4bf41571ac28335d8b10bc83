@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8dc9c7b4_291ddee0",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:13:09Z",
+      "side": 1,
+      "message": "can we not use auto here please? Still have to 34 lines above to understand what is this variable containing",
+      "range": {
+        "startLine": 933,
+        "startChar": 12,
+        "endLine": 933,
+        "endChar": 17
+      },
+      "revId": "274a94815bb9e12f4bf41571ac28335d8b10bc83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
