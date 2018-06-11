@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f564934_789ff887",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-11T18:09:55Z",
+      "side": 1,
+      "message": "I think I\u0027ve seen exactly this in a previous change in the same stack of reviews?\n\nthere was 2 comments:\n1- Can we use global constants everywhere we refer to 0 for uniforms and 1 for textures?\n2- Is the second one not supposed to be for textures?",
+      "range": {
+        "startLine": 282,
+        "startChar": 4,
+        "endLine": 283,
+        "endChar": 76
+      },
+      "revId": "7e421079e0503926abec76747f05086459ec9fd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
