@@ -956,6 +956,16 @@ inline int BitCount(uint64_t bits)
 #endif  // defined(ANGLE_IS_64_BIT_CPU)
 #endif  // defined(ANGLE_PLATFORM_POSIX)
 
+inline int BitCount(uint8_t bits)
+{
+    return BitCount(static_cast<uint32_t>(bits));
+}
+
+inline int BitCount(uint16_t bits)
+{
+    return BitCount(static_cast<uint32_t>(bits));
+}
+
 #if defined(ANGLE_PLATFORM_WINDOWS)
 // Return the index of the least significant bit set. Indexing is such that bit 0 is the least
 // significant bit. Implemented for different bit widths on different platforms.
@@ -995,6 +1005,16 @@ inline unsigned long ScanForward(uint64_t bits)
 }
 #endif  // defined(ANGLE_IS_64_BIT_CPU)
 #endif  // defined(ANGLE_PLATFORM_POSIX)
+
+inline unsigned long ScanForward(uint8_t bits)
+{
+    return ScanForward(static_cast<uint32_t>(bits));
+}
+
+inline unsigned long ScanForward(uint16_t bits)
+{
+    return ScanForward(static_cast<uint32_t>(bits));
+}
 
 // Return the index of the most significant bit set. Indexing is such that bit 0 is the least
 // significant bit.

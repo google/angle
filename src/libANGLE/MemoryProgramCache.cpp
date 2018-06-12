@@ -431,7 +431,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
 
     static_assert(static_cast<unsigned long>(ShaderType::EnumCount) <= sizeof(unsigned long) * 8,
                   "Too many shader types");
-    state->mLinkedShaderStages = stream.readInt<gl::ShaderBitSet>();
+    state->mLinkedShaderStages = ShaderBitSet(stream.readInt<uint8_t>());
 
     state->updateTransformFeedbackStrides();
 

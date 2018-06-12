@@ -43,7 +43,7 @@ void ActiveVariable::unionReferencesWith(const ActiveVariable &other)
 
 ShaderType ActiveVariable::getFirstShaderTypeWhereActive() const
 {
-    return static_cast<ShaderType>(gl::ScanForward(mActiveUseBits.bits()));
+    return static_cast<ShaderType>(ScanForward(mActiveUseBits.bits()));
 }
 
 GLuint ActiveVariable::activeShaderCount() const

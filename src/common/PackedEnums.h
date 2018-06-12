@@ -129,8 +129,8 @@ class PackedEnumMap
 
 // PackedEnumBitSetE> is like an std::bitset<E::EnumCount> but is indexed with enum values. It
 // implements the std::bitset interface except with enum values instead of indices.
-template <typename E>
-using PackedEnumBitSet = BitSetT<EnumSize<E>(), uint32_t, E>;
+template <typename E, typename DataT = uint32_t>
+using PackedEnumBitSet = BitSetT<EnumSize<E>(), DataT, E>;
 
 }  // namespace angle
 
@@ -179,7 +179,8 @@ constexpr size_t kGraphicsShaderCount = static_cast<size_t>(ShaderType::EnumCoun
 constexpr std::array<ShaderType, kGraphicsShaderCount> kAllGraphicsShaderTypes = {
     ShaderType::Vertex, ShaderType::Geometry, ShaderType::Fragment};
 
-using ShaderBitSet = angle::PackedEnumBitSet<ShaderType>;
+using ShaderBitSet = angle::PackedEnumBitSet<ShaderType, uint8_t>;
+static_assert(sizeof(ShaderBitSet) == sizeof(uint8_t), "Unexpected size");
 
 template <typename T>
 using ShaderMap = angle::PackedEnumMap<ShaderType, T>;
