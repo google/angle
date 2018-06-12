@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4f33c7c_fdf85aff",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-12T18:49:22Z",
+      "side": 1,
+      "message": "Maybe add ASSERT(indexType \u003d\u003d VK_INDEX_TYPE_UINT16) here?",
+      "range": {
+        "startLine": 469,
+        "startChar": 8,
+        "endLine": 469,
+        "endChar": 16
+      },
+      "revId": "78b01afd0b378468e6e10429b3e98dca2dc19d7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bb052b6_cf162939",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-12T18:49:22Z",
+      "side": 1,
+      "message": "This would look better as the first line in if(), I think.",
+      "range": {
+        "startLine": 470,
+        "startChar": 8,
+        "endLine": 470,
+        "endChar": 78
+      },
+      "revId": "78b01afd0b378468e6e10429b3e98dca2dc19d7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2926b221_b09909c4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-12T18:49:22Z",
+      "side": 1,
+      "message": "I think you can simplify this to indicesDst[i]\u003dsrcPtr[i]?",
+      "range": {
+        "startLine": 474,
+        "startChar": 0,
+        "endLine": 476,
+        "endChar": 0
+      },
+      "revId": "78b01afd0b378468e6e10429b3e98dca2dc19d7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
