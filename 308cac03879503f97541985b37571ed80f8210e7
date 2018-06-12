@@ -22,6 +22,30 @@
       "revId": "308cac03879503f97541985b37571ed80f8210e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80f70ceb_0a2f1467",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3066,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2018-06-12T20:25:01Z",
+      "side": 1,
+      "message": "Sure. The spec for GL_ANGLE_client_arrays L73 still says \"Rendering commands that draw more than 0 primitives using index data when no buffer is bound to the ELEMENT_ARRAY_BUFFER binding point when CLIENT_ARRAYS_ANGLE is TRUE generate an INVALID_OPERATION error\"\n\nDo you want me to change this also?",
+      "parentUuid": "3dac2269_97e0df9b",
+      "range": {
+        "startLine": 3064,
+        "startChar": 0,
+        "endLine": 3066,
+        "endChar": 45
+      },
+      "revId": "308cac03879503f97541985b37571ed80f8210e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
