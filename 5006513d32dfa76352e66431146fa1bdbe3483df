@@ -22,6 +22,30 @@
       "revId": "5006513d32dfa76352e66431146fa1bdbe3483df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efbf3429_97533c1a",
+        "filename": "src/tests/gl_tests/PointSpritesTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-12T20:09:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17bf3e1c_a44f1440",
+      "range": {
+        "startLine": 402,
+        "startChar": 38,
+        "endLine": 402,
+        "endChar": 42
+      },
+      "revId": "5006513d32dfa76352e66431146fa1bdbe3483df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
