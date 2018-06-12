@@ -199,6 +199,30 @@
       "revId": "9f80655f3383ac9802fb897fab2ac942ccee9214",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08a668ac_5a6c7635",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-12T11:45:01Z",
+      "side": 1,
+      "message": "Sorry about that, done.",
+      "parentUuid": "9fd2e6b6_fdf98cb6",
+      "range": {
+        "startLine": 353,
+        "startChar": 16,
+        "endLine": 353,
+        "endChar": 38
+      },
+      "revId": "9f80655f3383ac9802fb897fab2ac942ccee9214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
