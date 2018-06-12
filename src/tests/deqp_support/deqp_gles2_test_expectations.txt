@@ -306,7 +306,7 @@
 2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.line_strip.default_attribute = SKIP
 2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.line_loop.default_attribute = SKIP
 2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.indices.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.indices.buffer.*  = SKIP
+2659 VULKAN : dEQP-GLES2.functional.draw.draw_elements.indices.buffer.index_byte  = SKIP
 2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.points.default_attribute = SKIP
 2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.triangles.default_attribute = SKIP
 2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.triangle_fan.default_attribute = SKIP

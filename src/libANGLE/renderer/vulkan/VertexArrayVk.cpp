@@ -40,7 +40,8 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state, RendererVk *rend
       mLineLoopHelper(renderer),
       mDirtyLineLoopTranslation(true),
       mVertexBuffersDirty(false),
-      mIndexBufferDirty(false)
+      mIndexBufferDirty(false),
+      mLastIndexBufferOffset(0)
 {
     mCurrentArrayBufferHandles.fill(VK_NULL_HANDLE);
     mCurrentArrayBufferOffsets.fill(0);
@@ -493,9 +494,12 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
                                        bool newCommandBuffer)
 {
     ANGLE_TRY(onDraw(context, renderer, drawCallParams, commandBuffer, newCommandBuffer));
+    bool isLineLoop  = drawCallParams.mode() == gl::PrimitiveMode::LineLoop;
+    uintptr_t offset = mState.getElementArrayBuffer().get() && !isLineLoop
+                           ? reinterpret_cast<uintptr_t>(drawCallParams.indices())
+                           : 0;
 
-    if (!mState.getElementArrayBuffer().get() &&
-        drawCallParams.mode() != gl::PrimitiveMode::LineLoop)
+    if (!mState.getElementArrayBuffer().get() && !isLineLoop)
     {
         ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
         ANGLE_TRY(streamIndexData(renderer, drawCallParams));
@@ -503,7 +507,7 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
                                        mCurrentElementArrayBufferOffset,
                                        gl_vk::GetIndexType(drawCallParams.type()));
     }
-    else if (mIndexBufferDirty || newCommandBuffer)
+    else if (mIndexBufferDirty || newCommandBuffer || offset != mLastIndexBufferOffset)
     {
         if (drawCallParams.type() == GL_UNSIGNED_BYTE &&
             drawCallParams.mode() != gl::PrimitiveMode::LineLoop)
@@ -515,8 +519,9 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
         }
 
         commandBuffer->bindIndexBuffer(mCurrentElementArrayBufferHandle,
-                                       mCurrentElementArrayBufferOffset,
+                                       mCurrentElementArrayBufferOffset + offset,
                                        gl_vk::GetIndexType(drawCallParams.type()));
+        mLastIndexBufferOffset = offset;
 
         const gl::State &glState                  = context->getGLState();
         vk::CommandGraphResource *drawFramebuffer = vk::GetImpl(glState.getDrawFramebuffer());

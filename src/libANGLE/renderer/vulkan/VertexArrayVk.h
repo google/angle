@@ -128,6 +128,9 @@ class VertexArrayVk : public VertexArrayImpl
     // Cache variable for determining whether or not to store new dependencies in the node.
     bool mVertexBuffersDirty;
     bool mIndexBufferDirty;
+
+    // The offset we had the last time we bound the index buffer.
+    uintptr_t mLastIndexBufferOffset;
 };
 
 }  // namespace rx
