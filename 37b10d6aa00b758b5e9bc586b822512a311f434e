@@ -22,6 +22,30 @@
       "revId": "37b10d6aa00b758b5e9bc586b822512a311f434e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90c8fb44_be871eca",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T18:01:37Z",
+      "side": 1,
+      "message": "+1, it\u0027s better in vk_caps_utils.",
+      "parentUuid": "cc3880d8_309a712b",
+      "range": {
+        "startLine": 3132,
+        "startChar": 4,
+        "endLine": 3132,
+        "endChar": 74
+      },
+      "revId": "37b10d6aa00b758b5e9bc586b822512a311f434e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
