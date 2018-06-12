@@ -46,6 +46,30 @@
       "revId": "12d2918ebab88a8bf066a1325847c164da538f90",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa647720_d798dea9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-12T11:39:45Z",
+      "side": 1,
+      "message": "It will always be uint16_t by the way because that\u0027s what I use to emulate the GL_UNSIGNED_BYTE type",
+      "parentUuid": "cfb5d8e1_9e00efd1",
+      "range": {
+        "startLine": 473,
+        "startChar": 12,
+        "endLine": 473,
+        "endChar": 53
+      },
+      "revId": "12d2918ebab88a8bf066a1325847c164da538f90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
