@@ -43,7 +43,9 @@ struct Format final : private angle::NonCopyable
 
     const angle::Format &textureFormat() const;
     const angle::Format &bufferFormat() const;
+    const angle::Format &angleFormat() const;
 
+    angle::Format::ID angleFormatID;
     GLenum internalFormat;
     angle::Format::ID textureFormatID;
     VkFormat vkTextureFormat;

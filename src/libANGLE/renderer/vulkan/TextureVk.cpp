@@ -45,12 +45,6 @@ void MapSwizzleState(GLenum internalFormat,
             swizzleStateOut->swizzleBlue  = GL_ZERO;
             swizzleStateOut->swizzleAlpha = swizzleState.swizzleRed;
             break;
-        case GL_RGB8:
-            swizzleStateOut->swizzleRed   = swizzleState.swizzleRed;
-            swizzleStateOut->swizzleGreen = swizzleState.swizzleGreen;
-            swizzleStateOut->swizzleBlue  = swizzleState.swizzleBlue;
-            swizzleStateOut->swizzleAlpha = GL_ONE;
-            break;
         default:
             *swizzleStateOut = swizzleState;
             break;
@@ -612,7 +606,7 @@ gl::Error TextureVk::setStorage(const gl::Context *context,
     const vk::Format &format         = renderer->getFormat(internalFormat);
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
-    ANGLE_TRY(initImage(renderer, format, size, static_cast<uint32_t>(levels), commandBuffer));
+    ANGLE_TRY(initImage(contextVk, format, size, static_cast<uint32_t>(levels), commandBuffer));
     return gl::NoError();
 }
 
@@ -784,7 +778,6 @@ gl::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
 gl::Error TextureVk::generateMipmap(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    RendererVk *renderer = contextVk->getRenderer();
 
     // Some data is pending, or the image has not been defined at all yet
     if (!mImage.valid())
@@ -792,7 +785,7 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
         // lets initialize the image so we can generate the next levels.
         if (!mPixelBuffer.empty())
         {
-            ANGLE_TRY(ensureImageInitialized(renderer));
+            ANGLE_TRY(ensureImageInitialized(contextVk));
             ASSERT(mImage.valid());
         }
         else
@@ -802,6 +795,7 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
         }
     }
 
+    RendererVk *renderer = contextVk->getRenderer();
     VkFormatProperties imageProperties;
     vk::GetFormatProperties(renderer->getPhysicalDevice(), mImage.getFormat().vkTextureFormat,
                             &imageProperties);
@@ -853,21 +847,19 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
     ASSERT(imageIndex.getLevelIndex() == 0 && !imageIndex.hasLayer());
 
     ContextVk *contextVk = vk::GetImpl(context);
-    RendererVk *renderer = contextVk->getRenderer();
-
-    ANGLE_TRY(ensureImageInitialized(renderer));
+    ANGLE_TRY(ensureImageInitialized(contextVk));
 
     *rtOut = &mRenderTarget;
     return gl::NoError();
 }
 
-vk::Error TextureVk::ensureImageInitialized(RendererVk *renderer)
+vk::Error TextureVk::ensureImageInitialized(ContextVk *contextVk)
 {
     if (mImage.valid() && mPixelBuffer.empty())
     {
         return vk::NoError();
     }
-
+    RendererVk *renderer             = contextVk->getRenderer();
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
 
@@ -880,7 +872,7 @@ vk::Error TextureVk::ensureImageInitialized(RendererVk *renderer)
         const vk::Format &format =
             renderer->getFormat(baseLevelDesc.format.info->sizedInternalFormat);
 
-        ANGLE_TRY(initImage(renderer, format, baseLevelExtents, levelCount, commandBuffer));
+        ANGLE_TRY(initImage(contextVk, format, baseLevelExtents, levelCount, commandBuffer));
     }
 
     ANGLE_TRY(mPixelBuffer.flushUpdatesToImage(renderer, levelCount, &mImage, commandBuffer));
@@ -971,12 +963,13 @@ const vk::Sampler &TextureVk::getSampler() const
     return mSampler;
 }
 
-vk::Error TextureVk::initImage(RendererVk *renderer,
+vk::Error TextureVk::initImage(ContextVk *contextVk,
                                const vk::Format &format,
                                const gl::Extents &extents,
                                const uint32_t levelCount,
                                vk::CommandBuffer *commandBuffer)
 {
+    const RendererVk *renderer = contextVk->getRenderer();
     const VkDevice device = renderer->getDevice();
 
     const VkImageUsageFlags usage =
@@ -991,6 +984,10 @@ vk::Error TextureVk::initImage(RendererVk *renderer,
 
     gl::SwizzleState mappedSwizzle;
     MapSwizzleState(format.internalFormat, mState.getSwizzleState(), &mappedSwizzle);
+
+    // Renderable textures cannot have a swizzle.
+    ASSERT(!contextVk->getTextureCaps().get(format.internalFormat).textureAttachment ||
+           !mappedSwizzle.swizzleRequired());
 
     // TODO(jmadill): Separate imageviews for RenderTargets and Sampling.
     ANGLE_TRY(mImage.initImageView(device, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,

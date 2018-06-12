@@ -86,7 +86,8 @@ bool HasFullFormatSupport(VkPhysicalDevice physicalDevice, VkFormat vkFormat)
 
 // Format implementation.
 Format::Format()
-    : internalFormat(GL_NONE),
+    : angleFormatID(angle::Format::ID::NONE),
+      internalFormat(GL_NONE),
       textureFormatID(angle::Format::ID::NONE),
       vkTextureFormat(VK_FORMAT_UNDEFINED),
       bufferFormatID(angle::Format::ID::NONE),
@@ -104,6 +105,11 @@ const angle::Format &Format::textureFormat() const
 const angle::Format &Format::bufferFormat() const
 {
     return angle::Format::Get(bufferFormatID);
+}
+
+const angle::Format &Format::angleFormat() const
+{
+    return angle::Format::Get(angleFormatID);
 }
 
 bool operator==(const Format &lhs, const Format &rhs)
@@ -137,6 +143,7 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice,
         const GLenum internalFormat = mFormatData[formatIndex].internalFormat;
         mFormatData[formatIndex].loadFunctions =
             GetLoadFunctionsMap(internalFormat, mFormatData[formatIndex].textureFormatID);
+        mFormatData[formatIndex].angleFormatID = formatID;
 
         if (!mFormatData[formatIndex].valid())
         {

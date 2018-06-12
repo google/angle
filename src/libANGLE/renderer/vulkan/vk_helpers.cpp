@@ -611,10 +611,20 @@ Error ImageHelper::initImageView(VkDevice device,
     viewInfo.image                           = mImage.getHandle();
     viewInfo.viewType                        = gl_vk::GetImageViewType(textureType);
     viewInfo.format                          = mFormat->vkTextureFormat;
-    viewInfo.components.r                    = gl_vk::GetSwizzle(swizzleMap.swizzleRed);
-    viewInfo.components.g                    = gl_vk::GetSwizzle(swizzleMap.swizzleGreen);
-    viewInfo.components.b                    = gl_vk::GetSwizzle(swizzleMap.swizzleBlue);
-    viewInfo.components.a                    = gl_vk::GetSwizzle(swizzleMap.swizzleAlpha);
+    if (swizzleMap.swizzleRequired())
+    {
+        viewInfo.components.r = gl_vk::GetSwizzle(swizzleMap.swizzleRed);
+        viewInfo.components.g = gl_vk::GetSwizzle(swizzleMap.swizzleGreen);
+        viewInfo.components.b = gl_vk::GetSwizzle(swizzleMap.swizzleBlue);
+        viewInfo.components.a = gl_vk::GetSwizzle(swizzleMap.swizzleAlpha);
+    }
+    else
+    {
+        viewInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        viewInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        viewInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        viewInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    }
     viewInfo.subresourceRange.aspectMask     = aspectMask;
     viewInfo.subresourceRange.baseMipLevel   = 0;
     viewInfo.subresourceRange.levelCount     = levelCount;

@@ -175,7 +175,7 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     const vk::ImageView &getImageView() const;
     const vk::Sampler &getSampler() const;
 
-    vk::Error ensureImageInitialized(RendererVk *renderer);
+    vk::Error ensureImageInitialized(ContextVk *contextVk);
 
   private:
     void generateMipmapWithBlit(RendererVk *renderer);
@@ -198,7 +198,7 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
                                const gl::Rectangle &sourceArea,
                                const gl::InternalFormat &internalFormat,
                                gl::Framebuffer *source);
-    vk::Error initImage(RendererVk *renderer,
+    vk::Error initImage(ContextVk *contextVk,
                         const vk::Format &format,
                         const gl::Extents &extents,
                         const uint32_t levelCount,

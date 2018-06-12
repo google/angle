@@ -533,13 +533,24 @@ gl::Error FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
 
     if (clearColor)
     {
+        RenderTargetVk *renderTarget = getColorReadRenderTarget();
+        const vk::Format &format     = renderTarget->getImageFormat();
+        VkClearValue modifiedClear   = contextVk->getClearColorValue();
+
+        // We need to make sure we are not clearing the alpha channel if we are using a buffer
+        // format that doesn't have an alpha channel.
+        if (format.angleFormat().alphaBits == 0)
+        {
+            modifiedClear.color.float32[3] = 1.0;
+        }
+
         // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
         for (size_t colorIndex : mState.getEnabledDrawBuffers())
         {
             VkClearAttachment &clearAttachment = clearAttachments[clearAttachmentIndex];
             clearAttachment.aspectMask         = VK_IMAGE_ASPECT_COLOR_BIT;
             clearAttachment.colorAttachment    = static_cast<uint32_t>(colorIndex);
-            clearAttachment.clearValue         = contextVk->getClearColorValue();
+            clearAttachment.clearValue         = modifiedClear;
             ++clearAttachmentIndex;
         }
     }
