@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4d28589_78a1f773",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-06-12T07:24:01Z",
+      "side": 1,
+      "message": "Does it need to be decorated?",
+      "range": {
+        "startLine": 950,
+        "startChar": 47,
+        "endLine": 950,
+        "endChar": 69
+      },
+      "revId": "eab9da1de5a817ebeb45751f4ed637462760c76f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4810e1ca_4a9e67ab",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-06-12T07:24:01Z",
+      "side": 1,
+      "message": "TODO",
+      "range": {
+        "startLine": 617,
+        "startChar": 15,
+        "endLine": 617,
+        "endChar": 19
+      },
+      "revId": "eab9da1de5a817ebeb45751f4ed637462760c76f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61e14b22_9621d16b",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-06-12T07:24:01Z",
+      "side": 1,
+      "message": "Is it better to leave it UNIMPLEMENTED or something else? 128 seems a bit strange.",
+      "range": {
+        "startLine": 619,
+        "startChar": 12,
+        "endLine": 619,
+        "endChar": 53
+      },
+      "revId": "eab9da1de5a817ebeb45751f4ed637462760c76f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44be1f40_f296f34c",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-06-12T07:24:01Z",
+      "side": 1,
+      "message": "builtin",
+      "range": {
+        "startLine": 69,
+        "startChar": 53,
+        "endLine": 69,
+        "endChar": 61
+      },
+      "revId": "eab9da1de5a817ebeb45751f4ed637462760c76f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
