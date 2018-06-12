@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dac2269_97e0df9b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3066,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-12T19:56:23Z",
+      "side": 1,
+      "message": "nit: merge these if-statements now.",
+      "range": {
+        "startLine": 3064,
+        "startChar": 0,
+        "endLine": 3066,
+        "endChar": 45
+      },
+      "revId": "308cac03879503f97541985b37571ed80f8210e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
