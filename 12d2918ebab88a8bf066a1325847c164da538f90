@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c2148dd_e4bea7ef",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-12T05:01:07Z",
+      "side": 1,
+      "message": "I think Android issue might be little / big endian related.\nI think easiest way to solve is to use uint16_t / uint32_t (depending on indexType) instead of uint8_t.",
+      "range": {
+        "startLine": 473,
+        "startChar": 12,
+        "endLine": 473,
+        "endChar": 53
+      },
+      "revId": "12d2918ebab88a8bf066a1325847c164da538f90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
