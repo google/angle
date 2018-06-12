@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "57405cc2_c42c18f2",
+        "filename": "third_party/vulkan-tools/BUILD.gn",
+        "patchSetId": 47
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-06-12T22:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e855fa73_7d1f4cd1",
+      "range": {
+        "startLine": 178,
+        "startChar": 6,
+        "endLine": 178,
+        "endChar": 42
+      },
+      "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fe2d9a0_90f7e1b4",
         "filename": "third_party/vulkan-tools/README.angle",
         "patchSetId": 47
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "319c8ae7_b6f3d79f",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 47
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-06-12T22:15:09Z",
+      "side": 1,
+      "message": "Initially deleted b/c I didn\u0027t know how it was used. Then after your comment I looked at it and tried to come up with a good way to remove the file but not an obvious answer so restoring for this commit.",
+      "parentUuid": "96a07e06_26f37f8c",
+      "range": {
+        "startLine": 206,
+        "startChar": 7,
+        "endLine": 206,
+        "endChar": 34
+      },
+      "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67a3c2fc_715ee48d",
         "filename": "third_party/vulkan-validation-layers/README.angle",
         "patchSetId": 47
@@ -105,6 +153,24 @@
       "writtenOn": "2018-06-12T19:49:15Z",
       "side": 1,
       "message": "accidental deletion?",
+      "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b2ceb00_3b90db78",
+        "filename": "third_party/vulkan-validation-layers/dummy_spirv_tools_commit_id.h",
+        "patchSetId": 47
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-06-12T22:15:09Z",
+      "side": 1,
+      "message": "restored",
+      "parentUuid": "fe1aa9c2_0ea7a4ef",
       "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
