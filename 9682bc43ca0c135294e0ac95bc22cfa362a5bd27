@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85a830e3_a9f5bee6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T15:31:23Z",
+      "side": 1,
+      "message": "nit: I think you can just use  std::max(1.0f, mCaps.minAliasedPointSize)",
+      "range": {
+        "startLine": 3132,
+        "startChar": 41,
+        "endLine": 3132,
+        "endChar": 66
+      },
+      "revId": "9682bc43ca0c135294e0ac95bc22cfa362a5bd27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
