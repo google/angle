@@ -175,6 +175,30 @@
       "revId": "9f80655f3383ac9802fb897fab2ac942ccee9214",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fd2e6b6_fdf98cb6",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-12T07:37:36Z",
+      "side": 1,
+      "message": "Still \"FlipGLPointCoordinates\"?",
+      "parentUuid": "d202e15b_9042aca5",
+      "range": {
+        "startLine": 353,
+        "startChar": 16,
+        "endLine": 353,
+        "endChar": 38
+      },
+      "revId": "9f80655f3383ac9802fb897fab2ac942ccee9214",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
