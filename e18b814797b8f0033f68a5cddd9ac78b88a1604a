@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8cf62a79_1525f675",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-12T11:47:04Z",
+      "side": 1,
+      "message": "I understand what happened, I updated the following CL instead of this one in the relation chain. Sorry this got pushed but its fixed in the upcoming CL.",
+      "range": {
+        "startLine": 149,
+        "startChar": 5,
+        "endLine": 149,
+        "endChar": 27
+      },
+      "revId": "e18b814797b8f0033f68a5cddd9ac78b88a1604a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
