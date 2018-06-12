@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05a9d496_3db66988",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 44
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T17:39:39Z",
+      "side": 1,
+      "message": "I would have thought you should use the non-raw dirs here. \"raw\" is only used when passing directory arguments to python scripts.",
+      "range": {
+        "startLine": 96,
+        "startChar": 6,
+        "endLine": 96,
+        "endChar": 28
+      },
+      "revId": "e53c1a1eb294b35c0b02e09a635e750ed7f927b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f34451e_4ac73cfb",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 44
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T17:39:39Z",
+      "side": 1,
+      "message": "same comment here",
+      "range": {
+        "startLine": 155,
+        "startChar": 6,
+        "endLine": 155,
+        "endChar": 28
+      },
+      "revId": "e53c1a1eb294b35c0b02e09a635e750ed7f927b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa0cceb9_83815f92",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 44
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T17:39:39Z",
+      "side": 1,
+      "message": "same comment here",
+      "range": {
+        "startLine": 163,
+        "startChar": 6,
+        "endLine": 163,
+        "endChar": 28
+      },
+      "revId": "e53c1a1eb294b35c0b02e09a635e750ed7f927b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
