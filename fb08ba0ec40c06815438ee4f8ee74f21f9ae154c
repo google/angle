@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ba09332_f5314850",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T15:30:08Z",
+      "side": 1,
+      "message": "the offset can change between draw calls. does a changed offset trigger this block?",
+      "range": {
+        "startLine": 506,
+        "startChar": 13,
+        "endLine": 506,
+        "endChar": 31
+      },
+      "revId": "fb08ba0ec40c06815438ee4f8ee74f21f9ae154c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
