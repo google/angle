@@ -181,7 +181,7 @@ TEST_P(SixteenBppTextureTest, RGBA5551Validation)
 {
     // TODO(lucferron): Diagnose and fix
     // http://anglebug.com/2649
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsAndroid() || (IsWindows() && IsIntel())));
 
     GLushort pixels[4] =
     {
@@ -211,7 +211,7 @@ TEST_P(SixteenBppTextureTest, RGBA5551ClearAlpha)
 {
     // TODO(lucferron): Diagnose and fix
     // http://anglebug.com/2649
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsAndroid() || (IsWindows() && IsIntel())));
 
     GLTexture tex;
     GLFramebuffer fbo;
