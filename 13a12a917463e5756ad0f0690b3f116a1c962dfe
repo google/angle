@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fe2d9a0_90f7e1b4",
+        "filename": "third_party/vulkan-tools/README.angle",
+        "patchSetId": 47
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-12T19:39:50Z",
+      "side": 1,
+      "message": "nit: format",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 30
+      },
+      "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67a3c2fc_715ee48d",
+        "filename": "third_party/vulkan-validation-layers/README.angle",
+        "patchSetId": 47
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-12T19:39:50Z",
+      "side": 1,
+      "message": "nit: format",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 71
+      },
+      "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
