@@ -22,6 +22,30 @@
       "revId": "12d2918ebab88a8bf066a1325847c164da538f90",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfb5d8e1_9e00efd1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-12T11:27:31Z",
+      "side": 1,
+      "message": "ok I will update the code to do this, and resubmit a new patch. Thanks for the advice!",
+      "parentUuid": "7c2148dd_e4bea7ef",
+      "range": {
+        "startLine": 473,
+        "startChar": 12,
+        "endLine": 473,
+        "endChar": 53
+      },
+      "revId": "12d2918ebab88a8bf066a1325847c164da538f90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
