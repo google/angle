@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "e855fa73_7d1f4cd1",
+        "filename": "third_party/vulkan-tools/BUILD.gn",
+        "patchSetId": 47
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T19:49:15Z",
+      "side": 1,
+      "message": "I don\u0027t think these are necessary anymore. it doesn\u0027t seem to show up in any of our other build files.",
+      "range": {
+        "startLine": 178,
+        "startChar": 6,
+        "endLine": 178,
+        "endChar": 42
+      },
+      "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1fe2d9a0_90f7e1b4",
         "filename": "third_party/vulkan-tools/README.angle",
         "patchSetId": 47
@@ -18,6 +41,29 @@
         "startChar": 0,
         "endLine": 15,
         "endChar": 30
+      },
+      "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96a07e06_26f37f8c",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 47
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T19:49:15Z",
+      "side": 1,
+      "message": "did you accidentally delete this file?",
+      "range": {
+        "startLine": 206,
+        "startChar": 7,
+        "endLine": 206,
+        "endChar": 34
       },
       "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -42,6 +88,23 @@
         "endLine": 16,
         "endChar": 71
       },
+      "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe1aa9c2_0ea7a4ef",
+        "filename": "third_party/vulkan-validation-layers/dummy_spirv_tools_commit_id.h",
+        "patchSetId": 47
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T19:49:15Z",
+      "side": 1,
+      "message": "accidental deletion?",
       "revId": "13a12a917463e5756ad0f0690b3f116a1c962dfe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
