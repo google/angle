@@ -101,7 +101,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
 class ScopedVkLoaderEnvironment : angle::NonCopyable
 {
   public:
-    ScopedVkLoaderEnvironment(bool enableValidationLayers)
+    explicit ScopedVkLoaderEnvironment(bool enableValidationLayers)
         : mEnableValidationLayers(enableValidationLayers), mChangedCWD(false)
     {
 // Changing CWD and setting environment variables makes no sense on Android,
@@ -152,7 +152,7 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
         }
     }
 
-    bool canEnableValidationLayers() { return mEnableValidationLayers; }
+    bool canEnableValidationLayers() const { return mEnableValidationLayers; }
 
   private:
     bool mEnableValidationLayers;
@@ -163,13 +163,9 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
 }  // anonymous namespace
 
 // CommandBatch implementation.
-RendererVk::CommandBatch::CommandBatch()
-{
-}
+RendererVk::CommandBatch::CommandBatch() = default;
 
-RendererVk::CommandBatch::~CommandBatch()
-{
-}
+RendererVk::CommandBatch::~CommandBatch() = default;
 
 RendererVk::CommandBatch::CommandBatch(CommandBatch &&other)
     : commandPool(std::move(other.commandPool)), fence(std::move(other.fence)), serial(other.serial)
@@ -196,8 +192,7 @@ RendererVk::RendererVk()
       mDevice(VK_NULL_HANDLE),
       mGlslangWrapper(nullptr),
       mLastCompletedQueueSerial(mQueueSerialFactory.generate()),
-      mCurrentQueueSerial(mQueueSerialFactory.generate()),
-      mInFlightCommands()
+      mCurrentQueueSerial(mQueueSerialFactory.generate())
 {
 }
 
@@ -293,12 +288,11 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
     ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseDebugLayers(attribs));
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
 
-    bool enableNullDriver = false;
 #if !defined(ANGLE_PLATFORM_ANDROID)
     // Mock ICD does not currently run on Android
-    enableNullDriver = (attribs.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
-                                    EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE) ==
-                        EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
+    bool enableNullDriver = (attribs.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
+                                         EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE) ==
+                             EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
     if (enableNullDriver)
     {
         // Override environment variable to use built Mock ICD
@@ -306,6 +300,8 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
         ANGLE_VK_CHECK(angle::SetEnvironmentVar(g_VkICDPathEnv, ANGLE_VK_ICD_JSON),
                        VK_ERROR_INITIALIZATION_FAILED);
     }
+#else
+    constexpr bool enableNullDriver = false;
 #endif  // !defined(ANGLE_PLATFORM_ANDROID)
     // Gather global layer properties.
     uint32_t instanceLayerCount = 0;
@@ -651,11 +647,6 @@ uint32_t RendererVk::getMaxActiveTextures()
                               gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
 }
 
-uint32_t RendererVk::getUniformBufferDescriptorCount()
-{
-    return kUniformBufferDescriptorsPerDescriptorSet;
-}
-
 const vk::CommandPool &RendererVk::getCommandPool() const
 {
     return mCommandPool;
@@ -784,7 +775,7 @@ vk::Error RendererVk::submitFrame(const VkSubmitInfo &submitInfo, vk::CommandBuf
     return vk::NoError();
 }
 
-GlslangWrapper *RendererVk::getGlslangWrapper()
+GlslangWrapper *RendererVk::getGlslangWrapper() const
 {
     return mGlslangWrapper;
 }
@@ -794,7 +785,7 @@ Serial RendererVk::getCurrentQueueSerial() const
     return mCurrentQueueSerial;
 }
 
-bool RendererVk::isSerialInUse(Serial serial)
+bool RendererVk::isSerialInUse(Serial serial) const
 {
     return serial > mLastCompletedQueueSerial;
 }
@@ -1022,6 +1013,11 @@ vk::Error RendererVk::getInternalPipeline(const vk::ShaderAndSerial &vertexShade
 vk::ShaderLibrary *RendererVk::getShaderLibrary()
 {
     return &mShaderLibrary;
+}
+
+uint32_t GetUniformBufferDescriptorCount()
+{
+    return kUniformBufferDescriptorsPerDescriptorSet;
 }
 
 }  // namespace rx

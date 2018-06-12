@@ -68,13 +68,12 @@ class RendererVk : angle::NonCopyable
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
     uint32_t getMaxActiveTextures();
-    uint32_t getUniformBufferDescriptorCount();
 
-    GlslangWrapper *getGlslangWrapper();
+    GlslangWrapper *getGlslangWrapper() const;
 
     Serial getCurrentQueueSerial() const;
 
-    bool isSerialInUse(Serial serial);
+    bool isSerialInUse(Serial serial) const;
 
     template <typename T>
     void releaseObject(Serial resourceSerial, T *object)
@@ -137,7 +136,7 @@ class RendererVk : angle::NonCopyable
   private:
     vk::Error initializeDevice(uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
-    vk::Error submitFrame(const VkSubmitInfo &submitInfo, vk::CommandBuffer &&commandBatch);
+    vk::Error submitFrame(const VkSubmitInfo &submitInfo, vk::CommandBuffer &&commandBuffer);
     vk::Error checkInFlightCommands();
     void freeAllInFlightResources();
     vk::Error flushCommandGraph(const gl::Context *context, vk::CommandBuffer *commandBatch);
@@ -199,6 +198,8 @@ class RendererVk : angle::NonCopyable
     // Internal shader library.
     vk::ShaderLibrary mShaderLibrary;
 };
+
+uint32_t GetUniformBufferDescriptorCount();
 
 }  // namespace rx
 

@@ -80,8 +80,7 @@ gl::Error ContextVk::getIncompleteTexture(const gl::Context *context,
 
 gl::Error ContextVk::initialize()
 {
-    ANGLE_TRY(mDynamicDescriptorPool.init(this->getDevice(),
-                                          mRenderer->getUniformBufferDescriptorCount(),
+    ANGLE_TRY(mDynamicDescriptorPool.init(this->getDevice(), GetUniformBufferDescriptorCount(),
                                           mRenderer->getMaxActiveTextures()));
 
     mPipelineDesc.reset(new vk::PipelineDesc());

@@ -250,9 +250,7 @@ RenderPassDesc::RenderPassDesc()
     memset(this, 0, sizeof(RenderPassDesc));
 }
 
-RenderPassDesc::~RenderPassDesc()
-{
-}
+RenderPassDesc::~RenderPassDesc() = default;
 
 RenderPassDesc::RenderPassDesc(const RenderPassDesc &other)
 {
@@ -339,9 +337,7 @@ PipelineDesc::PipelineDesc()
     memset(this, 0, sizeof(PipelineDesc));
 }
 
-PipelineDesc::~PipelineDesc()
-{
-}
+PipelineDesc::~PipelineDesc() = default;
 
 PipelineDesc::PipelineDesc(const PipelineDesc &other)
 {
@@ -383,9 +379,9 @@ void PipelineDesc::initDefaults()
     mMultisampleStateInfo.rasterizationSamples = 1;
     mMultisampleStateInfo.sampleShadingEnable  = 0;
     mMultisampleStateInfo.minSampleShading     = 0.0f;
-    for (int maskIndex = 0; maskIndex < gl::MAX_SAMPLE_MASK_WORDS; ++maskIndex)
+    for (uint32_t &sampleMask : mMultisampleStateInfo.sampleMask)
     {
-        mMultisampleStateInfo.sampleMask[maskIndex] = 0;
+        sampleMask = 0;
     }
     mMultisampleStateInfo.alphaToCoverageEnable = 0;
     mMultisampleStateInfo.alphaToOneEnable      = 0;
@@ -818,9 +814,7 @@ AttachmentOpsArray::AttachmentOpsArray()
     memset(&mOps, 0, sizeof(PackedAttachmentOpsDesc) * mOps.size());
 }
 
-AttachmentOpsArray::~AttachmentOpsArray()
-{
-}
+AttachmentOpsArray::~AttachmentOpsArray() = default;
 
 AttachmentOpsArray::AttachmentOpsArray(const AttachmentOpsArray &other)
 {
@@ -869,9 +863,7 @@ bool operator==(const AttachmentOpsArray &lhs, const AttachmentOpsArray &rhs)
 }  // namespace vk
 
 // RenderPassCache implementation.
-RenderPassCache::RenderPassCache()
-{
-}
+RenderPassCache::RenderPassCache() = default;
 
 RenderPassCache::~RenderPassCache()
 {
@@ -967,9 +959,7 @@ vk::Error RenderPassCache::getRenderPassWithOps(VkDevice device,
 }
 
 // PipelineCache implementation.
-PipelineCache::PipelineCache()
-{
-}
+PipelineCache::PipelineCache() = default;
 
 PipelineCache::~PipelineCache()
 {
