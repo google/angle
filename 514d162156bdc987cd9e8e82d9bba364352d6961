@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "f1396529_35a7365b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T14:20:55Z",
+      "side": 1,
+      "message": "No.. you\u0027re getting bamboozled by Vulkan\u0027s indirection.\n\nDescriptor Set Layouts bundle descriptors. Pipeline layouts bundle descriptor set layouts. In this case there\u0027s two descriptor set layouts (one pipeline layout):\n\nset 0: { 0: vertex, 1: fragment } uniform buffers\nset 1: { 0: texture0, ..., 63: texturemax } textures",
+      "parentUuid": "7c0aa687_80cd2a5f",
+      "range": {
+        "startLine": 863,
+        "startChar": 30,
+        "endLine": 863,
+        "endChar": 71
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d10ca2d_44d607ea",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T14:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "078690f7_b30c38ba",
+      "range": {
+        "startLine": 862,
+        "startChar": 4,
+        "endLine": 863,
+        "endChar": 76
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4546f20_4ada5ef6",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 7
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7b604961_1d9a8d37",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T14:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4546f20_4ada5ef6",
+      "range": {
+        "startLine": 111,
+        "startChar": 55,
+        "endLine": 111,
+        "endChar": 68
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c9b1e821_13ababca",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2018-06-11T18:07:02Z",
       "side": 1,
       "message": "Auto here does not describe what\u0027s in mPayload",
+      "range": {
+        "startLine": 1136,
+        "startChar": 9,
+        "endLine": 1136,
+        "endChar": 14
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "630779dd_e6cc93c2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T14:20:55Z",
+      "side": 1,
+      "message": "This is a canonical usage in the style guide, so I think it is appropriate:\n\nhttps://google.github.io/styleguide/cppguide.html#auto\n\nSame for the other uses.",
+      "parentUuid": "c9b1e821_13ababca",
       "range": {
         "startLine": 1136,
         "startChar": 9,
@@ -243,6 +339,30 @@
       "writtenOn": "2018-06-11T18:07:02Z",
       "side": 1,
       "message": "std::atomic instead ?",
+      "range": {
+        "startLine": 62,
+        "startChar": 13,
+        "endLine": 62,
+        "endChar": 22
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20a16f85_a983ceff",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-12T14:20:55Z",
+      "side": 1,
+      "message": "std::atomic is a bit heavyweight. Can defer multi-threaded rendering until we have a test case that requires it.",
+      "parentUuid": "40d930af_0cf4eb3c",
       "range": {
         "startLine": 62,
         "startChar": 13,
