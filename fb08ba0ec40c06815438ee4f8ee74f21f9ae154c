@@ -22,6 +22,30 @@
       "revId": "fb08ba0ec40c06815438ee4f8ee74f21f9ae154c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43ef6c7f_95c9f635",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-13T13:56:10Z",
+      "side": 1,
+      "message": "I just added a test to verify that and it works.",
+      "parentUuid": "0ba09332_f5314850",
+      "range": {
+        "startLine": 506,
+        "startChar": 13,
+        "endLine": 506,
+        "endChar": 31
+      },
+      "revId": "fb08ba0ec40c06815438ee4f8ee74f21f9ae154c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
