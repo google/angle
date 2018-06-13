@@ -179,6 +179,38 @@ TEST_P(IndexBufferOffsetTest, DrawAtDifferentOffsets)
     EXPECT_GL_NO_ERROR();
 }
 
+// Uses index buffer offset and 2 drawElement calls one of the other with different counts,
+// makes sure the second drawElement call will have its data available.
+TEST_P(IndexBufferOffsetTest, DrawWithDifferentCountsSameOffset)
+{
+    GLubyte indexData[] = {99, 0, 1, 2, 1, 2, 3};
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    size_t indexDataWidth = 7 * sizeof(GLubyte);
+
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexDataWidth, indexData, GL_DYNAMIC_DRAW);
+    glUseProgram(mProgram);
+
+    glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+    glVertexAttribPointer(mPositionAttributeLocation, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(mPositionAttributeLocation);
+
+    glUniform4f(mColorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+
+    // The first draw draws the first triangle, and the second draws a quad.
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, reinterpret_cast<void *>(1));
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, reinterpret_cast<void *>(1));
+
+    // Check the upper left triangle
+    EXPECT_PIXEL_COLOR_EQ(0, getWindowHeight() / 4, GLColor::red);
+
+    // Check the down right triangle
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::red);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(IndexBufferOffsetTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

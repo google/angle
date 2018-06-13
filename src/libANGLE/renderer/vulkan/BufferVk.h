@@ -54,6 +54,7 @@ class BufferVk : public BufferImpl, public vk::CommandGraphResource
                             size_t count,
                             bool primitiveRestartEnabled,
                             gl::IndexRange *outRange) override;
+    GLint64 getSize();
 
     const vk::Buffer &getVkBuffer() const;
 

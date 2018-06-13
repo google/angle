@@ -165,10 +165,9 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     }
     else
     {
-        *shouldApplyVertexArrayOut = mVertexArrayBindingHasChanged;
+        *shouldApplyVertexArrayOut    = mVertexArrayBindingHasChanged;
+        mVertexArrayBindingHasChanged = false;
     }
-
-    mVertexArrayBindingHasChanged = false;
 
     // Ensure any writes to the textures are flushed before we read from them.
     if (mTexturesDirty)

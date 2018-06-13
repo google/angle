@@ -125,6 +125,11 @@ gl::Error BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr
     return gl::NoError();
 }
 
+GLint64 BufferVk::getSize()
+{
+    return mState.getSize();
+}
+
 gl::Error BufferVk::mapRange(const gl::Context *context,
                              size_t offset,
                              size_t length,
