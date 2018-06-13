@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "b5bbb1c5_164c9ddc",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T16:52:08Z",
+      "side": 1,
+      "message": "This catches it earlier - before we try to render to it. There could be a situation where there\u0027s no specific test. You can determine this by checking context-\u003egetTextureCaps().get(angleFormat).textureAttachment",
+      "parentUuid": "2120ede2_ff968d47",
+      "range": {
+        "startLine": 24,
+        "startChar": 5,
+        "endLine": 24,
+        "endChar": 20
+      },
+      "revId": "6c085385dc75c13bd8a9679ea4a7e41917a9c7dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea621472_83e9dd90",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 4
