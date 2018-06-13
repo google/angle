@@ -254,13 +254,12 @@ void TIntermTraverser::traverseBinary(TIntermBinary *node)
     //
     if (visit)
     {
-        if (node->getLeft())
-            node->getLeft()->traverse(this);
+        node->getLeft()->traverse(this);
 
         if (inVisit)
             visit = visitBinary(InVisit, node);
 
-        if (visit && node->getRight())
+        if (visit)
             node->getRight()->traverse(this);
     }
 
@@ -301,8 +300,7 @@ void TLValueTrackingTraverser::traverseBinary(TIntermBinary *node)
             setOperatorRequiresLValue(true);
         }
 
-        if (node->getLeft())
-            node->getLeft()->traverse(this);
+        node->getLeft()->traverse(this);
 
         if (inVisit)
             visit = visitBinary(InVisit, node);
@@ -320,7 +318,7 @@ void TLValueTrackingTraverser::traverseBinary(TIntermBinary *node)
             setInFunctionCallOutParameter(false);
         }
 
-        if (visit && node->getRight())
+        if (visit)
             node->getRight()->traverse(this);
 
         setOperatorRequiresLValue(parentOperatorRequiresLValue);
@@ -715,10 +713,8 @@ void TIntermTraverser::traverseTernary(TIntermTernary *node)
     if (visit)
     {
         node->getCondition()->traverse(this);
-        if (node->getTrueExpression())
-            node->getTrueExpression()->traverse(this);
-        if (node->getFalseExpression())
-            node->getFalseExpression()->traverse(this);
+        node->getTrueExpression()->traverse(this);
+        node->getFalseExpression()->traverse(this);
     }
 
     if (visit && postVisit)

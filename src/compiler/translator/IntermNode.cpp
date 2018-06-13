@@ -1047,6 +1047,7 @@ TIntermSwizzle::TIntermSwizzle(TIntermTyped *operand, const TVector<int> &swizzl
       mSwizzleOffsets(swizzleOffsets),
       mHasFoldedDuplicateOffsets(false)
 {
+    ASSERT(mOperand);
     ASSERT(mSwizzleOffsets.size() <= 4);
     promote();
 }
@@ -1054,12 +1055,15 @@ TIntermSwizzle::TIntermSwizzle(TIntermTyped *operand, const TVector<int> &swizzl
 TIntermUnary::TIntermUnary(TOperator op, TIntermTyped *operand, const TFunction *function)
     : TIntermOperator(op), mOperand(operand), mUseEmulatedFunction(false), mFunction(function)
 {
+    ASSERT(mOperand);
     promote();
 }
 
 TIntermBinary::TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *right)
     : TIntermOperator(op), mLeft(left), mRight(right), mAddIndexClamp(false)
 {
+    ASSERT(mLeft);
+    ASSERT(mRight);
     promote();
 }
 
@@ -1087,6 +1091,9 @@ TIntermTernary::TIntermTernary(TIntermTyped *cond,
       mTrueExpression(trueExpression),
       mFalseExpression(falseExpression)
 {
+    ASSERT(mCondition);
+    ASSERT(mTrueExpression);
+    ASSERT(mFalseExpression);
     getTypePointer()->setQualifier(
         TIntermTernary::DetermineQualifier(cond, trueExpression, falseExpression));
 }
