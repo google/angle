@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2120ede2_ff968d47",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-13T16:32:23Z",
+      "side": 1,
+      "message": "Why is the validation from the validation layer not enough for that? If not, how do we know if a format is renderable?",
+      "parentUuid": "76c1f328_2c654717",
+      "range": {
+        "startLine": 24,
+        "startChar": 5,
+        "endLine": 24,
+        "endChar": 20
+      },
+      "revId": "6c085385dc75c13bd8a9679ea4a7e41917a9c7dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea621472_83e9dd90",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "6c085385dc75c13bd8a9679ea4a7e41917a9c7dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5deccdfd_93026951",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-13T16:32:23Z",
+      "side": 1,
+      "message": "Done (had to store the ID though just like we do for the buffer and texture formats)",
+      "parentUuid": "ea621472_83e9dd90",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 51
+      },
+      "revId": "6c085385dc75c13bd8a9679ea4a7e41917a9c7dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
