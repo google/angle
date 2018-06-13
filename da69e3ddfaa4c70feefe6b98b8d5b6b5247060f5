@@ -22,6 +22,30 @@
       "revId": "da69e3ddfaa4c70feefe6b98b8d5b6b5247060f5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd4f1e2d_0d7220ff",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-13T19:32:22Z",
+      "side": 1,
+      "message": "Ok, after doing what you suggested, I still had success on the test. However, after debugging why, I found out that the logic in how we manage the mVertexArrayBindingHasChanged flag value is flawed. Its a bit complex to explain right here, but if I write a test that does 3 drawElements in a row, the offset isn\u0027t updated on the third call. It will be updated correctly on call 1 and 2 however. I will try to find a fix for that in particular since this is what this CL is about.",
+      "parentUuid": "9007b5c6_38a68b23",
+      "range": {
+        "startLine": 166,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 87
+      },
+      "revId": "da69e3ddfaa4c70feefe6b98b8d5b6b5247060f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
