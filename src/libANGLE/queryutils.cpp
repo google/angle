@@ -2257,75 +2257,87 @@ void SetTextureEnv(unsigned int unit,
                    TextureEnvParameter pname,
                    const GLfloat *params)
 {
-    if (target == TextureEnvTarget::Env)
+    TextureEnvironmentParameters &env = state->textureEnvironment(unit);
+    GLenum asEnum                     = ConvertToGLenum(params[0]);
+
+    switch (target)
     {
-        TextureEnvironmentParameters &env = state->textureEnvironment(unit);
-        GLenum asEnum                     = ConvertToGLenum(params[0]);
-        switch (pname)
-        {
-            case TextureEnvParameter::Mode:
-                env.mode = FromGLenum<TextureEnvMode>(asEnum);
-                break;
-            case TextureEnvParameter::CombineRgb:
-                env.combineRgb = FromGLenum<TextureCombine>(asEnum);
-                break;
-            case TextureEnvParameter::CombineAlpha:
-                env.combineAlpha = FromGLenum<TextureCombine>(asEnum);
-                break;
-            case TextureEnvParameter::Src0Rgb:
-                env.src0Rgb = FromGLenum<TextureSrc>(asEnum);
-                break;
-            case TextureEnvParameter::Src1Rgb:
-                env.src1Rgb = FromGLenum<TextureSrc>(asEnum);
-                break;
-            case TextureEnvParameter::Src2Rgb:
-                env.src2Rgb = FromGLenum<TextureSrc>(asEnum);
-                break;
-            case TextureEnvParameter::Src0Alpha:
-                env.src0Alpha = FromGLenum<TextureSrc>(asEnum);
-                break;
-            case TextureEnvParameter::Src1Alpha:
-                env.src1Alpha = FromGLenum<TextureSrc>(asEnum);
-                break;
-            case TextureEnvParameter::Src2Alpha:
-                env.src2Alpha = FromGLenum<TextureSrc>(asEnum);
-                break;
-            case TextureEnvParameter::Op0Rgb:
-                env.op0Rgb = FromGLenum<TextureOp>(asEnum);
-                break;
-            case TextureEnvParameter::Op1Rgb:
-                env.op1Rgb = FromGLenum<TextureOp>(asEnum);
-                break;
-            case TextureEnvParameter::Op2Rgb:
-                env.op2Rgb = FromGLenum<TextureOp>(asEnum);
-                break;
-            case TextureEnvParameter::Op0Alpha:
-                env.op0Alpha = FromGLenum<TextureOp>(asEnum);
-                break;
-            case TextureEnvParameter::Op1Alpha:
-                env.op1Alpha = FromGLenum<TextureOp>(asEnum);
-                break;
-            case TextureEnvParameter::Op2Alpha:
-                env.op2Alpha = FromGLenum<TextureOp>(asEnum);
-                break;
-            case TextureEnvParameter::Color:
-                env.color = ColorF::fromData(params);
-                break;
-            case TextureEnvParameter::RgbScale:
-                env.rgbScale = params[0];
-                break;
-            case TextureEnvParameter::AlphaScale:
-                env.alphaScale = params[0];
-                break;
-            default:
-                UNREACHABLE();
-                break;
-        }
-    }
-    else
-    {
-        // TODO(lfy@google.com): point sprite target
-        UNREACHABLE();
+        case TextureEnvTarget::Env:
+            switch (pname)
+            {
+                case TextureEnvParameter::Mode:
+                    env.mode = FromGLenum<TextureEnvMode>(asEnum);
+                    break;
+                case TextureEnvParameter::CombineRgb:
+                    env.combineRgb = FromGLenum<TextureCombine>(asEnum);
+                    break;
+                case TextureEnvParameter::CombineAlpha:
+                    env.combineAlpha = FromGLenum<TextureCombine>(asEnum);
+                    break;
+                case TextureEnvParameter::Src0Rgb:
+                    env.src0Rgb = FromGLenum<TextureSrc>(asEnum);
+                    break;
+                case TextureEnvParameter::Src1Rgb:
+                    env.src1Rgb = FromGLenum<TextureSrc>(asEnum);
+                    break;
+                case TextureEnvParameter::Src2Rgb:
+                    env.src2Rgb = FromGLenum<TextureSrc>(asEnum);
+                    break;
+                case TextureEnvParameter::Src0Alpha:
+                    env.src0Alpha = FromGLenum<TextureSrc>(asEnum);
+                    break;
+                case TextureEnvParameter::Src1Alpha:
+                    env.src1Alpha = FromGLenum<TextureSrc>(asEnum);
+                    break;
+                case TextureEnvParameter::Src2Alpha:
+                    env.src2Alpha = FromGLenum<TextureSrc>(asEnum);
+                    break;
+                case TextureEnvParameter::Op0Rgb:
+                    env.op0Rgb = FromGLenum<TextureOp>(asEnum);
+                    break;
+                case TextureEnvParameter::Op1Rgb:
+                    env.op1Rgb = FromGLenum<TextureOp>(asEnum);
+                    break;
+                case TextureEnvParameter::Op2Rgb:
+                    env.op2Rgb = FromGLenum<TextureOp>(asEnum);
+                    break;
+                case TextureEnvParameter::Op0Alpha:
+                    env.op0Alpha = FromGLenum<TextureOp>(asEnum);
+                    break;
+                case TextureEnvParameter::Op1Alpha:
+                    env.op1Alpha = FromGLenum<TextureOp>(asEnum);
+                    break;
+                case TextureEnvParameter::Op2Alpha:
+                    env.op2Alpha = FromGLenum<TextureOp>(asEnum);
+                    break;
+                case TextureEnvParameter::Color:
+                    env.color = ColorF::fromData(params);
+                    break;
+                case TextureEnvParameter::RgbScale:
+                    env.rgbScale = params[0];
+                    break;
+                case TextureEnvParameter::AlphaScale:
+                    env.alphaScale = params[0];
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+            break;
+        case TextureEnvTarget::PointSprite:
+            switch (pname)
+            {
+                case TextureEnvParameter::PointCoordReplace:
+                    env.pointSpriteCoordReplace = static_cast<bool>(params[0]);
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+            break;
+        default:
+            UNREACHABLE();
+            break;
     }
 }
 
@@ -2335,75 +2347,167 @@ void GetTextureEnv(unsigned int unit,
                    TextureEnvParameter pname,
                    GLfloat *params)
 {
-    if (target == TextureEnvTarget::Env)
+    const TextureEnvironmentParameters &env = state->textureEnvironment(unit);
+
+    switch (target)
     {
-        const TextureEnvironmentParameters &env = state->textureEnvironment(unit);
-        switch (pname)
-        {
-            case TextureEnvParameter::Mode:
-                ConvertPackedEnum(env.mode, params);
-                break;
-            case TextureEnvParameter::CombineRgb:
-                ConvertPackedEnum(env.combineRgb, params);
-                break;
-            case TextureEnvParameter::CombineAlpha:
-                ConvertPackedEnum(env.combineAlpha, params);
-                break;
-            case TextureEnvParameter::Src0Rgb:
-                ConvertPackedEnum(env.src0Rgb, params);
-                break;
-            case TextureEnvParameter::Src1Rgb:
-                ConvertPackedEnum(env.src1Rgb, params);
-                break;
-            case TextureEnvParameter::Src2Rgb:
-                ConvertPackedEnum(env.src2Rgb, params);
-                break;
-            case TextureEnvParameter::Src0Alpha:
-                ConvertPackedEnum(env.src0Alpha, params);
-                break;
-            case TextureEnvParameter::Src1Alpha:
-                ConvertPackedEnum(env.src1Alpha, params);
-                break;
-            case TextureEnvParameter::Src2Alpha:
-                ConvertPackedEnum(env.src2Alpha, params);
-                break;
-            case TextureEnvParameter::Op0Rgb:
-                ConvertPackedEnum(env.op0Rgb, params);
-                break;
-            case TextureEnvParameter::Op1Rgb:
-                ConvertPackedEnum(env.op1Rgb, params);
-                break;
-            case TextureEnvParameter::Op2Rgb:
-                ConvertPackedEnum(env.op2Rgb, params);
-                break;
-            case TextureEnvParameter::Op0Alpha:
-                ConvertPackedEnum(env.op0Alpha, params);
-                break;
-            case TextureEnvParameter::Op1Alpha:
-                ConvertPackedEnum(env.op1Alpha, params);
-                break;
-            case TextureEnvParameter::Op2Alpha:
-                ConvertPackedEnum(env.op2Alpha, params);
-                break;
-            case TextureEnvParameter::Color:
-                env.color.writeData(params);
-                break;
-            case TextureEnvParameter::RgbScale:
-                *params = env.rgbScale;
-                break;
-            case TextureEnvParameter::AlphaScale:
-                *params = env.alphaScale;
-                break;
-            default:
-                UNREACHABLE();
-                break;
-        }
+        case TextureEnvTarget::Env:
+            switch (pname)
+            {
+                case TextureEnvParameter::Mode:
+                    ConvertPackedEnum(env.mode, params);
+                    break;
+                case TextureEnvParameter::CombineRgb:
+                    ConvertPackedEnum(env.combineRgb, params);
+                    break;
+                case TextureEnvParameter::CombineAlpha:
+                    ConvertPackedEnum(env.combineAlpha, params);
+                    break;
+                case TextureEnvParameter::Src0Rgb:
+                    ConvertPackedEnum(env.src0Rgb, params);
+                    break;
+                case TextureEnvParameter::Src1Rgb:
+                    ConvertPackedEnum(env.src1Rgb, params);
+                    break;
+                case TextureEnvParameter::Src2Rgb:
+                    ConvertPackedEnum(env.src2Rgb, params);
+                    break;
+                case TextureEnvParameter::Src0Alpha:
+                    ConvertPackedEnum(env.src0Alpha, params);
+                    break;
+                case TextureEnvParameter::Src1Alpha:
+                    ConvertPackedEnum(env.src1Alpha, params);
+                    break;
+                case TextureEnvParameter::Src2Alpha:
+                    ConvertPackedEnum(env.src2Alpha, params);
+                    break;
+                case TextureEnvParameter::Op0Rgb:
+                    ConvertPackedEnum(env.op0Rgb, params);
+                    break;
+                case TextureEnvParameter::Op1Rgb:
+                    ConvertPackedEnum(env.op1Rgb, params);
+                    break;
+                case TextureEnvParameter::Op2Rgb:
+                    ConvertPackedEnum(env.op2Rgb, params);
+                    break;
+                case TextureEnvParameter::Op0Alpha:
+                    ConvertPackedEnum(env.op0Alpha, params);
+                    break;
+                case TextureEnvParameter::Op1Alpha:
+                    ConvertPackedEnum(env.op1Alpha, params);
+                    break;
+                case TextureEnvParameter::Op2Alpha:
+                    ConvertPackedEnum(env.op2Alpha, params);
+                    break;
+                case TextureEnvParameter::Color:
+                    env.color.writeData(params);
+                    break;
+                case TextureEnvParameter::RgbScale:
+                    *params = env.rgbScale;
+                    break;
+                case TextureEnvParameter::AlphaScale:
+                    *params = env.alphaScale;
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+            break;
+        case TextureEnvTarget::PointSprite:
+            switch (pname)
+            {
+                case TextureEnvParameter::PointCoordReplace:
+                    *params = static_cast<GLfloat>(env.pointSpriteCoordReplace);
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+            break;
+        default:
+            UNREACHABLE();
+            break;
     }
-    else
+}
+
+unsigned int GetPointParameterCount(PointParameter pname)
+{
+    switch (pname)
     {
-        // TODO(lfy@google.com): point sprite target
-        UNREACHABLE();
+        case PointParameter::PointSizeMin:
+        case PointParameter::PointSizeMax:
+        case PointParameter::PointFadeThresholdSize:
+            return 1;
+        case PointParameter::PointDistanceAttenuation:
+            return 3;
+        default:
+            return 0;
     }
+}
+
+void SetPointParameter(GLES1State *state, PointParameter pname, const GLfloat *params)
+{
+
+    PointParameters &pointParams = state->pointParameters();
+
+    switch (pname)
+    {
+        case PointParameter::PointSizeMin:
+            pointParams.pointSizeMin = params[0];
+            break;
+        case PointParameter::PointSizeMax:
+            pointParams.pointSizeMax = params[0];
+            break;
+        case PointParameter::PointFadeThresholdSize:
+            pointParams.pointFadeThresholdSize = params[0];
+            break;
+        case PointParameter::PointDistanceAttenuation:
+            for (unsigned int i = 0; i < 3; i++)
+            {
+                pointParams.pointDistanceAttenuation[i] = params[i];
+            }
+            break;
+        default:
+            UNREACHABLE();
+    }
+}
+
+void GetPointParameter(const GLES1State *state, PointParameter pname, GLfloat *params)
+{
+    const PointParameters &pointParams = state->pointParameters();
+
+    switch (pname)
+    {
+        case PointParameter::PointSizeMin:
+            params[0] = pointParams.pointSizeMin;
+            break;
+        case PointParameter::PointSizeMax:
+            params[0] = pointParams.pointSizeMax;
+            break;
+        case PointParameter::PointFadeThresholdSize:
+            params[0] = pointParams.pointFadeThresholdSize;
+            break;
+        case PointParameter::PointDistanceAttenuation:
+            for (unsigned int i = 0; i < 3; i++)
+            {
+                params[i] = pointParams.pointDistanceAttenuation[i];
+            }
+            break;
+        default:
+            UNREACHABLE();
+    }
+}
+
+void SetPointSize(GLES1State *state, GLfloat size)
+{
+    PointParameters &params = state->pointParameters();
+    params.pointSize        = size;
+}
+
+void GetPointSize(GLES1State *state, GLfloat *sizeOut)
+{
+    const PointParameters &params = state->pointParameters();
+    *sizeOut                      = params.pointSize;
 }
 
 }  // namespace gl

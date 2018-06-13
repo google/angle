@@ -413,6 +413,8 @@ struct Extensions
     bool pointSizeArray;
     // GL_OES_texture_cube_map
     bool textureCubeMap;
+    // GL_OES_point_sprite
+    bool pointSprite;
 
     // EGL_ANGLE_explicit_context GL subextensions
     // GL_ANGLE_explicit_context_gles1
@@ -625,6 +627,8 @@ struct Caps
     GLuint maxModelviewMatrixStackDepth;
     GLuint maxProjectionMatrixStackDepth;
     GLuint maxTextureMatrixStackDepth;
+    GLfloat minSmoothPointSize;
+    GLfloat maxSmoothPointSize;
 };
 
 Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensions);

@@ -419,34 +419,40 @@ void Context::orthox(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n, GLfi
                                                    FixedToFloat(n), FixedToFloat(f)));
 }
 
-void Context::pointParameterf(GLenum pname, GLfloat param)
+void Context::pointParameterf(PointParameter pname, GLfloat param)
 {
-    UNIMPLEMENTED();
+    SetPointParameter(&mGLState.gles1(), pname, &param);
 }
 
-void Context::pointParameterfv(GLenum pname, const GLfloat *params)
+void Context::pointParameterfv(PointParameter pname, const GLfloat *params)
 {
-    UNIMPLEMENTED();
+    SetPointParameter(&mGLState.gles1(), pname, params);
 }
 
-void Context::pointParameterx(GLenum pname, GLfixed param)
+void Context::pointParameterx(PointParameter pname, GLfixed param)
 {
-    UNIMPLEMENTED();
+    GLfloat paramf = FixedToFloat(param);
+    SetPointParameter(&mGLState.gles1(), pname, &paramf);
 }
 
-void Context::pointParameterxv(GLenum pname, const GLfixed *params)
+void Context::pointParameterxv(PointParameter pname, const GLfixed *params)
 {
-    UNIMPLEMENTED();
+    GLfloat paramsf[4] = {};
+    for (unsigned int i = 0; i < GetPointParameterCount(pname); i++)
+    {
+        paramsf[i] = FixedToFloat(params[i]);
+    }
+    SetPointParameter(&mGLState.gles1(), pname, paramsf);
 }
 
 void Context::pointSize(GLfloat size)
 {
-    UNIMPLEMENTED();
+    SetPointSize(&mGLState.gles1(), size);
 }
 
 void Context::pointSizex(GLfixed size)
 {
-    UNIMPLEMENTED();
+    SetPointSize(&mGLState.gles1(), FixedToFloat(size));
 }
 
 void Context::polygonOffsetx(GLfixed factor, GLfixed units)

@@ -47,7 +47,7 @@ void GLES1Renderer::onDestroy(Context *context, State *state)
 
 GLES1Renderer::~GLES1Renderer() = default;
 
-Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
+Error GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context, State *glState)
 {
     ANGLE_TRY(initializeRendererProgram(context, glState));
 
@@ -186,6 +186,8 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
 
             uniformBuffers.texEnvRgbScales[i]   = env.rgbScale;
             uniformBuffers.texEnvAlphaScales[i] = env.alphaScale;
+
+            uniformBuffers.pointSpriteCoordReplaces[i] = env.pointSpriteCoordReplace;
         }
 
         setUniform1iv(programObject, mProgramState.textureEnvModeLoc, kTexUnitCount,
@@ -227,6 +229,9 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
                       uniformBuffers.texEnvRgbScales.data());
         setUniform1fv(programObject, mProgramState.alphaScaleLoc, kTexUnitCount,
                       uniformBuffers.texEnvAlphaScales.data());
+
+        setUniform1iv(programObject, mProgramState.pointSpriteCoordReplaceLoc, kTexUnitCount,
+                      uniformBuffers.pointSpriteCoordReplaces.data());
     }
 
     // Alpha test
@@ -342,6 +347,20 @@ Error GLES1Renderer::prepareForDraw(Context *context, State *glState)
                       uniformBuffers.clipPlaneEnables.data());
         setUniform4fv(programObject, mProgramState.clipPlanesLoc, kClipPlaneCount,
                       reinterpret_cast<float *>(uniformBuffers.clipPlanes.data()));
+    }
+
+    // Point rasterization
+    {
+        const PointParameters &pointParams = gles1State.mPointParameters;
+
+        setUniform1i(programObject, mProgramState.pointRasterizationLoc,
+                     mode == PrimitiveMode::Points);
+        setUniform1i(programObject, mProgramState.pointSpriteEnabledLoc,
+                     glState->getEnableFeature(GL_POINT_SPRITE_OES));
+        setUniform1f(programObject, mProgramState.pointSizeMinLoc, pointParams.pointSizeMin);
+        setUniform1f(programObject, mProgramState.pointSizeMaxLoc, pointParams.pointSizeMax);
+        setUniform3fv(programObject, mProgramState.pointDistanceAttenuationLoc, 1,
+                      pointParams.pointDistanceAttenuation.data());
     }
 
     // None of those are changes in sampler, so there is no need to set the GL_PROGRAM dirty.
@@ -575,6 +594,8 @@ Error GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
     mProgramState.textureEnvColorLoc = programObject->getUniformLocation("texture_env_color");
     mProgramState.rgbScaleLoc        = programObject->getUniformLocation("texture_env_rgb_scale");
     mProgramState.alphaScaleLoc      = programObject->getUniformLocation("texture_env_alpha_scale");
+    mProgramState.pointSpriteCoordReplaceLoc =
+        programObject->getUniformLocation("point_sprite_coord_replace");
 
     mProgramState.enableAlphaTestLoc = programObject->getUniformLocation("enable_alpha_test");
     mProgramState.alphaFuncLoc       = programObject->getUniformLocation("alpha_func");
@@ -627,6 +648,13 @@ Error GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
     mProgramState.enableClipPlanesLoc = programObject->getUniformLocation("enable_clip_planes");
     mProgramState.clipPlaneEnablesLoc = programObject->getUniformLocation("clip_plane_enables");
     mProgramState.clipPlanesLoc       = programObject->getUniformLocation("clip_planes");
+
+    mProgramState.pointRasterizationLoc = programObject->getUniformLocation("point_rasterization");
+    mProgramState.pointSizeMinLoc       = programObject->getUniformLocation("point_size_min");
+    mProgramState.pointSizeMaxLoc       = programObject->getUniformLocation("point_size_max");
+    mProgramState.pointDistanceAttenuationLoc =
+        programObject->getUniformLocation("point_distance_attenuation");
+    mProgramState.pointSpriteEnabledLoc = programObject->getUniformLocation("point_sprite_enabled");
 
     glState->setProgram(context, programObject);
 

@@ -73,8 +73,8 @@ TextureCaps GenerateMinimumTextureCaps(GLenum sizedInternalFormat,
     TextureCaps caps;
 
     const InternalFormat &internalFormatInfo = GetSizedInternalFormatInfo(sizedInternalFormat);
-    caps.texturable = internalFormatInfo.textureSupport(clientVersion, extensions);
-    caps.filterable = internalFormatInfo.filterSupport(clientVersion, extensions);
+    caps.texturable        = internalFormatInfo.textureSupport(clientVersion, extensions);
+    caps.filterable        = internalFormatInfo.filterSupport(clientVersion, extensions);
     caps.textureAttachment = internalFormatInfo.textureAttachmentSupport(clientVersion, extensions);
     caps.renderbuffer      = internalFormatInfo.renderbufferSupport(clientVersion, extensions);
 
@@ -245,6 +245,7 @@ Extensions::Extensions()
       geometryShader(false),
       pointSizeArray(false),
       textureCubeMap(false),
+      pointSprite(false),
       explicitContextGles1(false),
       explicitContext(false)
 {
@@ -853,6 +854,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         // GLES1 extensinos
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArray);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMap);
+        map["GL_OES_point_sprite"] = enableableExtension(&Extensions::pointSprite);
         // clang-format on
 
         return map;
@@ -1012,7 +1014,9 @@ Caps::Caps()
       maxLights(0),
       maxModelviewMatrixStackDepth(0),
       maxProjectionMatrixStackDepth(0),
-      maxTextureMatrixStackDepth(0)
+      maxTextureMatrixStackDepth(0),
+      minSmoothPointSize(0),
+      maxSmoothPointSize(0)
 
 {
     for (size_t i = 0; i < 3; ++i)
@@ -1039,6 +1043,9 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxModelviewMatrixStackDepth  = 16;
         caps.maxProjectionMatrixStackDepth = 2;
         caps.maxTextureMatrixStackDepth    = 2;
+
+        caps.minSmoothPointSize = 1.0f;
+        caps.maxSmoothPointSize = 1.0f;
     }
 
     if (clientVersion >= Version(2, 0))

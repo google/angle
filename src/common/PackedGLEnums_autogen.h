@@ -224,6 +224,21 @@ template <>
 MatrixType FromGLenum<MatrixType>(GLenum from);
 GLenum ToGLenum(MatrixType from);
 
+enum class PointParameter : uint8_t
+{
+    PointSizeMin             = 0,
+    PointSizeMax             = 1,
+    PointFadeThresholdSize   = 2,
+    PointDistanceAttenuation = 3,
+
+    InvalidEnum = 4,
+    EnumCount   = 4,
+};
+
+template <>
+PointParameter FromGLenum<PointParameter>(GLenum from);
+GLenum ToGLenum(PointParameter from);
+
 enum class PrimitiveMode : uint8_t
 {
     Points                 = 0,
@@ -330,27 +345,28 @@ GLenum ToGLenum(TextureEnvMode from);
 
 enum class TextureEnvParameter : uint8_t
 {
-    Mode         = 0,
-    Color        = 1,
-    CombineRgb   = 2,
-    CombineAlpha = 3,
-    RgbScale     = 4,
-    AlphaScale   = 5,
-    Src0Rgb      = 6,
-    Src1Rgb      = 7,
-    Src2Rgb      = 8,
-    Src0Alpha    = 9,
-    Src1Alpha    = 10,
-    Src2Alpha    = 11,
-    Op0Rgb       = 12,
-    Op1Rgb       = 13,
-    Op2Rgb       = 14,
-    Op0Alpha     = 15,
-    Op1Alpha     = 16,
-    Op2Alpha     = 17,
+    Mode              = 0,
+    Color             = 1,
+    CombineRgb        = 2,
+    CombineAlpha      = 3,
+    RgbScale          = 4,
+    AlphaScale        = 5,
+    Src0Rgb           = 6,
+    Src1Rgb           = 7,
+    Src2Rgb           = 8,
+    Src0Alpha         = 9,
+    Src1Alpha         = 10,
+    Src2Alpha         = 11,
+    Op0Rgb            = 12,
+    Op1Rgb            = 13,
+    Op2Rgb            = 14,
+    Op0Alpha          = 15,
+    Op1Alpha          = 16,
+    Op2Alpha          = 17,
+    PointCoordReplace = 18,
 
-    InvalidEnum = 18,
-    EnumCount   = 18,
+    InvalidEnum = 19,
+    EnumCount   = 19,
 };
 
 template <>
@@ -359,10 +375,11 @@ GLenum ToGLenum(TextureEnvParameter from);
 
 enum class TextureEnvTarget : uint8_t
 {
-    Env = 0,
+    Env         = 0,
+    PointSprite = 1,
 
-    InvalidEnum = 1,
-    EnumCount   = 1,
+    InvalidEnum = 2,
+    EnumCount   = 2,
 };
 
 template <>

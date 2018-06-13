@@ -139,19 +139,14 @@ void GLES1State::initialize(const Context *context, const State *state)
 
     mClipPlanes.resize(caps.maxClipPlanes, {false, angle::Vector4(0.0f, 0.0f, 0.0f, 0.0f)});
 
-    mPointParameters.pointSizeMin                = 0.1f;
-    mPointParameters.pointSizeMax                = 100.0f;
-    mPointParameters.pointFadeThresholdSize      = 0.1f;
-    mPointParameters.pointDistanceAttenuation[0] = 1.0f;
-    mPointParameters.pointDistanceAttenuation[1] = 0.0f;
-    mPointParameters.pointDistanceAttenuation[2] = 0.0f;
-
-    mPointParameters.pointSize = 1.0f;
-
     mLineSmoothHint            = HintSetting::DontCare;
     mPointSmoothHint           = HintSetting::DontCare;
     mPerspectiveCorrectionHint = HintSetting::DontCare;
     mFogHint                   = HintSetting::DontCare;
+
+    // The user-specified point size, GL_POINT_SIZE_MAX,
+    // is initially equal to the implementation maximum.
+    mPointParameters.pointSizeMax = caps.maxAliasedPointSize;
 }
 
 void GLES1State::setAlphaFunc(AlphaTestFunc func, GLfloat ref)
@@ -404,6 +399,16 @@ const TextureEnvironmentParameters &GLES1State::textureEnvironment(unsigned int 
 {
     assert(unit < mTextureEnvironments.size());
     return mTextureEnvironments[unit];
+}
+
+PointParameters &GLES1State::pointParameters()
+{
+    return mPointParameters;
+}
+
+const PointParameters &GLES1State::pointParameters() const
+{
+    return mPointParameters;
 }
 
 }  // namespace gl
