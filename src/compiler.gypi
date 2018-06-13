@@ -197,6 +197,7 @@
             'compiler/translator/tree_util/ReplaceVariable.h',
             'compiler/translator/tree_util/RunAtTheEndOfShader.cpp',
             'compiler/translator/tree_util/RunAtTheEndOfShader.h',
+            'compiler/translator/tree_util/Visit.h',
             'third_party/compiler/ArrayBoundsClamper.cpp',
             'third_party/compiler/ArrayBoundsClamper.h',
         ],

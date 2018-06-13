@@ -202,6 +202,61 @@ void TIntermExpression::setTypePreservePrecision(const TType &t)
         return true;                                     \
     }
 
+unsigned int TIntermSymbol::getChildCount()
+{
+    return 0;
+}
+
+TIntermNode *TIntermSymbol::getChildNode(unsigned int index)
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
+unsigned int TIntermConstantUnion::getChildCount()
+{
+    return 0;
+}
+
+TIntermNode *TIntermConstantUnion::getChildNode(unsigned int index)
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
+unsigned int TIntermLoop::getChildCount()
+{
+    return (mInit ? 1 : 0) + (mCond ? 1 : 0) + (mExpr ? 1 : 0) + (mBody ? 1 : 0);
+}
+
+TIntermNode *TIntermLoop::getChildNode(unsigned int index)
+{
+    TIntermNode *children[4];
+    unsigned int childIndex = 0;
+    if (mInit)
+    {
+        children[childIndex] = mInit;
+        ++childIndex;
+    }
+    if (mCond)
+    {
+        children[childIndex] = mCond;
+        ++childIndex;
+    }
+    if (mExpr)
+    {
+        children[childIndex] = mExpr;
+        ++childIndex;
+    }
+    if (mBody)
+    {
+        children[childIndex] = mBody;
+        ++childIndex;
+    }
+    ASSERT(index < childIndex);
+    return children[index];
+}
+
 bool TIntermLoop::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     ASSERT(original != nullptr);  // This risks replacing multiple children.
@@ -212,10 +267,34 @@ bool TIntermLoop::replaceChildNode(TIntermNode *original, TIntermNode *replaceme
     return false;
 }
 
+unsigned int TIntermBranch::getChildCount()
+{
+    return (mExpression ? 1 : 0);
+}
+
+TIntermNode *TIntermBranch::getChildNode(unsigned int index)
+{
+    ASSERT(mExpression);
+    ASSERT(index == 0);
+    return mExpression;
+}
+
 bool TIntermBranch::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mExpression, TIntermTyped, original, replacement);
     return false;
+}
+
+unsigned int TIntermSwizzle::getChildCount()
+{
+    return 1;
+}
+
+TIntermNode *TIntermSwizzle::getChildNode(unsigned int index)
+{
+    ASSERT(mOperand);
+    ASSERT(index == 0);
+    return mOperand;
 }
 
 bool TIntermSwizzle::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
@@ -225,11 +304,38 @@ bool TIntermSwizzle::replaceChildNode(TIntermNode *original, TIntermNode *replac
     return false;
 }
 
+unsigned int TIntermBinary::getChildCount()
+{
+    return 2;
+}
+
+TIntermNode *TIntermBinary::getChildNode(unsigned int index)
+{
+    ASSERT(index < 2);
+    if (index == 0)
+    {
+        return mLeft;
+    }
+    return mRight;
+}
+
 bool TIntermBinary::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mLeft, TIntermTyped, original, replacement);
     REPLACE_IF_IS(mRight, TIntermTyped, original, replacement);
     return false;
+}
+
+unsigned int TIntermUnary::getChildCount()
+{
+    return 1;
+}
+
+TIntermNode *TIntermUnary::getChildNode(unsigned int index)
+{
+    ASSERT(mOperand);
+    ASSERT(index == 0);
+    return mOperand;
 }
 
 bool TIntermUnary::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
@@ -239,10 +345,37 @@ bool TIntermUnary::replaceChildNode(TIntermNode *original, TIntermNode *replacem
     return false;
 }
 
+unsigned int TIntermInvariantDeclaration::getChildCount()
+{
+    return 1;
+}
+
+TIntermNode *TIntermInvariantDeclaration::getChildNode(unsigned int index)
+{
+    ASSERT(mSymbol);
+    ASSERT(index == 0);
+    return mSymbol;
+}
+
 bool TIntermInvariantDeclaration::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mSymbol, TIntermSymbol, original, replacement);
     return false;
+}
+
+unsigned int TIntermFunctionDefinition::getChildCount()
+{
+    return 2;
+}
+
+TIntermNode *TIntermFunctionDefinition::getChildNode(unsigned int index)
+{
+    ASSERT(index < 2);
+    if (index == 0)
+    {
+        return mPrototype;
+    }
+    return mBody;
 }
 
 bool TIntermFunctionDefinition::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
@@ -252,9 +385,29 @@ bool TIntermFunctionDefinition::replaceChildNode(TIntermNode *original, TIntermN
     return false;
 }
 
+unsigned int TIntermAggregate::getChildCount()
+{
+    return mArguments.size();
+}
+
+TIntermNode *TIntermAggregate::getChildNode(unsigned int index)
+{
+    return mArguments[index];
+}
+
 bool TIntermAggregate::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     return replaceChildNodeInternal(original, replacement);
+}
+
+unsigned int TIntermBlock::getChildCount()
+{
+    return mStatements.size();
+}
+
+TIntermNode *TIntermBlock::getChildNode(unsigned int index)
+{
+    return mStatements[index];
 }
 
 bool TIntermBlock::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
@@ -262,9 +415,30 @@ bool TIntermBlock::replaceChildNode(TIntermNode *original, TIntermNode *replacem
     return replaceChildNodeInternal(original, replacement);
 }
 
+unsigned int TIntermFunctionPrototype::getChildCount()
+{
+    return 0;
+}
+
+TIntermNode *TIntermFunctionPrototype::getChildNode(unsigned int index)
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
 bool TIntermFunctionPrototype::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     return false;
+}
+
+unsigned int TIntermDeclaration::getChildCount()
+{
+    return mDeclarators.size();
+}
+
+TIntermNode *TIntermDeclaration::getChildNode(unsigned int index)
+{
+    return mDeclarators[index];
 }
 
 bool TIntermDeclaration::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
@@ -700,12 +874,49 @@ void TIntermDeclaration::appendDeclarator(TIntermTyped *declarator)
     mDeclarators.push_back(declarator);
 }
 
+unsigned int TIntermTernary::getChildCount()
+{
+    return 3;
+}
+
+TIntermNode *TIntermTernary::getChildNode(unsigned int index)
+{
+    ASSERT(index < 3);
+    if (index == 0)
+    {
+        return mCondition;
+    }
+    if (index == 1)
+    {
+        return mTrueExpression;
+    }
+    return mFalseExpression;
+}
+
 bool TIntermTernary::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mCondition, TIntermTyped, original, replacement);
     REPLACE_IF_IS(mTrueExpression, TIntermTyped, original, replacement);
     REPLACE_IF_IS(mFalseExpression, TIntermTyped, original, replacement);
     return false;
+}
+
+unsigned int TIntermIfElse::getChildCount()
+{
+    return 1 + (mTrueBlock ? 1 : 0) + (mFalseBlock ? 1 : 0);
+}
+
+TIntermNode *TIntermIfElse::getChildNode(unsigned int index)
+{
+    if (index == 0)
+    {
+        return mCondition;
+    }
+    if (mTrueBlock && index == 1)
+    {
+        return mTrueBlock;
+    }
+    return mFalseBlock;
 }
 
 bool TIntermIfElse::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
@@ -716,12 +927,39 @@ bool TIntermIfElse::replaceChildNode(TIntermNode *original, TIntermNode *replace
     return false;
 }
 
+unsigned int TIntermSwitch::getChildCount()
+{
+    return 2;
+}
+
+TIntermNode *TIntermSwitch::getChildNode(unsigned int index)
+{
+    ASSERT(index < 2);
+    if (index == 0)
+    {
+        return mInit;
+    }
+    return mStatementList;
+}
+
 bool TIntermSwitch::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mInit, TIntermTyped, original, replacement);
     REPLACE_IF_IS(mStatementList, TIntermBlock, original, replacement);
     ASSERT(mStatementList);
     return false;
+}
+
+unsigned int TIntermCase::getChildCount()
+{
+    return (mCondition ? 1 : 0);
+}
+
+TIntermNode *TIntermCase::getChildNode(unsigned int index)
+{
+    ASSERT(index == 0);
+    ASSERT(mCondition);
+    return mCondition;
 }
 
 bool TIntermCase::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
@@ -1117,6 +1355,7 @@ TIntermLoop::TIntermLoop(TLoopType type,
 TIntermIfElse::TIntermIfElse(TIntermTyped *cond, TIntermBlock *trueB, TIntermBlock *falseB)
     : TIntermNode(), mCondition(cond), mTrueBlock(trueB), mFalseBlock(falseB)
 {
+    ASSERT(mCondition);
     // Prune empty false blocks so that there won't be unnecessary operations done on it.
     if (mFalseBlock && mFalseBlock->getSequence()->empty())
     {
@@ -1127,6 +1366,7 @@ TIntermIfElse::TIntermIfElse(TIntermTyped *cond, TIntermBlock *trueB, TIntermBlo
 TIntermSwitch::TIntermSwitch(TIntermTyped *init, TIntermBlock *statementList)
     : TIntermNode(), mInit(init), mStatementList(statementList)
 {
+    ASSERT(mInit);
     ASSERT(mStatementList);
 }
 
