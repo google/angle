@@ -1695,11 +1695,10 @@ void ProgramD3D::initializeUniformStorage(const gl::ShaderBitSet &availableShade
             continue;
         }
 
-        for (gl::ShaderType shaderType : gl::AllShaderTypes())
+        for (gl::ShaderType shaderType : availableShaderStages)
         {
             if (d3dUniform->isReferencedByShader(shaderType))
             {
-                ASSERT(availableShaderStages[shaderType]);
                 shaderRegisters[shaderType] = std::max(
                     shaderRegisters[shaderType],
                     d3dUniform->mShaderRegisterIndexes[shaderType] + d3dUniform->registerCount);
@@ -1709,13 +1708,10 @@ void ProgramD3D::initializeUniformStorage(const gl::ShaderBitSet &availableShade
 
     // We only reset uniform storages for the shader stages available in the program (attached
     // shaders in ProgramD3D::link() and linkedShaderStages in ProgramD3D::load()).
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    for (gl::ShaderType shaderType : availableShaderStages)
     {
-        if (availableShaderStages[shaderType])
-        {
-            mShaderUniformStorages[shaderType].reset(
-                mRenderer->createUniformStorage(shaderRegisters[shaderType] * 16u));
-        }
+        mShaderUniformStorages[shaderType].reset(
+            mRenderer->createUniformStorage(shaderRegisters[shaderType] * 16u));
     }
 
     // Iterate the uniforms again to assign data pointers to default block uniforms.
@@ -1727,7 +1723,7 @@ void ProgramD3D::initializeUniformStorage(const gl::ShaderBitSet &availableShade
             continue;
         }
 
-        for (gl::ShaderType shaderType : gl::AllShaderTypes())
+        for (gl::ShaderType shaderType : availableShaderStages)
         {
             if (d3dUniform->isReferencedByShader(shaderType))
             {
