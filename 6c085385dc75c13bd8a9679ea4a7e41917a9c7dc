@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76c1f328_2c654717",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T14:33:06Z",
+      "side": 1,
+      "message": "is it possible to add some kind of ASSERT that we don\u0027t use a swizzle for a renderable format?",
+      "range": {
+        "startLine": 24,
+        "startChar": 5,
+        "endLine": 24,
+        "endChar": 20
+      },
+      "revId": "6c085385dc75c13bd8a9679ea4a7e41917a9c7dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea621472_83e9dd90",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T14:33:06Z",
+      "side": 1,
+      "message": "2 comments:\n\n- can you store this format as a property instead? You can init it in the vk table init.\n- maybe call it angleFormat instead of internalFormat",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 51
+      },
+      "revId": "6c085385dc75c13bd8a9679ea4a7e41917a9c7dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
