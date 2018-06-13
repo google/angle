@@ -331,12 +331,12 @@ Error DynamicDescriptorPool::allocateDescriptorSets(
 
 Error DynamicDescriptorPool::allocateNewPool(const VkDevice &device)
 {
-    VkDescriptorPoolSize poolSizes[DescriptorPoolIndexCount];
-    poolSizes[UniformBufferIndex].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-    poolSizes[UniformBufferIndex].descriptorCount =
+    VkDescriptorPoolSize poolSizes[kDescriptorSetCount];
+    poolSizes[kUniformsDescriptorSetIndex].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+    poolSizes[kUniformsDescriptorSetIndex].descriptorCount =
         mUniformBufferDescriptorsPerSet * mMaxSetsPerPool;
-    poolSizes[TextureIndex].type            = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-    poolSizes[TextureIndex].descriptorCount =
+    poolSizes[kTextureDescriptorSetIndex].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    poolSizes[kTextureDescriptorSetIndex].descriptorCount =
         mCombinedImageSamplerDescriptorsPerSet * mMaxSetsPerPool;
 
     VkDescriptorPoolCreateInfo descriptorPoolInfo;
@@ -346,7 +346,7 @@ Error DynamicDescriptorPool::allocateNewPool(const VkDevice &device)
     descriptorPoolInfo.maxSets = mMaxSetsPerPool;
 
     // Reserve pools for uniform blocks and textures.
-    descriptorPoolInfo.poolSizeCount = DescriptorPoolIndexCount;
+    descriptorPoolInfo.poolSizeCount = kDescriptorSetCount;
     descriptorPoolInfo.pPoolSizes    = poolSizes;
 
     mCurrentAllocatedDescriptorSetCount = 0;

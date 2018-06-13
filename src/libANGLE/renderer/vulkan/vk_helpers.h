@@ -86,13 +86,6 @@ class DynamicBuffer : angle::NonCopyable
 // Uses DescriptorPool to allocate descriptor sets as needed. If the descriptor pool
 // is full, we simply allocate a new pool to keep allocating descriptor sets as needed and
 // leave the renderer take care of the life time of the pools that become unused.
-enum DescriptorPoolIndex : uint8_t
-{
-    UniformBufferIndex       = 0,
-    TextureIndex             = 1,
-    DescriptorPoolIndexCount = 2
-};
-
 class DynamicDescriptorPool final : angle::NonCopyable
 {
   public:

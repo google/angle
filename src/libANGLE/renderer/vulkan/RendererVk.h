@@ -108,6 +108,7 @@ class RendererVk : angle::NonCopyable
     vk::Error getAppPipeline(const ProgramVk *programVk,
                              const vk::PipelineDesc &desc,
                              const gl::AttributesMask &activeAttribLocationsMask,
+                             const vk::PipelineLayout &pipelineLayout,
                              vk::PipelineAndSerial **pipelineOut);
 
     // For getting a vk::Pipeline for an internal draw call. Use an explicit RenderPass.
@@ -122,10 +123,12 @@ class RendererVk : angle::NonCopyable
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
     vk::CommandGraph *getCommandGraph();
 
+    // TODO(jmadill): Use PipelineLayout cache. http://anglebug.com/2462
     const vk::PipelineLayout &getGraphicsPipelineLayout() const;
-    const std::vector<vk::DescriptorSetLayout> &getGraphicsDescriptorSetLayouts() const;
+    const vk::DescriptorSetLayout &getGraphicsDescriptorSetLayout(uint32_t setIndex) const;
 
     // Used in internal shaders.
+    // TODO(jmadill): Use PipelineLayout cache. http://anglebug.com/2462
     vk::Error getInternalPushConstantPipelineLayout(const vk::PipelineLayout **pipelineLayoutOut);
 
     // Issues a new serial for linked shader modules. Used in the pipeline cache.
@@ -187,12 +190,18 @@ class RendererVk : angle::NonCopyable
     // See CommandGraph.h for a desription of the Command Graph.
     vk::CommandGraph mCommandGraph;
 
-    // ANGLE uses a single pipeline layout for all GL programs. It is owned here in the Renderer.
-    // See the design doc for an overview of the pipeline layout structure.
-    vk::PipelineLayout mGraphicsPipelineLayout;
-    std::vector<vk::DescriptorSetLayout> mGraphicsDescriptorSetLayouts;
+    // ANGLE uses a PipelineLayout cache to store compatible pipeline layouts.
+    PipelineLayoutCache mPipelineLayoutCache;
+
+    // DescriptorSetLayouts are also managed in a cache.
+    DescriptorSetLayoutCache mDescriptorSetLayoutCache;
+
+    // TODO(jmadill): Only use the pipeline layout cache. http://anglebug.com/2462
+    vk::BindingPointer<vk::PipelineLayout> mGraphicsPipelineLayout;
+    vk::DescriptorSetLayoutPointerArray mGraphicsDescriptorSetLayouts;
 
     // Used for internal shaders.
+    // TODO(jmadill): Use PipelineLayout cache. http://anglebug.com/2462
     vk::PipelineLayout mInternalPushConstantPipelineLayout;
 
     // Internal shader library.

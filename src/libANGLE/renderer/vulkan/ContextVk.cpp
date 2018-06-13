@@ -125,9 +125,11 @@ gl::Error ContextVk::initPipeline()
     // Ensure that the RenderPass description is updated.
     mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc());
 
+    const vk::PipelineLayout &pipelineLayout = mRenderer->getGraphicsPipelineLayout();
+
     // TODO(jmadill): Validate with ASSERT against physical device limits/caps?
     ANGLE_TRY(mRenderer->getAppPipeline(programVk, *mPipelineDesc, activeAttribLocationsMask,
-                                        &mCurrentPipeline));
+                                        pipelineLayout, &mCurrentPipeline));
 
     return gl::NoError();
 }

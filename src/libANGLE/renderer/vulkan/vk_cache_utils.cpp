@@ -860,6 +860,108 @@ bool operator==(const AttachmentOpsArray &lhs, const AttachmentOpsArray &rhs)
 {
     return (memcmp(&lhs, &rhs, sizeof(AttachmentOpsArray)) == 0);
 }
+
+// DescriptorSetLayoutDesc implementation.
+DescriptorSetLayoutDesc::DescriptorSetLayoutDesc() : mPackedDescriptorSetLayout{}
+{
+}
+
+DescriptorSetLayoutDesc::~DescriptorSetLayoutDesc() = default;
+
+DescriptorSetLayoutDesc::DescriptorSetLayoutDesc(const DescriptorSetLayoutDesc &other) = default;
+
+DescriptorSetLayoutDesc &DescriptorSetLayoutDesc::operator=(const DescriptorSetLayoutDesc &other) =
+    default;
+
+size_t DescriptorSetLayoutDesc::hash() const
+{
+    return angle::ComputeGenericHash(mPackedDescriptorSetLayout);
+}
+
+bool DescriptorSetLayoutDesc::operator==(const DescriptorSetLayoutDesc &other) const
+{
+    return (memcmp(&mPackedDescriptorSetLayout, &other.mPackedDescriptorSetLayout,
+                   sizeof(mPackedDescriptorSetLayout)) == 0);
+}
+
+void DescriptorSetLayoutDesc::update(uint32_t bindingIndex, VkDescriptorType type, uint32_t count)
+{
+    ASSERT(static_cast<size_t>(type) < std::numeric_limits<uint16_t>::max());
+    ASSERT(count < std::numeric_limits<uint16_t>::max());
+
+    PackedDescriptorSetBinding &packedBinding = mPackedDescriptorSetLayout[bindingIndex];
+
+    packedBinding.type  = static_cast<uint16_t>(type);
+    packedBinding.count = static_cast<uint16_t>(count);
+}
+
+void DescriptorSetLayoutDesc::unpackBindings(DescriptorSetLayoutBindingVector *bindings) const
+{
+    for (uint32_t bindingIndex = 0; bindingIndex < kMaxDescriptorSetLayoutBindings; ++bindingIndex)
+    {
+        const PackedDescriptorSetBinding &packedBinding = mPackedDescriptorSetLayout[bindingIndex];
+        if (packedBinding.count == 0)
+            continue;
+
+        VkDescriptorSetLayoutBinding binding;
+        binding.binding            = bindingIndex;
+        binding.descriptorCount    = packedBinding.count;
+        binding.descriptorType     = static_cast<VkDescriptorType>(packedBinding.type);
+        binding.stageFlags         = (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT);
+        binding.pImmutableSamplers = nullptr;
+
+        bindings->push_back(binding);
+    }
+}
+
+// PipelineLayoutDesc implementation.
+PipelineLayoutDesc::PipelineLayoutDesc() : mDescriptorSetLayouts{}, mPushConstantRanges{}
+{
+}
+
+PipelineLayoutDesc::~PipelineLayoutDesc() = default;
+
+PipelineLayoutDesc::PipelineLayoutDesc(const PipelineLayoutDesc &other) = default;
+
+PipelineLayoutDesc &PipelineLayoutDesc::operator=(const PipelineLayoutDesc &rhs)
+{
+    mDescriptorSetLayouts = rhs.mDescriptorSetLayouts;
+    mPushConstantRanges   = rhs.mPushConstantRanges;
+    return *this;
+}
+
+size_t PipelineLayoutDesc::hash() const
+{
+    return angle::ComputeGenericHash(*this);
+}
+
+bool PipelineLayoutDesc::operator==(const PipelineLayoutDesc &other) const
+{
+    return memcmp(this, &other, sizeof(PipelineLayoutDesc)) == 0;
+}
+
+void PipelineLayoutDesc::updateDescriptorSetLayout(uint32_t setIndex,
+                                                   const DescriptorSetLayoutDesc &desc)
+{
+    ASSERT(setIndex < mDescriptorSetLayouts.size());
+    mDescriptorSetLayouts[setIndex] = desc;
+}
+
+void PipelineLayoutDesc::updatePushConstantRange(gl::ShaderType shaderType,
+                                                 uint32_t offset,
+                                                 uint32_t size)
+{
+    ASSERT(shaderType == gl::ShaderType::Vertex || shaderType == gl::ShaderType::Fragment);
+    PackedPushConstantRange &packed = mPushConstantRanges[static_cast<size_t>(shaderType)];
+    packed.offset                   = offset;
+    packed.size                     = size;
+}
+
+const PushConstantRangeArray<PackedPushConstantRange> &PipelineLayoutDesc::getPushConstantRanges()
+    const
+{
+    return mPushConstantRanges;
+}
 }  // namespace vk
 
 // RenderPassCache implementation.
@@ -1021,4 +1123,123 @@ void PipelineCache::populate(const vk::PipelineDesc &desc, vk::Pipeline &&pipeli
     mPayload.emplace(desc, vk::PipelineAndSerial(std::move(pipeline), Serial()));
 }
 
+// DescriptorSetLayoutCache implementation.
+DescriptorSetLayoutCache::DescriptorSetLayoutCache() = default;
+
+DescriptorSetLayoutCache::~DescriptorSetLayoutCache()
+{
+    ASSERT(mPayload.empty());
+}
+
+void DescriptorSetLayoutCache::destroy(VkDevice device)
+{
+    for (auto &item : mPayload)
+    {
+        vk::SharedDescriptorSetLayout &layout = item.second;
+        ASSERT(!layout.isReferenced());
+        layout.get().destroy(device);
+    }
+
+    mPayload.clear();
+}
+
+vk::Error DescriptorSetLayoutCache::getDescriptorSetLayout(
+    VkDevice device,
+    const vk::DescriptorSetLayoutDesc &desc,
+    vk::BindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut)
+{
+    auto iter = mPayload.find(desc);
+    if (iter != mPayload.end())
+    {
+        vk::SharedDescriptorSetLayout &layout = iter->second;
+        descriptorSetLayoutOut->set(&layout);
+        return vk::NoError();
+    }
+
+    // We must unpack the descriptor set layout description.
+    vk::DescriptorSetLayoutBindingVector bindings;
+    desc.unpackBindings(&bindings);
+
+    VkDescriptorSetLayoutCreateInfo createInfo;
+    createInfo.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    createInfo.pNext        = nullptr;
+    createInfo.flags        = 0;
+    createInfo.bindingCount = static_cast<uint32_t>(bindings.size());
+    createInfo.pBindings    = bindings.data();
+
+    vk::DescriptorSetLayout newLayout;
+    ANGLE_TRY(newLayout.init(device, createInfo));
+
+    auto insertedItem = mPayload.emplace(desc, vk::SharedDescriptorSetLayout(std::move(newLayout)));
+    vk::SharedDescriptorSetLayout &insertedLayout = insertedItem.first->second;
+    descriptorSetLayoutOut->set(&insertedLayout);
+
+    return vk::NoError();
+}
+
+// PipelineLayoutCache implementation.
+PipelineLayoutCache::PipelineLayoutCache() = default;
+
+PipelineLayoutCache::~PipelineLayoutCache()
+{
+    ASSERT(mPayload.empty());
+}
+
+void PipelineLayoutCache::destroy(VkDevice device)
+{
+    for (auto &item : mPayload)
+    {
+        vk::SharedPipelineLayout &layout = item.second;
+        layout.get().destroy(device);
+    }
+
+    mPayload.clear();
+}
+
+vk::Error PipelineLayoutCache::getPipelineLayout(
+    VkDevice device,
+    const vk::PipelineLayoutDesc &desc,
+    const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
+    vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut)
+{
+    auto iter = mPayload.find(desc);
+    if (iter != mPayload.end())
+    {
+        vk::SharedPipelineLayout &layout = iter->second;
+        pipelineLayoutOut->set(&layout);
+        return vk::NoError();
+    }
+
+    // Note this does not handle gaps in descriptor set layouts gracefully.
+    angle::FixedVector<VkDescriptorSetLayout, vk::kMaxDescriptorSetLayouts> setLayoutHandles;
+    for (const vk::BindingPointer<vk::DescriptorSetLayout> &layoutPtr : descriptorSetLayouts)
+    {
+        VkDescriptorSetLayout setLayout = layoutPtr.get().getHandle();
+        if (setLayout != VK_NULL_HANDLE)
+        {
+            setLayoutHandles.push_back(setLayout);
+        }
+    }
+
+    // No pipeline layout found. We must create a new one.
+    VkPipelineLayoutCreateInfo createInfo;
+    createInfo.sType          = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    createInfo.pNext          = nullptr;
+    createInfo.flags          = 0;
+    createInfo.setLayoutCount = static_cast<uint32_t>(setLayoutHandles.size());
+    createInfo.pSetLayouts    = setLayoutHandles.data();
+
+    // TODO(jmadill): Init push constant ranges. http://anglebug.com/2462
+    createInfo.pushConstantRangeCount = 0;
+    createInfo.pPushConstantRanges    = nullptr;
+
+    vk::PipelineLayout newLayout;
+    ANGLE_TRY(newLayout.init(device, createInfo));
+
+    auto insertedItem = mPayload.emplace(desc, vk::SharedPipelineLayout(std::move(newLayout)));
+    vk::SharedPipelineLayout &insertedLayout = insertedItem.first->second;
+    pipelineLayoutOut->set(&insertedLayout);
+
+    return vk::NoError();
+}
 }  // namespace rx

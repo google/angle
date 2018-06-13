@@ -705,7 +705,6 @@ vk::Error ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descri
 
     // Write out to a new a descriptor set.
     vk::DynamicDescriptorPool *dynamicDescriptorPool = contextVk->getDynamicDescriptorPool();
-    const auto &descriptorSetLayouts = renderer->getGraphicsDescriptorSetLayouts();
 
     uint32_t potentialNewCount = descriptorSetIndex + 1;
     if (potentialNewCount > mDescriptorSets.size())
@@ -713,10 +712,10 @@ vk::Error ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descri
         mDescriptorSets.resize(potentialNewCount, VK_NULL_HANDLE);
     }
 
-    const VkDescriptorSetLayout *descriptorSetLayout =
-        descriptorSetLayouts[descriptorSetIndex].ptr();
+    const vk::DescriptorSetLayout &descriptorSetLayout =
+        renderer->getGraphicsDescriptorSetLayout(descriptorSetIndex);
 
-    ANGLE_TRY(dynamicDescriptorPool->allocateDescriptorSets(contextVk, descriptorSetLayout, 1,
+    ANGLE_TRY(dynamicDescriptorPool->allocateDescriptorSets(contextVk, descriptorSetLayout.ptr(), 1,
                                                             &mDescriptorSets[descriptorSetIndex]));
     return vk::NoError();
 }
@@ -772,7 +771,7 @@ vk::Error ProgramVk::updateUniforms(ContextVk *contextVk)
     {
         // We need to reinitialize the descriptor sets if we newly allocated buffers since we can't
         // modify the descriptor sets once initialized.
-        ANGLE_TRY(allocateDescriptorSet(contextVk, vk::UniformBufferIndex));
+        ANGLE_TRY(allocateDescriptorSet(contextVk, kUniformsDescriptorSetIndex));
         ANGLE_TRY(updateDefaultUniformsDescriptorSet(contextVk));
     }
 
@@ -857,10 +856,10 @@ gl::Error ProgramVk::updateTexturesDescriptorSet(const gl::Context *context)
     }
 
     ContextVk *contextVk = GetImplAs<ContextVk>(context);
-    ANGLE_TRY(allocateDescriptorSet(contextVk, vk::TextureIndex));
+    ANGLE_TRY(allocateDescriptorSet(contextVk, kTextureDescriptorSetIndex));
 
     ASSERT(mUsedDescriptorSetRange.contains(1));
-    VkDescriptorSet descriptorSet = mDescriptorSets[1];
+    VkDescriptorSet descriptorSet = mDescriptorSets[kTextureDescriptorSetIndex];
 
     // TODO(jmadill): Don't hard-code the texture limit.
     ShaderTextureArray<VkDescriptorImageInfo> descriptorImageInfo;
