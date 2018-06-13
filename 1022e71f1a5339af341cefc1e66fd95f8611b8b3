@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f371cff_66bd1710",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 54
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T16:45:40Z",
+      "side": 1,
+      "message": "this should probably be in a separate thing in the headers repo",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 44
+      },
+      "revId": "1022e71f1a5339af341cefc1e66fd95f8611b8b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f91a2dd1_1e5a8daa",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 54
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T16:45:40Z",
+      "side": 1,
+      "message": "rather than using ../ I think we should probably use abs paths - $angle_root/third_party. goes for all the instances in the code",
+      "range": {
+        "startLine": 255,
+        "startChar": 5,
+        "endLine": 255,
+        "endChar": 6
+      },
+      "revId": "1022e71f1a5339af341cefc1e66fd95f8611b8b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
