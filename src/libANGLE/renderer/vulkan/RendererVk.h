@@ -108,7 +108,6 @@ class RendererVk : angle::NonCopyable
     vk::Error getAppPipeline(const ProgramVk *programVk,
                              const vk::PipelineDesc &desc,
                              const gl::AttributesMask &activeAttribLocationsMask,
-                             const vk::PipelineLayout &pipelineLayout,
                              vk::PipelineAndSerial **pipelineOut);
 
     // For getting a vk::Pipeline for an internal draw call. Use an explicit RenderPass.
@@ -119,13 +118,19 @@ class RendererVk : angle::NonCopyable
                                   const gl::AttributesMask &activeAttribLocationsMask,
                                   vk::PipelineAndSerial **pipelineOut);
 
+    // Queries the descriptor set layout cache. Creates the layout if not present.
+    vk::Error getDescriptorSetLayout(
+        const vk::DescriptorSetLayoutDesc &desc,
+        vk::BindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut);
+
+    // Queries the pipeline layout cache. Creates the layout if not present.
+    vk::Error getPipelineLayout(const vk::PipelineLayoutDesc &desc,
+                                const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
+                                vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut);
+
     // This should only be called from ResourceVk.
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
     vk::CommandGraph *getCommandGraph();
-
-    // TODO(jmadill): Use PipelineLayout cache. http://anglebug.com/2462
-    const vk::PipelineLayout &getGraphicsPipelineLayout() const;
-    const vk::DescriptorSetLayout &getGraphicsDescriptorSetLayout(uint32_t setIndex) const;
 
     // Used in internal shaders.
     // TODO(jmadill): Use PipelineLayout cache. http://anglebug.com/2462
@@ -143,7 +148,6 @@ class RendererVk : angle::NonCopyable
     vk::Error checkInFlightCommands();
     void freeAllInFlightResources();
     vk::Error flushCommandGraph(const gl::Context *context, vk::CommandBuffer *commandBatch);
-    vk::Error initGraphicsPipelineLayout();
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;
@@ -195,10 +199,6 @@ class RendererVk : angle::NonCopyable
 
     // DescriptorSetLayouts are also managed in a cache.
     DescriptorSetLayoutCache mDescriptorSetLayoutCache;
-
-    // TODO(jmadill): Only use the pipeline layout cache. http://anglebug.com/2462
-    vk::BindingPointer<vk::PipelineLayout> mGraphicsPipelineLayout;
-    vk::DescriptorSetLayoutPointerArray mGraphicsDescriptorSetLayouts;
 
     // Used for internal shaders.
     // TODO(jmadill): Use PipelineLayout cache. http://anglebug.com/2462

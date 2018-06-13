@@ -121,6 +121,8 @@ class ProgramVk : public ProgramImpl
     gl::Error updateTexturesDescriptorSet(const gl::Context *context);
     void invalidateTextures();
 
+    const vk::PipelineLayout &getPipelineLayout() const;
+
     // For testing only.
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
 
@@ -179,6 +181,11 @@ class ProgramVk : public ProgramImpl
 
     template <typename T>
     using ShaderTextureArray = std::array<T, gl::IMPLEMENTATION_MAX_SHADER_TEXTURES>;
+
+    // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
+    // deleted while this program is in use.
+    vk::BindingPointer<vk::PipelineLayout> mPipelineLayout;
+    vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
 };
 
 }  // namespace rx

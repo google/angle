@@ -208,12 +208,6 @@ RendererVk::~RendererVk()
         }
     }
 
-    for (auto &descriptorSetLayout : mGraphicsDescriptorSetLayouts)
-    {
-        descriptorSetLayout.reset();
-    }
-
-    mGraphicsPipelineLayout.reset();
     mPipelineLayoutCache.destroy(mDevice);
     mDescriptorSetLayoutCache.destroy(mDevice);
 
@@ -448,9 +442,6 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
     // Initialize the format table.
     mFormatTable.initialize(mPhysicalDevice, &mNativeTextureCaps,
                             &mNativeCaps.compressedTextureFormats);
-
-    // Initialize the pipeline layout for GL programs.
-    ANGLE_TRY(initGraphicsPipelineLayout());
 
     return vk::NoError();
 }
@@ -843,51 +834,6 @@ vk::Error RendererVk::flush(const gl::Context *context,
     return vk::NoError();
 }
 
-const vk::PipelineLayout &RendererVk::getGraphicsPipelineLayout() const
-{
-    return mGraphicsPipelineLayout.get();
-}
-
-const vk::DescriptorSetLayout &RendererVk::getGraphicsDescriptorSetLayout(uint32_t setIndex) const
-{
-    return mGraphicsDescriptorSetLayouts[setIndex].get();
-}
-
-vk::Error RendererVk::initGraphicsPipelineLayout()
-{
-    ASSERT(!mGraphicsPipelineLayout.valid());
-
-    // Create two descriptor set layouts: one for default uniform info, and one for textures.
-    vk::DescriptorSetLayoutDesc uniformsSetDesc;
-    uniformsSetDesc.update(kVertexUniformsBindingIndex, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
-                           1);
-    uniformsSetDesc.update(kFragmentUniformsBindingIndex, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
-                           1);
-    ANGLE_TRY(mDescriptorSetLayoutCache.getDescriptorSetLayout(mDevice, uniformsSetDesc,
-                                                               &mGraphicsDescriptorSetLayouts[0]));
-
-    const uint32_t maxTextures = getMaxActiveTextures();
-
-    vk::DescriptorSetLayoutDesc texturesSetDesc;
-    for (uint32_t textureIndex = 0; textureIndex < maxTextures; ++textureIndex)
-    {
-        // TODO(jmadll): Sampler arrays. http://anglebug.com/2462
-        texturesSetDesc.update(textureIndex, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
-    }
-
-    ANGLE_TRY(mDescriptorSetLayoutCache.getDescriptorSetLayout(mDevice, texturesSetDesc,
-                                                               &mGraphicsDescriptorSetLayouts[1]));
-
-    vk::PipelineLayoutDesc pipelineLayoutDesc;
-    pipelineLayoutDesc.updateDescriptorSetLayout(kUniformsDescriptorSetIndex, uniformsSetDesc);
-    pipelineLayoutDesc.updateDescriptorSetLayout(kTextureDescriptorSetIndex, texturesSetDesc);
-
-    ANGLE_TRY(mPipelineLayoutCache.getPipelineLayout(
-        mDevice, pipelineLayoutDesc, mGraphicsDescriptorSetLayouts, &mGraphicsPipelineLayout));
-
-    return vk::NoError();
-}
-
 vk::Error RendererVk::getInternalPushConstantPipelineLayout(
     const vk::PipelineLayout **pipelineLayoutOut)
 {
@@ -924,7 +870,6 @@ Serial RendererVk::issueShaderSerial()
 vk::Error RendererVk::getAppPipeline(const ProgramVk *programVk,
                                      const vk::PipelineDesc &desc,
                                      const gl::AttributesMask &activeAttribLocationsMask,
-                                     const vk::PipelineLayout &pipelineLayout,
                                      vk::PipelineAndSerial **pipelineOut)
 {
     ASSERT(programVk->getVertexModuleSerial() ==
@@ -935,6 +880,8 @@ vk::Error RendererVk::getAppPipeline(const ProgramVk *programVk,
     // Pull in a compatible RenderPass.
     vk::RenderPass *compatibleRenderPass = nullptr;
     ANGLE_TRY(getCompatibleRenderPass(desc.getRenderPassDesc(), &compatibleRenderPass));
+
+    const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
 
     return mPipelineCache.getPipeline(mDevice, *compatibleRenderPass, pipelineLayout,
                                       activeAttribLocationsMask, programVk->getLinkedVertexModule(),
@@ -960,6 +907,22 @@ vk::Error RendererVk::getInternalPipeline(const vk::ShaderAndSerial &vertexShade
     return mPipelineCache.getPipeline(mDevice, *compatibleRenderPass, pipelineLayout,
                                       activeAttribLocationsMask, vertexShader.get(),
                                       fragmentShader.get(), pipelineDesc, pipelineOut);
+}
+
+vk::Error RendererVk::getDescriptorSetLayout(
+    const vk::DescriptorSetLayoutDesc &desc,
+    vk::BindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut)
+{
+    return mDescriptorSetLayoutCache.getDescriptorSetLayout(mDevice, desc, descriptorSetLayoutOut);
+}
+
+vk::Error RendererVk::getPipelineLayout(
+    const vk::PipelineLayoutDesc &desc,
+    const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
+    vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut)
+{
+    return mPipelineLayoutCache.getPipelineLayout(mDevice, desc, descriptorSetLayouts,
+                                                  pipelineLayoutOut);
 }
 
 vk::ShaderLibrary *RendererVk::getShaderLibrary()

@@ -125,11 +125,9 @@ gl::Error ContextVk::initPipeline()
     // Ensure that the RenderPass description is updated.
     mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc());
 
-    const vk::PipelineLayout &pipelineLayout = mRenderer->getGraphicsPipelineLayout();
-
     // TODO(jmadill): Validate with ASSERT against physical device limits/caps?
     ANGLE_TRY(mRenderer->getAppPipeline(programVk, *mPipelineDesc, activeAttribLocationsMask,
-                                        pipelineLayout, &mCurrentPipeline));
+                                        &mCurrentPipeline));
 
     return gl::NoError();
 }
@@ -216,7 +214,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     if (!usedRange.empty())
     {
         ASSERT(!descriptorSets.empty());
-        const vk::PipelineLayout &pipelineLayout = mRenderer->getGraphicsPipelineLayout();
+        const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
 
         (*commandBufferOut)
             ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, usedRange.low(),
