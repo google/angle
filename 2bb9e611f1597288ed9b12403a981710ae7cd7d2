@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e89803b_24e3d96e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 990,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T18:41:47Z",
+      "side": 1,
+      "message": "I don\u0027t think this is true - this implies a swizzle is required if !textureAttachment. Rather it should be !swizzleRequired || !textureAttachment. swizzleRequired implies !textureAttachment.",
+      "range": {
+        "startLine": 989,
+        "startChar": 4,
+        "endLine": 990,
+        "endChar": 45
+      },
+      "revId": "2bb9e611f1597288ed9b12403a981710ae7cd7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
