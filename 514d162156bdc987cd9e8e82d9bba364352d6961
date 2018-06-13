@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "ccf213f7_8c8a0150",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 863,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-13T17:06:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f1396529_35a7365b",
+      "range": {
+        "startLine": 863,
+        "startChar": 30,
+        "endLine": 863,
+        "endChar": 71
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4546f20_4ada5ef6",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 7
@@ -178,6 +202,30 @@
       "side": 1,
       "message": "This is a canonical usage in the style guide, so I think it is appropriate:\n\nhttps://google.github.io/styleguide/cppguide.html#auto\n\nSame for the other uses.",
       "parentUuid": "c9b1e821_13ababca",
+      "range": {
+        "startLine": 1136,
+        "startChar": 9,
+        "endLine": 1136,
+        "endChar": 14
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ab92a98_30b89421",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1136,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-13T17:06:33Z",
+      "side": 1,
+      "message": "The canonical usage for the loop demonstrated in that documentation is only ok if the type is visible by defining first, second as typed variables.\n\nThe type must be visible from the context very close to where auto is used, otherwise the reader needs to go to the definition of mPayload.",
+      "parentUuid": "630779dd_e6cc93c2",
       "range": {
         "startLine": 1136,
         "startChar": 9,
@@ -372,6 +420,30 @@
       "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1e8884c_aa7f2941",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-13T17:06:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "20a16f85_a983ceff",
+      "range": {
+        "startLine": 62,
+        "startChar": 13,
+        "endLine": 62,
+        "endChar": 22
+      },
+      "revId": "514d162156bdc987cd9e8e82d9bba364352d6961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
