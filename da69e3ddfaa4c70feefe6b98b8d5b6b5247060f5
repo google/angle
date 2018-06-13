@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9007b5c6_38a68b23",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T17:15:27Z",
+      "side": 1,
+      "message": "ok ok. To get the failure you\u0027ll need to ensure no commands between drawElements a and drawElements b. You could do something like draw a red and green triangle to form a quad that covers the window. Then verify after the two draws that you get the colors you expect. It should fail. Right now the ReadPixels is causing a glFinish that is re-creating the command buffer for the second draw.",
+      "range": {
+        "startLine": 166,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 87
+      },
+      "revId": "da69e3ddfaa4c70feefe6b98b8d5b6b5247060f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
