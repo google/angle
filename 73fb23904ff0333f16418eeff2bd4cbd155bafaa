@@ -16,6 +16,24 @@
       "revId": "73fb23904ff0333f16418eeff2bd4cbd155bafaa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e017c1eb_48f1933b",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T18:01:33Z",
+      "side": 0,
+      "message": "Different bug. That\u0027s samplers in structs.",
+      "parentUuid": "1fe77c12_30dd7151",
+      "revId": "73fb23904ff0333f16418eeff2bd4cbd155bafaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

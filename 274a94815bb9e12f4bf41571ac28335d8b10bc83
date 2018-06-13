@@ -22,6 +22,30 @@
       "revId": "274a94815bb9e12f4bf41571ac28335d8b10bc83",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ee08836_616b1b8a",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T18:01:33Z",
+      "side": 1,
+      "message": "Done. This was refactored code. Agree it\u0027s better without.",
+      "parentUuid": "8dc9c7b4_291ddee0",
+      "range": {
+        "startLine": 933,
+        "startChar": 12,
+        "endLine": 933,
+        "endChar": 17
+      },
+      "revId": "274a94815bb9e12f4bf41571ac28335d8b10bc83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
