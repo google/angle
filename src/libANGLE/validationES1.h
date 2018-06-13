@@ -132,10 +132,10 @@ bool ValidateOrthox(Context *context,
                     GLfixed t,
                     GLfixed n,
                     GLfixed f);
-bool ValidatePointParameterf(Context *context, GLenum pname, GLfloat param);
-bool ValidatePointParameterfv(Context *context, GLenum pname, const GLfloat *params);
-bool ValidatePointParameterx(Context *context, GLenum pname, GLfixed param);
-bool ValidatePointParameterxv(Context *context, GLenum pname, const GLfixed *params);
+bool ValidatePointParameterf(Context *context, PointParameter pname, GLfloat param);
+bool ValidatePointParameterfv(Context *context, PointParameter pname, const GLfloat *params);
+bool ValidatePointParameterx(Context *context, PointParameter pname, GLfixed param);
+bool ValidatePointParameterxv(Context *context, PointParameter pname, const GLfixed *params);
 bool ValidatePointSize(Context *context, GLfloat size);
 bool ValidatePointSizex(Context *context, GLfixed size);
 bool ValidatePolygonOffsetx(Context *context, GLfixed factor, GLfixed units);

@@ -35,7 +35,7 @@ class GLES1Renderer final : angle::NonCopyable
 
     void onDestroy(Context *context, State *state);
 
-    Error prepareForDraw(Context *context, State *glState);
+    Error prepareForDraw(PrimitiveMode mode, Context *context, State *glState);
 
     int vertexArrayIndex(ClientVertexArrayType type, const State *glState) const;
     static int TexCoordArrayIndex(unsigned int unit);
@@ -121,6 +121,7 @@ class GLES1Renderer final : angle::NonCopyable
         GLint textureEnvColorLoc;
         GLint rgbScaleLoc;
         GLint alphaScaleLoc;
+        GLint pointSpriteCoordReplaceLoc;
 
         // Alpha test
         GLint enableAlphaTestLoc;
@@ -167,6 +168,13 @@ class GLES1Renderer final : angle::NonCopyable
         GLint enableClipPlanesLoc;
         GLint clipPlaneEnablesLoc;
         GLint clipPlanesLoc;
+
+        // Point rasterization
+        GLint pointRasterizationLoc;
+        GLint pointSizeMinLoc;
+        GLint pointSizeMaxLoc;
+        GLint pointDistanceAttenuationLoc;
+        GLint pointSpriteEnabledLoc;
     };
 
     struct GLES1UniformBuffers
@@ -194,6 +202,7 @@ class GLES1Renderer final : angle::NonCopyable
         std::array<Vec4Uniform, kTexUnitCount> texEnvColors;
         std::array<GLfloat, kTexUnitCount> texEnvRgbScales;
         std::array<GLfloat, kTexUnitCount> texEnvAlphaScales;
+        std::array<GLint, kTexUnitCount> pointSpriteCoordReplaces;
 
         // Lighting
         std::array<GLint, kLightCount> lightEnables;

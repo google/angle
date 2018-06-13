@@ -132,7 +132,8 @@
     },
     "TextureEnvTarget":
     {
-        "Env": "GL_TEXTURE_ENV"
+        "Env": "GL_TEXTURE_ENV",
+        "PointSprite": "GL_POINT_SPRITE_OES"
     },
     "TextureEnvParameter":
     {
@@ -153,7 +154,8 @@
         "Op2Rgb": "GL_OPERAND2_RGB",
         "Op0Alpha": "GL_OPERAND0_ALPHA",
         "Op1Alpha": "GL_OPERAND1_ALPHA",
-        "Op2Alpha": "GL_OPERAND2_ALPHA"
+        "Op2Alpha": "GL_OPERAND2_ALPHA",
+        "PointCoordReplace": "GL_COORD_REPLACE_OES"
     },
     "TextureOp":
     {
@@ -238,5 +240,12 @@
         "LineStripAdjacency": "GL_LINE_STRIP_ADJACENCY_EXT",
         "TrianglesAdjacency": "GL_TRIANGLES_ADJACENCY_EXT",
         "TriangleStripAdjacency": "GL_TRIANGLE_STRIP_ADJACENCY_EXT"
+    },
+    "PointParameter":
+    {
+        "PointSizeMin" : "GL_POINT_SIZE_MIN",
+        "PointSizeMax" : "GL_POINT_SIZE_MAX",
+        "PointFadeThresholdSize" : "GL_POINT_FADE_THRESHOLD_SIZE",
+        "PointDistanceAttenuation" : "GL_POINT_DISTANCE_ATTENUATION"
     }
 }

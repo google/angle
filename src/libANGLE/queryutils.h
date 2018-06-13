@@ -197,6 +197,14 @@ void GetTextureEnv(unsigned int unit,
                    TextureEnvParameter pname,
                    GLfloat *params);
 
+unsigned int GetPointParameterCount(PointParameter pname);
+
+void SetPointParameter(GLES1State *state, PointParameter pname, const GLfloat *params);
+void GetPointParameter(const GLES1State *state, PointParameter pname, GLfloat *params);
+
+void SetPointSize(GLES1State *state, GLfloat size);
+void GetPointSize(GLES1State *state, GLfloat *sizeOut);
+
 }  // namespace gl
 
 namespace egl

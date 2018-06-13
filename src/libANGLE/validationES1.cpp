@@ -376,121 +376,140 @@ bool ValidateTexEnvCommon(Context *context,
 {
     ANGLE_VALIDATE_IS_GLES1(context);
 
-    if (target != TextureEnvTarget::Env)
+    switch (target)
     {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureEnvTarget);
-        return false;
-    }
-
-    switch (pname)
-    {
-        case TextureEnvParameter::Mode:
-        {
-            TextureEnvMode mode = FromGLenum<TextureEnvMode>(ConvertToGLenum(params[0]));
-            switch (mode)
+        case TextureEnvTarget::Env:
+            switch (pname)
             {
-                case TextureEnvMode::Add:
-                case TextureEnvMode::Blend:
-                case TextureEnvMode::Combine:
-                case TextureEnvMode::Decal:
-                case TextureEnvMode::Modulate:
-                case TextureEnvMode::Replace:
-                    break;
-                default:
-                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureEnvMode);
-                    return false;
-            }
-            break;
-        }
-        case TextureEnvParameter::CombineRgb:
-        case TextureEnvParameter::CombineAlpha:
-        {
-            TextureCombine combine = FromGLenum<TextureCombine>(ConvertToGLenum(params[0]));
-            switch (combine)
-            {
-                case TextureCombine::Add:
-                case TextureCombine::AddSigned:
-                case TextureCombine::Interpolate:
-                case TextureCombine::Modulate:
-                case TextureCombine::Replace:
-                case TextureCombine::Subtract:
-                    break;
-                case TextureCombine::Dot3Rgb:
-                case TextureCombine::Dot3Rgba:
-                    if (pname == TextureEnvParameter::CombineAlpha)
+                case TextureEnvParameter::Mode:
+                {
+                    TextureEnvMode mode = FromGLenum<TextureEnvMode>(ConvertToGLenum(params[0]));
+                    switch (mode)
                     {
-                        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombine);
+                        case TextureEnvMode::Add:
+                        case TextureEnvMode::Blend:
+                        case TextureEnvMode::Combine:
+                        case TextureEnvMode::Decal:
+                        case TextureEnvMode::Modulate:
+                        case TextureEnvMode::Replace:
+                            break;
+                        default:
+                            ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureEnvMode);
+                            return false;
+                    }
+                    break;
+                }
+                case TextureEnvParameter::CombineRgb:
+                case TextureEnvParameter::CombineAlpha:
+                {
+                    TextureCombine combine = FromGLenum<TextureCombine>(ConvertToGLenum(params[0]));
+                    switch (combine)
+                    {
+                        case TextureCombine::Add:
+                        case TextureCombine::AddSigned:
+                        case TextureCombine::Interpolate:
+                        case TextureCombine::Modulate:
+                        case TextureCombine::Replace:
+                        case TextureCombine::Subtract:
+                            break;
+                        case TextureCombine::Dot3Rgb:
+                        case TextureCombine::Dot3Rgba:
+                            if (pname == TextureEnvParameter::CombineAlpha)
+                            {
+                                ANGLE_VALIDATION_ERR(context, InvalidValue(),
+                                                     InvalidTextureCombine);
+                                return false;
+                            }
+                            break;
+                        default:
+                            ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombine);
+                            return false;
+                    }
+                    break;
+                }
+                case TextureEnvParameter::Src0Rgb:
+                case TextureEnvParameter::Src1Rgb:
+                case TextureEnvParameter::Src2Rgb:
+                case TextureEnvParameter::Src0Alpha:
+                case TextureEnvParameter::Src1Alpha:
+                case TextureEnvParameter::Src2Alpha:
+                {
+                    TextureSrc combine = FromGLenum<TextureSrc>(ConvertToGLenum(params[0]));
+                    switch (combine)
+                    {
+                        case TextureSrc::Constant:
+                        case TextureSrc::Previous:
+                        case TextureSrc::PrimaryColor:
+                        case TextureSrc::Texture:
+                            break;
+                        default:
+                            ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombineSrc);
+                            return false;
+                    }
+                    break;
+                }
+                case TextureEnvParameter::Op0Rgb:
+                case TextureEnvParameter::Op1Rgb:
+                case TextureEnvParameter::Op2Rgb:
+                case TextureEnvParameter::Op0Alpha:
+                case TextureEnvParameter::Op1Alpha:
+                case TextureEnvParameter::Op2Alpha:
+                {
+                    TextureOp operand = FromGLenum<TextureOp>(ConvertToGLenum(params[0]));
+                    switch (operand)
+                    {
+                        case TextureOp::SrcAlpha:
+                        case TextureOp::OneMinusSrcAlpha:
+                            break;
+                        case TextureOp::SrcColor:
+                        case TextureOp::OneMinusSrcColor:
+                            if (pname == TextureEnvParameter::Op0Alpha ||
+                                pname == TextureEnvParameter::Op1Alpha ||
+                                pname == TextureEnvParameter::Op2Alpha)
+                            {
+                                ANGLE_VALIDATION_ERR(context, InvalidValue(),
+                                                     InvalidTextureCombine);
+                                return false;
+                            }
+                            break;
+                        default:
+                            ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombineOp);
+                            return false;
+                    }
+                    break;
+                }
+                case TextureEnvParameter::RgbScale:
+                case TextureEnvParameter::AlphaScale:
+                    if (params[0] != 1.0f && params[0] != 2.0f && params[0] != 4.0f)
+                    {
+                        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureEnvScale);
                         return false;
                     }
                     break;
+                case TextureEnvParameter::Color:
+                    break;
                 default:
-                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombine);
+                    ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureEnvParameter);
                     return false;
             }
             break;
-        }
-        case TextureEnvParameter::Src0Rgb:
-        case TextureEnvParameter::Src1Rgb:
-        case TextureEnvParameter::Src2Rgb:
-        case TextureEnvParameter::Src0Alpha:
-        case TextureEnvParameter::Src1Alpha:
-        case TextureEnvParameter::Src2Alpha:
-        {
-            TextureSrc combine = FromGLenum<TextureSrc>(ConvertToGLenum(params[0]));
-            switch (combine)
+        case TextureEnvTarget::PointSprite:
+            if (!context->getExtensions().pointSprite)
             {
-                case TextureSrc::Constant:
-                case TextureSrc::Previous:
-                case TextureSrc::PrimaryColor:
-                case TextureSrc::Texture:
-                    break;
-                default:
-                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombineSrc);
-                    return false;
-            }
-            break;
-        }
-        case TextureEnvParameter::Op0Rgb:
-        case TextureEnvParameter::Op1Rgb:
-        case TextureEnvParameter::Op2Rgb:
-        case TextureEnvParameter::Op0Alpha:
-        case TextureEnvParameter::Op1Alpha:
-        case TextureEnvParameter::Op2Alpha:
-        {
-            TextureOp operand = FromGLenum<TextureOp>(ConvertToGLenum(params[0]));
-            switch (operand)
-            {
-                case TextureOp::SrcAlpha:
-                case TextureOp::OneMinusSrcAlpha:
-                    break;
-                case TextureOp::SrcColor:
-                case TextureOp::OneMinusSrcColor:
-                    if (pname == TextureEnvParameter::Op0Alpha ||
-                        pname == TextureEnvParameter::Op1Alpha ||
-                        pname == TextureEnvParameter::Op2Alpha)
-                    {
-                        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombine);
-                        return false;
-                    }
-                    break;
-                default:
-                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureCombineOp);
-                    return false;
-            }
-            break;
-        }
-        case TextureEnvParameter::RgbScale:
-        case TextureEnvParameter::AlphaScale:
-            if (params[0] != 1.0f && params[0] != 2.0f && params[0] != 4.0f)
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidTextureEnvScale);
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureEnvTarget);
                 return false;
             }
-            break;
-        case TextureEnvParameter::Color:
+            switch (pname)
+            {
+                case TextureEnvParameter::PointCoordReplace:
+                    break;
+                default:
+                    ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureEnvParameter);
+                    return false;
+            }
             break;
         default:
-            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureEnvParameter);
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureEnvTarget);
             return false;
     }
     return true;
@@ -526,6 +545,7 @@ bool ValidateGetTexEnvCommon(Context *context, TextureEnvTarget target, TextureE
             break;
         case TextureEnvParameter::RgbScale:
         case TextureEnvParameter::AlphaScale:
+        case TextureEnvParameter::PointCoordReplace:
             dummy[0] = 1.0f;
             break;
         default:
@@ -533,6 +553,46 @@ bool ValidateGetTexEnvCommon(Context *context, TextureEnvTarget target, TextureE
     }
 
     return ValidateTexEnvCommon(context, target, pname, dummy);
+}
+
+bool ValidatePointParameterCommon(Context *context, PointParameter pname, const GLfloat *params)
+{
+    ANGLE_VALIDATE_IS_GLES1(context);
+
+    switch (pname)
+    {
+        case PointParameter::PointSizeMin:
+        case PointParameter::PointSizeMax:
+        case PointParameter::PointFadeThresholdSize:
+        case PointParameter::PointDistanceAttenuation:
+            for (unsigned int i = 0; i < GetPointParameterCount(pname); i++)
+            {
+                if (params[i] < 0.0f)
+                {
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidPointParameterValue);
+                    return false;
+                }
+            }
+            break;
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPointParameter);
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidatePointSizeCommon(Context *context, GLfloat size)
+{
+    ANGLE_VALIDATE_IS_GLES1(context);
+
+    if (size <= 0.0f)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidPointSizeValue);
+        return false;
+    }
+
+    return true;
 }
 
 }  // namespace gl
@@ -992,40 +1052,54 @@ bool ValidateOrthox(Context *context,
     return true;
 }
 
-bool ValidatePointParameterf(Context *context, GLenum pname, GLfloat param)
+bool ValidatePointParameterf(Context *context, PointParameter pname, GLfloat param)
 {
-    UNIMPLEMENTED();
-    return true;
+    unsigned int paramCount = GetPointParameterCount(pname);
+    if (paramCount != 1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPointParameter);
+        return false;
+    }
+
+    return ValidatePointParameterCommon(context, pname, &param);
 }
 
-bool ValidatePointParameterfv(Context *context, GLenum pname, const GLfloat *params)
+bool ValidatePointParameterfv(Context *context, PointParameter pname, const GLfloat *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidatePointParameterCommon(context, pname, params);
 }
 
-bool ValidatePointParameterx(Context *context, GLenum pname, GLfixed param)
+bool ValidatePointParameterx(Context *context, PointParameter pname, GLfixed param)
 {
-    UNIMPLEMENTED();
-    return true;
+    unsigned int paramCount = GetPointParameterCount(pname);
+    if (paramCount != 1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPointParameter);
+        return false;
+    }
+
+    GLfloat paramf = FixedToFloat(param);
+    return ValidatePointParameterCommon(context, pname, &paramf);
 }
 
-bool ValidatePointParameterxv(Context *context, GLenum pname, const GLfixed *params)
+bool ValidatePointParameterxv(Context *context, PointParameter pname, const GLfixed *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    GLfloat paramsf[4] = {};
+    for (unsigned int i = 0; i < GetPointParameterCount(pname); i++)
+    {
+        paramsf[i] = FixedToFloat(params[i]);
+    }
+    return ValidatePointParameterCommon(context, pname, paramsf);
 }
 
 bool ValidatePointSize(Context *context, GLfloat size)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidatePointSizeCommon(context, size);
 }
 
 bool ValidatePointSizex(Context *context, GLfixed size)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidatePointSizeCommon(context, FixedToFloat(size));
 }
 
 bool ValidatePolygonOffsetx(Context *context, GLfixed factor, GLfixed units)
