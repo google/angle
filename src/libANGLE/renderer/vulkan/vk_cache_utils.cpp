@@ -1214,24 +1214,43 @@ vk::Error PipelineLayoutCache::getPipelineLayout(
     angle::FixedVector<VkDescriptorSetLayout, vk::kMaxDescriptorSetLayouts> setLayoutHandles;
     for (const vk::BindingPointer<vk::DescriptorSetLayout> &layoutPtr : descriptorSetLayouts)
     {
-        VkDescriptorSetLayout setLayout = layoutPtr.get().getHandle();
-        if (setLayout != VK_NULL_HANDLE)
+        if (layoutPtr.valid())
         {
-            setLayoutHandles.push_back(setLayout);
+            VkDescriptorSetLayout setLayout = layoutPtr.get().getHandle();
+            if (setLayout != VK_NULL_HANDLE)
+            {
+                setLayoutHandles.push_back(setLayout);
+            }
+        }
+    }
+
+    angle::FixedVector<VkPushConstantRange, vk::kMaxPushConstantRanges> pushConstantRanges;
+    const vk::PushConstantRangeArray<vk::PackedPushConstantRange> &descPushConstantRanges =
+        desc.getPushConstantRanges();
+    for (size_t shaderIndex = 0; shaderIndex < descPushConstantRanges.size(); ++shaderIndex)
+    {
+        const vk::PackedPushConstantRange &pushConstantDesc = descPushConstantRanges[shaderIndex];
+        if (pushConstantDesc.size > 0)
+        {
+            VkPushConstantRange pushConstantRange;
+            pushConstantRange.stageFlags =
+                shaderIndex == 0 ? VK_SHADER_STAGE_VERTEX_BIT : VK_SHADER_STAGE_FRAGMENT_BIT;
+            pushConstantRange.offset = pushConstantDesc.offset;
+            pushConstantRange.size   = pushConstantDesc.size;
+
+            pushConstantRanges.push_back(pushConstantRange);
         }
     }
 
     // No pipeline layout found. We must create a new one.
     VkPipelineLayoutCreateInfo createInfo;
-    createInfo.sType          = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    createInfo.pNext          = nullptr;
-    createInfo.flags          = 0;
-    createInfo.setLayoutCount = static_cast<uint32_t>(setLayoutHandles.size());
-    createInfo.pSetLayouts    = setLayoutHandles.data();
-
-    // TODO(jmadill): Init push constant ranges. http://anglebug.com/2462
-    createInfo.pushConstantRangeCount = 0;
-    createInfo.pPushConstantRanges    = nullptr;
+    createInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    createInfo.pNext                  = nullptr;
+    createInfo.flags                  = 0;
+    createInfo.setLayoutCount         = static_cast<uint32_t>(setLayoutHandles.size());
+    createInfo.pSetLayouts            = setLayoutHandles.data();
+    createInfo.pushConstantRangeCount = static_cast<uint32_t>(pushConstantRanges.size());
+    createInfo.pPushConstantRanges    = pushConstantRanges.data();
 
     vk::PipelineLayout newLayout;
     ANGLE_TRY(newLayout.init(device, createInfo));

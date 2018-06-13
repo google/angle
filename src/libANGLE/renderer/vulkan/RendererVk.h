@@ -132,10 +132,6 @@ class RendererVk : angle::NonCopyable
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
     vk::CommandGraph *getCommandGraph();
 
-    // Used in internal shaders.
-    // TODO(jmadill): Use PipelineLayout cache. http://anglebug.com/2462
-    vk::Error getInternalPushConstantPipelineLayout(const vk::PipelineLayout **pipelineLayoutOut);
-
     // Issues a new serial for linked shader modules. Used in the pipeline cache.
     Serial issueShaderSerial();
 
@@ -199,10 +195,6 @@ class RendererVk : angle::NonCopyable
 
     // DescriptorSetLayouts are also managed in a cache.
     DescriptorSetLayoutCache mDescriptorSetLayoutCache;
-
-    // Used for internal shaders.
-    // TODO(jmadill): Use PipelineLayout cache. http://anglebug.com/2462
-    vk::PipelineLayout mInternalPushConstantPipelineLayout;
 
     // Internal shader library.
     vk::ShaderLibrary mShaderLibrary;

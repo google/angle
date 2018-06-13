@@ -596,8 +596,17 @@ gl::Error FramebufferVk::clearWithDraw(ContextVk *contextVk, VkColorComponentFla
     ANGLE_TRY(shaderLibrary->getShader(renderer, vk::InternalShaderID::PushConstantColor_frag,
                                        &pushConstantColor));
 
-    const vk::PipelineLayout *pipelineLayout = nullptr;
-    ANGLE_TRY(renderer->getInternalPushConstantPipelineLayout(&pipelineLayout));
+    // The shader uses a simple pipeline layout with a push constant range.
+    vk::PipelineLayoutDesc pipelineLayoutDesc;
+    pipelineLayoutDesc.updatePushConstantRange(gl::ShaderType::Fragment, 0,
+                                               sizeof(VkClearColorValue));
+
+    // The shader does not use any descriptor sets.
+    vk::DescriptorSetLayoutPointerArray descriptorSetLayouts;
+
+    vk::BindingPointer<vk::PipelineLayout> pipelineLayout;
+    ANGLE_TRY(
+        renderer->getPipelineLayout(pipelineLayoutDesc, descriptorSetLayouts, &pipelineLayout));
 
     vk::RecordingMode recordingMode = vk::RecordingMode::Start;
     vk::CommandBuffer *drawCommands = nullptr;
@@ -630,15 +639,16 @@ gl::Error FramebufferVk::clearWithDraw(ContextVk *contextVk, VkColorComponentFla
     }
 
     vk::PipelineAndSerial *pipeline = nullptr;
-    ANGLE_TRY(renderer->getInternalPipeline(*fullScreenQuad, *pushConstantColor, *pipelineLayout,
-                                            pipelineDesc, gl::AttributesMask(), &pipeline));
+    ANGLE_TRY(renderer->getInternalPipeline(*fullScreenQuad, *pushConstantColor,
+                                            pipelineLayout.get(), pipelineDesc,
+                                            gl::AttributesMask(), &pipeline));
     pipeline->updateSerial(renderer->getCurrentQueueSerial());
 
     vk::CommandBuffer *writeCommands = nullptr;
     ANGLE_TRY(appendWriteResource(renderer, &writeCommands));
 
     VkClearColorValue clearColorValue = contextVk->getClearColorValue().color;
-    drawCommands->pushConstants(*pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+    drawCommands->pushConstants(pipelineLayout.get(), VK_SHADER_STAGE_FRAGMENT_BIT, 0,
                                 sizeof(VkClearColorValue), clearColorValue.float32);
 
     // TODO(jmadill): Masked combined color and depth/stencil clear. http://anglebug.com/2455
