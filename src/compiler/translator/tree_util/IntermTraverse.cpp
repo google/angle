@@ -18,11 +18,6 @@ void TIntermSymbol::traverse(TIntermTraverser *it)
     it->traverseSymbol(this);
 }
 
-void TIntermRaw::traverse(TIntermTraverser *it)
-{
-    it->traverseRaw(this);
-}
-
 void TIntermConstantUnion::traverse(TIntermTraverser *it)
 {
     it->traverseConstantUnion(this);
@@ -859,12 +854,6 @@ void TIntermTraverser::traverseBranch(TIntermBranch *node)
 
     if (visit && postVisit)
         visitBranch(PostVisit, node);
-}
-
-void TIntermTraverser::traverseRaw(TIntermRaw *node)
-{
-    ScopedNodeInTraversalPath addToPath(this, node);
-    visitRaw(node);
 }
 
 }  // namespace sh

@@ -55,7 +55,6 @@ class TIntermSymbol;
 class TIntermLoop;
 class TInfoSink;
 class TInfoSinkBase;
-class TIntermRaw;
 class TIntermBranch;
 
 class TSymbolTable;
@@ -99,7 +98,6 @@ class TIntermNode : angle::NonCopyable
     virtual TIntermCase *getAsCaseNode() { return 0; }
     virtual TIntermSymbol *getAsSymbolNode() { return 0; }
     virtual TIntermLoop *getAsLoopNode() { return 0; }
-    virtual TIntermRaw *getAsRawNode() { return 0; }
     virtual TIntermBranch *getAsBranchNode() { return 0; }
 
     // Replace a child node. Return true if |original| is a child
@@ -279,37 +277,6 @@ class TIntermExpression : public TIntermTyped
     TIntermExpression(const TIntermExpression &node) = default;
 
     TType mType;
-};
-
-// A Raw node stores raw code, that the translator will insert verbatim
-// into the output stream. Useful for transformation operations that make
-// complex code that might not fit naturally into the GLSL model.
-class TIntermRaw : public TIntermExpression
-{
-  public:
-    TIntermRaw(const TType &type, const ImmutableString &rawText)
-        : TIntermExpression(type), mRawText(rawText)
-    {
-    }
-    TIntermRaw(const TIntermRaw &) = delete;
-
-    TIntermTyped *deepCopy() const override
-    {
-        UNREACHABLE();
-        return nullptr;
-    }
-
-    bool hasSideEffects() const override { return false; }
-
-    const ImmutableString &getRawText() const { return mRawText; }
-
-    void traverse(TIntermTraverser *it) override;
-
-    TIntermRaw *getAsRawNode() override { return this; }
-    bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
-
-  protected:
-    ImmutableString mRawText;
 };
 
 // Constant folded node.

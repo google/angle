@@ -47,7 +47,6 @@ class TIntermTraverser : angle::NonCopyable
     virtual ~TIntermTraverser();
 
     virtual void visitSymbol(TIntermSymbol *node) {}
-    virtual void visitRaw(TIntermRaw *node) {}
     virtual void visitConstantUnion(TIntermConstantUnion *node) {}
     virtual bool visitSwizzle(Visit visit, TIntermSwizzle *node) { return true; }
     virtual bool visitBinary(Visit visit, TIntermBinary *node) { return true; }
@@ -75,7 +74,6 @@ class TIntermTraverser : angle::NonCopyable
     // and calling the visit functions in the appropriate places. They also track some
     // context that may be used by the visit functions.
     virtual void traverseSymbol(TIntermSymbol *node);
-    virtual void traverseRaw(TIntermRaw *node);
     virtual void traverseConstantUnion(TIntermConstantUnion *node);
     virtual void traverseSwizzle(TIntermSwizzle *node);
     virtual void traverseBinary(TIntermBinary *node);
