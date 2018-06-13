@@ -195,26 +195,28 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
         std::string setBindingString = "set = 1, binding = " + Str(textureCount);
 
+        std::string samplerName = gl::ParseResourceName(samplerUniform.name, nullptr);
+
         ASSERT(samplerUniform.isActive(gl::ShaderType::Vertex) ||
                samplerUniform.isActive(gl::ShaderType::Fragment));
         if (samplerUniform.isActive(gl::ShaderType::Vertex))
         {
-            InsertLayoutSpecifierString(&vertexSource, samplerUniform.name, setBindingString);
-            InsertQualifierSpecifierString(&vertexSource, samplerUniform.name, kUniformQualifier);
+            InsertLayoutSpecifierString(&vertexSource, samplerName, setBindingString);
+            InsertQualifierSpecifierString(&vertexSource, samplerName, kUniformQualifier);
         }
         else
         {
-            InsertQualifierSpecifierString(&vertexSource, samplerUniform.name, "");
+            InsertQualifierSpecifierString(&vertexSource, samplerName, "");
         }
 
         if (samplerUniform.isActive(gl::ShaderType::Fragment))
         {
-            InsertLayoutSpecifierString(&fragmentSource, samplerUniform.name, setBindingString);
-            InsertQualifierSpecifierString(&fragmentSource, samplerUniform.name, kUniformQualifier);
+            InsertLayoutSpecifierString(&fragmentSource, samplerName, setBindingString);
+            InsertQualifierSpecifierString(&fragmentSource, samplerName, kUniformQualifier);
         }
         else
         {
-            InsertQualifierSpecifierString(&fragmentSource, samplerUniform.name, "");
+            InsertQualifierSpecifierString(&fragmentSource, samplerName, "");
         }
 
         textureCount += samplerUniform.getBasicTypeElementCount();
