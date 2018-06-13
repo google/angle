@@ -292,6 +292,7 @@ Error DynamicDescriptorPool::init(const VkDevice &device,
 {
     ASSERT(!mCurrentDescriptorSetPool.valid() && mCurrentAllocatedDescriptorSetCount == 0);
 
+    // Note that this may allocate more sets than strictly necessary for a particular layout.
     mUniformBufferDescriptorsPerSet        = uniformBufferDescriptorsPerSet;
     mCombinedImageSamplerDescriptorsPerSet = combinedImageSamplerDescriptorsPerSet;
 

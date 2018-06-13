@@ -1956,10 +1956,6 @@ TEST_P(GLSLTest_ES3, InitGlobalArrayWithArrayIndexing)
 // Test that index-constant sampler array indexing is supported.
 TEST_P(GLSLTest, IndexConstantSamplerArrayIndexing)
 {
-    // TODO(lucferron): Samplers array support.
-    // http://anglebug.com/2462
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
     const std::string fragmentShaderSource =
@@ -3090,8 +3086,7 @@ TEST_P(GLSLTest, ArrayOfStructsWithSamplersAsFunctionArg)
     // Shader failed to compile on Android. http://anglebug.com/2114
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 
-    // TODO(lucferron): Sampler arrays support
-    // http://anglebug.com/2462
+    // TODO(jmadill): Samplers in structs. http://anglebug.com/2494
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     const std::string &fragmentShader =
@@ -3145,8 +3140,7 @@ TEST_P(GLSLTest, StructWithSamplerArrayAsFunctionArg)
     // Shader failed to compile on Android. http://anglebug.com/2114
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 
-    // TODO(lucferron): Sampler arrays support
-    // http://anglebug.com/2462
+    // TODO(jmadill): Samplers in structs. http://anglebug.com/2494
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     const std::string &fragmentShader =

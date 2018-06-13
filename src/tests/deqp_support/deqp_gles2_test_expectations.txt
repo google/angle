@@ -251,12 +251,10 @@
 2161 VULKAN : dEQP-GLES2.functional.vertex_arrays.* = SKIP
 2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
 2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
-2462 VULKAN : dEQP-GLES2.functional.uniform_api.info_query.basic_array.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.info_query.basic_struct.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.info_query.struct_in_array.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.info_query.array_in_struct.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.info_query.nested_structs_arrays.sampler2D_* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.uniform_api.info_query.multiple_basic_array.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.info_query.multiple_nested_structs_arrays.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.info_query.unused_uniforms.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.initial.get_uniform.basic.sampler* = SKIP
@@ -266,7 +264,6 @@
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.initial.get_uniform.array_in_struct.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.initial.get_uniform.nested_structs_arrays.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.initial.render.basic.samplerCube_* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.initial.render.basic_array.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.get_uniform.basic.sampler* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.get_uniform.basic_array.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.get_uniform.basic_struct.sampler2D_* = SKIP
@@ -275,7 +272,6 @@
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.get_uniform.nested_structs_arrays.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.get_uniform.basic_array_first_elem_without_brackets.sampler2D* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.basic.samplerCube* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.basic_array.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.basic_struct.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.struct_in_array.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.array_in_struct.sampler2D_* = SKIP
@@ -288,7 +284,6 @@
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.get_uniform.nested_structs_arrays.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.get_uniform.basic_array_first_elem_without_brackets.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.basic.samplerCube* = SKIP
-2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.basic_array.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.basic_struct.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.struct_in_array.sampler2D_* = SKIP
 2161 VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.array_in_struct.sampler2D_* = SKIP

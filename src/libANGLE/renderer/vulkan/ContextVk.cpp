@@ -179,21 +179,20 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
         {
             ASSERT(!samplerBinding.unreferenced);
 
-            // TODO(jmadill): Sampler arrays
-            ASSERT(samplerBinding.boundTextureUnits.size() == 1);
-
-            GLuint textureUnit   = samplerBinding.boundTextureUnits[0];
-            gl::Texture *texture = completeTextures[textureUnit];
-
-            // Null textures represent incomplete textures.
-            if (texture == nullptr)
+            for (GLuint textureUnit : samplerBinding.boundTextureUnits)
             {
-                ANGLE_TRY(getIncompleteTexture(context, samplerBinding.textureType, &texture));
-            }
+                gl::Texture *texture = completeTextures[textureUnit];
 
-            TextureVk *textureVk = vk::GetImpl(texture);
-            ANGLE_TRY(textureVk->ensureImageInitialized(mRenderer));
-            textureVk->addReadDependency(framebufferVk);
+                // Null textures represent incomplete textures.
+                if (texture == nullptr)
+                {
+                    ANGLE_TRY(getIncompleteTexture(context, samplerBinding.textureType, &texture));
+                }
+
+                TextureVk *textureVk = vk::GetImpl(texture);
+                ANGLE_TRY(textureVk->ensureImageInitialized(mRenderer));
+                textureVk->addReadDependency(framebufferVk);
+            }
         }
     }
 

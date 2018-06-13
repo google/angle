@@ -287,13 +287,16 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
     ANGLE_TRY(renderer->getDescriptorSetLayout(
         uniformsSetDesc, &mDescriptorSetLayouts[kUniformsDescriptorSetIndex]));
 
-    const uint32_t maxTextures = renderer->getMaxActiveTextures();
-
     vk::DescriptorSetLayoutDesc texturesSetDesc;
-    for (uint32_t textureIndex = 0; textureIndex < maxTextures; ++textureIndex)
+
+    for (uint32_t textureIndex = 0; textureIndex < mState.getSamplerBindings().size();
+         ++textureIndex)
     {
-        // TODO(jmadll): Sampler arrays. http://anglebug.com/2462
-        texturesSetDesc.update(textureIndex, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
+        const gl::SamplerBinding &samplerBinding = mState.getSamplerBindings()[textureIndex];
+
+        // The front-end always binds array sampler units sequentially.
+        const uint32_t count = static_cast<uint32_t>(samplerBinding.boundTextureUnits.size());
+        texturesSetDesc.update(textureIndex, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, count);
     }
 
     ANGLE_TRY(renderer->getDescriptorSetLayout(texturesSetDesc,
@@ -897,57 +900,61 @@ gl::Error ProgramVk::updateTexturesDescriptorSet(const gl::Context *context)
     // TODO(jmadill): Don't hard-code the texture limit.
     ShaderTextureArray<VkDescriptorImageInfo> descriptorImageInfo;
     ShaderTextureArray<VkWriteDescriptorSet> writeDescriptorInfo;
-    uint32_t imageCount = 0;
+    uint32_t writeCount = 0;
 
     const gl::State &glState     = contextVk->getGLState();
     const auto &completeTextures = glState.getCompleteTextureCache();
 
-    for (const gl::SamplerBinding &samplerBinding : mState.getSamplerBindings())
+    for (uint32_t textureIndex = 0; textureIndex < mState.getSamplerBindings().size();
+         ++textureIndex)
     {
+        const gl::SamplerBinding &samplerBinding = mState.getSamplerBindings()[textureIndex];
+
         ASSERT(!samplerBinding.unreferenced);
 
-        // TODO(jmadill): Sampler arrays
-        ASSERT(samplerBinding.boundTextureUnits.size() == 1);
-
-        GLuint textureUnit   = samplerBinding.boundTextureUnits[0];
-        gl::Texture *texture = completeTextures[textureUnit];
-
-        if (texture == nullptr)
+        for (uint32_t arrayElement = 0; arrayElement < samplerBinding.boundTextureUnits.size();
+             ++arrayElement)
         {
-            // If we have an incomplete texture, fetch it from our renderer.
-            ANGLE_TRY(
-                contextVk->getIncompleteTexture(context, samplerBinding.textureType, &texture));
+            GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
+            gl::Texture *texture = completeTextures[textureUnit];
+
+            if (texture == nullptr)
+            {
+                // If we have an incomplete texture, fetch it from our renderer.
+                ANGLE_TRY(
+                    contextVk->getIncompleteTexture(context, samplerBinding.textureType, &texture));
+            }
+
+            TextureVk *textureVk         = vk::GetImpl(texture);
+            const vk::ImageHelper &image = textureVk->getImage();
+
+            VkDescriptorImageInfo &imageInfo = descriptorImageInfo[writeCount];
+
+            imageInfo.sampler     = textureVk->getSampler().getHandle();
+            imageInfo.imageView   = textureVk->getImageView().getHandle();
+            imageInfo.imageLayout = image.getCurrentLayout();
+
+            VkWriteDescriptorSet &writeInfo = writeDescriptorInfo[writeCount];
+
+            writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            writeInfo.pNext            = nullptr;
+            writeInfo.dstSet           = descriptorSet;
+            writeInfo.dstBinding       = textureIndex;
+            writeInfo.dstArrayElement  = arrayElement;
+            writeInfo.descriptorCount  = 1;
+            writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            writeInfo.pImageInfo       = &imageInfo;
+            writeInfo.pBufferInfo      = nullptr;
+            writeInfo.pTexelBufferView = nullptr;
+
+            writeCount++;
         }
-
-        TextureVk *textureVk   = vk::GetImpl(texture);
-        const vk::ImageHelper &image = textureVk->getImage();
-
-        VkDescriptorImageInfo &imageInfo = descriptorImageInfo[imageCount];
-
-        imageInfo.sampler     = textureVk->getSampler().getHandle();
-        imageInfo.imageView   = textureVk->getImageView().getHandle();
-        imageInfo.imageLayout = image.getCurrentLayout();
-
-        auto &writeInfo = writeDescriptorInfo[imageCount];
-
-        writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        writeInfo.pNext            = nullptr;
-        writeInfo.dstSet           = descriptorSet;
-        writeInfo.dstBinding       = imageCount;
-        writeInfo.dstArrayElement  = 0;
-        writeInfo.descriptorCount  = 1;
-        writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        writeInfo.pImageInfo       = &imageInfo;
-        writeInfo.pBufferInfo      = nullptr;
-        writeInfo.pTexelBufferView = nullptr;
-
-        imageCount++;
     }
 
     VkDevice device = contextVk->getDevice();
 
-    ASSERT(imageCount > 0);
-    vkUpdateDescriptorSets(device, imageCount, writeDescriptorInfo.data(), 0, nullptr);
+    ASSERT(writeCount > 0);
+    vkUpdateDescriptorSets(device, writeCount, writeDescriptorInfo.data(), 0, nullptr);
 
     mDirtyTextures = false;
     return gl::NoError();
