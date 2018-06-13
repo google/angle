@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a8642864_e85b2c36",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T18:00:53Z",
+      "side": 1,
+      "message": "See earlier comments. Updated to use constants.",
+      "parentUuid": "6f564934_789ff887",
+      "range": {
+        "startLine": 282,
+        "startChar": 4,
+        "endLine": 283,
+        "endChar": 76
+      },
+      "revId": "7e421079e0503926abec76747f05086459ec9fd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ac9fd960_7f8f7c76",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "7e421079e0503926abec76747f05086459ec9fd2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0fd740c_986ee378",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-13T18:00:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac9fd960_7f8f7c76",
+      "range": {
+        "startLine": 88,
+        "startChar": 3,
+        "endLine": 88,
+        "endChar": 31
+      },
+      "revId": "7e421079e0503926abec76747f05086459ec9fd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
