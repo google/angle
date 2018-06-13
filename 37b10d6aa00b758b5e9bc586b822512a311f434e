@@ -70,6 +70,30 @@
       "revId": "37b10d6aa00b758b5e9bc586b822512a311f434e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb5cdda1_6dbbb5a1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3132,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-13T13:30:51Z",
+      "side": 1,
+      "message": "Update: Adding the assert fails the test with INVALID RESULTS, so one of the other backends probably has the same issue.",
+      "parentUuid": "bcd136ce_44ee8f6f",
+      "range": {
+        "startLine": 3132,
+        "startChar": 4,
+        "endLine": 3132,
+        "endChar": 74
+      },
+      "revId": "37b10d6aa00b758b5e9bc586b822512a311f434e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
