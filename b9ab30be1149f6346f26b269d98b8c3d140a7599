@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd52876b_6f86077f",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-14T17:11:57Z",
+      "side": 1,
+      "message": "why is this needed?",
+      "range": {
+        "startLine": 893,
+        "startChar": 57,
+        "endLine": 893,
+        "endChar": 82
+      },
+      "revId": "b9ab30be1149f6346f26b269d98b8c3d140a7599",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
