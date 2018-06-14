@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e66ea77_391de72a",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-14T13:45:44Z",
+      "side": 1,
+      "message": "here you\u0027re converting indexCount rather than the whole buffer. What if the app does two draw calls with index counts a and b where b \u003e a? Won\u0027t there be converted data? Maybe we can make a test for this.",
+      "range": {
+        "startLine": 538,
+        "startChar": 44,
+        "endLine": 538,
+        "endChar": 71
+      },
+      "revId": "d99726e58d1d5f5c52844c2386d4426cc0113f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd3c2479_92ae179c",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-14T13:45:44Z",
+      "side": 1,
+      "message": "how about mTranslatedByteIndexData",
+      "range": {
+        "startLine": 122,
+        "startChar": 22,
+        "endLine": 122,
+        "endChar": 47
+      },
+      "revId": "d99726e58d1d5f5c52844c2386d4426cc0113f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
