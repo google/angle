@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58d5d139_ada56049",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T21:16:16Z",
+      "side": 1,
+      "message": "How about Context or NativeContext? Data seems too abstract.",
+      "range": {
+        "startLine": 97,
+        "startChar": 18,
+        "endLine": 97,
+        "endChar": 22
+      },
+      "revId": "798786e355ea84a35c05900f57e80edd561f21f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
