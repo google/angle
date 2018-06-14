@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f0828d8b_3a91eea7",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-14T15:21:19Z",
+      "side": 1,
+      "message": "This is actually ok since I start the iteration including the offset as well so we\u0027ll always only copy the indexes we need. \n\nIf the offset changes, we are recopying everything we need every time.\n\nOn the second draw call you talk about, we\u0027ll copy from 0 -\u003e b. The test you made me wrote on the previous CL in this stack already covers this case by making 2 drawElements calls with offset 0 and then offset \u003e 0.",
+      "parentUuid": "4e66ea77_391de72a",
+      "range": {
+        "startLine": 538,
+        "startChar": 44,
+        "endLine": 538,
+        "endChar": 71
+      },
+      "revId": "d99726e58d1d5f5c52844c2386d4426cc0113f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd3c2479_92ae179c",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "d99726e58d1d5f5c52844c2386d4426cc0113f45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b6b560a_82034a18",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-14T15:21:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd3c2479_92ae179c",
+      "range": {
+        "startLine": 122,
+        "startChar": 22,
+        "endLine": 122,
+        "endChar": 47
+      },
+      "revId": "d99726e58d1d5f5c52844c2386d4426cc0113f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
