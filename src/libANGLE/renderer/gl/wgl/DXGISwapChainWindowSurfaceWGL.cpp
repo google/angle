@@ -276,6 +276,7 @@ FramebufferImpl *DXGISwapChainWindowSurfaceWGL::createDefaultFramebuffer(
     StateManagerGL *stateManager = GetStateManagerGL(context);
 
     GLuint framebufferID = 0;
+    functions->genFramebuffers(1, &framebufferID);
     stateManager->bindFramebuffer(GL_FRAMEBUFFER, framebufferID);
     functions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
                                        mColorRenderbufferID);
