@@ -655,6 +655,9 @@ TEST_P(StateChangeRenderTest, GenerateMipmap)
 // Tests that D3D11 dirty bit updates don't forget about BufferSubData attrib updates.
 TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
 {
+    // TODO(lucferron): Diagnose and fix, this is just flaky on intel. http://anglebug.com/2664
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel());
+
     const std::string vs =
         "attribute vec2 position;\n"
         "attribute vec4 color;\n"
