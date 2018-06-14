@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "55559324_2cf8b456",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-14T16:48:34Z",
+      "side": 1,
+      "message": "Ah ok I see, if I just convert the entire rest of the buffer starting at offset, I\u0027ll be sure that this always work instead and I won\u0027t need yet another flag.",
+      "parentUuid": "69670b47_5994be09",
+      "range": {
+        "startLine": 538,
+        "startChar": 44,
+        "endLine": 538,
+        "endChar": 71
+      },
+      "revId": "d99726e58d1d5f5c52844c2386d4426cc0113f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cd3c2479_92ae179c",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
         "patchSetId": 7
