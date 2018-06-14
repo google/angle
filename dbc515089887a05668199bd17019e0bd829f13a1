@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0fa7b38e_fae3bd59",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-14T19:24:38Z",
+      "side": 1,
+      "message": "How about simplifying the code like this:\n\n EGLAttrib virtualizedContextRequest \u003d // unchanged\n if (virtualized... \u003d\u003d EGL_DONT_CARE) {\n   virtualized... \u003d the default value;\n }",
+      "revId": "dbc515089887a05668199bd17019e0bd829f13a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71e0d88c_047a79c6",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-14T19:24:38Z",
+      "side": 1,
+      "message": "that shares what?",
+      "revId": "dbc515089887a05668199bd17019e0bd829f13a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
