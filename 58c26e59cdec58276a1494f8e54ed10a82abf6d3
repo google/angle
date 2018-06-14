@@ -34,6 +34,24 @@
       "revId": "58c26e59cdec58276a1494f8e54ed10a82abf6d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe9cbea1_1a44694b",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-14T19:31:59Z",
+      "side": 1,
+      "message": "Sorry, this was Vulkan spec-speak for \"In the EGL spec, is the application responsible for synchronizing accesses to the EGL display\"?",
+      "parentUuid": "8bc93bef_cd443912",
+      "revId": "58c26e59cdec58276a1494f8e54ed10a82abf6d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
