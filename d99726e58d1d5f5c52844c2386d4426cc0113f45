@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "69670b47_5994be09",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-14T15:22:22Z",
+      "side": 1,
+      "message": "Let me restate this -\n\ndraw with a count of 10 then a count of 20. offset stays the same.",
+      "parentUuid": "f0828d8b_3a91eea7",
+      "range": {
+        "startLine": 538,
+        "startChar": 44,
+        "endLine": 538,
+        "endChar": 71
+      },
+      "revId": "d99726e58d1d5f5c52844c2386d4426cc0113f45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cd3c2479_92ae179c",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
         "patchSetId": 7
