@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7cabefd_e8670fc0",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-14T19:12:22Z",
+      "side": 1,
+      "message": "Are EGL displays externally synchonized?",
+      "revId": "58c26e59cdec58276a1494f8e54ed10a82abf6d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
