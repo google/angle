@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59785721_dff12c64",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-14T19:58:54Z",
+      "side": 0,
+      "message": "nit: can revert this whitespace change",
+      "revId": "9491e5ebed989656c00e5b9434a17e321899b98b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
