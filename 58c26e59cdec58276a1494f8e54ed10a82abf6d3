@@ -52,6 +52,24 @@
       "revId": "58c26e59cdec58276a1494f8e54ed10a82abf6d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e309e6d_99a43c62",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-14T19:47:47Z",
+      "side": 1,
+      "message": "No, EGL should be thread safe on it\u0027s own.",
+      "parentUuid": "fe9cbea1_1a44694b",
+      "revId": "58c26e59cdec58276a1494f8e54ed10a82abf6d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
