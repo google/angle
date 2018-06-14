@@ -16,6 +16,24 @@
       "revId": "ea3c7f2eccd8c0f63af0c98931e826abaed291fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1fbc9ec7_05e4598c",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-14T19:15:11Z",
+      "side": 1,
+      "message": "I think this was a mistake, removed it.",
+      "parentUuid": "72bf2b36_c2253bff",
+      "revId": "ea3c7f2eccd8c0f63af0c98931e826abaed291fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
