@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19c09369_74688821",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T22:47:47Z",
+      "side": 0,
+      "message": "You can\u0027t keep this functionality?",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 534,
+        "endChar": 0
+      },
+      "revId": "798786e355ea84a35c05900f57e80edd561f21f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd5a84d2_89ae3a0c",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T22:47:47Z",
+      "side": 0,
+      "message": "Why did this go away?",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 0
+      },
+      "revId": "798786e355ea84a35c05900f57e80edd561f21f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

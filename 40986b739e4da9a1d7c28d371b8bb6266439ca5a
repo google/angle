@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e811aa57_e5a8b979",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T22:47:47Z",
+      "side": 1,
+      "message": "Can you use kDefaultWGLVirtualizedContexts here?",
+      "range": {
+        "startLine": 69,
+        "startChar": 27,
+        "endLine": 69,
+        "endChar": 31
+      },
+      "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0fe9522_e397afac",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T22:47:47Z",
+      "side": 1,
+      "message": "It\u0027s hard for me to see the relationship between this comment and the code.\nMaybe you can turn it into ASSERT somehow?\nLike:\n    if (newDC !\u003d currentData.dc || newContext !\u003d currentData.glrc)\n    {\n        ASSERT(!mVirtualizedContexts || drawSurface);",
+      "range": {
+        "startLine": 686,
+        "startChar": 0,
+        "endLine": 688,
+        "endChar": 83
+      },
+      "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab44f39c_c106e5a3",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T22:47:47Z",
+      "side": 1,
+      "message": "I don\u0027t understand the relationship between drawSurfaceWGL-\u003egetDC(), currentData.dc and mDeviceContext. Could you add a comment why mDeviceContext should be used instead of currentData.dc if drawSurface is null?",
+      "range": {
+        "startLine": 689,
+        "startChar": 56,
+        "endLine": 689,
+        "endChar": 70
+      },
+      "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bd4d5bf_8e9bccae",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T22:47:47Z",
+      "side": 1,
+      "message": "Is currentData.glrc ever going to change in mVirtualizedContexts?\nIf not, is it possible to simplify the logic here somehow?\nIf yes, maybe I don\u0027t understand what mVirtualizedContexts means.",
+      "range": {
+        "startLine": 696,
+        "startChar": 46,
+        "endLine": 696,
+        "endChar": 62
+      },
+      "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
