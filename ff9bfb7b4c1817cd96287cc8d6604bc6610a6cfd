@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1eda41e_71e3ee49",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 30
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T19:58:43Z",
+      "side": 1,
+      "message": "Could you expand on the role of ContextWGL?\nI see that DisplayWGL has RendererWGL which owns GLRC.\nAnd that ContextWGL also references RendererWGL.\nIs there more to the relationship graph?",
+      "revId": "ff9bfb7b4c1817cd96287cc8d6604bc6610a6cfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47073feb_b9b0d4a5",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T19:58:43Z",
+      "side": 1,
+      "message": "Since RendererWGL owns HGLRC, it makes sense to me to have destroyNativeContext there, and pass FunctionsWGL instead of DisplayWGL in it\u0027s constructor.\nI\u0027d move HGLRC creation into RendererWGL as well.\nCould also ask RendererWGL about current context instead of keeping it in mCurrentGLRC.\nThough, this is confusing, looks like mCurrentGLRC can change without mRenderer changing, wouldn\u0027t that be a problem?",
+      "range": {
+        "startLine": 74,
+        "startChar": 9,
+        "endLine": 74,
+        "endChar": 29
+      },
+      "revId": "ff9bfb7b4c1817cd96287cc8d6604bc6610a6cfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "794f649e_57ded148",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-14T19:58:43Z",
+      "side": 1,
+      "message": "Should you init this to nullptr?\nIt should be the default value, but ANGLE does this for other members anyway, for some reason.",
+      "range": {
+        "startLine": 95,
+        "startChar": 10,
+        "endLine": 95,
+        "endChar": 22
+      },
+      "revId": "ff9bfb7b4c1817cd96287cc8d6604bc6610a6cfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
