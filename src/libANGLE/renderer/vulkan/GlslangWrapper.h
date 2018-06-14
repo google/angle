@@ -26,6 +26,7 @@ class GlslangWrapper : public gl::RefCountObjectNoID
     gl::LinkResult linkProgram(const gl::Context *glContext,
                                const gl::ProgramState &programState,
                                const gl::ProgramLinkedResources &resources,
+                               const gl::Caps &glCaps,
                                std::vector<uint32_t> *vertexCodeOut,
                                std::vector<uint32_t> *fragmentCodeOut);
 

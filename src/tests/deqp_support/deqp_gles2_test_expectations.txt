@@ -223,7 +223,6 @@
 2580 VULKAN : dEQP-GLES2.functional.buffer.write.random.* = SKIP
 2494 VULKAN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_* = SKIP
 2592 VULKAN : dEQP-GLES2.functional.shaders.builtin_variable.depth_range* = SKIP
-2594 VULKAN : dEQP-GLES2.functional.shaders.fragdata.valid_static_index = SKIP
 2595 VULKAN : dEQP-GLES2.functional.shaders.random.all_features.fragment* = SKIP
 2597 VULKAN : dEQP-GLES2.functional.fbo.render.color.blend_rbo_rgb5_a* = SKIP
 2597 VULKAN : dEQP-GLES2.functional.fbo.render.color.blend_npot_rbo_rgb5_a* = SKIP

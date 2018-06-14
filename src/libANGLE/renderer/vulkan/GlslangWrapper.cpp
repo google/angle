@@ -20,6 +20,7 @@
 
 #include "common/string_utils.h"
 #include "common/utilities.h"
+#include "libANGLE/Caps.h"
 #include "libANGLE/ProgramLinkedResources.h"
 
 namespace rx
@@ -32,6 +33,39 @@ constexpr char kQualifierMarkerBegin[] = "@@ QUALIFIER-";
 constexpr char kLayoutMarkerBegin[]    = "@@ LAYOUT-";
 constexpr char kMarkerEnd[]            = " @@";
 constexpr char kUniformQualifier[]     = "uniform";
+
+void GetBuiltInResourcesFromCaps(const gl::Caps &caps, TBuiltInResource *outBuiltInResources)
+{
+    outBuiltInResources->maxDrawBuffers                   = caps.maxDrawBuffers;
+    outBuiltInResources->maxAtomicCounterBindings         = caps.maxAtomicCounterBufferBindings;
+    outBuiltInResources->maxAtomicCounterBufferSize       = caps.maxAtomicCounterBufferSize;
+    outBuiltInResources->maxClipPlanes                    = caps.maxClipPlanes;
+    outBuiltInResources->maxCombinedAtomicCounterBuffers  = caps.maxCombinedAtomicCounterBuffers;
+    outBuiltInResources->maxCombinedAtomicCounters        = caps.maxCombinedAtomicCounters;
+    outBuiltInResources->maxCombinedImageUniforms         = caps.maxCombinedImageUniforms;
+    outBuiltInResources->maxCombinedTextureImageUnits     = caps.maxCombinedTextureImageUnits;
+    outBuiltInResources->maxCombinedShaderOutputResources = caps.maxCombinedShaderOutputResources;
+    outBuiltInResources->maxComputeWorkGroupCountX        = caps.maxComputeWorkGroupCount[0];
+    outBuiltInResources->maxComputeWorkGroupCountY        = caps.maxComputeWorkGroupCount[1];
+    outBuiltInResources->maxComputeWorkGroupCountZ        = caps.maxComputeWorkGroupCount[2];
+    outBuiltInResources->maxComputeWorkGroupSizeX         = caps.maxComputeWorkGroupSize[0];
+    outBuiltInResources->maxComputeWorkGroupSizeY         = caps.maxComputeWorkGroupSize[1];
+    outBuiltInResources->maxComputeWorkGroupSizeZ         = caps.maxComputeWorkGroupSize[2];
+    outBuiltInResources->minProgramTexelOffset            = caps.minProgramTexelOffset;
+    outBuiltInResources->maxFragmentUniformVectors        = caps.maxFragmentUniformVectors;
+    outBuiltInResources->maxFragmentInputComponents       = caps.maxFragmentInputComponents;
+    outBuiltInResources->maxGeometryInputComponents       = caps.maxGeometryInputComponents;
+    outBuiltInResources->maxGeometryOutputComponents      = caps.maxGeometryOutputComponents;
+    outBuiltInResources->maxGeometryOutputVertices        = caps.maxGeometryOutputVertices;
+    outBuiltInResources->maxGeometryTotalOutputComponents = caps.maxGeometryTotalOutputComponents;
+    outBuiltInResources->maxLights                        = caps.maxLights;
+    outBuiltInResources->maxProgramTexelOffset            = caps.maxProgramTexelOffset;
+    outBuiltInResources->maxVaryingComponents             = caps.maxVaryingComponents;
+    outBuiltInResources->maxVaryingVectors                = caps.maxVaryingVectors;
+    outBuiltInResources->maxVertexAttribs                 = caps.maxVertexAttributes;
+    outBuiltInResources->maxVertexOutputComponents        = caps.maxVertexOutputComponents;
+    outBuiltInResources->maxVertexUniformVectors          = caps.maxVertexUniformVectors;
+}
 
 void InsertLayoutSpecifierString(std::string *shaderString,
                                  const std::string &variableName,
@@ -108,6 +142,7 @@ GlslangWrapper::~GlslangWrapper()
 gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
                                            const gl::ProgramState &programState,
                                            const gl::ProgramLinkedResources &resources,
+                                           const gl::Caps &glCaps,
                                            std::vector<uint32_t> *vertexCodeOut,
                                            std::vector<uint32_t> *fragmentCodeOut)
 {
@@ -242,8 +277,12 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     glslang::TShader vertexShader(EShLangVertex);
     vertexShader.setStringsWithLengths(&strings[0], &lengths[0], 1);
     vertexShader.setEntryPoint("main");
-    bool vertexResult = vertexShader.parse(&glslang::DefaultTBuiltInResource, 450, ECoreProfile,
-                                           false, false, messages);
+
+    TBuiltInResource builtInResources(glslang::DefaultTBuiltInResource);
+    GetBuiltInResourcesFromCaps(glCaps, &builtInResources);
+
+    bool vertexResult =
+        vertexShader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
     if (!vertexResult)
     {
         return gl::InternalError() << "Internal error parsing Vulkan vertex shader:\n"
@@ -254,8 +293,8 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     glslang::TShader fragmentShader(EShLangFragment);
     fragmentShader.setStringsWithLengths(&strings[1], &lengths[1], 1);
     fragmentShader.setEntryPoint("main");
-    bool fragmentResult = fragmentShader.parse(&glslang::DefaultTBuiltInResource, 450, ECoreProfile,
-                                               false, false, messages);
+    bool fragmentResult =
+        fragmentShader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
     if (!fragmentResult)
     {
         return gl::InternalError() << "Internal error parsing Vulkan fragment shader:\n"
