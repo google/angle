@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cada3a2c_f2b8be69",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-14T19:44:49Z",
+      "side": 1,
+      "message": "It ended up being about the same number of lines, I did refactor it into a function though.",
+      "parentUuid": "0fa7b38e_fae3bd59",
+      "revId": "dbc515089887a05668199bd17019e0bd829f13a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71e0d88c_047a79c6",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
         "patchSetId": 9
@@ -33,6 +51,24 @@
       "revId": "dbc515089887a05668199bd17019e0bd829f13a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f31966a6_88b8009b",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-14T19:44:49Z",
+      "side": 1,
+      "message": "I updated it to say \u0027shares with mRenderer\u0027.\n\nAlso updated the commit message to explain what\u0027s going on here.",
+      "parentUuid": "71e0d88c_047a79c6",
+      "revId": "dbc515089887a05668199bd17019e0bd829f13a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
