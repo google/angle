@@ -46,6 +46,30 @@
       "revId": "308cac03879503f97541985b37571ed80f8210e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa57c51f_4b045677",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3066,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-14T14:58:58Z",
+      "side": 1,
+      "message": "Yes, that would be great, we should try to be consistent given that we control both extensions.",
+      "parentUuid": "80f70ceb_0a2f1467",
+      "range": {
+        "startLine": 3064,
+        "startChar": 0,
+        "endLine": 3066,
+        "endChar": 45
+      },
+      "revId": "308cac03879503f97541985b37571ed80f8210e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
