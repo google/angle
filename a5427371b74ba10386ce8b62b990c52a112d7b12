@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "857f03c1_eb344c36",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2409,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-06-15T02:21:13Z",
+      "side": 1,
+      "message": "Now I have changed it back and there is only one extra if-statement for geometry shader.\n\nI suggest we use the pattern supported in https://chromium-review.googlesource.com/1100312, the code is as follows:\n\nfor (ShaderType shaderType : mProgramD3D-\u003egetLinkedShaderStages())\n{\n    ANGLE_TRY(applyTextures(context, shaderType);\n}\n\nI think although this method needs 2 more bit check but seems much cleaner, shall we use this?",
+      "parentUuid": "1e6c4f29_114325ce",
+      "range": {
+        "startLine": 2402,
+        "startChar": 0,
+        "endLine": 2409,
+        "endChar": 5
+      },
+      "revId": "a5427371b74ba10386ce8b62b990c52a112d7b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bcef8391_2ccf6c20",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 1
@@ -114,6 +138,30 @@
       "revId": "a5427371b74ba10386ce8b62b990c52a112d7b12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40fea444_b0774b2a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3188,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-06-15T02:21:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6f682d7_e34c440d",
+      "range": {
+        "startLine": 3177,
+        "startChar": 8,
+        "endLine": 3188,
+        "endChar": 22
+      },
+      "revId": "a5427371b74ba10386ce8b62b990c52a112d7b12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
