@@ -313,7 +313,6 @@
 
 2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
 2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
-2161 VULKAN : dEQP-GLES2.functional.uniform_api.random.* = SKIP
 2600 VULKAN : dEQP-GLES2.functional.state_query.shader.uniform_value_sampler = SKIP
 2601 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP
 2353 VULKAN : dEQP-GLES2.functional.polygon_offset.* = SKIP
