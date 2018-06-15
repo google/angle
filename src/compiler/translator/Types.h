@@ -191,9 +191,10 @@ class TType
     const TVector<unsigned int> *getArraySizes() const { return mArraySizes; }
     unsigned int getArraySizeProduct() const;
     bool isUnsizedArray() const;
-    unsigned int getOutermostArraySize() const {
-         ASSERT(isArray());
-         return mArraySizes->back();
+    unsigned int getOutermostArraySize() const
+    {
+        ASSERT(isArray());
+        return mArraySizes->back();
     }
     void makeArray(unsigned int s);
 

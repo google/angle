@@ -13,8 +13,8 @@
 #include <ShaderLang.h>
 
 // Other glslang includes.
-#include <StandAlone/ResourceLimits.h>
 #include <SPIRV/GlslangToSpv.h>
+#include <StandAlone/ResourceLimits.h>
 
 #include <array>
 
@@ -148,7 +148,7 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     // Assign varying locations.
     for (const gl::PackedVaryingRegister &varyingReg : resources.varyingPacking.getRegisterList())
     {
-        const auto &varying        = *varyingReg.packedVarying;
+        const auto &varying = *varyingReg.packedVarying;
 
         std::string locationString = "location = " + Str(varyingReg.registerRow);
         if (varyingReg.registerColumn > 0)
@@ -193,7 +193,7 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     for (unsigned int uniformIndex : programState.getSamplerUniformRange())
     {
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
-        std::string setBindingString = "set = 1, binding = " + Str(textureCount);
+        std::string setBindingString            = "set = 1, binding = " + Str(textureCount);
 
         std::string samplerName = gl::ParseResourceName(samplerUniform.name, nullptr);
 
@@ -233,7 +233,7 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     }
 
     std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};
-    std::array<int, 2> lengths = {
+    std::array<int, 2> lengths          = {
         {static_cast<int>(vertexSource.length()), static_cast<int>(fragmentSource.length())}};
 
     // Enable SPIR-V and Vulkan rules when parsing GLSL

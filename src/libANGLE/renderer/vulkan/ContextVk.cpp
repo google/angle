@@ -148,12 +148,12 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
         ANGLE_TRY(initPipeline());
     }
 
-    const auto &state            = mState.getState();
-    const gl::Program *programGL = state.getProgram();
-    ProgramVk *programVk         = vk::GetImpl(programGL);
+    const auto &state                  = mState.getState();
+    const gl::Program *programGL       = state.getProgram();
+    ProgramVk *programVk               = vk::GetImpl(programGL);
     const gl::Framebuffer *framebuffer = state.getDrawFramebuffer();
     FramebufferVk *framebufferVk       = vk::GetImpl(framebuffer);
-    Serial queueSerial           = mRenderer->getCurrentQueueSerial();
+    Serial queueSerial                 = mRenderer->getCurrentQueueSerial();
 
     vk::RecordingMode mode = vk::RecordingMode::Start;
     ANGLE_TRY(framebufferVk->getCommandBufferForDraw(this, commandBufferOut, &mode));
@@ -165,7 +165,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     }
     else
     {
-        *shouldApplyVertexArrayOut    = mVertexArrayBindingHasChanged;
+        *shouldApplyVertexArrayOut = mVertexArrayBindingHasChanged;
     }
 
     mVertexArrayBindingHasChanged = false;

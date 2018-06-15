@@ -26,10 +26,7 @@ class GLSLTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp()
-    {
-        ANGLETest::SetUp();
-    }
+    virtual void SetUp() { ANGLETest::SetUp(); }
 
     std::string GenerateVaryingType(GLint vectorSize)
     {
@@ -57,7 +54,8 @@ class GLSLTest : public ANGLETest
         }
         else
         {
-            sprintf(buff, "varying %s v%d[%d];\n", GenerateVaryingType(vectorSize).c_str(), id, arraySize);
+            sprintf(buff, "varying %s v%d[%d];\n", GenerateVaryingType(vectorSize).c_str(), id,
+                    arraySize);
         }
 
         return std::string(buff);
@@ -77,7 +75,8 @@ class GLSLTest : public ANGLETest
         {
             for (int i = 0; i < arraySize; i++)
             {
-                sprintf(buff, "\t v%d[%d] = %s(1.0);\n", id, i, GenerateVaryingType(vectorSize).c_str());
+                sprintf(buff, "\t v%d[%d] = %s(1.0);\n", id, i,
+                        GenerateVaryingType(vectorSize).c_str());
                 returnString += buff;
             }
         }
@@ -106,11 +105,22 @@ class GLSLTest : public ANGLETest
         }
     }
 
-    void GenerateGLSLWithVaryings(GLint floatCount, GLint floatArrayCount, GLint vec2Count, GLint vec2ArrayCount, GLint vec3Count, GLint vec3ArrayCount,
-                                  GLint vec4Count, GLint vec4ArrayCount, bool useFragCoord, bool usePointCoord, bool usePointSize,
-                                  std::string* fragmentShader, std::string* vertexShader)
+    void GenerateGLSLWithVaryings(GLint floatCount,
+                                  GLint floatArrayCount,
+                                  GLint vec2Count,
+                                  GLint vec2ArrayCount,
+                                  GLint vec3Count,
+                                  GLint vec3ArrayCount,
+                                  GLint vec4Count,
+                                  GLint vec4ArrayCount,
+                                  bool useFragCoord,
+                                  bool usePointCoord,
+                                  bool usePointSize,
+                                  std::string *fragmentShader,
+                                  std::string *vertexShader)
     {
-        // Generate a string declaring the varyings, to share between the fragment shader and the vertex shader.
+        // Generate a string declaring the varyings, to share between the fragment shader and the
+        // vertex shader.
         std::string varyingDeclaration;
 
         unsigned int varyingCount = 0;
@@ -303,7 +313,7 @@ class GLSLTest : public ANGLETest
 
         // Set gl_FragColor, and use special variables if requested
         fragmentShader->append("\tgl_FragColor = retColor");
-        
+
         if (useFragCoord)
         {
             fragmentShader->append(" + gl_FragCoord");
@@ -317,15 +327,26 @@ class GLSLTest : public ANGLETest
         fragmentShader->append(";\n}");
     }
 
-    void VaryingTestBase(GLint floatCount, GLint floatArrayCount, GLint vec2Count, GLint vec2ArrayCount, GLint vec3Count, GLint vec3ArrayCount,
-                         GLint vec4Count, GLint vec4ArrayCount, bool useFragCoord, bool usePointCoord, bool usePointSize, bool expectSuccess)
+    void VaryingTestBase(GLint floatCount,
+                         GLint floatArrayCount,
+                         GLint vec2Count,
+                         GLint vec2ArrayCount,
+                         GLint vec3Count,
+                         GLint vec3ArrayCount,
+                         GLint vec4Count,
+                         GLint vec4ArrayCount,
+                         bool useFragCoord,
+                         bool usePointCoord,
+                         bool usePointSize,
+                         bool expectSuccess)
     {
         std::string fragmentShaderSource;
         std::string vertexShaderSource;
 
-        GenerateGLSLWithVaryings(floatCount, floatArrayCount, vec2Count, vec2ArrayCount, vec3Count, vec3ArrayCount,
-                                 vec4Count, vec4ArrayCount, useFragCoord, usePointCoord, usePointSize,
-                                 &fragmentShaderSource, &vertexShaderSource);
+        GenerateGLSLWithVaryings(floatCount, floatArrayCount, vec2Count, vec2ArrayCount, vec3Count,
+                                 vec3ArrayCount, vec4Count, vec4ArrayCount, useFragCoord,
+                                 usePointCoord, usePointSize, &fragmentShaderSource,
+                                 &vertexShaderSource);
 
         GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
 
@@ -478,18 +499,12 @@ class GLSLTestNoValidation : public GLSLTest
 
 class GLSLTest_ES3 : public GLSLTest
 {
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-    }
+    void SetUp() override { ANGLETest::SetUp(); }
 };
 
 class GLSLTest_ES31 : public GLSLTest
 {
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-    }
+    void SetUp() override { ANGLETest::SetUp(); }
 };
 
 TEST_P(GLSLTest, NamelessScopedStructs)
@@ -638,7 +653,7 @@ TEST_P(GLSLTest, ElseIfRewriting)
     drawQuad(program, "a_position", 0.5f);
 
     EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth()-1, 0, 0, 255, 0, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() - 1, 0, 0, 255, 0, 255);
 }
 
 TEST_P(GLSLTest, TwoElseIfRewriting)
@@ -1308,15 +1323,16 @@ TEST_P(GLSLTest, MaxVaryingVec2Arrays)
     VaryingTestBase(0, 0, 0, maxVec2Arrays, 0, 0, 0, 0, false, false, false, true);
 }
 
-// Verify shader source with a fixed length that is less than the null-terminated length will compile.
+// Verify shader source with a fixed length that is less than the null-terminated length will
+// compile.
 TEST_P(GLSLTest, FixedShaderLength)
 {
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
     const std::string appendGarbage = "abcasdfasdfasdfasdfasdf";
-    const std::string source = "void main() { gl_FragColor = vec4(0, 0, 0, 0); }" + appendGarbage;
-    const char *sourceArray[1] = { source.c_str() };
-    GLint lengths[1] = { static_cast<GLint>(source.length() - appendGarbage.length()) };
+    const std::string source   = "void main() { gl_FragColor = vec4(0, 0, 0, 0); }" + appendGarbage;
+    const char *sourceArray[1] = {source.c_str()};
+    GLint lengths[1]           = {static_cast<GLint>(source.length() - appendGarbage.length())};
     glShaderSource(shader, static_cast<GLsizei>(ArraySize(sourceArray)), sourceArray, lengths);
     glCompileShader(shader);
 
@@ -1331,7 +1347,7 @@ TEST_P(GLSLTest, NegativeShaderLength)
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
     const char *sourceArray[1] = {essl1_shaders::fs::Red()};
-    GLint lengths[1] = { -10 };
+    GLint lengths[1]           = {-10};
     glShaderSource(shader, static_cast<GLsizei>(ArraySize(sourceArray)), sourceArray, lengths);
     glCompileShader(shader);
 
@@ -1358,19 +1374,11 @@ TEST_P(GLSLTest, MixedShaderLengths)
 {
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    const char *sourceArray[] =
-    {
-        "void main()",
-        "{",
-        "    gl_FragColor = vec4(0, 0, 0, 0);",
-        "}",
+    const char *sourceArray[] = {
+        "void main()", "{", "    gl_FragColor = vec4(0, 0, 0, 0);", "}",
     };
-    GLint lengths[] =
-    {
-        -10,
-        1,
-        static_cast<GLint>(strlen(sourceArray[2])),
-        -1,
+    GLint lengths[] = {
+        -10, 1, static_cast<GLint>(strlen(sourceArray[2])), -1,
     };
     ASSERT_EQ(ArraySize(sourceArray), ArraySize(lengths));
 
@@ -1387,21 +1395,11 @@ TEST_P(GLSLTest, ZeroShaderLength)
 {
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    const char *sourceArray[] =
-    {
-        "adfasdf",
-        "34534",
-        "void main() { gl_FragColor = vec4(0, 0, 0, 0); }",
-        "",
-        "asdfasdfsdsdf",
+    const char *sourceArray[] = {
+        "adfasdf", "34534", "void main() { gl_FragColor = vec4(0, 0, 0, 0); }", "", "asdfasdfsdsdf",
     };
-    GLint lengths[] =
-    {
-        0,
-        0,
-        -1,
-        0,
-        0,
+    GLint lengths[] = {
+        0, 0, -1, 0, 0,
     };
     ASSERT_EQ(ArraySize(sourceArray), ArraySize(lengths));
 
@@ -4292,7 +4290,8 @@ ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_OPENGLES(),
                        ES3_OPENGLES());
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 ANGLE_INSTANTIATE_TEST(WebGLGLSLTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());

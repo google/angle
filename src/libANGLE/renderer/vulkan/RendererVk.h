@@ -10,8 +10,8 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_RENDERERVK_H_
 #define LIBANGLE_RENDERER_VULKAN_RENDERERVK_H_
 
-#include <memory>
 #include <vulkan/vulkan.h>
+#include <memory>
 
 #include "common/angleutils.h"
 #include "libANGLE/Caps.h"

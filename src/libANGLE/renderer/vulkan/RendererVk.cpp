@@ -494,11 +494,11 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
     // Initialize the device
     VkDeviceCreateInfo createInfo;
 
-    createInfo.sType                = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo.pNext                = nullptr;
-    createInfo.flags                = 0;
-    createInfo.queueCreateInfoCount = 1;
-    createInfo.pQueueCreateInfos    = &queueCreateInfo;
+    createInfo.sType                 = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    createInfo.pNext                 = nullptr;
+    createInfo.flags                 = 0;
+    createInfo.queueCreateInfoCount  = 1;
+    createInfo.pQueueCreateInfos     = &queueCreateInfo;
     createInfo.enabledLayerCount     = enabledLayerCount;
     createInfo.ppEnabledLayerNames   = enabledLayerNames;
     createInfo.enabledExtensionCount = static_cast<uint32_t>(enabledDeviceExtensions.size());

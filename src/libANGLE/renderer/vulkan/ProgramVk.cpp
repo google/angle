@@ -193,7 +193,7 @@ vk::Error ProgramVk::reset(ContextVk *contextVk)
 
     mDescriptorSets.clear();
     mUsedDescriptorSetRange.invalidate();
-    mDirtyTextures       = false;
+    mDirtyTextures = false;
 
     return vk::NoError();
 }
@@ -359,8 +359,8 @@ gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
                 auto it = layoutMap[shaderType].find(uniformName);
                 if (it != layoutMap[shaderType].end())
                 {
-                    found                   = true;
-                    layoutInfo[shaderType]  = it->second;
+                    found                  = true;
+                    layoutInfo[shaderType] = it->second;
                 }
             }
 
@@ -523,7 +523,7 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
 
     const DefaultUniformBlock &uniformBlock =
         mDefaultUniformBlocks[static_cast<vk::ShaderType>(shaderType)];
-    const sh::BlockMemberInfo &layoutInfo   = uniformBlock.uniformLayout[location];
+    const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
 
     ASSERT(linkedUniform.typeInfo->componentType == entryPointType ||
            linkedUniform.typeInfo->componentType == gl::VariableBoolVectorType(entryPointType));

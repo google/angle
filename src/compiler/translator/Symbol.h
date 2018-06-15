@@ -199,9 +199,9 @@ struct TParameter
     const TVariable *createVariable(TSymbolTable *symbolTable)
     {
         const ImmutableString constName(name);
-        const TType *constType   = type;
-        name                     = nullptr;
-        type                     = nullptr;
+        const TType *constType = type;
+        name                   = nullptr;
+        type                   = nullptr;
         return new TVariable(symbolTable, constName, constType,
                              constName.empty() ? SymbolType::Empty : SymbolType::UserDefined);
     }

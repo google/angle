@@ -251,52 +251,52 @@ bool TParseContext::parseVectorFields(const TSourceLoc &line,
         {
             case 'x':
                 (*fieldOffsets)[i] = 0;
-                fieldSet[i]       = exyzw;
+                fieldSet[i]        = exyzw;
                 break;
             case 'r':
                 (*fieldOffsets)[i] = 0;
-                fieldSet[i]       = ergba;
+                fieldSet[i]        = ergba;
                 break;
             case 's':
                 (*fieldOffsets)[i] = 0;
-                fieldSet[i]       = estpq;
+                fieldSet[i]        = estpq;
                 break;
             case 'y':
                 (*fieldOffsets)[i] = 1;
-                fieldSet[i]       = exyzw;
+                fieldSet[i]        = exyzw;
                 break;
             case 'g':
                 (*fieldOffsets)[i] = 1;
-                fieldSet[i]       = ergba;
+                fieldSet[i]        = ergba;
                 break;
             case 't':
                 (*fieldOffsets)[i] = 1;
-                fieldSet[i]       = estpq;
+                fieldSet[i]        = estpq;
                 break;
             case 'z':
                 (*fieldOffsets)[i] = 2;
-                fieldSet[i]       = exyzw;
+                fieldSet[i]        = exyzw;
                 break;
             case 'b':
                 (*fieldOffsets)[i] = 2;
-                fieldSet[i]       = ergba;
+                fieldSet[i]        = ergba;
                 break;
             case 'p':
                 (*fieldOffsets)[i] = 2;
-                fieldSet[i]       = estpq;
+                fieldSet[i]        = estpq;
                 break;
 
             case 'w':
                 (*fieldOffsets)[i] = 3;
-                fieldSet[i]       = exyzw;
+                fieldSet[i]        = exyzw;
                 break;
             case 'a':
                 (*fieldOffsets)[i] = 3;
-                fieldSet[i]       = ergba;
+                fieldSet[i]        = ergba;
                 break;
             case 'q':
                 (*fieldOffsets)[i] = 3;
-                fieldSet[i]       = estpq;
+                fieldSet[i]        = estpq;
                 break;
             default:
                 error(line, "illegal vector field selection", compString);
@@ -1852,7 +1852,7 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
     }
 
     const TType &variableType = variable->getType();
-    TIntermTyped *node = nullptr;
+    TIntermTyped *node        = nullptr;
 
     if (variable->getConstPointer() && variableType.canReplaceWithConstantUnion())
     {
@@ -2435,7 +2435,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
     declarationQualifierErrorCheck(publicType.qualifier, publicType.layoutQualifier,
                                    identifierOrTypeLocation);
 
-    bool emptyDeclaration = (identifier == "");
+    bool emptyDeclaration                  = (identifier == "");
     mDeferredNonEmptyDeclarationErrorCheck = emptyDeclaration;
 
     TIntermSymbol *symbol = nullptr;
@@ -5545,8 +5545,8 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
     const TFunction *func                  = functionCall->getFunction();
-    TIntermNode *offset        = nullptr;
-    TIntermSequence *arguments = functionCall->getSequence();
+    TIntermNode *offset                    = nullptr;
+    TIntermSequence *arguments             = functionCall->getSequence();
     bool useTextureGatherOffsetConstraints = false;
     if (BuiltInGroup::isTextureOffsetNoBias(func))
     {

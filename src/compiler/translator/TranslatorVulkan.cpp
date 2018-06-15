@@ -268,7 +268,7 @@ void TranslatorVulkan::translate(TIntermBlock *root,
     sink << "#version 450 core\n";
 
     // Write out default uniforms into a uniform block assigned to a specific set/binding.
-    int defaultUniformCount = 0;
+    int defaultUniformCount        = 0;
     int structTypesUsedForUniforms = 0;
     for (const auto &uniform : getUniforms())
     {

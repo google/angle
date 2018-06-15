@@ -418,7 +418,7 @@ gl::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *render
 {
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
 
-    uint32_t *indices = nullptr;
+    uint32_t *indices          = nullptr;
     uint32_t destinationOffset = 0;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
@@ -605,12 +605,12 @@ Error ImageHelper::initImageView(VkDevice device,
                                  uint32_t levelCount)
 {
     VkImageViewCreateInfo viewInfo;
-    viewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    viewInfo.pNext                           = nullptr;
-    viewInfo.flags                           = 0;
-    viewInfo.image                           = mImage.getHandle();
-    viewInfo.viewType                        = gl_vk::GetImageViewType(textureType);
-    viewInfo.format                          = mFormat->vkTextureFormat;
+    viewInfo.sType    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    viewInfo.pNext    = nullptr;
+    viewInfo.flags    = 0;
+    viewInfo.image    = mImage.getHandle();
+    viewInfo.viewType = gl_vk::GetImageViewType(textureType);
+    viewInfo.format   = mFormat->vkTextureFormat;
     if (swizzleMap.swizzleRequired())
     {
         viewInfo.components.r = gl_vk::GetSwizzle(swizzleMap.swizzleRed);

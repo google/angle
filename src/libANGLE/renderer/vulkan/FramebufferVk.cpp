@@ -113,7 +113,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     Serial currentSerial = renderer->getCurrentQueueSerial();
 
     // This command buffer is only started once.
-    vk::CommandBuffer *commandBuffer  = nullptr;
+    vk::CommandBuffer *commandBuffer = nullptr;
 
     const gl::FramebufferAttachment *depthAttachment = mState.getDepthAttachment();
     bool clearDepth = (depthAttachment && (mask & GL_DEPTH_BUFFER_BIT) != 0);
@@ -203,7 +203,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     }
 
     // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
-    const auto &colorRenderTargets = mRenderTargetCache.getColors();
+    const auto &colorRenderTargets           = mRenderTargetCache.getColors();
     const VkClearColorValue &clearColorValue = contextVk->getClearColorValue().color;
     for (size_t colorIndex : mState.getEnabledDrawBuffers())
     {
