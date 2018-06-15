@@ -4714,7 +4714,8 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
             type->makeArrays(*declarator->arraySizes());
         }
 
-        TField *field = new TField(type, declarator->name(), declarator->line());
+        TField *field =
+            new TField(type, declarator->name(), declarator->line(), SymbolType::UserDefined);
         checkIsBelowStructNestingLimit(typeSpecifier.getLine(), *field);
         fieldList->push_back(field);
     }

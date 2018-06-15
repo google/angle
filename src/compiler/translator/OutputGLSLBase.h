@@ -69,8 +69,7 @@ class TOutputGLSLBase : public TIntermTraverser
 
     void visitCodeBlock(TIntermBlock *node);
 
-    ImmutableString hashFieldName(const TSymbol *containingStruct,
-                                  const ImmutableString &fieldName);
+    ImmutableString hashFieldName(const TField *field);
     // Same as hashName(), but without hashing "main".
     ImmutableString hashFunctionNameIfNeeded(const TFunction *func);
     // Used to translate function names for differences between ESSL and GLSL

@@ -10344,12 +10344,15 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
 {
     const TSourceLoc zeroSourceLoc             = {0, 0, 0, 0};
     TFieldList *fields_gl_DepthRangeParameters = new TFieldList();
-    fields_gl_DepthRangeParameters->push_back(new TField(
-        new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1), BuiltInName::near, zeroSourceLoc));
     fields_gl_DepthRangeParameters->push_back(
-        new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1), BuiltInName::far, zeroSourceLoc));
-    fields_gl_DepthRangeParameters->push_back(new TField(
-        new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1), BuiltInName::diff, zeroSourceLoc));
+        new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1), BuiltInName::near, zeroSourceLoc,
+                   SymbolType::BuiltIn));
+    fields_gl_DepthRangeParameters->push_back(
+        new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1), BuiltInName::far, zeroSourceLoc,
+                   SymbolType::BuiltIn));
+    fields_gl_DepthRangeParameters->push_back(
+        new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1), BuiltInName::diff, zeroSourceLoc,
+                   SymbolType::BuiltIn));
     TStructure *gl_DepthRangeParameters =
         new TStructure(BuiltInId::gl_DepthRangeParameters, BuiltInName::gl_DepthRangeParameters,
                        TExtension::UNDEFINED, fields_gl_DepthRangeParameters);
@@ -10789,7 +10792,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
         TExtension::NV_shader_framebuffer_fetch, type_gl_LastFragDataNV);
     TFieldList *fields_gl_PerVertex = new TFieldList();
     fields_gl_PerVertex->push_back(new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4, 1),
-                                              BuiltInName::gl_Position, zeroSourceLoc));
+                                              BuiltInName::gl_Position, zeroSourceLoc,
+                                              SymbolType::BuiltIn));
     TInterfaceBlock *gl_PerVertex =
         new TInterfaceBlock(BuiltInId::gl_PerVertex, BuiltInName::gl_PerVertex,
                             TExtension::EXT_geometry_shader, fields_gl_PerVertex);
@@ -10803,8 +10807,9 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
                                    TExtension::EXT_geometry_shader, type_gl_in);
     }
     TFieldList *fields_gl_PerVertexOutBlock = new TFieldList();
-    fields_gl_PerVertexOutBlock->push_back(new TField(
-        new TType(EbtFloat, EbpHigh, EvqPosition, 4, 1), BuiltInName::gl_Position, zeroSourceLoc));
+    fields_gl_PerVertexOutBlock->push_back(
+        new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4, 1), BuiltInName::gl_Position,
+                   zeroSourceLoc, SymbolType::BuiltIn));
     TInterfaceBlock *gl_PerVertexOutBlock =
         new TInterfaceBlock(BuiltInId::gl_PerVertexOutBlock, BuiltInName::gl_PerVertex,
                             TExtension::EXT_geometry_shader, fields_gl_PerVertexOutBlock);

@@ -20,22 +20,6 @@ namespace sh
 
 class TSymbolTable;
 
-enum class SymbolType
-{
-    BuiltIn,
-    UserDefined,
-    AngleInternal,
-    Empty  // Meaning symbol without a name.
-};
-
-enum class SymbolClass
-{
-    Function,
-    Variable,
-    Struct,
-    InterfaceBlock
-};
-
 // Symbol base class. (Can build functions or variables out of these...)
 class TSymbol : angle::NonCopyable
 {

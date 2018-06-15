@@ -37,6 +37,22 @@ class TSymbolUniqueId
     int mId;
 };
 
+enum class SymbolType
+{
+    BuiltIn,
+    UserDefined,
+    AngleInternal,
+    Empty  // Meaning symbol without a name.
+};
+
+enum class SymbolClass
+{
+    Function,
+    Variable,
+    Struct,
+    InterfaceBlock
+};
+
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_SYMBOLUNIQUEID_H_
