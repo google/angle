@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b39b901b_a1720d48",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-15T13:58:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ef750f7_e39dd558",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 75
+      },
+      "revId": "d5ff0433ed3b62560ae6692c950040cf37be689a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "968c2d52_ad36c471",
         "filename": "src/libANGLE/Buffer.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2018-06-14T19:56:17Z",
       "side": 1,
       "message": "ref",
+      "range": {
+        "startLine": 196,
+        "startChar": 2,
+        "endLine": 197,
+        "endChar": 75
+      },
+      "revId": "d5ff0433ed3b62560ae6692c950040cf37be689a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c9c46075_2e8ab801",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-15T13:58:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "968c2d52_ad36c471",
       "range": {
         "startLine": 196,
         "startChar": 2,
