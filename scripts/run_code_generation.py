@@ -168,7 +168,7 @@ generators = {
     'Vulkan mandatory format support table': {
         'inputs': [
             'src/libANGLE/renderer/angle_format.py',
-            'third_party/vulkan-validation-layers/src/scripts/vk.xml',
+            'third_party/vulkan-headers/src/registry/vk.xml',
             'src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json',
         ],
         'outputs': [

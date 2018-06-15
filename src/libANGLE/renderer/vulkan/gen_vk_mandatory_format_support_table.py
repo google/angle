@@ -87,7 +87,7 @@ def gen_format_case(index, vk_to_index_to_format_map, vk_map):
 input_file_name = 'vk_mandatory_format_support_data.json'
 out_file_name = 'vk_mandatory_format_support_table'
 
-tree = etree.parse(script_relative('../../../../third_party/vulkan-validation-layers/src/scripts/vk.xml'))
+tree = etree.parse(script_relative('../../../../third_party/vulkan-headers/src/registry/vk.xml'))
 root = tree.getroot()
 vk_format_enums = root.findall(".//enums[@name='VkFormat']/enum")
 vk_format_name_to_index_map = {}
