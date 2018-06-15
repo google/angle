@@ -1952,54 +1952,77 @@ void Program::setUniformMatrix4x3fv(GLint location,
     mProgram->setUniformMatrix4x3fv(location, clampedCount, transpose, v);
 }
 
+GLuint Program::getSamplerUniformBinding(const VariableLocation &uniformLocation) const
+{
+    GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(uniformLocation.index);
+    const std::vector<GLuint> &boundTextureUnits =
+        mState.mSamplerBindings[samplerIndex].boundTextureUnits;
+    return boundTextureUnits[uniformLocation.arrayIndex];
+}
+
 void Program::getUniformfv(const Context *context, GLint location, GLfloat *v) const
 {
-    const auto &uniformLocation = mState.getUniformLocations()[location];
-    const auto &uniform         = mState.getUniforms()[uniformLocation.index];
+    const VariableLocation &uniformLocation = mState.getUniformLocations()[location];
+    const LinkedUniform &uniform            = mState.getUniforms()[uniformLocation.index];
 
-    GLenum nativeType = gl::VariableComponentType(uniform.type);
+    if (uniform.isSampler())
+    {
+        *v = static_cast<GLfloat>(getSamplerUniformBinding(uniformLocation));
+        return;
+    }
+
+    const GLenum nativeType = gl::VariableComponentType(uniform.type);
     if (nativeType == GL_FLOAT)
     {
         mProgram->getUniformfv(context, location, v);
     }
     else
     {
-        getUniformInternal(context, v, location, nativeType,
-                           gl::VariableComponentCount(uniform.type));
+        getUniformInternal(context, v, location, nativeType, VariableComponentCount(uniform.type));
     }
 }
 
 void Program::getUniformiv(const Context *context, GLint location, GLint *v) const
 {
-    const auto &uniformLocation = mState.getUniformLocations()[location];
-    const auto &uniform         = mState.getUniforms()[uniformLocation.index];
+    const VariableLocation &uniformLocation = mState.getUniformLocations()[location];
+    const LinkedUniform &uniform            = mState.getUniforms()[uniformLocation.index];
 
-    GLenum nativeType = gl::VariableComponentType(uniform.type);
+    if (uniform.isSampler())
+    {
+        *v = static_cast<GLint>(getSamplerUniformBinding(uniformLocation));
+        return;
+    }
+
+    const GLenum nativeType = gl::VariableComponentType(uniform.type);
     if (nativeType == GL_INT || nativeType == GL_BOOL)
     {
         mProgram->getUniformiv(context, location, v);
     }
     else
     {
-        getUniformInternal(context, v, location, nativeType,
-                           gl::VariableComponentCount(uniform.type));
+        getUniformInternal(context, v, location, nativeType, VariableComponentCount(uniform.type));
     }
 }
 
 void Program::getUniformuiv(const Context *context, GLint location, GLuint *v) const
 {
-    const auto &uniformLocation = mState.getUniformLocations()[location];
-    const auto &uniform         = mState.getUniforms()[uniformLocation.index];
+    const VariableLocation &uniformLocation = mState.getUniformLocations()[location];
+    const LinkedUniform &uniform            = mState.getUniforms()[uniformLocation.index];
 
-    GLenum nativeType = gl::VariableComponentType(uniform.type);
+    if (uniform.isSampler())
+    {
+        *v = getSamplerUniformBinding(uniformLocation);
+        return;
+    }
+
+    const GLenum nativeType = VariableComponentType(uniform.type);
     if (nativeType == GL_UNSIGNED_INT)
     {
         mProgram->getUniformuiv(context, location, v);
     }
     else
     {
-        getUniformInternal(context, v, location, nativeType,
-                           gl::VariableComponentCount(uniform.type));
+        getUniformInternal(context, v, location, nativeType, VariableComponentCount(uniform.type));
     }
 }
 

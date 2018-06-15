@@ -819,6 +819,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     template <typename T>
     GLint getActiveInterfaceBlockMaxNameLength(const std::vector<T> &resources) const;
 
+    GLuint getSamplerUniformBinding(const VariableLocation &uniformLocation) const;
+
     ProgramState mState;
     rx::ProgramImpl *mProgram;
 
