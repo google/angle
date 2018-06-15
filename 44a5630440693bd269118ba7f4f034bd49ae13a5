@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "587b9caa_c1b0c936",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-15T16:19:27Z",
+      "side": 1,
+      "message": "These 2 vars are only needed inside your if",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 50,
+        "endChar": 73
+      },
+      "revId": "44a5630440693bd269118ba7f4f034bd49ae13a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b59b2f9_de8f883d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-15T16:19:27Z",
+      "side": 1,
+      "message": "Can we make this a constexpr kEmptyImmutableString?",
+      "range": {
+        "startLine": 73,
+        "startChar": 61,
+        "endLine": 73,
+        "endChar": 81
+      },
+      "revId": "44a5630440693bd269118ba7f4f034bd49ae13a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
