@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a96b1f9c_62acd87e",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1399,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-15T14:19:00Z",
+      "side": 1,
+      "message": "I feel like this is less readable than before - if there\u0027s an easy way to change it back, I\u0027d prefer to change it back, but it\u0027s OK as it is too.",
+      "revId": "0376c53369b267d006990d21bf53bd3f5b336cd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8441771_12f10beb",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-15T14:19:00Z",
+      "side": 1,
+      "message": "This has a big effect on readability - maybe worth forcing clang-format off here?",
+      "revId": "0376c53369b267d006990d21bf53bd3f5b336cd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
