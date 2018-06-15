@@ -53,20 +53,6 @@ static inline SupportRequirement VersionOrExts(GLuint major, GLuint minor, const
     return requirement;
 }
 
-// supported = (version || vertexExt) && requiredExt
-static inline SupportRequirement VersionOrExtsAndExts(GLuint major,
-                                                      GLuint minor,
-                                                      const std::string &versionExt,
-                                                      const std::string &requiredExt)
-{
-    SupportRequirement requirement;
-    requirement.version.major = major;
-    requirement.version.minor = minor;
-    angle::SplitStringAlongWhitespace(versionExt, &requirement.versionExtensions);
-    angle::SplitStringAlongWhitespace(requiredExt, &requirement.requiredExtensions);
-    return requirement;
-}
-
 // supported = version
 static inline SupportRequirement VersionOnly(GLuint major, GLuint minor)
 {
@@ -76,14 +62,30 @@ static inline SupportRequirement VersionOnly(GLuint major, GLuint minor)
     return requirement;
 }
 
-// supported = ext
-static inline SupportRequirement ExtsOnly(const std::string &ext)
+// supported = any one of sets in exts
+static inline SupportRequirement ExtsOnly(const std::vector<std::string> &exts)
 {
     SupportRequirement requirement;
     requirement.version.major = 0;
     requirement.version.minor = 0;
-    angle::SplitStringAlongWhitespace(ext, &requirement.requiredExtensions);
+    requirement.requiredExtensions.resize(exts.size());
+    for(size_t i = 0; i < exts.size(); i++)
+    {
+        angle::SplitStringAlongWhitespace(exts[i], &requirement.requiredExtensions[i]);
+    }
     return requirement;
+}
+
+// supported = ext
+static inline SupportRequirement ExtsOnly(const std::string &ext)
+{
+    return ExtsOnly(std::vector<std::string>({ext}));
+}
+
+// supported = ext1 || ext2
+static inline SupportRequirement ExtsOnly(const std::string &ext1, const std::string &ext2)
+{
+    return ExtsOnly(std::vector<std::string>({ext1, ext2}));
 }
 
 // supported = true
@@ -137,6 +139,33 @@ static inline void InsertFormatMapping(InternalFormatInfoMap *map,
     map->insert(std::make_pair(internalFormat, formatInfo));
 }
 
+// Note 1: This map is used to determine extensions support, which is based on checking support for
+// sized formats (this is ANGLE implementation limitation - D3D backend supports only sized formats)
+// In order to determine support for extensions which introduce unsized formats, this map would say
+// that a corresponding sized format is supported, instead. Thus, if this map says that a sized
+// format is supported, this means that either the actual sized format or a corresponding unsized
+// format is supported by the native driver.
+// For example, GL_EXT_texture_rg provides support for RED_EXT format with UNSIGNED_BYTE type.
+// Therefore, DetermineRGTextureSupport checks for GL_R8 support. Therefore this map says that
+// GL_R8 (and not RED_EXT) is supported if GL_EXT_texture_rg is available. GL_R8 itself
+// is supported in ES3, thus the combined condition is VersionOrExts(3, 0, "GL_EXT_texture_rg").
+//
+// Note 2: Texture Attachment support is checked also by SupportsNativeRendering().
+// Unsized formats appear in this map for this reason. The assumption is
+// that SupportsNativeRendering() will not check sized formats in the ES2 frontend
+// and the information in unsized formats is correct, and not merged like for sized formats.
+// In the ES3 frontend, it could happen that SupportsNativeRendering() would be wrong,
+// but this will be mitigated by fall back to CPU-readback in TextureGL::copySubTextureHelper().
+//
+// Note 3: Because creating renderbuffers with unsized formats is impossible,
+// the value of renderbuffer support is actually correct for the sized formats.
+//
+// Note 4: To determine whether a format is filterable, one must check both "Filter" and "Texture"
+// support, like it is done in GenerateTextureFormatCaps().
+// On the other hand, "Texture Attachment" support formula is self-contained.
+//
+// TODO(ynovikov): http://anglebug.com/2846 Verify support fields of BGRA, depth, stencil and
+// compressed formats, and all formats for Desktop GL.
 static InternalFormatInfoMap BuildInternalFormatInfoMap()
 {
     InternalFormatInfoMap map;
@@ -145,19 +174,19 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     //                       | Format              | OpenGL texture support                          | Filter           | OpenGL render support                        | OpenGL ES texture support                 | Filter           | OpenGL ES texture attachment support    | OpenGL ES renderbuffer support           |
     InsertFormatMapping(&map, GL_R8,                VersionOrExts(3, 0, "GL_ARB_texture_rg"),         AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOrExts(3, 0, "GL_EXT_texture_rg"),   AlwaysSupported(), VersionOrExts(3, 0, "GL_EXT_texture_rg"), VersionOrExts(3, 0, "GL_EXT_texture_rg")  );
     InsertFormatMapping(&map, GL_R8_SNORM,          VersionOnly(3, 1),                                AlwaysSupported(), NeverSupported(),                              VersionOnly(3, 0),                          AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
-    InsertFormatMapping(&map, GL_RG8,               VersionOrExts(3, 0, "GL_ARB_texture_rg"),         AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOrExts(3, 0, "GL_EXT_texture_rg"),   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"), VersionOrExts(3, 0, "GL_ARB_texture_rg")  );
+    InsertFormatMapping(&map, GL_RG8,               VersionOrExts(3, 0, "GL_ARB_texture_rg"),         AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOrExts(3, 0, "GL_EXT_texture_rg"),   AlwaysSupported(), VersionOrExts(3, 0, "GL_EXT_texture_rg"), VersionOrExts(3, 0, "GL_EXT_texture_rg")  );
     InsertFormatMapping(&map, GL_RG8_SNORM,         VersionOnly(3, 1),                                AlwaysSupported(), NeverSupported(),                              VersionOnly(3, 0),                          AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
-    InsertFormatMapping(&map, GL_RGB8,              AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             VersionOrExts(3, 0, "GL_OES_rgb8_rgba8"),   AlwaysSupported(), AlwaysSupported(),                        AlwaysSupported()                         );
+    InsertFormatMapping(&map, GL_RGB8,              AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             AlwaysSupported(),                          AlwaysSupported(), VersionOnly(2, 0),                        VersionOrExts(3, 0, "GL_OES_rgb8_rgba8")  );
     InsertFormatMapping(&map, GL_RGB8_SNORM,        VersionOnly(3, 1),                                AlwaysSupported(), NeverSupported(),                              VersionOnly(3, 0),                          AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
     InsertFormatMapping(&map, GL_RGB565,            AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             AlwaysSupported(),                          AlwaysSupported(), AlwaysSupported(),                        AlwaysSupported()                         );
     InsertFormatMapping(&map, GL_RGBA4,             AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             AlwaysSupported(),                          AlwaysSupported(), AlwaysSupported(),                        AlwaysSupported()                         );
     InsertFormatMapping(&map, GL_RGB5_A1,           AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             AlwaysSupported(),                          AlwaysSupported(), AlwaysSupported(),                        AlwaysSupported()                         );
-    InsertFormatMapping(&map, GL_RGBA8,             AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             VersionOrExts(3, 0, "GL_OES_rgb8_rgba8"),   AlwaysSupported(), VersionOrExts(3, 0, "GL_OES_rgb8_rgba8"), VersionOrExts(3, 0, "GL_OES_rgb8_rgba8")  );
+    InsertFormatMapping(&map, GL_RGBA8,             AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             AlwaysSupported(),                          AlwaysSupported(), VersionOnly(2, 0),                        VersionOrExts(3, 0, "GL_OES_rgb8_rgba8")  );
     InsertFormatMapping(&map, GL_RGBA8_SNORM,       VersionOnly(3, 1),                                AlwaysSupported(), NeverSupported(),                              VersionOnly(3, 0),                          AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
     InsertFormatMapping(&map, GL_RGB10_A2,          AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             VersionOnly(3, 0),                          AlwaysSupported(), VersionOnly(3, 0),                        VersionOnly(3, 0)                         );
     InsertFormatMapping(&map, GL_RGB10_A2UI,        VersionOrExts(3, 3, "GL_ARB_texture_rgb10_a2ui"), NeverSupported(),  AlwaysSupported(),                             VersionOnly(3, 0),                          NeverSupported(),  AlwaysSupported(),                        AlwaysSupported()                         );
-    InsertFormatMapping(&map, GL_SRGB8,             VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       AlwaysSupported(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    VersionOnly(3, 0),                          AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
-    InsertFormatMapping(&map, GL_SRGB8_ALPHA8,      VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       AlwaysSupported(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    VersionOnly(3, 0),                          AlwaysSupported(), VersionOrExts(3, 0, "GL_EXT_sRGB"),       VersionOrExts(3, 0, "GL_EXT_sRGB")        );
+    InsertFormatMapping(&map, GL_SRGB8,             VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       AlwaysSupported(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    VersionOrExts(3, 0, "GL_EXT_sRGB"),         AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
+    InsertFormatMapping(&map, GL_SRGB8_ALPHA8,      VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       AlwaysSupported(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    VersionOrExts(3, 0, "GL_EXT_sRGB"),         AlwaysSupported(), VersionOrExts(3, 0, "GL_EXT_sRGB"),       VersionOrExts(3, 0, "GL_EXT_sRGB")        );
     InsertFormatMapping(&map, GL_R8I,               VersionOrExts(3, 0, "GL_ARB_texture_rg"),         NeverSupported(),  VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        VersionOnly(3, 0)                         );
     InsertFormatMapping(&map, GL_R8UI,              VersionOrExts(3, 0, "GL_ARB_texture_rg"),         NeverSupported(),  VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        VersionOnly(3, 0)                         );
     InsertFormatMapping(&map, GL_R16I,              VersionOrExts(3, 0, "GL_ARB_texture_rg"),         NeverSupported(),  VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        VersionOnly(3, 0)                         );
@@ -184,40 +213,47 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     InsertFormatMapping(&map, GL_RGBA32UI,          VersionOrExts(3, 0, "GL_EXT_texture_integer"),    NeverSupported(),  VersionOrExts(3, 0, "GL_EXT_texture_integer"), VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        VersionOnly(3, 0)                         );
 
     // Unsized formats
-    InsertFormatMapping(&map, GL_ALPHA,             NeverSupported(),                                 NeverSupported(),  NeverSupported(),                              NeverSupported(),                           NeverSupported(),  NeverSupported(),                         NeverSupported()                          );
-    InsertFormatMapping(&map, GL_LUMINANCE,         NeverSupported(),                                 NeverSupported(),  NeverSupported(),                              NeverSupported(),                           NeverSupported(),  NeverSupported(),                         NeverSupported()                          );
-    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA,   NeverSupported(),                                 NeverSupported(),  NeverSupported(),                              NeverSupported(),                           NeverSupported(),  NeverSupported(),                         NeverSupported()                          );
-    InsertFormatMapping(&map, GL_RED,               VersionOrExts(3, 0, "GL_ARB_texture_rg"),         AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOrExts(3, 0, "GL_EXT_texture_rg"),   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"), VersionOrExts(3, 0, "GL_ARB_texture_rg")  );
-    InsertFormatMapping(&map, GL_RG,                VersionOrExts(3, 0, "GL_ARB_texture_rg"),         AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOrExts(3, 0, "GL_EXT_texture_rg"),   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"), VersionOrExts(3, 0, "GL_ARB_texture_rg")  );
-    InsertFormatMapping(&map, GL_RGB,               AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             AlwaysSupported(),                          AlwaysSupported(), AlwaysSupported(),                        AlwaysSupported()                         );
-    InsertFormatMapping(&map, GL_RGBA,              AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             AlwaysSupported(),                          AlwaysSupported(), AlwaysSupported(),                        AlwaysSupported()                         );
-    InsertFormatMapping(&map, GL_RED_INTEGER,       VersionOrExts(3, 0, "GL_ARB_texture_rg"),         NeverSupported(),  VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        VersionOnly(3, 0)                         );
-    InsertFormatMapping(&map, GL_RG_INTEGER,        VersionOrExts(3, 0, "GL_ARB_texture_rg"),         NeverSupported(),  VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        VersionOnly(3, 0)                         );
+    InsertFormatMapping(&map, GL_ALPHA,             NeverSupported(),                                 NeverSupported(),  NeverSupported(),                              AlwaysSupported(),                          AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
+    InsertFormatMapping(&map, GL_LUMINANCE,         NeverSupported(),                                 NeverSupported(),  NeverSupported(),                              AlwaysSupported(),                          AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA,   NeverSupported(),                                 NeverSupported(),  NeverSupported(),                              AlwaysSupported(),                          AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
+    InsertFormatMapping(&map, GL_RED,               VersionOrExts(3, 0, "GL_ARB_texture_rg"),         AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"),      ExtsOnly("GL_EXT_texture_rg"),              AlwaysSupported(), ExtsOnly("GL_EXT_texture_rg"),            NeverSupported()                          );
+    InsertFormatMapping(&map, GL_RG,                VersionOrExts(3, 0, "GL_ARB_texture_rg"),         AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg"),      ExtsOnly("GL_EXT_texture_rg"),              AlwaysSupported(), ExtsOnly("GL_EXT_texture_rg"),            NeverSupported()                          );
+    InsertFormatMapping(&map, GL_RGB,               AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             AlwaysSupported(),                          AlwaysSupported(), VersionOnly(2, 0),                        NeverSupported()                          );
+    InsertFormatMapping(&map, GL_RGBA,              AlwaysSupported(),                                AlwaysSupported(), AlwaysSupported(),                             AlwaysSupported(),                          AlwaysSupported(), VersionOnly(2, 0),                        NeverSupported()                          );
+    InsertFormatMapping(&map, GL_RED_INTEGER,       VersionOrExts(3, 0, "GL_ARB_texture_rg"),         NeverSupported(),  VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        NeverSupported()                          );
+    InsertFormatMapping(&map, GL_RG_INTEGER,        VersionOrExts(3, 0, "GL_ARB_texture_rg"),         NeverSupported(),  VersionOrExts(3, 0, "GL_ARB_texture_rg"),      VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        NeverSupported()                          );
     InsertFormatMapping(&map, GL_RGB_INTEGER,       VersionOrExts(3, 0, "GL_EXT_texture_integer"),    NeverSupported(),  NeverSupported(),                              VersionOnly(3, 0),                          NeverSupported(),  NeverSupported(),                         NeverSupported()                          );
-    InsertFormatMapping(&map, GL_RGBA_INTEGER,      VersionOrExts(3, 0, "GL_EXT_texture_integer"),    NeverSupported(),  VersionOrExts(3, 0, "GL_EXT_texture_integer"), VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        VersionOnly(3, 0)                         );
+    InsertFormatMapping(&map, GL_RGBA_INTEGER,      VersionOrExts(3, 0, "GL_EXT_texture_integer"),    NeverSupported(),  VersionOrExts(3, 0, "GL_EXT_texture_integer"), VersionOnly(3, 0),                          NeverSupported(),  VersionOnly(3, 0),                        NeverSupported()                          );
     InsertFormatMapping(&map, GL_SRGB,              VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       AlwaysSupported(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    ExtsOnly("GL_EXT_sRGB"),                    AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
-    InsertFormatMapping(&map, GL_SRGB_ALPHA,        VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       AlwaysSupported(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    ExtsOnly("GL_EXT_sRGB"),                    AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
+    InsertFormatMapping(&map, GL_SRGB_ALPHA,        VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),       AlwaysSupported(), VersionOrExts(2, 1, "GL_EXT_texture_sRGB"),    ExtsOnly("GL_EXT_sRGB"),                    AlwaysSupported(), ExtsOnly("GL_EXT_sRGB"),                  NeverSupported()                          );
 
     // From GL_EXT_texture_format_BGRA8888
     InsertFormatMapping(&map, GL_BGRA8_EXT,         VersionOrExts(1, 2, "GL_EXT_bgra"),               AlwaysSupported(), VersionOrExts(1, 2, "GL_EXT_bgra"),            ExtsOnly("GL_EXT_texture_format_BGRA8888"), AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
     InsertFormatMapping(&map, GL_BGRA_EXT,          VersionOrExts(1, 2, "GL_EXT_bgra"),               AlwaysSupported(), VersionOrExts(1, 2, "GL_EXT_bgra"),            ExtsOnly("GL_EXT_texture_format_BGRA8888"), AlwaysSupported(), NeverSupported(),                         NeverSupported()                          );
 
     // Floating point formats
-    // Note that GL_EXT_texture_shared_exponent and GL_ARB_color_buffer_float suggest that RGB9_E5
+    // Note 1: GL_EXT_texture_shared_exponent and GL_ARB_color_buffer_float suggest that RGB9_E5
     // would be renderable, but once support for renderable float textures got rolled into core GL
     // spec it wasn't intended to be renderable. In practice it's not reliably renderable even
     // with the extensions, there's a known bug in at least NVIDIA driver version 370.
-    //                       | Format              | OpenGL texture support                                       | Filter           | OpenGL render support                                                                  | OpenGL ES texture support                                         | Filter                                                 | OpenGL ES texture attachment support                                             | OpenGL ES renderbuffer support                                                  |
-    InsertFormatMapping(&map, GL_R11F_G11F_B10F,    VersionOrExts(3, 0, "GL_EXT_packed_float"),                    AlwaysSupported(), VersionOrExts(3, 0, "GL_EXT_packed_float GL_ARB_color_buffer_float"),                    VersionOnly(3, 0),                                                  AlwaysSupported(),                                       ExtsOnly("GL_EXT_color_buffer_float"),                                             ExtsOnly("GL_EXT_color_buffer_float")                                            );
-    InsertFormatMapping(&map, GL_RGB9_E5,           VersionOrExts(3, 0, "GL_EXT_texture_shared_exponent"),         AlwaysSupported(), NeverSupported(),                                                                        VersionOnly(3, 0),                                                  AlwaysSupported(),                                       NeverSupported(),                                                                  NeverSupported()                                                                 );
-    InsertFormatMapping(&map, GL_R16F,              VersionOrExts(3, 0, "GL_ARB_texture_rg ARB_texture_float"),    AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float GL_ARB_color_buffer_float"), VersionOrExts(3, 0, "GL_OES_texture_half_float GL_EXT_texture_rg"), VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), VersionOrExtsAndExts(3, 0, "GL_EXT_texture_rg", "GL_EXT_color_buffer_half_float"), VersionOrExtsAndExts(3, 0, "GL_EXT_texture_rg", "GL_EXT_color_buffer_half_float"));
-    InsertFormatMapping(&map, GL_RG16F,             VersionOrExts(3, 0, "GL_ARB_texture_rg ARB_texture_float"),    AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float GL_ARB_color_buffer_float"), VersionOrExts(3, 0, "GL_OES_texture_half_float GL_EXT_texture_rg"), VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), VersionOrExtsAndExts(3, 0, "GL_EXT_texture_rg", "GL_EXT_color_buffer_half_float"), VersionOrExtsAndExts(3, 0, "GL_EXT_texture_rg", "GL_EXT_color_buffer_half_float"));
-    InsertFormatMapping(&map, GL_RGB16F,            VersionOrExts(3, 0, "GL_ARB_texture_float"),                   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_float GL_ARB_color_buffer_float"),                   VersionOrExts(3, 0, "GL_OES_texture_half_float"),                   VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), ExtsOnly("GL_EXT_color_buffer_half_float"),                                        ExtsOnly("GL_EXT_color_buffer_half_float")                                       );
-    InsertFormatMapping(&map, GL_RGBA16F,           VersionOrExts(3, 0, "GL_ARB_texture_float"),                   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_float GL_ARB_color_buffer_float"),                   VersionOrExts(3, 0, "GL_OES_texture_half_float"),                   VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), ExtsOnly("GL_EXT_color_buffer_half_float"),                                        ExtsOnly("GL_EXT_color_buffer_half_float")                                       );
-    InsertFormatMapping(&map, GL_R32F,              VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float"), AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float GL_ARB_color_buffer_float"), VersionOrExts(3, 0, "GL_OES_texture_float GL_EXT_texture_rg"),      ExtsOnly("GL_OES_texture_float_linear"),                 ExtsOnly("GL_EXT_color_buffer_float"),                                             ExtsOnly("GL_EXT_color_buffer_float")                                            );
-    InsertFormatMapping(&map, GL_RG32F,             VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float"), AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float GL_ARB_color_buffer_float"), VersionOrExts(3, 0, "GL_OES_texture_float GL_EXT_texture_rg"),      ExtsOnly("GL_OES_texture_float_linear"),                 ExtsOnly("GL_EXT_color_buffer_float"),                                             ExtsOnly("GL_EXT_color_buffer_float")                                            );
-    InsertFormatMapping(&map, GL_RGB32F,            VersionOrExts(3, 0, "GL_ARB_texture_float"),                   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_float GL_ARB_color_buffer_float"),                   VersionOrExts(3, 0, "GL_OES_texture_float"),                        ExtsOnly("GL_OES_texture_float_linear"),                 NeverSupported(),                                                                  NeverSupported()                                                                 );
-    InsertFormatMapping(&map, GL_RGBA32F,           VersionOrExts(3, 0, "GL_ARB_texture_float"),                   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_float GL_ARB_color_buffer_float"),                   VersionOrExts(3, 0, "GL_OES_texture_float"),                        ExtsOnly("GL_OES_texture_float_linear"),                 ExtsOnly("GL_EXT_color_buffer_float"),                                             ExtsOnly("GL_EXT_color_buffer_float")                                            );
+    //
+    // Note 2: It's a bit unclear whether texture attachments with GL_RGB16F should be supported
+    // in ES3 with GL_EXT_color_buffer_half_float. Probably not, since in ES3 type is HALF_FLOAT,
+    // but GL_EXT_color_buffer_half_float is applicable only to type HALF_FLOAT_OES.
+    //
+    // Note 3: GL_EXT_color_buffer_float implies that ES3.0 is supported, this simplifies the check.
+    //
+    //                       | Format              | OpenGL texture support                                       | Filter           | OpenGL render support                                                                  | OpenGL ES texture support                                         | Filter                                                 | OpenGL ES texture attachment support                                                                                                      | OpenGL ES renderbuffer support                                                                                    |
+    InsertFormatMapping(&map, GL_R11F_G11F_B10F,    VersionOrExts(3, 0, "GL_EXT_packed_float"),                    AlwaysSupported(), VersionOrExts(3, 0, "GL_EXT_packed_float GL_ARB_color_buffer_float"),                    VersionOnly(3, 0),                                                  AlwaysSupported(),                                       ExtsOnly("GL_EXT_color_buffer_float"),                                                                                                      ExtsOnly("GL_EXT_color_buffer_float")                                                                              );
+    InsertFormatMapping(&map, GL_RGB9_E5,           VersionOrExts(3, 0, "GL_EXT_texture_shared_exponent"),         AlwaysSupported(), NeverSupported(),                                                                        VersionOnly(3, 0),                                                  AlwaysSupported(),                                       NeverSupported(),                                                                                                                           NeverSupported()                                                                                                   );
+    InsertFormatMapping(&map, GL_R16F,              VersionOrExts(3, 0, "GL_ARB_texture_rg ARB_texture_float"),    AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float GL_ARB_color_buffer_float"), VersionOrExts(3, 0, "GL_OES_texture_half_float GL_EXT_texture_rg"), VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), ExtsOnly("GL_EXT_texture_storage GL_OES_texture_half_float GL_EXT_texture_rg GL_EXT_color_buffer_half_float", "GL_EXT_color_buffer_float"), ExtsOnly("GL_EXT_texture_rg GL_OES_texture_half_float GL_EXT_color_buffer_half_float", "GL_EXT_color_buffer_float"));
+    InsertFormatMapping(&map, GL_RG16F,             VersionOrExts(3, 0, "GL_ARB_texture_rg ARB_texture_float"),    AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float GL_ARB_color_buffer_float"), VersionOrExts(3, 0, "GL_OES_texture_half_float GL_EXT_texture_rg"), VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), ExtsOnly("GL_EXT_texture_storage GL_OES_texture_half_float GL_EXT_texture_rg GL_EXT_color_buffer_half_float", "GL_EXT_color_buffer_float"), ExtsOnly("GL_EXT_texture_rg GL_OES_texture_half_float GL_EXT_color_buffer_half_float", "GL_EXT_color_buffer_float"));
+    InsertFormatMapping(&map, GL_RGB16F,            VersionOrExts(3, 0, "GL_ARB_texture_float"),                   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_float GL_ARB_color_buffer_float"),                   VersionOrExts(3, 0, "GL_OES_texture_half_float"),                   VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), ExtsOnly("GL_EXT_texture_storage GL_OES_texture_half_float GL_EXT_color_buffer_half_float"),                                                ExtsOnly("GL_OES_texture_half_float GL_EXT_color_buffer_half_float")                                               );
+    InsertFormatMapping(&map, GL_RGBA16F,           VersionOrExts(3, 0, "GL_ARB_texture_float"),                   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_float GL_ARB_color_buffer_float"),                   VersionOrExts(3, 0, "GL_OES_texture_half_float"),                   VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), ExtsOnly("GL_OES_texture_half_float GL_EXT_color_buffer_half_float", "GL_EXT_color_buffer_float"),                                          ExtsOnly("GL_OES_texture_half_float GL_EXT_color_buffer_half_float", "GL_EXT_color_buffer_float")                  );
+    InsertFormatMapping(&map, GL_R32F,              VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float"), AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float GL_ARB_color_buffer_float"), VersionOrExts(3, 0, "GL_OES_texture_float GL_EXT_texture_rg"),      ExtsOnly("GL_OES_texture_float_linear"),                 ExtsOnly("GL_EXT_color_buffer_float"),                                                                                                      ExtsOnly("GL_EXT_color_buffer_float")                                                                              );
+    InsertFormatMapping(&map, GL_RG32F,             VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float"), AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_rg GL_ARB_texture_float GL_ARB_color_buffer_float"), VersionOrExts(3, 0, "GL_OES_texture_float GL_EXT_texture_rg"),      ExtsOnly("GL_OES_texture_float_linear"),                 ExtsOnly("GL_EXT_color_buffer_float"),                                                                                                      ExtsOnly("GL_EXT_color_buffer_float")                                                                              );
+    InsertFormatMapping(&map, GL_RGB32F,            VersionOrExts(3, 0, "GL_ARB_texture_float"),                   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_float GL_ARB_color_buffer_float"),                   VersionOrExts(3, 0, "GL_OES_texture_float"),                        ExtsOnly("GL_OES_texture_float_linear"),                 NeverSupported(),                                                                                                                           NeverSupported()                                                                                                   );
+    InsertFormatMapping(&map, GL_RGBA32F,           VersionOrExts(3, 0, "GL_ARB_texture_float"),                   AlwaysSupported(), VersionOrExts(3, 0, "GL_ARB_texture_float GL_ARB_color_buffer_float"),                   VersionOrExts(3, 0, "GL_OES_texture_float"),                        ExtsOnly("GL_OES_texture_float_linear"),                 ExtsOnly("GL_EXT_color_buffer_float"),                                                                                                      ExtsOnly("GL_EXT_color_buffer_float")                                                                              );
 
     // Depth stencil formats
     //                       | Format                  | OpenGL texture support                            | Filter                                     | OpenGL render support                             | OpenGL ES texture support                  | Filter                                     | OpenGL ES texture attachment support                                   | OpenGL ES renderbuffer support                                        |
@@ -232,16 +268,16 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     InsertFormatMapping(&map, GL_DEPTH_STENCIL,         VersionOnly(1, 5),                                  VersionOrExts(1, 5, "GL_ARB_depth_texture"), VersionOnly(1, 5),                                  VersionOnly(2, 0),                           VersionOrExts(3, 0, "GL_OES_depth_texture"), VersionOnly(2, 0),                                                       VersionOnly(2, 0)                                                      );
 
     // Luminance alpha formats
-    //                       | Format                  | OpenGL texture support                      | Filter           | Render          | OpenGL ES texture support                                | Filter                                                 | OpenGL ES texture attachment support | OpenGL ES renderbuffer support |
-    InsertFormatMapping(&map, GL_ALPHA8_EXT,             AlwaysSupported(),                           AlwaysSupported(), NeverSupported(), ExtsOnly("GL_EXT_texture_storage"),                        AlwaysSupported(),                                       NeverSupported(),                      NeverSupported()                );
-    InsertFormatMapping(&map, GL_LUMINANCE8_EXT,         AlwaysSupported(),                           AlwaysSupported(), NeverSupported(), ExtsOnly("GL_EXT_texture_storage"),                        AlwaysSupported(),                                       NeverSupported(),                      NeverSupported()                );
-    InsertFormatMapping(&map, GL_LUMINANCE8_ALPHA8_EXT,  AlwaysSupported(),                           AlwaysSupported(), NeverSupported(), ExtsOnly("GL_EXT_texture_storage"),                        AlwaysSupported(),                                       NeverSupported(),                      NeverSupported()                );
-    InsertFormatMapping(&map, GL_ALPHA16F_EXT,           VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_EXT_texture_storage OES_texture_half_float"), VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), NeverSupported(),                      NeverSupported()                );
-    InsertFormatMapping(&map, GL_LUMINANCE16F_EXT,       VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_EXT_texture_storage OES_texture_half_float"), VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), NeverSupported(),                      NeverSupported()                );
-    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA16F_EXT, VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_EXT_texture_storage OES_texture_half_float"), VersionOrExts(3, 0, "GL_OES_texture_half_float_linear"), NeverSupported(),                      NeverSupported()                );
-    InsertFormatMapping(&map, GL_ALPHA32F_EXT,           VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_EXT_texture_storage OES_texture_float"),      ExtsOnly("GL_OES_texture_float_linear"),                 NeverSupported(),                      NeverSupported()                );
-    InsertFormatMapping(&map, GL_LUMINANCE32F_EXT,       VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_EXT_texture_storage OES_texture_float"),      ExtsOnly("GL_OES_texture_float_linear"),                 NeverSupported(),                      NeverSupported()                );
-    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA32F_EXT, VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_EXT_texture_storage OES_texture_float"),      ExtsOnly("GL_OES_texture_float_linear"),                 NeverSupported(),                      NeverSupported()                );
+    //                       | Format                  | OpenGL texture support                      | Filter           | Render          | OpenGL ES texture support            | Filter                                      | OpenGL ES texture attachment support | OpenGL ES renderbuffer support |
+    InsertFormatMapping(&map, GL_ALPHA8_EXT,             AlwaysSupported(),                           AlwaysSupported(), NeverSupported(), AlwaysSupported(),                     AlwaysSupported(),                            NeverSupported(),                      NeverSupported()                );
+    InsertFormatMapping(&map, GL_LUMINANCE8_EXT,         AlwaysSupported(),                           AlwaysSupported(), NeverSupported(), AlwaysSupported(),                     AlwaysSupported(),                            NeverSupported(),                      NeverSupported()                );
+    InsertFormatMapping(&map, GL_LUMINANCE8_ALPHA8_EXT,  AlwaysSupported(),                           AlwaysSupported(), NeverSupported(), AlwaysSupported(),                     AlwaysSupported(),                            NeverSupported(),                      NeverSupported()                );
+    InsertFormatMapping(&map, GL_ALPHA16F_EXT,           VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_OES_texture_half_float"), ExtsOnly("GL_OES_texture_half_float_linear"), NeverSupported(),                      NeverSupported()                );
+    InsertFormatMapping(&map, GL_LUMINANCE16F_EXT,       VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_OES_texture_half_float"), ExtsOnly("GL_OES_texture_half_float_linear"), NeverSupported(),                      NeverSupported()                );
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA16F_EXT, VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_OES_texture_half_float"), ExtsOnly("GL_OES_texture_half_float_linear"), NeverSupported(),                      NeverSupported()                );
+    InsertFormatMapping(&map, GL_ALPHA32F_EXT,           VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_OES_texture_float"),      ExtsOnly("GL_OES_texture_float_linear"),      NeverSupported(),                      NeverSupported()                );
+    InsertFormatMapping(&map, GL_LUMINANCE32F_EXT,       VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_OES_texture_float"),      ExtsOnly("GL_OES_texture_float_linear"),      NeverSupported(),                      NeverSupported()                );
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA32F_EXT, VersionOrExts(3, 0, "GL_ARB_texture_float"), AlwaysSupported(), NeverSupported(), ExtsOnly("GL_OES_texture_float"),      ExtsOnly("GL_OES_texture_float_linear"),      NeverSupported(),                      NeverSupported()                );
 
     // Compressed formats, From ES 3.0.1 spec, table 3.16
     //                       | Format                                      | OpenGL texture support                         | Filter           | Render          | OpenGL ES texture support                                                   | Filter           | OpenGL ES texture attachment support | OpenGL ES renderbuffer support |

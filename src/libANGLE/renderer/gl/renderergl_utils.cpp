@@ -63,12 +63,27 @@ namespace nativegl_gl
 
 static bool MeetsRequirements(const FunctionsGL *functions, const nativegl::SupportRequirement &requirements)
 {
-    for (const std::string &extension : requirements.requiredExtensions)
+    bool hasRequiredExtensions = false;
+    for (const std::vector<std::string> &exts : requirements.requiredExtensions)
     {
-        if (!functions->hasExtension(extension))
+        bool hasAllExtensionsInSet = true;
+        for (const std::string &extension : exts)
         {
-            return false;
+            if (!functions->hasExtension(extension))
+            {
+                hasAllExtensionsInSet = false;
+                break;
+            }
         }
+        if (hasAllExtensionsInSet)
+        {
+            hasRequiredExtensions = true;
+            break;
+        }
+    }
+    if (!requirements.requiredExtensions.empty() && !hasRequiredExtensions)
+    {
+        return false;
     }
 
     if (functions->version >= requirements.version)

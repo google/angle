@@ -358,8 +358,8 @@ TEST_P(D3DTextureTest, TestD3D11SupportedFormatsSurface)
 // formats. The test renders to and samples from the pbuffer.
 TEST_P(D3DTextureTest, TestD3D11SupportedFormatsTexture)
 {
-    bool srgbSupported = extensionEnabled("GL_EXT_sRGB") || getClientMajorVersion() == 3;
-    ANGLE_SKIP_TEST_IF(!valid() || !mD3D11Device || !srgbSupported);
+    bool srgb8alpha8TextureAttachmentSupported = getClientMajorVersion() >= 3;
+    ANGLE_SKIP_TEST_IF(!valid() || !mD3D11Device || !srgb8alpha8TextureAttachmentSupported);
 
     bool srgbWriteControlSupported = extensionEnabled("GL_EXT_sRGB_write_control") && !IsOpenGL();
 
@@ -464,8 +464,8 @@ TEST_P(D3DTextureTest, TestD3D11TypelessTexture)
     // Typeless formats are optional in the spec and currently only supported on D3D11 backend.
     ANGLE_SKIP_TEST_IF(!IsD3D11());
 
-    // SRGB support is required.
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_sRGB") && getClientMajorVersion() < 3);
+    // GL_SRGB8_ALPHA8 texture attachment support is required.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
     const std::array<EGLint, 2> eglGlColorspaces = {EGL_GL_COLORSPACE_LINEAR,
                                                     EGL_GL_COLORSPACE_SRGB};
