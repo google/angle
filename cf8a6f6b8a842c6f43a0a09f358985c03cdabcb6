@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b134f293_fcf0241b",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-18T15:31:36Z",
+      "side": 1,
+      "message": "Can you assert that gl::Buffer::isMapped is false?  Mapping a buffer twice will fail.",
+      "range": {
+        "startLine": 522,
+        "startChar": 12,
+        "endLine": 522,
+        "endChar": 66
+      },
+      "revId": "cf8a6f6b8a842c6f43a0a09f358985c03cdabcb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc13e4d3_e1997096",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-18T15:31:36Z",
+      "side": 1,
+      "message": "This doesn\u0027t handle primitive restart yet.  Can you assert that gl::State::isPrimitiveRestartEnabled is false?",
+      "range": {
+        "startLine": 539,
+        "startChar": 0,
+        "endLine": 542,
+        "endChar": 13
+      },
+      "revId": "cf8a6f6b8a842c6f43a0a09f358985c03cdabcb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
