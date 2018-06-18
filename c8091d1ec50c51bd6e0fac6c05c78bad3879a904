@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4704e77_5693509f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3042,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T17:50:37Z",
+      "side": 1,
+      "message": "you can optimize out this switch by making this a template member function. You could pass the enum ShaderType as the template parameter. Then looking up the current buffer info could be done via a helper struct. For now please keep the code as it is now. I can revisit this later if I need to optimize it.",
+      "range": {
+        "startLine": 3011,
+        "startChar": 0,
+        "endLine": 3042,
+        "endChar": 5
+      },
+      "revId": "c8091d1ec50c51bd6e0fac6c05c78bad3879a904",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
