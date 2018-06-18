@@ -22,6 +22,30 @@
       "revId": "cf202370625f56e84e1df79c24e4bdb53fc86aa4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a055fac_3e2999cb",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T13:01:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06f9c94b_4157639b",
+      "range": {
+        "startLine": 1120,
+        "startChar": 31,
+        "endLine": 1120,
+        "endChar": 33
+      },
+      "revId": "cf202370625f56e84e1df79c24e4bdb53fc86aa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
