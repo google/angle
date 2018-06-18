@@ -531,7 +531,7 @@ void ProgramVk::getUniformImpl(GLint location, T *v, GLenum entryPointType) cons
     if (gl::IsMatrixType(linkedUniform.type))
     {
         const uint8_t *ptrToElement = uniformBlock.uniformData.data() + layoutInfo.offset +
-                                      (locationInfo.arrayIndex * linkedUniform.getElementSize());
+                                      (locationInfo.arrayIndex * layoutInfo.arrayStride);
         GetMatrixUniform(linkedUniform.type, v, reinterpret_cast<const T *>(ptrToElement), false);
     }
     else

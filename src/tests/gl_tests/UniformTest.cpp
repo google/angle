@@ -249,6 +249,37 @@ void main() {
     }
 }
 
+// Test that we can get and set an array of matrices uniform.
+TEST_P(SimpleUniformTest, ArrayOfMat3UniformStateQuery)
+{
+    constexpr char kFragShader[] = R"(
+precision mediump float;
+uniform mat3 umatarray[2];
+void main() {
+    gl_FragColor = vec4(umatarray[1]);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Zero(), kFragShader);
+    glUseProgram(program);
+    std::vector<std::vector<GLfloat>> expected = {
+        {1.0f, 0.5f, 0.2f, -0.8f, -0.2f, 0.1f, 0.1f, 0.2f, 0.7f},
+        {0.9f, 0.4f, 0.1f, -0.9f, -0.3f, 0.0f, 0.0f, 0.1f, 0.6f}};
+
+    for (size_t i = 0; i < expected.size(); i++)
+    {
+        std::string locationName = "umatarray[" + std::to_string(i) + "]";
+        GLint uniformLocation    = glGetUniformLocation(program, locationName.c_str());
+        glUniformMatrix3fv(uniformLocation, 1, false, expected[i].data());
+        ASSERT_GL_NO_ERROR();
+        ASSERT_NE(uniformLocation, -1);
+
+        std::vector<GLfloat> results(9, 0);
+        glGetUniformfv(program, uniformLocation, results.data());
+        ASSERT_GL_NO_ERROR();
+        ASSERT_EQ(results, expected[i]);
+    }
+}
+
 // Test that we can get and set an int array of uniforms.
 TEST_P(SimpleUniformTest, FloatIntUniformStateQuery)
 {
