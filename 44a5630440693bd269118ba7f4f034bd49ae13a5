@@ -25,6 +25,53 @@
     },
     {
       "key": {
+        "uuid": "33c9436d_9a1cd227",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T12:56:18Z",
+      "side": 1,
+      "message": "they\u0027re used to query the type",
+      "parentUuid": "587b9caa_c1b0c936",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 50,
+        "endChar": 73
+      },
+      "revId": "44a5630440693bd269118ba7f4f034bd49ae13a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e76c80c_d2fcf6a7",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T12:56:18Z",
+      "side": 1,
+      "message": "reference",
+      "range": {
+        "startLine": 51,
+        "startChar": 42,
+        "endLine": 51,
+        "endChar": 52
+      },
+      "revId": "44a5630440693bd269118ba7f4f034bd49ae13a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b59b2f9_de8f883d",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 4
@@ -45,6 +92,30 @@
       "revId": "44a5630440693bd269118ba7f4f034bd49ae13a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6435f96_0d1db164",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T12:56:18Z",
+      "side": 1,
+      "message": "It\u0027s used in 14 places as ImmutableString(\"\"). Would be better done as a separate refactor I think.",
+      "parentUuid": "0b59b2f9_de8f883d",
+      "range": {
+        "startLine": 73,
+        "startChar": 61,
+        "endLine": 73,
+        "endChar": 81
+      },
+      "revId": "44a5630440693bd269118ba7f4f034bd49ae13a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
