@@ -10,6 +10,8 @@ import json
 import os
 import re
 
+kChannels = "ABDGLRSX"
+
 def get_angle_format_map_abs_path():
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), 'angle_format_map.json')
 
@@ -82,7 +84,7 @@ def get_component_type(format_id):
         raise ValueError("Unknown component type for " + format_id)
 
 def get_channel_tokens(format_id):
-    r = re.compile(r'([ABDGLRS][\d]+)')
+    r = re.compile(r'([' + kChannels + '][\d]+)')
     return filter(r.match, r.split(format_id))
 
 def get_channels(format_id):

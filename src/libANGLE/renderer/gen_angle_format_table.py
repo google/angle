@@ -197,7 +197,7 @@ def json_to_table_data(format_id, json, angle_to_gl):
     parsed["colorReadFunction"] = get_color_read_function(parsed)
     parsed["colorWriteFunction"] = get_color_write_function(parsed)
 
-    for channel in "ABDGLRS":
+    for channel in angle_format.kChannels:
         if parsed["bits"] != None and channel in parsed["bits"]:
             parsed[channel] = parsed["bits"][channel]
         else:
@@ -209,7 +209,7 @@ def json_to_table_data(format_id, json, angle_to_gl):
         parsed["fastCopyFunctions"] = "BGRACopyFunctions"
 
     sum_of_bits = 0
-    for channel in ["R", "G", "B", "A", "D", "S"]:
+    for channel in angle_format.kChannels:
         sum_of_bits += int(parsed[channel])
     parsed["pixelBytes"] = sum_of_bits / 8
     parsed["isBlock"] = "true" if format_id.endswith("_BLOCK") else "false"
