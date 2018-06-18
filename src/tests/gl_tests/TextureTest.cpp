@@ -1557,10 +1557,6 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGB)
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGBA)
 {
-    // TODO(lucferron): copySubImage isn't implemented yet.
-    // http://anglebug.com/2501
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Ignore SDK layers messages on D3D11 FL 9.3 (http://anglebug.com/1284)
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 
@@ -1573,9 +1569,6 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGBA)
 // handles GL_ALPHA
 TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
 {
-    // TODO(lucferron): DIRTY_BIT_UNPACK_STATE isn't implemented on Vulkan yet.
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     const int npotTexSize = 5;
     const int potTexSize  = 4;  // Should be less than npotTexSize
     GLuint tex2D;
@@ -1667,10 +1660,6 @@ TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
 // ANGLE previously rejected this if GL_OES_texture_npot wasn't active, which is incorrect.
 TEST_P(Texture2DTest, NPOTSubImageParameters)
 {
-    // TODO(lucferron): Generate mipmap on vulkan isn't implemented yet. Re-enable this when it
-    // is.
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
 

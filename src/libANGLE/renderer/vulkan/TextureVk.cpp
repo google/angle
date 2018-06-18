@@ -201,7 +201,7 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
 
     PackPixelsParams params;
     params.area        = sourceArea;
-    params.format      = formatInfo.internalFormat;
+    params.format      = formatInfo.format;
     params.type        = formatInfo.type;
     params.outputPitch = static_cast<GLuint>(outputRowPitch);
     params.packBuffer  = nullptr;
