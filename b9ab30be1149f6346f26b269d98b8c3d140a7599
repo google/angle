@@ -70,6 +70,30 @@
       "revId": "b9ab30be1149f6346f26b269d98b8c3d140a7599",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f555afce_d628eb72",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-18T17:34:47Z",
+      "side": 1,
+      "message": "There are no resources to delete if the context was never current.  Regardless, I think this was an unsafe assumption to make so I changed it to always make the context current.",
+      "parentUuid": "3c52a0e2_0d7cef9a",
+      "range": {
+        "startLine": 893,
+        "startChar": 57,
+        "endLine": 893,
+        "endChar": 82
+      },
+      "revId": "b9ab30be1149f6346f26b269d98b8c3d140a7599",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
