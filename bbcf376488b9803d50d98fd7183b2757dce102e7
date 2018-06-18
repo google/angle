@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c08aa03d_53313a15",
+        "filename": "src/libANGLE/renderer/gen_angle_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-18T19:42:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4d506b1_2d58adf4",
+      "range": {
+        "startLine": 201,
+        "startChar": 8,
+        "endLine": 201,
+        "endChar": 28
+      },
+      "revId": "bbcf376488b9803d50d98fd7183b2757dce102e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc455484_a6d2bd84",
         "filename": "src/libANGLE/renderer/gen_angle_format_table.py",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "bbcf376488b9803d50d98fd7183b2757dce102e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ca927cb_7937d978",
+        "filename": "src/libANGLE/renderer/gen_angle_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-18T19:42:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc455484_a6d2bd84",
+      "range": {
+        "startLine": 213,
+        "startChar": 19,
+        "endLine": 213,
+        "endChar": 54
+      },
+      "revId": "bbcf376488b9803d50d98fd7183b2757dce102e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
