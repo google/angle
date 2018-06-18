@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "06f9c94b_4157639b",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-18T12:59:45Z",
+      "side": 1,
+      "message": "Should be !\u003d",
+      "range": {
+        "startLine": 1120,
+        "startChar": 31,
+        "endLine": 1120,
+        "endChar": 33
+      },
+      "revId": "cf202370625f56e84e1df79c24e4bdb53fc86aa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
