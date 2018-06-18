@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f9440fa3_0f032dbd",
+        "filename": "extensions/KHR_parallel_shader_compile.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-18T17:31:20Z",
+      "side": 1,
+      "message": "implementation",
+      "range": {
+        "startLine": 142,
+        "startChar": 19,
+        "endLine": 142,
+        "endChar": 32
+      },
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0bcc0943_368868a7",
         "filename": "include/GLES2/gl2ext.h",
         "patchSetId": 1
@@ -13,6 +36,40 @@
       "writtenOn": "2018-06-18T15:42:49Z",
       "side": 1,
       "message": "Can you update the whole header from http://khronos.org/registry/OpenGL/api/GLES2/gl2ext.h\nand ANGLE\u0027s scripts/gl.xml from https://cvs.khronos.org/svn/repos/ogl/trunk/doc/registry/public/api/gl.xml\n\nYou should do this in a commit before this one and make sure to not run formatting on it.",
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "797bdfca_c0c40aa5",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-18T17:31:20Z",
+      "side": 1,
+      "message": "There is no spec-defined maximum, so this configurable maximum should live in State instead.",
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb220074_01e6c5e5",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1472,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-18T17:31:20Z",
+      "side": 1,
+      "message": "nit: implementation in the cpp file because right now it looks like a misnamed setter when it actually is an entrypoint.",
       "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
