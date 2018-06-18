@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "daeae935_35158d90",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T19:05:35Z",
+      "side": 1,
+      "message": "Fix angle::Format\u0027s pixelBytes.",
+      "range": {
+        "startLine": 7,
+        "startChar": 11,
+        "endLine": 7,
+        "endChar": 40
+      },
+      "revId": "ab6f27cf8dbc7010428cc880dbb9139670cad6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b57ff11_1f9485f8",
+        "filename": "src/libANGLE/renderer/angle_format.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T19:05:35Z",
+      "side": 1,
+      "message": "I think you can substitute in the kChannels string here.",
+      "range": {
+        "startLine": 87,
+        "startChar": 23,
+        "endLine": 87,
+        "endChar": 31
+      },
+      "revId": "ab6f27cf8dbc7010428cc880dbb9139670cad6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
