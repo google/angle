@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4d506b1_2d58adf4",
+        "filename": "src/libANGLE/renderer/gen_angle_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T18:44:59Z",
+      "side": 1,
+      "message": "probably remove this",
+      "range": {
+        "startLine": 201,
+        "startChar": 8,
+        "endLine": 201,
+        "endChar": 28
+      },
+      "revId": "bbcf376488b9803d50d98fd7183b2757dce102e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc455484_a6d2bd84",
+        "filename": "src/libANGLE/renderer/gen_angle_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T18:44:59Z",
+      "side": 1,
+      "message": "I think you can use for channel in \"blah\" like above.\n\nMaybe we should just move this string into angle_format.py and use it from there globally.",
+      "range": {
+        "startLine": 213,
+        "startChar": 19,
+        "endLine": 213,
+        "endChar": 54
+      },
+      "revId": "bbcf376488b9803d50d98fd7183b2757dce102e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
