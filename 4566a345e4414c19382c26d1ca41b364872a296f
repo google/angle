@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e168a5c_72f09205",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-18T15:51:30Z",
+      "side": 1,
+      "message": "sourcePixelBytes",
+      "range": {
+        "startLine": 351,
+        "startChar": 17,
+        "endLine": 351,
+        "endChar": 28
+      },
+      "revId": "4566a345e4414c19382c26d1ca41b364872a296f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4e9ec4e_4c318511",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-18T15:51:30Z",
+      "side": 1,
+      "message": "I think this is getting messy using the sourceFormat.pixelBytes above but other stuff below.  Why was this ternary needed.",
+      "range": {
+        "startLine": 352,
+        "startChar": 9,
+        "endLine": 352,
+        "endChar": 79
+      },
+      "revId": "4566a345e4414c19382c26d1ca41b364872a296f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
