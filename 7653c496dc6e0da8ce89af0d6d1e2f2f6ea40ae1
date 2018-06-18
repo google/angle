@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86371b19_f6f024ba",
+        "filename": "samples/sample_util/SampleApplication.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T12:43:01Z",
+      "side": 1,
+      "message": "can you make this a private function to this file? Also can you update it to look for a --use-angle\u003dvulkan, etc, flag instead of using just \"vulkan\" etc.",
+      "range": {
+        "startLine": 184,
+        "startChar": 7,
+        "endLine": 184,
+        "endChar": 28
+      },
+      "revId": "7653c496dc6e0da8ce89af0d6d1e2f2f6ea40ae1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
