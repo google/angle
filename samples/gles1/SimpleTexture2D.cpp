@@ -22,8 +22,8 @@
 class GLES1SimpleTexture2DSample : public SampleApplication
 {
   public:
-    GLES1SimpleTexture2DSample(EGLint displayType)
-        : SampleApplication("GLES1SimpleTexture2D", 1280, 720, 1, 0, displayType)
+    GLES1SimpleTexture2DSample(int argc, char **argv)
+        : SampleApplication("GLES1SimpleTexture2D", argc, argv, 1, 0)
     {
     }
 
@@ -82,13 +82,6 @@ class GLES1SimpleTexture2DSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    EGLint displayType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-
-    if (argc > 1)
-    {
-        displayType = GetDisplayTypeFromArg(argv[1]);
-    }
-
-    GLES1SimpleTexture2DSample app(displayType);
+    GLES1SimpleTexture2DSample app(argc, argv);
     return app.run();
 }

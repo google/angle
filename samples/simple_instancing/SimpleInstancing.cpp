@@ -28,8 +28,8 @@ using namespace angle;
 class SimpleInstancingSample : public SampleApplication
 {
   public:
-    SimpleInstancingSample()
-        : SampleApplication("SimpleInstancing", 1280, 720)
+    SimpleInstancingSample(int argc, char **argv)
+        : SampleApplication("SimpleInstancing", argc, argv)
     {
     }
 
@@ -197,6 +197,6 @@ class SimpleInstancingSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    SimpleInstancingSample app;
+    SimpleInstancingSample app(argc, argv);
     return app.run();
 }

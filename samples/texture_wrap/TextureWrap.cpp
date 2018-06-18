@@ -20,10 +20,7 @@
 class TextureWrapSample : public SampleApplication
 {
   public:
-    TextureWrapSample()
-        : SampleApplication("TextureWrap", 1280, 720)
-    {
-    }
+    TextureWrapSample(int argc, char **argv) : SampleApplication("TextureWrap", argc, argv) {}
 
     virtual bool initialize()
     {
@@ -151,6 +148,6 @@ private:
 
 int main(int argc, char **argv)
 {
-    TextureWrapSample app;
+    TextureWrapSample app(argc, argv);
     return app.run();
 }

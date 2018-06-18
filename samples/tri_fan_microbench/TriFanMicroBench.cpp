@@ -27,9 +27,8 @@
 class TriangleFanBenchSample : public SampleApplication
 {
   public:
-    TriangleFanBenchSample()
-        : SampleApplication("Microbench", 1280, 1280),
-          mFrameCount(0)
+    TriangleFanBenchSample(int argc, char **argv)
+        : SampleApplication("Microbench", argc, argv, 2, 0, 1280, 1280), mFrameCount(0)
     {
     }
 
@@ -234,6 +233,6 @@ class TriangleFanBenchSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    TriangleFanBenchSample app;
+    TriangleFanBenchSample app(argc, argv);
     return app.run();
 }

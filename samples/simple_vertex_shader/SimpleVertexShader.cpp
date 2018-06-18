@@ -25,8 +25,8 @@
 class SimpleVertexShaderSample : public SampleApplication
 {
   public:
-    SimpleVertexShaderSample(EGLint displayType)
-        : SampleApplication("SimpleVertexShader", 1280, 720, 2, 0, displayType)
+    SimpleVertexShaderSample(int argc, char **argv)
+        : SampleApplication("SimpleVertexShader", argc, argv)
     {
     }
 
@@ -144,13 +144,6 @@ class SimpleVertexShaderSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    EGLint displayType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-
-    if (argc > 1)
-    {
-        displayType = GetDisplayTypeFromArg(argv[1]);
-    }
-
-    SimpleVertexShaderSample app(displayType);
+    SimpleVertexShaderSample app(argc, argv);
     return app.run();
 }

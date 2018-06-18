@@ -21,8 +21,8 @@
 class GLES1HelloTriangleSample : public SampleApplication
 {
   public:
-    GLES1HelloTriangleSample(EGLint displayType)
-        : SampleApplication("GLES1HelloTriangle", 1280, 720, 1, 0, displayType)
+    GLES1HelloTriangleSample(int argc, char **argv)
+        : SampleApplication("GLES1HelloTriangle", argc, argv, 1, 0)
     {
     }
 
@@ -55,13 +55,6 @@ class GLES1HelloTriangleSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    EGLint displayType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-
-    if (argc > 1)
-    {
-        displayType = GetDisplayTypeFromArg(argv[1]);
-    }
-
-    GLES1HelloTriangleSample app(displayType);
+    GLES1HelloTriangleSample app(argc, argv);
     return app.run();
 }

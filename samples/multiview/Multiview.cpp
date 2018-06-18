@@ -42,8 +42,8 @@ void FillTranslationMatrix(float xOffset, float yOffset, float zOffset, float *m
 class MultiviewSample : public SampleApplication
 {
   public:
-    MultiviewSample()
-        : SampleApplication("Multiview", 1280, 720, 3, 0),
+    MultiviewSample(int argc, char **argv)
+        : SampleApplication("Multiview", argc, argv, 3, 0),
           mMultiviewProgram(0),
           mMultiviewPersperiveUniformLoc(-1),
           mMultiviewLeftEyeCameraUniformLoc(-1),
@@ -377,6 +377,6 @@ class MultiviewSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    MultiviewSample app;
+    MultiviewSample app(argc, argv);
     return app.run();
 }

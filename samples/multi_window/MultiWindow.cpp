@@ -19,8 +19,8 @@ using namespace angle;
 class MultiWindowSample : public SampleApplication
 {
   public:
-    MultiWindowSample()
-        : SampleApplication("MultiWindow", 256, 256)
+    MultiWindowSample(int argc, char **argv)
+        : SampleApplication("MultiWindow", argc, argv, 2, 0, 256, 256)
     {
     }
 
@@ -193,6 +193,6 @@ class MultiWindowSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    MultiWindowSample app;
+    MultiWindowSample app(argc, argv);
     return app.run();
 }

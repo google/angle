@@ -22,10 +22,7 @@
 class MultiTextureSample : public SampleApplication
 {
   public:
-    MultiTextureSample()
-        : SampleApplication("MultiTexture", 1280, 720)
-    {
-    }
+    MultiTextureSample(int argc, char **argv) : SampleApplication("MultiTexture", argc, argv) {}
 
     GLuint loadTexture(const std::string &path)
     {
@@ -171,6 +168,6 @@ class MultiTextureSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    MultiTextureSample app;
+    MultiTextureSample app(argc, argv);
     return app.run();
 }

@@ -19,8 +19,8 @@
 class StencilOperationsSample : public SampleApplication
 {
   public:
-    StencilOperationsSample()
-        : SampleApplication("StencilOperations", 1280, 720)
+    StencilOperationsSample(int argc, char **argv)
+        : SampleApplication("StencilOperations", argc, argv)
     {
     }
 
@@ -233,6 +233,6 @@ class StencilOperationsSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    StencilOperationsSample app;
+    StencilOperationsSample app(argc, argv);
     return app.run();
 }

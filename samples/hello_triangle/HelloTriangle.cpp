@@ -19,8 +19,8 @@
 class HelloTriangleSample : public SampleApplication
 {
   public:
-    HelloTriangleSample(EGLint displayType)
-        : SampleApplication("HelloTriangle", 1280, 720, 2, 0, displayType)
+    HelloTriangleSample(int argc, char **argv)
+        : SampleApplication("HelloTriangle", argc, argv, 2, 0)
     {
     }
 
@@ -87,13 +87,6 @@ class HelloTriangleSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    EGLint displayType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-
-    if (argc > 1)
-    {
-        displayType = GetDisplayTypeFromArg(argv[1]);
-    }
-
-    HelloTriangleSample app(displayType);
+    HelloTriangleSample app(argc, argv);
     return app.run();
 }

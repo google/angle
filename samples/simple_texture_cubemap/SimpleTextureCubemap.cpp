@@ -21,8 +21,8 @@
 class SimpleTextureCubemapSample : public SampleApplication
 {
   public:
-    SimpleTextureCubemapSample(EGLint displayType)
-        : SampleApplication("SimpleTextureCubemap", 1280, 720, 2, 0, displayType)
+    SimpleTextureCubemapSample(int argc, char **argv)
+        : SampleApplication("SimpleTextureCubemap", argc, argv)
     {
     }
 
@@ -129,13 +129,6 @@ class SimpleTextureCubemapSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    EGLint displayType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-
-    if (argc > 1)
-    {
-        displayType = GetDisplayTypeFromArg(argv[1]);
-    }
-
-    SimpleTextureCubemapSample app(displayType);
+    SimpleTextureCubemapSample app(argc, argv);
     return app.run();
 }

@@ -46,8 +46,8 @@
 class TexRedefBenchSample : public SampleApplication
 {
   public:
-    TexRedefBenchSample()
-        : SampleApplication("Microbench", 1280, 1280),
+    TexRedefBenchSample(int argc, char **argv)
+        : SampleApplication("Microbench", argc, argv, 2, 0, 1280, 1280),
           mPixelsResize(nullptr),
           mPixelsNewTex(nullptr),
           mTimeFrame(false),
@@ -272,6 +272,6 @@ class TexRedefBenchSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    TexRedefBenchSample app;
+    TexRedefBenchSample app(argc, argv);
     return app.run();
 }

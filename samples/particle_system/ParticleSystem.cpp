@@ -29,10 +29,7 @@ using namespace angle;
 class ParticleSystemSample : public SampleApplication
 {
   public:
-    ParticleSystemSample()
-        : SampleApplication("ParticleSystem", 1280, 720)
-    {
-    }
+    ParticleSystemSample(int argc, char **argv) : SampleApplication("ParticleSystem", argc, argv) {}
 
     bool initialize() override
     {
@@ -224,6 +221,6 @@ class ParticleSystemSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    ParticleSystemSample app;
+    ParticleSystemSample app(argc, argv);
     return app.run();
 }

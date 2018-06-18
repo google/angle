@@ -25,10 +25,7 @@
 class PostSubBufferSample : public SampleApplication
 {
   public:
-    PostSubBufferSample()
-        : SampleApplication("PostSubBuffer", 1280, 720)
-    {
-    }
+    PostSubBufferSample(int argc, char **argv) : SampleApplication("PostSubBuffer", argc, argv) {}
 
     virtual bool initialize()
     {
@@ -169,6 +166,6 @@ class PostSubBufferSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    PostSubBufferSample app;
+    PostSubBufferSample app(argc, argv);
     return app.run();
 }

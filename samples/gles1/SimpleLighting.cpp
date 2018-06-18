@@ -23,8 +23,8 @@
 class SimpleLightingSample : public SampleApplication
 {
   public:
-    SimpleLightingSample(EGLint displayType)
-        : SampleApplication("SimpleLightingSample", 1280, 720, 1, 0, displayType)
+    SimpleLightingSample(int argc, char **argv)
+        : SampleApplication("SimpleLightingSample", argc, argv, 1, 0)
     {
     }
 
@@ -112,13 +112,6 @@ class SimpleLightingSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    EGLint displayType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-
-    if (argc > 1)
-    {
-        displayType = GetDisplayTypeFromArg(argv[1]);
-    }
-
-    SimpleLightingSample app(displayType);
+    SimpleLightingSample app(argc, argv);
     return app.run();
 }

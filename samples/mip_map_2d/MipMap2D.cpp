@@ -20,10 +20,7 @@
 class MipMap2DSample : public SampleApplication
 {
   public:
-    MipMap2DSample()
-        : SampleApplication("MipMap2D", 1280, 720)
-    {
-    }
+    MipMap2DSample(int argc, char **argv) : SampleApplication("MipMap2D", argc, argv) {}
 
     virtual bool initialize()
     {
@@ -160,6 +157,6 @@ class MipMap2DSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    MipMap2DSample app;
+    MipMap2DSample app(argc, argv);
     return app.run();
 }

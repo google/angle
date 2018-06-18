@@ -24,8 +24,8 @@
 class MultipleDrawBuffersSample : public SampleApplication
 {
   public:
-    MultipleDrawBuffersSample()
-        : SampleApplication("MultipleDrawBuffers", 1280, 720)
+    MultipleDrawBuffersSample(int argc, char **argv)
+        : SampleApplication("MultipleDrawBuffers", argc, argv)
     {
     }
 
@@ -221,6 +221,6 @@ class MultipleDrawBuffersSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    MultipleDrawBuffersSample app;
+    MultipleDrawBuffersSample app(argc, argv);
     return app.run();
 }

@@ -23,8 +23,8 @@
 class FlatShadingSample : public SampleApplication
 {
   public:
-    FlatShadingSample(EGLint displayType)
-        : SampleApplication("FlatShadingSample", 1280, 720, 1, 0, displayType)
+    FlatShadingSample(int argc, char **argv)
+        : SampleApplication("FlatShadingSample", argc, argv, 1, 0)
     {
     }
 
@@ -102,13 +102,6 @@ class FlatShadingSample : public SampleApplication
 
 int main(int argc, char **argv)
 {
-    EGLint displayType = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
-
-    if (argc > 1)
-    {
-        displayType = GetDisplayTypeFromArg(argv[1]);
-    }
-
-    FlatShadingSample app(displayType);
+    FlatShadingSample app(argc, argv);
     return app.run();
 }
