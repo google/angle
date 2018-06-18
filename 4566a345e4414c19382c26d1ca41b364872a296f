@@ -45,6 +45,30 @@
       "revId": "4566a345e4414c19382c26d1ca41b364872a296f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41771fc9_ced17d6a",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-18T16:35:33Z",
+      "side": 1,
+      "message": "It\u0027s not, just use sourceFormat.pixelBytes. We should not be using sourceGLInfo anymore I think.",
+      "parentUuid": "c4e9ec4e_4c318511",
+      "range": {
+        "startLine": 352,
+        "startChar": 9,
+        "endLine": 352,
+        "endChar": 79
+      },
+      "revId": "4566a345e4414c19382c26d1ca41b364872a296f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
