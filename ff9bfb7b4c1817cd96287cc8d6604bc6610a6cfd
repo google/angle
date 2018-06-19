@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e2b7ba45_07e58689",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 30
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-19T15:59:26Z",
+      "side": 1,
+      "message": "That\u0027s pretty much it,  I expanded the commit message.",
+      "parentUuid": "a1eda41e_71e3ee49",
+      "revId": "ff9bfb7b4c1817cd96287cc8d6604bc6610a6cfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "47073feb_b9b0d4a5",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
         "patchSetId": 30
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "d6c12979_10a02701",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-19T15:59:26Z",
+      "side": 1,
+      "message": "It was my original plan to have the renderer destroy the context but it caused problems later when we needed to update our current context tracking in DisplayWGL if the context being deleted was current.\n\nUnfortunately the constructor of RendererGL requires that the context is already current.  I didn\u0027t want to go too far down the refactoring hole and reorder it.\n\nThere can now be multiple RendererWGLs so they don\u0027t have a sense of what\u0027s current, DisplayWGL is the only class that is a singleton and has knowledge of the global current context.\n\nmRenderer is not the \u0027current\u0027 renderer, just a renderer owned by this display.",
+      "parentUuid": "47073feb_b9b0d4a5",
+      "range": {
+        "startLine": 74,
+        "startChar": 9,
+        "endLine": 74,
+        "endChar": 29
+      },
+      "revId": "ff9bfb7b4c1817cd96287cc8d6604bc6610a6cfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "794f649e_57ded148",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
         "patchSetId": 30
@@ -62,6 +104,30 @@
       "revId": "ff9bfb7b4c1817cd96287cc8d6604bc6610a6cfd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aab8bee7_42442624",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-19T15:59:26Z",
+      "side": 1,
+      "message": "Done.  It\u0027s initial value is undefined here because it\u0027s a POD.",
+      "parentUuid": "794f649e_57ded148",
+      "range": {
+        "startLine": 95,
+        "startChar": 10,
+        "endLine": 95,
+        "endChar": 22
+      },
+      "revId": "ff9bfb7b4c1817cd96287cc8d6604bc6610a6cfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
