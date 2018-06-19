@@ -177,6 +177,10 @@
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed24_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.attach.deleted_input.buffer_vertex_array = FAIL
 
+// Basic line transform feedback tests flaky on Windows.
+2676 WIN : dEQP-GLES3.functional.transform_feedback.basic_types.interleaved.lines.* = FAIL
+2676 WIN : dEQP-GLES3.functional.transform_feedback.basic_types.separate.lines.* = FAIL
+
 // Very small threshold issue. Could upstream a higher tolerance to dEQP.
 2323 WIN : dEQP-GLES3.functional.texture.units.2_units.only_cube.7 = FAIL
 
