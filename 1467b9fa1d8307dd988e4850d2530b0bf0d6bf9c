@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be96042f_1b3db555",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-19T16:38:38Z",
+      "side": 1,
+      "message": "nit: not initialized",
+      "range": {
+        "startLine": 417,
+        "startChar": 9,
+        "endLine": 417,
+        "endChar": 20
+      },
+      "revId": "1467b9fa1d8307dd988e4850d2530b0bf0d6bf9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c1f2db2_383bcf31",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-19T16:38:38Z",
+      "side": 1,
+      "message": "I don\u0027t see where these are set to non-default limits.",
+      "range": {
+        "startLine": 630,
+        "startChar": 0,
+        "endLine": 631,
+        "endChar": 31
+      },
+      "revId": "1467b9fa1d8307dd988e4850d2530b0bf0d6bf9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
