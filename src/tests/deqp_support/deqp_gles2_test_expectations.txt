@@ -201,8 +201,12 @@
 2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.resize.rbo_rgba4_stencil_index8 = SKIP
 2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.stencil.* = SKIP
 2605 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.stencil_clear.* = SKIP
+2597 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb565_depth_component16_stencil_index8 = SKIP
 2597 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb565_stencil_index8 = SKIP
+2597 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1_depth_component16_stencil_index8 = SKIP
+2597 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgb_depth_component16_stencil_index8 = SKIP
 2597 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgb_stencil_index8 = SKIP
+2597 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgba_depth_component16_stencil_index8 = SKIP
 2597 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgba_stencil_index8 = SKIP
 2597 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.resize.tex2d_rgb_stencil_index8 = SKIP
 2597 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.resize.tex2d_rgba_stencil_index8 = SKIP
@@ -226,13 +230,7 @@
 2494 VULKAN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_* = SKIP
 2592 VULKAN : dEQP-GLES2.functional.shaders.builtin_variable.depth_range* = SKIP
 2595 VULKAN : dEQP-GLES2.functional.shaders.random.all_features.fragment* = SKIP
-2597 VULKAN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb565_depth_component16_stencil_index8 = SKIP
-2597 VULKAN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1_depth_component16_stencil_index8 = SKIP
-2597 VULKAN : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgb_depth_component16_stencil_index8 = SKIP
-2597 VULKAN : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgba_depth_component16_stencil_index8 = SKIP
 2597 VULKAN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgb* = SKIP
-2597 VULKAN : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.* = SKIP
-2597 VULKAN : dEQP-GLES2.functional.fbo.render.shared_colorbuffer_clear.tex2d_rgb = SKIP
 2597 VULKAN : dEQP-GLES2.functional.fbo.render.stencil_clear.tex2d_rgb_stencil_index8 = SKIP
 2161 VULKAN : dEQP-GLES2.functional.vertex_arrays.* = SKIP
 2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
