@@ -93,6 +93,30 @@
       "revId": "695c66ab99fd4a636ac95023682a969b89da504e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffd2388b_57c820ed",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-19T19:34:51Z",
+      "side": 1,
+      "message": "I see. I think it might be clearer if you check one is zero and the other is nonzero.",
+      "parentUuid": "8ed4e2a4_fb56780a",
+      "range": {
+        "startLine": 669,
+        "startChar": 8,
+        "endLine": 669,
+        "endChar": 92
+      },
+      "revId": "695c66ab99fd4a636ac95023682a969b89da504e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
