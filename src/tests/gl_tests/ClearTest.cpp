@@ -106,6 +106,31 @@ TEST_P(ClearTest, RGBA8Framebuffer)
     EXPECT_PIXEL_NEAR(0, 0, 128, 128, 128, 128, 1.0);
 }
 
+// Test clearing a RGB8 Framebuffer with a color mask.
+TEST_P(ClearTest, RGB8WithMaskFramebuffer)
+{
+    // TODO(lucferron): Figure out why this test fails on OSX / OpenGL.
+    // http://anglebug.com/2674
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
+
+    GLTexture texture;
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+
+    // alpha shouldn't really be taken into account and we should find 255 as a result since we
+    // are writing to a RGB8 texture. Also, the
+    glClearColor(0.5f, 0.5f, 0.5f, 0.2f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    EXPECT_PIXEL_NEAR(0, 0, 128, 128, 0, 255, 1.0);
+}
+
 TEST_P(ClearTest, ClearIssue)
 {
     glEnable(GL_DEPTH_TEST);

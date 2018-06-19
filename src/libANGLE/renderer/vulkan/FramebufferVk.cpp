@@ -134,7 +134,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     VkColorComponentFlags colorMaskFlags = contextVk->getClearColorMask();
     if (clearColor && (mActiveColorComponents & colorMaskFlags) != mActiveColorComponents)
     {
-        ANGLE_TRY(clearWithDraw(contextVk, colorMaskFlags));
+        ANGLE_TRY(clearWithDraw(context, colorMaskFlags));
 
         // Stencil clears must be handled separately. The only way to write out a stencil value from
         // a fragment shader in Vulkan is with VK_EXT_shader_stencil_export. Support for this
@@ -587,8 +587,10 @@ gl::Error FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
     return gl::NoError();
 }
 
-gl::Error FramebufferVk::clearWithDraw(ContextVk *contextVk, VkColorComponentFlags colorMaskFlags)
+gl::Error FramebufferVk::clearWithDraw(const gl::Context *context,
+                                       VkColorComponentFlags colorMaskFlags)
 {
+    ContextVk *contextVk             = vk::GetImpl(context);
     RendererVk *renderer             = contextVk->getRenderer();
     vk::ShaderLibrary *shaderLibrary = renderer->getShaderLibrary();
 
@@ -654,7 +656,18 @@ gl::Error FramebufferVk::clearWithDraw(ContextVk *contextVk, VkColorComponentFla
     vk::CommandBuffer *writeCommands = nullptr;
     ANGLE_TRY(appendWriteResource(renderer, &writeCommands));
 
+    // If the format of the framebuffer does not have an alpha channel, we need to make sure we does
+    // not affect the alpha channel of the type we're using to emulate the format.
+    // TODO(jmadill): Implement EXT_draw_buffers http://anglebug.com/2394
+    RenderTargetVk *renderTarget = mRenderTargetCache.getColors()[0];
+    ASSERT(renderTarget);
+
+    const vk::Format &imageFormat     = renderTarget->getImageFormat();
     VkClearColorValue clearColorValue = contextVk->getClearColorValue().color;
+    bool overrideAlphaWithOne =
+        imageFormat.textureFormat().alphaBits > 0 && imageFormat.angleFormat().alphaBits == 0;
+    clearColorValue.float32[3] = overrideAlphaWithOne ? 1.0f : clearColorValue.float32[3];
+
     drawCommands->pushConstants(pipelineLayout.get(), VK_SHADER_STAGE_FRAGMENT_BIT, 0,
                                 sizeof(VkClearColorValue), clearColorValue.float32);
 

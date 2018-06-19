@@ -110,7 +110,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                                         bool clearColor,
                                         bool clearDepth,
                                         bool clearStencil);
-    gl::Error clearWithDraw(ContextVk *contextVk, VkColorComponentFlags colorMaskFlags);
+    gl::Error clearWithDraw(const gl::Context *context, VkColorComponentFlags colorMaskFlags);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     RenderTargetVk *getColorReadRenderTarget() const;
 
