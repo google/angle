@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4226dfe3_49cee3ee",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-19T19:02:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be96042f_1b3db555",
+      "range": {
+        "startLine": 417,
+        "startChar": 9,
+        "endLine": 417,
+        "endChar": 20
+      },
+      "revId": "1467b9fa1d8307dd988e4850d2530b0bf0d6bf9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c1f2db2_383bcf31",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "1467b9fa1d8307dd988e4850d2530b0bf0d6bf9c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd871443_bbf8776d",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-19T19:02:03Z",
+      "side": 1,
+      "message": "These are intended to stay the default values [1, 1] for now. Also set them explicitly in Context.cpp to be more clear.",
+      "parentUuid": "7c1f2db2_383bcf31",
+      "range": {
+        "startLine": 630,
+        "startChar": 0,
+        "endLine": 631,
+        "endChar": 31
+      },
+      "revId": "1467b9fa1d8307dd988e4850d2530b0bf0d6bf9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
