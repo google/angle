@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "18f3cc6c_53160a21",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-19T19:04:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ebe8e665_eef3b08f",
+      "range": {
+        "startLine": 665,
+        "startChar": 4,
+        "endLine": 665,
+        "endChar": 79
+      },
+      "revId": "695c66ab99fd4a636ac95023682a969b89da504e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21a7afa0_62dd2860",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2018-06-19T18:07:38Z",
       "side": 1,
       "message": "Shouldn\u0027t one of these two format checks be for \u003d\u003d 0? So we know when we\u0027re going from RGB to RGBA?",
+      "range": {
+        "startLine": 669,
+        "startChar": 8,
+        "endLine": 669,
+        "endChar": 92
+      },
+      "revId": "695c66ab99fd4a636ac95023682a969b89da504e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ed4e2a4_fb56780a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-19T19:04:24Z",
+      "side": 1,
+      "message": "This is the check required to know if we need to actually keep the alpha channel as is. If both formats have alphaBits, we need to keep them as is and we don\u0027t modify it. If one or the other is 0, it will override the value to 1.0. I can inverse that if you think its clearer and rename keepAlpha to overrideAlphaToOne",
+      "parentUuid": "21a7afa0_62dd2860",
       "range": {
         "startLine": 669,
         "startChar": 8,
