@@ -203,11 +203,21 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     const VkClearColorValue &clearColorValue = contextVk->getClearColorValue().color;
     for (size_t colorIndex : mState.getEnabledDrawBuffers())
     {
+        VkClearColorValue modifiedClearColorValue = clearColorValue;
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndex];
+
+        // Its possible we're clearing a render target that has no alpha channel but we represent it
+        // with a texture that has one. We must not affect its alpha channel no matter what the
+        // clear value is in that case.
+        if (mEmulatedAlphaAttachmentMask[colorIndex])
+        {
+            modifiedClearColorValue.float32[3] = 1.0;
+        }
+
         ASSERT(colorRenderTarget);
         vk::ImageHelper *image = colorRenderTarget->getImageForWrite(currentSerial, this);
         GLint mipLevelToClear  = (attachment->type() == GL_TEXTURE) ? attachment->mipLevel() : 0;
-        image->clearColor(clearColorValue, mipLevelToClear, 1, commandBuffer);
+        image->clearColor(modifiedClearColorValue, mipLevelToClear, 1, commandBuffer);
     }
 
     return gl::NoError();
@@ -369,9 +379,19 @@ gl::Error FramebufferVk::syncState(const gl::Context *context,
                 RenderTargetVk *renderTarget = mRenderTargetCache.getColors()[colorIndex];
                 if (renderTarget)
                 {
-                    const angle::Format &format = renderTarget->getImageFormat().textureFormat();
-                    updateActiveColorMasks(colorIndex, format.redBits > 0, format.greenBits > 0,
-                                           format.blueBits > 0, format.alphaBits > 0);
+                    const angle::Format &emulatedFormat =
+                        renderTarget->getImageFormat().textureFormat();
+                    updateActiveColorMasks(
+                        colorIndex, emulatedFormat.redBits > 0, emulatedFormat.greenBits > 0,
+                        emulatedFormat.blueBits > 0, emulatedFormat.alphaBits > 0);
+
+                    // TODO(lucferron): Add a test to trigger edge case where the framebuffer
+                    // attachment would change but not the binding.
+                    // http://anglebug.com/2597
+                    const angle::Format &sourceFormat =
+                        renderTarget->getImageFormat().angleFormat();
+                    mEmulatedAlphaAttachmentMask.set(
+                        colorIndex, sourceFormat.alphaBits == 0 && emulatedFormat.alphaBits > 0);
                 }
                 else
                 {
@@ -383,8 +403,8 @@ gl::Error FramebufferVk::syncState(const gl::Context *context,
     }
 
     mActiveColorComponents = gl_vk::GetColorComponentFlags(
-        mActiveColorComponentMasks[0].any(), mActiveColorComponentMasks[1].any(),
-        mActiveColorComponentMasks[2].any(), mActiveColorComponentMasks[3].any());
+        mActiveColorComponentMasksForClear[0].any(), mActiveColorComponentMasksForClear[1].any(),
+        mActiveColorComponentMasksForClear[2].any(), mActiveColorComponentMasksForClear[3].any());
 
     mRenderPassDesc.reset();
     renderer->releaseObject(getStoredQueueSerial(), &mFramebuffer);
@@ -626,7 +646,7 @@ gl::Error FramebufferVk::clearWithDraw(const gl::Context *context,
     // This pipeline desc could be cached.
     vk::PipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
-    pipelineDesc.updateColorWriteMask(colorMaskFlags);
+    pipelineDesc.updateColorWriteMask(colorMaskFlags, getEmulatedAlphaAttachmentMask());
     pipelineDesc.updateRenderPassDesc(getRenderPassDesc());
     pipelineDesc.updateShaders(fullScreenQuad->queueSerial(), pushConstantColor->queueSerial());
     pipelineDesc.updateViewport(renderArea, 0.0f, 1.0f);
@@ -740,10 +760,15 @@ gl::Error FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
 
 void FramebufferVk::updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a)
 {
-    mActiveColorComponentMasks[0].set(colorIndex, r);
-    mActiveColorComponentMasks[1].set(colorIndex, g);
-    mActiveColorComponentMasks[2].set(colorIndex, b);
-    mActiveColorComponentMasks[3].set(colorIndex, a);
+    mActiveColorComponentMasksForClear[0].set(colorIndex, r);
+    mActiveColorComponentMasksForClear[1].set(colorIndex, g);
+    mActiveColorComponentMasksForClear[2].set(colorIndex, b);
+    mActiveColorComponentMasksForClear[3].set(colorIndex, a);
+}
+
+gl::DrawBufferMask FramebufferVk::getEmulatedAlphaAttachmentMask()
+{
+    return mEmulatedAlphaAttachmentMask;
 }
 
 gl::Error FramebufferVk::readPixelsImpl(const gl::Context *context,

@@ -171,6 +171,7 @@ class ContextVk : public ContextImpl
                         vk::CommandBuffer **commandBufferOut,
                         bool *shouldApplyVertexArrayOut);
 
+    void updateClearColorMask(const gl::BlendState &blendState);
     void updateScissor(const gl::State &glState);
 
     RendererVk *mRenderer;

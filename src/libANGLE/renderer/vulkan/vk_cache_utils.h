@@ -382,7 +382,8 @@ class PipelineDesc final
     void updateBlendColor(const gl::ColorF &color);
     void updateBlendFuncs(const gl::BlendState &blendState);
     void updateBlendEquations(const gl::BlendState &blendState);
-    void updateColorWriteMask(VkColorComponentFlags colorComponentFlags);
+    void updateColorWriteMask(VkColorComponentFlags colorComponentFlags,
+                              const gl::DrawBufferMask &alphaMask);
 
     // Depth/stencil states.
     void updateDepthTestEnabled(const gl::DepthStencilState &depthStencilState);

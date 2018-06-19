@@ -723,13 +723,15 @@ void PipelineDesc::updateBlendFuncs(const gl::BlendState &blendState)
     }
 }
 
-void PipelineDesc::updateColorWriteMask(VkColorComponentFlags colorComponentFlags)
+void PipelineDesc::updateColorWriteMask(VkColorComponentFlags colorComponentFlags,
+                                        const gl::DrawBufferMask &alphaMask)
 {
     uint8_t colorMask = static_cast<uint8_t>(colorComponentFlags);
 
-    for (PackedColorBlendAttachmentState &blendAttachmentState : mColorBlendStateInfo.attachments)
+    for (size_t colorIndex = 0; colorIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorIndex++)
     {
-        blendAttachmentState.colorWriteMask = colorMask;
+        mColorBlendStateInfo.attachments[colorIndex].colorWriteMask =
+            alphaMask[colorIndex] ? (colorMask & ~VK_COLOR_COMPONENT_A_BIT) : colorMask;
     }
 }
 

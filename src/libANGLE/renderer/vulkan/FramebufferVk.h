@@ -100,6 +100,8 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
 
     const gl::Extents &getReadImageExtents() const;
 
+    gl::DrawBufferMask getEmulatedAlphaAttachmentMask();
+
   private:
     FramebufferVk(const gl::FramebufferState &state);
     FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer);
@@ -124,9 +126,13 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     // channel is masked out, we check against the Framebuffer Attachments (RenderTargets) to see
     // if the masked out channel is present in any of the attachments.
     VkColorComponentFlags mActiveColorComponents;
-    gl::DrawBufferMask mActiveColorComponentMasks[4];
-
+    gl::DrawBufferMask mActiveColorComponentMasksForClear[4];
     vk::DynamicBuffer mReadPixelsBuffer;
+
+    // When we draw to the framebuffer, and the real format has an alpha channel but the format of
+    // the framebuffer does not, we need to mask out the alpha channel. This DrawBufferMask will
+    // contain the mask to apply to the alpha channel when drawing.
+    gl::DrawBufferMask mEmulatedAlphaAttachmentMask;
 };
 }  // namespace rx
 
