@@ -1,0 +1,251 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2fd0c432_f31540e8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "can you tag this with the Bug?",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89e36e79_9c9803f3",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "just 2018",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa2ea905_53945338",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "nit: Sandwich",
+      "range": {
+        "startLine": 23,
+        "startChar": 60,
+        "endLine": 23,
+        "endChar": 69
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80f1c196_ab8b2ede",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "if your if condition on line 40 fails to find the function, this variable is uninit. I suggest you just default it to 1.0",
+      "range": {
+        "startLine": 36,
+        "startChar": 13,
+        "endLine": 36,
+        "endChar": 28
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d84b56c0_9dbd01e3",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "nit: stylistically we prefer using #if defined() than #ifdef",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 21
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53fbc4e6_10d7fb7c",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "same comment as below for all these NULLs.",
+      "range": {
+        "startLine": 51,
+        "startChar": 33,
+        "endLine": 51,
+        "endChar": 37
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2542f7c_f781d51e",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "early exit on error instead of nesting the indented code. just to preserve line formatting.",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 5
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d56b5dd1_3a378e1d",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "prefer nullptr instead of NULL in ANGLE code.",
+      "range": {
+        "startLine": 82,
+        "startChar": 72,
+        "endLine": 82,
+        "endChar": 76
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ec57f2c_b55c51a2",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "TODO(ianelliot): ... http://anglebug.com/####",
+      "range": {
+        "startLine": 102,
+        "startChar": 65,
+        "endLine": 103,
+        "endChar": 75
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47624d9e_7b6ae512",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "is there a safe sprintf you can use?",
+      "range": {
+        "startLine": 109,
+        "startChar": 20,
+        "endLine": 109,
+        "endChar": 27
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef4b3dba_07c6c694",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:38:24Z",
+      "side": 1,
+      "message": "you aren\u0027t checking this one for validity. you could ASSERT validity or check for error.",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 91
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
