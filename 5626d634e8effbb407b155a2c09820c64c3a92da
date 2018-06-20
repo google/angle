@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "27bb210f_23548e9b",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89e36e79_9c9803f3",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa2ea905_53945338",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
@@ -62,6 +86,30 @@
       "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b8c024d_4354a63c",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa2ea905_53945338",
+      "range": {
+        "startLine": 23,
+        "startChar": 60,
+        "endLine": 23,
+        "endChar": 69
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -88,6 +136,30 @@
     },
     {
       "key": {
+        "uuid": "ac5aaabd_bc8a88d2",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done.  I\u0027m leaving those lines the same so that I go back to 1.0 if vkEnumerateInstanceVersion doesn\u0027t return VK_SUCCESS.",
+      "parentUuid": "80f1c196_ab8b2ede",
+      "range": {
+        "startLine": 36,
+        "startChar": 13,
+        "endLine": 36,
+        "endChar": 28
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d84b56c0_9dbd01e3",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
@@ -108,6 +180,30 @@
       "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0542ad62_0ef61b11",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d84b56c0_9dbd01e3",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 21
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -134,6 +230,30 @@
     },
     {
       "key": {
+        "uuid": "deabaf5f_738efaa3",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53fbc4e6_10d7fb7c",
+      "range": {
+        "startLine": 51,
+        "startChar": 33,
+        "endLine": 51,
+        "endChar": 37
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d2542f7c_f781d51e",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
@@ -157,6 +277,30 @@
     },
     {
       "key": {
+        "uuid": "89557ed8_daf9d7d8",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2542f7c_f781d51e",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 5
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d56b5dd1_3a378e1d",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
@@ -177,6 +321,30 @@
       "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "767aa609_04098ce9",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d56b5dd1_3a378e1d",
+      "range": {
+        "startLine": 82,
+        "startChar": 72,
+        "endLine": 82,
+        "endChar": 76
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -245,6 +413,24 @@
       "side": 1,
       "message": "Goto is frowned upon, I think what we would do here is store all things that might require later deletion in a struct and at the end check for every member or something similar to that.\n\nSee for example how it is done in Chrome https://cs.chromium.org/chromium/src/gpu/config/gpu_info_collector_win.cc?q\u003dgpu_info_collector_win\u0026sq\u003dpackage:chromium\u0026g\u003d0\u0026l\u003d362",
       "parentUuid": "51fbe846_01a0a436",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01349e1b_06cb5ec0",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "\u003e I don\u0027t think frown is severe enough. Gasp? Don\u0027t use goto. :)\n\nI was shocked to see goto used all over the kernel.  I won\u0027t use it in ANGLE:-).\n\nPlease take a look at what I did (I used a struct with a dtor that tries to cleanup + std::vector, per the next review comment).",
+      "parentUuid": "8fa77acf_69a13563",
       "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -322,6 +508,24 @@
     },
     {
       "key": {
+        "uuid": "bf0083d5_f48d17df",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20145e2d_7339348a",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7a427aa_ae5c8465",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
@@ -345,6 +549,30 @@
     },
     {
       "key": {
+        "uuid": "fe33c4f6_ce7590c7",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7a427aa_ae5c8465",
+      "range": {
+        "startLine": 87,
+        "startChar": 12,
+        "endLine": 87,
+        "endChar": 32
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ec57f2c_b55c51a2",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
@@ -356,6 +584,30 @@
       "writtenOn": "2018-06-20T18:38:24Z",
       "side": 1,
       "message": "TODO(ianelliot): ... http://anglebug.com/####",
+      "range": {
+        "startLine": 102,
+        "startChar": 65,
+        "endLine": 103,
+        "endChar": 75
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c61ef748_878d8b21",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "I changed the code to TODO.  Is this suggesting that I create a tracking bug too?",
+      "parentUuid": "3ec57f2c_b55c51a2",
       "range": {
         "startLine": 102,
         "startChar": 65,
@@ -439,6 +691,30 @@
     },
     {
       "key": {
+        "uuid": "1f2b6b52_d95620aa",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Sure.",
+      "parentUuid": "fcc449f6_537772b2",
+      "range": {
+        "startLine": 109,
+        "startChar": 20,
+        "endLine": 109,
+        "endChar": 27
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc63a6fa_e0bf6a91",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
@@ -453,6 +729,24 @@
       "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13cda43c_92b4256d",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc63a6fa_e0bf6a91",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -476,6 +770,30 @@
       "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a163df9b_6e22d7f6",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-20T20:38:22Z",
+      "side": 1,
+      "message": "Thanks, I\u0027ll check for error (here and elsewhere).",
+      "parentUuid": "ef4b3dba_07c6c694",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 91
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
