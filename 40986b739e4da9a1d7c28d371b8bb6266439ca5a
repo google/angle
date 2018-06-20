@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9d8593fc_381c7d22",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-20T21:03:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e811aa57_e5a8b979",
+      "range": {
+        "startLine": 69,
+        "startChar": 27,
+        "endLine": 69,
+        "endChar": 31
+      },
+      "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a0fe9522_e397afac",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
         "patchSetId": 10
@@ -45,6 +69,30 @@
       "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4ce3cac_df2a8567",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-20T21:03:18Z",
+      "side": 1,
+      "message": "I reordered some of the logic here to make it clearer but the assertion would have to be pretty complicated to cover all the edge cases (such as when no surface is ever created and MakeCurrent is called.",
+      "parentUuid": "a0fe9522_e397afac",
+      "range": {
+        "startLine": 686,
+        "startChar": 0,
+        "endLine": 688,
+        "endChar": 83
+      },
+      "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "07c07d51_7a83028d",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-20T21:03:18Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "ab44f39c_c106e5a3",
+      "range": {
+        "startLine": 689,
+        "startChar": 56,
+        "endLine": 689,
+        "endChar": 70
+      },
+      "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2bd4d5bf_8e9bccae",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
         "patchSetId": 10
@@ -91,6 +163,30 @@
       "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e38f0113_bf8a64a8",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-20T21:03:18Z",
+      "side": 1,
+      "message": "I simplified these checks and made them more clear with an assertion that context doesn\u0027t change when mVirtualizedContexts is enabled.",
+      "parentUuid": "2bd4d5bf_8e9bccae",
+      "range": {
+        "startLine": 696,
+        "startChar": 46,
+        "endLine": 696,
+        "endChar": 62
+      },
+      "revId": "40986b739e4da9a1d7c28d371b8bb6266439ca5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

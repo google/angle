@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7b3bbba5_f8e48d1d",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-20T21:03:18Z",
+      "side": 0,
+      "message": "I added an additional check to do this only when we\u0027re using virtualized contexts.  Checking for device loss is not really an EGL/WGL concept and requires a current context on this thread because we have to make GL calls to emulate it.",
+      "parentUuid": "19c09369_74688821",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 534,
+        "endChar": 0
+      },
+      "revId": "798786e355ea84a35c05900f57e80edd561f21f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd5a84d2_89ae3a0c",
         "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
         "patchSetId": 10
@@ -45,6 +69,30 @@
       "revId": "798786e355ea84a35c05900f57e80edd561f21f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94cfd379_21455bc8",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-20T21:03:18Z",
+      "side": 0,
+      "message": "We didn\u0027t need to bind the pbuffer to a texture so I removed the attribute.  Intel OpenGL doesn\u0027t support it so we get more coverage.",
+      "parentUuid": "cd5a84d2_89ae3a0c",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 0
+      },
+      "revId": "798786e355ea84a35c05900f57e80edd561f21f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
