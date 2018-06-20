@@ -13,20 +13,189 @@
 
 #include "angle_gl.h"
 #include "common/utilities.h"
+#include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/OutputVulkanGLSL.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/ReplaceVariable.h"
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
 #include "compiler/translator/util.h"
-#include "tree_util/FindMain.h"
-#include "tree_util/ReplaceVariable.h"
 
 namespace sh
 {
 
 namespace
 {
+// This traverser is designed to strip out samplers from structs. It moves them into
+// separate uniform sampler declarations. This allows the struct to be stored in the
+// default uniform block. It also requires that we rewrite any functions that take the
+// struct as an argument. The struct is split into two arguments.
+class RewriteStructSamplers final : public TIntermTraverser
+{
+  public:
+    RewriteStructSamplers(TSymbolTable *symbolTable)
+        : TIntermTraverser(true, false, false, symbolTable), mRemovedUniformsCount(0)
+    {
+    }
+
+    int removedUniformsCount() const { return mRemovedUniformsCount; }
+
+    bool visitDeclaration(Visit visit, TIntermDeclaration *decl) override
+    {
+        ASSERT(visit == PreVisit);
+
+        if (!mInGlobalScope)
+        {
+            return true;
+        }
+
+        const TIntermSequence &sequence = *(decl->getSequence());
+        TIntermTyped *declarator        = sequence.front()->getAsTyped();
+        const TType &type               = declarator->getType();
+
+        if (type.isStructureContainingSamplers())
+        {
+            TIntermSequence *newSequence = new TIntermSequence;
+
+            if (type.isStructSpecifier())
+            {
+                stripStructSpecifierSamplers(type.getStruct(), newSequence);
+            }
+            else
+            {
+                TIntermSymbol *asSymbol = declarator->getAsSymbolNode();
+                ASSERT(asSymbol);
+                const TVariable &variable = asSymbol->variable();
+                ASSERT(variable.symbolType() != SymbolType::Empty);
+                extractStructSamplerUniforms(decl, variable, type.getStruct(), newSequence);
+            }
+
+            mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), decl, *newSequence);
+        }
+
+        return true;
+    }
+
+    bool visitBinary(Visit visit, TIntermBinary *node) override
+    {
+        if (node->getOp() == EOpIndexDirectStruct && node->getType().isSampler())
+        {
+            TIntermTyped *lhs                 = node->getLeft();
+            const ImmutableString &structName = lhs->getAsSymbolNode()->variable().name();
+            const TStructure *structure       = lhs->getType().getStruct();
+            int index                        = node->getRight()->getAsConstantUnion()->getIConst(0);
+            const ImmutableString &fieldName = structure->fields()[index]->name();
+
+            ImmutableStringBuilder stringBuilder(structName.length() + fieldName.length() + 1);
+            stringBuilder << structName << "_" << fieldName;
+
+            TVariable *samplerReplacement = mExtractedSamplers[stringBuilder];
+            ASSERT(samplerReplacement);
+
+            TIntermSymbol *replacement = new TIntermSymbol(samplerReplacement);
+
+            queueReplacement(replacement, OriginalNode::IS_DROPPED);
+            return true;
+        }
+
+        return true;
+    }
+
+  private:
+    void stripStructSpecifierSamplers(const TStructure *structure,
+                                      TIntermSequence *newSequence) const
+    {
+        TFieldList *newFieldList = new TFieldList;
+        ASSERT(structure->containsSamplers());
+
+        for (const TField *field : structure->fields())
+        {
+            // TODO(jmadill): Nested struct samplers. http://anglebug.com/2494
+            ASSERT(!field->type()->isStructureContainingSamplers());
+            if (!field->type()->isSampler())
+            {
+                TType *newType = new TType(*field->type());
+                TField *newField =
+                    new TField(newType, field->name(), field->line(), field->symbolType());
+                newFieldList->push_back(newField);
+            }
+        }
+
+        // Prune empty structs.
+        if (newFieldList->empty())
+        {
+            return;
+        }
+
+        TStructure *newStruct =
+            new TStructure(mSymbolTable, structure->name(), newFieldList, structure->symbolType());
+        TType *newStructType = new TType(newStruct, true);
+        TVariable *newStructVar =
+            new TVariable(mSymbolTable, ImmutableString(""), newStructType, SymbolType::Empty);
+        TIntermSymbol *newStructRef = new TIntermSymbol(newStructVar);
+
+        TIntermDeclaration *structDecl = new TIntermDeclaration;
+        structDecl->appendDeclarator(newStructRef);
+
+        newSequence->push_back(structDecl);
+    }
+
+    void extractStructSamplerUniforms(TIntermDeclaration *oldDeclaration,
+                                      const TVariable &variable,
+                                      const TStructure *structure,
+                                      TIntermSequence *newSequence)
+    {
+        ASSERT(structure->containsSamplers());
+
+        size_t nonSamplerCount = 0;
+
+        for (const TField *field : structure->fields())
+        {
+            // TODO(jmadill): Nested struct samplers. http://anglebug.com/2494
+            ASSERT(!field->type()->isStructureContainingSamplers());
+            if (field->type()->isSampler())
+            {
+                // Name the sampler internally as varName_fieldName
+                ImmutableStringBuilder stringBuilder(variable.name().length() +
+                                                     field->name().length() + 1);
+                stringBuilder << variable.name() << "_" << field->name();
+                ImmutableString newName(stringBuilder);
+                TType *newType = new TType(*field->type());
+                newType->setQualifier(EvqUniform);
+                TVariable *newVariable =
+                    new TVariable(mSymbolTable, newName, newType, SymbolType::AngleInternal);
+                TIntermSymbol *newRef = new TIntermSymbol(newVariable);
+
+                TIntermDeclaration *samplerDecl = new TIntermDeclaration;
+                samplerDecl->appendDeclarator(newRef);
+
+                newSequence->push_back(samplerDecl);
+
+                mExtractedSamplers[newName] = newVariable;
+            }
+            else
+            {
+                nonSamplerCount++;
+            }
+        }
+
+        if (nonSamplerCount > 0)
+        {
+            // Keep the old declaration around if it has other members.
+            newSequence->push_back(oldDeclaration);
+        }
+        else
+        {
+            mRemovedUniformsCount++;
+        }
+    }
+
+    int mRemovedUniformsCount;
+    std::map<ImmutableString, TVariable *> mExtractedSamplers;
+};
+
 // This traverser translates embedded uniform structs into a specifier and declaration.
 // This makes the declarations easier to move into uniform blocks.
 class NameEmbeddedUniformStructsTraverser : public TIntermTraverser
@@ -371,6 +540,12 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         NameEmbeddedUniformStructsTraverser nameStructs(&getSymbolTable());
         root->traverse(&nameStructs);
         nameStructs.updateTree();
+
+        RewriteStructSamplers rewriteStructSamplers(&getSymbolTable());
+        root->traverse(&rewriteStructSamplers);
+        rewriteStructSamplers.updateTree();
+
+        defaultUniformCount -= rewriteStructSamplers.removedUniformsCount();
 
         // We must declare the struct types before using them.
         DeclareStructTypesTraverser structTypesTraverser(&outputGLSL);

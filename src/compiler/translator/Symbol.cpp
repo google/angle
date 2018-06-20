@@ -84,6 +84,7 @@ TVariable::TVariable(TSymbolTable *symbolTable,
       unionArray(nullptr)
 {
     ASSERT(mType);
+    ASSERT(name.empty() || symbolType != SymbolType::Empty);
 }
 
 TStructure::TStructure(TSymbolTable *symbolTable,

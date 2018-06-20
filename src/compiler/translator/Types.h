@@ -330,6 +330,8 @@ class TType
     // Initializes all lazily-initialized members.
     void realize();
 
+    bool isSampler() const { return IsSampler(type); }
+
   private:
     void invalidateMangledName();
     const char *buildMangledName() const;
