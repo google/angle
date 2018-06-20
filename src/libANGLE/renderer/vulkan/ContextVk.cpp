@@ -120,7 +120,7 @@ gl::Error ContextVk::initPipeline()
     mPipelineDesc->updateTopology(mCurrentDrawMode);
 
     // Copy over the latest attrib and binding descriptions.
-    vertexArrayVk->getPackedInputDescriptions(mPipelineDesc.get());
+    vertexArrayVk->getPackedInputDescriptions(mRenderer, mPipelineDesc.get());
 
     // Ensure that the RenderPass description is updated.
     mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc());

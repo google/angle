@@ -51,7 +51,7 @@ class VertexArrayVk : public VertexArrayImpl
                                 Serial serial,
                                 bool isDrawElements);
 
-    void getPackedInputDescriptions(vk::PipelineDesc *pipelineDesc);
+    void getPackedInputDescriptions(const RendererVk *rendererVk, vk::PipelineDesc *pipelineDesc);
 
     // Draw call handling.
     gl::Error drawArrays(const gl::Context *context,
@@ -71,8 +71,9 @@ class VertexArrayVk : public VertexArrayImpl
     // update vertex info for attributes the program doesn't use, (very silly edge case). The
     // advantage is the cached state then doesn't depend on the Program, so doesn't have to be
     // updated when the active Program changes.
-    void updatePackedInputDescriptions();
-    void updatePackedInputInfo(uint32_t attribIndex,
+    void updatePackedInputDescriptions(const RendererVk *rendererVk);
+    void updatePackedInputInfo(const RendererVk *rendererVk,
+                               uint32_t attribIndex,
                                const gl::VertexBinding &binding,
                                const gl::VertexAttribute &attrib);
 

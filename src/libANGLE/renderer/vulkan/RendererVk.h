@@ -98,6 +98,8 @@ class RendererVk : angle::NonCopyable
         return mFormatTable[internalFormat];
     }
 
+    const vk::Format &getFormat(angle::Format::ID formatID) const { return mFormatTable[formatID]; }
+
     vk::Error getCompatibleRenderPass(const vk::RenderPassDesc &desc,
                                       vk::RenderPass **renderPassOut);
     vk::Error getRenderPassWithOps(const vk::RenderPassDesc &desc,

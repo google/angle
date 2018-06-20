@@ -70,14 +70,12 @@ class FormatTable final : angle::NonCopyable
                     std::vector<GLenum> *outCompressedTextureFormats);
 
     const Format &operator[](GLenum internalFormat) const;
+    const Format &operator[](angle::Format::ID formatID) const;
 
   private:
     // The table data is indexed by angle::Format::ID.
     std::array<Format, angle::kNumANGLEFormats> mFormatData;
 };
-
-// TODO(jmadill): This is temporary. Figure out how to handle format conversions.
-VkFormat GetNativeVertexFormat(gl::VertexFormatType vertexFormat);
 
 // This will return a reference to a VkFormatProperties with the feature flags supported
 // if the format is a mandatory format described in section 31.3.3. Required Format Support
