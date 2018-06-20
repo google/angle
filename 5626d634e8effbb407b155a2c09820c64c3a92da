@@ -215,6 +215,24 @@
     },
     {
       "key": {
+        "uuid": "ab1d2fe4_c9afee90",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T19:26:07Z",
+      "side": 1,
+      "message": "I don\u0027t think frown is severe enough. Gasp? Don\u0027t use goto. :)",
+      "parentUuid": "51fbe846_01a0a436",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ade80f2e_136b7a0b",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
@@ -244,6 +262,47 @@
       "side": 1,
       "message": "I must be misunderstanding something.  vkEnumeratePhysicalDevices takes a pointer to an array of VkPhysicalDevice\u0027s.  How would a std::vector help?",
       "parentUuid": "ade80f2e_136b7a0b",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "433e84c5_d55eac11",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T19:26:07Z",
+      "side": 1,
+      "message": "Corentin\u0027s suggestion is good. Use .data to get a pointer to the base element of the vector. Initialize the vector with the count and it will be sized correctly.",
+      "parentUuid": "bf882512_e5635cbc",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7a427aa_ae5c8465",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T19:26:07Z",
+      "side": 1,
+      "message": "Do not use c style casts.\n\nhttps://google.github.io/styleguide/cppguide.html#Casting",
+      "range": {
+        "startLine": 87,
+        "startChar": 12,
+        "endLine": 87,
+        "endChar": 32
+      },
       "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
