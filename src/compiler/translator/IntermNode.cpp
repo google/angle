@@ -1648,6 +1648,17 @@ const TConstantUnion *TIntermBinary::getConstantValue() const
     return constIndexingResult;
 }
 
+const ImmutableString &TIntermBinary::getIndexStructFieldName() const
+{
+    ASSERT(mOp == EOpIndexDirectStruct);
+
+    const TType &lhsType        = mLeft->getType();
+    const TStructure *structure = lhsType.getStruct();
+    const int index             = mRight->getAsConstantUnion()->getIConst(0);
+
+    return structure->fields()[index]->name();
+}
+
 TIntermTyped *TIntermUnary::fold(TDiagnostics *diagnostics)
 {
     TConstantUnion *constArray = nullptr;

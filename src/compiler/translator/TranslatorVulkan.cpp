@@ -82,37 +82,44 @@ class RewriteStructSamplers final : public TIntermTraverser
     {
         if (node->getOp() == EOpIndexDirectStruct && node->getType().isSampler())
         {
-            TIntermTyped *lhs                = node->getLeft();
-            const TType &lhsType             = lhs->getType();
-            const TStructure *structure      = lhsType.getStruct();
-            int index                        = node->getRight()->getAsConstantUnion()->getIConst(0);
-            const ImmutableString &fieldName = structure->fields()[index]->name();
+            std::string stringBuilder;
 
-            ImmutableStringBuilder stringBuilder(kESSLMaxIdentifierLength + fieldName.length() +
-                                                 10);
-            TIntermBinary *lhsAsBinary = lhs->getAsBinaryNode();
-
-            if (lhsAsBinary)
+            TIntermTyped *currentNode = node;
+            while (currentNode->getAsBinaryNode())
             {
-                ASSERT(lhsAsBinary->getOp() == EOpIndexDirect);
-                TIntermTyped *lhsLhs = lhsAsBinary->getLeft();
+                TIntermBinary *asBinary = currentNode->getAsBinaryNode();
 
-                const int lhsIndex = lhsAsBinary->getRight()->getAsConstantUnion()->getIConst(0);
-                const ImmutableString &structName = lhsLhs->getAsSymbolNode()->variable().name();
+                switch (asBinary->getOp())
+                {
+                    case EOpIndexDirect:
+                    {
+                        const int index = asBinary->getRight()->getAsConstantUnion()->getIConst(0);
+                        const std::string strInt = Str(index);
+                        stringBuilder.insert(0, strInt);
+                        stringBuilder.insert(0, "_");
+                        break;
+                    }
+                    case EOpIndexDirectStruct:
+                    {
+                        stringBuilder.insert(0, asBinary->getIndexStructFieldName().data());
+                        stringBuilder.insert(0, "_");
+                        break;
+                    }
 
-                stringBuilder << structName << "_";
-                stringBuilder.appendHex(lhsIndex);
-                stringBuilder << "_";
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
+
+                currentNode = asBinary->getLeft();
             }
-            else
-            {
-                const ImmutableString &structName = lhs->getAsSymbolNode()->variable().name();
-                stringBuilder << structName << "_";
-            }
 
-            stringBuilder << fieldName;
+            const ImmutableString &variableName = currentNode->getAsSymbolNode()->variable().name();
+            stringBuilder.insert(0, variableName.data());
 
-            TVariable *samplerReplacement = mExtractedSamplers[stringBuilder];
+            ImmutableString newName(stringBuilder);
+
+            TVariable *samplerReplacement = mExtractedSamplers[newName];
             ASSERT(samplerReplacement);
 
             TIntermSymbol *replacement = new TIntermSymbol(samplerReplacement);
@@ -125,8 +132,7 @@ class RewriteStructSamplers final : public TIntermTraverser
     }
 
   private:
-    void stripStructSpecifierSamplers(const TStructure *structure,
-                                      TIntermSequence *newSequence) const
+    void stripStructSpecifierSamplers(const TStructure *structure, TIntermSequence *newSequence)
     {
         TFieldList *newFieldList = new TFieldList;
         ASSERT(structure->containsSamplers());
@@ -135,11 +141,10 @@ class RewriteStructSamplers final : public TIntermTraverser
         // TODO(jmadill): Fix potential bug. http://anglebug.com/2494
         for (const TField *field : structure->fields())
         {
-            // TODO(jmadill): Nested struct samplers. http://anglebug.com/2494
-            ASSERT(!field->type()->isStructureContainingSamplers());
-            if (!field->type()->isSampler())
+            const TType &fieldType = *field->type();
+            if (!fieldType.isSampler() && !isRemovedStructType(fieldType))
             {
-                TType *newType = new TType(*field->type());
+                TType *newType = new TType(fieldType);
                 TField *newField =
                     new TField(newType, field->name(), field->line(), field->symbolType());
                 newFieldList->push_back(newField);
@@ -149,6 +154,7 @@ class RewriteStructSamplers final : public TIntermTraverser
         // Prune empty structs.
         if (newFieldList->empty())
         {
+            mRemovedStructs.insert(structure->name());
             return;
         }
 
@@ -165,6 +171,12 @@ class RewriteStructSamplers final : public TIntermTraverser
         newSequence->push_back(structDecl);
     }
 
+    bool isRemovedStructType(const TType &type) const
+    {
+        const TStructure *structure = type.getStruct();
+        return (structure && (mRemovedStructs.count(structure->name()) > 0));
+    }
+
     void extractStructSamplerUniforms(TIntermDeclaration *oldDeclaration,
                                       const TVariable &variable,
                                       const TStructure *structure,
@@ -176,40 +188,8 @@ class RewriteStructSamplers final : public TIntermTraverser
 
         for (const TField *field : structure->fields())
         {
-            // TODO(jmadill): Nested struct samplers. http://anglebug.com/2494
-            const TType *fieldType = field->type();
-            ASSERT(!fieldType->isStructureContainingSamplers());
-            if (fieldType->isSampler())
-            {
-                const TType &variableType = variable.getType();
-                if (variableType.isArray())
-                {
-                    // Name the samplers internally as varName_<index>_fieldName
-                    const TVector<unsigned int> &arraySizes = *variableType.getArraySizes();
-                    for (unsigned int arrayElement = 0; arrayElement < arraySizes[0];
-                         ++arrayElement)
-                    {
-                        ImmutableStringBuilder stringBuilder(variable.name().length() +
-                                                             field->name().length() + 10);
-                        stringBuilder << variable.name() << "_";
-                        stringBuilder.appendHex(arrayElement);
-                        stringBuilder << "_" << field->name();
-                        extractSampler(stringBuilder, fieldType, newSequence);
-                    }
-                }
-                else
-                {
-                    // Name the sampler internally as varName_fieldName
-                    ImmutableStringBuilder stringBuilder(variable.name().length() +
-                                                         field->name().length() + 1);
-                    stringBuilder << variable.name() << "_" << field->name();
-                    extractSampler(stringBuilder, fieldType, newSequence);
-                }
-            }
-            else
-            {
-                nonSamplerCount++;
-            }
+            nonSamplerCount +=
+                extractFieldSamplers(variable.name(), field, variable.getType(), newSequence);
         }
 
         if (nonSamplerCount > 0)
@@ -223,11 +203,71 @@ class RewriteStructSamplers final : public TIntermTraverser
         }
     }
 
+    size_t extractFieldSamplers(const ImmutableString &prefix,
+                                const TField *field,
+                                const TType &containingType,
+                                TIntermSequence *newSequence)
+    {
+        if (containingType.isArray())
+        {
+            size_t nonSamplerCount = 0;
+
+            // Name the samplers internally as varName_<index>_fieldName
+            const TVector<unsigned int> &arraySizes = *containingType.getArraySizes();
+            for (unsigned int arrayElement = 0; arrayElement < arraySizes[0]; ++arrayElement)
+            {
+                ImmutableStringBuilder stringBuilder(prefix.length() + 10);
+                stringBuilder << prefix << "_";
+                stringBuilder.appendHex(arrayElement);
+                nonSamplerCount = extractFieldSamplersImpl(stringBuilder, field, newSequence);
+            }
+
+            return nonSamplerCount;
+        }
+
+        return extractFieldSamplersImpl(prefix, field, newSequence);
+    }
+
+    size_t extractFieldSamplersImpl(const ImmutableString &prefix,
+                                    const TField *field,
+                                    TIntermSequence *newSequence)
+    {
+        size_t nonSamplerCount = 0;
+
+        const TType &fieldType = *field->type();
+        if (fieldType.isSampler() || fieldType.isStructureContainingSamplers())
+        {
+            ImmutableStringBuilder stringBuilder(prefix.length() + field->name().length() + 1);
+            stringBuilder << prefix << "_" << field->name();
+            ImmutableString newPrefix(stringBuilder);
+
+            if (fieldType.isSampler())
+            {
+                extractSampler(newPrefix, fieldType, newSequence);
+            }
+            else
+            {
+                const TStructure *structure = fieldType.getStruct();
+                for (const TField *nestedField : structure->fields())
+                {
+                    nonSamplerCount +=
+                        extractFieldSamplers(newPrefix, nestedField, fieldType, newSequence);
+                }
+            }
+        }
+        else
+        {
+            nonSamplerCount++;
+        }
+
+        return nonSamplerCount;
+    }
+
     void extractSampler(const ImmutableString &newName,
-                        const TType *fieldType,
+                        const TType &fieldType,
                         TIntermSequence *newSequence)
     {
-        TType *newType = new TType(*fieldType);
+        TType *newType = new TType(fieldType);
         newType->setQualifier(EvqUniform);
         TVariable *newVariable =
             new TVariable(mSymbolTable, newName, newType, SymbolType::AngleInternal);
@@ -243,6 +283,7 @@ class RewriteStructSamplers final : public TIntermTraverser
 
     int mRemovedUniformsCount;
     std::map<ImmutableString, TVariable *> mExtractedSamplers;
+    std::set<ImmutableString> mRemovedStructs;
 };
 
 // This traverser translates embedded uniform structs into a specifier and declaration.

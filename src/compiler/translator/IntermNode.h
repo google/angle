@@ -446,7 +446,10 @@ class TIntermBinary : public TIntermOperator
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
     void setAddIndexClamp() { mAddIndexClamp = true; }
-    bool getAddIndexClamp() { return mAddIndexClamp; }
+    bool getAddIndexClamp() const { return mAddIndexClamp; }
+
+    // This method is only valid for EOpIndexDirectStruct. It returns the name of the field.
+    const ImmutableString &getIndexStructFieldName() const;
 
   protected:
     TIntermTyped *mLeft;
