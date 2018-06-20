@@ -86,6 +86,30 @@
       "revId": "c0ccbc0272ae4f4cf1f6d879016d5fdcb35addf5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bc7e5e9_f0abf57d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T16:59:31Z",
+      "side": 1,
+      "message": "Sounds good. Is the code repeated? Should we make a helper?",
+      "parentUuid": "a4f6947b_96a3567d",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 71
+      },
+      "revId": "c0ccbc0272ae4f4cf1f6d879016d5fdcb35addf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
