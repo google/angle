@@ -320,6 +320,30 @@
     },
     {
       "key": {
+        "uuid": "fcc449f6_537772b2",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T19:23:48Z",
+      "side": 1,
+      "message": "It probably will make some sanitizers happier. If you don\u0027t mind I think it\u0027s marginally better to use snprintf.",
+      "parentUuid": "e18ac11a_394eb045",
+      "range": {
+        "startLine": 109,
+        "startChar": 20,
+        "endLine": 109,
+        "endChar": 27
+      },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ef4b3dba_07c6c694",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
