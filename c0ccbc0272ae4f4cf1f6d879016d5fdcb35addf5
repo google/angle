@@ -62,6 +62,30 @@
       "revId": "c0ccbc0272ae4f4cf1f6d879016d5fdcb35addf5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4f6947b_96a3567d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-20T16:52:23Z",
+      "side": 1,
+      "message": "Yes, there was 2 tests that were failing because the stencil bit was appended here. Somehow the stencilAttachment wasn\u0027t null, but the underlying texture format didn\u0027t have stencilBits. This is how we also check it elsewhere so anyways its more consistent that way as well.",
+      "parentUuid": "8da8b958_97d6850b",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 71
+      },
+      "revId": "c0ccbc0272ae4f4cf1f6d879016d5fdcb35addf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
