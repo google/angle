@@ -32,6 +32,8 @@ class ImmutableStringBuilder
     // This invalidates the ImmutableStringBuilder, so it should only be called once.
     operator ImmutableString();
 
+    void appendDecimal(const uint32_t &i);
+
     template <typename T>
     void appendHex(T number)
     {

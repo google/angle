@@ -175,3 +175,27 @@ TEST_F(HLSLOutputTest, ParameterWithNoName)
         })";
     compile(shaderString);
 }
+
+// Test that array dimensions are written out correctly.
+TEST_F(HLSLOutputTest, Array)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision mediump float;
+
+        uniform float uf;
+
+        out vec4 my_FragColor;
+
+        void main()
+        {
+            my_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+            float arr[2];
+            for (int i = 0; i < 2; ++i) {
+                arr[i] = uf * 2.0;
+                my_FragColor.x += arr[i];
+            }
+        })";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode("_arr[2]"));
+}

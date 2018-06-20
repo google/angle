@@ -72,6 +72,8 @@ class OutputHLSL : public TIntermTraverser
     }
 
   protected:
+    void writeReferencedAttributes(TInfoSinkBase &out) const;
+    void writeReferencedVaryings(TInfoSinkBase &out) const;
     void header(TInfoSinkBase &out,
                 const std::vector<MappedStruct> &std140Structs,
                 const BuiltInFunctionEmulator *builtInFunctionEmulator) const;

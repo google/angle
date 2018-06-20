@@ -46,7 +46,7 @@ InterpolationType GetInterpolationType(TQualifier qualifier);
 
 // Returns array brackets including size with outermost array size first, as specified in GLSL ES
 // 3.10 section 4.1.9.
-TString ArrayString(const TType &type);
+ImmutableString ArrayString(const TType &type);
 
 ImmutableString GetTypeName(const TType &type, ShHashFunction64 hashFunction, NameMap *nameMap);
 

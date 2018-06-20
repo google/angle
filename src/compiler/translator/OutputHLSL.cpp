@@ -393,7 +393,7 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
 
             if (structType->isArray())
             {
-                mappedStructs += ArrayString(*mappedStruct.field->type());
+                mappedStructs += ArrayString(*mappedStruct.field->type()).data();
             }
 
             mappedStructs += " =\n";
@@ -404,33 +404,37 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
     return mappedStructs;
 }
 
-void OutputHLSL::header(TInfoSinkBase &out,
-                        const std::vector<MappedStruct> &std140Structs,
-                        const BuiltInFunctionEmulator *builtInFunctionEmulator) const
+void OutputHLSL::writeReferencedAttributes(TInfoSinkBase &out) const
 {
-    TString varyings;
-    TString attributes;
-    TString mappedStructs = generateStructMapping(std140Structs);
+    for (const auto &attribute : mReferencedAttributes)
+    {
+        const TType &type           = attribute.second->getType();
+        const ImmutableString &name = attribute.second->name();
 
+        out << "static " << TypeString(type) << " " << Decorate(name) << ArrayString(type) << " = "
+            << zeroInitializer(type) << ";\n";
+    }
+}
+
+void OutputHLSL::writeReferencedVaryings(TInfoSinkBase &out) const
+{
     for (const auto &varying : mReferencedVaryings)
     {
         const TType &type           = varying.second->getType();
         const ImmutableString &name = varying.second->name();
 
         // Program linking depends on this exact format
-        varyings += TString("static ") + InterpolationString(type.getQualifier()) + " " +
-                    TypeString(type) + " " + Decorate(name) + ArrayString(type) + " = " +
-                    zeroInitializer(type) + ";\n";
+        out << "static " << InterpolationString(type.getQualifier()) << " " << TypeString(type)
+            << " " << Decorate(name) << ArrayString(type) << " = " << zeroInitializer(type)
+            << ";\n";
     }
+}
 
-    for (const auto &attribute : mReferencedAttributes)
-    {
-        const TType &type           = attribute.second->getType();
-        const ImmutableString &name = attribute.second->name();
-
-        attributes += "static " + TypeString(type) + " " + Decorate(name) + ArrayString(type) +
-                      " = " + zeroInitializer(type) + ";\n";
-    }
+void OutputHLSL::header(TInfoSinkBase &out,
+                        const std::vector<MappedStruct> &std140Structs,
+                        const BuiltInFunctionEmulator *builtInFunctionEmulator) const
+{
+    TString mappedStructs = generateStructMapping(std140Structs);
 
     out << mStructureHLSL->structsHeader();
 
@@ -491,7 +495,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
             IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_draw_buffers);
 
         out << "// Varyings\n";
-        out << varyings;
+        writeReferencedVaryings(out);
         out << "\n";
 
         if (mShaderVersion >= 300)
@@ -644,7 +648,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
     else if (mShaderType == GL_VERTEX_SHADER)
     {
         out << "// Attributes\n";
-        out << attributes;
+        writeReferencedAttributes(out);
         out << "\n"
                "static float4 gl_Position = float4(0, 0, 0, 0);\n";
 
@@ -665,7 +669,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
         out << "\n"
                "// Varyings\n";
-        out << varyings;
+        writeReferencedVaryings(out);
         out << "\n";
 
         if (mUsesDepthRange)

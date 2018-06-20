@@ -10,6 +10,7 @@
 
 #include "common/utilities.h"
 #include "compiler/preprocessor/numeric_lex.h"
+#include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/SymbolTable.h"
 
 bool atoi_clamp(const char *str, unsigned int *value)
@@ -472,24 +473,25 @@ GLenum GLVariablePrecision(const TType &type)
     return GL_NONE;
 }
 
-TString ArrayString(const TType &type)
+ImmutableString ArrayString(const TType &type)
 {
-    TStringStream arrayString;
     if (!type.isArray())
-        return arrayString.str();
+        return ImmutableString("");
 
     const TVector<unsigned int> &arraySizes = *type.getArraySizes();
+    constexpr const size_t kMaxDecimalDigitsPerSize = 10u;
+    ImmutableStringBuilder arrayString(arraySizes.size() * (kMaxDecimalDigitsPerSize + 2u));
     for (auto arraySizeIter = arraySizes.rbegin(); arraySizeIter != arraySizes.rend();
          ++arraySizeIter)
     {
         arrayString << "[";
         if (*arraySizeIter > 0)
         {
-            arrayString << (*arraySizeIter);
+            arrayString.appendDecimal(*arraySizeIter);
         }
         arrayString << "]";
     }
-    return arrayString.str();
+    return arrayString;
 }
 
 ImmutableString GetTypeName(const TType &type, ShHashFunction64 hashFunction, NameMap *nameMap)

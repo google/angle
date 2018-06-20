@@ -613,7 +613,7 @@ TString UniformHLSL::uniformBlockMembersString(const TInterfaceBlock &interfaceB
         }
 
         hlsl += "    " + InterfaceBlockFieldTypeString(field, blockStorage) + " " +
-                Decorate(field.name()) + ArrayString(fieldType) + ";\n";
+                Decorate(field.name()) + ArrayString(fieldType).data() + ";\n";
 
         // must pad out after matrices and arrays, where HLSL usually allows itself room to pack
         // stuff
