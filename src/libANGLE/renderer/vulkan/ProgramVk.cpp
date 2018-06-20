@@ -168,8 +168,6 @@ gl::Error ProgramVk::destroy(const gl::Context *contextImpl)
 
 vk::Error ProgramVk::reset(ContextVk *contextVk)
 {
-    // TODO(jmadill): Handle re-linking a program that is in-use. http://anglebug.com/2397
-
     VkDevice device = contextVk->getDevice();
 
     for (auto &descriptorSetLayout : mDescriptorSetLayouts)
