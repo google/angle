@@ -552,42 +552,6 @@ GLenum ToGLenum(MatrixType from)
 }
 
 template <>
-PointParameter FromGLenum<PointParameter>(GLenum from)
-{
-    switch (from)
-    {
-        case GL_POINT_SIZE_MIN:
-            return PointParameter::PointSizeMin;
-        case GL_POINT_SIZE_MAX:
-            return PointParameter::PointSizeMax;
-        case GL_POINT_FADE_THRESHOLD_SIZE:
-            return PointParameter::PointFadeThresholdSize;
-        case GL_POINT_DISTANCE_ATTENUATION:
-            return PointParameter::PointDistanceAttenuation;
-        default:
-            return PointParameter::InvalidEnum;
-    }
-}
-
-GLenum ToGLenum(PointParameter from)
-{
-    switch (from)
-    {
-        case PointParameter::PointSizeMin:
-            return GL_POINT_SIZE_MIN;
-        case PointParameter::PointSizeMax:
-            return GL_POINT_SIZE_MAX;
-        case PointParameter::PointFadeThresholdSize:
-            return GL_POINT_FADE_THRESHOLD_SIZE;
-        case PointParameter::PointDistanceAttenuation:
-            return GL_POINT_DISTANCE_ATTENUATION;
-        default:
-            UNREACHABLE();
-            return 0;
-    }
-}
-
-template <>
 PrimitiveMode FromGLenum<PrimitiveMode>(GLenum from)
 {
     switch (from)
@@ -900,8 +864,6 @@ TextureEnvParameter FromGLenum<TextureEnvParameter>(GLenum from)
             return TextureEnvParameter::Op1Alpha;
         case GL_OPERAND2_ALPHA:
             return TextureEnvParameter::Op2Alpha;
-        case GL_COORD_REPLACE_OES:
-            return TextureEnvParameter::PointCoordReplace;
         default:
             return TextureEnvParameter::InvalidEnum;
     }
@@ -947,8 +909,6 @@ GLenum ToGLenum(TextureEnvParameter from)
             return GL_OPERAND1_ALPHA;
         case TextureEnvParameter::Op2Alpha:
             return GL_OPERAND2_ALPHA;
-        case TextureEnvParameter::PointCoordReplace:
-            return GL_COORD_REPLACE_OES;
         default:
             UNREACHABLE();
             return 0;
@@ -962,8 +922,6 @@ TextureEnvTarget FromGLenum<TextureEnvTarget>(GLenum from)
     {
         case GL_TEXTURE_ENV:
             return TextureEnvTarget::Env;
-        case GL_POINT_SPRITE_OES:
-            return TextureEnvTarget::PointSprite;
         default:
             return TextureEnvTarget::InvalidEnum;
     }
@@ -975,8 +933,6 @@ GLenum ToGLenum(TextureEnvTarget from)
     {
         case TextureEnvTarget::Env:
             return GL_TEXTURE_ENV;
-        case TextureEnvTarget::PointSprite:
-            return GL_POINT_SPRITE_OES;
         default:
             UNREACHABLE();
             return 0;

@@ -107,11 +107,11 @@ struct TextureEnvironmentParameters
 
 struct PointParameters
 {
-    GLfloat pointSizeMin                    = 0.0f;
-    GLfloat pointSizeMax                    = 1.0f;
-    GLfloat pointFadeThresholdSize          = 1.0f;
-    angle::Vector3 pointDistanceAttenuation = {1.0f, 0.0f, 0.0f};
-    GLfloat pointSize                       = 1.0f;
+    GLfloat pointSizeMin;
+    GLfloat pointSizeMax;
+    GLfloat pointFadeThresholdSize;
+    angle::Vector3 pointDistanceAttenuation;
+    GLfloat pointSize;
 };
 
 struct ClipPlaneParameters
@@ -185,9 +185,6 @@ class GLES1State final : angle::NonCopyable
 
     TextureEnvironmentParameters &textureEnvironment(unsigned int unit);
     const TextureEnvironmentParameters &textureEnvironment(unsigned int unit) const;
-
-    PointParameters &pointParameters();
-    const PointParameters &pointParameters() const;
 
   private:
     friend class State;

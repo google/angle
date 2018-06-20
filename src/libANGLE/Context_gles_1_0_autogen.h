@@ -72,10 +72,10 @@
     void normalPointer(GLenum type, GLsizei stride, const void *pointer);                        \
     void orthof(GLfloat l, GLfloat r, GLfloat b, GLfloat t, GLfloat n, GLfloat f);               \
     void orthox(GLfixed l, GLfixed r, GLfixed b, GLfixed t, GLfixed n, GLfixed f);               \
-    void pointParameterf(PointParameter pnamePacked, GLfloat param);                             \
-    void pointParameterfv(PointParameter pnamePacked, const GLfloat *params);                    \
-    void pointParameterx(PointParameter pnamePacked, GLfixed param);                             \
-    void pointParameterxv(PointParameter pnamePacked, const GLfixed *params);                    \
+    void pointParameterf(GLenum pname, GLfloat param);                                           \
+    void pointParameterfv(GLenum pname, const GLfloat *params);                                  \
+    void pointParameterx(GLenum pname, GLfixed param);                                           \
+    void pointParameterxv(GLenum pname, const GLfixed *params);                                  \
     void pointSize(GLfloat size);                                                                \
     void pointSizex(GLfixed size);                                                               \
     void polygonOffsetx(GLfixed factor, GLfixed units);                                          \

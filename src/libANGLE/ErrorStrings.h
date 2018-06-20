@@ -112,9 +112,6 @@ ERRMSG(InvalidName, "Invalid name.");
 ERRMSG(InvalidNameCharacters, "Name contains invalid characters.");
 ERRMSG(InvalidPname, "Invalid pname.");
 ERRMSG(InvalidPointerQuery, "Invalid pointer query.");
-ERRMSG(InvalidPointParameter, "Invalid point parameter.");
-ERRMSG(InvalidPointParameterValue, "Invalid point parameter value (must be non-negative).");
-ERRMSG(InvalidPointSizeValue, "Invalid point size (must be positive).");
 ERRMSG(InvalidPrecision, "Invalid or unsupported precision type.");
 ERRMSG(InvalidProgramName, "Program object expected.");
 ERRMSG(InvalidProjectionMatrix,

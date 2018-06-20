@@ -28,13 +28,6 @@ uniform mat4 texture_matrix[4];
 uniform bool enable_rescale_normal;
 uniform bool enable_normalize;
 
-// Point rasterization//////////////////////////////////////////////////////////
-
-uniform bool point_rasterization;
-uniform float point_size_min;
-uniform float point_size_max;
-uniform vec3 point_distance_attenuation;
-
 out vec4 pos_varying;
 out vec3 normal_varying;
 out vec4 color_varying;
@@ -79,17 +72,7 @@ void main()
     vec4 vertexPos = projection * modelview * pos;
     gl_Position    = vertexPos;
 
-    if (point_rasterization)
-    {
-        float dist         = length(vertexPos.z);
-        float attConst     = point_distance_attenuation[0];
-        float attLinear    = point_distance_attenuation[1];
-        float attQuad      = point_distance_attenuation[2];
-        float attPart      = attConst + attLinear * dist + attQuad * dist * dist;
-        float attPointSize = pointsize / pow(attPart, 0.5);
-
-        gl_PointSize = clamp(attPointSize, point_size_min, point_size_max);
-    }
+    gl_PointSize = pointsize;
 }
 )";
 
@@ -205,7 +188,6 @@ uniform int op2_alpha[kMaxTexUnits];
 uniform vec4 texture_env_color[kMaxTexUnits];
 uniform float texture_env_rgb_scale[kMaxTexUnits];
 uniform float texture_env_alpha_scale[kMaxTexUnits];
-uniform bool point_sprite_coord_replace[kMaxTexUnits];
 
 // Vertex attributes////////////////////////////////////////////////////////////
 
@@ -266,11 +248,6 @@ uniform vec4 fog_color;
 uniform bool enable_clip_planes;
 uniform bool clip_plane_enables[kMaxClipPlanes];
 uniform vec4 clip_planes[kMaxClipPlanes];
-
-// Point rasterization//////////////////////////////////////////////////////////
-
-uniform bool point_rasterization;
-uniform bool point_sprite_enabled;
 
 // Outgoing fragment////////////////////////////////////////////////////////////
 
@@ -441,7 +418,7 @@ bool doClipPlaneTest()
     {
         if (clip_plane_enables[i])
         {
-            float dist = dot(clip_planes[i].xyz, pos_varying.xyz) + clip_planes[i].w * pos_varying.w;
+            float dist = dot(clip_planes[i].xyz, pos_varying.xyz) + clip_planes[i].w;
             res        = res && (dist >= 0.0);
         }
     }
@@ -527,43 +504,6 @@ vec4 getTextureColor(int unit)
             {
                 // TODO: Weird stuff happens
                 // res = texture(tex_cube_sampler3, texcoord3_varying.xyz);
-            }
-            break;
-        default:
-            break;
-    }
-
-    return res;
-}
-
-vec4 getPointSpriteTextureColor(int unit)
-{
-    vec4 res;
-
-    switch (unit)
-    {
-        case 0:
-            if (enable_texture_2d[0])
-            {
-                res = texture(tex_sampler0, gl_PointCoord.xy);
-            }
-            break;
-        case 1:
-            if (enable_texture_2d[1])
-            {
-                res = texture(tex_sampler1, gl_PointCoord.xy);
-            }
-            break;
-        case 2:
-            if (enable_texture_2d[2])
-            {
-                res = texture(tex_sampler2, gl_PointCoord.xy);
-            }
-            break;
-        case 3:
-            if (enable_texture_2d[3])
-            {
-                res = texture(tex_sampler3, gl_PointCoord.xy);
             }
             break;
         default:
@@ -976,22 +916,12 @@ void main()
 
     for (int i = 0; i < kMaxTexUnits; i++)
     {
-        vec4 textureColor;
-
-        if (point_rasterization && point_sprite_enabled &&
-            point_sprite_coord_replace[i]) {
-            textureColor = getPointSpriteTextureColor(i);
-        } else {
-            textureColor = getTextureColor(i);
-        }
-
         currentFragment = textureFunction(
             i, texture_format[i], texture_env_mode[i], combine_rgb[i], combine_alpha[i],
             src0_rgb[i], src0_alpha[i], src1_rgb[i], src1_alpha[i], src2_rgb[i], src2_alpha[i],
             op0_rgb[i], op0_alpha[i], op1_rgb[i], op1_alpha[i], op2_rgb[i], op2_alpha[i],
             texture_env_color[i], texture_env_rgb_scale[i], texture_env_alpha_scale[i],
-            vertex_color, texturePrevColor, textureColor);
-
+            vertex_color, texturePrevColor, getTextureColor(i));
         texturePrevColor = currentFragment;
     }
 

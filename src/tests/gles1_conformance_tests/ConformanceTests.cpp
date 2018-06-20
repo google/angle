@@ -325,6 +325,7 @@ TEST_P(GLES1ConformanceTest, PointAntiAlias)
 
 TEST_P(GLES1ConformanceTest, PointRaster)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, PointRasterExec());
 }
 
@@ -492,40 +493,24 @@ TEST_P(GLES1ConformanceTest, MatrixQuery)
 
 TEST_P(GLES1ConformanceTest, BufferObject)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, BufferObjectExec());
 }
 
 TEST_P(GLES1ConformanceTest, PointSizeArray)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, PointSizeArrayExec());
 }
 
 TEST_P(GLES1ConformanceTest, PointSprite)
 {
+    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, PointSpriteExec());
 }
 
 TEST_P(GLES1ConformanceTest, UserClip)
 {
-    // "2.11 Clipping" describes the complementarity criterion, where a
-    // primitive drawn once with a particular clip plane and again with the
-    // negated version of the clip plane must not overdraw for pixels where the
-    // plane equation evaluates exactly to zero; that is, we would need to
-    // detect previously drawn fragments from one clip plane that lie exactly
-    // on the half space boundary, and avoid drawing them if the same primitive
-    // is issued next draw with a negated version of the clip plane.
-    //
-    // TODO(lfy@google.com)
-    // We can skip the test for now, or seed the test with a sufficiently nice
-    // random number so that it still test clip planes, but doesn't have any
-    // pixels exactly on half space boundaries.
-    //
-    // Proper fix would either involve a more complex scheme to track fragments
-    // on the half space boundary and discard or not next draw based on whether
-    // they are hit again, or to pass through to a hardware clip plane
-    // implementation (available in desktop GL or Vulkan)
-
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, UserClipExec());
 }
 

@@ -1472,7 +1472,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
   private:
     void initialize();
 
-    Error prepareForDraw(PrimitiveMode mode);
+    Error prepareForDraw();
     Error prepareForClear(GLbitfield mask);
     Error prepareForClearBuffer(GLenum buffer, GLint drawbuffer);
     Error syncState();

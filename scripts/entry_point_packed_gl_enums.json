@@ -271,18 +271,6 @@
     "glMatrixMode": {
         "mode": "MatrixType"
     },
-    "glPointParameterf": {
-        "pname" : "PointParameter"
-    },
-    "glPointParameterfv": {
-        "pname" : "PointParameter"
-    },
-    "glPointParameterx": {
-        "pname" : "PointParameter"
-    },
-    "glPointParameterxv": {
-        "pname" : "PointParameter"
-    },
     "glQueryCounterEXT": {
         "target": "QueryType"
     },

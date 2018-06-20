@@ -1302,10 +1302,6 @@ void Context::getFloatvImpl(GLenum pname, GLfloat *params)
             params[0] = mCaps.minAliasedPointSize;
             params[1] = mCaps.maxAliasedPointSize;
             break;
-        case GL_SMOOTH_POINT_SIZE_RANGE:
-            params[0] = mCaps.minSmoothPointSize;
-            params[1] = mCaps.maxSmoothPointSize;
-            break;
         case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
             ASSERT(mExtensions.textureFilterAnisotropic);
             *params = mExtensions.maxTextureAnisotropy;
@@ -2087,7 +2083,7 @@ void Context::drawArrays(PrimitiveMode mode, GLint first, GLsizei count)
         return;
     }
 
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(mImplementation->drawArrays(this, mode, first, count));
     MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(), count, 1);
 }
@@ -2103,7 +2099,7 @@ void Context::drawArraysInstanced(PrimitiveMode mode,
         return;
     }
 
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(
         mImplementation->drawArraysInstanced(this, mode, first, count, instanceCount));
     MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(), count,
@@ -2118,7 +2114,7 @@ void Context::drawElements(PrimitiveMode mode, GLsizei count, GLenum type, const
         return;
     }
 
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(mImplementation->drawElements(this, mode, count, type, indices));
 }
 
@@ -2134,7 +2130,7 @@ void Context::drawElementsInstanced(PrimitiveMode mode,
         return;
     }
 
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(
         mImplementation->drawElementsInstanced(this, mode, count, type, indices, instances));
 }
@@ -2152,20 +2148,20 @@ void Context::drawRangeElements(PrimitiveMode mode,
         return;
     }
 
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(
         mImplementation->drawRangeElements(this, mode, start, end, count, type, indices));
 }
 
 void Context::drawArraysIndirect(PrimitiveMode mode, const void *indirect)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(mImplementation->drawArraysIndirect(this, mode, indirect));
 }
 
 void Context::drawElementsIndirect(PrimitiveMode mode, GLenum type, const void *indirect)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    ANGLE_CONTEXT_TRY(prepareForDraw());
     ANGLE_CONTEXT_TRY(mImplementation->drawElementsIndirect(this, mode, type, indirect));
 }
 
@@ -3051,7 +3047,6 @@ Extensions Context::generateSupportedExtensions() const
         // Default extensions for GLES1
         supportedExtensions.pointSizeArray = true;
         supportedExtensions.textureCubeMap = true;
-        supportedExtensions.pointSprite    = true;
     }
 
     if (getClientVersion() < ES_3_0)
@@ -3140,8 +3135,6 @@ void Context::initCaps()
         mCaps.maxModelviewMatrixStackDepth  = Caps::GlobalMatrixStackDepth;
         mCaps.maxProjectionMatrixStackDepth = Caps::GlobalMatrixStackDepth;
         mCaps.maxTextureMatrixStackDepth    = Caps::GlobalMatrixStackDepth;
-        mCaps.minSmoothPointSize            = 1.0f;
-        mCaps.maxSmoothPointSize            = 1.0f;
     }
 
     // Apply/Verify implementation limits
@@ -3318,11 +3311,11 @@ void Context::initWorkarounds()
     mWorkarounds.loseContextOnOutOfMemory = (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
 }
 
-Error Context::prepareForDraw(PrimitiveMode mode)
+Error Context::prepareForDraw()
 {
     if (mGLES1Renderer)
     {
-        ANGLE_TRY(mGLES1Renderer->prepareForDraw(mode, this, &mGLState));
+        ANGLE_TRY(mGLES1Renderer->prepareForDraw(this, &mGLState));
     }
 
     ANGLE_TRY(syncDirtyObjects());
@@ -7133,16 +7126,8 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             case GL_FOG_START:
             case GL_FOG_END:
             case GL_FOG_MODE:
-            case GL_POINT_SIZE:
-            case GL_POINT_SIZE_MIN:
-            case GL_POINT_SIZE_MAX:
-            case GL_POINT_FADE_THRESHOLD_SIZE:
                 *type      = GL_FLOAT;
                 *numParams = 1;
-                return true;
-            case GL_SMOOTH_POINT_SIZE_RANGE:
-                *type      = GL_FLOAT;
-                *numParams = 2;
                 return true;
             case GL_CURRENT_COLOR:
             case GL_CURRENT_TEXTURE_COORDS:
@@ -7152,7 +7137,6 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
                 *numParams = 4;
                 return true;
             case GL_CURRENT_NORMAL:
-            case GL_POINT_DISTANCE_ATTENUATION:
                 *type      = GL_FLOAT;
                 *numParams = 3;
                 return true;

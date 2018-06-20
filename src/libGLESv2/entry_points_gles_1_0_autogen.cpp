@@ -1030,12 +1030,11 @@ void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        context->gatherParams<EntryPoint::PointParameterf>(pnamePacked, param);
+        context->gatherParams<EntryPoint::PointParameterf>(pname, param);
 
-        if (context->skipValidation() || ValidatePointParameterf(context, pnamePacked, param))
+        if (context->skipValidation() || ValidatePointParameterf(context, pname, param))
         {
-            context->pointParameterf(pnamePacked, param);
+            context->pointParameterf(pname, param);
         }
     }
 }
@@ -1047,12 +1046,11 @@ void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        context->gatherParams<EntryPoint::PointParameterfv>(pnamePacked, params);
+        context->gatherParams<EntryPoint::PointParameterfv>(pname, params);
 
-        if (context->skipValidation() || ValidatePointParameterfv(context, pnamePacked, params))
+        if (context->skipValidation() || ValidatePointParameterfv(context, pname, params))
         {
-            context->pointParameterfv(pnamePacked, params);
+            context->pointParameterfv(pname, params);
         }
     }
 }
@@ -1064,12 +1062,11 @@ void GL_APIENTRY PointParameterx(GLenum pname, GLfixed param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        context->gatherParams<EntryPoint::PointParameterx>(pnamePacked, param);
+        context->gatherParams<EntryPoint::PointParameterx>(pname, param);
 
-        if (context->skipValidation() || ValidatePointParameterx(context, pnamePacked, param))
+        if (context->skipValidation() || ValidatePointParameterx(context, pname, param))
         {
-            context->pointParameterx(pnamePacked, param);
+            context->pointParameterx(pname, param);
         }
     }
 }
@@ -1081,12 +1078,11 @@ void GL_APIENTRY PointParameterxv(GLenum pname, const GLfixed *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        PointParameter pnamePacked = FromGLenum<PointParameter>(pname);
-        context->gatherParams<EntryPoint::PointParameterxv>(pnamePacked, params);
+        context->gatherParams<EntryPoint::PointParameterxv>(pname, params);
 
-        if (context->skipValidation() || ValidatePointParameterxv(context, pnamePacked, params))
+        if (context->skipValidation() || ValidatePointParameterxv(context, pname, params))
         {
-            context->pointParameterxv(pnamePacked, params);
+            context->pointParameterxv(pname, params);
         }
     }
 }

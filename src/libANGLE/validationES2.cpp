@@ -818,7 +818,6 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_CLIP_PLANE4:
         case GL_CLIP_PLANE5:
         case GL_FOG:
-        case GL_POINT_SMOOTH:
             return context->getClientVersion() < Version(2, 0);
         case GL_POINT_SIZE_ARRAY_OES:
             return context->getClientVersion() < Version(2, 0) &&
@@ -826,9 +825,7 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_TEXTURE_CUBE_MAP:
             return context->getClientVersion() < Version(2, 0) &&
                    context->getExtensions().textureCubeMap;
-        case GL_POINT_SPRITE_OES:
-            return context->getClientVersion() < Version(2, 0) &&
-                   context->getExtensions().pointSprite;
+
         default:
             return false;
     }

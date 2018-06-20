@@ -812,12 +812,6 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_FOG:
             mGLES1State.mFogEnabled = enabled;
             break;
-        case GL_POINT_SMOOTH:
-            mGLES1State.mPointSmoothEnabled = enabled;
-            break;
-        case GL_POINT_SPRITE_OES:
-            mGLES1State.mPointSpriteEnabled = enabled;
-            break;
         default:
             UNREACHABLE();
     }
@@ -913,10 +907,7 @@ bool State::getEnableFeature(GLenum feature) const
             return mGLES1State.mClipPlanes[feature - GL_CLIP_PLANE0].enabled;
         case GL_FOG:
             return mGLES1State.mFogEnabled;
-        case GL_POINT_SMOOTH:
-            return mGLES1State.mPointSmoothEnabled;
-        case GL_POINT_SPRITE_OES:
-            return mGLES1State.mPointSpriteEnabled;
+            break;
         default:
             UNREACHABLE();
             return false;
@@ -2044,15 +2035,6 @@ void State::getFloatv(GLenum pname, GLfloat *params)
         case GL_FOG_END:
         case GL_FOG_COLOR:
             GetFogParameters(&mGLES1State, pname, params);
-            break;
-        case GL_POINT_SIZE:
-            GetPointSize(&mGLES1State, params);
-            break;
-        case GL_POINT_SIZE_MIN:
-        case GL_POINT_SIZE_MAX:
-        case GL_POINT_FADE_THRESHOLD_SIZE:
-        case GL_POINT_DISTANCE_ATTENUATION:
-            GetPointParameter(&mGLES1State, FromGLenum<PointParameter>(pname), params);
             break;
         default:
             UNREACHABLE();
