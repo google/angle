@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a6435f0a_a2cdbb7c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-20T17:07:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a22973d3_464de6da",
+      "revId": "c0ccbc0272ae4f4cf1f6d879016d5fdcb35addf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9aa083b2_1e8296f1",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 4
@@ -39,6 +57,30 @@
       "revId": "c0ccbc0272ae4f4cf1f6d879016d5fdcb35addf5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff0c5e75_52476287",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-20T17:07:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9aa083b2_1e8296f1",
+      "range": {
+        "startLine": 296,
+        "startChar": 15,
+        "endLine": 296,
+        "endChar": 53
+      },
+      "revId": "c0ccbc0272ae4f4cf1f6d879016d5fdcb35addf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -101,6 +143,30 @@
       "side": 1,
       "message": "Sounds good. Is the code repeated? Should we make a helper?",
       "parentUuid": "a4f6947b_96a3567d",
+      "range": {
+        "startLine": 180,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 71
+      },
+      "revId": "c0ccbc0272ae4f4cf1f6d879016d5fdcb35addf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61f4c38e_95f737d3",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-20T17:07:12Z",
+      "side": 1,
+      "message": "Yes, 3 places. Done",
+      "parentUuid": "7bc7e5e9_f0abf57d",
       "range": {
         "startLine": 180,
         "startChar": 0,
