@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a335e091_5aafd502",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T13:40:16Z",
+      "side": 1,
+      "message": "You should make sure that SeparateDeclarations is run on the AST before this - then you can assert that the declaration has only a single child and this code becomes simpler.",
+      "revId": "d33c5f564c978d818039e7606f08c2509d0d1946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "228ee0ba_f9f306f0",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T13:40:16Z",
+      "side": 1,
+      "message": "Comments with GLSL corresponding to the added AST structures makes this type of code easier to read. Suggest you add:\n\nstruct s0 { ... };",
+      "revId": "d33c5f564c978d818039e7606f08c2509d0d1946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "218e0e54_78eb7901",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T13:40:16Z",
+      "side": 1,
+      "message": "Maybe \"structDeclaratorVar\"? The variable itself doesn\u0027t have a name so \"namedVar\" is a bit of an odd name.",
+      "range": {
+        "startLine": 78,
+        "startChar": 19,
+        "endLine": 78,
+        "endChar": 28
+      },
+      "revId": "d33c5f564c978d818039e7606f08c2509d0d1946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a20cb592_d7acde47",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T13:40:16Z",
+      "side": 1,
+      "message": "This could also be \"structDeclarator\".",
+      "range": {
+        "startLine": 80,
+        "startChar": 23,
+        "endLine": 80,
+        "endChar": 38
+      },
+      "revId": "d33c5f564c978d818039e7606f08c2509d0d1946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82e154dd_328f7eef",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T13:40:16Z",
+      "side": 1,
+      "message": "Here this kind of comment would make things clearer: // uniform s0 \u003cstructUniformName\u003e;",
+      "revId": "d33c5f564c978d818039e7606f08c2509d0d1946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
