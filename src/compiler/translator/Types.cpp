@@ -396,33 +396,6 @@ const char *TType::getBuiltInTypeNameString() const
     return getBasicString();
 }
 
-TString TType::getCompleteString() const
-{
-    TStringStream stream;
-
-    if (invariant)
-        stream << "invariant ";
-    if (qualifier != EvqTemporary && qualifier != EvqGlobal)
-        stream << getQualifierString() << " ";
-    if (precision != EbpUndefined)
-        stream << getPrecisionString() << " ";
-    if (mArraySizes)
-    {
-        for (auto arraySizeIter = mArraySizes->rbegin(); arraySizeIter != mArraySizes->rend();
-             ++arraySizeIter)
-        {
-            stream << "array[" << (*arraySizeIter) << "] of ";
-        }
-    }
-    if (isMatrix())
-        stream << getCols() << "X" << getRows() << " matrix of ";
-    else if (isVector())
-        stream << getNominalSize() << "-component vector of ";
-
-    stream << getBasicString();
-    return stream.str();
-}
-
 int TType::getDeepestStructNesting() const
 {
     return mStructure ? mStructure->deepestNesting() : 0;

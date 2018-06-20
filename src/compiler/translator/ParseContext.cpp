@@ -367,25 +367,26 @@ void TParseContext::outOfRangeError(bool isError,
 //
 // Same error message for all places assignments don't work.
 //
-void TParseContext::assignError(const TSourceLoc &line, const char *op, TString left, TString right)
+void TParseContext::assignError(const TSourceLoc &line,
+                                const char *op,
+                                const TType &left,
+                                const TType &right)
 {
-    std::stringstream reasonStream;
+    TInfoSinkBase reasonStream;
     reasonStream << "cannot convert from '" << right << "' to '" << left << "'";
-    std::string reason = reasonStream.str();
-    error(line, reason.c_str(), op);
+    error(line, reasonStream.c_str(), op);
 }
 
 //
 // Same error message for all places unary operations don't work.
 //
-void TParseContext::unaryOpError(const TSourceLoc &line, const char *op, TString operand)
+void TParseContext::unaryOpError(const TSourceLoc &line, const char *op, const TType &operand)
 {
-    std::stringstream reasonStream;
+    TInfoSinkBase reasonStream;
     reasonStream << "wrong operand type - no operation '" << op
                  << "' exists that takes an operand of type " << operand
                  << " (or there is no acceptable conversion)";
-    std::string reason = reasonStream.str();
-    error(line, reason.c_str(), op);
+    error(line, reasonStream.c_str(), op);
 }
 
 //
@@ -393,16 +394,15 @@ void TParseContext::unaryOpError(const TSourceLoc &line, const char *op, TString
 //
 void TParseContext::binaryOpError(const TSourceLoc &line,
                                   const char *op,
-                                  TString left,
-                                  TString right)
+                                  const TType &left,
+                                  const TType &right)
 {
-    std::stringstream reasonStream;
+    TInfoSinkBase reasonStream;
     reasonStream << "wrong operand types - no operation '" << op
                  << "' exists that takes a left-hand operand of type '" << left
                  << "' and a right operand of type '" << right
                  << "' (or there is no acceptable conversion)";
-    std::string reason = reasonStream.str();
-    error(line, reason.c_str(), op);
+    error(line, reasonStream.c_str(), op);
 }
 
 void TParseContext::checkPrecisionSpecified(const TSourceLoc &line,
@@ -1045,8 +1045,9 @@ bool TParseContext::checkArrayElementIsNotArray(const TSourceLoc &line,
 {
     if (mShaderVersion < 310 && elementType.isArray())
     {
-        error(line, "cannot declare arrays of arrays",
-              TType(elementType).getCompleteString().c_str());
+        TInfoSinkBase typeString;
+        typeString << TType(elementType);
+        error(line, "cannot declare arrays of arrays", typeString.c_str());
         return false;
     }
     return true;
@@ -1076,8 +1077,10 @@ bool TParseContext::checkIsValidTypeAndQualifierForArray(const TSourceLoc &index
         sh::IsVarying(elementType.qualifier) &&
         !IsGeometryShaderInput(mShaderType, elementType.qualifier))
     {
+        TInfoSinkBase typeString;
+        typeString << TType(elementType);
         error(indexLocation, "cannot declare arrays of structs of this qualifier",
-              TType(elementType).getCompleteString().c_str());
+              typeString.c_str());
         return false;
     }
     return checkIsValidQualifierForArray(indexLocation, elementType);
@@ -1922,10 +1925,9 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     {
         if (EvqConst != initializer->getType().getQualifier())
         {
-            std::stringstream reasonStream;
-            reasonStream << "assigning non-constant to '" << type->getCompleteString() << "'";
-            std::string reason = reasonStream.str();
-            error(line, reason.c_str(), "=");
+            TInfoSinkBase reasonStream;
+            reasonStream << "assigning non-constant to '" << *type << "'";
+            error(line, reasonStream.c_str(), "=");
 
             // We're still going to declare the variable to avoid extra error messages.
             type->setQualifier(EvqTemporary);
@@ -1975,8 +1977,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
 
     if (!binaryOpCommonCheck(EOpInitialize, intermSymbol, initializer, line))
     {
-        assignError(line, "=", variable->getType().getCompleteString(),
-                    initializer->getCompleteString());
+        assignError(line, "=", variable->getType(), initializer->getType());
         return false;
     }
 
@@ -3396,8 +3397,10 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
         if (type.isStructureContainingArrays())
         {
             // ESSL 1.00.17 section 6.1 Function Definitions
+            TInfoSinkBase typeString;
+            typeString << TType(type);
             error(location, "structures containing arrays can't be function return values",
-                  TType(type).getCompleteString().c_str());
+                  typeString.c_str());
         }
     }
 
@@ -4871,7 +4874,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
             if (child->getBasicType() != EbtBool || child->isMatrix() || child->isArray() ||
                 child->isVector())
             {
-                unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
+                unaryOpError(loc, GetOperatorString(op), child->getType());
                 return nullptr;
             }
             break;
@@ -4879,7 +4882,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
             if ((child->getBasicType() != EbtInt && child->getBasicType() != EbtUInt) ||
                 child->isMatrix() || child->isArray())
             {
-                unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
+                unaryOpError(loc, GetOperatorString(op), child->getType());
                 return nullptr;
             }
             break;
@@ -4893,7 +4896,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
                 child->getBasicType() == EbtBool || child->isArray() ||
                 IsOpaqueType(child->getBasicType()))
             {
-                unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
+                unaryOpError(loc, GetOperatorString(op), child->getType());
                 return nullptr;
             }
             break;
@@ -4904,7 +4907,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
 
     if (child->getMemoryQualifier().writeonly)
     {
-        unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
+        unaryOpError(loc, GetOperatorString(op), child->getType());
         return nullptr;
     }
 
@@ -5327,8 +5330,7 @@ TIntermTyped *TParseContext::addBinaryMath(TOperator op,
     TIntermTyped *node = addBinaryMathInternal(op, left, right, loc);
     if (node == 0)
     {
-        binaryOpError(loc, GetOperatorString(op), left->getCompleteString(),
-                      right->getCompleteString());
+        binaryOpError(loc, GetOperatorString(op), left->getType(), right->getType());
         return left;
     }
     return node;
@@ -5342,8 +5344,7 @@ TIntermTyped *TParseContext::addBinaryMathBooleanResult(TOperator op,
     TIntermTyped *node = addBinaryMathInternal(op, left, right, loc);
     if (node == nullptr)
     {
-        binaryOpError(loc, GetOperatorString(op), left->getCompleteString(),
-                      right->getCompleteString());
+        binaryOpError(loc, GetOperatorString(op), left->getType(), right->getType());
         node = CreateBoolNode(false);
         node->setLine(loc);
     }
@@ -5374,7 +5375,7 @@ TIntermTyped *TParseContext::addAssign(TOperator op,
     }
     if (node == nullptr)
     {
-        assignError(loc, "assign", left->getCompleteString(), right->getCompleteString());
+        assignError(loc, "assign", left->getType(), right->getType());
         return left;
     }
     if (op != EOpAssign)
@@ -5885,12 +5886,10 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
 
     if (trueExpression->getType() != falseExpression->getType())
     {
-        std::stringstream reasonStream;
-        reasonStream << "mismatching ternary operator operand types '"
-                     << trueExpression->getCompleteString() << " and '"
-                     << falseExpression->getCompleteString() << "'";
-        std::string reason = reasonStream.str();
-        error(loc, reason.c_str(), "?:");
+        TInfoSinkBase reasonStream;
+        reasonStream << "mismatching ternary operator operand types '" << trueExpression->getType()
+                     << " and '" << falseExpression->getType() << "'";
+        error(loc, reasonStream.c_str(), "?:");
         return falseExpression;
     }
     if (IsOpaqueType(trueExpression->getBasicType()))

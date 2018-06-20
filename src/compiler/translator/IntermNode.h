@@ -160,7 +160,6 @@ class TIntermTyped : public TIntermNode
     bool isScalar() const { return getType().isScalar(); }
     bool isScalarInt() const { return getType().isScalarInt(); }
     const char *getBasicString() const { return getType().getBasicString(); }
-    TString getCompleteString() const { return getType().getCompleteString(); }
 
     unsigned int getOutermostArraySize() const { return getType().getOutermostArraySize(); }
 

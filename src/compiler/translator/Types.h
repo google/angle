@@ -291,8 +291,6 @@ class TType
 
     const char *getBuiltInTypeNameString() const;
 
-    TString getCompleteString() const;
-
     // If this type is a struct, returns the deepest struct nesting of
     // any field in the struct. For example:
     //   struct nesting1 {
