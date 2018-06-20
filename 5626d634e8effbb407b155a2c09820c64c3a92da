@@ -233,6 +233,24 @@
     },
     {
       "key": {
+        "uuid": "8fa77acf_69a13563",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-20T19:30:11Z",
+      "side": 1,
+      "message": "Goto is frowned upon, I think what we would do here is store all things that might require later deletion in a struct and at the end check for every member or something similar to that.\n\nSee for example how it is done in Chrome https://cs.chromium.org/chromium/src/gpu/config/gpu_info_collector_win.cc?q\u003dgpu_info_collector_win\u0026sq\u003dpackage:chromium\u0026g\u003d0\u0026l\u003d362",
+      "parentUuid": "51fbe846_01a0a436",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ade80f2e_136b7a0b",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
@@ -279,6 +297,24 @@
       "writtenOn": "2018-06-20T19:26:07Z",
       "side": 1,
       "message": "Corentin\u0027s suggestion is good. Use .data to get a pointer to the base element of the vector. Initialize the vector with the count and it will be sized correctly.",
+      "parentUuid": "bf882512_e5635cbc",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20145e2d_7339348a",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-20T19:30:11Z",
+      "side": 1,
+      "message": "If we return early for example at [1], then pPhysicalDevices would get leaked. An std::vector would help thanks to RAII. Also ANGLE doesn\u0027t use hungarian notation so this variable could be named physicalDevices.",
       "parentUuid": "bf882512_e5635cbc",
       "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -397,6 +433,23 @@
         "endLine": 109,
         "endChar": 27
       },
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc63a6fa_e0bf6a91",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-20T19:30:11Z",
+      "side": 1,
+      "message": "[1]",
       "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
