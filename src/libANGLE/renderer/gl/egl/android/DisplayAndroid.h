@@ -44,7 +44,10 @@ class DisplayAndroid : public DisplayEGL
                            EGLenum target,
                            const egl::AttributeMap &attribs) override;
 
-    ContextImpl *createContext(const gl::ContextState &state) override;
+    ContextImpl *createContext(const gl::ContextState &state,
+                               const egl::Config *configuration,
+                               const gl::Context *shareContext,
+                               const egl::AttributeMap &attribs) override;
 
     egl::ConfigSet generateConfigs() override;
 

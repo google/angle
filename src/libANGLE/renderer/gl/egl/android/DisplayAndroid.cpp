@@ -255,7 +255,10 @@ ImageImpl *DisplayAndroid::createImage(const egl::ImageState &state,
     return DisplayGL::createImage(state, target, attribs);
 }
 
-ContextImpl *DisplayAndroid::createContext(const gl::ContextState &state)
+ContextImpl *DisplayAndroid::createContext(const gl::ContextState &state,
+                                           const egl::Config *configuration,
+                                           const gl::Context *shareContext,
+                                           const egl::AttributeMap &attribs)
 {
     return new ContextGL(state, mRenderer);
 }

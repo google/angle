@@ -200,7 +200,10 @@ DeviceImpl *DisplayD3D::createDevice()
     return mRenderer->createEGLDevice();
 }
 
-ContextImpl *DisplayD3D::createContext(const gl::ContextState &state)
+ContextImpl *DisplayD3D::createContext(const gl::ContextState &state,
+                                       const egl::Config *configuration,
+                                       const gl::Context *shareContext,
+                                       const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
     return mRenderer->createContext(state);
