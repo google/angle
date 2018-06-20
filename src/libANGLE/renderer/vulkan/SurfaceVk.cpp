@@ -425,10 +425,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         ANGLE_TRY(mDepthStencilImage.initMemory(device, renderer->getMemoryProperties(),
                                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
-        const VkImageAspectFlags aspect =
-            (dsFormat.textureFormat().depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
-            (dsFormat.textureFormat().stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
-
+        const VkImageAspectFlags aspect = vk::GetDepthStencilAspectFlags(dsFormat.textureFormat());
         VkClearDepthStencilValue depthStencilClearValue = {1.0f, 0};
 
         // Set transfer dest layout, and clear the image.

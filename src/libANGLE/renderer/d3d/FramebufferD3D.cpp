@@ -293,8 +293,7 @@ bool FramebufferD3D::checkStatus(const gl::Context *context) const
 {
     // if we have both a depth and stencil buffer, they must refer to the same object
     // since we only support packed_depth_stencil and not separate depth and stencil
-    if (mState.getDepthAttachment() != nullptr && mState.getStencilAttachment() != nullptr &&
-        mState.getDepthStencilAttachment() == nullptr)
+    if (mState.hasSeparateDepthAndStencilAttachments())
     {
         return false;
     }

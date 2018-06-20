@@ -86,6 +86,8 @@ namespace vk
 {
 struct Format;
 
+VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format);
+
 template <typename T>
 struct ImplTypeHelper;
 

@@ -262,6 +262,11 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
 
 namespace vk
 {
+VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format)
+{
+    return (format.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
+           (format.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
+}
 
 Error::Error(VkResult result) : mResult(result), mFile(nullptr), mLine(0)
 {

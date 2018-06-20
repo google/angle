@@ -58,8 +58,7 @@ void RenderTargetVk::onDepthStencilDraw(vk::CommandGraphResource *framebufferVk,
 
     // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
     const angle::Format &format    = mImage->getFormat().textureFormat();
-    VkImageAspectFlags aspectFlags = (format.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
-                                     (format.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
+    VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
 
     mImage->changeLayoutWithStages(aspectFlags, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
                                    VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,

@@ -79,6 +79,7 @@ class FramebufferState final : angle::NonCopyable
     }
 
     bool attachmentsHaveSameDimensions() const;
+    bool hasSeparateDepthAndStencilAttachments() const;
     bool colorAttachmentsAreUniqueImages() const;
     Box getDimensions() const;
 

@@ -516,6 +516,14 @@ bool FramebufferState::attachmentsHaveSameDimensions() const
     return !hasMismatchedSize(mStencilAttachment);
 }
 
+bool FramebufferState::hasSeparateDepthAndStencilAttachments() const
+{
+    // if we have both a depth and stencil buffer, they must refer to the same object
+    // since we only support packed_depth_stencil and not separate depth and stencil
+    return (getDepthAttachment() != nullptr && getStencilAttachment() != nullptr &&
+            getDepthStencilAttachment() == nullptr);
+}
+
 const FramebufferAttachment *FramebufferState::getDrawBuffer(size_t drawBufferIdx) const
 {
     ASSERT(drawBufferIdx < mDrawBufferStates.size());
