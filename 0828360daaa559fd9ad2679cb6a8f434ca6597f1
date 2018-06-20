@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e33342a_358c6e79",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1049,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T14:34:43Z",
+      "side": 1,
+      "message": "did you also want to add an overload for TPublicType? Maybe called internally by TType?",
+      "range": {
+        "startLine": 1049,
+        "startChar": 8,
+        "endLine": 1049,
+        "endChar": 41
+      },
+      "revId": "0828360daaa559fd9ad2679cb6a8f434ca6597f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
