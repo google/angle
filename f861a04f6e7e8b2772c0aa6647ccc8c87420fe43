@@ -42,6 +42,47 @@
     },
     {
       "key": {
+        "uuid": "c3195581_7fad7a99",
+        "filename": "include/GLES2/gl2ext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-06-20T11:42:21Z",
+      "side": 1,
+      "message": "gl2ext.h updated in this commit: https://chromium-review.googlesource.com/c/angle/angle/+/1107494.\n\ngl.xml has no new update from Khronos.",
+      "parentUuid": "0bcc0943_368868a7",
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a8eb34a_5009f1a8",
+        "filename": "scripts/gl_angle_ext.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 954,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-06-20T11:42:21Z",
+      "side": 1,
+      "message": "Geoff, there is a similar GL_ARB_parallel_shader_compile in gl.xml already. Should I use that one instead of adding a new one here in gl_angle_ext.xml?",
+      "range": {
+        "startLine": 954,
+        "startChar": 25,
+        "endLine": 954,
+        "endChar": 55
+      },
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "797bdfca_c0c40aa5",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 1
