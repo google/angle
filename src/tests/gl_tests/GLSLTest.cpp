@@ -1824,6 +1824,30 @@ TEST_P(GLSLTest, TextureLOD)
     glDeleteShader(shader);
 }
 
+// Test to verify the compilation of a shader that would have a sampler unused in a vertex shader
+// but used in the fragment shader.
+TEST_P(GLSLTest, VerifySamplerInBothVertexAndFragmentShaders)
+{
+    const std::string vs =
+        R"(precision mediump float;
+        uniform sampler2D s_texture;
+        void main()
+        {
+            gl_Position = vec4(1.0, 1.0, 1.0, 1.0);
+        })";
+
+    const std::string fs =
+        R"(precision mediump float;
+        uniform sampler2D s_texture;
+        void main()
+        {
+            gl_FragColor = texture2D(s_texture, vec2(0.0, 0.0));
+        })";
+
+    GLuint program = CompileProgram(vs, fs);
+    EXPECT_NE(0u, program);
+}
+
 // Test that two constructors which have vec4 and mat2 parameters get disambiguated (issue in
 // HLSL).
 TEST_P(GLSLTest_ES3, AmbiguousConstructorCall2x2)

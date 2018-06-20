@@ -237,22 +237,14 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
         if (samplerUniform.isActive(gl::ShaderType::Vertex))
         {
             InsertLayoutSpecifierString(&vertexSource, samplerName, setBindingString);
-            InsertQualifierSpecifierString(&vertexSource, samplerName, kUniformQualifier);
         }
-        else
-        {
-            InsertQualifierSpecifierString(&vertexSource, samplerName, "");
-        }
+        InsertQualifierSpecifierString(&vertexSource, samplerName, kUniformQualifier);
 
         if (samplerUniform.isActive(gl::ShaderType::Fragment))
         {
             InsertLayoutSpecifierString(&fragmentSource, samplerName, setBindingString);
-            InsertQualifierSpecifierString(&fragmentSource, samplerName, kUniformQualifier);
         }
-        else
-        {
-            InsertQualifierSpecifierString(&fragmentSource, samplerName, "");
-        }
+        InsertQualifierSpecifierString(&fragmentSource, samplerName, kUniformQualifier);
 
         textureCount++;
     }
