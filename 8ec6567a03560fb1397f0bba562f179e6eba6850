@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc64fbb3_b3fbfb1d",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1848,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T20:07:14Z",
+      "side": 1,
+      "message": "You could optionally do a simple render with a mono color texture to verify the operation works.",
+      "range": {
+        "startLine": 1847,
+        "startChar": 0,
+        "endLine": 1848,
+        "endChar": 27
+      },
+      "revId": "8ec6567a03560fb1397f0bba562f179e6eba6850",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
