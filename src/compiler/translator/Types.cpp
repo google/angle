@@ -194,7 +194,7 @@ TType::TType(const TPublicType &p)
     }
 }
 
-TType::TType(const TStructure *userDef)
+TType::TType(const TStructure *userDef, bool isStructSpecifier)
     : type(EbtStruct),
       precision(EbpUndefined),
       qualifier(EvqTemporary),
@@ -206,7 +206,7 @@ TType::TType(const TStructure *userDef)
       mArraySizes(nullptr),
       mInterfaceBlock(nullptr),
       mStructure(userDef),
-      mIsStructSpecifier(false),
+      mIsStructSpecifier(isStructSpecifier),
       mMangledName(nullptr)
 {
 }

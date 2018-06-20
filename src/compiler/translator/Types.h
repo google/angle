@@ -100,7 +100,7 @@ class TType
           unsigned char ps = 1,
           unsigned char ss = 1);
     explicit TType(const TPublicType &p);
-    explicit TType(const TStructure *userDef);
+    TType(const TStructure *userDef, bool isStructSpecifier);
     TType(const TInterfaceBlock *interfaceBlockIn,
           TQualifier qualifierIn,
           TLayoutQualifier layoutQualifierIn);

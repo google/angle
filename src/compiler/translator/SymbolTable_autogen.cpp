@@ -10357,7 +10357,7 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
         new TStructure(BuiltInId::gl_DepthRangeParameters, BuiltInName::gl_DepthRangeParameters,
                        TExtension::UNDEFINED, fields_gl_DepthRangeParameters);
     mVar_gl_DepthRangeParameters = gl_DepthRangeParameters;
-    TType *type_gl_DepthRange    = new TType(gl_DepthRangeParameters);
+    TType *type_gl_DepthRange    = new TType(gl_DepthRangeParameters, false);
     type_gl_DepthRange->setQualifier(EvqUniform);
     type_gl_DepthRange->realize();
     mVar_gl_DepthRange =

@@ -2931,6 +2931,59 @@ TEST_P(WebGLGLSLTest, UninitializedNamelessStructInGlobalScope)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests nameless struct uniforms.
+TEST_P(GLSLTest, EmbeddedStructUniform)
+{
+    const char kFragmentShader[] = R"(precision mediump float;
+uniform struct { float q; } b;
+void main()
+{
+    gl_FragColor = vec4(1, 0, 0, 1);
+    if (b.q == 0.5)
+    {
+        gl_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+    glUseProgram(program);
+    GLint uniLoc = glGetUniformLocation(program, "b.q");
+    ASSERT_NE(-1, uniLoc);
+    glUniform1f(uniLoc, 0.5f);
+
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Tests two nameless struct uniforms.
+TEST_P(GLSLTest, TwoEmbeddedStructUniforms)
+{
+    const char kFragmentShader[] = R"(precision mediump float;
+uniform struct { float q; } b, c;
+void main()
+{
+    gl_FragColor = vec4(1, 0, 0, 1);
+    if (b.q == 0.5 && c.q == 1.0)
+    {
+        gl_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+    glUseProgram(program);
+
+    GLint uniLocB = glGetUniformLocation(program, "b.q");
+    ASSERT_NE(-1, uniLocB);
+    glUniform1f(uniLocB, 0.5f);
+
+    GLint uniLocC = glGetUniformLocation(program, "c.q");
+    ASSERT_NE(-1, uniLocC);
+    glUniform1f(uniLocC, 1.0f);
+
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that a loop condition that has an initializer declares a variable.
 TEST_P(GLSLTest_ES3, ConditionInitializerDeclaresVariable)
 {

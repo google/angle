@@ -157,10 +157,10 @@ class TIntermTraverser : angle::NonCopyable
     // but also with other nodes like declarations.
     struct NodeReplaceWithMultipleEntry
     {
-        NodeReplaceWithMultipleEntry(TIntermAggregateBase *_parent,
-                                     TIntermNode *_original,
-                                     TIntermSequence _replacements)
-            : parent(_parent), original(_original), replacements(_replacements)
+        NodeReplaceWithMultipleEntry(TIntermAggregateBase *parentIn,
+                                     TIntermNode *originalIn,
+                                     TIntermSequence replacementsIn)
+            : parent(parentIn), original(originalIn), replacements(std::move(replacementsIn))
         {
         }
 

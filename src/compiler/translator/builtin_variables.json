@@ -59,7 +59,7 @@
             },
             "gl_DepthRange":{
                 "level":"COMMON_BUILTINS",
-                "initDynamicType":"TType *{type_name} = new TType(gl_DepthRangeParameters); {type_name}->setQualifier(EvqUniform);"
+                "initDynamicType":"TType *{type_name} = new TType(gl_DepthRangeParameters, false); {type_name}->setQualifier(EvqUniform);"
             }
         }
     },
