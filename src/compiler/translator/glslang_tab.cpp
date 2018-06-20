@@ -3196,7 +3196,7 @@ yyreduce:
 
     {
         ES3_OR_NEWER(ImmutableString((yyvsp[-3].lex).string), (yylsp[-4]), "interface blocks");
-        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-4].interm.typeQualifierBuilder), (yylsp[-3]), ImmutableString((yyvsp[-3].lex).string), (yyvsp[-2].interm.fieldList), ImmutableString(""), (yyloc), NULL, (yyloc));
+        (yyval.interm.intermNode) = context->addInterfaceBlock(*(yyvsp[-4].interm.typeQualifierBuilder), (yylsp[-3]), ImmutableString((yyvsp[-3].lex).string), (yyvsp[-2].interm.fieldList), kEmptyImmutableString, (yyloc), NULL, (yyloc));
     }
 
     break;
@@ -3414,7 +3414,7 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[0].interm.type);
-        (yyval.interm).intermDeclaration = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), ImmutableString(""));
+        (yyval.interm).intermDeclaration = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), kEmptyImmutableString);
     }
 
     break;
@@ -4398,14 +4398,14 @@ yyreduce:
 
   case 229:
 
-    { context->enterStructDeclaration((yylsp[0]), ImmutableString("")); }
+    { context->enterStructDeclaration((yylsp[0]), kEmptyImmutableString); }
 
     break;
 
   case 230:
 
     {
-        (yyval.interm.typeSpecifierNonArray) = context->addStructure((yylsp[-4]), (yyloc), ImmutableString(""), (yyvsp[-1].interm.fieldList));
+        (yyval.interm.typeSpecifierNonArray) = context->addStructure((yylsp[-4]), (yyloc), kEmptyImmutableString, (yyvsp[-1].interm.fieldList));
     }
 
     break;

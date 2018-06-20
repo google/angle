@@ -607,7 +607,7 @@ declaration
     }
     | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE SEMICOLON {
         ES3_OR_NEWER(ImmutableString($2.string), @1, "interface blocks");
-        $$ = context->addInterfaceBlock(*$1, @2, ImmutableString($2.string), $3, ImmutableString(""), @$, NULL, @$);
+        $$ = context->addInterfaceBlock(*$1, @2, ImmutableString($2.string), $3, kEmptyImmutableString, @$, NULL, @$);
     }
     | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE IDENTIFIER SEMICOLON {
         ES3_OR_NEWER(ImmutableString($2.string), @1, "interface blocks");
@@ -740,7 +740,7 @@ init_declarator_list
 single_declaration
     : fully_specified_type {
         $$.type = $1;
-        $$.intermDeclaration = context->parseSingleDeclaration($$.type, @1, ImmutableString(""));
+        $$.intermDeclaration = context->parseSingleDeclaration($$.type, @1, kEmptyImmutableString);
     }
     | fully_specified_type identifier {
         $$.type = $1;
@@ -1200,8 +1200,8 @@ struct_specifier
     : STRUCT identifier LEFT_BRACE { context->enterStructDeclaration(@2, ImmutableString($2.string)); } struct_declaration_list RIGHT_BRACE {
         $$ = context->addStructure(@1, @2, ImmutableString($2.string), $5);
     }
-    | STRUCT LEFT_BRACE { context->enterStructDeclaration(@2, ImmutableString("")); } struct_declaration_list RIGHT_BRACE {
-        $$ = context->addStructure(@1, @$, ImmutableString(""), $4);
+    | STRUCT LEFT_BRACE { context->enterStructDeclaration(@2, kEmptyImmutableString); } struct_declaration_list RIGHT_BRACE {
+        $$ = context->addStructure(@1, @$, kEmptyImmutableString, $4);
     }
     ;
 

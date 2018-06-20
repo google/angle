@@ -184,7 +184,7 @@ void TFunction::addParameter(const TVariable *p)
     mParametersVector->push_back(p);
     mParameters  = mParametersVector->data();
     mParamCount  = mParametersVector->size();
-    mMangledName = ImmutableString("");
+    mMangledName = kEmptyImmutableString;
 }
 
 void TFunction::shareParameters(const TFunction &parametersSource)

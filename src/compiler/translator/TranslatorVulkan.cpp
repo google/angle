@@ -162,7 +162,7 @@ class RewriteStructSamplers final : public TIntermTraverser
             new TStructure(mSymbolTable, structure->name(), newFieldList, structure->symbolType());
         TType *newStructType = new TType(newStruct, true);
         TVariable *newStructVar =
-            new TVariable(mSymbolTable, ImmutableString(""), newStructType, SymbolType::Empty);
+            new TVariable(mSymbolTable, kEmptyImmutableString, newStructType, SymbolType::Empty);
         TIntermSymbol *newStructRef = new TIntermSymbol(newStructVar);
 
         TIntermDeclaration *structDecl = new TIntermDeclaration;
@@ -329,13 +329,13 @@ class NameEmbeddedUniformStructsTraverser : public TIntermTraverser
                        const TStructure *oldStructure)
     {
         // struct <structName> { ... };
-        TStructure *structure = new TStructure(mSymbolTable, ImmutableString(""),
+        TStructure *structure = new TStructure(mSymbolTable, kEmptyImmutableString,
                                                &oldStructure->fields(), SymbolType::AngleInternal);
         TType *namedType      = new TType(structure, true);
         namedType->setQualifier(EvqGlobal);
 
         TVariable *structVariable =
-            new TVariable(mSymbolTable, ImmutableString(""), namedType, SymbolType::Empty);
+            new TVariable(mSymbolTable, kEmptyImmutableString, namedType, SymbolType::Empty);
         TIntermSymbol *structDeclarator       = new TIntermSymbol(structVariable);
         TIntermDeclaration *structDeclaration = new TIntermDeclaration;
         structDeclaration->appendDeclarator(structDeclarator);

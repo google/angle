@@ -1679,7 +1679,7 @@ ImmutableString OutputHLSL::samplerNamePrefixFromStruct(TIntermTyped *node)
         }
         default:
             UNREACHABLE();
-            return ImmutableString("");
+            return kEmptyImmutableString;
     }
 }
 

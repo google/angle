@@ -81,7 +81,7 @@ ImmutableString HashName(const TSymbol *symbol, ShHashFunction64 hashFunction, N
 {
     if (symbol->symbolType() == SymbolType::Empty)
     {
-        return ImmutableString("");
+        return kEmptyImmutableString;
     }
     if (symbol->symbolType() == SymbolType::AngleInternal ||
         symbol->symbolType() == SymbolType::BuiltIn)

@@ -150,7 +150,7 @@ TVariable *CreateTempVariable(TSymbolTable *symbolTable, const TType *type)
     ASSERT(symbolTable != nullptr);
     // TODO(oetuaho): Might be useful to sanitize layout qualifier etc. on the type of the created
     // variable. This might need to be done in other places as well.
-    return new TVariable(symbolTable, ImmutableString(""), type, SymbolType::AngleInternal);
+    return new TVariable(symbolTable, kEmptyImmutableString, type, SymbolType::AngleInternal);
 }
 
 TVariable *CreateTempVariable(TSymbolTable *symbolTable, const TType *type, TQualifier qualifier)

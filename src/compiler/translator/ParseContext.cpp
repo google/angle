@@ -2448,7 +2448,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
         if (type->getBasicType() == EbtStruct)
         {
             TVariable *emptyVariable =
-                new TVariable(&symbolTable, ImmutableString(""), type, SymbolType::Empty);
+                new TVariable(&symbolTable, kEmptyImmutableString, type, SymbolType::Empty);
             symbol = new TIntermSymbol(emptyVariable);
         }
         else if (IsAtomicCounter(publicType.getBasicType()))
