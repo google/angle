@@ -22,6 +22,30 @@
       "revId": "0828360daaa559fd9ad2679cb6a8f434ca6597f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ae7d9fa_e114000c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1049,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T14:37:56Z",
+      "side": 1,
+      "message": "It doesn\u0027t seem necessary to handle TPublicType with an optimized function, since it can always be converted to TType without cluttering up the code too much. This code is only executed in case there\u0027s an error so performance isn\u0027t too much of a concern either.",
+      "parentUuid": "8e33342a_358c6e79",
+      "range": {
+        "startLine": 1049,
+        "startChar": 8,
+        "endLine": 1049,
+        "endChar": 41
+      },
+      "revId": "0828360daaa559fd9ad2679cb6a8f434ca6597f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
