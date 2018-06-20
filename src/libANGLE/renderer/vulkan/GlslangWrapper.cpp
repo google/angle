@@ -254,7 +254,7 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
             InsertQualifierSpecifierString(&fragmentSource, samplerName, "");
         }
 
-        textureCount += samplerUniform.getBasicTypeElementCount();
+        textureCount++;
     }
 
     for (const gl::UnusedUniform &unusedUniform : resources.unusedUniforms)
