@@ -109,6 +109,9 @@ TEST_P(ClearTest, RGBA8Framebuffer)
 // Test clearing a RGB8 Framebuffer with a color mask.
 TEST_P(ClearTest, RGB8WithMaskFramebuffer)
 {
+    // TODO(fjhenigman): Diagnose and fix http://anglebug.com/2681
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsOpenGLES());
+
     // TODO(lucferron): Figure out why this test fails on OSX / OpenGL.
     // http://anglebug.com/2674
     ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
