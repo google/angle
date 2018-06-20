@@ -16,10 +16,6 @@ namespace sh
 
 namespace
 {
-
-// GLSL ES 3.00.6 section 3.9: the maximum length of an identifier is 1024 characters.
-static const unsigned int kESSLMaxIdentifierLength = 1024u;
-
 constexpr const ImmutableString kHashedNamePrefix("webgl_");
 
 // Can't prefix with just _ because then we might introduce a double underscore, which is not safe

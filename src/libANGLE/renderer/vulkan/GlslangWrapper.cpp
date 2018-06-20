@@ -235,6 +235,11 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
         // Samplers in structs are extracted.
         std::replace(samplerName.begin(), samplerName.end(), '.', '_');
 
+        // Samplers in arrays of structs are also extracted.
+        std::replace(samplerName.begin(), samplerName.end(), '[', '_');
+        samplerName.erase(std::remove(samplerName.begin(), samplerName.end(), ']'),
+                          samplerName.end());
+
         ASSERT(samplerUniform.isActive(gl::ShaderType::Vertex) ||
                samplerUniform.isActive(gl::ShaderType::Fragment));
         if (samplerUniform.isActive(gl::ShaderType::Vertex))

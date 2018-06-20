@@ -51,7 +51,6 @@ class ImmutableStringBuilder
             mData[mPos++]  = digitChar;
             --index;
         }
-        return;
     }
 
   private:
@@ -65,6 +64,9 @@ class ImmutableStringBuilder
     size_t mMaxLength;
     char *mData;
 };
+
+// GLSL ES 3.00.6 section 3.9: the maximum length of an identifier is 1024 characters.
+constexpr unsigned int kESSLMaxIdentifierLength = 1024u;
 
 }  // namespace sh
 
