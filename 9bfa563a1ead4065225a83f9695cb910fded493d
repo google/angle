@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd47ab14_79e68b26",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T14:01:51Z",
+      "side": 1,
+      "message": "I\u0027d prefer to have the traversers in separate files if there\u0027s going to be a whole bunch of them. You could put Vulkan output specific ones in a separate directory like tree_ops/vulkan_glsl",
+      "revId": "9bfa563a1ead4065225a83f9695cb910fded493d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04be1112_b33f5ea6",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T14:01:51Z",
+      "side": 1,
+      "message": "You could use ImmutableStringBuilder in cases like this where the length is known in advance so the string doesn\u0027t need to be copied.",
+      "revId": "9bfa563a1ead4065225a83f9695cb910fded493d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4ff6f87_5f3978f7",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T14:01:51Z",
+      "side": 1,
+      "message": "Should probably be an empty string. Is it possible to also assert that in TVariable constructor in case symbolType \u003d\u003d SymbolType::Empty?",
+      "range": {
+        "startLine": 136,
+        "startChar": 40,
+        "endLine": 136,
+        "endChar": 57
+      },
+      "revId": "9bfa563a1ead4065225a83f9695cb910fded493d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "981f3802_0dc8d819",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-20T14:01:51Z",
+      "side": 1,
+      "message": "Again ImmutableStringBuilder.",
+      "revId": "9bfa563a1ead4065225a83f9695cb910fded493d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
