@@ -83,6 +83,30 @@
     },
     {
       "key": {
+        "uuid": "e9374248_39febe5c",
+        "filename": "scripts/gl_angle_ext.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 954,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-20T14:40:15Z",
+      "side": 1,
+      "message": "Yes, our scripts should automatically use that file and then fall back to this one.  This file is for adding extensions that we have not yet up-streamed to Khronos.",
+      "parentUuid": "7a8eb34a_5009f1a8",
+      "range": {
+        "startLine": 954,
+        "startChar": 25,
+        "endLine": 954,
+        "endChar": 55
+      },
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "797bdfca_c0c40aa5",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 1
