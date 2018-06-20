@@ -180,6 +180,40 @@
     },
     {
       "key": {
+        "uuid": "e4ba40cf_5d4e13ef",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-20T19:01:21Z",
+      "side": 1,
+      "message": "If this is hit, the instance gets leaked. Same for most other returns.",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ade80f2e_136b7a0b",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-06-20T19:01:21Z",
+      "side": 1,
+      "message": "To avoid leaks, we could use an std::vector here.",
+      "revId": "5626d634e8effbb407b155a2c09820c64c3a92da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ec57f2c_b55c51a2",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 1
