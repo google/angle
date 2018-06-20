@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "266b7e2b_29656533",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:22:49Z",
+      "side": 1,
+      "message": "the names or the test looks backwards. source format should have 0 alpha bits, dest should have \u003e 0, right? maybe calling destFormat emulatedFormat is clearer.",
+      "range": {
+        "startLine": 391,
+        "startChar": 36,
+        "endLine": 391,
+        "endChar": 91
+      },
+      "revId": "e0a9115c44a80332a986479f89fad1edfab15aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d398c5d6_fd9b9917",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T18:22:49Z",
+      "side": 1,
+      "message": "probably rename this too",
+      "range": {
+        "startLine": 753,
+        "startChar": 34,
+        "endLine": 753,
+        "endChar": 57
+      },
+      "revId": "e0a9115c44a80332a986479f89fad1edfab15aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
