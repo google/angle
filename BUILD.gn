@@ -865,12 +865,10 @@ foreach(is_shared_library,
       set_sources_assignment_filter([])
       sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
       sources += rebase_path(util_gypi.util_android_sources, ".", "util")
-      if (ndk_supports_nativewindow) {
-        libs += [ "nativewindow" ]
-      } else {
-        libs += [ "android" ]
-      }
-      libs += [ "log" ]
+      libs += [
+        "android",
+        "log",
+      ]
     }
 
     if (use_ozone) {
