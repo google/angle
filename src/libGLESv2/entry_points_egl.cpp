@@ -513,11 +513,6 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
     // Only call makeCurrent if the context or surfaces have changed.
     if (previousDraw != drawSurface || previousRead != readSurface || previousContext != context)
     {
-        ANGLE_EGL_TRY_RETURN(thread, display->makeCurrent(drawSurface, readSurface, context),
-                             "eglMakeCurrent", GetContextIfValid(display, context), EGL_FALSE);
-
-        thread->setCurrent(context);
-
         // Release the surface from the previously-current context, to allow
         // destroyed surfaces to delete themselves.
         if (previousContext != nullptr && context != previousContext)
@@ -525,6 +520,11 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
             ANGLE_EGL_TRY_RETURN(thread, previousContext->releaseSurface(display), "eglMakeCurrent",
                                  GetContextIfValid(display, context), EGL_FALSE);
         }
+
+        ANGLE_EGL_TRY_RETURN(thread, display->makeCurrent(drawSurface, readSurface, context),
+                             "eglMakeCurrent", GetContextIfValid(display, context), EGL_FALSE);
+
+        thread->setCurrent(context);
     }
 
     thread->setSuccess();
