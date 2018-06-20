@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffe4c368_004c5381",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T16:32:09Z",
+      "side": 1,
+      "message": "can\u0027t you use the mask here?",
+      "range": {
+        "startLine": 213,
+        "startChar": 7,
+        "endLine": 213,
+        "endChar": 98
+      },
+      "revId": "650ced793808f805a0641fd589e8f24e0fe90562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "940fe505_742d6cd5",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T16:32:09Z",
+      "side": 1,
+      "message": "calling them \"angle format\" vs \"teture format\" is not clear since they\u0027re both texture and angle formats. How about sourceFormat and destFormat?",
+      "range": {
+        "startLine": 383,
+        "startChar": 41,
+        "endLine": 383,
+        "endChar": 55
+      },
+      "revId": "650ced793808f805a0641fd589e8f24e0fe90562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ce92e8d_bc94ed82",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-20T16:32:09Z",
+      "side": 1,
+      "message": "how about mEmulatedAlphaAttachmentMask. The property is \"are we emulating alpha\" and the mask is over attachments.",
+      "range": {
+        "startLine": 391,
+        "startChar": 20,
+        "endLine": 391,
+        "endChar": 44
+      },
+      "revId": "650ced793808f805a0641fd589e8f24e0fe90562",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
