@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "792aaab3_29c091f2",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-21T07:57:32Z",
+      "side": 1,
+      "message": "Yep, that\u0027s totally fine.",
+      "parentUuid": "12ab3875_22b711d7",
+      "revId": "9bfa563a1ead4065225a83f9695cb910fded493d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04be1112_b33f5ea6",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 7
