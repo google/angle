@@ -107,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "04b6d90d_64c669cf",
+        "filename": "scripts/gl_angle_ext.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 954,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-06-21T06:25:45Z",
+      "side": 1,
+      "message": "I was confused about the ARB and KHR things. Having dug a bit more, I find that ARB is for GL only, while KHR is both feasible for GL and GLES. In this sense ANGLE should implement KHR_parallel_shader_compile other thant ARB_parallel_shader_compile. gl.xml has both ARB and KHR extensions, i.e GL_ARB_parallel_shader_compile, GL_KHR_debug etc. But GL_KHR_parallel_shader_compile is missing. Probably Khronos just haven\u0027t updated it timely. So should I simply add GL_KHR_parallel_shader_compile to ANGLE\u0027s gl.xml? Then we can remove it in future when Khronos\u0027s gl.xml has it.",
+      "parentUuid": "e9374248_39febe5c",
+      "range": {
+        "startLine": 954,
+        "startChar": 25,
+        "endLine": 954,
+        "endChar": 55
+      },
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "797bdfca_c0c40aa5",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 1
