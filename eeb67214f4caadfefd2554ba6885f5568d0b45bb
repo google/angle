@@ -95,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "049b772f_911f9d9f",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-21T14:02:13Z",
+      "side": 1,
+      "message": "I have multiple Chromium issues open to delete unused histograms:\n\nhttp://crbug.com/797614 http://crbug.com/768640\n\nD3DCompile isn\u0027t listed there but it isn\u0027t very useful and gathers a lot of data. I think it would better to compute something more informative and log it periodically like we do in Renderer11::updateHistograms.",
+      "parentUuid": "cce89b40_c871fc31",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 32
+      },
+      "revId": "eeb67214f4caadfefd2554ba6885f5568d0b45bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "537c2ba0_09bc4d63",
         "filename": "src/libANGLE/renderer/gl/ShaderGL.cpp",
         "patchSetId": 1
