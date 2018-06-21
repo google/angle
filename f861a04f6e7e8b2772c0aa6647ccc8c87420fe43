@@ -131,6 +131,30 @@
     },
     {
       "key": {
+        "uuid": "5c465add_cd58f0ae",
+        "filename": "scripts/gl_angle_ext.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 954,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-21T12:53:37Z",
+      "side": 1,
+      "message": "Please file an issue and/or a pull request against https://github.com/KhronosGroup/OpenGL-Registry . You can keep it in this file for now. If the pull request is accepted quickly you can update to use the new gl.xml.",
+      "parentUuid": "04b6d90d_64c669cf",
+      "range": {
+        "startLine": 954,
+        "startChar": 25,
+        "endLine": 954,
+        "endChar": 55
+      },
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "797bdfca_c0c40aa5",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 1
