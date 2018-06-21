@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "01bc7e54_da3a3b61",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-21T20:28:29Z",
+      "side": 1,
+      "message": "typo?",
+      "range": {
+        "startLine": 45,
+        "startChar": 60,
+        "endLine": 45,
+        "endChar": 65
+      },
+      "revId": "92803dddeab01c92423b0ca9d40fcc2b984366ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7dd7ea3a_097d8fd0",
+        "filename": "src/tests/angle_unittests_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-21T20:28:29Z",
+      "side": 1,
+      "message": "maybe drop the names to be consistent?",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 66
+      },
+      "revId": "92803dddeab01c92423b0ca9d40fcc2b984366ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
