@@ -180,6 +180,29 @@
     },
     {
       "key": {
+        "uuid": "c1d17c4a_5ceb53b9",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-21T13:03:24Z",
+      "side": 1,
+      "message": "you can use a local reference to clean up this code:\n\n\u003ctype\u003e \u0026gpuInfo \u003d info-\u003egpus[i];\ngpuInfo.vendorIf \u003d ....",
+      "range": {
+        "startLine": 126,
+        "startChar": 8,
+        "endLine": 126,
+        "endChar": 21
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "373ff429_e0f3042a",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 2
@@ -196,6 +219,29 @@
         "startChar": 0,
         "endLine": 131,
         "endChar": 18
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1eb6fd65_c78ce29a",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-21T13:03:24Z",
+      "side": 1,
+      "message": "constants should be k prefixed. so kDriverVersionSize",
+      "range": {
+        "startLine": 132,
+        "startChar": 30,
+        "endLine": 132,
+        "endChar": 48
       },
       "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
