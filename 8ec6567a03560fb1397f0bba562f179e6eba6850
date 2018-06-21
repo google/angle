@@ -22,6 +22,30 @@
       "revId": "8ec6567a03560fb1397f0bba562f179e6eba6850",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5af0c946_03ded2a0",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1848,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-21T11:13:26Z",
+      "side": 1,
+      "message": "This test was simple enough to reproduce the issue, have a success on every other renderers and failure on Vulkan. I like tests to be as simple as they can be to reproduce an issue.\n\nEvery test in GLSLTest is also like this, they just verify for compilation success. I don\u0027t want to change the pattern right here for one case out of the blue.",
+      "parentUuid": "fc64fbb3_b3fbfb1d",
+      "range": {
+        "startLine": 1847,
+        "startChar": 0,
+        "endLine": 1848,
+        "endChar": 27
+      },
+      "revId": "8ec6567a03560fb1397f0bba562f179e6eba6850",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
