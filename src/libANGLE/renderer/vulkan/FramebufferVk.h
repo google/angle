@@ -72,6 +72,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                          GLenum format,
                          GLenum type,
                          void *pixels) override;
+
     gl::Error blit(const gl::Context *context,
                    const gl::Rectangle &sourceArea,
                    const gl::Rectangle &destArea,
@@ -86,7 +87,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     gl::Error getSamplePosition(const gl::Context *context,
                                 size_t index,
                                 GLfloat *xy) const override;
-
+    RenderTargetVk *getDepthStencilRenderTarget() const;
     const vk::RenderPassDesc &getRenderPassDesc();
     gl::Error getCommandBufferForDraw(ContextVk *contextVk,
                                       vk::CommandBuffer **commandBufferOut,
@@ -114,6 +115,18 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                                         bool clearStencil);
     gl::Error clearWithDraw(const gl::Context *context, VkColorComponentFlags colorMaskFlags);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
+
+    gl::Error blitImpl(vk::CommandBuffer *commandBuffer,
+                       const gl::Rectangle &readRectIn,
+                       const gl::Rectangle &drawRectIn,
+                       RenderTargetVk *readRenderTarget,
+                       RenderTargetVk *drawRenderTarget,
+                       GLenum filter,
+                       const gl::Rectangle *scissor,
+                       bool colorBlit,
+                       bool depthBlit,
+                       bool stencilBlit);
+
     RenderTargetVk *getColorReadRenderTarget() const;
 
     WindowSurfaceVk *mBackbuffer;
