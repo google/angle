@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c5802b6c_d8cd3120",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-21T13:49:38Z",
+      "side": 1,
+      "message": "Want to give it a run through the bots with virtualization disabled and see how it goes first.",
+      "parentUuid": "5ff60a0a_339f1142",
+      "range": {
+        "startLine": 39,
+        "startChar": 55,
+        "endLine": 39,
+        "endChar": 60
+      },
+      "revId": "3e2383223c0728794721d1ece720ff2ab4e922ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "53fcba23_ef99fa42",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
         "patchSetId": 15
@@ -45,6 +69,30 @@
       "revId": "3e2383223c0728794721d1ece720ff2ab4e922ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d42eac08_96195d86",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-21T13:49:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53fcba23_ef99fa42",
+      "range": {
+        "startLine": 72,
+        "startChar": 27,
+        "endLine": 72,
+        "endChar": 31
+      },
+      "revId": "3e2383223c0728794721d1ece720ff2ab4e922ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
