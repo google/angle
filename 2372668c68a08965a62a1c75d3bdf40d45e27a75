@@ -88,6 +88,30 @@
     },
     {
       "key": {
+        "uuid": "35f45a49_50ff3b4b",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-21T22:41:04Z",
+      "side": 1,
+      "message": "Thanks for the pointer to the style guide.\n\nI am confused/concerned though.  I originally copied this from SystemInfo.{h|cpp} (both of which have the \"(c)\".  I\u0027m find removing that.  Should I remove the \"(c)\" from the other files?\n\nThe style guide and your comments for the other files indicate that I shouldn\u0027t bump the year of the most-recent change in the other files.  That doesn\u0027t match my understanding of what is required, nor what I have done in other projects.  I\u0027ll do what you ask though.",
+      "parentUuid": "42aff4d7_ea90ff8a",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b394ddf5_9a96547c",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 2
@@ -111,6 +135,30 @@
     },
     {
       "key": {
+        "uuid": "5ac309e8_ae6f4db8",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-21T22:41:04Z",
+      "side": 1,
+      "message": "Will do",
+      "parentUuid": "b394ddf5_9a96547c",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 24
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1ee3e429_15f903a0",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 2
@@ -122,6 +170,30 @@
       "writtenOn": "2018-06-20T23:08:46Z",
       "side": 1,
       "message": "can wrap to 100 characters",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 63
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb2f170e_733f95b3",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-21T22:41:04Z",
+      "side": 1,
+      "message": "Okay, will do.",
+      "parentUuid": "1ee3e429_15f903a0",
       "range": {
         "startLine": 45,
         "startChar": 0,
@@ -177,6 +249,30 @@
       "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ffc91da_5966a8d5",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-21T22:41:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75f71a02_a7656d01",
+      "range": {
+        "startLine": 121,
+        "startChar": 9,
+        "endLine": 121,
+        "endChar": 13
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -260,6 +356,30 @@
       "writtenOn": "2018-06-21T13:46:32Z",
       "side": 1,
       "message": "Maybe always write this driver version string outside of the switch and then just overwrite it in the kVendorID_Qualcomm case.",
+      "range": {
+        "startLine": 138,
+        "startChar": 16,
+        "endLine": 139,
+        "endChar": 60
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f62ca48_48862f2d",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-21T22:41:04Z",
+      "side": 1,
+      "message": "I don\u0027t know if you saw, but I emailed vendors to understand if they encode the data.  If most don\u0027t, I\u0027ll do this.  Either way, I can move line 139 (and all its duplicates) out of the switch.",
+      "parentUuid": "db54540f_fea86ad1",
       "range": {
         "startLine": 138,
         "startChar": 16,
