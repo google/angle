@@ -479,7 +479,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
     }
     else if (platform == EGL_PLATFORM_DEVICE_EXT)
     {
-        Device *eglDevice = reinterpret_cast<Device *>(native_display);
+        Device *eglDevice = static_cast<Device *>(native_display);
         if (eglDevice == nullptr || !Device::IsValidDevice(eglDevice))
         {
             return EglBadAttribute() << "native_display should be a valid EGL device if "

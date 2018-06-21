@@ -1306,8 +1306,7 @@ uint8_t *MapBufferRangeWithFallback(const FunctionsGL *functions,
 {
     if (functions->mapBufferRange != nullptr)
     {
-        return reinterpret_cast<uint8_t *>(
-            functions->mapBufferRange(target, offset, length, access));
+        return static_cast<uint8_t *>(functions->mapBufferRange(target, offset, length, access));
     }
     else if (functions->mapBuffer != nullptr &&
              (functions->standard == STANDARD_GL_DESKTOP || access == GL_MAP_WRITE_BIT))
@@ -1334,7 +1333,7 @@ uint8_t *MapBufferRangeWithFallback(const FunctionsGL *functions,
             return nullptr;
         }
 
-        return reinterpret_cast<uint8_t *>(functions->mapBuffer(target, accessEnum)) + offset;
+        return static_cast<uint8_t *>(functions->mapBuffer(target, accessEnum)) + offset;
     }
     else
     {

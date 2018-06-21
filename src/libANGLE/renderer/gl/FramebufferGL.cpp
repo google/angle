@@ -455,7 +455,7 @@ Error FramebufferGL::readPixels(const gl::Context *context,
                                         packBuffer && packState.rowLength != 0 &&
                                         packState.rowLength < area.width;
 
-    GLubyte *pixels = reinterpret_cast<GLubyte *>(ptrOrOffset);
+    GLubyte *pixels = static_cast<GLubyte *>(ptrOrOffset);
     int leftClip    = area.x - origArea.x;
     int topClip     = area.y - origArea.y;
     if (leftClip || topClip)

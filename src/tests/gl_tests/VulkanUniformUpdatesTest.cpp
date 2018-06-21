@@ -32,7 +32,7 @@ class VulkanUniformUpdatesTest : public ANGLETest
     rx::ContextVk *hackANGLE()
     {
         // Hack the angle!
-        const gl::Context *context = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
+        const gl::Context *context = static_cast<gl::Context *>(getEGLWindow()->getContext());
         return rx::GetImplAs<rx::ContextVk>(context);
     }
 };

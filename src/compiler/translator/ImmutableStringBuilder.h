@@ -58,7 +58,7 @@ class ImmutableStringBuilder
     inline static char *AllocateEmptyPoolCharArray(size_t strLength)
     {
         size_t requiredSize = strLength + 1u;
-        return reinterpret_cast<char *>(GetGlobalPoolAllocator()->allocate(requiredSize));
+        return static_cast<char *>(GetGlobalPoolAllocator()->allocate(requiredSize));
     }
 
     size_t mPos;

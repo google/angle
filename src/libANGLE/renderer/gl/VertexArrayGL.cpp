@@ -357,7 +357,7 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &attribsToStr
 
             // Attributes using client memory ignore the VERTEX_ATTRIB_BINDING state.
             // https://www.opengl.org/registry/specs/ARB/vertex_attrib_binding.txt
-            const uint8_t *inputPointer = reinterpret_cast<const uint8_t *>(attrib.pointer);
+            const uint8_t *inputPointer = static_cast<const uint8_t *>(attrib.pointer);
 
             // Pack the data when copying it, user could have supplied a very large stride that
             // would cause the buffer to be much larger than needed.

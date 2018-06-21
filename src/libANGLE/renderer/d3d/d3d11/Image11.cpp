@@ -62,8 +62,8 @@ gl::Error Image11::GenerateMipmap(const gl::Context *context,
         return error;
     }
 
-    const uint8_t *sourceData = reinterpret_cast<const uint8_t *>(srcMapped.pData);
-    uint8_t *destData         = reinterpret_cast<uint8_t *>(destMapped.pData);
+    const uint8_t *sourceData = static_cast<const uint8_t *>(srcMapped.pData);
+    uint8_t *destData         = static_cast<uint8_t *>(destMapped.pData);
 
     auto mipGenerationFunction =
         d3d11::Format::Get(src->getInternalFormat(), rendererCaps).format().mipGenerationFunction;
@@ -112,10 +112,10 @@ gl::Error Image11::CopyImage(const gl::Context *context,
         gl::GetSizedInternalFormatInfo(destFormat.fboImplementationInternalFormat);
     GLuint destPixelBytes = destFormatInfo.pixelBytes;
 
-    const uint8_t *sourceData = reinterpret_cast<const uint8_t *>(srcMapped.pData) +
+    const uint8_t *sourceData = static_cast<const uint8_t *>(srcMapped.pData) +
                                 sourceRect.x * sourcePixelBytes + sourceRect.y * srcMapped.RowPitch;
-    uint8_t *destData = reinterpret_cast<uint8_t *>(destMapped.pData) +
-                        destOffset.x * destPixelBytes + destOffset.y * destMapped.RowPitch;
+    uint8_t *destData = static_cast<uint8_t *>(destMapped.pData) + destOffset.x * destPixelBytes +
+                        destOffset.y * destMapped.RowPitch;
 
     CopyImageCHROMIUM(sourceData, srcMapped.RowPitch, sourcePixelBytes,
                       sourceFormat.colorReadFunction, destData, destMapped.RowPitch, destPixelBytes,
@@ -304,11 +304,11 @@ gl::Error Image11::loadData(const gl::Context *context,
     D3D11_MAPPED_SUBRESOURCE mappedImage;
     ANGLE_TRY(map(context, D3D11_MAP_WRITE, &mappedImage));
 
-    uint8_t *offsetMappedData = (reinterpret_cast<uint8_t *>(mappedImage.pData) +
+    uint8_t *offsetMappedData = (static_cast<uint8_t *>(mappedImage.pData) +
                                  (area.y * mappedImage.RowPitch + area.x * outputPixelSize +
                                   area.z * mappedImage.DepthPitch));
     loadFunction(area.width, area.height, area.depth,
-                 reinterpret_cast<const uint8_t *>(input) + inputSkipBytes, inputRowPitch,
+                 static_cast<const uint8_t *>(input) + inputSkipBytes, inputRowPitch,
                  inputDepthPitch, offsetMappedData, mappedImage.RowPitch, mappedImage.DepthPitch);
 
     unmap();
@@ -343,11 +343,11 @@ gl::Error Image11::loadCompressedData(const gl::Context *context,
     ANGLE_TRY(map(context, D3D11_MAP_WRITE, &mappedImage));
 
     uint8_t *offsetMappedData =
-        reinterpret_cast<uint8_t *>(mappedImage.pData) +
+        static_cast<uint8_t *>(mappedImage.pData) +
         ((area.y / outputBlockHeight) * mappedImage.RowPitch +
          (area.x / outputBlockWidth) * outputPixelSize + area.z * mappedImage.DepthPitch);
 
-    loadFunction(area.width, area.height, area.depth, reinterpret_cast<const uint8_t *>(input),
+    loadFunction(area.width, area.height, area.depth, static_cast<const uint8_t *>(input),
                  inputRowPitch, inputDepthPitch, offsetMappedData, mappedImage.RowPitch,
                  mappedImage.DepthPitch);
 

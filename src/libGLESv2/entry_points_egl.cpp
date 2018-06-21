@@ -1159,7 +1159,7 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplay(EGLenum platform,
     }
     else if (platform == EGL_PLATFORM_DEVICE_EXT)
     {
-        Device *eglDevice = reinterpret_cast<Device *>(native_display);
+        Device *eglDevice = static_cast<Device *>(native_display);
         return Display::GetDisplayFromDevice(eglDevice, attribMap);
     }
     else

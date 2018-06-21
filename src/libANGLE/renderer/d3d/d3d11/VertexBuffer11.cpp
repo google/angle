@@ -75,7 +75,7 @@ gl::Error VertexBuffer11::mapResource()
         ANGLE_TRY(mRenderer->mapResource(mBuffer.get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0,
                                          &mappedResource));
 
-        mMappedResourceData = reinterpret_cast<uint8_t *>(mappedResource.pData);
+        mMappedResourceData = static_cast<uint8_t *>(mappedResource.pData);
     }
 
     return gl::NoError();

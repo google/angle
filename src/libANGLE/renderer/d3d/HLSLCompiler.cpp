@@ -217,7 +217,7 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
 
         if (errorMessage)
         {
-            std::string message = reinterpret_cast<const char*>(errorMessage->GetBufferPointer());
+            std::string message = static_cast<const char *>(errorMessage->GetBufferPointer());
             SafeRelease(errorMessage);
 
             infoLog.appendSanitized(message.c_str());
@@ -314,7 +314,7 @@ gl::Error HLSLCompiler::disassembleBinary(ID3DBlob *shaderBinary, std::string *d
 
     if (SUCCEEDED(result))
     {
-        *disassemblyOut = std::string(reinterpret_cast<const char*>(disassembly->GetBufferPointer()));
+        *disassemblyOut = std::string(static_cast<const char *>(disassembly->GetBufferPointer()));
     }
     else
     {

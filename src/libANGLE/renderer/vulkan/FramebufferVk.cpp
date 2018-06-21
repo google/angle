@@ -315,7 +315,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     params.pack        = glState.getPackState();
 
     ANGLE_TRY(readPixelsImpl(context, clippedArea, params,
-                             reinterpret_cast<uint8_t *>(pixels) + outputSkipBytes));
+                             static_cast<uint8_t *>(pixels) + outputSkipBytes));
     mReadPixelsBuffer.releaseRetainedBuffers(renderer);
     return gl::NoError();
 }
@@ -836,7 +836,7 @@ gl::Error FramebufferVk::readPixelsImpl(const gl::Context *context,
     ANGLE_TRY(mReadPixelsBuffer.invalidate(renderer->getDevice()));
 
     PackPixels(packPixelsParams, angleFormat, area.width * angleFormat.pixelBytes, readPixelBuffer,
-               reinterpret_cast<uint8_t *>(pixels));
+               static_cast<uint8_t *>(pixels));
 
     return vk::NoError();
 }

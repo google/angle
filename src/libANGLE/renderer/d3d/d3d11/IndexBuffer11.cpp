@@ -75,7 +75,7 @@ gl::Error IndexBuffer11::mapBuffer(unsigned int offset, unsigned int size, void*
     ANGLE_TRY(
         mRenderer->mapResource(mBuffer.get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource));
 
-    *outMappedMemory = reinterpret_cast<char*>(mappedResource.pData) + offset;
+    *outMappedMemory = static_cast<char *>(mappedResource.pData) + offset;
     return gl::NoError();
 }
 

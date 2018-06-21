@@ -43,7 +43,7 @@ TEST_P(VulkanFormatTablesTest, TestFormatSupport)
     ASSERT_TRUE(IsVulkan());
 
     // Hack the angle!
-    const gl::Context *context = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
+    const gl::Context *context = static_cast<gl::Context *>(getEGLWindow()->getContext());
     auto *contextVk            = rx::GetImplAs<rx::ContextVk>(context);
     rx::RendererVk *renderer   = contextVk->getRenderer();
 

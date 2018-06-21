@@ -837,7 +837,7 @@ ContextImpl *Renderer9::createContext(const gl::ContextState &state)
 
 void *Renderer9::getD3DDevice()
 {
-    return reinterpret_cast<void *>(mDevice);
+    return mDevice;
 }
 
 gl::Error Renderer9::allocateEventQuery(IDirect3DQuery9 **outQuery)
@@ -1506,7 +1506,7 @@ gl::Error Renderer9::drawLineLoop(const gl::Context *context,
         }
 
         startIndex         = static_cast<unsigned int>(offset) / 4;
-        unsigned int *data = reinterpret_cast<unsigned int *>(mappedMemory);
+        unsigned int *data = static_cast<unsigned int *>(mappedMemory);
 
         switch (type)
         {
@@ -1589,7 +1589,7 @@ gl::Error Renderer9::drawLineLoop(const gl::Context *context,
         }
 
         startIndex           = static_cast<unsigned int>(offset) / 2;
-        unsigned short *data = reinterpret_cast<unsigned short *>(mappedMemory);
+        unsigned short *data = static_cast<unsigned short *>(mappedMemory);
 
         switch (type)
         {
@@ -1716,7 +1716,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
             void *mappedMemory = nullptr;
             ANGLE_TRY(mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr));
 
-            unsigned short *data = reinterpret_cast<unsigned short *>(mappedMemory);
+            unsigned short *data = static_cast<unsigned short *>(mappedMemory);
             for (size_t i = 0; i < count; i++)
             {
                 data[i] = static_cast<unsigned short>(i);
@@ -1738,7 +1738,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
             void *mappedMemory = nullptr;
             ANGLE_TRY(mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr));
 
-            unsigned int *data = reinterpret_cast<unsigned int *>(mappedMemory);
+            unsigned int *data = static_cast<unsigned int *>(mappedMemory);
             for (unsigned int i = 0; i < count; i++)
             {
                 data[i] = i;

@@ -313,7 +313,7 @@ ShHandle ConstructCompiler(sh::GLenum type,
         return 0;
     }
 
-    return reinterpret_cast<void *>(base);
+    return base;
 }
 
 void Destruct(ShHandle handle)

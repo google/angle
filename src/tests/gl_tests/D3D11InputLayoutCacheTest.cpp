@@ -65,7 +65,7 @@ class D3D11InputLayoutCacheTest : public ANGLETest
 TEST_P(D3D11InputLayoutCacheTest, StressTest)
 {
     // Hack the ANGLE!
-    gl::Context *context = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
+    gl::Context *context = static_cast<gl::Context *>(getEGLWindow()->getContext());
     rx::Context11 *context11               = rx::GetImplAs<rx::Context11>(context);
     rx::Renderer11 *renderer11             = context11->getRenderer();
     rx::InputLayoutCache *inputLayoutCache = renderer11->getStateManager()->getInputLayoutCache();

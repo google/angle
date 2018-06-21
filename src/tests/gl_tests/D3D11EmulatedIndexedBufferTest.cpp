@@ -31,7 +31,7 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
         ANGLETest::SetUp();
         ASSERT_EQ(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, GetParam().getRenderer());
 
-        mContext                 = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
+        mContext                 = static_cast<gl::Context *>(getEGLWindow()->getContext());
         rx::Context11 *context11 = rx::GetImplAs<rx::Context11>(mContext);
         mRenderer                = context11->getRenderer();
 

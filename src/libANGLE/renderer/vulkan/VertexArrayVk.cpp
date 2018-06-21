@@ -522,7 +522,7 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
             void *srcDataMapping = nullptr;
             ASSERT(!glBuffer->isMapped());
             ANGLE_TRY(bufferVk->map(context, 0, &srcDataMapping));
-            uint8_t *srcData           = reinterpret_cast<uint8_t *>(srcDataMapping);
+            uint8_t *srcData           = static_cast<uint8_t *>(srcDataMapping);
             intptr_t offsetIntoSrcData = reinterpret_cast<intptr_t>(drawCallParams.indices());
             srcData += offsetIntoSrcData;
 

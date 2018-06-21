@@ -184,7 +184,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Context *context,
         return gl::OutOfMemory() << "Failed to lock internal render target.";
     }
 
-    uint8_t *source = reinterpret_cast<uint8_t *>(lock.pBits);
+    uint8_t *source = static_cast<uint8_t *>(lock.pBits);
     int inputPitch  = lock.Pitch;
 
     const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);

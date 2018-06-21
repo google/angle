@@ -236,7 +236,7 @@ TIntermBlock *EnsureBlock(TIntermNode *node)
 
 TIntermSymbol *ReferenceGlobalVariable(const ImmutableString &name, const TSymbolTable &symbolTable)
 {
-    const TVariable *var = reinterpret_cast<const TVariable *>(symbolTable.findGlobal(name));
+    const TVariable *var = static_cast<const TVariable *>(symbolTable.findGlobal(name));
     ASSERT(var);
     return new TIntermSymbol(var);
 }
@@ -246,7 +246,7 @@ TIntermSymbol *ReferenceBuiltInVariable(const ImmutableString &name,
                                         int shaderVersion)
 {
     const TVariable *var =
-        reinterpret_cast<const TVariable *>(symbolTable.findBuiltIn(name, shaderVersion));
+        static_cast<const TVariable *>(symbolTable.findBuiltIn(name, shaderVersion));
     ASSERT(var);
     return new TIntermSymbol(var);
 }

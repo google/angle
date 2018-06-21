@@ -87,8 +87,8 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
                                  << gl::FmtHR(result);
     }
 
-    const uint8_t *sourceData = reinterpret_cast<const uint8_t*>(sourceLocked.pBits);
-    uint8_t *destData = reinterpret_cast<uint8_t*>(destLocked.pBits);
+    const uint8_t *sourceData = static_cast<const uint8_t *>(sourceLocked.pBits);
+    uint8_t *destData         = static_cast<uint8_t *>(destLocked.pBits);
 
     ASSERT(sourceData && destData);
 
@@ -217,10 +217,10 @@ gl::Error Image9::CopyImage(const gl::Context *context,
                                  << gl::FmtHR(result);
     }
 
-    const uint8_t *sourceData = reinterpret_cast<const uint8_t *>(sourceLocked.pBits) +
+    const uint8_t *sourceData = static_cast<const uint8_t *>(sourceLocked.pBits) +
                                 sourceRect.x * sourceD3DFormatInfo.pixelBytes +
                                 sourceRect.y * sourceLocked.Pitch;
-    uint8_t *destData = reinterpret_cast<uint8_t *>(destLocked.pBits) +
+    uint8_t *destData = static_cast<uint8_t *>(destLocked.pBits) +
                         destOffset.x * destD3DFormatInfo.pixelBytes +
                         destOffset.y * destLocked.Pitch;
     ASSERT(sourceData && destData);
@@ -325,8 +325,8 @@ gl::Error Image9::createSurface()
                 return gl::OutOfMemory() << "Failed to lock image surface, " << gl::FmtHR(result);
             }
 
-            d3dFormatInfo.dataInitializerFunction(mWidth, mHeight, 1, reinterpret_cast<uint8_t*>(lockedRect.pBits),
-                                                  lockedRect.Pitch, 0);
+            d3dFormatInfo.dataInitializerFunction(
+                mWidth, mHeight, 1, static_cast<uint8_t *>(lockedRect.pBits), lockedRect.Pitch, 0);
 
             result = newSurface->UnlockRect();
             ASSERT(SUCCEEDED(result));
@@ -579,8 +579,8 @@ gl::Error Image9::loadData(const gl::Context *context,
     }
 
     d3dFormatInfo.loadFunction(area.width, area.height, area.depth,
-                               reinterpret_cast<const uint8_t *>(input), inputRowPitch, 0,
-                               reinterpret_cast<uint8_t *>(locked.pBits), locked.Pitch, 0);
+                               static_cast<const uint8_t *>(input), inputRowPitch, 0,
+                               static_cast<uint8_t *>(locked.pBits), locked.Pitch, 0);
 
     unlock();
 
@@ -622,8 +622,8 @@ gl::Error Image9::loadCompressedData(const gl::Context *context,
     }
 
     d3d9FormatInfo.loadFunction(area.width, area.height, area.depth,
-                                reinterpret_cast<const uint8_t*>(input), inputRowPitch, inputDepthPitch,
-                                reinterpret_cast<uint8_t*>(locked.pBits), locked.Pitch, 0);
+                                static_cast<const uint8_t *>(input), inputRowPitch, inputDepthPitch,
+                                static_cast<uint8_t *>(locked.pBits), locked.Pitch, 0);
 
     unlock();
 

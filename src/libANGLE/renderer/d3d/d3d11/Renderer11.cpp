@@ -807,7 +807,7 @@ egl::Error Renderer11::initializeD3DDevice()
         void *device = nullptr;
         ANGLE_TRY(deviceD3D->getDevice(&device));
 
-        ID3D11Device *d3dDevice = reinterpret_cast<ID3D11Device *>(device);
+        ID3D11Device *d3dDevice = static_cast<ID3D11Device *>(device);
         if (FAILED(d3dDevice->GetDeviceRemovedReason()))
         {
             return egl::EglNotInitialized() << "Inputted D3D11 device has been lost.";
@@ -1400,7 +1400,7 @@ SwapChainD3D *Renderer11::createSwapChain(NativeWindowD3D *nativeWindow,
 
 void *Renderer11::getD3DDevice()
 {
-    return reinterpret_cast<void *>(mDevice);
+    return mDevice;
 }
 
 gl::Error Renderer11::drawWithGeometryShaderAndTransformFeedback(const gl::Context *context,
@@ -2792,7 +2792,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
         return gl::NoError();
     }
 
-    gl::Error error = loadExecutable(reinterpret_cast<const uint8_t *>(binary->GetBufferPointer()),
+    gl::Error error = loadExecutable(static_cast<const uint8_t *>(binary->GetBufferPointer()),
                                      binary->GetBufferSize(), type, streamOutVaryings,
                                      separatedOutputBuffers, outExectuable);
 

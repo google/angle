@@ -518,7 +518,7 @@ gl::Error ShaderConstants11::updateBuffer(Renderer11 *renderer,
         renderer->mapResource(driverConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapping));
 
     memcpy(mapping.pData, data, dataSize);
-    memcpy(reinterpret_cast<uint8_t *>(mapping.pData) + dataSize, samplerData,
+    memcpy(static_cast<uint8_t *>(mapping.pData) + dataSize, samplerData,
            sizeof(SamplerMetadata) * numSamplers);
 
     renderer->getDeviceContext()->Unmap(driverConstantBuffer.get(), 0);

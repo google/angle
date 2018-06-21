@@ -718,8 +718,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     switch (clearParams.colorType)
     {
         case GL_FLOAT:
-            dirtyCb = UpdateDataCache(reinterpret_cast<RtvDsvClearInfo<float> *>(&mShaderData),
-                                      clearParams.colorF, zValue, numRtvs, colorMask);
+            dirtyCb = UpdateDataCache(&mShaderData, clearParams.colorF, zValue, numRtvs, colorMask);
             break;
         case GL_UNSIGNED_INT:
             dirtyCb = UpdateDataCache(reinterpret_cast<RtvDsvClearInfo<uint32_t> *>(&mShaderData),

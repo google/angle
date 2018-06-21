@@ -1134,7 +1134,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     ANGLE_TRY(
         mRenderer->mapResource(mSwizzleCB.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
 
-    unsigned int *swizzleIndices = reinterpret_cast<unsigned int *>(mappedResource.pData);
+    unsigned int *swizzleIndices = static_cast<unsigned int *>(mappedResource.pData);
     swizzleIndices[0]            = GetSwizzleIndex(swizzleTarget.swizzleRed);
     swizzleIndices[1]            = GetSwizzleIndex(swizzleTarget.swizzleGreen);
     swizzleIndices[2]            = GetSwizzleIndex(swizzleTarget.swizzleBlue);

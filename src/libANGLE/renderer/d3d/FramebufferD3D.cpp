@@ -270,7 +270,7 @@ gl::Error FramebufferD3D::readPixels(const gl::Context *context,
         (area.x - origArea.x) * sizedFormatInfo.pixelBytes + (area.y - origArea.y) * outputPitch;
 
     return readPixelsImpl(context, area, format, type, outputPitch, packState,
-                          reinterpret_cast<uint8_t *>(pixels) + outputSkipBytes);
+                          static_cast<uint8_t *>(pixels) + outputSkipBytes);
 }
 
 gl::Error FramebufferD3D::blit(const gl::Context *context,

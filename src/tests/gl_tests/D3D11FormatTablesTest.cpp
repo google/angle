@@ -40,7 +40,7 @@ TEST_P(D3D11FormatTablesTest, TestFormatSupport)
     ASSERT_EQ(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, GetParam().getRenderer());
 
     // Hack the angle!
-    gl::Context *context = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
+    gl::Context *context     = static_cast<gl::Context *>(getEGLWindow()->getContext());
     rx::Context11 *context11 = rx::GetImplAs<rx::Context11>(context);
     rx::Renderer11 *renderer = context11->getRenderer();
     const auto &textureCaps  = renderer->getNativeTextureCaps();

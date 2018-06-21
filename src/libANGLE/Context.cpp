@@ -3815,7 +3815,7 @@ void Context::texImage2D(TextureTarget target,
     Extents size(width, height, 1);
     Texture *texture = getTargetTexture(TextureTargetToType(target));
     handleError(texture->setImage(this, mGLState.getUnpackState(), target, level, internalformat,
-                                  size, format, type, reinterpret_cast<const uint8_t *>(pixels)));
+                                  size, format, type, static_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texImage2DRobust(TextureTarget target,
@@ -3849,7 +3849,7 @@ void Context::texImage3D(TextureType target,
     Texture *texture = getTargetTexture(target);
     handleError(texture->setImage(this, mGLState.getUnpackState(),
                                   NonCubeTextureTypeToTarget(target), level, internalformat, size,
-                                  format, type, reinterpret_cast<const uint8_t *>(pixels)));
+                                  format, type, static_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texImage3DRobust(TextureType target,
@@ -3888,7 +3888,7 @@ void Context::texSubImage2D(TextureTarget target,
     Box area(xoffset, yoffset, 0, width, height, 1);
     Texture *texture = getTargetTexture(TextureTargetToType(target));
     handleError(texture->setSubImage(this, mGLState.getUnpackState(), target, level, area, format,
-                                     type, reinterpret_cast<const uint8_t *>(pixels)));
+                                     type, static_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texSubImage2DRobust(TextureTarget target,
@@ -3929,7 +3929,7 @@ void Context::texSubImage3D(TextureType target,
     Texture *texture = getTargetTexture(target);
     handleError(texture->setSubImage(this, mGLState.getUnpackState(),
                                      NonCubeTextureTypeToTarget(target), level, area, format, type,
-                                     reinterpret_cast<const uint8_t *>(pixels)));
+                                     static_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texSubImage3DRobust(TextureType target,
@@ -3964,7 +3964,7 @@ void Context::compressedTexImage2D(TextureTarget target,
     Texture *texture = getTargetTexture(TextureTargetToType(target));
     handleError(texture->setCompressedImage(this, mGLState.getUnpackState(), target, level,
                                             internalformat, size, imageSize,
-                                            reinterpret_cast<const uint8_t *>(data)));
+                                            static_cast<const uint8_t *>(data)));
 }
 
 void Context::compressedTexImage2DRobust(TextureTarget target,
@@ -3996,7 +3996,7 @@ void Context::compressedTexImage3D(TextureType target,
     Texture *texture = getTargetTexture(target);
     handleError(texture->setCompressedImage(
         this, mGLState.getUnpackState(), NonCubeTextureTypeToTarget(target), level, internalformat,
-        size, imageSize, reinterpret_cast<const uint8_t *>(data)));
+        size, imageSize, static_cast<const uint8_t *>(data)));
 }
 
 void Context::compressedTexImage3DRobust(TextureType target,
@@ -4030,7 +4030,7 @@ void Context::compressedTexSubImage2D(TextureTarget target,
     Texture *texture = getTargetTexture(TextureTargetToType(target));
     handleError(texture->setCompressedSubImage(this, mGLState.getUnpackState(), target, level, area,
                                                format, imageSize,
-                                               reinterpret_cast<const uint8_t *>(data)));
+                                               static_cast<const uint8_t *>(data)));
 }
 
 void Context::compressedTexSubImage2DRobust(TextureTarget target,
@@ -4072,7 +4072,7 @@ void Context::compressedTexSubImage3D(TextureType target,
     Texture *texture = getTargetTexture(target);
     handleError(texture->setCompressedSubImage(
         this, mGLState.getUnpackState(), NonCubeTextureTypeToTarget(target), level, area, format,
-        imageSize, reinterpret_cast<const uint8_t *>(data)));
+        imageSize, static_cast<const uint8_t *>(data)));
 }
 
 void Context::compressedTexSubImage3DRobust(TextureType target,
@@ -6648,14 +6648,14 @@ GLboolean Context::testFenceNV(GLuint fence)
 void Context::eGLImageTargetTexture2D(TextureType target, GLeglImageOES image)
 {
     Texture *texture        = getTargetTexture(target);
-    egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
+    egl::Image *imageObject = static_cast<egl::Image *>(image);
     handleError(texture->setEGLImageTarget(this, target, imageObject));
 }
 
 void Context::eGLImageTargetRenderbufferStorage(GLenum target, GLeglImageOES image)
 {
     Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
-    egl::Image *imageObject    = reinterpret_cast<egl::Image *>(image);
+    egl::Image *imageObject    = static_cast<egl::Image *>(image);
     handleError(renderbuffer->setStorageEGLImageTarget(this, imageObject));
 }
 
