@@ -6,9 +6,9 @@
 
 #include "compiler/translator/OutputHLSL.h"
 
+#include <stdio.h>
 #include <algorithm>
 #include <cfloat>
-#include <stdio.h>
 
 #include "common/angleutils.h"
 #include "common/debug.h"
@@ -56,7 +56,7 @@ bool IsDeclarationWrittenOut(TIntermDeclaration *node)
     ASSERT(sequence->size() == 1);
     ASSERT(variable);
     return (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal ||
-            variable->getQualifier() == EvqConst);
+            variable->getQualifier() == EvqConst || variable->getQualifier() == EvqShared);
 }
 
 bool IsInStd140InterfaceBlock(TIntermTyped *node)
@@ -165,14 +165,14 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
 {
     mInsideFunction = false;
 
-    mUsesFragColor               = false;
-    mUsesFragData                = false;
-    mUsesDepthRange              = false;
-    mUsesFragCoord               = false;
-    mUsesPointCoord              = false;
-    mUsesFrontFacing             = false;
-    mUsesPointSize               = false;
-    mUsesInstanceID              = false;
+    mUsesFragColor   = false;
+    mUsesFragData    = false;
+    mUsesDepthRange  = false;
+    mUsesFragCoord   = false;
+    mUsesPointCoord  = false;
+    mUsesFrontFacing = false;
+    mUsesPointSize   = false;
+    mUsesInstanceID  = false;
     mHasMultiviewExtensionEnabled =
         IsExtensionEnabled(mExtensionBehavior, TExtension::OVR_multiview);
     mUsesViewID                  = false;
@@ -414,18 +414,18 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
     for (const auto &varying : mReferencedVaryings)
     {
-        const TType &type   = varying.second->getType();
+        const TType &type           = varying.second->getType();
         const ImmutableString &name = varying.second->name();
 
         // Program linking depends on this exact format
-        varyings += TString("static ") + InterpolationString(type.getQualifier()) + " " + TypeString(type) +
-                    " " + Decorate(name) + ArrayString(type) + " = " + zeroInitializer(type) +
-                    ";\n";
+        varyings += TString("static ") + InterpolationString(type.getQualifier()) + " " +
+                    TypeString(type) + " " + Decorate(name) + ArrayString(type) + " = " +
+                    zeroInitializer(type) + ";\n";
     }
 
     for (const auto &attribute : mReferencedAttributes)
     {
-        const TType &type   = attribute.second->getType();
+        const TType &type           = attribute.second->getType();
         const ImmutableString &name = attribute.second->name();
 
         attributes += "static " + TypeString(type) + " " + Decorate(name) + ArrayString(type) +
@@ -499,7 +499,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
             for (const auto &outputVariable : mReferencedOutputVariables)
             {
                 const ImmutableString &variableName = outputVariable.second->name();
-                const TType &variableType   = outputVariable.second->getType();
+                const TType &variableType           = outputVariable.second->getType();
 
                 out << "static " << TypeString(variableType) << " out_" << variableName
                     << ArrayString(variableType) << " = " << zeroInitializer(variableType) << ";\n";
@@ -509,8 +509,9 @@ void OutputHLSL::header(TInfoSinkBase &out,
         {
             const unsigned int numColorValues = usingMRTExtension ? mNumRenderTargets : 1;
 
-            out << "static float4 gl_Color[" << numColorValues << "] =\n"
-                                                                  "{\n";
+            out << "static float4 gl_Color[" << numColorValues
+                << "] =\n"
+                   "{\n";
             for (unsigned int i = 0; i < numColorValues; i++)
             {
                 out << "    float4(0, 0, 0, 0)";
@@ -1244,7 +1245,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             {
                 if (visit == PreVisit)
                 {
-                    TIntermSymbol *instanceArraySymbol = node->getLeft()->getAsSymbolNode();
+                    TIntermSymbol *instanceArraySymbol    = node->getLeft()->getAsSymbolNode();
                     const TInterfaceBlock *interfaceBlock = leftType.getInterfaceBlock();
                     if (mReferencedUniformBlocks.count(interfaceBlock->uniqueId().get()) == 0)
                     {
@@ -1807,7 +1808,11 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
                 declarator->getAsSymbolNode()->variable().symbolType() !=
                     SymbolType::Empty)  // Variable declaration
             {
-                if (!mInsideFunction)
+                if (declarator->getQualifier() == EvqShared)
+                {
+                    out << "groupshared ";
+                }
+                else if (!mInsideFunction)
                 {
                     out << "static ";
                 }
@@ -1820,7 +1825,15 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
                 {
                     symbol->traverse(this);
                     out << ArrayString(symbol->getType());
-                    out << " = " + zeroInitializer(symbol->getType());
+                    // We don't initialize shared variables because:
+                    // 1. It is very slow for D3D11 drivers to compile a compute shader if we add
+                    // code to initialize a groupshared array variable with a large array size.
+                    // 2. It is unnecessary to initialize shared variables, as GLSL even does not
+                    // allow initializing shared variables at all.
+                    if (declarator->getQualifier() != EvqShared)
+                    {
+                        out << " = " + zeroInitializer(symbol->getType());
+                    }
                 }
                 else
                 {
@@ -1928,7 +1941,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             else if (node->getFunction()->isImageFunction())
             {
                 const ImmutableString &name = node->getFunction()->name();
-                TType type                = (*arguments)[0]->getAsTyped()->getType();
+                TType type                  = (*arguments)[0]->getAsTyped()->getType();
                 TString imageFunctionName   = mImageFunctionHLSL->useImageFunction(
                     name, type.getBasicType(), type.getLayoutQualifier().imageInternalFormat,
                     type.getMemoryQualifier().readonly);
