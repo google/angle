@@ -88,13 +88,6 @@ gl::Error VertexArrayVk::streamVertexData(RendererVk *renderer,
         const gl::VertexBinding &binding  = bindings[attrib.bindingIndex];
         ASSERT(attrib.enabled && binding.getBuffer().get() == nullptr);
 
-        // TODO(fjhenigman): Work with more formats than just GL_FLOAT.
-        if (attrib.type != GL_FLOAT)
-        {
-            UNIMPLEMENTED();
-            return gl::InternalError();
-        }
-
         // Only [firstVertex, lastVertex] is needed by the upcoming draw so that
         // is all we copy, but we allocate space for [0, lastVertex] so indexing
         // will work.  If we don't start at zero all the indices will be off.
@@ -349,6 +342,11 @@ void VertexArrayVk::updatePackedInputInfo(const RendererVk *rendererVk,
 
     VkFormat vkFormat = rendererVk->getFormat(GetVertexFormatID(attrib)).vkBufferFormat;
     ASSERT(vkFormat <= std::numeric_limits<uint16_t>::max());
+    if (vkFormat == VK_FORMAT_UNDEFINED)
+    {
+        // TODO(fjhenigman): Add support for vertex data format.  anglebug.com/2405
+        UNIMPLEMENTED();
+    }
 
     vk::PackedVertexInputAttributeDesc &attribDesc = mPackedInputAttributes[attribIndex];
     attribDesc.format                              = static_cast<uint16_t>(vkFormat);

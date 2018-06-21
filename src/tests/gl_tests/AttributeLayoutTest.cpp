@@ -296,7 +296,7 @@ class AttributeLayoutTest : public ANGLETest
 
         for (unsigned i = 0; i < mTestCases.size(); ++i)
         {
-            if (Skip(mTestCases[i]))
+            if (mTestCases[i].size() == 0 || Skip(mTestCases[i]))
                 continue;
 
             PrepareTestCase(mTestCases[i]);
@@ -388,29 +388,44 @@ void AttributeLayoutTest::GetTestCases(void)
     // 5. stride != size
     mTestCases.push_back({Float(B0, 0, 16, mCoord), Float(B1, 0, 12, mColor)});
 
+    // 6-7. normalized byte/short
+    if (IsVulkan() && (IsAndroid() || (IsWindows() && IsAMD())))
+    {
+        // empty test cases preserve the numbering
+        mTestCases.push_back({});
+        mTestCases.push_back({});
+    }
+    else
+    {
+        // TODO(fjhenigman): Enable these once vertex format conversion is implemented.
+        // anglebug.com/2405
+        mTestCases.push_back({NormSByte(M0, 0, 8, mCoord), NormUByte(M0, 4, 8, mColor)});
+        mTestCases.push_back({NormSShort(M0, 0, 20, mCoord), NormUShort(M0, 8, 20, mColor)});
+    }
+
     if (IsVulkan())
     {
-        std::cout << "cases skipped on Vulkan: integer data, non-zero buffer offsets" << std::endl;
+        std::cout << "cases skipped on Vulkan: fixed or non-normalized byte/short data, non-zero "
+                     "buffer offsets"
+                  << std::endl;
         return;
     }
 
-    // 6. one buffer, sequential
+    // 8. one buffer, sequential
     mTestCases.push_back({Float(B0, 0, 8, mCoord), Float(B0, 96, 12, mColor)});
 
-    // 7. one buffer, interleaved
+    // 9. one buffer, interleaved
     mTestCases.push_back({Float(B0, 0, 20, mCoord), Float(B0, 8, 20, mColor)});
 
-    // 8. memory and buffer, float and integer
+    // 10. memory and buffer, float and integer
     mTestCases.push_back({Float(M0, 0, 8, mCoord), SByte(B0, 0, 12, mColor)});
 
-    // 9. buffer and memory, unusual offset and stride
+    // 11. buffer and memory, unusual offset and stride
     mTestCases.push_back({Float(B0, 11, 13, mCoord), Float(M0, 23, 17, mColor)});
 
-    // 10-13. remaining ES2 types
+    // 12-13. unnormalized
     mTestCases.push_back({Fixed(M0, 0, 20, mCoord), UByte(M0, 16, 20, mColor)});
     mTestCases.push_back({SShort(M0, 0, 20, mCoord), UShort(M0, 8, 20, mColor)});
-    mTestCases.push_back({NormSByte(M0, 0, 8, mCoord), NormUByte(M0, 4, 8, mColor)});
-    mTestCases.push_back({NormSShort(M0, 0, 20, mCoord), NormUShort(M0, 8, 20, mColor)});
 
     // 14-15. remaining ES3 types
     if (es3)
