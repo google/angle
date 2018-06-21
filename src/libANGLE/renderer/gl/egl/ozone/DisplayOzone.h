@@ -28,6 +28,7 @@ namespace rx
 {
 
 class FramebufferGL;
+class RendererEGL;
 
 // TODO(fjhenigman) Implement swap control.  The following struct will be used for that.
 // State-tracking data for the swap control to allow DisplayOzone to remember per
@@ -146,6 +147,8 @@ class DisplayOzone final : public DisplayEGL
 
     gl::Version getMaxSupportedESVersion() const override;
 
+    void destroyNativeContext(EGLContext context) override;
+
     // TODO(fjhenigman) Implement this.
     // Swap interval can be set globally or per drawable.
     // This function will make sure the drawable's swap interval is the
@@ -168,7 +171,7 @@ class DisplayOzone final : public DisplayEGL
                                 void *data);
     void pageFlipHandler(unsigned int sequence, uint64_t tv);
 
-    std::shared_ptr<RendererGL> mRenderer;
+    std::shared_ptr<RendererEGL> mRenderer;
 
     gbm_device *mGBM;
     drmModeConnectorPtr mConnector;

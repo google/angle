@@ -717,6 +717,8 @@
         ],
         'libangle_gl_egl_sources':
         [
+            'libANGLE/renderer/gl/egl/ContextEGL.cpp',
+            'libANGLE/renderer/gl/egl/ContextEGL.h',
             'libANGLE/renderer/gl/egl/DisplayEGL.cpp',
             'libANGLE/renderer/gl/egl/DisplayEGL.h',
             'libANGLE/renderer/gl/egl/egl_utils.cpp',
@@ -726,6 +728,8 @@
             'libANGLE/renderer/gl/egl/functionsegl_typedefs.h',
             'libANGLE/renderer/gl/egl/PbufferSurfaceEGL.cpp',
             'libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h',
+            'libANGLE/renderer/gl/egl/RendererEGL.cpp',
+            'libANGLE/renderer/gl/egl/RendererEGL.h',
             'libANGLE/renderer/gl/egl/SurfaceEGL.cpp',
             'libANGLE/renderer/gl/egl/SurfaceEGL.h',
             'libANGLE/renderer/gl/egl/WindowSurfaceEGL.cpp',

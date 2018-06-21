@@ -16,7 +16,7 @@ namespace rx
 #define EGL_NO_CONFIG ((EGLConfig)0)
 
 DisplayEGL::DisplayEGL(const egl::DisplayState &state)
-    : DisplayGL(state), mEGL(nullptr), mConfig(EGL_NO_CONFIG), mContext(EGL_NO_CONTEXT)
+    : DisplayGL(state), mEGL(nullptr), mConfig(EGL_NO_CONFIG)
 {
 }
 
@@ -31,7 +31,9 @@ std::string DisplayEGL::getVendorString() const
     return vendor;
 }
 
-egl::Error DisplayEGL::initializeContext(const egl::AttributeMap &eglAttributes)
+egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
+                                         const egl::AttributeMap &eglAttributes,
+                                         EGLContext *outContext) const
 {
     gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
 
@@ -82,11 +84,13 @@ egl::Error DisplayEGL::initializeContext(const egl::AttributeMap &eglAttributes)
         contextAttribLists.push_back({EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE});
     }
 
+    EGLContext context = EGL_NO_CONTEXT;
     for (const auto &attribList : contextAttribLists)
     {
-        mContext = mEGL->createContext(mConfig, EGL_NO_CONTEXT, attribList.data());
-        if (mContext != EGL_NO_CONTEXT)
+        context = mEGL->createContext(mConfig, shareContext, attribList.data());
+        if (context != EGL_NO_CONTEXT)
         {
+            *outContext = context;
             return egl::NoError();
         }
     }

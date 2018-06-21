@@ -26,6 +26,8 @@
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/egl/ContextEGL.h"
+#include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 #include "libANGLE/renderer/gl/egl/FunctionsEGLDL.h"
 #include "libANGLE/renderer/gl/egl/ozone/SurfaceOzone.h"
 #include "platform/Platform.h"
@@ -524,9 +526,10 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
         mConfig = config[0];
     }
 
-    ANGLE_TRY(initializeContext(display->getAttributeMap()));
+    EGLContext context = EGL_NO_CONTEXT;
+    ANGLE_TRY(initializeContext(EGL_NO_CONTEXT, display->getAttributeMap(), &context));
 
-    if (!mEGL->makeCurrent(EGL_NO_SURFACE, mContext))
+    if (!mEGL->makeCurrent(EGL_NO_SURFACE, context))
     {
         return egl::EglNotInitialized() << "Could not make context current.";
     }
@@ -534,7 +537,8 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
     std::unique_ptr<FunctionsGL> functionsGL(mEGL->makeFunctionsGL());
     functionsGL->initialize(display->getAttributeMap());
 
-    mRenderer.reset(new RendererGL(std::move(functionsGL), display->getAttributeMap()));
+    mRenderer.reset(
+        new RendererEGL(std::move(functionsGL), display->getAttributeMap(), this, context));
     const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
     if (maxVersion < gl::Version(2, 0))
     {
@@ -855,19 +859,14 @@ void DisplayOzone::terminate()
 
     DisplayGL::terminate();
 
-    if (mContext)
-    {
-        // Mesa might crash if you terminate EGL with a context current
-        // then re-initialize EGL, so make our context not current.
-        mEGL->makeCurrent(EGL_NO_SURFACE, EGL_NO_CONTEXT);
-        mEGL->destroyContext(mContext);
-        mContext = nullptr;
-    }
-
     mRenderer.reset();
 
     if (mEGL)
     {
+        // Mesa might crash if you terminate EGL with a context current then re-initialize EGL, so
+        // make our context not current.
+        mEGL->makeCurrent(EGL_NO_SURFACE, EGL_NO_CONTEXT);
+
         ANGLE_SWALLOW_ERR(mEGL->terminate());
         SafeDelete(mEGL);
     }
@@ -936,7 +935,8 @@ ContextImpl *DisplayOzone::createContext(const gl::ContextState &state,
                                          const gl::Context *shareContext,
                                          const egl::AttributeMap &attribs)
 {
-    return new ContextGL(state, mRenderer);
+    // All contexts on Ozone are virtualized and share the same renderer.
+    return new ContextEGL(state, mRenderer);
 }
 
 DeviceImpl *DisplayOzone::createDevice()
@@ -997,6 +997,11 @@ egl::Error DisplayOzone::waitNative(const gl::Context *context, EGLint engine) c
 gl::Version DisplayOzone::getMaxSupportedESVersion() const
 {
     return mRenderer->getMaxSupportedESVersion();
+}
+
+void DisplayOzone::destroyNativeContext(EGLContext context)
+{
+    mEGL->destroyContext(context);
 }
 
 void DisplayOzone::setSwapInterval(EGLSurface drawable, SwapControlData *data)

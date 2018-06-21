@@ -11,12 +11,15 @@
 
 #include <map>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 
 namespace rx
 {
+
+class RendererEGL;
 
 class DisplayAndroid : public DisplayEGL
 {
@@ -67,7 +70,13 @@ class DisplayAndroid : public DisplayEGL
 
     gl::Version getMaxSupportedESVersion() const override;
 
+    void destroyNativeContext(EGLContext context) override;
+
   private:
+    egl::Error createRenderer(EGLContext shareContext,
+                              bool makeNewContextCurrent,
+                              std::shared_ptr<RendererEGL> *outRenderer);
+
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
     template <typename T>
@@ -80,12 +89,21 @@ class DisplayAndroid : public DisplayEGL
                                     const char *extension,
                                     const U &defaultValue) const;
 
-    std::shared_ptr<RendererGL> mRenderer;
+    bool mVirtualizedContexts;
+    std::shared_ptr<RendererEGL> mRenderer;
+
+    egl::AttributeMap mDisplayAttributes;
 
     std::vector<EGLint> mConfigAttribList;
     std::map<EGLint, EGLint> mConfigIds;
     EGLSurface mDummyPbuffer;
-    EGLSurface mCurrentSurface;
+
+    struct CurrentNativeContext
+    {
+        EGLSurface surface = EGL_NO_SURFACE;
+        EGLContext context = EGL_NO_CONTEXT;
+    };
+    std::unordered_map<std::thread::id, CurrentNativeContext> mCurrentNativeContext;
 };
 
 }  // namespace rx
