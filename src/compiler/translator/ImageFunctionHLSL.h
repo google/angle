@@ -25,10 +25,10 @@ class ImageFunctionHLSL final : angle::NonCopyable
   public:
     // Returns the name of the image function implementation to caller.
     // The name that's passed in is the name of the GLSL image function that it should implement.
-    TString useImageFunction(const ImmutableString &name,
-                             const TBasicType &type,
-                             TLayoutImageInternalFormat imageInternalFormat,
-                             bool readonly);
+    ImmutableString useImageFunction(const ImmutableString &name,
+                                     const TBasicType &type,
+                                     TLayoutImageInternalFormat imageInternalFormat,
+                                     bool readonly);
 
     void imageFunctionHeader(TInfoSinkBase &out);
 
@@ -53,7 +53,7 @@ class ImageFunctionHLSL final : angle::NonCopyable
             SNORM_FLOAT4
         };
 
-        TString name() const;
+        ImmutableString name() const;
 
         bool operator<(const ImageFunction &rhs) const;
 

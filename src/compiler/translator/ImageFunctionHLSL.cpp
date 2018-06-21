@@ -169,28 +169,34 @@ void ImageFunctionHLSL::OutputImageStoreFunctionBody(
         UNREACHABLE();
 }
 
-TString ImageFunctionHLSL::ImageFunction::name() const
+ImmutableString ImageFunctionHLSL::ImageFunction::name() const
 {
-    TString name = "gl_image";
+    static const ImmutableString kGlImageName("gl_image");
+
+    ImmutableString suffix(nullptr);
     if (readonly)
     {
-        name += TextureTypeSuffix(image, imageInternalFormat);
+        suffix = ImmutableString(TextureTypeSuffix(image, imageInternalFormat));
     }
     else
     {
-        name += RWTextureTypeSuffix(image, imageInternalFormat);
+        suffix = ImmutableString(RWTextureTypeSuffix(image, imageInternalFormat));
     }
+
+    ImmutableStringBuilder name(kGlImageName.length() + suffix.length() + 5u);
+
+    name << kGlImageName << suffix;
 
     switch (method)
     {
         case Method::SIZE:
-            name += "Size";
+            name << "Size";
             break;
         case Method::LOAD:
-            name += "Load";
+            name << "Load";
             break;
         case Method::STORE:
-            name += "Store";
+            name << "Store";
             break;
         default:
             UNREACHABLE();
@@ -293,10 +299,10 @@ bool ImageFunctionHLSL::ImageFunction::operator<(const ImageFunction &rhs) const
            std::tie(rhs.image, rhs.type, rhs.method, rhs.readonly);
 }
 
-TString ImageFunctionHLSL::useImageFunction(const ImmutableString &name,
-                                            const TBasicType &type,
-                                            TLayoutImageInternalFormat imageInternalFormat,
-                                            bool readonly)
+ImmutableString ImageFunctionHLSL::useImageFunction(const ImmutableString &name,
+                                                    const TBasicType &type,
+                                                    TLayoutImageInternalFormat imageInternalFormat,
+                                                    bool readonly)
 {
     ASSERT(IsImage(type));
     ImageFunction imageFunction;
