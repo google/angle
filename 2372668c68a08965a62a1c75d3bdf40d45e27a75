@@ -246,6 +246,29 @@
       "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db54540f_fea86ad1",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-21T13:46:32Z",
+      "side": 1,
+      "message": "Maybe always write this driver version string outside of the switch and then just overwrite it in the kVendorID_Qualcomm case.",
+      "range": {
+        "startLine": 138,
+        "startChar": 16,
+        "endLine": 139,
+        "endChar": 60
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
