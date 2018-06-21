@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "cce89b40_c871fc31",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-06-21T13:19:55Z",
+      "side": 1,
+      "message": "Could you clarify this comment a bit more? I am not quite familiar with the histogram macros. I just followed the existing \"D3DCompile\" histogram here:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/d3d/HLSLCompiler.cpp?rcl\u003dcd70aa422ce61a94fa5727822cd821f3a7dc5a5f\u0026l\u003d212.",
+      "parentUuid": "37e89e49_38b281cf",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 32
+      },
+      "revId": "eeb67214f4caadfefd2554ba6885f5568d0b45bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "537c2ba0_09bc4d63",
         "filename": "src/libANGLE/renderer/gl/ShaderGL.cpp",
         "patchSetId": 1
