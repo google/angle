@@ -46,6 +46,30 @@
       "revId": "8ec6567a03560fb1397f0bba562f179e6eba6850",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "825a024a_a63f363b",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1848,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-21T17:14:40Z",
+      "side": 1,
+      "message": "The lack of draw was the old \"Bad\" pattern. Most of the newer tests use a quad draw. If you look for quadDraw in this file you\u0027ll see quite a few tests do a draw validation.",
+      "parentUuid": "5af0c946_03ded2a0",
+      "range": {
+        "startLine": 1847,
+        "startChar": 0,
+        "endLine": 1848,
+        "endChar": 27
+      },
+      "revId": "8ec6567a03560fb1397f0bba562f179e6eba6850",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
