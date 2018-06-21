@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "48539c64_7d0067c5",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-21T20:36:07Z",
+      "side": 1,
+      "message": "Yep, find-replace error, thanks :)",
+      "parentUuid": "01bc7e54_da3a3b61",
+      "range": {
+        "startLine": 45,
+        "startChar": 60,
+        "endLine": 45,
+        "endChar": 65
+      },
+      "revId": "92803dddeab01c92423b0ca9d40fcc2b984366ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7dd7ea3a_097d8fd0",
         "filename": "src/tests/angle_unittests_utils.h",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "92803dddeab01c92423b0ca9d40fcc2b984366ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66a179a4_b1fa615e",
+        "filename": "src/tests/angle_unittests_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-21T20:36:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7dd7ea3a_097d8fd0",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 66
+      },
+      "revId": "92803dddeab01c92423b0ca9d40fcc2b984366ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
