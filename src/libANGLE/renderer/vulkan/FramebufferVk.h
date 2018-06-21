@@ -107,6 +107,16 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     FramebufferVk(const gl::FramebufferState &state);
     FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer);
 
+    gl::Error blitUsingCopy(RendererVk *renderer,
+                            vk::CommandBuffer *commandBuffer,
+                            const gl::Rectangle &rectangle,
+                            const gl::Rectangle &destArea,
+                            RenderTargetVk *renderTargetVk,
+                            RenderTargetVk *drawRenderTargetVk,
+                            const gl::Rectangle *scissor,
+                            bool blitDepthBuffer,
+                            bool blitStencilBuffer);
+
     gl::ErrorOrResult<vk::Framebuffer *> getFramebuffer(RendererVk *rendererVk);
 
     gl::Error clearWithClearAttachments(ContextVk *contextVk,

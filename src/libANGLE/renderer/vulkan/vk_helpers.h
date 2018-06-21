@@ -193,6 +193,7 @@ class ImageHelper final : angle::NonCopyable
                         const gl::Extents &extent,
                         StagingUsage usage);
 
+    VkImageAspectFlags getAspectFlags() const;
     void release(Serial serial, RendererVk *renderer);
     void destroy(VkDevice device);
     void dumpResources(Serial serial, std::vector<GarbageObject> *garbageQueue);

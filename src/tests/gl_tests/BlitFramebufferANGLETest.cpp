@@ -570,11 +570,6 @@ TEST_P(BlitFramebufferANGLETest, ReverseOversizedBlit)
 // blit from user-created FBO to system framebuffer, with depth buffer.
 TEST_P(BlitFramebufferANGLETest, BlitWithDepth)
 {
-    // TODO(lucferron): The format used is not supported for vkCmdBlitImage so we'll need to
-    // implement a slow path.
-    // http://anglebug.com/2643
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
@@ -614,11 +609,6 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepth)
 // blit from system FBO to user-created framebuffer, with depth buffer.
 TEST_P(BlitFramebufferANGLETest, ReverseBlitWithDepth)
 {
-    // TODO(lucferron): The format used is not supported for vkCmdBlitImage so we'll need to
-    // implement a slow path.
-    // http://anglebug.com/2643
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
@@ -791,16 +781,14 @@ TEST_P(BlitFramebufferANGLETest, BlitWithMissingAttachments)
 
 TEST_P(BlitFramebufferANGLETest, BlitStencil)
 {
-    // TODO(lucferron): The format used is not supported for vkCmdBlitImage so we'll need to
-    // implement a slow path.
-    // http://anglebug.com/2643
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     // TODO(jmadill): Figure out if we can fix this on D3D9.
     // https://code.google.com/p/angleproject/issues/detail?id=2205
     ANGLE_SKIP_TEST_IF(IsIntel() && IsD3D9());
+
+    // TODO(lucferron): Diagnose and fix http://anglebug.com/2693
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsVulkan());
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
