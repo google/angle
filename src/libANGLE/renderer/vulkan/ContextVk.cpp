@@ -66,7 +66,7 @@ ContextVk::~ContextVk()
 void ContextVk::onDestroy(const gl::Context *context)
 {
     mIncompleteTextures.onDestroy(context);
-    mDynamicDescriptorPool.destroy(mRenderer);
+    mDynamicDescriptorPool.destroy(getDevice());
 }
 
 gl::Error ContextVk::getIncompleteTexture(const gl::Context *context,
@@ -80,8 +80,14 @@ gl::Error ContextVk::getIncompleteTexture(const gl::Context *context,
 
 gl::Error ContextVk::initialize()
 {
-    ANGLE_TRY(mDynamicDescriptorPool.init(this->getDevice(), GetUniformBufferDescriptorCount(),
-                                          mRenderer->getMaxActiveTextures()));
+    // Note that this may reserve more sets than strictly necessary for a particular layout.
+    vk::DescriptorPoolSizes poolSizes;
+    poolSizes.push_back({VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
+                         GetUniformBufferDescriptorCount() * vk::kDefaultDescriptorPoolMaxSets});
+    poolSizes.push_back({VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                         mRenderer->getMaxActiveTextures() * vk::kDefaultDescriptorPoolMaxSets});
+
+    ANGLE_TRY(mDynamicDescriptorPool.init(getDevice(), poolSizes));
 
     mPipelineDesc.reset(new vk::PipelineDesc());
     mPipelineDesc->initDefaults();

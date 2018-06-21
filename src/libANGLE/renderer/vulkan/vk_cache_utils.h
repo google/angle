@@ -647,7 +647,6 @@ constexpr uint32_t kVertexUniformsBindingIndex   = 0;
 constexpr uint32_t kFragmentUniformsBindingIndex = 1;
 constexpr uint32_t kUniformsDescriptorSetIndex   = 0;
 constexpr uint32_t kTextureDescriptorSetIndex    = 1;
-constexpr uint32_t kDescriptorSetCount           = 2;
 
 }  // namespace rx
 

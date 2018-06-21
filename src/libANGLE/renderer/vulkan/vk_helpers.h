@@ -90,33 +90,39 @@ class DynamicBuffer : angle::NonCopyable
 // using the maximum number of descriptor sets and buffers with each allocation. Currently: 2
 // (Vertex/Fragment) uniform buffers and 64 (MAX_ACTIVE_TEXTURES) image/samplers.
 
+using DescriptorPoolSizes = angle::FixedVector<VkDescriptorPoolSize, kMaxDescriptorSetLayouts>;
+
+// This is an arbitrary max. We can change this later if necessary.
+constexpr uint32_t kDefaultDescriptorPoolMaxSets = 2048;
+
 class DynamicDescriptorPool final : angle::NonCopyable
 {
   public:
     DynamicDescriptorPool();
     ~DynamicDescriptorPool();
-    void destroy(RendererVk *rendererVk);
-    Error init(const VkDevice &device,
-               uint32_t uniformBufferDescriptorsPerSet,
-               uint32_t combinedImageSamplerDescriptorsPerSet);
 
-    // It is an undefined behavior to pass a different descriptorSetLayout from call to call.
-    Error allocateDescriptorSets(ContextVk *contextVk,
-                                 const VkDescriptorSetLayout *descriptorSetLayout,
-                                 uint32_t descriptorSetCount,
-                                 VkDescriptorSet *descriptorSetsOut);
+    Error init(VkDevice device, const DescriptorPoolSizes &poolSizes);
+    void destroy(VkDevice device);
+
+    // We use the descriptor type to help count the number of free sets.
+    // By convention, sets are indexed according to the constants in vk_cache_utils.h.
+    Error allocateSets(ContextVk *contextVk,
+                       const VkDescriptorSetLayout *descriptorSetLayout,
+                       uint32_t descriptorSetCount,
+                       uint32_t descriptorSetIndex,
+                       VkDescriptorSet *descriptorSetsOut);
 
     // For testing only!
     void setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool);
 
   private:
-    Error allocateNewPool(const VkDevice &device);
+    Error allocateNewPool(VkDevice device);
 
     uint32_t mMaxSetsPerPool;
-    DescriptorPool mCurrentDescriptorSetPool;
-    size_t mCurrentAllocatedDescriptorSetCount;
-    uint32_t mUniformBufferDescriptorsPerSet;
-    uint32_t mCombinedImageSamplerDescriptorsPerSet;
+    uint32_t mCurrentSetsCount;
+    DescriptorPool mCurrentDescriptorPool;
+    DescriptorPoolSizes mPoolSizes;
+    DescriptorSetLayoutArray<uint32_t> mFreeDescriptorSets;
 };
 
 // This class' responsibility is to create index buffers needed to support line loops in Vulkan.
