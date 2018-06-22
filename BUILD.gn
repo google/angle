@@ -251,6 +251,10 @@ static_library("angle_gpu_info_util") {
   libs = []
   defines = []
 
+  if (is_android) {
+    sources += [ "src/gpu_info_util/SystemInfo_android.cpp" ]
+  }
+
   if (is_win) {
     sources +=
         rebase_path(gles_gypi.libangle_gpu_info_util_win_sources, ".", "src")
