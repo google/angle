@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "7b6c5af7_64c8c9d1",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-22T20:13:04Z",
+      "side": 1,
+      "message": "https://cs.chromium.org/chromium/src/third_party/angle/third_party/spirv-tools/BUILD.gn?l\u003d165",
+      "parentUuid": "2e08cad3_1bb570b2",
+      "range": {
+        "startLine": 256,
+        "startChar": 30,
+        "endLine": 256,
+        "endChar": 68
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b5b41ae8_5dd7ff03",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
