@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8fe8f152_b213102f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "nit: update comment",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 20
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc4dec62_b21a3bdb",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "nit: can specify type",
+      "range": {
+        "startLine": 357,
+        "startChar": 10,
+        "endLine": 357,
+        "endChar": 15
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fc58bb0_aa57c262",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "for some reason i\u0027m surprised this works. I would have thought we need to use beginWriteResource. There may be some sequences of commands that trigger bugs.",
+      "range": {
+        "startLine": 365,
+        "startChar": 14,
+        "endLine": 365,
+        "endChar": 33
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f952ca71_310029c4",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "can you please use the render target cache",
+      "range": {
+        "startLine": 386,
+        "startChar": 0,
+        "endLine": 388,
+        "endChar": 41
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e003432_a36ec827",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "can you please use the render target cache",
+      "range": {
+        "startLine": 410,
+        "startChar": 0,
+        "endLine": 416,
+        "endChar": 0
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a78c37f_5f2085ea",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "nit: can we return an error in the mean time?",
+      "range": {
+        "startLine": 435,
+        "startChar": 12,
+        "endLine": 435,
+        "endChar": 25
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7813083_89a2282a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "don\u0027t we have a helper for this?",
+      "range": {
+        "startLine": 489,
+        "startChar": 14,
+        "endLine": 490,
+        "endChar": 96
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e6c1f48_05d2f9db",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "getImageForRead should do this.",
+      "range": {
+        "startLine": 509,
+        "startChar": 0,
+        "endLine": 511,
+        "endChar": 88
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e7245f9_5ffab0c0",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "can use const\u0026",
+      "range": {
+        "startLine": 513,
+        "startChar": 4,
+        "endLine": 513,
+        "endChar": 21
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3009bb28_d9212cd7",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:20:48Z",
+      "side": 1,
+      "message": "doesn\u0027t this need a transition to TRANSFER_DST?",
+      "range": {
+        "startLine": 525,
+        "startChar": 50,
+        "endLine": 525,
+        "endChar": 66
+      },
+      "revId": "6bc3791748cfc30255ef3096e2c90de15f523979",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
