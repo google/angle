@@ -1824,28 +1824,43 @@ TEST_P(GLSLTest, TextureLOD)
     glDeleteShader(shader);
 }
 
-// Test to verify the compilation of a shader that would have a sampler unused in a vertex shader
+// Test to verify the a shader can have a sampler unused in a vertex shader
 // but used in the fragment shader.
 TEST_P(GLSLTest, VerifySamplerInBothVertexAndFragmentShaders)
 {
-    const std::string vs =
-        R"(precision mediump float;
-        uniform sampler2D s_texture;
+    const std::string vs = R"(
+        attribute vec2 position;
+        varying mediump vec2 texCoord;
+        uniform sampler2D tex;
         void main()
         {
-            gl_Position = vec4(1.0, 1.0, 1.0, 1.0);
+            gl_Position = vec4(position, 0, 1);
+            texCoord = position * 0.5 + vec2(0.5);
         })";
 
-    const std::string fs =
-        R"(precision mediump float;
-        uniform sampler2D s_texture;
+    const std::string fs = R"(
+        varying mediump vec2 texCoord;
+        uniform sampler2D tex;
         void main()
         {
-            gl_FragColor = texture2D(s_texture, vec2(0.0, 0.0));
+            gl_FragColor = texture2D(tex, texCoord);
         })";
 
     GLuint program = CompileProgram(vs, fs);
     EXPECT_NE(0u, program);
+
+    // Initialize basic red texture.
+    const std::vector<GLColor> redColors(4, GLColor::red);
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, redColors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(program, "position", 0.0f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
 }
 
 // Test that two constructors which have vec4 and mat2 parameters get disambiguated (issue in
