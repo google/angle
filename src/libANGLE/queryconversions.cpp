@@ -88,6 +88,8 @@ template GLfloat CastFromGLintStateValue<GLfloat, GLenum>(GLenum pname, GLenum v
 template GLint CastFromGLintStateValue<GLint, GLenum>(GLenum pname, GLenum value);
 template GLint64 CastFromGLintStateValue<GLint64, GLenum>(GLenum pname, GLenum value);
 template GLuint CastFromGLintStateValue<GLuint, GLenum>(GLenum pname, GLenum value);
+template GLfloat CastFromGLintStateValue<GLfloat, GLint>(GLenum pname, GLint value);
+template GLint CastFromGLintStateValue<GLint, GLint>(GLenum pname, GLint value);
 template GLfloat CastFromGLintStateValue<GLfloat, bool>(GLenum pname, bool value);
 template GLuint CastFromGLintStateValue<GLuint, bool>(GLenum pname, bool value);
 template GLint CastFromGLintStateValue<GLint, bool>(GLenum pname, bool value);

@@ -269,7 +269,6 @@ TEST_P(GLES1ConformanceTest, LogicOp)
 
 TEST_P(GLES1ConformanceTest, Mip)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MipExec());
 }
 
@@ -281,13 +280,11 @@ TEST_P(GLES1ConformanceTest, MipLevels)
 
 TEST_P(GLES1ConformanceTest, MipLin)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MipLinExec());
 }
 
 TEST_P(GLES1ConformanceTest, MipSelect)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, MipSelectExec());
 }
 

@@ -188,6 +188,18 @@ void QueryTexParameterBase(const Texture *texture, GLenum pname, ParamType *para
             *params =
                 CastFromGLintStateValue<ParamType>(pname, texture->getDepthStencilTextureMode());
             break;
+        case GL_TEXTURE_CROP_RECT_OES:
+        {
+            const gl::Rectangle &crop = texture->getCrop();
+            params[0]                 = CastFromGLintStateValue<ParamType>(pname, crop.x);
+            params[1]                 = CastFromGLintStateValue<ParamType>(pname, crop.y);
+            params[2]                 = CastFromGLintStateValue<ParamType>(pname, crop.width);
+            params[3]                 = CastFromGLintStateValue<ParamType>(pname, crop.height);
+            break;
+        }
+        case GL_GENERATE_MIPMAP:
+            *params = CastFromGLintStateValue<ParamType>(pname, texture->getGenerateMipmapHint());
+            break;
         default:
             UNREACHABLE();
             break;
@@ -260,6 +272,15 @@ void SetTexParameterBase(Context *context, Texture *texture, GLenum pname, const
             break;
         case GL_TEXTURE_SRGB_DECODE_EXT:
             texture->setSRGBDecode(ConvertToGLenum(pname, params[0]));
+            break;
+        case GL_TEXTURE_CROP_RECT_OES:
+            texture->setCrop(gl::Rectangle(CastQueryValueTo<GLint>(pname, params[0]),
+                                           CastQueryValueTo<GLint>(pname, params[1]),
+                                           CastQueryValueTo<GLint>(pname, params[2]),
+                                           CastQueryValueTo<GLint>(pname, params[3])));
+            break;
+        case GL_GENERATE_MIPMAP:
+            texture->setGenerateMipmapHint(ConvertToGLenum(params[0]));
             break;
         default:
             UNREACHABLE();
@@ -2508,6 +2529,39 @@ void GetPointSize(GLES1State *state, GLfloat *sizeOut)
 {
     const PointParameters &params = state->pointParameters();
     *sizeOut                      = params.pointSize;
+}
+
+unsigned int GetTexParameterCount(GLenum pname)
+{
+    switch (pname)
+    {
+        case GL_TEXTURE_CROP_RECT_OES:
+            return 4;
+        case GL_TEXTURE_MAG_FILTER:
+        case GL_TEXTURE_MIN_FILTER:
+        case GL_TEXTURE_WRAP_S:
+        case GL_TEXTURE_WRAP_T:
+        case GL_TEXTURE_USAGE_ANGLE:
+        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+        case GL_TEXTURE_IMMUTABLE_FORMAT:
+        case GL_TEXTURE_WRAP_R:
+        case GL_TEXTURE_IMMUTABLE_LEVELS:
+        case GL_TEXTURE_SWIZZLE_R:
+        case GL_TEXTURE_SWIZZLE_G:
+        case GL_TEXTURE_SWIZZLE_B:
+        case GL_TEXTURE_SWIZZLE_A:
+        case GL_TEXTURE_BASE_LEVEL:
+        case GL_TEXTURE_MAX_LEVEL:
+        case GL_TEXTURE_MIN_LOD:
+        case GL_TEXTURE_MAX_LOD:
+        case GL_TEXTURE_COMPARE_MODE:
+        case GL_TEXTURE_COMPARE_FUNC:
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+        case GL_DEPTH_STENCIL_TEXTURE_MODE:
+            return 1;
+        default:
+            return 0;
+    }
 }
 
 }  // namespace gl

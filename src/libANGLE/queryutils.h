@@ -205,6 +205,8 @@ void GetPointParameter(const GLES1State *state, PointParameter pname, GLfloat *p
 void SetPointSize(GLES1State *state, GLfloat size);
 void GetPointSize(GLES1State *state, GLfloat *sizeOut);
 
+unsigned int GetTexParameterCount(GLenum pname);
+
 }  // namespace gl
 
 namespace egl

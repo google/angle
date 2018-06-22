@@ -6261,7 +6261,7 @@ bool ValidateReadPixels(Context *context,
 
 bool ValidateTexParameterf(Context *context, TextureType target, GLenum pname, GLfloat param)
 {
-    return ValidateTexParameterBase(context, target, pname, -1, &param);
+    return ValidateTexParameterBase(context, target, pname, 1, &param);
 }
 
 bool ValidateTexParameterfv(Context *context,
@@ -6274,7 +6274,7 @@ bool ValidateTexParameterfv(Context *context,
 
 bool ValidateTexParameteri(Context *context, TextureType target, GLenum pname, GLint param)
 {
-    return ValidateTexParameterBase(context, target, pname, -1, &param);
+    return ValidateTexParameterBase(context, target, pname, 1, &param);
 }
 
 bool ValidateTexParameteriv(Context *context, TextureType target, GLenum pname, const GLint *params)

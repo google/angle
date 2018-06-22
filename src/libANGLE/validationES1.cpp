@@ -840,7 +840,13 @@ bool ValidateGetTexEnvxv(Context *context,
 
 bool ValidateGetTexParameterxv(Context *context, TextureType target, GLenum pname, GLfixed *params)
 {
-    UNIMPLEMENTED();
+    ANGLE_VALIDATE_IS_GLES1(context);
+
+    if (!ValidateGetTexParameterBase(context, target, pname, nullptr))
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -1248,8 +1254,9 @@ bool ValidateTexEnvxv(Context *context,
 
 bool ValidateTexParameterx(Context *context, TextureType target, GLenum pname, GLfixed param)
 {
-    UNIMPLEMENTED();
-    return true;
+    ANGLE_VALIDATE_IS_GLES1(context);
+    GLfloat paramf = FixedToFloat(param);
+    return ValidateTexParameterBase(context, target, pname, 1, &paramf);
 }
 
 bool ValidateTexParameterxv(Context *context,
@@ -1257,8 +1264,13 @@ bool ValidateTexParameterxv(Context *context,
                             GLenum pname,
                             const GLfixed *params)
 {
-    UNIMPLEMENTED();
-    return true;
+    ANGLE_VALIDATE_IS_GLES1(context);
+    GLfloat paramsf[4] = {};
+    for (unsigned int i = 0; i < GetTexParameterCount(pname); i++)
+    {
+        paramsf[i] = FixedToFloat(params[i]);
+    }
+    return ValidateTexParameterBase(context, target, pname, -1, paramsf);
 }
 
 bool ValidateTranslatef(Context *context, GLfloat x, GLfloat y, GLfloat z)

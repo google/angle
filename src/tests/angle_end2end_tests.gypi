@@ -67,6 +67,7 @@
             '<(angle_path)/src/tests/gl_tests/gles1/PointParameterTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/ShadeModelTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/TextureEnvTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/gles1/TextureParameterTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/TextureTargetEnableTest.cpp',
             '<(angle_path)/src/tests/gl_tests/gles1/VertexPointerTest.cpp',
             '<(angle_path)/src/tests/gl_tests/GLSLTest.cpp',
