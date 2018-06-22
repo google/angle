@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf3e1656_ca95dedc",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:55:34Z",
+      "side": 1,
+      "message": "nit: TODO(fjhenigman)",
+      "range": {
+        "startLine": 375,
+        "startChar": 3,
+        "endLine": 375,
+        "endChar": 6
+      },
+      "revId": "ebf17c9d9dd32734ab67a0e6d8a1e01cd83c0ee4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f1d9c27_c28b98f7",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T19:55:34Z",
+      "side": 1,
+      "message": "same here and below",
+      "revId": "ebf17c9d9dd32734ab67a0e6d8a1e01cd83c0ee4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
