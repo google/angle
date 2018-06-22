@@ -112,6 +112,30 @@
     },
     {
       "key": {
+        "uuid": "29b75557_c43f53d7",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T01:30:26Z",
+      "side": 1,
+      "message": "Quoth the style guide\n\n\"$YEAR should be set to the current year at the time a file is created, and not changed thereafter.\"\n\nThere\u0027s no need to retroactively fix the prior headers. If we feel like it we can do it en masse at some point.",
+      "parentUuid": "35f45a49_50ff3b4b",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b394ddf5_9a96547c",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 2
