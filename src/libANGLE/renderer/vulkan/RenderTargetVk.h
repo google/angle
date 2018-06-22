@@ -48,8 +48,12 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     const vk::ImageHelper &getImage() const;
 
-    vk::ImageHelper *getImageForWrite(Serial currentSerial,
-                                      vk::CommandGraphResource *writingResource) const;
+    // getImageForRead will also transition the resource to the given layout.
+    vk::ImageHelper *getImageForRead(vk::CommandGraphResource *readingResource,
+                                     VkImageLayout layout,
+                                     VkImageAspectFlags aspectFlags,
+                                     vk::CommandBuffer *commandBuffer);
+    vk::ImageHelper *getImageForWrite(vk::CommandGraphResource *writingResource) const;
     vk::ImageView *getImageView() const;
     vk::CommandGraphResource *getResource() const;
 

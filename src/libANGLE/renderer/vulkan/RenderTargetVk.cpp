@@ -104,8 +104,23 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageView 
     mImageView = imageView;
 }
 
-vk::ImageHelper *RenderTargetVk::getImageForWrite(Serial currentSerial,
-                                                  vk::CommandGraphResource *writingResource) const
+vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readingResource,
+                                                 VkImageLayout layout,
+                                                 VkImageAspectFlags aspectFlags,
+                                                 vk::CommandBuffer *commandBuffer)
+{
+    ASSERT(mImage && mImage->valid());
+
+    // TODO(jmadill): Better simultaneous resource access. http://anglebug.com/2679
+    mResource->addWriteDependency(readingResource);
+
+    mImage->changeLayoutWithStages(aspectFlags, layout, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
+
+    return mImage;
+}
+
+vk::ImageHelper *RenderTargetVk::getImageForWrite(vk::CommandGraphResource *writingResource) const
 {
     ASSERT(mImage && mImage->valid());
     mResource->addWriteDependency(writingResource);
