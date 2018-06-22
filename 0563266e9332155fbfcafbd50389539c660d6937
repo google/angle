@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51505470_e3d14aac",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1848,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T14:32:40Z",
+      "side": 1,
+      "message": "nit: keeping the R() stuff would be nice if possible.",
+      "range": {
+        "startLine": 1831,
+        "startChar": 0,
+        "endLine": 1848,
+        "endChar": 0
+      },
+      "revId": "0563266e9332155fbfcafbd50389539c660d6937",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
