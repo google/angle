@@ -6638,4 +6638,14 @@ bool ValidateTexStorage3DEXT(Context *context,
                                              depth);
 }
 
+bool ValidateMaxShaderCompilerThreadsKHR(Context *context, GLuint count)
+{
+    if (!context->getExtensions().parallelShaderCompile)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+    return true;
+}
+
 }  // namespace gl

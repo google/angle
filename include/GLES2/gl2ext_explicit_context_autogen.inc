@@ -194,6 +194,7 @@ typedef GLboolean (GL_APIENTRYP PFNGLISQUERYEXTCONTEXTANGLE)(GLeglContext ctx, G
 typedef GLboolean (GL_APIENTRYP PFNGLISVERTEXARRAYOESCONTEXTANGLE)(GLeglContext ctx, GLuint array);
 typedef void *(GL_APIENTRYP PFNGLMAPBUFFEROESCONTEXTANGLE)(GLeglContext ctx, GLenum target, GLenum access);
 typedef void *(GL_APIENTRYP PFNGLMAPBUFFERRANGEEXTCONTEXTANGLE)(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
+typedef void (GL_APIENTRYP PFNGLMAXSHADERCOMPILERTHREADSKHRCONTEXTANGLE)(GLeglContext ctx, GLuint count);
 typedef void (GL_APIENTRYP PFNGLOBJECTLABELKHRCONTEXTANGLE)(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
 typedef void (GL_APIENTRYP PFNGLOBJECTPTRLABELKHRCONTEXTANGLE)(GLeglContext ctx, const void *ptr, GLsizei length, const GLchar *label);
 typedef void (GL_APIENTRYP PFNGLPOPDEBUGGROUPKHRCONTEXTANGLE)(GLeglContext ctx);
@@ -495,6 +496,7 @@ GL_APICALL GLboolean GL_APIENTRY glIsQueryEXTContextANGLE(GLeglContext ctx, GLui
 GL_APICALL GLboolean GL_APIENTRY glIsVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array);
 GL_APICALL void *GL_APIENTRY glMapBufferOESContextANGLE(GLeglContext ctx, GLenum target, GLenum access);
 GL_APICALL void *GL_APIENTRY glMapBufferRangeEXTContextANGLE(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
+GL_APICALL void GL_APIENTRY glMaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuint count);
 GL_APICALL void GL_APIENTRY glObjectLabelKHRContextANGLE(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
 GL_APICALL void GL_APIENTRY glObjectPtrLabelKHRContextANGLE(GLeglContext ctx, const void *ptr, GLsizei length, const GLchar *label);
 GL_APICALL void GL_APIENTRY glPopDebugGroupKHRContextANGLE(GLeglContext ctx);

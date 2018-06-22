@@ -1737,6 +1737,11 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
                               GL_VERTEX_ATTRIB_ARRAY_TYPE, params);
             break;
 
+        // GL_KHR_parallel_shader_compile
+        case GL_MAX_SHADER_COMPILER_THREADS_KHR:
+            *params = mGLState.getMaxShaderCompilerThreads();
+            break;
+
         default:
             handleError(mGLState.getIntegerv(this, pname, params));
             break;
@@ -3050,12 +3055,16 @@ Extensions Context::generateSupportedExtensions() const
 {
     Extensions supportedExtensions = mImplementation->getNativeExtensions();
 
+    // Explicitly enable GL_KHR_parallel_shader_compile
+    supportedExtensions.parallelShaderCompile = true;
+
     if (getClientVersion() < ES_2_0)
     {
         // Default extensions for GLES1
         supportedExtensions.pointSizeArray = true;
         supportedExtensions.textureCubeMap = true;
         supportedExtensions.pointSprite    = true;
+        supportedExtensions.parallelShaderCompile = false;
     }
 
     if (getClientVersion() < ES_3_0)
@@ -6988,6 +6997,13 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         return true;
     }
 
+    if (getExtensions().parallelShaderCompile && pname == GL_MAX_SHADER_COMPILER_THREADS_KHR)
+    {
+        *type      = GL_INT;
+        *numParams = 1;
+        return true;
+    }
+
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {
@@ -7473,6 +7489,11 @@ GLenum Context::getConvertedRenderbufferFormat(GLenum internalformat) const
                    internalformat == GL_DEPTH_STENCIL
                ? GL_DEPTH24_STENCIL8
                : internalformat;
+}
+
+void Context::maxShaderCompilerThreads(GLuint count)
+{
+    mGLState.setMaxShaderCompilerThreads(count);
 }
 
 }  // namespace gl

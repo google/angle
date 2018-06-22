@@ -3407,6 +3407,23 @@ void GL_APIENTRY PushDebugGroupKHR(GLenum source, GLuint id, GLsizei length, con
     }
 }
 
+// GL_KHR_parallel_shader_compile
+void GL_APIENTRY MaxShaderCompilerThreadsKHR(GLuint count)
+{
+    EVENT("(GLuint count = %u)", count);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::MaxShaderCompilerThreadsKHR>(count);
+
+        if (context->skipValidation() || ValidateMaxShaderCompilerThreadsKHR(context, count))
+        {
+            context->maxShaderCompilerThreads(count);
+        }
+    }
+}
+
 // GL_NV_fence
 void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint *fences)
 {
@@ -10806,6 +10823,23 @@ void GL_APIENTRY MatrixModeContextANGLE(GLeglContext ctx, GLenum mode)
         if (context->skipValidation() || ValidateMatrixMode(context, modePacked))
         {
             context->matrixMode(modePacked);
+        }
+    }
+}
+
+void GL_APIENTRY MaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuint count)
+{
+    EVENT("(GLuint count = %u)", count);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::MaxShaderCompilerThreadsKHR>(count);
+
+        if (context->skipValidation() || ValidateMaxShaderCompilerThreadsKHR(context, count))
+        {
+            context->maxShaderCompilerThreads(count);
         }
     }
 }

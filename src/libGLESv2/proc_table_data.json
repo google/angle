@@ -526,6 +526,10 @@
         "glFramebufferTextureMultiviewSideBySideANGLE"
     ],
 
+    "GL_KHR_parallel_shader_compile": [
+        "glMaxShaderCompilerThreadsKHR"
+    ],
+
     "GLES3 core": [
         "glReadBuffer",
         "glDrawRangeElements",

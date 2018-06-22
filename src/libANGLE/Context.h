@@ -1469,6 +1469,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     static int TexCoordArrayIndex(unsigned int unit);
     AttributesMask getVertexArraysAttributeMask() const;
 
+    // GL_KHR_parallel_shader_compile
+    void maxShaderCompilerThreads(GLuint count);
+
   private:
     void initialize();
 

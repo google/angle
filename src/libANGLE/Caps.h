@@ -421,6 +421,9 @@ struct Extensions
     bool explicitContextGles1;
     // GL_ANGLE_explicit_context
     bool explicitContext;
+
+    // GL_KHR_parallel_shader_compile
+    bool parallelShaderCompile;
 };
 
 struct ExtensionInfo

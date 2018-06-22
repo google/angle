@@ -388,6 +388,7 @@ enum class EntryPoint
     MatrixLoadIdentityCHROMIUM,
     MatrixLoadfCHROMIUM,
     MatrixMode,
+    MaxShaderCompilerThreadsKHR,
     MemoryBarrier,
     MemoryBarrierByRegion,
     MultMatrixf,

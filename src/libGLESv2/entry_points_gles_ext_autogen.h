@@ -690,6 +690,9 @@ ANGLE_EXPORT void GL_APIENTRY PushDebugGroupKHR(GLenum source,
                                                 GLsizei length,
                                                 const GLchar *message);
 
+// GL_KHR_parallel_shader_compile
+ANGLE_EXPORT void GL_APIENTRY MaxShaderCompilerThreadsKHR(GLuint count);
+
 // GL_NV_fence
 ANGLE_EXPORT void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint *fences);
 ANGLE_EXPORT void GL_APIENTRY FinishFenceNV(GLuint fence);
@@ -1846,6 +1849,8 @@ ANGLE_EXPORT void GL_APIENTRY MatrixIndexPointerOESContextANGLE(GLeglContext ctx
                                                                 GLsizei stride,
                                                                 const void *pointer);
 ANGLE_EXPORT void GL_APIENTRY MatrixModeContextANGLE(GLeglContext ctx, GLenum mode);
+ANGLE_EXPORT void GL_APIENTRY MaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx,
+                                                                      GLuint count);
 ANGLE_EXPORT void GL_APIENTRY MemoryBarrierContextANGLE(GLeglContext ctx, GLbitfield barriers);
 ANGLE_EXPORT void GL_APIENTRY MemoryBarrierByRegionContextANGLE(GLeglContext ctx,
                                                                 GLbitfield barriers);

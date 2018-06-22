@@ -336,6 +336,10 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     void setFramebufferSRGB(bool sRGB);
     bool getFramebufferSRGB() const;
 
+    // GL_KHR_parallel_shader_compile
+    void setMaxShaderCompilerThreads(GLuint count);
+    GLuint getMaxShaderCompilerThreads() const;
+
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params);
     void getFloatv(GLenum pname, GLfloat *params);
@@ -610,6 +614,9 @@ class State : public angle::ObserverInterface, angle::NonCopyable
 
     // GL_ANGLE_program_cache_control
     const bool mProgramBinaryCacheEnabled;
+
+    // GL_KHR_parallel_shader_compile
+    GLuint mMaxShaderCompilerThreads;
 
     // GLES1 emulation: state specific to GLES1
     GLES1State mGLES1State;

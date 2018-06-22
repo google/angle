@@ -3647,6 +3647,12 @@ void GL_APIENTRY glPushDebugGroupKHR(GLenum source,
     return gl::PushDebugGroupKHR(source, id, length, message);
 }
 
+// GL_KHR_parallel_shader_compile
+void GL_APIENTRY glMaxShaderCompilerThreadsKHR(GLuint count)
+{
+    return gl::MaxShaderCompilerThreadsKHR(count);
+}
+
 // GL_NV_fence
 void GL_APIENTRY glDeleteFencesNV(GLsizei n, const GLuint *fences)
 {
@@ -6135,6 +6141,11 @@ void GL_APIENTRY glMatrixIndexPointerOESContextANGLE(GLeglContext ctx,
 void GL_APIENTRY glMatrixModeContextANGLE(GLeglContext ctx, GLenum mode)
 {
     return gl::MatrixModeContextANGLE(ctx, mode);
+}
+
+void GL_APIENTRY glMaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuint count)
+{
+    return gl::MaxShaderCompilerThreadsKHRContextANGLE(ctx, count);
 }
 
 void GL_APIENTRY glMemoryBarrierContextANGLE(GLeglContext ctx, GLbitfield barriers)

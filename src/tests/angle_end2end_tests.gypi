@@ -91,6 +91,7 @@
             '<(angle_path)/src/tests/gl_tests/ProvokingVertexTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ObjectAllocationTest.cpp',
             '<(angle_path)/src/tests/gl_tests/OcclusionQueriesTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/ParallelShaderCompileTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ProgramBinaryTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ProgramInterfaceTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ProgramParameterTest.cpp',
