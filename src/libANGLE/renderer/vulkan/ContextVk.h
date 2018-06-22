@@ -163,6 +163,7 @@ class ContextVk : public ContextImpl
     gl::Error getIncompleteTexture(const gl::Context *context,
                                    gl::TextureType type,
                                    gl::Texture **textureOut);
+    void updateColorMask(const gl::BlendState &blendState);
 
   private:
     gl::Error initPipeline();
@@ -171,7 +172,6 @@ class ContextVk : public ContextImpl
                         vk::CommandBuffer **commandBufferOut,
                         bool *shouldApplyVertexArrayOut);
 
-    void updateClearColorMask(const gl::BlendState &blendState);
     void updateScissor(const gl::State &glState);
 
     RendererVk *mRenderer;

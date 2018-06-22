@@ -106,6 +106,61 @@ TEST_P(ClearTest, RGBA8Framebuffer)
     EXPECT_PIXEL_NEAR(0, 0, 128, 128, 128, 128, 1.0);
 }
 
+// Test to validate that we can go from an RGBA framebuffer attachment, to an RGB one and still
+// have a correct behavior after.
+TEST_P(ClearTest, ChangeFramebufferAttachmentFromRGBAtoRGB)
+{
+    // TODO(lucferron): Diagnose and fix this on D3D9 and 11.
+    // http://anglebug.com/2685
+    ANGLE_SKIP_TEST_IF(IsD3D9() || IsD3D11());
+
+    ANGLE_GL_PROGRAM(program, angle::essl1_shaders::vs::Simple(),
+                     angle::essl1_shaders::fs::UniformColor());
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glUseProgram(program);
+    GLint positionLocation = glGetAttribLocation(program, angle::essl1_shaders::PositionAttrib());
+    ASSERT_NE(positionLocation, -1);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+
+    GLint colorUniformLocation =
+        glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    glUniform4f(colorUniformLocation, 1.0f, 1.0f, 1.0f, 0.5f);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
+
+    GLTexture texture;
+    glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // So far so good, we have an RGBA framebuffer that we've cleared to 0.5 everywhere.
+    EXPECT_PIXEL_NEAR(0, 0, 128, 0, 128, 128, 1.0);
+
+    // In the Vulkan backend, RGB textures are emulated with an RGBA texture format
+    // underneath and we keep a special mask to know that we shouldn't touch the alpha
+    // channel when we have that emulated texture. This test exists to validate that
+    // this mask gets updated correctly when the framebuffer attachment changes.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::magenta);
+}
+
 // Test clearing a RGB8 Framebuffer with a color mask.
 TEST_P(ClearTest, RGB8WithMaskFramebuffer)
 {

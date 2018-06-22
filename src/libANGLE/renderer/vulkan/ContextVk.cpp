@@ -378,7 +378,7 @@ void ContextVk::popDebugGroup()
     UNIMPLEMENTED();
 }
 
-void ContextVk::updateClearColorMask(const gl::BlendState &blendState)
+void ContextVk::updateColorMask(const gl::BlendState &blendState)
 {
     mClearColorMask =
         gl_vk::GetColorComponentFlags(blendState.colorMaskRed, blendState.colorMaskGreen,
@@ -444,7 +444,7 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 mPipelineDesc->updateBlendEquations(glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_COLOR_MASK:
-                updateClearColorMask(glState.getBlendState());
+                updateColorMask(glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
                 WARN() << "DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED unimplemented";
@@ -555,7 +555,7 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_READ_FRAMEBUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
-                updateClearColorMask(glState.getBlendState());
+                updateColorMask(glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
                 WARN() << "DIRTY_BIT_RENDERBUFFER_BINDING unimplemented";
