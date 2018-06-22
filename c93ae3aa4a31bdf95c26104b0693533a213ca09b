@@ -184,6 +184,30 @@
     },
     {
       "key": {
+        "uuid": "6135d580_21d5ba7c",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-22T20:36:55Z",
+      "side": 1,
+      "message": "We use a combination of a macro and a template function in rest of ANGLE.\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/FunctionsGL.cpp?l\u003d93\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp?g\u003d0\u0026l\u003d125",
+      "parentUuid": "676dc74e_186a2bfc",
+      "range": {
+        "startLine": 28,
+        "startChar": 12,
+        "endLine": 29,
+        "endChar": 95
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3dad265c_b340fed8",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
