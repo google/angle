@@ -50,7 +50,6 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     : ContextImpl(state),
       mRenderer(renderer),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
-      mDynamicDescriptorPool(),
       mTexturesDirty(false),
       mVertexArrayBindingHasChanged(false),
       mClearColorMask(kAllColorChannelsMask)
@@ -66,7 +65,11 @@ ContextVk::~ContextVk()
 void ContextVk::onDestroy(const gl::Context *context)
 {
     mIncompleteTextures.onDestroy(context);
-    mDynamicDescriptorPool.destroy(getDevice());
+
+    for (vk::DynamicDescriptorPool &descriptorPool : mDynamicDescriptorPools)
+    {
+        descriptorPool.destroy(getDevice());
+    }
 }
 
 gl::Error ContextVk::getIncompleteTexture(const gl::Context *context,
@@ -81,13 +84,20 @@ gl::Error ContextVk::getIncompleteTexture(const gl::Context *context,
 gl::Error ContextVk::initialize()
 {
     // Note that this may reserve more sets than strictly necessary for a particular layout.
-    vk::DescriptorPoolSizes poolSizes;
-    poolSizes.push_back({VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
-                         GetUniformBufferDescriptorCount() * vk::kDefaultDescriptorPoolMaxSets});
-    poolSizes.push_back({VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-                         mRenderer->getMaxActiveTextures() * vk::kDefaultDescriptorPoolMaxSets});
+    vk::DescriptorPoolSizes uniformPoolSize;
+    uniformPoolSize.push_back(
+        {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
+         GetUniformBufferDescriptorCount() * vk::kDefaultDescriptorPoolMaxSets});
 
-    ANGLE_TRY(mDynamicDescriptorPool.init(getDevice(), poolSizes));
+    vk::DescriptorPoolSizes imageSamplerPoolSize;
+    imageSamplerPoolSize.push_back(
+        {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+         mRenderer->getMaxActiveTextures() * vk::kDefaultDescriptorPoolMaxSets});
+
+    ANGLE_TRY(
+        mDynamicDescriptorPools[kUniformsDescriptorSetIndex].init(getDevice(), uniformPoolSize));
+    ANGLE_TRY(mDynamicDescriptorPools[kTextureDescriptorSetIndex].init(getDevice(),
+                                                                       imageSamplerPoolSize));
 
     mPipelineDesc.reset(new vk::PipelineDesc());
     mPipelineDesc->initDefaults();
@@ -766,9 +776,9 @@ gl::Error ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbitfiel
     return gl::InternalError();
 }
 
-vk::DynamicDescriptorPool *ContextVk::getDynamicDescriptorPool()
+vk::DynamicDescriptorPool *ContextVk::getDynamicDescriptorPool(uint32_t descriptorSetIndex)
 {
-    return &mDynamicDescriptorPool;
+    return &mDynamicDescriptorPools[descriptorSetIndex];
 }
 
 const VkClearValue &ContextVk::getClearColorValue() const

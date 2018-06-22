@@ -154,7 +154,7 @@ class ContextVk : public ContextImpl
 
     void invalidateCurrentPipeline();
 
-    vk::DynamicDescriptorPool *getDynamicDescriptorPool();
+    vk::DynamicDescriptorPool *getDynamicDescriptorPool(uint32_t descriptorSetIndex);
 
     const VkClearValue &getClearColorValue() const;
     const VkClearValue &getClearDepthStencilValue() const;
@@ -182,9 +182,9 @@ class ContextVk : public ContextImpl
     // Kept in a pointer so allocations can be aligned, and structs can be portably packed.
     std::unique_ptr<vk::PipelineDesc> mPipelineDesc;
 
-    // The dynamic descriptor pool is externally sychronized, so cannot be accessed from different
-    // threads simultaneously. Hence, we keep it in the ContextVk instead of the RendererVk.
-    vk::DynamicDescriptorPool mDynamicDescriptorPool;
+    // The descriptor pools are externally sychronized, so cannot be accessed from different
+    // threads simultaneously. Hence, we keep them in the ContextVk instead of the RendererVk.
+    vk::DescriptorSetLayoutArray<vk::DynamicDescriptorPool> mDynamicDescriptorPools;
 
     // Triggers adding dependencies to the command graph.
     bool mTexturesDirty;

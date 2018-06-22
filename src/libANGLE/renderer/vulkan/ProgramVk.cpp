@@ -741,7 +741,8 @@ Serial ProgramVk::getFragmentModuleSerial() const
 vk::Error ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex)
 {
     // Write out to a new a descriptor set.
-    vk::DynamicDescriptorPool *dynamicDescriptorPool = contextVk->getDynamicDescriptorPool();
+    vk::DynamicDescriptorPool *dynamicDescriptorPool =
+        contextVk->getDynamicDescriptorPool(descriptorSetIndex);
 
     uint32_t potentialNewCount = descriptorSetIndex + 1;
     if (potentialNewCount > mDescriptorSets.size())

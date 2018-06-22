@@ -18,7 +18,6 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
-#include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "test_utils/gl_raii.h"
 
 using namespace angle;
@@ -29,7 +28,7 @@ namespace
 class VulkanUniformUpdatesTest : public ANGLETest
 {
   protected:
-    rx::ContextVk *hackANGLE()
+    rx::ContextVk *hackANGLE() const
     {
         // Hack the angle!
         const gl::Context *context = static_cast<gl::Context *>(getEGLWindow()->getContext());
@@ -83,6 +82,15 @@ void main()
     }
 }
 
+void InitTexture(GLColor color, GLTexture *texture)
+{
+    const std::vector<GLColor> colors(4, color);
+    glBindTexture(GL_TEXTURE_2D, *texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, colors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+}
+
 // Force uniform updates until the dynamic descriptor pool wraps into a new pool allocation.
 TEST_P(VulkanUniformUpdatesTest, DescriptorPoolUpdates)
 {
@@ -90,7 +98,7 @@ TEST_P(VulkanUniformUpdatesTest, DescriptorPoolUpdates)
 
     // Force a small limit on the max sets per pool to more easily trigger a new allocation.
     constexpr uint32_t kMaxSetsForTesting                = 32;
-    rx::vk::DynamicDescriptorPool *dynamicDescriptorPool = hackANGLE()->getDynamicDescriptorPool();
+    rx::vk::DynamicDescriptorPool *dynamicDescriptorPool = hackANGLE()->getDynamicDescriptorPool(0);
     dynamicDescriptorPool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
 
     // Initialize texture program.
@@ -115,6 +123,89 @@ TEST_P(VulkanUniformUpdatesTest, DescriptorPoolUpdates)
     {
         glUniform1i(texLoc, 0);
         drawQuad(program, "position", 0.5f, 1.0f, true);
+        swapBuffers();
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
+// Uniform updates along with Texture updates.
+TEST_P(VulkanUniformUpdatesTest, DescriptorPoolUniformAndTextureUpdates)
+{
+    ASSERT_TRUE(IsVulkan());
+
+    // Force a small limit on the max sets per pool to more easily trigger a new allocation.
+    constexpr uint32_t kMaxSetsForTesting = 32;
+    rx::vk::DynamicDescriptorPool *uniformPool =
+        hackANGLE()->getDynamicDescriptorPool(rx::kUniformsDescriptorSetIndex);
+    uniformPool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
+    rx::vk::DynamicDescriptorPool *texturePool =
+        hackANGLE()->getDynamicDescriptorPool(rx::kTextureDescriptorSetIndex);
+    texturePool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
+
+    // Initialize texture program.
+    constexpr char kVS[] = R"(attribute vec2 position;
+varying mediump vec2 texCoord;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    texCoord = position * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFS[] = R"(varying mediump vec2 texCoord;
+uniform sampler2D tex;
+uniform mediump vec4 colorMask;
+void main()
+{
+    gl_FragColor = texture2D(tex, texCoord) * colorMask;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    // Get uniform locations.
+    GLint texLoc = glGetUniformLocation(program, "tex");
+    ASSERT_NE(-1, texLoc);
+
+    GLint colorMaskLoc = glGetUniformLocation(program, "colorMask");
+    ASSERT_NE(-1, colorMaskLoc);
+
+    // Initialize white texture.
+    GLTexture whiteTexture;
+    InitTexture(GLColor::white, &whiteTexture);
+    ASSERT_GL_NO_ERROR();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, whiteTexture);
+
+    // Initialize magenta texture.
+    GLTexture magentaTexture;
+    InitTexture(GLColor::magenta, &magentaTexture);
+    ASSERT_GL_NO_ERROR();
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, magentaTexture);
+
+    // Draw multiple times, each iteration will create a new descriptor set.
+    for (uint32_t iteration = 0; iteration < kMaxSetsForTesting * 2; ++iteration)
+    {
+        // Draw with white.
+        glUniform1i(texLoc, 0);
+        glUniform4f(colorMaskLoc, 1.0f, 1.0f, 1.0f, 1.0f);
+        drawQuad(program, "position", 0.5f, 1.0f, true);
+
+        // Draw with white masking out red.
+        glUniform4f(colorMaskLoc, 0.0f, 1.0f, 1.0f, 1.0f);
+        drawQuad(program, "position", 0.5f, 1.0f, true);
+
+        // Draw with magenta.
+        glUniform1i(texLoc, 1);
+        glUniform4f(colorMaskLoc, 1.0f, 1.0f, 1.0f, 1.0f);
+        drawQuad(program, "position", 0.5f, 1.0f, true);
+
+        // Draw with magenta masking out red.
+        glUniform4f(colorMaskLoc, 0.0f, 1.0f, 1.0f, 1.0f);
+        drawQuad(program, "position", 0.5f, 1.0f, true);
+
         swapBuffers();
         ASSERT_GL_NO_ERROR();
     }
