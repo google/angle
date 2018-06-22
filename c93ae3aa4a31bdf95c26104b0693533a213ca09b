@@ -113,6 +113,30 @@
     },
     {
       "key": {
+        "uuid": "2a9c745d_62160f3c",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T20:29:26Z",
+      "side": 1,
+      "message": "I can, but that complicates getting the libvulkan pointer needed by dlsym().",
+      "parentUuid": "b5b41ae8_5dd7ff03",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 7
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "21f70831_6678119b",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
@@ -124,6 +148,30 @@
       "writtenOn": "2018-06-22T19:42:17Z",
       "side": 1,
       "message": "Let\u0027s turn this into a templated helper function, this pattern is used in a bunch of places in this file",
+      "range": {
+        "startLine": 28,
+        "startChar": 12,
+        "endLine": 29,
+        "endChar": 95
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "676dc74e_186a2bfc",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T20:29:26Z",
+      "side": 1,
+      "message": "I don\u0027t see how to make a function template for this, since the type of function-pointer returned can have arbitrary parameters and return type.  A macro can be done.  \n\n#define DLSYM(type, fn) reinterpret_cast\u003ctype\u003e(dlsym(libvulkan, fn)\n\nIs that acceptable?",
+      "parentUuid": "21f70831_6678119b",
       "range": {
         "startLine": 28,
         "startChar": 12,
