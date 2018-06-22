@@ -2054,6 +2054,8 @@ TEST_P(SimpleStateChangeTest, ReleaseShaderInUseThatReadsFromUniforms)
 
     glDisableVertexAttribArray(positionLocation);
 
+    glUseProgram(0);
+
     // Verify we drew red in the end since thats the last draw.
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, 0, GLColor::red);
 }

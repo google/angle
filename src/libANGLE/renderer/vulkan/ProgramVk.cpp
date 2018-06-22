@@ -176,13 +176,15 @@ vk::Error ProgramVk::reset(ContextVk *contextVk)
     }
     mPipelineLayout.reset();
 
+    RendererVk *renderer = contextVk->getRenderer();
     for (auto &uniformBlock : mDefaultUniformBlocks)
     {
-        uniformBlock.storage.destroy(device);
+        uniformBlock.storage.release(renderer);
     }
 
-    mEmptyUniformBlockStorage.memory.destroy(device);
-    mEmptyUniformBlockStorage.buffer.destroy(device);
+    Serial currentSerial = renderer->getCurrentQueueSerial();
+    renderer->releaseObject(currentSerial, &mEmptyUniformBlockStorage.memory);
+    renderer->releaseObject(currentSerial, &mEmptyUniformBlockStorage.buffer);
 
     mLinkedFragmentModule.destroy(device);
     mLinkedVertexModule.destroy(device);
