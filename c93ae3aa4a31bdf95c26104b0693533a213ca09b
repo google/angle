@@ -137,6 +137,30 @@
     },
     {
       "key": {
+        "uuid": "bee68cac_d30df7a6",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T21:44:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a9c745d_62160f3c",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 7
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21f70831_6678119b",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
@@ -208,6 +232,30 @@
     },
     {
       "key": {
+        "uuid": "a2a18e8b_8553b7e1",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T21:44:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6135d580_21d5ba7c",
+      "range": {
+        "startLine": 28,
+        "startChar": 12,
+        "endLine": 29,
+        "endChar": 95
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3dad265c_b340fed8",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
@@ -231,6 +279,30 @@
     },
     {
       "key": {
+        "uuid": "80853314_bb95972f",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T21:44:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3dad265c_b340fed8",
+      "range": {
+        "startLine": 38,
+        "startChar": 15,
+        "endLine": 38,
+        "endChar": 32
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f594dc9_f999607b",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
@@ -251,6 +323,30 @@
       "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b555dd04_be5c5502",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T21:44:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f594dc9_f999607b",
+      "range": {
+        "startLine": 45,
+        "startChar": 19,
+        "endLine": 45,
+        "endChar": 27
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -300,6 +396,30 @@
     },
     {
       "key": {
+        "uuid": "6d20c46c_75cf43e0",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T21:44:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb85d833_7cb3576c",
+      "range": {
+        "startLine": 143,
+        "startChar": 7,
+        "endLine": 143,
+        "endChar": 47
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1caeee5b_52d2cf2f",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
@@ -320,6 +440,30 @@
       "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "932a5eb9_2b05f715",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T21:44:03Z",
+      "side": 1,
+      "message": "I\u0027ve been getting feedback from the IHVs, and so I\u0027ll be updating some of these after I get some clarification.  I agree that putting them back in the switch is good, though I\u0027m going to default to hex.",
+      "parentUuid": "1caeee5b_52d2cf2f",
+      "range": {
+        "startLine": 144,
+        "startChar": 8,
+        "endLine": 144,
+        "endChar": 86
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
