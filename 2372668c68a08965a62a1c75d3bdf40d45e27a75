@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "a2ead21e_22236af0",
+        "filename": "src/gpu_info_util/SystemInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d789ac29_84bc75f2",
+      "range": {
+        "startLine": 2,
+        "startChar": 22,
+        "endLine": 2,
+        "endChar": 27
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fd0572fe_9ec416f9",
         "filename": "src/gpu_info_util/SystemInfo.h",
         "patchSetId": 2
@@ -62,6 +86,30 @@
       "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e50ab412_859a7dae",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd0572fe_9ec416f9",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -136,6 +184,30 @@
     },
     {
       "key": {
+        "uuid": "b6334011_1367e5c4",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29b75557_c43f53d7",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b394ddf5_9a96547c",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 2
@@ -180,6 +252,30 @@
       "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42927c41_accb897f",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ac309e8_ae6f4db8",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 24
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -230,6 +326,30 @@
     },
     {
       "key": {
+        "uuid": "31af4427_f06025c2",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb2f170e_733f95b3",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 63
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91da0a9b_595c7c6e",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 2
@@ -250,6 +370,30 @@
       "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94454772_3c2f7301",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91da0a9b_595c7c6e",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 48
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -300,6 +444,30 @@
     },
     {
       "key": {
+        "uuid": "37a7b335_e44e7107",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ffc91da_5966a8d5",
+      "range": {
+        "startLine": 121,
+        "startChar": 9,
+        "endLine": 121,
+        "endChar": 13
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1d17c4a_5ceb53b9",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 2
@@ -320,6 +488,30 @@
       "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27a35c0d_33e451af",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1d17c4a_5ceb53b9",
+      "range": {
+        "startLine": 126,
+        "startChar": 8,
+        "endLine": 126,
+        "endChar": 21
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -346,6 +538,30 @@
     },
     {
       "key": {
+        "uuid": "d1c5c501_59fafc24",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "373ff429_e0f3042a",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 18
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1eb6fd65_c78ce29a",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 2
@@ -366,6 +582,30 @@
       "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "065df508_e969eb78",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1eb6fd65_c78ce29a",
+      "range": {
+        "startLine": 132,
+        "startChar": 30,
+        "endLine": 132,
+        "endChar": 48
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -416,6 +656,30 @@
     },
     {
       "key": {
+        "uuid": "75ab8fa8_1eca1e41",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f62ca48_48862f2d",
+      "range": {
+        "startLine": 138,
+        "startChar": 16,
+        "endLine": 139,
+        "endChar": 60
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "345b9352_caa4a99e",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 2
@@ -427,6 +691,30 @@
       "writtenOn": "2018-06-22T15:49:06Z",
       "side": 1,
       "message": "consider moving the parsing of driver versions into SystemInfo.cpp. There\u0027s already some vendor-specific parsing routines there. Seems like a good place for them to live. It\u0027s possible for NVIDIA/Intel we might want them in a shared place.",
+      "range": {
+        "startLine": 163,
+        "startChar": 0,
+        "endLine": 174,
+        "endChar": 60
+      },
+      "revId": "2372668c68a08965a62a1c75d3bdf40d45e27a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed1f8e75_3b760e1e",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-22T19:20:31Z",
+      "side": 1,
+      "message": "I had considered that.  As opposed to parsing, this code is formatting a string, albeit with bit-twiddling the Vulkan driverVersion.",
+      "parentUuid": "345b9352_caa4a99e",
       "range": {
         "startLine": 163,
         "startChar": 0,
