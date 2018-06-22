@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c54dc4c9_4a3a701d",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T14:34:03Z",
+      "side": 1,
+      "message": "instead of this could put an ANGLE_SKIP_TEST_IF in the first line of each test?",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 9
+      },
+      "revId": "feddc18e9ad9156af829b8102a161095c34fbc66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a27b6b5_34e49077",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T14:34:03Z",
+      "side": 1,
+      "message": "you can get rid of these and call them directly.",
+      "range": {
+        "startLine": 44,
+        "startChar": 7,
+        "endLine": 50,
+        "endChar": 0
+      },
+      "revId": "feddc18e9ad9156af829b8102a161095c34fbc66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
