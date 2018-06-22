@@ -175,9 +175,6 @@ inline std::string Str(int i)
 
 size_t FormatStringIntoVector(const char *fmt, va_list vararg, std::vector<char> &buffer);
 
-std::string FormatString(const char *fmt, va_list vararg);
-std::string FormatString(const char *fmt, ...);
-
 template <typename T>
 std::string ToString(const T &value)
 {
