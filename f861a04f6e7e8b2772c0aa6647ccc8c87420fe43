@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2960bd1c_a486d4ed",
+        "filename": "extensions/KHR_parallel_shader_compile.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-06-22T04:46:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9440fa3_0f032dbd",
+      "range": {
+        "startLine": 142,
+        "startChar": 19,
+        "endLine": 142,
+        "endChar": 32
+      },
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bcc0943_368868a7",
         "filename": "include/GLES2/gl2ext.h",
         "patchSetId": 1
@@ -179,6 +203,30 @@
     },
     {
       "key": {
+        "uuid": "b9f9cb91_6d9c85d7",
+        "filename": "scripts/gl_angle_ext.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 954,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-06-22T04:46:18Z",
+      "side": 1,
+      "message": "Thanks for the information.\nI updated it in this separate commit: https://chromium-review.googlesource.com/c/angle/angle/+/1111469.",
+      "parentUuid": "140e6adc_9295a0ab",
+      "range": {
+        "startLine": 954,
+        "startChar": 25,
+        "endLine": 954,
+        "endChar": 55
+      },
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "797bdfca_c0c40aa5",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 1
@@ -196,6 +244,24 @@
     },
     {
       "key": {
+        "uuid": "cf787dae_174e02de",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-06-22T04:46:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "797bdfca_c0c40aa5",
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb220074_01e6c5e5",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 1
@@ -210,6 +276,24 @@
       "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d15bda49_dd23159f",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1472,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-06-22T04:46:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb220074_01e6c5e5",
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -233,6 +317,30 @@
       "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a003fea5_f4a03c3f",
+        "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-06-22T04:46:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "607b4317_ef5c31db",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 74
+      },
+      "revId": "f861a04f6e7e8b2772c0aa6647ccc8c87420fe43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
