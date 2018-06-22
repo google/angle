@@ -78,6 +78,7 @@ TEST_P(MultithreadingTest, MakeCurrentSingleContext)
 TEST_P(MultithreadingTest, MakeCurrentMultiContext)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL() && IsAMD());
 
     std::mutex mutex;
 
