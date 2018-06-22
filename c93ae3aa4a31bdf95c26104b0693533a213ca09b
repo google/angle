@@ -65,6 +65,29 @@
     },
     {
       "key": {
+        "uuid": "21f70831_6678119b",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-22T19:42:17Z",
+      "side": 1,
+      "message": "Let\u0027s turn this into a templated helper function, this pattern is used in a bunch of places in this file",
+      "range": {
+        "startLine": 28,
+        "startChar": 12,
+        "endLine": 29,
+        "endChar": 95
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3dad265c_b340fed8",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
@@ -88,6 +111,29 @@
     },
     {
       "key": {
+        "uuid": "2f594dc9_f999607b",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-22T19:42:17Z",
+      "side": 1,
+      "message": "nit: return VK_NULL_HANDLE to be clear that this is a failure case.",
+      "range": {
+        "startLine": 45,
+        "startChar": 19,
+        "endLine": 45,
+        "endChar": 27
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5b0732ea_b630c8f1",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
@@ -104,6 +150,52 @@
         "startChar": 12,
         "endLine": 84,
         "endChar": 29
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb85d833_7cb3576c",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-22T19:42:17Z",
+      "side": 1,
+      "message": "I didn\u0027t realize earlier but the result is an std::string so let\u0027s just use angle\u0027s FormatString function from common/angleutils.h and write direclty to gpu.devierVersion.",
+      "range": {
+        "startLine": 143,
+        "startChar": 7,
+        "endLine": 143,
+        "endChar": 47
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1caeee5b_52d2cf2f",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-22T19:42:17Z",
+      "side": 1,
+      "message": "Ah, I didn\u0027t notice that it was about half-half on hex-decimal driver versions.  Let\u0027s move for the formatting back into the switch then.",
+      "range": {
+        "startLine": 144,
+        "startChar": 8,
+        "endLine": 144,
+        "endChar": 86
       },
       "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
