@@ -22,6 +22,30 @@
       "revId": "c0dda7c89419d962fb53ea04bc1a237b98630356",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43c6c694_ab631e0a",
+        "filename": "src/tests/gl_tests/VulkanUniformUpdatesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-22T13:19:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48e7ab53_80bb30fa",
+      "range": {
+        "startLine": 210,
+        "startChar": 4,
+        "endLine": 210,
+        "endChar": 5
+      },
+      "revId": "c0dda7c89419d962fb53ea04bc1a237b98630356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
