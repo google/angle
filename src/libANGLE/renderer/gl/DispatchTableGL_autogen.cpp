@@ -1193,6 +1193,7 @@ void DispatchTableGL::initProcsDesktopGL(const gl::Version &version,
         ASSIGN("glGetProgramPipelineInfoLog", getProgramPipelineInfoLog);
         ASSIGN("glGetProgramPipelineiv", getProgramPipelineiv);
         ASSIGN("glIsProgramPipeline", isProgramPipeline);
+        ASSIGN("glProgramParameteri", programParameteri);
         ASSIGN("glProgramUniform1d", programUniform1d);
         ASSIGN("glProgramUniform1dv", programUniform1dv);
         ASSIGN("glProgramUniform1f", programUniform1f);
@@ -2313,6 +2314,11 @@ void DispatchTableGL::initProcsGLES(const gl::Version &version,
         ASSIGN("glClearTexSubImageEXT", clearTexSubImage);
     }
 
+    if (extensions.count("GL_EXT_clip_control") != 0)
+    {
+        ASSIGN("glClipControlEXT", clipControl);
+    }
+
     if (extensions.count("GL_EXT_copy_image") != 0)
     {
         ASSIGN("glCopyImageSubDataEXT", copyImageSubData);
@@ -2515,7 +2521,7 @@ void DispatchTableGL::initProcsGLES(const gl::Version &version,
         ASSIGN("glDrawElementsBaseVertexOES", drawElementsBaseVertex);
         ASSIGN("glDrawElementsInstancedBaseVertexOES", drawElementsInstancedBaseVertex);
         ASSIGN("glDrawRangeElementsBaseVertexOES", drawRangeElementsBaseVertex);
-        ASSIGN("glMultiDrawElementsBaseVertexOES", multiDrawElementsBaseVertex);
+        ASSIGN("glMultiDrawElementsBaseVertexEXT", multiDrawElementsBaseVertex);
     }
 
     if (extensions.count("GL_OES_geometry_shader") != 0)
@@ -3908,6 +3914,7 @@ void DispatchTableGL::initProcsDesktopGLNULL(const gl::Version &version,
         getProgramPipelineInfoLog = &glGetProgramPipelineInfoLogNULL;
         getProgramPipelineiv      = &glGetProgramPipelineivNULL;
         isProgramPipeline         = &glIsProgramPipelineNULL;
+        programParameteri         = &glProgramParameteriNULL;
         programUniform1d          = &glProgramUniform1dNULL;
         programUniform1dv         = &glProgramUniform1dvNULL;
         programUniform1f          = &glProgramUniform1fNULL;
@@ -5025,6 +5032,11 @@ void DispatchTableGL::initProcsGLESNULL(const gl::Version &version,
     {
         clearTexImage    = &glClearTexImageNULL;
         clearTexSubImage = &glClearTexSubImageNULL;
+    }
+
+    if (extensions.count("GL_EXT_clip_control") != 0)
+    {
+        clipControl = &glClipControlNULL;
     }
 
     if (extensions.count("GL_EXT_copy_image") != 0)

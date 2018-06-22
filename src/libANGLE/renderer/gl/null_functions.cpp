@@ -807,7 +807,7 @@ void INTERNAL_GL_APIENTRY glDepthMaskNULL(GLboolean flag)
 {
 }
 
-void INTERNAL_GL_APIENTRY glDepthRangeNULL(GLdouble near, GLdouble far)
+void INTERNAL_GL_APIENTRY glDepthRangeNULL(GLdouble n, GLdouble f)
 {
 }
 

@@ -431,7 +431,7 @@ void INTERNAL_GL_APIENTRY glDeleteTransformFeedbacksNULL(GLsizei n, const GLuint
 void INTERNAL_GL_APIENTRY glDeleteVertexArraysNULL(GLsizei n, const GLuint *arrays);
 void INTERNAL_GL_APIENTRY glDepthFuncNULL(GLenum func);
 void INTERNAL_GL_APIENTRY glDepthMaskNULL(GLboolean flag);
-void INTERNAL_GL_APIENTRY glDepthRangeNULL(GLdouble near, GLdouble far);
+void INTERNAL_GL_APIENTRY glDepthRangeNULL(GLdouble n, GLdouble f);
 void INTERNAL_GL_APIENTRY glDepthRangeArrayvNULL(GLuint first, GLsizei count, const GLdouble *v);
 void INTERNAL_GL_APIENTRY glDepthRangeIndexedNULL(GLuint index, GLdouble n, GLdouble f);
 void INTERNAL_GL_APIENTRY glDepthRangefNULL(GLfloat n, GLfloat f);
