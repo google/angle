@@ -60,7 +60,8 @@ class BufferState final : angle::NonCopyable
     GLint64 mMapOffset;
     GLint64 mMapLength;
     int mBindingCount;
-    int mTransformFeedbackBindingCount;
+    int mTransformFeedbackIndexedBindingCount;
+    int mTransformFeedbackGenericBindingCount;
 };
 
 class Buffer final : public RefCountObject, public LabeledObject
@@ -116,7 +117,7 @@ class Buffer final : public RefCountObject, public LabeledObject
 
     bool isBound() const;
     bool isBoundForTransformFeedbackAndOtherUse() const;
-    void onBindingChanged(const Context *context, bool bound, BufferBinding target);
+    void onBindingChanged(const Context *context, bool bound, BufferBinding target, bool indexed);
 
   private:
     BufferState mState;
