@@ -183,3 +183,46 @@ def get_internal_format_initializer(internal_format, format_id):
         return 'Initialize4ComponentData<GLuint, 0x00000000, 0x00000000, 0x00000000, 0x00000001>'
     else:
         raise ValueError('warning: internal format initializer could not be generated and may be needed for ' + internal_format)
+
+def get_vertex_copy_function(src_format, dst_format):
+    if dst_format == "NONE":
+        return "nullptr";
+
+    num_channel = len(get_channel_tokens(src_format))
+    if num_channel < 1 or num_channel > 4:
+        return "nullptr";
+
+    if 'FIXED' in src_format:
+        assert 'FLOAT' in dst_format, ('get_vertex_copy_function: can only convert fixed to float,'
+                                       + ' not to ' + dst_format)
+        return 'Copy32FixedTo32FVertexData<%d, %d>' % (num_channel, num_channel)
+
+    sign = ''
+    base_type = None
+    if 'FLOAT' in src_format:
+        base_type = 'float'
+    else:
+        bits = get_bits(src_format)
+        redbits = bits and bits.get('R')
+        if redbits == 8:
+            base_type = 'byte'
+        elif redbits == 16:
+            base_type = 'short'
+        elif redbits == 32:
+            base_type = 'int'
+
+        if 'UINT' in src_format or 'UNORM' in src_format or 'USCALED' in src_format:
+            sign = 'u'
+
+    if base_type is None:
+        return "nullptr";
+
+    gl_type = 'GL' + sign + base_type
+
+    if src_format == dst_format:
+        return 'CopyNativeVertexData<%s, %d, %d, 0>' % (gl_type, num_channel, num_channel)
+
+    assert 'FLOAT' in dst_format, ('get_vertex_copy_function: can only convert to float,'
+                                   + ' not to ' + dst_format)
+    normalized = 'true' if 'NORM' in src_format else 'false'
+    return "CopyTo32FVertexData<%s, %d, %d, %s>" % (gl_type, num_channel, num_channel, normalized)

@@ -13,6 +13,7 @@
 
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/Format.h"
+#include "libANGLE/renderer/copyvertex.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
 #include <array>
@@ -52,8 +53,11 @@ struct Format final : private angle::NonCopyable
     void initBufferFallback(VkPhysicalDevice physicalDevice,
                             angle::Format::ID format,
                             VkFormat vkFormat,
+                            VertexCopyFunction function,
+                            bool functionConverts,
                             angle::Format::ID fallbackFormat,
-                            VkFormat fallbackVkFormat);
+                            VkFormat fallbackVkFormat,
+                            VertexCopyFunction fallbackFunction);
 
     const angle::Format &textureFormat() const;
     const angle::Format &bufferFormat() const;
@@ -67,6 +71,8 @@ struct Format final : private angle::NonCopyable
     VkFormat vkBufferFormat;
     InitializeTextureDataFunction textureInitializerFunction;
     LoadFunctionMap textureLoadFunctions;
+    VertexCopyFunction vertexLoadFunction;
+    bool vertexLoadRequiresConversion;
 };
 
 bool operator==(const Format &lhs, const Format &rhs);

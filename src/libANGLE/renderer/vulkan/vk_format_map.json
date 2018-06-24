@@ -231,6 +231,105 @@
         },
         "D24_UNORM_S8_UINT": {
             "texture": "D32_FLOAT_S8X24_UINT"
+        },
+
+        "R8_UNORM": {
+            "buffer": "R32_FLOAT"
+        },
+        "R8_SNORM": {
+            "buffer": "R32_FLOAT"
+        },
+        "R8_USCALED": {
+            "buffer": "R32_FLOAT"
+        },
+        "R8_SSCALED": {
+            "buffer": "R32_FLOAT"
+        },
+        "R8G8_UNORM": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R8G8_SNORM": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R8G8_USCALED": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R8G8_SSCALED": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R8G8B8_UNORM": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R8G8B8_SNORM": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R8G8B8_USCALED": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R8G8B8_SSCALED": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R8G8B8A8_UNORM": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R8G8B8A8_SNORM": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R8G8B8A8_USCALED": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R8G8B8A8_SSCALED": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+
+        "R16_UNORM": {
+            "buffer": "R32_FLOAT"
+        },
+        "R16_SNORM": {
+            "buffer": "R32_FLOAT"
+        },
+        "R16_USCALED": {
+            "buffer": "R32_FLOAT"
+        },
+        "R16_SSCALED": {
+            "buffer": "R32_FLOAT"
+        },
+        "R16G16_UNORM": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R16G16_SNORM": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R16G16_USCALED": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R16G16_SSCALED": {
+            "buffer": "R32G32_FLOAT"
+        },
+        "R16G16B16_UNORM": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R16G16B16_SNORM": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R16G16B16_USCALED": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R16G16B16_SSCALED": {
+            "buffer": "R32G32B32_FLOAT"
+        },
+        "R16G16B16A16_UNORM": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R16G16B16A16_SNORM": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R16G16B16A16_USCALED": {
+            "buffer": "R32G32B32A32_FLOAT"
+        },
+        "R16G16B16A16_SSCALED": {
+            "buffer": "R32G32B32A32_FLOAT"
         }
+
     }
 }

@@ -389,23 +389,10 @@ void AttributeLayoutTest::GetTestCases(void)
     mTestCases.push_back({Float(B0, 0, 16, mCoord), Float(B1, 0, 12, mColor)});
 
     // 6-9. byte/short
-    if (IsVulkan() && (IsAndroid() || (IsWindows() && IsAMD())))
-    {
-        // empty test cases preserve the numbering
-        mTestCases.push_back({});
-        mTestCases.push_back({});
-        mTestCases.push_back({});
-        mTestCases.push_back({});
-    }
-    else
-    {
-        // TODO(fjhenigman): Enable these once vertex format conversion is implemented.
-        // anglebug.com/2405
-        mTestCases.push_back({SByte(M0, 0, 20, mCoord), UByte(M0, 10, 20, mColor)});
-        mTestCases.push_back({SShort(M0, 0, 20, mCoord), UShort(M0, 8, 20, mColor)});
-        mTestCases.push_back({NormSByte(M0, 0, 8, mCoord), NormUByte(M0, 4, 8, mColor)});
-        mTestCases.push_back({NormSShort(M0, 0, 20, mCoord), NormUShort(M0, 8, 20, mColor)});
-    }
+    mTestCases.push_back({SByte(M0, 0, 20, mCoord), UByte(M0, 10, 20, mColor)});
+    mTestCases.push_back({SShort(M0, 0, 20, mCoord), UShort(M0, 8, 20, mColor)});
+    mTestCases.push_back({NormSByte(M0, 0, 8, mCoord), NormUByte(M0, 4, 8, mColor)});
+    mTestCases.push_back({NormSShort(M0, 0, 20, mCoord), NormUShort(M0, 8, 20, mColor)});
 
     if (IsVulkan())
     {

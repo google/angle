@@ -82,13 +82,18 @@ angle::Format::ID::{texture_fallback},
 {texture_initializer_fallback});"""
 
 buffer_basic_template = """bufferFormatID = angle::Format::ID::{buffer};
-vkBufferFormat = {vk_buffer_format};"""
+vkBufferFormat = {vk_buffer_format};
+vertexLoadFunction = {vertex_load_function};
+vertexLoadRequiresConversion = {vertex_load_converts};"""
 
 buffer_fallback_template = """initBufferFallback(physicalDevice,
 angle::Format::ID::{buffer},
 {vk_buffer_format},
+{vertex_load_function},
+{vertex_load_converts},
 angle::Format::ID::{buffer_fallback},
-{vk_buffer_format_fallback});"""
+{vk_buffer_format_fallback},
+{vertex_load_function_fallback});"""
 
 def gen_format_case(angle, internal_format, vk_json_data):
     vk_map = vk_json_data["map"]
@@ -131,8 +136,11 @@ def gen_format_case(angle, internal_format, vk_json_data):
         buffer_template=buffer_template,
         buffer=buffer_format,
         vk_buffer_format=vk_map[buffer_format],
+        vertex_load_function=angle_format.get_vertex_copy_function(angle, buffer_format),
+        vertex_load_converts='false' if angle == buffer_format else 'true',
         buffer_fallback=buffer_fallback,
         vk_buffer_format_fallback=vk_map[buffer_fallback],
+        vertex_load_function_fallback=angle_format.get_vertex_copy_function(angle, buffer_fallback),
     )
 
     return format_entry_template.format(**args).format(**args)

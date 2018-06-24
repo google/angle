@@ -56,6 +56,13 @@ bool HasFullTextureFormatSupport(VkPhysicalDevice physicalDevice, VkFormat vkFor
            HasFormatFeatureBits(kBitsDepth, formatProperties);
 }
 
+bool HasFullBufferFormatSupport(VkPhysicalDevice physicalDevice, VkFormat vkFormat)
+{
+    VkFormatProperties formatProperties;
+    vk::GetFormatProperties(physicalDevice, vkFormat, &formatProperties);
+    return formatProperties.bufferFeatures & VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT;
+}
+
 }  // anonymous namespace
 
 namespace vk
@@ -126,12 +133,30 @@ void Format::initTextureFallback(VkPhysicalDevice physicalDevice,
 void Format::initBufferFallback(VkPhysicalDevice physicalDevice,
                                 angle::Format::ID format,
                                 VkFormat vkFormat,
+                                VertexCopyFunction function,
+                                bool functionConverts,
                                 angle::Format::ID fallbackFormat,
-                                VkFormat fallbackVkFormat)
+                                VkFormat fallbackVkFormat,
+                                VertexCopyFunction fallbackFunction)
 {
     ASSERT(format != angle::Format::ID::NONE);
     ASSERT(fallbackFormat != angle::Format::ID::NONE);
-    UNIMPLEMENTED();
+
+    if (HasFullBufferFormatSupport(physicalDevice, vkFormat))
+    {
+        bufferFormatID               = format;
+        vkBufferFormat               = vkFormat;
+        vertexLoadFunction           = function;
+        vertexLoadRequiresConversion = functionConverts;
+    }
+    else
+    {
+        bufferFormatID               = fallbackFormat;
+        vkBufferFormat               = fallbackVkFormat;
+        vertexLoadFunction           = fallbackFunction;
+        vertexLoadRequiresConversion = true;
+        ASSERT(HasFullBufferFormatSupport(physicalDevice, vkBufferFormat));
+    }
 }
 
 const angle::Format &Format::textureFormat() const

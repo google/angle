@@ -31,12 +31,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::A1R5G5B5_UNORM:
-            internalFormat             = GL_A1RGB5_ANGLEX;
-            textureFormatID            = angle::Format::ID::A1R5G5B5_UNORM;
-            vkTextureFormat            = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::A1R5G5B5_UNORM;
-            vkBufferFormat             = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
+            internalFormat               = GL_A1RGB5_ANGLEX;
+            textureFormatID              = angle::Format::ID::A1R5G5B5_UNORM;
+            vkTextureFormat              = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::A1R5G5B5_UNORM;
+            vkBufferFormat               = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::A32_FLOAT:
@@ -52,93 +54,113 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::ASTC_10x10_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_10x10_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_10x10_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_10x10_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_10x10_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_10x10_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_10x10_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_10x10_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_10x10_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_10x10_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_10x10_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_10x10_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_10x10_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_10x5_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_10x5_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_10x5_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_10x5_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_10x5_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_10x5_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_10x5_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_10x5_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_10x5_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_10x5_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_10x5_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_10x5_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_10x5_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_10x6_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_10x6_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_10x6_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_10x6_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_10x6_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_10x6_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_10x6_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_10x6_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_10x6_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_10x6_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_10x6_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_10x6_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_10x6_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_10x8_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_10x8_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_10x8_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_10x8_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_10x8_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_10x8_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_10x8_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_10x8_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_10x8_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_10x8_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_10x8_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_10x8_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_10x8_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_12x10_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_12x10_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_12x10_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_12x10_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_12x10_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_12x10_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_12x10_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_12x10_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_12x10_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_12x10_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_12x10_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_12x10_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_12x10_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_12x12_SRGB_BLOCK:
@@ -146,183 +168,223 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::ASTC_12x12_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_12x12_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_12x12_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_12x12_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_12x12_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_12x12_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_12x12_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_4x4_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_4x4_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_4x4_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_4x4_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_4x4_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_4x4_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_4x4_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_4x4_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_4x4_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_4x4_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_4x4_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_4x4_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_5x4_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_5x4_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_5x4_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_5x4_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_5x4_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_5x4_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_5x4_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_5x4_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_5x4_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_5x4_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_5x4_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_5x4_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_5x4_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_5x5_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_5x5_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_5x5_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_5x5_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_5x5_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_5x5_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_5x5_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_5x5_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_5x5_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_5x5_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_5x5_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_5x5_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_5x5_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_6x5_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_6x5_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_6x5_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_6x5_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_6x5_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_6x5_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_6x5_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_6x5_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_6x5_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_6x5_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_6x5_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_6x5_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_6x5_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_6x6_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_6x6_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_6x6_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_6x6_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_6x6_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_6x6_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_6x6_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_6x6_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_6x6_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_6x6_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_6x6_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_6x6_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_6x6_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_8x5_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_8x5_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_8x5_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_8x5_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_8x5_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_8x5_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_8x5_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_8x5_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_8x5_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_8x5_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_8x5_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_8x5_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_8x6_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_8x6_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_8x6_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_8x6_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_8x6_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_8x6_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_8x6_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_8x6_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_8x6_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_8x6_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_8x6_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_8x6_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_8x6_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_8x8_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_8x8_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_8x8_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_8x8_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_8x8_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_8x8_SRGB_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ASTC_8x8_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
-            textureFormatID            = angle::Format::ID::ASTC_8x8_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ASTC_8x8_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_ASTC_8x8_KHR;
+            textureFormatID              = angle::Format::ID::ASTC_8x8_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ASTC_8x8_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ASTC_8x8_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::B4G4R4A4_UNORM:
-            internalFormat             = GL_BGRA4_ANGLEX;
-            textureFormatID            = angle::Format::ID::B4G4R4A4_UNORM;
-            vkTextureFormat            = VK_FORMAT_B4G4R4A4_UNORM_PACK16;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::B4G4R4A4_UNORM;
-            vkBufferFormat             = VK_FORMAT_B4G4R4A4_UNORM_PACK16;
+            internalFormat               = GL_BGRA4_ANGLEX;
+            textureFormatID              = angle::Format::ID::B4G4R4A4_UNORM;
+            vkTextureFormat              = VK_FORMAT_B4G4R4A4_UNORM_PACK16;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::B4G4R4A4_UNORM;
+            vkBufferFormat               = VK_FORMAT_B4G4R4A4_UNORM_PACK16;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::B5G5R5A1_UNORM:
-            internalFormat             = GL_BGR5_A1_ANGLEX;
-            textureFormatID            = angle::Format::ID::B5G5R5A1_UNORM;
-            vkTextureFormat            = VK_FORMAT_B5G5R5A1_UNORM_PACK16;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::B5G5R5A1_UNORM;
-            vkBufferFormat             = VK_FORMAT_B5G5R5A1_UNORM_PACK16;
+            internalFormat               = GL_BGR5_A1_ANGLEX;
+            textureFormatID              = angle::Format::ID::B5G5R5A1_UNORM;
+            vkTextureFormat              = VK_FORMAT_B5G5R5A1_UNORM_PACK16;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::B5G5R5A1_UNORM;
+            vkBufferFormat               = VK_FORMAT_B5G5R5A1_UNORM_PACK16;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::B5G6R5_UNORM:
-            internalFormat             = GL_BGR565_ANGLEX;
-            textureFormatID            = angle::Format::ID::B5G6R5_UNORM;
-            vkTextureFormat            = VK_FORMAT_B5G6R5_UNORM_PACK16;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::B5G6R5_UNORM;
-            vkBufferFormat             = VK_FORMAT_B5G6R5_UNORM_PACK16;
+            internalFormat               = GL_BGR565_ANGLEX;
+            textureFormatID              = angle::Format::ID::B5G6R5_UNORM;
+            vkTextureFormat              = VK_FORMAT_B5G6R5_UNORM_PACK16;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::B5G6R5_UNORM;
+            vkBufferFormat               = VK_FORMAT_B5G6R5_UNORM_PACK16;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::B8G8R8A8_TYPELESS:
@@ -334,12 +396,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::B8G8R8A8_UNORM:
-            internalFormat             = GL_BGRA8_EXT;
-            textureFormatID            = angle::Format::ID::B8G8R8A8_UNORM;
-            vkTextureFormat            = VK_FORMAT_B8G8R8A8_UNORM;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::B8G8R8A8_UNORM;
-            vkBufferFormat             = VK_FORMAT_B8G8R8A8_UNORM;
+            internalFormat               = GL_BGRA8_EXT;
+            textureFormatID              = angle::Format::ID::B8G8R8A8_UNORM;
+            vkTextureFormat              = VK_FORMAT_B8G8R8A8_UNORM;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::B8G8R8A8_UNORM;
+            vkBufferFormat               = VK_FORMAT_B8G8R8A8_UNORM;
+            vertexLoadFunction           = CopyNativeVertexData<GLubyte, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::B8G8R8A8_UNORM_SRGB:
@@ -347,21 +411,25 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::B8G8R8X8_UNORM:
-            internalFormat             = GL_BGRX8_ANGLEX;
-            textureFormatID            = angle::Format::ID::B8G8R8A8_UNORM;
-            vkTextureFormat            = VK_FORMAT_B8G8R8A8_UNORM;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::NONE;
-            vkBufferFormat             = VK_FORMAT_UNDEFINED;
+            internalFormat               = GL_BGRX8_ANGLEX;
+            textureFormatID              = angle::Format::ID::B8G8R8A8_UNORM;
+            vkTextureFormat              = VK_FORMAT_B8G8R8A8_UNORM;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::NONE;
+            vkBufferFormat               = VK_FORMAT_UNDEFINED;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = true;
             break;
 
         case angle::Format::ID::BC1_RGBA_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-            textureFormatID            = angle::Format::ID::BC1_RGBA_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::BC1_RGBA_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+            textureFormatID              = angle::Format::ID::BC1_RGBA_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::BC1_RGBA_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC1_RGBA_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::BC1_RGBA_UNORM_SRGB_BLOCK:
@@ -369,12 +437,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::BC1_RGB_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
-            textureFormatID            = angle::Format::ID::BC1_RGB_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_BC1_RGB_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::BC1_RGB_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_BC1_RGB_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+            textureFormatID              = angle::Format::ID::BC1_RGB_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_BC1_RGB_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::BC1_RGB_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_BC1_RGB_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::BC1_RGB_UNORM_SRGB_BLOCK:
@@ -398,12 +468,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::D16_UNORM:
-            internalFormat             = GL_DEPTH_COMPONENT16;
-            textureFormatID            = angle::Format::ID::D16_UNORM;
-            vkTextureFormat            = VK_FORMAT_D16_UNORM;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::D16_UNORM;
-            vkBufferFormat             = VK_FORMAT_D16_UNORM;
+            internalFormat               = GL_DEPTH_COMPONENT16;
+            textureFormatID              = angle::Format::ID::D16_UNORM;
+            vkTextureFormat              = VK_FORMAT_D16_UNORM;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::D16_UNORM;
+            vkBufferFormat               = VK_FORMAT_D16_UNORM;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::D24_UNORM:
@@ -416,17 +488,21 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
                                 VK_FORMAT_D24_UNORM_S8_UINT, nullptr,
                                 angle::Format::ID::D32_FLOAT_S8X24_UINT,
                                 VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr);
-            bufferFormatID = angle::Format::ID::D24_UNORM_S8_UINT;
-            vkBufferFormat = VK_FORMAT_D24_UNORM_S8_UINT;
+            bufferFormatID               = angle::Format::ID::D24_UNORM_S8_UINT;
+            vkBufferFormat               = VK_FORMAT_D24_UNORM_S8_UINT;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::D32_FLOAT:
-            internalFormat             = GL_DEPTH_COMPONENT32F;
-            textureFormatID            = angle::Format::ID::D32_FLOAT;
-            vkTextureFormat            = VK_FORMAT_D32_SFLOAT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::D32_FLOAT;
-            vkBufferFormat             = VK_FORMAT_D32_SFLOAT;
+            internalFormat               = GL_DEPTH_COMPONENT32F;
+            textureFormatID              = angle::Format::ID::D32_FLOAT;
+            vkTextureFormat              = VK_FORMAT_D32_SFLOAT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::D32_FLOAT;
+            vkBufferFormat               = VK_FORMAT_D32_SFLOAT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::D32_FLOAT_S8X24_UINT:
@@ -435,8 +511,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
                                 VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr,
                                 angle::Format::ID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT,
                                 nullptr);
-            bufferFormatID = angle::Format::ID::D32_FLOAT_S8X24_UINT;
-            vkBufferFormat = VK_FORMAT_D32_SFLOAT_S8_UINT;
+            bufferFormatID               = angle::Format::ID::D32_FLOAT_S8X24_UINT;
+            vkBufferFormat               = VK_FORMAT_D32_SFLOAT_S8_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::D32_UNORM:
@@ -444,39 +522,47 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::EAC_R11G11_SNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_SIGNED_RG11_EAC;
-            textureFormatID            = angle::Format::ID::EAC_R11G11_SNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::EAC_R11G11_SNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_SIGNED_RG11_EAC;
+            textureFormatID              = angle::Format::ID::EAC_R11G11_SNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::EAC_R11G11_SNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_EAC_R11G11_SNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::EAC_R11G11_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RG11_EAC;
-            textureFormatID            = angle::Format::ID::EAC_R11G11_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::EAC_R11G11_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RG11_EAC;
+            textureFormatID              = angle::Format::ID::EAC_R11G11_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::EAC_R11G11_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_EAC_R11G11_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::EAC_R11_SNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_SIGNED_R11_EAC;
-            textureFormatID            = angle::Format::ID::EAC_R11_SNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_EAC_R11_SNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::EAC_R11_SNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_EAC_R11_SNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_SIGNED_R11_EAC;
+            textureFormatID              = angle::Format::ID::EAC_R11_SNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_EAC_R11_SNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::EAC_R11_SNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_EAC_R11_SNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::EAC_R11_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_R11_EAC;
-            textureFormatID            = angle::Format::ID::EAC_R11_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_EAC_R11_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::EAC_R11_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_EAC_R11_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_R11_EAC;
+            textureFormatID              = angle::Format::ID::EAC_R11_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_EAC_R11_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::EAC_R11_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_EAC_R11_UNORM_BLOCK;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ETC1_LOSSY_DECODE_R8G8B8_UNORM_BLOCK:
@@ -488,12 +574,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2;
-            textureFormatID            = angle::Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2;
+            textureFormatID              = angle::Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ETC2_R8G8B8A1_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK;
+            vertexLoadFunction           = CopyNativeVertexData<GLbyte, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ETC2_R8G8B8A1_UNORM_BLOCK:
@@ -503,42 +591,52 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
             bufferFormatID             = angle::Format::ID::ETC2_R8G8B8A1_UNORM_BLOCK;
             vkBufferFormat             = VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
+            vertexLoadFunction         = CopyNativeVertexData<GLubyte, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ETC2_R8G8B8A8_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC;
-            textureFormatID            = angle::Format::ID::ETC2_R8G8B8A8_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ETC2_R8G8B8A8_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC;
+            textureFormatID              = angle::Format::ID::ETC2_R8G8B8A8_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ETC2_R8G8B8A8_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK;
+            vertexLoadFunction           = CopyNativeVertexData<GLbyte, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ETC2_R8G8B8A8_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGBA8_ETC2_EAC;
-            textureFormatID            = angle::Format::ID::ETC2_R8G8B8A8_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ETC2_R8G8B8A8_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGBA8_ETC2_EAC;
+            textureFormatID              = angle::Format::ID::ETC2_R8G8B8A8_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ETC2_R8G8B8A8_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK;
+            vertexLoadFunction           = CopyNativeVertexData<GLubyte, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ETC2_R8G8B8_SRGB_BLOCK:
-            internalFormat             = GL_COMPRESSED_SRGB8_ETC2;
-            textureFormatID            = angle::Format::ID::ETC2_R8G8B8_SRGB_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ETC2_R8G8B8_SRGB_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
+            internalFormat               = GL_COMPRESSED_SRGB8_ETC2;
+            textureFormatID              = angle::Format::ID::ETC2_R8G8B8_SRGB_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ETC2_R8G8B8_SRGB_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK;
+            vertexLoadFunction           = CopyNativeVertexData<GLbyte, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::ETC2_R8G8B8_UNORM_BLOCK:
-            internalFormat             = GL_COMPRESSED_RGB8_ETC2;
-            textureFormatID            = angle::Format::ID::ETC2_R8G8B8_UNORM_BLOCK;
-            vkTextureFormat            = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::ETC2_R8G8B8_UNORM_BLOCK;
-            vkBufferFormat             = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
+            internalFormat               = GL_COMPRESSED_RGB8_ETC2;
+            textureFormatID              = angle::Format::ID::ETC2_R8G8B8_UNORM_BLOCK;
+            vkTextureFormat              = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::ETC2_R8G8B8_UNORM_BLOCK;
+            vkBufferFormat               = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK;
+            vertexLoadFunction           = CopyNativeVertexData<GLubyte, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::L16A16_FLOAT:
@@ -606,21 +704,25 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R16G16B16A16_FLOAT:
-            internalFormat             = GL_RGBA16F;
-            textureFormatID            = angle::Format::ID::R16G16B16A16_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R16G16B16A16_SFLOAT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16A16_FLOAT;
-            vkBufferFormat             = VK_FORMAT_R16G16B16A16_SFLOAT;
+            internalFormat               = GL_RGBA16F;
+            textureFormatID              = angle::Format::ID::R16G16B16A16_FLOAT;
+            vkTextureFormat              = VK_FORMAT_R16G16B16A16_SFLOAT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16G16B16A16_FLOAT;
+            vkBufferFormat               = VK_FORMAT_R16G16B16A16_SFLOAT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16G16B16A16_SINT:
-            internalFormat             = GL_RGBA16I;
-            textureFormatID            = angle::Format::ID::R16G16B16A16_SINT;
-            vkTextureFormat            = VK_FORMAT_R16G16B16A16_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16A16_SINT;
-            vkBufferFormat             = VK_FORMAT_R16G16B16A16_SINT;
+            internalFormat               = GL_RGBA16I;
+            textureFormatID              = angle::Format::ID::R16G16B16A16_SINT;
+            vkTextureFormat              = VK_FORMAT_R16G16B16A16_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16G16B16A16_SINT;
+            vkBufferFormat               = VK_FORMAT_R16G16B16A16_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLshort, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16G16B16A16_SNORM:
@@ -628,8 +730,11 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16B16A16_SNORM;
             vkTextureFormat            = VK_FORMAT_R16G16B16A16_SNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16A16_SNORM;
-            vkBufferFormat             = VK_FORMAT_R16G16B16A16_SNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16G16B16A16_SNORM,
+                               VK_FORMAT_R16G16B16A16_SNORM, CopyNativeVertexData<GLshort, 4, 4, 0>,
+                               false, angle::Format::ID::R32G32B32A32_FLOAT,
+                               VK_FORMAT_R32G32B32A32_SFLOAT,
+                               CopyTo32FVertexData<GLshort, 4, 4, true>);
             break;
 
         case angle::Format::ID::R16G16B16A16_SSCALED:
@@ -637,17 +742,22 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16B16A16_SSCALED;
             vkTextureFormat            = VK_FORMAT_R16G16B16A16_SSCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16A16_SSCALED;
-            vkBufferFormat             = VK_FORMAT_R16G16B16A16_SSCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16G16B16A16_SSCALED,
+                               VK_FORMAT_R16G16B16A16_SSCALED,
+                               CopyNativeVertexData<GLshort, 4, 4, 0>, false,
+                               angle::Format::ID::R32G32B32A32_FLOAT, VK_FORMAT_R32G32B32A32_SFLOAT,
+                               CopyTo32FVertexData<GLshort, 4, 4, false>);
             break;
 
         case angle::Format::ID::R16G16B16A16_UINT:
-            internalFormat             = GL_RGBA16UI;
-            textureFormatID            = angle::Format::ID::R16G16B16A16_UINT;
-            vkTextureFormat            = VK_FORMAT_R16G16B16A16_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16A16_UINT;
-            vkBufferFormat             = VK_FORMAT_R16G16B16A16_UINT;
+            internalFormat               = GL_RGBA16UI;
+            textureFormatID              = angle::Format::ID::R16G16B16A16_UINT;
+            vkTextureFormat              = VK_FORMAT_R16G16B16A16_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16G16B16A16_UINT;
+            vkBufferFormat               = VK_FORMAT_R16G16B16A16_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLushort, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16G16B16A16_UNORM:
@@ -655,8 +765,11 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16B16A16_UNORM;
             vkTextureFormat            = VK_FORMAT_R16G16B16A16_UNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16A16_UNORM;
-            vkBufferFormat             = VK_FORMAT_R16G16B16A16_UNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16G16B16A16_UNORM,
+                               VK_FORMAT_R16G16B16A16_UNORM,
+                               CopyNativeVertexData<GLushort, 4, 4, 0>, false,
+                               angle::Format::ID::R32G32B32A32_FLOAT, VK_FORMAT_R32G32B32A32_SFLOAT,
+                               CopyTo32FVertexData<GLushort, 4, 4, true>);
             break;
 
         case angle::Format::ID::R16G16B16A16_USCALED:
@@ -664,26 +777,33 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16B16A16_USCALED;
             vkTextureFormat            = VK_FORMAT_R16G16B16A16_USCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16A16_USCALED;
-            vkBufferFormat             = VK_FORMAT_R16G16B16A16_USCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16G16B16A16_USCALED,
+                               VK_FORMAT_R16G16B16A16_USCALED,
+                               CopyNativeVertexData<GLushort, 4, 4, 0>, false,
+                               angle::Format::ID::R32G32B32A32_FLOAT, VK_FORMAT_R32G32B32A32_SFLOAT,
+                               CopyTo32FVertexData<GLushort, 4, 4, false>);
             break;
 
         case angle::Format::ID::R16G16B16_FLOAT:
-            internalFormat             = GL_RGB16F;
-            textureFormatID            = angle::Format::ID::R16G16B16_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R16G16B16_SFLOAT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16_FLOAT;
-            vkBufferFormat             = VK_FORMAT_R16G16B16_SFLOAT;
+            internalFormat               = GL_RGB16F;
+            textureFormatID              = angle::Format::ID::R16G16B16_FLOAT;
+            vkTextureFormat              = VK_FORMAT_R16G16B16_SFLOAT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16G16B16_FLOAT;
+            vkBufferFormat               = VK_FORMAT_R16G16B16_SFLOAT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16G16B16_SINT:
-            internalFormat             = GL_RGB16I;
-            textureFormatID            = angle::Format::ID::R16G16B16_SINT;
-            vkTextureFormat            = VK_FORMAT_R16G16B16_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16_SINT;
-            vkBufferFormat             = VK_FORMAT_R16G16B16_SINT;
+            internalFormat               = GL_RGB16I;
+            textureFormatID              = angle::Format::ID::R16G16B16_SINT;
+            vkTextureFormat              = VK_FORMAT_R16G16B16_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16G16B16_SINT;
+            vkBufferFormat               = VK_FORMAT_R16G16B16_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLshort, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16G16B16_SNORM:
@@ -691,8 +811,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16B16_SNORM;
             vkTextureFormat            = VK_FORMAT_R16G16B16_SNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16_SNORM;
-            vkBufferFormat             = VK_FORMAT_R16G16B16_SNORM;
+            initBufferFallback(
+                physicalDevice, angle::Format::ID::R16G16B16_SNORM, VK_FORMAT_R16G16B16_SNORM,
+                CopyNativeVertexData<GLshort, 3, 3, 0>, false, angle::Format::ID::R32G32B32_FLOAT,
+                VK_FORMAT_R32G32B32_SFLOAT, CopyTo32FVertexData<GLshort, 3, 3, true>);
             break;
 
         case angle::Format::ID::R16G16B16_SSCALED:
@@ -700,17 +822,21 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16B16_SSCALED;
             vkTextureFormat            = VK_FORMAT_R16G16B16_SSCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16_SSCALED;
-            vkBufferFormat             = VK_FORMAT_R16G16B16_SSCALED;
+            initBufferFallback(
+                physicalDevice, angle::Format::ID::R16G16B16_SSCALED, VK_FORMAT_R16G16B16_SSCALED,
+                CopyNativeVertexData<GLshort, 3, 3, 0>, false, angle::Format::ID::R32G32B32_FLOAT,
+                VK_FORMAT_R32G32B32_SFLOAT, CopyTo32FVertexData<GLshort, 3, 3, false>);
             break;
 
         case angle::Format::ID::R16G16B16_UINT:
-            internalFormat             = GL_RGB16UI;
-            textureFormatID            = angle::Format::ID::R16G16B16_UINT;
-            vkTextureFormat            = VK_FORMAT_R16G16B16_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16_UINT;
-            vkBufferFormat             = VK_FORMAT_R16G16B16_UINT;
+            internalFormat               = GL_RGB16UI;
+            textureFormatID              = angle::Format::ID::R16G16B16_UINT;
+            vkTextureFormat              = VK_FORMAT_R16G16B16_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16G16B16_UINT;
+            vkBufferFormat               = VK_FORMAT_R16G16B16_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLushort, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16G16B16_UNORM:
@@ -718,8 +844,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16B16_UNORM;
             vkTextureFormat            = VK_FORMAT_R16G16B16_UNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16_UNORM;
-            vkBufferFormat             = VK_FORMAT_R16G16B16_UNORM;
+            initBufferFallback(
+                physicalDevice, angle::Format::ID::R16G16B16_UNORM, VK_FORMAT_R16G16B16_UNORM,
+                CopyNativeVertexData<GLushort, 3, 3, 0>, false, angle::Format::ID::R32G32B32_FLOAT,
+                VK_FORMAT_R32G32B32_SFLOAT, CopyTo32FVertexData<GLushort, 3, 3, true>);
             break;
 
         case angle::Format::ID::R16G16B16_USCALED:
@@ -727,26 +855,32 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16B16_USCALED;
             vkTextureFormat            = VK_FORMAT_R16G16B16_USCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16B16_USCALED;
-            vkBufferFormat             = VK_FORMAT_R16G16B16_USCALED;
+            initBufferFallback(
+                physicalDevice, angle::Format::ID::R16G16B16_USCALED, VK_FORMAT_R16G16B16_USCALED,
+                CopyNativeVertexData<GLushort, 3, 3, 0>, false, angle::Format::ID::R32G32B32_FLOAT,
+                VK_FORMAT_R32G32B32_SFLOAT, CopyTo32FVertexData<GLushort, 3, 3, false>);
             break;
 
         case angle::Format::ID::R16G16_FLOAT:
-            internalFormat             = GL_RG16F;
-            textureFormatID            = angle::Format::ID::R16G16_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R16G16_SFLOAT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16_FLOAT;
-            vkBufferFormat             = VK_FORMAT_R16G16_SFLOAT;
+            internalFormat               = GL_RG16F;
+            textureFormatID              = angle::Format::ID::R16G16_FLOAT;
+            vkTextureFormat              = VK_FORMAT_R16G16_SFLOAT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16G16_FLOAT;
+            vkBufferFormat               = VK_FORMAT_R16G16_SFLOAT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 2, 2, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16G16_SINT:
-            internalFormat             = GL_RG16I;
-            textureFormatID            = angle::Format::ID::R16G16_SINT;
-            vkTextureFormat            = VK_FORMAT_R16G16_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16_SINT;
-            vkBufferFormat             = VK_FORMAT_R16G16_SINT;
+            internalFormat               = GL_RG16I;
+            textureFormatID              = angle::Format::ID::R16G16_SINT;
+            vkTextureFormat              = VK_FORMAT_R16G16_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16G16_SINT;
+            vkBufferFormat               = VK_FORMAT_R16G16_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLshort, 2, 2, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16G16_SNORM:
@@ -754,8 +888,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16_SNORM;
             vkTextureFormat            = VK_FORMAT_R16G16_SNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16_SNORM;
-            vkBufferFormat             = VK_FORMAT_R16G16_SNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16G16_SNORM,
+                               VK_FORMAT_R16G16_SNORM, CopyNativeVertexData<GLshort, 2, 2, 0>,
+                               false, angle::Format::ID::R32G32_FLOAT, VK_FORMAT_R32G32_SFLOAT,
+                               CopyTo32FVertexData<GLshort, 2, 2, true>);
             break;
 
         case angle::Format::ID::R16G16_SSCALED:
@@ -763,17 +899,21 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16_SSCALED;
             vkTextureFormat            = VK_FORMAT_R16G16_SSCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16_SSCALED;
-            vkBufferFormat             = VK_FORMAT_R16G16_SSCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16G16_SSCALED,
+                               VK_FORMAT_R16G16_SSCALED, CopyNativeVertexData<GLshort, 2, 2, 0>,
+                               false, angle::Format::ID::R32G32_FLOAT, VK_FORMAT_R32G32_SFLOAT,
+                               CopyTo32FVertexData<GLshort, 2, 2, false>);
             break;
 
         case angle::Format::ID::R16G16_UINT:
-            internalFormat             = GL_RG16UI;
-            textureFormatID            = angle::Format::ID::R16G16_UINT;
-            vkTextureFormat            = VK_FORMAT_R16G16_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16_UINT;
-            vkBufferFormat             = VK_FORMAT_R16G16_UINT;
+            internalFormat               = GL_RG16UI;
+            textureFormatID              = angle::Format::ID::R16G16_UINT;
+            vkTextureFormat              = VK_FORMAT_R16G16_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16G16_UINT;
+            vkBufferFormat               = VK_FORMAT_R16G16_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLushort, 2, 2, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16G16_UNORM:
@@ -781,8 +921,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16_UNORM;
             vkTextureFormat            = VK_FORMAT_R16G16_UNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16_UNORM;
-            vkBufferFormat             = VK_FORMAT_R16G16_UNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16G16_UNORM,
+                               VK_FORMAT_R16G16_UNORM, CopyNativeVertexData<GLushort, 2, 2, 0>,
+                               false, angle::Format::ID::R32G32_FLOAT, VK_FORMAT_R32G32_SFLOAT,
+                               CopyTo32FVertexData<GLushort, 2, 2, true>);
             break;
 
         case angle::Format::ID::R16G16_USCALED:
@@ -790,26 +932,32 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16G16_USCALED;
             vkTextureFormat            = VK_FORMAT_R16G16_USCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16G16_USCALED;
-            vkBufferFormat             = VK_FORMAT_R16G16_USCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16G16_USCALED,
+                               VK_FORMAT_R16G16_USCALED, CopyNativeVertexData<GLushort, 2, 2, 0>,
+                               false, angle::Format::ID::R32G32_FLOAT, VK_FORMAT_R32G32_SFLOAT,
+                               CopyTo32FVertexData<GLushort, 2, 2, false>);
             break;
 
         case angle::Format::ID::R16_FLOAT:
-            internalFormat             = GL_R16F;
-            textureFormatID            = angle::Format::ID::R16_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R16_SFLOAT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16_FLOAT;
-            vkBufferFormat             = VK_FORMAT_R16_SFLOAT;
+            internalFormat               = GL_R16F;
+            textureFormatID              = angle::Format::ID::R16_FLOAT;
+            vkTextureFormat              = VK_FORMAT_R16_SFLOAT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16_FLOAT;
+            vkBufferFormat               = VK_FORMAT_R16_SFLOAT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16_SINT:
-            internalFormat             = GL_R16I;
-            textureFormatID            = angle::Format::ID::R16_SINT;
-            vkTextureFormat            = VK_FORMAT_R16_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16_SINT;
-            vkBufferFormat             = VK_FORMAT_R16_SINT;
+            internalFormat               = GL_R16I;
+            textureFormatID              = angle::Format::ID::R16_SINT;
+            vkTextureFormat              = VK_FORMAT_R16_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16_SINT;
+            vkBufferFormat               = VK_FORMAT_R16_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLshort, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16_SNORM:
@@ -817,8 +965,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16_SNORM;
             vkTextureFormat            = VK_FORMAT_R16_SNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16_SNORM;
-            vkBufferFormat             = VK_FORMAT_R16_SNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16_SNORM, VK_FORMAT_R16_SNORM,
+                               CopyNativeVertexData<GLshort, 1, 1, 0>, false,
+                               angle::Format::ID::R32_FLOAT, VK_FORMAT_R32_SFLOAT,
+                               CopyTo32FVertexData<GLshort, 1, 1, true>);
             break;
 
         case angle::Format::ID::R16_SSCALED:
@@ -826,17 +976,21 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16_SSCALED;
             vkTextureFormat            = VK_FORMAT_R16_SSCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16_SSCALED;
-            vkBufferFormat             = VK_FORMAT_R16_SSCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16_SSCALED,
+                               VK_FORMAT_R16_SSCALED, CopyNativeVertexData<GLshort, 1, 1, 0>, false,
+                               angle::Format::ID::R32_FLOAT, VK_FORMAT_R32_SFLOAT,
+                               CopyTo32FVertexData<GLshort, 1, 1, false>);
             break;
 
         case angle::Format::ID::R16_UINT:
-            internalFormat             = GL_R16UI;
-            textureFormatID            = angle::Format::ID::R16_UINT;
-            vkTextureFormat            = VK_FORMAT_R16_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16_UINT;
-            vkBufferFormat             = VK_FORMAT_R16_UINT;
+            internalFormat               = GL_R16UI;
+            textureFormatID              = angle::Format::ID::R16_UINT;
+            vkTextureFormat              = VK_FORMAT_R16_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R16_UINT;
+            vkBufferFormat               = VK_FORMAT_R16_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLushort, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R16_UNORM:
@@ -844,8 +998,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16_UNORM;
             vkTextureFormat            = VK_FORMAT_R16_UNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16_UNORM;
-            vkBufferFormat             = VK_FORMAT_R16_UNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16_UNORM, VK_FORMAT_R16_UNORM,
+                               CopyNativeVertexData<GLushort, 1, 1, 0>, false,
+                               angle::Format::ID::R32_FLOAT, VK_FORMAT_R32_SFLOAT,
+                               CopyTo32FVertexData<GLushort, 1, 1, true>);
             break;
 
         case angle::Format::ID::R16_USCALED:
@@ -853,8 +1009,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R16_USCALED;
             vkTextureFormat            = VK_FORMAT_R16_USCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R16_USCALED;
-            vkBufferFormat             = VK_FORMAT_R16_USCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R16_USCALED,
+                               VK_FORMAT_R16_USCALED, CopyNativeVertexData<GLushort, 1, 1, 0>,
+                               false, angle::Format::ID::R32_FLOAT, VK_FORMAT_R32_SFLOAT,
+                               CopyTo32FVertexData<GLushort, 1, 1, false>);
             break;
 
         case angle::Format::ID::R32G32B32A32_FIXED:
@@ -862,21 +1020,25 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R32G32B32A32_FLOAT:
-            internalFormat             = GL_RGBA32F;
-            textureFormatID            = angle::Format::ID::R32G32B32A32_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R32G32B32A32_SFLOAT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32G32B32A32_FLOAT;
-            vkBufferFormat             = VK_FORMAT_R32G32B32A32_SFLOAT;
+            internalFormat               = GL_RGBA32F;
+            textureFormatID              = angle::Format::ID::R32G32B32A32_FLOAT;
+            vkTextureFormat              = VK_FORMAT_R32G32B32A32_SFLOAT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32G32B32A32_FLOAT;
+            vkBufferFormat               = VK_FORMAT_R32G32B32A32_SFLOAT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32G32B32A32_SINT:
-            internalFormat             = GL_RGBA32I;
-            textureFormatID            = angle::Format::ID::R32G32B32A32_SINT;
-            vkTextureFormat            = VK_FORMAT_R32G32B32A32_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32G32B32A32_SINT;
-            vkBufferFormat             = VK_FORMAT_R32G32B32A32_SINT;
+            internalFormat               = GL_RGBA32I;
+            textureFormatID              = angle::Format::ID::R32G32B32A32_SINT;
+            vkTextureFormat              = VK_FORMAT_R32G32B32A32_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32G32B32A32_SINT;
+            vkBufferFormat               = VK_FORMAT_R32G32B32A32_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLint, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32G32B32A32_SNORM:
@@ -888,12 +1050,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R32G32B32A32_UINT:
-            internalFormat             = GL_RGBA32UI;
-            textureFormatID            = angle::Format::ID::R32G32B32A32_UINT;
-            vkTextureFormat            = VK_FORMAT_R32G32B32A32_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32G32B32A32_UINT;
-            vkBufferFormat             = VK_FORMAT_R32G32B32A32_UINT;
+            internalFormat               = GL_RGBA32UI;
+            textureFormatID              = angle::Format::ID::R32G32B32A32_UINT;
+            vkTextureFormat              = VK_FORMAT_R32G32B32A32_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32G32B32A32_UINT;
+            vkBufferFormat               = VK_FORMAT_R32G32B32A32_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLuint, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32G32B32A32_UNORM:
@@ -909,21 +1073,25 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R32G32B32_FLOAT:
-            internalFormat             = GL_RGB32F;
-            textureFormatID            = angle::Format::ID::R32G32B32_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R32G32B32_SFLOAT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32G32B32_FLOAT;
-            vkBufferFormat             = VK_FORMAT_R32G32B32_SFLOAT;
+            internalFormat               = GL_RGB32F;
+            textureFormatID              = angle::Format::ID::R32G32B32_FLOAT;
+            vkTextureFormat              = VK_FORMAT_R32G32B32_SFLOAT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32G32B32_FLOAT;
+            vkBufferFormat               = VK_FORMAT_R32G32B32_SFLOAT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32G32B32_SINT:
-            internalFormat             = GL_RGB32I;
-            textureFormatID            = angle::Format::ID::R32G32B32_SINT;
-            vkTextureFormat            = VK_FORMAT_R32G32B32_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32G32B32_SINT;
-            vkBufferFormat             = VK_FORMAT_R32G32B32_SINT;
+            internalFormat               = GL_RGB32I;
+            textureFormatID              = angle::Format::ID::R32G32B32_SINT;
+            vkTextureFormat              = VK_FORMAT_R32G32B32_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32G32B32_SINT;
+            vkBufferFormat               = VK_FORMAT_R32G32B32_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLint, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32G32B32_SNORM:
@@ -935,12 +1103,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R32G32B32_UINT:
-            internalFormat             = GL_RGB32UI;
-            textureFormatID            = angle::Format::ID::R32G32B32_UINT;
-            vkTextureFormat            = VK_FORMAT_R32G32B32_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32G32B32_UINT;
-            vkBufferFormat             = VK_FORMAT_R32G32B32_UINT;
+            internalFormat               = GL_RGB32UI;
+            textureFormatID              = angle::Format::ID::R32G32B32_UINT;
+            vkTextureFormat              = VK_FORMAT_R32G32B32_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32G32B32_UINT;
+            vkBufferFormat               = VK_FORMAT_R32G32B32_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLuint, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32G32B32_UNORM:
@@ -956,21 +1126,25 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R32G32_FLOAT:
-            internalFormat             = GL_RG32F;
-            textureFormatID            = angle::Format::ID::R32G32_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R32G32_SFLOAT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32G32_FLOAT;
-            vkBufferFormat             = VK_FORMAT_R32G32_SFLOAT;
+            internalFormat               = GL_RG32F;
+            textureFormatID              = angle::Format::ID::R32G32_FLOAT;
+            vkTextureFormat              = VK_FORMAT_R32G32_SFLOAT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32G32_FLOAT;
+            vkBufferFormat               = VK_FORMAT_R32G32_SFLOAT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 2, 2, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32G32_SINT:
-            internalFormat             = GL_RG32I;
-            textureFormatID            = angle::Format::ID::R32G32_SINT;
-            vkTextureFormat            = VK_FORMAT_R32G32_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32G32_SINT;
-            vkBufferFormat             = VK_FORMAT_R32G32_SINT;
+            internalFormat               = GL_RG32I;
+            textureFormatID              = angle::Format::ID::R32G32_SINT;
+            vkTextureFormat              = VK_FORMAT_R32G32_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32G32_SINT;
+            vkBufferFormat               = VK_FORMAT_R32G32_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLint, 2, 2, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32G32_SNORM:
@@ -982,12 +1156,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R32G32_UINT:
-            internalFormat             = GL_RG32UI;
-            textureFormatID            = angle::Format::ID::R32G32_UINT;
-            vkTextureFormat            = VK_FORMAT_R32G32_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32G32_UINT;
-            vkBufferFormat             = VK_FORMAT_R32G32_UINT;
+            internalFormat               = GL_RG32UI;
+            textureFormatID              = angle::Format::ID::R32G32_UINT;
+            vkTextureFormat              = VK_FORMAT_R32G32_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32G32_UINT;
+            vkBufferFormat               = VK_FORMAT_R32G32_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLuint, 2, 2, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32G32_UNORM:
@@ -1003,21 +1179,25 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R32_FLOAT:
-            internalFormat             = GL_R32F;
-            textureFormatID            = angle::Format::ID::R32_FLOAT;
-            vkTextureFormat            = VK_FORMAT_R32_SFLOAT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32_FLOAT;
-            vkBufferFormat             = VK_FORMAT_R32_SFLOAT;
+            internalFormat               = GL_R32F;
+            textureFormatID              = angle::Format::ID::R32_FLOAT;
+            vkTextureFormat              = VK_FORMAT_R32_SFLOAT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32_FLOAT;
+            vkBufferFormat               = VK_FORMAT_R32_SFLOAT;
+            vertexLoadFunction           = CopyNativeVertexData<GLfloat, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32_SINT:
-            internalFormat             = GL_R32I;
-            textureFormatID            = angle::Format::ID::R32_SINT;
-            vkTextureFormat            = VK_FORMAT_R32_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32_SINT;
-            vkBufferFormat             = VK_FORMAT_R32_SINT;
+            internalFormat               = GL_R32I;
+            textureFormatID              = angle::Format::ID::R32_SINT;
+            vkTextureFormat              = VK_FORMAT_R32_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32_SINT;
+            vkBufferFormat               = VK_FORMAT_R32_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLint, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32_SNORM:
@@ -1029,12 +1209,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R32_UINT:
-            internalFormat             = GL_R32UI;
-            textureFormatID            = angle::Format::ID::R32_UINT;
-            vkTextureFormat            = VK_FORMAT_R32_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R32_UINT;
-            vkBufferFormat             = VK_FORMAT_R32_UINT;
+            internalFormat               = GL_R32UI;
+            textureFormatID              = angle::Format::ID::R32_UINT;
+            vkTextureFormat              = VK_FORMAT_R32_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R32_UINT;
+            vkBufferFormat               = VK_FORMAT_R32_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLuint, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R32_UNORM:
@@ -1046,39 +1228,47 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R4G4B4A4_UNORM:
-            internalFormat             = GL_RGBA4;
-            textureFormatID            = angle::Format::ID::R8G8B8A8_UNORM;
-            vkTextureFormat            = VK_FORMAT_R8G8B8A8_UNORM;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R4G4B4A4_UNORM;
-            vkBufferFormat             = VK_FORMAT_R4G4B4A4_UNORM_PACK16;
+            internalFormat               = GL_RGBA4;
+            textureFormatID              = angle::Format::ID::R8G8B8A8_UNORM;
+            vkTextureFormat              = VK_FORMAT_R8G8B8A8_UNORM;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R4G4B4A4_UNORM;
+            vkBufferFormat               = VK_FORMAT_R4G4B4A4_UNORM_PACK16;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R5G5B5A1_UNORM:
-            internalFormat             = GL_RGB5_A1;
-            textureFormatID            = angle::Format::ID::A1R5G5B5_UNORM;
-            vkTextureFormat            = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R5G5B5A1_UNORM;
-            vkBufferFormat             = VK_FORMAT_R5G5B5A1_UNORM_PACK16;
+            internalFormat               = GL_RGB5_A1;
+            textureFormatID              = angle::Format::ID::A1R5G5B5_UNORM;
+            vkTextureFormat              = VK_FORMAT_A1R5G5B5_UNORM_PACK16;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R5G5B5A1_UNORM;
+            vkBufferFormat               = VK_FORMAT_R5G5B5A1_UNORM_PACK16;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R5G6B5_UNORM:
-            internalFormat             = GL_RGB565;
-            textureFormatID            = angle::Format::ID::R5G6B5_UNORM;
-            vkTextureFormat            = VK_FORMAT_R5G6B5_UNORM_PACK16;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R5G6B5_UNORM;
-            vkBufferFormat             = VK_FORMAT_R5G6B5_UNORM_PACK16;
+            internalFormat               = GL_RGB565;
+            textureFormatID              = angle::Format::ID::R5G6B5_UNORM;
+            vkTextureFormat              = VK_FORMAT_R5G6B5_UNORM_PACK16;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R5G6B5_UNORM;
+            vkBufferFormat               = VK_FORMAT_R5G6B5_UNORM_PACK16;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R8G8B8A8_SINT:
-            internalFormat             = GL_RGBA8I;
-            textureFormatID            = angle::Format::ID::R8G8B8A8_SINT;
-            vkTextureFormat            = VK_FORMAT_R8G8B8A8_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8A8_SINT;
-            vkBufferFormat             = VK_FORMAT_R8G8B8A8_SINT;
+            internalFormat               = GL_RGBA8I;
+            textureFormatID              = angle::Format::ID::R8G8B8A8_SINT;
+            vkTextureFormat              = VK_FORMAT_R8G8B8A8_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R8G8B8A8_SINT;
+            vkBufferFormat               = VK_FORMAT_R8G8B8A8_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLbyte, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R8G8B8A8_SNORM:
@@ -1086,8 +1276,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8B8A8_SNORM;
             vkTextureFormat            = VK_FORMAT_R8G8B8A8_SNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8A8_SNORM;
-            vkBufferFormat             = VK_FORMAT_R8G8B8A8_SNORM;
+            initBufferFallback(
+                physicalDevice, angle::Format::ID::R8G8B8A8_SNORM, VK_FORMAT_R8G8B8A8_SNORM,
+                CopyNativeVertexData<GLbyte, 4, 4, 0>, false, angle::Format::ID::R32G32B32A32_FLOAT,
+                VK_FORMAT_R32G32B32A32_SFLOAT, CopyTo32FVertexData<GLbyte, 4, 4, true>);
             break;
 
         case angle::Format::ID::R8G8B8A8_SSCALED:
@@ -1095,8 +1287,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8B8A8_SSCALED;
             vkTextureFormat            = VK_FORMAT_R8G8B8A8_SSCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8A8_SSCALED;
-            vkBufferFormat             = VK_FORMAT_R8G8B8A8_SSCALED;
+            initBufferFallback(
+                physicalDevice, angle::Format::ID::R8G8B8A8_SSCALED, VK_FORMAT_R8G8B8A8_SSCALED,
+                CopyNativeVertexData<GLbyte, 4, 4, 0>, false, angle::Format::ID::R32G32B32A32_FLOAT,
+                VK_FORMAT_R32G32B32A32_SFLOAT, CopyTo32FVertexData<GLbyte, 4, 4, false>);
             break;
 
         case angle::Format::ID::R8G8B8A8_TYPELESS:
@@ -1108,12 +1302,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::R8G8B8A8_UINT:
-            internalFormat             = GL_RGBA8UI;
-            textureFormatID            = angle::Format::ID::R8G8B8A8_UINT;
-            vkTextureFormat            = VK_FORMAT_R8G8B8A8_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8A8_UINT;
-            vkBufferFormat             = VK_FORMAT_R8G8B8A8_UINT;
+            internalFormat               = GL_RGBA8UI;
+            textureFormatID              = angle::Format::ID::R8G8B8A8_UINT;
+            vkTextureFormat              = VK_FORMAT_R8G8B8A8_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R8G8B8A8_UINT;
+            vkBufferFormat               = VK_FORMAT_R8G8B8A8_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLubyte, 4, 4, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R8G8B8A8_UNORM:
@@ -1121,8 +1317,11 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8B8A8_UNORM;
             vkTextureFormat            = VK_FORMAT_R8G8B8A8_UNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8A8_UNORM;
-            vkBufferFormat             = VK_FORMAT_R8G8B8A8_UNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8G8B8A8_UNORM,
+                               VK_FORMAT_R8G8B8A8_UNORM, CopyNativeVertexData<GLubyte, 4, 4, 0>,
+                               false, angle::Format::ID::R32G32B32A32_FLOAT,
+                               VK_FORMAT_R32G32B32A32_SFLOAT,
+                               CopyTo32FVertexData<GLubyte, 4, 4, true>);
             break;
 
         case angle::Format::ID::R8G8B8A8_UNORM_SRGB:
@@ -1134,17 +1333,22 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8B8A8_USCALED;
             vkTextureFormat            = VK_FORMAT_R8G8B8A8_USCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8A8_USCALED;
-            vkBufferFormat             = VK_FORMAT_R8G8B8A8_USCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8G8B8A8_USCALED,
+                               VK_FORMAT_R8G8B8A8_USCALED, CopyNativeVertexData<GLubyte, 4, 4, 0>,
+                               false, angle::Format::ID::R32G32B32A32_FLOAT,
+                               VK_FORMAT_R32G32B32A32_SFLOAT,
+                               CopyTo32FVertexData<GLubyte, 4, 4, false>);
             break;
 
         case angle::Format::ID::R8G8B8_SINT:
-            internalFormat             = GL_RGB8I;
-            textureFormatID            = angle::Format::ID::R8G8B8_SINT;
-            vkTextureFormat            = VK_FORMAT_R8G8B8_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8_SINT;
-            vkBufferFormat             = VK_FORMAT_R8G8B8_SINT;
+            internalFormat               = GL_RGB8I;
+            textureFormatID              = angle::Format::ID::R8G8B8_SINT;
+            vkTextureFormat              = VK_FORMAT_R8G8B8_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R8G8B8_SINT;
+            vkBufferFormat               = VK_FORMAT_R8G8B8_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLbyte, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R8G8B8_SNORM:
@@ -1152,8 +1356,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8B8_SNORM;
             vkTextureFormat            = VK_FORMAT_R8G8B8_SNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8_SNORM;
-            vkBufferFormat             = VK_FORMAT_R8G8B8_SNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8G8B8_SNORM,
+                               VK_FORMAT_R8G8B8_SNORM, CopyNativeVertexData<GLbyte, 3, 3, 0>, false,
+                               angle::Format::ID::R32G32B32_FLOAT, VK_FORMAT_R32G32B32_SFLOAT,
+                               CopyTo32FVertexData<GLbyte, 3, 3, true>);
             break;
 
         case angle::Format::ID::R8G8B8_SSCALED:
@@ -1161,17 +1367,21 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8B8_SSCALED;
             vkTextureFormat            = VK_FORMAT_R8G8B8_SSCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8_SSCALED;
-            vkBufferFormat             = VK_FORMAT_R8G8B8_SSCALED;
+            initBufferFallback(
+                physicalDevice, angle::Format::ID::R8G8B8_SSCALED, VK_FORMAT_R8G8B8_SSCALED,
+                CopyNativeVertexData<GLbyte, 3, 3, 0>, false, angle::Format::ID::R32G32B32_FLOAT,
+                VK_FORMAT_R32G32B32_SFLOAT, CopyTo32FVertexData<GLbyte, 3, 3, false>);
             break;
 
         case angle::Format::ID::R8G8B8_UINT:
-            internalFormat             = GL_RGB8UI;
-            textureFormatID            = angle::Format::ID::R8G8B8_UINT;
-            vkTextureFormat            = VK_FORMAT_R8G8B8_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8_UINT;
-            vkBufferFormat             = VK_FORMAT_R8G8B8_UINT;
+            internalFormat               = GL_RGB8UI;
+            textureFormatID              = angle::Format::ID::R8G8B8_UINT;
+            vkTextureFormat              = VK_FORMAT_R8G8B8_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R8G8B8_UINT;
+            vkBufferFormat               = VK_FORMAT_R8G8B8_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLubyte, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R8G8B8_UNORM:
@@ -1179,8 +1389,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8B8A8_UNORM;
             vkTextureFormat            = VK_FORMAT_R8G8B8A8_UNORM;
             textureInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
-            bufferFormatID             = angle::Format::ID::R8G8B8_UNORM;
-            vkBufferFormat             = VK_FORMAT_R8G8B8_UNORM;
+            initBufferFallback(
+                physicalDevice, angle::Format::ID::R8G8B8_UNORM, VK_FORMAT_R8G8B8_UNORM,
+                CopyNativeVertexData<GLubyte, 3, 3, 0>, false, angle::Format::ID::R32G32B32_FLOAT,
+                VK_FORMAT_R32G32B32_SFLOAT, CopyTo32FVertexData<GLubyte, 3, 3, true>);
             break;
 
         case angle::Format::ID::R8G8B8_UNORM_SRGB:
@@ -1192,17 +1404,21 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8B8_USCALED;
             vkTextureFormat            = VK_FORMAT_R8G8B8_USCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8B8_USCALED;
-            vkBufferFormat             = VK_FORMAT_R8G8B8_USCALED;
+            initBufferFallback(
+                physicalDevice, angle::Format::ID::R8G8B8_USCALED, VK_FORMAT_R8G8B8_USCALED,
+                CopyNativeVertexData<GLubyte, 3, 3, 0>, false, angle::Format::ID::R32G32B32_FLOAT,
+                VK_FORMAT_R32G32B32_SFLOAT, CopyTo32FVertexData<GLubyte, 3, 3, false>);
             break;
 
         case angle::Format::ID::R8G8_SINT:
-            internalFormat             = GL_RG8I;
-            textureFormatID            = angle::Format::ID::R8G8_SINT;
-            vkTextureFormat            = VK_FORMAT_R8G8_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8_SINT;
-            vkBufferFormat             = VK_FORMAT_R8G8_SINT;
+            internalFormat               = GL_RG8I;
+            textureFormatID              = angle::Format::ID::R8G8_SINT;
+            vkTextureFormat              = VK_FORMAT_R8G8_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R8G8_SINT;
+            vkBufferFormat               = VK_FORMAT_R8G8_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLbyte, 2, 2, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R8G8_SNORM:
@@ -1210,8 +1426,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8_SNORM;
             vkTextureFormat            = VK_FORMAT_R8G8_SNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8_SNORM;
-            vkBufferFormat             = VK_FORMAT_R8G8_SNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8G8_SNORM, VK_FORMAT_R8G8_SNORM,
+                               CopyNativeVertexData<GLbyte, 2, 2, 0>, false,
+                               angle::Format::ID::R32G32_FLOAT, VK_FORMAT_R32G32_SFLOAT,
+                               CopyTo32FVertexData<GLbyte, 2, 2, true>);
             break;
 
         case angle::Format::ID::R8G8_SSCALED:
@@ -1219,17 +1437,21 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8_SSCALED;
             vkTextureFormat            = VK_FORMAT_R8G8_SSCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8_SSCALED;
-            vkBufferFormat             = VK_FORMAT_R8G8_SSCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8G8_SSCALED,
+                               VK_FORMAT_R8G8_SSCALED, CopyNativeVertexData<GLbyte, 2, 2, 0>, false,
+                               angle::Format::ID::R32G32_FLOAT, VK_FORMAT_R32G32_SFLOAT,
+                               CopyTo32FVertexData<GLbyte, 2, 2, false>);
             break;
 
         case angle::Format::ID::R8G8_UINT:
-            internalFormat             = GL_RG8UI;
-            textureFormatID            = angle::Format::ID::R8G8_UINT;
-            vkTextureFormat            = VK_FORMAT_R8G8_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8_UINT;
-            vkBufferFormat             = VK_FORMAT_R8G8_UINT;
+            internalFormat               = GL_RG8UI;
+            textureFormatID              = angle::Format::ID::R8G8_UINT;
+            vkTextureFormat              = VK_FORMAT_R8G8_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R8G8_UINT;
+            vkBufferFormat               = VK_FORMAT_R8G8_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLubyte, 2, 2, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R8G8_UNORM:
@@ -1237,8 +1459,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8_UNORM;
             vkTextureFormat            = VK_FORMAT_R8G8_UNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8_UNORM;
-            vkBufferFormat             = VK_FORMAT_R8G8_UNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8G8_UNORM, VK_FORMAT_R8G8_UNORM,
+                               CopyNativeVertexData<GLubyte, 2, 2, 0>, false,
+                               angle::Format::ID::R32G32_FLOAT, VK_FORMAT_R32G32_SFLOAT,
+                               CopyTo32FVertexData<GLubyte, 2, 2, true>);
             break;
 
         case angle::Format::ID::R8G8_USCALED:
@@ -1246,17 +1470,21 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8G8_USCALED;
             vkTextureFormat            = VK_FORMAT_R8G8_USCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8G8_USCALED;
-            vkBufferFormat             = VK_FORMAT_R8G8_USCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8G8_USCALED,
+                               VK_FORMAT_R8G8_USCALED, CopyNativeVertexData<GLubyte, 2, 2, 0>,
+                               false, angle::Format::ID::R32G32_FLOAT, VK_FORMAT_R32G32_SFLOAT,
+                               CopyTo32FVertexData<GLubyte, 2, 2, false>);
             break;
 
         case angle::Format::ID::R8_SINT:
-            internalFormat             = GL_R8I;
-            textureFormatID            = angle::Format::ID::R8_SINT;
-            vkTextureFormat            = VK_FORMAT_R8_SINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8_SINT;
-            vkBufferFormat             = VK_FORMAT_R8_SINT;
+            internalFormat               = GL_R8I;
+            textureFormatID              = angle::Format::ID::R8_SINT;
+            vkTextureFormat              = VK_FORMAT_R8_SINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R8_SINT;
+            vkBufferFormat               = VK_FORMAT_R8_SINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLbyte, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R8_SNORM:
@@ -1264,8 +1492,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8_SNORM;
             vkTextureFormat            = VK_FORMAT_R8_SNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8_SNORM;
-            vkBufferFormat             = VK_FORMAT_R8_SNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8_SNORM, VK_FORMAT_R8_SNORM,
+                               CopyNativeVertexData<GLbyte, 1, 1, 0>, false,
+                               angle::Format::ID::R32_FLOAT, VK_FORMAT_R32_SFLOAT,
+                               CopyTo32FVertexData<GLbyte, 1, 1, true>);
             break;
 
         case angle::Format::ID::R8_SSCALED:
@@ -1273,17 +1503,21 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8_SSCALED;
             vkTextureFormat            = VK_FORMAT_R8_SSCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8_SSCALED;
-            vkBufferFormat             = VK_FORMAT_R8_SSCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8_SSCALED, VK_FORMAT_R8_SSCALED,
+                               CopyNativeVertexData<GLbyte, 1, 1, 0>, false,
+                               angle::Format::ID::R32_FLOAT, VK_FORMAT_R32_SFLOAT,
+                               CopyTo32FVertexData<GLbyte, 1, 1, false>);
             break;
 
         case angle::Format::ID::R8_UINT:
-            internalFormat             = GL_R8UI;
-            textureFormatID            = angle::Format::ID::R8_UINT;
-            vkTextureFormat            = VK_FORMAT_R8_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8_UINT;
-            vkBufferFormat             = VK_FORMAT_R8_UINT;
+            internalFormat               = GL_R8UI;
+            textureFormatID              = angle::Format::ID::R8_UINT;
+            vkTextureFormat              = VK_FORMAT_R8_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::R8_UINT;
+            vkBufferFormat               = VK_FORMAT_R8_UINT;
+            vertexLoadFunction           = CopyNativeVertexData<GLubyte, 1, 1, 0>;
+            vertexLoadRequiresConversion = false;
             break;
 
         case angle::Format::ID::R8_UNORM:
@@ -1291,8 +1525,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8_UNORM;
             vkTextureFormat            = VK_FORMAT_R8_UNORM;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8_UNORM;
-            vkBufferFormat             = VK_FORMAT_R8_UNORM;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8_UNORM, VK_FORMAT_R8_UNORM,
+                               CopyNativeVertexData<GLubyte, 1, 1, 0>, false,
+                               angle::Format::ID::R32_FLOAT, VK_FORMAT_R32_SFLOAT,
+                               CopyTo32FVertexData<GLubyte, 1, 1, true>);
             break;
 
         case angle::Format::ID::R8_USCALED:
@@ -1300,8 +1536,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             textureFormatID            = angle::Format::ID::R8_USCALED;
             vkTextureFormat            = VK_FORMAT_R8_USCALED;
             textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::R8_USCALED;
-            vkBufferFormat             = VK_FORMAT_R8_USCALED;
+            initBufferFallback(physicalDevice, angle::Format::ID::R8_USCALED, VK_FORMAT_R8_USCALED,
+                               CopyNativeVertexData<GLubyte, 1, 1, 0>, false,
+                               angle::Format::ID::R32_FLOAT, VK_FORMAT_R32_SFLOAT,
+                               CopyTo32FVertexData<GLubyte, 1, 1, false>);
             break;
 
         case angle::Format::ID::R9G9B9E5_SHAREDEXP:
@@ -1309,12 +1547,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::S8_UINT:
-            internalFormat             = GL_STENCIL_INDEX8;
-            textureFormatID            = angle::Format::ID::S8_UINT;
-            vkTextureFormat            = VK_FORMAT_S8_UINT;
-            textureInitializerFunction = nullptr;
-            bufferFormatID             = angle::Format::ID::S8_UINT;
-            vkBufferFormat             = VK_FORMAT_S8_UINT;
+            internalFormat               = GL_STENCIL_INDEX8;
+            textureFormatID              = angle::Format::ID::S8_UINT;
+            vkTextureFormat              = VK_FORMAT_S8_UINT;
+            textureInitializerFunction   = nullptr;
+            bufferFormatID               = angle::Format::ID::S8_UINT;
+            vkBufferFormat               = VK_FORMAT_S8_UINT;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
             break;
 
         default:

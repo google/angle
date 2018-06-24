@@ -42,10 +42,13 @@ class VertexArrayVk : public VertexArrayImpl
                         const gl::VertexArray::DirtyAttribBitsArray &attribBits,
                         const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
 
-    const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const;
-    const gl::AttribArray<VkDeviceSize> &getCurrentArrayBufferOffsets() const;
+    void updateDrawDependencies(vk::CommandGraphResource *drawFramebuffer,
+                                const gl::AttributesMask &activeAttribsMask,
+                                vk::CommandGraphResource *elementArrayBufferOverride,
+                                Serial serial,
+                                bool isDrawElements);
 
-    void getPackedInputDescriptions(const RendererVk *rendererVk, vk::PipelineDesc *pipelineDesc);
+    void getPackedInputDescriptions(vk::PipelineDesc *pipelineDesc);
 
     // Draw call handling.
     gl::Error drawArrays(const gl::Context *context,
@@ -63,9 +66,8 @@ class VertexArrayVk : public VertexArrayImpl
     // update vertex info for attributes the program doesn't use, (very silly edge case). The
     // advantage is the cached state then doesn't depend on the Program, so doesn't have to be
     // updated when the active Program changes.
-    void updatePackedInputDescriptions(const RendererVk *rendererVk);
-    void updatePackedInputInfo(const RendererVk *rendererVk,
-                               uint32_t attribIndex,
+    void updatePackedInputDescriptions();
+    void updatePackedInputInfo(uint32_t attribIndex,
                                const gl::VertexBinding &binding,
                                const gl::VertexAttribute &attrib);
 
@@ -91,13 +93,16 @@ class VertexArrayVk : public VertexArrayImpl
                             vk::CommandBuffer *commandBuffer,
                             bool newCommandBuffer);
 
-    void syncDirtyAttrib(const gl::VertexAttribute &attrib,
+    void syncDirtyAttrib(const RendererVk *renderer,
+                         const gl::VertexAttribute &attrib,
                          const gl::VertexBinding &binding,
                          size_t attribIndex);
 
     gl::AttribArray<VkBuffer> mCurrentArrayBufferHandles;
     gl::AttribArray<VkDeviceSize> mCurrentArrayBufferOffsets;
     gl::AttribArray<vk::CommandGraphResource *> mCurrentArrayBufferResources;
+    gl::AttribArray<const vk::Format *> mCurrentArrayBufferFormats;
+    gl::AttribArray<GLuint> mCurrentArrayBufferStrides;
     VkBuffer mCurrentElementArrayBufferHandle;
     VkDeviceSize mCurrentElementArrayBufferOffset;
     vk::CommandGraphResource *mCurrentElementArrayBufferResource;
