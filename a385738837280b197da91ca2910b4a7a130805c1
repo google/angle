@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "de987836_62b05c2d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-25T09:09:23Z",
+      "side": 1,
+      "message": "I just realized that there\u0027s one fairly big flaw here still: If there\u0027s a struct with a sampler in the beginning like this:\n\nstruct S {\n   sampler2D s;\n   int i;\n} sVar;\n\nthen a statement like \"sVar.i;\" will be broken by removing the sampler since the indexes of the struct members change. My idea for a solution would be to add dummy fields in place of the removed ones so the indexing would be preserved. They could be void fields for example, and they could simply be skipped in the output stage.\n\nThis is probably best to address in a separate change.",
+      "revId": "a385738837280b197da91ca2910b4a7a130805c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b242ae40_30fbd3e9",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
         "patchSetId": 10
