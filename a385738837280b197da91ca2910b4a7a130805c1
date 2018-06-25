@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b242ae40_30fbd3e9",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-25T08:53:42Z",
+      "side": 1,
+      "message": "Should also mention samplers in arrays of structs, though this code should also work for arrays of samplers in structs.",
+      "revId": "a385738837280b197da91ca2910b4a7a130805c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
