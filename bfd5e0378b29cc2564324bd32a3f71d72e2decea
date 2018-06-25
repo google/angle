@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "42c041f4_383df9e3",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-06-25T09:22:34Z",
+      "side": 1,
+      "message": "I\u0027d like to put this in a getIndexStructFieldName() helper function, either as a member of TIntermBinary or in IntermNode_util. It could assert that the op on the node is EOpIndexDirectStruct.",
+      "range": {
+        "startLine": 104,
+        "startChar": 24,
+        "endLine": 107,
+        "endChar": 94
+      },
+      "revId": "bfd5e0378b29cc2564324bd32a3f71d72e2decea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
