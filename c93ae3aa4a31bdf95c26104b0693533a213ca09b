@@ -492,6 +492,30 @@
     },
     {
       "key": {
+        "uuid": "9ec84224_68577508",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-25T18:46:03Z",
+      "side": 1,
+      "message": "Indeed, it wants vararg, maybe some other formatting method would work better.\nLike strstream \u003c\u003c.\nFormatString used a static buffer, and that\u0027s bad for multithreading, so it had to be removed.",
+      "parentUuid": "96d51559_ea137a46",
+      "range": {
+        "startLine": 143,
+        "startChar": 7,
+        "endLine": 143,
+        "endChar": 47
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1caeee5b_52d2cf2f",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
