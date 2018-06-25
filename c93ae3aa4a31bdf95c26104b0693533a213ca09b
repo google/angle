@@ -468,6 +468,30 @@
     },
     {
       "key": {
+        "uuid": "96d51559_ea137a46",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-25T18:41:18Z",
+      "side": 1,
+      "message": "Here is an example\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/common/debug.cpp?type\u003dcs\u0026q\u003dformatstringintovector\u0026sq\u003dpackage:chromium\u0026g\u003d0\u0026l\u003d111",
+      "parentUuid": "7177e018_cbaad160",
+      "range": {
+        "startLine": 143,
+        "startChar": 7,
+        "endLine": 143,
+        "endChar": 47
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1caeee5b_52d2cf2f",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
