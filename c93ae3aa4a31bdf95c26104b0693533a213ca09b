@@ -444,6 +444,30 @@
     },
     {
       "key": {
+        "uuid": "7177e018_cbaad160",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2018-06-25T15:06:30Z",
+      "side": 1,
+      "message": "How does one use FormatStringIntoVector?  I tried, and it seems like it wants to be part of the implementation of a FormatString (have a varargs already).",
+      "parentUuid": "f2747c95_6bddac0b",
+      "range": {
+        "startLine": 143,
+        "startChar": 7,
+        "endLine": 143,
+        "endChar": 47
+      },
+      "revId": "c93ae3aa4a31bdf95c26104b0693533a213ca09b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1caeee5b_52d2cf2f",
         "filename": "src/gpu_info_util/SystemInfo_android.cpp",
         "patchSetId": 3
