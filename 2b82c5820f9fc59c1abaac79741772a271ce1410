@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9bebb68_3986f7e6",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T19:59:20Z",
+      "side": 1,
+      "message": "use the Is function here, not GetParam().",
+      "range": {
+        "startLine": 478,
+        "startChar": 64,
+        "endLine": 478,
+        "endChar": 95
+      },
+      "revId": "2b82c5820f9fc59c1abaac79741772a271ce1410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
