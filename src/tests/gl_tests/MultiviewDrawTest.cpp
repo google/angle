@@ -1642,6 +1642,9 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleFan)
 // bounds. The test does not rely on the actual line width being greater than 1.0.
 TEST_P(MultiviewSideBySideRenderTest, NoLeakingFragments)
 {
+    // TODO(oetuaho): Diagnose and fix http://anglebug.com/2687
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
+
     if (!requestMultiviewExtension())
     {
         return;
