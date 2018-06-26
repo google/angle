@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17c34450_40de0d56",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T13:58:50Z",
+      "side": 1,
+      "message": "looks like you\u0027re comparing CreateInstance with VK_NULL_HANDLE? Shouldn\u0027t this be a VkResult?",
+      "range": {
+        "startLine": 84,
+        "startChar": 74,
+        "endLine": 84,
+        "endChar": 88
+      },
+      "revId": "482985c06d58f131d672aea653fe895282cb7e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b2e68d7_56838ada",
+        "filename": "src/gpu_info_util/SystemInfo_android.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T13:58:50Z",
+      "side": 1,
+      "message": "nit: name with mCamelCase as per style guide\n\nhttps://chromium.googlesource.com/angle/angle/+/HEAD/doc/CodingStandard.md#variable-names",
+      "range": {
+        "startLine": 95,
+        "startChar": 10,
+        "endLine": 95,
+        "endChar": 24
+      },
+      "revId": "482985c06d58f131d672aea653fe895282cb7e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
