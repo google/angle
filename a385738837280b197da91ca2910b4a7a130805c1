@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1a02156d_1c1fdd0c",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T15:26:05Z",
+      "side": 1,
+      "message": "OK. Sounds good. I\u0027ll make a follow up with a test that tries to repro the bug. Left comment.",
+      "parentUuid": "de987836_62b05c2d",
+      "revId": "a385738837280b197da91ca2910b4a7a130805c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b242ae40_30fbd3e9",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
         "patchSetId": 10
@@ -33,6 +51,24 @@
       "revId": "a385738837280b197da91ca2910b4a7a130805c1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c0c55f2_c215bf10",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T15:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b242ae40_30fbd3e9",
+      "revId": "a385738837280b197da91ca2910b4a7a130805c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
