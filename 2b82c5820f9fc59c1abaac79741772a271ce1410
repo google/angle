@@ -22,6 +22,30 @@
       "revId": "2b82c5820f9fc59c1abaac79741772a271ce1410",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be9d703e_062f543f",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-26T20:12:02Z",
+      "side": 1,
+      "message": "oops, missed that.\nluckily I also made a typo that prevented this from landing :)",
+      "parentUuid": "f9bebb68_3986f7e6",
+      "range": {
+        "startLine": 478,
+        "startChar": 64,
+        "endLine": 478,
+        "endChar": 95
+      },
+      "revId": "2b82c5820f9fc59c1abaac79741772a271ce1410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
