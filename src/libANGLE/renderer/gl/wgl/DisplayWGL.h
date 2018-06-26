@@ -90,18 +90,12 @@ class DisplayWGL : public DisplayGL
 
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
-    HGLRC initializeContextAttribs(HGLRC shareContext,
-                                   const egl::AttributeMap &eglAttributes) const;
-    HGLRC createContextAttribs(HGLRC shareContext,
-                               const gl::Version &version,
-                               int profileMask) const;
+    HGLRC initializeContextAttribs(const egl::AttributeMap &eglAttributes) const;
+    HGLRC createContextAttribs(const gl::Version &version, int profileMask) const;
 
-    egl::Error createRenderer(HGLRC shareContext,
-                              bool makeNewContextCurrent,
-                              std::shared_ptr<RendererWGL> *outRenderer);
+    egl::Error createRenderer(std::shared_ptr<RendererWGL> *outRenderer);
 
     std::shared_ptr<RendererWGL> mRenderer;
-    bool mVirtualizedContexts;
 
     struct CurrentNativeContext
     {

@@ -24,7 +24,6 @@
 #include "libANGLE/renderer/gl/wgl/RendererWGL.h"
 #include "libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
-#include "libANGLE/renderer/renderer_utils.h"
 
 #include "platform/Platform.h"
 
@@ -34,9 +33,6 @@
 
 namespace rx
 {
-
-// Use context virtualization by default because Chrome uses it.
-static constexpr bool kDefaultWGLVirtualizedContexts = true;
 
 class FunctionsGLWindows : public FunctionsGL
 {
@@ -69,7 +65,6 @@ class FunctionsGLWindows : public FunctionsGL
 DisplayWGL::DisplayWGL(const egl::DisplayState &state)
     : DisplayGL(state),
       mRenderer(nullptr),
-      mVirtualizedContexts(kDefaultWGLVirtualizedContexts),
       mCurrentData(),
       mOpenGLModule(nullptr),
       mFunctionsWGL(nullptr),
@@ -107,9 +102,6 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 egl::Error DisplayWGL::initializeImpl(egl::Display *display)
 {
     mDisplayAttributes = display->getAttributeMap();
-
-    mVirtualizedContexts =
-        ShouldUseVirtualizedContexts(mDisplayAttributes, kDefaultWGLVirtualizedContexts);
 
     mOpenGLModule = LoadLibraryA("opengl32.dll");
     if (!mOpenGLModule)
@@ -258,7 +250,7 @@ egl::Error DisplayWGL::initializeImpl(egl::Display *display)
                << "Failed to set the pixel format on the intermediate OpenGL window.";
     }
 
-    ANGLE_TRY(createRenderer(nullptr, true, &mRenderer));
+    ANGLE_TRY(createRenderer(&mRenderer));
     const FunctionsGL *functionsGL = mRenderer->getFunctions();
 
     mHasRobustness = functionsGL->getGraphicsResetStatus != nullptr;
@@ -450,23 +442,7 @@ ContextImpl *DisplayWGL::createContext(const gl::ContextState &state,
                                        const gl::Context *shareContext,
                                        const egl::AttributeMap &attribs)
 {
-    std::shared_ptr<RendererWGL> renderer;
-    if (mVirtualizedContexts)
-    {
-        renderer = mRenderer;
-    }
-    else
-    {
-        // Create a new renderer that shares with the Display-level one.
-        egl::Error error = createRenderer(mRenderer->getContext(), false, &renderer);
-        if (error.isError())
-        {
-            ERR() << "Failed to create a shared renderer: " << error.getMessage();
-            return nullptr;
-        }
-    }
-
-    return new ContextWGL(state, renderer);
+    return new ContextWGL(state, mRenderer);
 }
 
 DeviceImpl *DisplayWGL::createDevice()
@@ -554,11 +530,8 @@ egl::ConfigSet DisplayWGL::generateConfigs()
 
 bool DisplayWGL::testDeviceLost()
 {
-    // Can only call Renderer::getResetStatus if we know that it's context is current.  This is only
-    // guarenteed when we're using virtualized contexts.
-    if (mVirtualizedContexts && mHasRobustness)
+    if (mHasRobustness)
     {
-        ASSERT(mCurrentData.at(std::this_thread::get_id()).glrc == mRenderer->getContext());
         return mRenderer->getResetStatus() != GL_NO_ERROR;
     }
 
@@ -695,43 +668,18 @@ egl::Error DisplayWGL::makeCurrent(egl::Surface *drawSurface,
 {
     CurrentNativeContext &currentContext = mCurrentData[std::this_thread::get_id()];
 
-    HDC newDC = nullptr;
+    HDC newDC = currentContext.dc;
     if (drawSurface)
     {
         SurfaceWGL *drawSurfaceWGL = GetImplAs<SurfaceWGL>(drawSurface);
         newDC                      = drawSurfaceWGL->getDC();
     }
 
-    HGLRC newContext = nullptr;
+    HGLRC newContext = currentContext.glrc;
     if (context)
     {
         ContextWGL *contextWGL = GetImplAs<ContextWGL>(context);
         newContext             = contextWGL->getContext();
-    }
-
-    // The context should never change when context virtualization is being used, even when a null
-    // context is being bound.
-    if (mVirtualizedContexts)
-    {
-        ASSERT(newContext == nullptr || currentContext.glrc == nullptr ||
-               newContext == currentContext.glrc);
-        newContext = mRenderer->getContext();
-
-        // When contexts are virtualized, only single-threaded rendering is supported. This allows
-        // us to leave the previous surface bound if a null surface is being bound and emulate the
-        // surfaceless functionality because we know that this surface can not be made current on
-        // another thread.
-        if (newDC == nullptr)
-        {
-            newDC = currentContext.dc;
-        }
-    }
-
-    // WGL sometimes fails to make current a null DC even though it should support surfaceless make
-    // current calls, bind root device context for the intermediate window in this case.
-    if (newDC == nullptr && newContext != nullptr)
-    {
-        newDC = mDeviceContext;
     }
 
     if (newDC != currentContext.dc || newContext != currentContext.glrc)
@@ -804,19 +752,9 @@ gl::Version DisplayWGL::getMaxSupportedESVersion() const
 void DisplayWGL::destroyNativeContext(HGLRC context)
 {
     mFunctionsWGL->deleteContext(context);
-
-    // If this context is current, remove it from the tracking of current contexts to make sure we
-    // don't try to make it current again.
-    CurrentNativeContext &currentContext = mCurrentData[std::this_thread::get_id()];
-    if (currentContext.glrc == context)
-    {
-        currentContext.dc   = nullptr;
-        currentContext.glrc = nullptr;
-    }
 }
 
-HGLRC DisplayWGL::initializeContextAttribs(HGLRC shareContext,
-                                           const egl::AttributeMap &eglAttributes) const
+HGLRC DisplayWGL::initializeContextAttribs(const egl::AttributeMap &eglAttributes) const
 {
     EGLint requestedDisplayType = static_cast<EGLint>(
         eglAttributes.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE));
@@ -835,7 +773,7 @@ HGLRC DisplayWGL::initializeContextAttribs(HGLRC shareContext,
         {
             profileMask |= WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
         }
-        return createContextAttribs(shareContext, requestedVersion, profileMask);
+        return createContextAttribs(requestedVersion, profileMask);
     }
 
     // Try all the GL version in order as a workaround for Mesa context creation where the driver
@@ -852,7 +790,7 @@ HGLRC DisplayWGL::initializeContextAttribs(HGLRC shareContext,
             profileFlag |= WGL_CONTEXT_ES_PROFILE_BIT_EXT;
         }
 
-        HGLRC context = createContextAttribs(shareContext, info.version, profileFlag);
+        HGLRC context = createContextAttribs(info.version, profileFlag);
         if (context != nullptr)
         {
             return context;
@@ -862,9 +800,7 @@ HGLRC DisplayWGL::initializeContextAttribs(HGLRC shareContext,
     return nullptr;
 }
 
-HGLRC DisplayWGL::createContextAttribs(HGLRC shareContext,
-                                       const gl::Version &version,
-                                       int profileMask) const
+HGLRC DisplayWGL::createContextAttribs(const gl::Version &version, int profileMask) const
 {
     std::vector<int> attribs;
 
@@ -891,17 +827,15 @@ HGLRC DisplayWGL::createContextAttribs(HGLRC shareContext,
     attribs.push_back(0);
     attribs.push_back(0);
 
-    return mFunctionsWGL->createContextAttribsARB(mDeviceContext, shareContext, &attribs[0]);
+    return mFunctionsWGL->createContextAttribsARB(mDeviceContext, nullptr, &attribs[0]);
 }
 
-egl::Error DisplayWGL::createRenderer(HGLRC shareContext,
-                                      bool makeNewContextCurrent,
-                                      std::shared_ptr<RendererWGL> *outRenderer)
+egl::Error DisplayWGL::createRenderer(std::shared_ptr<RendererWGL> *outRenderer)
 {
     HGLRC context = nullptr;
     if (mFunctionsWGL->createContextAttribsARB)
     {
-        context = initializeContextAttribs(shareContext, mDisplayAttributes);
+        context = initializeContextAttribs(mDisplayAttributes);
     }
 
     // If wglCreateContextAttribsARB is unavailable or failed, try the standard wglCreateContext
@@ -909,14 +843,6 @@ egl::Error DisplayWGL::createRenderer(HGLRC shareContext,
     {
         // Don't have control over GL versions
         context = mFunctionsWGL->createContext(mDeviceContext);
-        if (context && shareContext)
-        {
-            if (!mFunctionsWGL->shareLists(shareContext, context))
-            {
-                return egl::EglNotInitialized()
-                       << "Failed to share lists to newly created context.";
-            }
-        }
     }
 
     if (!context)
@@ -929,27 +855,15 @@ egl::Error DisplayWGL::createRenderer(HGLRC shareContext,
     {
         return egl::EglNotInitialized() << "Failed to make the intermediate WGL context current.";
     }
+    CurrentNativeContext &currentContext = mCurrentData[std::this_thread::get_id()];
+    currentContext.dc                    = mDeviceContext;
+    currentContext.glrc                  = context;
 
     std::unique_ptr<FunctionsGL> functionsGL(
         new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress));
     functionsGL->initialize(mDisplayAttributes);
 
     outRenderer->reset(new RendererWGL(std::move(functionsGL), mDisplayAttributes, this, context));
-
-    CurrentNativeContext &currentContext = mCurrentData[std::this_thread::get_id()];
-    if (makeNewContextCurrent)
-    {
-        currentContext.dc   = mDeviceContext;
-        currentContext.glrc = context;
-    }
-    else
-    {
-        // Reset the current context back to the previous state
-        if (!mFunctionsWGL->makeCurrent(currentContext.dc, currentContext.glrc))
-        {
-            return egl::EglNotInitialized() << "Failed reset the current context.";
-        }
-    }
 
     return egl::NoError();
 }
