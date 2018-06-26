@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "824ebbcd_0e8ab1e3",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T13:37:36Z",
+      "side": 1,
+      "message": "use\n\nANGLE_SKIP_TEST_IF(IsWindows() \u0026\u0026 IsAMD() \u0026\u0026 (IsOpenGL() || IsD3D11_FL93()));",
+      "range": {
+        "startLine": 483,
+        "startChar": 0,
+        "endLine": 490,
+        "endChar": 0
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7df1f45_1c77bc12",
+        "filename": "src/tests/gl_tests/AttributeLayoutTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T13:37:36Z",
+      "side": 1,
+      "message": "same deal",
+      "range": {
+        "startLine": 498,
+        "startChar": 5,
+        "endLine": 498,
+        "endChar": 82
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
