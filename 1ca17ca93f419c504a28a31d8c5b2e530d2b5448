@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b6a9bd24_f4d394b1",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-26T18:46:39Z",
+      "side": 1,
+      "message": "This is causing me issues. The getColorReadRenderTarget function is not returning me the same buffer as the code here. Its returning me the first draw target instead so I end up trying to use the same render target for both the source and the destination. \n\nIs it an error in getColorReadRenderTarget??",
+      "parentUuid": "0a1da9c6_f6320984",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 373,
+        "endChar": 33
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "287b43cb_f6884ed9",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "342ab764_964efac5",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-26T18:46:39Z",
+      "side": 1,
+      "message": "Not with the current set of tests, I changed it to an assert",
+      "parentUuid": "287b43cb_f6884ed9",
+      "range": {
+        "startLine": 390,
+        "startChar": 16,
+        "endLine": 390,
+        "endChar": 29
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "5a5dc708_5e2c7bd6",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-26T18:46:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb738742_7226a482",
+      "range": {
+        "startLine": 397,
+        "startChar": 0,
+        "endLine": 405,
+        "endChar": 33
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7bbcd159_b4912966",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 6
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "62042d64_a601691b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-26T18:46:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bbcd159_b4912966",
+      "range": {
+        "startLine": 477,
+        "startChar": 42,
+        "endLine": 479,
+        "endChar": 73
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9361283a_594d7fbd",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 6
@@ -114,6 +210,30 @@
       "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdb31e5e_a095207c",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-26T18:46:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9361283a_594d7fbd",
+      "range": {
+        "startLine": 497,
+        "startChar": 25,
+        "endLine": 499,
+        "endChar": 76
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
