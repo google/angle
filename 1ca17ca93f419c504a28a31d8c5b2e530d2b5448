@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "0a1da9c6_f6320984",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T16:42:52Z",
+      "side": 1,
+      "message": "can you call FramebufferVk::getColorReadRenderTarget for this? I want to avoid calling Framebuffer::getRenderTarget. You should be able to call the private method from the same class.",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 373,
+        "endChar": 33
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "287b43cb_f6884ed9",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T16:42:52Z",
+      "side": 1,
+      "message": "does this ever get hit ?",
+      "range": {
+        "startLine": 390,
+        "startChar": 16,
+        "endLine": 390,
+        "endChar": 29
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb738742_7226a482",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T16:42:52Z",
+      "side": 1,
+      "message": "can you make a new method FramebufferVk::getDepthStencilRenderTarget for this? Alternately you can access the render target cache directly. Just need to call vk::GetImpl()",
+      "range": {
+        "startLine": 397,
+        "startChar": 0,
+        "endLine": 405,
+        "endChar": 33
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7bbcd159_b4912966",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 6
