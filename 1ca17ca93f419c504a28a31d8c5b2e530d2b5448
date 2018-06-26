@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7bbcd159_b4912966",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-26T16:10:31Z",
+      "side": 1,
+      "message": "Our Rectangle class has x0, x1, y0, y1 as helpers for these.",
+      "range": {
+        "startLine": 477,
+        "startChar": 42,
+        "endLine": 479,
+        "endChar": 73
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9361283a_594d7fbd",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-26T16:10:31Z",
+      "side": 1,
+      "message": "Same comment.",
+      "range": {
+        "startLine": 497,
+        "startChar": 25,
+        "endLine": 499,
+        "endChar": 76
+      },
+      "revId": "1ca17ca93f419c504a28a31d8c5b2e530d2b5448",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
