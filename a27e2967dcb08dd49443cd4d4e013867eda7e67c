@@ -22,6 +22,30 @@
       "revId": "a27e2967dcb08dd49443cd4d4e013867eda7e67c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5316d230_aa73820a",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-06-26T17:05:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a45c91c_8e07ed84",
+      "range": {
+        "startLine": 269,
+        "startChar": 20,
+        "endLine": 269,
+        "endChar": 24
+      },
+      "revId": "a27e2967dcb08dd49443cd4d4e013867eda7e67c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
