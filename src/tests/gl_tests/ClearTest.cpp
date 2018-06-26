@@ -113,6 +113,7 @@ TEST_P(ClearTest, ChangeFramebufferAttachmentFromRGBAtoRGB)
     // TODO(lucferron): Diagnose and fix this on D3D9 and 11.
     // http://anglebug.com/2689
     ANGLE_SKIP_TEST_IF(IsD3D9() || IsD3D11() || (IsOzone() && IsOpenGLES()));
+    ANGLE_SKIP_TEST_IF(IsOSX() && (IsNVIDIA() || IsIntel()) && IsDesktopOpenGL());
 
     ANGLE_GL_PROGRAM(program, angle::essl1_shaders::vs::Simple(),
                      angle::essl1_shaders::fs::UniformColor());
