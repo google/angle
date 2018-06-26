@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee5d516a_d5f68d95",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T13:33:33Z",
+      "side": 1,
+      "message": "can you please also set the Read FBO binding in mReadPixelsDirtyBits and both Read and Draw in mBlitDirtyBits?",
+      "range": {
+        "startLine": 427,
+        "startChar": 4,
+        "endLine": 427,
+        "endChar": 19
+      },
+      "revId": "6565b9279af28850114244d14983307f5d9980cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
