@@ -121,8 +121,6 @@ class Traverser final : public TIntermTraverser
         TFieldList *newFieldList = new TFieldList;
         ASSERT(structure->containsSamplers());
 
-        // Removing the sampler field may produce struct indexing bugs.
-        // TODO(jmadill): Fix potential bug. http://anglebug.com/2494
         for (const TField *field : structure->fields())
         {
             const TType &fieldType = *field->type();
