@@ -141,6 +141,30 @@
       "revId": "5a8775b09c72b03a6fa907e7a041ebda6427ca3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65dabb86_72143bac",
+        "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T02:15:52Z",
+      "side": 1,
+      "message": "no. Can you change bool requestParallelShaderCompileExtension to bool ensureParallelShadercompileExtensionAvailable",
+      "parentUuid": "928a12b2_031d9f43",
+      "range": {
+        "startLine": 35,
+        "startChar": 12,
+        "endLine": 35,
+        "endChar": 32
+      },
+      "revId": "5a8775b09c72b03a6fa907e7a041ebda6427ca3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
