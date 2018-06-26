@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e10b634e_cbaa4fca",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-26T20:43:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de57b96c_f8cbb40a",
+      "range": {
+        "startLine": 343,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 25
+      },
+      "revId": "cd6f6a5ba792245719745ba9c44e7a8214051136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ac5102bc_09b424a2",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "5470b0b9_da164e7b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-26T20:43:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac5102bc_09b424a2",
+      "range": {
+        "startLine": 394,
+        "startChar": 8,
+        "endLine": 394,
+        "endChar": 80
+      },
+      "revId": "cd6f6a5ba792245719745ba9c44e7a8214051136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97ba90f8_92a81b17",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 8
@@ -59,6 +107,30 @@
       "writtenOn": "2018-06-26T19:52:22Z",
       "side": 1,
       "message": "you can use the render target cache directly here.",
+      "range": {
+        "startLine": 398,
+        "startChar": 18,
+        "endLine": 398,
+        "endChar": 45
+      },
+      "revId": "cd6f6a5ba792245719745ba9c44e7a8214051136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ec98e9d_afb48fc4",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-26T20:43:29Z",
+      "side": 1,
+      "message": "Why not use the accessor if there is one instead? I disagree with using internal members when there is an actual getter for it. The compiler is going to substitute it for the same thing anyways and you\u0027re protected agaisnt issues that could arise if you end up modifying the getter to have something done for every caller of it. Its a common best practice of encapsulation never to use the direct private members, even inside the class itself.\n\nIs it not considered a best practice in C++ for some obscure reason I\u0027m not aware of?",
+      "parentUuid": "97ba90f8_92a81b17",
       "range": {
         "startLine": 398,
         "startChar": 18,
