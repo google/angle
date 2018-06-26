@@ -140,6 +140,30 @@
       "revId": "cd6f6a5ba792245719745ba9c44e7a8214051136",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a75e0cb_b55caf39",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-26T20:47:29Z",
+      "side": 1,
+      "message": "It\u0027s C++. It\u0027s slower because unless you inline the access in the header it\u0027s unlikely to be inlined. Not a big deal, just a suggestion.",
+      "parentUuid": "6ec98e9d_afb48fc4",
+      "range": {
+        "startLine": 398,
+        "startChar": 18,
+        "endLine": 398,
+        "endChar": 45
+      },
+      "revId": "cd6f6a5ba792245719745ba9c44e7a8214051136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
