@@ -185,13 +185,6 @@ class RendererGL : angle::NonCopyable
     gl::Error memoryBarrier(GLbitfield barriers);
     gl::Error memoryBarrierByRegion(GLbitfield barriers);
 
-    void onDebugMessage(GLenum source,
-                        GLenum type,
-                        GLuint id,
-                        GLenum severity,
-                        GLsizei length,
-                        const GLchar *message);
-
   private:
     void ensureCapsInitialized() const;
     void generateCaps(gl::Caps *outCaps,
@@ -210,7 +203,6 @@ class RendererGL : angle::NonCopyable
     WorkaroundsGL mWorkarounds;
 
     bool mUseDebugOutput;
-    std::map<GLuint, size_t> mDebugMessageCounts;
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;

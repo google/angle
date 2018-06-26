@@ -68,12 +68,6 @@ void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds
 
 namespace nativegl
 {
-std::string FormatDebugMessage(GLenum source,
-                               GLenum type,
-                               GLuint id,
-                               GLenum severity,
-                               GLsizei length,
-                               const GLchar *message);
 bool SupportsFenceSync(const FunctionsGL *functions);
 bool SupportsOcclusionQueries(const FunctionsGL *functions);
 bool SupportsNativeRendering(const FunctionsGL *functions,
