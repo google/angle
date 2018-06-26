@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e99c374_ec64aca0",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-26T14:14:25Z",
+      "side": 1,
+      "message": "Could use a comment.",
+      "range": {
+        "startLine": 243,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 83
+      },
+      "revId": "b496f41b7d0f10e23d252d9b7f0c09f150a02b98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
