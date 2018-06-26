@@ -22,7 +22,10 @@ class Traverser final : public TIntermTraverser
     explicit Traverser(TSymbolTable *symbolTable)
         : TIntermTraverser(true, false, false, symbolTable), mRemovedUniformsCount(0)
     {
+        mSymbolTable->push();
     }
+
+    ~Traverser() override { mSymbolTable->pop(); }
 
     int removedUniformsCount() const { return mRemovedUniformsCount; }
 
@@ -103,7 +106,8 @@ class Traverser final : public TIntermTraverser
 
             ImmutableString newName(stringBuilder);
 
-            TVariable *samplerReplacement = mExtractedSamplers[newName];
+            const TVariable *samplerReplacement =
+                static_cast<const TVariable *>(mSymbolTable->findUserDefined(newName));
             ASSERT(samplerReplacement);
 
             TIntermSymbol *replacement = new TIntermSymbol(samplerReplacement);
@@ -260,11 +264,10 @@ class Traverser final : public TIntermTraverser
 
         newSequence->push_back(samplerDecl);
 
-        mExtractedSamplers[newName] = newVariable;
+        mSymbolTable->declareInternal(newVariable);
     }
 
     int mRemovedUniformsCount;
-    std::map<ImmutableString, TVariable *> mExtractedSamplers;
     std::set<ImmutableString> mRemovedStructs;
 };
 }  // anonymous namespace
