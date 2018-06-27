@@ -114,14 +114,18 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
                << "eglChooseConfig failed with " << egl::Error(mEGL->getError());
     }
 
-    int dummyPbufferAttribs[] = {
-        EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE,
-    };
-    mDummyPbuffer = mEGL->createPbufferSurface(configWithFormat, dummyPbufferAttribs);
-    if (mDummyPbuffer == EGL_NO_SURFACE)
+    // A dummy pbuffer is only needed if surfaceless contexts are not supported.
+    if (!mEGL->hasExtension("EGL_KHR_surfaceless_context"))
     {
-        return egl::EglNotInitialized()
-               << "eglCreatePbufferSurface failed with " << egl::Error(mEGL->getError());
+        int dummyPbufferAttribs[] = {
+            EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE,
+        };
+        mDummyPbuffer = mEGL->createPbufferSurface(configWithFormat, dummyPbufferAttribs);
+        if (mDummyPbuffer == EGL_NO_SURFACE)
+        {
+            return egl::EglNotInitialized()
+                   << "eglCreatePbufferSurface failed with " << egl::Error(mEGL->getError());
+        }
     }
 
     // Create mDummyPbuffer with a normal config, but create a no_config mContext, if possible
