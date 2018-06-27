@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2c829e44_71e6523d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1287062
+      },
+      "writtenOn": "2018-06-27T22:07:41Z",
+      "side": 1,
+      "message": "Oh yea apologies! Didn\u0027t know that was part of the process!",
+      "parentUuid": "c1abc9f5_dc5359ea",
+      "revId": "2df9b5b07dcc424a6830d65e8d6b756aa78e3497",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0ab36125_a8e1e9a9",
         "filename": "src/tests/perf_tests/MultiviewPerf.cpp",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2018-06-27T21:56:35Z",
       "side": 1,
       "message": "we don\u0027t actually expose this ext in Vulkan. Can probably omit it. It may behave gracefully.",
+      "range": {
+        "startLine": 519,
+        "startChar": 23,
+        "endLine": 519,
+        "endChar": 78
+      },
+      "revId": "2df9b5b07dcc424a6830d65e8d6b756aa78e3497",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed85b015_99b4b63b",
+        "filename": "src/tests/perf_tests/MultiviewPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1287062
+      },
+      "writtenOn": "2018-06-27T22:07:41Z",
+      "side": 1,
+      "message": "Sure! would this be the only line to omit or should all the changes in this file be omitted?",
+      "parentUuid": "0ab36125_a8e1e9a9",
       "range": {
         "startLine": 519,
         "startChar": 23,
