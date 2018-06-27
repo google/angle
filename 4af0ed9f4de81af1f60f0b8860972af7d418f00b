@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d2a03365_9343d954",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 967,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-27T14:40:42Z",
+      "side": 1,
+      "message": "Should this be in setSubImage too?  The spec is a bit vague about what triggers the mipmap generation: \"making any change to the texels of the zero level array of a mipmap will also compute a complete set of mipmap arrays\".  I assume this covers glTexSubImage and glCopy[Sub]Image but I don\u0027t know about rendering to mip 0, that could be costly to track.",
+      "range": {
+        "startLine": 964,
+        "startChar": 0,
+        "endLine": 967,
+        "endChar": 5
+      },
+      "revId": "4af0ed9f4de81af1f60f0b8860972af7d418f00b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3265d414_61f8abc4",
         "filename": "src/libANGLE/queryconversions.cpp",
         "patchSetId": 5
