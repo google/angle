@@ -268,6 +268,12 @@ VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format)
            (format.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
 }
 
+VkImageAspectFlags GetFormatAspectFlags(const angle::Format &format)
+{
+    return (format.redBits > 0 ? VK_IMAGE_ASPECT_COLOR_BIT : 0) |
+           GetDepthStencilAspectFlags(format);
+}
+
 Error::Error(VkResult result) : mResult(result), mFile(nullptr), mLine(0)
 {
     ASSERT(result == VK_SUCCESS);

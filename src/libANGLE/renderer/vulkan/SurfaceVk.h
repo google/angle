@@ -20,13 +20,15 @@ namespace rx
 {
 class RendererVk;
 
-class OffscreenSurfaceVk : public SurfaceImpl
+class OffscreenSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
 {
   public:
     OffscreenSurfaceVk(const egl::SurfaceState &surfaceState, EGLint width, EGLint height);
     ~OffscreenSurfaceVk() override;
 
     egl::Error initialize(const egl::Display *display) override;
+    void destroy(const egl::Display *display) override;
+
     FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
                                               const gl::FramebufferState &state) override;
     egl::Error swap(const gl::Context *context) override;
@@ -59,8 +61,27 @@ class OffscreenSurfaceVk : public SurfaceImpl
                                  const gl::ImageIndex &imageIndex) override;
 
   private:
+    struct AttachmentImage final : angle::NonCopyable
+    {
+        AttachmentImage(vk::CommandGraphResource *commandGraphResource);
+        ~AttachmentImage();
+
+        egl::Error initialize(const egl::Display *display,
+                              EGLint width,
+                              EGLint height,
+                              const vk::Format &vkFormat);
+        void destroy(const egl::Display *display, Serial storedQueueSerial);
+
+        vk::ImageHelper image;
+        vk::ImageView imageView;
+        RenderTargetVk renderTarget;
+    };
+
     EGLint mWidth;
     EGLint mHeight;
+
+    AttachmentImage mColorAttachment;
+    AttachmentImage mDepthStencilAttachment;
 };
 
 class WindowSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource

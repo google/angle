@@ -84,10 +84,7 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
         VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         ANGLE_TRY(mImage.initMemory(device, renderer->getMemoryProperties(), flags));
 
-        VkImageAspectFlags aspect =
-            (textureFormat.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0) |
-            (textureFormat.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0) |
-            (textureFormat.redBits > 0 ? VK_IMAGE_ASPECT_COLOR_BIT : 0);
+        VkImageAspectFlags aspect = vk::GetFormatAspectFlags(textureFormat);
 
         ANGLE_TRY(mImage.initImageView(device, gl::TextureType::_2D, aspect, gl::SwizzleState(),
                                        &mImageView, 1));

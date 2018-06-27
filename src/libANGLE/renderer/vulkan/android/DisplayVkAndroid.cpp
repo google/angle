@@ -66,7 +66,7 @@ egl::ConfigSet DisplayVkAndroid::generateConfigs()
     rgba.renderableType        = EGL_OPENGL_ES2_BIT;
     rgba.sampleBuffers         = 0;
     rgba.samples               = 0;
-    rgba.surfaceType           = EGL_WINDOW_BIT;
+    rgba.surfaceType           = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
     rgba.optimalOrientation    = 0;
     rgba.transparentType       = EGL_NONE;
     rgba.transparentRedValue   = 0;

@@ -93,7 +93,7 @@ egl::ConfigSet DisplayVkXcb::generateConfigs()
     bgra.renderableType        = EGL_OPENGL_ES2_BIT;
     bgra.sampleBuffers         = 0;
     bgra.samples               = 0;
-    bgra.surfaceType           = EGL_WINDOW_BIT;
+    bgra.surfaceType           = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
     bgra.optimalOrientation    = 0;
     bgra.transparentType       = EGL_NONE;
     bgra.transparentRedValue   = 0;

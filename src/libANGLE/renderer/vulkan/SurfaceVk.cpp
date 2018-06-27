@@ -48,12 +48,68 @@ VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &pres
     return presentModes[0];
 }
 
+constexpr VkImageUsageFlags kSurfaceVKImageUsageFlags =
+    VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+constexpr VkImageUsageFlags kSurfaceVKColorImageUsageFlags =
+    kSurfaceVKImageUsageFlags | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+constexpr VkImageUsageFlags kSurfaceVKDepthStencilImageUsageFlags =
+    kSurfaceVKImageUsageFlags | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
 }  // namespace
+
+OffscreenSurfaceVk::AttachmentImage::AttachmentImage(vk::CommandGraphResource *commandGraphResource)
+    : renderTarget(&image, &imageView, commandGraphResource)
+{
+}
+
+OffscreenSurfaceVk::AttachmentImage::~AttachmentImage() = default;
+
+egl::Error OffscreenSurfaceVk::AttachmentImage::initialize(const egl::Display *display,
+                                                           EGLint width,
+                                                           EGLint height,
+                                                           const vk::Format &vkFormat)
+{
+    const DisplayVk *displayVk = vk::GetImpl(display);
+    RendererVk *renderer       = displayVk->getRenderer();
+    VkDevice device            = renderer->getDevice();
+
+    const angle::Format &textureFormat = vkFormat.textureFormat();
+    bool isDepthOrStencilFormat   = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
+    const VkImageUsageFlags usage = isDepthOrStencilFormat ? kSurfaceVKDepthStencilImageUsageFlags
+                                                           : kSurfaceVKColorImageUsageFlags;
+
+    gl::Extents extents(static_cast<int>(width), static_cast<int>(height), 1);
+    ANGLE_TRY(image.init(device, gl::TextureType::_2D, extents, vkFormat, 1, usage, 1));
+
+    VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    ANGLE_TRY(image.initMemory(device, renderer->getMemoryProperties(), flags));
+
+    VkImageAspectFlags aspect = vk::GetFormatAspectFlags(textureFormat);
+
+    ANGLE_TRY(image.initImageView(device, gl::TextureType::_2D, aspect, gl::SwizzleState(),
+                                  &imageView, 1));
+
+    return egl::NoError();
+}
+
+void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display,
+                                                  Serial storedQueueSerial)
+{
+    const DisplayVk *displayVk = vk::GetImpl(display);
+    RendererVk *renderer       = displayVk->getRenderer();
+
+    image.release(renderer->getCurrentQueueSerial(), renderer);
+    renderer->releaseObject(storedQueueSerial, &imageView);
+}
 
 OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState,
                                        EGLint width,
                                        EGLint height)
-    : SurfaceImpl(surfaceState), mWidth(width), mHeight(height)
+    : SurfaceImpl(surfaceState),
+      mWidth(width),
+      mHeight(height),
+      mColorAttachment(this),
+      mDepthStencilAttachment(this)
 {
 }
 
@@ -63,7 +119,30 @@ OffscreenSurfaceVk::~OffscreenSurfaceVk()
 
 egl::Error OffscreenSurfaceVk::initialize(const egl::Display *display)
 {
+    const DisplayVk *displayVk = vk::GetImpl(display);
+    RendererVk *renderer       = displayVk->getRenderer();
+
+    const egl::Config *config = mState.config;
+
+    if (config->renderTargetFormat != GL_NONE)
+    {
+        ANGLE_TRY(mColorAttachment.initialize(display, mWidth, mHeight,
+                                              renderer->getFormat(config->renderTargetFormat)));
+    }
+
+    if (config->depthStencilFormat != GL_NONE)
+    {
+        ANGLE_TRY(mDepthStencilAttachment.initialize(
+            display, mWidth, mHeight, renderer->getFormat(config->depthStencilFormat)));
+    }
+
     return egl::NoError();
+}
+
+void OffscreenSurfaceVk::destroy(const egl::Display *display)
+{
+    mColorAttachment.destroy(display, getStoredQueueSerial());
+    mDepthStencilAttachment.destroy(display, getStoredQueueSerial());
 }
 
 FramebufferImpl *OffscreenSurfaceVk::createDefaultFramebuffer(const gl::Context *context,
@@ -137,14 +216,22 @@ EGLint OffscreenSurfaceVk::getSwapBehavior() const
     return EGL_BUFFER_PRESERVED;
 }
 
-gl::Error OffscreenSurfaceVk::getAttachmentRenderTarget(
-    const gl::Context * /*context*/,
-    GLenum /*binding*/,
-    const gl::ImageIndex & /*imageIndex*/,
-    FramebufferAttachmentRenderTarget ** /*rtOut*/)
+gl::Error OffscreenSurfaceVk::getAttachmentRenderTarget(const gl::Context * /*context*/,
+                                                        GLenum binding,
+                                                        const gl::ImageIndex & /*imageIndex*/,
+                                                        FramebufferAttachmentRenderTarget **rtOut)
 {
-    UNREACHABLE();
-    return gl::InternalError();
+    if (binding == GL_BACK)
+    {
+        *rtOut = &mColorAttachment.renderTarget;
+    }
+    else
+    {
+        ASSERT(binding == GL_DEPTH || binding == GL_STENCIL || binding == GL_DEPTH_STENCIL);
+        *rtOut = &mDepthStencilAttachment.renderTarget;
+    }
+
+    return gl::NoError();
 }
 
 gl::Error OffscreenSurfaceVk::initializeContents(const gl::Context *context,
@@ -345,9 +432,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
                    VK_ERROR_INITIALIZATION_FAILED);
 
     // We need transfer src for reading back from the backbuffer.
-    VkImageUsageFlags imageUsageFlags =
-        (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-         VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+    VkImageUsageFlags imageUsageFlags = kSurfaceVKColorImageUsageFlags;
 
     VkSwapchainCreateInfoKHR swapchainInfo;
     swapchainInfo.sType                 = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -416,12 +501,10 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     {
         const vk::Format &dsFormat = renderer->getFormat(mState.config->depthStencilFormat);
 
-        const VkImageUsageFlags usage =
-            (VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-             VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
+        const VkImageUsageFlags dsUsage = kSurfaceVKDepthStencilImageUsageFlags;
 
-        ANGLE_TRY(
-            mDepthStencilImage.init(device, gl::TextureType::_2D, extents, dsFormat, 1, usage, 1));
+        ANGLE_TRY(mDepthStencilImage.init(device, gl::TextureType::_2D, extents, dsFormat, 1,
+                                          dsUsage, 1));
         ANGLE_TRY(mDepthStencilImage.initMemory(device, renderer->getMemoryProperties(),
                                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
