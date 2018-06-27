@@ -239,6 +239,30 @@
     },
     {
       "key": {
+        "uuid": "80850620_4bc324f9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T20:53:00Z",
+      "side": 1,
+      "message": "Startup time is extremely important and is not thing we will ignore. It affects every app\u0027s startup including Chrome, maps and games. We can\u0027t afford to ignore any wasted time in the long run. For now let\u0027s use the simpler approach.",
+      "parentUuid": "ceb7e40e_c1952a08",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 27
+      },
+      "revId": "20f7ca68ee3e026e855b61bf48fa662592617438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "08624bb5_eb573fa2",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 2

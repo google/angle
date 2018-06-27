@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "734f08ca_b0756552",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T20:53:00Z",
+      "side": 0,
+      "message": "I still would prefer keeping the templates. Can you please restore them?",
+      "parentUuid": "3e60a787_e897439f",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 17
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "412aa115_9cfe90de",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
         "patchSetId": 2
