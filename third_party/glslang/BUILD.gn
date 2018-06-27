@@ -85,6 +85,7 @@ static_library("glslang") {
     "src/glslang/MachineIndependent/SymbolTable.h",
     "src/glslang/MachineIndependent/Versions.cpp",
     "src/glslang/MachineIndependent/Versions.h",
+    "src/glslang/MachineIndependent/attribute.cpp",
     "src/glslang/MachineIndependent/gl_types.h",
     "src/glslang/MachineIndependent/glslang.y",
     "src/glslang/MachineIndependent/glslang_tab.cpp",
@@ -138,6 +139,7 @@ executable("glslang_validator") {
     "src/StandAlone/DirStackFileIncluder.h",
     "src/StandAlone/StandAlone.cpp",
   ]
+  defines = [ "ENABLE_OPT" ]
   configs -= [ "//build/config/compiler:chromium_code" ]
   configs += [ "//build/config/compiler:no_chromium_code" ]
   public_deps = [
