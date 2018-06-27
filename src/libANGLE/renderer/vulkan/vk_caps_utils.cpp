@@ -8,7 +8,12 @@
 //
 
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
+
+#include "common/utilities.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/vulkan/DisplayVk.h"
+
 #include "vk_format_utils.h"
 
 namespace
@@ -138,4 +143,98 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outCaps->maxVertexOutputComponents = outCaps->maxVaryingVectors * 4;
 }
 }  // namespace vk
+
+namespace egl_vk
+{
+egl::Config GenerateDefaultConfig(const gl::InternalFormat &colorFormat,
+                                  const gl::InternalFormat &depthStencilFormat,
+                                  EGLint sampleCount)
+{
+    egl::Config config;
+
+    config.renderTargetFormat    = colorFormat.internalFormat;
+    config.depthStencilFormat    = depthStencilFormat.internalFormat;
+    config.bufferSize            = colorFormat.pixelBytes * 8;
+    config.redSize               = colorFormat.redBits;
+    config.greenSize             = colorFormat.greenBits;
+    config.blueSize              = colorFormat.blueBits;
+    config.alphaSize             = colorFormat.alphaBits;
+    config.alphaMaskSize         = 0;
+    config.bindToTextureRGB      = EGL_FALSE;
+    config.bindToTextureRGBA     = EGL_FALSE;
+    config.colorBufferType       = EGL_RGB_BUFFER;
+    config.configCaveat          = EGL_NONE;
+    config.conformant            = 0;
+    config.depthSize             = depthStencilFormat.depthBits;
+    config.stencilSize           = depthStencilFormat.stencilBits;
+    config.level                 = 0;
+    config.matchNativePixmap     = EGL_NONE;
+    config.maxPBufferWidth       = 0;
+    config.maxPBufferHeight      = 0;
+    config.maxPBufferPixels      = 0;
+    config.maxSwapInterval       = 1;
+    config.minSwapInterval       = 1;
+    config.nativeRenderable      = EGL_TRUE;
+    config.nativeVisualID        = 0;
+    config.nativeVisualType      = EGL_NONE;
+    config.renderableType        = EGL_OPENGL_ES2_BIT;
+    config.sampleBuffers         = (sampleCount > 0) ? 1 : 0;
+    config.samples               = sampleCount;
+    config.surfaceType           = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
+    config.optimalOrientation    = 0;
+    config.transparentType       = EGL_NONE;
+    config.transparentRedValue   = 0;
+    config.transparentGreenValue = 0;
+    config.transparentBlueValue  = 0;
+    config.colorComponentType =
+        gl_egl::GLComponentTypeToEGLColorComponentType(colorFormat.componentType);
+
+    return config;
+}
+
+egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
+                               size_t colorFormatsCount,
+                               const GLenum *depthStencilFormats,
+                               size_t depthStencilFormatCount,
+                               const EGLint *sampleCounts,
+                               size_t sampleCountsCount,
+                               DisplayVk *display)
+{
+    ASSERT(colorFormatsCount > 0);
+    ASSERT(display != nullptr);
+
+    egl::ConfigSet configSet;
+
+    for (size_t colorFormatIdx = 0; colorFormatIdx < colorFormatsCount; colorFormatIdx++)
+    {
+        const gl::InternalFormat &colorFormatInfo =
+            gl::GetSizedInternalFormatInfo(colorFormats[colorFormatIdx]);
+        ASSERT(colorFormatInfo.sized);
+
+        for (size_t depthStencilFormatIdx = 0; depthStencilFormatIdx < depthStencilFormatCount;
+             depthStencilFormatIdx++)
+        {
+            const gl::InternalFormat &depthStencilFormatInfo =
+                gl::GetSizedInternalFormatInfo(depthStencilFormats[depthStencilFormatIdx]);
+            ASSERT(depthStencilFormats[depthStencilFormatIdx] == GL_NONE ||
+                   depthStencilFormatInfo.sized);
+
+            for (size_t sampleCountIndex = 0; sampleCountIndex < sampleCountsCount;
+                 sampleCountIndex++)
+            {
+                egl::Config config = GenerateDefaultConfig(colorFormatInfo, depthStencilFormatInfo,
+                                                           sampleCounts[sampleCountIndex]);
+                if (display->checkConfigSupport(&config))
+                {
+                    configSet.add(config);
+                }
+            }
+        }
+    }
+
+    return configSet;
+}
+
+}  // namespace egl_vk
+
 }  // namespace rx

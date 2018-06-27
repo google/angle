@@ -69,6 +69,11 @@ class DisplayVk : public DisplayImpl
 
     virtual const char *getWSIName() const = 0;
 
+    // Determine if a config with given formats and sample counts is supported.  This callback may
+    // modify the config to add or remove platform specific attributes such as nativeVisualID before
+    // returning a bool to indicate if the config should be supported.
+    virtual bool checkConfigSupport(egl::Config *config) = 0;
+
   private:
     virtual SurfaceImpl *createWindowSurfaceVk(const egl::SurfaceState &state,
                                                EGLNativeWindowType window,

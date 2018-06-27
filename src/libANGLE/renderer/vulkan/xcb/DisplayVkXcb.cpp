@@ -11,6 +11,7 @@
 
 #include <xcb/xcb.h>
 
+#include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 #include "libANGLE/renderer/vulkan/xcb/WindowSurfaceVkXcb.h"
 
 namespace rx
@@ -63,54 +64,17 @@ SurfaceImpl *DisplayVkXcb::createWindowSurfaceVk(const egl::SurfaceState &state,
 
 egl::ConfigSet DisplayVkXcb::generateConfigs()
 {
-    // TODO(jmadill): Multiple configs, pbuffers, and proper checking of config attribs.
-    egl::Config bgra;
-    bgra.renderTargetFormat    = GL_BGRA8_EXT;
-    bgra.depthStencilFormat    = GL_NONE;
-    bgra.bufferSize            = 32;
-    bgra.redSize               = 8;
-    bgra.greenSize             = 8;
-    bgra.blueSize              = 8;
-    bgra.alphaSize             = 8;
-    bgra.alphaMaskSize         = 0;
-    bgra.bindToTextureRGB      = EGL_FALSE;
-    bgra.bindToTextureRGBA     = EGL_FALSE;
-    bgra.colorBufferType       = EGL_RGB_BUFFER;
-    bgra.configCaveat          = EGL_NONE;
-    bgra.conformant            = 0;
-    bgra.depthSize             = 0;
-    bgra.stencilSize           = 0;
-    bgra.level                 = 0;
-    bgra.matchNativePixmap     = EGL_NONE;
-    bgra.maxPBufferWidth       = 0;
-    bgra.maxPBufferHeight      = 0;
-    bgra.maxPBufferPixels      = 0;
-    bgra.maxSwapInterval       = 1;
-    bgra.minSwapInterval       = 1;
-    bgra.nativeRenderable      = EGL_TRUE;
-    bgra.nativeVisualID        = 0;
-    bgra.nativeVisualType      = EGL_NONE;
-    bgra.renderableType        = EGL_OPENGL_ES2_BIT;
-    bgra.sampleBuffers         = 0;
-    bgra.samples               = 0;
-    bgra.surfaceType           = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
-    bgra.optimalOrientation    = 0;
-    bgra.transparentType       = EGL_NONE;
-    bgra.transparentRedValue   = 0;
-    bgra.transparentGreenValue = 0;
-    bgra.transparentBlueValue  = 0;
-    bgra.colorComponentType    = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
+    constexpr GLenum kColorFormats[]        = {GL_BGRA8_EXT};
+    constexpr GLenum kDepthStencilFormats[] = {GL_NONE, GL_DEPTH24_STENCIL8};
+    constexpr EGLint kSampleCounts[]        = {0};
+    return egl_vk::GenerateConfigs(kColorFormats, kDepthStencilFormats, kSampleCounts, this);
+}
 
-    egl::Config bgraD24S8;
-    bgraD24S8                    = bgra;
-    bgraD24S8.depthStencilFormat = GL_DEPTH24_STENCIL8;
-    bgraD24S8.depthSize          = 24;
-    bgraD24S8.stencilSize        = 8;
-
-    egl::ConfigSet configSet;
-    configSet.add(bgra);
-    configSet.add(bgraD24S8);
-    return configSet;
+bool DisplayVkXcb::checkConfigSupport(egl::Config *config)
+{
+    // TODO(geofflang): Test for native support and modify the config accordingly.
+    // anglebug.com/2692
+    return true;
 }
 
 const char *DisplayVkXcb::getWSIName() const
