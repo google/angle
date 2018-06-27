@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ded3f4bf_4ba3d051",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:54:45Z",
+      "side": 1,
+      "message": "these args are backwards. also you should be checking optimal bits.",
+      "range": {
+        "startLine": 56,
+        "startChar": 48,
+        "endLine": 57,
+        "endChar": 88
+      },
+      "revId": "e708cb0cd1ef4c7172c28a610038a539cc7008c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a86f2a6a_32a1b834",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:54:45Z",
+      "side": 1,
+      "message": "same deal.",
+      "range": {
+        "startLine": 58,
+        "startChar": 48,
+        "endLine": 59,
+        "endChar": 88
+      },
+      "revId": "e708cb0cd1ef4c7172c28a610038a539cc7008c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
