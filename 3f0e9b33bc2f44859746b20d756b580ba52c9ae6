@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfe69533_6647c56d",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-27T17:41:43Z",
+      "side": 1,
+      "message": "I\u0027ve got a util for that:\nvk::GetDepthStencilAspectFlags",
+      "range": {
+        "startLine": 80,
+        "startChar": 32,
+        "endLine": 81,
+        "endChar": 99
+      },
+      "revId": "3f0e9b33bc2f44859746b20d756b580ba52c9ae6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
