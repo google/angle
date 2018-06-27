@@ -162,6 +162,17 @@
 2546 WIN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
 2546 WIN : dEQP-EGL.functional.thread_cleanup.* = SKIP
 
+// Windows Vulkan failures
+2635 WIN VULKAN : dEQP-EGL.functional.multicontext.non_shared_clear = FAIL
+2635 WIN VULKAN : dEQP-EGL.functional.multicontext.non_shared_make_current = FAIL
+2635 WIN VULKAN : dEQP-EGL.functional.multicontext.shared_clear = FAIL
+2635 WIN VULKAN : dEQP-EGL.functional.multicontext.shared_make_current = FAIL
+2635 WIN VULKAN : dEQP-EGL.functional.negative_api.wait_native = FAIL
+2635 WIN VULKAN : dEQP-EGL.functional.resize.surface_size.grow = FAIL
+2635 WIN VULKAN : dEQP-EGL.functional.resize.surface_size.stretch_height = FAIL
+2635 WIN VULKAN : dEQP-EGL.functional.resize.surface_size.stretch_width = FAIL
+2635 WIN VULKAN : dEQP-EGL.functional.wide_color.pbuffer_8888_colorspace_default = FAIL
+
 // Linux failures
 2546 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1.rgba8888_pixmap = SKIP
 2546 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1_gles2.rgba8888_pixmap = SKIP
