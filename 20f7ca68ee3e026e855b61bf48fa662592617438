@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "094e2cda_710feece",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-27T00:01:46Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "c0d21ee5_86240738",
+      "range": {
+        "startLine": 72,
+        "startChar": 93,
+        "endLine": 72,
+        "endChar": 118
+      },
+      "revId": "20f7ca68ee3e026e855b61bf48fa662592617438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e027073_18cb0c3a",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "48df948b_a7f2dd5d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-27T00:01:46Z",
+      "side": 1,
+      "message": "ok I can do that when texure\u003d\u003dNONE and buffer\u003d\u003dNONE",
+      "parentUuid": "6e027073_18cb0c3a",
+      "range": {
+        "startLine": 30,
+        "startChar": 29,
+        "endLine": 30,
+        "endChar": 44
+      },
+      "revId": "20f7ca68ee3e026e855b61bf48fa662592617438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e479a01_68fb0871",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2018-06-26T20:55:35Z",
       "side": 1,
       "message": "we should at some point try to re-use this query. we\u0027ll probably end up calling it twice for buffers and textures.",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 27
+      },
+      "revId": "20f7ca68ee3e026e855b61bf48fa662592617438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ef8701e_e1b956e1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-27T00:01:46Z",
+      "side": 1,
+      "message": "it\u0027s also called in this loop\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/vulkan/vk_format_utils.cpp?rcl\u003d7c37ca1836402b654dbbf5f00007e09bdf2a7051\u0026l\u003d158\n\nso why don\u0027t we just call it once there before Format::initialize() and pass the result down through Format::initialize()",
+      "parentUuid": "9e479a01_68fb0871",
       "range": {
         "startLine": 48,
         "startChar": 8,

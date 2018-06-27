@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1cbb41d5_61c0e65f",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-27T00:01:46Z",
+      "side": 0,
+      "message": "if we\u0027re going to generate a comment in place of code for the empty case, I kind of need to build up the template on the fly, so this is just going to be \"empty_blah \u003d \u0027// not implemented\u0027\" and I\u0027ll tack it on when I see we\u0027re not calling initTexture or initBuffer.\n\nMy first pass at this actually looked like:\nbegin \u003d \"case {format}\"\nblah    \u003d \"internalFormat \u003d {internal_format}\"\ntexture \u003d \"initTexture({arg1}, {arg2} ...)\"\nbuffer  \u003d \"initBuffer({arg3}, {arg4} ...)\"\nempty   \u003d \"// not implemented\nend     \u003d \"break\";\nThen assemble the pieces we need, fill in a dictionary, get everything out of the dictionary.\nSeems long-winded and more complicated to me, but if that\u0027s what you want...",
+      "parentUuid": "1c0a3a9d_69ecd587",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 17
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "412aa115_9cfe90de",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d8cb2452_10bfe42d",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-27T00:01:46Z",
+      "side": 0,
+      "message": "see previous comment",
+      "parentUuid": "412aa115_9cfe90de",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 3
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "55f2d4fe_dd8c4899",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2018-06-26T20:55:35Z",
       "side": 0,
       "message": "feels like you should keep these - there is no luma or alpha formats for buffers.",
+      "range": {
+        "startLine": 206,
+        "startChar": 11,
+        "endLine": 206,
+        "endChar": 29
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "667e88f8_1822726e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-27T00:01:46Z",
+      "side": 0,
+      "message": "There are tons of entries in the map that don\u0027t make sense for buffers.\nTo override just a handful of them seems confusing, unless there is really something special about these.",
+      "parentUuid": "55f2d4fe_dd8c4899",
       "range": {
         "startLine": 206,
         "startChar": 11,
