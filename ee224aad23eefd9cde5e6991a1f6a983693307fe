@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "3e60a787_e897439f",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-27T20:22:56Z",
+      "side": 0,
+      "message": "Texture may or may not have fallback.  Buffer may or may not have fallback.  So I don\u0027t see how one template can fit, we need some logic to assemble pieces.\nGiven that, and that the pieces are one line each, using templates just seems like extra work.",
+      "parentUuid": "a5df6f33_e9d97cba",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 17
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "412aa115_9cfe90de",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
         "patchSetId": 2
@@ -108,6 +132,30 @@
       "side": 0,
       "message": "see previous comment",
       "parentUuid": "412aa115_9cfe90de",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 3
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92fe24ce_a8b684c5",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-27T20:22:56Z",
+      "side": 0,
+      "message": "Wasn\u0027t sure what \"stupid\" meant at first, but I guess it means no fallback.\nI thought we were in agreement that generated code should be eschewed in favor of hand-written code because the latter is easier to read and modify.\nIt\u0027s hard enough to figure out code, I\u0027d rather not make people figure out the code that writes the code.\nWhat are the benefits of making this any more complicated than it has to be?",
+      "parentUuid": "d8cb2452_10bfe42d",
       "range": {
         "startLine": 65,
         "startChar": 0,

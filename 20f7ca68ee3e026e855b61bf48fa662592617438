@@ -215,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "ceb7e40e_c1952a08",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-06-27T20:22:56Z",
+      "side": 1,
+      "message": "Good.  This is a one-time start-up cost, right?\nIf so there ought to be 1000 other things more in need of optimizing.  :)",
+      "parentUuid": "91742d16_c6656064",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 27
+      },
+      "revId": "20f7ca68ee3e026e855b61bf48fa662592617438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "08624bb5_eb573fa2",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 2
