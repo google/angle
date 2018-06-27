@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a5df6f33_e9d97cba",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T13:29:20Z",
+      "side": 0,
+      "message": "What I was proposing is keeping empty_format_entry_template and format_entry_template. Then updating fallback_format_entry_template to call initTexture and initBuffer.",
+      "parentUuid": "1cbb41d5_61c0e65f",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 17
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "412aa115_9cfe90de",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
         "patchSetId": 2
@@ -140,6 +164,30 @@
       "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77865783_9252bf34",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T13:29:20Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "667e88f8_1822726e",
+      "range": {
+        "startLine": 206,
+        "startChar": 11,
+        "endLine": 206,
+        "endChar": 29
+      },
+      "revId": "ee224aad23eefd9cde5e6991a1f6a983693307fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
