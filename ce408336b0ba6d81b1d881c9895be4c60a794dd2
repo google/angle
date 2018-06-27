@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be31aa28_41cc7e1d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:00:21Z",
+      "side": 1,
+      "message": "I didn\u0027t notice this before. I think we always want to use optimal here instead of linear. We don\u0027t really use linear anywhere right now.",
+      "range": {
+        "startLine": 59,
+        "startChar": 74,
+        "endLine": 59,
+        "endChar": 95
+      },
+      "revId": "ce408336b0ba6d81b1d881c9895be4c60a794dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c7d42e6_ddf43769",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:00:21Z",
+      "side": 1,
+      "message": "same",
+      "revId": "ce408336b0ba6d81b1d881c9895be4c60a794dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "937f0275_25b48e38",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:00:21Z",
+      "side": 1,
+      "message": "you can omit this",
+      "range": {
+        "startLine": 356,
+        "startChar": 38,
+        "endLine": 356,
+        "endChar": 53
+      },
+      "revId": "ce408336b0ba6d81b1d881c9895be4c60a794dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec801205_a7a1a948",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:00:21Z",
+      "side": 1,
+      "message": "you should also ASSERT somewhere that the rects match the image dimensions.",
+      "range": {
+        "startLine": 397,
+        "startChar": 11,
+        "endLine": 397,
+        "endChar": 28
+      },
+      "revId": "ce408336b0ba6d81b1d881c9895be4c60a794dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1520085b_5f45cfb7",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:00:21Z",
+      "side": 1,
+      "message": "I think you can also ASSERT that the offsets are zero",
+      "range": {
+        "startLine": 411,
+        "startChar": 37,
+        "endLine": 411,
+        "endChar": 77
+      },
+      "revId": "ce408336b0ba6d81b1d881c9895be4c60a794dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01cf74c9_2ab001bc",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:00:21Z",
+      "side": 1,
+      "message": "nit: put this outside the command into a temporary for readability",
+      "range": {
+        "startLine": 414,
+        "startChar": 26,
+        "endLine": 415,
+        "endChar": 99
+      },
+      "revId": "ce408336b0ba6d81b1d881c9895be4c60a794dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6eeb563_a8639139",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:00:21Z",
+      "side": 1,
+      "message": "here ASSERT that filter is NEAREST.",
+      "range": {
+        "startLine": 479,
+        "startChar": 54,
+        "endLine": 479,
+        "endChar": 60
+      },
+      "revId": "ce408336b0ba6d81b1d881c9895be4c60a794dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72a2868b_34668f46",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 867,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T14:00:21Z",
+      "side": 1,
+      "message": "can you make a helper function getAspectFlags on ImageHelper?",
+      "range": {
+        "startLine": 867,
+        "startChar": 8,
+        "endLine": 867,
+        "endChar": 79
+      },
+      "revId": "ce408336b0ba6d81b1d881c9895be4c60a794dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
