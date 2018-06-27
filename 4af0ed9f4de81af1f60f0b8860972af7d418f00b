@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3265d414_61f8abc4",
+        "filename": "src/libANGLE/queryconversions.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T13:37:36Z",
+      "side": 1,
+      "message": "why not use GLint?",
+      "range": {
+        "startLine": 91,
+        "startChar": 50,
+        "endLine": 91,
+        "endChar": 53
+      },
+      "revId": "4af0ed9f4de81af1f60f0b8860972af7d418f00b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00598df1_c1795aad",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 6277,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T13:37:36Z",
+      "side": 1,
+      "message": "what does passing 1 instead of -1 bufSize do?",
+      "range": {
+        "startLine": 6277,
+        "startChar": 11,
+        "endLine": 6277,
+        "endChar": 35
+      },
+      "revId": "4af0ed9f4de81af1f60f0b8860972af7d418f00b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
