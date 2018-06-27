@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "57679bf7_941873ad",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 967,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-27T17:20:33Z",
+      "side": 1,
+      "message": "Sounds good.  The spec does say that compressed textures will not automatically generate mips though.",
+      "parentUuid": "5f43991f_4590ab03",
+      "range": {
+        "startLine": 964,
+        "startChar": 0,
+        "endLine": 967,
+        "endChar": 5
+      },
+      "revId": "4af0ed9f4de81af1f60f0b8860972af7d418f00b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3265d414_61f8abc4",
         "filename": "src/libANGLE/queryconversions.cpp",
         "patchSetId": 5
