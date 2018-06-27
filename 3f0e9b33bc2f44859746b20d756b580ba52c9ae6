@@ -22,6 +22,30 @@
       "revId": "3f0e9b33bc2f44859746b20d756b580ba52c9ae6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66013b09_fe2d67e5",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-27T18:13:50Z",
+      "side": 1,
+      "message": "Done, I added another one beside it to handle the color aspect too and used it in RenderbufferVK.",
+      "parentUuid": "dfe69533_6647c56d",
+      "range": {
+        "startLine": 80,
+        "startChar": 32,
+        "endLine": 81,
+        "endChar": 99
+      },
+      "revId": "3f0e9b33bc2f44859746b20d756b580ba52c9ae6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
