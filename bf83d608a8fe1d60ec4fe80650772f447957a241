@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "464e7762_a46648ff",
+        "filename": "third_party/spirv-tools/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T18:23:17Z",
+      "side": 1,
+      "message": "fix",
+      "range": {
+        "startLine": 67,
+        "startChar": 10,
+        "endLine": 67,
+        "endChar": 39
+      },
+      "revId": "bf83d608a8fe1d60ec4fe80650772f447957a241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3a87448_aa601b05",
+        "filename": "third_party/spirv-tools/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-27T18:23:17Z",
+      "side": 1,
+      "message": "fix",
+      "range": {
+        "startLine": 185,
+        "startChar": 6,
+        "endLine": 185,
+        "endChar": 35
+      },
+      "revId": "bf83d608a8fe1d60ec4fe80650772f447957a241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
