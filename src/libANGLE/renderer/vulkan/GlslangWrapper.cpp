@@ -95,6 +95,17 @@ void InsertQualifierSpecifierString(std::string *shaderString,
     angle::ReplaceSubstring(shaderString, searchString, replacementString);
 }
 
+void EraseLayoutAndQualifierStrings(std::string *vertexSource,
+                                    std::string *fragmentSource,
+                                    const std::string &uniformName)
+{
+    InsertLayoutSpecifierString(vertexSource, uniformName, "");
+    InsertLayoutSpecifierString(fragmentSource, uniformName, "");
+
+    InsertQualifierSpecifierString(vertexSource, uniformName, "");
+    InsertQualifierSpecifierString(fragmentSource, uniformName, "");
+}
+
 std::string GetMappedSamplerName(const std::string &originalName)
 {
     std::string samplerName = gl::ParseResourceName(originalName, nullptr);
@@ -216,10 +227,7 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     // Remove all the markers for unused varyings.
     for (const std::string &varyingName : resources.varyingPacking.getInactiveVaryingNames())
     {
-        InsertLayoutSpecifierString(&vertexSource, varyingName, "");
-        InsertLayoutSpecifierString(&fragmentSource, varyingName, "");
-        InsertQualifierSpecifierString(&vertexSource, varyingName, "");
-        InsertQualifierSpecifierString(&fragmentSource, varyingName, "");
+        EraseLayoutAndQualifierStrings(&vertexSource, &fragmentSource, varyingName);
     }
 
     // Bind the default uniforms for vertex and fragment shaders.
@@ -262,21 +270,33 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
         textureCount++;
     }
 
+    // Start the unused sampler bindings at something ridiculously high.
+    constexpr int kBaseUnusedSamplerBinding = 100;
+    int unusedSamplerBinding                = kBaseUnusedSamplerBinding;
+
     for (const gl::UnusedUniform &unusedUniform : resources.unusedUniforms)
     {
-        std::string uniformName = unusedUniform.name;
         if (unusedUniform.isSampler)
         {
             // Samplers in structs are extracted and renamed.
-            uniformName = GetMappedSamplerName(uniformName);
+            std::string uniformName = GetMappedSamplerName(unusedUniform.name);
+
+            std::stringstream layoutStringStream;
+
+            layoutStringStream << "set = 0, binding = " << unusedSamplerBinding++;
+
+            std::string layoutString = layoutStringStream.str();
+
+            InsertLayoutSpecifierString(&vertexSource, uniformName, layoutString);
+            InsertLayoutSpecifierString(&fragmentSource, uniformName, layoutString);
+
+            InsertQualifierSpecifierString(&vertexSource, uniformName, kUniformQualifier);
+            InsertQualifierSpecifierString(&fragmentSource, uniformName, kUniformQualifier);
         }
-
-        InsertLayoutSpecifierString(&vertexSource, uniformName, "");
-        InsertLayoutSpecifierString(&fragmentSource, uniformName, "");
-
-        const std::string qualifierToUse = unusedUniform.isSampler ? kUniformQualifier : "";
-        InsertQualifierSpecifierString(&vertexSource, uniformName, qualifierToUse);
-        InsertQualifierSpecifierString(&fragmentSource, uniformName, qualifierToUse);
+        else
+        {
+            EraseLayoutAndQualifierStrings(&vertexSource, &fragmentSource, unusedUniform.name);
+        }
     }
 
     std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};

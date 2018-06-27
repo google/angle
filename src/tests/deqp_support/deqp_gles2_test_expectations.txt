@@ -307,7 +307,6 @@
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_8_fixed* = SKIP
 2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
 2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
-2600 VULKAN : dEQP-GLES2.functional.state_query.shader.uniform_value_sampler = SKIP
 2601 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP
 2353 VULKAN : dEQP-GLES2.functional.polygon_offset.* = SKIP
 2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.points.default_attribute = SKIP
