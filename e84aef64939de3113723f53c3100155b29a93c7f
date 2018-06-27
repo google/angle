@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9815df3_a7c4dc4c",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-27T11:45:20Z",
+      "side": 1,
+      "message": "Can you break the string to make it fit in the line width? (same applies for other places above 100 chars)",
+      "range": {
+        "startLine": 72,
+        "startChar": 15,
+        "endLine": 72,
+        "endChar": 118
+      },
+      "revId": "e84aef64939de3113723f53c3100155b29a93c7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66f09775_058be022",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-27T11:45:20Z",
+      "side": 1,
+      "message": "nit: Maybe put this into a var for better readability?",
+      "range": {
+        "startLine": 74,
+        "startChar": 8,
+        "endLine": 74,
+        "endChar": 85
+      },
+      "revId": "e84aef64939de3113723f53c3100155b29a93c7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09bfbebd_97967969",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-27T11:45:20Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 94
+      },
+      "revId": "e84aef64939de3113723f53c3100155b29a93c7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
