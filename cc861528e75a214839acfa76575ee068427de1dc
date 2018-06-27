@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "459cc417_b7a65945",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-27T20:01:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4adbc8ad_dbf5752f",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 1
+      },
+      "revId": "cc861528e75a214839acfa76575ee068427de1dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ca7af70_c727fa51",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "cc861528e75a214839acfa76575ee068427de1dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "389c389b_43328e58",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-27T20:01:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ca7af70_c727fa51",
+      "range": {
+        "startLine": 64,
+        "startChar": 11,
+        "endLine": 64,
+        "endChar": 18
+      },
+      "revId": "cc861528e75a214839acfa76575ee068427de1dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0abdb747_c2da4769",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-27T20:01:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ed7c73e_22980fe2",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 14
+      },
+      "revId": "cc861528e75a214839acfa76575ee068427de1dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "748db0d1_8cf5da7c",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
         "patchSetId": 3
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "5c666fbf_2846b6e7",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-27T20:01:38Z",
+      "side": 1,
+      "message": "Chatted about this, going to keep it in here for encapsulation for now.",
+      "parentUuid": "748db0d1_8cf5da7c",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 36
+      },
+      "revId": "cc861528e75a214839acfa76575ee068427de1dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "be6c244f_cad89876",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 3
@@ -114,6 +210,30 @@
       "revId": "cc861528e75a214839acfa76575ee068427de1dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b18b4595_e348f225",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-27T20:01:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be6c244f_cad89876",
+      "range": {
+        "startLine": 271,
+        "startChar": 19,
+        "endLine": 271,
+        "endChar": 45
+      },
+      "revId": "cc861528e75a214839acfa76575ee068427de1dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
