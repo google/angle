@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f43991f_4590ab03",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 967,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-27T17:18:09Z",
+      "side": 1,
+      "message": "Good catch, yes it should be tripped by setting the sub image as well.\n\nAdded those for sub image, copy image, and compressed as well.\n\nIf we are rendering to the texture, I guess if we strictly interpret that spec we can check for a framebuffer attachment that is getting written to for each draw, but it\u0027s not clear whether it applies since FBOs are an extension to OpenGL ES 1 (GL_OES_framebuffer_object) and there\u0027s nothing in there about how mipmap hints interact with them (but glGenerateMipmapOES is offered).\n\nI\u0027m going to assume that since there hasn\u0027t been a conformance test or app (that I know of) that exercises this concept yet, let\u0027s go with the IMO simpler option of not auto calling glGenerateMipmap every draw call when a texture with the hint is bound.",
+      "parentUuid": "d2a03365_9343d954",
+      "range": {
+        "startLine": 964,
+        "startChar": 0,
+        "endLine": 967,
+        "endChar": 5
+      },
+      "revId": "4af0ed9f4de81af1f60f0b8860972af7d418f00b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3265d414_61f8abc4",
         "filename": "src/libANGLE/queryconversions.cpp",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "4af0ed9f4de81af1f60f0b8860972af7d418f00b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d859ea2f_497d2abb",
+        "filename": "src/libANGLE/queryconversions.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2018-06-27T17:18:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3265d414_61f8abc4",
+      "range": {
+        "startLine": 91,
+        "startChar": 50,
+        "endLine": 91,
+        "endChar": 53
+      },
+      "revId": "4af0ed9f4de81af1f60f0b8860972af7d418f00b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
