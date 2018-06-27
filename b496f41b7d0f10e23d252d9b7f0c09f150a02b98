@@ -22,6 +22,30 @@
       "revId": "b496f41b7d0f10e23d252d9b7f0c09f150a02b98",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4417c633_9522e8b1",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2018-06-27T00:50:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e99c374_ec64aca0",
+      "range": {
+        "startLine": 243,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 83
+      },
+      "revId": "b496f41b7d0f10e23d252d9b7f0c09f150a02b98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
