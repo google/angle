@@ -281,6 +281,13 @@ TexSubImageParams OpenGLOrGLESParams()
     return params;
 }
 
+TexSubImageParams VulkanParams()
+{
+    TexSubImageParams params;
+    params.eglParameters = egl_platform::VULKAN();
+    return params;
+}
+
 }  // namespace
 
 TEST_P(TexSubImageBenchmark, Run)
@@ -288,4 +295,8 @@ TEST_P(TexSubImageBenchmark, Run)
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(TexSubImageBenchmark, D3D11Params(), D3D9Params(), OpenGLOrGLESParams());
+ANGLE_INSTANTIATE_TEST(TexSubImageBenchmark,
+                       D3D11Params(),
+                       D3D9Params(),
+                       OpenGLOrGLESParams(),
+                       VulkanParams());

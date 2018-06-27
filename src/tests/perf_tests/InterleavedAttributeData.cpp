@@ -225,10 +225,18 @@ InterleavedAttributeDataParams OpenGLOrGLESParams()
     return params;
 }
 
+InterleavedAttributeDataParams VulkanParams()
+{
+    InterleavedAttributeDataParams params;
+    params.eglParameters = egl_platform::VULKAN();
+    return params;
+}
+
 ANGLE_INSTANTIATE_TEST(InterleavedAttributeDataBenchmark,
                        D3D11Params(),
                        D3D11_9_3Params(),
                        D3D9Params(),
-                       OpenGLOrGLESParams());
+                       OpenGLOrGLESParams(),
+                       VulkanParams());
 
 }  // anonymous namespace

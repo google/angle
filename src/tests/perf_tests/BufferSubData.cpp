@@ -378,6 +378,16 @@ BufferSubDataParams BufferUpdateOpenGLOrGLESParams()
     return params;
 }
 
+BufferSubDataParams BufferUpdateVulkanParams()
+{
+    BufferSubDataParams params;
+    params.eglParameters        = egl_platform::VULKAN();
+    params.vertexType           = GL_FLOAT;
+    params.vertexComponentCount = 4;
+    params.vertexNormalized     = GL_FALSE;
+    return params;
+}
+
 TEST_P(BufferSubDataBenchmark, Run)
 {
     run();
@@ -386,6 +396,7 @@ TEST_P(BufferSubDataBenchmark, Run)
 ANGLE_INSTANTIATE_TEST(BufferSubDataBenchmark,
                        BufferUpdateD3D11Params(),
                        BufferUpdateD3D9Params(),
-                       BufferUpdateOpenGLOrGLESParams());
+                       BufferUpdateOpenGLOrGLESParams(),
+                       BufferUpdateVulkanParams());
 
 } // namespace

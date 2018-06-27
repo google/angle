@@ -278,6 +278,13 @@ TextureSamplingParams OpenGLOrGLESParams()
     return params;
 }
 
+TextureSamplingParams VulkanParams()
+{
+    TextureSamplingParams params;
+    params.eglParameters = egl_platform::VULKAN();
+    return params;
+}
+
 }  // anonymous namespace
 
 TEST_P(TextureSamplingBenchmark, Run)
@@ -285,4 +292,8 @@ TEST_P(TextureSamplingBenchmark, Run)
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(TextureSamplingBenchmark, D3D11Params(), D3D9Params(), OpenGLOrGLESParams());
+ANGLE_INSTANTIATE_TEST(TextureSamplingBenchmark,
+                       D3D11Params(),
+                       D3D9Params(),
+                       OpenGLOrGLESParams(),
+                       VulkanParams());

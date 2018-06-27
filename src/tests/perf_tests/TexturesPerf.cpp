@@ -308,5 +308,4 @@ ANGLE_INSTANTIATE_TEST(TexturesBenchmark,
                        D3D9Params(true),
                        OpenGLOrGLESParams(false),
                        OpenGLOrGLESParams(true));
-
 }  // namespace angle

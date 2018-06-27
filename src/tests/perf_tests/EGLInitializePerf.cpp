@@ -154,6 +154,6 @@ TEST_P(EGLInitializePerfTest, Run)
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(EGLInitializePerfTest, angle::ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(EGLInitializePerfTest, angle::ES2_D3D11(), angle::ES2_VULKAN());
 
 } // namespace

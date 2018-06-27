@@ -135,6 +135,13 @@ LinkProgramParams LinkProgramOpenGLOrGLESParams()
     return params;
 }
 
+LinkProgramParams LinkProgramVulkanParams()
+{
+    LinkProgramParams params;
+    params.eglParameters = VULKAN();
+    return params;
+}
+
 TEST_P(LinkProgramBenchmark, Run)
 {
     run();
@@ -143,6 +150,7 @@ TEST_P(LinkProgramBenchmark, Run)
 ANGLE_INSTANTIATE_TEST(LinkProgramBenchmark,
                        LinkProgramD3D11Params(),
                        LinkProgramD3D9Params(),
-                       LinkProgramOpenGLOrGLESParams());
+                       LinkProgramOpenGLOrGLESParams(),
+                       LinkProgramVulkanParams());
 
 }  // anonymous namespace

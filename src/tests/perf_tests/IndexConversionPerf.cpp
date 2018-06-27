@@ -223,5 +223,4 @@ TEST_P(IndexConversionPerfTest, Run)
 ANGLE_INSTANTIATE_TEST(IndexConversionPerfTest,
                        IndexConversionPerfD3D11Params(),
                        IndexRangeOffsetPerfD3D11Params());
-
 }  // namespace

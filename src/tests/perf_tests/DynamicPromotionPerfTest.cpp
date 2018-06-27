@@ -177,6 +177,13 @@ DynamicPromotionParams DynamicPromotionD3D9Params()
     return params;
 }
 
+DynamicPromotionParams DynamicPromotionVulkanParams()
+{
+    DynamicPromotionParams params;
+    params.eglParameters = egl_platform::VULKAN();
+    return params;
+}
+
 TEST_P(DynamicPromotionPerfTest, Run)
 {
     run();
@@ -184,6 +191,7 @@ TEST_P(DynamicPromotionPerfTest, Run)
 
 ANGLE_INSTANTIATE_TEST(DynamicPromotionPerfTest,
                        DynamicPromotionD3D11Params(),
-                       DynamicPromotionD3D9Params());
+                       DynamicPromotionD3D9Params(),
+                       DynamicPromotionVulkanParams());
 
 }  // anonymous namespace
