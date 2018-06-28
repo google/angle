@@ -223,6 +223,10 @@
         "B8G8R8X8_UNORM": {
             "buffer": "NONE",
             "texture": "B8G8R8A8_UNORM"
+        },
+        "D24_UNORM_X8_UINT": {
+            "buffer": "NONE",
+            "texture": "D24_UNORM_S8_UINT"
         }
     },
     "fallbacks": {
@@ -230,6 +234,9 @@
             "texture": "D24_UNORM_S8_UINT"
         },
         "D24_UNORM_S8_UINT": {
+            "texture": "D32_FLOAT_S8X24_UINT"
+        },
+        "D24_UNORM_X8_UINT": {
             "texture": "D32_FLOAT_S8X24_UINT"
         },
 

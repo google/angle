@@ -68,7 +68,7 @@
   "Vulkan format:src/libANGLE/renderer/vulkan/gen_vk_format_table.py":
     "2ecc99c12cd41bda7107a7d9ffe3786c",
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":
-    "48d376e36fc9fbb1f2a804cc49fc6277",
+    "d1afcd16318ca0a19550d713eb23b85a",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
     "c1cc895645db3fe1cd284352890c219e",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":
