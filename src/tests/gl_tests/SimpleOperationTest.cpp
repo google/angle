@@ -399,6 +399,51 @@ TEST_P(SimpleOperationTest, DrawLine)
     }
 }
 
+// Simple line test that will use a very large offset in the vertex attributes.
+TEST_P(SimpleOperationTest, DrawLineWithLargeAttribPointerOffset)
+{
+    // TODO(lucferron): This test fails for the same reason as http://anglebug.com/2580
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    // We assume in the test the width and height are equal and we are tracing
+    // the line from bottom left to top right. Verify that all pixels along that line
+    // have been traced with green.
+    ASSERT_EQ(getWindowWidth(), getWindowHeight());
+
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    glUseProgram(program);
+
+    int kOffset = 3315;
+    std::vector<Vector3> vertices(kOffset);
+    Vector3 vector1{-1.0f, -1.0f, 0.0f};
+    Vector3 vector2{1.0f, 1.0f, 0.0f};
+    vertices.emplace_back(vector1);
+    vertices.emplace_back(vector2);
+
+    const GLint positionLocation = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLocation);
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0,
+                          reinterpret_cast<const void *>(kOffset * sizeof(vertices[0])));
+    glEnableVertexAttribArray(positionLocation);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_LINES, 0, 2);
+
+    glDisableVertexAttribArray(positionLocation);
+
+    ASSERT_GL_NO_ERROR();
+
+    for (auto x = 0; x < getWindowWidth(); x++)
+    {
+        EXPECT_PIXEL_COLOR_EQ(x, x, GLColor::green);
+    }
+}
+
 // Simple line strip test.
 TEST_P(SimpleOperationTest, DrawLineStrip)
 {
