@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a576e39a_2b0bce05",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T20:01:48Z",
+      "side": 1,
+      "message": "replace this with mState.size()",
+      "range": {
+        "startLine": 52,
+        "startChar": 15,
+        "endLine": 52,
+        "endChar": 35
+      },
+      "revId": "e11da3967d524f8adb37dabd44ab0f793bc6d9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8164412a_12fe59d6",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T20:01:48Z",
+      "side": 1,
+      "message": "you can remove this variable as well.",
+      "range": {
+        "startLine": 80,
+        "startChar": 8,
+        "endLine": 80,
+        "endChar": 28
+      },
+      "revId": "e11da3967d524f8adb37dabd44ab0f793bc6d9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b95ba3eb_6b40c4a8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T20:01:48Z",
+      "side": 1,
+      "message": "nit: maybe put this above the Allocate call and pass it to createInfo.size.",
+      "range": {
+        "startLine": 166,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 50
+      },
+      "revId": "e11da3967d524f8adb37dabd44ab0f793bc6d9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
