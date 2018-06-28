@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be18bc6c_b80f58ba",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-28T14:59:31Z",
+      "side": 1,
+      "message": "With the DisplayEGL change, this can be switched back.",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 241,
+        "endChar": 46
+      },
+      "revId": "76b88b0d2c91db345942dd425ba5f232729c40d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

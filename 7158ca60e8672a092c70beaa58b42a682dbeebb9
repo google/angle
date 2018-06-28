@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0aa7e10c_445c20f2",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2484,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-28T14:59:31Z",
+      "side": 0,
+      "message": "This can be removed, change DisplayEGL::generateExtensions to always expose the extension.",
+      "range": {
+        "startLine": 2479,
+        "startChar": 1,
+        "endLine": 2484,
+        "endChar": 5
+      },
+      "revId": "7158ca60e8672a092c70beaa58b42a682dbeebb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
