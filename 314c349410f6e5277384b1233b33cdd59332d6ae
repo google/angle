@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ff8de14_abe2001e",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T16:48:16Z",
+      "side": 1,
+      "message": "for all of these arrays you can make them constexpr \u003ctype\u003e kName[] \u003d { };",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 10
+      },
+      "revId": "314c349410f6e5277384b1233b33cdd59332d6ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa785824_14410956",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T16:48:16Z",
+      "side": 1,
+      "message": "nit: can revert the changes to this file",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "314c349410f6e5277384b1233b33cdd59332d6ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68ff525c_54f0edf4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T16:48:16Z",
+      "side": 1,
+      "message": "nit: can remove this",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 28
+      },
+      "revId": "314c349410f6e5277384b1233b33cdd59332d6ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
