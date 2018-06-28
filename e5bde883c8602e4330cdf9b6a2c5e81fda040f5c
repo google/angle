@@ -25,6 +25,40 @@
     },
     {
       "key": {
+        "uuid": "0e9b018e_9727ce33",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-06-28T13:37:16Z",
+      "side": 1,
+      "message": "This duplicates the \"if\" check above on 271. Can they be merged?",
+      "revId": "e5bde883c8602e4330cdf9b6a2c5e81fda040f5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74668d48_c09604be",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-06-28T13:37:16Z",
+      "side": 1,
+      "message": "Can this line be killed?",
+      "revId": "e5bde883c8602e4330cdf9b6a2c5e81fda040f5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9ff7a1a7_fbc5199e",
         "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
         "patchSetId": 1
