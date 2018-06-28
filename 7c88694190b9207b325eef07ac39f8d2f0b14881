@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76a353a9_ef05eda8",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-28T16:42:51Z",
+      "side": 1,
+      "message": "put in a var? (would be used 4 times)",
+      "range": {
+        "startLine": 746,
+        "startChar": 4,
+        "endLine": 746,
+        "endChar": 15
+      },
+      "revId": "7c88694190b9207b325eef07ac39f8d2f0b14881",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
