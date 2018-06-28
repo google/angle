@@ -402,9 +402,6 @@ TEST_P(SimpleOperationTest, DrawLine)
 // Simple line test that will use a very large offset in the vertex attributes.
 TEST_P(SimpleOperationTest, DrawLineWithLargeAttribPointerOffset)
 {
-    // TODO(lucferron): This test fails for the same reason as http://anglebug.com/2580
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // We assume in the test the width and height are equal and we are tracing
     // the line from bottom left to top right. Verify that all pixels along that line
     // have been traced with green.
