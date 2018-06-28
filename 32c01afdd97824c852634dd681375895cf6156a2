@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26456400_d43cfa5e",
+        "filename": "src/libANGLE/renderer/gl/egl/ContextEGL.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-28T21:28:04Z",
+      "side": 1,
+      "message": "nit: our style guide says no (c), also the other 3 files",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "32c01afdd97824c852634dd681375895cf6156a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b20c10c_5b6d4f27",
+        "filename": "src/libANGLE/renderer/gl/egl/ContextEGL.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-28T21:28:04Z",
+      "side": 1,
+      "message": "EGL, also the 2 other places",
+      "range": {
+        "startLine": 9,
+        "startChar": 40,
+        "endLine": 9,
+        "endChar": 43
+      },
+      "revId": "32c01afdd97824c852634dd681375895cf6156a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a979793_375e2d76",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-28T21:28:04Z",
+      "side": 1,
+      "message": "nit: you could use mDisplayAttributes here if you moved the next line to be before this one",
+      "range": {
+        "startLine": 56,
+        "startChar": 37,
+        "endLine": 56,
+        "endChar": 63
+      },
+      "revId": "32c01afdd97824c852634dd681375895cf6156a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "746450a4_3d608579",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-28T21:28:04Z",
+      "side": 1,
+      "message": "EGL_NO_SURFACE?",
+      "range": {
+        "startLine": 528,
+        "startChar": 44,
+        "endLine": 528,
+        "endChar": 51
+      },
+      "revId": "32c01afdd97824c852634dd681375895cf6156a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8989b8d3_f00ba0df",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-06-28T21:28:04Z",
+      "side": 1,
+      "message": "EGL_NO_CONTEXT?",
+      "range": {
+        "startLine": 529,
+        "startChar": 44,
+        "endLine": 529,
+        "endChar": 51
+      },
+      "revId": "32c01afdd97824c852634dd681375895cf6156a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
