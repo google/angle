@@ -478,6 +478,12 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
     std::vector<const char *> enabledDeviceExtensions;
     enabledDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
+    // Selectively enable KHR_MAINTENANCE1 to support viewport flipping.
+    if (getFeatures().flipViewportY)
+    {
+        enabledDeviceExtensions.push_back(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
+    }
+
     ANGLE_VK_TRY(VerifyExtensionsPresent(deviceExtensionProps, enabledDeviceExtensions));
 
     VkDeviceQueueCreateInfo queueCreateInfo;

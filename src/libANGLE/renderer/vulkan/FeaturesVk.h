@@ -18,6 +18,21 @@ struct FeaturesVk
     // shader patching to implement OpenGL basic line rasterization rules. This feature will
     // normally always be enabled. Exposing it as an option enables performance testing.
     bool basicGLLineRasterization = false;
+
+    // Flips the viewport to render upside-down. This has the effect to render the same way as
+    // OpenGL. If this feature gets enabled, we enable the KHR_MAINTENANCE_1 extension to allow
+    // negative viewports. We inverse rendering to the backbuffer by reversing the height of the
+    // viewport and increasing Y by the height. So if the viewport was (0,0,width,height), it
+    // becomes (0, height, width, -height). Unfortunately, when we start doing this, we also need
+    // to adjust a lot of places since the rendering now happens upside-down. Affected places so
+    // far:
+    // -readPixels
+    // -copyTexImage
+    // -framebuffer blit
+    // -generating mipmaps
+    // -Point sprites tests
+    // -texStorage
+    bool flipViewportY = false;
 };
 }  // namespace rx
 

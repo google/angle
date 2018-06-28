@@ -350,7 +350,10 @@ class PipelineDesc final
                              const ShaderModule &fragmentModule,
                              Pipeline *pipelineOut) const;
 
-    void updateViewport(const gl::Rectangle &viewport, float nearPlane, float farPlane);
+    void updateViewport(const gl::Rectangle &viewport,
+                        float nearPlane,
+                        float farPlane,
+                        bool invertViewport);
     void updateDepthRange(float nearPlane, float farPlane);
 
     // Shader stage info
@@ -365,7 +368,7 @@ class PipelineDesc final
     void updateTopology(gl::PrimitiveMode drawMode);
 
     // Raster states
-    void updateCullMode(const gl::RasterizerState &rasterState);
+    void updateCullMode(const gl::RasterizerState &rasterState, bool invertCullMode);
     void updateFrontFace(const gl::RasterizerState &rasterState);
     void updateLineWidth(float lineWidth);
 
@@ -375,7 +378,9 @@ class PipelineDesc final
 
     // Scissor support
     const VkRect2D &getScissor() const { return mScissor; }
-    void updateScissor(const gl::Rectangle &rect);
+    void updateScissor(const gl::Rectangle &rect,
+                       bool invertScissor,
+                       const gl::Rectangle &renderArea);
 
     // Blend states
     void updateBlendEnabled(bool isBlendEnabled);

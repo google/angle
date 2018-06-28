@@ -637,12 +637,21 @@ void PipelineDesc::updateShaders(Serial vertexSerial, Serial fragmentSerial)
         static_cast<uint32_t>(fragmentSerial.getValue());
 }
 
-void PipelineDesc::updateViewport(const gl::Rectangle &viewport, float nearPlane, float farPlane)
+void PipelineDesc::updateViewport(const gl::Rectangle &viewport,
+                                  float nearPlane,
+                                  float farPlane,
+                                  bool invertViewport)
 {
     mViewport.x      = static_cast<float>(viewport.x);
     mViewport.y      = static_cast<float>(viewport.y);
     mViewport.width  = static_cast<float>(viewport.width);
     mViewport.height = static_cast<float>(viewport.height);
+
+    if (invertViewport)
+    {
+        mViewport.y += viewport.height;
+        mViewport.height = -mViewport.height;
+    }
     updateDepthRange(nearPlane, farPlane);
 }
 
@@ -666,9 +675,10 @@ void PipelineDesc::updateTopology(gl::PrimitiveMode drawMode)
     mInputAssemblyInfo.topology = static_cast<uint32_t>(gl_vk::GetPrimitiveTopology(drawMode));
 }
 
-void PipelineDesc::updateCullMode(const gl::RasterizerState &rasterState)
+void PipelineDesc::updateCullMode(const gl::RasterizerState &rasterState, bool invertCullMode)
 {
-    mRasterizationStateInfo.cullMode = static_cast<uint16_t>(gl_vk::GetCullMode(rasterState));
+    mRasterizationStateInfo.cullMode =
+        static_cast<uint16_t>(gl_vk::GetCullMode(rasterState, invertCullMode));
 }
 
 void PipelineDesc::updateFrontFace(const gl::RasterizerState &rasterState)
@@ -805,9 +815,15 @@ void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
     mRenderPassDesc = renderPassDesc;
 }
 
-void PipelineDesc::updateScissor(const gl::Rectangle &rect)
+void PipelineDesc::updateScissor(const gl::Rectangle &rect,
+                                 bool invertScissor,
+                                 const gl::Rectangle &renderArea)
 {
     mScissor = gl_vk::GetRect(rect);
+    if (invertScissor)
+    {
+        mScissor.offset.y = renderArea.height - mScissor.offset.y - mScissor.extent.height;
+    }
 }
 
 // AttachmentOpsArray implementation.

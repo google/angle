@@ -145,6 +145,11 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
 
     // Use OpenGL line rasterization rules by default.
     features->basicGLLineRasterization = true;
+
+    // For now, set this manually to true to enable viewport flipping. A couple of features are not
+    // working well like copyTexImage, copySubTexImage, blit, and probably some more. Until
+    // everything is fixed, we will keep the viewport flipping feature disabled.
+    features->flipViewportY = false;
 }
 }  // namespace vk
 

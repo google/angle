@@ -87,6 +87,8 @@ class ContextVk : public ContextImpl
     void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message) override;
     void popDebugGroup() override;
 
+    bool isViewportFlipEnabled();
+
     // State sync with dirty bits.
     void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits) override;
 

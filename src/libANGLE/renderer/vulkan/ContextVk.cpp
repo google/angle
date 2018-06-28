@@ -378,6 +378,12 @@ void ContextVk::popDebugGroup()
     UNIMPLEMENTED();
 }
 
+bool ContextVk::isViewportFlipEnabled()
+{
+    gl::Framebuffer *framebuffer = mState.getState().getDrawFramebuffer();
+    return framebuffer->isDefault() && mRenderer->getFeatures().flipViewportY;
+}
+
 void ContextVk::updateColorMask(const gl::BlendState &blendState)
 {
     mClearColorMask =
@@ -391,16 +397,20 @@ void ContextVk::updateColorMask(const gl::BlendState &blendState)
 
 void ContextVk::updateScissor(const gl::State &glState)
 {
+    FramebufferVk *framebufferVk = vk::GetImpl(getGLState().getDrawFramebuffer());
+    gl::Box dimensions           = framebufferVk->getState().getDimensions();
+    gl::Rectangle renderArea(0, 0, dimensions.width, dimensions.height);
+
     if (glState.isScissorTestEnabled())
     {
-        mPipelineDesc->updateScissor(glState.getScissor());
+        mPipelineDesc->updateScissor(glState.getScissor(), isViewportFlipEnabled(), renderArea);
     }
     else
     {
         // If the scissor test isn't enabled, we can simply use a really big scissor that's
         // certainly larger than the current surface using the maximum size of a 2D texture
         // for the width and height.
-        mPipelineDesc->updateScissor(kMaxSizedScissor);
+        mPipelineDesc->updateScissor(kMaxSizedScissor, isViewportFlipEnabled(), renderArea);
     }
 }
 
@@ -426,7 +436,7 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 break;
             case gl::State::DIRTY_BIT_VIEWPORT:
                 mPipelineDesc->updateViewport(glState.getViewport(), glState.getNearPlane(),
-                                              glState.getFarPlane());
+                                              glState.getFarPlane(), isViewportFlipEnabled());
                 break;
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
                 mPipelineDesc->updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
@@ -495,7 +505,8 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 break;
             case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
             case gl::State::DIRTY_BIT_CULL_FACE:
-                mPipelineDesc->updateCullMode(glState.getRasterizerState());
+                mPipelineDesc->updateCullMode(glState.getRasterizerState(),
+                                              isViewportFlipEnabled());
                 break;
             case gl::State::DIRTY_BIT_FRONT_FACE:
                 mPipelineDesc->updateFrontFace(glState.getRasterizerState());
@@ -555,7 +566,12 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_READ_FRAMEBUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
+                mPipelineDesc->updateViewport(glState.getViewport(), glState.getNearPlane(),
+                                              glState.getFarPlane(), isViewportFlipEnabled());
                 updateColorMask(glState.getBlendState());
+                mPipelineDesc->updateCullMode(glState.getRasterizerState(),
+                                              isViewportFlipEnabled());
+                updateScissor(glState);
                 break;
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
                 WARN() << "DIRTY_BIT_RENDERBUFFER_BINDING unimplemented";

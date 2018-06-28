@@ -296,20 +296,32 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     // Clip read area to framebuffer.
     const gl::Extents &fbSize = getState().getReadAttachment()->getSize();
     const gl::Rectangle fbRect(0, 0, fbSize.width, fbSize.height);
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+
     gl::Rectangle clippedArea;
     if (!ClipRectangle(area, fbRect, &clippedArea))
     {
         // nothing to read
         return gl::NoError();
     }
+    gl::Rectangle flippedArea = clippedArea;
+    if (contextVk->isViewportFlipEnabled())
+    {
+        flippedArea.y = fbRect.height - flippedArea.y - flippedArea.height;
+    }
 
     const gl::State &glState = context->getGLState();
-    RendererVk *renderer     = vk::GetImpl(context)->getRenderer();
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
 
-    const gl::PixelPackState &packState       = context->getGLState().getPackState();
+    gl::PixelPackState packState(context->getGLState().getPackState());
+    if (contextVk->isViewportFlipEnabled())
+    {
+        packState.reverseRowOrder = !packState.reverseRowOrder;
+    }
+
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
 
     GLuint outputPitch = 0;
@@ -324,14 +336,14 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
                        (clippedArea.y - area.y) * outputPitch;
 
     PackPixelsParams params;
-    params.area        = clippedArea;
+    params.area        = flippedArea;
     params.format      = format;
     params.type        = type;
     params.outputPitch = outputPitch;
     params.packBuffer  = glState.getTargetBuffer(gl::BufferBinding::PixelPack);
     params.pack        = glState.getPackState();
 
-    ANGLE_TRY(readPixelsImpl(context, clippedArea, params,
+    ANGLE_TRY(readPixelsImpl(context, flippedArea, params,
                              static_cast<uint8_t *>(pixels) + outputSkipBytes));
     mReadPixelsBuffer.releaseRetainedBuffers(renderer);
     return gl::NoError();
@@ -877,7 +889,7 @@ gl::Error FramebufferVk::clearWithDraw(const gl::Context *context,
     pipelineDesc.updateColorWriteMask(colorMaskFlags, getEmulatedAlphaAttachmentMask());
     pipelineDesc.updateRenderPassDesc(getRenderPassDesc());
     pipelineDesc.updateShaders(fullScreenQuad->queueSerial(), pushConstantColor->queueSerial());
-    pipelineDesc.updateViewport(renderArea, 0.0f, 1.0f);
+    pipelineDesc.updateViewport(renderArea, 0.0f, 1.0f, contextVk->isViewportFlipEnabled());
 
     const gl::State &glState = contextVk->getGLState();
     if (glState.isScissorTestEnabled())
@@ -888,11 +900,11 @@ gl::Error FramebufferVk::clearWithDraw(const gl::Context *context,
             return gl::NoError();
         }
 
-        pipelineDesc.updateScissor(intersection);
+        pipelineDesc.updateScissor(intersection, contextVk->isViewportFlipEnabled(), renderArea);
     }
     else
     {
-        pipelineDesc.updateScissor(renderArea);
+        pipelineDesc.updateScissor(renderArea, contextVk->isViewportFlipEnabled(), renderArea);
     }
 
     vk::PipelineAndSerial *pipeline = nullptr;

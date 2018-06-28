@@ -287,6 +287,7 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
                const Rectangle &destArea,
                GLbitfield mask,
                GLenum filter);
+    bool isDefault() const;
 
     enum DirtyBitType : size_t
     {

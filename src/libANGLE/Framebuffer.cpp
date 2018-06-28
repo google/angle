@@ -1522,6 +1522,11 @@ Error Framebuffer::blit(const Context *context,
     return mImpl->blit(context, sourceArea, destArea, blitMask, filter);
 }
 
+bool Framebuffer::isDefault() const
+{
+    return id() == 0;
+}
+
 int Framebuffer::getSamples(const Context *context)
 {
     return (isComplete(context) ? getCachedSamples(context) : 0);
