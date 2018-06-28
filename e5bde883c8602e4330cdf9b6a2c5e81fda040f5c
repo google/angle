@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3f3c94f_09e37ba6",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-28T11:04:18Z",
+      "side": 1,
+      "message": "nit: use a constant",
+      "range": {
+        "startLine": 266,
+        "startChar": 31,
+        "endLine": 266,
+        "endChar": 34
+      },
+      "revId": "e5bde883c8602e4330cdf9b6a2c5e81fda040f5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ff7a1a7_fbc5199e",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-28T11:04:18Z",
+      "side": 1,
+      "message": "Lets put these 4 calls in a private method with 2 parameters: the uniform name and the qualifier name. \nWe\u0027ll be able to replace a couple of 4 line long blocks with a single call in this function.",
+      "range": {
+        "startLine": 294,
+        "startChar": 12,
+        "endLine": 298,
+        "endChar": 77
+      },
+      "revId": "e5bde883c8602e4330cdf9b6a2c5e81fda040f5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
