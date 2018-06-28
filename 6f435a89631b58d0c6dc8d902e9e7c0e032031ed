@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4cb3f6b2_2f80f2fb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T15:21:32Z",
+      "side": 1,
+      "message": "can you use Vulkan: instead of VK: ?\n\nI have like 600 CLs that already use Vulkan:",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 2
+      },
+      "revId": "6f435a89631b58d0c6dc8d902e9e7c0e032031ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d122f667_d53da958",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T15:21:32Z",
+      "side": 1,
+      "message": "nit: can you mention one or two flags that might get modified?",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 34
+      },
+      "revId": "6f435a89631b58d0c6dc8d902e9e7c0e032031ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "026d59ec_90dd9a0f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1465,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T15:21:32Z",
+      "side": 1,
+      "message": "this stuff can go in vk_caps_utils.",
+      "range": {
+        "startLine": 1465,
+        "startChar": 12,
+        "endLine": 1465,
+        "endChar": 33
+      },
+      "revId": "6f435a89631b58d0c6dc8d902e9e7c0e032031ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04fd798d_090857d2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1505,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T15:21:32Z",
+      "side": 1,
+      "message": "if there\u0027s any other flags that can be initialized appropriately can do that now too.",
+      "range": {
+        "startLine": 1505,
+        "startChar": 35,
+        "endLine": 1505,
+        "endChar": 69
+      },
+      "revId": "6f435a89631b58d0c6dc8d902e9e7c0e032031ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
