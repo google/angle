@@ -49,6 +49,9 @@ class SurfaceEGL : public SurfaceGL
     const FunctionsEGL *mEGL;
     EGLConfig mConfig;
     EGLSurface mSurface;
+
+  private:
+    bool mHasSwapBuffersWithDamage;
 };
 
 }  // namespace rx

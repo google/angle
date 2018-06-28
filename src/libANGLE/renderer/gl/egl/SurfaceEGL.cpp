@@ -14,7 +14,11 @@ namespace rx
 {
 
 SurfaceEGL::SurfaceEGL(const egl::SurfaceState &state, const FunctionsEGL *egl, EGLConfig config)
-    : SurfaceGL(state), mEGL(egl), mConfig(config), mSurface(EGL_NO_SURFACE)
+    : SurfaceGL(state),
+      mEGL(egl),
+      mConfig(config),
+      mSurface(EGL_NO_SURFACE),
+      mHasSwapBuffersWithDamage(mEGL->hasExtension("EGL_KHR_swap_buffers_with_damage"))
 {
 }
 
@@ -45,7 +49,15 @@ egl::Error SurfaceEGL::swap(const gl::Context *context)
 
 egl::Error SurfaceEGL::swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects)
 {
-    EGLBoolean success = mEGL->swapBuffersWithDamageKHR(mSurface, rects, n_rects);
+    EGLBoolean success;
+    if (mHasSwapBuffersWithDamage)
+    {
+        success = mEGL->swapBuffersWithDamageKHR(mSurface, rects, n_rects);
+    }
+    else
+    {
+        success = mEGL->swapBuffers(mSurface);
+    }
     if (success == EGL_FALSE)
     {
         return egl::Error(mEGL->getError(), "eglSwapBuffersWithDamageKHR failed");

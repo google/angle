@@ -100,7 +100,6 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
         mEGL->hasExtension("EGL_EXT_create_context_robustness");
 
     outExtensions->postSubBuffer = false;  // Since SurfaceEGL::postSubBuffer is not implemented
-    outExtensions->swapBuffersWithDamage = mEGL->hasExtension("EGL_KHR_swap_buffers_with_damage");
     outExtensions->presentationTime      = mEGL->hasExtension("EGL_ANDROID_presentation_time");
 
     // Contexts are virtualized so textures can be shared globally
@@ -108,6 +107,10 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     // Surfaceless contexts are emulated even if there is no native support.
     outExtensions->surfacelessContext = true;
+
+    // We will fallback to regular swap if swapBuffersWithDamage isn't
+    // supported, so indicate support here to keep validation happy.
+    outExtensions->swapBuffersWithDamage = true;
 
     DisplayGL::generateExtensions(outExtensions);
 }
