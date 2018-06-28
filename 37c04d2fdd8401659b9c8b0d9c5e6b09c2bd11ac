@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96c191c2_e3cdacb6",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-28T15:06:38Z",
+      "side": 1,
+      "message": "This formatted really poorly, can we split it up somehow?",
+      "range": {
+        "startLine": 403,
+        "startChar": 36,
+        "endLine": 405,
+        "endChar": 98
+      },
+      "revId": "37c04d2fdd8401659b9c8b0d9c5e6b09c2bd11ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9dd47fc6_e41a368a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-06-28T15:06:38Z",
+      "side": 1,
+      "message": "Now it\u0027s my turn: there is vk::GetFormatAspectFlags for this :D",
+      "range": {
+        "startLine": 717,
+        "startChar": 11,
+        "endLine": 718,
+        "endChar": 83
+      },
+      "revId": "37c04d2fdd8401659b9c8b0d9c5e6b09c2bd11ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
