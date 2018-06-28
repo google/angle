@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "c268a489_e420e3fb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-28T20:11:41Z",
+      "side": 1,
+      "message": "maybe can describe the problem : the space between mSize and the allocated size was not meant to be used.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 9
+      },
+      "revId": "e11da3967d524f8adb37dabd44ab0f793bc6d9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a576e39a_2b0bce05",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 5
