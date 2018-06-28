@@ -269,8 +269,6 @@
 2494 VULKAN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = SKIP
 2494 VULKAN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = SKIP
 2592 VULKAN : dEQP-GLES2.functional.shaders.builtin_variable.depth_range* = SKIP
-2597 VULKAN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgb* = SKIP
-2597 VULKAN : dEQP-GLES2.functional.fbo.render.stencil_clear.tex2d_rgb_stencil_index8 = SKIP
 
 // fixed format vertex data
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.input_types.3_byte2_vec2_byte2_vec2_fixed* = SKIP
