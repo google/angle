@@ -248,7 +248,6 @@ class ImageHelper final : angle::NonCopyable
     gl::Extents mExtents;
     const Format *mFormat;
     GLint mSamples;
-    size_t mAllocatedMemorySize;
 
     // Current state.
     VkImageLayout mCurrentLayout;

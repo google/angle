@@ -657,8 +657,7 @@ class ObjectAndSerial final : angle::NonCopyable
 Error AllocateBufferMemory(RendererVk *renderer,
                            VkMemoryPropertyFlags memoryPropertyFlags,
                            Buffer *buffer,
-                           DeviceMemory *deviceMemoryOut,
-                           size_t *requiredSizeOut);
+                           DeviceMemory *deviceMemoryOut);
 
 struct BufferAndMemory final : angle::NonCopyable
 {
@@ -675,8 +674,7 @@ Error AllocateImageMemory(VkDevice device,
                           const MemoryProperties &memoryProperties,
                           VkMemoryPropertyFlags memoryPropertyFlags,
                           Image *image,
-                          DeviceMemory *deviceMemoryOut,
-                          size_t *requiredSizeOut);
+                          DeviceMemory *deviceMemoryOut);
 
 using ShaderAndSerial = ObjectAndSerial<ShaderModule>;
 

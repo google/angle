@@ -18,7 +18,7 @@
 namespace rx
 {
 
-BufferVk::BufferVk(const gl::BufferState &state) : BufferImpl(state), mCurrentRequiredSize(0)
+BufferVk::BufferVk(const gl::BufferState &state) : BufferImpl(state)
 {
 }
 
@@ -49,7 +49,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
     VkDevice device      = contextVk->getDevice();
 
-    if (size > mCurrentRequiredSize)
+    if (size > static_cast<size_t>(mState.getSize()))
     {
         // Release and re-create the memory and buffer.
         release(contextVk->getRenderer());
@@ -76,7 +76,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
         const VkMemoryPropertyFlags memoryPropertyFlags =
             (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
         ANGLE_TRY(vk::AllocateBufferMemory(contextVk->getRenderer(), memoryPropertyFlags, &mBuffer,
-                                           &mBufferMemory, &mCurrentRequiredSize));
+                                           &mBufferMemory));
     }
 
     if (data)

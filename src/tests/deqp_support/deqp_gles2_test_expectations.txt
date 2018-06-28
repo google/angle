@@ -262,9 +262,6 @@
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
 
 // Vulkan failures
-2580 VULKAN : dEQP-GLES2.functional.buffer.write.recreate_store.different_size = SKIP
-2580 VULKAN : dEQP-GLES2.functional.buffer.write.recreate_store.random_* = SKIP
-2580 VULKAN : dEQP-GLES2.functional.buffer.write.random.* = SKIP
 2494 VULKAN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = SKIP
 2494 VULKAN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = SKIP
 2592 VULKAN : dEQP-GLES2.functional.shaders.builtin_variable.depth_range* = SKIP

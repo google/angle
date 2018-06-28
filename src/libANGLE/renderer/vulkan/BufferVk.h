@@ -64,7 +64,6 @@ class BufferVk : public BufferImpl, public vk::CommandGraphResource
 
     vk::Buffer mBuffer;
     vk::DeviceMemory mBufferMemory;
-    size_t mCurrentRequiredSize;
 };
 
 }  // namespace rx

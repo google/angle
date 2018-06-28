@@ -149,11 +149,13 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
 
         mRetainedBuffers.emplace_back(std::move(mBuffer), std::move(mMemory));
 
+        mSize = std::max(sizeToAllocate, mMinSize);
+
         VkBufferCreateInfo createInfo;
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         createInfo.pNext                 = nullptr;
         createInfo.flags                 = 0;
-        createInfo.size                  = std::max(sizeToAllocate, mMinSize);
+        createInfo.size                  = mSize;
         createInfo.usage                 = mUsage;
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
@@ -161,7 +163,7 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
         ANGLE_TRY(mBuffer.init(device, createInfo));
 
         ANGLE_TRY(AllocateBufferMemory(renderer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &mBuffer,
-                                       &mMemory, &mSize));
+                                       &mMemory));
 
         ANGLE_TRY(mMemory.map(device, 0, mSize, 0, &mMappedMemory));
         mNextAllocationOffset        = 0;
@@ -508,7 +510,6 @@ void LineLoopHelper::Draw(uint32_t count, CommandBuffer *commandBuffer)
 ImageHelper::ImageHelper()
     : mFormat(nullptr),
       mSamples(0),
-      mAllocatedMemorySize(0),
       mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED),
       mLayerCount(0)
 {
@@ -520,7 +521,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mExtents(other.mExtents),
       mFormat(other.mFormat),
       mSamples(other.mSamples),
-      mAllocatedMemorySize(other.mAllocatedMemorySize),
       mCurrentLayout(other.mCurrentLayout),
       mLayerCount(other.mLayerCount)
 {
@@ -594,8 +594,7 @@ Error ImageHelper::initMemory(VkDevice device,
                               VkMemoryPropertyFlags flags)
 {
     // TODO(jmadill): Memory sub-allocation. http://anglebug.com/2162
-    ANGLE_TRY(AllocateImageMemory(device, memoryProperties, flags, &mImage, &mDeviceMemory,
-                                  &mAllocatedMemorySize));
+    ANGLE_TRY(AllocateImageMemory(device, memoryProperties, flags, &mImage, &mDeviceMemory));
     return NoError();
 }
 
@@ -745,11 +744,6 @@ const Format &ImageHelper::getFormat() const
 GLint ImageHelper::getSamples() const
 {
     return mSamples;
-}
-
-size_t ImageHelper::getAllocatedMemorySize() const
-{
-    return mAllocatedMemorySize;
 }
 
 void ImageHelper::changeLayoutWithStages(VkImageAspectFlags aspectMask,

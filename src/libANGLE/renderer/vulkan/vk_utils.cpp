@@ -131,15 +131,11 @@ vk::Error AllocateBufferOrImageMemory(VkDevice device,
                                       const vk::MemoryProperties &memoryProperties,
                                       VkMemoryPropertyFlags memoryPropertyFlags,
                                       T *bufferOrImage,
-                                      vk::DeviceMemory *deviceMemoryOut,
-                                      size_t *requiredSizeOut)
+                                      vk::DeviceMemory *deviceMemoryOut)
 {
     // Call driver to determine memory requirements.
     VkMemoryRequirements memoryRequirements;
     bufferOrImage->getMemoryRequirements(device, &memoryRequirements);
-
-    // The requirements size is not always equal to the specified API size.
-    *requiredSizeOut = static_cast<size_t>(memoryRequirements.size);
 
     ANGLE_TRY(FindAndAllocateCompatibleMemory(device, memoryProperties, memoryPropertyFlags,
                                               memoryRequirements, deviceMemoryOut));
@@ -1106,9 +1102,8 @@ vk::Error StagingBuffer::init(ContextVk *contextVk, VkDeviceSize size, StagingUs
         (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
     ANGLE_TRY(mBuffer.init(contextVk->getDevice(), createInfo));
-    ANGLE_TRY(
-        AllocateBufferMemory(contextVk->getRenderer(), flags, &mBuffer, &mDeviceMemory, &mSize));
-
+    ANGLE_TRY(AllocateBufferMemory(contextVk->getRenderer(), flags, &mBuffer, &mDeviceMemory));
+    mSize = static_cast<size_t>(size);
     return vk::NoError();
 }
 
@@ -1121,25 +1116,23 @@ void StagingBuffer::dumpResources(Serial serial, std::vector<vk::GarbageObject> 
 Error AllocateBufferMemory(RendererVk *renderer,
                            VkMemoryPropertyFlags memoryPropertyFlags,
                            Buffer *buffer,
-                           DeviceMemory *deviceMemoryOut,
-                           size_t *requiredSizeOut)
+                           DeviceMemory *deviceMemoryOut)
 {
     VkDevice device                              = renderer->getDevice();
     const vk::MemoryProperties &memoryProperties = renderer->getMemoryProperties();
 
     return AllocateBufferOrImageMemory(device, memoryProperties, memoryPropertyFlags, buffer,
-                                       deviceMemoryOut, requiredSizeOut);
+                                       deviceMemoryOut);
 }
 
 Error AllocateImageMemory(VkDevice device,
                           const MemoryProperties &memoryProperties,
                           VkMemoryPropertyFlags memoryPropertyFlags,
                           Image *image,
-                          DeviceMemory *deviceMemoryOut,
-                          size_t *requiredSizeOut)
+                          DeviceMemory *deviceMemoryOut)
 {
     return AllocateBufferOrImageMemory(device, memoryProperties, memoryPropertyFlags, image,
-                                       deviceMemoryOut, requiredSizeOut);
+                                       deviceMemoryOut);
 }
 
 // GarbageObject implementation.

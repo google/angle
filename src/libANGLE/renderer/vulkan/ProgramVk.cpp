@@ -422,9 +422,8 @@ gl::Error ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
             // Assume host visible/coherent memory available.
             VkMemoryPropertyFlags flags =
                 (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-            size_t requiredSize = 0;
             ANGLE_TRY(AllocateBufferMemory(renderer, flags, &mEmptyUniformBlockStorage.buffer,
-                                           &mEmptyUniformBlockStorage.memory, &requiredSize));
+                                           &mEmptyUniformBlockStorage.memory));
         }
 
         // Ensure the descriptor set range includes the uniform buffers at position 0.
