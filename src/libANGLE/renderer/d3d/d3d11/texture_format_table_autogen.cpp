@@ -179,6 +179,37 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
                                          nullptr);
             return info;
         }
+        case GL_BGRX8_ANGLEX:
+        {
+            if (OnlyFL11_1Plus(deviceCaps))
+            {
+                static constexpr Format info(GL_BGRX8_ANGLEX,
+                                             angle::Format::ID::B8G8R8X8_UNORM,
+                                             DXGI_FORMAT_B8G8R8X8_UNORM,
+                                             DXGI_FORMAT_B8G8R8X8_UNORM,
+                                             DXGI_FORMAT_UNKNOWN,
+                                             DXGI_FORMAT_B8G8R8X8_UNORM,
+                                             DXGI_FORMAT_UNKNOWN,
+                                             DXGI_FORMAT_B8G8R8X8_UNORM,
+                                             GL_BGRX8_ANGLEX,
+                                             nullptr);
+                return info;
+            }
+            else
+            {
+                static constexpr Format info(GL_BGRX8_ANGLEX,
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             DXGI_FORMAT_R8G8B8A8_UNORM,
+                                             DXGI_FORMAT_R8G8B8A8_UNORM,
+                                             DXGI_FORMAT_R8G8B8A8_UNORM,
+                                             DXGI_FORMAT_R8G8B8A8_UNORM,
+                                             DXGI_FORMAT_UNKNOWN,
+                                             DXGI_FORMAT_R8G8B8A8_UNORM,
+                                             GL_RGBA8,
+                                             nullptr);
+                return info;
+            }
+        }
         case GL_COMPRESSED_R11_EAC:
         {
             static constexpr Format info(GL_COMPRESSED_R11_EAC,

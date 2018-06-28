@@ -548,11 +548,11 @@ void AddRGBAFormat(InternalFormatInfoMap *map,
     formatInfo.pixelBytes = (red + green + blue + alpha + shared) / 8;
     formatInfo.componentCount =
         ((red > 0) ? 1 : 0) + ((green > 0) ? 1 : 0) + ((blue > 0) ? 1 : 0) + ((alpha > 0) ? 1 : 0);
-    formatInfo.format         = format;
-    formatInfo.type           = type;
-    formatInfo.componentType  = componentType;
-    formatInfo.colorEncoding  = (srgb ? GL_SRGB : GL_LINEAR);
-    formatInfo.textureSupport = textureSupport;
+    formatInfo.format                   = format;
+    formatInfo.type                     = type;
+    formatInfo.componentType            = componentType;
+    formatInfo.colorEncoding            = (srgb ? GL_SRGB : GL_LINEAR);
+    formatInfo.textureSupport           = textureSupport;
     formatInfo.filterSupport            = filterSupport;
     formatInfo.textureAttachmentSupport = textureAttachmentSupport;
     formatInfo.renderbufferSupport      = renderbufferSupport;
@@ -578,15 +578,15 @@ static void AddLUMAFormat(InternalFormatInfoMap *map,
     formatInfo.sized          = sized;
     formatInfo.sizedInternalFormat =
         sized ? internalFormat : GetSizedFormatInternal(internalFormat, type);
-    formatInfo.luminanceBits  = luminance;
-    formatInfo.alphaBits      = alpha;
-    formatInfo.pixelBytes     = (luminance + alpha) / 8;
-    formatInfo.componentCount = ((luminance > 0) ? 1 : 0) + ((alpha > 0) ? 1 : 0);
-    formatInfo.format         = format;
-    formatInfo.type           = type;
-    formatInfo.componentType  = componentType;
-    formatInfo.colorEncoding  = GL_LINEAR;
-    formatInfo.textureSupport = textureSupport;
+    formatInfo.luminanceBits            = luminance;
+    formatInfo.alphaBits                = alpha;
+    formatInfo.pixelBytes               = (luminance + alpha) / 8;
+    formatInfo.componentCount           = ((luminance > 0) ? 1 : 0) + ((alpha > 0) ? 1 : 0);
+    formatInfo.format                   = format;
+    formatInfo.type                     = type;
+    formatInfo.componentType            = componentType;
+    formatInfo.colorEncoding            = GL_LINEAR;
+    formatInfo.textureSupport           = textureSupport;
     formatInfo.filterSupport            = filterSupport;
     formatInfo.textureAttachmentSupport = textureAttachmentSupport;
     formatInfo.renderbufferSupport      = renderbufferSupport;
@@ -613,15 +613,15 @@ void AddDepthStencilFormat(InternalFormatInfoMap *map,
     formatInfo.sized          = sized;
     formatInfo.sizedInternalFormat =
         sized ? internalFormat : GetSizedFormatInternal(internalFormat, type);
-    formatInfo.depthBits      = depthBits;
-    formatInfo.stencilBits    = stencilBits;
-    formatInfo.pixelBytes     = (depthBits + stencilBits + unusedBits) / 8;
-    formatInfo.componentCount = ((depthBits > 0) ? 1 : 0) + ((stencilBits > 0) ? 1 : 0);
-    formatInfo.format         = format;
-    formatInfo.type           = type;
-    formatInfo.componentType  = componentType;
-    formatInfo.colorEncoding  = GL_LINEAR;
-    formatInfo.textureSupport = textureSupport;
+    formatInfo.depthBits                = depthBits;
+    formatInfo.stencilBits              = stencilBits;
+    formatInfo.pixelBytes               = (depthBits + stencilBits + unusedBits) / 8;
+    formatInfo.componentCount           = ((depthBits > 0) ? 1 : 0) + ((stencilBits > 0) ? 1 : 0);
+    formatInfo.format                   = format;
+    formatInfo.type                     = type;
+    formatInfo.componentType            = componentType;
+    formatInfo.colorEncoding            = GL_LINEAR;
+    formatInfo.textureSupport           = textureSupport;
     formatInfo.filterSupport            = filterSupport;
     formatInfo.textureAttachmentSupport = textureAttachmentSupport;
     formatInfo.renderbufferSupport      = renderbufferSupport;
@@ -644,19 +644,19 @@ void AddCompressedFormat(InternalFormatInfoMap *map,
                          InternalFormat::SupportCheckFunction renderbufferSupport)
 {
     InternalFormat formatInfo;
-    formatInfo.internalFormat        = internalFormat;
-    formatInfo.sized                 = true;
-    formatInfo.sizedInternalFormat   = internalFormat;
-    formatInfo.compressedBlockWidth  = compressedBlockWidth;
-    formatInfo.compressedBlockHeight = compressedBlockHeight;
-    formatInfo.pixelBytes            = compressedBlockSize / 8;
-    formatInfo.componentCount        = componentCount;
-    formatInfo.format                = format;
-    formatInfo.type                  = type;
-    formatInfo.componentType         = GL_UNSIGNED_NORMALIZED;
-    formatInfo.colorEncoding         = (srgb ? GL_SRGB : GL_LINEAR);
-    formatInfo.compressed            = true;
-    formatInfo.textureSupport        = textureSupport;
+    formatInfo.internalFormat           = internalFormat;
+    formatInfo.sized                    = true;
+    formatInfo.sizedInternalFormat      = internalFormat;
+    formatInfo.compressedBlockWidth     = compressedBlockWidth;
+    formatInfo.compressedBlockHeight    = compressedBlockHeight;
+    formatInfo.pixelBytes               = compressedBlockSize / 8;
+    formatInfo.componentCount           = componentCount;
+    formatInfo.format                   = format;
+    formatInfo.type                     = type;
+    formatInfo.componentType            = GL_UNSIGNED_NORMALIZED;
+    formatInfo.colorEncoding            = (srgb ? GL_SRGB : GL_LINEAR);
+    formatInfo.compressed               = true;
+    formatInfo.textureSupport           = textureSupport;
     formatInfo.filterSupport            = filterSupport;
     formatInfo.textureAttachmentSupport = textureAttachmentSupport;
     formatInfo.renderbufferSupport      = renderbufferSupport;
@@ -727,6 +727,7 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddRGBAFormat(&map, GL_BGRA8_SRGB_ANGLEX, true,  8,  8,  8,  8, 0, GL_BGRA_EXT,     GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, true,  NeverSupported,                                 AlwaysSupported, AlwaysSupported,                                AlwaysSupported                               );
 
     // Special format which is not really supported, so always false for all supports.
+    AddRGBAFormat(&map, GL_BGRX8_ANGLEX,      true,  8,  8,  8,  0, 0, GL_BGRA_EXT,     GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, false, NeverSupported,                                 NeverSupported,  NeverSupported,                                 NeverSupported                                );
     AddRGBAFormat(&map, GL_BGR565_ANGLEX,     true,  5,  6,  5,  1, 0, GL_BGRA_EXT,     GL_UNSIGNED_SHORT_5_6_5,           GL_UNSIGNED_NORMALIZED, false, NeverSupported,                                 NeverSupported,  NeverSupported,                                 NeverSupported                                );
 
     // Floating point renderability and filtering is provided by OES_texture_float and OES_texture_half_float

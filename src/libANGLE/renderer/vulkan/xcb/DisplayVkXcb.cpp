@@ -64,7 +64,7 @@ SurfaceImpl *DisplayVkXcb::createWindowSurfaceVk(const egl::SurfaceState &state,
 
 egl::ConfigSet DisplayVkXcb::generateConfigs()
 {
-    constexpr GLenum kColorFormats[]        = {GL_BGRA8_EXT};
+    constexpr GLenum kColorFormats[]        = {GL_BGRA8_EXT, GL_BGRX8_ANGLEX};
     constexpr GLenum kDepthStencilFormats[] = {GL_NONE, GL_DEPTH24_STENCIL8};
     constexpr EGLint kSampleCounts[]        = {0};
     return egl_vk::GenerateConfigs(kColorFormats, kDepthStencilFormats, kSampleCounts, this);

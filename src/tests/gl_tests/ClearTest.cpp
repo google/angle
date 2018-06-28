@@ -77,8 +77,25 @@ class ClearTestBase : public ANGLETest
     std::vector<GLuint> mTextures;
 };
 
-class ClearTest : public ClearTestBase {};
-class ClearTestES3 : public ClearTestBase {};
+class ClearTest : public ClearTestBase
+{
+};
+class ClearTestES3 : public ClearTestBase
+{
+};
+
+class ClearTestRGB : public ANGLETest
+{
+  protected:
+    ClearTestRGB()
+    {
+        setWindowWidth(128);
+        setWindowHeight(128);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+    }
+};
 
 // Test clearing the default framebuffer
 TEST_P(ClearTest, DefaultFramebuffer)
@@ -86,6 +103,14 @@ TEST_P(ClearTest, DefaultFramebuffer)
     glClearColor(0.25f, 0.5f, 0.5f, 0.5f);
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_PIXEL_NEAR(0, 0, 64, 128, 128, 128, 1.0);
+}
+
+// Test clearing the RGB default framebuffer and verify that the alpha channel is not cleared
+TEST_P(ClearTestRGB, DefaultFramebufferRGB)
+{
+    glClearColor(0.25f, 0.5f, 0.5f, 0.5f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_NEAR(0, 0, 64, 128, 128, 255, 1.0);
 }
 
 // Test clearing a RGBA8 Framebuffer
@@ -233,7 +258,7 @@ TEST_P(ClearTest, ClearIssue)
 // mistakenly clear every channel (including the masked-out ones)
 TEST_P(ClearTestES3, MaskedClearBufferBug)
 {
-    unsigned char pixelData[] = { 255, 255, 255, 255 };
+    unsigned char pixelData[] = {255, 255, 255, 255};
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
 
@@ -250,8 +275,8 @@ TEST_P(ClearTestES3, MaskedClearBufferBug)
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(0, 0, 255, 255, 255, 255);
 
-    float clearValue[] = { 0, 0.5f, 0.5f, 1.0f };
-    GLenum drawBuffers[] = { GL_NONE, GL_COLOR_ATTACHMENT1 };
+    float clearValue[]   = {0, 0.5f, 0.5f, 1.0f};
+    GLenum drawBuffers[] = {GL_NONE, GL_COLOR_ATTACHMENT1};
     glDrawBuffers(2, drawBuffers);
     glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
     glClearBufferfv(GL_COLOR, 1, clearValue);
@@ -276,10 +301,10 @@ TEST_P(ClearTestES3, BadFBOSerialBug)
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, getWindowWidth(), getWindowHeight());
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
 
-    GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
+    GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0};
     glDrawBuffers(1, drawBuffers);
 
-    float clearValues1[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+    float clearValues1[] = {0.0f, 1.0f, 0.0f, 1.0f};
     glClearBufferfv(GL_COLOR, 0, clearValues1);
 
     ASSERT_GL_NO_ERROR();
@@ -460,7 +485,7 @@ TEST_P(ClearTestES3, RepeatedClear)
             const Vector4 color   = RandomVec4(seed, fmtValueMin, fmtValueMax);
             GLColor expectedColor = Vec4ToColor(color);
 
-            int testN           = cellX * cellSize + cellY * backFBOSize * cellSize + backFBOSize + 1;
+            int testN = cellX * cellSize + cellY * backFBOSize * cellSize + backFBOSize + 1;
             GLColor actualColor = pixelData[testN];
             EXPECT_NEAR(expectedColor.R, actualColor.R, 1);
             EXPECT_NEAR(expectedColor.G, actualColor.G, 1);
@@ -603,8 +628,8 @@ TEST_P(ClearTest, MaskedColorAndDepthClear)
     ASSERT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-// Vulkan support disabled because of incomplete implementation.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against. Vulkan support disabled because of incomplete implementation.
 ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
@@ -616,5 +641,8 @@ ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(ClearTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(ScissoredClearTest, ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
+
+// Not all ANGLE backends support RGB backbuffers
+ANGLE_INSTANTIATE_TEST(ClearTestRGB, ES2_D3D11(), ES3_D3D11(), ES2_VULKAN());
 
 }  // anonymous namespace

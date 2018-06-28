@@ -16,7 +16,7 @@
   "D3D11 format:src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py":
     "2a6afa5c7381b3cba46bf4e19146511c",
   "D3D11 format:src/libANGLE/renderer/d3d/d3d11/texture_format_data.json":
-    "27c0b8debb6d5f610ad4f868d0b57aee",
+    "461eb24ff0b5c45f948568a46ba7416c",
   "D3D11 format:src/libANGLE/renderer/d3d/d3d11/texture_format_map.json":
     "c60bd3863f0964ea6c3eee7d62d7fab2",
   "DXGI format support:src/libANGLE/renderer/d3d/d3d11/dxgi_support_data.json":
@@ -68,7 +68,7 @@
   "Vulkan format:src/libANGLE/renderer/vulkan/gen_vk_format_table.py":
     "be1ca0bd596cf826d8f38d110fba35b0",
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":
-    "8b02327195f831c782b0a30b36b589d6",
+    "f7d883e82c2d9f284e15edff3a1a7dcb",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
     "d651e28ab62477029093152e37ed49c9",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":

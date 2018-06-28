@@ -414,8 +414,15 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::Format::ID::B8G8R8X8_UNORM:
-            // This format is not implemented in Vulkan.
+        {
+            internalFormat          = GL_BGRX8_ANGLEX;
+            textureFormatID         = angle::Format::ID::B8G8R8A8_UNORM;
+            vkTextureFormat         = VK_FORMAT_B8G8R8A8_UNORM;
+            bufferFormatID          = angle::Format::ID::NONE;
+            vkBufferFormat          = VK_FORMAT_UNDEFINED;
+            dataInitializerFunction = nullptr;
             break;
+        }
 
         case angle::Format::ID::BC1_RGBA_UNORM_BLOCK:
         {
