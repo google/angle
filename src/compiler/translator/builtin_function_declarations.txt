@@ -508,7 +508,7 @@ GROUP BEGIN AtomicCounter
 GROUP END AtomicCounter
 
 GROUP BEGIN AtomicMemory {"queryFunction": true}
-  DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction"}
+  DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "auto"}
     uint atomicAdd(inout uint, uint);
     int atomicAdd(inout int, int);
     uint atomicMin(inout uint, uint);

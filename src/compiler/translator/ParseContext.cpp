@@ -5620,10 +5620,10 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 
 void TParseContext::checkAtomicMemoryBuiltinFunctions(TIntermAggregate *functionCall)
 {
-    ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
     const TFunction *func = functionCall->getFunction();
     if (BuiltInGroup::isAtomicMemory(func))
     {
+        ASSERT(IsAtomicFunction(functionCall->getOp()));
         TIntermSequence *arguments = functionCall->getSequence();
         TIntermTyped *memNode      = (*arguments)[0]->getAsTyped();
 
@@ -5845,9 +5845,12 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
                     ASSERT(callNode != nullptr);
                     return callNode;
                 }
+
                 TIntermAggregate *callNode =
                     TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, &fnCall->arguments());
                 callNode->setLine(loc);
+
+                checkAtomicMemoryBuiltinFunctions(callNode);
 
                 // Some built-in functions have out parameters too.
                 functionCallRValueLValueErrorCheck(fnCandidate, callNode);
@@ -5864,7 +5867,6 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
             checkTextureOffsetConst(callNode);
             checkTextureGather(callNode);
             checkImageMemoryAccessForBuiltinFunctions(callNode);
-            checkAtomicMemoryBuiltinFunctions(callNode);
             functionCallRValueLValueErrorCheck(fnCandidate, callNode);
             return callNode;
         }

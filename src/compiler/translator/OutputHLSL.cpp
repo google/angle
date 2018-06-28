@@ -80,6 +80,38 @@ bool IsInStd140InterfaceBlock(TIntermTyped *node)
     return false;
 }
 
+const char *GetHLSLAtomicFunctionStringAndLeftParenthesis(TOperator op)
+{
+    switch (op)
+    {
+        case EOpAtomicAdd:
+            return "InterlockedAdd(";
+        case EOpAtomicMin:
+            return "InterlockedMin(";
+        case EOpAtomicMax:
+            return "InterlockedMax(";
+        case EOpAtomicAnd:
+            return "InterlockedAnd(";
+        case EOpAtomicOr:
+            return "InterlockedOr(";
+        case EOpAtomicXor:
+            return "InterlockedXor(";
+        case EOpAtomicExchange:
+            return "InterlockedExchange(";
+        case EOpAtomicCompSwap:
+            return "InterlockedCompareExchange(";
+        default:
+            UNREACHABLE();
+            return "";
+    }
+}
+
+bool IsAtomicFunctionDirectAssign(const TIntermBinary &node)
+{
+    return node.getOp() == EOpAssign && node.getRight()->getAsAggregate() &&
+           IsAtomicFunction(node.getRight()->getAsAggregate()->getOp());
+}
+
 }  // anonymous namespace
 
 TReferencedBlock::TReferencedBlock(const TInterfaceBlock *aBlock,
@@ -1142,6 +1174,27 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 // function call is assigned.
                 ASSERT(rightAgg == nullptr);
             }
+            // Assignment expressions with atomic functions should be transformed into atomic
+            // function calls in HLSL.
+            // e.g. original_value = atomicAdd(dest, value) should be translated into
+            //      InterlockedAdd(dest, value, original_value);
+            else if (IsAtomicFunctionDirectAssign(*node))
+            {
+                TIntermAggregate *atomicFunctionNode = node->getRight()->getAsAggregate();
+                TOperator atomicFunctionOp           = atomicFunctionNode->getOp();
+                out << GetHLSLAtomicFunctionStringAndLeftParenthesis(atomicFunctionOp);
+                TIntermSequence *argumentSeq = atomicFunctionNode->getSequence();
+                ASSERT(argumentSeq->size() >= 2u);
+                for (auto &argument : *argumentSeq)
+                {
+                    argument->traverse(this);
+                    out << ", ";
+                }
+                node->getLeft()->traverse(this);
+                out << ")";
+                return false;
+            }
+
             outputAssign(visit, node->getType(), out);
             break;
         case EOpInitialize:
@@ -2139,6 +2192,29 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpMemoryBarrier:
             outputTriplet(out, visit, "AllMemoryBarrier(", "", ")");
             break;
+
+        // Single atomic function calls without return value.
+        // e.g. atomicAdd(dest, value) should be translated into InterlockedAdd(dest, value).
+        case EOpAtomicAdd:
+        case EOpAtomicMin:
+        case EOpAtomicMax:
+        case EOpAtomicAnd:
+        case EOpAtomicOr:
+        case EOpAtomicXor:
+            outputTriplet(out, visit, GetHLSLAtomicFunctionStringAndLeftParenthesis(node->getOp()),
+                          ",", ")");
+            break;
+
+        // The parameter 'original_value' of InterlockedExchange(dest, value, original_value) and
+        // InterlockedCompareExchange(dest, compare_value, value, original_value) is not optional.
+        // https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/interlockedexchange
+        // https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/interlockedcompareexchange
+        // So all the call of atomicExchange(dest, value) and atomicCompSwap(dest, compare_value,
+        // value) should all be modified into the form of "int temp; temp = atomicExchange(dest,
+        // value);" and "int temp; temp = atomicCompSwap(dest, compare_value, value);" in the
+        // intermediate tree before traversing outputHLSL.
+        case EOpAtomicExchange:
+        case EOpAtomicCompSwap:
         default:
             UNREACHABLE();
     }
