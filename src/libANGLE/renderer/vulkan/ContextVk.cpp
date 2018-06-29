@@ -795,4 +795,8 @@ VkColorComponentFlags ContextVk::getClearColorMask() const
 {
     return mClearColorMask;
 }
+const FeaturesVk &ContextVk::getFeatures() const
+{
+    return mRenderer->getFeatures();
+}
 }  // namespace rx

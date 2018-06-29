@@ -771,6 +771,7 @@
             'libANGLE/renderer/vulkan/DeviceVk.h',
             'libANGLE/renderer/vulkan/DisplayVk.cpp',
             'libANGLE/renderer/vulkan/DisplayVk.h',
+            'libANGLE/renderer/vulkan/FeaturesVk.h',
             'libANGLE/renderer/vulkan/FenceNVVk.cpp',
             'libANGLE/renderer/vulkan/FenceNVVk.h',
             'libANGLE/renderer/vulkan/FramebufferVk.cpp',

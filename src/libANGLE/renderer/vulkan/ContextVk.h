@@ -17,6 +17,7 @@
 
 namespace rx
 {
+struct FeaturesVk;
 class RendererVk;
 
 class ContextVk : public ContextImpl
@@ -150,7 +151,8 @@ class ContextVk : public ContextImpl
     gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
     VkDevice getDevice() const;
-    RendererVk *getRenderer() { return mRenderer; }
+    RendererVk *getRenderer() const { return mRenderer; }
+    const FeaturesVk &getFeatures() const;
 
     void invalidateCurrentPipeline();
 

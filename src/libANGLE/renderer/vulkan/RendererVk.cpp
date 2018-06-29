@@ -603,7 +603,7 @@ void RendererVk::ensureCapsInitialized() const
     if (!mCapsInitialized)
     {
         vk::GenerateCaps(mPhysicalDeviceProperties, mNativeTextureCaps, &mNativeCaps,
-                         &mNativeExtensions, &mNativeLimitations);
+                         &mNativeExtensions, &mNativeLimitations, &mFeatures);
         mCapsInitialized = true;
     }
 }

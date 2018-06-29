@@ -16,6 +16,7 @@
 #include "common/angleutils.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
+#include "libANGLE/renderer/vulkan/FeaturesVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "libANGLE/renderer/vulkan/vk_internal_shaders.h"
 
@@ -138,6 +139,7 @@ class RendererVk : angle::NonCopyable
     Serial issueShaderSerial();
 
     vk::ShaderLibrary *getShaderLibrary();
+    const FeaturesVk &getFeatures() const { return mFeatures; }
 
   private:
     vk::Error initializeDevice(uint32_t queueFamilyIndex);
@@ -152,6 +154,7 @@ class RendererVk : angle::NonCopyable
     mutable gl::TextureCapsMap mNativeTextureCaps;
     mutable gl::Extensions mNativeExtensions;
     mutable gl::Limitations mNativeLimitations;
+    mutable FeaturesVk mFeatures;
 
     VkInstance mInstance;
     bool mEnableValidationLayers;

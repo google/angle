@@ -26,6 +26,7 @@ struct InternalFormat;
 
 namespace rx
 {
+struct FeaturesVk;
 
 class DisplayVk;
 
@@ -35,7 +36,8 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
                   const gl::TextureCapsMap &textureCaps,
                   gl::Caps *outCaps,
                   gl::Extensions *outExtensions,
-                  gl::Limitations * /* outLimitations */);
+                  gl::Limitations * /* outLimitations */,
+                  FeaturesVk *features);
 }  // namespace vk
 
 namespace egl_vk
