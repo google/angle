@@ -44,6 +44,18 @@ namespace
 // one for the vertex shader.
 constexpr size_t kUniformBufferDescriptorsPerDescriptorSet = 2;
 
+bool ShouldEnableMockICD(const egl::AttributeMap &attribs)
+{
+#if !defined(ANGLE_PLATFORM_ANDROID)
+    // Mock ICD does not currently run on Android
+    return (attribs.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
+                        EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE) ==
+            EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
+#else
+    return false;
+#endif  // !defined(ANGLE_PLATFORM_ANDROID)
+}
+
 VkResult VerifyExtensionsPresent(const std::vector<VkExtensionProperties> &extensionProps,
                                  const std::vector<const char *> &enabledExtensionNames)
 {
@@ -101,13 +113,28 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
 class ScopedVkLoaderEnvironment : angle::NonCopyable
 {
   public:
-    explicit ScopedVkLoaderEnvironment(bool enableValidationLayers)
-        : mEnableValidationLayers(enableValidationLayers), mChangedCWD(false)
+    ScopedVkLoaderEnvironment(bool enableValidationLayers, bool enableMockICD)
+        : mEnableValidationLayers(enableValidationLayers),
+          mEnableMockICD(enableMockICD),
+          mChangedCWD(false),
+          mChangedICDPath(false)
     {
 // Changing CWD and setting environment variables makes no sense on Android,
 // since this code is a part of Java application there.
 // Android Vulkan loader doesn't need this either.
 #if !defined(ANGLE_PLATFORM_ANDROID)
+        if (enableMockICD)
+        {
+            // Override environment variable to use built Mock ICD
+            // ANGLE_VK_ICD_JSON gets set to the built mock ICD in BUILD.gn
+            mPreviousICDPath = angle::GetEnvironmentVar(g_VkICDPathEnv);
+            mChangedICDPath  = angle::SetEnvironmentVar(g_VkICDPathEnv, ANGLE_VK_ICD_JSON);
+            if (!mChangedICDPath)
+            {
+                ERR() << "Error setting Path for Mock/Null Driver.";
+                mEnableMockICD = false;
+            }
+        }
         if (mEnableValidationLayers)
         {
             const auto &cwd = angle::GetCWD();
@@ -150,14 +177,23 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
             angle::SetCWD(mPreviousCWD.value().c_str());
 #endif  // !defined(ANGLE_PLATFORM_ANDROID)
         }
+        if (mChangedICDPath)
+        {
+            angle::SetEnvironmentVar(g_VkICDPathEnv, mPreviousICDPath.value().c_str());
+        }
     }
 
     bool canEnableValidationLayers() const { return mEnableValidationLayers; }
 
+    bool canEnableMockICD() const { return mEnableMockICD; }
+
   private:
     bool mEnableValidationLayers;
+    bool mEnableMockICD;
     bool mChangedCWD;
     Optional<std::string> mPreviousCWD;
+    bool mChangedICDPath;
+    Optional<std::string> mPreviousICDPath;
 };
 
 }  // anonymous namespace
@@ -286,24 +322,11 @@ void ChoosePhysicalDevice(const std::vector<VkPhysicalDevice> &physicalDevices,
 
 vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *wsiName)
 {
-    ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseDebugLayers(attribs));
+    ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseDebugLayers(attribs),
+                                                ShouldEnableMockICD(attribs));
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
+    bool enableMockICD      = scopedEnvironment.canEnableMockICD();
 
-#if !defined(ANGLE_PLATFORM_ANDROID)
-    // Mock ICD does not currently run on Android
-    bool enableNullDriver = (attribs.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
-                                         EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE) ==
-                             EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE);
-    if (enableNullDriver)
-    {
-        // Override environment variable to use built Mock ICD
-        // ANGLE_VK_ICD_JSON gets set to the built mock ICD in BUILD.gn
-        ANGLE_VK_CHECK(angle::SetEnvironmentVar(g_VkICDPathEnv, ANGLE_VK_ICD_JSON),
-                       VK_ERROR_INITIALIZATION_FAILED);
-    }
-#else
-    constexpr bool enableNullDriver = false;
-#endif  // !defined(ANGLE_PLATFORM_ANDROID)
     // Gather global layer properties.
     uint32_t instanceLayerCount = 0;
     ANGLE_VK_TRY(vkEnumerateInstanceLayerProperties(&instanceLayerCount, nullptr));
@@ -399,7 +422,7 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
     std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
     ANGLE_VK_TRY(
         vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount, physicalDevices.data()));
-    ChoosePhysicalDevice(physicalDevices, enableNullDriver, &mPhysicalDevice,
+    ChoosePhysicalDevice(physicalDevices, enableMockICD, &mPhysicalDevice,
                          &mPhysicalDeviceProperties);
 
     // Ensure we can find a graphics queue family.
