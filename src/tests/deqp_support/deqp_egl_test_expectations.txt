@@ -217,6 +217,21 @@
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_stencil = FAIL
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_no_depth_no_stencil = FAIL
 
+// Linux Vulkan failures
+2635 LINUX VULKAN : dEQP-EGL.functional.create_surface.pbuffer.rgba8888_depth_stencil = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.create_surface.pbuffer.rgba8888_no_depth_no_stencil = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.negative_api.wait_native = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.query_context.get_current_context.rgba8888_pbuffer = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.query_context.get_current_display.rgba8888_pbuffer = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.query_context.get_current_surface.rgba8888_pbuffer = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.query_context.query_context.rgba8888_pbuffer = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.query_surface.set_attribute.pbuffer.rgba8888_depth_stencil = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.query_surface.set_attribute.pbuffer.rgba8888_no_depth_no_stencil = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.grow = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.shrink = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.stretch_height = FAIL
+2635 LINUX VULKAN : dEQP-EGL.functional.resize.surface_size.stretch_width = FAIL
+
 // Mac failures
 2546 MAC : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
 2546 MAC : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
