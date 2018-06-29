@@ -7,9 +7,14 @@
 # run_code_reneration.py:
 #   Runs  ANGLE format table and other script run_code_renerationgeneration.
 
-import os, subprocess, sys
+import hashlib
+import json
+import os
+import subprocess
+import sys
 
-root_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+script_dir = os.path.abspath(os.path.dirname(os.path.abspath(__file__)))
+root_dir = os.path.abspath(os.path.join(script_dir, '..'))
 
 # auto_script is a standard way for scripts to return their inputs and outputs.
 
@@ -24,8 +29,9 @@ def auto_script(script):
     return {
         'script': script,
         'inputs': grab_from_script(base_script, 'inputs'),
-        'outputs': grab_from_script(base_script, 'outputs'),
     }
+
+hash_fname = "run_code_generation_hashes.json"
 
 # TODO(jmadill): Convert everyting to auto-script.
 generators = {
@@ -35,18 +41,11 @@ generators = {
             'src/libANGLE/renderer/angle_format_data.json',
             'src/libANGLE/renderer/angle_format_map.json',
         ],
-        'outputs': [
-            'src/libANGLE/renderer/Format_table_autogen.cpp',
-            'src/libANGLE/renderer/Format_ID_autogen.inl',
-        ],
         'script': 'src/libANGLE/renderer/gen_angle_format_table.py',
     },
     'ANGLE load functions table': {
         'inputs': [
             'src/libANGLE/renderer/load_functions_data.json',
-        ],
-        'outputs': [
-            'src/libANGLE/renderer/load_functions_table_autogen.cpp',
         ],
         'script': 'src/libANGLE/renderer/gen_load_functions_table.py',
     },
@@ -56,9 +55,6 @@ generators = {
             'src/libANGLE/renderer/d3d/d3d11/texture_format_data.json',
             'src/libANGLE/renderer/d3d/d3d11/texture_format_map.json',
         ],
-        'outputs': [
-            'src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp',
-        ],
         'script': 'src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py',
     },
     'DXGI format': {
@@ -67,26 +63,17 @@ generators = {
             'src/libANGLE/renderer/angle_format_map.json',
             'src/libANGLE/renderer/d3d/d3d11/dxgi_format_data.json',
         ],
-        'outputs': [
-            'src/libANGLE/renderer/d3d/d3d11/dxgi_format_map_autogen.cpp',
-        ],
         'script': 'src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py',
     },
     'DXGI format support': {
         'inputs': [
             'src/libANGLE/renderer/d3d/d3d11/dxgi_support_data.json',
         ],
-        'outputs': [
-            'src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.cpp',
-        ],
         'script': 'src/libANGLE/renderer/d3d/d3d11/gen_dxgi_support_tables.py',
     },
     'GL copy conversion table': {
         'inputs': [
             'src/libANGLE/es3_copy_conversion_formats.json',
-        ],
-        'outputs': [
-            'src/libANGLE/es3_copy_conversion_table_autogen.cpp',
         ],
         'script': 'src/libANGLE/gen_copy_conversion_table.py',
     },
@@ -95,12 +82,6 @@ generators = {
             'scripts/entry_point_packed_gl_enums.json',
             'scripts/gl.xml',
         ],
-        'outputs': [
-            'src/libGLESv2/entry_points_gles_2_0_autogen.cpp',
-            'src/libGLESv2/entry_points_gles_2_0_autogen.h',
-            'src/libGLESv2/entry_points_gles_3_0_autogen.cpp',
-            'src/libGLESv2/entry_points_gles_3_0_autogen.h',
-        ],
         'script': 'scripts/generate_entry_points.py',
     },
     'GL format map': {
@@ -108,27 +89,15 @@ generators = {
             'src/libANGLE/es3_format_type_combinations.json',
             'src/libANGLE/format_map_data.json',
         ],
-        'outputs': [
-            'src/libANGLE/format_map_autogen.cpp',
-        ],
         'script': 'src/libANGLE/gen_format_map.py',
     },
     'uniform type': {
         'inputs': [],
-        'outputs': [
-            'src/common/uniform_type_info_autogen.cpp',
-        ],
         'script': 'src/common/gen_uniform_type_table.py',
     },
     'OpenGL dispatch table': {
         'inputs': [
             'scripts/gl.xml',
-        ],
-        'outputs': [
-            'src/libANGLE/renderer/gl/DispatchTableGL_autogen.cpp',
-            'src/libANGLE/renderer/gl/DispatchTableGL_autogen.h',
-            'src/libANGLE/renderer/gl/null_functions.h',
-            'src/libANGLE/renderer/gl/null_functions.cpp',
         ],
         'script': 'src/libANGLE/renderer/gl/generate_gl_dispatch_table.py',
     },
@@ -137,20 +106,11 @@ generators = {
             'src/common/packed_gl_enums.json',
             'src/common/packed_egl_enums.json',
         ],
-        'outputs': [
-            'src/common/PackedEGLEnums_autogen.cpp',
-            'src/common/PackedEGLEnums_autogen.h',
-            'src/common/PackedGLEnums_autogen.cpp',
-            'src/common/PackedGLEnums_autogen.h',
-        ],
         'script': 'src/common/gen_packed_gl_enums.py',
     },
     'proc table': {
         'inputs': [
             'src/libGLESv2/proc_table_data.json',
-        ],
-        'outputs': [
-            'src/libGLESv2/proc_table_autogen.cpp',
         ],
         'script': 'src/libGLESv2/gen_proc_table.py',
     },
@@ -160,9 +120,6 @@ generators = {
             'src/libANGLE/renderer/angle_format_map.json',
             'src/libANGLE/renderer/vulkan/vk_format_map.json',
         ],
-        'outputs': [
-            'src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp',
-        ],
         'script': 'src/libANGLE/renderer/vulkan/gen_vk_format_table.py',
     },
     'Vulkan mandatory format support table': {
@@ -170,9 +127,6 @@ generators = {
             'src/libANGLE/renderer/angle_format.py',
             'third_party/vulkan-headers/src/registry/vk.xml',
             'src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json',
-        ],
-        'outputs': [
-            'src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp',
         ],
         'script': 'src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py',
     },
@@ -182,9 +136,6 @@ generators = {
         'inputs': [
             'src/compiler/translator/emulated_builtin_function_data_hlsl.json'
         ],
-        'outputs': [
-            'src/compiler/translator/emulated_builtin_functions_hlsl_autogen.cpp'
-        ],
         'script': 'src/compiler/translator/gen_emulated_builtin_function_tables.py'
     },
     'ESSL static builtins': {
@@ -192,41 +143,37 @@ generators = {
             'src/compiler/translator/builtin_function_declarations.txt',
             'src/compiler/translator/builtin_variables.json',
         ],
-        'outputs': [
-            'src/compiler/translator/tree_util/BuiltIn_autogen.h',
-            'src/compiler/translator/builtin_symbols_hash_autogen.txt',
-            'src/compiler/translator/ParseContext_autogen.h',
-            'src/compiler/translator/SymbolTable_autogen.cpp',
-            'src/compiler/translator/SymbolTable_autogen.h',
-            'src/tests/compiler_tests/ImmutableString_test_autogen.cpp',
-        ],
         'script': 'src/compiler/translator/gen_builtin_symbols.py',
     },
 }
 
+def md5(fname):
+    hash_md5 = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+def any_input_dirty(name, inputs):
+    for finput in inputs:
+        key = name + ":" + finput
+        new_hashes[key] = md5(finput)
+        if (not key in old_hashes) or (old_hashes[key] != new_hashes[key]):
+            return True
+    return False
+
+os.chdir(script_dir)
+old_hashes = json.load(open(hash_fname))
+new_hashes = {}
 any_dirty = False
 
 for name, info in sorted(generators.iteritems()):
 
-    # Set the CWD to the root ANGLE directory.
+    # Reset the CWD to the root ANGLE directory.
     os.chdir(root_dir)
-
     script = info['script']
-    dirty = False
 
-    for finput in info['inputs'] + [script]:
-        input_mtime = os.path.getmtime(finput)
-        for foutput in info['outputs']:
-            if not os.path.exists(foutput):
-                print('Output ' + foutput + ' not found for ' + name + ' table')
-                dirty = True
-            else:
-                output_mtime = os.path.getmtime(foutput)
-                # Use a fuzzy comparison to avoid tiny time delta errors.
-                if input_mtime - output_mtime > 0.1:
-                    dirty = True
-
-    if dirty:
+    if any_input_dirty(name, info['inputs'] + [script]):
         any_dirty = True
 
         # Set the CWD to the script directory.
@@ -247,3 +194,7 @@ if any_dirty:
     args += ['cl', 'format', '--full']
     print('Calling git cl format')
     subprocess.call(args)
+
+    os.chdir(script_dir)
+    json.dump(new_hashes, open(hash_fname, "w"), indent=2, sort_keys=True,
+              separators=(',', ':\n    '))

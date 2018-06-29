@@ -1,0 +1,98 @@
+{
+  "ANGLE format:src/libANGLE/renderer/angle_format.py":
+    "ddf4dae07bfad22bbf13f4b14e43d8f4",
+  "ANGLE format:src/libANGLE/renderer/angle_format_data.json":
+    "3513511d9f0c7afd9dbc33d1d0de5987",
+  "ANGLE format:src/libANGLE/renderer/angle_format_map.json":
+    "28aeb36a9cdb5262702d9f1e8b81b8ed",
+  "ANGLE format:src/libANGLE/renderer/gen_angle_format_table.py":
+    "aa268de9ae7424a83633656b97d8161d",
+  "ANGLE load functions table:src/libANGLE/renderer/gen_load_functions_table.py":
+    "de1532286bb6720c309f673a9630a132",
+  "ANGLE load functions table:src/libANGLE/renderer/load_functions_data.json":
+    "976cac5f0dcb9b2a782b1b257819b71c",
+  "D3D11 format:src/libANGLE/renderer/angle_format.py":
+    "ddf4dae07bfad22bbf13f4b14e43d8f4",
+  "D3D11 format:src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py":
+    "2a6afa5c7381b3cba46bf4e19146511c",
+  "D3D11 format:src/libANGLE/renderer/d3d/d3d11/texture_format_data.json":
+    "27c0b8debb6d5f610ad4f868d0b57aee",
+  "D3D11 format:src/libANGLE/renderer/d3d/d3d11/texture_format_map.json":
+    "c60bd3863f0964ea6c3eee7d62d7fab2",
+  "DXGI format support:src/libANGLE/renderer/d3d/d3d11/dxgi_support_data.json":
+    "ed2631ebf8535890c03433a264bfe9b7",
+  "DXGI format support:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_support_tables.py":
+    "e5073223e0338d625a3ec3adb743fc1e",
+  "DXGI format:src/libANGLE/renderer/angle_format.py":
+    "ddf4dae07bfad22bbf13f4b14e43d8f4",
+  "DXGI format:src/libANGLE/renderer/angle_format_map.json":
+    "28aeb36a9cdb5262702d9f1e8b81b8ed",
+  "DXGI format:src/libANGLE/renderer/d3d/d3d11/dxgi_format_data.json":
+    "3607db87d772bddcfe8f7e4a247046fc",
+  "DXGI format:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py":
+    "abe278e3e7d68b53ea44eabad7360954",
+  "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
+    "b8b75e150cea623fdb7503e196fc67ef",
+  "ESSL static builtins:src/compiler/translator/builtin_variables.json":
+    "fd8612ea296fe89f9a0c132018569753",
+  "ESSL static builtins:src/compiler/translator/gen_builtin_symbols.py":
+    "7f75b265cc4aeef2f9585348aa1f1267",
+  "Emulated HLSL functions:src/compiler/translator/emulated_builtin_function_data_hlsl.json":
+    "6c908980bdfe28569d8f148326e748a4",
+  "Emulated HLSL functions:src/compiler/translator/gen_emulated_builtin_function_tables.py":
+    "b43ad00aaca29f278b78986df2705f53",
+  "GL copy conversion table:src/libANGLE/es3_copy_conversion_formats.json":
+    "9ebd7404a10e4069485258db8fe3dffc",
+  "GL copy conversion table:src/libANGLE/gen_copy_conversion_table.py":
+    "5218d44a5c02b7ac98599a7262375cc7",
+  "GL entry point:scripts/entry_point_packed_gl_enums.json":
+    "d409cb2e59a037e1d5698c6b00829c18",
+  "GL entry point:scripts/generate_entry_points.py":
+    "57bea24a1a17f8076ed290c335a3208f",
+  "GL entry point:scripts/gl.xml":
+    "521a7e2337f60ba5aa5ae906f5d1a5c4",
+  "GL format map:src/libANGLE/es3_format_type_combinations.json":
+    "0ae351748cdcd5fd2e7447416bac64b5",
+  "GL format map:src/libANGLE/format_map_data.json":
+    "9a76bd8b82d2417dcd5c1ee2052f77b5",
+  "GL format map:src/libANGLE/gen_format_map.py":
+    "87226f5d2224743f941026ec1c9489e5",
+  "OpenGL dispatch table:scripts/gl.xml":
+    "521a7e2337f60ba5aa5ae906f5d1a5c4",
+  "OpenGL dispatch table:src/libANGLE/renderer/gl/generate_gl_dispatch_table.py":
+    "98855aea9916706b384e8843fc8cc145",
+  "Vulkan format:src/libANGLE/renderer/angle_format.py":
+    "ddf4dae07bfad22bbf13f4b14e43d8f4",
+  "Vulkan format:src/libANGLE/renderer/angle_format_map.json":
+    "28aeb36a9cdb5262702d9f1e8b81b8ed",
+  "Vulkan format:src/libANGLE/renderer/vulkan/gen_vk_format_table.py":
+    "be1ca0bd596cf826d8f38d110fba35b0",
+  "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":
+    "8b02327195f831c782b0a30b36b589d6",
+  "Vulkan internal shader programs:C:\\src\\angle\\src\\libANGLE\\renderer\\vulkan\\shaders\\src\\FullScreenQuad.vert":
+    "ab897aa9eb45f83f66080ee082e7d51e",
+  "Vulkan internal shader programs:C:\\src\\angle\\src\\libANGLE\\renderer\\vulkan\\shaders\\src\\PushConstantColor.frag":
+    "3b931f51bfee8310f3d6497d5c9ed8a1",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
+    "d651e28ab62477029093152e37ed49c9",
+  "Vulkan mandatory format support table:src/libANGLE/renderer/angle_format.py":
+    "ddf4dae07bfad22bbf13f4b14e43d8f4",
+  "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py":
+    "9f8beddd1c293787c851bb9dc42552cb",
+  "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json":
+    "f9faa72f7d2b926e4eca5cc0ffb73feb",
+  "Vulkan mandatory format support table:third_party/vulkan-headers/src/registry/vk.xml":
+    "147f8153623cd74b26a0ceba90afbc86",
+  "packed enum:src/common/gen_packed_gl_enums.py":
+    "878d244fb50d4163adcbfbce8a8c660c",
+  "packed enum:src/common/packed_egl_enums.json":
+    "4921ce9fc375dee01fe839e5f25b4a06",
+  "packed enum:src/common/packed_gl_enums.json":
+    "44b4eb27ff237a096246e5fb31c64958",
+  "proc table:src/libGLESv2/gen_proc_table.py":
+    "69518f0b2e34331f8c911e2602fe049d",
+  "proc table:src/libGLESv2/proc_table_data.json":
+    "52e9cae4a47cb00ee68633275603c6b4",
+  "uniform type:src/common/gen_uniform_type_table.py":
+    "e892048b2185e3e661b8ba9c541834cc"
+}
