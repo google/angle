@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9250433_eb1c937f",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-29T11:38:13Z",
+      "side": 1,
+      "message": "nit: maybe just to be consistent leave a space before that line. All others are spaced out with one under and one above.",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 116,
+        "endChar": 0
+      },
+      "revId": "feb30dde6596203b26b6923dd67e182d74255c01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50148f75_6c774fce",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-29T11:38:13Z",
+      "side": 1,
+      "message": "Is it a typo \" Typed\" instead of \"Type\" ?",
+      "range": {
+        "startLine": 76,
+        "startChar": 38,
+        "endLine": 76,
+        "endChar": 67
+      },
+      "revId": "feb30dde6596203b26b6923dd67e182d74255c01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "534554bc_ff779780",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-29T11:38:13Z",
+      "side": 1,
+      "message": "I think adding a sentence or two describing what each visit method is doing would be beneficial. This is all pretty complicated and requires a lot of attention to understand everything happening.",
+      "range": {
+        "startLine": 119,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 5
+      },
+      "revId": "feb30dde6596203b26b6923dd67e182d74255c01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca4dbc31_d458d190",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-06-29T11:38:13Z",
+      "side": 1,
+      "message": "Where is this magic 10 coming from? Use a constant instead",
+      "range": {
+        "startLine": 335,
+        "startChar": 64,
+        "endLine": 335,
+        "endChar": 66
+      },
+      "revId": "feb30dde6596203b26b6923dd67e182d74255c01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
