@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "90e82484_c9fe5524",
+        "filename": "scripts/run_code_generation.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-29T21:10:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56b19781_c92ef08f",
+      "range": {
+        "startLine": 161,
+        "startChar": 7,
+        "endLine": 161,
+        "endChar": 84
+      },
+      "revId": "58a91d6e1aed954c71938e32c6a8980a8a347755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "287c9ef8_797def47",
         "filename": "scripts/run_code_generation_hashes.json",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-06-29T19:46:08Z",
       "side": 1,
       "message": "CR/LF?",
+      "range": {
+        "startLine": 2,
+        "startChar": 91,
+        "endLine": 2,
+        "endChar": 92
+      },
+      "revId": "58a91d6e1aed954c71938e32c6a8980a8a347755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "710b60c4_6fa0afa3",
+        "filename": "scripts/run_code_generation_hashes.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-29T21:10:23Z",
+      "side": 1,
+      "message": "Was an extra space. Fixed it.",
+      "parentUuid": "287c9ef8_797def47",
       "range": {
         "startLine": 2,
         "startChar": 91,
