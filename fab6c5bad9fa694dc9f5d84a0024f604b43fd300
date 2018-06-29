@@ -16,6 +16,24 @@
       "revId": "fab6c5bad9fa694dc9f5d84a0024f604b43fd300",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02759b26_1fd12327",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-06-29T15:31:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7563b790_a06ed509",
+      "revId": "fab6c5bad9fa694dc9f5d84a0024f604b43fd300",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
