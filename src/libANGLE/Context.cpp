@@ -14,6 +14,7 @@
 #include <sstream>
 #include <vector>
 
+#include "common/PackedEnums.h"
 #include "common/matrix_utils.h"
 #include "common/platform.h"
 #include "common/utilities.h"
@@ -253,6 +254,46 @@ void LimitCap(CapT *cap, MaxT maximum)
 {
     *cap = std::min(*cap, static_cast<CapT>(maximum));
 }
+
+constexpr angle::PackedEnumMap<gl::PrimitiveMode, GLsizei> kMinimumPrimitiveCounts = {{
+    /* Points */ 1,
+    /* Lines */ 2,
+    /* LineLoop */ 2,
+    /* LineStrip */ 2,
+    /* Triangles */ 3,
+    /* TriangleStrip */ 3,
+    /* TriangleFan */ 3,
+    /* LinesAdjacency */ 2,
+    /* LineStripAdjacency */ 2,
+    /* TrianglesAdjacency */ 3,
+    /* TriangleStripAdjacency */ 3,
+}};
+// Indices above are code-gen'd so make sure they don't change
+//  if any of these static asserts are hit, must update kMinimumPrimitiveCounts abouve
+static_assert(static_cast<gl::PrimitiveMode>(0) == gl::PrimitiveMode::Points,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(1) == gl::PrimitiveMode::Lines,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(2) == gl::PrimitiveMode::LineLoop,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(3) == gl::PrimitiveMode::LineStrip,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(4) == gl::PrimitiveMode::Triangles,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(5) == gl::PrimitiveMode::TriangleStrip,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(6) == gl::PrimitiveMode::TriangleFan,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(7) == gl::PrimitiveMode::LinesAdjacency,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(8) == gl::PrimitiveMode::LineStripAdjacency,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(9) == gl::PrimitiveMode::TrianglesAdjacency,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(10) == gl::PrimitiveMode::TriangleStripAdjacency,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
+static_assert(static_cast<gl::PrimitiveMode>(11) == gl::PrimitiveMode::EnumCount,
+              "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
 
 }  // anonymous namespace
 
@@ -2090,8 +2131,8 @@ void Context::texParameterIuivRobust(TextureType target,
 
 void Context::drawArrays(PrimitiveMode mode, GLint first, GLsizei count)
 {
-    // No-op if zero count
-    if (count == 0)
+    // No-op if count draws no primitives for given mode
+    if (noopDraw(mode, count))
     {
         return;
     }
@@ -2106,8 +2147,8 @@ void Context::drawArraysInstanced(PrimitiveMode mode,
                                   GLsizei count,
                                   GLsizei instanceCount)
 {
-    // No-op if zero count
-    if (count == 0 || instanceCount == 0)
+    // No-op if count draws no primitives for given mode
+    if (noopDrawInstanced(mode, count, instanceCount))
     {
         return;
     }
@@ -2121,8 +2162,8 @@ void Context::drawArraysInstanced(PrimitiveMode mode,
 
 void Context::drawElements(PrimitiveMode mode, GLsizei count, GLenum type, const void *indices)
 {
-    // No-op if zero count
-    if (count == 0)
+    // No-op if count draws no primitives for given mode
+    if (noopDraw(mode, count))
     {
         return;
     }
@@ -2137,8 +2178,8 @@ void Context::drawElementsInstanced(PrimitiveMode mode,
                                     const void *indices,
                                     GLsizei instances)
 {
-    // No-op if zero count
-    if (count == 0 || instances == 0)
+    // No-op if count draws no primitives for given mode
+    if (noopDrawInstanced(mode, count, instances))
     {
         return;
     }
@@ -2155,8 +2196,8 @@ void Context::drawRangeElements(PrimitiveMode mode,
                                 GLenum type,
                                 const void *indices)
 {
-    // No-op if zero count
-    if (count == 0)
+    // No-op if count draws no primitives for given mode
+    if (noopDraw(mode, count))
     {
         return;
     }
@@ -3329,6 +3370,19 @@ void Context::initWorkarounds()
     // Lose the context upon out of memory error if the application is
     // expecting to watch for those events.
     mWorkarounds.loseContextOnOutOfMemory = (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
+}
+
+// Return true if the draw is a no-op, else return false.
+//  A no-op draw occurs if the count of vertices is less than the minimum required to
+//  have a valid primitive for this mode (0 for points, 0-1 for lines, 0-2 for tris).
+bool Context::noopDraw(PrimitiveMode mode, GLsizei count)
+{
+    return count < kMinimumPrimitiveCounts[mode];
+}
+
+bool Context::noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount)
+{
+    return (instanceCount == 0) || noopDraw(mode, count);
 }
 
 Error Context::prepareForDraw(PrimitiveMode mode)

@@ -243,7 +243,7 @@ class StateManager11 final : angle::NonCopyable
     // Only used in testing.
     InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
 
-    GLsizei getCurrentMinimumDrawCount() const { return mCurrentMinimumDrawCount; }
+    bool getCullEverything() const { return mCullEverything; }
     VertexDataManager *getVertexDataManager() { return &mVertexDataManager; }
 
     ProgramD3D *getProgramD3D() const { return mProgramD3D; }
@@ -487,7 +487,7 @@ class StateManager11 final : angle::NonCopyable
     // Currently applied primitive topology
     D3D11_PRIMITIVE_TOPOLOGY mCurrentPrimitiveTopology;
     gl::PrimitiveMode mLastAppliedDrawMode;
-    GLsizei mCurrentMinimumDrawCount;
+    bool mCullEverything;
 
     // Currently applied shaders
     gl::ShaderMap<ResourceSerial> mAppliedShaders;

@@ -549,7 +549,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0),
       mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
       mLastAppliedDrawMode(gl::PrimitiveMode::InvalidEnum),
-      mCurrentMinimumDrawCount(0),
+      mCullEverything(false),
       mDirtySwizzles(false),
       mAppliedIB(nullptr),
       mAppliedIBFormat(DXGI_FORMAT_UNKNOWN),
@@ -3400,6 +3400,8 @@ void StateManager11::syncPrimitiveTopology(const gl::State &glState,
                                            gl::PrimitiveMode currentDrawMode)
 {
     D3D11_PRIMITIVE_TOPOLOGY primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+    // Don't cull everything by default, this also resets if we were previously culling
+    mCullEverything = false;
 
     switch (currentDrawMode)
     {
@@ -3414,7 +3416,7 @@ void StateManager11::syncPrimitiveTopology(const gl::State &glState,
             {
                 // Notify developers of risking undefined behavior.
                 WARN() << "Point rendering without writing to gl_PointSize.";
-                mCurrentMinimumDrawCount = std::numeric_limits<GLsizei>::max();
+                mCullEverything = true;
                 return;
             }
 
@@ -3428,36 +3430,29 @@ void StateManager11::syncPrimitiveTopology(const gl::State &glState,
             {
                 primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
             }
-            mCurrentMinimumDrawCount = 1;
             break;
         }
         case gl::PrimitiveMode::Lines:
             primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
-            mCurrentMinimumDrawCount = 2;
             break;
         case gl::PrimitiveMode::LineLoop:
             primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
-            mCurrentMinimumDrawCount = 2;
             break;
         case gl::PrimitiveMode::LineStrip:
             primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
-            mCurrentMinimumDrawCount = 2;
             break;
         case gl::PrimitiveMode::Triangles:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-            mCurrentMinimumDrawCount =
-                CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
+            mCullEverything   = CullsEverything(glState);
             break;
         case gl::PrimitiveMode::TriangleStrip:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-            mCurrentMinimumDrawCount =
-                CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
+            mCullEverything   = CullsEverything(glState);
             break;
         // emulate fans via rewriting index buffer
         case gl::PrimitiveMode::TriangleFan:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-            mCurrentMinimumDrawCount =
-                CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
+            mCullEverything   = CullsEverything(glState);
             break;
         default:
             UNREACHABLE();

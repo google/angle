@@ -1458,7 +1458,7 @@ gl::Error Renderer11::drawWithGeometryShaderAndTransformFeedback(const gl::Conte
 
 gl::Error Renderer11::drawArrays(const gl::Context *context, const gl::DrawCallParams &params)
 {
-    if (params.vertexCount() < static_cast<size_t>(mStateManager.getCurrentMinimumDrawCount()))
+    if (mStateManager.getCullEverything())
     {
         return gl::NoError();
     }
@@ -1541,7 +1541,7 @@ gl::Error Renderer11::drawArrays(const gl::Context *context, const gl::DrawCallP
 
 gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCallParams &params)
 {
-    if (params.indexCount() < mStateManager.getCurrentMinimumDrawCount())
+    if (mStateManager.getCullEverything())
     {
         return gl::NoError();
     }
@@ -1624,7 +1624,7 @@ gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCal
 gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
                                          const gl::DrawCallParams &params)
 {
-    if (std::numeric_limits<GLsizei>::max() == mStateManager.getCurrentMinimumDrawCount())
+    if (mStateManager.getCullEverything())
     {
         return gl::NoError();
     }
@@ -1647,7 +1647,7 @@ gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
 gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
                                            const gl::DrawCallParams &params)
 {
-    if (std::numeric_limits<GLsizei>::max() == mStateManager.getCurrentMinimumDrawCount())
+    if (mStateManager.getCullEverything())
     {
         return gl::NoError();
     }

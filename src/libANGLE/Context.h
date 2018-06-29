@@ -1475,6 +1475,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
   private:
     void initialize();
 
+    bool noopDraw(PrimitiveMode mode, GLsizei count);
+    bool noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount);
+
     Error prepareForDraw(PrimitiveMode mode);
     Error prepareForClear(GLbitfield mask);
     Error prepareForClearBuffer(GLenum buffer, GLint drawbuffer);
