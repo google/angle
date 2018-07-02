@@ -411,8 +411,10 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
     std::string varyingSemantic =
         GetVaryingSemantic(mRenderer->getMajorShaderModel(), programUsesPointSize);
 
-    for (const PackedVaryingRegister &registerInfo : varyingPacking.getRegisterList())
+    const auto &registerInfos = varyingPacking.getRegisterList();
+    for (GLuint registerIndex = 0u; registerIndex < registerInfos.size(); ++registerIndex)
     {
+        const PackedVaryingRegister &registerInfo = registerInfos[registerIndex];
         const auto &varying = *registerInfo.packedVarying->varying;
         ASSERT(!varying.isStruct());
 
@@ -442,8 +444,7 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
         GLenum componentType  = gl::VariableComponentType(transposedType);
         int columnCount       = gl::VariableColumnCount(transposedType);
         HLSLComponentTypeString(hlslStream, componentType, columnCount);
-        unsigned int semanticIndex = registerInfo.semanticIndex;
-        hlslStream << " v" << semanticIndex << " : " << varyingSemantic << semanticIndex << ";\n";
+        hlslStream << " v" << registerIndex << " : " << varyingSemantic << registerIndex << ";\n";
     }
 
     hlslStream << "};\n";
@@ -583,13 +584,15 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         vertexStream << "    output.gl_FragCoord = gl_Position;\n";
     }
 
-    for (const PackedVaryingRegister &registerInfo : varyingPacking.getRegisterList())
+    const auto &registerInfos = varyingPacking.getRegisterList();
+    for (GLuint registerIndex = 0u; registerIndex < registerInfos.size(); ++registerIndex)
     {
+        const PackedVaryingRegister &registerInfo = registerInfos[registerIndex];
         const auto &packedVarying = *registerInfo.packedVarying;
         const auto &varying = *packedVarying.varying;
         ASSERT(!varying.isStruct());
 
-        vertexStream << "    output.v" << registerInfo.semanticIndex << " = ";
+        vertexStream << "    output.v" << registerIndex << " = ";
 
         if (packedVarying.isStructField())
         {
@@ -787,8 +790,9 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         }
     }
 
-    for (const PackedVaryingRegister &registerInfo : varyingPacking.getRegisterList())
+    for (GLuint registerIndex = 0u; registerIndex < registerInfos.size(); ++registerIndex)
     {
+        const PackedVaryingRegister &registerInfo = registerInfos[registerIndex];
         const auto &packedVarying = *registerInfo.packedVarying;
         const auto &varying = *packedVarying.varying;
         ASSERT(!varying.isBuiltIn() && !varying.isStruct());
@@ -818,7 +822,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
             WriteArrayString(pixelStream, registerInfo.varyingRowIndex);
         }
 
-        pixelStream << " = input.v" << registerInfo.semanticIndex;
+        pixelStream << " = input.v" << registerIndex;
 
         switch (VariableColumnCount(transposedType))
         {
@@ -967,14 +971,16 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
         }
     }
 
-    for (const PackedVaryingRegister &varyingRegister : varyingPacking.getRegisterList())
+    const auto &registerInfos = varyingPacking.getRegisterList();
+    for (GLuint registerIndex = 0u; registerIndex < registerInfos.size(); ++registerIndex)
     {
-        preambleStream << "    output.v" << varyingRegister.semanticIndex << " = ";
+        const PackedVaryingRegister &varyingRegister = registerInfos[registerIndex];
+        preambleStream << "    output.v" << registerIndex << " = ";
         if (varyingRegister.packedVarying->interpolation == sh::INTERPOLATION_FLAT)
         {
             preambleStream << "flat";
         }
-        preambleStream << "input.v" << varyingRegister.semanticIndex << "; \n";
+        preambleStream << "input.v" << registerIndex << "; \n";
     }
 
     if (vertexBuiltins.glFragCoord.enabled)

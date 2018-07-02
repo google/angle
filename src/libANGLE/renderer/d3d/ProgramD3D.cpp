@@ -2607,29 +2607,31 @@ void ProgramD3D::gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyi
         {
             if (builtins.glPosition.enabled)
             {
-                mStreamOutVaryings.push_back(D3DVarying(builtins.glPosition.semantic,
-                                                        builtins.glPosition.index, 4, outputSlot));
+                mStreamOutVaryings.emplace_back(builtins.glPosition.semantic,
+                                                builtins.glPosition.index, 4, outputSlot);
             }
         }
         else if (tfVaryingName == "gl_FragCoord")
         {
             if (builtins.glFragCoord.enabled)
             {
-                mStreamOutVaryings.push_back(D3DVarying(builtins.glFragCoord.semantic,
-                                                        builtins.glFragCoord.index, 4, outputSlot));
+                mStreamOutVaryings.emplace_back(builtins.glFragCoord.semantic,
+                                                builtins.glFragCoord.index, 4, outputSlot);
             }
         }
         else if (tfVaryingName == "gl_PointSize")
         {
             if (builtins.glPointSize.enabled)
             {
-                mStreamOutVaryings.push_back(D3DVarying("PSIZE", 0, 1, outputSlot));
+                mStreamOutVaryings.emplace_back("PSIZE", 0, 1, outputSlot);
             }
         }
         else
         {
-            for (const auto &registerInfo : varyingPacking.getRegisterList())
+            const auto &registerInfos = varyingPacking.getRegisterList();
+            for (GLuint registerIndex = 0u; registerIndex < registerInfos.size(); ++registerIndex)
             {
+                const auto &registerInfo = registerInfos[registerIndex];
                 const auto &varying   = *registerInfo.packedVarying->varying;
                 GLenum transposedType = gl::TransposeMatrixType(varying.type);
                 int componentCount    = gl::VariableColumnCount(transposedType);
@@ -2639,8 +2641,8 @@ void ProgramD3D::gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyi
                 // register needs its own stream out entry.
                 if (registerInfo.tfVaryingName() == tfVaryingName)
                 {
-                    mStreamOutVaryings.push_back(D3DVarying(
-                        varyingSemantic, registerInfo.semanticIndex, componentCount, outputSlot));
+                    mStreamOutVaryings.emplace_back(varyingSemantic, registerIndex, componentCount,
+                                                    outputSlot);
                 }
             }
         }

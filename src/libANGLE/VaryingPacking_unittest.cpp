@@ -38,7 +38,7 @@ class VaryingPackingTest : public ::testing::TestWithParam<GLuint>
         InfoLog infoLog;
         std::vector<std::string> transformFeedbackVaryings;
 
-        return varyingPacking->packUserVaryings(infoLog, packedVaryings, transformFeedbackVaryings);
+        return varyingPacking->packUserVaryings(infoLog, packedVaryings);
     }
 
     // Uses the "relaxed" ANGLE packing mode.
