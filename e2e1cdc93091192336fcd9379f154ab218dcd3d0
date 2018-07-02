@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd3d5b33_1db8b220",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-02T08:50:25Z",
+      "side": 1,
+      "message": "This dual tree-transform + direct translation looks like it would work but I think it might be a bit simpler to use the BuiltinFunctionEmulator instead. For example atomicAdd could be defined like this:\n\n  int atomicAdd(uint mem, int value) {\n    int oldValue \u003d 0;\n    InterlockedAdd(mem, value, oldValue);\n    return value;\n  }\n\nWDYT?",
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
