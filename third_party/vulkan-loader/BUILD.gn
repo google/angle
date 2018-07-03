@@ -7,6 +7,7 @@
 # https://github.com/KhronosGroup/Vulkan-Loader
 
 import("../../gni/angle.gni")
+import("$angle_root/third_party/vulkan-headers/vulkan_headers_script_deps.gni")
 
 if (!is_android) {
   vulkan_undefine_configs = []
@@ -81,17 +82,13 @@ helper_script_and_deps = [
 # so that all dependencies are together. The reg.py script from
 # the headers repo is required input to loader_genvk.py.
 copy("python_gen_deps") {
-  sources = [
-    "$angle_root/third_party/vulkan-headers/src/registry/cgenerator.py",
-    "$angle_root/third_party/vulkan-headers/src/registry/generator.py",
-    "$angle_root/third_party/vulkan-headers/src/registry/reg.py",
-    "$angle_root/third_party/vulkan-headers/src/registry/vk.xml",
-    "src/scripts/common_codegen.py",
-    "src/scripts/dispatch_table_helper_generator.py",
-    "src/scripts/helper_file_generator.py",
-    "src/scripts/loader_extension_generator.py",
-    "src/scripts/loader_genvk.py",
-  ]
+  sources = vulkan_registry_script_files + [
+              "src/scripts/common_codegen.py",
+              "src/scripts/dispatch_table_helper_generator.py",
+              "src/scripts/helper_file_generator.py",
+              "src/scripts/loader_extension_generator.py",
+              "src/scripts/loader_genvk.py",
+            ]
   outputs = [
     "$vulkan_gen_dir/{{source_file_part}}",
   ]
@@ -109,10 +106,6 @@ foreach(script_and_dep, helper_script_and_deps) {
     inputs = [
       "$vulkan_gen_dir/$dep",
       "$vulkan_gen_dir/common_codegen.py",
-      "$vulkan_gen_dir/reg.py",
-      "$vulkan_gen_dir/vk.xml",
-      "$vulkan_gen_dir/generator.py",
-      "$vulkan_gen_dir/cgenerator.py",
     ]
     outputs = [
       "$vulkan_gen_dir/$file",
