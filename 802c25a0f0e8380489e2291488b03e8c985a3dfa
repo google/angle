@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ea3ce15_d22fed24",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-03T09:55:45Z",
+      "side": 1,
+      "message": "This can be made a bit smaller by removing the NVIDIA extension bits, the attachment bits that are only useful for images, and maybe the \"memory\" bits that are used for making data visible for mapped buffers.",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 64
+      },
+      "revId": "802c25a0f0e8380489e2291488b03e8c985a3dfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1d12ac2_5f083499",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-03T09:55:45Z",
+      "side": 1,
+      "message": "This causes a cache flush on every buffer copy which is a bit unfortunate. This could be improved later down the line by combining multiple barriers together and only putting the barrier when the reuse is actually reused later.",
+      "revId": "802c25a0f0e8380489e2291488b03e8c985a3dfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
