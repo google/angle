@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "20a963da_eacc32c2",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-03T12:59:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8273c9e4_7ea273ad",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 64
+      },
+      "revId": "802c25a0f0e8380489e2291488b03e8c985a3dfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1d12ac2_5f083499",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 1
@@ -60,6 +84,24 @@
       "writtenOn": "2018-07-03T09:55:45Z",
       "side": 1,
       "message": "This causes a cache flush on every buffer copy which is a bit unfortunate. This could be improved later down the line by combining multiple barriers together and only putting the barrier when the reuse is actually reused later.",
+      "revId": "802c25a0f0e8380489e2291488b03e8c985a3dfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ac8a1e6_7b2d608b",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-03T12:59:58Z",
+      "side": 1,
+      "message": "Yes, this is a general issue to be optimized. I put a TODO here as Jamie did above. Probably resources like buffer, image should provide a barrier struct partially filled with src fields. The rest dst fields can be exactly filled wherever they are later used.",
+      "parentUuid": "c1d12ac2_5f083499",
       "revId": "802c25a0f0e8380489e2291488b03e8c985a3dfa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
