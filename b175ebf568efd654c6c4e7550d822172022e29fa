@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a68a454_e98b22cc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-03T18:52:58Z",
+      "side": 1,
+      "message": "can you file a bug to track this roll? I believe there was another issue blocked on it.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 4
+      },
+      "revId": "b175ebf568efd654c6c4e7550d822172022e29fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4aa09538_b0ff01d9",
+        "filename": "third_party/vulkan-tools/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-03T18:52:58Z",
+      "side": 1,
+      "message": "these get copied twice. could you instead make this a copy rule in vulkan_headers and make both of the existing python_gen_deps depend on it?",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 65
+      },
+      "revId": "b175ebf568efd654c6c4e7550d822172022e29fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

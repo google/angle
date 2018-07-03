@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5dde2a1_b095e00f",
+        "filename": "third_party/vulkan-validation-layers/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-03T18:52:58Z",
+      "side": 0,
+      "message": "I take it this got removed from the upstream repos?",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 3
+      },
+      "revId": "2b06054dd41f3c26d656f4ed7043a90e1f934f07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
