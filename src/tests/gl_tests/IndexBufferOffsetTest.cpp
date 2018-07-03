@@ -129,7 +129,8 @@ TEST_P(IndexBufferOffsetTest, UInt8Index)
 // Test using an offset for an UInt16 index buffer
 TEST_P(IndexBufferOffsetTest, UInt16Index)
 {
-    // TODO(lucferron): Figure out why this is failing only on intel with Vulkan.
+    // TODO(jie.a.chen@intel.com): Re-enable the test once the driver fix is
+    // available in public release.
     // http://anglebug.com/2663
     ANGLE_SKIP_TEST_IF(IsIntel() && IsVulkan());
 

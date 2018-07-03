@@ -228,6 +228,27 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
         VkBufferCopy copyRegion = {0, offset, size};
         commandBuffer->copyBuffer(stagingBuffer.getBuffer(), mBuffer, 1, &copyRegion);
 
+        // Insert a barrier to ensure copy has done.
+        // TODO(jie.a.chen@intel.com): Insert minimal barriers.
+        bufferBarrier.sType         = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+        bufferBarrier.pNext         = nullptr;
+        bufferBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        bufferBarrier.dstAccessMask =
+            VK_ACCESS_INDIRECT_COMMAND_READ_BIT | VK_ACCESS_INDEX_READ_BIT |
+            VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT | VK_ACCESS_UNIFORM_READ_BIT |
+            VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT |
+            VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_TRANSFER_READ_BIT |
+            VK_ACCESS_TRANSFER_WRITE_BIT | VK_ACCESS_HOST_READ_BIT | VK_ACCESS_HOST_WRITE_BIT;
+
+        bufferBarrier.srcQueueFamilyIndex = 0;
+        bufferBarrier.dstQueueFamilyIndex = 0;
+        bufferBarrier.buffer              = mBuffer.getHandle();
+        bufferBarrier.offset              = offset;
+        bufferBarrier.size                = static_cast<VkDeviceSize>(size);
+
+        commandBuffer->singleBufferBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                           VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, bufferBarrier);
+
         // Immediately release staging buffer.
         // TODO(jmadill): Staging buffer re-use.
         renderer->releaseObject(getStoredQueueSerial(), &stagingBuffer);
