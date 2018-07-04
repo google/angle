@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "82e7122d_1237611c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-04T18:54:45Z",
+      "side": 1,
+      "message": "+1. this should be using a dirty bit design.",
+      "parentUuid": "328a4e1b_bd95e5c4",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 86
+      },
+      "revId": "69814fe237ed173a5a80e11424aeed021c1e5c7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a6a1f68d_af53e536",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
         "patchSetId": 7
