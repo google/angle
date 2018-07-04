@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ca20761_3b5d794e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-04T18:46:19Z",
+      "side": 0,
+      "message": "I\u0027m not as familiar with the mRelevantDirtyBitsMask.  Why is this removed?",
+      "range": {
+        "startLine": 191,
+        "startChar": 0,
+        "endLine": 193,
+        "endChar": 95
+      },
+      "revId": "a72f400c5ff3dccd47d8c5147a9703b56f763c34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "328a4e1b_bd95e5c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-04T18:46:19Z",
+      "side": 1,
+      "message": "I\u0027d like to avoid using a callback like this if possible.  Can you do this logic when handling the binding attributes in syncState?  It may require re-ordering the VertexArray dirty bits to have the binding dirty bits come before the attribute dirty bits.  Make sure to add static_asserts about the ordering if you change it.",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 86
+      },
+      "revId": "69814fe237ed173a5a80e11424aeed021c1e5c7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6a1f68d_af53e536",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-04T18:46:19Z",
+      "side": 1,
+      "message": "Let\u0027s make this an std::array of gl::MAX_VERTEX_ATTRIBS.  Memory access can be faster if it\u0027s not going through an extra indirection.",
+      "range": {
+        "startLine": 98,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 15
+      },
+      "revId": "69814fe237ed173a5a80e11424aeed021c1e5c7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
