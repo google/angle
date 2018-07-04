@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4d1d5faa_a97a51a4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-04T16:44:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca280bbb_e95e58a0",
+      "range": {
+        "startLine": 384,
+        "startChar": 39,
+        "endLine": 384,
+        "endChar": 52
+      },
+      "revId": "24371cd7ddd777850d85cbea498f90ee9b2970e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "636e9f50_2bc2c380",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "2ef05078_462e111e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-04T16:44:41Z",
+      "side": 1,
+      "message": "Not with the feature enabled. I want to enable more tests and find more issues before I do that. I just want to move incrementally. For now I just know that SimpleOperationTests are working.",
+      "parentUuid": "636e9f50_2bc2c380",
+      "range": {
+        "startLine": 406,
+        "startChar": 23,
+        "endLine": 406,
+        "endChar": 36
+      },
+      "revId": "24371cd7ddd777850d85cbea498f90ee9b2970e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c001845_51f292ce",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 6
@@ -68,6 +116,30 @@
       "revId": "24371cd7ddd777850d85cbea498f90ee9b2970e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4df78f98_e6ca5623",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-04T16:44:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c001845_51f292ce",
+      "range": {
+        "startLine": 568,
+        "startChar": 28,
+        "endLine": 568,
+        "endChar": 62
+      },
+      "revId": "24371cd7ddd777850d85cbea498f90ee9b2970e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
