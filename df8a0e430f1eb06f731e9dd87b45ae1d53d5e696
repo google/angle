@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "779a5d0b_4386fa53",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 698,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-04T17:19:54Z",
+      "side": 1,
+      "message": "Can you add an invertCullMode parameter to GetCullMode instead of doing it here?  Implementation should be simpler there and you won\u0027t need to make a copy of the RasterizerState.",
+      "range": {
+        "startLine": 680,
+        "startChar": 4,
+        "endLine": 698,
+        "endChar": 5
+      },
+      "revId": "df8a0e430f1eb06f731e9dd87b45ae1d53d5e696",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
