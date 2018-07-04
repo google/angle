@@ -46,6 +46,30 @@
       "revId": "c899e61200f25e2f7d07ab86c83810369e7dbdcf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "209fb467_8709b0dc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-04T21:01:33Z",
+      "side": 1,
+      "message": "Whoops, the VK size is in bytes and the EGL size is in pixels.  Going to simply divide it by the pixel size for now.",
+      "parentUuid": "fe961d6d_08067b94",
+      "range": {
+        "startLine": 179,
+        "startChar": 35,
+        "endLine": 179,
+        "endChar": 83
+      },
+      "revId": "c899e61200f25e2f7d07ab86c83810369e7dbdcf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
