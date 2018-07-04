@@ -22,6 +22,30 @@
       "revId": "c899e61200f25e2f7d07ab86c83810369e7dbdcf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe961d6d_08067b94",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-04T20:58:27Z",
+      "side": 1,
+      "message": "Turns out that because maxResourceSize must be at least 2^31 and Config::maxResourceSize (EGLint) is a 32-bit signed integer, the Vulkan minimum is larger than EGL maximum are the same value here and we don\u0027t need to check anything.  I added a static assertion.",
+      "parentUuid": "971fcc71_a84cb250",
+      "range": {
+        "startLine": 179,
+        "startChar": 35,
+        "endLine": 179,
+        "endChar": 83
+      },
+      "revId": "c899e61200f25e2f7d07ab86c83810369e7dbdcf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
