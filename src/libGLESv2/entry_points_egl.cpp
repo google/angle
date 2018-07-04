@@ -635,6 +635,7 @@ EGLBoolean EGLAPIENTRY WaitNative(EGLint engine)
     {
         thread->setError(EglBadParameter() << "the 'engine' parameter has an unrecognized value",
                          GetDebug(), "eglWaitNative", GetDisplayIfValid(display));
+        return EGL_FALSE;
     }
 
     error = display->waitNative(thread->getContext(), engine);

@@ -167,7 +167,6 @@
 2635 WIN VULKAN : dEQP-EGL.functional.multicontext.non_shared_make_current = FAIL
 2635 WIN VULKAN : dEQP-EGL.functional.multicontext.shared_clear = FAIL
 2635 WIN VULKAN : dEQP-EGL.functional.multicontext.shared_make_current = FAIL
-2635 WIN VULKAN : dEQP-EGL.functional.negative_api.wait_native = FAIL
 2635 WIN VULKAN : dEQP-EGL.functional.query_context.get_current_context.rgba8888_pbuffer = FAIL
 2635 WIN VULKAN : dEQP-EGL.functional.query_context.get_current_display.rgba8888_pbuffer = FAIL
 2635 WIN VULKAN : dEQP-EGL.functional.query_context.get_current_surface.rgba8888_pbuffer = FAIL
@@ -216,7 +215,6 @@
 2546 LINUX : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_no_depth_no_stencil = FAIL
 
 // Linux Vulkan failures
-2635 LINUX VULKAN : dEQP-EGL.functional.negative_api.wait_native = FAIL
 2635 LINUX VULKAN : dEQP-EGL.functional.query_context.get_current_context.rgba8888_pbuffer = FAIL
 2635 LINUX VULKAN : dEQP-EGL.functional.query_context.get_current_display.rgba8888_pbuffer = FAIL
 2635 LINUX VULKAN : dEQP-EGL.functional.query_context.get_current_surface.rgba8888_pbuffer = FAIL
