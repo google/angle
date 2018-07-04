@@ -9,11 +9,14 @@
 
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 
+#include <type_traits>
+
 #include "common/utilities.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FeaturesVk.h"
+#include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "vk_format_utils.h"
 
 namespace
@@ -155,7 +158,38 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
 
 namespace egl_vk
 {
-egl::Config GenerateDefaultConfig(const gl::InternalFormat &colorFormat,
+
+namespace
+{
+
+EGLint ComputeMaximumPBufferPixels(const VkPhysicalDeviceProperties &physicalDeviceProperties)
+{
+    // EGLints are signed 32-bit integers, it's fairly easy to overflow them, especially since
+    // Vulkan's minimum guaranteed VkImageFormatProperties::maxResourceSize is 2^31 bytes.
+    constexpr uint64_t kMaxValueForEGLint =
+        static_cast<uint64_t>(std::numeric_limits<EGLint>::max());
+
+    // TODO(geofflang): Compute the maximum size of a pbuffer by using the maxResourceSize result
+    // from vkGetPhysicalDeviceImageFormatProperties for both the color and depth stencil format and
+    // the exact image creation parameters that would be used to create the pbuffer. Because it is
+    // always safe to return out-of-memory errors on pbuffer allocation, it's fine to simply return
+    // the number of pixels in a max width by max height pbuffer for now. http://anglebug.com/2622
+
+    // Storing the result of squaring a 32-bit unsigned int in a 64-bit unsigned int is safe.
+    static_assert(std::is_same<decltype(physicalDeviceProperties.limits.maxImageDimension2D),
+                               uint32_t>::value,
+                  "physicalDeviceProperties.limits.maxImageDimension2D expected to be a uint32_t.");
+    const uint64_t maxDimensionsSquared =
+        static_cast<uint64_t>(physicalDeviceProperties.limits.maxImageDimension2D) *
+        static_cast<uint64_t>(physicalDeviceProperties.limits.maxImageDimension2D);
+
+    return static_cast<EGLint>(std::min(maxDimensionsSquared, kMaxValueForEGLint));
+}
+
+// Generates a basic config for a combination of color format, depth stencil format and sample
+// count.
+egl::Config GenerateDefaultConfig(const VkPhysicalDeviceProperties &physicalDeviceProperties,
+                                  const gl::InternalFormat &colorFormat,
                                   const gl::InternalFormat &depthStencilFormat,
                                   EGLint sampleCount)
 {
@@ -178,9 +212,9 @@ egl::Config GenerateDefaultConfig(const gl::InternalFormat &colorFormat,
     config.stencilSize           = depthStencilFormat.stencilBits;
     config.level                 = 0;
     config.matchNativePixmap     = EGL_NONE;
-    config.maxPBufferWidth       = 0;
-    config.maxPBufferHeight      = 0;
-    config.maxPBufferPixels      = 0;
+    config.maxPBufferWidth       = physicalDeviceProperties.limits.maxImageDimension2D;
+    config.maxPBufferHeight      = physicalDeviceProperties.limits.maxImageDimension2D;
+    config.maxPBufferPixels      = ComputeMaximumPBufferPixels(physicalDeviceProperties);
     config.maxSwapInterval       = 1;
     config.minSwapInterval       = 1;
     config.nativeRenderable      = EGL_TRUE;
@@ -201,6 +235,8 @@ egl::Config GenerateDefaultConfig(const gl::InternalFormat &colorFormat,
     return config;
 }
 
+}  // anonymous namespace
+
 egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
                                size_t colorFormatsCount,
                                const GLenum *depthStencilFormats,
@@ -213,6 +249,10 @@ egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
     ASSERT(display != nullptr);
 
     egl::ConfigSet configSet;
+
+    const RendererVk *renderer = display->getRenderer();
+    const VkPhysicalDeviceProperties &physicalDeviceProperties =
+        renderer->getPhysicalDeviceProperties();
 
     for (size_t colorFormatIdx = 0; colorFormatIdx < colorFormatsCount; colorFormatIdx++)
     {
@@ -231,8 +271,9 @@ egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
             for (size_t sampleCountIndex = 0; sampleCountIndex < sampleCountsCount;
                  sampleCountIndex++)
             {
-                egl::Config config = GenerateDefaultConfig(colorFormatInfo, depthStencilFormatInfo,
-                                                           sampleCounts[sampleCountIndex]);
+                egl::Config config =
+                    GenerateDefaultConfig(physicalDeviceProperties, colorFormatInfo,
+                                          depthStencilFormatInfo, sampleCounts[sampleCountIndex]);
                 if (display->checkConfigSupport(&config))
                 {
                     configSet.add(config);

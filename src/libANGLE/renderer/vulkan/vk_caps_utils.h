@@ -42,12 +42,6 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
 
 namespace egl_vk
 {
-// Generates a basic config for a combination of color format, depth stencil format and sample
-// count.
-egl::Config GenerateDefaultConfig(const gl::InternalFormat &colorFormat,
-                                  const gl::InternalFormat &depthStencilFormat,
-                                  EGLint sampleCount);
-
 // Permutes over all combinations of color format, depth stencil format and sample count and
 // generates a basic config which is passed to DisplayVk::checkConfigSupport.
 egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
