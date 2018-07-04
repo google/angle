@@ -16,6 +16,114 @@
       "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "681124bf_b2f95b0c",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-04T09:59:16Z",
+      "side": 1,
+      "message": "nit: maybe we don\u0027t need to add a member function for this, it could either be a static function or inlined in the condition since it is used only once.",
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86075a63_1aa8e68e",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-04T09:59:16Z",
+      "side": 1,
+      "message": "These could be passed by parameter instead of template arguments.",
+      "range": {
+        "startLine": 23,
+        "startChar": 51,
+        "endLine": 23,
+        "endChar": 88
+      },
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f73fc6c_4dfd2cc1",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1479,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-04T09:59:16Z",
+      "side": 1,
+      "message": "nit: I don\u0027t think groupMemoryBarrier is needed here.",
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46996395_14955572",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1489,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-04T09:59:16Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45a9b607_5993c886",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1520,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-04T09:59:16Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99c8774b_70fb4404",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1537,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-04T09:59:16Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
