@@ -13,6 +13,7 @@
 #include "common/aligned_memory.h"
 #include "libANGLE/SizedMRUCache.h"
 #include "libANGLE/VertexAttribute.h"
+#include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
@@ -637,7 +638,8 @@ void PipelineDesc::updateShaders(Serial vertexSerial, Serial fragmentSerial)
         static_cast<uint32_t>(fragmentSerial.getValue());
 }
 
-void PipelineDesc::updateViewport(const gl::Rectangle &viewport,
+void PipelineDesc::updateViewport(FramebufferVk *framebufferVk,
+                                  const gl::Rectangle &viewport,
                                   float nearPlane,
                                   float farPlane,
                                   bool invertViewport)
@@ -649,7 +651,9 @@ void PipelineDesc::updateViewport(const gl::Rectangle &viewport,
 
     if (invertViewport)
     {
-        mViewport.y += viewport.height;
+        gl::Box dimensions       = framebufferVk->getState().getDimensions();
+        gl::Rectangle renderArea = gl::Rectangle(0, 0, dimensions.width, dimensions.height);
+        mViewport.y              = static_cast<float>(renderArea.height - viewport.y);
         mViewport.height = -mViewport.height;
     }
     updateDepthRange(nearPlane, farPlane);

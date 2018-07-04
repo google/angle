@@ -350,7 +350,8 @@ class PipelineDesc final
                              const ShaderModule &fragmentModule,
                              Pipeline *pipelineOut) const;
 
-    void updateViewport(const gl::Rectangle &viewport,
+    void updateViewport(FramebufferVk *framebufferVk,
+                        const gl::Rectangle &viewport,
                         float nearPlane,
                         float farPlane,
                         bool invertViewport);

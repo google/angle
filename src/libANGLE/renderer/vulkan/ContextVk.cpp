@@ -435,9 +435,13 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 updateScissor(glState);
                 break;
             case gl::State::DIRTY_BIT_VIEWPORT:
-                mPipelineDesc->updateViewport(glState.getViewport(), glState.getNearPlane(),
-                                              glState.getFarPlane(), isViewportFlipEnabled());
+            {
+                FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
+                mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
+                                              glState.getNearPlane(), glState.getFarPlane(),
+                                              isViewportFlipEnabled());
                 break;
+            }
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
                 mPipelineDesc->updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
                 break;
@@ -566,13 +570,17 @@ void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits
                 WARN() << "DIRTY_BIT_READ_FRAMEBUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
-                mPipelineDesc->updateViewport(glState.getViewport(), glState.getNearPlane(),
-                                              glState.getFarPlane(), isViewportFlipEnabled());
+            {
+                FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
+                mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
+                                              glState.getNearPlane(), glState.getFarPlane(),
+                                              isViewportFlipEnabled());
                 updateColorMask(glState.getBlendState());
                 mPipelineDesc->updateCullMode(glState.getRasterizerState(),
                                               isViewportFlipEnabled());
                 updateScissor(glState);
                 break;
+            }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
                 WARN() << "DIRTY_BIT_RENDERBUFFER_BINDING unimplemented";
                 break;

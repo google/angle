@@ -782,7 +782,14 @@ gl::Error FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
         // There is nothing to clear since the scissor is outside of the render area.
         return gl::NoError();
     }
+
     clearRect.rect = gl_vk::GetRect(intersection);
+
+    if (contextVk->isViewportFlipEnabled())
+    {
+        clearRect.rect.offset.y = getRenderPassRenderArea().height - clearRect.rect.offset.y -
+                                  clearRect.rect.extent.height;
+    }
 
     gl::AttachmentArray<VkClearAttachment> clearAttachments;
     int clearAttachmentIndex = 0;
@@ -889,7 +896,7 @@ gl::Error FramebufferVk::clearWithDraw(const gl::Context *context,
     pipelineDesc.updateColorWriteMask(colorMaskFlags, getEmulatedAlphaAttachmentMask());
     pipelineDesc.updateRenderPassDesc(getRenderPassDesc());
     pipelineDesc.updateShaders(fullScreenQuad->queueSerial(), pushConstantColor->queueSerial());
-    pipelineDesc.updateViewport(renderArea, 0.0f, 1.0f, contextVk->isViewportFlipEnabled());
+    pipelineDesc.updateViewport(this, renderArea, 0.0f, 1.0f, contextVk->isViewportFlipEnabled());
 
     const gl::State &glState = contextVk->getGLState();
     if (glState.isScissorTestEnabled())
