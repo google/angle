@@ -140,6 +140,30 @@
     },
     {
       "key": {
+        "uuid": "5a934548_d81c6a30",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-04T15:18:12Z",
+      "side": 1,
+      "message": "Also this should update the cull mode, and any other features we end up touching.",
+      "parentUuid": "ebdf7206_b1d71c46",
+      "range": {
+        "startLine": 593,
+        "startChar": 5,
+        "endLine": 597,
+        "endChar": 67
+      },
+      "revId": "e72154a51a0ed53cfc13eaf22d2a232e78a12040",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9dff5ba8_830f7f4d",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 4
