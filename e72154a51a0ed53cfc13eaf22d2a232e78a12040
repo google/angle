@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "7eb4e620_297c6ce4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-04T14:30:06Z",
+      "side": 1,
+      "message": "I think we need to invert the scissor as well.",
+      "range": {
+        "startLine": 61,
+        "startChar": 14,
+        "endLine": 61,
+        "endChar": 28
+      },
+      "revId": "e72154a51a0ed53cfc13eaf22d2a232e78a12040",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8bb2df56_3a9beb60",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 4
