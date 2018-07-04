@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca280bbb_e95e58a0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-04T16:14:13Z",
+      "side": 1,
+      "message": "nit: mRenderer",
+      "range": {
+        "startLine": 384,
+        "startChar": 39,
+        "endLine": 384,
+        "endChar": 52
+      },
+      "revId": "24371cd7ddd777850d85cbea498f90ee9b2970e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "636e9f50_2bc2c380",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-04T16:14:13Z",
+      "side": 1,
+      "message": "is there a test that will exercise this new code?",
+      "range": {
+        "startLine": 406,
+        "startChar": 23,
+        "endLine": 406,
+        "endChar": 36
+      },
+      "revId": "24371cd7ddd777850d85cbea498f90ee9b2970e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c001845_51f292ce",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-04T16:14:13Z",
+      "side": 1,
+      "message": "scissor too right?",
+      "range": {
+        "startLine": 568,
+        "startChar": 28,
+        "endLine": 568,
+        "endChar": 62
+      },
+      "revId": "24371cd7ddd777850d85cbea498f90ee9b2970e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
