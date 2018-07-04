@@ -78,8 +78,11 @@ DeviceImpl *DisplayVk::createDevice()
 
 egl::Error DisplayVk::waitClient(const gl::Context *context) const
 {
+    // TODO(jmadill): Call flush instead of finish once it is implemented in RendererVK.
+    // http://anglebug.com/2504
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+
+    return mRenderer->finish(context);
 }
 
 egl::Error DisplayVk::waitNative(const gl::Context *context, EGLint engine) const
