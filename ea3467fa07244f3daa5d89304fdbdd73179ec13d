@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee007f63_5ba88235",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T19:00:44Z",
+      "side": 1,
+      "message": "hum. kinda neat that this is a real format.",
+      "range": {
+        "startLine": 108,
+        "startChar": 18,
+        "endLine": 108,
+        "endChar": 44
+      },
+      "revId": "ea3467fa07244f3daa5d89304fdbdd73179ec13d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2d236a9_4c8d4cf4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T19:00:44Z",
+      "side": 1,
+      "message": "this should go in overrides rather than the base map. technically the format doesn\u0027t exist in Vulkan. the map is for 1:1 equivalents.",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 53
+      },
+      "revId": "ea3467fa07244f3daa5d89304fdbdd73179ec13d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cb489a6_e782e388",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 10
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T19:00:44Z",
+      "side": 1,
+      "message": "down here.",
+      "range": {
+        "startLine": 205,
+        "startChar": 5,
+        "endLine": 205,
+        "endChar": 14
+      },
+      "revId": "ea3467fa07244f3daa5d89304fdbdd73179ec13d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
