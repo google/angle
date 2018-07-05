@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c08ba05_16bc0cc6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T14:44:57Z",
+      "side": 1,
+      "message": "you can remove explicit if you add a second argument to a method.",
+      "range": {
+        "startLine": 104,
+        "startChar": 4,
+        "endLine": 104,
+        "endChar": 13
+      },
+      "revId": "217756f09a0056f6b7622bfaedad3e6f4d4fca58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0aaab7d_6c066e8a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T14:44:57Z",
+      "side": 1,
+      "message": "Refactor suggestion and an edge case fix for an error in mock ICD init:\n\nCan you move the #if !defined(ANGLE_PLATFORM_ANDROID) block above into a helper function ShouldEnableMockICD(attribs)? Add a member canEnableMockICD() to the ScopedVkLoadEnv class and use that to initialize enableNullDriver. Rename to enableMockICD as well.\n\nThis is similar to how we initialize mEnableValidationLayers below.",
+      "range": {
+        "startLine": 309,
+        "startChar": 48,
+        "endLine": 309,
+        "endChar": 95
+      },
+      "revId": "217756f09a0056f6b7622bfaedad3e6f4d4fca58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

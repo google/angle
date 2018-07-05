@@ -69,6 +69,30 @@
       "revId": "25bdd714cf35df5e026d478d1e69089c7b5ee647",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1986cc48_db8a9342",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T14:44:57Z",
+      "side": 1,
+      "message": "see other comments. That\u0027s fine about the define.",
+      "parentUuid": "1727ca10_7f49da0c",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 9
+      },
+      "revId": "25bdd714cf35df5e026d478d1e69089c7b5ee647",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
