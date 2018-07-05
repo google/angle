@@ -445,6 +445,11 @@ void CommandBuffer::singleBufferBarrier(VkPipelineStageFlags srcStageMask,
                          &bufferBarrier, 0, nullptr);
 }
 
+void CommandBuffer::destroy(VkDevice device)
+{
+    releaseHandle();
+}
+
 void CommandBuffer::destroy(VkDevice device, const vk::CommandPool &commandPool)
 {
     if (valid())

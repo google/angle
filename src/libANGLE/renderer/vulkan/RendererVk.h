@@ -179,6 +179,8 @@ class RendererVk : angle::NonCopyable
         CommandBatch(CommandBatch &&other);
         CommandBatch &operator=(CommandBatch &&other);
 
+        void destroy(VkDevice device);
+
         vk::CommandPool commandPool;
         vk::Fence fence;
         Serial serial;

@@ -314,7 +314,13 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     CommandBuffer();
 
     VkCommandBuffer releaseHandle();
+
+    // This is used for normal pool allocated command buffers. It reset the handle.
+    void destroy(VkDevice device);
+
+    // This is used in conjunction with VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT.
     void destroy(VkDevice device, const CommandPool &commandPool);
+
     Error init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo);
     void blitImage(const Image &srcImage,
                    VkImageLayout srcImageLayout,
@@ -696,6 +702,25 @@ enum class RecordingMode
 {
     Start,
     Append,
+};
+
+// Helper class to handle RAII patterns for initialization. Requires that T have a destroy method
+// that takes a VkDevice and returns void.
+template <typename T>
+class Scoped final : angle::NonCopyable
+{
+  public:
+    Scoped(VkDevice device) : mDevice(device) {}
+    ~Scoped() { mVar.destroy(mDevice); }
+
+    const T &get() const { return mVar; }
+    T &get() { return mVar; }
+
+    T &&release() { return std::move(mVar); }
+
+  private:
+    VkDevice mDevice;
+    T mVar;
 };
 }  // namespace vk
 
