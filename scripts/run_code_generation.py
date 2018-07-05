@@ -22,9 +22,18 @@ def get_child_script_dirname(script):
     # All script names are relative to ANGLE's root
     return os.path.dirname(os.path.abspath(os.path.join(root_dir, script)))
 
+# Replace all backslashes with forward slashes to be platform independent
+def clean_path_slashes(path):
+    return path.replace("\\", "/")
+
+# Takes a script input file name which is relative to the code generation script's directory and
+# changes it to be relative to the angle root directory
+def rebase_script_input_path(script_path, input_file_path):
+    return os.path.relpath(os.path.join(os.path.dirname(script_path), input_file_path), root_dir);
+
 def grab_from_script(script, param):
     res = subprocess.check_output(['python', script, param]).strip()
-    return [os.path.abspath(os.path.join(os.path.dirname(script), name)) for name in res.split(',')]
+    return [clean_path_slashes(rebase_script_input_path(script, name)) for name in res.split(',')]
 
 def auto_script(script):
     # Set the CWD to the script directory.

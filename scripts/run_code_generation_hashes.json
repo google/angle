@@ -69,12 +69,12 @@
     "be1ca0bd596cf826d8f38d110fba35b0",
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":
     "8b02327195f831c782b0a30b36b589d6",
-  "Vulkan internal shader programs:C:\\src\\angle\\src\\libANGLE\\renderer\\vulkan\\shaders\\src\\FullScreenQuad.vert":
-    "ab897aa9eb45f83f66080ee082e7d51e",
-  "Vulkan internal shader programs:C:\\src\\angle\\src\\libANGLE\\renderer\\vulkan\\shaders\\src\\PushConstantColor.frag":
-    "3b931f51bfee8310f3d6497d5c9ed8a1",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
     "d651e28ab62477029093152e37ed49c9",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":
+    "ab897aa9eb45f83f66080ee082e7d51e",
+  "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/PushConstantColor.frag":
+    "3b931f51bfee8310f3d6497d5c9ed8a1",
   "Vulkan mandatory format support table:src/libANGLE/renderer/angle_format.py":
     "ddf4dae07bfad22bbf13f4b14e43d8f4",
   "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py":
