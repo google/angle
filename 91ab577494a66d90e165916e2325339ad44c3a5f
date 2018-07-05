@@ -22,6 +22,30 @@
       "revId": "91ab577494a66d90e165916e2325339ad44c3a5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26c70310_f8b08eea",
+        "filename": "scripts/run_code_generation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-05T19:10:17Z",
+      "side": 1,
+      "message": "Changed it to the super verbose get_code_generation_script_dirname",
+      "parentUuid": "407d1b57_93f1c362",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 22
+      },
+      "revId": "91ab577494a66d90e165916e2325339ad44c3a5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
