@@ -168,12 +168,13 @@ def md5(fname):
     return hash_md5.hexdigest()
 
 def any_input_dirty(name, inputs):
+    found_dirty_input = False
     for finput in inputs:
         key = name + ":" + finput
         new_hashes[key] = md5(finput)
         if (not key in old_hashes) or (old_hashes[key] != new_hashes[key]):
-            return True
-    return False
+            found_dirty_input = True
+    return found_dirty_input
 
 os.chdir(script_dir)
 old_hashes = json.load(open(hash_fname))
