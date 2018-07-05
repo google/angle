@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8f4f41a_ad49f1c0",
+        "filename": "scripts/run_code_generation.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T19:12:22Z",
+      "side": 1,
+      "message": "thanks.. but i think this is for the non-code-generation script. aka the scripts that are run from this script. hence the confusion :)",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 38
+      },
+      "revId": "3e8b7029c119663454d59248703142e277bbd251",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
