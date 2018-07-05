@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "d4150feb_24ce1ccf",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-05T06:10:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "681124bf_b2f95b0c",
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86075a63_1aa8e68e",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 6
@@ -59,6 +77,30 @@
     },
     {
       "key": {
+        "uuid": "746498df_5b7c1c40",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-05T06:10:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86075a63_1aa8e68e",
+      "range": {
+        "startLine": 23,
+        "startChar": 51,
+        "endLine": 23,
+        "endChar": 88
+      },
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f73fc6c_4dfd2cc1",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 6
@@ -73,6 +115,24 @@
       "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b07e2e1_fece8fe2",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1479,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-05T06:10:31Z",
+      "side": 1,
+      "message": "Done\nI find using memoryBarrierShared() here is enough.",
+      "parentUuid": "4f73fc6c_4dfd2cc1",
+      "revId": "e2e1cdc93091192336fcd9379f154ab218dcd3d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
