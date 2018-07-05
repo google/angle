@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54632767_6efebfed",
+        "filename": "src/common/PackedEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-05T16:06:34Z",
+      "side": 1,
+      "message": "Possible to Possible to name this mPrivateData to be clear that it should not be referenced?",
+      "range": {
+        "startLine": 126,
+        "startChar": 12,
+        "endLine": 126,
+        "endChar": 17
+      },
+      "revId": "523a64538eab7a2fac2fb9ab0716884864623432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
