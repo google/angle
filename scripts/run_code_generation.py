@@ -18,13 +18,17 @@ root_dir = os.path.abspath(os.path.join(script_dir, '..'))
 
 # auto_script is a standard way for scripts to return their inputs and outputs.
 
+def get_child_script_dirname(script):
+    # All script names are relative to ANGLE's root
+    return os.path.dirname(os.path.abspath(os.path.join(root_dir, script)))
+
 def grab_from_script(script, param):
     res = subprocess.check_output(['python', script, param]).strip()
     return [os.path.abspath(os.path.join(os.path.dirname(script), name)) for name in res.split(',')]
 
 def auto_script(script):
     # Set the CWD to the script directory.
-    os.chdir(os.path.dirname(os.path.abspath(script)))
+    os.chdir(get_child_script_dirname(script))
     base_script = os.path.basename(script)
     return {
         'script': script,
@@ -177,7 +181,7 @@ for name, info in sorted(generators.iteritems()):
         any_dirty = True
 
         # Set the CWD to the script directory.
-        os.chdir(os.path.dirname(os.path.abspath(script)))
+        os.chdir(get_child_script_dirname(script))
 
         print('Running ' + name + ' code generator')
         if subprocess.call(['python', os.path.basename(script)]) != 0:
