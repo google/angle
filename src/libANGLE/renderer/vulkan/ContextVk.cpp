@@ -14,6 +14,7 @@
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
@@ -52,7 +53,8 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
       mTexturesDirty(false),
       mVertexArrayBindingHasChanged(false),
-      mClearColorMask(kAllColorChannelsMask)
+      mClearColorMask(kAllColorChannelsMask),
+      mFlipYForCurrentSurface(false)
 {
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
@@ -378,10 +380,10 @@ void ContextVk::popDebugGroup()
     UNIMPLEMENTED();
 }
 
-bool ContextVk::isViewportFlipEnabled()
+bool ContextVk::isViewportFlipEnabled() const
 {
     gl::Framebuffer *framebuffer = mState.getState().getDrawFramebuffer();
-    return framebuffer->isDefault() && mRenderer->getFeatures().flipViewportY;
+    return framebuffer->isDefault() && mFlipYForCurrentSurface;
 }
 
 void ContextVk::updateColorMask(const gl::BlendState &blendState)
@@ -671,8 +673,14 @@ GLint64 ContextVk::getTimestamp()
     return GLint64();
 }
 
-void ContextVk::onMakeCurrent(const gl::Context * /*context*/)
+void ContextVk::onMakeCurrent(const gl::Context *context)
 {
+    // Flip viewports if FeaturesVk::flipViewportY is enabled and the user did not request that the
+    // surface is flipped.
+    egl::Surface *drawSurface = context->getCurrentDrawSurface();
+    mFlipYForCurrentSurface =
+        drawSurface != nullptr && mRenderer->getFeatures().flipViewportY &&
+        !IsMaskFlagSet(drawSurface->getOrientation(), EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE);
 }
 
 gl::Caps ContextVk::getNativeCaps() const
