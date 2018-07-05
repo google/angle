@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea1e60f8_87f66c72",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T12:44:24Z",
+      "side": 1,
+      "message": "nit: can you move this line into the case? just trying to avoid anything in the hot path. duplication is fine. Or you could make a helper. Or make updateViewport take different params.",
+      "range": {
+        "startLine": 429,
+        "startChar": 5,
+        "endLine": 429,
+        "endChar": 87
+      },
+      "revId": "28fad65bac0d980ad80d3c86d97d9f8d37387966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ee89af9_abf0d261",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T12:44:24Z",
+      "side": 1,
+      "message": "is this still correct if the viewport is \u003e than the renderArea?",
+      "range": {
+        "startLine": 653,
+        "startChar": 46,
+        "endLine": 653,
+        "endChar": 63
+      },
+      "revId": "28fad65bac0d980ad80d3c86d97d9f8d37387966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
