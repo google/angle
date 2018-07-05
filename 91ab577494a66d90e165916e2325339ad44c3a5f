@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "407d1b57_93f1c362",
+        "filename": "scripts/run_code_generation.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-05T18:56:35Z",
+      "side": 1,
+      "message": "script is unfortunately a bit overloaded. maybe we should rename script_dir above to file_dir?",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 22
+      },
+      "revId": "91ab577494a66d90e165916e2325339ad44c3a5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
