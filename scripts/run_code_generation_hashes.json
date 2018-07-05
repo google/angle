@@ -82,7 +82,7 @@
   "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json":
     "f9faa72f7d2b926e4eca5cc0ffb73feb",
   "Vulkan mandatory format support table:third_party/vulkan-headers/src/registry/vk.xml":
-    "147f8153623cd74b26a0ceba90afbc86",
+    "ef4320881fab0dd62df5f9e84b4ac117",
   "packed enum:src/common/gen_packed_gl_enums.py":
     "878d244fb50d4163adcbfbce8a8c660c",
   "packed enum:src/common/packed_egl_enums.json":
