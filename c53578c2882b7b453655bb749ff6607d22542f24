@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f77497a_7620700b",
+        "filename": "third_party/vulkan-headers/vulkan_headers_script_deps.gni",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-06T16:28:35Z",
+      "side": 1,
+      "message": "I suspect this is causing the build error.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 29
+      },
+      "revId": "c53578c2882b7b453655bb749ff6607d22542f24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
