@@ -125,9 +125,17 @@ void ProgramGL::setSeparable(bool separable)
     mFunctions->programParameteri(mProgramID, GL_PROGRAM_SEPARABLE, separable ? GL_TRUE : GL_FALSE);
 }
 
-gl::LinkResult ProgramGL::link(const gl::Context *context,
-                               const gl::ProgramLinkedResources &resources,
-                               gl::InfoLog &infoLog)
+std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
+                                           const gl::ProgramLinkedResources &resources,
+                                           gl::InfoLog &infoLog)
+{
+    // TODO(jie.a.chen@intel.com): Parallelize linking.
+    return std::make_unique<LinkEventDone>(linkImpl(context, resources, infoLog));
+}
+
+gl::LinkResult ProgramGL::linkImpl(const gl::Context *context,
+                                   const gl::ProgramLinkedResources &resources,
+                                   gl::InfoLog &infoLog)
 {
     preLink();
 

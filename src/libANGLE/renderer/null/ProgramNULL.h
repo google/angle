@@ -28,9 +28,9 @@ class ProgramNULL : public ProgramImpl
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
-    gl::LinkResult link(const gl::Context *context,
-                        const gl::ProgramLinkedResources &resources,
-                        gl::InfoLog &infoLog) override;
+    std::unique_ptr<LinkEvent> link(const gl::Context *context,
+                                    const gl::ProgramLinkedResources &resources,
+                                    gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;

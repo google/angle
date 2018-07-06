@@ -196,9 +196,9 @@ class ProgramD3D : public ProgramImpl
                                                           ShaderExecutableD3D **outExectuable,
                                                           gl::InfoLog *infoLog);
     angle::Result getComputeExecutable(ShaderExecutableD3D **outExecutable);
-    gl::LinkResult link(const gl::Context *context,
-                        const gl::ProgramLinkedResources &resources,
-                        gl::InfoLog &infoLog) override;
+    std::unique_ptr<LinkEvent> link(const gl::Context *context,
+                                    const gl::ProgramLinkedResources &resources,
+                                    gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void setPathFragmentInputGen(const std::string &inputName,
@@ -311,6 +311,7 @@ class ProgramD3D : public ProgramImpl
     class GetVertexExecutableTask;
     class GetPixelExecutableTask;
     class GetGeometryExecutableTask;
+    class GraphicsProgramLinkEvent;
 
     class VertexExecutable
     {
@@ -451,7 +452,8 @@ class ProgramD3D : public ProgramImpl
                                     GLboolean transpose,
                                     const GLfloat *value);
 
-    gl::LinkResult compileProgramExecutables(const gl::Context *context, gl::InfoLog &infoLog);
+    std::unique_ptr<LinkEvent> compileProgramExecutables(const gl::Context *context,
+                                                         gl::InfoLog &infoLog);
     gl::LinkResult compileComputeExecutable(const gl::Context *context, gl::InfoLog &infoLog);
 
     void gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyings,

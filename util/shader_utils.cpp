@@ -126,12 +126,11 @@ GLuint CompileProgramWithTransformFeedback(
                                                     transformFeedbackVaryings, bufferMode);
 }
 
-GLuint CompileProgramWithGSAndTransformFeedback(
-    const std::string &vsSource,
-    const std::string &gsSource,
-    const std::string &fsSource,
-    const std::vector<std::string> &transformFeedbackVaryings,
-    GLenum bufferMode)
+static GLuint CompileAndLinkProgram(const std::string &vsSource,
+                                    const std::string &gsSource,
+                                    const std::string &fsSource,
+                                    const std::vector<std::string> &transformFeedbackVaryings,
+                                    GLenum bufferMode)
 {
     GLuint program = glCreateProgram();
 
@@ -182,12 +181,34 @@ GLuint CompileProgramWithGSAndTransformFeedback(
 
     glLinkProgram(program);
 
+    return program;
+}
+
+GLuint CompileProgramWithGSAndTransformFeedback(
+    const std::string &vsSource,
+    const std::string &gsSource,
+    const std::string &fsSource,
+    const std::vector<std::string> &transformFeedbackVaryings,
+    GLenum bufferMode)
+{
+    GLuint program =
+        CompileAndLinkProgram(vsSource, gsSource, fsSource, transformFeedbackVaryings, bufferMode);
+    if (program == 0)
+    {
+        return 0;
+    }
     return CheckLinkStatusAndReturnProgram(program, true);
 }
 
 GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource)
 {
     return CompileProgramWithGS(vsSource, "", fsSource);
+}
+
+GLuint CompileProgramParallel(const std::string &vsSource, const std::string &fsSource)
+{
+    std::vector<std::string> emptyVector;
+    return CompileAndLinkProgram(vsSource, "", fsSource, emptyVector, GL_NONE);
 }
 
 GLuint CompileProgramWithGS(const std::string &vsSource,

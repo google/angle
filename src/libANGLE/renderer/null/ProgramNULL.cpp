@@ -41,11 +41,11 @@ void ProgramNULL::setSeparable(bool separable)
 {
 }
 
-gl::LinkResult ProgramNULL::link(const gl::Context *contextImpl,
-                                 const gl::ProgramLinkedResources &resources,
-                                 gl::InfoLog &infoLog)
+std::unique_ptr<LinkEvent> ProgramNULL::link(const gl::Context *contextImpl,
+                                             const gl::ProgramLinkedResources &resources,
+                                             gl::InfoLog &infoLog)
 {
-    return true;
+    return std::make_unique<LinkEventDone>(true);
 }
 
 GLboolean ProgramNULL::validate(const gl::Caps &caps, gl::InfoLog *infoLog)

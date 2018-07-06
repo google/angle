@@ -1019,6 +1019,9 @@ void QueryProgramiv(const Context *context, const Program *program, GLenum pname
         case GL_LINK_STATUS:
             *params = program->isLinked();
             return;
+        case GL_COMPLETION_STATUS_KHR:
+            *params = program->isLinking() ? GL_FALSE : GL_TRUE;
+            return;
         case GL_VALIDATE_STATUS:
             *params = program->isValidated();
             return;
@@ -1160,6 +1163,11 @@ void QueryShaderiv(const Context *context, Shader *shader, GLenum pname, GLint *
             *params = shader->isFlaggedForDeletion();
             return;
         case GL_COMPILE_STATUS:
+            *params = shader->isCompiled(context) ? GL_TRUE : GL_FALSE;
+            return;
+        case GL_COMPLETION_STATUS_KHR:
+            // TODO(jie.a.chen@intel.com): Parallelize shader compilation.
+            // http://crbug.com/849576
             *params = shader->isCompiled(context) ? GL_TRUE : GL_FALSE;
             return;
         case GL_INFO_LOG_LENGTH:

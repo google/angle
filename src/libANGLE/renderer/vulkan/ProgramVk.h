@@ -32,9 +32,9 @@ class ProgramVk : public ProgramImpl
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
-    gl::LinkResult link(const gl::Context *context,
-                        const gl::ProgramLinkedResources &resources,
-                        gl::InfoLog &infoLog) override;
+    std::unique_ptr<LinkEvent> link(const gl::Context *context,
+                                    const gl::ProgramLinkedResources &resources,
+                                    gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
@@ -136,6 +136,9 @@ class ProgramVk : public ProgramImpl
 
     template <typename T>
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
+    gl::LinkResult linkImpl(const gl::Context *context,
+                            const gl::ProgramLinkedResources &resources,
+                            gl::InfoLog &infoLog);
 
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable

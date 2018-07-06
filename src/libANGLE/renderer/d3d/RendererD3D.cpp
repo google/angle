@@ -39,8 +39,7 @@ RendererD3D::RendererD3D(egl::Display *display)
       mCapsInitialized(false),
       mWorkaroundsInitialized(false),
       mDisjoint(false),
-      mDeviceLost(false),
-      mWorkerThreadPool(4)
+      mDeviceLost(false)
 {
 }
 
@@ -169,11 +168,6 @@ const gl::Limitations &RendererD3D::getNativeLimitations() const
 {
     ensureCapsInitialized();
     return mNativeLimitations;
-}
-
-angle::WorkerThreadPool *RendererD3D::getWorkerThreadPool()
-{
-    return &mWorkerThreadPool;
 }
 
 Serial RendererD3D::generateSerial()

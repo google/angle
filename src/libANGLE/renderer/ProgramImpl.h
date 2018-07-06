@@ -30,6 +30,35 @@ struct BlockMemberInfo;
 
 namespace rx
 {
+
+// Provides a mechanism to access the result of asynchronous linking.
+class LinkEvent : angle::NonCopyable
+{
+  public:
+    virtual ~LinkEvent(){};
+
+    // Please be aware that these methods may be called under a gl::Context other
+    // than the one where the LinkEvent was created.
+    //
+    // Waits until the linking is actually done. Returns true if the linking
+    // succeeded, false otherwise.
+    virtual bool wait() = 0;
+    // Peeks whether the linking is still ongoing.
+    virtual bool isLinking() = 0;
+};
+
+// Wraps an already done linking.
+class LinkEventDone final : public LinkEvent
+{
+  public:
+    LinkEventDone(const gl::LinkResult &result) : mResult(result) {}
+    bool wait() override { return (!mResult.isError() && mResult.getResult()); }
+    bool isLinking() override { return false; }
+
+  private:
+    gl::LinkResult mResult;
+};
+
 class ProgramImpl : angle::NonCopyable
 {
   public:
@@ -44,9 +73,9 @@ class ProgramImpl : angle::NonCopyable
     virtual void setBinaryRetrievableHint(bool retrievable) = 0;
     virtual void setSeparable(bool separable)               = 0;
 
-    virtual gl::LinkResult link(const gl::Context *context,
-                                const gl::ProgramLinkedResources &resources,
-                                gl::InfoLog &infoLog)                      = 0;
+    virtual std::unique_ptr<LinkEvent> link(const gl::Context *context,
+                                            const gl::ProgramLinkedResources &resources,
+                                            gl::InfoLog &infoLog)          = 0;
     virtual GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) = 0;
 
     virtual void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) = 0;
