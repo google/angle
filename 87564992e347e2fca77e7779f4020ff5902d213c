@@ -1,0 +1,245 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d21c221_86236baa",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "Is it better to introduce why we should translate ssbo into RWByteAddressBuffer?",
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78ead92c_e5315234",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "does not",
+      "range": {
+        "startLine": 12,
+        "startChar": 27,
+        "endLine": 12,
+        "endChar": 31
+      },
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a8666af_5f391410",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": ", then",
+      "range": {
+        "startLine": 16,
+        "startChar": 39,
+        "endLine": 16,
+        "endChar": 45
+      },
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65302f46_b30b371b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "Improve",
+      "range": {
+        "startLine": 67,
+        "startChar": 3,
+        "endLine": 67,
+        "endChar": 10
+      },
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9247e0b_860ae0c1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "TODOs have been marked in the corresponding places in this patch.",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 68,
+        "endChar": 45
+      },
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecc2b4d2_d4ea86d1",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "return type.getQualifier() \u003d\u003d EvqBuffer;",
+      "range": {
+        "startLine": 98,
+        "startChar": 2,
+        "endLine": 104,
+        "endChar": 1
+      },
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80359a45_5bda8eb2",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "Is it better to use switch-case here?",
+      "range": {
+        "startLine": 393,
+        "startChar": 8,
+        "endLine": 393,
+        "endChar": 35
+      },
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c098495_789f0beb",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1320,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "else if",
+      "range": {
+        "startLine": 1320,
+        "startChar": 12,
+        "endLine": 1320,
+        "endChar": 33
+      },
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f33592d0_d0302669",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "Return",
+      "range": {
+        "startLine": 96,
+        "startChar": 34,
+        "endLine": 96,
+        "endChar": 40
+      },
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d66e2a3_81efd5c8",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "Blocks",
+      "range": {
+        "startLine": 1445,
+        "startChar": 45,
+        "endLine": 1445,
+        "endChar": 50
+      },
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9496e81a_7bd623aa",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1539,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T08:02:23Z",
+      "side": 1,
+      "message": "Maybe you can add a test on a ssbo with multiple members.",
+      "revId": "87564992e347e2fca77e7779f4020ff5902d213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
