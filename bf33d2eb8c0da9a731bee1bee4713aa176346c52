@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ec9524c1_bc607cb8",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3366,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-07-06T21:38:54Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "be697bbd_3f80664d",
+      "range": {
+        "startLine": 3337,
+        "startChar": 0,
+        "endLine": 3366,
+        "endChar": 28
+      },
+      "revId": "bf33d2eb8c0da9a731bee1bee4713aa176346c52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a0798785_1c085579",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "bf33d2eb8c0da9a731bee1bee4713aa176346c52",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88eb194a_c69a4fa4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3417,
+      "author": {
+        "id": 1256245
+      },
+      "writtenOn": "2018-07-06T21:38:54Z",
+      "side": 1,
+      "message": "Resetting at the start of this function (syncPrimitiveTopology) which I believe makes sense.",
+      "parentUuid": "a0798785_1c085579",
+      "range": {
+        "startLine": 3417,
+        "startChar": 16,
+        "endLine": 3417,
+        "endChar": 32
+      },
+      "revId": "bf33d2eb8c0da9a731bee1bee4713aa176346c52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
