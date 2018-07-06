@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d53f5e6a_4d4d6c04",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-06T14:06:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea1e60f8_87f66c72",
+      "range": {
+        "startLine": 429,
+        "startChar": 5,
+        "endLine": 429,
+        "endChar": 87
+      },
+      "revId": "28fad65bac0d980ad80d3c86d97d9f8d37387966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ee89af9_abf0d261",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "28fad65bac0d980ad80d3c86d97d9f8d37387966",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fefade7c_fbf89d22",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-06T14:06:58Z",
+      "side": 1,
+      "message": "There are tests for that in ViewportTest (example: DoubleWindowOffCenter) and they are passing with the inversion as well",
+      "parentUuid": "9ee89af9_abf0d261",
+      "range": {
+        "startLine": 653,
+        "startChar": 46,
+        "endLine": 653,
+        "endChar": 63
+      },
+      "revId": "28fad65bac0d980ad80d3c86d97d9f8d37387966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
