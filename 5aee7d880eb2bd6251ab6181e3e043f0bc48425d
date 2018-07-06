@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea8a883f_bc6becc4",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3362,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-06T22:12:05Z",
+      "side": 1,
+      "message": "nit: I think you might as well do return count \u003c kMinimumPrimitiveCounts[mode] for now. We can optimize this later if need be.",
+      "range": {
+        "startLine": 3351,
+        "startChar": 4,
+        "endLine": 3362,
+        "endChar": 52
+      },
+      "revId": "5aee7d880eb2bd6251ab6181e3e043f0bc48425d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
