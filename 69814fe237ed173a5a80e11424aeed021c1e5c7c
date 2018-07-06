@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f5da2552_3be2d848",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T01:14:06Z",
+      "side": 1,
+      "message": "If we don\u0027t use a callback to update the binding-attributes map, I find we need to maintain the attribute-binding map in the last sync, or we cannot easily update its old binding. We may also have to add an if-statement when iterating every attributes in syncState.",
+      "parentUuid": "82e7122d_1237611c",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 86
+      },
+      "revId": "69814fe237ed173a5a80e11424aeed021c1e5c7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a6a1f68d_af53e536",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
         "patchSetId": 7
@@ -69,6 +93,30 @@
       "revId": "69814fe237ed173a5a80e11424aeed021c1e5c7c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ca565a5_3b4043e9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T01:14:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6a1f68d_af53e536",
+      "range": {
+        "startLine": 98,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 15
+      },
+      "revId": "69814fe237ed173a5a80e11424aeed021c1e5c7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

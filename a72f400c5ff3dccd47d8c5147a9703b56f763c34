@@ -22,6 +22,30 @@
       "revId": "a72f400c5ff3dccd47d8c5147a9703b56f763c34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05be96f9_e7944512",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-06T01:14:06Z",
+      "side": 0,
+      "message": "I don\u0027t find it used anywhere, so I decide to remove it.",
+      "parentUuid": "5ca20761_3b5d794e",
+      "range": {
+        "startLine": 191,
+        "startChar": 0,
+        "endLine": 193,
+        "endChar": 95
+      },
+      "revId": "a72f400c5ff3dccd47d8c5147a9703b56f763c34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
