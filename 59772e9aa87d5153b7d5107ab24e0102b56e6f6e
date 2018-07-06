@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9b4d53d7_63e421ff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-07-06T13:28:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14856f3e_8697686b",
+      "range": {
+        "startLine": 9,
+        "startChar": 11,
+        "endLine": 9,
+        "endChar": 19
+      },
+      "revId": "59772e9aa87d5153b7d5107ab24e0102b56e6f6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b83d34c4_555905e9",
         "filename": "/COMMIT_MSG",
         "patchSetId": 9
@@ -36,6 +60,24 @@
       "writtenOn": "2018-06-12T14:16:54Z",
       "side": 1,
       "message": "My experience from WebGPU is that this approach doesn\u0027t work for large buffers: the RWStructuredBuffers have a \"small\" limit on the element size that has to be less than a few kilobytes. Also this approach can\u0027t support unsized arrays at the end of an SSBO. I suggest using a RWByteAddressBuffer instead.",
+      "revId": "59772e9aa87d5153b7d5107ab24e0102b56e6f6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df7dcd33_9b4e89f9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-07-06T13:28:18Z",
+      "side": 1,
+      "message": "Thanks for the suggestion. Done.",
+      "parentUuid": "b83d34c4_555905e9",
       "revId": "59772e9aa87d5153b7d5107ab24e0102b56e6f6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
