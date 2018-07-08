@@ -824,6 +824,8 @@ ProcEntry g_procTable[] = {
     {"glMatrixIndexPointerOESContextANGLE", P(gl::MatrixIndexPointerOESContextANGLE)},
     {"glMatrixMode", P(gl::MatrixMode)},
     {"glMatrixModeContextANGLE", P(gl::MatrixModeContextANGLE)},
+    {"glMaxShaderCompilerThreadsKHR", P(gl::MaxShaderCompilerThreadsKHR)},
+    {"glMaxShaderCompilerThreadsKHRContextANGLE", P(gl::MaxShaderCompilerThreadsKHRContextANGLE)},
     {"glMemoryBarrier", P(gl::MemoryBarrier)},
     {"glMemoryBarrierByRegion", P(gl::MemoryBarrierByRegion)},
     {"glMemoryBarrierByRegionContextANGLE", P(gl::MemoryBarrierByRegionContextANGLE)},
@@ -1237,5 +1239,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1169;
+size_t g_numProcs = 1171;
 }  // namespace egl
