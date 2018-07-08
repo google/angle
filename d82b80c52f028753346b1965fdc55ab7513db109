@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1d4ae39_ddcfa39a",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-08T13:48:50Z",
+      "side": 1,
+      "message": "Instead of format_entry/empty/begin can you put it back to empty_format_entry and format_entry? In format entry do the case, the internalFormat assign, and have a {texture} and {buffer} section for the nested-templates.",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 15
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "575c2551_bc2be739",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-08T13:48:50Z",
+      "side": 1,
+      "message": "can you rename this to texture_initializer?",
+      "range": {
+        "startLine": 74,
+        "startChar": 31,
+        "endLine": 74,
+        "endChar": 42
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39bb39e2_75b7ccac",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-08T13:48:50Z",
+      "side": 1,
+      "message": "Can you omit this can call GetFormatProperties multiple times in the different locations?",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 23
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a73c87e_58d5c2f5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-08T13:48:50Z",
+      "side": 1,
+      "message": "Can we put this back below and allow us to call it multiple times until we can do the more complex optimization you were mentioning?",
+      "range": {
+        "startLine": 180,
+        "startChar": 8,
+        "endLine": 180,
+        "endChar": 51
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a47c4df3_d1cb8741",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-08T13:48:50Z",
+      "side": 1,
+      "message": "can we rename this to textureInitializerFunction?",
+      "range": {
+        "startLine": 71,
+        "startChar": 34,
+        "endLine": 71,
+        "endChar": 57
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

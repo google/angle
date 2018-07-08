@@ -287,6 +287,30 @@
     },
     {
       "key": {
+        "uuid": "7f132f91_387ca26b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-08T13:48:50Z",
+      "side": 1,
+      "message": "For now as I said in the previous comment I think we should use the simpler approach. We can do a cache later if need be.",
+      "parentUuid": "92e56143_752f74ec",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 27
+      },
+      "revId": "20f7ca68ee3e026e855b61bf48fa662592617438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "08624bb5_eb573fa2",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 2
