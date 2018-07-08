@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "280b2578_9ad5a37d",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-08T07:06:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9815df3_a7c4dc4c",
+      "range": {
+        "startLine": 72,
+        "startChar": 15,
+        "endLine": 72,
+        "endChar": 118
+      },
+      "revId": "e84aef64939de3113723f53c3100155b29a93c7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "66f09775_058be022",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2018-06-27T11:45:20Z",
       "side": 1,
       "message": "nit: Maybe put this into a var for better readability?",
+      "range": {
+        "startLine": 74,
+        "startChar": 8,
+        "endLine": 74,
+        "endChar": 85
+      },
+      "revId": "e84aef64939de3113723f53c3100155b29a93c7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe0532a1_b146147f",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-08T07:06:39Z",
+      "side": 1,
+      "message": "My thinking is that\u0027s harder to read because you have to look back and find the variable and keep that in your head when looking at this call.\nFewer variables \u003d\u003d less to keep track of.",
+      "parentUuid": "66f09775_058be022",
       "range": {
         "startLine": 74,
         "startChar": 8,

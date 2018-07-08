@@ -263,6 +263,30 @@
     },
     {
       "key": {
+        "uuid": "92e56143_752f74ec",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-08T07:06:39Z",
+      "side": 1,
+      "message": "Turns out not to be this easy.  It\u0027s only in the generated code where we know which VkFormat to get the properties of.  So that\u0027s where I put the call to GetFormatProperties().  Which seems to go against your wish for that code to be as constexpr-ish as possible.\nIf you\u0027re still going to forbid any function call in non-fallback cases, then I think we need to pass around the VkFormatProperties AND a way to know if it\u0027s been filled in yet.  It gets even hairier when we also want to use/set properties in initBufferFallback().  The cleanest way would seem to be for GetFormatProperties() to cache/memoize, or we could generate additional code to pre-fetch properties for all valid formats, or loop over the formats a second time, doing the properties stuff.  Do you have an idea how expensive GetFormatProperties() is?  If not, this is all premature optimization.",
+      "parentUuid": "80850620_4bc324f9",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 27
+      },
+      "revId": "20f7ca68ee3e026e855b61bf48fa662592617438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "08624bb5_eb573fa2",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 2
@@ -283,6 +307,30 @@
       "revId": "20f7ca68ee3e026e855b61bf48fa662592617438",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed39540d_60264ab3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-08T07:06:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08624bb5_eb573fa2",
+      "range": {
+        "startLine": 44,
+        "startChar": 9,
+        "endLine": 44,
+        "endChar": 26
+      },
+      "revId": "20f7ca68ee3e026e855b61bf48fa662592617438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
