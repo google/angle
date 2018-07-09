@@ -330,7 +330,7 @@ egl::Error DisplayD3D::waitClient(const gl::Context *context)
     for (egl::Surface *surface : mState.surfaceSet)
     {
         SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
-        ANGLE_TRY(surfaceD3D->checkForOutOfDateSwapChain(context));
+        ANGLE_TRY(surfaceD3D->checkForOutOfDateSwapChain(this));
     }
 
     return egl::NoError();
@@ -344,13 +344,13 @@ egl::Error DisplayD3D::waitNative(const gl::Context *context, EGLint engine)
     if (drawSurface != nullptr)
     {
         SurfaceD3D *drawSurfaceD3D = GetImplAs<SurfaceD3D>(drawSurface);
-        ANGLE_TRY(drawSurfaceD3D->checkForOutOfDateSwapChain(context));
+        ANGLE_TRY(drawSurfaceD3D->checkForOutOfDateSwapChain(this));
     }
 
     if (readSurface != nullptr)
     {
         SurfaceD3D *readSurfaceD3D = GetImplAs<SurfaceD3D>(readSurface);
-        ANGLE_TRY(readSurfaceD3D->checkForOutOfDateSwapChain(context));
+        ANGLE_TRY(readSurfaceD3D->checkForOutOfDateSwapChain(this));
     }
 
     return egl::NoError();

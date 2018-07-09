@@ -153,13 +153,13 @@ void SwapChain11::releaseOffscreenDepthBuffer()
     mDepthStencilSRView.reset();
 }
 
-EGLint SwapChain11::resetOffscreenBuffers(const gl::Context *context,
+EGLint SwapChain11::resetOffscreenBuffers(DisplayD3D *displayD3D,
                                           int backbufferWidth,
                                           int backbufferHeight)
 {
     if (mNeedsOffscreenTexture)
     {
-        EGLint result = resetOffscreenColorBuffer(context, backbufferWidth, backbufferHeight);
+        EGLint result = resetOffscreenColorBuffer(displayD3D, backbufferWidth, backbufferHeight);
         if (result != EGL_SUCCESS)
         {
             return result;
@@ -178,7 +178,7 @@ EGLint SwapChain11::resetOffscreenBuffers(const gl::Context *context,
     return EGL_SUCCESS;
 }
 
-EGLint SwapChain11::resetOffscreenColorBuffer(const gl::Context *context,
+EGLint SwapChain11::resetOffscreenColorBuffer(DisplayD3D *displayD3D,
                                               int backbufferWidth,
                                               int backbufferHeight)
 {
@@ -350,7 +350,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(const gl::Context *context,
 
         if (mSwapChain)
         {
-            swapRect(context, 0, 0, backbufferWidth, backbufferHeight);
+            swapRect(displayD3D, 0, 0, backbufferWidth, backbufferHeight);
         }
     }
 
@@ -444,9 +444,7 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
     return EGL_SUCCESS;
 }
 
-EGLint SwapChain11::resize(const gl::Context *context,
-                           EGLint backbufferWidth,
-                           EGLint backbufferHeight)
+EGLint SwapChain11::resize(DisplayD3D *displayD3D, EGLint backbufferWidth, EGLint backbufferHeight)
 {
     TRACE_EVENT0("gpu.angle", "SwapChain11::resize");
     ID3D11Device *device = mRenderer->getDevice();
@@ -526,7 +524,7 @@ EGLint SwapChain11::resize(const gl::Context *context,
 
     mFirstSwap = true;
 
-    return resetOffscreenBuffers(context, backbufferWidth, backbufferHeight);
+    return resetOffscreenBuffers(displayD3D, backbufferWidth, backbufferHeight);
 }
 
 DXGI_FORMAT SwapChain11::getSwapChainNativeFormat() const
@@ -557,7 +555,7 @@ DXGI_FORMAT SwapChain11::getSwapChainNativeFormat() const
     }
 }
 
-EGLint SwapChain11::reset(const gl::Context *context,
+EGLint SwapChain11::reset(DisplayD3D *displayD3D,
                           EGLint backbufferWidth,
                           EGLint backbufferHeight,
                           EGLint swapInterval)
@@ -573,7 +571,7 @@ EGLint SwapChain11::reset(const gl::Context *context,
     // If the swap chain already exists, just resize
     if (mSwapChain != nullptr)
     {
-        return resize(context, backbufferWidth, backbufferHeight);
+        return resize(displayD3D, backbufferWidth, backbufferHeight);
     }
 
     TRACE_EVENT0("gpu.angle", "SwapChain11::reset");
@@ -646,7 +644,7 @@ EGLint SwapChain11::reset(const gl::Context *context,
 
     mFirstSwap = true;
 
-    return resetOffscreenBuffers(context, backbufferWidth, backbufferHeight);
+    return resetOffscreenBuffers(displayD3D, backbufferWidth, backbufferHeight);
 }
 
 void SwapChain11::initPassThroughResources()
@@ -748,7 +746,7 @@ void SwapChain11::initPassThroughResources()
 }
 
 // parameters should be validated/clamped by caller
-EGLint SwapChain11::swapRect(const gl::Context *context,
+EGLint SwapChain11::swapRect(DisplayD3D *displayD3D,
                              EGLint x,
                              EGLint y,
                              EGLint width,
@@ -756,14 +754,14 @@ EGLint SwapChain11::swapRect(const gl::Context *context,
 {
     if (mNeedsOffscreenTexture)
     {
-        EGLint result = copyOffscreenToBackbuffer(context, x, y, width, height);
+        EGLint result = copyOffscreenToBackbuffer(displayD3D, x, y, width, height);
         if (result != EGL_SUCCESS)
         {
             return result;
         }
     }
 
-    EGLint result = present(context, x, y, width, height);
+    EGLint result = present(displayD3D, x, y, width, height);
     if (result != EGL_SUCCESS)
     {
         return result;
@@ -774,7 +772,7 @@ EGLint SwapChain11::swapRect(const gl::Context *context,
     return EGL_SUCCESS;
 }
 
-EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
+EGLint SwapChain11::copyOffscreenToBackbuffer(DisplayD3D *displayD3D,
                                               EGLint x,
                                               EGLint y,
                                               EGLint width,
@@ -858,11 +856,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
     return EGL_SUCCESS;
 }
 
-EGLint SwapChain11::present(const gl::Context *context,
-                            EGLint x,
-                            EGLint y,
-                            EGLint width,
-                            EGLint height)
+EGLint SwapChain11::present(DisplayD3D *displayD3D, EGLint x, EGLint y, EGLint width, EGLint height)
 {
     if (!mSwapChain)
     {

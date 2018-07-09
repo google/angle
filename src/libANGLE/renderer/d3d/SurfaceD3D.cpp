@@ -12,6 +12,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/Format.h"
+#include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
@@ -189,7 +190,8 @@ egl::Error SurfaceD3D::resetSwapChain(const egl::Display *display)
     }
 
     // This is a bit risky to pass the proxy context here, but it can happen at almost any time.
-    egl::Error error = resetSwapChain(display->getProxyContext(), width, height);
+    DisplayD3D *displayD3D = GetImplAs<DisplayD3D>(display);
+    egl::Error error       = resetSwapChain(displayD3D, width, height);
     if (error.isError())
     {
         SafeDelete(mSwapChain);
@@ -199,7 +201,7 @@ egl::Error SurfaceD3D::resetSwapChain(const egl::Display *display)
     return egl::NoError();
 }
 
-egl::Error SurfaceD3D::resizeSwapChain(const gl::Context *context,
+egl::Error SurfaceD3D::resizeSwapChain(DisplayD3D *displayD3D,
                                        int backbufferWidth,
                                        int backbufferHeight)
 {
@@ -207,7 +209,7 @@ egl::Error SurfaceD3D::resizeSwapChain(const gl::Context *context,
     ASSERT(mSwapChain);
 
     EGLint status =
-        mSwapChain->resize(context, std::max(1, backbufferWidth), std::max(1, backbufferHeight));
+        mSwapChain->resize(displayD3D, std::max(1, backbufferWidth), std::max(1, backbufferHeight));
 
     if (status == EGL_CONTEXT_LOST)
     {
@@ -225,14 +227,14 @@ egl::Error SurfaceD3D::resizeSwapChain(const gl::Context *context,
     return egl::NoError();
 }
 
-egl::Error SurfaceD3D::resetSwapChain(const gl::Context *context,
+egl::Error SurfaceD3D::resetSwapChain(DisplayD3D *displayD3D,
                                       int backbufferWidth,
                                       int backbufferHeight)
 {
     ASSERT(backbufferWidth >= 0 && backbufferHeight >= 0);
     ASSERT(mSwapChain);
 
-    EGLint status = mSwapChain->reset(context, std::max(1, backbufferWidth),
+    EGLint status = mSwapChain->reset(displayD3D, std::max(1, backbufferWidth),
                                       std::max(1, backbufferHeight), mSwapInterval);
 
     if (status == EGL_CONTEXT_LOST)
@@ -252,7 +254,7 @@ egl::Error SurfaceD3D::resetSwapChain(const gl::Context *context,
     return egl::NoError();
 }
 
-egl::Error SurfaceD3D::swapRect(const gl::Context *context,
+egl::Error SurfaceD3D::swapRect(DisplayD3D *displayD3D,
                                 EGLint x,
                                 EGLint y,
                                 EGLint width,
@@ -275,7 +277,7 @@ egl::Error SurfaceD3D::swapRect(const gl::Context *context,
 
     if (width != 0 && height != 0)
     {
-        EGLint status = mSwapChain->swapRect(context, x, y, width, height);
+        EGLint status = mSwapChain->swapRect(displayD3D, x, y, width, height);
 
         if (status == EGL_CONTEXT_LOST)
         {
@@ -288,12 +290,12 @@ egl::Error SurfaceD3D::swapRect(const gl::Context *context,
         }
     }
 
-    ANGLE_TRY(checkForOutOfDateSwapChain(context));
+    ANGLE_TRY(checkForOutOfDateSwapChain(displayD3D));
 
     return egl::NoError();
 }
 
-egl::Error SurfaceD3D::checkForOutOfDateSwapChain(const gl::Context *context)
+egl::Error SurfaceD3D::checkForOutOfDateSwapChain(DisplayD3D *displayD3D)
 {
     RECT client;
     int clientWidth = getWidth();
@@ -317,11 +319,11 @@ egl::Error SurfaceD3D::checkForOutOfDateSwapChain(const gl::Context *context)
 
     if (mSwapIntervalDirty)
     {
-        ANGLE_TRY(resetSwapChain(context, clientWidth, clientHeight));
+        ANGLE_TRY(resetSwapChain(displayD3D, clientWidth, clientHeight));
     }
     else if (sizeDirty)
     {
-        ANGLE_TRY(resizeSwapChain(context, clientWidth, clientHeight));
+        ANGLE_TRY(resizeSwapChain(displayD3D, clientWidth, clientHeight));
     }
 
     return egl::NoError();
@@ -329,7 +331,8 @@ egl::Error SurfaceD3D::checkForOutOfDateSwapChain(const gl::Context *context)
 
 egl::Error SurfaceD3D::swap(const gl::Context *context)
 {
-    return swapRect(context, 0, 0, mWidth, mHeight);
+    DisplayD3D *displayD3D = GetImplAs<DisplayD3D>(context->getCurrentDisplay());
+    return swapRect(displayD3D, 0, 0, mWidth, mHeight);
 }
 
 egl::Error SurfaceD3D::postSubBuffer(const gl::Context *context,
@@ -338,7 +341,8 @@ egl::Error SurfaceD3D::postSubBuffer(const gl::Context *context,
                                      EGLint width,
                                      EGLint height)
 {
-    return swapRect(context, x, y, width, height);
+    DisplayD3D *displayD3D = GetImplAs<DisplayD3D>(context->getCurrentDisplay());
+    return swapRect(displayD3D, x, y, width, height);
 }
 
 rx::SwapChainD3D *SurfaceD3D::getSwapChain() const
