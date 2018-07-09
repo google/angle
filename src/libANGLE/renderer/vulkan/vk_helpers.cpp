@@ -76,20 +76,6 @@ VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType)
         return 0;
     }
 }
-
-size_t GetDescriptorSetIndexfromType(VkDescriptorType descriptorType)
-{
-    switch (descriptorType)
-    {
-        case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC:
-            return kUniformsDescriptorSetIndex;
-        case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
-            return kTextureDescriptorSetIndex;
-        default:
-            UNREACHABLE();
-            return 0;
-    }
-}
 }  // anonymous namespace
 
 // DynamicBuffer implementation.
@@ -280,17 +266,20 @@ void DynamicBuffer::setMinimumSizeForTesting(size_t minSize)
 
 // DynamicDescriptorPool implementation.
 DynamicDescriptorPool::DynamicDescriptorPool()
-    : mMaxSetsPerPool(kDefaultDescriptorPoolMaxSets), mCurrentSetsCount(0), mFreeDescriptorSets({})
+    : mMaxSetsPerPool(kDefaultDescriptorPoolMaxSets),
+      mCurrentSetsCount(0),
+      mPoolSize{},
+      mFreeDescriptorSets(0)
 {
 }
 
 DynamicDescriptorPool::~DynamicDescriptorPool() = default;
 
-Error DynamicDescriptorPool::init(VkDevice device, const DescriptorPoolSizes &poolSizes)
+Error DynamicDescriptorPool::init(VkDevice device, const VkDescriptorPoolSize &poolSize)
 {
     ASSERT(!mCurrentDescriptorPool.valid());
 
-    mPoolSizes = poolSizes;
+    mPoolSize = poolSize;
     ANGLE_TRY(allocateNewPool(device));
     return NoError();
 }
@@ -303,11 +292,9 @@ void DynamicDescriptorPool::destroy(VkDevice device)
 Error DynamicDescriptorPool::allocateSets(ContextVk *contextVk,
                                           const VkDescriptorSetLayout *descriptorSetLayout,
                                           uint32_t descriptorSetCount,
-                                          uint32_t descriptorSetIndex,
                                           VkDescriptorSet *descriptorSetsOut)
 {
-    if (mFreeDescriptorSets[descriptorSetIndex] < descriptorSetCount ||
-        mCurrentSetsCount >= mMaxSetsPerPool)
+    if (mFreeDescriptorSets < descriptorSetCount || mCurrentSetsCount >= mMaxSetsPerPool)
     {
         RendererVk *renderer = contextVk->getRenderer();
         Serial currentSerial = renderer->getCurrentQueueSerial();
@@ -328,8 +315,8 @@ Error DynamicDescriptorPool::allocateSets(ContextVk *contextVk,
     ANGLE_TRY(mCurrentDescriptorPool.allocateDescriptorSets(contextVk->getDevice(), allocInfo,
                                                             descriptorSetsOut));
 
-    ASSERT(mFreeDescriptorSets[descriptorSetIndex] >= descriptorSetCount);
-    mFreeDescriptorSets[descriptorSetIndex] -= descriptorSetCount;
+    ASSERT(mFreeDescriptorSets >= descriptorSetCount);
+    mFreeDescriptorSets -= descriptorSetCount;
     mCurrentSetsCount++;
     return NoError();
 }
@@ -343,17 +330,11 @@ Error DynamicDescriptorPool::allocateNewPool(VkDevice device)
     descriptorPoolInfo.maxSets = mMaxSetsPerPool;
 
     // Reserve pools for uniform blocks and textures.
-    descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(mPoolSizes.size());
-    descriptorPoolInfo.pPoolSizes    = mPoolSizes.data();
+    descriptorPoolInfo.poolSizeCount = 1u;
+    descriptorPoolInfo.pPoolSizes    = &mPoolSize;
 
-    mFreeDescriptorSets.fill(0);
+    mFreeDescriptorSets = mPoolSize.descriptorCount;
     mCurrentSetsCount = 0;
-
-    for (const VkDescriptorPoolSize &poolSize : mPoolSizes)
-    {
-        size_t setIndex = GetDescriptorSetIndexfromType(poolSize.type);
-        mFreeDescriptorSets[setIndex] += poolSize.descriptorCount;
-    }
 
     ANGLE_TRY(mCurrentDescriptorPool.init(device, descriptorPoolInfo));
     return NoError();

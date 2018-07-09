@@ -748,7 +748,6 @@ vk::Error ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t descri
     const vk::DescriptorSetLayout &descriptorSetLayout =
         mDescriptorSetLayouts[descriptorSetIndex].get();
     ANGLE_TRY(dynamicDescriptorPool->allocateSets(contextVk, descriptorSetLayout.ptr(), 1,
-                                                  descriptorSetIndex,
                                                   &mDescriptorSets[descriptorSetIndex]));
     return vk::NoError();
 }

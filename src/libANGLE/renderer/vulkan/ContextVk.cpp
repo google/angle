@@ -86,18 +86,15 @@ gl::Error ContextVk::getIncompleteTexture(const gl::Context *context,
 gl::Error ContextVk::initialize()
 {
     // Note that this may reserve more sets than strictly necessary for a particular layout.
-    vk::DescriptorPoolSizes uniformPoolSize;
-    uniformPoolSize.push_back(
-        {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
-         GetUniformBufferDescriptorCount() * vk::kDefaultDescriptorPoolMaxSets});
-
-    vk::DescriptorPoolSizes imageSamplerPoolSize;
-    imageSamplerPoolSize.push_back(
-        {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-         mRenderer->getMaxActiveTextures() * vk::kDefaultDescriptorPoolMaxSets});
-
+    VkDescriptorPoolSize uniformPoolSize = {
+        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
+        GetUniformBufferDescriptorCount() * vk::kDefaultDescriptorPoolMaxSets};
     ANGLE_TRY(
         mDynamicDescriptorPools[kUniformsDescriptorSetIndex].init(getDevice(), uniformPoolSize));
+
+    VkDescriptorPoolSize imageSamplerPoolSize = {
+        VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        mRenderer->getMaxActiveTextures() * vk::kDefaultDescriptorPoolMaxSets};
     ANGLE_TRY(mDynamicDescriptorPools[kTextureDescriptorSetIndex].init(getDevice(),
                                                                        imageSamplerPoolSize));
 

@@ -90,8 +90,6 @@ class DynamicBuffer : angle::NonCopyable
 // using the maximum number of descriptor sets and buffers with each allocation. Currently: 2
 // (Vertex/Fragment) uniform buffers and 64 (MAX_ACTIVE_TEXTURES) image/samplers.
 
-using DescriptorPoolSizes = angle::FixedVector<VkDescriptorPoolSize, kMaxDescriptorSetLayouts>;
-
 // This is an arbitrary max. We can change this later if necessary.
 constexpr uint32_t kDefaultDescriptorPoolMaxSets = 2048;
 
@@ -101,7 +99,8 @@ class DynamicDescriptorPool final : angle::NonCopyable
     DynamicDescriptorPool();
     ~DynamicDescriptorPool();
 
-    Error init(VkDevice device, const DescriptorPoolSizes &poolSizes);
+    // The DynamicDescriptorPool only handles one pool size at at time.
+    Error init(VkDevice device, const VkDescriptorPoolSize &poolSize);
     void destroy(VkDevice device);
 
     // We use the descriptor type to help count the number of free sets.
@@ -109,7 +108,6 @@ class DynamicDescriptorPool final : angle::NonCopyable
     Error allocateSets(ContextVk *contextVk,
                        const VkDescriptorSetLayout *descriptorSetLayout,
                        uint32_t descriptorSetCount,
-                       uint32_t descriptorSetIndex,
                        VkDescriptorSet *descriptorSetsOut);
 
     // For testing only!
@@ -121,8 +119,8 @@ class DynamicDescriptorPool final : angle::NonCopyable
     uint32_t mMaxSetsPerPool;
     uint32_t mCurrentSetsCount;
     DescriptorPool mCurrentDescriptorPool;
-    DescriptorPoolSizes mPoolSizes;
-    DescriptorSetLayoutArray<uint32_t> mFreeDescriptorSets;
+    VkDescriptorPoolSize mPoolSize;
+    uint32_t mFreeDescriptorSets;
 };
 
 // This class' responsibility is to create index buffers needed to support line loops in Vulkan.
