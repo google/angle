@@ -168,6 +168,8 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
                                                              const gl::InternalFormat &formatInfo,
                                                              FramebufferVk *framebufferVk)
 {
+    ContextVk *contextVk = vk::GetImpl(context);
+
     // If the extents and offset is outside the source image, we need to clip.
     gl::Rectangle clippedRectangle;
     const gl::Extents readExtents = framebufferVk->getReadImageExtents();
@@ -176,6 +178,12 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
     {
         // Empty source area, nothing to do.
         return gl::NoError();
+    }
+
+    bool isViewportFlipEnabled = contextVk->isViewportFlipEnabledForDrawFBO();
+    if (isViewportFlipEnabled)
+    {
+        clippedRectangle.y = readExtents.height - clippedRectangle.y - clippedRectangle.height;
     }
 
     // 1- obtain a buffer handle to copy to
@@ -199,34 +207,46 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
     mStagingBuffer.allocate(renderer, allocationSize, &stagingPointer, &bufferHandle,
                             &stagingOffset, &newBufferAllocated);
 
+    gl::PixelPackState pixelPackState = gl::PixelPackState();
+    // TODO(lucferron): The pixel pack state alignment should probably be 1 instead of 4.
+    // http://anglebug.com/2718
+
+    if (isViewportFlipEnabled)
+    {
+        pixelPackState.reverseRowOrder = !pixelPackState.reverseRowOrder;
+    }
+
     PackPixelsParams params;
-    params.area        = sourceArea;
+    params.area        = clippedRectangle;
     params.format      = formatInfo.format;
     params.type        = formatInfo.type;
     params.outputPitch = static_cast<GLuint>(outputRowPitch);
     params.packBuffer  = nullptr;
-    params.pack        = gl::PixelPackState();
+    params.pack        = pixelPackState;
 
     // 2- copy the source image region to the pixel buffer using a cpu readback
     if (loadFunction.requiresConversion)
     {
         // When a conversion is required, we need to use the loadFunction to read from a temporary
         // buffer instead so its an even slower path.
-        size_t bufferSize = storageFormat.pixelBytes * sourceArea.width * sourceArea.height;
+        size_t bufferSize =
+            storageFormat.pixelBytes * clippedRectangle.width * clippedRectangle.height;
         angle::MemoryBuffer *memoryBuffer = nullptr;
         ANGLE_TRY(context->getScratchBuffer(bufferSize, &memoryBuffer));
 
         // Read into the scratch buffer
-        ANGLE_TRY(framebufferVk->readPixelsImpl(context, sourceArea, params, memoryBuffer->data()));
+        ANGLE_TRY(
+            framebufferVk->readPixelsImpl(context, clippedRectangle, params, memoryBuffer->data()));
 
         // Load from scratch buffer to our pixel buffer
-        loadFunction.loadFunction(sourceArea.width, sourceArea.height, 1, memoryBuffer->data(),
-                                  outputRowPitch, 0, stagingPointer, outputRowPitch, 0);
+        loadFunction.loadFunction(clippedRectangle.width, clippedRectangle.height, 1,
+                                  memoryBuffer->data(), outputRowPitch, 0, stagingPointer,
+                                  outputRowPitch, 0);
     }
     else
     {
         // We read directly from the framebuffer into our pixel buffer.
-        ANGLE_TRY(framebufferVk->readPixelsImpl(context, sourceArea, params, stagingPointer));
+        ANGLE_TRY(framebufferVk->readPixelsImpl(context, clippedRectangle, params, stagingPointer));
     }
 
     // 3- enqueue the destination image subresource update
