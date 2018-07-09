@@ -70,11 +70,8 @@ struct AllEnums
 template <typename E, typename T>
 class PackedEnumMap
 {
-  private:
     using UnderlyingType = typename std::underlying_type<E>::type;
     using Storage        = std::array<T, EnumSize<E>()>;
-
-    Storage mData;
 
   public:
     // types:
@@ -93,38 +90,41 @@ class PackedEnumMap
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
     // No explicit construct/copy/destroy for aggregate type
-    void fill(const T &u) { mData.fill(u); }
-    void swap(PackedEnumMap<E, T> &a) noexcept { mData.swap(a.mData); }
+    void fill(const T &u) { mPrivateData.fill(u); }
+    void swap(PackedEnumMap<E, T> &a) noexcept { mPrivateData.swap(a.mPrivateData); }
 
     // iterators:
-    iterator begin() noexcept { return mData.begin(); }
-    const_iterator begin() const noexcept { return mData.begin(); }
-    iterator end() noexcept { return mData.end(); }
-    const_iterator end() const noexcept { return mData.end(); }
+    iterator begin() noexcept { return mPrivateData.begin(); }
+    const_iterator begin() const noexcept { return mPrivateData.begin(); }
+    iterator end() noexcept { return mPrivateData.end(); }
+    const_iterator end() const noexcept { return mPrivateData.end(); }
 
-    reverse_iterator rbegin() noexcept { return mData.rbegin(); }
-    const_reverse_iterator rbegin() const noexcept { return mData.rbegin(); }
-    reverse_iterator rend() noexcept { return mData.rend(); }
-    const_reverse_iterator rend() const noexcept { return mData.rend(); }
+    reverse_iterator rbegin() noexcept { return mPrivateData.rbegin(); }
+    const_reverse_iterator rbegin() const noexcept { return mPrivateData.rbegin(); }
+    reverse_iterator rend() noexcept { return mPrivateData.rend(); }
+    const_reverse_iterator rend() const noexcept { return mPrivateData.rend(); }
 
     // capacity:
-    constexpr size_type size() const noexcept { return mData.size(); }
-    constexpr size_type max_size() const noexcept { return mData.max_size(); }
-    constexpr bool empty() const noexcept { return mData.empty(); }
+    constexpr size_type size() const noexcept { return mPrivateData.size(); }
+    constexpr size_type max_size() const noexcept { return mPrivateData.max_size(); }
+    constexpr bool empty() const noexcept { return mPrivateData.empty(); }
 
     // element access:
-    reference operator[](E n) { return mData[static_cast<UnderlyingType>(n)]; }
-    const_reference operator[](E n) const { return mData[static_cast<UnderlyingType>(n)]; }
-    const_reference at(E n) const { return mData.at(static_cast<UnderlyingType>(n)); }
-    reference at(E n) { return mData.at(static_cast<UnderlyingType>(n)); }
+    reference operator[](E n) { return mPrivateData[static_cast<UnderlyingType>(n)]; }
+    const_reference operator[](E n) const { return mPrivateData[static_cast<UnderlyingType>(n)]; }
+    const_reference at(E n) const { return mPrivateData.at(static_cast<UnderlyingType>(n)); }
+    reference at(E n) { return mPrivateData.at(static_cast<UnderlyingType>(n)); }
 
-    reference front() { return mData.front(); }
-    const_reference front() const { return mData.front(); }
-    reference back() { return mData.back(); }
-    const_reference back() const { return mData.back(); }
+    reference front() { return mPrivateData.front(); }
+    const_reference front() const { return mPrivateData.front(); }
+    reference back() { return mPrivateData.back(); }
+    const_reference back() const { return mPrivateData.back(); }
 
-    T *data() noexcept { return mData.data(); }
-    const T *data() const noexcept { return mData.data(); }
+    T *data() noexcept { return mPrivateData.data(); }
+    const T *data() const noexcept { return mPrivateData.data(); }
+
+    // Do not access this variable directly. It unfortunately must be public to use aggregate init.
+    /* private: */ Storage mPrivateData;
 };
 
 // PackedEnumBitSetE> is like an std::bitset<E::EnumCount> but is indexed with enum values. It
