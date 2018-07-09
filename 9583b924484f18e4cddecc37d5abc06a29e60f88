@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9fc16168_e55da77d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T17:28:03Z",
+      "side": 1,
+      "message": "tiny nit: also can you wrap these to 80 chars?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 186
+      },
+      "revId": "9583b924484f18e4cddecc37d5abc06a29e60f88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "12b48ed1_6502cb5d",
         "filename": "src/libANGLE/renderer/renderer_utils.cpp",
         "patchSetId": 10
