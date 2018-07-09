@@ -106,7 +106,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     EGLint getVerticalResolution() const;
     EGLenum getMultisampleResolve() const;
 
-    gl::Texture *getBoundTexture() const { return mTexture.get(); }
+    gl::Texture *getBoundTexture() const { return mTexture; }
 
     EGLint isFixedSize() const;
 
@@ -186,7 +186,9 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
 
     EGLint mOrientation;
 
-    gl::BindingPointer<gl::Texture> mTexture;
+    // We don't use a binding pointer here. We don't ever want to own an orphaned texture. If a
+    // Texture is deleted the Surface is unbound in onDestroy.
+    gl::Texture *mTexture;
 
     gl::Format mColorFormat;
     gl::Format mDSFormat;

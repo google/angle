@@ -60,7 +60,7 @@ Surface::Surface(EGLint surfaceType,
       mRenderBuffer(EGL_BACK_BUFFER),
       mSwapBehavior(EGL_NONE),
       mOrientation(0),
-      mTexture(),
+      mTexture(nullptr),
       mColorFormat(config->renderTargetFormat),
       mDSFormat(config->depthStencilFormat),
       mInitState(gl::InitState::Initialized)
@@ -123,7 +123,7 @@ Error Surface::destroyImpl(const Display *display)
         mImplementation->destroy(display);
     }
 
-    if (mTexture.get())
+    if (mTexture)
     {
         gl::Context *context = display->getProxyContext();
         if (mImplementation)
@@ -135,7 +135,7 @@ Error Surface::destroyImpl(const Display *display)
         {
             return Error(EGL_BAD_SURFACE);
         }
-        mTexture.set(context, nullptr);
+        mTexture = nullptr;
     }
 
     SafeDelete(mImplementation);
@@ -388,7 +388,7 @@ EGLint Surface::getHeight() const
 
 Error Surface::bindTexImage(const gl::Context *context, gl::Texture *texture, EGLint buffer)
 {
-    ASSERT(!mTexture.get());
+    ASSERT(!mTexture);
     ANGLE_TRY(mImplementation->bindTexImage(context, texture, buffer));
 
     auto glErr = texture->bindTexImageFromSurface(context, this);
@@ -396,7 +396,7 @@ Error Surface::bindTexImage(const gl::Context *context, gl::Texture *texture, EG
     {
         return Error(EGL_BAD_SURFACE);
     }
-    mTexture.set(context, texture);
+    mTexture = texture;
 
     return NoError();
 }
@@ -407,13 +407,13 @@ Error Surface::releaseTexImage(const gl::Context *context, EGLint buffer)
 
     ANGLE_TRY(mImplementation->releaseTexImage(context, buffer));
 
-    ASSERT(mTexture.get());
+    ASSERT(mTexture);
     auto glErr = mTexture->releaseTexImageFromSurface(context);
     if (glErr.isError())
     {
         return Error(EGL_BAD_SURFACE);
     }
-    mTexture.set(context, nullptr);
+    mTexture = nullptr;
 
     return NoError();
 }
@@ -425,8 +425,8 @@ Error Surface::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR 
 
 void Surface::releaseTexImageFromTexture(const gl::Context *context)
 {
-    ASSERT(mTexture.get());
-    mTexture.set(context, nullptr);
+    ASSERT(mTexture);
+    mTexture = nullptr;
 }
 
 gl::Extents Surface::getAttachmentSize(const gl::ImageIndex & /*target*/) const
