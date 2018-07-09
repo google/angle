@@ -525,13 +525,11 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
             case gl::State::DIRTY_BIT_CULL_FACE:
-            {
-                mPipelineDesc->updateCullMode(glState.getRasterizerState(),
-                                              isViewportFlipEnabledForDrawFBO());
+                mPipelineDesc->updateCullMode(glState.getRasterizerState());
                 break;
-            }
             case gl::State::DIRTY_BIT_FRONT_FACE:
-                mPipelineDesc->updateFrontFace(glState.getRasterizerState());
+                mPipelineDesc->updateFrontFace(glState.getRasterizerState(),
+                                               isViewportFlipEnabledForDrawFBO());
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
                 WARN() << "DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED unimplemented";
@@ -595,8 +593,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                                               glState.getNearPlane(), glState.getFarPlane(),
                                               isViewportFlipEnabledForDrawFBO());
                 updateColorMask(glState.getBlendState());
-                mPipelineDesc->updateCullMode(glState.getRasterizerState(),
-                                              isViewportFlipEnabledForDrawFBO());
+                mPipelineDesc->updateCullMode(glState.getRasterizerState());
                 updateScissor(glState);
                 break;
             }

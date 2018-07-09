@@ -679,16 +679,15 @@ void PipelineDesc::updateTopology(gl::PrimitiveMode drawMode)
     mInputAssemblyInfo.topology = static_cast<uint32_t>(gl_vk::GetPrimitiveTopology(drawMode));
 }
 
-void PipelineDesc::updateCullMode(const gl::RasterizerState &rasterState, bool invertCullMode)
+void PipelineDesc::updateCullMode(const gl::RasterizerState &rasterState)
 {
-    mRasterizationStateInfo.cullMode =
-        static_cast<uint16_t>(gl_vk::GetCullMode(rasterState, invertCullMode));
+    mRasterizationStateInfo.cullMode = static_cast<uint16_t>(gl_vk::GetCullMode(rasterState));
 }
 
-void PipelineDesc::updateFrontFace(const gl::RasterizerState &rasterState)
+void PipelineDesc::updateFrontFace(const gl::RasterizerState &rasterState, bool invertFrontFace)
 {
     mRasterizationStateInfo.frontFace =
-        static_cast<uint16_t>(gl_vk::GetFrontFace(rasterState.frontFace));
+        static_cast<uint16_t>(gl_vk::GetFrontFace(rasterState.frontFace, invertFrontFace));
 }
 
 void PipelineDesc::updateLineWidth(float lineWidth)

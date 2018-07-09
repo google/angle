@@ -1309,7 +1309,7 @@ VkPrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode)
     }
 }
 
-VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState, bool invertCullMode)
+VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState)
 {
     if (!rasterState.cullFace)
     {
@@ -1319,9 +1319,9 @@ VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState, bool invertC
     switch (rasterState.cullMode)
     {
         case gl::CullFaceMode::Front:
-            return invertCullMode ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_FRONT_BIT;
+            return VK_CULL_MODE_FRONT_BIT;
         case gl::CullFaceMode::Back:
-            return invertCullMode ? VK_CULL_MODE_FRONT_BIT : VK_CULL_MODE_BACK_BIT;
+            return VK_CULL_MODE_BACK_BIT;
         case gl::CullFaceMode::FrontAndBack:
             return VK_CULL_MODE_FRONT_AND_BACK;
         default:
@@ -1330,15 +1330,15 @@ VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState, bool invertC
     }
 }
 
-VkFrontFace GetFrontFace(GLenum frontFace)
+VkFrontFace GetFrontFace(GLenum frontFace, bool invertCullFace)
 {
     // Invert CW and CCW to have the same behavior as OpenGL.
     switch (frontFace)
     {
         case GL_CW:
-            return VK_FRONT_FACE_COUNTER_CLOCKWISE;
+            return invertCullFace ? VK_FRONT_FACE_CLOCKWISE : VK_FRONT_FACE_COUNTER_CLOCKWISE;
         case GL_CCW:
-            return VK_FRONT_FACE_CLOCKWISE;
+            return invertCullFace ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE;
         default:
             UNREACHABLE();
             return VK_FRONT_FACE_CLOCKWISE;

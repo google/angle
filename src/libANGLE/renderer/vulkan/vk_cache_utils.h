@@ -369,8 +369,8 @@ class PipelineDesc final
     void updateTopology(gl::PrimitiveMode drawMode);
 
     // Raster states
-    void updateCullMode(const gl::RasterizerState &rasterState, bool invertCullMode);
-    void updateFrontFace(const gl::RasterizerState &rasterState);
+    void updateCullMode(const gl::RasterizerState &rasterState);
+    void updateFrontFace(const gl::RasterizerState &rasterState, bool invertFrontFace);
     void updateLineWidth(float lineWidth);
 
     // RenderPass description.
