@@ -87,7 +87,8 @@ class ContextVk : public ContextImpl
     void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message) override;
     void popDebugGroup() override;
 
-    bool isViewportFlipEnabled() const;
+    bool isViewportFlipEnabledForDrawFBO() const;
+    bool isViewportFlipEnabledForReadFBO() const;
 
     // State sync with dirty bits.
     gl::Error syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits) override;
@@ -177,6 +178,8 @@ class ContextVk : public ContextImpl
                         bool *shouldApplyVertexArrayOut);
 
     void updateScissor(const gl::State &glState);
+    void updateFlipViewportDrawFramebuffer(const gl::State &glState);
+    void updateFlipViewportReadFramebuffer(const gl::State &glState);
 
     vk::Error updateDriverUniforms();
 
@@ -206,6 +209,8 @@ class ContextVk : public ContextImpl
     // If the current surface bound to this context wants to have all rendering flipped vertically.
     // Updated on calls to onMakeCurrent.
     bool mFlipYForCurrentSurface;
+    bool mFlipViewportForDrawFramebuffer;
+    bool mFlipViewportForReadFramebuffer;
 
     // For shader uniforms such as gl_DepthRange and the viewport size.
     struct DriverUniforms

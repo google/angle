@@ -387,10 +387,14 @@ void ContextVk::popDebugGroup()
     UNIMPLEMENTED();
 }
 
-bool ContextVk::isViewportFlipEnabled() const
+bool ContextVk::isViewportFlipEnabledForDrawFBO() const
 {
-    gl::Framebuffer *framebuffer = mState.getState().getDrawFramebuffer();
-    return framebuffer->isDefault() && mFlipYForCurrentSurface;
+    return mFlipViewportForDrawFramebuffer && mFlipYForCurrentSurface;
+}
+
+bool ContextVk::isViewportFlipEnabledForReadFBO() const
+{
+    return mFlipViewportForReadFramebuffer;
 }
 
 void ContextVk::updateColorMask(const gl::BlendState &blendState)
@@ -412,14 +416,16 @@ void ContextVk::updateScissor(const gl::State &glState)
 
     if (glState.isScissorTestEnabled())
     {
-        mPipelineDesc->updateScissor(glState.getScissor(), isViewportFlipEnabled(), renderArea);
+        mPipelineDesc->updateScissor(glState.getScissor(), isViewportFlipEnabledForDrawFBO(),
+                                     renderArea);
     }
     else
     {
         // If the scissor test isn't enabled, we can simply use a really big scissor that's
         // certainly larger than the current surface using the maximum size of a 2D texture
         // for the width and height.
-        mPipelineDesc->updateScissor(kMaxSizedScissor, isViewportFlipEnabled(), renderArea);
+        mPipelineDesc->updateScissor(kMaxSizedScissor, isViewportFlipEnabledForDrawFBO(),
+                                     renderArea);
     }
 }
 
@@ -448,7 +454,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
                 mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
                                               glState.getNearPlane(), glState.getFarPlane(),
-                                              isViewportFlipEnabled());
+                                              isViewportFlipEnabledForDrawFBO());
                 ANGLE_TRY(updateDriverUniforms());
                 break;
             }
@@ -519,9 +525,11 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_CULL_FACE_ENABLED:
             case gl::State::DIRTY_BIT_CULL_FACE:
+            {
                 mPipelineDesc->updateCullMode(glState.getRasterizerState(),
-                                              isViewportFlipEnabled());
+                                              isViewportFlipEnabledForDrawFBO());
                 break;
+            }
             case gl::State::DIRTY_BIT_FRONT_FACE:
                 mPipelineDesc->updateFrontFace(glState.getRasterizerState());
                 break;
@@ -577,17 +585,18 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 WARN() << "DIRTY_BIT_SHADER_DERIVATIVE_HINT unimplemented";
                 break;
             case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
-                WARN() << "DIRTY_BIT_READ_FRAMEBUFFER_BINDING unimplemented";
+                updateFlipViewportReadFramebuffer(context->getGLState());
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
+                updateFlipViewportDrawFramebuffer(context->getGLState());
                 FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
                 mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
                                               glState.getNearPlane(), glState.getFarPlane(),
-                                              isViewportFlipEnabled());
+                                              isViewportFlipEnabledForDrawFBO());
                 updateColorMask(glState.getBlendState());
                 mPipelineDesc->updateCullMode(glState.getRasterizerState(),
-                                              isViewportFlipEnabled());
+                                              isViewportFlipEnabledForDrawFBO());
                 updateScissor(glState);
                 break;
             }
@@ -689,6 +698,24 @@ void ContextVk::onMakeCurrent(const gl::Context *context)
     mFlipYForCurrentSurface =
         drawSurface != nullptr && mRenderer->getFeatures().flipViewportY &&
         !IsMaskFlagSet(drawSurface->getOrientation(), EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE);
+
+    const gl::State &glState = context->getGLState();
+    updateFlipViewportDrawFramebuffer(glState);
+    updateFlipViewportReadFramebuffer(glState);
+}
+
+void ContextVk::updateFlipViewportDrawFramebuffer(const gl::State &glState)
+{
+    gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
+    mFlipViewportForDrawFramebuffer =
+        drawFramebuffer->isDefault() && mRenderer->getFeatures().flipViewportY;
+}
+
+void ContextVk::updateFlipViewportReadFramebuffer(const gl::State &glState)
+{
+    gl::Framebuffer *readFramebuffer = glState.getReadFramebuffer();
+    mFlipViewportForReadFramebuffer =
+        readFramebuffer->isDefault() && mRenderer->getFeatures().flipViewportY;
 }
 
 gl::Caps ContextVk::getNativeCaps() const
