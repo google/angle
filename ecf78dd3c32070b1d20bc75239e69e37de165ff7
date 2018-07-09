@@ -1,0 +1,227 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebe41c37_5e940aa7",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "nit: variableName",
+      "range": {
+        "startLine": 102,
+        "startChar": 74,
+        "endLine": 102,
+        "endChar": 85
+      },
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e457393_bffb522e",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "I\u0027m a bit worried by the complexity of the interaction of this with the rest of OutputHLSL. Would it be possible to do something like atomics were we only handle:\n\n \u003cLValue derived from a block\u003e \u003d value;\n\nand\n\n \u003ctype\u003e var \u003d \u003cRValue derived from a block\u003e;\n\nthen have an AST transform that simplifies all usages of block to something like this? It would avoid having to store state in OutputHLSL.",
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b32f6a69_4b945ffe",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "Why is this condition needed? Aren\u0027t buffer variables only interface blocks and shouldn\u0027t they all take the else branch?",
+      "range": {
+        "startLine": 979,
+        "startChar": 1,
+        "endLine": 982,
+        "endChar": 13
+      },
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "997b7100_8e164798",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "nit: this doesn\u0027t support nested structures and arrays.",
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc4705b8_8b47c135",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1163,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "What does this mean? Is it \"isThisNodeTheSymbolCorrespondingToSSBO\" (note that this is a bad name too).",
+      "range": {
+        "startLine": 1163,
+        "startChar": 17,
+        "endLine": 1163,
+        "endChar": 33
+      },
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e840824d_3f7a5934",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1497,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "nit: else if, but with the refactor I mentioned above, it would be nice is this were a custom traverser instead with an assert in this iterator that shader storage blocks can\u0027t appear here. Ditto in other places in this function.",
+      "range": {
+        "startLine": 1494,
+        "startChar": 0,
+        "endLine": 1497,
+        "endChar": 17
+      },
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d8244c9_baeb6f09",
+        "filename": "src/compiler/translator/ShaderStorageBlockFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "nit: ImmutableString",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 11
+      },
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c97cfac9_0c89763b",
+        "filename": "src/compiler/translator/ShaderStorageBlockFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "Maybe swizzle could be decomposed to simpler constructs earlier with a tree transform? It would be in a follow up CL.\n\nAlso we would need to hoist ssbo accesses outside of more complex expression, as well as expressions in for loops / while loops etc.",
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c08db4c7_c1df74b7",
+        "filename": "src/compiler/translator/ShaderStorageBlockFunctionHLSL.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "Would it make sense for this to take the full type and extract the basic type and return type from it? This CL wouldn\u0027t have to handle things like vec2 and mat4 but it would make it easier to implement later.\nAlso this class could be responsible for creating the function name and returning it. This would make the prototype be:\n\n // Returns the name of the HLSL method that does the load / store.\n ImmutableString registerShaderStorageBlockFunction (const TTyp\u0026 type, SSBOMethod method);",
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c094147d_a44e929c",
+        "filename": "src/compiler/translator/StructureHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "nit: this should be const.",
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a1f3537_0abd8ac9",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T11:47:34Z",
+      "side": 1,
+      "message": "nit: Or UAV, I think it is common enough that we can use the abbreviation.",
+      "range": {
+        "startLine": 115,
+        "startChar": 18,
+        "endLine": 115,
+        "endChar": 37
+      },
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
