@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b7cc95f_e9c32aaf",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T20:17:16Z",
+      "side": 1,
+      "message": "I guess I should have just been clear the first time. Please make this one method.",
+      "range": {
+        "startLine": 383,
+        "startChar": 0,
+        "endLine": 391,
+        "endChar": 46
+      },
+      "revId": "b4df16229f195011cf114cb5ffb0d63b0a6bc6eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
