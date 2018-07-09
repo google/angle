@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dbb0d28_cec74034",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T14:25:44Z",
+      "side": 1,
+      "message": "nit: glState (can fix retroactively)",
+      "range": {
+        "startLine": 319,
+        "startChar": 33,
+        "endLine": 319,
+        "endChar": 54
+      },
+      "revId": "a813ab56e9ba49b2f0ae00d096313b76c14899ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
