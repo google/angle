@@ -1,0 +1,221 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f985360_f6d1ac10",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Naming suggestion: \"hasSamplerInStructParams\".",
+      "range": {
+        "startLine": 237,
+        "startChar": 9,
+        "endLine": 237,
+        "endChar": 36
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54d40d56_36760c73",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Maybe this could live in ImmutableStringBuilder? It could be used in other places as well. It could be made into a template variable like kHexCharCount\u003cT\u003e and instantiated for the types it is needed like int and uint. Or maybe this could also work:\n\nstatic constexpr const size_t GetHexCharCount\u003cT\u003e() { return sizeof(T) * 2; }",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21ae8ba0_b4a11603",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "If the AST contains both a prototype declaration and and a definition for the function, this will end up creating two different new TFunctions. That puts the AST in an inconsistent state. So you should look if the new function already exists in the symbol table.",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c6b315e_df1cebed",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Naming suggestion: visitSamplerInStructParam",
+      "range": {
+        "startLine": 402,
+        "startChar": 21,
+        "endLine": 402,
+        "endChar": 44
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7dc45263_dcf3cfb1",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Naming suggestion: traverseStructContainingSamplers",
+      "range": {
+        "startLine": 407,
+        "startChar": 13,
+        "endLine": 407,
+        "endChar": 35
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19e3f34a_2b3315a0",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Naming suggestion: hasNonSamplerFields",
+      "range": {
+        "startLine": 409,
+        "startChar": 17,
+        "endLine": 409,
+        "endChar": 40
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83ee8af2_7e032e4c",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Naming suggestion: traverseSamplerInStruct",
+      "range": {
+        "startLine": 428,
+        "startChar": 13,
+        "endLine": 428,
+        "endChar": 34
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f1fed09_65bdd4a4",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Add ASSERT(field-\u003etype()-\u003eisSampler())",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "255888a6_948196a8",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Add ASSERT(field-\u003etype()-\u003eisSampler())",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "347a9211_b7491b24",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Might be helpful to assert that the struct looked up from the symbol table doesn\u0027t contain samplers?",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a2c27bb_856e0892",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-09T11:45:48Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the argument also be changed to point to the struct type where the sampler has been removed?",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
