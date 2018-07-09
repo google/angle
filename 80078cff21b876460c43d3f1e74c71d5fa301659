@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "82a00a5d_be2d7697",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-09T03:59:29Z",
+      "side": 0,
+      "message": "sure, writing {space} 20 times is clearly better than doing one replace().",
+      "parentUuid": "81bf23d2_f096fbd8",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 7
+      },
+      "revId": "80078cff21b876460c43d3f1e74c71d5fa301659",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "faabf418_289b02c2",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "80078cff21b876460c43d3f1e74c71d5fa301659",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f72e9a9b_154909bf",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-09T03:59:29Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "faabf418_289b02c2",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 114,
+        "endChar": 57
+      },
+      "revId": "80078cff21b876460c43d3f1e74c71d5fa301659",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

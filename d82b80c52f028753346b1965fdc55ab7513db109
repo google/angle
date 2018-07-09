@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fa475c98_787fe557",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-09T03:59:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1d4ae39_ddcfa39a",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 15
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "575c2551_bc2be739",
         "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "defb0e9e_b91ca208",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-09T03:59:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "575c2551_bc2be739",
+      "range": {
+        "startLine": 74,
+        "startChar": 31,
+        "endLine": 74,
+        "endChar": 42
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f7f36fed_0457f841",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-09T03:59:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39bb39e2_75b7ccac",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 23
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a73c87e_58d5c2f5",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
         "patchSetId": 4
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "38e5a37b_80719707",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-09T03:59:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a73c87e_58d5c2f5",
+      "range": {
+        "startLine": 180,
+        "startChar": 8,
+        "endLine": 180,
+        "endChar": 51
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a47c4df3_d1cb8741",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 4
@@ -114,6 +210,30 @@
       "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0f9e3e1_49a89874",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-09T03:59:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a47c4df3_d1cb8741",
+      "range": {
+        "startLine": 71,
+        "startChar": 34,
+        "endLine": 71,
+        "endChar": 57
+      },
+      "revId": "d82b80c52f028753346b1965fdc55ab7513db109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
