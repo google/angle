@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c75ed64d_fbff9ab9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1540,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-07-09T06:16:53Z",
+      "side": 1,
+      "message": "It seems that in order to only assign semantics on D3D11 back-end, you changes resources to non-const. Hence lots of related files are modified. I don\u0027t know if there is better choice if we keep the const. Will add google reviewers to look at this. Other parts look good to me. Thanks.",
+      "range": {
+        "startLine": 1540,
+        "startChar": 32,
+        "endLine": 1540,
+        "endChar": 60
+      },
+      "revId": "5b93ecd6d4d9549a93973d60322eb37aadfe38c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
