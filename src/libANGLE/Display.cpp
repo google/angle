@@ -959,12 +959,12 @@ void Display::notifyDeviceLost()
     mDeviceLost = true;
 }
 
-Error Display::waitClient(const gl::Context *context) const
+Error Display::waitClient(const gl::Context *context)
 {
     return mImplementation->waitClient(context);
 }
 
-Error Display::waitNative(const gl::Context *context, EGLint engine) const
+Error Display::waitNative(const gl::Context *context, EGLint engine)
 {
     return mImplementation->waitNative(context, engine);
 }

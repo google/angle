@@ -41,8 +41,8 @@ class DisplayNULL : public DisplayImpl
 
     DeviceImpl *createDevice() override;
 
-    egl::Error waitClient(const gl::Context *context) const override;
-    egl::Error waitNative(const gl::Context *context, EGLint engine) const override;
+    egl::Error waitClient(const gl::Context *context) override;
+    egl::Error waitNative(const gl::Context *context, EGLint engine) override;
     gl::Version getMaxSupportedESVersion() const override;
 
     SurfaceImpl *createWindowSurface(const egl::SurfaceState &state,

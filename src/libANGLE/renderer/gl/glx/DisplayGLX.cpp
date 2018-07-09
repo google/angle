@@ -708,13 +708,13 @@ std::string DisplayGLX::getVendorString() const
     return "";
 }
 
-egl::Error DisplayGLX::waitClient(const gl::Context *context) const
+egl::Error DisplayGLX::waitClient(const gl::Context *context)
 {
     mGLX.waitGL();
     return egl::NoError();
 }
 
-egl::Error DisplayGLX::waitNative(const gl::Context *context, EGLint engine) const
+egl::Error DisplayGLX::waitNative(const gl::Context *context, EGLint engine)
 {
     // eglWaitNative is used to notice the driver of changes in X11 for the current surface, such as
     // changes of the window size. We use this event to update the child window of WindowSurfaceGLX

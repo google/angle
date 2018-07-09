@@ -650,13 +650,13 @@ egl::Error DisplayWGL::makeCurrentSurfaceless(gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error DisplayWGL::waitClient(const gl::Context *context) const
+egl::Error DisplayWGL::waitClient(const gl::Context *context)
 {
     // Unimplemented as this is not needed for WGL
     return egl::NoError();
 }
 
-egl::Error DisplayWGL::waitNative(const gl::Context *context, EGLint engine) const
+egl::Error DisplayWGL::waitNative(const gl::Context *context, EGLint engine)
 {
     // Unimplemented as this is not needed for WGL
     return egl::NoError();

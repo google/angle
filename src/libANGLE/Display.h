@@ -134,8 +134,8 @@ class Display final : public LabeledObject, angle::NonCopyable
     bool testDeviceLost();
     void notifyDeviceLost();
 
-    Error waitClient(const gl::Context *context) const;
-    Error waitNative(const gl::Context *context, EGLint engine) const;
+    Error waitClient(const gl::Context *context);
+    Error waitNative(const gl::Context *context, EGLint engine);
 
     const Caps &getCaps() const;
 

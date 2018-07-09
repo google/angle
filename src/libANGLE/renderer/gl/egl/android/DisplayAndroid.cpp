@@ -459,13 +459,13 @@ DeviceImpl *DisplayAndroid::createDevice()
     return nullptr;
 }
 
-egl::Error DisplayAndroid::waitClient(const gl::Context *context) const
+egl::Error DisplayAndroid::waitClient(const gl::Context *context)
 {
     UNIMPLEMENTED();
     return egl::NoError();
 }
 
-egl::Error DisplayAndroid::waitNative(const gl::Context *context, EGLint engine) const
+egl::Error DisplayAndroid::waitNative(const gl::Context *context, EGLint engine)
 {
     UNIMPLEMENTED();
     return egl::NoError();

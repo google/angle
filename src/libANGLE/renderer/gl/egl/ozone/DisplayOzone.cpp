@@ -982,13 +982,13 @@ bool DisplayOzone::isValidNativeWindow(EGLNativeWindowType window) const
     return true;
 }
 
-egl::Error DisplayOzone::waitClient(const gl::Context *context) const
+egl::Error DisplayOzone::waitClient(const gl::Context *context)
 {
     // TODO(fjhenigman) Implement this.
     return egl::NoError();
 }
 
-egl::Error DisplayOzone::waitNative(const gl::Context *context, EGLint engine) const
+egl::Error DisplayOzone::waitNative(const gl::Context *context, EGLint engine)
 {
     // TODO(fjhenigman) Implement this.
     return egl::NoError();

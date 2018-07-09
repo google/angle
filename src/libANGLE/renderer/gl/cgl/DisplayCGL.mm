@@ -295,13 +295,13 @@ void DisplayCGL::generateCaps(egl::Caps *outCaps) const
     outCaps->textureNPOT = true;
 }
 
-egl::Error DisplayCGL::waitClient(const gl::Context *context) const
+egl::Error DisplayCGL::waitClient(const gl::Context *context)
 {
     // TODO(cwallez) UNIMPLEMENTED()
     return egl::NoError();
 }
 
-egl::Error DisplayCGL::waitNative(const gl::Context *context, EGLint engine) const
+egl::Error DisplayCGL::waitNative(const gl::Context *context, EGLint engine)
 {
     // TODO(cwallez) UNIMPLEMENTED()
     return egl::NoError();

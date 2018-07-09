@@ -325,7 +325,7 @@ void DisplayD3D::generateCaps(egl::Caps *outCaps) const
     outCaps->textureNPOT = mRenderer->getNativeExtensions().textureNPOT;
 }
 
-egl::Error DisplayD3D::waitClient(const gl::Context *context) const
+egl::Error DisplayD3D::waitClient(const gl::Context *context)
 {
     for (egl::Surface *surface : mState.surfaceSet)
     {
@@ -336,7 +336,7 @@ egl::Error DisplayD3D::waitClient(const gl::Context *context) const
     return egl::NoError();
 }
 
-egl::Error DisplayD3D::waitNative(const gl::Context *context, EGLint engine) const
+egl::Error DisplayD3D::waitNative(const gl::Context *context, EGLint engine)
 {
     egl::Surface *drawSurface = context->getCurrentDrawSurface();
     egl::Surface *readSurface = context->getCurrentReadSurface();

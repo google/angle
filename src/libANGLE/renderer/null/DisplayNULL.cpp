@@ -115,12 +115,12 @@ DeviceImpl *DisplayNULL::createDevice()
     return new DeviceNULL();
 }
 
-egl::Error DisplayNULL::waitClient(const gl::Context *context) const
+egl::Error DisplayNULL::waitClient(const gl::Context *context)
 {
     return egl::NoError();
 }
 
-egl::Error DisplayNULL::waitNative(const gl::Context *context, EGLint engine) const
+egl::Error DisplayNULL::waitNative(const gl::Context *context, EGLint engine)
 {
     return egl::NoError();
 }
