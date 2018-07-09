@@ -365,9 +365,10 @@ void ContextGL::popDebugGroup()
     mRenderer->popDebugGroup();
 }
 
-void ContextGL::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
+gl::Error ContextGL::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->syncState(context, dirtyBits);
+    return gl::NoError();
 }
 
 GLint ContextGL::getGPUDisjoint()

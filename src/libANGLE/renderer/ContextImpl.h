@@ -140,7 +140,8 @@ class ContextImpl : public GLImplFactory
     virtual void popDebugGroup()                                                               = 0;
 
     // State sync with dirty bits.
-    virtual void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits) = 0;
+    virtual gl::Error syncState(const gl::Context *context,
+                                const gl::State::DirtyBits &dirtyBits) = 0;
 
     // Disjoint timer queries
     virtual GLint getGPUDisjoint() = 0;

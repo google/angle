@@ -403,9 +403,10 @@ void Context11::popDebugGroup()
     popGroupMarker();
 }
 
-void Context11::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
+gl::Error Context11::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->syncState(context, dirtyBits);
+    return gl::NoError();
 }
 
 GLint Context11::getGPUDisjoint()

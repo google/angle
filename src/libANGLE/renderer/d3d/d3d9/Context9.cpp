@@ -255,9 +255,10 @@ void Context9::popDebugGroup()
     popGroupMarker();
 }
 
-void Context9::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
+gl::Error Context9::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->syncState(mState.getState(), dirtyBits);
+    return gl::NoError();
 }
 
 GLint Context9::getGPUDisjoint()

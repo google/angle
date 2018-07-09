@@ -295,8 +295,9 @@ void ContextNULL::popDebugGroup()
 {
 }
 
-void ContextNULL::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
+gl::Error ContextNULL::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
+    return gl::NoError();
 }
 
 GLint ContextNULL::getGPUDisjoint()
