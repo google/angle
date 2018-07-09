@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d3987e8_bd4ba3b1",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T19:28:32Z",
+      "side": 1,
+      "message": "We should probably make the Context helper method take a framebuffer parameter. If it\u0027s very inconvenient you can add a second helper method. On first inspection it seems we usually have a framebuffer pointer available anyway that we can pass to isViewportFlipEnabled.",
+      "range": {
+        "startLine": 451,
+        "startChar": 22,
+        "endLine": 451,
+        "endChar": 93
+      },
+      "revId": "bc0706267276d3c494b130f39088017138be24b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
