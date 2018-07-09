@@ -22,6 +22,30 @@
       "revId": "09ed4bdb20605eb593915d20cde856b13f8426dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eee9fb88_7acf2cea",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-09T17:53:32Z",
+      "side": 1,
+      "message": "Done, I compute if the default framebuffer should be flipped on calls to make current.",
+      "parentUuid": "e6199b6f_21ca519a",
+      "range": {
+        "startLine": 390,
+        "startChar": 3,
+        "endLine": 398,
+        "endChar": 86
+      },
+      "revId": "09ed4bdb20605eb593915d20cde856b13f8426dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
