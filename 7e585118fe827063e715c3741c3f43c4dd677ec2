@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bd6fb34_521467df",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1199,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T08:27:36Z",
+      "side": 0,
+      "message": "nit: this could become ProgramMergedVarying without the \u0026",
+      "range": {
+        "startLine": 1199,
+        "startChar": 7,
+        "endLine": 1199,
+        "endChar": 20
+      },
+      "revId": "7e585118fe827063e715c3741c3f43c4dd677ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb1df7f5_1e6ab19b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3315,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T08:27:36Z",
+      "side": 0,
+      "message": "This is part of the patch is a noop given copy elision is guaranteed here. https://en.wikipedia.org/wiki/Copy_elision Can it be reverted to the original?",
+      "revId": "7e585118fe827063e715c3741c3f43c4dd677ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

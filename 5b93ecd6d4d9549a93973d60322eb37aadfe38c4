@@ -22,6 +22,30 @@
       "revId": "5b93ecd6d4d9549a93973d60322eb37aadfe38c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5297df39_231cd500",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1540,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-09T08:27:36Z",
+      "side": 1,
+      "message": "+1, a solution to compute registers only in the D3D backend could be to split these registers in a separate gl::D3DProgramLinkedResources.",
+      "parentUuid": "c75ed64d_fbff9ab9",
+      "range": {
+        "startLine": 1540,
+        "startChar": 32,
+        "endLine": 1540,
+        "endChar": 60
+      },
+      "revId": "5b93ecd6d4d9549a93973d60322eb37aadfe38c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
