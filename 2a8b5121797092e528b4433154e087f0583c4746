@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2aa661a6_96e2c2e1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T14:27:54Z",
+      "side": 1,
+      "message": "nit: glState",
+      "range": {
+        "startLine": 439,
+        "startChar": 58,
+        "endLine": 439,
+        "endChar": 76
+      },
+      "revId": "2a8b5121797092e528b4433154e087f0583c4746",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58692c7e_d7a37579",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T14:27:54Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 574,
+        "startChar": 59,
+        "endLine": 574,
+        "endChar": 76
+      },
+      "revId": "2a8b5121797092e528b4433154e087f0583c4746",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
