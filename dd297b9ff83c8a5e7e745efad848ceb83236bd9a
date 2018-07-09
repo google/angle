@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67530d40_ad70e67d",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T12:59:06Z",
+      "side": 1,
+      "message": "this space stuff isn\u0027t correct. but I guess it doesn\u0027t matter because git cl format takes care of it. you can probably remove it.",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 29
+      },
+      "revId": "dd297b9ff83c8a5e7e745efad848ceb83236bd9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f398113_5e13845a",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T12:59:06Z",
+      "side": 1,
+      "message": "you can put the internalFormat thing back here.",
+      "range": {
+        "startLine": 100,
+        "startChar": 8,
+        "endLine": 100,
+        "endChar": 17
+      },
+      "revId": "dd297b9ff83c8a5e7e745efad848ceb83236bd9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60fc0b98_01ad4001",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T12:59:06Z",
+      "side": 1,
+      "message": "this can be cleaned up. for texture_basic_template/fallback_template/buffer_template remove the prefixes on the replacements. so {vk_format}/{vk_format_fallback}/{format_id}/{fallback}/{texture_initializer}/{texture_initialier_fallback}. Make a small args dict here filling these out. Then substitute into the correct template then return the filled in string. for initializer, either remove the ValueError in angle_format.py or add a parameter to avoid calling it for buffers.",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 118,
+        "endChar": 0
+      },
+      "revId": "dd297b9ff83c8a5e7e745efad848ceb83236bd9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59f1c4cd_de9da4e5",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T12:59:06Z",
+      "side": 1,
+      "message": "you can insert texture and buffer into args here from the new return vals.",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 122,
+        "endChar": 81
+      },
+      "revId": "dd297b9ff83c8a5e7e745efad848ceb83236bd9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3e4c178_c087ac79",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T12:59:06Z",
+      "side": 1,
+      "message": "these args would be moved into the get_ method above.",
+      "range": {
+        "startLine": 124,
+        "startChar": 0,
+        "endLine": 140,
+        "endChar": 5
+      },
+      "revId": "dd297b9ff83c8a5e7e745efad848ceb83236bd9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

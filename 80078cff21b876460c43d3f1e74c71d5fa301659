@@ -93,6 +93,29 @@
       "revId": "80078cff21b876460c43d3f1e74c71d5fa301659",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e730472_0fefdaea",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T12:59:06Z",
+      "side": 0,
+      "message": "can you leave these? I liked they way they look.",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 9
+      },
+      "revId": "80078cff21b876460c43d3f1e74c71d5fa301659",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
