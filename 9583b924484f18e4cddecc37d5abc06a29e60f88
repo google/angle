@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12b48ed1_6502cb5d",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T17:27:42Z",
+      "side": 1,
+      "message": "you can make this function local to RendererVk. No such concept as a mock ICD in any other Renderer. And for other back-ends such as OpenGL ES we can use the NULL driver so we can\u0027t make it shared.",
+      "range": {
+        "startLine": 444,
+        "startChar": 0,
+        "endLine": 455,
+        "endChar": 1
+      },
+      "revId": "9583b924484f18e4cddecc37d5abc06a29e60f88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
