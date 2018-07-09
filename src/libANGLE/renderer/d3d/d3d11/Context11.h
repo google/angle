@@ -16,13 +16,14 @@ namespace rx
 {
 class Renderer11;
 
-class Context11 : public ContextImpl
+class Context11 : public ContextImpl, public MultisampleTextureInitializer
 {
   public:
     Context11(const gl::ContextState &state, Renderer11 *renderer);
     ~Context11() override;
 
     gl::Error initialize() override;
+    void onDestroy(const gl::Context *context) override;
 
     // Shader creation
     CompilerImpl *createCompiler() override;
@@ -149,11 +150,19 @@ class Context11 : public ContextImpl
     gl::Error triggerDrawCallProgramRecompilation(const gl::Context *context,
                                                   gl::PrimitiveMode drawMode);
 
+    gl::Error getIncompleteTexture(const gl::Context *context,
+                                   gl::TextureType type,
+                                   gl::Texture **textureOut);
+
+    gl::Error initializeMultisampleTextureToBlack(const gl::Context *context,
+                                                  gl::Texture *glTexture) override;
+
   private:
     gl::Error prepareForDrawCall(const gl::Context *context,
                                  const gl::DrawCallParams &drawCallParams);
 
     Renderer11 *mRenderer;
+    IncompleteTextureSet mIncompleteTextures;
 };
 
 }  // namespace rx

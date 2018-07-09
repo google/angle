@@ -102,7 +102,7 @@ class BufferFactoryD3D : angle::NonCopyable
 
 using AttribIndexArray = gl::AttribArray<int>;
 
-class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitializer
+class RendererD3D : public BufferFactoryD3D
 {
   public:
     explicit RendererD3D(egl::Display *display);
@@ -329,16 +329,13 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
 
     angle::WorkerThreadPool *getWorkerThreadPool();
 
-    gl::Error getIncompleteTexture(const gl::Context *context,
-                                   gl::TextureType type,
-                                   gl::Texture **textureOut);
+    virtual gl::Error getIncompleteTexture(const gl::Context *context,
+                                           gl::TextureType type,
+                                           gl::Texture **textureOut) = 0;
 
     Serial generateSerial();
 
     virtual bool canSelectViewInVertexShader() const = 0;
-
-    gl::Error initializeMultisampleTextureToBlack(const gl::Context *context,
-                                                  gl::Texture *glTexture) override;
 
     // Should really be handled by Program dirty bits, but that requires splitting Program9/11.
     virtual void onDirtyUniformBlockBinding(GLuint uniformBlockIndex);
@@ -349,8 +346,6 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
                               gl::TextureCapsMap *outTextureCaps,
                               gl::Extensions *outExtensions,
                               gl::Limitations *outLimitations) const = 0;
-
-    void cleanup();
 
     bool skipDraw(const gl::State &glState, gl::PrimitiveMode drawMode);
 
@@ -368,8 +363,6 @@ class RendererD3D : public BufferFactoryD3D, public MultisampleTextureInitialize
     mutable gl::TextureCapsMap mNativeTextureCaps;
     mutable gl::Extensions mNativeExtensions;
     mutable gl::Limitations mNativeLimitations;
-
-    IncompleteTextureSet mIncompleteTextures;
 
     mutable bool mWorkaroundsInitialized;
     mutable angle::WorkaroundsD3D mWorkarounds;

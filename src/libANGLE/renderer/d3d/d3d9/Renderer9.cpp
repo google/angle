@@ -150,8 +150,6 @@ Renderer9::~Renderer9()
 
 void Renderer9::release()
 {
-    RendererD3D::cleanup();
-
     gl::UninitializeDebugAnnotations();
 
     mTranslatedAttribCache.clear();
@@ -3267,4 +3265,10 @@ gl::Error Renderer9::applyTextures(const gl::Context *context)
     return gl::NoError();
 }
 
+gl::Error Renderer9::getIncompleteTexture(const gl::Context *context,
+                                          gl::TextureType type,
+                                          gl::Texture **textureOut)
+{
+    return GetImplAs<Context9>(context)->getIncompleteTexture(context, type, textureOut);
+}
 }  // namespace rx

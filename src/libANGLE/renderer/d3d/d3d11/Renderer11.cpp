@@ -1905,8 +1905,6 @@ bool Renderer11::testDeviceResettable()
 
 void Renderer11::release()
 {
-    RendererD3D::cleanup();
-
     mScratchMemoryBuffer.clear();
 
     if (mAnnotator != nullptr)
@@ -3886,4 +3884,10 @@ void Renderer11::onDirtyUniformBlockBinding(GLuint /*uniformBlockIndex*/)
     mStateManager.invalidateProgramUniformBuffers();
 }
 
+gl::Error Renderer11::getIncompleteTexture(const gl::Context *context,
+                                           gl::TextureType type,
+                                           gl::Texture **textureOut)
+{
+    return GetImplAs<Context11>(context)->getIncompleteTexture(context, type, textureOut);
+}
 }  // namespace rx

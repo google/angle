@@ -46,12 +46,6 @@ RendererD3D::RendererD3D(egl::Display *display)
 
 RendererD3D::~RendererD3D()
 {
-    cleanup();
-}
-
-void RendererD3D::cleanup()
-{
-    mIncompleteTextures.onDestroy(mDisplay->getProxyContext());
 }
 
 bool RendererD3D::skipDraw(const gl::State &glState, gl::PrimitiveMode drawMode)
@@ -80,13 +74,6 @@ bool RendererD3D::skipDraw(const gl::State &glState, gl::PrimitiveMode drawMode)
     }
 
     return false;
-}
-
-gl::Error RendererD3D::getIncompleteTexture(const gl::Context *context,
-                                            gl::TextureType type,
-                                            gl::Texture **textureOut)
-{
-    return mIncompleteTextures.getIncompleteTexture(context, type, this, textureOut);
 }
 
 GLenum RendererD3D::getResetStatus()
@@ -203,17 +190,6 @@ bool InstancedPointSpritesActive(ProgramD3D *programD3D, gl::PrimitiveMode mode)
 gl::Error RendererD3D::initRenderTarget(RenderTargetD3D *renderTarget)
 {
     return clearRenderTarget(renderTarget, gl::ColorF(0, 0, 0, 0), 1, 0);
-}
-
-gl::Error RendererD3D::initializeMultisampleTextureToBlack(const gl::Context *context,
-                                                           gl::Texture *glTexture)
-{
-    ASSERT(glTexture->getType() == gl::TextureType::_2DMultisample);
-    TextureD3D *textureD3D        = GetImplAs<TextureD3D>(glTexture);
-    gl::ImageIndex index          = gl::ImageIndex::Make2DMultisample();
-    RenderTargetD3D *renderTarget = nullptr;
-    ANGLE_TRY(textureD3D->getRenderTarget(context, index, &renderTarget));
-    return clearRenderTarget(renderTarget, gl::ColorF(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0);
 }
 
 void RendererD3D::onDirtyUniformBlockBinding(GLuint /*uniformBlockIndex*/)

@@ -390,6 +390,10 @@ class Renderer9 : public RendererD3D
 
     bool canSelectViewInVertexShader() const override;
 
+    gl::Error getIncompleteTexture(const gl::Context *context,
+                                   gl::TextureType type,
+                                   gl::Texture **textureOut) override;
+
   private:
     gl::Error drawArraysImpl(const gl::Context *context,
                              gl::PrimitiveMode mode,

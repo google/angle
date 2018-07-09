@@ -122,6 +122,11 @@ gl::Error Context11::initialize()
     return gl::NoError();
 }
 
+void Context11::onDestroy(const gl::Context *context)
+{
+    mIncompleteTextures.onDestroy(context);
+}
+
 CompilerImpl *Context11::createCompiler()
 {
     if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
@@ -571,4 +576,21 @@ gl::Error Context11::memoryBarrierByRegion(const gl::Context *context, GLbitfiel
     return gl::NoError();
 }
 
+gl::Error Context11::getIncompleteTexture(const gl::Context *context,
+                                          gl::TextureType type,
+                                          gl::Texture **textureOut)
+{
+    return mIncompleteTextures.getIncompleteTexture(context, type, this, textureOut);
+}
+
+gl::Error Context11::initializeMultisampleTextureToBlack(const gl::Context *context,
+                                                         gl::Texture *glTexture)
+{
+    ASSERT(glTexture->getType() == gl::TextureType::_2DMultisample);
+    TextureD3D *textureD3D        = GetImplAs<TextureD3D>(glTexture);
+    gl::ImageIndex index          = gl::ImageIndex::Make2DMultisample();
+    RenderTargetD3D *renderTarget = nullptr;
+    ANGLE_TRY(textureD3D->getRenderTarget(context, index, &renderTarget));
+    return mRenderer->clearRenderTarget(renderTarget, gl::ColorF(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0);
+}
 }  // namespace rx

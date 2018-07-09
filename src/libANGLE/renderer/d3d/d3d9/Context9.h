@@ -23,6 +23,7 @@ class Context9 : public ContextImpl
     ~Context9() override;
 
     gl::Error initialize() override;
+    void onDestroy(const gl::Context *context) override;
 
     // Shader creation
     CompilerImpl *createCompiler() override;
@@ -146,8 +147,13 @@ class Context9 : public ContextImpl
 
     Renderer9 *getRenderer() const { return mRenderer; }
 
+    gl::Error getIncompleteTexture(const gl::Context *context,
+                                   gl::TextureType type,
+                                   gl::Texture **textureOut);
+
   private:
     Renderer9 *mRenderer;
+    IncompleteTextureSet mIncompleteTextures;
 };
 
 }  // namespace rx

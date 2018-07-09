@@ -41,6 +41,11 @@ gl::Error Context9::initialize()
     return gl::NoError();
 }
 
+void Context9::onDestroy(const gl::Context *context)
+{
+    mIncompleteTextures.onDestroy(context);
+}
+
 CompilerImpl *Context9::createCompiler()
 {
     return new CompilerD3D(SH_HLSL_3_0_OUTPUT);
@@ -322,4 +327,10 @@ gl::Error Context9::memoryBarrierByRegion(const gl::Context *context, GLbitfield
     return gl::InternalError() << "D3D9 doesn't support ES 3.1 memoryBarrierByRegion API";
 }
 
+gl::Error Context9::getIncompleteTexture(const gl::Context *context,
+                                         gl::TextureType type,
+                                         gl::Texture **textureOut)
+{
+    return mIncompleteTextures.getIncompleteTexture(context, type, nullptr, textureOut);
+}
 }  // namespace rx
