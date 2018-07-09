@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e40bce85_acdfe51d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T19:40:55Z",
+      "side": 1,
+      "message": "just make this a local static method to RendererVk.cpp. A non-class method inside the namespace{} block in the top of the file.",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 78,
+        "endChar": 69
+      },
+      "revId": "a1988577318aeef6b38ac52536d79b40f3aa9b34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
