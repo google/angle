@@ -22,6 +22,30 @@
       "revId": "523a64538eab7a2fac2fb9ab0716884864623432",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e073792b_78e75b8d",
+        "filename": "src/common/PackedEnums.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T14:41:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54632767_6efebfed",
+      "range": {
+        "startLine": 126,
+        "startChar": 12,
+        "endLine": 126,
+        "endChar": 17
+      },
+      "revId": "523a64538eab7a2fac2fb9ab0716884864623432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
