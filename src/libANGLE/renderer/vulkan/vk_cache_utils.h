@@ -474,7 +474,7 @@ class DescriptorSetLayoutDesc final
 
 // The following are for caching descriptor set layouts. Limited to max two descriptor set layouts
 // and two push constants. One push constant per shader stage. This can be extended in the future.
-constexpr size_t kMaxDescriptorSetLayouts = 2;
+constexpr size_t kMaxDescriptorSetLayouts = 3;
 constexpr size_t kMaxPushConstantRanges   = 2;
 
 struct PackedPushConstantRange
@@ -649,10 +649,11 @@ class PipelineLayoutCache final : angle::NonCopyable
 };
 
 // Some descriptor set and pipeline layout constants.
-constexpr uint32_t kVertexUniformsBindingIndex   = 0;
-constexpr uint32_t kFragmentUniformsBindingIndex = 1;
-constexpr uint32_t kUniformsDescriptorSetIndex   = 0;
-constexpr uint32_t kTextureDescriptorSetIndex    = 1;
+constexpr uint32_t kVertexUniformsBindingIndex       = 0;
+constexpr uint32_t kFragmentUniformsBindingIndex     = 1;
+constexpr uint32_t kUniformsDescriptorSetIndex       = 0;
+constexpr uint32_t kTextureDescriptorSetIndex        = 1;
+constexpr uint32_t kDriverUniformsDescriptorSetIndex = 2;
 
 }  // namespace rx
 

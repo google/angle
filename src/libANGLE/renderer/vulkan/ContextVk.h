@@ -178,6 +178,8 @@ class ContextVk : public ContextImpl
 
     void updateScissor(const gl::State &glState);
 
+    vk::Error updateDriverUniforms();
+
     RendererVk *mRenderer;
     vk::PipelineAndSerial *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
@@ -204,6 +206,15 @@ class ContextVk : public ContextImpl
     // If the current surface bound to this context wants to have all rendering flipped vertically.
     // Updated on calls to onMakeCurrent.
     bool mFlipYForCurrentSurface;
+
+    // For shader uniforms such as gl_DepthRange and the viewport size.
+    struct DriverUniforms
+    {
+        std::array<float, 4> viewport;
+    };
+    vk::DynamicBuffer mDriverUniformsBuffer;
+    VkDescriptorSet mDriverUniformsDescriptorSet;
+    vk::BindingPointer<vk::DescriptorSetLayout> mDriverUniformsSetLayout;
 };
 }  // namespace rx
 

@@ -54,7 +54,9 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mTexturesDirty(false),
       mVertexArrayBindingHasChanged(false),
       mClearColorMask(kAllColorChannelsMask),
-      mFlipYForCurrentSurface(false)
+      mFlipYForCurrentSurface(false),
+      mDriverUniformsBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, sizeof(DriverUniforms) * 16),
+      mDriverUniformsDescriptorSet(VK_NULL_HANDLE)
 {
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
@@ -66,7 +68,9 @@ ContextVk::~ContextVk()
 
 void ContextVk::onDestroy(const gl::Context *context)
 {
+    mDriverUniformsSetLayout.reset();
     mIncompleteTextures.onDestroy(context);
+    mDriverUniformsBuffer.destroy(getDevice());
 
     for (vk::DynamicDescriptorPool &descriptorPool : mDynamicDescriptorPools)
     {
@@ -89,6 +93,7 @@ gl::Error ContextVk::initialize()
     VkDescriptorPoolSize uniformPoolSize = {
         VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
         GetUniformBufferDescriptorCount() * vk::kDefaultDescriptorPoolMaxSets};
+
     ANGLE_TRY(
         mDynamicDescriptorPools[kUniformsDescriptorSetIndex].init(getDevice(), uniformPoolSize));
 
@@ -97,6 +102,11 @@ gl::Error ContextVk::initialize()
         mRenderer->getMaxActiveTextures() * vk::kDefaultDescriptorPoolMaxSets};
     ANGLE_TRY(mDynamicDescriptorPools[kTextureDescriptorSetIndex].init(getDevice(),
                                                                        imageSamplerPoolSize));
+
+    VkDescriptorPoolSize driverUniformsPoolSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                                   vk::kDefaultDescriptorPoolMaxSets};
+    ANGLE_TRY(mDynamicDescriptorPools[kDriverUniformsDescriptorSetIndex].init(
+        getDevice(), driverUniformsPoolSize));
 
     mPipelineDesc.reset(new vk::PipelineDesc());
     mPipelineDesc->initDefaults();
@@ -439,6 +449,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
                                               glState.getNearPlane(), glState.getFarPlane(),
                                               isViewportFlipEnabled());
+                ANGLE_TRY(updateDriverUniforms());
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
@@ -826,8 +837,76 @@ VkColorComponentFlags ContextVk::getClearColorMask() const
 {
     return mClearColorMask;
 }
+
 const FeaturesVk &ContextVk::getFeatures() const
 {
     return mRenderer->getFeatures();
+}
+
+vk::Error ContextVk::updateDriverUniforms()
+{
+    if (!mDriverUniformsBuffer.valid())
+    {
+        size_t minAlignment = static_cast<size_t>(
+            mRenderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
+        mDriverUniformsBuffer.init(minAlignment, mRenderer);
+    }
+
+    // Release any previously retained buffers.
+    mDriverUniformsBuffer.releaseRetainedBuffers(mRenderer);
+
+    const gl::Rectangle &glViewport = mState.getState().getViewport();
+
+    // Allocate a new region in the dynamic buffer.
+    uint8_t *ptr            = nullptr;
+    VkBuffer buffer         = VK_NULL_HANDLE;
+    uint32_t offset         = 0;
+    bool newBufferAllocated = false;
+    ANGLE_TRY(mDriverUniformsBuffer.allocate(mRenderer, sizeof(DriverUniforms), &ptr, &buffer,
+                                             &offset, &newBufferAllocated));
+
+    // Copy and flush to the device.
+    DriverUniforms *driverUniforms = reinterpret_cast<DriverUniforms *>(ptr);
+    driverUniforms->viewport[0]    = static_cast<float>(glViewport.x);
+    driverUniforms->viewport[1]    = static_cast<float>(glViewport.y);
+    driverUniforms->viewport[2]    = static_cast<float>(glViewport.width);
+    driverUniforms->viewport[2]    = static_cast<float>(glViewport.height);
+
+    ANGLE_TRY(mDriverUniformsBuffer.flush(getDevice()));
+
+    // Get the descriptor set layout.
+    if (!mDriverUniformsSetLayout.valid())
+    {
+        vk::DescriptorSetLayoutDesc desc;
+        desc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+
+        ANGLE_TRY(mRenderer->getDescriptorSetLayout(desc, &mDriverUniformsSetLayout));
+    }
+
+    // Allocate a new descriptor set.
+    ANGLE_TRY(mDynamicDescriptorPools[kDriverUniformsDescriptorSetIndex].allocateSets(
+        this, mDriverUniformsSetLayout.get().ptr(), 1, &mDriverUniformsDescriptorSet));
+
+    // Update the driver uniform descriptor set.
+    VkDescriptorBufferInfo bufferInfo;
+    bufferInfo.buffer = buffer;
+    bufferInfo.offset = offset;
+    bufferInfo.range  = sizeof(DriverUniforms);
+
+    VkWriteDescriptorSet writeInfo;
+    writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfo.pNext            = nullptr;
+    writeInfo.dstSet           = mDriverUniformsDescriptorSet;
+    writeInfo.dstBinding       = 0;
+    writeInfo.dstArrayElement  = 0;
+    writeInfo.descriptorCount  = 1;
+    writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    writeInfo.pImageInfo       = nullptr;
+    writeInfo.pTexelBufferView = nullptr;
+    writeInfo.pBufferInfo      = &bufferInfo;
+
+    vkUpdateDescriptorSets(getDevice(), 1, &writeInfo, 0, nullptr);
+
+    return vk::NoError();
 }
 }  // namespace rx
