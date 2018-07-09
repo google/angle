@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d32f1cb3_3d1da223",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3404,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-09T13:35:08Z",
+      "side": 1,
+      "message": "tiny nit: it would technically be one instruction faster in some cases to explicitly set this to false in cases below.",
+      "range": {
+        "startLine": 3404,
+        "startChar": 4,
+        "endLine": 3404,
+        "endChar": 28
+      },
+      "revId": "d55eaa81939fd36803e904ffa90edd9cba66b13e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
