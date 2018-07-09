@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a90b7c7_b63975e7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-09T18:09:37Z",
+      "side": 1,
+      "message": "Since we know the size of the object in the buffer, maybe make the initial size a multiple of sizeof(DriverUniforms)?",
+      "range": {
+        "startLine": 56,
+        "startChar": 64,
+        "endLine": 56,
+        "endChar": 67
+      },
+      "revId": "921d2a9df3b9a6da05bbb77786fb26c28353f2ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ad213cc_1ca70c00",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 865,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-09T18:09:37Z",
+      "side": 1,
+      "message": "Can you cast ptr to DriverUnforms* and intialize it directly in the DMA memory?",
+      "range": {
+        "startLine": 865,
+        "startChar": 4,
+        "endLine": 865,
+        "endChar": 57
+      },
+      "revId": "921d2a9df3b9a6da05bbb77786fb26c28353f2ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
