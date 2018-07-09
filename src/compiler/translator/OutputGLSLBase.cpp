@@ -165,6 +165,13 @@ void TOutputGLSLBase::writeLayoutQualifier(TIntermTyped *variable)
         return;
     }
 
+    if (type.getBasicType() == EbtInterfaceBlock)
+    {
+        const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+        declareInterfaceBlockLayout(interfaceBlock);
+        return;
+    }
+
     TInfoSinkBase &out                      = objSink();
     const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
     out << "layout(";
@@ -266,11 +273,6 @@ void TOutputGLSLBase::writeVariableType(const TType &type, const TSymbol *symbol
     if (type.isInvariant())
     {
         writeInvariantQualifier(type);
-    }
-    if (type.getBasicType() == EbtInterfaceBlock)
-    {
-        const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
-        declareInterfaceBlockLayout(interfaceBlock);
     }
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
@@ -1316,7 +1318,7 @@ bool NeedsToWriteLayoutQualifier(const TType &type)
 {
     if (type.getBasicType() == EbtInterfaceBlock)
     {
-        return false;
+        return true;
     }
 
     const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
