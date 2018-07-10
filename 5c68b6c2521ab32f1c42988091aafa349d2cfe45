@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "846bdde1_37a9a5ed",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 18
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T15:43:38Z",
+      "side": 1,
+      "message": "nit: can probably leave out the buffer thingy or use NONE. I don\u0027t think this is a valid vertex buffer format.",
+      "range": {
+        "startLine": 229,
+        "startChar": 12,
+        "endLine": 229,
+        "endChar": 39
+      },
+      "revId": "5c68b6c2521ab32f1c42988091aafa349d2cfe45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
