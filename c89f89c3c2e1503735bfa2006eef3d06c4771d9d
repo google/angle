@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6094962_7d3189c7",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T13:03:44Z",
+      "side": 1,
+      "message": "be careful with this. I think the default row alignment is 4. you may want an alignment of 1? you may be able to init it with pixelPackState \u003d  { 1 };\n\nthis would be an existing issue. would have to think about how to repro this.",
+      "range": {
+        "startLine": 209,
+        "startChar": 23,
+        "endLine": 209,
+        "endChar": 38
+      },
+      "revId": "c89f89c3c2e1503735bfa2006eef3d06c4771d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
