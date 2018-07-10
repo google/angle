@@ -1557,6 +1557,10 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGB)
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGBA)
 {
+    // TODO(lucferron): This test fails only on linux and intel.
+    // http://anglebug.com/2726
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux() && IsIntel());
+
     // Ignore SDK layers messages on D3D11 FL 9.3 (http://anglebug.com/1284)
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
 

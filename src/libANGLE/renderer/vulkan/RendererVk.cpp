@@ -653,10 +653,9 @@ void RendererVk::initFeatures()
     // Use OpenGL line rasterization rules by default.
     mFeatures.basicGLLineRasterization = true;
 
-    // For now, set this manually to true to enable viewport flipping. A couple of features are not
-    // working well like copyTexImage, copySubTexImage, blit, and probably some more. Until
-    // everything is fixed, we will keep the viewport flipping feature disabled.
-    mFeatures.flipViewportY = false;
+    // TODO(lucferron): Currently disabled on Intel only since many tests are failing and need
+    // investigation. http://anglebug.com/2728
+    mFeatures.flipViewportY = !IsIntel(mPhysicalDeviceProperties.vendorID);
 }
 
 void RendererVk::ensureCapsInitialized() const

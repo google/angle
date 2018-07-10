@@ -574,6 +574,9 @@ TEST_P(BlitFramebufferANGLETest, ReverseOversizedBlit)
 // blit from user-created FBO to system framebuffer, with depth buffer.
 TEST_P(BlitFramebufferANGLETest, BlitWithDepthUserToDefault)
 {
+    // TODO(lucferron): Diagnose and fix http://anglebug.com/2729
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan());
+
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
@@ -627,6 +630,9 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepthUserToDefault)
 // blit from system FBO to user-created framebuffer, with depth buffer.
 TEST_P(BlitFramebufferANGLETest, BlitWithDepthDefaultToUser)
 {
+    // TODO(lucferron): Diagnose and fix http://anglebug.com/2729
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan());
+
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
@@ -820,6 +826,9 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
 
     // TODO(lucferron): Diagnose and fix http://anglebug.com/2693
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsVulkan());
+
+    // TODO(lucferron): Diagnose and fix http://anglebug.com/2729
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan());
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
