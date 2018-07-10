@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c73d6117_22fc1769",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-10T12:17:42Z",
+      "side": 1,
+      "message": "Should be \"Parenthesis\" I think. Bracket is \"[\"",
+      "range": {
+        "startLine": 83,
+        "startChar": 46,
+        "endLine": 83,
+        "endChar": 53
+      },
+      "revId": "7da59484445d540bbbb5983a9ed2cdb8d7d1493a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a846b82_206a7a8d",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1182,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-10T12:17:42Z",
+      "side": 1,
+      "message": "Nit: \"argument\" would be more exact here rather than \"parameter\".",
+      "range": {
+        "startLine": 1182,
+        "startChar": 33,
+        "endLine": 1182,
+        "endChar": 42
+      },
+      "revId": "7da59484445d540bbbb5983a9ed2cdb8d7d1493a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
