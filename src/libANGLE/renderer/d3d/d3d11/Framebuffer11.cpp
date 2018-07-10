@@ -330,21 +330,37 @@ gl::Error Framebuffer11::blitImpl(const gl::Context *context,
     {
         const gl::FramebufferAttachment *readBuffer = sourceFramebuffer->getDepthOrStencilbuffer();
         ASSERT(readBuffer);
-
         RenderTargetD3D *readRenderTarget = nullptr;
         ANGLE_TRY(readBuffer->getRenderTarget(context, &readRenderTarget));
         ASSERT(readRenderTarget);
 
+        const bool invertSource        = UsePresentPathFast(mRenderer, readBuffer);
+        gl::Rectangle actualSourceArea = sourceArea;
+        if (invertSource)
+        {
+            RenderTarget11 *readRenderTarget11 = GetAs<RenderTarget11>(readRenderTarget);
+            actualSourceArea.y                 = readRenderTarget11->getHeight() - sourceArea.y;
+            actualSourceArea.height            = -sourceArea.height;
+        }
+
         const gl::FramebufferAttachment *drawBuffer = mState.getDepthOrStencilAttachment();
         ASSERT(drawBuffer);
-
         RenderTargetD3D *drawRenderTarget = nullptr;
         ANGLE_TRY(drawBuffer->getRenderTarget(context, &drawRenderTarget));
         ASSERT(drawRenderTarget);
 
-        ANGLE_TRY(mRenderer->blitRenderbufferRect(context, sourceArea, destArea, readRenderTarget,
-                                                  drawRenderTarget, filter, scissor, false,
-                                                  blitDepth, blitStencil));
+        bool invertDest              = UsePresentPathFast(mRenderer, drawBuffer);
+        gl::Rectangle actualDestArea = destArea;
+        if (invertDest)
+        {
+            RenderTarget11 *drawRenderTarget11 = GetAs<RenderTarget11>(drawRenderTarget);
+            actualDestArea.y                   = drawRenderTarget11->getHeight() - destArea.y;
+            actualDestArea.height              = -destArea.height;
+        }
+
+        ANGLE_TRY(mRenderer->blitRenderbufferRect(context, actualSourceArea, actualDestArea,
+                                                  readRenderTarget, drawRenderTarget, filter,
+                                                  scissor, false, blitDepth, blitStencil));
     }
 
     ANGLE_TRY(markAttachmentsDirty(context));

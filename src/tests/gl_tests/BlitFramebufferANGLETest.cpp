@@ -25,6 +25,7 @@ class BlitFramebufferANGLETest : public ANGLETest
 
         mCheckerProgram = 0;
         mBlueProgram = 0;
+        mRedProgram     = 0;
 
         mOriginalFBO = 0;
 
@@ -67,7 +68,8 @@ class BlitFramebufferANGLETest : public ANGLETest
         mCheckerProgram =
             CompileProgram(essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Checkered());
         mBlueProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
-        if (mCheckerProgram == 0 || mBlueProgram == 0)
+        mRedProgram  = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+        if (mCheckerProgram == 0 || mBlueProgram == 0 || mRedProgram == 0)
         {
             FAIL() << "shader compilation failed.";
         }
@@ -236,6 +238,7 @@ class BlitFramebufferANGLETest : public ANGLETest
     {
         glDeleteProgram(mCheckerProgram);
         glDeleteProgram(mBlueProgram);
+        glDeleteProgram(mRedProgram);
 
         glDeleteFramebuffers(1, &mUserFBO);
         glDeleteTextures(1, &mUserColorBuffer);
@@ -337,6 +340,7 @@ class BlitFramebufferANGLETest : public ANGLETest
 
     GLuint mCheckerProgram;
     GLuint mBlueProgram;
+    GLuint mRedProgram;
 
     GLuint mOriginalFBO;
 
@@ -568,12 +572,8 @@ TEST_P(BlitFramebufferANGLETest, ReverseOversizedBlit)
 }
 
 // blit from user-created FBO to system framebuffer, with depth buffer.
-TEST_P(BlitFramebufferANGLETest, BlitWithDepth)
+TEST_P(BlitFramebufferANGLETest, BlitWithDepthUserToDefault)
 {
-    // TODO(lucferron): Fix this test and the implementation.
-    // http://anglebug.com/2673
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
@@ -583,15 +583,27 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepth)
 
     glEnable(GL_DEPTH_TEST);
 
-    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.3f);
-
     EXPECT_GL_NO_ERROR();
+
+    // Clear the first half of the screen
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, getWindowWidth(), getWindowHeight() / 2);
+
+    glClearDepthf(0.1f);
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Scissor the second half of the screen
+    glScissor(0, getWindowHeight() / 2, getWindowWidth(), getWindowHeight() / 2);
+
+    glClearDepthf(0.9f);
+    glClearColor(0.0, 1.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glDisable(GL_SCISSOR_TEST);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mOriginalFBO);
     glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, mUserFBO);
-
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(), getWindowHeight(), 
                            GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
@@ -599,41 +611,51 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepth)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
-    // if blit is happening correctly, this quad will not draw, because it is behind the blitted one
-    drawQuad(mBlueProgram, essl1_shaders::PositionAttrib(), 0.8f);
+    // if blit is happening correctly, this quad will draw only on the bottom half since it will be
+    // behind on the first half and in front on the second half.
+    drawQuad(mBlueProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     glDisable(GL_DEPTH_TEST);
 
-    EXPECT_PIXEL_EQ(    getWindowWidth() / 4,     getWindowHeight() / 4, 255,   0,   0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4,     getWindowHeight() / 4,   0, 255,   0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255,   0,   0, 255);
-    EXPECT_PIXEL_EQ(    getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0, 255,   0, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
+    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
+    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 0, 255, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 0, 255, 255);
 }
 
 // blit from system FBO to user-created framebuffer, with depth buffer.
-TEST_P(BlitFramebufferANGLETest, ReverseBlitWithDepth)
+TEST_P(BlitFramebufferANGLETest, BlitWithDepthDefaultToUser)
 {
-    // TODO(lucferron): Fix this test and the implementation.
-    // http://anglebug.com/2673
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
+    glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     glEnable(GL_DEPTH_TEST);
 
-    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.3f);
-
     EXPECT_GL_NO_ERROR();
+
+    // Clear the first half of the screen
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, getWindowWidth(), getWindowHeight() / 2);
+
+    glClearDepthf(0.1f);
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Scissor the second half of the screen
+    glScissor(0, getWindowHeight() / 2, getWindowWidth(), getWindowHeight() / 2);
+
+    glClearDepthf(0.9f);
+    glClearColor(0.0, 1.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glDisable(GL_SCISSOR_TEST);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mUserFBO);
     glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, mOriginalFBO);
-
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(), getWindowHeight(), 
                            GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
@@ -641,16 +663,16 @@ TEST_P(BlitFramebufferANGLETest, ReverseBlitWithDepth)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
-    // if blit is happening correctly, this quad will not draw, because it is behind the blitted one
-
-    drawQuad(mBlueProgram, essl1_shaders::PositionAttrib(), 0.8f);
+    // if blit is happening correctly, this quad will draw only on the bottom half since it will be
+    // behind on the first half and in front on the second half.
+    drawQuad(mBlueProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
     glDisable(GL_DEPTH_TEST);
 
-    EXPECT_PIXEL_EQ(    getWindowWidth() / 4,     getWindowHeight() / 4, 255,   0,   0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4,     getWindowHeight() / 4,   0, 255,   0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255,   0,   0, 255);
-    EXPECT_PIXEL_EQ(    getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0, 255,   0, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
+    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
+    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 0, 255, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 0, 255, 255);
 }
 
 // blit from one region of the system fbo to another-- this should fail.
@@ -789,10 +811,6 @@ TEST_P(BlitFramebufferANGLETest, BlitWithMissingAttachments)
 
 TEST_P(BlitFramebufferANGLETest, BlitStencil)
 {
-    // TODO(lucferron): Fix this test and the implementation.
-    // http://anglebug.com/2673
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
 
     // TODO(jmadill): Figure out if we can fix this on D3D9.
@@ -804,16 +822,27 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.0, 1.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glClearStencil(0x0);
+
+    // Scissor half the screen so we fill the stencil only halfway
+    glScissor(0, 0, getWindowWidth(), getWindowHeight() / 2);
+    glEnable(GL_SCISSOR_TEST);
+
     // fill the stencil buffer with 0x1
     glStencilFunc(GL_ALWAYS, 0x1, 0xFF);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     glEnable(GL_STENCIL_TEST);
-    drawQuad(mCheckerProgram, essl1_shaders::PositionAttrib(), 0.3f);
+    drawQuad(mRedProgram, essl1_shaders::PositionAttrib(), 0.3f);
+
+    glDisable(GL_SCISSOR_TEST);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mOriginalFBO);
     glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, mUserFBO);
 
+    // These clears are not useful in theory because we're copying over them, but its
+    // helpful in debugging if we see white in any result.
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClearStencil(0x0);
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -827,19 +856,21 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
     EXPECT_PIXEL_EQ(    getWindowWidth() / 4,     getWindowHeight() / 4, 255,   0,   0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4,     getWindowHeight() / 4,   0, 255,   0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255,   0,   0, 255);
+    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
+    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
     EXPECT_PIXEL_EQ(    getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0, 255,   0, 255);
 
     glStencilFunc(GL_EQUAL, 0x1, 0xFF); // only pass if stencil buffer at pixel reads 0x1
+
     drawQuad(mBlueProgram, essl1_shaders::PositionAttrib(),
              0.8f);  // blue quad will draw if stencil buffer was copied
+
     glDisable(GL_STENCIL_TEST);
 
     EXPECT_PIXEL_EQ(    getWindowWidth() / 4,     getWindowHeight() / 4,   0,   0, 255, 255);
     EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4,     getWindowHeight() / 4,   0,   0, 255, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0,   0, 255, 255);
-    EXPECT_PIXEL_EQ(    getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0,   0, 255, 255);
+    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
 }
 
 // make sure that attempting to blit a partial depth buffer issues an error

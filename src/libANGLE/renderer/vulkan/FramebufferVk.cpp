@@ -485,6 +485,7 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
         {
             if (flipSource || contextVk->isViewportFlipEnabledForReadFBO())
             {
+                // TODO(lucferron): Implement this http://anglebug.com/2673
                 // The tests in BlitFramebufferANGLETest are passing, but they are wrong since they
                 // use a single color for the depth / stencil buffers, it looks like its working,
                 // but if it was a gradient or a checked board, you would realize the flip isn't
