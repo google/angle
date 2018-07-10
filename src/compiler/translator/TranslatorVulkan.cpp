@@ -256,6 +256,44 @@ void AppendVertexShaderDepthCorrectionToMain(TIntermBlock *root, TSymbolTable *s
     // Append the assignment as a statement at the end of the shader.
     RunAtTheEndOfShader(root, assignment, symbolTable);
 }
+
+// The AddDriverUniformsToShader operation adds an internal uniform block to a shader. The driver
+// block is used to implement Vulkan-specific features and workarounds. Returns the driver uniforms
+// variable.
+const TVariable *AddDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable)
+{
+    // This field list mirrors the structure of ContextVk::DriverUniforms.
+    TFieldList *driverFieldList = new TFieldList;
+
+    // Add a vec4 field "viewport" to the driver uniform fields.
+    TType *driverViewportType  = new TType(EbtFloat, 4);
+    TField *driverViewportSize = new TField(driverViewportType, ImmutableString("viewport"),
+                                            TSourceLoc(), SymbolType::AngleInternal);
+    driverFieldList->push_back(driverViewportSize);
+
+    // Define a driver uniform block "ANGLEUniformBlock".
+    TLayoutQualifier driverLayoutQualifier = TLayoutQualifier::Create();
+    TInterfaceBlock *interfaceBlock =
+        new TInterfaceBlock(symbolTable, ImmutableString("ANGLEUniformBlock"), driverFieldList,
+                            driverLayoutQualifier, SymbolType::AngleInternal);
+
+    // Make the inteface block into a declaration. Use instance name "ANGLEUniforms".
+    TType *interfaceBlockType = new TType(interfaceBlock, EvqUniform, driverLayoutQualifier);
+    TIntermDeclaration *driverUniformsDecl = new TIntermDeclaration;
+    TVariable *driverUniformsVar = new TVariable(symbolTable, ImmutableString("ANGLEUniforms"),
+                                                 interfaceBlockType, SymbolType::AngleInternal);
+    TIntermSymbol *driverUniformsDeclarator = new TIntermSymbol(driverUniformsVar);
+    driverUniformsDecl->appendDeclarator(driverUniformsDeclarator);
+
+    // Insert the declarations before Main.
+    TIntermSequence *insertSequence = new TIntermSequence;
+    insertSequence->push_back(driverUniformsDecl);
+
+    size_t mainIndex = FindMainIndex(root);
+    root->insertChildNodes(mainIndex, *insertSequence);
+
+    return driverUniformsVar;
+}
 }  // anonymous namespace
 
 TranslatorVulkan::TranslatorVulkan(sh::GLenum type, ShShaderSpec spec)
@@ -314,6 +352,8 @@ void TranslatorVulkan::translate(TIntermBlock *root,
 
         sink << "};\n";
     }
+
+    AddDriverUniformsToShader(root, &getSymbolTable());
 
     // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
     // if it's core profile shaders and they are used.

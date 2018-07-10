@@ -595,8 +595,6 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
                     node->getLeft()->getType().getInterfaceBlock();
                 const TIntermConstantUnion *index = node->getRight()->getAsConstantUnion();
                 const TField *field               = interfaceBlock->fields()[index->getIConst(0)];
-                ASSERT(interfaceBlock->symbolType() == SymbolType::UserDefined ||
-                       interfaceBlock->name() == "gl_PerVertex");
                 out << hashFieldName(field);
                 visitChildren = false;
             }

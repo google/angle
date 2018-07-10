@@ -46,7 +46,7 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     bool needsCustomLayout =
         (type.getQualifier() == EvqAttribute || type.getQualifier() == EvqFragmentOut ||
          type.getQualifier() == EvqVertexIn || IsVarying(type.getQualifier()) ||
-         IsSampler(type.getBasicType()));
+         IsSampler(type.getBasicType()) || type.isInterfaceBlock());
 
     if (!NeedsToWriteLayoutQualifier(type) && !needsCustomLayout)
     {
@@ -58,8 +58,6 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 
     // This isn't super clean, but it gets the job done.
     // See corresponding code in GlslangWrapper.cpp.
-    // TODO(jmadill): Ensure declarations are separated.
-
     TIntermSymbol *symbol = variable->getAsSymbolNode();
     ASSERT(symbol);
 
@@ -99,9 +97,7 @@ void TOutputVulkanGLSL::writeQualifier(TQualifier qualifier, const TSymbol *symb
     }
 
     TInfoSinkBase &out = objSink();
-    out << "@@ QUALIFIER-";
-    out << symbol->name().data();
-    out << " @@ ";
+    out << "@@ QUALIFIER-" << symbol->name().data() << " @@ ";
 }
 
 void TOutputVulkanGLSL::writeStructType(const TStructure *structure)
@@ -112,5 +108,4 @@ void TOutputVulkanGLSL::writeStructType(const TStructure *structure)
         objSink() << ";\n";
     }
 }
-
 }  // namespace sh

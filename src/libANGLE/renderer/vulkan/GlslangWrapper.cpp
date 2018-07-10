@@ -299,6 +299,15 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
         }
     }
 
+    // Substitute layout and qualifier strings for the driver uniforms block.
+    constexpr char kDriverBlockLayoutString[] = "set = 2, binding = 0";
+    constexpr char kDriverBlockName[]         = "ANGLEUniforms";
+    InsertLayoutSpecifierString(&vertexSource, kDriverBlockName, kDriverBlockLayoutString);
+    InsertLayoutSpecifierString(&fragmentSource, kDriverBlockName, kDriverBlockLayoutString);
+
+    InsertQualifierSpecifierString(&vertexSource, kDriverBlockName, kUniformQualifier);
+    InsertQualifierSpecifierString(&fragmentSource, kDriverBlockName, kUniformQualifier);
+
     std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};
     std::array<int, 2> lengths          = {
         {static_cast<int>(vertexSource.length()), static_cast<int>(fragmentSource.length())}};
