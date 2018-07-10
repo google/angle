@@ -30,11 +30,16 @@
 
 static_assert(EGL_DONT_CARE == -1, "Unexpected value for EGL_DONT_CARE");
 
+// We should clean this up at some point by making it a properly exposed enum.
+#define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999
+
 namespace tcu
 {
-ANGLEPlatform::ANGLEPlatform()
+ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc)
 {
     angle::SetLowPriorityProcess();
+
+    mPlatformMethods.logError = logErrorFunc;
 
 #if (DE_OS == DE_OS_WIN32)
     {
@@ -146,13 +151,23 @@ std::vector<eglw::EGLAttrib> ANGLEPlatform::initAttribs(eglw::EGLAttrib type,
         attribs.push_back(minorVersion);
     }
 
+    static_assert(sizeof(eglw::EGLAttrib) == sizeof(angle::PlatformMethods *),
+                  "Unexpected pointer size");
+    attribs.push_back(EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX);
+    attribs.push_back(reinterpret_cast<eglw::EGLAttrib>(&mPlatformMethods));
+
     attribs.push_back(EGL_NONE);
     return attribs;
 }
 }  // namespace tcu
 
 // Create platform
+tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc)
+{
+    return new tcu::ANGLEPlatform(logErrorFunc);
+}
+
 tcu::Platform *createPlatform()
 {
-    return new tcu::ANGLEPlatform();
+    return CreateANGLEPlatform(nullptr);
 }

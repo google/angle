@@ -4644,7 +4644,7 @@ bool ValidateBlendFuncSeparate(Context *context,
                     "Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and "
                     "GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR not supported by this "
                     "implementation.";
-                ERR() << msg;
+                WARN() << msg;
             }
             context->handleError(InvalidOperation() << msg);
             return false;

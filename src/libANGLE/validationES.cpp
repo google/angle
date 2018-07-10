@@ -2720,8 +2720,8 @@ bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
             {
                 if (!extensions.webglCompatibility)
                 {
-                    ERR() << "This ANGLE implementation does not support separate front/back "
-                             "stencil writemasks, reference values, or stencil mask values.";
+                    WARN() << "This ANGLE implementation does not support separate front/back "
+                              "stencil writemasks, reference values, or stencil mask values.";
                 }
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(), StencilReferenceMaskOrMismatch);
                 return false;

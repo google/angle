@@ -29,6 +29,7 @@
 #   include "egluPlatform.hpp"
 #endif
 
+#include "platform/Platform.h"
 #include "tcuANGLENativeDisplayFactory.h"
 
 namespace tcu
@@ -39,7 +40,7 @@ class ANGLEPlatform : public tcu::Platform,
                       private eglu::Platform
 {
   public:
-    ANGLEPlatform();
+    ANGLEPlatform(angle::LogErrorFunc logErrorFunc);
     ~ANGLEPlatform();
 
     bool processEvents() override;
@@ -55,6 +56,7 @@ class ANGLEPlatform : public tcu::Platform,
                                              eglw::EGLAttrib minorVersion = -1);
 
     EventState mEvents;
+    angle::PlatformMethods mPlatformMethods;
 };
 
 } // tcu

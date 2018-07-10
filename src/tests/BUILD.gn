@@ -518,7 +518,6 @@ if (build_angle_gles1_conform_tests) {
 ### dEQP tests
 ###-----------------------------------------------------
 
-# TODO(jmadill): Other platforms.
 if (build_angle_deqp_tests) {
   deqp_gypi =
       exec_script("//build/gypi_to_gn.py",
@@ -618,8 +617,10 @@ if (build_angle_deqp_tests) {
       angle_root + ":angle_common",
       angle_root + ":angle_util",
       angle_root + ":libEGL${angle_libs_suffix}",
+      angle_root + ":libGLESv2${angle_libs_suffix}",
       "//third_party/libpng:libpng",
     ]
+
     defines = [ "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"" ]
 
     configs -= deqp_undefine_configs

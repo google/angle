@@ -466,3 +466,8 @@
 2628 ANDROID : dEQP-GLES3.functional.shaders.indexing.moredynamic.user_defined_fncall_inout_parameter_with_index_with_side_effects_fragment = FAIL
 2628 ANDROID : dEQP-GLES3.functional.shaders.indexing.moredynamic.user_defined_fncall_out_parameter_fragment = FAIL
 2627 ANDROID : dEQP-GLES3.functional.shaders.loops.short_circuit.* = FAIL
+
+2567 GLES ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.red_unsigned_byte = FAIL
+2567 GLES ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.rg_unsigned_byte = FAIL
+2567 GLES ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.red_unsigned_byte = FAIL
+2567 GLES ANDROID : dEQP-GLES3.functional.fbo.completeness.renderable.texture.stencil.rg_unsigned_byte = FAIL

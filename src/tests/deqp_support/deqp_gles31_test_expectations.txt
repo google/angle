@@ -1644,3 +1644,8 @@
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_storage.block_number_limits = FAIL
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.log.shader_storage.block_number_limits = FAIL
 2324 DEBUG RELEASE : dEQP-GLES31.functional.debug.negative_coverage.callbacks.shader_storage.block_number_limits = FAIL
+
+// These tests are failing because of compile errors with SSBOs in compute shaders.
+1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.compute.exceed_shared_memory_size_limit = FAIL
+1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.compute.exceed_shared_memory_size_limit = FAIL
+1951 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.compute.exceed_shared_memory_size_limit = FAIL

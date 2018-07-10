@@ -116,12 +116,12 @@ gl::Error ContextVk::initialize()
 
 gl::Error ContextVk::flush(const gl::Context *context)
 {
-    // TODO(jmadill): Flush will need to insert a semaphore for the next flush to wait on.
-    UNIMPLEMENTED();
+    // TODO(jmadill): Multiple flushes will need to insert semaphores. http://anglebug.com/2504
 
     // dEQP tests rely on having no errors thrown at the end of the test and they always call
     // flush at the end of the their tests. Just returning NoError until we implement flush
     // allow us to work on enabling many tests in the meantime.
+    WARN() << "Flush is unimplemented. http://anglebug.com/2504";
     return gl::NoError();
 }
 
