@@ -22,6 +22,30 @@
       "revId": "c89f89c3c2e1503735bfa2006eef3d06c4771d9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aca95052_d06e076c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-10T13:21:41Z",
+      "side": 1,
+      "message": "This was indeed already exactly like this. I don\u0027t want to change this behavior with this CL it isn\u0027t aimed at that. You want to create a bug for this if you think we should change it?",
+      "parentUuid": "d6094962_7d3189c7",
+      "range": {
+        "startLine": 209,
+        "startChar": 23,
+        "endLine": 209,
+        "endChar": 38
+      },
+      "revId": "c89f89c3c2e1503735bfa2006eef3d06c4771d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
