@@ -46,6 +46,30 @@
       "revId": "cc5eb52654c9ec08ff07f6f437d5c1180811bafb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "665a156d_ec1f7679",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-10T13:48:59Z",
+      "side": 1,
+      "message": "I would prefer doing that on a separate CL. I\u0027ll follow up with it after the current patch stack.",
+      "parentUuid": "93e14bed_a49310a3",
+      "range": {
+        "startLine": 390,
+        "startChar": 38,
+        "endLine": 390,
+        "endChar": 72
+      },
+      "revId": "cc5eb52654c9ec08ff07f6f437d5c1180811bafb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
