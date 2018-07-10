@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4ab01bd_5a1bc8c9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T12:59:08Z",
+      "side": 1,
+      "message": "this would work out better if you make it take FramebufferVk. You can make an isDefault for FramebufferImpl or just call framebufferVk-\u003egetState().id() \u003d\u003d 0.",
+      "range": {
+        "startLine": 390,
+        "startChar": 38,
+        "endLine": 390,
+        "endChar": 72
+      },
+      "revId": "cc5eb52654c9ec08ff07f6f437d5c1180811bafb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
