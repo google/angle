@@ -70,6 +70,30 @@
       "revId": "cc5eb52654c9ec08ff07f6f437d5c1180811bafb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d89e172f_a3fd7e46",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T13:52:39Z",
+      "side": 1,
+      "message": "Could you either fix it in a prior CL or revert to the first iteration of the code which didn\u0027t modify isViewportFlipEnabled? Sorry for the back-and-forth. I dislike passing the gl::Framebuffer to this method.",
+      "parentUuid": "665a156d_ec1f7679",
+      "range": {
+        "startLine": 390,
+        "startChar": 38,
+        "endLine": 390,
+        "endChar": 72
+      },
+      "revId": "cc5eb52654c9ec08ff07f6f437d5c1180811bafb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
