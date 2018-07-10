@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "985b0d3b_f5daca23",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T21:24:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f69061a1_1423bb67",
+      "range": {
+        "startLine": 10,
+        "startChar": 38,
+        "endLine": 10,
+        "endChar": 46
+      },
+      "revId": "783006efd8825b986ecaf803e32a29248602f60f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1847b12b_c9fd0fbc",
         "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
         "patchSetId": 17
@@ -45,6 +69,30 @@
       "revId": "783006efd8825b986ecaf803e32a29248602f60f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5f8afed_94ba2a79",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T21:24:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1847b12b_c9fd0fbc",
+      "range": {
+        "startLine": 31,
+        "startChar": 1,
+        "endLine": 31,
+        "endChar": 31
+      },
+      "revId": "783006efd8825b986ecaf803e32a29248602f60f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
