@@ -22,6 +22,30 @@
       "revId": "cc5eb52654c9ec08ff07f6f437d5c1180811bafb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93e14bed_a49310a3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T13:11:57Z",
+      "side": 1,
+      "message": "Actually, maybe the best thing to do is cache two booleans in ContextVk - isViewportFlipEnabledForReadFBO and isViewportFlipEnabledForDrawFBO. They are updated on the two different DIRTY_BIT_*_FRAMEBUFFER_BINDING calls and in the onMakeCurrent call. Your call. We can always add this later.",
+      "parentUuid": "e4ab01bd_5a1bc8c9",
+      "range": {
+        "startLine": 390,
+        "startChar": 38,
+        "endLine": 390,
+        "endChar": 72
+      },
+      "revId": "cc5eb52654c9ec08ff07f6f437d5c1180811bafb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
