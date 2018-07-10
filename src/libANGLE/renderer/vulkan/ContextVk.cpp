@@ -236,17 +236,21 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     // TODO(jmadill): Handle multiple command buffers.
     const auto &descriptorSets   = programVk->getDescriptorSets();
     const gl::RangeUI &usedRange = programVk->getUsedDescriptorSetRange();
+    const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
     if (!usedRange.empty())
     {
         ASSERT(!descriptorSets.empty());
-        const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
-
         (*commandBufferOut)
             ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, usedRange.low(),
                                  usedRange.length(), &descriptorSets[usedRange.low()],
                                  programVk->getDynamicOffsetsCount(),
                                  programVk->getDynamicOffsets());
     }
+
+    (*commandBufferOut)
+        ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+                             kDriverUniformsDescriptorSetIndex, 1, &mDriverUniformsDescriptorSet, 0,
+                             nullptr);
 
     return gl::NoError();
 }

@@ -302,9 +302,16 @@ gl::LinkResult ProgramVk::link(const gl::Context *glContext,
     ANGLE_TRY(renderer->getDescriptorSetLayout(texturesSetDesc,
                                                &mDescriptorSetLayouts[kTextureDescriptorSetIndex]));
 
+    vk::DescriptorSetLayoutDesc driverUniformsSetDesc;
+    driverUniformsSetDesc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+    ANGLE_TRY(renderer->getDescriptorSetLayout(
+        driverUniformsSetDesc, &mDescriptorSetLayouts[kDriverUniformsDescriptorSetIndex]));
+
     vk::PipelineLayoutDesc pipelineLayoutDesc;
     pipelineLayoutDesc.updateDescriptorSetLayout(kUniformsDescriptorSetIndex, uniformsSetDesc);
     pipelineLayoutDesc.updateDescriptorSetLayout(kTextureDescriptorSetIndex, texturesSetDesc);
+    pipelineLayoutDesc.updateDescriptorSetLayout(kDriverUniformsDescriptorSetIndex,
+                                                 driverUniformsSetDesc);
 
     ANGLE_TRY(
         renderer->getPipelineLayout(pipelineLayoutDesc, mDescriptorSetLayouts, &mPipelineLayout));
