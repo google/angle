@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68c0da44_c54f875b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-10T15:56:35Z",
+      "side": 1,
+      "message": "I would like to handle all of the asynchronous linking from within the Program class itself.  Context shouldn\u0027t have to be aware that the program is still linking or do any synchronization around that.",
+      "range": {
+        "startLine": 752,
+        "startChar": 0,
+        "endLine": 753,
+        "endChar": 24
+      },
+      "revId": "525c957a3cf225297f4efca886bba407365df590",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "284037e5_a0e07fd4",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5571,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-10T15:56:35Z",
+      "side": 1,
+      "message": "I\u0027m not sure if this is an issue, the handling of the program executable change in the D3D backend can block until the program is linked but I suspect that any GL calls that require a program will do queries on it during validation and force the link to finish before that happens.\n\nWe shouldn\u0027t have a beginLink and endLink on the program object.  beginLink should be called inside of Program::Link and endLink should be called methods inside of Program that require the link to be resolved.",
+      "range": {
+        "startLine": 5558,
+        "startChar": 0,
+        "endLine": 5571,
+        "endChar": 5
+      },
+      "revId": "525c957a3cf225297f4efca886bba407365df590",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
