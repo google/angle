@@ -94,6 +94,30 @@
       "revId": "cc5eb52654c9ec08ff07f6f437d5c1180811bafb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6c95016_0c1e68e2",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-10T14:18:47Z",
+      "side": 1,
+      "message": "I did it all here after all.",
+      "parentUuid": "d89e172f_a3fd7e46",
+      "range": {
+        "startLine": 390,
+        "startChar": 38,
+        "endLine": 390,
+        "endChar": 72
+      },
+      "revId": "cc5eb52654c9ec08ff07f6f437d5c1180811bafb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
