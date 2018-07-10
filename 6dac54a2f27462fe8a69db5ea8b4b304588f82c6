@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8e7cf83_1c68d672",
+        "filename": "src/compiler/translator/builtin_symbols_hash_autogen.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T21:15:50Z",
+      "side": 1,
+      "message": "I suspect this file might still have an issue. I\u0027m fine with ignoring the problem for now.",
+      "revId": "6dac54a2f27462fe8a69db5ea8b4b304588f82c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
