@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "c335b3a9_e5cdf77c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-07-10T10:12:19Z",
+      "side": 1,
+      "message": "The current implementation already assumes that we only process normal EOpAssign. The compound assignment operations is not included in this patch.\nThe complexity is mainly that we need to calculate the offset of each part in ssbo and get the total location.\nFor example:\n   instanceA.s[gl_LocalInvocationIndex].f[0] \u003d 1.0\n -\u003efloat_Store(_instanceA, 64+12*gl_LocalInvocationIndex+0+4*0 , 1.0)\n\nFor any buffer variable, it can be composed by the combination of EOpIndexDirectInterfaceBlock, EOpIndexInDirect, EOpIndexDirectStruct , EOpIndexDirect. So we need to calculate the offset in these operations when the node is in a shader storage block even for \n \u003cLValue derived from a block\u003e \u003d value;\nand\n \u003ctype\u003e var \u003d \u003cRValue derived from a block\u003e;",
+      "parentUuid": "4e457393_bffb522e",
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b32f6a69_4b945ffe",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 13
@@ -53,6 +71,30 @@
       "writtenOn": "2018-07-09T11:47:34Z",
       "side": 1,
       "message": "Why is this condition needed? Aren\u0027t buffer variables only interface blocks and shouldn\u0027t they all take the else branch?",
+      "range": {
+        "startLine": 979,
+        "startChar": 1,
+        "endLine": 982,
+        "endChar": 13
+      },
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b22e24fa_74155a76",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-07-10T10:12:19Z",
+      "side": 1,
+      "message": "If variableType.isInterfaceBlock() is false, it means that the variable is in default shader storage block which doesn\u0027t have an instance name. If variableType.isInterfaceBlock() is true, it means the variable is the instance name.\nFor example:\nbuffer bufName\n{\n    float f;\n} instanceName;\n\nvariableType.isInterfaceBlock() will be true.\n\nBuf for \nbuffer bufName\n{\n    float f;\n};\nvariableType.isInterfaceBlock() will be false.",
+      "parentUuid": "b32f6a69_4b945ffe",
       "range": {
         "startLine": 979,
         "startChar": 1,
@@ -82,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "24b932df_4c19f732",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-07-10T10:12:19Z",
+      "side": 1,
+      "message": "This process is not for nested structures and arrays. It\u0027s only for non-instance shader storage block.\nFor example\nbuffer bufName\n{\n    float f;\n};\nvoid main()\n{\n   f \u003d 0.2;\n}\n\nWe have to translate\n   f \u003d 0.2\n-\u003e float_Store(_bufName, 0, 0.2);\n\nHere, we need to output \u0027float_Store(_bufName, 0\u0027.\nvariableName is \u0027_bufName, 0\u0027. Maybe, I should change a name to avoid confusion.",
+      "parentUuid": "997b7100_8e164798",
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fc4705b8_8b47c135",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 13
@@ -93,6 +153,30 @@
       "writtenOn": "2018-07-09T11:47:34Z",
       "side": 1,
       "message": "What does this mean? Is it \"isThisNodeTheSymbolCorrespondingToSSBO\" (note that this is a bad name too).",
+      "range": {
+        "startLine": 1163,
+        "startChar": 17,
+        "endLine": 1163,
+        "endChar": 33
+      },
+      "revId": "ecf78dd3c32070b1d20bc75239e69e37de165ff7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3db64151_dc242c3f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1163,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-07-10T10:12:19Z",
+      "side": 1,
+      "message": "Check whether the node is the last node in ssbo so that we can decide if a right bracket is needed. \n   E.g. struct S {\n          float f[2];\n          int i;\n        };\n\n        layout(std140, binding \u003d 0) buffer blockA {\n            vec2 v;\n            S s[8];\n        } instanceA;\n\n        instanceA.v  // v is the last node in ssbo\n        instanceA.s[0].i // i is the last node in ssbo\n        instanceA.s[0].f[0] // f[0] is the last node in ssbo.",
+      "parentUuid": "fc4705b8_8b47c135",
       "range": {
         "startLine": 1163,
         "startChar": 17,
