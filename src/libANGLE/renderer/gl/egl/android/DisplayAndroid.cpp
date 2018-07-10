@@ -42,6 +42,7 @@ static constexpr bool kDefaultEGLVirtualizedContexts = true;
 DisplayAndroid::DisplayAndroid(const egl::DisplayState &state)
     : DisplayEGL(state),
       mVirtualizedContexts(kDefaultEGLVirtualizedContexts),
+      mSupportsSurfaceless(false),
       mDummyPbuffer(EGL_NO_SURFACE)
 {
 }
@@ -126,7 +127,8 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
     }
 
     // A dummy pbuffer is only needed if surfaceless contexts are not supported.
-    if (!mEGL->hasExtension("EGL_KHR_surfaceless_context"))
+    mSupportsSurfaceless = mEGL->hasExtension("EGL_KHR_surfaceless_context");
+    if (!mSupportsSurfaceless)
     {
         int dummyPbufferAttribs[] = {
             EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE,
@@ -499,6 +501,22 @@ egl::Error DisplayAndroid::makeCurrent(egl::Surface *drawSurface,
                newContext == currentContext.context);
 
         newContext = mRenderer->getContext();
+
+        // If we know that we're only running on one thread (mVirtualizedContexts == true) and
+        // EGL_NO_SURFACE is going to be bound, we can optimize this case by not changing the
+        // surface binding and emulate the surfaceless extension in the frontend.
+        if (newSurface == EGL_NO_SURFACE)
+        {
+            newSurface = currentContext.surface;
+        }
+
+        // It's possible that no surface has been created yet and the driver doesn't support
+        // surfaceless, bind the dummy pbuffer.
+        if (newSurface == EGL_NO_SURFACE && !mSupportsSurfaceless)
+        {
+            newSurface = mDummyPbuffer;
+            ASSERT(newSurface != EGL_NO_SURFACE);
+        }
     }
 
     if (newSurface != currentContext.surface || newContext != currentContext.context)
@@ -533,6 +551,15 @@ void DisplayAndroid::destroyNativeContext(EGLContext context)
             currentContext.second.context = EGL_NO_CONTEXT;
         }
     }
+}
+
+void DisplayAndroid::generateExtensions(egl::DisplayExtensions *outExtensions) const
+{
+    // Surfaceless can be support if the native driver supports it or we know that we are running on
+    // a single thread (mVirtualizedContexts == true)
+    outExtensions->surfacelessContext = mSupportsSurfaceless || mVirtualizedContexts;
+
+    DisplayEGL::generateExtensions(outExtensions);
 }
 
 egl::Error DisplayAndroid::makeCurrentSurfaceless(gl::Context *context)

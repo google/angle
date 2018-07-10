@@ -73,6 +73,8 @@ class DisplayAndroid : public DisplayEGL
     void destroyNativeContext(EGLContext context) override;
 
   private:
+    void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
+
     egl::Error createRenderer(EGLContext shareContext,
                               bool makeNewContextCurrent,
                               std::shared_ptr<RendererEGL> *outRenderer);
@@ -93,6 +95,8 @@ class DisplayAndroid : public DisplayEGL
     std::shared_ptr<RendererEGL> mRenderer;
 
     egl::AttributeMap mDisplayAttributes;
+
+    bool mSupportsSurfaceless;
 
     std::vector<EGLint> mConfigAttribList;
     std::map<EGLint, EGLint> mConfigIds;

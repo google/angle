@@ -1009,6 +1009,14 @@ void DisplayOzone::setSwapInterval(EGLSurface drawable, SwapControlData *data)
     ASSERT(data != nullptr);
 }
 
+void DisplayOzone::generateExtensions(egl::DisplayExtensions *outExtensions) const
+{
+    // Surfaceless contexts are emulated even if there is no native support.
+    outExtensions->surfacelessContext = true;
+
+    DisplayEGL::generateExtensions(outExtensions);
+}
+
 egl::Error DisplayOzone::makeCurrentSurfaceless(gl::Context *context)
 {
     // Nothing to do, handled in the GL layers

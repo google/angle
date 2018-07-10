@@ -109,9 +109,6 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
 
-    // Surfaceless contexts are emulated even if there is no native support.
-    outExtensions->surfacelessContext = true;
-
     // We will fallback to regular swap if swapBuffersWithDamage isn't
     // supported, so indicate support here to keep validation happy.
     outExtensions->swapBuffersWithDamage = true;

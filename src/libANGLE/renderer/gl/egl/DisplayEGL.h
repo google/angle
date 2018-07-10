@@ -30,11 +30,12 @@ class DisplayEGL : public DisplayGL
                                  const egl::AttributeMap &eglAttributes,
                                  EGLContext *outContext) const;
 
+    void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
+
     FunctionsEGL *mEGL;
     EGLConfig mConfig;
 
   private:
-    void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 };
 
