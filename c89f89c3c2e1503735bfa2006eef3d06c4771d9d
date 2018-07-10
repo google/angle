@@ -46,6 +46,30 @@
       "revId": "c89f89c3c2e1503735bfa2006eef3d06c4771d9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b0cbbc8_db9a6d2c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T13:24:41Z",
+      "side": 1,
+      "message": "Maybe create a separate bug. We should probably try to write a test to make it fail. You can leave a TODO with the bug for now.",
+      "parentUuid": "aca95052_d06e076c",
+      "range": {
+        "startLine": 209,
+        "startChar": 23,
+        "endLine": 209,
+        "endChar": 38
+      },
+      "revId": "c89f89c3c2e1503735bfa2006eef3d06c4771d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
