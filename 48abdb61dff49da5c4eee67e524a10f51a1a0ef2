@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7020d00_25822a04",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T14:43:05Z",
+      "side": 1,
+      "message": "nit: ReadFramebuffer",
+      "range": {
+        "startLine": 588,
+        "startChar": 16,
+        "endLine": 588,
+        "endChar": 44
+      },
+      "revId": "48abdb61dff49da5c4eee67e524a10f51a1a0ef2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "614b28ff_ed56c692",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T14:43:05Z",
+      "side": 1,
+      "message": "nit: DrawFramebuffer",
+      "range": {
+        "startLine": 592,
+        "startChar": 16,
+        "endLine": 592,
+        "endChar": 44
+      },
+      "revId": "48abdb61dff49da5c4eee67e524a10f51a1a0ef2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4490f98_10df71d1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T14:43:05Z",
+      "side": 1,
+      "message": "nit: DrawFramebuffer. Also you can pass the gl::State instead of gl::Context.",
+      "range": {
+        "startLine": 706,
+        "startChar": 16,
+        "endLine": 706,
+        "endChar": 44
+      },
+      "revId": "48abdb61dff49da5c4eee67e524a10f51a1a0ef2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdaee4f1_3ccf758e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T14:43:05Z",
+      "side": 1,
+      "message": "nit: ReadFramebuffer. Also you can pass the gl::State instead of gl::Context.",
+      "range": {
+        "startLine": 713,
+        "startChar": 16,
+        "endLine": 713,
+        "endChar": 44
+      },
+      "revId": "48abdb61dff49da5c4eee67e524a10f51a1a0ef2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
