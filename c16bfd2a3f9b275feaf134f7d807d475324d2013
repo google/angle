@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8d425d17_c4889464",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T18:55:08Z",
+      "side": 1,
+      "message": "Why not:\n\n* set attribsToUpdate for any dirty attribs\n* for any dirty bindings, set all the dirty bound attribs using your inverse mapping.\n\nWhere is the situation where you need to store the prior values? Can you show me the lines of code in a small pseudocode example?",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 0
+      },
+      "revId": "c16bfd2a3f9b275feaf134f7d807d475324d2013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d722a80_e227ffcb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
         "patchSetId": 8
@@ -18,6 +41,29 @@
         "startChar": 4,
         "endLine": 61,
         "endChar": 52
+      },
+      "revId": "c16bfd2a3f9b275feaf134f7d807d475324d2013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b1b7c78_95664354",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-10T18:55:08Z",
+      "side": 1,
+      "message": "I think we should move this inverse mapping to the front-end. It\u0027s possible we can make use of this. Also we can probably store it in each gl::AttributeBinding.",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 98
       },
       "revId": "c16bfd2a3f9b275feaf134f7d807d475324d2013",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
