@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "76983d5c_10d42625",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f985360_f6d1ac10",
+      "range": {
+        "startLine": 237,
+        "startChar": 9,
+        "endLine": 237,
+        "endChar": 36
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d40d56_36760c73",
         "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
         "patchSetId": 6
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "267c94c5_9cf049e5",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d40d56_36760c73",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21ae8ba0_b4a11603",
         "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
         "patchSetId": 6
@@ -56,6 +98,24 @@
       "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd19fa13_98d963d9",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Good catch. Done. Added test.",
+      "parentUuid": "21ae8ba0_b4a11603",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "3b10278b_0ff2e853",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c6b315e_df1cebed",
+      "range": {
+        "startLine": 402,
+        "startChar": 21,
+        "endLine": 402,
+        "endChar": 44
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7dc45263_dcf3cfb1",
         "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
         "patchSetId": 6
@@ -102,6 +186,30 @@
       "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "681dec78_ee265357",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7dc45263_dcf3cfb1",
+      "range": {
+        "startLine": 407,
+        "startChar": 13,
+        "endLine": 407,
+        "endChar": 35
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -128,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "927244d6_4f4a164a",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19e3f34a_2b3315a0",
+      "range": {
+        "startLine": 409,
+        "startChar": 17,
+        "endLine": 409,
+        "endChar": 40
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83ee8af2_7e032e4c",
         "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
         "patchSetId": 6
@@ -151,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "dfe3c9e0_31a9aca6",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83ee8af2_7e032e4c",
+      "range": {
+        "startLine": 428,
+        "startChar": 13,
+        "endLine": 428,
+        "endChar": 34
+      },
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f1fed09_65bdd4a4",
         "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
         "patchSetId": 6
@@ -165,6 +321,24 @@
       "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e870802_ae1e039f",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f1fed09_65bdd4a4",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -185,6 +359,24 @@
     },
     {
       "key": {
+        "uuid": "a10798aa_163e4f29",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "255888a6_948196a8",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "347a9211_b7491b24",
         "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
         "patchSetId": 6
@@ -202,6 +394,24 @@
     },
     {
       "key": {
+        "uuid": "5c060789_e5d32612",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "347a9211_b7491b24",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a2c27bb_856e0892",
         "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
         "patchSetId": 6
@@ -213,6 +423,24 @@
       "writtenOn": "2018-07-09T11:45:48Z",
       "side": 1,
       "message": "Shouldn\u0027t the argument also be changed to point to the struct type where the sampler has been removed?",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef26da40_fa563b87",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:37:19Z",
+      "side": 1,
+      "message": "Yes but this is similar to the prior issue where the tree is inconsistent but works. I can fix this in a follow up but it\u0027s medium tricky since it involves rewriting binary expressions. Nested structs and arrays make it complicated. Would be okay with leaving this unfinished. Left a comment.",
+      "parentUuid": "9a2c27bb_856e0892",
       "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
