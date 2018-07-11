@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "35607115_f04387e1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-11T15:00:27Z",
+      "side": 1,
+      "message": "Are you sure that it should use the existing binary if link fails?  The first thing we do in Program::link is destroy the current binary.",
+      "parentUuid": "a6ff3d61_e9ef61d9",
+      "range": {
+        "startLine": 752,
+        "startChar": 0,
+        "endLine": 753,
+        "endChar": 24
+      },
+      "revId": "525c957a3cf225297f4efca886bba407365df590",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "284037e5_a0e07fd4",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
@@ -108,6 +132,30 @@
       "side": 1,
       "message": "Essentially the desired logic is to block the programs(Program, ProgramD3D, ProgramGL, ...) when they are linking. We can achieve this either internally or externally for programs.\nThe proposal in this CL blocks programs externally from Context. It seems simple in my opinion.\nI once tried to go through each public method inside Program, and check whether it should be blocked for linking. The rules I used are:\n  The method must not write the values that the background linking tasks will read.\n  The method must not read the values that the background linking tasks will write.\nBut it tuned out to be a hard job for me to figure this out clearly, as there is no known boundary regarding what a background linking task should read and write. To be simple, we may need to block all public methods for programs. As programs are all large class with dozens of methods, this may lead to more scattered code lines. I can continue to work this way if you really want a try.",
       "parentUuid": "284037e5_a0e07fd4",
+      "range": {
+        "startLine": 5558,
+        "startChar": 0,
+        "endLine": 5571,
+        "endChar": 5
+      },
+      "revId": "525c957a3cf225297f4efca886bba407365df590",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca2aa547_b6eb8001",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5571,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-11T15:00:27Z",
+      "side": 1,
+      "message": "I would prefer to keep it within the Program class because then it becomes a contained implementation detail of the Program class instead of every class that uses a program needing to know how it works.\n\nIt\u0027s perfectly fine to have a private method in program, something like finishPendingLink that checks if the link is still ongoing and blocks if it is.  We can then call this method in each public program function, only adding a single line to each public method.",
+      "parentUuid": "d3404f79_1379dad1",
       "range": {
         "startLine": 5558,
         "startChar": 0,
