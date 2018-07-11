@@ -723,7 +723,8 @@ gl::Error TextureD3D::initializeContents(const gl::Context *context,
     zeroDataUnpackState.alignment = 1;
 
     angle::MemoryBuffer *zeroBuffer = nullptr;
-    ANGLE_TRY(context->getZeroFilledBuffer(imageBytes, &zeroBuffer));
+    ANGLE_TRY_ALLOCATION(context->getZeroFilledBuffer(imageBytes, &zeroBuffer));
+
     if (shouldUseSetData(image))
     {
         ANGLE_TRY(mTexStorage->setData(context, imageIndex, image, nullptr, formatInfo.type,

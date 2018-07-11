@@ -259,6 +259,12 @@ std::string ToString(const T &value)
         return gl::InternalError() << "Integer overflow."; \
     }
 
+#define ANGLE_TRY_ALLOCATION(result)                                       \
+    if (!result)                                                           \
+    {                                                                      \
+        return gl::OutOfMemory() << "Failed to allocate internal buffer."; \
+    }
+
 // The below inlining code lifted from V8.
 #if defined(__clang__) || (defined(__GNUC__) && defined(__has_attribute))
 #define ANGLE_HAS_ATTRIBUTE_ALWAYS_INLINE (__has_attribute(always_inline))

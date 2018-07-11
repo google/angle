@@ -3649,10 +3649,7 @@ FramebufferImpl *Renderer11::createDefaultFramebuffer(const gl::FramebufferState
 
 gl::Error Renderer11::getScratchMemoryBuffer(size_t requestedSize, angle::MemoryBuffer **bufferOut)
 {
-    if (!mScratchMemoryBuffer.get(requestedSize, bufferOut))
-    {
-        return gl::OutOfMemory() << "Failed to allocate internal buffer.";
-    }
+    ANGLE_TRY_ALLOCATION(mScratchMemoryBuffer.get(requestedSize, bufferOut));
     return gl::NoError();
 }
 

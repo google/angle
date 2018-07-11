@@ -601,7 +601,8 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     size_t destBufferSize =
         sourceArea.width * sourceArea.height * destInternalFormatInfo.pixelBytes;
     angle::MemoryBuffer *buffer = nullptr;
-    ANGLE_TRY(context->getScratchBuffer(sourceBufferSize + destBufferSize, &buffer));
+    ANGLE_TRY_ALLOCATION(context->getScratchBuffer(sourceBufferSize + destBufferSize, &buffer));
+
     uint8_t *sourceMemory = buffer->data();
     uint8_t *destMemory   = buffer->data() + sourceBufferSize;
 

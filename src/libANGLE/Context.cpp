@@ -5021,24 +5021,16 @@ void Context::framebufferParameteri(GLenum target, GLenum pname, GLint param)
     SetFramebufferParameteri(framebuffer, pname, param);
 }
 
-Error Context::getScratchBuffer(size_t requstedSizeBytes,
-                                angle::MemoryBuffer **scratchBufferOut) const
+bool Context::getScratchBuffer(size_t requstedSizeBytes,
+                               angle::MemoryBuffer **scratchBufferOut) const
 {
-    if (!mScratchBuffer.get(requstedSizeBytes, scratchBufferOut))
-    {
-        return OutOfMemory() << "Failed to allocate internal buffer.";
-    }
-    return NoError();
+    return mScratchBuffer.get(requstedSizeBytes, scratchBufferOut);
 }
 
-Error Context::getZeroFilledBuffer(size_t requstedSizeBytes,
-                                   angle::MemoryBuffer **zeroBufferOut) const
+bool Context::getZeroFilledBuffer(size_t requstedSizeBytes,
+                                  angle::MemoryBuffer **zeroBufferOut) const
 {
-    if (!mZeroFilledBuffer.getInitialized(requstedSizeBytes, zeroBufferOut, 0))
-    {
-        return OutOfMemory() << "Failed to allocate internal buffer.";
-    }
-    return NoError();
+    return mZeroFilledBuffer.getInitialized(requstedSizeBytes, zeroBufferOut, 0);
 }
 
 Error Context::prepareForDispatch()

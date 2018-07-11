@@ -600,7 +600,7 @@ gl::Error TextureGL::copyImage(const gl::Context *context,
         GLuint pixelBytes =
             gl::GetInternalFormatInfo(copyTexImageFormat.internalFormat, type).pixelBytes;
         angle::MemoryBuffer *zero;
-        ANGLE_TRY(context->getZeroFilledBuffer(
+        ANGLE_TRY_ALLOCATION(context->getZeroFilledBuffer(
             origSourceArea.width * origSourceArea.height * pixelBytes, &zero));
 
         gl::PixelUnpackState unpack;
@@ -1539,7 +1539,7 @@ gl::Error TextureGL::initializeContents(const gl::Context *context,
             internalFormatInfo.computeCompressedImageSize(desc.size, &imageSize));
 
         angle::MemoryBuffer *zero;
-        ANGLE_TRY(context->getZeroFilledBuffer(imageSize, &zero));
+        ANGLE_TRY_ALLOCATION(context->getZeroFilledBuffer(imageSize, &zero));
 
         // WebGL spec requires that zero data is uploaded to compressed textures even if it might
         // not result in zero color data.
@@ -1569,7 +1569,7 @@ gl::Error TextureGL::initializeContents(const gl::Context *context,
             &imageSize));
 
         angle::MemoryBuffer *zero;
-        ANGLE_TRY(context->getZeroFilledBuffer(imageSize, &zero));
+        ANGLE_TRY_ALLOCATION(context->getZeroFilledBuffer(imageSize, &zero));
 
         if (nativegl::UseTexImage2D(getType()))
         {

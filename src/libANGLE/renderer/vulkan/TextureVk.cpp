@@ -229,7 +229,7 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
         size_t bufferSize =
             storageFormat.pixelBytes * clippedRectangle.width * clippedRectangle.height;
         angle::MemoryBuffer *memoryBuffer = nullptr;
-        ANGLE_TRY(context->getScratchBuffer(bufferSize, &memoryBuffer));
+        ANGLE_TRY_ALLOCATION(context->getScratchBuffer(bufferSize, &memoryBuffer));
 
         // Read into the scratch buffer
         ANGLE_TRY(

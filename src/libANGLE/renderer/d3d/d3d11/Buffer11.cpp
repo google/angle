@@ -502,10 +502,7 @@ gl::Error Buffer11::mapRange(const gl::Context *context,
         ANGLE_TRY_RESULT(getStagingStorage(context), mMappedStorage);
     }
 
-    if (!mMappedStorage)
-    {
-        return gl::OutOfMemory() << "Failed to allocate mappable internal buffer.";
-    }
+    ANGLE_TRY_ALLOCATION(mMappedStorage);
 
     if ((access & GL_MAP_WRITE_BIT) > 0)
     {

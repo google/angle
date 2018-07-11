@@ -206,11 +206,7 @@ gl::Error VertexDataManager::initialize()
 {
     mStreamingBuffer.reset(
         new StreamingVertexBufferInterface(mFactory, INITIAL_STREAM_BUFFER_SIZE));
-    if (!mStreamingBuffer)
-    {
-        return gl::OutOfMemory() << "Failed to allocate the streaming vertex buffer.";
-    }
-
+    ANGLE_TRY_ALLOCATION(mStreamingBuffer);
     return gl::NoError();
 }
 
