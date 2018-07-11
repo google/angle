@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a6ff3d61_e9ef61d9",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T13:31:02Z",
+      "side": 1,
+      "message": "I think this would be better done by calling State::onProgramExecutableChange and making mDirtyBits mutable. It\u0027s annoying that this will need to make more things \"mutable\" but I think it\u0027s a better way.\n\nI agree with Geoff.",
+      "parentUuid": "317c3431_d7c81455",
+      "range": {
+        "startLine": 752,
+        "startChar": 0,
+        "endLine": 753,
+        "endChar": 24
+      },
+      "revId": "525c957a3cf225297f4efca886bba407365df590",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "284037e5_a0e07fd4",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
