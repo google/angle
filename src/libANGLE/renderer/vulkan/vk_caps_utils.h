@@ -36,8 +36,7 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
                   const gl::TextureCapsMap &textureCaps,
                   gl::Caps *outCaps,
                   gl::Extensions *outExtensions,
-                  gl::Limitations * /* outLimitations */,
-                  FeaturesVk *features);
+                  gl::Limitations * /* outLimitations */);
 }  // namespace vk
 
 namespace egl_vk

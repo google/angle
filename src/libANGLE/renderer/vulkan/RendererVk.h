@@ -148,6 +148,7 @@ class RendererVk : angle::NonCopyable
     vk::Error checkInFlightCommands();
     void freeAllInFlightResources();
     vk::Error flushCommandGraph(const gl::Context *context, vk::CommandBuffer *commandBatch);
+    void initFeatures();
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;

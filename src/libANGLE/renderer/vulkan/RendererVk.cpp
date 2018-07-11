@@ -454,6 +454,8 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
 
     ANGLE_VK_CHECK(graphicsQueueFamilyCount > 0, VK_ERROR_INITIALIZATION_FAILED);
 
+    initFeatures();
+
     // If only one queue family, go ahead and initialize the device. If there is more than one
     // queue, we'll have to wait until we see a WindowSurface to know which supports present.
     if (graphicsQueueFamilyCount == 1)
@@ -638,12 +640,23 @@ std::string RendererVk::getRendererDescription() const
     return strstr.str();
 }
 
+void RendererVk::initFeatures()
+{
+    // Use OpenGL line rasterization rules by default.
+    mFeatures.basicGLLineRasterization = true;
+
+    // For now, set this manually to true to enable viewport flipping. A couple of features are not
+    // working well like copyTexImage, copySubTexImage, blit, and probably some more. Until
+    // everything is fixed, we will keep the viewport flipping feature disabled.
+    mFeatures.flipViewportY = false;
+}
+
 void RendererVk::ensureCapsInitialized() const
 {
     if (!mCapsInitialized)
     {
         vk::GenerateCaps(mPhysicalDeviceProperties, mNativeTextureCaps, &mNativeCaps,
-                         &mNativeExtensions, &mNativeLimitations, &mFeatures);
+                         &mNativeExtensions, &mNativeLimitations);
         mCapsInitialized = true;
     }
 }

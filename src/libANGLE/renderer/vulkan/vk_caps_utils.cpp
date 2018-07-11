@@ -33,8 +33,7 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
                   const gl::TextureCapsMap &textureCaps,
                   gl::Caps *outCaps,
                   gl::Extensions *outExtensions,
-                  gl::Limitations * /* outLimitations */,
-                  FeaturesVk *features)
+                  gl::Limitations * /* outLimitations */)
 {
     outExtensions->setTextureExtensionSupport(textureCaps);
 
@@ -145,14 +144,6 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outCaps->maxVaryingVectors =
         (physicalDeviceProperties.limits.maxVertexOutputComponents / 4) - kReservedVaryingCount;
     outCaps->maxVertexOutputComponents = outCaps->maxVaryingVectors * 4;
-
-    // Use OpenGL line rasterization rules by default.
-    features->basicGLLineRasterization = true;
-
-    // For now, set this manually to true to enable viewport flipping. A couple of features are not
-    // working well like copyTexImage, copySubTexImage, blit, and probably some more. Until
-    // everything is fixed, we will keep the viewport flipping feature disabled.
-    features->flipViewportY = false;
 }
 }  // namespace vk
 
