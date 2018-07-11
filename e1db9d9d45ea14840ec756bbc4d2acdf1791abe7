@@ -444,6 +444,24 @@
       "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a5a26e8_05c7c9d6",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-11T12:49:48Z",
+      "side": 1,
+      "message": "Maybe change the plain comment to a TODO so it\u0027s not accidentally forgotten? I\u0027m okay with doing it as a follow-up though.",
+      "parentUuid": "ef26da40_fa563b87",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
