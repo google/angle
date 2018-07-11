@@ -24,7 +24,7 @@ WindowSurfaceVkAndroid::WindowSurfaceVkAndroid(const egl::SurfaceState &surfaceS
 {
 }
 
-vk::ErrorOrResult<gl::Extents> WindowSurfaceVkAndroid::createSurfaceVk(RendererVk *renderer)
+vk::Error WindowSurfaceVkAndroid::createSurfaceVk(RendererVk *renderer, gl::Extents *extentsOut)
 {
     VkAndroidSurfaceCreateInfoKHR createInfo;
 
@@ -39,7 +39,8 @@ vk::ErrorOrResult<gl::Extents> WindowSurfaceVkAndroid::createSurfaceVk(RendererV
     int32_t height = ANativeWindow_getHeight(mNativeWindowType);
     ANGLE_VK_CHECK(width > 0 && height > 0, VK_ERROR_INITIALIZATION_FAILED);
 
-    return gl::Extents(width, height, 0);
+    *extentsOut = gl::Extents(width, height, 0);
+    return vk::NoError();
 }
 
 }  // namespace rx

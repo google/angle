@@ -322,10 +322,10 @@ egl::Error WindowSurfaceVk::initialize(const egl::Display *display)
 vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
 {
     gl::Extents windowSize;
-    ANGLE_TRY_RESULT(createSurfaceVk(renderer), windowSize);
+    ANGLE_TRY(createSurfaceVk(renderer, &windowSize));
 
     uint32_t presentQueue = 0;
-    ANGLE_TRY_RESULT(renderer->selectPresentQueueForSurface(mSurface), presentQueue);
+    ANGLE_TRY(renderer->selectPresentQueueForSurface(mSurface, &presentQueue));
     ANGLE_UNUSED_VARIABLE(presentQueue);
 
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();

@@ -137,7 +137,7 @@ class WindowSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
     VkInstance mInstance;
 
   private:
-    virtual vk::ErrorOrResult<gl::Extents> createSurfaceVk(RendererVk *renderer) = 0;
+    virtual vk::Error createSurfaceVk(RendererVk *renderer, gl::Extents *extentsOut) = 0;
     vk::Error initializeImpl(RendererVk *renderer);
     vk::Error nextSwapchainImage(RendererVk *renderer);
 

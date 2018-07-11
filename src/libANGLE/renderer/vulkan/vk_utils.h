@@ -150,9 +150,6 @@ class Error final
     unsigned int mLine;
 };
 
-template <typename ResultT>
-using ErrorOrResult = angle::ErrorOrResultBase<Error, ResultT, VkResult, VK_SUCCESS>;
-
 // Avoid conflicting with X headers which define "Success".
 inline Error NoError()
 {

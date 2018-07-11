@@ -55,7 +55,7 @@ class RendererVk : angle::NonCopyable
     VkQueue getQueue() const { return mQueue; }
     VkDevice getDevice() const { return mDevice; }
 
-    vk::ErrorOrResult<uint32_t> selectPresentQueueForSurface(VkSurfaceKHR surface);
+    vk::Error selectPresentQueueForSurface(VkSurfaceKHR surface, uint32_t *presentQueueOut);
 
     vk::Error finish(const gl::Context *context);
     vk::Error flush(const gl::Context *context,

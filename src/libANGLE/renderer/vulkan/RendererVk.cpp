@@ -559,7 +559,7 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
     return vk::NoError();
 }
 
-vk::ErrorOrResult<uint32_t> RendererVk::selectPresentQueueForSurface(VkSurfaceKHR surface)
+vk::Error RendererVk::selectPresentQueueForSurface(VkSurfaceKHR surface, uint32_t *presentQueueOut)
 {
     // We've already initialized a device, and can't re-create it unless it's never been used.
     // TODO(jmadill): Handle the re-creation case if necessary.
@@ -572,7 +572,11 @@ vk::ErrorOrResult<uint32_t> RendererVk::selectPresentQueueForSurface(VkSurfaceKH
         ANGLE_VK_TRY(vkGetPhysicalDeviceSurfaceSupportKHR(mPhysicalDevice, mCurrentQueueFamilyIndex,
                                                           surface, &supportsPresent));
 
-        return (supportsPresent == VK_TRUE);
+        if (supportsPresent == VK_TRUE)
+        {
+            *presentQueueOut = mCurrentQueueFamilyIndex;
+            return vk::NoError();
+        }
     }
 
     // Find a graphics and present queue.
@@ -598,7 +602,8 @@ vk::ErrorOrResult<uint32_t> RendererVk::selectPresentQueueForSurface(VkSurfaceKH
     ANGLE_VK_CHECK(newPresentQueue.valid(), VK_ERROR_INITIALIZATION_FAILED);
     ANGLE_TRY(initializeDevice(newPresentQueue.value()));
 
-    return newPresentQueue.value();
+    *presentQueueOut = newPresentQueue.value();
+    return vk::NoError();
 }
 
 std::string RendererVk::getVendorString() const
