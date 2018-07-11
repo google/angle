@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "41435692_81d5acef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:36:15Z",
+      "side": 1,
+      "message": "nice, you figured it out?\n\nBTW is this only for the PRESENT_PATH_FAST or does it also apply to PRESENT_PATH_COPY?",
+      "range": {
+        "startLine": 9,
+        "startChar": 46,
+        "endLine": 9,
+        "endChar": 65
+      },
+      "revId": "f5f265b1657a6377fc91e9f8cb819b7b880dbda2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
