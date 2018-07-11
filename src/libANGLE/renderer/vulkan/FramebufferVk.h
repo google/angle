@@ -89,7 +89,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                                 GLfloat *xy) const override;
     RenderTargetVk *getDepthStencilRenderTarget() const;
     const vk::RenderPassDesc &getRenderPassDesc();
-    gl::Error getCommandBufferForDraw(ContextVk *contextVk,
+    vk::Error getCommandBufferForDraw(ContextVk *contextVk,
                                       vk::CommandBuffer **commandBufferOut,
                                       vk::RecordingMode *modeOut);
 
@@ -117,7 +117,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                             bool blitDepthBuffer,
                             bool blitStencilBuffer);
 
-    gl::ErrorOrResult<vk::Framebuffer *> getFramebuffer(RendererVk *rendererVk);
+    vk::Error getFramebuffer(RendererVk *rendererVk, vk::Framebuffer **framebufferOut);
 
     gl::Error clearWithClearAttachments(ContextVk *contextVk,
                                         bool clearColor,

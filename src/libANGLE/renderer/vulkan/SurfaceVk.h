@@ -127,9 +127,9 @@ class WindowSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
     gl::Error initializeContents(const gl::Context *context,
                                  const gl::ImageIndex &imageIndex) override;
 
-    gl::ErrorOrResult<vk::Framebuffer *> getCurrentFramebuffer(
-        VkDevice device,
-        const vk::RenderPass &compatibleRenderPass);
+    vk::Error getCurrentFramebuffer(VkDevice device,
+                                    const vk::RenderPass &compatibleRenderPass,
+                                    vk::Framebuffer **framebufferOut);
 
   protected:
     EGLNativeWindowType mNativeWindowType;

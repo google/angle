@@ -719,12 +719,13 @@ const vk::RenderPassDesc &FramebufferVk::getRenderPassDesc()
     return mRenderPassDesc.value();
 }
 
-gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(RendererVk *rendererVk)
+vk::Error FramebufferVk::getFramebuffer(RendererVk *rendererVk, vk::Framebuffer **framebufferOut)
 {
     // If we've already created our cached Framebuffer, return it.
     if (mFramebuffer.valid())
     {
-        return &mFramebuffer;
+        *framebufferOut = &mFramebuffer;
+        return vk::NoError();
     }
 
     const vk::RenderPassDesc &desc = getRenderPassDesc();
@@ -736,7 +737,7 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(RendererVk *r
     VkDevice device = rendererVk->getDevice();
     if (mBackbuffer)
     {
-        return mBackbuffer->getCurrentFramebuffer(device, *renderPass);
+        return mBackbuffer->getCurrentFramebuffer(device, *renderPass, framebufferOut);
     }
 
     // Gather VkImageViews over all FBO attachments, also size of attached region.
@@ -781,7 +782,8 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(RendererVk *r
 
     ANGLE_TRY(mFramebuffer.init(device, framebufferInfo));
 
-    return &mFramebuffer;
+    *framebufferOut = &mFramebuffer;
+    return vk::NoError();
 }
 
 gl::Error FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
@@ -988,7 +990,7 @@ gl::Error FramebufferVk::getSamplePosition(const gl::Context *context,
     return gl::InternalError() << "getSamplePosition is unimplemented.";
 }
 
-gl::Error FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
+vk::Error FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
                                                  vk::CommandBuffer **commandBufferOut,
                                                  vk::RecordingMode *modeOut)
 {
@@ -998,11 +1000,11 @@ gl::Error FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
     if (appendToStartedRenderPass(renderer, commandBufferOut))
     {
         *modeOut = vk::RecordingMode::Append;
-        return gl::NoError();
+        return vk::NoError();
     }
 
     vk::Framebuffer *framebuffer = nullptr;
-    ANGLE_TRY_RESULT(getFramebuffer(renderer), framebuffer);
+    ANGLE_TRY(getFramebuffer(renderer, &framebuffer));
 
     // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
     std::vector<VkClearValue> attachmentClearValues;

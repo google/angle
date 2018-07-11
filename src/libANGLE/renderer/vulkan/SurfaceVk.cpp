@@ -664,16 +664,17 @@ gl::Error WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context * /*conte
     return gl::NoError();
 }
 
-gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
-    VkDevice device,
-    const vk::RenderPass &compatibleRenderPass)
+vk::Error WindowSurfaceVk::getCurrentFramebuffer(VkDevice device,
+                                                 const vk::RenderPass &compatibleRenderPass,
+                                                 vk::Framebuffer **framebufferOut)
 {
     vk::Framebuffer &currentFramebuffer = mSwapchainImages[mCurrentSwapchainImageIndex].framebuffer;
 
     if (currentFramebuffer.valid())
     {
         // Validation layers should detect if the render pass is really compatible.
-        return &currentFramebuffer;
+        *framebufferOut = &currentFramebuffer;
+        return vk::NoError();
     }
 
     VkFramebufferCreateInfo framebufferInfo;
@@ -698,7 +699,8 @@ gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
     }
 
     ASSERT(currentFramebuffer.valid());
-    return &currentFramebuffer;
+    *framebufferOut = &currentFramebuffer;
+    return vk::NoError();
 }
 
 gl::Error WindowSurfaceVk::initializeContents(const gl::Context *context,
