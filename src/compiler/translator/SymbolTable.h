@@ -113,6 +113,8 @@ class TSymbolTable : angle::NonCopyable, TSymbolTableBase
 
     const TSymbol *findUserDefined(const ImmutableString &name) const;
 
+    TFunction *findUserDefinedFunction(const ImmutableString &name) const;
+
     const TSymbol *findGlobal(const ImmutableString &name) const;
 
     const TSymbol *findBuiltIn(const ImmutableString &name, int shaderVersion) const;
@@ -156,8 +158,6 @@ class TSymbolTable : angle::NonCopyable, TSymbolTableBase
     int nextUniqueIdValue();
 
     class TSymbolTableLevel;
-
-    TFunction *findUserDefinedFunction(const ImmutableString &name) const;
 
     void initSamplerDefaultPrecision(TBasicType samplerType);
 

@@ -55,6 +55,12 @@ class ImmutableStringBuilder
         }
     }
 
+    template <typename T>
+    static constexpr size_t GetHexCharCount()
+    {
+        return sizeof(T) * 2;
+    }
+
   private:
     inline static char *AllocateEmptyPoolCharArray(size_t strLength)
     {

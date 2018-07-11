@@ -219,4 +219,17 @@ bool TFunction::isImageFunction() const
            (name() == kImageSizeName || name() == kImageLoadName || name() == kImageStoreName);
 }
 
+bool TFunction::hasSamplerInStructParams() const
+{
+    for (size_t paramIndex = 0; paramIndex < mParamCount; ++paramIndex)
+    {
+        const TVariable *param = getParam(paramIndex);
+        if (param->getType().isStructureContainingSamplers())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 }  // namespace sh

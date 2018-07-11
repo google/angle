@@ -267,9 +267,28 @@
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
 
 // Vulkan failures
-2494 VULKAN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = SKIP
-2494 VULKAN : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = SKIP
 2592 VULKAN : dEQP-GLES2.functional.shaders.builtin_variable.depth_range* = SKIP
+2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
+2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
+2601 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP
+2353 VULKAN : dEQP-GLES2.functional.polygon_offset.* = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.points.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.triangles.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.triangle_fan.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.triangle_strip.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.lines.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.line_strip.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.line_loop.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.indices.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.points.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.triangles.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.triangle_fan.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.triangle_strip.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.lines.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.line_strip.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.line_loop.default_attribute = SKIP
+2444 VULKAN : dEQP-GLES2.functional.draw.random.* = SKIP
+2444 VULKAN : dEQP-GLES2.functional.default_vertex_attrib.* = SKIP
 
 // fixed format vertex data
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.input_types.3_byte2_vec2_byte2_vec2_fixed* = SKIP
@@ -307,27 +326,6 @@
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_0_fixed* = SKIP
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_fixed* = SKIP
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_8_fixed* = SKIP
-2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
-2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
-2601 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP
-2353 VULKAN : dEQP-GLES2.functional.polygon_offset.* = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.points.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.triangles.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.triangle_fan.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.triangle_strip.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.lines.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.line_strip.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_arrays.line_loop.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.indices.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.points.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.triangles.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.triangle_fan.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.triangle_strip.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.lines.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.line_strip.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.draw_elements.line_loop.default_attribute = SKIP
-2444 VULKAN : dEQP-GLES2.functional.draw.random.* = SKIP
-2444 VULKAN : dEQP-GLES2.functional.default_vertex_attrib.* = SKIP
 
 // Vulkan AMD Windows specific failures
 2602 VULKAN WIN AMD : dEQP-GLES2.functional.buffer.write.* = SKIP

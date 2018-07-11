@@ -3224,14 +3224,103 @@ TEST_P(GLSLTest_ES3, VaryingStructUsedInFragmentShader)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// This test covers passing a struct containing a sampler as a function argument.
+TEST_P(GLSLTest, StructsWithSamplersAsFunctionArg)
+{
+    // Shader failed to compile on Android. http://anglebug.com/2114
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+
+    const char kFragmentShader[] = R"(precision mediump float;
+struct S { sampler2D samplerMember; };
+uniform S uStruct;
+uniform vec2 uTexCoord;
+vec4 foo(S structVar)
+{
+    return texture2D(structVar.samplerMember, uTexCoord);
+}
+void main()
+{
+    gl_FragColor = foo(uStruct);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+
+    // Initialize the texture with green.
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    GLubyte texData[] = {0u, 255u, 0u, 255u};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw
+    glUseProgram(program);
+    GLint samplerMemberLoc = glGetUniformLocation(program, "uStruct.samplerMember");
+    ASSERT_NE(-1, samplerMemberLoc);
+    glUniform1i(samplerMemberLoc, 0);
+    GLint texCoordLoc = glGetUniformLocation(program, "uTexCoord");
+    ASSERT_NE(-1, texCoordLoc);
+    glUniform2f(texCoordLoc, 0.5f, 0.5f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
+}
+
+// This test covers passing a struct containing a sampler as a function argument.
+TEST_P(GLSLTest, StructsWithSamplersAsFunctionArgWithPrototype)
+{
+    // Shader failed to compile on Android. http://anglebug.com/2114
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+
+    const char kFragmentShader[] = R"(precision mediump float;
+struct S { sampler2D samplerMember; };
+uniform S uStruct;
+uniform vec2 uTexCoord;
+vec4 foo(S structVar);
+vec4 foo(S structVar)
+{
+    return texture2D(structVar.samplerMember, uTexCoord);
+}
+void main()
+{
+    gl_FragColor = foo(uStruct);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+
+    // Initialize the texture with green.
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    GLubyte texData[] = {0u, 255u, 0u, 255u};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw
+    glUseProgram(program);
+    GLint samplerMemberLoc = glGetUniformLocation(program, "uStruct.samplerMember");
+    ASSERT_NE(-1, samplerMemberLoc);
+    glUniform1i(samplerMemberLoc, 0);
+    GLint texCoordLoc = glGetUniformLocation(program, "uTexCoord");
+    ASSERT_NE(-1, texCoordLoc);
+    glUniform2f(texCoordLoc, 0.5f, 0.5f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
+}
 // This test covers passing an array of structs containing samplers as a function argument.
 TEST_P(GLSLTest, ArrayOfStructsWithSamplersAsFunctionArg)
 {
     // Shader failed to compile on Android. http://anglebug.com/2114
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
-
-    // TODO(jmadill): Samplers in structs. http://anglebug.com/2494
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     const std::string &fragmentShader =
         "precision mediump float;\n"
@@ -3284,8 +3373,8 @@ TEST_P(GLSLTest, StructWithSamplerArrayAsFunctionArg)
     // Shader failed to compile on Android. http://anglebug.com/2114
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 
-    // TODO(jmadill): Samplers in structs. http://anglebug.com/2494
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+    // TODO(jmadill): Fix on Android if possible. http://anglebug.com/2703
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
     const std::string &fragmentShader =
         "precision mediump float;\n"
@@ -3332,6 +3421,108 @@ TEST_P(GLSLTest, StructWithSamplerArrayAsFunctionArg)
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
 }
 
+// This test covers passing nested structs containing a sampler as a function argument.
+TEST_P(GLSLTest, NestedStructsWithSamplersAsFunctionArg)
+{
+    // Shader failed to compile on Android. http://anglebug.com/2114
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+
+    const char kFragmentShader[] = R"(precision mediump float;
+struct S { sampler2D samplerMember; };
+struct T { S nest; };
+uniform T uStruct;
+uniform vec2 uTexCoord;
+vec4 foo2(S structVar)
+{
+    return texture2D(structVar.samplerMember, uTexCoord);
+}
+vec4 foo(T structVar)
+{
+    return foo2(structVar.nest);
+}
+void main()
+{
+    gl_FragColor = foo(uStruct);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+
+    // Initialize the texture with green.
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    GLubyte texData[] = {0u, 255u, 0u, 255u};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw
+    glUseProgram(program);
+    GLint samplerMemberLoc = glGetUniformLocation(program, "uStruct.nest.samplerMember");
+    ASSERT_NE(-1, samplerMemberLoc);
+    glUniform1i(samplerMemberLoc, 0);
+    GLint texCoordLoc = glGetUniformLocation(program, "uTexCoord");
+    ASSERT_NE(-1, texCoordLoc);
+    glUniform2f(texCoordLoc, 0.5f, 0.5f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
+}
+
+// This test covers passing a compound structs containing a sampler as a function argument.
+TEST_P(GLSLTest, CompoundStructsWithSamplersAsFunctionArg)
+{
+    // Shader failed to compile on Android. http://anglebug.com/2114
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+
+    const char kFragmentShader[] = R"(precision mediump float;
+struct S { sampler2D samplerMember; bool b; };
+uniform S uStruct;
+uniform vec2 uTexCoord;
+vec4 foo(S structVar)
+{
+    if (structVar.b)
+        return texture2D(structVar.samplerMember, uTexCoord);
+    else
+        return vec4(1, 0, 0, 1);
+}
+void main()
+{
+    gl_FragColor = foo(uStruct);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+
+    // Initialize the texture with green.
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    GLubyte texData[] = {0u, 255u, 0u, 255u};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw
+    glUseProgram(program);
+    GLint samplerMemberLoc = glGetUniformLocation(program, "uStruct.samplerMember");
+    ASSERT_NE(-1, samplerMemberLoc);
+    glUniform1i(samplerMemberLoc, 0);
+    GLint texCoordLoc = glGetUniformLocation(program, "uTexCoord");
+    ASSERT_NE(-1, texCoordLoc);
+    glUniform2f(texCoordLoc, 0.5f, 0.5f);
+    GLint bLoc = glGetUniformLocation(program, "uStruct.b");
+    ASSERT_NE(-1, bLoc);
+    glUniform1i(bLoc, 1);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
+}
 // Test that a global variable declared after main() works. This is a regression test for an issue
 // in global variable initialization.
 TEST_P(WebGLGLSLTest, GlobalVariableDeclaredAfterMain)
