@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e1ad5ab_48ce6036",
+        "filename": "src/compiler/translator/tree_util/IntermTraverse.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T14:46:07Z",
+      "side": 1,
+      "message": "would it be possible to reinstate TIntermRaw before you land this CL? I need it for implementing #ifdefs for a Vulkan feature.\n\nSee https://chromium-review.googlesource.com/c/angle/angle/+/1120153",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 75
+      },
+      "revId": "d085c22cf03338d59c20289880367a1432683a84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
