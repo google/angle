@@ -282,7 +282,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     VkInstance instance        = renderer->getInstance();
 
     // We might not need to flush the pipe here.
-    renderer->finish(display->getProxyContext());
+    ANGLE_SWALLOW_ERR(renderer->finish(display->getProxyContext()));
 
     mAcquireNextImageSemaphore.destroy(device);
 
@@ -483,8 +483,9 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     {
         SwapchainImage &member = mSwapchainImages[imageIndex];
         member.image.init2DWeakReference(swapchainImages[imageIndex], extents, format, 1);
-        member.image.initImageView(device, gl::TextureType::_2D, VK_IMAGE_ASPECT_COLOR_BIT,
-                                   gl::SwizzleState(), &member.imageView, 1);
+        ANGLE_TRY(member.image.initImageView(device, gl::TextureType::_2D,
+                                             VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
+                                             &member.imageView, 1));
 
         // Set transfer dest layout, and clear the image to black.
         member.image.clearColor(transparentBlack, 0, 1, commandBuffer);

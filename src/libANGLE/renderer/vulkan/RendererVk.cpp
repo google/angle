@@ -816,7 +816,7 @@ vk::Error RendererVk::submitFrame(const VkSubmitInfo &submitInfo, vk::CommandBuf
     poolInfo.flags            = 0;
     poolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
 
-    mCommandPool.init(mDevice, poolInfo);
+    ANGLE_TRY(mCommandPool.init(mDevice, poolInfo));
 
     return vk::NoError();
 }

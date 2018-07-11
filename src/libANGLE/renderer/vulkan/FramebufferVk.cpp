@@ -1052,7 +1052,7 @@ gl::DrawBufferMask FramebufferVk::getEmulatedAlphaAttachmentMask()
     return mEmulatedAlphaAttachmentMask;
 }
 
-gl::Error FramebufferVk::readPixelsImpl(const gl::Context *context,
+vk::Error FramebufferVk::readPixelsImpl(const gl::Context *context,
                                         const gl::Rectangle &area,
                                         const PackPixelsParams &packPixelsParams,
                                         void *pixels)
@@ -1082,8 +1082,8 @@ gl::Error FramebufferVk::readPixelsImpl(const gl::Context *context,
     uint32_t stagingOffset           = 0;
     size_t allocationSize            = area.width * angleFormat.pixelBytes * area.height;
 
-    mReadPixelsBuffer.allocate(renderer, allocationSize, &readPixelBuffer, &bufferHandle,
-                               &stagingOffset, &newBufferAllocated);
+    ANGLE_TRY(mReadPixelsBuffer.allocate(renderer, allocationSize, &readPixelBuffer, &bufferHandle,
+                                         &stagingOffset, &newBufferAllocated));
 
     VkBufferImageCopy region;
     region.bufferImageHeight               = area.height;

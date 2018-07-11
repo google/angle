@@ -28,7 +28,7 @@ class PixelBuffer final : angle::NonCopyable
 
     void removeStagedUpdates(const gl::ImageIndex &index);
 
-    gl::Error stageSubresourceUpdate(ContextVk *contextVk,
+    vk::Error stageSubresourceUpdate(ContextVk *contextVk,
                                      const gl::ImageIndex &index,
                                      const gl::Extents &extents,
                                      const gl::Offset &offset,
@@ -37,14 +37,14 @@ class PixelBuffer final : angle::NonCopyable
                                      GLenum type,
                                      const uint8_t *pixels);
 
-    gl::Error stageSubresourceUpdateAndGetData(RendererVk *renderer,
+    vk::Error stageSubresourceUpdateAndGetData(RendererVk *renderer,
                                                size_t allocationSize,
                                                const gl::ImageIndex &imageIndex,
                                                const gl::Extents &extents,
                                                const gl::Offset &offset,
                                                uint8_t **destData);
 
-    gl::Error stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
+    vk::Error stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
                                                     const gl::ImageIndex &index,
                                                     const gl::Rectangle &sourceArea,
                                                     const gl::Offset &dstOffset,
@@ -54,7 +54,7 @@ class PixelBuffer final : angle::NonCopyable
 
     // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
     // dst.
-    gl::Error allocate(RendererVk *renderer,
+    vk::Error allocate(RendererVk *renderer,
                        size_t sizeInBytes,
                        uint8_t **ptrOut,
                        VkBuffer *handleOut,
@@ -178,11 +178,11 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     vk::Error ensureImageInitialized(ContextVk *contextVk);
 
   private:
-    void generateMipmapWithBlit(RendererVk *renderer);
+    vk::Error generateMipmapWithBlit(RendererVk *renderer);
 
-    gl::Error generateMipmapWithCPU(const gl::Context *context);
+    vk::Error generateMipmapWithCPU(const gl::Context *context);
 
-    gl::Error generateMipmapLevelsWithCPU(ContextVk *contextVk,
+    vk::Error generateMipmapLevelsWithCPU(ContextVk *contextVk,
                                           const angle::Format &sourceFormat,
                                           GLuint layer,
                                           GLuint firstMipLevel,

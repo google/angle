@@ -118,7 +118,7 @@ GetImplType<T> *GetImpl(const T *glObject)
     return GetImplAs<GetImplType<T>>(glObject);
 }
 
-class Error final
+class ANGLE_NO_DISCARD Error final
 {
   public:
     Error(VkResult result);
@@ -155,6 +155,18 @@ inline Error NoError()
 {
     return Error(VK_SUCCESS);
 }
+
+#define ANGLE_TRY_VK_CHECKED_MATH(result)                 \
+    if (!result)                                          \
+    {                                                     \
+        return vk::Error(VK_ERROR_VALIDATION_FAILED_EXT); \
+    }
+
+#define ANGLE_TRY_VK_ALLOCATION(result)                \
+    if (!result)                                       \
+    {                                                  \
+        return vk::Error(VK_ERROR_OUT_OF_HOST_MEMORY); \
+    }
 
 // Unimplemented handle types:
 // Instance

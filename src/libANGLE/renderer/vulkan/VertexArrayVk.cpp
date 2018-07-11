@@ -529,9 +529,9 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
             uint8_t *allocatedData      = nullptr;
             bool newBufferAllocated     = false;
             uint32_t expandedDataOffset = 0;
-            mTranslatedByteIndexData.allocate(
+            ANGLE_TRY(mTranslatedByteIndexData.allocate(
                 renderer, static_cast<size_t>(bufferVk->getSize()) * 2, &allocatedData,
-                &mCurrentElementArrayBufferHandle, &expandedDataOffset, &newBufferAllocated);
+                &mCurrentElementArrayBufferHandle, &expandedDataOffset, &newBufferAllocated));
             mCurrentElementArrayBufferOffset = static_cast<VkDeviceSize>(expandedDataOffset);
 
             // Expand the source into the destination
@@ -543,7 +543,7 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
             }
 
             // Make sure our writes are available.
-            mTranslatedByteIndexData.flush(renderer->getDevice());
+            ANGLE_TRY(mTranslatedByteIndexData.flush(renderer->getDevice()));
             GLboolean result = false;
             ANGLE_TRY(bufferVk->unmap(context, &result));
 

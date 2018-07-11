@@ -136,18 +136,18 @@ class LineLoopHelper final : public vk::CommandGraphResource
     LineLoopHelper(RendererVk *renderer);
     ~LineLoopHelper();
 
-    gl::Error getIndexBufferForDrawArrays(RendererVk *renderer,
+    vk::Error getIndexBufferForDrawArrays(RendererVk *renderer,
                                           const gl::DrawCallParams &drawCallParams,
                                           VkBuffer *bufferHandleOut,
                                           VkDeviceSize *offsetOut);
-    gl::Error getIndexBufferForElementArrayBuffer(RendererVk *renderer,
+    vk::Error getIndexBufferForElementArrayBuffer(RendererVk *renderer,
                                                   BufferVk *elementArrayBufferVk,
                                                   VkIndexType indexType,
                                                   int indexCount,
                                                   intptr_t elementArrayOffset,
                                                   VkBuffer *bufferHandleOut,
                                                   VkDeviceSize *bufferOffsetOut);
-    gl::Error getIndexBufferForClientElementArray(RendererVk *renderer,
+    vk::Error getIndexBufferForClientElementArray(RendererVk *renderer,
                                                   const gl::DrawCallParams &drawCallParams,
                                                   VkBuffer *bufferHandleOut,
                                                   VkDeviceSize *bufferOffsetOut);

@@ -359,7 +359,7 @@ LineLoopHelper::LineLoopHelper(RendererVk *renderer)
 
 LineLoopHelper::~LineLoopHelper() = default;
 
-gl::Error LineLoopHelper::getIndexBufferForDrawArrays(RendererVk *renderer,
+vk::Error LineLoopHelper::getIndexBufferForDrawArrays(RendererVk *renderer,
                                                       const gl::DrawCallParams &drawCallParams,
                                                       VkBuffer *bufferHandleOut,
                                                       VkDeviceSize *offsetOut)
@@ -390,10 +390,10 @@ gl::Error LineLoopHelper::getIndexBufferForDrawArrays(RendererVk *renderer,
     // writing.
     ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
 
-    return gl::NoError();
+    return vk::NoError();
 }
 
-gl::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *renderer,
+vk::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *renderer,
                                                               BufferVk *elementArrayBufferVk,
                                                               VkIndexType indexType,
                                                               int indexCount,
@@ -422,17 +422,17 @@ gl::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *render
     std::array<VkBufferCopy, 2> copies = {{copy1, copy2}};
 
     vk::CommandBuffer *commandBuffer;
-    beginWriteResource(renderer, &commandBuffer);
+    ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
 
     elementArrayBufferVk->addReadDependency(this);
     commandBuffer->copyBuffer(elementArrayBufferVk->getVkBuffer().getHandle(), *bufferHandleOut, 2,
                               copies.data());
 
     ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
-    return gl::NoError();
+    return vk::NoError();
 }
 
-gl::Error LineLoopHelper::getIndexBufferForClientElementArray(
+vk::Error LineLoopHelper::getIndexBufferForClientElementArray(
     RendererVk *renderer,
     const gl::DrawCallParams &drawCallParams,
     VkBuffer *bufferHandleOut,
@@ -471,7 +471,7 @@ gl::Error LineLoopHelper::getIndexBufferForClientElementArray(
     }
 
     ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
-    return gl::NoError();
+    return vk::NoError();
 }
 
 void LineLoopHelper::destroy(VkDevice device)

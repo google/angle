@@ -459,7 +459,7 @@ Error CommandGraphNode::visitAndExecute(VkDevice device,
 {
     if (mOutsideRenderPassCommands.valid())
     {
-        mOutsideRenderPassCommands.end();
+        ANGLE_TRY(mOutsideRenderPassCommands.end());
         primaryCommandBuffer->executeCommands(1, &mOutsideRenderPassCommands);
     }
 
@@ -471,7 +471,7 @@ Error CommandGraphNode::visitAndExecute(VkDevice device,
         ANGLE_TRY(
             renderPassCache->getCompatibleRenderPass(device, serial, mRenderPassDesc, &renderPass));
 
-        mInsideRenderPassCommands.end();
+        ANGLE_TRY(mInsideRenderPassCommands.end());
 
         VkRenderPassBeginInfo beginInfo;
         beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

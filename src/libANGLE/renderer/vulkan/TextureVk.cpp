@@ -91,7 +91,7 @@ void PixelBuffer::removeStagedUpdates(const gl::ImageIndex &index)
         mSubresourceUpdates.end());
 }
 
-gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
+vk::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
                                               const gl::ImageIndex &index,
                                               const gl::Extents &extents,
                                               const gl::Offset &offset,
@@ -101,19 +101,19 @@ gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
                                               const uint8_t *pixels)
 {
     GLuint inputRowPitch = 0;
-    ANGLE_TRY_CHECKED_MATH(formatInfo.computeRowPitch(type, extents.width, unpack.alignment,
-                                                      unpack.rowLength, &inputRowPitch));
+    ANGLE_TRY_VK_CHECKED_MATH(formatInfo.computeRowPitch(type, extents.width, unpack.alignment,
+                                                         unpack.rowLength, &inputRowPitch));
 
     GLuint inputDepthPitch = 0;
-    ANGLE_TRY_CHECKED_MATH(formatInfo.computeDepthPitch(extents.height, unpack.imageHeight,
-                                                        inputRowPitch, &inputDepthPitch));
+    ANGLE_TRY_VK_CHECKED_MATH(formatInfo.computeDepthPitch(extents.height, unpack.imageHeight,
+                                                           inputRowPitch, &inputDepthPitch));
 
     // TODO(jmadill): skip images for 3D Textures.
     bool applySkipImages = false;
 
     GLuint inputSkipBytes = 0;
-    ANGLE_TRY_CHECKED_MATH(formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
-                                                       applySkipImages, &inputSkipBytes));
+    ANGLE_TRY_VK_CHECKED_MATH(formatInfo.computeSkipBytes(
+        type, inputRowPitch, inputDepthPitch, unpack, applySkipImages, &inputSkipBytes));
 
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -129,8 +129,8 @@ gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
     bool newBufferAllocated = false;
     uint32_t stagingOffset  = 0;
     size_t allocationSize   = outputDepthPitch * extents.depth;
-    mStagingBuffer.allocate(renderer, allocationSize, &stagingPointer, &bufferHandle,
-                            &stagingOffset, &newBufferAllocated);
+    ANGLE_TRY(mStagingBuffer.allocate(renderer, allocationSize, &stagingPointer, &bufferHandle,
+                                      &stagingOffset, &newBufferAllocated));
 
     const uint8_t *source = pixels + inputSkipBytes;
 
@@ -154,10 +154,10 @@ gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
 
     mSubresourceUpdates.emplace_back(bufferHandle, copy);
 
-    return gl::NoError();
+    return vk::NoError();
 }
 
-gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
+vk::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
                                                              const gl::ImageIndex &index,
                                                              const gl::Rectangle &sourceArea,
                                                              const gl::Offset &dstOffset,
@@ -174,7 +174,7 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
                        &clippedRectangle))
     {
         // Empty source area, nothing to do.
-        return gl::NoError();
+        return vk::NoError();
     }
 
     bool isViewportFlipEnabled = contextVk->isViewportFlipEnabledForDrawFBO();
@@ -201,8 +201,8 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
 
     // The destination is only one layer deep.
     size_t allocationSize = outputDepthPitch;
-    mStagingBuffer.allocate(renderer, allocationSize, &stagingPointer, &bufferHandle,
-                            &stagingOffset, &newBufferAllocated);
+    ANGLE_TRY(mStagingBuffer.allocate(renderer, allocationSize, &stagingPointer, &bufferHandle,
+                                      &stagingOffset, &newBufferAllocated));
 
     gl::PixelPackState pixelPackState = gl::PixelPackState();
     // TODO(lucferron): The pixel pack state alignment should probably be 1 instead of 4.
@@ -229,7 +229,7 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
         size_t bufferSize =
             storageFormat.pixelBytes * clippedRectangle.width * clippedRectangle.height;
         angle::MemoryBuffer *memoryBuffer = nullptr;
-        ANGLE_TRY_ALLOCATION(context->getScratchBuffer(bufferSize, &memoryBuffer));
+        ANGLE_TRY_VK_ALLOCATION(context->getScratchBuffer(bufferSize, &memoryBuffer));
 
         // Read into the scratch buffer
         ANGLE_TRY(
@@ -260,10 +260,10 @@ gl::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
 
     // 3- enqueue the destination image subresource update
     mSubresourceUpdates.emplace_back(bufferHandle, copyToImage);
-    return gl::NoError();
+    return vk::NoError();
 }
 
-gl::Error PixelBuffer::allocate(RendererVk *renderer,
+vk::Error PixelBuffer::allocate(RendererVk *renderer,
                                 size_t sizeInBytes,
                                 uint8_t **ptrOut,
                                 VkBuffer *handleOut,
@@ -335,7 +335,7 @@ bool PixelBuffer::empty() const
     return mSubresourceUpdates.empty();
 }
 
-gl::Error PixelBuffer::stageSubresourceUpdateAndGetData(RendererVk *renderer,
+vk::Error PixelBuffer::stageSubresourceUpdateAndGetData(RendererVk *renderer,
                                                         size_t allocationSize,
                                                         const gl::ImageIndex &imageIndex,
                                                         const gl::Extents &extents,
@@ -362,10 +362,10 @@ gl::Error PixelBuffer::stageSubresourceUpdateAndGetData(RendererVk *renderer,
 
     mSubresourceUpdates.emplace_back(bufferHandle, copy);
 
-    return gl::NoError();
+    return vk::NoError();
 }
 
-gl::Error TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
+vk::Error TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
                                                  const angle::Format &sourceFormat,
                                                  GLuint layer,
                                                  GLuint firstMipLevel,
@@ -412,7 +412,7 @@ gl::Error TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
         previousLevelRowPitch = destRowPitch;
     }
 
-    return gl::NoError();
+    return vk::NoError();
 }
 
 PixelBuffer::SubresourceUpdate::SubresourceUpdate() : bufferHandle(VK_NULL_HANDLE)
@@ -644,12 +644,12 @@ gl::Error TextureVk::setImageExternal(const gl::Context *context,
     return gl::InternalError();
 }
 
-void TextureVk::generateMipmapWithBlit(RendererVk *renderer)
+vk::Error TextureVk::generateMipmapWithBlit(RendererVk *renderer)
 {
     uint32_t imageLayerCount           = GetImageLayerCount(mState.getType());
     const gl::Extents baseLevelExtents = mImage.getExtents();
     vk::CommandBuffer *commandBuffer   = nullptr;
-    getCommandBufferForWrite(renderer, &commandBuffer);
+    ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
 
     // We are able to use blitImage since the image format we are using supports it. This
     // is a faster way we can generate the mips.
@@ -719,9 +719,11 @@ void TextureVk::generateMipmapWithBlit(RendererVk *renderer)
     // This is just changing the internal state of the image helper so that the next call
     // to changeLayoutWithStages will use this layout as the "oldLayout" argument.
     mImage.updateLayout(VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+
+    return vk::NoError();
 }
 
-gl::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
+vk::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
@@ -734,7 +736,7 @@ gl::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
     size_t baseLevelAllocationSize     = sourceRowPitch * baseLevelExtents.height;
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    getCommandBufferForWrite(renderer, &commandBuffer);
+    ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
 
     // Requirement of the copyImageToBuffer, the source image must be in SRC_OPTIMAL layout.
     mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
@@ -788,8 +790,7 @@ gl::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
             sourceRowPitch, baseLevelBuffers + bufferOffset));
     }
 
-    mPixelBuffer.flushUpdatesToImage(renderer, levelCount, &mImage, commandBuffer);
-    return gl::NoError();
+    return mPixelBuffer.flushUpdatesToImage(renderer, levelCount, &mImage, commandBuffer);
 }
 
 gl::Error TextureVk::generateMipmap(const gl::Context *context)
@@ -821,7 +822,7 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
     // only.
     if (IsMaskFlagSet(kBlitFeatureFlags, imageProperties.linearTilingFeatures))
     {
-        generateMipmapWithBlit(renderer);
+        ANGLE_TRY(generateMipmapWithBlit(renderer));
     }
     else
     {

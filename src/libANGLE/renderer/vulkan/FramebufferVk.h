@@ -94,7 +94,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                                       vk::RecordingMode *modeOut);
 
     // Internal helper function for readPixels operations.
-    gl::Error readPixelsImpl(const gl::Context *context,
+    vk::Error readPixelsImpl(const gl::Context *context,
                              const gl::Rectangle &area,
                              const PackPixelsParams &packPixelsParams,
                              void *pixels);
