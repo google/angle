@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "68cbd602_6f03ff7f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-11T07:33:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c73d6117_22fc1769",
+      "range": {
+        "startLine": 83,
+        "startChar": 46,
+        "endLine": 83,
+        "endChar": 53
+      },
+      "revId": "7da59484445d540bbbb5983a9ed2cdb8d7d1493a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a846b82_206a7a8d",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "7da59484445d540bbbb5983a9ed2cdb8d7d1493a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4bd34346_8140bd0d",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1182,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-11T07:33:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a846b82_206a7a8d",
+      "range": {
+        "startLine": 1182,
+        "startChar": 33,
+        "endLine": 1182,
+        "endChar": 42
+      },
+      "revId": "7da59484445d540bbbb5983a9ed2cdb8d7d1493a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
