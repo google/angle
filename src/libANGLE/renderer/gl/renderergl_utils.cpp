@@ -1359,27 +1359,27 @@ gl::ErrorOrResult<bool> ShouldApplyLastRowPaddingWorkaround(const gl::Extents &s
     // We are using an pack or unpack buffer, compute what the driver thinks is going to be the
     // last byte read or written. If it is past the end of the buffer, we will need to use the
     // workaround otherwise the driver will generate INVALID_OPERATION and not do the operation.
-    CheckedNumeric<size_t> checkedEndByte;
-    CheckedNumeric<size_t> pixelBytes;
-    size_t rowPitch;
 
     const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
-    ANGLE_TRY_RESULT(glFormat.computePackUnpackEndByte(type, size, state, is3D), checkedEndByte);
-    ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, size.width, state.alignment, state.rowLength),
-                     rowPitch);
-    pixelBytes = glFormat.computePixelBytes(type);
+    GLuint endByte                     = 0;
+    ANGLE_TRY_CHECKED_MATH(glFormat.computePackUnpackEndByte(type, size, state, is3D, &endByte));
+    GLuint rowPitch = 0;
+    ANGLE_TRY_CHECKED_MATH(
+        glFormat.computeRowPitch(type, size.width, state.alignment, state.rowLength, &rowPitch));
 
-    checkedEndByte += reinterpret_cast<intptr_t>(pixels);
+    CheckedNumeric<size_t> checkedPixelBytes = glFormat.computePixelBytes(type);
+    CheckedNumeric<size_t> checkedEndByte =
+        angle::CheckedNumeric<size_t>(endByte) + reinterpret_cast<intptr_t>(pixels);
 
     // At this point checkedEndByte is the actual last byte read.
     // The driver adds an extra row padding (if any), mimic it.
-    ANGLE_TRY_CHECKED_MATH(pixelBytes);
-    if (pixelBytes.ValueOrDie() * size.width < rowPitch)
+    ANGLE_TRY_CHECKED_MATH(checkedPixelBytes.IsValid());
+    if (checkedPixelBytes.ValueOrDie() * size.width < rowPitch)
     {
-        checkedEndByte += rowPitch - pixelBytes * size.width;
+        checkedEndByte += rowPitch - checkedPixelBytes * size.width;
     }
 
-    ANGLE_TRY_CHECKED_MATH(checkedEndByte);
+    ANGLE_TRY_CHECKED_MATH(checkedEndByte.IsValid());
 
     return checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelBuffer->getSize());
 }

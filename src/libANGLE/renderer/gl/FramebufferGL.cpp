@@ -464,9 +464,8 @@ Error FramebufferGL::readPixels(const gl::Context *context,
         const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(readFormat, readType);
 
         GLuint rowBytes = 0;
-        ANGLE_TRY_RESULT(glFormat.computeRowPitch(readType, origArea.width, packState.alignment,
-                                                  packState.rowLength),
-                         rowBytes);
+        ANGLE_TRY_CHECKED_MATH(glFormat.computeRowPitch(
+            readType, origArea.width, packState.alignment, packState.rowLength, &rowBytes));
         pixels += leftClip * glFormat.pixelBytes + topClip * rowBytes;
     }
 
@@ -892,10 +891,10 @@ gl::Error FramebufferGL::readPixelsRowByRow(const gl::Context *context,
     const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
 
     GLuint rowBytes = 0;
-    ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength),
-                     rowBytes);
+    ANGLE_TRY_CHECKED_MATH(
+        glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength, &rowBytes));
     GLuint skipBytes = 0;
-    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(type, rowBytes, 0, pack, false), skipBytes);
+    ANGLE_TRY_CHECKED_MATH(glFormat.computeSkipBytes(type, rowBytes, 0, pack, false, &skipBytes));
 
     gl::PixelPackState directPack;
     directPack.alignment   = 1;
@@ -934,10 +933,11 @@ gl::Error FramebufferGL::readPixelsAllAtOnce(const gl::Context *context,
         const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
 
         GLuint rowBytes = 0;
-        ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength),
-                         rowBytes);
+        ANGLE_TRY_CHECKED_MATH(
+            glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength, &rowBytes));
         GLuint skipBytes = 0;
-        ANGLE_TRY_RESULT(glFormat.computeSkipBytes(type, rowBytes, 0, pack, false), skipBytes);
+        ANGLE_TRY_CHECKED_MATH(
+            glFormat.computeSkipBytes(type, rowBytes, 0, pack, false, &skipBytes));
 
         gl::PixelPackState directPack;
         directPack.alignment = 1;

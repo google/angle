@@ -254,7 +254,7 @@ std::string ToString(const T &value)
 #define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999
 
 #define ANGLE_TRY_CHECKED_MATH(result)                     \
-    if (!result.IsValid())                                 \
+    if (!result)                                           \
     {                                                      \
         return gl::InternalError() << "Integer overflow."; \
     }

@@ -1405,13 +1405,14 @@ bool ValidateCompressedTexImage3D(Context *context,
         return false;
     }
 
-    auto blockSizeOrErr = formatInfo.computeCompressedImageSize(gl::Extents(width, height, depth));
-    if (blockSizeOrErr.isError())
+    GLuint blockSize = 0;
+    if (!formatInfo.computeCompressedImageSize(gl::Extents(width, height, depth), &blockSize))
     {
         context->handleError(InvalidValue());
         return false;
     }
-    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSizeOrErr.getResult())
+
+    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSize)
     {
         context->handleError(InvalidValue());
         return false;
@@ -2026,13 +2027,14 @@ bool ValidateCompressedTexSubImage3D(Context *context,
         return false;
     }
 
-    auto blockSizeOrErr = formatInfo.computeCompressedImageSize(gl::Extents(width, height, depth));
-    if (blockSizeOrErr.isError())
+    GLuint blockSize = 0;
+    if (!formatInfo.computeCompressedImageSize(gl::Extents(width, height, depth), &blockSize))
     {
-        context->handleError(blockSizeOrErr.getError());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
         return false;
     }
-    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSizeOrErr.getResult())
+
+    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSize)
     {
         context->handleError(InvalidValue());
         return false;

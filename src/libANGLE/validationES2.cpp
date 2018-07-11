@@ -2733,14 +2733,15 @@ bool ValidateCompressedTexImage2D(Context *context,
     }
 
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalformat);
-    auto blockSizeOrErr = formatInfo.computeCompressedImageSize(gl::Extents(width, height, 1));
-    if (blockSizeOrErr.isError())
+
+    GLuint blockSize = 0;
+    if (!formatInfo.computeCompressedImageSize(gl::Extents(width, height, 1), &blockSize))
     {
-        context->handleError(blockSizeOrErr.getError());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
         return false;
     }
 
-    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSizeOrErr.getResult())
+    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSize)
     {
         ANGLE_VALIDATION_ERR(context, InvalidValue(), CompressedTextureDimensionsMustMatchData);
         return false;
@@ -2827,14 +2828,14 @@ bool ValidateCompressedTexSubImage2D(Context *context,
     }
 
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(format);
-    auto blockSizeOrErr = formatInfo.computeCompressedImageSize(gl::Extents(width, height, 1));
-    if (blockSizeOrErr.isError())
+    GLuint blockSize                 = 0;
+    if (!formatInfo.computeCompressedImageSize(gl::Extents(width, height, 1), &blockSize))
     {
-        context->handleError(blockSizeOrErr.getError());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
         return false;
     }
 
-    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSizeOrErr.getResult())
+    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSize)
     {
         context->handleError(InvalidValue());
         return false;

@@ -101,22 +101,19 @@ gl::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
                                               const uint8_t *pixels)
 {
     GLuint inputRowPitch = 0;
-    ANGLE_TRY_RESULT(
-        formatInfo.computeRowPitch(type, extents.width, unpack.alignment, unpack.rowLength),
-        inputRowPitch);
+    ANGLE_TRY_CHECKED_MATH(formatInfo.computeRowPitch(type, extents.width, unpack.alignment,
+                                                      unpack.rowLength, &inputRowPitch));
 
     GLuint inputDepthPitch = 0;
-    ANGLE_TRY_RESULT(
-        formatInfo.computeDepthPitch(extents.height, unpack.imageHeight, inputRowPitch),
-        inputDepthPitch);
+    ANGLE_TRY_CHECKED_MATH(formatInfo.computeDepthPitch(extents.height, unpack.imageHeight,
+                                                        inputRowPitch, &inputDepthPitch));
 
     // TODO(jmadill): skip images for 3D Textures.
     bool applySkipImages = false;
 
     GLuint inputSkipBytes = 0;
-    ANGLE_TRY_RESULT(
-        formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack, applySkipImages),
-        inputSkipBytes);
+    ANGLE_TRY_CHECKED_MATH(formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
+                                                       applySkipImages, &inputSkipBytes));
 
     RendererVk *renderer = contextVk->getRenderer();
 

@@ -27,6 +27,18 @@ namespace
 using InternalFormatInfoMap =
     std::unordered_map<GLenum, std::unordered_map<GLenum, InternalFormat>>;
 
+bool CheckedMathResult(const CheckedNumeric<GLuint> &value, GLuint *resultOut)
+{
+    if (!value.IsValid())
+    {
+        return false;
+    }
+    else
+    {
+        *resultOut = value.ValueOrDie();
+        return true;
+    }
+}
 }  // anonymous namespace
 
 FormatType::FormatType() : format(GL_NONE), type(GL_NONE)
@@ -1081,16 +1093,17 @@ GLuint InternalFormat::computePixelBytes(GLenum formatType) const
     return components * typeInfo.bytes;
 }
 
-ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
-                                                      GLsizei width,
-                                                      GLint alignment,
-                                                      GLint rowLength) const
+bool InternalFormat::computeRowPitch(GLenum formatType,
+                                     GLsizei width,
+                                     GLint alignment,
+                                     GLint rowLength,
+                                     GLuint *resultOut) const
 {
     // Compressed images do not use pack/unpack parameters.
     if (compressed)
     {
         ASSERT(rowLength == 0);
-        return computeCompressedImageSize(Extents(width, 1, 1));
+        return computeCompressedImageSize(Extents(width, 1, 1), resultOut);
     }
 
     CheckedNumeric<GLuint> checkedWidth(rowLength > 0 ? rowLength : width);
@@ -1099,36 +1112,38 @@ ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
     ASSERT(alignment > 0 && isPow2(alignment));
     CheckedNumeric<GLuint> checkedAlignment(alignment);
     auto aligned = rx::roundUp(checkedRowBytes, checkedAlignment);
-    ANGLE_TRY_CHECKED_MATH(aligned);
-    return aligned.ValueOrDie();
+    return CheckedMathResult(aligned, resultOut);
 }
 
-ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLsizei height,
-                                                        GLint imageHeight,
-                                                        GLuint rowPitch) const
+bool InternalFormat::computeDepthPitch(GLsizei height,
+                                       GLint imageHeight,
+                                       GLuint rowPitch,
+                                       GLuint *resultOut) const
 {
     GLuint rows =
         (imageHeight > 0 ? static_cast<GLuint>(imageHeight) : static_cast<GLuint>(height));
     CheckedNumeric<GLuint> checkedRowPitch(rowPitch);
 
-    auto depthPitch = checkedRowPitch * rows;
-    ANGLE_TRY_CHECKED_MATH(depthPitch);
-    return depthPitch.ValueOrDie();
+    return CheckedMathResult(checkedRowPitch * rows, resultOut);
 }
 
-ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLenum formatType,
-                                                        GLsizei width,
-                                                        GLsizei height,
-                                                        GLint alignment,
-                                                        GLint rowLength,
-                                                        GLint imageHeight) const
+bool InternalFormat::computeDepthPitch(GLenum formatType,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLint alignment,
+                                       GLint rowLength,
+                                       GLint imageHeight,
+                                       GLuint *resultOut) const
 {
     GLuint rowPitch = 0;
-    ANGLE_TRY_RESULT(computeRowPitch(formatType, width, alignment, rowLength), rowPitch);
-    return computeDepthPitch(height, imageHeight, rowPitch);
+    if (!computeRowPitch(formatType, width, alignment, rowLength, &rowPitch))
+    {
+        return false;
+    }
+    return computeDepthPitch(height, imageHeight, rowPitch, resultOut);
 }
 
-ErrorOrResult<GLuint> InternalFormat::computeCompressedImageSize(const Extents &size) const
+bool InternalFormat::computeCompressedImageSize(const Extents &size, GLuint *resultOut) const
 {
     CheckedNumeric<GLuint> checkedWidth(size.width);
     CheckedNumeric<GLuint> checkedHeight(size.height);
@@ -1140,15 +1155,15 @@ ErrorOrResult<GLuint> InternalFormat::computeCompressedImageSize(const Extents &
     auto numBlocksWide = (checkedWidth + checkedBlockWidth - 1u) / checkedBlockWidth;
     auto numBlocksHigh = (checkedHeight + checkedBlockHeight - 1u) / checkedBlockHeight;
     auto bytes         = numBlocksWide * numBlocksHigh * pixelBytes * checkedDepth;
-    ANGLE_TRY_CHECKED_MATH(bytes);
-    return bytes.ValueOrDie();
+    return CheckedMathResult(bytes, resultOut);
 }
 
-ErrorOrResult<GLuint> InternalFormat::computeSkipBytes(GLenum formatType,
-                                                       GLuint rowPitch,
-                                                       GLuint depthPitch,
-                                                       const PixelStoreStateBase &state,
-                                                       bool is3D) const
+bool InternalFormat::computeSkipBytes(GLenum formatType,
+                                      GLuint rowPitch,
+                                      GLuint depthPitch,
+                                      const PixelStoreStateBase &state,
+                                      bool is3D,
+                                      GLuint *resultOut) const
 {
     CheckedNumeric<GLuint> checkedRowPitch(rowPitch);
     CheckedNumeric<GLuint> checkedDepthPitch(depthPitch);
@@ -1163,29 +1178,36 @@ ErrorOrResult<GLuint> InternalFormat::computeSkipBytes(GLenum formatType,
     }
     auto skipBytes = checkedSkipImagesBytes + checkedSkipRows * checkedRowPitch +
                      checkedSkipPixels * checkedPixelBytes;
-    ANGLE_TRY_CHECKED_MATH(skipBytes);
-    return skipBytes.ValueOrDie();
+    return CheckedMathResult(skipBytes, resultOut);
 }
 
-ErrorOrResult<GLuint> InternalFormat::computePackUnpackEndByte(GLenum formatType,
-                                                               const Extents &size,
-                                                               const PixelStoreStateBase &state,
-                                                               bool is3D) const
+bool InternalFormat::computePackUnpackEndByte(GLenum formatType,
+                                              const Extents &size,
+                                              const PixelStoreStateBase &state,
+                                              bool is3D,
+                                              GLuint *resultOut) const
 {
     GLuint rowPitch = 0;
-    ANGLE_TRY_RESULT(computeRowPitch(formatType, size.width, state.alignment, state.rowLength),
-                     rowPitch);
-
-    GLuint depthPitch = 0;
-    if (is3D)
+    if (!computeRowPitch(formatType, size.width, state.alignment, state.rowLength, &rowPitch))
     {
-        ANGLE_TRY_RESULT(computeDepthPitch(size.height, state.imageHeight, rowPitch), depthPitch);
+        return false;
     }
 
-    CheckedNumeric<GLuint> checkedCopyBytes = 0;
+    GLuint depthPitch = 0;
+    if (is3D && !computeDepthPitch(size.height, state.imageHeight, rowPitch, &depthPitch))
+    {
+        return false;
+    }
+
+    CheckedNumeric<GLuint> checkedCopyBytes(0);
     if (compressed)
     {
-        ANGLE_TRY_RESULT(computeCompressedImageSize(size), checkedCopyBytes);
+        GLuint copyBytes = 0;
+        if (!computeCompressedImageSize(size, &copyBytes))
+        {
+            return false;
+        }
+        checkedCopyBytes = copyBytes;
     }
     else if (size.height != 0 && (!is3D || size.depth != 0))
     {
@@ -1202,14 +1224,15 @@ ErrorOrResult<GLuint> InternalFormat::computePackUnpackEndByte(GLenum formatType
         }
     }
 
-    CheckedNumeric<GLuint> checkedSkipBytes = 0;
-    ANGLE_TRY_RESULT(computeSkipBytes(formatType, rowPitch, depthPitch, state, is3D),
-                     checkedSkipBytes);
+    GLuint skipBytes = 0;
+    if (!computeSkipBytes(formatType, rowPitch, depthPitch, state, is3D, &skipBytes))
+    {
+        return false;
+    }
 
-    CheckedNumeric<GLuint> endByte = checkedCopyBytes + checkedSkipBytes;
+    CheckedNumeric<GLuint> endByte = checkedCopyBytes + CheckedNumeric<GLuint>(skipBytes);
 
-    ANGLE_TRY_CHECKED_MATH(endByte);
-    return endByte.ValueOrDie();
+    return CheckedMathResult(endByte, resultOut);
 }
 
 GLenum GetUnsizedFormat(GLenum internalFormat)

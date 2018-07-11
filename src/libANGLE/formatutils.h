@@ -56,32 +56,37 @@ struct InternalFormat
 
     GLuint computePixelBytes(GLenum formatType) const;
 
-    ErrorOrResult<GLuint> computeRowPitch(GLenum formatType,
-                                          GLsizei width,
-                                          GLint alignment,
-                                          GLint rowLength) const;
-    ErrorOrResult<GLuint> computeDepthPitch(GLsizei height,
-                                            GLint imageHeight,
-                                            GLuint rowPitch) const;
-    ErrorOrResult<GLuint> computeDepthPitch(GLenum formatType,
-                                            GLsizei width,
-                                            GLsizei height,
-                                            GLint alignment,
-                                            GLint rowLength,
-                                            GLint imageHeight) const;
+    bool computeRowPitch(GLenum formatType,
+                         GLsizei width,
+                         GLint alignment,
+                         GLint rowLength,
+                         GLuint *resultOut) const;
+    bool computeDepthPitch(GLsizei height,
+                           GLint imageHeight,
+                           GLuint rowPitch,
+                           GLuint *resultOut) const;
+    bool computeDepthPitch(GLenum formatType,
+                           GLsizei width,
+                           GLsizei height,
+                           GLint alignment,
+                           GLint rowLength,
+                           GLint imageHeight,
+                           GLuint *resultOut) const;
 
-    ErrorOrResult<GLuint> computeCompressedImageSize(const Extents &size) const;
+    bool computeCompressedImageSize(const Extents &size, GLuint *resultOut) const;
 
-    ErrorOrResult<GLuint> computeSkipBytes(GLenum formatType,
-                                           GLuint rowPitch,
-                                           GLuint depthPitch,
-                                           const PixelStoreStateBase &state,
-                                           bool is3D) const;
+    bool computeSkipBytes(GLenum formatType,
+                          GLuint rowPitch,
+                          GLuint depthPitch,
+                          const PixelStoreStateBase &state,
+                          bool is3D,
+                          GLuint *resultOut) const;
 
-    ErrorOrResult<GLuint> computePackUnpackEndByte(GLenum formatType,
-                                                   const Extents &size,
-                                                   const PixelStoreStateBase &state,
-                                                   bool is3D) const;
+    bool computePackUnpackEndByte(GLenum formatType,
+                                  const Extents &size,
+                                  const PixelStoreStateBase &state,
+                                  bool is3D,
+                                  GLuint *resultOut) const;
 
     bool isLUMA() const;
     GLenum getReadPixelsFormat() const;

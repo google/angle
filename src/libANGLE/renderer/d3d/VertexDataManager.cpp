@@ -138,7 +138,7 @@ gl::ErrorOrResult<unsigned int> TranslatedAttribute::computeOffset(GLint startVe
     CheckedNumeric<unsigned int> offset;
 
     offset = baseOffset + stride * static_cast<unsigned int>(startVertex);
-    ANGLE_TRY_CHECKED_MATH(offset);
+    ANGLE_TRY_CHECKED_MATH(offset.IsValid());
     return offset.ValueOrDie();
 }
 
