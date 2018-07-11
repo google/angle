@@ -22,6 +22,30 @@
       "revId": "d085c22cf03338d59c20289880367a1432683a84",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da93e8f4_4084c5d1",
+        "filename": "src/compiler/translator/tree_util/IntermTraverse.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-11T14:54:06Z",
+      "side": 1,
+      "message": "I\u0027m not sure if TIntermRaw is the best solution for that problem. I\u0027d maybe rather add a new \"TIntermPreprocessorDirective\" node type that would restrict its usage a bit, instead of having a very flexible raw node type that makes it harder to reason about the shader translator code. It shouldn\u0027t be very hard at all to implement that on top of this patch.",
+      "parentUuid": "5e1ad5ab_48ce6036",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 75
+      },
+      "revId": "d085c22cf03338d59c20289880367a1432683a84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
