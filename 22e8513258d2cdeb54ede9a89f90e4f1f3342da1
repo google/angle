@@ -22,6 +22,30 @@
       "revId": "22e8513258d2cdeb54ede9a89f90e4f1f3342da1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "159b6acd_e9cacc80",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-11T16:05:07Z",
+      "side": 1,
+      "message": "It\u0027s in the mVirtualizedContexts block already.",
+      "parentUuid": "664cf003_7dd10b14",
+      "range": {
+        "startLine": 508,
+        "startChar": 12,
+        "endLine": 508,
+        "endChar": 40
+      },
+      "revId": "22e8513258d2cdeb54ede9a89f90e4f1f3342da1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
