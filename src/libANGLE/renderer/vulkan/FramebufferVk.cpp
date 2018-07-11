@@ -77,7 +77,8 @@ FramebufferVk::FramebufferVk(const gl::FramebufferState &state)
     : FramebufferImpl(state),
       mBackbuffer(nullptr),
       mActiveColorComponents(0),
-      mReadPixelsBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT, kMinReadPixelsBufferSize)
+      mReadPixelsBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT, kMinReadPixelsBufferSize),
+      mBlitPixelBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, kMinReadPixelsBufferSize)
 {
 }
 
@@ -85,7 +86,8 @@ FramebufferVk::FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk 
     : FramebufferImpl(state),
       mBackbuffer(backbuffer),
       mActiveColorComponents(0),
-      mReadPixelsBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT, kMinReadPixelsBufferSize)
+      mReadPixelsBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT, kMinReadPixelsBufferSize),
+      mBlitPixelBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, kMinReadPixelsBufferSize)
 {
 }
 
@@ -98,6 +100,7 @@ void FramebufferVk::destroy(const gl::Context *context)
     renderer->releaseObject(getStoredQueueSerial(), &mFramebuffer);
 
     mReadPixelsBuffer.destroy(contextVk->getDevice());
+    mBlitPixelBuffer.destroy(contextVk->getDevice());
 }
 
 gl::Error FramebufferVk::discard(const gl::Context *context,
@@ -342,7 +345,8 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     params.packBuffer  = glState.getTargetBuffer(gl::BufferBinding::PixelPack);
     params.pack        = packState;
 
-    ANGLE_TRY(readPixelsImpl(context, flippedArea, params,
+    ANGLE_TRY(readPixelsImpl(context, flippedArea, params, VK_IMAGE_ASPECT_COLOR_BIT,
+                             getColorReadRenderTarget(),
                              static_cast<uint8_t *>(pixels) + outputSkipBytes));
     mReadPixelsBuffer.releaseRetainedBuffers(renderer);
     return gl::NoError();
@@ -353,8 +357,7 @@ RenderTargetVk *FramebufferVk::getDepthStencilRenderTarget() const
     return mRenderTargetCache.getDepthStencil();
 }
 
-gl::Error FramebufferVk::blitUsingCopy(RendererVk *renderer,
-                                       vk::CommandBuffer *commandBuffer,
+gl::Error FramebufferVk::blitUsingCopy(vk::CommandBuffer *commandBuffer,
                                        const gl::Rectangle &readArea,
                                        const gl::Rectangle &destArea,
                                        RenderTargetVk *readRenderTarget,
@@ -404,16 +407,16 @@ gl::Error FramebufferVk::blitUsingCopy(RendererVk *renderer,
     VkFlags aspectFlags =
         vk::GetDepthStencilAspectFlags(readRenderTarget->getImageFormat().textureFormat());
     vk::ImageHelper *readImage = readRenderTarget->getImageForRead(
-        this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aspectFlags, commandBuffer);
+        this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, commandBuffer);
     vk::ImageHelper *writeImage = drawRenderTarget->getImageForWrite(this);
     // Requirement of the copyImageToBuffer, the dst image must be in
     // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL layout.
     writeImage->changeLayoutWithStages(aspectFlags, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                                        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
                                        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
-    VkImageAspectFlags depthBit   = blitDepthBuffer ? VK_IMAGE_ASPECT_DEPTH_BIT : 0;
-    VkImageAspectFlags stencilBit = blitStencilBuffer ? VK_IMAGE_ASPECT_STENCIL_BIT : 0;
-    VkImageAspectFlags aspectMask = depthBit | stencilBit;
+
+    VkImageAspectFlags aspectMask =
+        vk::GetDepthStencilAspectFlagsForCopy(blitDepthBuffer, blitStencilBuffer);
     vk::ImageHelper::Copy(readImage, writeImage, gl::Offset(), gl::Offset(),
                           gl::Extents(scissoredDrawRect.width, scissoredDrawRect.height, 1),
                           aspectMask, commandBuffer);
@@ -426,6 +429,105 @@ RenderTargetVk *FramebufferVk::getColorReadRenderTarget() const
     RenderTargetVk *renderTarget = mRenderTargetCache.getColorRead(mState);
     ASSERT(renderTarget && renderTarget->getImage().valid());
     return renderTarget;
+}
+
+gl::Error FramebufferVk::blitWithReadback(const gl::Context *context,
+                                          const gl::Rectangle &sourceArea,
+                                          const gl::Rectangle &destArea,
+                                          bool blitDepthBuffer,
+                                          bool blitStencilBuffer,
+                                          vk::CommandBuffer *commandBuffer,
+                                          RenderTargetVk *readRenderTarget,
+                                          RenderTargetVk *drawRenderTarget)
+{
+    ContextVk *contextVk          = vk::GetImpl(context);
+    RendererVk *renderer          = contextVk->getRenderer();
+    vk::ImageHelper *imageForRead = readRenderTarget->getImageForRead(
+        this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, commandBuffer);
+    const angle::Format &drawFormat = drawRenderTarget->getImageFormat().angleFormat();
+    const gl::InternalFormat &sizedInternalDrawFormat =
+        gl::GetSizedInternalFormatInfo(drawFormat.glInternalFormat);
+
+    GLuint outputPitch = 0;
+
+    if (blitStencilBuffer)
+    {
+        // If we're copying the stencil bits, we need to adjust the outputPitch
+        // because in Vulkan, if we copy the stencil out of a any texture, the stencil
+        // will be tightly packed in an S8 buffer (as specified in the spec here
+        // https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkBufferImageCopy.html)
+        outputPitch = destArea.width * (drawFormat.stencilBits / 8);
+    }
+    else
+    {
+        outputPitch = destArea.width * drawFormat.pixelBytes;
+    }
+
+    PackPixelsParams packPixelsParams;
+    packPixelsParams.pack.alignment       = 1;
+    packPixelsParams.pack.reverseRowOrder = true;
+    packPixelsParams.type                 = sizedInternalDrawFormat.type;
+    packPixelsParams.format               = sizedInternalDrawFormat.format;
+    packPixelsParams.area.height          = destArea.height;
+    packPixelsParams.area.width           = destArea.width;
+    packPixelsParams.area.x               = destArea.x;
+    packPixelsParams.area.y               = destArea.y;
+    packPixelsParams.outputPitch          = outputPitch;
+
+    GLuint pixelBytes    = imageForRead->getFormat().angleFormat().pixelBytes;
+    GLuint sizeToRequest = sourceArea.width * sourceArea.height * pixelBytes;
+
+    uint8_t *copyPtr   = nullptr;
+    VkBuffer handleOut = VK_NULL_HANDLE;
+    uint32_t offsetOut = 0;
+
+    if (!mBlitPixelBuffer.valid())
+    {
+        mBlitPixelBuffer.init(1, renderer);
+        ASSERT(mBlitPixelBuffer.valid());
+    }
+
+    VkImageAspectFlags copyFlags =
+        vk::GetDepthStencilAspectFlagsForCopy(blitDepthBuffer, blitStencilBuffer);
+
+    ANGLE_TRY(mBlitPixelBuffer.allocate(renderer, sizeToRequest, &copyPtr, &handleOut, &offsetOut,
+                                        nullptr));
+    ANGLE_TRY(readPixelsImpl(context, sourceArea, packPixelsParams, copyFlags, readRenderTarget,
+                             copyPtr));
+    ANGLE_TRY(mBlitPixelBuffer.flush(contextVk->getDevice()));
+
+    // Reinitialize the commandBuffer after a read pixels because it calls
+    // renderer->finish which makes command buffers obsolete.
+    ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
+
+    // We read the bytes of the image in a buffer, now we have to copy them into the
+    // destination target.
+    vk::ImageHelper *imageForWrite = drawRenderTarget->getImageForWrite(this);
+
+    imageForWrite->changeLayoutWithStages(
+        imageForWrite->getAspectFlags(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
+
+    VkBufferImageCopy region;
+    region.bufferOffset                    = offsetOut;
+    region.bufferImageHeight               = sourceArea.height;
+    region.bufferRowLength                 = sourceArea.width;
+    region.imageExtent.width               = destArea.width;
+    region.imageExtent.height              = destArea.height;
+    region.imageExtent.depth               = 1;
+    region.imageSubresource.mipLevel       = 0;
+    region.imageSubresource.aspectMask     = copyFlags;
+    region.imageSubresource.baseArrayLayer = 0;
+    region.imageSubresource.layerCount     = 1;
+    region.imageOffset.x                   = destArea.x;
+    region.imageOffset.y                   = destArea.y;
+    region.imageOffset.z                   = 0;
+
+    commandBuffer->copyBufferToImage(handleOut, imageForWrite->getImage(),
+                                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+
+    mBlitPixelBuffer.releaseRetainedBuffers(renderer);
+    return gl::NoError();
 }
 
 gl::Error FramebufferVk::blit(const gl::Context *context,
@@ -482,20 +584,19 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
         }
         else
         {
-            if (flipSource || contextVk->isViewportFlipEnabledForReadFBO())
-            {
-                // TODO(lucferron): Implement this http://anglebug.com/2673
-                // The tests in BlitFramebufferANGLETest are passing, but they are wrong since they
-                // use a single color for the depth / stencil buffers, it looks like its working,
-                // but if it was a gradient or a checked board, you would realize the flip isn't
-                // happening with this copy.
-                UNIMPLEMENTED();
-                return gl::InternalError();
-            }
-
             ASSERT(filter == GL_NEAREST);
-            ANGLE_TRY(blitUsingCopy(renderer, commandBuffer, sourceArea, destArea, readRenderTarget,
-                                    drawRenderTarget, scissor, blitDepthBuffer, blitStencilBuffer));
+            if (flipSource || flipDest)
+            {
+                ANGLE_TRY(blitWithReadback(context, sourceArea, destArea, blitDepthBuffer,
+                                           blitStencilBuffer, commandBuffer, readRenderTarget,
+                                           drawRenderTarget));
+            }
+            else
+            {
+                ANGLE_TRY(blitUsingCopy(commandBuffer, sourceArea, destArea, readRenderTarget,
+                                        drawRenderTarget, scissor, blitDepthBuffer,
+                                        blitStencilBuffer));
+            }
         }
     }
 
@@ -552,7 +653,7 @@ gl::Error FramebufferVk::blitImpl(ContextVk *contextVk,
         colorBlit ? VK_IMAGE_ASPECT_COLOR_BIT
                   : vk::GetDepthStencilAspectFlags(readImageFormat.textureFormat());
     vk::ImageHelper *srcImage = readRenderTarget->getImageForRead(
-        this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, aspectMask, commandBuffer);
+        this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, commandBuffer);
 
     if (flipSource)
     {
@@ -1057,6 +1158,8 @@ gl::DrawBufferMask FramebufferVk::getEmulatedAlphaAttachmentMask()
 vk::Error FramebufferVk::readPixelsImpl(const gl::Context *context,
                                         const gl::Rectangle &area,
                                         const PackPixelsParams &packPixelsParams,
+                                        const VkImageAspectFlags &copyAspectFlags,
+                                        RenderTargetVk *renderTarget,
                                         void *pixels)
 {
     ContextVk *contextVk = vk::GetImpl(context);
@@ -1071,18 +1174,29 @@ vk::Error FramebufferVk::readPixelsImpl(const gl::Context *context,
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
 
-    RenderTargetVk *renderTarget = getColorReadRenderTarget();
-
     // Note that although we're reading from the image, we need to update the layout below.
-    vk::ImageHelper *srcImage = renderTarget->getImageForRead(
-        this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, commandBuffer);
+
+    vk::ImageHelper *srcImage =
+        renderTarget->getImageForRead(this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, commandBuffer);
 
     const angle::Format &angleFormat = srcImage->getFormat().textureFormat();
+
+    GLuint pixelBytes = angleFormat.pixelBytes;
+
+    // If we're copying only the stencil bits, we need to adjust the allocation size and the source
+    // pitch because in Vulkan, if we copy the stencil out of a D24S8 texture, the stencil will be
+    // tightly packed in an S8 buffer (as specified in the spec here
+    // https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkBufferImageCopy.html)
+    if (copyAspectFlags == VK_IMAGE_ASPECT_STENCIL_BIT)
+    {
+        pixelBytes = angleFormat.stencilBits / 8;
+    }
+
     VkBuffer bufferHandle            = VK_NULL_HANDLE;
     uint8_t *readPixelBuffer         = nullptr;
     bool newBufferAllocated          = false;
     uint32_t stagingOffset           = 0;
-    size_t allocationSize            = area.width * angleFormat.pixelBytes * area.height;
+    size_t allocationSize            = area.width * pixelBytes * area.height;
 
     ANGLE_TRY(mReadPixelsBuffer.allocate(renderer, allocationSize, &readPixelBuffer, &bufferHandle,
                                          &stagingOffset, &newBufferAllocated));
@@ -1097,7 +1211,7 @@ vk::Error FramebufferVk::readPixelsImpl(const gl::Context *context,
     region.imageOffset.x                   = area.x;
     region.imageOffset.y                   = area.y;
     region.imageOffset.z                   = 0;
-    region.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.imageSubresource.aspectMask     = copyAspectFlags;
     region.imageSubresource.baseArrayLayer = 0;
     region.imageSubresource.layerCount     = 1;
     region.imageSubresource.mipLevel       = 0;
@@ -1113,7 +1227,7 @@ vk::Error FramebufferVk::readPixelsImpl(const gl::Context *context,
     // created with the host coherent bit.
     ANGLE_TRY(mReadPixelsBuffer.invalidate(renderer->getDevice()));
 
-    PackPixels(packPixelsParams, angleFormat, area.width * angleFormat.pixelBytes, readPixelBuffer,
+    PackPixels(packPixelsParams, angleFormat, area.width * pixelBytes, readPixelBuffer,
                static_cast<uint8_t *>(pixels));
 
     return vk::NoError();

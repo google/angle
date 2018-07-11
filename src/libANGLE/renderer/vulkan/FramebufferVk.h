@@ -97,25 +97,35 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     vk::Error readPixelsImpl(const gl::Context *context,
                              const gl::Rectangle &area,
                              const PackPixelsParams &packPixelsParams,
+                             const VkImageAspectFlags &copyAspectFlags,
+                             RenderTargetVk *renderTarget,
                              void *pixels);
 
     const gl::Extents &getReadImageExtents() const;
 
     gl::DrawBufferMask getEmulatedAlphaAttachmentMask();
+    RenderTargetVk *getColorReadRenderTarget() const;
 
   private:
     FramebufferVk(const gl::FramebufferState &state);
     FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer);
 
-    gl::Error blitUsingCopy(RendererVk *renderer,
-                            vk::CommandBuffer *commandBuffer,
-                            const gl::Rectangle &rectangle,
+    gl::Error blitUsingCopy(vk::CommandBuffer *commandBuffer,
+                            const gl::Rectangle &readArea,
                             const gl::Rectangle &destArea,
-                            RenderTargetVk *renderTargetVk,
-                            RenderTargetVk *drawRenderTargetVk,
+                            RenderTargetVk *readRenderTarget,
+                            RenderTargetVk *drawRenderTarget,
                             const gl::Rectangle *scissor,
                             bool blitDepthBuffer,
                             bool blitStencilBuffer);
+    gl::Error blitWithReadback(const gl::Context *context,
+                               const gl::Rectangle &sourceArea,
+                               const gl::Rectangle &destArea,
+                               bool blitDepthBuffer,
+                               bool blitStencilBuffer,
+                               vk::CommandBuffer *commandBuffer,
+                               RenderTargetVk *readRenderTarget,
+                               RenderTargetVk *drawRenderTarget);
 
     vk::Error getFramebuffer(RendererVk *rendererVk, vk::Framebuffer **framebufferOut);
 
@@ -140,8 +150,6 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                        bool flipSource,
                        bool flipDest);
 
-    RenderTargetVk *getColorReadRenderTarget() const;
-
     WindowSurfaceVk *mBackbuffer;
 
     Optional<vk::RenderPassDesc> mRenderPassDesc;
@@ -154,6 +162,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     VkColorComponentFlags mActiveColorComponents;
     gl::DrawBufferMask mActiveColorComponentMasksForClear[4];
     vk::DynamicBuffer mReadPixelsBuffer;
+    vk::DynamicBuffer mBlitPixelBuffer;
 
     // When we draw to the framebuffer, and the real format has an alpha channel but the format of
     // the framebuffer does not, we need to mask out the alpha channel. This DrawBufferMask will

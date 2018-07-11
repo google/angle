@@ -366,6 +366,7 @@ void PackPixels(const PackPixelsParams &params,
     }
 
     ColorWriteFunction colorWriteFunction = GetColorWriteFunction(formatType);
+    ASSERT(colorWriteFunction != nullptr);
 
     // Maximum size of any Color<T> type used.
     uint8_t temp[16];

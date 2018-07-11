@@ -270,6 +270,12 @@ VkImageAspectFlags GetFormatAspectFlags(const angle::Format &format)
            GetDepthStencilAspectFlags(format);
 }
 
+VkImageAspectFlags GetDepthStencilAspectFlagsForCopy(bool copyDepth, bool copyStencil)
+{
+    return copyDepth ? VK_IMAGE_ASPECT_DEPTH_BIT
+                     : 0 | copyStencil ? VK_IMAGE_ASPECT_STENCIL_BIT : 0;
+}
+
 Error::Error(VkResult result) : mResult(result), mFile(nullptr), mLine(0)
 {
     ASSERT(result == VK_SUCCESS);

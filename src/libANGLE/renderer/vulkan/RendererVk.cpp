@@ -701,8 +701,8 @@ vk::Error RendererVk::finish(const gl::Context *context)
 {
     if (!mCommandGraph.empty())
     {
-        vk::CommandBuffer commandBatch;
-        ANGLE_TRY(flushCommandGraph(context, &commandBatch));
+        vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
+        ANGLE_TRY(flushCommandGraph(context, &commandBatch.get()));
 
         VkSubmitInfo submitInfo;
         submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -711,11 +711,11 @@ vk::Error RendererVk::finish(const gl::Context *context)
         submitInfo.pWaitSemaphores      = nullptr;
         submitInfo.pWaitDstStageMask    = nullptr;
         submitInfo.commandBufferCount   = 1;
-        submitInfo.pCommandBuffers      = commandBatch.ptr();
+        submitInfo.pCommandBuffers      = commandBatch.get().ptr();
         submitInfo.signalSemaphoreCount = 0;
         submitInfo.pSignalSemaphores    = nullptr;
 
-        ANGLE_TRY(submitFrame(submitInfo, std::move(commandBatch)));
+        ANGLE_TRY(submitFrame(submitInfo, std::move(commandBatch.get())));
     }
 
     ASSERT(mQueue != VK_NULL_HANDLE);
