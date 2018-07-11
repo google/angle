@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "0cb54d2f_88ddb7a0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:29:22Z",
+      "side": 1,
+      "message": "What specific dirty bit? DIRTY_BIT_ATTRIB or DIRTY_BIT_BINDING?",
+      "parentUuid": "68330702_a1223565",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 0
+      },
+      "revId": "c16bfd2a3f9b275feaf134f7d807d475324d2013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d722a80_e227ffcb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
         "patchSetId": 8
@@ -107,6 +131,30 @@
       "side": 1,
       "message": "I only use it on D3D11 back-ends because I find it only useful on D3D11. The binding-attribute map is unnecessary on either OpenGL and Vulkan back-ends since both of them can support separate setting of attribute and binding.",
       "parentUuid": "1b1b7c78_95664354",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 98
+      },
+      "revId": "c16bfd2a3f9b275feaf134f7d807d475324d2013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "685b6e5e_fdbd8250",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T12:29:22Z",
+      "side": 1,
+      "message": "It will be useful for me for optimization if we can move it to the front end. Maybe that is better as a split patch.",
+      "parentUuid": "92d14c6c_6fb9125b",
       "range": {
         "startLine": 95,
         "startChar": 4,
