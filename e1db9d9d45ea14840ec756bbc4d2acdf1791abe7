@@ -462,6 +462,24 @@
       "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62251bd4_7497b725",
+        "filename": "src/compiler/translator/tree_ops/RewriteStructSamplers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-11T14:15:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a5a26e8_05c7c9d6",
+      "revId": "e1db9d9d45ea14840ec756bbc4d2acdf1791abe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
