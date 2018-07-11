@@ -22,6 +22,30 @@
       "revId": "f5f265b1657a6377fc91e9f8cb819b7b880dbda2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de9d39b5_c235ca57",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-11T13:09:41Z",
+      "side": 1,
+      "message": "Yup, this is only the present_path_fast. The copy path was working already.",
+      "parentUuid": "41435692_81d5acef",
+      "range": {
+        "startLine": 9,
+        "startChar": 46,
+        "endLine": 9,
+        "endChar": 65
+      },
+      "revId": "f5f265b1657a6377fc91e9f8cb819b7b880dbda2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
