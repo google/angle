@@ -131,6 +131,26 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
                            gl::Framebuffer *source) override;
+
+    gl::Error copyTexture(const gl::Context *context,
+                          const gl::ImageIndex &index,
+                          GLenum internalFormat,
+                          GLenum type,
+                          size_t sourceLevel,
+                          bool unpackFlipY,
+                          bool unpackPremultiplyAlpha,
+                          bool unpackUnmultiplyAlpha,
+                          const gl::Texture *source) override;
+    gl::Error copySubTexture(const gl::Context *context,
+                             const gl::ImageIndex &index,
+                             const gl::Offset &destOffset,
+                             size_t sourceLevel,
+                             const gl::Rectangle &sourceArea,
+                             bool unpackFlipY,
+                             bool unpackPremultiplyAlpha,
+                             bool unpackUnmultiplyAlpha,
+                             const gl::Texture *source) override;
+
     gl::Error setStorage(const gl::Context *context,
                          gl::TextureType type,
                          size_t levels,
@@ -178,6 +198,16 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     angle::Result ensureImageInitialized(ContextVk *contextVk);
 
   private:
+    angle::Result redefineImage(const gl::Context *context,
+                                const gl::ImageIndex &index,
+                                const gl::InternalFormat &internalFormat,
+                                const gl::Extents &size);
+
+    angle::Result copyImageDataToBuffer(ContextVk *contextVk,
+                                        size_t sourceLevel,
+                                        const gl::Rectangle &sourceArea,
+                                        uint8_t **outDataPtr);
+
     angle::Result generateMipmapWithBlit(ContextVk *contextVk);
 
     angle::Result generateMipmapWithCPU(const gl::Context *context);
@@ -198,6 +228,18 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
                                    const gl::Rectangle &sourceArea,
                                    const gl::InternalFormat &internalFormat,
                                    gl::Framebuffer *source);
+
+    gl::Error copySubTextureImpl(ContextVk *contextVk,
+                                 const gl::ImageIndex &index,
+                                 const gl::Offset &destOffset,
+                                 const gl::InternalFormat &destFormat,
+                                 size_t sourceLevel,
+                                 const gl::Rectangle &sourceArea,
+                                 bool unpackFlipY,
+                                 bool unpackPremultiplyAlpha,
+                                 bool unpackUnmultiplyAlpha,
+                                 TextureVk *source);
+
     angle::Result initImage(ContextVk *contextVk,
                             const vk::Format &format,
                             const gl::Extents &extents,

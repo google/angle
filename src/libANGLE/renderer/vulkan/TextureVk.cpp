@@ -464,25 +464,10 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
-    // If there is any staged changes for this index, we can remove them since we're going to
-    // override them with this call.
-    mPixelBuffer.removeStagedUpdates(index);
-
     // Convert internalFormat to sized internal format.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
 
-    if (mImage.valid())
-    {
-        const vk::Format &vkFormat = renderer->getFormat(formatInfo.sizedInternalFormat);
-
-        // Calculate the expected size for the index we are defining. If the size is different from
-        // the given size, or the format is different, we are redefining the image so we must
-        // release it.
-        if (mImage.getFormat() != vkFormat || size != mImage.getSize(index))
-        {
-            releaseImage(context, renderer);
-        }
-    }
+    ANGLE_TRY(redefineImage(context, index, formatInfo, size));
 
     // Early-out on empty textures, don't create a zero-sized storage.
     if (size.empty())
@@ -556,8 +541,7 @@ gl::Error TextureVk::copyImage(const gl::Context *context,
     gl::Extents newImageSize(sourceArea.width, sourceArea.height, 1);
     const gl::InternalFormat &internalFormatInfo =
         gl::GetInternalFormatInfo(internalFormat, GL_UNSIGNED_BYTE);
-    ANGLE_TRY(setImage(context, index, internalFormat, newImageSize, internalFormatInfo.format,
-                       internalFormatInfo.type, gl::PixelUnpackState(), nullptr));
+    ANGLE_TRY(redefineImage(context, index, internalFormatInfo, newImageSize));
     return copySubImageImpl(context, index, gl::Offset(0, 0, 0), sourceArea, internalFormatInfo,
                             source);
 }
@@ -570,6 +554,48 @@ gl::Error TextureVk::copySubImage(const gl::Context *context,
 {
     const gl::InternalFormat &currentFormat = *mState.getBaseLevelDesc().format.info;
     return copySubImageImpl(context, index, destOffset, sourceArea, currentFormat, source);
+}
+
+gl::Error TextureVk::copyTexture(const gl::Context *context,
+                                 const gl::ImageIndex &index,
+                                 GLenum internalFormat,
+                                 GLenum type,
+                                 size_t sourceLevel,
+                                 bool unpackFlipY,
+                                 bool unpackPremultiplyAlpha,
+                                 bool unpackUnmultiplyAlpha,
+                                 const gl::Texture *source)
+{
+    TextureVk *sourceVk = vk::GetImpl(source);
+    const gl::ImageDesc &sourceImageDesc =
+        sourceVk->mState.getImageDesc(NonCubeTextureTypeToTarget(source->getType()), sourceLevel);
+    gl::Rectangle sourceArea(0, 0, sourceImageDesc.size.width, sourceImageDesc.size.height);
+
+    const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
+
+    ANGLE_TRY(redefineImage(context, index, destFormatInfo, sourceImageDesc.size));
+
+    return copySubTextureImpl(vk::GetImpl(context), index, gl::kOffsetZero, destFormatInfo,
+                              sourceLevel, sourceArea, unpackFlipY, unpackPremultiplyAlpha,
+                              unpackUnmultiplyAlpha, sourceVk);
+}
+
+gl::Error TextureVk::copySubTexture(const gl::Context *context,
+                                    const gl::ImageIndex &index,
+                                    const gl::Offset &destOffset,
+                                    size_t sourceLevel,
+                                    const gl::Rectangle &sourceArea,
+                                    bool unpackFlipY,
+                                    bool unpackPremultiplyAlpha,
+                                    bool unpackUnmultiplyAlpha,
+                                    const gl::Texture *source)
+{
+    gl::TextureTarget target                 = index.getTarget();
+    size_t level                             = static_cast<size_t>(index.getLevelIndex());
+    const gl::InternalFormat &destFormatInfo = *mState.getImageDesc(target, level).format.info;
+    return copySubTextureImpl(vk::GetImpl(context), index, destOffset, destFormatInfo, sourceLevel,
+                              sourceArea, unpackFlipY, unpackPremultiplyAlpha,
+                              unpackUnmultiplyAlpha, vk::GetImpl(source));
 }
 
 angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
@@ -605,6 +631,56 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
 
     onResourceChanged(renderer);
     framebufferVk->addReadDependency(this);
+    return angle::Result::Continue();
+}
+
+gl::Error TextureVk::copySubTextureImpl(ContextVk *contextVk,
+                                        const gl::ImageIndex &index,
+                                        const gl::Offset &destOffset,
+                                        const gl::InternalFormat &destFormat,
+                                        size_t sourceLevel,
+                                        const gl::Rectangle &sourceArea,
+                                        bool unpackFlipY,
+                                        bool unpackPremultiplyAlpha,
+                                        bool unpackUnmultiplyAlpha,
+                                        TextureVk *source)
+{
+    RendererVk *renderer = contextVk->getRenderer();
+
+    // Read back the requested region of the source texture
+    uint8_t *sourceData = nullptr;
+    ANGLE_TRY(source->copyImageDataToBuffer(contextVk, sourceLevel, sourceArea, &sourceData));
+
+    ANGLE_TRY(renderer->finish(contextVk));
+
+    // Using the front-end ANGLE format for the colorRead and colorWrite functions.  Otherwise
+    // emulated formats like luminance-alpha would not know how to interpret the data.
+    const angle::Format &sourceAngleFormat = source->getImage().getFormat().angleFormat();
+    const angle::Format &destAngleFormat =
+        renderer->getFormat(destFormat.sizedInternalFormat).angleFormat();
+    size_t destinationAllocationSize =
+        sourceArea.width * sourceArea.height * destAngleFormat.pixelBytes;
+
+    // Allocate memory in the destination texture for the copy/conversion
+    uint8_t *destData = nullptr;
+    ANGLE_TRY(mPixelBuffer.stageSubresourceUpdateAndGetData(
+        contextVk, destinationAllocationSize, index,
+        gl::Extents(sourceArea.width, sourceArea.height, 1), destOffset, &destData));
+
+    // Source and dest data is tightly packed
+    GLuint sourceDataRowPitch = sourceArea.width * sourceAngleFormat.pixelBytes;
+    GLuint destDataRowPitch   = sourceArea.width * destAngleFormat.pixelBytes;
+
+    CopyImageCHROMIUM(sourceData, sourceDataRowPitch, sourceAngleFormat.pixelBytes,
+                      sourceAngleFormat.colorReadFunction, destData, destDataRowPitch,
+                      destAngleFormat.pixelBytes, destAngleFormat.colorWriteFunction,
+                      destFormat.format, destFormat.componentType, sourceArea.width,
+                      sourceArea.height, unpackFlipY, unpackPremultiplyAlpha,
+                      unpackUnmultiplyAlpha);
+
+    // Create a new graph node to store image initialization commands.
+    onResourceChanged(contextVk->getRenderer());
+
     return angle::Result::Continue();
 }
 
@@ -645,6 +721,90 @@ gl::Error TextureVk::setImageExternal(const gl::Context *context,
 {
     UNIMPLEMENTED();
     return gl::InternalError();
+}
+
+angle::Result TextureVk::redefineImage(const gl::Context *context,
+                                       const gl::ImageIndex &index,
+                                       const gl::InternalFormat &internalFormat,
+                                       const gl::Extents &size)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+
+    // If there is any staged changes for this index, we can remove them since we're going to
+    // override them with this call.
+    mPixelBuffer.removeStagedUpdates(index);
+
+    if (mImage.valid())
+    {
+        const vk::Format &vkFormat = renderer->getFormat(internalFormat.sizedInternalFormat);
+
+        // Calculate the expected size for the index we are defining. If the size is different from
+        // the given size, or the format is different, we are redefining the image so we must
+        // release it.
+        if (mImage.getFormat() != vkFormat || size != mImage.getSize(index))
+        {
+            releaseImage(context, renderer);
+        }
+    }
+
+    return angle::Result::Continue();
+}
+
+angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
+                                               size_t sourceLevel,
+                                               const gl::Rectangle &sourceArea,
+                                               uint8_t **outDataPtr)
+{
+    if (sourceLevel != 0)
+    {
+        WARN() << "glCopyTextureCHROMIUM with sourceLevel != 0 not implemented.";
+        return angle::Result::Stop();
+    }
+
+    // Make sure the source is initialized and it's images are flushed.
+    ANGLE_TRY(ensureImageInitialized(contextVk));
+
+    const angle::Format &angleFormat = getImage().getFormat().textureFormat();
+    const gl::Extents imageSize =
+        mState.getImageDesc(NonCubeTextureTypeToTarget(mState.getType()), sourceLevel).size;
+    size_t sourceCopyAllocationSize = sourceArea.width * sourceArea.height * angleFormat.pixelBytes;
+
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
+
+    // Requirement of the copyImageToBuffer, the source image must be in SRC_OPTIMAL layout.
+    bool newBufferAllocated = false;
+    mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
+
+    // Allocate enough memory to copy the sourceArea region of the source texture into its pixel
+    // buffer.
+    VkBuffer copyBufferHandle;
+    uint32_t sourceCopyOffset = 0;
+    ANGLE_TRY(mPixelBuffer.allocate(contextVk, sourceCopyAllocationSize, outDataPtr,
+                                    &copyBufferHandle, &sourceCopyOffset, &newBufferAllocated));
+
+    VkBufferImageCopy region;
+    region.bufferOffset                    = static_cast<VkDeviceSize>(sourceCopyOffset);
+    region.bufferRowLength                 = imageSize.width;
+    region.bufferImageHeight               = imageSize.height;
+    region.imageExtent.width               = sourceArea.width;
+    region.imageExtent.height              = sourceArea.height;
+    region.imageExtent.depth               = 1;
+    region.imageOffset.x                   = sourceArea.x;
+    region.imageOffset.y                   = sourceArea.y;
+    region.imageOffset.z                   = 0;
+    region.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.imageSubresource.baseArrayLayer = 0;
+    region.imageSubresource.layerCount     = 1;
+    region.imageSubresource.mipLevel       = sourceLevel;
+
+    commandBuffer->copyImageToBuffer(mImage.getImage(), mImage.getCurrentLayout(), copyBufferHandle,
+                                     1, &region);
+
+    return angle::Result::Continue();
 }
 
 angle::Result TextureVk::generateMipmapWithBlit(ContextVk *contextVk)

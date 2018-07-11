@@ -60,13 +60,15 @@ bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *in
 
 struct Offset
 {
-    Offset() : x(0), y(0), z(0) {}
-    Offset(int x_in, int y_in, int z_in) : x(x_in), y(y_in), z(z_in) {}
+    constexpr Offset() : x(0), y(0), z(0) {}
+    constexpr Offset(int x_in, int y_in, int z_in) : x(x_in), y(y_in), z(z_in) {}
 
     int x;
     int y;
     int z;
 };
+
+constexpr Offset kOffsetZero(0, 0, 0);
 
 bool operator==(const Offset &a, const Offset &b);
 bool operator!=(const Offset &a, const Offset &b);
