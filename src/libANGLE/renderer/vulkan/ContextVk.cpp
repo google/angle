@@ -481,19 +481,14 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 updateColorMask(glState.getBlendState());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
-                WARN() << "DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED unimplemented";
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
-                WARN() << "DIRTY_BIT_SAMPLE_COVERAGE_ENABLED unimplemented";
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_COVERAGE:
-                WARN() << "DIRTY_BIT_SAMPLE_COVERAGE unimplemented";
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_MASK_ENABLED:
-                WARN() << "DIRTY_BIT_SAMPLE_MASK_ENABLED unimplemented";
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_MASK:
-                WARN() << "DIRTY_BIT_SAMPLE_MASK unimplemented";
                 break;
             case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
                 mPipelineDesc->updateDepthTestEnabled(glState.getDepthStencilState());
@@ -536,19 +531,15 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                                                isViewportFlipEnabledForDrawFBO());
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
-                WARN() << "DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED unimplemented";
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET:
-                WARN() << "DIRTY_BIT_POLYGON_OFFSET unimplemented";
                 break;
             case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
-                WARN() << "DIRTY_BIT_RASTERIZER_DISCARD_ENABLED unimplemented";
                 break;
             case gl::State::DIRTY_BIT_LINE_WIDTH:
                 mPipelineDesc->updateLineWidth(glState.getLineWidth());
                 break;
             case gl::State::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED:
-                WARN() << "DIRTY_BIT_PRIMITIVE_RESTART_ENABLED unimplemented";
                 break;
             case gl::State::DIRTY_BIT_CLEAR_COLOR:
                 mClearColorValue.color.float32[0] = glState.getColorClearValue().red;
@@ -568,23 +559,18 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 // setImage or setSubImage in TextureVk, which is plumbed through the frontend call
                 break;
             case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
-                WARN() << "DIRTY_BIT_UNPACK_BUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_PACK_STATE:
                 // This is a no-op, its only important to use the right pack state when we do
                 // call readPixels later on.
                 break;
             case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
-                WARN() << "DIRTY_BIT_PACK_BUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_DITHER_ENABLED:
-                WARN() << "DIRTY_BIT_DITHER_ENABLED unimplemented";
                 break;
             case gl::State::DIRTY_BIT_GENERATE_MIPMAP_HINT:
-                WARN() << "DIRTY_BIT_GENERATE_MIPMAP_HINT unimplemented";
                 break;
             case gl::State::DIRTY_BIT_SHADER_DERIVATIVE_HINT:
-                WARN() << "DIRTY_BIT_SHADER_DERIVATIVE_HINT unimplemented";
                 break;
             case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
                 updateFlipViewportReadFramebuffer(context->getGLState());
@@ -603,17 +589,14 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
-                WARN() << "DIRTY_BIT_RENDERBUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
                 invalidateCurrentPipeline();
                 mVertexArrayBindingHasChanged = true;
                 break;
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
-                WARN() << "DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING:
-                WARN() << "DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
                 break;
@@ -632,37 +615,26 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 dirtyTextures = true;
                 break;
             case gl::State::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING:
-                WARN() << "DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
-                WARN() << "DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
-                WARN() << "DIRTY_BIT_UNIFORM_BUFFER_BINDINGS unimplemented";
                 break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
-                WARN() << "DIRTY_BIT_MULTISAMPLING unimplemented";
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
-                WARN() << "DIRTY_BIT_SAMPLE_ALPHA_TO_ONE unimplemented";
                 break;
             case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
-                WARN() << "DIRTY_BIT_COVERAGE_MODULATION unimplemented";
                 break;
             case gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_MV:
-                WARN() << "DIRTY_BIT_PATH_RENDERING_MATRIX_MV unimplemented";
                 break;
             case gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ:
-                WARN() << "DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ unimplemented";
                 break;
             case gl::State::DIRTY_BIT_PATH_RENDERING_STENCIL_STATE:
-                WARN() << "DIRTY_BIT_PATH_RENDERING_STENCIL_STATE unimplemented";
                 break;
             case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB:
-                WARN() << "DIRTY_BIT_FRAMEBUFFER_SRGB unimplemented";
                 break;
             case gl::State::DIRTY_BIT_CURRENT_VALUES:
-                WARN() << "DIRTY_BIT_CURRENT_VALUES unimplemented";
                 break;
             default:
                 UNREACHABLE();
