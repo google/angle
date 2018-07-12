@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "648f35af_f7633b0d",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 848,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-12T07:43:29Z",
+      "side": 1,
+      "message": "Taking ImmutableString as an argument would be safer.\n\nNow this interface doesn\u0027t document that \"command\" must be either pool-allocated or static, which could lead to errors.",
+      "revId": "35aa38ef54a4c1da5859698c4788adab5ea878dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0e2394a_ea6ca14f",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-07-12T07:43:29Z",
+      "side": 1,
+      "message": "\"final\" could be used for this and also other overridden methods.",
+      "range": {
+        "startLine": 852,
+        "startChar": 40,
+        "endLine": 852,
+        "endChar": 48
+      },
+      "revId": "35aa38ef54a4c1da5859698c4788adab5ea878dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
