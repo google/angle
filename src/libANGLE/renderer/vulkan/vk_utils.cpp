@@ -1095,6 +1095,23 @@ angle::Result AllocateImageMemory(vk::Context *context,
     return AllocateBufferOrImageMemory(context, memoryPropertyFlags, image, deviceMemoryOut);
 }
 
+angle::Result InitShaderAndSerial(Context *context,
+                                  ShaderAndSerial *shaderAndSerial,
+                                  const uint32_t *shaderCode,
+                                  size_t shaderCodeSize)
+{
+    VkShaderModuleCreateInfo createInfo;
+    createInfo.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    createInfo.pNext    = nullptr;
+    createInfo.flags    = 0;
+    createInfo.codeSize = shaderCodeSize;
+    createInfo.pCode    = shaderCode;
+
+    ANGLE_TRY(shaderAndSerial->get().init(context, createInfo));
+    shaderAndSerial->updateSerial(context->getRenderer()->issueShaderSerial());
+    return angle::Result::Continue();
+}
+
 // GarbageObject implementation.
 GarbageObject::GarbageObject()
     : mSerial(), mHandleType(HandleType::Invalid), mHandle(VK_NULL_HANDLE)
