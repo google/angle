@@ -253,13 +253,16 @@ bool ShaderVariable::isSameVariableAtLinkTime(const ShaderVariable &other,
     return true;
 }
 
-Uniform::Uniform() : binding(-1), offset(-1), readonly(false), writeonly(false) {}
+Uniform::Uniform()
+    : binding(-1), imageUnitFormat(GL_NONE), offset(-1), readonly(false), writeonly(false)
+{}
 
 Uniform::~Uniform() {}
 
 Uniform::Uniform(const Uniform &other)
     : VariableWithLocation(other),
       binding(other.binding),
+      imageUnitFormat(other.imageUnitFormat),
       offset(other.offset),
       readonly(other.readonly),
       writeonly(other.writeonly)
@@ -269,6 +272,7 @@ Uniform &Uniform::operator=(const Uniform &other)
 {
     VariableWithLocation::operator=(other);
     binding                       = other.binding;
+    imageUnitFormat               = other.imageUnitFormat;
     offset                        = other.offset;
     readonly                      = other.readonly;
     writeonly                     = other.writeonly;
@@ -278,7 +282,8 @@ Uniform &Uniform::operator=(const Uniform &other)
 bool Uniform::operator==(const Uniform &other) const
 {
     return VariableWithLocation::operator==(other) && binding == other.binding &&
-           offset == other.offset && readonly == other.readonly && writeonly == other.writeonly;
+           imageUnitFormat == other.imageUnitFormat && offset == other.offset &&
+           readonly == other.readonly && writeonly == other.writeonly;
 }
 
 bool Uniform::isSameUniformAtLinkTime(const Uniform &other) const
@@ -286,6 +291,10 @@ bool Uniform::isSameUniformAtLinkTime(const Uniform &other) const
     // Enforce a consistent match.
     // https://cvs.khronos.org/bugzilla/show_bug.cgi?id=16261
     if (binding != -1 && other.binding != -1 && binding != other.binding)
+    {
+        return false;
+    }
+    if (imageUnitFormat != other.imageUnitFormat)
     {
         return false;
     }

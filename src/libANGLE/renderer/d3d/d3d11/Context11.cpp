@@ -582,6 +582,44 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
     return angle::Result::Continue;
 }
 
+angle::Result Context11::triggerDispatchCallProgramRecompilation(const gl::Context *context)
+{
+    const auto &glState    = context->getState();
+    gl::Program *program   = glState.getProgram();
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+
+    programD3D->updateCachedComputeImage2DBindLayout(context);
+
+    bool recompileCS = !programD3D->hasComputeExecutableForCachedImage2DBindLayout();
+
+    if (!recompileCS)
+    {
+        return angle::Result::Continue;
+    }
+
+    // Load the compiler if necessary and recompile the programs.
+    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized(this));
+
+    gl::InfoLog infoLog;
+
+    ShaderExecutableD3D *computeExe = nullptr;
+    ANGLE_TRY(programD3D->getComputeExecutableForImage2DBindLayout(this, &computeExe, &infoLog));
+    if (!programD3D->hasComputeExecutableForCachedImage2DBindLayout())
+    {
+        ASSERT(infoLog.getLength() > 0);
+        ERR() << "Dynamic recompilation error log: " << infoLog.str();
+        ANGLE_TRY_HR(this, E_FAIL, "Error compiling dynamic compute executable");
+    }
+
+    // Refresh the program cache entry.
+    if (mMemoryProgramCache)
+    {
+        mMemoryProgramCache->updateProgram(context, program);
+    }
+
+    return angle::Result::Continue;
+}
+
 angle::Result Context11::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
     return angle::Result::Continue;

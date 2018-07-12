@@ -812,7 +812,7 @@ const char *RWTextureTypeSuffix(const TBasicType type,
         }
         default:
             // All other types are identified by their group suffix
-            return TextureGroupSuffix(type, imageInternalFormat);
+            return RWTextureGroupSuffix(type, imageInternalFormat);
     }
 #if !UNREACHABLE_IS_NORETURN
     UNREACHABLE();

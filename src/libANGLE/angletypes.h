@@ -351,6 +351,8 @@ struct ImageUnit
     GLenum format;
 };
 
+using ImageUnitTextureTypeMap = std::map<unsigned int, gl::TextureType>;
+
 struct PixelStoreStateBase
 {
     GLint alignment   = 4;

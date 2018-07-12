@@ -44,10 +44,14 @@ class ShaderConstants11 : angle::NonCopyable
                           const D3D11_VIEWPORT &dxViewport,
                           bool is9_3,
                           bool presentPathFast);
+    void onImageLayerChange(gl::ShaderType shaderType, unsigned int imageIndex, int layer);
     void onSamplerChange(gl::ShaderType shaderType,
                          unsigned int samplerIndex,
                          const gl::Texture &texture,
                          const gl::SamplerState &samplerState);
+    void onImageChange(gl::ShaderType shaderType,
+                       unsigned int imageIndex,
+                       const gl::ImageUnit &imageUnit);
 
     angle::Result updateBuffer(const gl::Context *context,
                                Renderer11 *renderer,
@@ -127,12 +131,25 @@ class ShaderConstants11 : angle::NonCopyable
     static_assert(sizeof(SamplerMetadata) == 32u,
                   "Sampler metadata struct must be two 4-vec --> 32 bytes.");
 
+    struct ImageMetadata
+    {
+        ImageMetadata() : layer(0), padding{0} {}
+
+        int layer;
+        int padding[3];  // This just pads the struct to 16 bytes
+    };
+    static_assert(sizeof(ImageMetadata) == 16u,
+                  "Image metadata struct must be one 4-vec --> 16 bytes.");
+
     static size_t GetShaderConstantsStructSize(gl::ShaderType shaderType);
 
     // Return true if dirty.
     bool updateSamplerMetadata(SamplerMetadata *data,
                                const gl::Texture &texture,
                                const gl::SamplerState &samplerState);
+
+    // Return true if dirty.
+    bool updateImageMetadata(ImageMetadata *data, const gl::ImageUnit &imageUnit);
 
     Vertex mVertex;
     Pixel mPixel;
@@ -141,6 +158,10 @@ class ShaderConstants11 : angle::NonCopyable
 
     gl::ShaderMap<std::vector<SamplerMetadata>> mShaderSamplerMetadata;
     gl::ShaderMap<int> mNumActiveShaderSamplers;
+    gl::ShaderMap<std::vector<ImageMetadata>> mShaderReadonlyImageMetadata;
+    gl::ShaderMap<int> mNumActiveShaderReadonlyImages;
+    gl::ShaderMap<std::vector<ImageMetadata>> mShaderImageMetadata;
+    gl::ShaderMap<int> mNumActiveShaderImages;
 };
 
 class StateManager11 final : angle::NonCopyable
@@ -313,6 +334,10 @@ class StateManager11 final : angle::NonCopyable
                                        int index,
                                        gl::Texture *texture,
                                        const gl::SamplerState &sampler);
+    angle::Result setImageState(const gl::Context *context,
+                                gl::ShaderType type,
+                                int index,
+                                const gl::ImageUnit &imageUnit);
     angle::Result setTextureForImage(const gl::Context *context,
                                      gl::ShaderType type,
                                      int index,
@@ -396,13 +421,15 @@ class StateManager11 final : angle::NonCopyable
         DIRTY_BIT_RASTERIZER_STATE,
         DIRTY_BIT_BLEND_STATE,
         DIRTY_BIT_DEPTH_STENCIL_STATE,
+        // DIRTY_BIT_SHADERS and DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE should be dealt before
+        // DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS for update image layers.
+        DIRTY_BIT_SHADERS,
         DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE,
         DIRTY_BIT_PROGRAM_UNIFORMS,
         DIRTY_BIT_DRIVER_UNIFORMS,
         DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS,
         DIRTY_BIT_PROGRAM_ATOMIC_COUNTER_BUFFERS,
         DIRTY_BIT_PROGRAM_SHADER_STORAGE_BUFFERS,
-        DIRTY_BIT_SHADERS,
         DIRTY_BIT_CURRENT_VALUE_ATTRIBS,
         DIRTY_BIT_TRANSFORM_FEEDBACK,
         DIRTY_BIT_VERTEX_BUFFERS_AND_INPUT_LAYOUT,

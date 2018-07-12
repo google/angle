@@ -181,6 +181,7 @@ struct Uniform : public VariableWithLocation
     bool operator!=(const Uniform &other) const { return !operator==(other); }
 
     int binding;
+    GLenum imageUnitFormat;
     int offset;
     bool readonly;
     bool writeonly;

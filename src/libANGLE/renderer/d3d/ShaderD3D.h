@@ -56,6 +56,9 @@ class ShaderD3D : public ShaderImpl
 
     unsigned int getUniformBlockRegister(const std::string &blockName) const;
     unsigned int getShaderStorageBlockRegister(const std::string &blockName) const;
+    unsigned int getReadonlyImage2DRegisterIndex() const { return mReadonlyImage2DRegisterIndex; }
+    unsigned int getImage2DRegisterIndex() const { return mImage2DRegisterIndex; }
+    bool useImage2DFunction(const std::string &functionName) const;
     void appendDebugInfo(const std::string &info) const { mDebugInfo += info; }
 
     void generateWorkarounds(angle::CompilerWorkaroundsD3D *workarounds) const;
@@ -95,6 +98,9 @@ class ShaderD3D : public ShaderImpl
     std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mUniformBlockRegisterMap;
     std::map<std::string, unsigned int> mShaderStorageBlockRegisterMap;
+    unsigned int mReadonlyImage2DRegisterIndex;
+    unsigned int mImage2DRegisterIndex;
+    std::set<std::string> mUsedImage2DFunctionNames;
     ShCompileOptions mAdditionalOptions;
 };
 }  // namespace rx

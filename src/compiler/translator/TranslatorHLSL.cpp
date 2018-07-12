@@ -145,6 +145,9 @@ void TranslatorHLSL::translate(TIntermBlock *root,
     mShaderStorageBlockRegisterMap = outputHLSL.getShaderStorageBlockRegisterMap();
     mUniformBlockRegisterMap       = outputHLSL.getUniformBlockRegisterMap();
     mUniformRegisterMap            = outputHLSL.getUniformRegisterMap();
+    mReadonlyImage2DRegisterIndex  = outputHLSL.getReadonlyImage2DRegisterIndex();
+    mImage2DRegisterIndex          = outputHLSL.getImage2DRegisterIndex();
+    mUsedImage2DFunctionNames      = outputHLSL.getUsedImage2DFunctionNames();
 }
 
 bool TranslatorHLSL::shouldFlattenPragmaStdglInvariantAll()
@@ -179,6 +182,21 @@ unsigned int TranslatorHLSL::getUniformBlockRegister(const std::string &uniformB
 const std::map<std::string, unsigned int> *TranslatorHLSL::getUniformRegisterMap() const
 {
     return &mUniformRegisterMap;
+}
+
+unsigned int TranslatorHLSL::getReadonlyImage2DRegisterIndex() const
+{
+    return mReadonlyImage2DRegisterIndex;
+}
+
+unsigned int TranslatorHLSL::getImage2DRegisterIndex() const
+{
+    return mImage2DRegisterIndex;
+}
+
+const std::set<std::string> *TranslatorHLSL::getUsedImage2DFunctionNames() const
+{
+    return &mUsedImage2DFunctionNames;
 }
 
 }  // namespace sh

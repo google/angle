@@ -554,6 +554,42 @@ const std::map<std::string, unsigned int> *GetUniformRegisterMap(const ShHandle 
 #endif  // ANGLE_ENABLE_HLSL
 }
 
+unsigned int GetReadonlyImage2DRegisterIndex(const ShHandle handle)
+{
+#ifdef ANGLE_ENABLE_HLSL
+    TranslatorHLSL *translator = GetTranslatorHLSLFromHandle(handle);
+    ASSERT(translator);
+
+    return translator->getReadonlyImage2DRegisterIndex();
+#else
+    return 0;
+#endif  // ANGLE_ENABLE_HLSL
+}
+
+unsigned int GetImage2DRegisterIndex(const ShHandle handle)
+{
+#ifdef ANGLE_ENABLE_HLSL
+    TranslatorHLSL *translator = GetTranslatorHLSLFromHandle(handle);
+    ASSERT(translator);
+
+    return translator->getImage2DRegisterIndex();
+#else
+    return 0;
+#endif  // ANGLE_ENABLE_HLSL
+}
+
+const std::set<std::string> *GetUsedImage2DFunctionNames(const ShHandle handle)
+{
+#ifdef ANGLE_ENABLE_HLSL
+    TranslatorHLSL *translator = GetTranslatorHLSLFromHandle(handle);
+    ASSERT(translator);
+
+    return translator->getUsedImage2DFunctionNames();
+#else
+    return nullptr;
+#endif  // ANGLE_ENABLE_HLSL
+}
+
 bool HasValidGeometryShaderInputPrimitiveType(const ShHandle handle)
 {
     ASSERT(handle);

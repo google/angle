@@ -767,6 +767,8 @@ Uniform CollectVariablesTraverser::recordUniform(const TIntermSymbol &variable) 
     Uniform uniform;
     setCommonVariableProperties(variable.getType(), variable.variable(), &uniform);
     uniform.binding   = variable.getType().getLayoutQualifier().binding;
+    uniform.imageUnitFormat =
+        GetImageInternalFormatType(variable.getType().getLayoutQualifier().imageInternalFormat);
     uniform.location  = variable.getType().getLayoutQualifier().location;
     uniform.offset    = variable.getType().getLayoutQualifier().offset;
     uniform.readonly  = variable.getType().getMemoryQualifier().readonly;

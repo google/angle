@@ -12,6 +12,7 @@
 
 #include <array>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -25,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 203
+#define ANGLE_SH_VERSION 204
 
 enum ShShaderSpec
 {
@@ -627,6 +628,19 @@ bool GetUniformBlockRegister(const ShHandle handle,
 // Gives a map from uniform names to compiler-assigned registers in the default uniform block.
 // Note that the map contains also registers of samplers that have been extracted from structs.
 const std::map<std::string, unsigned int> *GetUniformRegisterMap(const ShHandle handle);
+
+// Sampler, image and atomic counters share registers(t type and u type),
+// GetReadonlyImage2DRegisterIndex and GetImage2DRegisterIndex return the first index into
+// a range of reserved registers for image2D/iimage2D/uimage2D variables.
+// Parameters: handle: Specifies the compiler
+unsigned int GetReadonlyImage2DRegisterIndex(const ShHandle handle);
+unsigned int GetImage2DRegisterIndex(const ShHandle handle);
+
+// The method records these used function names related with image2D/iimage2D/uimage2D, these
+// functions will be dynamically generated.
+// Parameters:
+// handle: Specifies the compiler
+const std::set<std::string> *GetUsedImage2DFunctionNames(const ShHandle handle);
 
 bool HasValidGeometryShaderInputPrimitiveType(const ShHandle handle);
 bool HasValidGeometryShaderOutputPrimitiveType(const ShHandle handle);

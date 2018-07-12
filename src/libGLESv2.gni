@@ -339,6 +339,8 @@ libangle_d3d_shared_sources = [
   "src/libANGLE/renderer/d3d/DisplayD3D.h",
   "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
   "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+  "src/libANGLE/renderer/d3d/DynamicImage2DHLSL.cpp",
+  "src/libANGLE/renderer/d3d/DynamicImage2DHLSL.h",
   "src/libANGLE/renderer/d3d/EGLImageD3D.cpp",
   "src/libANGLE/renderer/d3d/EGLImageD3D.h",
   "src/libANGLE/renderer/d3d/formatutilsD3D.h",

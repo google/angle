@@ -443,6 +443,30 @@ bool IsImageType(GLenum type)
     return false;
 }
 
+bool IsImage2DType(GLenum type)
+{
+    switch (type)
+    {
+        case GL_IMAGE_2D:
+        case GL_INT_IMAGE_2D:
+        case GL_UNSIGNED_INT_IMAGE_2D:
+            return true;
+        case GL_IMAGE_3D:
+        case GL_INT_IMAGE_3D:
+        case GL_UNSIGNED_INT_IMAGE_3D:
+        case GL_IMAGE_2D_ARRAY:
+        case GL_INT_IMAGE_2D_ARRAY:
+        case GL_UNSIGNED_INT_IMAGE_2D_ARRAY:
+        case GL_IMAGE_CUBE:
+        case GL_INT_IMAGE_CUBE:
+        case GL_UNSIGNED_INT_IMAGE_CUBE:
+            return false;
+        default:
+            UNREACHABLE();
+            return false;
+    }
+}
+
 bool IsAtomicCounterType(GLenum type)
 {
     return type == GL_UNSIGNED_INT_ATOMIC_COUNTER;

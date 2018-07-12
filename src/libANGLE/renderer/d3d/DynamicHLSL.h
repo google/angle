@@ -18,6 +18,7 @@
 #include "libANGLE/Program.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/DynamicImage2DHLSL.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 
 namespace sh
@@ -38,6 +39,27 @@ namespace rx
 {
 class ProgramD3DMetadata;
 class ShaderD3D;
+
+// This class needs to match OutputHLSL::decorate
+class DecorateVariable final : angle::NonCopyable
+{
+  public:
+    explicit DecorateVariable(const std::string &str) : mName(str) {}
+    const std::string &getName() const { return mName; }
+
+  private:
+    const std::string &mName;
+};
+
+inline std::ostream &operator<<(std::ostream &o, const DecorateVariable &dv)
+{
+    if (dv.getName().compare(0, 3, "gl_") != 0)
+    {
+        o << "_";
+    }
+    o << dv.getName();
+    return o;
+}
 
 struct PixelShaderOutputVariable
 {
@@ -127,6 +149,12 @@ class DynamicHLSL : angle::NonCopyable
         const std::vector<PixelShaderOutputVariable> &outputVariables,
         bool usesFragDepth,
         const std::vector<GLenum> &outputLayout) const;
+    std::string generateComputeShaderForImage2DBindSignature(
+        const d3d::Context *context,
+        ProgramD3D &programD3D,
+        const gl::ProgramState &programData,
+        std::vector<sh::Uniform> &image2DUniforms,
+        const gl::ImageUnitTextureTypeMap &image2DBindLayout) const;
     void generateShaderLinkHLSL(const gl::Caps &caps,
                                 const gl::ProgramState &programData,
                                 const ProgramD3DMetadata &programMetadata,

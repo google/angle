@@ -302,8 +302,7 @@ void ResourcesHLSL::outputHLSLImageUniformIndices(TInfoSinkBase &out,
 void ResourcesHLSL::outputHLSLReadonlyImageUniformGroup(TInfoSinkBase &out,
                                                         const HLSLTextureGroup textureGroup,
                                                         const TVector<const TVariable *> &group,
-                                                        unsigned int *groupTextureRegisterIndex,
-                                                        unsigned int *imageUniformGroupIndex)
+                                                        unsigned int *groupTextureRegisterIndex)
 {
     if (group.empty())
     {
@@ -311,23 +310,21 @@ void ResourcesHLSL::outputHLSLReadonlyImageUniformGroup(TInfoSinkBase &out,
     }
 
     unsigned int groupRegisterCount = 0;
-    outputHLSLImageUniformIndices(out, group, *imageUniformGroupIndex, &groupRegisterCount);
+    outputHLSLImageUniformIndices(out, group, *groupTextureRegisterIndex, &groupRegisterCount);
 
     TString suffix = TextureGroupSuffix(textureGroup);
     out << "static const uint readonlyImageIndexOffset" << suffix << " = "
-        << (*imageUniformGroupIndex) << ";\n";
+        << (*groupTextureRegisterIndex) << ";\n";
     out << "uniform " << TextureString(textureGroup) << " readonlyImages" << suffix << "["
         << groupRegisterCount << "]"
         << " : register(t" << (*groupTextureRegisterIndex) << ");\n";
     *groupTextureRegisterIndex += groupRegisterCount;
-    *imageUniformGroupIndex += groupRegisterCount;
 }
 
 void ResourcesHLSL::outputHLSLImageUniformGroup(TInfoSinkBase &out,
                                                 const HLSLRWTextureGroup textureGroup,
                                                 const TVector<const TVariable *> &group,
-                                                unsigned int *groupTextureRegisterIndex,
-                                                unsigned int *imageUniformGroupIndex)
+                                                unsigned int *groupTextureRegisterIndex)
 {
     if (group.empty())
     {
@@ -335,16 +332,15 @@ void ResourcesHLSL::outputHLSLImageUniformGroup(TInfoSinkBase &out,
     }
 
     unsigned int groupRegisterCount = 0;
-    outputHLSLImageUniformIndices(out, group, *imageUniformGroupIndex, &groupRegisterCount);
+    outputHLSLImageUniformIndices(out, group, *groupTextureRegisterIndex, &groupRegisterCount);
 
     TString suffix = RWTextureGroupSuffix(textureGroup);
-    out << "static const uint imageIndexOffset" << suffix << " = " << (*imageUniformGroupIndex)
+    out << "static const uint imageIndexOffset" << suffix << " = " << (*groupTextureRegisterIndex)
         << ";\n";
     out << "uniform " << RWTextureString(textureGroup) << " images" << suffix << "["
         << groupRegisterCount << "]"
         << " : register(u" << (*groupTextureRegisterIndex) << ");\n";
     *groupTextureRegisterIndex += groupRegisterCount;
-    *imageUniformGroupIndex += groupRegisterCount;
 }
 
 void ResourcesHLSL::outputHLSL4_0_FL9_3Sampler(TInfoSinkBase &out,
@@ -411,6 +407,7 @@ void ResourcesHLSL::uniformsHeader(TInfoSinkBase &out,
     TVector<TVector<const TVariable *>> groupedImageUniforms(HLSL_RWTEXTURE_MAX + 1);
 
     TUnorderedMap<int, unsigned int> assignedAtomicCounterBindings;
+    unsigned int reservedReadonlyImageRegisterCount = 0, reservedImageRegisterCount = 0;
     for (auto &uniformIt : referencedUniforms)
     {
         // Output regular uniforms. Group sampler uniforms by type.
@@ -429,6 +426,20 @@ void ResourcesHLSL::uniformsHeader(TInfoSinkBase &out,
         }
         else if (outputType == SH_HLSL_4_1_OUTPUT && IsImage(type.getBasicType()))
         {
+            if (IsImage2D(type.getBasicType()))
+            {
+                const Uniform *uniform = findUniformByName(variable.name());
+                if (type.getMemoryQualifier().readonly)
+                {
+                    reservedReadonlyImageRegisterCount +=
+                        HLSLVariableRegisterCount(*uniform, mOutputType);
+                }
+                else
+                {
+                    reservedImageRegisterCount += HLSLVariableRegisterCount(*uniform, mOutputType);
+                }
+                continue;
+            }
             if (type.getMemoryQualifier().readonly)
             {
                 HLSLTextureGroup group = TextureGroup(
@@ -508,7 +519,6 @@ void ResourcesHLSL::uniformsHeader(TInfoSinkBase &out,
         // Atomic counters and RW texture share the same resources. Therefore, RW texture need to
         // start counting after the last atomic counter.
         unsigned int groupRWTextureRegisterIndex = mUAVRegister;
-        unsigned int imageUniformGroupIndex      = 0;
         // TEXTURE_2D is special, index offset is assumed to be 0 and omitted in that case.
         ASSERT(HLSL_TEXTURE_MIN == HLSL_TEXTURE_2D);
         for (int groupId = HLSL_TEXTURE_MIN; groupId < HLSL_TEXTURE_MAX; ++groupId)
@@ -519,23 +529,44 @@ void ResourcesHLSL::uniformsHeader(TInfoSinkBase &out,
         }
         mSamplerCount = groupTextureRegisterIndex;
 
+        // Reserve t type register for readonly image2D variables.
+        mReadonlyImage2DRegisterIndex = mTextureRegister;
+        groupTextureRegisterIndex += reservedReadonlyImageRegisterCount;
+        mTextureRegister += reservedReadonlyImageRegisterCount;
+
         for (int groupId = HLSL_TEXTURE_MIN; groupId < HLSL_TEXTURE_MAX; ++groupId)
         {
-            outputHLSLReadonlyImageUniformGroup(
-                out, HLSLTextureGroup(groupId), groupedReadonlyImageUniforms[groupId],
-                &groupTextureRegisterIndex, &imageUniformGroupIndex);
+            outputHLSLReadonlyImageUniformGroup(out, HLSLTextureGroup(groupId),
+                                                groupedReadonlyImageUniforms[groupId],
+                                                &groupTextureRegisterIndex);
         }
+        mReadonlyImageCount = groupTextureRegisterIndex - mReadonlyImage2DRegisterIndex;
+        if (mReadonlyImageCount)
+        {
+            out << "static const uint readonlyImageIndexStart = " << mReadonlyImage2DRegisterIndex
+                << ";\n";
+        }
+
+        // Reserve u type register for writable image2D variables.
+        mImage2DRegisterIndex = mUAVRegister;
+        groupRWTextureRegisterIndex += reservedImageRegisterCount;
+        mUAVRegister += reservedImageRegisterCount;
 
         for (int groupId = HLSL_RWTEXTURE_MIN; groupId < HLSL_RWTEXTURE_MAX; ++groupId)
         {
             outputHLSLImageUniformGroup(out, HLSLRWTextureGroup(groupId),
-                                        groupedImageUniforms[groupId], &groupRWTextureRegisterIndex,
-                                        &imageUniformGroupIndex);
+                                        groupedImageUniforms[groupId],
+                                        &groupRWTextureRegisterIndex);
+        }
+        mImageCount = groupRWTextureRegisterIndex - mImage2DRegisterIndex;
+        if (mImageCount)
+        {
+            out << "static const uint imageIndexStart = " << mImage2DRegisterIndex << ";\n";
         }
     }
 }
 
-void ResourcesHLSL::samplerMetadataUniforms(TInfoSinkBase &out, const char *reg)
+void ResourcesHLSL::samplerMetadataUniforms(TInfoSinkBase &out, unsigned int regIndex)
 {
     // If mSamplerCount is 0 the shader doesn't use any textures for samplers.
     if (mSamplerCount > 0)
@@ -549,7 +580,31 @@ void ResourcesHLSL::samplerMetadataUniforms(TInfoSinkBase &out, const char *reg)
                "        int4 intBorderColor;\n"
                "    };\n"
                "    SamplerMetadata samplerMetadata["
-            << mSamplerCount << "] : packoffset(" << reg << ");\n";
+            << mSamplerCount << "] : packoffset(c" << regIndex << ");\n";
+    }
+}
+
+void ResourcesHLSL::imageMetadataUniforms(TInfoSinkBase &out, unsigned int regIndex)
+{
+    if (mReadonlyImageCount > 0 || mImageCount > 0)
+    {
+        out << "    struct ImageMetadata\n"
+               "    {\n"
+               "        int layer;\n"
+               "        int3 padding;\n"
+               "    };\n";
+
+        if (mReadonlyImageCount > 0)
+        {
+            out << "    ImageMetadata readonlyImageMetadata[" << mReadonlyImageCount
+                << "] : packoffset(c" << regIndex << ");\n";
+        }
+
+        if (mImageCount > 0)
+        {
+            out << "    ImageMetadata imageMetadata[" << mImageCount << "] : packoffset(c"
+                << regIndex + mReadonlyImageCount << ");\n";
+        }
     }
 }
 

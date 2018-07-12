@@ -144,6 +144,16 @@ ShShaderOutput ShaderD3D::getCompilerOutputType() const
     return mCompilerOutputType;
 }
 
+bool ShaderD3D::useImage2DFunction(const std::string &functionName) const
+{
+    if (mUsedImage2DFunctionNames.empty())
+    {
+        return false;
+    }
+
+    return mUsedImage2DFunctionNames.find(functionName) != mUsedImage2DFunctionNames.end();
+}
+
 ShCompileOptions ShaderD3D::prepareSourceAndReturnOptions(const gl::Context *context,
                                                           std::stringstream *shaderSourceStream,
                                                           std::string *sourcePath)
@@ -181,6 +191,13 @@ const std::map<std::string, unsigned int> &GetUniformRegisterMap(
     return *uniformRegisterMap;
 }
 
+const std::set<std::string> &GetUsedImage2DFunctionNames(
+    const std::set<std::string> *usedImage2DFunctionNames)
+{
+    ASSERT(usedImage2DFunctionNames);
+    return *usedImage2DFunctionNames;
+}
+
 bool ShaderD3D::postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog)
 {
     // TODO(jmadill): We shouldn't need to cache this.
@@ -209,6 +226,10 @@ bool ShaderD3D::postTranslateCompile(gl::ShCompilerInstance *compiler, std::stri
     ShHandle compilerHandle = compiler->getHandle();
 
     mUniformRegisterMap = GetUniformRegisterMap(sh::GetUniformRegisterMap(compilerHandle));
+    mReadonlyImage2DRegisterIndex = sh::GetReadonlyImage2DRegisterIndex(compilerHandle);
+    mImage2DRegisterIndex         = sh::GetImage2DRegisterIndex(compilerHandle);
+    mUsedImage2DFunctionNames =
+        GetUsedImage2DFunctionNames(sh::GetUsedImage2DFunctionNames(compilerHandle));
 
     for (const sh::InterfaceBlock &interfaceBlock : mData.getUniformBlocks())
     {
