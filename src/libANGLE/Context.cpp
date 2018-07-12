@@ -3091,9 +3091,10 @@ Extensions Context::generateSupportedExtensions() const
     if (getClientVersion() < ES_2_0)
     {
         // Default extensions for GLES1
-        supportedExtensions.pointSizeArray = true;
-        supportedExtensions.textureCubeMap = true;
-        supportedExtensions.pointSprite    = true;
+        supportedExtensions.pointSizeArray        = true;
+        supportedExtensions.textureCubeMap        = true;
+        supportedExtensions.pointSprite           = true;
+        supportedExtensions.drawTexture           = true;
         supportedExtensions.parallelShaderCompile = false;
     }
 

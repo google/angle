@@ -595,6 +595,19 @@ bool ValidatePointSizeCommon(Context *context, GLfloat size)
     return true;
 }
 
+bool ValidateDrawTexCommon(Context *context, float width, float height)
+{
+    ANGLE_VALIDATE_IS_GLES1(context);
+
+    if (width <= 0.0f || height <= 0.0f)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NonPositiveDrawTextureDimension);
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl
 
 namespace gl
@@ -1302,26 +1315,24 @@ bool ValidateDrawTexfOES(Context *context,
                          GLfloat width,
                          GLfloat height)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateDrawTexCommon(context, width, height);
 }
 
 bool ValidateDrawTexfvOES(Context *context, const GLfloat *coords)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateDrawTexCommon(context, coords[3], coords[4]);
 }
 
 bool ValidateDrawTexiOES(Context *context, GLint x, GLint y, GLint z, GLint width, GLint height)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateDrawTexCommon(context, static_cast<GLfloat>(width),
+                                 static_cast<GLfloat>(height));
 }
 
 bool ValidateDrawTexivOES(Context *context, const GLint *coords)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateDrawTexCommon(context, static_cast<GLfloat>(coords[3]),
+                                 static_cast<GLfloat>(coords[4]));
 }
 
 bool ValidateDrawTexsOES(Context *context,
@@ -1331,14 +1342,14 @@ bool ValidateDrawTexsOES(Context *context,
                          GLshort width,
                          GLshort height)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateDrawTexCommon(context, static_cast<GLfloat>(width),
+                                 static_cast<GLfloat>(height));
 }
 
 bool ValidateDrawTexsvOES(Context *context, const GLshort *coords)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateDrawTexCommon(context, static_cast<GLfloat>(coords[3]),
+                                 static_cast<GLfloat>(coords[4]));
 }
 
 bool ValidateDrawTexxOES(Context *context,
@@ -1348,14 +1359,12 @@ bool ValidateDrawTexxOES(Context *context,
                          GLfixed width,
                          GLfixed height)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateDrawTexCommon(context, FixedToFloat(width), FixedToFloat(height));
 }
 
 bool ValidateDrawTexxvOES(Context *context, const GLfixed *coords)
 {
-    UNIMPLEMENTED();
-    return true;
+    return ValidateDrawTexCommon(context, FixedToFloat(coords[3]), FixedToFloat(coords[4]));
 }
 
 bool ValidateCurrentPaletteMatrixOES(Context *context, GLuint matrixpaletteindex)

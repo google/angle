@@ -185,6 +185,8 @@ ERRMSG(NegativeStride, "Cannot have negative stride.");
 ERRMSG(NoActiveComputeShaderStage, "No active compute shader stage in this program.");
 ERRMSG(NoActiveGeometryShaderStage, "No active geometry shader stage in this program.");
 ERRMSG(NoActiveProgramWithComputeShader, "No active program for the compute shader stage.");
+ERRMSG(NonPositiveDrawTextureDimension,
+       "Both width and height argument of drawn texture must be positive.");
 ERRMSG(NoSuchPath, "No such path object.");
 ERRMSG(NoTransformFeedbackOutputVariables,
        "The active program has specified no output variables to record.");

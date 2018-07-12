@@ -41,6 +41,14 @@ class GLES1Renderer final : angle::NonCopyable
     static int TexCoordArrayIndex(unsigned int unit);
     AttributesMask getVertexArraysAttributeMask(const State *glState) const;
 
+    void drawTexture(Context *context,
+                     State *glState,
+                     float x,
+                     float y,
+                     float z,
+                     float width,
+                     float height);
+
   private:
     using Mat4Uniform = float[16];
     using Vec4Uniform = float[4];
@@ -70,8 +78,11 @@ class GLES1Renderer final : angle::NonCopyable
                              const GLfloat *value);
     void setUniform4fv(Program *programObject, GLint loc, GLint count, const GLfloat *value);
     void setUniform3fv(Program *programObject, GLint loc, GLint count, const GLfloat *value);
+    void setUniform2fv(Program *programObject, GLint loc, GLint count, const GLfloat *value);
     void setUniform1f(Program *programObject, GLint loc, GLfloat value);
     void setUniform1fv(Program *programObject, GLint loc, GLint count, const GLfloat *value);
+
+    void setAttributesEnabled(Context *context, State *glState, AttributesMask mask);
 
     static constexpr int kTexUnitCount   = 4;
     static constexpr int kLightCount     = 8;
@@ -175,6 +186,12 @@ class GLES1Renderer final : angle::NonCopyable
         GLint pointSizeMaxLoc;
         GLint pointDistanceAttenuationLoc;
         GLint pointSpriteEnabledLoc;
+
+        // Draw texture
+        GLint enableDrawTextureLoc;
+        GLint drawTextureCoordsLoc;
+        GLint drawTextureDimsLoc;
+        GLint drawTextureNormalizedCropRectLoc;
     };
 
     struct GLES1UniformBuffers
@@ -220,10 +237,17 @@ class GLES1Renderer final : angle::NonCopyable
         // Clip planes
         std::array<GLint, kClipPlaneCount> clipPlaneEnables;
         std::array<Vec4Uniform, kClipPlaneCount> clipPlanes;
+
+        // Texture crop rectangles
+        std::array<Vec4Uniform, kTexUnitCount> texCropRects;
     };
 
     GLES1UniformBuffers mUniformBuffers;
     GLES1ProgramState mProgramState;
+
+    bool mDrawTextureEnabled      = false;
+    GLfloat mDrawTextureCoords[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+    GLfloat mDrawTextureDims[2]   = {0.0f, 0.0f};
 };
 
 }  // namespace gl

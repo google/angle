@@ -415,6 +415,8 @@ struct Extensions
     bool textureCubeMap;
     // GL_OES_point_sprite
     bool pointSprite;
+    // GL_OES_draw_texture
+    bool drawTexture;
 
     // EGL_ANGLE_explicit_context GL subextensions
     // GL_ANGLE_explicit_context_gles1

@@ -161,6 +161,7 @@ class GLES1State final : angle::NonCopyable
     void multMatrix(const angle::Mat4 &m);
 
     void setClientStateEnabled(ClientVertexArrayType clientState, bool enable);
+    void setTexCoordArrayEnabled(unsigned int unit, bool enable);
     bool isClientStateEnabled(ClientVertexArrayType clientState) const;
     bool isTexCoordArrayEnabled(unsigned int unit) const;
     bool isTextureTargetEnabled(unsigned int unit, const TextureType type) const;

@@ -23,7 +23,7 @@ in vec4 texcoord3;
 uniform mat4 projection;
 uniform mat4 modelview;
 uniform mat4 modelview_invtr;
-uniform mat4 texture_matrix[4];
+uniform mat4 texture_matrix[kMaxTexUnits];
 
 uniform bool enable_rescale_normal;
 uniform bool enable_normalize;
@@ -35,21 +35,84 @@ uniform float point_size_min;
 uniform float point_size_max;
 uniform vec3 point_distance_attenuation;
 
+// GL_OES_draw_texture uniforms/////////////////////////////////////////////////
+
+uniform bool enable_draw_texture;
+uniform vec4 draw_texture_coords;
+uniform vec2 draw_texture_dims;
+uniform vec4 draw_texture_normalized_crop_rect[kMaxTexUnits];
+
+// Varyings/////////////////////////////////////////////////////////////////////
+
 out vec4 pos_varying;
 out vec3 normal_varying;
 out vec4 color_varying;
 flat out vec4 color_varying_flat;
-out float pointsize_varying;
 out vec4 texcoord0_varying;
 out vec4 texcoord1_varying;
 out vec4 texcoord2_varying;
 out vec4 texcoord3_varying;
 
-void main()
+const vec4 drawTextureVertices[6] = vec4[](
+    vec4(0.0, 0.0, 0.0, 1.0),
+    vec4(1.0, 0.0, 0.0, 1.0),
+    vec4(1.0, 1.0, 0.0, 1.0),
+    vec4(0.0, 0.0, 0.0, 1.0),
+    vec4(1.0, 1.0, 0.0, 1.0),
+    vec4(0.0, 1.0, 0.0, 1.0));
+
+vec4 drawTexturePosition(int vertexId)
 {
-    pos_varying    = modelview * pos;
-    mat3 mvInvTr3  = mat3(modelview_invtr);
-    normal_varying = mvInvTr3 * normal;
+
+    float drawTexX = draw_texture_coords[0];
+    float drawTexY = draw_texture_coords[1];
+    float drawTexZ = draw_texture_coords[2];
+    float drawTexW = draw_texture_dims[0];
+    float drawTexH = draw_texture_dims[1];
+
+    return vec4(drawTexX, drawTexY, drawTexZ, 0.0) +
+           drawTextureVertices[vertexId] *
+           vec4(drawTexW, drawTexH, 1.0, 1.0);
+}
+
+vec4 drawTextureTexCoord(int vertexId, int textureUnit)
+{
+    float texCropU = draw_texture_normalized_crop_rect[textureUnit].x;
+    float texCropV = draw_texture_normalized_crop_rect[textureUnit].y;
+    float texCropW = draw_texture_normalized_crop_rect[textureUnit].z;
+    float texCropH = draw_texture_normalized_crop_rect[textureUnit].w;
+
+    return vec4(texCropU, texCropV, 0.0, 0.0) +
+           drawTextureVertices[vertexId] *
+           vec4(texCropW, texCropH, 0.0, 0.0);
+}
+
+vec4 calcWorldPosition(vec4 posInput)
+{
+    return modelview * posInput;
+}
+
+vec4 calcNdcFromWorldPosition(vec4 worldPos)
+{
+    return projection * worldPos;
+}
+
+float calcPointSize(vec4 ndcPos)
+{
+    float dist         = length(ndcPos.z);
+    float attConst     = point_distance_attenuation[0];
+    float attLinear    = point_distance_attenuation[1];
+    float attQuad      = point_distance_attenuation[2];
+    float attPart      = attConst + attLinear * dist + attQuad * dist * dist;
+    float attPointSize = pointsize / pow(attPart, 0.5);
+
+    return clamp(attPointSize, point_size_min, point_size_max);
+}
+
+vec3 calcNormal(vec3 normalInput)
+{
+    mat3 mvInvTr3 = mat3(modelview_invtr);
+    vec3 result   = mvInvTr3 * normalInput;
 
     if (enable_rescale_normal)
     {
@@ -60,35 +123,64 @@ void main()
         {
             rescale = 1.0 / len;
         }
-        normal_varying *= rescale;
+        result *= rescale;
     }
 
     if (enable_normalize)
     {
-        normal_varying = normalize(normal_varying);
+        result = normalize(result);
     }
 
+    return result;
+}
+
+void main()
+{
     color_varying      = color;
     color_varying_flat = color;
-    pointsize_varying  = pointsize;
-    texcoord0_varying  = texture_matrix[0] * texcoord0;
-    texcoord1_varying  = texture_matrix[1] * texcoord1;
-    texcoord2_varying  = texture_matrix[2] * texcoord2;
-    texcoord3_varying  = texture_matrix[3] * texcoord3;
 
-    vec4 vertexPos = projection * modelview * pos;
-    gl_Position    = vertexPos;
-
-    if (point_rasterization)
+    if (enable_draw_texture)
     {
-        float dist         = length(vertexPos.z);
-        float attConst     = point_distance_attenuation[0];
-        float attLinear    = point_distance_attenuation[1];
-        float attQuad      = point_distance_attenuation[2];
-        float attPart      = attConst + attLinear * dist + attQuad * dist * dist;
-        float attPointSize = pointsize / pow(attPart, 0.5);
+        int vertexId        = gl_VertexID;
+        vec4 posDrawTexture = drawTexturePosition(vertexId);
 
-        gl_PointSize = clamp(attPointSize, point_size_min, point_size_max);
+        gl_Position = posDrawTexture;
+        pos_varying = posDrawTexture;
+
+        normal_varying = normal;
+
+        gl_PointSize = pointsize;
+
+        texcoord0_varying = drawTextureTexCoord(vertexId, 0);
+        texcoord1_varying = drawTextureTexCoord(vertexId, 1);
+        texcoord2_varying = drawTextureTexCoord(vertexId, 2);
+        texcoord3_varying = drawTextureTexCoord(vertexId, 3);
+    }
+    else
+    {
+        vec4 worldPos = calcWorldPosition(pos);
+        vec4 ndcPos   = calcNdcFromWorldPosition(worldPos);
+
+        gl_Position = ndcPos;
+        pos_varying = worldPos;
+
+        normal_varying = calcNormal(normal);
+
+        // Avoid calculating point size stuff
+        // if we are not rendering points.
+        if (point_rasterization)
+        {
+            gl_PointSize = calcPointSize(ndcPos);
+        }
+        else
+        {
+            gl_PointSize = pointsize;
+        }
+
+        texcoord0_varying = texture_matrix[0] * texcoord0;
+        texcoord1_varying = texture_matrix[1] * texcoord1;
+        texcoord2_varying = texture_matrix[2] * texcoord2;
+        texcoord3_varying = texture_matrix[3] * texcoord3;
     }
 }
 )";
@@ -213,7 +305,6 @@ in vec4 pos_varying;
 in vec3 normal_varying;
 in vec4 color_varying;
 flat in vec4 color_varying_flat;
-in float pointsize_varying;
 in vec4 texcoord0_varying;
 in vec4 texcoord1_varying;
 in vec4 texcoord2_varying;
@@ -271,6 +362,10 @@ uniform vec4 clip_planes[kMaxClipPlanes];
 
 uniform bool point_rasterization;
 uniform bool point_sprite_enabled;
+
+// GL_OES_draw_texture//////////////////////////////////////////////////////////
+
+uniform bool enable_draw_texture;
 
 // Outgoing fragment////////////////////////////////////////////////////////////
 
@@ -950,7 +1045,7 @@ vec4 textureFunction(int unit,
 constexpr char kGLES1DrawFShaderMain[] = R"(
 void main()
 {
-    if (enable_clip_planes)
+    if (enable_clip_planes && !enable_draw_texture)
     {
         if (!doClipPlaneTest())
         {

@@ -290,6 +290,11 @@ void GLES1State::setClientStateEnabled(ClientVertexArrayType clientState, bool e
     }
 }
 
+void GLES1State::setTexCoordArrayEnabled(unsigned int unit, bool enable)
+{
+    mTexCoordArrayEnabled[unit] = enable;
+}
+
 bool GLES1State::isClientStateEnabled(ClientVertexArrayType clientState) const
 {
     switch (clientState)

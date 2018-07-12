@@ -1153,6 +1153,17 @@ inline int32_t WrappingMul(int32_t lhs, int32_t rhs)
     return static_cast<int32_t>(resultWide);
 }
 
+inline float scaleScreenDimensionToNdc(float dimensionScreen, float viewportDimension)
+{
+    return 2.0f * dimensionScreen / viewportDimension;
+}
+
+inline float scaleScreenCoordinateToNdc(float coordinateScreen, float viewportDimension)
+{
+    float halfShifted = coordinateScreen / viewportDimension;
+    return 2.0f * (halfShifted - 0.5f);
+}
+
 }  // namespace gl
 
 namespace rx

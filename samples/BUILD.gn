@@ -197,6 +197,12 @@ angle_sample("gles1_flat_shading") {
   ]
 }
 
+angle_sample("gles1_draw_texture") {
+  sources = [
+    "gles1/DrawTexture.cpp",
+  ]
+}
+
 group("all") {
   testonly = true
   deps = [
