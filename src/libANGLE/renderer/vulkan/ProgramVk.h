@@ -119,7 +119,7 @@ class ProgramVk : public ProgramImpl
     // or Textures.
     const gl::RangeUI &getUsedDescriptorSetRange() const;
 
-    gl::Error updateTexturesDescriptorSet(const gl::Context *context);
+    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
     void invalidateTextures();
 
     const vk::PipelineLayout &getPipelineLayout() const;
@@ -177,9 +177,6 @@ class ProgramVk : public ProgramImpl
     std::vector<VkDescriptorSet> mDescriptorSets;
     gl::RangeUI mUsedDescriptorSetRange;
     bool mDirtyTextures;
-
-    template <typename T>
-    using ShaderTextureArray = std::array<T, gl::IMPLEMENTATION_MAX_SHADER_TEXTURES>;
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
     // deleted while this program is in use.

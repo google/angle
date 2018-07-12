@@ -75,9 +75,7 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
 }
 
-ContextVk::~ContextVk()
-{
-}
+ContextVk::~ContextVk() = default;
 
 void ContextVk::onDestroy(const gl::Context *context)
 {
@@ -220,27 +218,13 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
     if (mTexturesDirty)
     {
         mTexturesDirty = false;
+
         // TODO(jmadill): Should probably merge this for loop with programVk's descriptor update.
-        ContextVk *contextVk         = vk::GetImpl(context);
-        const auto &completeTextures = state.getCompleteTextureCache();
-        for (const gl::SamplerBinding &samplerBinding : programGL->getSamplerBindings())
+        for (size_t textureIndex : state.getActiveTexturesMask())
         {
-            ASSERT(!samplerBinding.unreferenced);
-
-            for (GLuint textureUnit : samplerBinding.boundTextureUnits)
-            {
-                gl::Texture *texture = completeTextures[textureUnit];
-
-                // Null textures represent incomplete textures.
-                if (texture == nullptr)
-                {
-                    ANGLE_TRY(getIncompleteTexture(context, samplerBinding.textureType, &texture));
-                }
-
-                TextureVk *textureVk = vk::GetImpl(texture);
-                ANGLE_TRY(textureVk->ensureImageInitialized(contextVk));
-                textureVk->addReadDependency(framebufferVk);
-            }
+            TextureVk *textureVk = mActiveTextures[textureIndex];
+            ANGLE_TRY(textureVk->ensureImageInitialized(this));
+            textureVk->addReadDependency(framebufferVk);
         }
     }
 
@@ -252,7 +236,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 
     // TODO(jmadill): Can probably use more dirty bits here.
     ANGLE_TRY(programVk->updateUniforms(this));
-    ANGLE_TRY(programVk->updateTexturesDescriptorSet(context));
+    ANGLE_TRY(programVk->updateTexturesDescriptorSet(this));
 
     // Bind the graphics descriptor sets.
     // TODO(jmadill): Handle multiple command buffers.
@@ -434,9 +418,9 @@ void ContextVk::updateColorMask(const gl::BlendState &blendState)
                                         framebufferVk->getEmulatedAlphaAttachmentMask());
 }
 
-void ContextVk::updateScissor(const gl::State &glState)
+void ContextVk::updateScissor(const gl::State &glState) const
 {
-    FramebufferVk *framebufferVk = vk::GetImpl(getGLState().getDrawFramebuffer());
+    FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
     gl::Box dimensions           = framebufferVk->getState().getDimensions();
     gl::Rectangle renderArea(0, 0, dimensions.width, dimensions.height);
 
@@ -664,6 +648,8 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
 
     if (dirtyTextures)
     {
+        ANGLE_TRY(updateActiveTextures(context));
+
         ProgramVk *programVk = vk::GetImpl(glState.getProgram());
         programVk->invalidateTextures();
         mTexturesDirty = true;
@@ -948,5 +934,38 @@ void ContextVk::handleError(VkResult errorCode, const char *file, unsigned int l
                 << ", line " << line << ".";
 
     mErrors->handleError(gl::Error(glErrorCode, glErrorCode, errorStream.str()));
+}
+
+gl::Error ContextVk::updateActiveTextures(const gl::Context *context)
+{
+    const auto &completeTextures = mState.getState().getCompleteTextureCache();
+    const gl::Program *program = mState.getState().getProgram();
+
+    mActiveTextures.fill(nullptr);
+
+    for (const gl::SamplerBinding &samplerBinding : program->getSamplerBindings())
+    {
+        ASSERT(!samplerBinding.unreferenced);
+
+        for (GLuint textureUnit : samplerBinding.boundTextureUnits)
+        {
+            gl::Texture *texture = completeTextures[textureUnit];
+
+            // Null textures represent incomplete textures.
+            if (texture == nullptr)
+            {
+                ANGLE_TRY(getIncompleteTexture(context, samplerBinding.textureType, &texture));
+            }
+
+            mActiveTextures[textureUnit] = vk::GetImpl(texture);
+        }
+    }
+
+    return gl::NoError();
+}
+
+const gl::ActiveTextureArray<TextureVk *> &ContextVk::getActiveTextures() const
+{
+    return mActiveTextures;
 }
 }  // namespace rx

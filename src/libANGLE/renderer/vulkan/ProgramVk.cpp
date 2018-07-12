@@ -860,26 +860,23 @@ const gl::RangeUI &ProgramVk::getUsedDescriptorSetRange() const
     return mUsedDescriptorSetRange;
 }
 
-gl::Error ProgramVk::updateTexturesDescriptorSet(const gl::Context *context)
+angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
 {
     if (mState.getSamplerBindings().empty() || !mDirtyTextures)
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
-    ContextVk *contextVk = GetImplAs<ContextVk>(context);
     ANGLE_TRY(allocateDescriptorSet(contextVk, kTextureDescriptorSetIndex));
 
     ASSERT(mUsedDescriptorSetRange.contains(1));
     VkDescriptorSet descriptorSet = mDescriptorSets[kTextureDescriptorSetIndex];
 
-    // TODO(jmadill): Don't hard-code the texture limit.
-    ShaderTextureArray<VkDescriptorImageInfo> descriptorImageInfo;
-    ShaderTextureArray<VkWriteDescriptorSet> writeDescriptorInfo;
+    gl::ActiveTextureArray<VkDescriptorImageInfo> descriptorImageInfo;
+    gl::ActiveTextureArray<VkWriteDescriptorSet> writeDescriptorInfo;
     uint32_t writeCount = 0;
 
-    const gl::State &glState     = contextVk->getGLState();
-    const auto &completeTextures = glState.getCompleteTextureCache();
+    const gl::ActiveTextureArray<TextureVk *> &activeTextures = contextVk->getActiveTextures();
 
     for (uint32_t textureIndex = 0; textureIndex < mState.getSamplerBindings().size();
          ++textureIndex)
@@ -891,17 +888,8 @@ gl::Error ProgramVk::updateTexturesDescriptorSet(const gl::Context *context)
         for (uint32_t arrayElement = 0; arrayElement < samplerBinding.boundTextureUnits.size();
              ++arrayElement)
         {
-            GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
-            gl::Texture *texture = completeTextures[textureUnit];
-
-            if (texture == nullptr)
-            {
-                // If we have an incomplete texture, fetch it from our renderer.
-                ANGLE_TRY(
-                    contextVk->getIncompleteTexture(context, samplerBinding.textureType, &texture));
-            }
-
-            TextureVk *textureVk         = vk::GetImpl(texture);
+            GLuint textureUnit           = samplerBinding.boundTextureUnits[arrayElement];
+            TextureVk *textureVk         = activeTextures[textureUnit];
             const vk::ImageHelper &image = textureVk->getImage();
 
             VkDescriptorImageInfo &imageInfo = descriptorImageInfo[writeCount];
@@ -933,7 +921,7 @@ gl::Error ProgramVk::updateTexturesDescriptorSet(const gl::Context *context)
     vkUpdateDescriptorSets(device, writeCount, writeDescriptorInfo.data(), 0, nullptr);
 
     mDirtyTextures = false;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void ProgramVk::invalidateTextures()
