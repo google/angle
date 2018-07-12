@@ -66,6 +66,7 @@ class TOutputGLSLBase : public TIntermTraverser
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
     bool visitLoop(Visit visit, TIntermLoop *node) override;
     bool visitBranch(Visit visit, TIntermBranch *node) override;
+    void visitPreprocessorDirective(TIntermPreprocessorDirective *node) override;
 
     void visitCodeBlock(TIntermBlock *node);
 

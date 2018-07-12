@@ -46,6 +46,10 @@ bool isSingleStatement(TIntermNode *node)
     {
         return false;
     }
+    else if (node->getAsPreprocessorDirective())
+    {
+        return false;
+    }
     return true;
 }
 
@@ -1111,6 +1115,40 @@ void TOutputGLSLBase::visitCodeBlock(TIntermBlock *node)
     {
         out << "{\n}\n";  // Empty code block.
     }
+}
+
+void TOutputGLSLBase::visitPreprocessorDirective(TIntermPreprocessorDirective *node)
+{
+    TInfoSinkBase &out = objSink();
+
+    out << "\n";
+
+    switch (node->getDirective())
+    {
+        case PreprocessorDirective::Define:
+            out << "#define";
+            break;
+        case PreprocessorDirective::Endif:
+            out << "#endif";
+            break;
+        case PreprocessorDirective::If:
+            out << "#if";
+            break;
+        case PreprocessorDirective::Ifdef:
+            out << "#ifdef";
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    if (!node->getCommand().empty())
+    {
+        out << " " << node->getCommand();
+    }
+
+    out << "\n";
 }
 
 ImmutableString TOutputGLSLBase::getTypeName(const TType &type)

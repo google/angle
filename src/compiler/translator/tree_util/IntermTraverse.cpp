@@ -32,8 +32,8 @@ void TIntermTraverser::traverse(T *node)
 
     if (visit)
     {
-        unsigned int childIndex = 0;
-        unsigned int childCount = node->getChildCount();
+        size_t childIndex = 0;
+        size_t childCount = node->getChildCount();
 
         while (childIndex < childCount && visit)
         {
@@ -101,6 +101,11 @@ void TIntermAggregate::traverse(TIntermTraverser *it)
 void TIntermLoop::traverse(TIntermTraverser *it)
 {
     it->traverseLoop(this);
+}
+
+void TIntermPreprocessorDirective::traverse(TIntermTraverser *it)
+{
+    it->visitPreprocessorDirective(this);
 }
 
 bool TIntermSymbol::visit(Visit visit, TIntermTraverser *it)
@@ -189,6 +194,12 @@ bool TIntermSwitch::visit(Visit visit, TIntermTraverser *it)
 bool TIntermCase::visit(Visit visit, TIntermTraverser *it)
 {
     return it->visitCase(visit, this);
+}
+
+bool TIntermPreprocessorDirective::visit(Visit visit, TIntermTraverser *it)
+{
+    it->visitPreprocessorDirective(this);
+    return false;
 }
 
 TIntermTraverser::TIntermTraverser(bool preVisit,
@@ -614,5 +625,4 @@ void TIntermTraverser::traverseLoop(TIntermLoop *node)
 {
     traverse(node);
 }
-
 }  // namespace sh
