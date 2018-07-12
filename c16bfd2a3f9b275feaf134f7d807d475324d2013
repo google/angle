@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "50d8a331_4a1bde74",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-12T20:29:27Z",
+      "side": 1,
+      "message": "Ok. Well, let\u0027s think about two cases.\n\na) all attributes have the same binding index.\n  - in this case, you can use the inverse binding-\u003eattribute mapping to flag dirty attribs.\nb) some attributes have different binding indexes.\n  - in this case, the attributes are marked dirty: DIRTY_ATTRIB_BINDING\n\nIn either case I don\u0027t think you need the prior values. Does this make sense?",
+      "parentUuid": "c54f1518_1ddebfb9",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 0
+      },
+      "revId": "c16bfd2a3f9b275feaf134f7d807d475324d2013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d722a80_e227ffcb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
         "patchSetId": 8
