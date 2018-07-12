@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c826d93_cf7e7d34",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-12T14:48:52Z",
+      "side": 1,
+      "message": "nit: could we move this block into a blitWithReadback helper function? for better code readability.",
+      "range": {
+        "startLine": 489,
+        "startChar": 16,
+        "endLine": 489,
+        "endChar": 27
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9764a3fc_9f2e7190",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-12T14:48:52Z",
+      "side": 1,
+      "message": "nit: can probably put this in the Framebuffer init. i don\u0027t we allocate anything until the first allocate() call",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 534,
+        "endChar": 17
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93517486_cd03ab83",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-12T14:48:52Z",
+      "side": 1,
+      "message": "maybe we can make this into a small helper function and re-use it in other places.",
+      "range": {
+        "startLine": 536,
+        "startChar": 0,
+        "endLine": 539,
+        "endChar": 0
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbd833d2_d53521fd",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1178,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-12T14:48:52Z",
+      "side": 1,
+      "message": "I\u0027m wondering about this. maybe we just have pixelBytes wrong for a few stencil formats. let me ping you offline.",
+      "range": {
+        "startLine": 1171,
+        "startChar": 0,
+        "endLine": 1178,
+        "endChar": 5
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb46bca6_89efb993",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-12T14:48:52Z",
+      "side": 1,
+      "message": "nit: calling this mBlitPixelBuffer would line up nicely with the other uses of DynamicBuffer.",
+      "range": {
+        "startLine": 157,
+        "startChar": 22,
+        "endLine": 157,
+        "endChar": 37
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
