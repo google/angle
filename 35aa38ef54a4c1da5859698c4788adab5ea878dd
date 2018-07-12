@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c1b1da1e_1c17f10e",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 848,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-12T14:41:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "648f35af_f7633b0d",
+      "revId": "35aa38ef54a4c1da5859698c4788adab5ea878dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c0e2394a_ea6ca14f",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 2
@@ -39,6 +57,30 @@
       "revId": "35aa38ef54a4c1da5859698c4788adab5ea878dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "463f88ff_e6f3a6f8",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-12T14:41:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0e2394a_ea6ca14f",
+      "range": {
+        "startLine": 852,
+        "startChar": 40,
+        "endLine": 852,
+        "endChar": 48
+      },
+      "revId": "35aa38ef54a4c1da5859698c4788adab5ea878dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
