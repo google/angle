@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "c897baf5_9e00dcdf",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-12T00:57:37Z",
+      "side": 1,
+      "message": "The spec text(ES3.10 Page 72):\n\"If LinkProgram or ProgramBinary successfully re-links a program object\nthat is active for any shader stage, then the newly generated executable code will\nbe installed as part of the current rendering state for all shader stages where the\nprogram is active. Additionally, the newly generated executable code is made part\nof the state of any program pipeline for all stages where the program is attached.\nIf a program object that is active for any shader stage is re-linked unsuccessfully, the link status will be set to FALSE, but any existing executables and associated state will remain part of the current rendering state until a subsequent call to\nUseProgram, UseProgramStages, or BindProgramPipeline removes them from\nuse.\"\n\nIt\u0027s not just how to update mDirtyBits. The fact is that mDirtyBits is going to be modified probably. Anyone who reads mDirtyBits has to be aware of this \"linking\" state, and waits until the state finally is settled down.",
+      "parentUuid": "35607115_f04387e1",
+      "range": {
+        "startLine": 752,
+        "startChar": 0,
+        "endLine": 753,
+        "endChar": 24
+      },
+      "revId": "525c957a3cf225297f4efca886bba407365df590",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "284037e5_a0e07fd4",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
@@ -156,6 +180,30 @@
       "side": 1,
       "message": "I would prefer to keep it within the Program class because then it becomes a contained implementation detail of the Program class instead of every class that uses a program needing to know how it works.\n\nIt\u0027s perfectly fine to have a private method in program, something like finishPendingLink that checks if the link is still ongoing and blocks if it is.  We can then call this method in each public program function, only adding a single line to each public method.",
       "parentUuid": "d3404f79_1379dad1",
+      "range": {
+        "startLine": 5558,
+        "startChar": 0,
+        "endLine": 5571,
+        "endChar": 5
+      },
+      "revId": "525c957a3cf225297f4efca886bba407365df590",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ff1b144_2ac625e9",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5571,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-12T00:57:37Z",
+      "side": 1,
+      "message": "Okay, I will try this way.",
+      "parentUuid": "ca2aa547_b6eb8001",
       "range": {
         "startLine": 5558,
         "startChar": 0,
