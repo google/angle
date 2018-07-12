@@ -22,6 +22,29 @@
       "revId": "72f8e19d789b8bf613797b128357187cb57d05fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "177c7d57_e6858609",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-12T13:54:39Z",
+      "side": 1,
+      "message": "Could these be called Error and Success instead?",
+      "range": {
+        "startLine": 272,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 54
+      },
+      "revId": "72f8e19d789b8bf613797b128357187cb57d05fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
