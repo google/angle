@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7beb49cd_647f9f14",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-12T16:21:52Z",
+      "side": 1,
+      "message": "if possible, say briefly what is to be done",
+      "revId": "0fc43455fe07ec144b71bf7c50d9a939a0405363",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
