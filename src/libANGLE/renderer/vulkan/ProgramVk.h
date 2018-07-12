@@ -99,10 +99,11 @@ class ProgramVk : public ProgramImpl
                                  GLint components,
                                  const GLfloat *coeffs) override;
 
-    const vk::ShaderModule &getLinkedVertexModule() const;
-    Serial getVertexModuleSerial() const;
-    const vk::ShaderModule &getLinkedFragmentModule() const;
-    Serial getFragmentModuleSerial() const;
+    // Also initializes the pipeline layout, descriptor set layouts, and used descriptor ranges.
+    gl::Error initShaders(const ContextVk *contextVk,
+                          const gl::DrawCallParams &drawCallParams,
+                          const vk::ShaderAndSerial **vertexShaderAndSerialOut,
+                          const vk::ShaderAndSerial **fragmentShaderAndSerialOut);
 
     angle::Result updateUniforms(ContextVk *contextVk);
 
@@ -144,10 +145,8 @@ class ProgramVk : public ProgramImpl
     template <typename T>
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
 
-    vk::ShaderModule mLinkedVertexModule;
-    Serial mVertexModuleSerial;
-    vk::ShaderModule mLinkedFragmentModule;
-    Serial mFragmentModuleSerial;
+    vk::ShaderAndSerial mDefaultVertexShaderAndSerial;
+    vk::ShaderAndSerial mDefaultFragmentShaderAndSerial;
 
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable

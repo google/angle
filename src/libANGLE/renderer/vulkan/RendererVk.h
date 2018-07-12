@@ -28,7 +28,6 @@ class AttributeMap;
 namespace rx
 {
 class FramebufferVk;
-class GlslangWrapper;
 
 namespace vk
 {
@@ -75,8 +74,6 @@ class RendererVk : angle::NonCopyable
     const gl::Limitations &getNativeLimitations() const;
     uint32_t getMaxActiveTextures();
 
-    GlslangWrapper *getGlslangWrapper() const;
-
     Serial getCurrentQueueSerial() const;
 
     bool isSerialInUse(Serial serial) const;
@@ -114,21 +111,14 @@ class RendererVk : angle::NonCopyable
                                        const vk::AttachmentOpsArray &ops,
                                        vk::RenderPass **renderPassOut);
 
-    // For getting a vk::Pipeline for the an application's draw call. RenderPassDesc is automatic.
-    angle::Result getAppPipeline(vk::Context *context,
-                                 const ProgramVk *programVk,
-                                 const vk::PipelineDesc &desc,
-                                 const gl::AttributesMask &activeAttribLocationsMask,
-                                 vk::PipelineAndSerial **pipelineOut);
-
-    // For getting a vk::Pipeline for an internal draw call. Use an explicit RenderPass.
-    angle::Result getInternalPipeline(vk::Context *context,
-                                      const vk::ShaderAndSerial &vertexShader,
-                                      const vk::ShaderAndSerial &fragmentShader,
-                                      const vk::PipelineLayout &pipelineLayout,
-                                      const vk::PipelineDesc &pipelineDesc,
-                                      const gl::AttributesMask &activeAttribLocationsMask,
-                                      vk::PipelineAndSerial **pipelineOut);
+    // For getting a vk::Pipeline and checking the pipeline cache.
+    angle::Result getPipeline(vk::Context *context,
+                              const vk::ShaderAndSerial &vertexShader,
+                              const vk::ShaderAndSerial &fragmentShader,
+                              const vk::PipelineLayout &pipelineLayout,
+                              const vk::PipelineDesc &pipelineDesc,
+                              const gl::AttributesMask &activeAttribLocationsMask,
+                              vk::PipelineAndSerial **pipelineOut);
 
     // Queries the descriptor set layout cache. Creates the layout if not present.
     angle::Result getDescriptorSetLayout(
@@ -180,7 +170,6 @@ class RendererVk : angle::NonCopyable
     uint32_t mCurrentQueueFamilyIndex;
     VkDevice mDevice;
     vk::CommandPool mCommandPool;
-    GlslangWrapper *mGlslangWrapper;
     SerialFactory mQueueSerialFactory;
     SerialFactory mShaderSerialFactory;
     Serial mLastCompletedQueueSerial;

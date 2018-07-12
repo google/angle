@@ -611,37 +611,36 @@ class ObjectAndSerial final : angle::NonCopyable
   public:
     ObjectAndSerial() {}
 
-    ObjectAndSerial(ObjT &&object, Serial queueSerial)
-        : mObject(std::move(object)), mQueueSerial(queueSerial)
-    {
-    }
+    ObjectAndSerial(ObjT &&object, Serial serial) : mObject(std::move(object)), mSerial(serial) {}
 
     ObjectAndSerial(ObjectAndSerial &&other)
-        : mObject(std::move(other.mObject)), mQueueSerial(std::move(other.mQueueSerial))
+        : mObject(std::move(other.mObject)), mSerial(std::move(other.mSerial))
     {
     }
     ObjectAndSerial &operator=(ObjectAndSerial &&other)
     {
-        mObject      = std::move(other.mObject);
-        mQueueSerial = std::move(other.mQueueSerial);
+        mObject = std::move(other.mObject);
+        mSerial = std::move(other.mSerial);
         return *this;
     }
 
-    Serial queueSerial() const { return mQueueSerial; }
-    void updateSerial(Serial newSerial)
-    {
-        ASSERT(newSerial >= mQueueSerial);
-        mQueueSerial = newSerial;
-    }
+    Serial getSerial() const { return mSerial; }
+    void updateSerial(Serial newSerial) { mSerial = newSerial; }
 
     const ObjT &get() const { return mObject; }
     ObjT &get() { return mObject; }
 
     bool valid() const { return mObject.valid(); }
 
+    void destroy(VkDevice device)
+    {
+        mObject.destroy(device);
+        mSerial = Serial();
+    }
+
   private:
     ObjT mObject;
-    Serial mQueueSerial;
+    Serial mSerial;
 };
 
 angle::Result AllocateBufferMemory(vk::Context *context,

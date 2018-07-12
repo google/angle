@@ -259,7 +259,6 @@ RendererVk::RendererVk()
       mQueue(VK_NULL_HANDLE),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mDevice(VK_NULL_HANDLE),
-      mGlslangWrapper(nullptr),
       mLastCompletedQueueSerial(mQueueSerialFactory.generate()),
       mCurrentQueueSerial(mQueueSerialFactory.generate())
 {
@@ -284,11 +283,7 @@ void RendererVk::onDestroy(vk::Context *context)
     mPipelineCache.destroy(mDevice);
     mShaderLibrary.destroy(mDevice);
 
-    if (mGlslangWrapper)
-    {
-        GlslangWrapper::ReleaseReference();
-        mGlslangWrapper = nullptr;
-    }
+    GlslangWrapper::Release();
 
     if (mCommandPool.valid())
     {
@@ -469,7 +464,7 @@ angle::Result RendererVk::initialize(vk::Context *context,
     // Store the physical device memory properties so we can find the right memory pools.
     mMemoryProperties.init(mPhysicalDevice);
 
-    mGlslangWrapper = GlslangWrapper::GetReference();
+    GlslangWrapper::Initialize();
 
     // Initialize the format table.
     mFormatTable.initialize(mPhysicalDevice, &mNativeTextureCaps,
@@ -830,11 +825,6 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     return angle::Result::Continue();
 }
 
-GlslangWrapper *RendererVk::getGlslangWrapper() const
-{
-    return mGlslangWrapper;
-}
-
 Serial RendererVk::getCurrentQueueSerial() const
 {
     return mCurrentQueueSerial;
@@ -902,39 +892,17 @@ Serial RendererVk::issueShaderSerial()
     return mShaderSerialFactory.generate();
 }
 
-angle::Result RendererVk::getAppPipeline(vk::Context *context,
-                                         const ProgramVk *programVk,
-                                         const vk::PipelineDesc &desc,
-                                         const gl::AttributesMask &activeAttribLocationsMask,
-                                         vk::PipelineAndSerial **pipelineOut)
+angle::Result RendererVk::getPipeline(vk::Context *context,
+                                      const vk::ShaderAndSerial &vertexShader,
+                                      const vk::ShaderAndSerial &fragmentShader,
+                                      const vk::PipelineLayout &pipelineLayout,
+                                      const vk::PipelineDesc &pipelineDesc,
+                                      const gl::AttributesMask &activeAttribLocationsMask,
+                                      vk::PipelineAndSerial **pipelineOut)
 {
-    ASSERT(programVk->getVertexModuleSerial() ==
-           desc.getShaderStageInfo()[vk::ShaderType::VertexShader].moduleSerial);
-    ASSERT(programVk->getFragmentModuleSerial() ==
-           desc.getShaderStageInfo()[vk::ShaderType::FragmentShader].moduleSerial);
-
-    // Pull in a compatible RenderPass.
-    vk::RenderPass *compatibleRenderPass = nullptr;
-    ANGLE_TRY(getCompatibleRenderPass(context, desc.getRenderPassDesc(), &compatibleRenderPass));
-
-    const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
-
-    return mPipelineCache.getPipeline(context, *compatibleRenderPass, pipelineLayout,
-                                      activeAttribLocationsMask, programVk->getLinkedVertexModule(),
-                                      programVk->getLinkedFragmentModule(), desc, pipelineOut);
-}
-
-angle::Result RendererVk::getInternalPipeline(vk::Context *context,
-                                              const vk::ShaderAndSerial &vertexShader,
-                                              const vk::ShaderAndSerial &fragmentShader,
-                                              const vk::PipelineLayout &pipelineLayout,
-                                              const vk::PipelineDesc &pipelineDesc,
-                                              const gl::AttributesMask &activeAttribLocationsMask,
-                                              vk::PipelineAndSerial **pipelineOut)
-{
-    ASSERT(vertexShader.queueSerial() ==
+    ASSERT(vertexShader.getSerial() ==
            pipelineDesc.getShaderStageInfo()[vk::ShaderType::VertexShader].moduleSerial);
-    ASSERT(fragmentShader.queueSerial() ==
+    ASSERT(fragmentShader.getSerial() ==
            pipelineDesc.getShaderStageInfo()[vk::ShaderType::FragmentShader].moduleSerial);
 
     // Pull in a compatible RenderPass.

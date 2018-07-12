@@ -141,7 +141,7 @@ gl::Error ContextVk::finish(const gl::Context *context)
     return mRenderer->finish(this);
 }
 
-gl::Error ContextVk::initPipeline()
+gl::Error ContextVk::initPipeline(const gl::DrawCallParams &drawCallParams)
 {
     ASSERT(!mCurrentPipeline);
 
@@ -161,9 +161,20 @@ gl::Error ContextVk::initPipeline()
     // Ensure that the RenderPass description is updated.
     mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc());
 
-    // TODO(jmadill): Validate with ASSERT against physical device limits/caps?
-    ANGLE_TRY(mRenderer->getAppPipeline(this, programVk, *mPipelineDesc, activeAttribLocationsMask,
-                                        &mCurrentPipeline));
+    // Trigger draw call shader patching and fill out the pipeline desc.
+    const vk::ShaderAndSerial *vertexShaderAndSerial   = nullptr;
+    const vk::ShaderAndSerial *fragmentShaderAndSerial = nullptr;
+    ANGLE_TRY(programVk->initShaders(this, drawCallParams, &vertexShaderAndSerial,
+                                     &fragmentShaderAndSerial));
+
+    mPipelineDesc->updateShaders(vertexShaderAndSerial->getSerial(),
+                                 fragmentShaderAndSerial->getSerial());
+
+    const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
+
+    ANGLE_TRY(mRenderer->getPipeline(this, *vertexShaderAndSerial, *fragmentShaderAndSerial,
+                                     pipelineLayout, *mPipelineDesc, activeAttribLocationsMask,
+                                     &mCurrentPipeline));
 
     return gl::NoError();
 }
@@ -181,7 +192,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 
     if (!mCurrentPipeline)
     {
-        ANGLE_TRY(initPipeline());
+        ANGLE_TRY(initPipeline(drawCallParams));
     }
 
     const auto &state                  = mState.getState();
@@ -603,7 +614,6 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
                 break;
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
-                invalidateCurrentPipeline();
                 mVertexArrayBindingHasChanged = true;
                 break;
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
@@ -614,10 +624,8 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
-                ProgramVk *programVk = vk::GetImpl(glState.getProgram());
-                mPipelineDesc->updateShaders(programVk->getVertexModuleSerial(),
-                                             programVk->getFragmentModuleSerial());
                 dirtyTextures = true;
+                // No additional work is needed here. We will update the pipeline desc later.
                 break;
             }
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:

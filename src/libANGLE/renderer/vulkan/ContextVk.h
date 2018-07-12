@@ -172,7 +172,7 @@ class ContextVk : public ContextImpl, public vk::Context
     void handleError(VkResult errorCode, const char *file, unsigned int line) override;
 
   private:
-    gl::Error initPipeline();
+    gl::Error initPipeline(const gl::DrawCallParams &drawCallParams);
     gl::Error setupDraw(const gl::Context *context,
                         const gl::DrawCallParams &drawCallParams,
                         vk::CommandBuffer **commandBufferOut,

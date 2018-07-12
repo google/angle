@@ -121,53 +121,25 @@ std::string GetMappedSamplerName(const std::string &originalName)
 }  // anonymous namespace
 
 // static
-GlslangWrapper *GlslangWrapper::mInstance = nullptr;
-
-// static
-GlslangWrapper *GlslangWrapper::GetReference()
-{
-    if (!mInstance)
-    {
-        mInstance = new GlslangWrapper();
-    }
-
-    mInstance->addRef();
-
-    return mInstance;
-}
-
-// static
-void GlslangWrapper::ReleaseReference()
-{
-    if (mInstance->getRefCount() == 1)
-    {
-        mInstance->release();
-        mInstance = nullptr;
-    }
-    else
-    {
-        mInstance->release();
-    }
-}
-
-GlslangWrapper::GlslangWrapper()
+void GlslangWrapper::Initialize()
 {
     int result = ShInitialize();
     ASSERT(result != 0);
 }
 
-GlslangWrapper::~GlslangWrapper()
+// static
+void GlslangWrapper::Release()
 {
     int result = ShFinalize();
     ASSERT(result != 0);
 }
 
-gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
-                                           const gl::ProgramState &programState,
-                                           const gl::ProgramLinkedResources &resources,
-                                           const gl::Caps &glCaps,
-                                           std::vector<uint32_t> *vertexCodeOut,
-                                           std::vector<uint32_t> *fragmentCodeOut)
+// static
+void GlslangWrapper::GetShaderSource(const gl::Context *glContext,
+                                     const gl::ProgramState &programState,
+                                     const gl::ProgramLinkedResources &resources,
+                                     std::string *vertexSourceOut,
+                                     std::string *fragmentSourceOut)
 {
     gl::Shader *glVertexShader   = programState.getAttachedShader(gl::ShaderType::Vertex);
     gl::Shader *glFragmentShader = programState.getAttachedShader(gl::ShaderType::Fragment);
@@ -308,6 +280,17 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
     InsertQualifierSpecifierString(&vertexSource, kDriverBlockName, kUniformQualifier);
     InsertQualifierSpecifierString(&fragmentSource, kDriverBlockName, kUniformQualifier);
 
+    *vertexSourceOut   = vertexSource;
+    *fragmentSourceOut = fragmentSource;
+}
+
+// static
+gl::LinkResult GlslangWrapper::GetShaderCode(const gl::Caps &glCaps,
+                                             const std::string &vertexSource,
+                                             const std::string &fragmentSource,
+                                             std::vector<uint32_t> *vertexCodeOut,
+                                             std::vector<uint32_t> *fragmentCodeOut)
+{
     std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};
     std::array<int, 2> lengths          = {
         {static_cast<int>(vertexSource.length()), static_cast<int>(fragmentSource.length())}};
@@ -360,5 +343,4 @@ gl::LinkResult GlslangWrapper::linkProgram(const gl::Context *glContext,
 
     return true;
 }
-
 }  // namespace rx
