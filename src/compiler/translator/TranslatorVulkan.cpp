@@ -150,6 +150,7 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
 };
 
 constexpr ImmutableString kFlippedPointCoordName = ImmutableString("flippedPointCoord");
+constexpr ImmutableString kEmulatedDepthRangeParams = ImmutableString("ANGLEDepthRangeParams");
 
 // Declares a new variable to replace gl_PointCoord with a version that is flipping the Y
 // coordinate.
@@ -233,6 +234,28 @@ void FlipGLPointCoord(TIntermBlock *root,
     mainSequence->insert(mainSequence->begin(), assignment);
 }
 
+// Declares a new variable to replace gl_DepthRange, its values are fed from a driver uniform.
+void ReplaceGLDepthRangeWithDriverUniform(TIntermBlock *root,
+                                          const TVariable *driverUniforms,
+                                          TSymbolTable *symbolTable)
+{
+    // Create a symbol reference to "gl_DepthRange"
+    const TVariable *depthRangeVar = static_cast<const TVariable *>(
+        symbolTable->findBuiltIn(ImmutableString("gl_DepthRange"), 0));
+
+    // ANGLEUniforms.depthRange
+    TIntermSymbol *angleUniformsRef    = new TIntermSymbol(driverUniforms);
+    TConstantUnion *depthRangeConstant = new TConstantUnion;
+    depthRangeConstant->setIConst(2);
+    TIntermConstantUnion *depthRangeIndex =
+        new TIntermConstantUnion(depthRangeConstant, *StaticType::GetBasic<EbtInt>());
+    TIntermBinary *angleEmulatedDepthRangeRef =
+        new TIntermBinary(EOpIndexDirectInterfaceBlock, angleUniformsRef, depthRangeIndex);
+
+    // Use this variable instead of gl_DepthRange everywhere.
+    ReplaceVariableWithTyped(root, depthRangeVar, angleEmulatedDepthRangeRef);
+}
+
 // This operation performs the viewport depth translation needed by Vulkan. In GL the viewport
 // transformation is slightly different - see the GL 2.0 spec section "2.12.1 Controlling the
 // Viewport". In Vulkan the corresponding spec section is currently "23.4. Coordinate
@@ -299,6 +322,34 @@ const TVariable *AddDriverUniformsToShader(TIntermBlock *root, TSymbolTable *sym
         new TField(driverViewportScaleFactorType, ImmutableString("viewportScaleFactor"),
                    TSourceLoc(), SymbolType::AngleInternal);
     driverFieldList->push_back(driverViewportScaleFactorSize);
+
+    // Add a new struct field "depthRange" to the driver uniform fields.
+    const TSourceLoc zeroSourceLoc     = {0, 0, 0, 0};
+    TFieldList *depthRangeParamsFields = new TFieldList();
+    depthRangeParamsFields->push_back(new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1),
+                                                 ImmutableString("near"), zeroSourceLoc,
+                                                 SymbolType::AngleInternal));
+    depthRangeParamsFields->push_back(new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1),
+                                                 ImmutableString("far"), zeroSourceLoc,
+                                                 SymbolType::AngleInternal));
+    depthRangeParamsFields->push_back(new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1),
+                                                 ImmutableString("diff"), zeroSourceLoc,
+                                                 SymbolType::AngleInternal));
+    depthRangeParamsFields->push_back(new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1, 1),
+                                                 ImmutableString("dummyPacker"), zeroSourceLoc,
+                                                 SymbolType::AngleInternal));
+    TStructure *emulatedDepthRangeParams = new TStructure(
+        symbolTable, kEmulatedDepthRangeParams, depthRangeParamsFields, SymbolType::AngleInternal);
+    TType *emulatedDepthRangeType = new TType(emulatedDepthRangeParams, false);
+    TVariable *depthRangeVar =
+        new TVariable(symbolTable->nextUniqueId(), kEmptyImmutableString, SymbolType::Empty,
+                      TExtension::UNDEFINED, emulatedDepthRangeType);
+
+    DeclareGlobalVariable(root, depthRangeVar);
+
+    TField *driverDepthRangeSize = new TField(emulatedDepthRangeType, ImmutableString("depthRange"),
+                                              TSourceLoc(), SymbolType::AngleInternal);
+    driverFieldList->push_back(driverDepthRangeSize);
 
     // Define a driver uniform block "ANGLEUniformBlock".
     TLayoutQualifier driverLayoutQualifier = TLayoutQualifier::Create();
@@ -383,6 +434,8 @@ void TranslatorVulkan::translate(TIntermBlock *root,
     }
 
     const TVariable *driverUniformsVariable = AddDriverUniformsToShader(root, &getSymbolTable());
+
+    ReplaceGLDepthRangeWithDriverUniform(root, driverUniformsVariable, &getSymbolTable());
 
     // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
     // if it's core profile shaders and they are used.

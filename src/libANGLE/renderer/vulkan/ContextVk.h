@@ -182,7 +182,7 @@ class ContextVk : public ContextImpl, public vk::Context
     void updateFlipViewportDrawFramebuffer(const gl::State &glState);
     void updateFlipViewportReadFramebuffer(const gl::State &glState);
 
-    angle::Result updateDriverUniforms();
+    angle::Result updateDriverUniforms(const gl::State &glState);
 
     vk::PipelineAndSerial *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
@@ -217,6 +217,9 @@ class ContextVk : public ContextImpl, public vk::Context
     {
         std::array<float, 4> viewport;
         std::array<float, 4> viewportScaleFactor;
+
+        // We'll use x, y, z for near / far / diff respectively.
+        std::array<float, 4> depthRange;
     };
     vk::DynamicBuffer mDriverUniformsBuffer;
     VkDescriptorSet mDriverUniformsDescriptorSet;

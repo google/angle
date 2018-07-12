@@ -267,7 +267,6 @@
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
 
 // Vulkan failures
-2592 VULKAN : dEQP-GLES2.functional.shaders.builtin_variable.depth_range* = SKIP
 2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
 2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
 2601 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP

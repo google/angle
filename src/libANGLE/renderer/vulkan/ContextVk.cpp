@@ -245,8 +245,8 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
 
     // Bind the graphics descriptor sets.
     // TODO(jmadill): Handle multiple command buffers.
-    const auto &descriptorSets   = programVk->getDescriptorSets();
-    const gl::RangeUI &usedRange = programVk->getUsedDescriptorSetRange();
+    const auto &descriptorSets               = programVk->getDescriptorSets();
+    const gl::RangeUI &usedRange             = programVk->getUsedDescriptorSetRange();
     const vk::PipelineLayout &pipelineLayout = programVk->getPipelineLayout();
     if (!usedRange.empty())
     {
@@ -470,11 +470,12 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
                                               glState.getNearPlane(), glState.getFarPlane(),
                                               isViewportFlipEnabledForDrawFBO());
-                ANGLE_TRY(updateDriverUniforms());
+                ANGLE_TRY(updateDriverUniforms(glState));
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
                 mPipelineDesc->updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
+                ANGLE_TRY(updateDriverUniforms(glState));
                 break;
             case gl::State::DIRTY_BIT_BLEND_ENABLED:
                 mPipelineDesc->updateBlendEnabled(glState.isBlendEnabled());
@@ -588,8 +589,8 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
-                ANGLE_TRY(updateDriverUniforms());
-                updateFlipViewportDrawFramebuffer(context->getGLState());
+                ANGLE_TRY(updateDriverUniforms(glState));
+                updateFlipViewportDrawFramebuffer(glState);
                 FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
                 mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
                                               glState.getNearPlane(), glState.getFarPlane(),
@@ -687,7 +688,7 @@ gl::Error ContextVk::onMakeCurrent(const gl::Context *context)
     const gl::State &glState = context->getGLState();
     updateFlipViewportDrawFramebuffer(glState);
     updateFlipViewportReadFramebuffer(glState);
-    ANGLE_TRY(updateDriverUniforms());
+    ANGLE_TRY(updateDriverUniforms(glState));
     return gl::NoError();
 }
 
@@ -857,7 +858,7 @@ const FeaturesVk &ContextVk::getFeatures() const
     return mRenderer->getFeatures();
 }
 
-angle::Result ContextVk::updateDriverUniforms()
+angle::Result ContextVk::updateDriverUniforms(const gl::State &glState)
 {
     if (!mDriverUniformsBuffer.valid())
     {
@@ -869,7 +870,7 @@ angle::Result ContextVk::updateDriverUniforms()
     // Release any previously retained buffers.
     mDriverUniformsBuffer.releaseRetainedBuffers(mRenderer);
 
-    const gl::Rectangle &glViewport = mState.getState().getViewport();
+    const gl::Rectangle &glViewport = glState.getViewport();
 
     // Allocate a new region in the dynamic buffer.
     uint8_t *ptr            = nullptr;
@@ -880,12 +881,17 @@ angle::Result ContextVk::updateDriverUniforms()
                                              &newBufferAllocated));
     float scaleY = isViewportFlipEnabledForDrawFBO() ? 1.0f : -1.0f;
 
+    float depthRangeNear = glState.getNearPlane();
+    float depthRangeFar  = glState.getFarPlane();
+    float depthRangeDiff = depthRangeFar - depthRangeNear;
+
     // Copy and flush to the device.
     DriverUniforms *driverUniforms = reinterpret_cast<DriverUniforms *>(ptr);
     *driverUniforms                = {
         {static_cast<float>(glViewport.x), static_cast<float>(glViewport.y),
          static_cast<float>(glViewport.width), static_cast<float>(glViewport.height)},
-        {1.0f, scaleY, 1.0f, 1.0f}};
+        {1.0f, scaleY, 1.0f, 1.0f},
+        {depthRangeNear, depthRangeFar, depthRangeDiff, 0.0f}};
 
     ANGLE_TRY(mDriverUniformsBuffer.flush(this));
 
