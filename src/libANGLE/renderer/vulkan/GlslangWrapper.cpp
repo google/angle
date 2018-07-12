@@ -285,11 +285,12 @@ void GlslangWrapper::GetShaderSource(const gl::Context *glContext,
 }
 
 // static
-gl::LinkResult GlslangWrapper::GetShaderCode(const gl::Caps &glCaps,
-                                             const std::string &vertexSource,
-                                             const std::string &fragmentSource,
-                                             std::vector<uint32_t> *vertexCodeOut,
-                                             std::vector<uint32_t> *fragmentCodeOut)
+angle::Result GlslangWrapper::GetShaderCode(vk::Context *context,
+                                            const gl::Caps &glCaps,
+                                            const std::string &vertexSource,
+                                            const std::string &fragmentSource,
+                                            std::vector<uint32_t> *vertexCodeOut,
+                                            std::vector<uint32_t> *fragmentCodeOut)
 {
     std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};
     std::array<int, 2> lengths          = {
@@ -309,9 +310,10 @@ gl::LinkResult GlslangWrapper::GetShaderCode(const gl::Caps &glCaps,
         vertexShader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
     if (!vertexResult)
     {
-        return gl::InternalError() << "Internal error parsing Vulkan vertex shader:\n"
-                                   << vertexShader.getInfoLog() << "\n"
-                                   << vertexShader.getInfoDebugLog() << "\n";
+        ERR() << "Internal error parsing Vulkan vertex shader:\n"
+              << vertexShader.getInfoLog() << "\n"
+              << vertexShader.getInfoDebugLog() << "\n";
+        ANGLE_VK_CHECK(context, false, VK_ERROR_INVALID_SHADER_NV);
     }
 
     glslang::TShader fragmentShader(EShLangFragment);
@@ -321,9 +323,10 @@ gl::LinkResult GlslangWrapper::GetShaderCode(const gl::Caps &glCaps,
         fragmentShader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
     if (!fragmentResult)
     {
-        return gl::InternalError() << "Internal error parsing Vulkan fragment shader:\n"
-                                   << fragmentShader.getInfoLog() << "\n"
-                                   << fragmentShader.getInfoDebugLog() << "\n";
+        ERR() << "Internal error parsing Vulkan fragment shader:\n"
+              << fragmentShader.getInfoLog() << "\n"
+              << fragmentShader.getInfoDebugLog() << "\n";
+        ANGLE_VK_CHECK(context, false, VK_ERROR_INVALID_SHADER_NV);
     }
 
     glslang::TProgram program;
@@ -332,8 +335,8 @@ gl::LinkResult GlslangWrapper::GetShaderCode(const gl::Caps &glCaps,
     bool linkResult = program.link(messages);
     if (!linkResult)
     {
-        return gl::InternalError() << "Internal error linking Vulkan shaders:\n"
-                                   << program.getInfoLog() << "\n";
+        ERR() << "Internal error linking Vulkan shaders:\n" << program.getInfoLog() << "\n";
+        ANGLE_VK_CHECK(context, false, VK_ERROR_INVALID_SHADER_NV);
     }
 
     glslang::TIntermediate *vertexStage   = program.getIntermediate(EShLangVertex);
@@ -341,6 +344,6 @@ gl::LinkResult GlslangWrapper::GetShaderCode(const gl::Caps &glCaps,
     glslang::GlslangToSpv(*vertexStage, *vertexCodeOut);
     glslang::GlslangToSpv(*fragmentStage, *fragmentCodeOut);
 
-    return true;
+    return angle::Result::Continue();
 }
 }  // namespace rx

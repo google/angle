@@ -12,7 +12,6 @@
 
 #include <array>
 
-#include "libANGLE/Constants.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
@@ -100,29 +99,20 @@ class ProgramVk : public ProgramImpl
                                  const GLfloat *coeffs) override;
 
     // Also initializes the pipeline layout, descriptor set layouts, and used descriptor ranges.
-    gl::Error initShaders(const ContextVk *contextVk,
-                          const gl::DrawCallParams &drawCallParams,
-                          const vk::ShaderAndSerial **vertexShaderAndSerialOut,
-                          const vk::ShaderAndSerial **fragmentShaderAndSerialOut);
+    angle::Result initShaders(ContextVk *contextVk,
+                              const gl::DrawCallParams &drawCallParams,
+                              const vk::ShaderAndSerial **vertexShaderAndSerialOut,
+                              const vk::ShaderAndSerial **fragmentShaderAndSerialOut,
+                              const vk::PipelineLayout **pipelineLayoutOut);
 
     angle::Result updateUniforms(ContextVk *contextVk);
 
-    const std::vector<VkDescriptorSet> &getDescriptorSets() const;
-    const uint32_t *getDynamicOffsets();
-    uint32_t getDynamicOffsetsCount();
-
-    // In Vulkan, it is invalid to pass in a NULL descriptor set to vkCmdBindDescriptorSets.
-    // However, it's valid to leave them in an undefined, unbound state, if they are never used.
-    // This means when we want to ignore a descriptor set index, we need to pass in an offset
-    // parameter to BindDescriptorSets, which is an offset into the getDescriptorSets array.
-    // This allows us to skip binding blank descriptor sets when the Program doesn't use Uniforms
-    // or Textures.
-    const gl::RangeUI &getUsedDescriptorSetRange() const;
-
-    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
     void invalidateTextures();
 
-    const vk::PipelineLayout &getPipelineLayout() const;
+    angle::Result updateDescriptorSets(ContextVk *contextVk,
+                                       const gl::DrawCallParams &drawCallParams,
+                                       VkDescriptorSet driverUniformsDescriptorSet,
+                                       vk::CommandBuffer *commandBuffer);
 
     // For testing only.
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
@@ -136,17 +126,16 @@ class ProgramVk : public ProgramImpl
 
     angle::Result reset(ContextVk *contextVk);
     angle::Result allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex);
-    gl::Error initDefaultUniformBlocks(const gl::Context *glContext);
+    angle::Result initDefaultUniformBlocks(const gl::Context *glContext);
+
     angle::Result updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
+    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
 
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;
 
     template <typename T>
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
-
-    vk::ShaderAndSerial mDefaultVertexShaderAndSerial;
-    vk::ShaderAndSerial mDefaultFragmentShaderAndSerial;
 
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable
@@ -182,6 +171,32 @@ class ProgramVk : public ProgramImpl
     // deleted while this program is in use.
     vk::BindingPointer<vk::PipelineLayout> mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
+
+    class ShaderInfo final : angle::NonCopyable
+    {
+      public:
+        ShaderInfo();
+        ~ShaderInfo();
+
+        angle::Result getShaders(ContextVk *contextVk,
+                                 const std::string &vertexSource,
+                                 const std::string &fragmentSource,
+                                 const vk::ShaderAndSerial **vertexShaderAndSerialOut,
+                                 const vk::ShaderAndSerial **fragmentShaderAndSerialOut);
+        void destroy(VkDevice device);
+        bool valid() const;
+
+      private:
+        vk::ShaderAndSerial mVertexShaderAndSerial;
+        vk::ShaderAndSerial mFragmentShaderAndSerial;
+    };
+
+    // TODO(jmadill): Line rasterization emulation shaders. http://anglebug.com/2598
+    ShaderInfo mDefaultShaderInfo;
+
+    // We keep the translated linked shader sources to use with shader draw call patching.
+    std::string mVertexSource;
+    std::string mFragmentSource;
 };
 
 }  // namespace rx
