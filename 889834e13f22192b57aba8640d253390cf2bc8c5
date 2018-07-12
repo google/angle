@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "21b3b743_072e250e",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-12T17:07:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c826d93_cf7e7d34",
+      "range": {
+        "startLine": 489,
+        "startChar": 16,
+        "endLine": 489,
+        "endChar": 27
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9764a3fc_9f2e7190",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2018-07-12T14:48:52Z",
       "side": 1,
       "message": "nit: can probably put this in the Framebuffer init. i don\u0027t we allocate anything until the first allocate() call",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 534,
+        "endChar": 17
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45e3fe78_fe3d5715",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-12T17:07:13Z",
+      "side": 1,
+      "message": "What is framebuffer init? I don\u0027t see such a function in Framebuffer",
+      "parentUuid": "9764a3fc_9f2e7190",
       "range": {
         "startLine": 530,
         "startChar": 0,
@@ -68,6 +116,30 @@
       "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38dc8d34_335c075a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-12T17:07:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93517486_cd03ab83",
+      "range": {
+        "startLine": 536,
+        "startChar": 0,
+        "endLine": 539,
+        "endChar": 0
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -138,6 +210,30 @@
       "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c289898_7da8328b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1262827
+      },
+      "writtenOn": "2018-07-12T17:07:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb46bca6_89efb993",
+      "range": {
+        "startLine": 157,
+        "startChar": 22,
+        "endLine": 157,
+        "endChar": 37
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
