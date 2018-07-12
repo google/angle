@@ -148,7 +148,7 @@ class ContextImpl : public GLImplFactory
     virtual GLint64 getTimestamp() = 0;
 
     // Context switching
-    virtual void onMakeCurrent(const gl::Context *context) = 0;
+    virtual gl::Error onMakeCurrent(const gl::Context *context) = 0;
 
     // Native capabilities, unmodified by gl::Context.
     virtual gl::Caps getNativeCaps() const                         = 0;

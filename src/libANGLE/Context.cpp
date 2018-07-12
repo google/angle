@@ -632,7 +632,7 @@ egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     }
 
     // Notify the renderer of a context switch
-    mImplementation->onMakeCurrent(this);
+    ANGLE_TRY(mImplementation->onMakeCurrent(this));
     return egl::NoError();
 }
 

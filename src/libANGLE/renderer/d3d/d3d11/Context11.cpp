@@ -424,9 +424,10 @@ GLint64 Context11::getTimestamp()
     return mRenderer->getTimestamp();
 }
 
-void Context11::onMakeCurrent(const gl::Context *context)
+gl::Error Context11::onMakeCurrent(const gl::Context *context)
 {
-    ANGLE_SWALLOW_ERR(mRenderer->getStateManager()->onMakeCurrent(context));
+    ANGLE_TRY(mRenderer->getStateManager()->onMakeCurrent(context));
+    return gl::NoError();
 }
 
 gl::Caps Context11::getNativeCaps() const

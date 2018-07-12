@@ -128,7 +128,7 @@ class Context11 : public ContextImpl, public MultisampleTextureInitializer
     GLint64 getTimestamp() override;
 
     // Context switching
-    void onMakeCurrent(const gl::Context *context) override;
+    gl::Error onMakeCurrent(const gl::Context *context) override;
 
     // Caps queries
     gl::Caps getNativeCaps() const override;
