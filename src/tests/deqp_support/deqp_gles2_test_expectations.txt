@@ -391,3 +391,6 @@
 2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.normalize.user_ptr_0_0_byte3_normalized_vec4_dynamic_draw_quads_256 = FAIL
 2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.normalize.user_ptr_0_0_unsigned_byte3_normalized_vec4_dynamic_draw_quads_1 = FAIL
 2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.normalize.user_ptr_0_0_unsigned_byte3_normalized_vec4_dynamic_draw_quads_256 = FAIL
+
+// Failing on the Pixel 2.
+2727 VULKAN ANDROID : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = FAIL
