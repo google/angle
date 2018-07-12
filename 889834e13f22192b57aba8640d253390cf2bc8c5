@@ -94,6 +94,30 @@
     },
     {
       "key": {
+        "uuid": "93a31c17_ecc1e22a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1178,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-12T14:50:54Z",
+      "side": 1,
+      "message": "Nevermind, this should be correct!",
+      "parentUuid": "cbd833d2_d53521fd",
+      "range": {
+        "startLine": 1171,
+        "startChar": 0,
+        "endLine": 1178,
+        "endChar": 5
+      },
+      "revId": "889834e13f22192b57aba8640d253390cf2bc8c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb46bca6_89efb993",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
         "patchSetId": 7
