@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d45c35f0_3b3d99d8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T18:48:36Z",
+      "side": 1,
+      "message": "instead of calling setImage directly, can you make an setImage function that does the work you need? and call that I\u0027ve run into snafus when calling TextureImpl/BufferImpl/FramebufferImpl override functions directly. Just trying to avoid that.",
+      "range": {
+        "startLine": 592,
+        "startChar": 14,
+        "endLine": 592,
+        "endChar": 22
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0c6d3d1_521db3c3",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T18:48:36Z",
+      "side": 1,
+      "message": "can you update the return type to angle::Result and the context to ContextVk? Hoping to keep all the internal Vulkan stuff in this form.",
+      "range": {
+        "startLine": 654,
+        "startChar": 0,
+        "endLine": 654,
+        "endChar": 67
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3cc8fa5_c3577b35",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T18:48:36Z",
+      "side": 1,
+      "message": "can we return an error here?",
+      "range": {
+        "startLine": 668,
+        "startChar": 19,
+        "endLine": 668,
+        "endChar": 26
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c772fef_0086c9d5",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T18:48:36Z",
+      "side": 1,
+      "message": "I\u0027d like to try and diagnose this error. It\u0027s fine as a follow up but please leave a TODO with a bug tag so we don\u0027t forget it.",
+      "range": {
+        "startLine": 677,
+        "startChar": 4,
+        "endLine": 677,
+        "endChar": 41
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d5c0693_a3173268",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T18:48:36Z",
+      "side": 1,
+      "message": "note this is the non-emulated format. For unsupported formats this will return the unsupported format. For the destination format use textureFormat(). We should probably clarify this. Unsure if this causes any issues but something you should be aware of.",
+      "range": {
+        "startLine": 679,
+        "startChar": 76,
+        "endLine": 679,
+        "endChar": 87
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0309c43a_37c7824b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T18:48:36Z",
+      "side": 1,
+      "message": "This is a bit of a hack since you\u0027re a TextureVk modifying another TextureVk. This will have to be redesigned at some point when we support more implicit transitions and dependencies. Unsure of how to fix it right now so please just leave a comment.",
+      "range": {
+        "startLine": 688,
+        "startChar": 4,
+        "endLine": 688,
+        "endChar": 80
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cff7e840_bd0006ae",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 710,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T18:48:36Z",
+      "side": 1,
+      "message": "if this is packed I believe you can use 0 for these. But ok either way.",
+      "range": {
+        "startLine": 709,
+        "startChar": 0,
+        "endLine": 710,
+        "endChar": 68
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02826c39_d6ff626e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T18:48:36Z",
+      "side": 1,
+      "message": "same comment about angleFormat. You probably should be using textureFormat.",
+      "range": {
+        "startLine": 729,
+        "startChar": 60,
+        "endLine": 729,
+        "endChar": 71
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
