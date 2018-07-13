@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "811687c9_b186c239",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-13T15:29:12Z",
+      "side": 1,
+      "message": "Why are we passing the egl handle when initializing the vulkan backend?  Can we just not pass it from the platform in this case?",
+      "range": {
+        "startLine": 496,
+        "startChar": 12,
+        "endLine": 496,
+        "endChar": 64
+      },
+      "revId": "6e1e780efc46f5a312149e2fdb0a242e9f91f6e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
