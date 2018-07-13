@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e09c1c9a_b05388b2",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1592,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T12:28:30Z",
+      "side": 1,
+      "message": "If we make it a member of ContextImpl we can modify it without mutable. I changed the code such that handleError is now non-const and the ErrorSet no longer uses mutable. There\u0027s only one place in Framebuffer where this is an issue. And this will go away once the refactor is complete. LMK if you are ok with this explanation.",
+      "parentUuid": "e6d0e8d7_339d0f5c",
+      "range": {
+        "startLine": 1592,
+        "startChar": 4,
+        "endLine": 1592,
+        "endChar": 21
+      },
+      "revId": "72f8e19d789b8bf613797b128357187cb57d05fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "177c7d57_e6858609",
         "filename": "src/libANGLE/Error.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2018-07-12T13:54:39Z",
       "side": 1,
       "message": "Could these be called Error and Success instead?",
+      "range": {
+        "startLine": 272,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 54
+      },
+      "revId": "72f8e19d789b8bf613797b128357187cb57d05fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49242f57_b941ce63",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T12:28:30Z",
+      "side": 1,
+      "message": "isError is named that way for compatibility with the macro. But naming the methods Stop() and Continue() will let us also use Stop() for \"early-exit\" scenarios. For example when we detect a no-op draw we can return Stop() but not generate an error. It\u0027s not technically an error in that case.\n\nI changed the comments here to make this clearer. LMK if this seems acceptable to you.",
+      "parentUuid": "177c7d57_e6858609",
       "range": {
         "startLine": 272,
         "startChar": 0,
@@ -68,6 +116,30 @@
       "revId": "72f8e19d789b8bf613797b128357187cb57d05fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52aa4326_8a004380",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T12:28:30Z",
+      "side": 1,
+      "message": "Good catch, done.",
+      "parentUuid": "ac8beb41_d4e11dcc",
+      "range": {
+        "startLine": 276,
+        "startChar": 4,
+        "endLine": 276,
+        "endChar": 31
+      },
+      "revId": "72f8e19d789b8bf613797b128357187cb57d05fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
