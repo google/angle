@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a89e35d2_7bca536a",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-13T15:39:13Z",
+      "side": 1,
+      "message": "Put this in ShouldCreateLogMessage",
+      "range": {
+        "startLine": 171,
+        "startChar": 0,
+        "endLine": 174,
+        "endChar": 8
+      },
+      "revId": "76d988ece3536d44153a2a84b992bc94f74615d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fc5b935_a1ed8557",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-13T15:39:13Z",
+      "side": 1,
+      "message": "Can you refactor this into a switch above the __android_log_print?",
+      "range": {
+        "startLine": 177,
+        "startChar": 28,
+        "endLine": 179,
+        "endChar": 97
+      },
+      "revId": "76d988ece3536d44153a2a84b992bc94f74615d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
