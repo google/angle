@@ -63,6 +63,21 @@ class TransformFeedback;
 class VertexArray;
 struct VertexAttribute;
 
+class ErrorSet : angle::NonCopyable
+{
+  public:
+    explicit ErrorSet(Context *context);
+    ~ErrorSet();
+
+    void handleError(const Error &error);
+    bool empty() const;
+    GLenum popError();
+
+  private:
+    Context *mContext;
+    std::set<GLenum> mErrors;
+};
+
 class Context final : public egl::LabeledObject, angle::NonCopyable
 {
   public:
@@ -1380,10 +1395,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     void framebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level);
 
     // Consumes the error.
-    void handleError(const Error &error) const;
+    void handleError(const Error &error);
 
     GLenum getError();
-    void markContextLost() const;
+    void markContextLost();
     bool isContextLost() const;
     GLenum getGraphicsResetStatus();
     bool isResetNotificationEnabled();
@@ -1574,17 +1589,16 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     std::vector<const char *> mRequestableExtensionStrings;
 
     // Recorded errors
-    typedef std::set<GLenum> ErrorSet;
-    mutable ErrorSet mErrors;
+    ErrorSet mErrors;
 
     // GLES1 renderer state
     std::unique_ptr<GLES1Renderer> mGLES1Renderer;
 
     // Current/lost context flags
     bool mHasBeenCurrent;
-    mutable bool mContextLost;
-    mutable GLenum mResetStatus;
-    mutable bool mContextLostForced;
+    bool mContextLost;
+    GLenum mResetStatus;
+    bool mContextLostForced;
     GLenum mResetStrategy;
     const bool mRobustAccess;
     const bool mSurfacelessSupported;

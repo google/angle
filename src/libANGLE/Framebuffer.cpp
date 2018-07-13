@@ -1024,7 +1024,8 @@ GLenum Framebuffer::checkStatus(const Context *context)
             Error err = syncState(context);
             if (err.isError())
             {
-                context->handleError(err);
+                // TODO(jmadill): Remove when refactor complete. http://anglebug.com/2491
+                const_cast<Context *>(context)->handleError(err);
                 return GetDefaultReturnValue<EntryPoint::CheckFramebufferStatus, GLenum>();
             }
             if (!mImpl->checkStatus(context))

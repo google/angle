@@ -9,11 +9,13 @@
 
 #include "libANGLE/renderer/ContextImpl.h"
 
+#include "libANGLE/Context.h"
+
 namespace rx
 {
 
 ContextImpl::ContextImpl(const gl::ContextState &state)
-    : mState(state), mMemoryProgramCache(nullptr)
+    : mState(state), mMemoryProgramCache(nullptr), mErrors(nullptr)
 {
 }
 
@@ -116,4 +118,13 @@ void ContextImpl::setMemoryProgramCache(gl::MemoryProgramCache *memoryProgramCac
     mMemoryProgramCache = memoryProgramCache;
 }
 
+void ContextImpl::setErrorSet(gl::ErrorSet *errorSet)
+{
+    mErrors = errorSet;
+}
+
+void ContextImpl::handleError(const gl::Error &error)
+{
+    mErrors->handleError(error);
+}
 }  // namespace rx

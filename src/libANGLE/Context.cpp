@@ -330,6 +330,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
                memoryProgramCache != nullptr),
       mConfig(config),
       mClientType(EGL_OPENGL_ES_API),
+      mErrors(this),
       mHasBeenCurrent(false),
       mContextLost(false),
       mResetStatus(GL_NO_ERROR),
@@ -2541,21 +2542,9 @@ void Context::getProgramInterfaceivRobust(GLuint program,
     UNIMPLEMENTED();
 }
 
-void Context::handleError(const Error &error) const
+void Context::handleError(const Error &error)
 {
-    if (ANGLE_UNLIKELY(error.isError()))
-    {
-        GLenum code = error.getCode();
-        mErrors.insert(code);
-        if (code == GL_OUT_OF_MEMORY && getWorkarounds().loseContextOnOutOfMemory)
-        {
-            markContextLost();
-        }
-
-        ASSERT(!error.getMessage().empty());
-        mGLState.getDebug().insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, error.getID(),
-                                          GL_DEBUG_SEVERITY_HIGH, error.getMessage());
-    }
+    mErrors.handleError(error);
 }
 
 // Get one of the recorded errors and clear its flag, if any.
@@ -2568,14 +2557,12 @@ GLenum Context::getError()
     }
     else
     {
-        GLenum error = *mErrors.begin();
-        mErrors.erase(mErrors.begin());
-        return error;
+        return mErrors.popError();
     }
 }
 
 // NOTE: this function should not assume that this context is current!
-void Context::markContextLost() const
+void Context::markContextLost()
 {
     if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
     {
@@ -7542,4 +7529,48 @@ void Context::maxShaderCompilerThreads(GLuint count)
     mGLState.setMaxShaderCompilerThreads(count);
 }
 
+// ErrorSet implementation.
+ErrorSet::ErrorSet(Context *context) : mContext(context)
+{
+}
+
+ErrorSet::~ErrorSet() = default;
+
+void ErrorSet::handleError(const Error &error)
+{
+    // This internal enum is used to filter internal errors that are already handled.
+    // TODO(jmadill): Remove this when refactor is done. http://anglebug.com/2491
+    if (error.getCode() == GL_INTERNAL_ERROR_ANGLEX)
+    {
+        return;
+    }
+
+    if (ANGLE_UNLIKELY(error.isError()))
+    {
+        GLenum code = error.getCode();
+        mErrors.insert(code);
+        if (code == GL_OUT_OF_MEMORY && mContext->getWorkarounds().loseContextOnOutOfMemory)
+        {
+            mContext->markContextLost();
+        }
+
+        ASSERT(!error.getMessage().empty());
+        mContext->getGLState().getDebug().insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR,
+                                                        error.getID(), GL_DEBUG_SEVERITY_HIGH,
+                                                        error.getMessage());
+    }
+}
+
+bool ErrorSet::empty() const
+{
+    return mErrors.empty();
+}
+
+GLenum ErrorSet::popError()
+{
+    ASSERT(!empty());
+    GLenum error = *mErrors.begin();
+    mErrors.erase(mErrors.begin());
+    return error;
+}
 }  // namespace gl
