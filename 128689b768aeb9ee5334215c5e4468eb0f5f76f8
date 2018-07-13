@@ -16,6 +16,24 @@
       "revId": "128689b768aeb9ee5334215c5e4468eb0f5f76f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50d9d808_bd8d60c6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T19:30:53Z",
+      "side": 0,
+      "message": "Yep!",
+      "parentUuid": "5f65a2dc_7c16f8da",
+      "revId": "128689b768aeb9ee5334215c5e4468eb0f5f76f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
