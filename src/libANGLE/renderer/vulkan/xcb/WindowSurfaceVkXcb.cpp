@@ -38,9 +38,8 @@ angle::Result WindowSurfaceVkXcb::createSurfaceVk(vk::Context *context, gl::Exte
     xcb_get_geometry_cookie_t cookie = xcb_get_geometry(mXcbConnection, mNativeWindowType);
     xcb_get_geometry_reply_t *reply  = xcb_get_geometry_reply(mXcbConnection, cookie, nullptr);
     ASSERT(reply);
-    free(reply);
-
     *extentsOut = gl::Extents(reply->width, reply->height, 0);
+    free(reply);
     return angle::Result::Continue();
 }
 
