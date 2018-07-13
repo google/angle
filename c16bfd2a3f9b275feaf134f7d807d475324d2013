@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "b95e635f_a9bc230a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-13T06:11:34Z",
+      "side": 1,
+      "message": "The prior values are used to update the binding-attribute map. The binding-attribute map should also be updated in each sync, or we cannot sync attributes correctly or sync some attributes that are not needed to be sync.\n\nIn either a) or b), when the DIRTY_ATTRIB_BINDING is dirty, this means the attribute is using a different binding from last sync, so we need to update all the related items in the binding-attribute map:\n1. Label the new binding being used by this attribute.\n2. Label the old binding not being used by this attribute.\nStep 1 is easy to do as we know which binding should be used for this attribute, but Step 2 is harder to do as we cannot directly get the binding this attribute used in the last sync. Without the prior value we have to get the old binding by another iteration on the binding-attribute map before step 1, which costs more time.\n\nNote that the prior values are not needed if the binding-attribute map is updated in a callback function, where we can get both the old and the new bindingIndex easily.",
+      "parentUuid": "50d8a331_4a1bde74",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 0
+      },
+      "revId": "c16bfd2a3f9b275feaf134f7d807d475324d2013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d722a80_e227ffcb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
         "patchSetId": 8
