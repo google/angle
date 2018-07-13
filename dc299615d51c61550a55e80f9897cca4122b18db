@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "61d72085_badd6094",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-13T19:07:30Z",
+      "side": 1,
+      "message": "angle::Format::pixelBytes is equivalent?  it works so far.",
+      "parentUuid": "47e56d62_b0bef9a8",
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d7d3ec25_750d1c00",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
@@ -60,6 +78,30 @@
     },
     {
       "key": {
+        "uuid": "d0078f43_04fae4cf",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-13T19:07:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7d3ec25_750d1c00",
+      "range": {
+        "startLine": 101,
+        "startChar": 12,
+        "endLine": 101,
+        "endChar": 96
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a580e67_50b4f710",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
@@ -71,6 +113,30 @@
       "writtenOn": "2018-06-04T21:07:21Z",
       "side": 1,
       "message": "do you think we could do this in syncDirtyAttrib? I forget the details. We were discussing something like that. then maybe you wouldn\u0027t need the separate mStride.",
+      "range": {
+        "startLine": 325,
+        "startChar": 12,
+        "endLine": 325,
+        "endChar": 33
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d397b01a_8870ff81",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-13T19:07:30Z",
+      "side": 1,
+      "message": "My plan is for the next CL to do a big overhaul/cleanup.\nThis CL is meant to be as simple as possible.",
+      "parentUuid": "6a580e67_50b4f710",
       "range": {
         "startLine": 325,
         "startChar": 12,
@@ -103,6 +169,30 @@
       "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82cb7141_eda8c5f2",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-13T19:07:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b381f5a_b2c89395",
+      "range": {
+        "startLine": 111,
+        "startChar": 19,
+        "endLine": 111,
+        "endChar": 38
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -153,6 +243,30 @@
     },
     {
       "key": {
+        "uuid": "73f72163_9fb0d26e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-13T19:07:30Z",
+      "side": 1,
+      "message": "split out to https://chromium-review.googlesource.com/c/angle/angle/+/1113026",
+      "parentUuid": "03f9667f_16453b9a",
+      "range": {
+        "startLine": 358,
+        "startChar": 0,
+        "endLine": 389,
+        "endChar": 9
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9b859274_b13355d6",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 1
@@ -173,6 +287,30 @@
       "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6bc01ff_886d4af4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-13T19:07:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b859274_b13355d6",
+      "range": {
+        "startLine": 54,
+        "startChar": 20,
+        "endLine": 54,
+        "endChar": 33
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -199,6 +337,30 @@
     },
     {
       "key": {
+        "uuid": "a834851d_d5940973",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-13T19:07:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a33443bf_e8fe641e",
+      "range": {
+        "startLine": 55,
+        "startChar": 23,
+        "endLine": 55,
+        "endChar": 41
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49211edc_1d2d4826",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
         "patchSetId": 1
@@ -219,6 +381,30 @@
       "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd5c545c_78020007",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-13T19:07:30Z",
+      "side": 1,
+      "message": "Name change done.  I think the current CL is not exactly what you were expecting when you wrote this comment, and there is probably no advantage to the mini struct anymore.",
+      "parentUuid": "49211edc_1d2d4826",
+      "range": {
+        "startLine": 56,
+        "startChar": 9,
+        "endLine": 56,
+        "endChar": 27
+      },
+      "revId": "dc299615d51c61550a55e80f9897cca4122b18db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
