@@ -46,6 +46,30 @@
       "revId": "6e1e780efc46f5a312149e2fdb0a242e9f91f6e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8489077f_628c4e93",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-07-13T15:56:15Z",
+      "side": 1,
+      "message": "Okay, never mind this CL. If I leave out the eglHandle this works fine.",
+      "parentUuid": "0b4cf82b_64a663c1",
+      "range": {
+        "startLine": 496,
+        "startChar": 12,
+        "endLine": 496,
+        "endChar": 64
+      },
+      "revId": "6e1e780efc46f5a312149e2fdb0a242e9f91f6e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
