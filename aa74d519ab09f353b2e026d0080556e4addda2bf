@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8da66945_e65f842d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-13T19:08:10Z",
+      "side": 1,
+      "message": "nit: just \"program\"",
+      "range": {
+        "startLine": 942,
+        "startChar": 23,
+        "endLine": 942,
+        "endChar": 32
+      },
+      "revId": "aa74d519ab09f353b2e026d0080556e4addda2bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
