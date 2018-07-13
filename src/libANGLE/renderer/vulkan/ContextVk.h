@@ -20,7 +20,7 @@ namespace rx
 struct FeaturesVk;
 class RendererVk;
 
-class ContextVk : public ContextImpl
+class ContextVk : public ContextImpl, public vk::Context
 {
   public:
     ContextVk(const gl::ContextState &state, RendererVk *renderer);
@@ -154,7 +154,6 @@ class ContextVk : public ContextImpl
     gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
     VkDevice getDevice() const;
-    RendererVk *getRenderer() const { return mRenderer; }
     const FeaturesVk &getFeatures() const;
 
     void invalidateCurrentPipeline();
@@ -170,6 +169,8 @@ class ContextVk : public ContextImpl
                                    gl::Texture **textureOut);
     void updateColorMask(const gl::BlendState &blendState);
 
+    void handleError(VkResult errorCode, const char *file, unsigned int line) override;
+
   private:
     gl::Error initPipeline();
     gl::Error setupDraw(const gl::Context *context,
@@ -181,9 +182,8 @@ class ContextVk : public ContextImpl
     void updateFlipViewportDrawFramebuffer(const gl::State &glState);
     void updateFlipViewportReadFramebuffer(const gl::State &glState);
 
-    vk::Error updateDriverUniforms();
+    angle::Result updateDriverUniforms();
 
-    RendererVk *mRenderer;
     vk::PipelineAndSerial *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
 

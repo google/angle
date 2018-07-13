@@ -13,59 +13,45 @@
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
-namespace rx
-{
 namespace
 {
-GLenum DefaultGLErrorCode(VkResult result)
-{
-    switch (result)
-    {
-        case VK_ERROR_OUT_OF_HOST_MEMORY:
-        case VK_ERROR_OUT_OF_DEVICE_MEMORY:
-        case VK_ERROR_TOO_MANY_OBJECTS:
-            return GL_OUT_OF_MEMORY;
-        default:
-            return GL_INVALID_OPERATION;
-    }
-}
-
-EGLint DefaultEGLErrorCode(VkResult result)
-{
-    switch (result)
-    {
-        case VK_ERROR_OUT_OF_HOST_MEMORY:
-        case VK_ERROR_OUT_OF_DEVICE_MEMORY:
-        case VK_ERROR_TOO_MANY_OBJECTS:
-            return EGL_BAD_ALLOC;
-        case VK_ERROR_INITIALIZATION_FAILED:
-            return EGL_NOT_INITIALIZED;
-        case VK_ERROR_SURFACE_LOST_KHR:
-        case VK_ERROR_DEVICE_LOST:
-            return EGL_CONTEXT_LOST;
-        default:
-            return EGL_BAD_ACCESS;
-    }
-}
-
-VkImageUsageFlags GetStagingBufferUsageFlags(vk::StagingUsage usage)
+VkImageUsageFlags GetStagingBufferUsageFlags(rx::vk::StagingUsage usage)
 {
     switch (usage)
     {
-        case vk::StagingUsage::Read:
+        case rx::vk::StagingUsage::Read:
             return VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-        case vk::StagingUsage::Write:
+        case rx::vk::StagingUsage::Write:
             return VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-        case vk::StagingUsage::Both:
+        case rx::vk::StagingUsage::Both:
             return (VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
         default:
             UNREACHABLE();
             return 0;
     }
 }
+}  // anonymous namespace
 
+namespace angle
+{
+egl::Error ToEGL(Result result, rx::DisplayVk *displayVk, EGLint errorCode)
+{
+    if (result.isError())
+    {
+        return displayVk->getEGLError(errorCode);
+    }
+    else
+    {
+        return egl::NoError();
+    }
+}
+}  // namespace angle
+
+namespace rx
+{
 // Mirrors std_validation_str in loader.c
 const char *g_VkStdValidationLayerName = "VK_LAYER_LUNARG_standard_validation";
 const char *g_VkValidationLayerNames[] = {
@@ -106,15 +92,15 @@ bool HasValidationLayers(const std::vector<VkLayerProperties> &layerProps)
     return true;
 }
 
-vk::Error FindAndAllocateCompatibleMemory(VkDevice device,
-                                          const vk::MemoryProperties &memoryProperties,
-                                          VkMemoryPropertyFlags memoryPropertyFlags,
-                                          const VkMemoryRequirements &memoryRequirements,
-                                          vk::DeviceMemory *deviceMemoryOut)
+angle::Result FindAndAllocateCompatibleMemory(vk::Context *context,
+                                              const vk::MemoryProperties &memoryProperties,
+                                              VkMemoryPropertyFlags memoryPropertyFlags,
+                                              const VkMemoryRequirements &memoryRequirements,
+                                              vk::DeviceMemory *deviceMemoryOut)
 {
     uint32_t memoryTypeIndex = 0;
-    ANGLE_TRY(memoryProperties.findCompatibleMemoryIndex(memoryRequirements, memoryPropertyFlags,
-                                                         &memoryTypeIndex));
+    ANGLE_TRY(memoryProperties.findCompatibleMemoryIndex(context, memoryRequirements,
+                                                         memoryPropertyFlags, &memoryTypeIndex));
 
     VkMemoryAllocateInfo allocInfo;
     allocInfo.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -122,28 +108,28 @@ vk::Error FindAndAllocateCompatibleMemory(VkDevice device,
     allocInfo.memoryTypeIndex = memoryTypeIndex;
     allocInfo.allocationSize  = memoryRequirements.size;
 
-    ANGLE_TRY(deviceMemoryOut->allocate(device, allocInfo));
-    return vk::NoError();
+    ANGLE_TRY(deviceMemoryOut->allocate(context, allocInfo));
+    return angle::Result::Continue();
 }
 
 template <typename T>
-vk::Error AllocateBufferOrImageMemory(VkDevice device,
-                                      const vk::MemoryProperties &memoryProperties,
-                                      VkMemoryPropertyFlags memoryPropertyFlags,
-                                      T *bufferOrImage,
-                                      vk::DeviceMemory *deviceMemoryOut)
+angle::Result AllocateBufferOrImageMemory(vk::Context *context,
+                                          VkMemoryPropertyFlags memoryPropertyFlags,
+                                          T *bufferOrImage,
+                                          vk::DeviceMemory *deviceMemoryOut)
 {
+    const vk::MemoryProperties &memoryProperties = context->getRenderer()->getMemoryProperties();
+
     // Call driver to determine memory requirements.
     VkMemoryRequirements memoryRequirements;
-    bufferOrImage->getMemoryRequirements(device, &memoryRequirements);
+    bufferOrImage->getMemoryRequirements(context->getDevice(), &memoryRequirements);
 
-    ANGLE_TRY(FindAndAllocateCompatibleMemory(device, memoryProperties, memoryPropertyFlags,
+    ANGLE_TRY(FindAndAllocateCompatibleMemory(context, memoryProperties, memoryPropertyFlags,
                                               memoryRequirements, deviceMemoryOut));
-    ANGLE_TRY(bufferOrImage->bindMemory(device, *deviceMemoryOut));
+    ANGLE_TRY(bufferOrImage->bindMemory(context, *deviceMemoryOut));
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
-}  // anonymous namespace
 
 uint32_t GetImageLayerCount(gl::TextureType textureType)
 {
@@ -276,68 +262,21 @@ VkImageAspectFlags GetDepthStencilAspectFlagsForCopy(bool copyDepth, bool copySt
                      : 0 | copyStencil ? VK_IMAGE_ASPECT_STENCIL_BIT : 0;
 }
 
-Error::Error(VkResult result) : mResult(result), mFile(nullptr), mLine(0)
-{
-    ASSERT(result == VK_SUCCESS);
-}
-
-Error::Error(VkResult result, const char *file, unsigned int line)
-    : mResult(result), mFile(file), mLine(line)
+// Context implementation.
+Context::Context(RendererVk *renderer) : mRenderer(renderer)
 {
 }
 
-Error::~Error()
+Context::~Context()
 {
 }
 
-Error::Error(const Error &other) = default;
-Error &Error::operator=(const Error &other) = default;
-
-gl::Error Error::toGL(GLenum glErrorCode) const
+VkDevice Context::getDevice() const
 {
-    if (!isError())
-    {
-        return gl::NoError();
-    }
-
-    // TODO(jmadill): Set extended error code to 'vulkan internal error'.
-    return gl::Error(glErrorCode, glErrorCode, toString());
+    return mRenderer->getDevice();
 }
 
-egl::Error Error::toEGL(EGLint eglErrorCode) const
-{
-    if (!isError())
-    {
-        return egl::NoError();
-    }
-
-    // TODO(jmadill): Set extended error code to 'vulkan internal error'.
-    return egl::Error(eglErrorCode, eglErrorCode, toString());
-}
-
-std::string Error::toString() const
-{
-    std::stringstream errorStream;
-    errorStream << "Internal Vulkan error: " << VulkanResultString(mResult) << ", in " << mFile
-                << ", line " << mLine << ".";
-    return errorStream.str();
-}
-
-Error::operator gl::Error() const
-{
-    return toGL(DefaultGLErrorCode(mResult));
-}
-
-Error::operator egl::Error() const
-{
-    return toEGL(DefaultEGLErrorCode(mResult));
-}
-
-bool Error::isError() const
-{
-    return (mResult != VK_SUCCESS);
-}
-
+// BufferAndMemory implementation.
 BufferAndMemory::BufferAndMemory() = default;
 
 BufferAndMemory::BufferAndMemory(Buffer &&buffer, DeviceMemory &&deviceMemory)
@@ -371,11 +310,12 @@ void CommandPool::destroy(VkDevice device)
     }
 }
 
-Error CommandPool::init(VkDevice device, const VkCommandPoolCreateInfo &createInfo)
+angle::Result CommandPool::init(Context *context, const VkCommandPoolCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateCommandPool(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context,
+                 vkCreateCommandPool(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 // CommandBuffer implementation.
@@ -390,11 +330,11 @@ VkCommandBuffer CommandBuffer::releaseHandle()
     return handle;
 }
 
-Error CommandBuffer::init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo)
+angle::Result CommandBuffer::init(Context *context, const VkCommandBufferAllocateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkAllocateCommandBuffers(device, &createInfo, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkAllocateCommandBuffers(context->getDevice(), &createInfo, &mHandle));
+    return angle::Result::Continue();
 }
 
 void CommandBuffer::blitImage(const Image &srcImage,
@@ -410,25 +350,25 @@ void CommandBuffer::blitImage(const Image &srcImage,
                    dstImageLayout, regionCount, pRegions, filter);
 }
 
-Error CommandBuffer::begin(const VkCommandBufferBeginInfo &info)
+angle::Result CommandBuffer::begin(Context *context, const VkCommandBufferBeginInfo &info)
 {
     ASSERT(valid());
-    ANGLE_VK_TRY(vkBeginCommandBuffer(mHandle, &info));
-    return NoError();
+    ANGLE_VK_TRY(context, vkBeginCommandBuffer(mHandle, &info));
+    return angle::Result::Continue();
 }
 
-Error CommandBuffer::end()
+angle::Result CommandBuffer::end(Context *context)
 {
     ASSERT(valid());
-    ANGLE_VK_TRY(vkEndCommandBuffer(mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkEndCommandBuffer(mHandle));
+    return angle::Result::Continue();
 }
 
-Error CommandBuffer::reset()
+angle::Result CommandBuffer::reset(Context *context)
 {
     ASSERT(valid());
-    ANGLE_VK_TRY(vkResetCommandBuffer(mHandle, 0));
-    return NoError();
+    ANGLE_VK_TRY(context, vkResetCommandBuffer(mHandle, 0));
+    return angle::Result::Continue();
 }
 
 void CommandBuffer::singleImageBarrier(VkPipelineStageFlags srcStageMask,
@@ -673,11 +613,11 @@ void Image::destroy(VkDevice device)
     }
 }
 
-Error Image::init(VkDevice device, const VkImageCreateInfo &createInfo)
+angle::Result Image::init(Context *context, const VkImageCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateImage(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkCreateImage(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 void Image::getMemoryRequirements(VkDevice device, VkMemoryRequirements *requirementsOut) const
@@ -686,11 +626,12 @@ void Image::getMemoryRequirements(VkDevice device, VkMemoryRequirements *require
     vkGetImageMemoryRequirements(device, mHandle, requirementsOut);
 }
 
-Error Image::bindMemory(VkDevice device, const vk::DeviceMemory &deviceMemory)
+angle::Result Image::bindMemory(Context *context, const vk::DeviceMemory &deviceMemory)
 {
     ASSERT(valid() && deviceMemory.valid());
-    ANGLE_VK_TRY(vkBindImageMemory(device, mHandle, deviceMemory.getHandle(), 0));
-    return NoError();
+    ANGLE_VK_TRY(context,
+                 vkBindImageMemory(context->getDevice(), mHandle, deviceMemory.getHandle(), 0));
+    return angle::Result::Continue();
 }
 
 void Image::getSubresourceLayout(VkDevice device,
@@ -721,10 +662,10 @@ void ImageView::destroy(VkDevice device)
     }
 }
 
-Error ImageView::init(VkDevice device, const VkImageViewCreateInfo &createInfo)
+angle::Result ImageView::init(Context *context, const VkImageViewCreateInfo &createInfo)
 {
-    ANGLE_VK_TRY(vkCreateImageView(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkCreateImageView(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 // Semaphore implementation.
@@ -741,7 +682,7 @@ void Semaphore::destroy(VkDevice device)
     }
 }
 
-Error Semaphore::init(VkDevice device)
+angle::Result Semaphore::init(Context *context)
 {
     ASSERT(!valid());
 
@@ -750,9 +691,10 @@ Error Semaphore::init(VkDevice device)
     semaphoreInfo.pNext = nullptr;
     semaphoreInfo.flags = 0;
 
-    ANGLE_VK_TRY(vkCreateSemaphore(device, &semaphoreInfo, nullptr, &mHandle));
+    ANGLE_VK_TRY(context,
+                 vkCreateSemaphore(context->getDevice(), &semaphoreInfo, nullptr, &mHandle));
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 // Framebuffer implementation.
@@ -769,11 +711,12 @@ void Framebuffer::destroy(VkDevice device)
     }
 }
 
-Error Framebuffer::init(VkDevice device, const VkFramebufferCreateInfo &createInfo)
+angle::Result Framebuffer::init(Context *context, const VkFramebufferCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateFramebuffer(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context,
+                 vkCreateFramebuffer(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 void Framebuffer::setHandle(VkFramebuffer handle)
@@ -795,23 +738,23 @@ void DeviceMemory::destroy(VkDevice device)
     }
 }
 
-Error DeviceMemory::allocate(VkDevice device, const VkMemoryAllocateInfo &allocInfo)
+angle::Result DeviceMemory::allocate(Context *context, const VkMemoryAllocateInfo &allocInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkAllocateMemory(device, &allocInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkAllocateMemory(context->getDevice(), &allocInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
-Error DeviceMemory::map(VkDevice device,
-                        VkDeviceSize offset,
-                        VkDeviceSize size,
-                        VkMemoryMapFlags flags,
-                        uint8_t **mapPointer) const
+angle::Result DeviceMemory::map(Context *context,
+                                VkDeviceSize offset,
+                                VkDeviceSize size,
+                                VkMemoryMapFlags flags,
+                                uint8_t **mapPointer) const
 {
     ASSERT(valid());
-    ANGLE_VK_TRY(
-        vkMapMemory(device, mHandle, offset, size, flags, reinterpret_cast<void **>(mapPointer)));
-    return NoError();
+    ANGLE_VK_TRY(context, vkMapMemory(context->getDevice(), mHandle, offset, size, flags,
+                                      reinterpret_cast<void **>(mapPointer)));
+    return angle::Result::Continue();
 }
 
 void DeviceMemory::unmap(VkDevice device) const
@@ -834,11 +777,11 @@ void RenderPass::destroy(VkDevice device)
     }
 }
 
-Error RenderPass::init(VkDevice device, const VkRenderPassCreateInfo &createInfo)
+angle::Result RenderPass::init(Context *context, const VkRenderPassCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateRenderPass(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkCreateRenderPass(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 // Buffer implementation.
@@ -855,18 +798,19 @@ void Buffer::destroy(VkDevice device)
     }
 }
 
-Error Buffer::init(VkDevice device, const VkBufferCreateInfo &createInfo)
+angle::Result Buffer::init(Context *context, const VkBufferCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateBuffer(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkCreateBuffer(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
-Error Buffer::bindMemory(VkDevice device, const DeviceMemory &deviceMemory)
+angle::Result Buffer::bindMemory(Context *context, const DeviceMemory &deviceMemory)
 {
     ASSERT(valid() && deviceMemory.valid());
-    ANGLE_VK_TRY(vkBindBufferMemory(device, mHandle, deviceMemory.getHandle(), 0));
-    return NoError();
+    ANGLE_VK_TRY(context,
+                 vkBindBufferMemory(context->getDevice(), mHandle, deviceMemory.getHandle(), 0));
+    return angle::Result::Continue();
 }
 
 void Buffer::getMemoryRequirements(VkDevice device, VkMemoryRequirements *memoryRequirementsOut)
@@ -889,11 +833,12 @@ void ShaderModule::destroy(VkDevice device)
     }
 }
 
-Error ShaderModule::init(VkDevice device, const VkShaderModuleCreateInfo &createInfo)
+angle::Result ShaderModule::init(Context *context, const VkShaderModuleCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateShaderModule(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context,
+                 vkCreateShaderModule(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 // Pipeline implementation.
@@ -910,12 +855,13 @@ void Pipeline::destroy(VkDevice device)
     }
 }
 
-Error Pipeline::initGraphics(VkDevice device, const VkGraphicsPipelineCreateInfo &createInfo)
+angle::Result Pipeline::initGraphics(Context *context,
+                                     const VkGraphicsPipelineCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(
-        vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkCreateGraphicsPipelines(context->getDevice(), VK_NULL_HANDLE, 1,
+                                                    &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 // PipelineLayout implementation.
@@ -932,11 +878,12 @@ void PipelineLayout::destroy(VkDevice device)
     }
 }
 
-Error PipelineLayout::init(VkDevice device, const VkPipelineLayoutCreateInfo &createInfo)
+angle::Result PipelineLayout::init(Context *context, const VkPipelineLayoutCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreatePipelineLayout(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context,
+                 vkCreatePipelineLayout(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 // DescriptorSetLayout implementation.
@@ -953,11 +900,13 @@ void DescriptorSetLayout::destroy(VkDevice device)
     }
 }
 
-Error DescriptorSetLayout::init(VkDevice device, const VkDescriptorSetLayoutCreateInfo &createInfo)
+angle::Result DescriptorSetLayout::init(Context *context,
+                                        const VkDescriptorSetLayoutCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateDescriptorSetLayout(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context,
+                 vkCreateDescriptorSetLayout(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 // DescriptorPool implementation.
@@ -974,30 +923,33 @@ void DescriptorPool::destroy(VkDevice device)
     }
 }
 
-Error DescriptorPool::init(VkDevice device, const VkDescriptorPoolCreateInfo &createInfo)
+angle::Result DescriptorPool::init(Context *context, const VkDescriptorPoolCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateDescriptorPool(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context,
+                 vkCreateDescriptorPool(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
-Error DescriptorPool::allocateDescriptorSets(VkDevice device,
-                                             const VkDescriptorSetAllocateInfo &allocInfo,
-                                             VkDescriptorSet *descriptorSetsOut)
+angle::Result DescriptorPool::allocateDescriptorSets(Context *context,
+                                                     const VkDescriptorSetAllocateInfo &allocInfo,
+                                                     VkDescriptorSet *descriptorSetsOut)
 {
     ASSERT(valid());
-    ANGLE_VK_TRY(vkAllocateDescriptorSets(device, &allocInfo, descriptorSetsOut));
-    return NoError();
+    ANGLE_VK_TRY(context,
+                 vkAllocateDescriptorSets(context->getDevice(), &allocInfo, descriptorSetsOut));
+    return angle::Result::Continue();
 }
 
-Error DescriptorPool::freeDescriptorSets(VkDevice device,
-                                         uint32_t descriptorSetCount,
-                                         const VkDescriptorSet *descriptorSets)
+angle::Result DescriptorPool::freeDescriptorSets(Context *context,
+                                                 uint32_t descriptorSetCount,
+                                                 const VkDescriptorSet *descriptorSets)
 {
     ASSERT(valid());
     ASSERT(descriptorSetCount > 0);
-    ANGLE_VK_TRY(vkFreeDescriptorSets(device, mHandle, descriptorSetCount, descriptorSets));
-    return NoError();
+    ANGLE_VK_TRY(context, vkFreeDescriptorSets(context->getDevice(), mHandle, descriptorSetCount,
+                                               descriptorSets));
+    return angle::Result::Continue();
 }
 
 // Sampler implementation.
@@ -1014,11 +966,11 @@ void Sampler::destroy(VkDevice device)
     }
 }
 
-Error Sampler::init(VkDevice device, const VkSamplerCreateInfo &createInfo)
+angle::Result Sampler::init(Context *context, const VkSamplerCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateSampler(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkCreateSampler(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 // Fence implementation.
@@ -1035,11 +987,11 @@ void Fence::destroy(VkDevice device)
     }
 }
 
-Error Fence::init(VkDevice device, const VkFenceCreateInfo &createInfo)
+angle::Result Fence::init(Context *context, const VkFenceCreateInfo &createInfo)
 {
     ASSERT(!valid());
-    ANGLE_VK_TRY(vkCreateFence(device, &createInfo, nullptr, &mHandle));
-    return NoError();
+    ANGLE_VK_TRY(context, vkCreateFence(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
 }
 
 VkResult Fence::getStatus(VkDevice device) const
@@ -1059,9 +1011,11 @@ void MemoryProperties::init(VkPhysicalDevice physicalDevice)
     ASSERT(mMemoryProperties.memoryTypeCount > 0);
 }
 
-Error MemoryProperties::findCompatibleMemoryIndex(const VkMemoryRequirements &memoryRequirements,
-                                                  VkMemoryPropertyFlags memoryPropertyFlags,
-                                                  uint32_t *typeIndexOut) const
+angle::Result MemoryProperties::findCompatibleMemoryIndex(
+    Context *context,
+    const VkMemoryRequirements &memoryRequirements,
+    VkMemoryPropertyFlags memoryPropertyFlags,
+    uint32_t *typeIndexOut) const
 {
     ASSERT(mMemoryProperties.memoryTypeCount > 0 && mMemoryProperties.memoryTypeCount <= 32);
 
@@ -1077,12 +1031,13 @@ Error MemoryProperties::findCompatibleMemoryIndex(const VkMemoryRequirements &me
             memoryPropertyFlags)
         {
             *typeIndexOut = static_cast<uint32_t>(memoryIndex);
-            return NoError();
+            return angle::Result::Continue();
         }
     }
 
     // TODO(jmadill): Add error message to error.
-    return vk::Error(VK_ERROR_INCOMPATIBLE_DRIVER);
+    context->handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, __LINE__);
+    return angle::Result::Stop();
 }
 
 // StagingBuffer implementation.
@@ -1097,7 +1052,7 @@ void StagingBuffer::destroy(VkDevice device)
     mSize = 0;
 }
 
-vk::Error StagingBuffer::init(ContextVk *contextVk, VkDeviceSize size, StagingUsage usage)
+angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUsage usage)
 {
     VkBufferCreateInfo createInfo;
     createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -1112,10 +1067,10 @@ vk::Error StagingBuffer::init(ContextVk *contextVk, VkDeviceSize size, StagingUs
     VkMemoryPropertyFlags flags =
         (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-    ANGLE_TRY(mBuffer.init(contextVk->getDevice(), createInfo));
-    ANGLE_TRY(AllocateBufferMemory(contextVk->getRenderer(), flags, &mBuffer, &mDeviceMemory));
+    ANGLE_TRY(mBuffer.init(context, createInfo));
+    ANGLE_TRY(AllocateBufferMemory(context, flags, &mBuffer, &mDeviceMemory));
     mSize = static_cast<size_t>(size);
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 void StagingBuffer::dumpResources(Serial serial, std::vector<vk::GarbageObject> *garbageQueue)
@@ -1124,26 +1079,20 @@ void StagingBuffer::dumpResources(Serial serial, std::vector<vk::GarbageObject> 
     mDeviceMemory.dumpResources(serial, garbageQueue);
 }
 
-Error AllocateBufferMemory(RendererVk *renderer,
-                           VkMemoryPropertyFlags memoryPropertyFlags,
-                           Buffer *buffer,
-                           DeviceMemory *deviceMemoryOut)
+angle::Result AllocateBufferMemory(vk::Context *context,
+                                   VkMemoryPropertyFlags memoryPropertyFlags,
+                                   Buffer *buffer,
+                                   DeviceMemory *deviceMemoryOut)
 {
-    VkDevice device                              = renderer->getDevice();
-    const vk::MemoryProperties &memoryProperties = renderer->getMemoryProperties();
-
-    return AllocateBufferOrImageMemory(device, memoryProperties, memoryPropertyFlags, buffer,
-                                       deviceMemoryOut);
+    return AllocateBufferOrImageMemory(context, memoryPropertyFlags, buffer, deviceMemoryOut);
 }
 
-Error AllocateImageMemory(VkDevice device,
-                          const MemoryProperties &memoryProperties,
-                          VkMemoryPropertyFlags memoryPropertyFlags,
-                          Image *image,
-                          DeviceMemory *deviceMemoryOut)
+angle::Result AllocateImageMemory(vk::Context *context,
+                                  VkMemoryPropertyFlags memoryPropertyFlags,
+                                  Image *image,
+                                  DeviceMemory *deviceMemoryOut)
 {
-    return AllocateBufferOrImageMemory(device, memoryProperties, memoryPropertyFlags, image,
-                                       deviceMemoryOut);
+    return AllocateBufferOrImageMemory(context, memoryPropertyFlags, image, deviceMemoryOut);
 }
 
 // GarbageObject implementation.
@@ -1462,9 +1411,3 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
 }
 }  // namespace gl_vk
 }  // namespace rx
-
-std::ostream &operator<<(std::ostream &stream, const rx::vk::Error &error)
-{
-    stream << error.toString();
-    return stream;
-}

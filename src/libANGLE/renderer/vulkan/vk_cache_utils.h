@@ -342,13 +342,13 @@ class PipelineDesc final
 
     void initDefaults();
 
-    Error initializePipeline(VkDevice device,
-                             const RenderPass &compatibleRenderPass,
-                             const PipelineLayout &pipelineLayout,
-                             const gl::AttributesMask &activeAttribLocationsMask,
-                             const ShaderModule &vertexModule,
-                             const ShaderModule &fragmentModule,
-                             Pipeline *pipelineOut) const;
+    angle::Result initializePipeline(vk::Context *context,
+                                     const RenderPass &compatibleRenderPass,
+                                     const PipelineLayout &pipelineLayout,
+                                     const gl::AttributesMask &activeAttribLocationsMask,
+                                     const ShaderModule &vertexModule,
+                                     const ShaderModule &fragmentModule,
+                                     Pipeline *pipelineOut) const;
 
     void updateViewport(FramebufferVk *framebufferVk,
                         const gl::Rectangle &viewport,
@@ -572,15 +572,15 @@ class RenderPassCache final : angle::NonCopyable
 
     void destroy(VkDevice device);
 
-    vk::Error getCompatibleRenderPass(VkDevice device,
-                                      Serial serial,
-                                      const vk::RenderPassDesc &desc,
-                                      vk::RenderPass **renderPassOut);
-    vk::Error getRenderPassWithOps(VkDevice device,
-                                   Serial serial,
-                                   const vk::RenderPassDesc &desc,
-                                   const vk::AttachmentOpsArray &attachmentOps,
-                                   vk::RenderPass **renderPassOut);
+    angle::Result getCompatibleRenderPass(vk::Context *context,
+                                          Serial serial,
+                                          const vk::RenderPassDesc &desc,
+                                          vk::RenderPass **renderPassOut);
+    angle::Result getRenderPassWithOps(vk::Context *context,
+                                       Serial serial,
+                                       const vk::RenderPassDesc &desc,
+                                       const vk::AttachmentOpsArray &attachmentOps,
+                                       vk::RenderPass **renderPassOut);
 
   private:
     // Use a two-layer caching scheme. The top level matches the "compatible" RenderPass elements.
@@ -601,14 +601,14 @@ class PipelineCache final : angle::NonCopyable
     void destroy(VkDevice device);
 
     void populate(const vk::PipelineDesc &desc, vk::Pipeline &&pipeline);
-    vk::Error getPipeline(VkDevice device,
-                          const vk::RenderPass &compatibleRenderPass,
-                          const vk::PipelineLayout &pipelineLayout,
-                          const gl::AttributesMask &activeAttribLocationsMask,
-                          const vk::ShaderModule &vertexModule,
-                          const vk::ShaderModule &fragmentModule,
-                          const vk::PipelineDesc &desc,
-                          vk::PipelineAndSerial **pipelineOut);
+    angle::Result getPipeline(vk::Context *context,
+                              const vk::RenderPass &compatibleRenderPass,
+                              const vk::PipelineLayout &pipelineLayout,
+                              const gl::AttributesMask &activeAttribLocationsMask,
+                              const vk::ShaderModule &vertexModule,
+                              const vk::ShaderModule &fragmentModule,
+                              const vk::PipelineDesc &desc,
+                              vk::PipelineAndSerial **pipelineOut);
 
   private:
     std::unordered_map<vk::PipelineDesc, vk::PipelineAndSerial> mPayload;
@@ -622,8 +622,8 @@ class DescriptorSetLayoutCache final : angle::NonCopyable
 
     void destroy(VkDevice device);
 
-    vk::Error getDescriptorSetLayout(
-        VkDevice device,
+    angle::Result getDescriptorSetLayout(
+        vk::Context *context,
         const vk::DescriptorSetLayoutDesc &desc,
         vk::BindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut);
 
@@ -639,10 +639,10 @@ class PipelineLayoutCache final : angle::NonCopyable
 
     void destroy(VkDevice device);
 
-    vk::Error getPipelineLayout(VkDevice device,
-                                const vk::PipelineLayoutDesc &desc,
-                                const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
-                                vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut);
+    angle::Result getPipelineLayout(vk::Context *context,
+                                    const vk::PipelineLayoutDesc &desc,
+                                    const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
+                                    vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut);
 
   private:
     std::unordered_map<vk::PipelineLayoutDesc, vk::SharedPipelineLayout> mPayload;

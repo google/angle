@@ -23,7 +23,7 @@ WindowSurfaceVkXcb::WindowSurfaceVkXcb(const egl::SurfaceState &surfaceState,
 {
 }
 
-vk::Error WindowSurfaceVkXcb::createSurfaceVk(RendererVk *renderer, gl::Extents *extentsOut)
+angle::Result WindowSurfaceVkXcb::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {
     VkXcbSurfaceCreateInfoKHR createInfo;
 
@@ -32,7 +32,8 @@ vk::Error WindowSurfaceVkXcb::createSurfaceVk(RendererVk *renderer, gl::Extents 
     createInfo.flags      = 0;
     createInfo.connection = mXcbConnection;
     createInfo.window     = mNativeWindowType;
-    ANGLE_VK_TRY(vkCreateXcbSurfaceKHR(renderer->getInstance(), &createInfo, nullptr, &mSurface));
+    ANGLE_VK_TRY(context, vkCreateXcbSurfaceKHR(context->getRenderer()->getInstance(), &createInfo,
+                                                nullptr, &mSurface));
 
     xcb_get_geometry_cookie_t cookie = xcb_get_geometry(mXcbConnection, mNativeWindowType);
     xcb_get_geometry_reply_t *reply  = xcb_get_geometry_reply(mXcbConnection, cookie, nullptr);
@@ -40,7 +41,7 @@ vk::Error WindowSurfaceVkXcb::createSurfaceVk(RendererVk *renderer, gl::Extents 
     free(reply);
 
     *extentsOut = gl::Extents(reply->width, reply->height, 0);
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

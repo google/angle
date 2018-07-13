@@ -59,7 +59,15 @@ class DisplayVk;
 class RenderTargetVk;
 class RendererVk;
 class RenderPassCache;
+}  // namespace rx
 
+namespace angle
+{
+egl::Error ToEGL(Result result, rx::DisplayVk *displayVk, EGLint errorCode);
+}  // namespace angle
+
+namespace rx
+{
 ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_VK_OBJECT);
 
 const char *VulkanResultString(VkResult result);
@@ -85,6 +93,21 @@ enum class TextureDimension
 namespace vk
 {
 struct Format;
+
+// Abstracts error handling. Implemented by both ContextVk for GL and RendererVk for EGL errors.
+class Context : angle::NonCopyable
+{
+  public:
+    Context(RendererVk *renderer);
+    virtual ~Context();
+
+    virtual void handleError(VkResult result, const char *file, unsigned int line) = 0;
+    VkDevice getDevice() const;
+    RendererVk *getRenderer() const { return mRenderer; }
+
+  protected:
+    RendererVk *const mRenderer;
+};
 
 VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format);
 VkImageAspectFlags GetFormatAspectFlags(const angle::Format &format);
@@ -118,56 +141,6 @@ GetImplType<T> *GetImpl(const T *glObject)
 {
     return GetImplAs<GetImplType<T>>(glObject);
 }
-
-class ANGLE_NO_DISCARD Error final
-{
-  public:
-    Error(VkResult result);
-    Error(VkResult result, const char *file, unsigned int line);
-    ~Error();
-
-    Error(const Error &other);
-    Error &operator=(const Error &other);
-
-    gl::Error toGL(GLenum glErrorCode) const;
-    egl::Error toEGL(EGLint eglErrorCode) const;
-
-    operator gl::Error() const;
-    operator egl::Error() const;
-
-    template <typename T>
-    operator gl::ErrorOrResult<T>() const
-    {
-        return operator gl::Error();
-    }
-
-    bool isError() const;
-
-    std::string toString() const;
-
-  private:
-    VkResult mResult;
-    const char *mFile;
-    unsigned int mLine;
-};
-
-// Avoid conflicting with X headers which define "Success".
-inline Error NoError()
-{
-    return Error(VK_SUCCESS);
-}
-
-#define ANGLE_TRY_VK_CHECKED_MATH(result)                 \
-    if (!result)                                          \
-    {                                                     \
-        return vk::Error(VK_ERROR_VALIDATION_FAILED_EXT); \
-    }
-
-#define ANGLE_TRY_VK_ALLOCATION(result)                \
-    if (!result)                                       \
-    {                                                  \
-        return vk::Error(VK_ERROR_OUT_OF_HOST_MEMORY); \
-    }
 
 // Unimplemented handle types:
 // Instance
@@ -299,9 +272,10 @@ class MemoryProperties final : angle::NonCopyable
     MemoryProperties();
 
     void init(VkPhysicalDevice physicalDevice);
-    Error findCompatibleMemoryIndex(const VkMemoryRequirements &memoryRequirements,
-                                    VkMemoryPropertyFlags memoryPropertyFlags,
-                                    uint32_t *indexOut) const;
+    angle::Result findCompatibleMemoryIndex(Context *context,
+                                            const VkMemoryRequirements &memoryRequirements,
+                                            VkMemoryPropertyFlags memoryPropertyFlags,
+                                            uint32_t *indexOut) const;
 
   private:
     VkPhysicalDeviceMemoryProperties mMemoryProperties;
@@ -314,7 +288,7 @@ class CommandPool final : public WrappedObject<CommandPool, VkCommandPool>
 
     void destroy(VkDevice device);
 
-    Error init(VkDevice device, const VkCommandPoolCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkCommandPoolCreateInfo &createInfo);
 };
 
 // Helper class that wraps a Vulkan command buffer.
@@ -331,7 +305,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     // This is used in conjunction with VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT.
     void destroy(VkDevice device, const CommandPool &commandPool);
 
-    Error init(VkDevice device, const VkCommandBufferAllocateInfo &createInfo);
+    angle::Result init(Context *context, const VkCommandBufferAllocateInfo &createInfo);
     void blitImage(const Image &srcImage,
                    VkImageLayout srcImageLayout,
                    const Image &dstImage,
@@ -341,10 +315,10 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                    VkFilter filter);
     using WrappedObject::operator=;
 
-    Error begin(const VkCommandBufferBeginInfo &info);
+    angle::Result begin(Context *context, const VkCommandBufferBeginInfo &info);
 
-    Error end();
-    Error reset();
+    angle::Result end(Context *context);
+    angle::Result reset(Context *context);
 
     void singleImageBarrier(VkPipelineStageFlags srcStageMask,
                             VkPipelineStageFlags dstStageMask,
@@ -453,10 +427,10 @@ class Image final : public WrappedObject<Image, VkImage>
     // Called on shutdown when the helper class *does* own the handle to the image resource.
     void destroy(VkDevice device);
 
-    Error init(VkDevice device, const VkImageCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkImageCreateInfo &createInfo);
 
     void getMemoryRequirements(VkDevice device, VkMemoryRequirements *requirementsOut) const;
-    Error bindMemory(VkDevice device, const DeviceMemory &deviceMemory);
+    angle::Result bindMemory(Context *context, const DeviceMemory &deviceMemory);
 
     void getSubresourceLayout(VkDevice device,
                               VkImageAspectFlagBits aspectMask,
@@ -471,7 +445,7 @@ class ImageView final : public WrappedObject<ImageView, VkImageView>
     ImageView();
     void destroy(VkDevice device);
 
-    Error init(VkDevice device, const VkImageViewCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkImageViewCreateInfo &createInfo);
 };
 
 class Semaphore final : public WrappedObject<Semaphore, VkSemaphore>
@@ -480,7 +454,7 @@ class Semaphore final : public WrappedObject<Semaphore, VkSemaphore>
     Semaphore();
     void destroy(VkDevice device);
 
-    Error init(VkDevice device);
+    angle::Result init(Context *context);
 };
 
 class Framebuffer final : public WrappedObject<Framebuffer, VkFramebuffer>
@@ -492,7 +466,7 @@ class Framebuffer final : public WrappedObject<Framebuffer, VkFramebuffer>
     // Use this method only in necessary cases. (RenderPass)
     void setHandle(VkFramebuffer handle);
 
-    Error init(VkDevice device, const VkFramebufferCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkFramebufferCreateInfo &createInfo);
 };
 
 class DeviceMemory final : public WrappedObject<DeviceMemory, VkDeviceMemory>
@@ -501,12 +475,12 @@ class DeviceMemory final : public WrappedObject<DeviceMemory, VkDeviceMemory>
     DeviceMemory();
     void destroy(VkDevice device);
 
-    Error allocate(VkDevice device, const VkMemoryAllocateInfo &allocInfo);
-    Error map(VkDevice device,
-              VkDeviceSize offset,
-              VkDeviceSize size,
-              VkMemoryMapFlags flags,
-              uint8_t **mapPointer) const;
+    angle::Result allocate(Context *context, const VkMemoryAllocateInfo &allocInfo);
+    angle::Result map(Context *context,
+                      VkDeviceSize offset,
+                      VkDeviceSize size,
+                      VkMemoryMapFlags flags,
+                      uint8_t **mapPointer) const;
     void unmap(VkDevice device) const;
 };
 
@@ -516,7 +490,7 @@ class RenderPass final : public WrappedObject<RenderPass, VkRenderPass>
     RenderPass();
     void destroy(VkDevice device);
 
-    Error init(VkDevice device, const VkRenderPassCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkRenderPassCreateInfo &createInfo);
 };
 
 enum class StagingUsage
@@ -532,8 +506,8 @@ class Buffer final : public WrappedObject<Buffer, VkBuffer>
     Buffer();
     void destroy(VkDevice device);
 
-    Error init(VkDevice device, const VkBufferCreateInfo &createInfo);
-    Error bindMemory(VkDevice device, const DeviceMemory &deviceMemory);
+    angle::Result init(Context *context, const VkBufferCreateInfo &createInfo);
+    angle::Result bindMemory(Context *context, const DeviceMemory &deviceMemory);
     void getMemoryRequirements(VkDevice device, VkMemoryRequirements *memoryRequirementsOut);
 };
 
@@ -543,7 +517,7 @@ class ShaderModule final : public WrappedObject<ShaderModule, VkShaderModule>
     ShaderModule();
     void destroy(VkDevice device);
 
-    Error init(VkDevice device, const VkShaderModuleCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkShaderModuleCreateInfo &createInfo);
 };
 
 class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
@@ -552,7 +526,7 @@ class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
     Pipeline();
     void destroy(VkDevice device);
 
-    Error initGraphics(VkDevice device, const VkGraphicsPipelineCreateInfo &createInfo);
+    angle::Result initGraphics(Context *context, const VkGraphicsPipelineCreateInfo &createInfo);
 };
 
 class PipelineLayout final : public WrappedObject<PipelineLayout, VkPipelineLayout>
@@ -561,7 +535,7 @@ class PipelineLayout final : public WrappedObject<PipelineLayout, VkPipelineLayo
     PipelineLayout();
     void destroy(VkDevice device);
 
-    Error init(VkDevice device, const VkPipelineLayoutCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkPipelineLayoutCreateInfo &createInfo);
 };
 
 class DescriptorSetLayout final : public WrappedObject<DescriptorSetLayout, VkDescriptorSetLayout>
@@ -570,7 +544,7 @@ class DescriptorSetLayout final : public WrappedObject<DescriptorSetLayout, VkDe
     DescriptorSetLayout();
     void destroy(VkDevice device);
 
-    Error init(VkDevice device, const VkDescriptorSetLayoutCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkDescriptorSetLayoutCreateInfo &createInfo);
 };
 
 class DescriptorPool final : public WrappedObject<DescriptorPool, VkDescriptorPool>
@@ -579,14 +553,14 @@ class DescriptorPool final : public WrappedObject<DescriptorPool, VkDescriptorPo
     DescriptorPool();
     void destroy(VkDevice device);
 
-    Error init(VkDevice device, const VkDescriptorPoolCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkDescriptorPoolCreateInfo &createInfo);
 
-    Error allocateDescriptorSets(VkDevice device,
-                                 const VkDescriptorSetAllocateInfo &allocInfo,
-                                 VkDescriptorSet *descriptorSetsOut);
-    Error freeDescriptorSets(VkDevice device,
-                             uint32_t descriptorSetCount,
-                             const VkDescriptorSet *descriptorSets);
+    angle::Result allocateDescriptorSets(Context *context,
+                                         const VkDescriptorSetAllocateInfo &allocInfo,
+                                         VkDescriptorSet *descriptorSetsOut);
+    angle::Result freeDescriptorSets(Context *context,
+                                     uint32_t descriptorSetCount,
+                                     const VkDescriptorSet *descriptorSets);
 };
 
 class Sampler final : public WrappedObject<Sampler, VkSampler>
@@ -594,7 +568,7 @@ class Sampler final : public WrappedObject<Sampler, VkSampler>
   public:
     Sampler();
     void destroy(VkDevice device);
-    Error init(VkDevice device, const VkSamplerCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkSamplerCreateInfo &createInfo);
 };
 
 class Fence final : public WrappedObject<Fence, VkFence>
@@ -604,7 +578,7 @@ class Fence final : public WrappedObject<Fence, VkFence>
     void destroy(VkDevice fence);
     using WrappedObject::operator=;
 
-    Error init(VkDevice device, const VkFenceCreateInfo &createInfo);
+    angle::Result init(Context *context, const VkFenceCreateInfo &createInfo);
     VkResult getStatus(VkDevice device) const;
 };
 
@@ -615,7 +589,7 @@ class StagingBuffer final : angle::NonCopyable
     StagingBuffer();
     void destroy(VkDevice device);
 
-    Error init(ContextVk *contextVk, VkDeviceSize size, StagingUsage usage);
+    angle::Result init(Context *context, VkDeviceSize size, StagingUsage usage);
 
     Buffer &getBuffer() { return mBuffer; }
     const Buffer &getBuffer() const { return mBuffer; }
@@ -670,10 +644,10 @@ class ObjectAndSerial final : angle::NonCopyable
     Serial mQueueSerial;
 };
 
-Error AllocateBufferMemory(RendererVk *renderer,
-                           VkMemoryPropertyFlags memoryPropertyFlags,
-                           Buffer *buffer,
-                           DeviceMemory *deviceMemoryOut);
+angle::Result AllocateBufferMemory(vk::Context *context,
+                                   VkMemoryPropertyFlags memoryPropertyFlags,
+                                   Buffer *buffer,
+                                   DeviceMemory *deviceMemoryOut);
 
 struct BufferAndMemory final : angle::NonCopyable
 {
@@ -686,11 +660,10 @@ struct BufferAndMemory final : angle::NonCopyable
     DeviceMemory memory;
 };
 
-Error AllocateImageMemory(VkDevice device,
-                          const MemoryProperties &memoryProperties,
-                          VkMemoryPropertyFlags memoryPropertyFlags,
-                          Image *image,
-                          DeviceMemory *deviceMemoryOut);
+angle::Result AllocateImageMemory(vk::Context *context,
+                                  VkMemoryPropertyFlags memoryPropertyFlags,
+                                  Image *image,
+                                  DeviceMemory *deviceMemoryOut);
 
 using ShaderAndSerial = ObjectAndSerial<ShaderModule>;
 
@@ -755,18 +728,23 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
 
 }  // namespace rx
 
-#define ANGLE_VK_TRY(command)                                          \
+#define ANGLE_VK_TRY(context, command)                                 \
     {                                                                  \
         auto ANGLE_LOCAL_VAR = command;                                \
         if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS))             \
         {                                                              \
-            return rx::vk::Error(ANGLE_LOCAL_VAR, __FILE__, __LINE__); \
+            context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__); \
+            return angle::Result::Stop();                              \
         }                                                              \
     }                                                                  \
     ANGLE_EMPTY_STATEMENT
 
-#define ANGLE_VK_CHECK(test, error) ANGLE_VK_TRY(test ? VK_SUCCESS : error)
+#define ANGLE_VK_CHECK(context, test, error) ANGLE_VK_TRY(context, test ? VK_SUCCESS : error)
 
-std::ostream &operator<<(std::ostream &stream, const rx::vk::Error &error);
+#define ANGLE_VK_CHECK_MATH(context, result) \
+    ANGLE_VK_CHECK(context, result, VK_ERROR_VALIDATION_FAILED_EXT)
+
+#define ANGLE_VK_CHECK_ALLOC(context, result) \
+    ANGLE_VK_CHECK(context, result, VK_ERROR_OUT_OF_HOST_MEMORY)
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_UTILS_H_

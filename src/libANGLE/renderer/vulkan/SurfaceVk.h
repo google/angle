@@ -66,16 +66,18 @@ class OffscreenSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
         AttachmentImage(vk::CommandGraphResource *commandGraphResource);
         ~AttachmentImage();
 
-        egl::Error initialize(const egl::Display *display,
-                              EGLint width,
-                              EGLint height,
-                              const vk::Format &vkFormat);
+        angle::Result initialize(DisplayVk *displayVk,
+                                 EGLint width,
+                                 EGLint height,
+                                 const vk::Format &vkFormat);
         void destroy(const egl::Display *display, Serial storedQueueSerial);
 
         vk::ImageHelper image;
         vk::ImageView imageView;
         RenderTargetVk renderTarget;
     };
+
+    angle::Result initializeImpl(DisplayVk *displayVk);
 
     EGLint mWidth;
     EGLint mHeight;
@@ -127,9 +129,9 @@ class WindowSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
     gl::Error initializeContents(const gl::Context *context,
                                  const gl::ImageIndex &imageIndex) override;
 
-    vk::Error getCurrentFramebuffer(VkDevice device,
-                                    const vk::RenderPass &compatibleRenderPass,
-                                    vk::Framebuffer **framebufferOut);
+    angle::Result getCurrentFramebuffer(vk::Context *context,
+                                        const vk::RenderPass &compatibleRenderPass,
+                                        vk::Framebuffer **framebufferOut);
 
   protected:
     EGLNativeWindowType mNativeWindowType;
@@ -137,9 +139,10 @@ class WindowSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
     VkInstance mInstance;
 
   private:
-    virtual vk::Error createSurfaceVk(RendererVk *renderer, gl::Extents *extentsOut) = 0;
-    vk::Error initializeImpl(RendererVk *renderer);
-    vk::Error nextSwapchainImage(RendererVk *renderer);
+    virtual angle::Result createSurfaceVk(vk::Context *context, gl::Extents *extentsOut) = 0;
+    angle::Result initializeImpl(DisplayVk *displayVk);
+    angle::Result nextSwapchainImage(DisplayVk *displayVk);
+    angle::Result swapImpl(DisplayVk *displayVk);
 
     VkSwapchainKHR mSwapchain;
 

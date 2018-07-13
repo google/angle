@@ -30,16 +30,16 @@ void ShaderLibrary::destroy(VkDevice device)
     }
 }
 
-Error ShaderLibrary::getShader(RendererVk *renderer,
-                               InternalShaderID shaderID,
-                               const ShaderAndSerial **shaderOut)
+angle::Result ShaderLibrary::getShader(vk::Context *context,
+                                       InternalShaderID shaderID,
+                                       const ShaderAndSerial **shaderOut)
 {
     ShaderAndSerial &shader = mShaders[shaderID];
     *shaderOut              = &shader;
 
     if (shader.get().valid())
     {
-        return NoError();
+        return angle::Result::Continue();
     }
 
     const priv::ShaderBlob &shaderCode = priv::GetInternalShaderBlob(shaderID);
@@ -52,9 +52,9 @@ Error ShaderLibrary::getShader(RendererVk *renderer,
     createInfo.codeSize = shaderCode.codeSize;
     createInfo.pCode    = shaderCode.code;
 
-    ANGLE_TRY(shader.get().init(renderer->getDevice(), createInfo));
-    shader.updateSerial(renderer->issueShaderSerial());
-    return NoError();
+    ANGLE_TRY(shader.get().init(context, createInfo));
+    shader.updateSerial(context->getRenderer()->issueShaderSerial());
+    return angle::Result::Continue();
 }
 }  // namespace vk
 }  // namespace rx

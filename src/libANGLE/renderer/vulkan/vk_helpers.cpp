@@ -108,12 +108,12 @@ bool DynamicBuffer::valid()
     return mAlignment > 0;
 }
 
-Error DynamicBuffer::allocate(RendererVk *renderer,
-                              size_t sizeInBytes,
-                              uint8_t **ptrOut,
-                              VkBuffer *handleOut,
-                              uint32_t *offsetOut,
-                              bool *newBufferAllocatedOut)
+angle::Result DynamicBuffer::allocate(Context *context,
+                                      size_t sizeInBytes,
+                                      uint8_t **ptrOut,
+                                      VkBuffer *handleOut,
+                                      uint32_t *offsetOut,
+                                      bool *newBufferAllocatedOut)
 {
     ASSERT(valid());
 
@@ -124,12 +124,10 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
 
     if (!checkedNextWriteOffset.IsValid() || checkedNextWriteOffset.ValueOrDie() >= mSize)
     {
-        VkDevice device = renderer->getDevice();
-
         if (mMappedMemory)
         {
-            ANGLE_TRY(flush(device));
-            mMemory.unmap(device);
+            ANGLE_TRY(flush(context));
+            mMemory.unmap(context->getDevice());
             mMappedMemory = nullptr;
         }
 
@@ -146,12 +144,12 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
         createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0;
         createInfo.pQueueFamilyIndices   = nullptr;
-        ANGLE_TRY(mBuffer.init(device, createInfo));
+        ANGLE_TRY(mBuffer.init(context, createInfo));
 
-        ANGLE_TRY(AllocateBufferMemory(renderer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &mBuffer,
-                                       &mMemory));
+        ANGLE_TRY(
+            AllocateBufferMemory(context, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &mBuffer, &mMemory));
 
-        ANGLE_TRY(mMemory.map(device, 0, mSize, 0, &mMappedMemory));
+        ANGLE_TRY(mMemory.map(context, 0, mSize, 0, &mMappedMemory));
         mNextAllocationOffset        = 0;
         mLastFlushOrInvalidateOffset = 0;
 
@@ -176,10 +174,10 @@ Error DynamicBuffer::allocate(RendererVk *renderer,
     *ptrOut    = mMappedMemory + mNextAllocationOffset;
     *offsetOut = mNextAllocationOffset;
     mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error DynamicBuffer::flush(VkDevice device)
+angle::Result DynamicBuffer::flush(Context *context)
 {
     if (mNextAllocationOffset > mLastFlushOrInvalidateOffset)
     {
@@ -189,14 +187,14 @@ Error DynamicBuffer::flush(VkDevice device)
         range.memory = mMemory.getHandle();
         range.offset = mLastFlushOrInvalidateOffset;
         range.size   = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
-        ANGLE_VK_TRY(vkFlushMappedMemoryRanges(device, 1, &range));
+        ANGLE_VK_TRY(context, vkFlushMappedMemoryRanges(context->getDevice(), 1, &range));
 
         mLastFlushOrInvalidateOffset = mNextAllocationOffset;
     }
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error DynamicBuffer::invalidate(VkDevice device)
+angle::Result DynamicBuffer::invalidate(Context *context)
 {
     if (mNextAllocationOffset > mLastFlushOrInvalidateOffset)
     {
@@ -206,11 +204,11 @@ Error DynamicBuffer::invalidate(VkDevice device)
         range.memory = mMemory.getHandle();
         range.offset = mLastFlushOrInvalidateOffset;
         range.size   = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
-        ANGLE_VK_TRY(vkInvalidateMappedMemoryRanges(device, 1, &range));
+        ANGLE_VK_TRY(context, vkInvalidateMappedMemoryRanges(context->getDevice(), 1, &range));
 
         mLastFlushOrInvalidateOffset = mNextAllocationOffset;
     }
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void DynamicBuffer::release(RendererVk *renderer)
@@ -275,13 +273,13 @@ DynamicDescriptorPool::DynamicDescriptorPool()
 
 DynamicDescriptorPool::~DynamicDescriptorPool() = default;
 
-Error DynamicDescriptorPool::init(VkDevice device, const VkDescriptorPoolSize &poolSize)
+angle::Result DynamicDescriptorPool::init(Context *context, const VkDescriptorPoolSize &poolSize)
 {
     ASSERT(!mCurrentDescriptorPool.valid());
 
     mPoolSize = poolSize;
-    ANGLE_TRY(allocateNewPool(device));
-    return NoError();
+    ANGLE_TRY(allocateNewPool(context));
+    return angle::Result::Continue();
 }
 
 void DynamicDescriptorPool::destroy(VkDevice device)
@@ -289,20 +287,20 @@ void DynamicDescriptorPool::destroy(VkDevice device)
     mCurrentDescriptorPool.destroy(device);
 }
 
-Error DynamicDescriptorPool::allocateSets(ContextVk *contextVk,
-                                          const VkDescriptorSetLayout *descriptorSetLayout,
-                                          uint32_t descriptorSetCount,
-                                          VkDescriptorSet *descriptorSetsOut)
+angle::Result DynamicDescriptorPool::allocateSets(Context *context,
+                                                  const VkDescriptorSetLayout *descriptorSetLayout,
+                                                  uint32_t descriptorSetCount,
+                                                  VkDescriptorSet *descriptorSetsOut)
 {
     if (mFreeDescriptorSets < descriptorSetCount || mCurrentSetsCount >= mMaxSetsPerPool)
     {
-        RendererVk *renderer = contextVk->getRenderer();
+        RendererVk *renderer = context->getRenderer();
         Serial currentSerial = renderer->getCurrentQueueSerial();
 
         // We will bust the limit of descriptor set with this allocation so we need to get a new
         // pool for it.
         renderer->releaseObject(currentSerial, &mCurrentDescriptorPool);
-        ANGLE_TRY(allocateNewPool(contextVk->getDevice()));
+        ANGLE_TRY(allocateNewPool(context));
     }
 
     VkDescriptorSetAllocateInfo allocInfo;
@@ -312,16 +310,15 @@ Error DynamicDescriptorPool::allocateSets(ContextVk *contextVk,
     allocInfo.descriptorSetCount = descriptorSetCount;
     allocInfo.pSetLayouts        = descriptorSetLayout;
 
-    ANGLE_TRY(mCurrentDescriptorPool.allocateDescriptorSets(contextVk->getDevice(), allocInfo,
-                                                            descriptorSetsOut));
+    ANGLE_TRY(mCurrentDescriptorPool.allocateDescriptorSets(context, allocInfo, descriptorSetsOut));
 
     ASSERT(mFreeDescriptorSets >= descriptorSetCount);
     mFreeDescriptorSets -= descriptorSetCount;
     mCurrentSetsCount++;
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error DynamicDescriptorPool::allocateNewPool(VkDevice device)
+angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
 {
     VkDescriptorPoolCreateInfo descriptorPoolInfo;
     descriptorPoolInfo.sType   = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -336,8 +333,8 @@ Error DynamicDescriptorPool::allocateNewPool(VkDevice device)
     mFreeDescriptorSets = mPoolSize.descriptorCount;
     mCurrentSetsCount = 0;
 
-    ANGLE_TRY(mCurrentDescriptorPool.init(device, descriptorPoolInfo));
-    return NoError();
+    ANGLE_TRY(mCurrentDescriptorPool.init(context, descriptorPoolInfo));
+    return angle::Result::Continue();
 }
 
 void DynamicDescriptorPool::setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool)
@@ -359,17 +356,17 @@ LineLoopHelper::LineLoopHelper(RendererVk *renderer)
 
 LineLoopHelper::~LineLoopHelper() = default;
 
-vk::Error LineLoopHelper::getIndexBufferForDrawArrays(RendererVk *renderer,
-                                                      const gl::DrawCallParams &drawCallParams,
-                                                      VkBuffer *bufferHandleOut,
-                                                      VkDeviceSize *offsetOut)
+angle::Result LineLoopHelper::getIndexBufferForDrawArrays(Context *context,
+                                                          const gl::DrawCallParams &drawCallParams,
+                                                          VkBuffer *bufferHandleOut,
+                                                          VkDeviceSize *offsetOut)
 {
     uint32_t *indices    = nullptr;
     size_t allocateBytes = sizeof(uint32_t) * (drawCallParams.vertexCount() + 1);
     uint32_t offset      = 0;
 
-    mDynamicIndexBuffer.releaseRetainedBuffers(renderer);
-    ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
+    mDynamicIndexBuffer.releaseRetainedBuffers(context->getRenderer());
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            &offset, nullptr));
     *offsetOut = static_cast<VkDeviceSize>(offset);
@@ -388,18 +385,18 @@ vk::Error LineLoopHelper::getIndexBufferForDrawArrays(RendererVk *renderer,
     // Since we are not using the VK_MEMORY_PROPERTY_HOST_COHERENT_BIT flag when creating the
     // device memory in the StreamingBuffer, we always need to make sure we flush it after
     // writing.
-    ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
+    ANGLE_TRY(mDynamicIndexBuffer.flush(context));
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
-vk::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *renderer,
-                                                              BufferVk *elementArrayBufferVk,
-                                                              VkIndexType indexType,
-                                                              int indexCount,
-                                                              intptr_t elementArrayOffset,
-                                                              VkBuffer *bufferHandleOut,
-                                                              VkDeviceSize *bufferOffsetOut)
+angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(Context *context,
+                                                                  BufferVk *elementArrayBufferVk,
+                                                                  VkIndexType indexType,
+                                                                  int indexCount,
+                                                                  intptr_t elementArrayOffset,
+                                                                  VkBuffer *bufferHandleOut,
+                                                                  VkDeviceSize *bufferOffsetOut)
 {
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
 
@@ -409,8 +406,8 @@ vk::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *render
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (indexCount + 1);
 
-    mDynamicIndexBuffer.releaseRetainedBuffers(renderer);
-    ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
+    mDynamicIndexBuffer.releaseRetainedBuffers(context->getRenderer());
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            &destinationOffset, nullptr));
     *bufferOffsetOut = static_cast<VkDeviceSize>(destinationOffset);
@@ -422,18 +419,18 @@ vk::Error LineLoopHelper::getIndexBufferForElementArrayBuffer(RendererVk *render
     std::array<VkBufferCopy, 2> copies = {{copy1, copy2}};
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
+    ANGLE_TRY(beginWriteResource(context, &commandBuffer));
 
     elementArrayBufferVk->addReadDependency(this);
     commandBuffer->copyBuffer(elementArrayBufferVk->getVkBuffer().getHandle(), *bufferHandleOut, 2,
                               copies.data());
 
-    ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
-    return vk::NoError();
+    ANGLE_TRY(mDynamicIndexBuffer.flush(context));
+    return angle::Result::Continue();
 }
 
-vk::Error LineLoopHelper::getIndexBufferForClientElementArray(
-    RendererVk *renderer,
+angle::Result LineLoopHelper::getIndexBufferForClientElementArray(
+    Context *context,
     const gl::DrawCallParams &drawCallParams,
     VkBuffer *bufferHandleOut,
     VkDeviceSize *bufferOffsetOut)
@@ -445,7 +442,7 @@ vk::Error LineLoopHelper::getIndexBufferForClientElementArray(
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (drawCallParams.indexCount() + 1);
-    ANGLE_TRY(mDynamicIndexBuffer.allocate(renderer, allocateBytes,
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            &offset, nullptr));
     *bufferOffsetOut = static_cast<VkDeviceSize>(offset);
@@ -470,8 +467,8 @@ vk::Error LineLoopHelper::getIndexBufferForClientElementArray(
                unitSize);
     }
 
-    ANGLE_TRY(mDynamicIndexBuffer.flush(renderer->getDevice()));
-    return vk::NoError();
+    ANGLE_TRY(mDynamicIndexBuffer.flush(context));
+    return angle::Result::Continue();
 }
 
 void LineLoopHelper::destroy(VkDevice device)
@@ -519,13 +516,13 @@ bool ImageHelper::valid() const
     return mImage.valid();
 }
 
-Error ImageHelper::init(VkDevice device,
-                        gl::TextureType textureType,
-                        const gl::Extents &extents,
-                        const Format &format,
-                        GLint samples,
-                        VkImageUsageFlags usage,
-                        uint32_t mipLevels)
+angle::Result ImageHelper::init(Context *context,
+                                gl::TextureType textureType,
+                                const gl::Extents &extents,
+                                const Format &format,
+                                GLint samples,
+                                VkImageUsageFlags usage,
+                                uint32_t mipLevels)
 {
     ASSERT(!valid());
 
@@ -555,8 +552,8 @@ Error ImageHelper::init(VkDevice device,
 
     mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-    ANGLE_TRY(mImage.init(device, imageInfo));
-    return NoError();
+    ANGLE_TRY(mImage.init(context, imageInfo));
+    return angle::Result::Continue();
 }
 
 void ImageHelper::release(Serial serial, RendererVk *renderer)
@@ -570,21 +567,21 @@ void ImageHelper::resetImageWeakReference()
     mImage.reset();
 }
 
-Error ImageHelper::initMemory(VkDevice device,
-                              const MemoryProperties &memoryProperties,
-                              VkMemoryPropertyFlags flags)
+angle::Result ImageHelper::initMemory(Context *context,
+                                      const MemoryProperties &memoryProperties,
+                                      VkMemoryPropertyFlags flags)
 {
     // TODO(jmadill): Memory sub-allocation. http://anglebug.com/2162
-    ANGLE_TRY(AllocateImageMemory(device, memoryProperties, flags, &mImage, &mDeviceMemory));
-    return NoError();
+    ANGLE_TRY(AllocateImageMemory(context, flags, &mImage, &mDeviceMemory));
+    return angle::Result::Continue();
 }
 
-Error ImageHelper::initImageView(VkDevice device,
-                                 gl::TextureType textureType,
-                                 VkImageAspectFlags aspectMask,
-                                 const gl::SwizzleState &swizzleMap,
-                                 ImageView *imageViewOut,
-                                 uint32_t levelCount)
+angle::Result ImageHelper::initImageView(Context *context,
+                                         gl::TextureType textureType,
+                                         VkImageAspectFlags aspectMask,
+                                         const gl::SwizzleState &swizzleMap,
+                                         ImageView *imageViewOut,
+                                         uint32_t levelCount)
 {
     VkImageViewCreateInfo viewInfo;
     viewInfo.sType    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -613,8 +610,8 @@ Error ImageHelper::initImageView(VkDevice device,
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount     = mLayerCount;
 
-    ANGLE_TRY(imageViewOut->init(device, viewInfo));
-    return NoError();
+    ANGLE_TRY(imageViewOut->init(context, viewInfo));
+    return angle::Result::Continue();
 }
 
 void ImageHelper::destroy(VkDevice device)
@@ -640,11 +637,11 @@ void ImageHelper::init2DWeakReference(VkImage handle,
     mImage.setHandle(handle);
 }
 
-Error ImageHelper::init2DStaging(VkDevice device,
-                                 const MemoryProperties &memoryProperties,
-                                 const Format &format,
-                                 const gl::Extents &extents,
-                                 StagingUsage usage)
+angle::Result ImageHelper::init2DStaging(Context *context,
+                                         const MemoryProperties &memoryProperties,
+                                         const Format &format,
+                                         const gl::Extents &extents,
+                                         StagingUsage usage)
 {
     ASSERT(!valid());
 
@@ -677,7 +674,7 @@ Error ImageHelper::init2DStaging(VkDevice device,
     imageInfo.pQueueFamilyIndices   = nullptr;
     imageInfo.initialLayout         = mCurrentLayout;
 
-    ANGLE_TRY(mImage.init(device, imageInfo));
+    ANGLE_TRY(mImage.init(context, imageInfo));
 
     // Allocate and bind host visible and coherent Image memory.
     // TODO(ynovikov): better approach would be to request just visible memory,
@@ -686,9 +683,9 @@ Error ImageHelper::init2DStaging(VkDevice device,
     // 1) not having (enough) coherent memory and 2) coherent memory being slower
     VkMemoryPropertyFlags memoryPropertyFlags =
         (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-    ANGLE_TRY(initMemory(device, memoryProperties, memoryPropertyFlags));
+    ANGLE_TRY(initMemory(context, memoryProperties, memoryPropertyFlags));
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 VkImageAspectFlags ImageHelper::getAspectFlags() const

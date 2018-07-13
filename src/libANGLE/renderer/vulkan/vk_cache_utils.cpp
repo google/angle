@@ -174,10 +174,10 @@ void UnpackBlendAttachmentState(const vk::PackedColorBlendAttachmentState &packe
     stateOut->colorWriteMask      = static_cast<VkColorComponentFlags>(packedState.colorWriteMask);
 }
 
-Error InitializeRenderPassFromDesc(VkDevice device,
-                                   const RenderPassDesc &desc,
-                                   const AttachmentOpsArray &ops,
-                                   RenderPass *renderPass)
+angle::Result InitializeRenderPassFromDesc(vk::Context *context,
+                                           const RenderPassDesc &desc,
+                                           const AttachmentOpsArray &ops,
+                                           RenderPass *renderPass)
 {
     uint32_t attachmentCount = desc.attachmentCount();
     ASSERT(attachmentCount > 0);
@@ -238,8 +238,8 @@ Error InitializeRenderPassFromDesc(VkDevice device,
     createInfo.dependencyCount = 0;
     createInfo.pDependencies   = nullptr;
 
-    ANGLE_TRY(renderPass->init(device, createInfo));
-    return vk::NoError();
+    ANGLE_TRY(renderPass->init(context, createInfo));
+    return angle::Result::Continue();
 }
 
 }  // anonymous namespace
@@ -435,13 +435,13 @@ void PipelineDesc::initDefaults()
               blendAttachmentState);
 }
 
-Error PipelineDesc::initializePipeline(VkDevice device,
-                                       const RenderPass &compatibleRenderPass,
-                                       const PipelineLayout &pipelineLayout,
-                                       const gl::AttributesMask &activeAttribLocationsMask,
-                                       const ShaderModule &vertexModule,
-                                       const ShaderModule &fragmentModule,
-                                       Pipeline *pipelineOut) const
+angle::Result PipelineDesc::initializePipeline(vk::Context *context,
+                                               const RenderPass &compatibleRenderPass,
+                                               const PipelineLayout &pipelineLayout,
+                                               const gl::AttributesMask &activeAttribLocationsMask,
+                                               const ShaderModule &vertexModule,
+                                               const ShaderModule &fragmentModule,
+                                               Pipeline *pipelineOut) const
 {
     VkPipelineShaderStageCreateInfo shaderStages[2];
     VkPipelineVertexInputStateCreateInfo vertexInputState;
@@ -618,9 +618,9 @@ Error PipelineDesc::initializePipeline(VkDevice device,
     createInfo.basePipelineHandle  = VK_NULL_HANDLE;
     createInfo.basePipelineIndex   = 0;
 
-    ANGLE_TRY(pipelineOut->initGraphics(device, createInfo));
+    ANGLE_TRY(pipelineOut->initGraphics(context, createInfo));
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 const ShaderStageInfo &PipelineDesc::getShaderStageInfo() const
@@ -1005,10 +1005,10 @@ void RenderPassCache::destroy(VkDevice device)
     mPayload.clear();
 }
 
-vk::Error RenderPassCache::getCompatibleRenderPass(VkDevice device,
-                                                   Serial serial,
-                                                   const vk::RenderPassDesc &desc,
-                                                   vk::RenderPass **renderPassOut)
+angle::Result RenderPassCache::getCompatibleRenderPass(vk::Context *context,
+                                                       Serial serial,
+                                                       const vk::RenderPassDesc &desc,
+                                                       vk::RenderPass **renderPassOut)
 {
     auto outerIt = mPayload.find(desc);
     if (outerIt != mPayload.end())
@@ -1019,7 +1019,7 @@ vk::Error RenderPassCache::getCompatibleRenderPass(VkDevice device,
         // Find the first element and return it.
         innerCache.begin()->second.updateSerial(serial);
         *renderPassOut = &innerCache.begin()->second.get();
-        return vk::NoError();
+        return angle::Result::Continue();
     }
 
     // Insert some dummy attachment ops.
@@ -1038,14 +1038,14 @@ vk::Error RenderPassCache::getCompatibleRenderPass(VkDevice device,
                         VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
     }
 
-    return getRenderPassWithOps(device, serial, desc, ops, renderPassOut);
+    return getRenderPassWithOps(context, serial, desc, ops, renderPassOut);
 }
 
-vk::Error RenderPassCache::getRenderPassWithOps(VkDevice device,
-                                                Serial serial,
-                                                const vk::RenderPassDesc &desc,
-                                                const vk::AttachmentOpsArray &attachmentOps,
-                                                vk::RenderPass **renderPassOut)
+angle::Result RenderPassCache::getRenderPassWithOps(vk::Context *context,
+                                                    Serial serial,
+                                                    const vk::RenderPassDesc &desc,
+                                                    const vk::AttachmentOpsArray &attachmentOps,
+                                                    vk::RenderPass **renderPassOut)
 {
     auto outerIt = mPayload.find(desc);
     if (outerIt != mPayload.end())
@@ -1059,7 +1059,7 @@ vk::Error RenderPassCache::getRenderPassWithOps(VkDevice device,
             // TODO(jmadill): Could possibly use an MRU cache here.
             innerIt->second.updateSerial(serial);
             *renderPassOut = &innerIt->second.get();
-            return vk::NoError();
+            return angle::Result::Continue();
         }
     }
     else
@@ -1069,7 +1069,7 @@ vk::Error RenderPassCache::getRenderPassWithOps(VkDevice device,
     }
 
     vk::RenderPass newRenderPass;
-    ANGLE_TRY(vk::InitializeRenderPassFromDesc(device, desc, attachmentOps, &newRenderPass));
+    ANGLE_TRY(vk::InitializeRenderPassFromDesc(context, desc, attachmentOps, &newRenderPass));
 
     vk::RenderPassAndSerial withSerial(std::move(newRenderPass), serial);
 
@@ -1078,7 +1078,7 @@ vk::Error RenderPassCache::getRenderPassWithOps(VkDevice device,
     *renderPassOut         = &insertPos.first->second.get();
 
     // TODO(jmadill): Trim cache, and pre-populate with the most common RPs on startup.
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 // PipelineCache implementation.
@@ -1099,28 +1099,28 @@ void PipelineCache::destroy(VkDevice device)
     mPayload.clear();
 }
 
-vk::Error PipelineCache::getPipeline(VkDevice device,
-                                     const vk::RenderPass &compatibleRenderPass,
-                                     const vk::PipelineLayout &pipelineLayout,
-                                     const gl::AttributesMask &activeAttribLocationsMask,
-                                     const vk::ShaderModule &vertexModule,
-                                     const vk::ShaderModule &fragmentModule,
-                                     const vk::PipelineDesc &desc,
-                                     vk::PipelineAndSerial **pipelineOut)
+angle::Result PipelineCache::getPipeline(vk::Context *context,
+                                         const vk::RenderPass &compatibleRenderPass,
+                                         const vk::PipelineLayout &pipelineLayout,
+                                         const gl::AttributesMask &activeAttribLocationsMask,
+                                         const vk::ShaderModule &vertexModule,
+                                         const vk::ShaderModule &fragmentModule,
+                                         const vk::PipelineDesc &desc,
+                                         vk::PipelineAndSerial **pipelineOut)
 {
     auto item = mPayload.find(desc);
     if (item != mPayload.end())
     {
         *pipelineOut = &item->second;
-        return vk::NoError();
+        return angle::Result::Continue();
     }
 
     vk::Pipeline newPipeline;
 
     // This "if" is left here for the benefit of VulkanPipelineCachePerfTest.
-    if (device != VK_NULL_HANDLE)
+    if (context != nullptr)
     {
-        ANGLE_TRY(desc.initializePipeline(device, compatibleRenderPass, pipelineLayout,
+        ANGLE_TRY(desc.initializePipeline(context, compatibleRenderPass, pipelineLayout,
                                           activeAttribLocationsMask, vertexModule, fragmentModule,
                                           &newPipeline));
     }
@@ -1130,7 +1130,7 @@ vk::Error PipelineCache::getPipeline(VkDevice device,
         mPayload.emplace(desc, vk::PipelineAndSerial(std::move(newPipeline), Serial()));
     *pipelineOut = &insertedItem.first->second;
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 void PipelineCache::populate(const vk::PipelineDesc &desc, vk::Pipeline &&pipeline)
@@ -1164,8 +1164,8 @@ void DescriptorSetLayoutCache::destroy(VkDevice device)
     mPayload.clear();
 }
 
-vk::Error DescriptorSetLayoutCache::getDescriptorSetLayout(
-    VkDevice device,
+angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
+    vk::Context *context,
     const vk::DescriptorSetLayoutDesc &desc,
     vk::BindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut)
 {
@@ -1174,7 +1174,7 @@ vk::Error DescriptorSetLayoutCache::getDescriptorSetLayout(
     {
         vk::SharedDescriptorSetLayout &layout = iter->second;
         descriptorSetLayoutOut->set(&layout);
-        return vk::NoError();
+        return angle::Result::Continue();
     }
 
     // We must unpack the descriptor set layout description.
@@ -1189,13 +1189,13 @@ vk::Error DescriptorSetLayoutCache::getDescriptorSetLayout(
     createInfo.pBindings    = bindings.data();
 
     vk::DescriptorSetLayout newLayout;
-    ANGLE_TRY(newLayout.init(device, createInfo));
+    ANGLE_TRY(newLayout.init(context, createInfo));
 
     auto insertedItem = mPayload.emplace(desc, vk::SharedDescriptorSetLayout(std::move(newLayout)));
     vk::SharedDescriptorSetLayout &insertedLayout = insertedItem.first->second;
     descriptorSetLayoutOut->set(&insertedLayout);
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 // PipelineLayoutCache implementation.
@@ -1217,8 +1217,8 @@ void PipelineLayoutCache::destroy(VkDevice device)
     mPayload.clear();
 }
 
-vk::Error PipelineLayoutCache::getPipelineLayout(
-    VkDevice device,
+angle::Result PipelineLayoutCache::getPipelineLayout(
+    vk::Context *context,
     const vk::PipelineLayoutDesc &desc,
     const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
     vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut)
@@ -1228,7 +1228,7 @@ vk::Error PipelineLayoutCache::getPipelineLayout(
     {
         vk::SharedPipelineLayout &layout = iter->second;
         pipelineLayoutOut->set(&layout);
-        return vk::NoError();
+        return angle::Result::Continue();
     }
 
     // Note this does not handle gaps in descriptor set layouts gracefully.
@@ -1274,12 +1274,12 @@ vk::Error PipelineLayoutCache::getPipelineLayout(
     createInfo.pPushConstantRanges    = pushConstantRanges.data();
 
     vk::PipelineLayout newLayout;
-    ANGLE_TRY(newLayout.init(device, createInfo));
+    ANGLE_TRY(newLayout.init(context, createInfo));
 
     auto insertedItem = mPayload.emplace(desc, vk::SharedPipelineLayout(std::move(newLayout)));
     vk::SharedPipelineLayout &insertedLayout = insertedItem.first->second;
     pipelineLayoutOut->set(&insertedLayout);
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 }  // namespace rx

@@ -42,18 +42,18 @@ class DynamicBuffer : angle::NonCopyable
     // This call will allocate a new region at the end of the buffer. It internally may trigger
     // a new buffer to be created (which is returned in 'newBufferAllocatedOut'. This param may
     // be nullptr.
-    Error allocate(RendererVk *renderer,
-                   size_t sizeInBytes,
-                   uint8_t **ptrOut,
-                   VkBuffer *handleOut,
-                   uint32_t *offsetOut,
-                   bool *newBufferAllocatedOut);
+    angle::Result allocate(Context *context,
+                           size_t sizeInBytes,
+                           uint8_t **ptrOut,
+                           VkBuffer *handleOut,
+                           uint32_t *offsetOut,
+                           bool *newBufferAllocatedOut);
 
     // After a sequence of writes, call flush to ensure the data is visible to the device.
-    Error flush(VkDevice device);
+    angle::Result flush(Context *context);
 
     // After a sequence of writes, call invalidate to ensure the data is visible to the host.
-    Error invalidate(VkDevice device);
+    angle::Result invalidate(Context *context);
 
     // This releases resources when they might currently be in use.
     void release(RendererVk *renderer);
@@ -100,21 +100,21 @@ class DynamicDescriptorPool final : angle::NonCopyable
     ~DynamicDescriptorPool();
 
     // The DynamicDescriptorPool only handles one pool size at at time.
-    Error init(VkDevice device, const VkDescriptorPoolSize &poolSize);
+    angle::Result init(Context *context, const VkDescriptorPoolSize &poolSize);
     void destroy(VkDevice device);
 
     // We use the descriptor type to help count the number of free sets.
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.
-    Error allocateSets(ContextVk *contextVk,
-                       const VkDescriptorSetLayout *descriptorSetLayout,
-                       uint32_t descriptorSetCount,
-                       VkDescriptorSet *descriptorSetsOut);
+    angle::Result allocateSets(Context *context,
+                               const VkDescriptorSetLayout *descriptorSetLayout,
+                               uint32_t descriptorSetCount,
+                               VkDescriptorSet *descriptorSetsOut);
 
     // For testing only!
     void setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool);
 
   private:
-    Error allocateNewPool(VkDevice device);
+    angle::Result allocateNewPool(Context *context);
 
     uint32_t mMaxSetsPerPool;
     uint32_t mCurrentSetsCount;
@@ -136,21 +136,21 @@ class LineLoopHelper final : public vk::CommandGraphResource
     LineLoopHelper(RendererVk *renderer);
     ~LineLoopHelper();
 
-    vk::Error getIndexBufferForDrawArrays(RendererVk *renderer,
-                                          const gl::DrawCallParams &drawCallParams,
-                                          VkBuffer *bufferHandleOut,
-                                          VkDeviceSize *offsetOut);
-    vk::Error getIndexBufferForElementArrayBuffer(RendererVk *renderer,
-                                                  BufferVk *elementArrayBufferVk,
-                                                  VkIndexType indexType,
-                                                  int indexCount,
-                                                  intptr_t elementArrayOffset,
-                                                  VkBuffer *bufferHandleOut,
-                                                  VkDeviceSize *bufferOffsetOut);
-    vk::Error getIndexBufferForClientElementArray(RendererVk *renderer,
-                                                  const gl::DrawCallParams &drawCallParams,
-                                                  VkBuffer *bufferHandleOut,
-                                                  VkDeviceSize *bufferOffsetOut);
+    angle::Result getIndexBufferForDrawArrays(Context *context,
+                                              const gl::DrawCallParams &drawCallParams,
+                                              VkBuffer *bufferHandleOut,
+                                              VkDeviceSize *offsetOut);
+    angle::Result getIndexBufferForElementArrayBuffer(Context *context,
+                                                      BufferVk *elementArrayBufferVk,
+                                                      VkIndexType indexType,
+                                                      int indexCount,
+                                                      intptr_t elementArrayOffset,
+                                                      VkBuffer *bufferHandleOut,
+                                                      VkDeviceSize *bufferOffsetOut);
+    angle::Result getIndexBufferForClientElementArray(Context *context,
+                                                      const gl::DrawCallParams &drawCallParams,
+                                                      VkBuffer *bufferHandleOut,
+                                                      VkDeviceSize *bufferOffsetOut);
 
     void destroy(VkDevice device);
 
@@ -169,27 +169,27 @@ class ImageHelper final : angle::NonCopyable
 
     bool valid() const;
 
-    Error init(VkDevice device,
-               gl::TextureType textureType,
-               const gl::Extents &extents,
-               const Format &format,
-               GLint samples,
-               VkImageUsageFlags usage,
-               uint32_t mipLevels);
-    Error initMemory(VkDevice device,
-                     const MemoryProperties &memoryProperties,
-                     VkMemoryPropertyFlags flags);
-    Error initImageView(VkDevice device,
-                        gl::TextureType textureType,
-                        VkImageAspectFlags aspectMask,
-                        const gl::SwizzleState &swizzleMap,
-                        ImageView *imageViewOut,
-                        uint32_t levelCount);
-    Error init2DStaging(VkDevice device,
-                        const MemoryProperties &memoryProperties,
-                        const Format &format,
-                        const gl::Extents &extent,
-                        StagingUsage usage);
+    angle::Result init(Context *context,
+                       gl::TextureType textureType,
+                       const gl::Extents &extents,
+                       const Format &format,
+                       GLint samples,
+                       VkImageUsageFlags usage,
+                       uint32_t mipLevels);
+    angle::Result initMemory(Context *context,
+                             const MemoryProperties &memoryProperties,
+                             VkMemoryPropertyFlags flags);
+    angle::Result initImageView(Context *context,
+                                gl::TextureType textureType,
+                                VkImageAspectFlags aspectMask,
+                                const gl::SwizzleState &swizzleMap,
+                                ImageView *imageViewOut,
+                                uint32_t levelCount);
+    angle::Result init2DStaging(Context *context,
+                                const MemoryProperties &memoryProperties,
+                                const Format &format,
+                                const gl::Extents &extent,
+                                StagingUsage usage);
 
     VkImageAspectFlags getAspectFlags() const;
     void release(Serial serial, RendererVk *renderer);
@@ -208,7 +208,6 @@ class ImageHelper final : angle::NonCopyable
     const gl::Extents &getExtents() const;
     const Format &getFormat() const;
     GLint getSamples() const;
-    size_t getAllocatedMemorySize() const;
 
     VkImageLayout getCurrentLayout() const { return mCurrentLayout; }
     void updateLayout(VkImageLayout layout) { mCurrentLayout = layout; }

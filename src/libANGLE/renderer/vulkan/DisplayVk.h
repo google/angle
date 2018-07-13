@@ -11,12 +11,13 @@
 #define LIBANGLE_RENDERER_VULKAN_DISPLAYVK_H_
 
 #include "libANGLE/renderer/DisplayImpl.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {
 class RendererVk;
 
-class DisplayVk : public DisplayImpl
+class DisplayVk : public DisplayImpl, public vk::Context
 {
   public:
     DisplayVk(const egl::DisplayState &state);
@@ -65,14 +66,17 @@ class DisplayVk : public DisplayImpl
                                                        const egl::AttributeMap &attribs) override;
     gl::Version getMaxSupportedESVersion() const override;
 
-    RendererVk *getRenderer() const { return mRenderer.get(); }
-
     virtual const char *getWSIName() const = 0;
 
     // Determine if a config with given formats and sample counts is supported.  This callback may
     // modify the config to add or remove platform specific attributes such as nativeVisualID before
     // returning a bool to indicate if the config should be supported.
     virtual bool checkConfigSupport(egl::Config *config) = 0;
+
+    void handleError(VkResult result, const char *file, unsigned int line) override;
+
+    // TODO(jmadill): Remove this once refactor is done. http://anglebug.com/2491
+    egl::Error getEGLError(EGLint errorCode);
 
   private:
     virtual SurfaceImpl *createWindowSurfaceVk(const egl::SurfaceState &state,
@@ -82,7 +86,7 @@ class DisplayVk : public DisplayImpl
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
-    std::unique_ptr<RendererVk> mRenderer;
+    std::string mStoredErrorString;
 };
 
 }  // namespace rx

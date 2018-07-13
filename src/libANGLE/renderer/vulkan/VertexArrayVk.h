@@ -45,22 +45,14 @@ class VertexArrayVk : public VertexArrayImpl
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const;
     const gl::AttribArray<VkDeviceSize> &getCurrentArrayBufferOffsets() const;
 
-    void updateDrawDependencies(vk::CommandGraphResource *drawFramebuffer,
-                                const gl::AttributesMask &activeAttribsMask,
-                                vk::CommandGraphResource *elementArrayBufferOverride,
-                                Serial serial,
-                                bool isDrawElements);
-
     void getPackedInputDescriptions(const RendererVk *rendererVk, vk::PipelineDesc *pipelineDesc);
 
     // Draw call handling.
     gl::Error drawArrays(const gl::Context *context,
-                         RendererVk *renderer,
                          const gl::DrawCallParams &drawCallParams,
                          vk::CommandBuffer *commandBuffer,
                          bool shouldApplyVertexArray);
     gl::Error drawElements(const gl::Context *context,
-                           RendererVk *renderer,
                            const gl::DrawCallParams &drawCallParams,
                            vk::CommandBuffer *commandBuffer,
                            bool shouldApplyVertexArray);
@@ -84,19 +76,17 @@ class VertexArrayVk : public VertexArrayImpl
     void updateElementArrayBufferReadDependency(vk::CommandGraphResource *drawFramebuffer,
                                                 Serial serial);
 
-    gl::Error streamVertexData(RendererVk *renderer,
-                               const gl::AttributesMask &attribsToStream,
-                               const gl::DrawCallParams &drawCallParams);
+    angle::Result streamVertexData(ContextVk *contextVk,
+                                   const gl::AttributesMask &attribsToStream,
+                                   const gl::DrawCallParams &drawCallParams);
 
-    gl::Error streamIndexData(RendererVk *renderer, const gl::DrawCallParams &drawCallParams);
+    angle::Result streamIndexData(ContextVk *contextVk, const gl::DrawCallParams &drawCallParams);
 
     gl::Error onDraw(const gl::Context *context,
-                     RendererVk *renderer,
                      const gl::DrawCallParams &drawCallParams,
                      vk::CommandBuffer *commandBuffer,
                      bool newCommandBuffer);
     gl::Error onIndexedDraw(const gl::Context *context,
-                            RendererVk *renderer,
                             const gl::DrawCallParams &drawCallParams,
                             vk::CommandBuffer *commandBuffer,
                             bool newCommandBuffer);

@@ -89,17 +89,17 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                                 GLfloat *xy) const override;
     RenderTargetVk *getDepthStencilRenderTarget() const;
     const vk::RenderPassDesc &getRenderPassDesc();
-    vk::Error getCommandBufferForDraw(ContextVk *contextVk,
-                                      vk::CommandBuffer **commandBufferOut,
-                                      vk::RecordingMode *modeOut);
+    angle::Result getCommandBufferForDraw(ContextVk *contextVk,
+                                          vk::CommandBuffer **commandBufferOut,
+                                          vk::RecordingMode *modeOut);
 
     // Internal helper function for readPixels operations.
-    vk::Error readPixelsImpl(const gl::Context *context,
-                             const gl::Rectangle &area,
-                             const PackPixelsParams &packPixelsParams,
-                             const VkImageAspectFlags &copyAspectFlags,
-                             RenderTargetVk *renderTarget,
-                             void *pixels);
+    angle::Result readPixelsImpl(ContextVk *contextVk,
+                                 const gl::Rectangle &area,
+                                 const PackPixelsParams &packPixelsParams,
+                                 const VkImageAspectFlags &copyAspectFlags,
+                                 RenderTargetVk *renderTarget,
+                                 void *pixels);
 
     const gl::Extents &getReadImageExtents() const;
 
@@ -110,45 +110,44 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     FramebufferVk(const gl::FramebufferState &state);
     FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer);
 
-    gl::Error blitUsingCopy(vk::CommandBuffer *commandBuffer,
-                            const gl::Rectangle &readArea,
-                            const gl::Rectangle &destArea,
-                            RenderTargetVk *readRenderTarget,
-                            RenderTargetVk *drawRenderTarget,
-                            const gl::Rectangle *scissor,
-                            bool blitDepthBuffer,
-                            bool blitStencilBuffer);
-    gl::Error blitWithReadback(const gl::Context *context,
-                               const gl::Rectangle &sourceArea,
-                               const gl::Rectangle &destArea,
-                               bool blitDepthBuffer,
-                               bool blitStencilBuffer,
-                               vk::CommandBuffer *commandBuffer,
-                               RenderTargetVk *readRenderTarget,
-                               RenderTargetVk *drawRenderTarget);
-
-    vk::Error getFramebuffer(RendererVk *rendererVk, vk::Framebuffer **framebufferOut);
-
-    gl::Error clearWithClearAttachments(ContextVk *contextVk,
-                                        bool clearColor,
-                                        bool clearDepth,
-                                        bool clearStencil);
-    gl::Error clearWithDraw(const gl::Context *context, VkColorComponentFlags colorMaskFlags);
-    void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
-
-    gl::Error blitImpl(ContextVk *contextVk,
-                       vk::CommandBuffer *commandBuffer,
-                       const gl::Rectangle &readRectIn,
-                       const gl::Rectangle &drawRectIn,
+    void blitUsingCopy(vk::CommandBuffer *commandBuffer,
+                       const gl::Rectangle &readArea,
+                       const gl::Rectangle &destArea,
                        RenderTargetVk *readRenderTarget,
                        RenderTargetVk *drawRenderTarget,
-                       GLenum filter,
                        const gl::Rectangle *scissor,
-                       bool colorBlit,
-                       bool depthBlit,
-                       bool stencilBlit,
-                       bool flipSource,
-                       bool flipDest);
+                       bool blitDepthBuffer,
+                       bool blitStencilBuffer);
+    angle::Result blitWithReadback(ContextVk *contextVk,
+                                   const gl::Rectangle &sourceArea,
+                                   const gl::Rectangle &destArea,
+                                   bool blitDepthBuffer,
+                                   bool blitStencilBuffer,
+                                   vk::CommandBuffer *commandBuffer,
+                                   RenderTargetVk *readRenderTarget,
+                                   RenderTargetVk *drawRenderTarget);
+
+    angle::Result getFramebuffer(ContextVk *contextVk, vk::Framebuffer **framebufferOut);
+
+    angle::Result clearWithClearAttachments(ContextVk *contextVk,
+                                            bool clearColor,
+                                            bool clearDepth,
+                                            bool clearStencil);
+    angle::Result clearWithDraw(ContextVk *contextVk, VkColorComponentFlags colorMaskFlags);
+    void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
+
+    void blitImpl(vk::CommandBuffer *commandBuffer,
+                  const gl::Rectangle &readRectIn,
+                  const gl::Rectangle &drawRectIn,
+                  RenderTargetVk *readRenderTarget,
+                  RenderTargetVk *drawRenderTarget,
+                  GLenum filter,
+                  const gl::Rectangle *scissor,
+                  bool colorBlit,
+                  bool depthBlit,
+                  bool stencilBlit,
+                  bool flipSource,
+                  bool flipDest);
 
     WindowSurfaceVk *mBackbuffer;
 

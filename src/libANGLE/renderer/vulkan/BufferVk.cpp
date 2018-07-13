@@ -47,7 +47,6 @@ gl::Error BufferVk::setData(const gl::Context *context,
                             gl::BufferUsage usage)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    VkDevice device      = contextVk->getDevice();
 
     if (size > static_cast<size_t>(mState.getSize()))
     {
@@ -70,13 +69,13 @@ gl::Error BufferVk::setData(const gl::Context *context,
         createInfo.queueFamilyIndexCount = 0;
         createInfo.pQueueFamilyIndices   = nullptr;
 
-        ANGLE_TRY(mBuffer.init(device, createInfo));
+        ANGLE_TRY(mBuffer.init(contextVk, createInfo));
 
         // Assume host vislble/coherent memory available.
         const VkMemoryPropertyFlags memoryPropertyFlags =
             (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-        ANGLE_TRY(vk::AllocateBufferMemory(contextVk->getRenderer(), memoryPropertyFlags, &mBuffer,
-                                           &mBufferMemory));
+        ANGLE_TRY(
+            vk::AllocateBufferMemory(contextVk, memoryPropertyFlags, &mBuffer, &mBufferMemory));
     }
 
     if (data)
@@ -117,12 +116,15 @@ gl::Error BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBufferMemory.getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = vk::GetImpl(context)->getDevice();
-
-    ANGLE_TRY(
-        mBufferMemory.map(device, 0, mState.getSize(), 0, reinterpret_cast<uint8_t **>(mapPtr)));
-
+    ContextVk *contextVk = vk::GetImpl(context);
+    ANGLE_TRY(mapImpl(contextVk, mapPtr));
     return gl::NoError();
+}
+
+angle::Result BufferVk::mapImpl(ContextVk *contextVk, void **mapPtr)
+{
+    return mBufferMemory.map(contextVk, 0, mState.getSize(), 0,
+                             reinterpret_cast<uint8_t **>(mapPtr));
 }
 
 GLint64 BufferVk::getSize()
@@ -139,9 +141,10 @@ gl::Error BufferVk::mapRange(const gl::Context *context,
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBufferMemory.getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = vk::GetImpl(context)->getDevice();
+    ContextVk *contextVk = vk::GetImpl(context);
 
-    ANGLE_TRY(mBufferMemory.map(device, offset, length, 0, reinterpret_cast<uint8_t **>(mapPtr)));
+    ANGLE_TRY(
+        mBufferMemory.map(contextVk, offset, length, 0, reinterpret_cast<uint8_t **>(mapPtr)));
 
     return gl::NoError();
 }
@@ -165,7 +168,7 @@ gl::Error BufferVk::getIndexRange(const gl::Context *context,
                                   bool primitiveRestartEnabled,
                                   gl::IndexRange *outRange)
 {
-    VkDevice device = vk::GetImpl(context)->getDevice();
+    ContextVk *contextVk = vk::GetImpl(context);
 
     // TODO(jmadill): Consider keeping a shadow system memory copy in some cases.
     ASSERT(mBuffer.valid());
@@ -173,18 +176,18 @@ gl::Error BufferVk::getIndexRange(const gl::Context *context,
     const gl::Type &typeInfo = gl::GetTypeInfo(type);
 
     uint8_t *mapPointer = nullptr;
-    ANGLE_TRY(mBufferMemory.map(device, offset, typeInfo.bytes * count, 0, &mapPointer));
+    ANGLE_TRY(mBufferMemory.map(contextVk, offset, typeInfo.bytes * count, 0, &mapPointer));
 
     *outRange = gl::ComputeIndexRange(type, mapPointer, count, primitiveRestartEnabled);
 
-    mBufferMemory.unmap(device);
+    mBufferMemory.unmap(contextVk->getDevice());
     return gl::NoError();
 }
 
-vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
-                                const uint8_t *data,
-                                size_t size,
-                                size_t offset)
+angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
+                                    const uint8_t *data,
+                                    size_t size,
+                                    size_t offset)
 {
     RendererVk *renderer = contextVk->getRenderer();
     VkDevice device      = contextVk->getDevice();
@@ -197,7 +200,7 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
                                      vk::StagingUsage::Write));
 
         uint8_t *mapPointer = nullptr;
-        ANGLE_TRY(stagingBuffer.getDeviceMemory().map(device, 0, size, 0, &mapPointer));
+        ANGLE_TRY(stagingBuffer.getDeviceMemory().map(contextVk, 0, size, 0, &mapPointer));
         ASSERT(mapPointer);
 
         memcpy(mapPointer, data, size);
@@ -207,7 +210,7 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
         // 'beginWriteResource' will stop any subsequent rendering from using the old buffer data,
         // by marking any current read operations / command buffers as 'finished'.
         vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(beginWriteResource(renderer, &commandBuffer));
+        ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
 
         // Insert a barrier to ensure reads from the buffer are complete.
         // TODO(jmadill): Insert minimal barriers.
@@ -256,7 +259,7 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
     else
     {
         uint8_t *mapPointer = nullptr;
-        ANGLE_TRY(mBufferMemory.map(device, offset, size, 0, &mapPointer));
+        ANGLE_TRY(mBufferMemory.map(contextVk, offset, size, 0, &mapPointer));
         ASSERT(mapPointer);
 
         memcpy(mapPointer, data, size);
@@ -264,7 +267,7 @@ vk::Error BufferVk::setDataImpl(ContextVk *contextVk,
         mBufferMemory.unmap(device);
     }
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 const vk::Buffer &BufferVk::getVkBuffer() const

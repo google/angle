@@ -28,43 +28,43 @@ class PixelBuffer final : angle::NonCopyable
 
     void removeStagedUpdates(const gl::ImageIndex &index);
 
-    vk::Error stageSubresourceUpdate(ContextVk *contextVk,
-                                     const gl::ImageIndex &index,
-                                     const gl::Extents &extents,
-                                     const gl::Offset &offset,
-                                     const gl::InternalFormat &formatInfo,
-                                     const gl::PixelUnpackState &unpack,
-                                     GLenum type,
-                                     const uint8_t *pixels);
+    angle::Result stageSubresourceUpdate(ContextVk *contextVk,
+                                         const gl::ImageIndex &index,
+                                         const gl::Extents &extents,
+                                         const gl::Offset &offset,
+                                         const gl::InternalFormat &formatInfo,
+                                         const gl::PixelUnpackState &unpack,
+                                         GLenum type,
+                                         const uint8_t *pixels);
 
-    vk::Error stageSubresourceUpdateAndGetData(RendererVk *renderer,
-                                               size_t allocationSize,
-                                               const gl::ImageIndex &imageIndex,
-                                               const gl::Extents &extents,
-                                               const gl::Offset &offset,
-                                               uint8_t **destData);
+    angle::Result stageSubresourceUpdateAndGetData(ContextVk *contextVk,
+                                                   size_t allocationSize,
+                                                   const gl::ImageIndex &imageIndex,
+                                                   const gl::Extents &extents,
+                                                   const gl::Offset &offset,
+                                                   uint8_t **destData);
 
-    vk::Error stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
-                                                    const gl::ImageIndex &index,
-                                                    const gl::Rectangle &sourceArea,
-                                                    const gl::Offset &dstOffset,
-                                                    const gl::Extents &dstExtent,
-                                                    const gl::InternalFormat &formatInfo,
-                                                    FramebufferVk *framebufferVk);
+    angle::Result stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
+                                                        const gl::ImageIndex &index,
+                                                        const gl::Rectangle &sourceArea,
+                                                        const gl::Offset &dstOffset,
+                                                        const gl::Extents &dstExtent,
+                                                        const gl::InternalFormat &formatInfo,
+                                                        FramebufferVk *framebufferVk);
 
     // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
     // dst.
-    vk::Error allocate(RendererVk *renderer,
-                       size_t sizeInBytes,
-                       uint8_t **ptrOut,
-                       VkBuffer *handleOut,
-                       uint32_t *offsetOut,
-                       bool *newBufferAllocatedOut);
+    angle::Result allocate(ContextVk *contextVk,
+                           size_t sizeInBytes,
+                           uint8_t **ptrOut,
+                           VkBuffer *handleOut,
+                           uint32_t *offsetOut,
+                           bool *newBufferAllocatedOut);
 
-    vk::Error flushUpdatesToImage(RendererVk *renderer,
-                                  uint32_t levelCount,
-                                  vk::ImageHelper *image,
-                                  vk::CommandBuffer *commandBuffer);
+    angle::Result flushUpdatesToImage(ContextVk *contextVk,
+                                      uint32_t levelCount,
+                                      vk::ImageHelper *image,
+                                      vk::CommandBuffer *commandBuffer);
 
     bool empty() const;
 
@@ -175,36 +175,37 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     const vk::ImageView &getImageView() const;
     const vk::Sampler &getSampler() const;
 
-    vk::Error ensureImageInitialized(ContextVk *contextVk);
+    angle::Result ensureImageInitialized(ContextVk *contextVk);
 
   private:
-    vk::Error generateMipmapWithBlit(RendererVk *renderer);
+    angle::Result generateMipmapWithBlit(ContextVk *contextVk);
 
-    vk::Error generateMipmapWithCPU(const gl::Context *context);
+    angle::Result generateMipmapWithCPU(const gl::Context *context);
 
-    vk::Error generateMipmapLevelsWithCPU(ContextVk *contextVk,
-                                          const angle::Format &sourceFormat,
-                                          GLuint layer,
-                                          GLuint firstMipLevel,
-                                          GLuint maxMipLevel,
-                                          size_t sourceWidth,
-                                          size_t sourceHeight,
-                                          size_t sourceRowPitch,
-                                          uint8_t *sourceData);
+    angle::Result generateMipmapLevelsWithCPU(ContextVk *contextVk,
+                                              const angle::Format &sourceFormat,
+                                              GLuint layer,
+                                              GLuint firstMipLevel,
+                                              GLuint maxMipLevel,
+                                              size_t sourceWidth,
+                                              size_t sourceHeight,
+                                              size_t sourceRowPitch,
+                                              uint8_t *sourceData);
 
-    gl::Error copySubImageImpl(const gl::Context *context,
-                               const gl::ImageIndex &index,
-                               const gl::Offset &destOffset,
-                               const gl::Rectangle &sourceArea,
-                               const gl::InternalFormat &internalFormat,
-                               gl::Framebuffer *source);
-    vk::Error initImage(ContextVk *contextVk,
-                        const vk::Format &format,
-                        const gl::Extents &extents,
-                        const uint32_t levelCount,
-                        vk::CommandBuffer *commandBuffer);
+    angle::Result copySubImageImpl(const gl::Context *context,
+                                   const gl::ImageIndex &index,
+                                   const gl::Offset &destOffset,
+                                   const gl::Rectangle &sourceArea,
+                                   const gl::InternalFormat &internalFormat,
+                                   gl::Framebuffer *source);
+    angle::Result initImage(ContextVk *contextVk,
+                            const vk::Format &format,
+                            const gl::Extents &extents,
+                            const uint32_t levelCount,
+                            vk::CommandBuffer *commandBuffer);
     void releaseImage(const gl::Context *context, RendererVk *renderer);
-    vk::Error getCommandBufferForWrite(RendererVk *renderer, vk::CommandBuffer **commandBufferOut);
+    angle::Result getCommandBufferForWrite(ContextVk *contextVk,
+                                           vk::CommandBuffer **commandBufferOut);
     uint32_t getLevelCount() const;
 
     vk::ImageHelper mImage;

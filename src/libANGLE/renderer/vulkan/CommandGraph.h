@@ -43,7 +43,7 @@ class CommandGraphResource
   protected:
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
-    Error beginWriteResource(RendererVk *renderer, CommandBuffer **commandBufferOut);
+    angle::Result beginWriteResource(Context *context, CommandBuffer **commandBufferOut);
 
     // Check if we have started writing outside a RenderPass.
     bool hasStartedWriteResource() const;
@@ -51,16 +51,16 @@ class CommandGraphResource
     // Starts rendering to an existing command buffer for the resource.
     // The started command buffer will render outside of a RenderPass.
     // Calls beginWriteResource if we have not yet started writing.
-    Error appendWriteResource(RendererVk *renderer, CommandBuffer **commandBufferOut);
+    angle::Result appendWriteResource(Context *context, CommandBuffer **commandBufferOut);
 
     // Begins a command buffer on the current graph node for in-RenderPass rendering.
     // Currently only called from FramebufferVk::getCommandBufferForDraw.
-    Error beginRenderPass(RendererVk *renderer,
-                          const Framebuffer &framebuffer,
-                          const gl::Rectangle &renderArea,
-                          const RenderPassDesc &renderPassDesc,
-                          const std::vector<VkClearValue> &clearValues,
-                          CommandBuffer **commandBufferOut) const;
+    angle::Result beginRenderPass(Context *context,
+                                  const Framebuffer &framebuffer,
+                                  const gl::Rectangle &renderArea,
+                                  const RenderPassDesc &renderPassDesc,
+                                  const std::vector<VkClearValue> &clearValues,
+                                  CommandBuffer **commandBufferOut) const;
 
     // Checks if we're in a RenderPass, returning true if so. Updates serial internally.
     // Returns the started command buffer in commandBufferOut.
@@ -132,11 +132,11 @@ class CommandGraph final : angle::NonCopyable
     // to set up dependency relations.
     CommandGraphNode *allocateNode();
 
-    Error submitCommands(VkDevice device,
-                         Serial serial,
-                         RenderPassCache *renderPassCache,
-                         CommandPool *commandPool,
-                         CommandBuffer *primaryCommandBufferOut);
+    angle::Result submitCommands(Context *context,
+                                 Serial serial,
+                                 RenderPassCache *renderPassCache,
+                                 CommandPool *commandPool,
+                                 CommandBuffer *primaryCommandBufferOut);
     bool empty() const;
 
   private:

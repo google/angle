@@ -23,9 +23,9 @@ class ShaderLibrary final : angle::NonCopyable
     ShaderLibrary();
     ~ShaderLibrary();
 
-    Error getShader(RendererVk *renderer,
-                    InternalShaderID shaderID,
-                    const ShaderAndSerial **shaderOut);
+    angle::Result getShader(Context *context,
+                            InternalShaderID shaderID,
+                            const ShaderAndSerial **shaderOut);
     void destroy(VkDevice device);
 
   private:

@@ -23,11 +23,11 @@ namespace vk
 namespace
 {
 
-Error InitAndBeginCommandBuffer(VkDevice device,
-                                const CommandPool &commandPool,
-                                const VkCommandBufferInheritanceInfo &inheritanceInfo,
-                                VkCommandBufferUsageFlags flags,
-                                CommandBuffer *commandBuffer)
+angle::Result InitAndBeginCommandBuffer(vk::Context *context,
+                                        const CommandPool &commandPool,
+                                        const VkCommandBufferInheritanceInfo &inheritanceInfo,
+                                        VkCommandBufferUsageFlags flags,
+                                        CommandBuffer *commandBuffer)
 {
     ASSERT(!commandBuffer->valid());
 
@@ -38,7 +38,7 @@ Error InitAndBeginCommandBuffer(VkDevice device,
     createInfo.level              = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
     createInfo.commandBufferCount = 1;
 
-    ANGLE_TRY(commandBuffer->init(device, createInfo));
+    ANGLE_TRY(commandBuffer->init(context, createInfo));
 
     VkCommandBufferBeginInfo beginInfo;
     beginInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -46,8 +46,8 @@ Error InitAndBeginCommandBuffer(VkDevice device,
     beginInfo.flags            = flags | VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     beginInfo.pInheritanceInfo = &inheritanceInfo;
 
-    ANGLE_TRY(commandBuffer->begin(beginInfo));
-    return NoError();
+    ANGLE_TRY(commandBuffer->begin(context, beginInfo));
+    return angle::Result::Continue();
 }
 
 }  // anonymous namespace
@@ -63,12 +63,12 @@ class CommandGraphNode final : angle::NonCopyable
     CommandBuffer *getInsideRenderPassCommands();
 
     // For outside the render pass (copies, transitions, etc).
-    Error beginOutsideRenderPassRecording(VkDevice device,
-                                          const CommandPool &commandPool,
-                                          CommandBuffer **commandsOut);
+    angle::Result beginOutsideRenderPassRecording(Context *context,
+                                                  const CommandPool &commandPool,
+                                                  CommandBuffer **commandsOut);
 
     // For rendering commands (draws).
-    Error beginInsideRenderPassRecording(RendererVk *renderer, CommandBuffer **commandsOut);
+    angle::Result beginInsideRenderPassRecording(Context *context, CommandBuffer **commandsOut);
 
     // storeRenderPassInfo and append*RenderTarget store info relevant to the RenderPass.
     void storeRenderPassInfo(const Framebuffer &framebuffer,
@@ -89,10 +89,10 @@ class CommandGraphNode final : angle::NonCopyable
     // Commands for traversing the node on a flush operation.
     VisitedState visitedState() const;
     void visitParents(std::vector<CommandGraphNode *> *stack);
-    Error visitAndExecute(VkDevice device,
-                          Serial serial,
-                          RenderPassCache *renderPassCache,
-                          CommandBuffer *primaryCommandBuffer);
+    angle::Result visitAndExecute(Context *context,
+                                  Serial serial,
+                                  RenderPassCache *renderPassCache,
+                                  CommandBuffer *primaryCommandBuffer);
 
     const gl::Rectangle &getRenderPassRenderArea() const;
 
@@ -163,38 +163,36 @@ bool CommandGraphResource::hasStartedWriteResource() const
            mCurrentWritingNode->getOutsideRenderPassCommands()->valid();
 }
 
-Error CommandGraphResource::beginWriteResource(RendererVk *renderer,
-                                               CommandBuffer **commandBufferOut)
+angle::Result CommandGraphResource::beginWriteResource(Context *context,
+                                                       CommandBuffer **commandBufferOut)
 {
-    onResourceChanged(renderer);
-
-    VkDevice device = renderer->getDevice();
-    return mCurrentWritingNode->beginOutsideRenderPassRecording(device, renderer->getCommandPool(),
-                                                                commandBufferOut);
+    onResourceChanged(context->getRenderer());
+    return mCurrentWritingNode->beginOutsideRenderPassRecording(
+        context, context->getRenderer()->getCommandPool(), commandBufferOut);
 }
 
-Error CommandGraphResource::appendWriteResource(RendererVk *renderer,
-                                                CommandBuffer **commandBufferOut)
+angle::Result CommandGraphResource::appendWriteResource(Context *context,
+                                                        CommandBuffer **commandBufferOut)
 {
-    updateQueueSerial(renderer->getCurrentQueueSerial());
+    updateQueueSerial(context->getRenderer()->getCurrentQueueSerial());
 
     if (!hasChildlessWritingNode())
     {
-        return beginWriteResource(renderer, commandBufferOut);
+        return beginWriteResource(context, commandBufferOut);
     }
 
     CommandBuffer *outsideRenderPassCommands = mCurrentWritingNode->getOutsideRenderPassCommands();
     if (!outsideRenderPassCommands->valid())
     {
         ANGLE_TRY(mCurrentWritingNode->beginOutsideRenderPassRecording(
-            renderer->getDevice(), renderer->getCommandPool(), commandBufferOut));
+            context, context->getRenderer()->getCommandPool(), commandBufferOut));
     }
     else
     {
         *commandBufferOut = outsideRenderPassCommands;
     }
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 bool CommandGraphResource::appendToStartedRenderPass(RendererVk *renderer,
@@ -223,18 +221,18 @@ const gl::Rectangle &CommandGraphResource::getRenderPassRenderArea() const
     return mCurrentWritingNode->getRenderPassRenderArea();
 }
 
-Error CommandGraphResource::beginRenderPass(RendererVk *renderer,
-                                            const Framebuffer &framebuffer,
-                                            const gl::Rectangle &renderArea,
-                                            const RenderPassDesc &renderPassDesc,
-                                            const std::vector<VkClearValue> &clearValues,
-                                            CommandBuffer **commandBufferOut) const
+angle::Result CommandGraphResource::beginRenderPass(Context *context,
+                                                    const Framebuffer &framebuffer,
+                                                    const gl::Rectangle &renderArea,
+                                                    const RenderPassDesc &renderPassDesc,
+                                                    const std::vector<VkClearValue> &clearValues,
+                                                    CommandBuffer **commandBufferOut) const
 {
     // Hard-code RenderPass to clear the first render target to the current clear value.
     // TODO(jmadill): Proper clear value implementation. http://anglebug.com/2361
     mCurrentWritingNode->storeRenderPassInfo(framebuffer, renderArea, renderPassDesc, clearValues);
 
-    return mCurrentWritingNode->beginInsideRenderPassRecording(renderer, commandBufferOut);
+    return mCurrentWritingNode->beginInsideRenderPassRecording(context, commandBufferOut);
 }
 
 void CommandGraphResource::onResourceChanged(RendererVk *renderer)
@@ -314,9 +312,9 @@ CommandBuffer *CommandGraphNode::getInsideRenderPassCommands()
     return &mInsideRenderPassCommands;
 }
 
-Error CommandGraphNode::beginOutsideRenderPassRecording(VkDevice device,
-                                                        const CommandPool &commandPool,
-                                                        CommandBuffer **commandsOut)
+angle::Result CommandGraphNode::beginOutsideRenderPassRecording(Context *context,
+                                                                const CommandPool &commandPool,
+                                                                CommandBuffer **commandsOut)
 {
     ASSERT(!mHasChildren);
 
@@ -330,22 +328,23 @@ Error CommandGraphNode::beginOutsideRenderPassRecording(VkDevice device,
     inheritanceInfo.queryFlags           = 0;
     inheritanceInfo.pipelineStatistics   = 0;
 
-    ANGLE_TRY(InitAndBeginCommandBuffer(device, commandPool, inheritanceInfo, 0,
+    ANGLE_TRY(InitAndBeginCommandBuffer(context, commandPool, inheritanceInfo, 0,
                                         &mOutsideRenderPassCommands));
 
     *commandsOut = &mOutsideRenderPassCommands;
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error CommandGraphNode::beginInsideRenderPassRecording(RendererVk *renderer,
-                                                       CommandBuffer **commandsOut)
+angle::Result CommandGraphNode::beginInsideRenderPassRecording(Context *context,
+                                                               CommandBuffer **commandsOut)
 {
     ASSERT(!mHasChildren);
 
     // Get a compatible RenderPass from the cache so we can initialize the inheritance info.
     // TODO(jmadill): Support query for compatible/conformant render pass. htto://anglebug.com/2361
     RenderPass *compatibleRenderPass;
-    ANGLE_TRY(renderer->getCompatibleRenderPass(mRenderPassDesc, &compatibleRenderPass));
+    ANGLE_TRY(context->getRenderer()->getCompatibleRenderPass(context, mRenderPassDesc,
+                                                              &compatibleRenderPass));
 
     VkCommandBufferInheritanceInfo inheritanceInfo;
     inheritanceInfo.sType                = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
@@ -358,11 +357,11 @@ Error CommandGraphNode::beginInsideRenderPassRecording(RendererVk *renderer,
     inheritanceInfo.pipelineStatistics   = 0;
 
     ANGLE_TRY(InitAndBeginCommandBuffer(
-        renderer->getDevice(), renderer->getCommandPool(), inheritanceInfo,
+        context, context->getRenderer()->getCommandPool(), inheritanceInfo,
         VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT, &mInsideRenderPassCommands));
 
     *commandsOut = &mInsideRenderPassCommands;
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void CommandGraphNode::storeRenderPassInfo(const Framebuffer &framebuffer,
@@ -452,14 +451,14 @@ void CommandGraphNode::visitParents(std::vector<CommandGraphNode *> *stack)
     mVisitedState = VisitedState::Ready;
 }
 
-Error CommandGraphNode::visitAndExecute(VkDevice device,
-                                        Serial serial,
-                                        RenderPassCache *renderPassCache,
-                                        CommandBuffer *primaryCommandBuffer)
+angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
+                                                Serial serial,
+                                                RenderPassCache *renderPassCache,
+                                                CommandBuffer *primaryCommandBuffer)
 {
     if (mOutsideRenderPassCommands.valid())
     {
-        ANGLE_TRY(mOutsideRenderPassCommands.end());
+        ANGLE_TRY(mOutsideRenderPassCommands.end(context));
         primaryCommandBuffer->executeCommands(1, &mOutsideRenderPassCommands);
     }
 
@@ -468,10 +467,10 @@ Error CommandGraphNode::visitAndExecute(VkDevice device,
         // Pull a compatible RenderPass from the cache.
         // TODO(jmadill): Insert real ops and layout transitions.
         RenderPass *renderPass = nullptr;
-        ANGLE_TRY(
-            renderPassCache->getCompatibleRenderPass(device, serial, mRenderPassDesc, &renderPass));
+        ANGLE_TRY(renderPassCache->getCompatibleRenderPass(context, serial, mRenderPassDesc,
+                                                           &renderPass));
 
-        ANGLE_TRY(mInsideRenderPassCommands.end());
+        ANGLE_TRY(mInsideRenderPassCommands.end(context));
 
         VkRenderPassBeginInfo beginInfo;
         beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -492,7 +491,7 @@ Error CommandGraphNode::visitAndExecute(VkDevice device,
     }
 
     mVisitedState = VisitedState::Visited;
-    return NoError();
+    return angle::Result::Continue();
 }
 
 const gl::Rectangle &CommandGraphNode::getRenderPassRenderArea() const
@@ -516,11 +515,11 @@ CommandGraphNode *CommandGraph::allocateNode()
     return newCommands;
 }
 
-Error CommandGraph::submitCommands(VkDevice device,
-                                   Serial serial,
-                                   RenderPassCache *renderPassCache,
-                                   CommandPool *commandPool,
-                                   CommandBuffer *primaryCommandBufferOut)
+angle::Result CommandGraph::submitCommands(Context *context,
+                                           Serial serial,
+                                           RenderPassCache *renderPassCache,
+                                           CommandPool *commandPool,
+                                           CommandBuffer *primaryCommandBufferOut)
 {
     VkCommandBufferAllocateInfo primaryInfo;
     primaryInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -529,11 +528,11 @@ Error CommandGraph::submitCommands(VkDevice device,
     primaryInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     primaryInfo.commandBufferCount = 1;
 
-    ANGLE_TRY(primaryCommandBufferOut->init(device, primaryInfo));
+    ANGLE_TRY(primaryCommandBufferOut->init(context, primaryInfo));
 
     if (mNodes.empty())
     {
-        return NoError();
+        return angle::Result::Continue();
     }
 
     std::vector<CommandGraphNode *> nodeStack;
@@ -544,7 +543,7 @@ Error CommandGraph::submitCommands(VkDevice device,
     beginInfo.flags            = 0;
     beginInfo.pInheritanceInfo = nullptr;
 
-    ANGLE_TRY(primaryCommandBufferOut->begin(beginInfo));
+    ANGLE_TRY(primaryCommandBufferOut->begin(context, beginInfo));
 
     for (CommandGraphNode *topLevelNode : mNodes)
     {
@@ -565,7 +564,7 @@ Error CommandGraph::submitCommands(VkDevice device,
                     node->visitParents(&nodeStack);
                     break;
                 case VisitedState::Ready:
-                    ANGLE_TRY(node->visitAndExecute(device, serial, renderPassCache,
+                    ANGLE_TRY(node->visitAndExecute(context, serial, renderPassCache,
                                                     primaryCommandBufferOut));
                     nodeStack.pop_back();
                     break;
@@ -579,7 +578,7 @@ Error CommandGraph::submitCommands(VkDevice device,
         }
     }
 
-    ANGLE_TRY(primaryCommandBufferOut->end());
+    ANGLE_TRY(primaryCommandBufferOut->end(context));
 
     // TODO(jmadill): Use pool allocation so we don't need to deallocate command graph.
     for (CommandGraphNode *node : mNodes)
@@ -588,7 +587,7 @@ Error CommandGraph::submitCommands(VkDevice device,
     }
     mNodes.clear();
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 bool CommandGraph::empty() const

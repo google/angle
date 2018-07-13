@@ -41,7 +41,10 @@ class RendererVk : angle::NonCopyable
     RendererVk();
     ~RendererVk();
 
-    vk::Error initialize(const egl::AttributeMap &attribs, const char *wsiName);
+    angle::Result initialize(vk::Context *context,
+                             const egl::AttributeMap &attribs,
+                             const char *wsiName);
+    void onDestroy(vk::Context *context);
 
     std::string getVendorString() const;
     std::string getRendererDescription() const;
@@ -55,12 +58,14 @@ class RendererVk : angle::NonCopyable
     VkQueue getQueue() const { return mQueue; }
     VkDevice getDevice() const { return mDevice; }
 
-    vk::Error selectPresentQueueForSurface(VkSurfaceKHR surface, uint32_t *presentQueueOut);
+    angle::Result selectPresentQueueForSurface(vk::Context *context,
+                                               VkSurfaceKHR surface,
+                                               uint32_t *presentQueueOut);
 
-    vk::Error finish(const gl::Context *context);
-    vk::Error flush(const gl::Context *context,
-                    const vk::Semaphore &waitSemaphore,
-                    const vk::Semaphore &signalSemaphore);
+    angle::Result finish(vk::Context *context);
+    angle::Result flush(vk::Context *context,
+                        const vk::Semaphore &waitSemaphore,
+                        const vk::Semaphore &signalSemaphore);
 
     const vk::CommandPool &getCommandPool() const;
 
@@ -101,35 +106,41 @@ class RendererVk : angle::NonCopyable
 
     const vk::Format &getFormat(angle::Format::ID formatID) const { return mFormatTable[formatID]; }
 
-    vk::Error getCompatibleRenderPass(const vk::RenderPassDesc &desc,
-                                      vk::RenderPass **renderPassOut);
-    vk::Error getRenderPassWithOps(const vk::RenderPassDesc &desc,
-                                   const vk::AttachmentOpsArray &ops,
-                                   vk::RenderPass **renderPassOut);
+    angle::Result getCompatibleRenderPass(vk::Context *context,
+                                          const vk::RenderPassDesc &desc,
+                                          vk::RenderPass **renderPassOut);
+    angle::Result getRenderPassWithOps(vk::Context *context,
+                                       const vk::RenderPassDesc &desc,
+                                       const vk::AttachmentOpsArray &ops,
+                                       vk::RenderPass **renderPassOut);
 
     // For getting a vk::Pipeline for the an application's draw call. RenderPassDesc is automatic.
-    vk::Error getAppPipeline(const ProgramVk *programVk,
-                             const vk::PipelineDesc &desc,
-                             const gl::AttributesMask &activeAttribLocationsMask,
-                             vk::PipelineAndSerial **pipelineOut);
+    angle::Result getAppPipeline(vk::Context *context,
+                                 const ProgramVk *programVk,
+                                 const vk::PipelineDesc &desc,
+                                 const gl::AttributesMask &activeAttribLocationsMask,
+                                 vk::PipelineAndSerial **pipelineOut);
 
     // For getting a vk::Pipeline for an internal draw call. Use an explicit RenderPass.
-    vk::Error getInternalPipeline(const vk::ShaderAndSerial &vertexShader,
-                                  const vk::ShaderAndSerial &fragmentShader,
-                                  const vk::PipelineLayout &pipelineLayout,
-                                  const vk::PipelineDesc &pipelineDesc,
-                                  const gl::AttributesMask &activeAttribLocationsMask,
-                                  vk::PipelineAndSerial **pipelineOut);
+    angle::Result getInternalPipeline(vk::Context *context,
+                                      const vk::ShaderAndSerial &vertexShader,
+                                      const vk::ShaderAndSerial &fragmentShader,
+                                      const vk::PipelineLayout &pipelineLayout,
+                                      const vk::PipelineDesc &pipelineDesc,
+                                      const gl::AttributesMask &activeAttribLocationsMask,
+                                      vk::PipelineAndSerial **pipelineOut);
 
     // Queries the descriptor set layout cache. Creates the layout if not present.
-    vk::Error getDescriptorSetLayout(
+    angle::Result getDescriptorSetLayout(
+        vk::Context *context,
         const vk::DescriptorSetLayoutDesc &desc,
         vk::BindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut);
 
     // Queries the pipeline layout cache. Creates the layout if not present.
-    vk::Error getPipelineLayout(const vk::PipelineLayoutDesc &desc,
-                                const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
-                                vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut);
+    angle::Result getPipelineLayout(vk::Context *context,
+                                    const vk::PipelineLayoutDesc &desc,
+                                    const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
+                                    vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut);
 
     // This should only be called from ResourceVk.
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
@@ -142,12 +153,14 @@ class RendererVk : angle::NonCopyable
     const FeaturesVk &getFeatures() const { return mFeatures; }
 
   private:
-    vk::Error initializeDevice(uint32_t queueFamilyIndex);
+    angle::Result initializeDevice(vk::Context *context, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
-    vk::Error submitFrame(const VkSubmitInfo &submitInfo, vk::CommandBuffer &&commandBuffer);
-    vk::Error checkInFlightCommands();
+    angle::Result submitFrame(vk::Context *context,
+                              const VkSubmitInfo &submitInfo,
+                              vk::CommandBuffer &&commandBuffer);
+    angle::Result checkInFlightCommands(vk::Context *context);
     void freeAllInFlightResources();
-    vk::Error flushCommandGraph(const gl::Context *context, vk::CommandBuffer *commandBatch);
+    angle::Result flushCommandGraph(vk::Context *context, vk::CommandBuffer *commandBatch);
     void initFeatures();
 
     mutable bool mCapsInitialized;

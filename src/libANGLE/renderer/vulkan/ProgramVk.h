@@ -104,7 +104,7 @@ class ProgramVk : public ProgramImpl
     const vk::ShaderModule &getLinkedFragmentModule() const;
     Serial getFragmentModuleSerial() const;
 
-    vk::Error updateUniforms(ContextVk *contextVk);
+    angle::Result updateUniforms(ContextVk *contextVk);
 
     const std::vector<VkDescriptorSet> &getDescriptorSets() const;
     const uint32_t *getDynamicOffsets();
@@ -133,10 +133,10 @@ class ProgramVk : public ProgramImpl
                             GLboolean transpose,
                             const GLfloat *value);
 
-    vk::Error reset(ContextVk *contextVk);
-    vk::Error allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex);
+    angle::Result reset(ContextVk *contextVk);
+    angle::Result allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex);
     gl::Error initDefaultUniformBlocks(const gl::Context *glContext);
-    vk::Error updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
+    angle::Result updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
 
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;

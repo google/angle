@@ -22,7 +22,7 @@ WindowSurfaceVkWin32::WindowSurfaceVkWin32(const egl::SurfaceState &surfaceState
 {
 }
 
-vk::Error WindowSurfaceVkWin32::createSurfaceVk(RendererVk *renderer, gl::Extents *extentsOut)
+angle::Result WindowSurfaceVkWin32::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {
     VkWin32SurfaceCreateInfoKHR createInfo;
 
@@ -31,13 +31,15 @@ vk::Error WindowSurfaceVkWin32::createSurfaceVk(RendererVk *renderer, gl::Extent
     createInfo.flags     = 0;
     createInfo.hinstance = GetModuleHandle(nullptr);
     createInfo.hwnd      = mNativeWindowType;
-    ANGLE_VK_TRY(vkCreateWin32SurfaceKHR(renderer->getInstance(), &createInfo, nullptr, &mSurface));
+    ANGLE_VK_TRY(context, vkCreateWin32SurfaceKHR(context->getRenderer()->getInstance(),
+                                                  &createInfo, nullptr, &mSurface));
 
     RECT rect;
-    ANGLE_VK_CHECK(GetClientRect(mNativeWindowType, &rect) == TRUE, VK_ERROR_INITIALIZATION_FAILED);
+    ANGLE_VK_CHECK(context, GetClientRect(mNativeWindowType, &rect) == TRUE,
+                   VK_ERROR_INITIALIZATION_FAILED);
 
     *extentsOut = gl::Extents(rect.right - rect.left, rect.bottom - rect.top, 0);
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

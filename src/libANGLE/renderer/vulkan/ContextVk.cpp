@@ -37,6 +37,19 @@ namespace rx
 
 namespace
 {
+GLenum DefaultGLErrorCode(VkResult result)
+{
+    switch (result)
+    {
+        case VK_ERROR_OUT_OF_HOST_MEMORY:
+        case VK_ERROR_OUT_OF_DEVICE_MEMORY:
+        case VK_ERROR_TOO_MANY_OBJECTS:
+            return GL_OUT_OF_MEMORY;
+        default:
+            return GL_INVALID_OPERATION;
+    }
+}
+
 constexpr gl::Rectangle kMaxSizedScissor(0,
                                          0,
                                          std::numeric_limits<int>::max(),
@@ -49,7 +62,7 @@ constexpr VkColorComponentFlags kAllColorChannelsMask =
 
 ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     : ContextImpl(state),
-      mRenderer(renderer),
+      vk::Context(renderer),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
       mTexturesDirty(false),
       mVertexArrayBindingHasChanged(false),
@@ -94,19 +107,17 @@ gl::Error ContextVk::initialize()
         VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
         GetUniformBufferDescriptorCount() * vk::kDefaultDescriptorPoolMaxSets};
 
-    ANGLE_TRY(
-        mDynamicDescriptorPools[kUniformsDescriptorSetIndex].init(getDevice(), uniformPoolSize));
+    ANGLE_TRY(mDynamicDescriptorPools[kUniformsDescriptorSetIndex].init(this, uniformPoolSize));
 
     VkDescriptorPoolSize imageSamplerPoolSize = {
         VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
         mRenderer->getMaxActiveTextures() * vk::kDefaultDescriptorPoolMaxSets};
-    ANGLE_TRY(mDynamicDescriptorPools[kTextureDescriptorSetIndex].init(getDevice(),
-                                                                       imageSamplerPoolSize));
+    ANGLE_TRY(mDynamicDescriptorPools[kTextureDescriptorSetIndex].init(this, imageSamplerPoolSize));
 
     VkDescriptorPoolSize driverUniformsPoolSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                                                    vk::kDefaultDescriptorPoolMaxSets};
     ANGLE_TRY(mDynamicDescriptorPools[kDriverUniformsDescriptorSetIndex].init(
-        getDevice(), driverUniformsPoolSize));
+        this, driverUniformsPoolSize));
 
     mPipelineDesc.reset(new vk::PipelineDesc());
     mPipelineDesc->initDefaults();
@@ -127,7 +138,7 @@ gl::Error ContextVk::flush(const gl::Context *context)
 
 gl::Error ContextVk::finish(const gl::Context *context)
 {
-    return mRenderer->finish(context);
+    return mRenderer->finish(this);
 }
 
 gl::Error ContextVk::initPipeline()
@@ -151,7 +162,7 @@ gl::Error ContextVk::initPipeline()
     mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc());
 
     // TODO(jmadill): Validate with ASSERT against physical device limits/caps?
-    ANGLE_TRY(mRenderer->getAppPipeline(programVk, *mPipelineDesc, activeAttribLocationsMask,
+    ANGLE_TRY(mRenderer->getAppPipeline(this, programVk, *mPipelineDesc, activeAttribLocationsMask,
                                         &mCurrentPipeline));
 
     return gl::NoError();
@@ -268,8 +279,8 @@ gl::Error ContextVk::drawArrays(const gl::Context *context,
 
     const gl::VertexArray *vertexArray = context->getGLState().getVertexArray();
     VertexArrayVk *vertexArrayVk       = vk::GetImpl(vertexArray);
-    ANGLE_TRY(vertexArrayVk->drawArrays(context, mRenderer, drawCallParams, commandBuffer,
-                                        shouldApplyVertexArray));
+    ANGLE_TRY(
+        vertexArrayVk->drawArrays(context, drawCallParams, commandBuffer, shouldApplyVertexArray));
 
     return gl::NoError();
 }
@@ -298,7 +309,7 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
 
     gl::VertexArray *vao         = mState.getState().getVertexArray();
     VertexArrayVk *vertexArrayVk = vk::GetImpl(vao);
-    ANGLE_TRY(vertexArrayVk->drawElements(context, mRenderer, drawCallParams, commandBuffer,
+    ANGLE_TRY(vertexArrayVk->drawElements(context, drawCallParams, commandBuffer,
                                           shouldApplyVertexArray));
 
     return gl::NoError();
@@ -846,7 +857,7 @@ const FeaturesVk &ContextVk::getFeatures() const
     return mRenderer->getFeatures();
 }
 
-vk::Error ContextVk::updateDriverUniforms()
+angle::Result ContextVk::updateDriverUniforms()
 {
     if (!mDriverUniformsBuffer.valid())
     {
@@ -865,8 +876,8 @@ vk::Error ContextVk::updateDriverUniforms()
     VkBuffer buffer         = VK_NULL_HANDLE;
     uint32_t offset         = 0;
     bool newBufferAllocated = false;
-    ANGLE_TRY(mDriverUniformsBuffer.allocate(mRenderer, sizeof(DriverUniforms), &ptr, &buffer,
-                                             &offset, &newBufferAllocated));
+    ANGLE_TRY(mDriverUniformsBuffer.allocate(this, sizeof(DriverUniforms), &ptr, &buffer, &offset,
+                                             &newBufferAllocated));
     float scaleY = isViewportFlipEnabledForDrawFBO() ? 1.0f : -1.0f;
 
     // Copy and flush to the device.
@@ -876,7 +887,7 @@ vk::Error ContextVk::updateDriverUniforms()
          static_cast<float>(glViewport.width), static_cast<float>(glViewport.height)},
         {1.0f, scaleY, 1.0f, 1.0f}};
 
-    ANGLE_TRY(mDriverUniformsBuffer.flush(getDevice()));
+    ANGLE_TRY(mDriverUniformsBuffer.flush(this));
 
     // Get the descriptor set layout.
     if (!mDriverUniformsSetLayout.valid())
@@ -884,7 +895,7 @@ vk::Error ContextVk::updateDriverUniforms()
         vk::DescriptorSetLayoutDesc desc;
         desc.update(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
 
-        ANGLE_TRY(mRenderer->getDescriptorSetLayout(desc, &mDriverUniformsSetLayout));
+        ANGLE_TRY(mRenderer->getDescriptorSetLayout(this, desc, &mDriverUniformsSetLayout));
     }
 
     // Allocate a new descriptor set.
@@ -911,6 +922,17 @@ vk::Error ContextVk::updateDriverUniforms()
 
     vkUpdateDescriptorSets(getDevice(), 1, &writeInfo, 0, nullptr);
 
-    return vk::NoError();
+    return angle::Result::Continue();
+}
+
+void ContextVk::handleError(VkResult errorCode, const char *file, unsigned int line)
+{
+    GLenum glErrorCode = DefaultGLErrorCode(errorCode);
+
+    std::stringstream errorStream;
+    errorStream << "Internal Vulkan error: " << VulkanResultString(errorCode) << ", in " << file
+                << ", line " << line << ".";
+
+    mErrors->handleError(gl::Error(glErrorCode, glErrorCode, errorStream.str()));
 }
 }  // namespace rx

@@ -908,7 +908,7 @@ void Program::onDestroy(const Context *context)
         }
     }
 
-    // TODO(jmadill): Handle error in the Context.
+    // TODO(jmadill): Handle error in the Context. http://anglebug.com/2491
     ANGLE_SWALLOW_ERR(mProgram->destroy(context));
 
     ASSERT(!mState.hasAttachedShader());

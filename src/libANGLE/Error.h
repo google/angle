@@ -247,7 +247,7 @@ inline Error NoError()
     }                                                  \
     ANGLE_EMPTY_STATEMENT
 
-// TODO(jmadill): Introduce way to store errors to a const Context.
+// TODO(jmadill): Introduce way to store errors to a const Context. http://anglebug.com/2491
 #define ANGLE_SWALLOW_ERR(EXPR)                                       \
     {                                                                 \
         auto ANGLE_LOCAL_VAR = EXPR;                                  \

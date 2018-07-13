@@ -91,29 +91,30 @@ void PixelBuffer::removeStagedUpdates(const gl::ImageIndex &index)
         mSubresourceUpdates.end());
 }
 
-vk::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
-                                              const gl::ImageIndex &index,
-                                              const gl::Extents &extents,
-                                              const gl::Offset &offset,
-                                              const gl::InternalFormat &formatInfo,
-                                              const gl::PixelUnpackState &unpack,
-                                              GLenum type,
-                                              const uint8_t *pixels)
+angle::Result PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
+                                                  const gl::ImageIndex &index,
+                                                  const gl::Extents &extents,
+                                                  const gl::Offset &offset,
+                                                  const gl::InternalFormat &formatInfo,
+                                                  const gl::PixelUnpackState &unpack,
+                                                  GLenum type,
+                                                  const uint8_t *pixels)
 {
     GLuint inputRowPitch = 0;
-    ANGLE_TRY_VK_CHECKED_MATH(formatInfo.computeRowPitch(type, extents.width, unpack.alignment,
-                                                         unpack.rowLength, &inputRowPitch));
+    ANGLE_VK_CHECK_MATH(contextVk, formatInfo.computeRowPitch(type, extents.width, unpack.alignment,
+                                                              unpack.rowLength, &inputRowPitch));
 
     GLuint inputDepthPitch = 0;
-    ANGLE_TRY_VK_CHECKED_MATH(formatInfo.computeDepthPitch(extents.height, unpack.imageHeight,
-                                                           inputRowPitch, &inputDepthPitch));
+    ANGLE_VK_CHECK_MATH(contextVk, formatInfo.computeDepthPitch(extents.height, unpack.imageHeight,
+                                                                inputRowPitch, &inputDepthPitch));
 
     // TODO(jmadill): skip images for 3D Textures.
     bool applySkipImages = false;
 
     GLuint inputSkipBytes = 0;
-    ANGLE_TRY_VK_CHECKED_MATH(formatInfo.computeSkipBytes(
-        type, inputRowPitch, inputDepthPitch, unpack, applySkipImages, &inputSkipBytes));
+    ANGLE_VK_CHECK_MATH(contextVk,
+                        formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
+                                                    applySkipImages, &inputSkipBytes));
 
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -129,7 +130,7 @@ vk::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
     bool newBufferAllocated = false;
     uint32_t stagingOffset  = 0;
     size_t allocationSize   = outputDepthPitch * extents.depth;
-    ANGLE_TRY(mStagingBuffer.allocate(renderer, allocationSize, &stagingPointer, &bufferHandle,
+    ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, &stagingPointer, &bufferHandle,
                                       &stagingOffset, &newBufferAllocated));
 
     const uint8_t *source = pixels + inputSkipBytes;
@@ -154,16 +155,17 @@ vk::Error PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
 
     mSubresourceUpdates.emplace_back(bufferHandle, copy);
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
-vk::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *context,
-                                                             const gl::ImageIndex &index,
-                                                             const gl::Rectangle &sourceArea,
-                                                             const gl::Offset &dstOffset,
-                                                             const gl::Extents &dstExtent,
-                                                             const gl::InternalFormat &formatInfo,
-                                                             FramebufferVk *framebufferVk)
+angle::Result PixelBuffer::stageSubresourceUpdateFromFramebuffer(
+    const gl::Context *context,
+    const gl::ImageIndex &index,
+    const gl::Rectangle &sourceArea,
+    const gl::Offset &dstOffset,
+    const gl::Extents &dstExtent,
+    const gl::InternalFormat &formatInfo,
+    FramebufferVk *framebufferVk)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -174,7 +176,7 @@ vk::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
                        &clippedRectangle))
     {
         // Empty source area, nothing to do.
-        return vk::NoError();
+        return angle::Result::Continue();
     }
 
     bool isViewportFlipEnabled = contextVk->isViewportFlipEnabledForDrawFBO();
@@ -184,7 +186,7 @@ vk::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
     }
 
     // 1- obtain a buffer handle to copy to
-    RendererVk *renderer = GetImplAs<ContextVk>(context)->getRenderer();
+    RendererVk *renderer = contextVk->getRenderer();
 
     const vk::Format &vkFormat         = renderer->getFormat(formatInfo.sizedInternalFormat);
     const angle::Format &storageFormat = vkFormat.textureFormat();
@@ -201,7 +203,7 @@ vk::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
 
     // The destination is only one layer deep.
     size_t allocationSize = outputDepthPitch;
-    ANGLE_TRY(mStagingBuffer.allocate(renderer, allocationSize, &stagingPointer, &bufferHandle,
+    ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, &stagingPointer, &bufferHandle,
                                       &stagingOffset, &newBufferAllocated));
 
     gl::PixelPackState pixelPackState = gl::PixelPackState();
@@ -229,11 +231,11 @@ vk::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
         size_t bufferSize =
             storageFormat.pixelBytes * clippedRectangle.width * clippedRectangle.height;
         angle::MemoryBuffer *memoryBuffer = nullptr;
-        ANGLE_TRY_VK_ALLOCATION(context->getScratchBuffer(bufferSize, &memoryBuffer));
+        ANGLE_VK_CHECK_ALLOC(contextVk, context->getScratchBuffer(bufferSize, &memoryBuffer));
 
         // Read into the scratch buffer
         ANGLE_TRY(framebufferVk->readPixelsImpl(
-            context, clippedRectangle, params, VK_IMAGE_ASPECT_COLOR_BIT,
+            contextVk, clippedRectangle, params, VK_IMAGE_ASPECT_COLOR_BIT,
             framebufferVk->getColorReadRenderTarget(), memoryBuffer->data()));
 
         // Load from scratch buffer to our pixel buffer
@@ -245,7 +247,7 @@ vk::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
     {
         // We read directly from the framebuffer into our pixel buffer.
         ANGLE_TRY(framebufferVk->readPixelsImpl(
-            context, clippedRectangle, params, VK_IMAGE_ASPECT_COLOR_BIT,
+            contextVk, clippedRectangle, params, VK_IMAGE_ASPECT_COLOR_BIT,
             framebufferVk->getColorReadRenderTarget(), stagingPointer));
     }
 
@@ -263,31 +265,31 @@ vk::Error PixelBuffer::stageSubresourceUpdateFromFramebuffer(const gl::Context *
 
     // 3- enqueue the destination image subresource update
     mSubresourceUpdates.emplace_back(bufferHandle, copyToImage);
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
-vk::Error PixelBuffer::allocate(RendererVk *renderer,
-                                size_t sizeInBytes,
-                                uint8_t **ptrOut,
-                                VkBuffer *handleOut,
-                                uint32_t *offsetOut,
-                                bool *newBufferAllocatedOut)
+angle::Result PixelBuffer::allocate(ContextVk *contextVk,
+                                    size_t sizeInBytes,
+                                    uint8_t **ptrOut,
+                                    VkBuffer *handleOut,
+                                    uint32_t *offsetOut,
+                                    bool *newBufferAllocatedOut)
 {
-    return mStagingBuffer.allocate(renderer, sizeInBytes, ptrOut, handleOut, offsetOut,
+    return mStagingBuffer.allocate(contextVk, sizeInBytes, ptrOut, handleOut, offsetOut,
                                    newBufferAllocatedOut);
 }
 
-vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
-                                           uint32_t levelCount,
-                                           vk::ImageHelper *image,
-                                           vk::CommandBuffer *commandBuffer)
+angle::Result PixelBuffer::flushUpdatesToImage(ContextVk *contextVk,
+                                               uint32_t levelCount,
+                                               vk::ImageHelper *image,
+                                               vk::CommandBuffer *commandBuffer)
 {
     if (mSubresourceUpdates.empty())
     {
-        return vk::NoError();
+        return angle::Result::Continue();
     }
 
-    ANGLE_TRY(mStagingBuffer.flush(renderer->getDevice()));
+    ANGLE_TRY(mStagingBuffer.flush(contextVk));
 
     std::vector<SubresourceUpdate> updatesToKeep;
 
@@ -322,7 +324,7 @@ vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
 
     if (mSubresourceUpdates.empty())
     {
-        mStagingBuffer.releaseRetainedBuffers(renderer);
+        mStagingBuffer.releaseRetainedBuffers(contextVk->getRenderer());
     }
     else
     {
@@ -330,7 +332,7 @@ vk::Error PixelBuffer::flushUpdatesToImage(RendererVk *renderer,
                   "extra images defined in the Texture.";
     }
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 bool PixelBuffer::empty() const
@@ -338,17 +340,17 @@ bool PixelBuffer::empty() const
     return mSubresourceUpdates.empty();
 }
 
-vk::Error PixelBuffer::stageSubresourceUpdateAndGetData(RendererVk *renderer,
-                                                        size_t allocationSize,
-                                                        const gl::ImageIndex &imageIndex,
-                                                        const gl::Extents &extents,
-                                                        const gl::Offset &offset,
-                                                        uint8_t **destData)
+angle::Result PixelBuffer::stageSubresourceUpdateAndGetData(ContextVk *contextVk,
+                                                            size_t allocationSize,
+                                                            const gl::ImageIndex &imageIndex,
+                                                            const gl::Extents &extents,
+                                                            const gl::Offset &offset,
+                                                            uint8_t **destData)
 {
     VkBuffer bufferHandle;
     uint32_t stagingOffset  = 0;
     bool newBufferAllocated = false;
-    ANGLE_TRY(mStagingBuffer.allocate(renderer, allocationSize, destData, &bufferHandle,
+    ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, destData, &bufferHandle,
                                       &stagingOffset, &newBufferAllocated));
 
     VkBufferImageCopy copy;
@@ -365,21 +367,19 @@ vk::Error PixelBuffer::stageSubresourceUpdateAndGetData(RendererVk *renderer,
 
     mSubresourceUpdates.emplace_back(bufferHandle, copy);
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
-vk::Error TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
-                                                 const angle::Format &sourceFormat,
-                                                 GLuint layer,
-                                                 GLuint firstMipLevel,
-                                                 GLuint maxMipLevel,
-                                                 const size_t sourceWidth,
-                                                 const size_t sourceHeight,
-                                                 const size_t sourceRowPitch,
-                                                 uint8_t *sourceData)
+angle::Result TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
+                                                     const angle::Format &sourceFormat,
+                                                     GLuint layer,
+                                                     GLuint firstMipLevel,
+                                                     GLuint maxMipLevel,
+                                                     const size_t sourceWidth,
+                                                     const size_t sourceHeight,
+                                                     const size_t sourceRowPitch,
+                                                     uint8_t *sourceData)
 {
-    RendererVk *renderer = contextVk->getRenderer();
-
     size_t previousLevelWidth    = sourceWidth;
     size_t previousLevelHeight   = sourceHeight;
     uint8_t *previousLevelData   = sourceData;
@@ -399,7 +399,7 @@ vk::Error TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
         gl::Extents mipLevelExtents(static_cast<int>(mipWidth), static_cast<int>(mipHeight), 1);
 
         ANGLE_TRY(mPixelBuffer.stageSubresourceUpdateAndGetData(
-            renderer, mipAllocationSize,
+            contextVk, mipAllocationSize,
             gl::ImageIndex::MakeFromType(mState.getType(), currentMipLevel, layer), mipLevelExtents,
             gl::Offset(), &destData));
 
@@ -415,7 +415,7 @@ vk::Error TextureVk::generateMipmapLevelsWithCPU(ContextVk *contextVk,
         previousLevelRowPitch = destRowPitch;
     }
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 PixelBuffer::SubresourceUpdate::SubresourceUpdate() : bufferHandle(VK_NULL_HANDLE)
@@ -572,19 +572,19 @@ gl::Error TextureVk::copySubImage(const gl::Context *context,
     return copySubImageImpl(context, index, destOffset, sourceArea, currentFormat, source);
 }
 
-gl::Error TextureVk::copySubImageImpl(const gl::Context *context,
-                                      const gl::ImageIndex &index,
-                                      const gl::Offset &destOffset,
-                                      const gl::Rectangle &sourceArea,
-                                      const gl::InternalFormat &internalFormat,
-                                      gl::Framebuffer *source)
+angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
+                                          const gl::ImageIndex &index,
+                                          const gl::Offset &destOffset,
+                                          const gl::Rectangle &sourceArea,
+                                          const gl::InternalFormat &internalFormat,
+                                          gl::Framebuffer *source)
 {
     gl::Extents fbSize = source->getReadColorbuffer()->getSize();
     gl::Rectangle clippedSourceArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
                        &clippedSourceArea))
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     const gl::Offset modifiedDestOffset(destOffset.x + sourceArea.x - sourceArea.x,
@@ -605,14 +605,14 @@ gl::Error TextureVk::copySubImageImpl(const gl::Context *context,
 
     onResourceChanged(renderer);
     framebufferVk->addReadDependency(this);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-vk::Error TextureVk::getCommandBufferForWrite(RendererVk *renderer,
-                                              vk::CommandBuffer **commandBufferOut)
+angle::Result TextureVk::getCommandBufferForWrite(ContextVk *contextVk,
+                                                  vk::CommandBuffer **commandBufferOut)
 {
-    ANGLE_TRY(appendWriteResource(renderer, commandBufferOut));
-    return vk::NoError();
+    ANGLE_TRY(appendWriteResource(contextVk, commandBufferOut));
+    return angle::Result::Continue();
 }
 
 gl::Error TextureVk::setStorage(const gl::Context *context,
@@ -625,7 +625,7 @@ gl::Error TextureVk::setStorage(const gl::Context *context,
     RendererVk *renderer             = contextVk->getRenderer();
     const vk::Format &format         = renderer->getFormat(internalFormat);
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
+    ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
     ANGLE_TRY(initImage(contextVk, format, size, static_cast<uint32_t>(levels), commandBuffer));
     return gl::NoError();
 }
@@ -647,12 +647,12 @@ gl::Error TextureVk::setImageExternal(const gl::Context *context,
     return gl::InternalError();
 }
 
-vk::Error TextureVk::generateMipmapWithBlit(RendererVk *renderer)
+angle::Result TextureVk::generateMipmapWithBlit(ContextVk *contextVk)
 {
     uint32_t imageLayerCount           = GetImageLayerCount(mState.getType());
     const gl::Extents baseLevelExtents = mImage.getExtents();
     vk::CommandBuffer *commandBuffer   = nullptr;
-    ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
+    ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
 
     // We are able to use blitImage since the image format we are using supports it. This
     // is a faster way we can generate the mips.
@@ -723,10 +723,10 @@ vk::Error TextureVk::generateMipmapWithBlit(RendererVk *renderer)
     // to changeLayoutWithStages will use this layout as the "oldLayout" argument.
     mImage.updateLayout(VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
 
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
-vk::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
+angle::Result TextureVk::generateMipmapWithCPU(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
@@ -739,7 +739,7 @@ vk::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
     size_t baseLevelAllocationSize     = sourceRowPitch * baseLevelExtents.height;
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
+    ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
 
     // Requirement of the copyImageToBuffer, the source image must be in SRC_OPTIMAL layout.
     mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
@@ -753,7 +753,7 @@ vk::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
     uint32_t copyBaseOffset;
 
     // Allocate enough memory to copy every level 0 image (one for each layer of the texture).
-    ANGLE_TRY(mPixelBuffer.allocate(renderer, totalAllocationSize, &baseLevelBuffers,
+    ANGLE_TRY(mPixelBuffer.allocate(contextVk, totalAllocationSize, &baseLevelBuffers,
                                     &copyBufferHandle, &copyBaseOffset, &newBufferAllocated));
 
     // Do only one copy for all layers at once.
@@ -775,7 +775,7 @@ vk::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
     commandBuffer->copyImageToBuffer(mImage.getImage(), mImage.getCurrentLayout(), copyBufferHandle,
                                      1, &region);
 
-    ANGLE_TRY(renderer->finish(context));
+    ANGLE_TRY(renderer->finish(contextVk));
 
     const uint32_t levelCount = getLevelCount();
 
@@ -793,7 +793,7 @@ vk::Error TextureVk::generateMipmapWithCPU(const gl::Context *context)
             sourceRowPitch, baseLevelBuffers + bufferOffset));
     }
 
-    return mPixelBuffer.flushUpdatesToImage(renderer, levelCount, &mImage, commandBuffer);
+    return mPixelBuffer.flushUpdatesToImage(contextVk, levelCount, &mImage, commandBuffer);
 }
 
 gl::Error TextureVk::generateMipmap(const gl::Context *context)
@@ -825,7 +825,7 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
     // only.
     if (IsMaskFlagSet(kBlitFeatureFlags, imageProperties.linearTilingFeatures))
     {
-        ANGLE_TRY(generateMipmapWithBlit(renderer));
+        ANGLE_TRY(generateMipmapWithBlit(contextVk));
     }
     else
     {
@@ -874,15 +874,15 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
     return gl::NoError();
 }
 
-vk::Error TextureVk::ensureImageInitialized(ContextVk *contextVk)
+angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk)
 {
     if (mImage.valid() && mPixelBuffer.empty())
     {
-        return vk::NoError();
+        return angle::Result::Continue();
     }
     RendererVk *renderer             = contextVk->getRenderer();
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(getCommandBufferForWrite(renderer, &commandBuffer));
+    ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
 
     const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
     const gl::Extents &baseLevelExtents = baseLevelDesc.size;
@@ -896,8 +896,8 @@ vk::Error TextureVk::ensureImageInitialized(ContextVk *contextVk)
         ANGLE_TRY(initImage(contextVk, format, baseLevelExtents, levelCount, commandBuffer));
     }
 
-    ANGLE_TRY(mPixelBuffer.flushUpdatesToImage(renderer, levelCount, &mImage, commandBuffer));
-    return vk::NoError();
+    ANGLE_TRY(mPixelBuffer.flushUpdatesToImage(contextVk, levelCount, &mImage, commandBuffer));
+    return angle::Result::Continue();
 }
 
 gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::DirtyBits &dirtyBits)
@@ -937,7 +937,7 @@ gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::Di
     samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
-    ANGLE_TRY(mSampler.init(contextVk->getDevice(), samplerInfo));
+    ANGLE_TRY(mSampler.init(contextVk, samplerInfo));
     return gl::NoError();
 }
 
@@ -984,24 +984,23 @@ const vk::Sampler &TextureVk::getSampler() const
     return mSampler;
 }
 
-vk::Error TextureVk::initImage(ContextVk *contextVk,
-                               const vk::Format &format,
-                               const gl::Extents &extents,
-                               const uint32_t levelCount,
-                               vk::CommandBuffer *commandBuffer)
+angle::Result TextureVk::initImage(ContextVk *contextVk,
+                                   const vk::Format &format,
+                                   const gl::Extents &extents,
+                                   const uint32_t levelCount,
+                                   vk::CommandBuffer *commandBuffer)
 {
     const RendererVk *renderer = contextVk->getRenderer();
-    const VkDevice device = renderer->getDevice();
 
     const VkImageUsageFlags usage =
         (VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
          VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT);
 
-    ANGLE_TRY(mImage.init(device, mState.getType(), extents, format, 1, usage, levelCount));
+    ANGLE_TRY(mImage.init(contextVk, mState.getType(), extents, format, 1, usage, levelCount));
 
     const VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-    ANGLE_TRY(mImage.initMemory(device, renderer->getMemoryProperties(), flags));
+    ANGLE_TRY(mImage.initMemory(contextVk, renderer->getMemoryProperties(), flags));
 
     gl::SwizzleState mappedSwizzle;
     MapSwizzleState(format.internalFormat, mState.getSwizzleState(), &mappedSwizzle);
@@ -1011,15 +1010,15 @@ vk::Error TextureVk::initImage(ContextVk *contextVk,
            !mappedSwizzle.swizzleRequired());
 
     // TODO(jmadill): Separate imageviews for RenderTargets and Sampling.
-    ANGLE_TRY(mImage.initImageView(device, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
+    ANGLE_TRY(mImage.initImageView(contextVk, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
                                    mappedSwizzle, &mMipmapImageView, levelCount));
-    ANGLE_TRY(mImage.initImageView(device, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
+    ANGLE_TRY(mImage.initImageView(contextVk, mState.getType(), VK_IMAGE_ASPECT_COLOR_BIT,
                                    mappedSwizzle, &mBaseLevelImageView, 1));
 
     // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
     VkClearColorValue black = {{0, 0, 0, 1.0f}};
     mImage.clearColor(black, 0, levelCount, commandBuffer);
-    return vk::NoError();
+    return angle::Result::Continue();
 }
 
 void TextureVk::releaseImage(const gl::Context *context, RendererVk *renderer)
