@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f65a2dc_7c16f8da",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-13T05:16:37Z",
+      "side": 0,
+      "message": "This comment seems to have gone away.  Is it no longer relevant?",
+      "revId": "128689b768aeb9ee5334215c5e4468eb0f5f76f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
