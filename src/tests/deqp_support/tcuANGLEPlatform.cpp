@@ -151,10 +151,13 @@ std::vector<eglw::EGLAttrib> ANGLEPlatform::initAttribs(eglw::EGLAttrib type,
         attribs.push_back(minorVersion);
     }
 
-    static_assert(sizeof(eglw::EGLAttrib) == sizeof(angle::PlatformMethods *),
-                  "Unexpected pointer size");
-    attribs.push_back(EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX);
-    attribs.push_back(reinterpret_cast<eglw::EGLAttrib>(&mPlatformMethods));
+    if (mPlatformMethods.logError)
+    {
+        static_assert(sizeof(eglw::EGLAttrib) == sizeof(angle::PlatformMethods *),
+                      "Unexpected pointer size");
+        attribs.push_back(EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX);
+        attribs.push_back(reinterpret_cast<eglw::EGLAttrib>(&mPlatformMethods));
+    }
 
     attribs.push_back(EGL_NONE);
     return attribs;
