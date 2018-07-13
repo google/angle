@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "ab0b841e_3f5c7e5e",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1592,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-13T16:07:08Z",
+      "side": 1,
+      "message": "Actually we already use this passing-a-pointer pattern for the memory program cache. It works great because it allows us to avoid using the mutable kludge. I\u0027m very against using mutable everywhere as it breaks thread-safety. Can you let me know if you are ok with me landing this CL? We can always change things later if there\u0027s some other issue that comes up.",
+      "parentUuid": "d834c707_852768b1",
+      "range": {
+        "startLine": 1592,
+        "startChar": 4,
+        "endLine": 1592,
+        "endChar": 21
+      },
+      "revId": "72f8e19d789b8bf613797b128357187cb57d05fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "177c7d57_e6858609",
         "filename": "src/libANGLE/Error.h",
         "patchSetId": 3
