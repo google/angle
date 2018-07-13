@@ -66,6 +66,8 @@ class SRGBTextureTest : public ANGLETest
     GLint mTextureLocation = -1;
 };
 
+// GenerateMipmaps should generate INVALID_OPERATION in ES 2.0 / WebGL 1.0 with EXT_sRGB.
+// https://bugs.chromium.org/p/chromium/issues/detail?id=769989
 TEST_P(SRGBTextureTest, SRGBValidation)
 {
     // TODO(fjhenigman): Figure out why this fails on Ozone Intel.
@@ -87,7 +89,14 @@ TEST_P(SRGBTextureTest, SRGBValidation)
         EXPECT_GL_NO_ERROR();
 
         glGenerateMipmap(GL_TEXTURE_2D);
-        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        if (getClientMajorVersion() < 3)
+        {
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        }
+        else
+        {
+            EXPECT_GL_NO_ERROR();
+        }
     }
     else
     {
@@ -118,7 +127,14 @@ TEST_P(SRGBTextureTest, SRGBAValidation)
         EXPECT_GL_NO_ERROR();
 
         glGenerateMipmap(GL_TEXTURE_2D);
-        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        if (getClientMajorVersion() < 3)
+        {
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        }
+        else
+        {
+            EXPECT_GL_NO_ERROR();
+        }
     }
     else
     {
