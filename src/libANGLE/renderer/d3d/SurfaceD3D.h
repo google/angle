@@ -46,6 +46,8 @@ class SurfaceD3D : public SurfaceImpl
     egl::Error releaseTexImage(const gl::Context *context, EGLint buffer) override;
     egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) override;
     void setSwapInterval(EGLint interval) override;
+    void setFixedWidth(EGLint width) override;
+    void setFixedHeight(EGLint height) override;
 
     EGLint getWidth() const override;
     EGLint getHeight() const override;
@@ -86,6 +88,8 @@ class SurfaceD3D : public SurfaceImpl
     egl::Display *mDisplay;
 
     bool mFixedSize;
+    GLint mFixedWidth;
+    GLint mFixedHeight;
     GLint mOrientation;
 
     GLenum mRenderTargetFormat;

@@ -289,6 +289,18 @@ void Surface::setSwapBehavior(EGLenum behavior)
     mSwapBehavior = behavior;
 }
 
+void Surface::setFixedWidth(EGLint width)
+{
+    mFixedWidth = width;
+    mImplementation->setFixedWidth(width);
+}
+
+void Surface::setFixedHeight(EGLint height)
+{
+    mFixedHeight = height;
+    mImplementation->setFixedHeight(height);
+}
+
 const Config *Surface::getConfig() const
 {
     return mState.config;

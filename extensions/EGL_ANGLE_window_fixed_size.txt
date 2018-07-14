@@ -10,6 +10,7 @@ Contributors
 
     John Bauman
     Shannon Woods
+    Geoff Lang
 
 Contacts
 
@@ -21,7 +22,7 @@ Status
 
 Version
 
-    Version 4, February 24, 2014
+    Version 5, July 23, 2018
 
 Number
 
@@ -34,8 +35,8 @@ Dependencies
 
 Overview
 
-    This extension allows creating a window surface with a fixed size that is
-    specified when it is created.
+    This extension allows creating a window surface that does not resize
+    automatically.
 
 New Types
 
@@ -54,7 +55,8 @@ New Tokens
 
 Additions to Chapter 3 of the EGL 1.4 Specification:
 
-    Modify the third paragraph of Section 3.5.1 (Creating On-Screen Rendering Surfaces)
+    Modify the third paragraph of Section 3.5.1 (Creating On-Screen Rendering
+    Surfaces)
 
     "<attrib_list> specifies a list of attributes for the window. The list has
     the same structure as described for eglChooseConfig.  Attributes that can
@@ -71,15 +73,14 @@ Additions to Chapter 3 of the EGL 1.4 Specification:
     is taken from the native window. Its default value is EGL_FALSE.
 
     If the value of EGL_FIXED_SIZE_ANGLE is EGL_TRUE, the window surface's
-    size in pixels is specified by the EGL_WIDTH and EGL_HEIGHT attributes,
-    and will not change throughout the lifetime of the surface. If its value
-    is EGL_FALSE, then the values of EGL_WIDTH and EGL_HEIGHT are ignored and
-    the window surface must be resized by the implementation subsequent to the
-    native window being resized, and prior to copying its contents to the
-    native window (e.g. in eglSwapBuffers, as described in section 3.9.1.1).
-    The default values for EGL_WIDTH and EGL_HEIGHT are zero. If the value
-    specified for either of EGL_WIDTH or EGL_HEIGHT is less than zero then an
-    EGL_BAD_PARAMETER error is generated."
+    size in pixels is specified by the EGL_WIDTH and EGL_HEIGHT attributes.
+    If its value is EGL_FALSE, then the values of EGL_WIDTH and EGL_HEIGHT
+    are ignored and the window surface must be resized by the implementation
+    subsequent to the native window being resized, and prior to copying its
+    contents to the native window (e.g. in eglSwapBuffers, as described in
+    section 3.9.1.1). The default values for EGL_WIDTH and EGL_HEIGHT are zero.
+    If the value specified for either of EGL_WIDTH or EGL_HEIGHT is less than
+    zero then an EGL_BAD_PARAMETER error is generated."
 
     Add the following entry to Table 3.5
     (Queryable surface attributes and types)
@@ -102,6 +103,21 @@ Additions to Chapter 3 of the EGL 1.4 Specification:
     yet resized the window surface, the size returned by eglQuerySurface will
     always be that of the EGL surface, not the corresponding native window."
 
+    Alter the beginning of the first paragraph of Section 3.5.6 (Surface
+    Attributes)
+
+    "The specified attribute of surface is set to value. Attributes that can
+    be specified are EGL_MIPMAP_LEVEL, EGL_MULTISAMPLE_RESOLVE,
+    EGL_SWAP_BEHAVIOR, EGL_WIDTH, and EGL_HEIGHT."
+
+    Add the following paragraph to Section 3.5.6 (Surface Attributes)
+
+    "If attribute is EGL_WIDTH or EGL_HEIGHT then the value specifies the new
+    surface width or height respectively. The new width and height are not
+    guarenteed to be applied until the next call to eglSwapBuffers or
+    eglWaitNative. If the surface does not have EGL_FIXED_SIZE_ANGLE set then
+    an EGL_BAD_MATCH error is generated."
+
     Add the following paragraph to Section 3.5.6 (Surface Attributes)
 
     "Querying EGL_FIXED_SIZE_ANGLE returns EGL_FALSE if the surface will be
@@ -111,9 +127,10 @@ Additions to Chapter 3 of the EGL 1.4 Specification:
     Alter the beginning of the first paragraph of Section 3.9.1.1 (Native
     Window Resizing)
 
-    "If <surface> does not have EGL_FIXED_SIZE_ANGLE set and the native window
-    corresponding to <surface> has been resized prior to the swap, <surface>
-    must be resized to match."
+    "If the surface has EGL_FIXED_SIZE_ANGLE set and EGL_WIDTH or EGL_HEIGHT
+    have changed or the surface does not have EGL_FIXED_SIZE_ANGLE set and its
+    corresponding native window has been resized prior to the swap, surface
+    must be resized to match".
 
 Issues
 
@@ -123,7 +140,14 @@ Issues
     RESOLVED: No. Surfaces that have their sizes specified initially must have
     EGL_FIXED_SIZE_ANGLE set and can never be resized.
 
+    RESOLVED(rev 5): Fixed size surfaces can now be resized by setting
+    EGL_WIDTH and EGL_HEIGHT surface attributes. This is the best way to give
+    users explicit control of the size of window surfaces without re-creating
+    them on each resize.
+
 Revision History
+
+    Version 5, 2018/07/23 - Allow reizing fixed size surfaces.
 
     Version 4, 2014/02/24 - formatting changes.
 

@@ -521,6 +521,67 @@ TEST_F(EGLSurfaceTest, CreateWithEGLConfig8880Support)
     glDeleteProgram(program);
 }
 
+TEST_F(EGLSurfaceTest, FixedSizeWindow)
+{
+    ANGLE_SKIP_TEST_IF(
+        !ANGLETest::eglDisplayExtensionEnabled(EGL_NO_DISPLAY, "EGL_ANGLE_platform_angle_d3d"));
+
+    const EGLint configAttributes[] = {
+        EGL_RED_SIZE,   8, EGL_GREEN_SIZE,   8, EGL_BLUE_SIZE,      8, EGL_ALPHA_SIZE, 0,
+        EGL_DEPTH_SIZE, 0, EGL_STENCIL_SIZE, 0, EGL_SAMPLE_BUFFERS, 0, EGL_NONE};
+
+    initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+    ANGLE_SKIP_TEST_IF(EGLWindow::FindEGLConfig(mDisplay, configAttributes, &mConfig) == EGL_FALSE);
+
+    ANGLE_SKIP_TEST_IF(
+        !ANGLETest::eglDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_window_fixed_size"));
+
+    constexpr EGLint kInitialSize = 64;
+    constexpr EGLint kUpdateSize  = 32;
+
+    EGLint surfaceAttributes[] = {
+        EGL_FIXED_SIZE_ANGLE, EGL_TRUE, EGL_WIDTH, kInitialSize, EGL_HEIGHT, kInitialSize, EGL_NONE,
+    };
+
+    // Create first window surface
+    mWindowSurface =
+        eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(), surfaceAttributes);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(EGL_NO_SURFACE, mWindowSurface);
+
+    initializeContext();
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext));
+    ASSERT_EGL_SUCCESS();
+
+    EGLint queryIsFixedSize = 0;
+    EXPECT_EGL_TRUE(
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_FIXED_SIZE_ANGLE, &queryIsFixedSize));
+    ASSERT_EGL_SUCCESS();
+    EXPECT_EGL_TRUE(queryIsFixedSize);
+
+    EGLint queryWidth = 0;
+    EXPECT_EGL_TRUE(eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &queryWidth));
+    ASSERT_EGL_SUCCESS();
+    EXPECT_EQ(kInitialSize, queryWidth);
+
+    EGLint queryHeight = 0;
+    EXPECT_EGL_TRUE(eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &queryHeight));
+    ASSERT_EGL_SUCCESS();
+    EXPECT_EQ(kInitialSize, queryHeight);
+
+    // Update the size
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, mWindowSurface, EGL_WIDTH, kUpdateSize));
+    ASSERT_EGL_SUCCESS();
+
+    EXPECT_EGL_TRUE(eglWaitNative(EGL_CORE_NATIVE_ENGINE));
+    ASSERT_EGL_SUCCESS();
+
+    EGLint queryUpdatedWidth = 0;
+    EXPECT_EGL_TRUE(eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &queryUpdatedWidth));
+    ASSERT_EGL_SUCCESS();
+    EXPECT_EQ(kUpdateSize, queryUpdatedWidth);
+}
+
 #if defined(ANGLE_ENABLE_D3D11)
 // Test that rendering to an IDCompositionSurface using a pbuffer works.
 TEST_F(EGLSurfaceTest, CreateDirectCompositionSurface)
