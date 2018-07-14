@@ -65,9 +65,6 @@
 2428 D3D11 NVIDIA : dEQP-GLES3.functional.fbo.invalidate.default.bind_all = SKIP
 2428 D3D11 NVIDIA : dEQP-GLES3.functional.polygon_offset.default_render_with_units = SKIP
 
-// TODO(jmadill): Find why this fails when run in a certain sequence, but not singly.
-1098 WIN : dEQP-GLES3.functional.uniform_api.random.50 = FAIL
-
 // Missing the SampleCmp instruction in vertex shaders.
 1435 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.sampler2dshadow_vertex = FAIL
 1435 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_vertex = FAIL
@@ -171,8 +168,6 @@
 1096 WIN : dEQP-GLES3.functional.fragment_ops.blend.fbo_srgb.equation_src_func_dst_func.reverse_subtract_one_minus_constant_alpha_one_minus_constant_color = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.random.* = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = FAIL
-1098 WIN : dEQP-GLES3.functional.uniform_api.random.8 = FAIL
-1098 WIN : dEQP-GLES3.functional.uniform_api.random.81 = FAIL
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed16_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed24_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.attach.deleted_input.buffer_vertex_array = FAIL
@@ -266,7 +261,6 @@
 1323 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_linear_clamp = FAIL
 1323 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_linear_mirror = FAIL
 1323 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_linear_repeat = FAIL
-1098 LINUX : dEQP-GLES3.functional.uniform_api.random.6 = FAIL
 
 // While loops with 'continue' seem flaky on Linux. (Possibly all GL renderers)
 1324 LINUX : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.conditional_continue_vertex = FAIL
