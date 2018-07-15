@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "639cffc6_14282d86",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-15T16:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3663577c_20c4525e",
+      "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f852d585_aeb9b96e",
         "filename": "src/libANGLE/renderer/angle_format.py",
         "patchSetId": 9
@@ -39,6 +57,30 @@
       "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a458e15d_8e428a4f",
+        "filename": "src/libANGLE/renderer/angle_format.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-15T16:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f852d585_aeb9b96e",
+      "range": {
+        "startLine": 196,
+        "startChar": 77,
+        "endLine": 196,
+        "endChar": 119
+      },
+      "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "16ae5094_58cbed70",
+        "filename": "src/libANGLE/renderer/angle_format.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-15T16:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6173e02f_460f0a2e",
+      "range": {
+        "startLine": 224,
+        "startChar": 22,
+        "endLine": 224,
+        "endChar": 32
+      },
+      "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5325a1ea_53e8ce75",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 9
@@ -85,6 +151,30 @@
       "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f5c1db6_6fbfa6fd",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-15T16:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5325a1ea_53e8ce75",
+      "range": {
+        "startLine": 103,
+        "startChar": 12,
+        "endLine": 104,
+        "endChar": 66
+      },
+      "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "b564cc3c_4405d662",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-15T16:31:39Z",
+      "side": 1,
+      "message": "I reused \u0027dst\u0027 instead of making another variable, hope that\u0027s ok.",
+      "parentUuid": "08983292_847ad938",
+      "range": {
+        "startLine": 106,
+        "startChar": 12,
+        "endLine": 106,
+        "endChar": 69
+      },
+      "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "38706895_3ba009ac",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 9
@@ -131,6 +245,30 @@
       "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b4d6aa9_b9adcb69",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-15T16:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38706895_3ba009ac",
+      "range": {
+        "startLine": 248,
+        "startChar": 12,
+        "endLine": 248,
+        "endChar": 67
+      },
+      "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "e5a5e6ce_f4cead1d",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-15T16:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8b51072_78e54c98",
+      "range": {
+        "startLine": 104,
+        "startChar": 40,
+        "endLine": 104,
+        "endChar": 47
+      },
+      "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8ec1c7f_677bd007",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
         "patchSetId": 9
@@ -177,6 +339,30 @@
       "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d8036ae_881097cb",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-15T16:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8ec1c7f_677bd007",
+      "range": {
+        "startLine": 105,
+        "startChar": 28,
+        "endLine": 105,
+        "endChar": 35
+      },
+      "revId": "bcd531ed39861898a25a58dbf47916c4e24b3356",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
