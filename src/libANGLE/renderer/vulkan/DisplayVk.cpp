@@ -164,7 +164,8 @@ gl::Version DisplayVk::getMaxSupportedESVersion() const
 
 void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    outExtensions->surfaceOrientation = true;
+    outExtensions->surfaceOrientation       = true;
+    outExtensions->displayTextureShareGroup = true;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const

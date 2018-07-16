@@ -254,4 +254,5 @@ ANGLE_INSTANTIATE_TEST(EGLContextSharingTest,
                        ES2_D3D11(),
                        ES3_D3D11(),
                        ES2_OPENGL(),
-                       ES3_OPENGL());
+                       ES3_OPENGL(),
+                       ES2_VULKAN());
