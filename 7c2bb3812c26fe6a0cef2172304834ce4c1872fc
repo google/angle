@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94f117c4_5fb66b5b",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-16T14:59:34Z",
+      "side": 1,
+      "message": "can we call this mBindingToAttributeMasks?",
+      "range": {
+        "startLine": 96,
+        "startChar": 59,
+        "endLine": 96,
+        "endChar": 89
+      },
+      "revId": "7c2bb3812c26fe6a0cef2172304834ce4c1872fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e28c8db_033af105",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-16T14:59:34Z",
+      "side": 1,
+      "message": "trying to understand why you need to set other attributes dirty if the pointer changes. This shouldn\u0027t modify any of the binding state.",
+      "range": {
+        "startLine": 46,
+        "startChar": 41,
+        "endLine": 46,
+        "endChar": 72
+      },
+      "revId": "7c2bb3812c26fe6a0cef2172304834ce4c1872fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
