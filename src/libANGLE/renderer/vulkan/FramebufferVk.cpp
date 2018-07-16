@@ -308,7 +308,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
         return gl::NoError();
     }
     gl::Rectangle flippedArea = clippedArea;
-    if (contextVk->isViewportFlipEnabledForDrawFBO())
+    if (contextVk->isViewportFlipEnabledForReadFBO())
     {
         flippedArea.y = fbRect.height - flippedArea.y - flippedArea.height;
     }
@@ -319,7 +319,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
 
     gl::PixelPackState packState(glState.getPackState());
-    if (contextVk->isViewportFlipEnabledForDrawFBO())
+    if (contextVk->isViewportFlipEnabledForReadFBO())
     {
         packState.reverseRowOrder = !packState.reverseRowOrder;
     }
