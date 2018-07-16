@@ -166,6 +166,10 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     outExtensions->surfaceOrientation       = true;
     outExtensions->displayTextureShareGroup = true;
+
+    // TODO(geofflang): Extension is exposed but not implemented so that other aspects of the Vulkan
+    // backend can be tested in Chrome. http://anglebug.com/2722
+    outExtensions->robustResourceInitialization = true;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const
