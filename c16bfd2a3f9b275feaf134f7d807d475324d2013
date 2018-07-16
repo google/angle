@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "501793fe_7b3c739b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-16T02:10:30Z",
+      "side": 1,
+      "message": "Why don\u0027t you take my suggestion about moving the binding-attribute map to the front end? I think you wouldn\u0027t need the prior values to update it in this case.",
+      "parentUuid": "b95e635f_a9bc230a",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 0
+      },
+      "revId": "c16bfd2a3f9b275feaf134f7d807d475324d2013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d722a80_e227ffcb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
         "patchSetId": 8
