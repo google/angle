@@ -487,6 +487,8 @@ void Context::initialize()
     mComputeDirtyBits.set(State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
     mComputeDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM_TEXTURES);
 
+    mImplementation->setErrorSet(&mErrors);
+
     handleError(mImplementation->initialize());
 }
 
