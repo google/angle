@@ -157,6 +157,7 @@ class ContextVk : public ContextImpl, public vk::Context
     const FeaturesVk &getFeatures() const;
 
     void invalidateCurrentPipeline();
+    void invalidateDefaultAttribute(size_t attribIndex);
 
     vk::DynamicDescriptorPool *getDynamicDescriptorPool(uint32_t descriptorSetIndex);
 
@@ -185,6 +186,8 @@ class ContextVk : public ContextImpl, public vk::Context
 
     angle::Result updateDriverUniforms(const gl::State &glState);
     gl::Error updateActiveTextures(const gl::Context *context);
+    angle::Result updateDefaultAttributes();
+    angle::Result updateDefaultAttribute(size_t attribIndex);
 
     vk::PipelineAndSerial *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
@@ -230,6 +233,10 @@ class ContextVk : public ContextImpl, public vk::Context
     // This cache should also probably include the texture index (shader location) and array
     // index (also in the shader). This info is used in the descriptor update step.
     gl::ActiveTextureArray<TextureVk *> mActiveTextures;
+
+    // "Current Value" aka default vertex attribute state.
+    gl::AttributesMask mDirtyDefaultAttribs;
+    gl::AttribArray<vk::DynamicBuffer> mDefaultAttribBuffers;
 };
 }  // namespace rx
 

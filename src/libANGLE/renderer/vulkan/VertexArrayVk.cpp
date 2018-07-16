@@ -147,16 +147,16 @@ angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,
     return angle::Result::Continue();
 }
 
-#define ANGLE_VERTEX_DIRTY_ATTRIB_FUNC(INDEX)                                                      \
-    case gl::VertexArray::DIRTY_BIT_ATTRIB_0 + INDEX:                                              \
-        syncDirtyAttrib(rendererVk, attribs[INDEX], bindings[attribs[INDEX].bindingIndex], INDEX); \
-        invalidatePipeline = true;                                                                 \
+#define ANGLE_VERTEX_DIRTY_ATTRIB_FUNC(INDEX)                                                     \
+    case gl::VertexArray::DIRTY_BIT_ATTRIB_0 + INDEX:                                             \
+        syncDirtyAttrib(contextVk, attribs[INDEX], bindings[attribs[INDEX].bindingIndex], INDEX); \
+        invalidatePipeline = true;                                                                \
         break;
 
-#define ANGLE_VERTEX_DIRTY_BINDING_FUNC(INDEX)                                                     \
-    case gl::VertexArray::DIRTY_BIT_BINDING_0 + INDEX:                                             \
-        syncDirtyAttrib(rendererVk, attribs[INDEX], bindings[attribs[INDEX].bindingIndex], INDEX); \
-        invalidatePipeline = true;                                                                 \
+#define ANGLE_VERTEX_DIRTY_BINDING_FUNC(INDEX)                                                    \
+    case gl::VertexArray::DIRTY_BIT_BINDING_0 + INDEX:                                            \
+        syncDirtyAttrib(contextVk, attribs[INDEX], bindings[attribs[INDEX].bindingIndex], INDEX); \
+        invalidatePipeline = true;                                                                \
         break;
 
 #define ANGLE_VERTEX_DIRTY_BUFFER_DATA_FUNC(INDEX)         \
@@ -173,8 +173,7 @@ gl::Error VertexArrayVk::syncState(const gl::Context *context,
     bool invalidatePipeline = false;
 
     // Invalidate current pipeline.
-    ContextVk *contextVk   = vk::GetImpl(context);
-    RendererVk *rendererVk = contextVk->getRenderer();
+    ContextVk *contextVk = vk::GetImpl(context);
 
     // Rebuild current attribute buffers cache. This will fail horribly if the buffer changes.
     // TODO(jmadill): Handle buffer storage changes.
@@ -233,13 +232,15 @@ gl::Error VertexArrayVk::syncState(const gl::Context *context,
     return gl::NoError();
 }
 
-void VertexArrayVk::syncDirtyAttrib(const RendererVk *renderer,
+void VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                                     const gl::VertexAttribute &attrib,
                                     const gl::VertexBinding &binding,
                                     size_t attribIndex)
 {
     // Invalidate the input description for pipelines.
     mDirtyPackedInputs.set(attribIndex);
+
+    RendererVk *renderer = contextVk->getRenderer();
 
     if (attrib.enabled)
     {
@@ -273,7 +274,15 @@ void VertexArrayVk::syncDirtyAttrib(const RendererVk *renderer,
     }
     else
     {
-        WARN() << "Default vertex attributes unimplemented. http://anglebug.com/2444";
+        contextVk->invalidateDefaultAttribute(attribIndex);
+
+        // These will be filled out by the ContextVk.
+        mCurrentArrayBufferResources[attribIndex] = nullptr;
+        mCurrentArrayBufferHandles[attribIndex]   = VK_NULL_HANDLE;
+        mCurrentArrayBufferOffsets[attribIndex]   = 0;
+        mCurrentArrayBufferStrides[attribIndex]   = 0;
+        mCurrentArrayBufferFormats[attribIndex] =
+            &renderer->getFormat(angle::Format::ID::R32G32B32A32_FLOAT);
     }
 }
 
@@ -326,7 +335,14 @@ void VertexArrayVk::updatePackedInputDescriptions()
         }
         else
         {
-            WARN() << "Default vertex attributes unimplemented. http://anglebug.com/2444";
+            vk::PackedVertexInputBindingDesc &bindingDesc = mPackedInputBindings[attribIndex];
+            bindingDesc.stride                            = 0;
+            bindingDesc.inputRate                         = VK_VERTEX_INPUT_RATE_VERTEX;
+
+            vk::PackedVertexInputAttributeDesc &attribDesc = mPackedInputAttributes[attribIndex];
+            attribDesc.format   = static_cast<uint16_t>(VK_FORMAT_R32G32B32A32_SFLOAT);
+            attribDesc.location = static_cast<uint16_t>(attribIndex);
+            attribDesc.offset   = 0;
         }
     }
 
@@ -580,5 +596,22 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
     }
 
     return gl::NoError();
+}
+
+void VertexArrayVk::updateDefaultAttrib(RendererVk *renderer,
+                                        size_t attribIndex,
+                                        VkBuffer bufferHandle,
+                                        uint32_t offset)
+{
+    if (!mState.getEnabledAttributesMask().test(attribIndex))
+    {
+        mCurrentArrayBufferHandles[attribIndex]   = bufferHandle;
+        mCurrentArrayBufferOffsets[attribIndex]   = offset;
+        mCurrentArrayBufferResources[attribIndex] = nullptr;
+        mCurrentArrayBufferStrides[attribIndex]   = 0;
+        mCurrentArrayBufferFormats[attribIndex] =
+            &renderer->getFormat(angle::Format::ID::R32G32B32A32_FIXED);
+        mDirtyPackedInputs.set(attribIndex);
+    }
 }
 }  // namespace rx
