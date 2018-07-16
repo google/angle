@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6dcc0c82_1caa29b0",
+        "filename": "src/libANGLE/renderer/angle_format.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T15:13:12Z",
+      "side": 1,
+      "message": "We might need to cover the GL_UNSIGNED_INT_10_10_10_2 formats here.",
+      "range": {
+        "startLine": 207,
+        "startChar": 7,
+        "endLine": 212,
+        "endChar": 29
+      },
+      "revId": "ccebcde365a32fca7065e4e86b9c5324a887cbef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
