@@ -252,10 +252,7 @@ egl::Error DisplayD3D::restoreLostDevice(const egl::Display *display)
     // Release surface resources to make the Reset() succeed
     for (egl::Surface *surface : mState.surfaceSet)
     {
-        if (surface->getBoundTexture())
-        {
-            ANGLE_TRY(surface->releaseTexImage(display->getProxyContext(), EGL_BACK_BUFFER));
-        }
+        ASSERT(!surface->getBoundTexture());
         SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
         surfaceD3D->releaseSwapChain();
     }
