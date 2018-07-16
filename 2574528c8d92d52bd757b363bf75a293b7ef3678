@@ -22,6 +22,30 @@
       "revId": "2574528c8d92d52bd757b363bf75a293b7ef3678",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "024ea6b0_8fe370bd",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-07-16T02:39:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f292be76_7071c277",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 55
+      },
+      "revId": "2574528c8d92d52bd757b363bf75a293b7ef3678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
