@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "19521d8d_0780d38e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "Refactored the useful part of setImage into a redefineImage and shared it with this.",
+      "parentUuid": "d45c35f0_3b3d99d8",
+      "range": {
+        "startLine": 592,
+        "startChar": 14,
+        "endLine": 592,
+        "endChar": 22
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b803636_4def4daf",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f8c1520_16408cca",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b803636_4def4daf",
+      "range": {
+        "startLine": 595,
+        "startChar": 46,
+        "endLine": 595,
+        "endChar": 65
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "74d3ae02_3473ba20",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0c6d3d1_521db3c3",
+      "range": {
+        "startLine": 654,
+        "startChar": 0,
+        "endLine": 654,
+        "endChar": 67
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3cc8fa5_c3577b35",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd0e5839_5b86906d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3cc8fa5_c3577b35",
+      "range": {
+        "startLine": 668,
+        "startChar": 19,
+        "endLine": 668,
+        "endChar": 26
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "d90f7c76_19769e2e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "Fixed the issue.",
+      "parentUuid": "9c772fef_0086c9d5",
+      "range": {
+        "startLine": 677,
+        "startChar": 4,
+        "endLine": 677,
+        "endChar": 41
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d5c0693_a3173268",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 3
@@ -137,6 +257,30 @@
       "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74d496a4_c2301f54",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "I added  a comment about this but it\u0027s an issue with emulated formats not having the correct colorRead and colorWrite functions.",
+      "parentUuid": "0d5c0693_a3173268",
+      "range": {
+        "startLine": 679,
+        "startChar": 76,
+        "endLine": 679,
+        "endChar": 87
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "0d0ecf00_fc1a69b0",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "It\u0027s not split into two methods, one on the source texture to do the transition/queue the data copy and one on the destination texture to do the conversion into the destination pixel buffer.",
+      "parentUuid": "0309c43a_37c7824b",
+      "range": {
+        "startLine": 688,
+        "startChar": 4,
+        "endLine": 688,
+        "endChar": 80
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cff7e840_bd0006ae",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 3
@@ -183,6 +351,30 @@
       "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3efcc886_d95c4b0c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 710,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "cff7e840_bd0006ae",
+      "range": {
+        "startLine": 709,
+        "startChar": 0,
+        "endLine": 710,
+        "endChar": 68
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "e571459b_cf81372c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02826c39_d6ff626e",
+      "range": {
+        "startLine": 729,
+        "startChar": 60,
+        "endLine": 729,
+        "endChar": 71
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5835400c_b2a4966b",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 3
@@ -229,6 +445,30 @@
       "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0801274e_5a5e2845",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-16T21:14:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5835400c_b2a4966b",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 6
+      },
+      "revId": "135b87cf91c4ddeec0fd687a344cc9dba6923a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
