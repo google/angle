@@ -1372,7 +1372,7 @@ Error Texture::releaseTexImageInternal(const Context *context)
     if (mBoundSurface)
     {
         // Notify the surface
-        mBoundSurface->releaseTexImageFromTexture(context);
+        ANGLE_TRY(mBoundSurface->releaseTexImageFromTexture(context));
 
         // Then, call the same method as from the surface
         ANGLE_TRY(releaseTexImageFromSurface(context));

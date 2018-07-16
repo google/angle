@@ -146,11 +146,11 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
 
     // ANGLE-only method, used internally
     friend class gl::Texture;
-    void releaseTexImageFromTexture(const gl::Context *context);
+    Error releaseTexImageFromTexture(const gl::Context *context);
 
     SurfaceState mState;
     rx::SurfaceImpl *mImplementation;
-    int mCurrentCount;
+    int mRefCount;
     bool mDestroyed;
 
     EGLint mType;
@@ -197,6 +197,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     Error destroyImpl(const Display *display);
 
     void postSwap(const gl::Context *context);
+    Error releaseRef(const Display *display);
 
     gl::InitState mInitState;
 };

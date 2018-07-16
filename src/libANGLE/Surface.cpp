@@ -36,7 +36,7 @@ Surface::Surface(EGLint surfaceType,
     : FramebufferAttachmentObject(),
       mState(config, attributes),
       mImplementation(nullptr),
-      mCurrentCount(0),
+      mRefCount(0),
       mDestroyed(false),
       mType(surfaceType),
       mBuftype(buftype),
@@ -123,20 +123,7 @@ Error Surface::destroyImpl(const Display *display)
         mImplementation->destroy(display);
     }
 
-    if (mTexture)
-    {
-        gl::Context *context = display->getProxyContext();
-        if (mImplementation)
-        {
-            ANGLE_TRY(mImplementation->releaseTexImage(context, EGL_BACK_BUFFER));
-        }
-        auto glErr = mTexture->releaseTexImageFromSurface(context);
-        if (glErr.isError())
-        {
-            return Error(EGL_BAD_SURFACE);
-        }
-        mTexture = nullptr;
-    }
+    ASSERT(!mTexture);
 
     SafeDelete(mImplementation);
 
@@ -188,24 +175,30 @@ Error Surface::setIsCurrent(const gl::Context *context, bool isCurrent)
 {
     if (isCurrent)
     {
-        mCurrentCount++;
+        mRefCount++;
         return NoError();
     }
 
-    ASSERT(mCurrentCount > 0);
-    mCurrentCount--;
-    if (mCurrentCount == 0 && mDestroyed)
+    return releaseRef(context->getCurrentDisplay());
+}
+
+Error Surface::releaseRef(const Display *display)
+{
+    ASSERT(mRefCount > 0);
+    mRefCount--;
+    if (mRefCount == 0 && mDestroyed)
     {
-        ASSERT(context);
-        return destroyImpl(context->getCurrentDisplay());
+        ASSERT(display);
+        return destroyImpl(display);
     }
+
     return NoError();
 }
 
 Error Surface::onDestroy(const Display *display)
 {
     mDestroyed = true;
-    if (mCurrentCount == 0)
+    if (mRefCount == 0)
     {
         return destroyImpl(display);
     }
@@ -397,6 +390,7 @@ Error Surface::bindTexImage(const gl::Context *context, gl::Texture *texture, EG
         return Error(EGL_BAD_SURFACE);
     }
     mTexture = texture;
+    mRefCount++;
 
     return NoError();
 }
@@ -413,9 +407,8 @@ Error Surface::releaseTexImage(const gl::Context *context, EGLint buffer)
     {
         return Error(EGL_BAD_SURFACE);
     }
-    mTexture = nullptr;
 
-    return NoError();
+    return releaseTexImageFromTexture(context);
 }
 
 Error Surface::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
@@ -423,10 +416,11 @@ Error Surface::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR 
     return mImplementation->getSyncValues(ust, msc, sbc);
 }
 
-void Surface::releaseTexImageFromTexture(const gl::Context *context)
+Error Surface::releaseTexImageFromTexture(const gl::Context *context)
 {
     ASSERT(mTexture);
     mTexture = nullptr;
+    return releaseRef(context->getCurrentDisplay());
 }
 
 gl::Extents Surface::getAttachmentSize(const gl::ImageIndex & /*target*/) const
