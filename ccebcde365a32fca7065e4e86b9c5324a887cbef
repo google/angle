@@ -22,6 +22,30 @@
       "revId": "ccebcde365a32fca7065e4e86b9c5324a887cbef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59156a71_785a4326",
+        "filename": "src/libANGLE/renderer/angle_format.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-16T15:15:39Z",
+      "side": 1,
+      "message": "Probably when we do ES3. There are VK formats for those but I don\u0027t think they\u0027re mandatory.",
+      "parentUuid": "6dcc0c82_1caa29b0",
+      "range": {
+        "startLine": 207,
+        "startChar": 7,
+        "endLine": 212,
+        "endChar": 29
+      },
+      "revId": "ccebcde365a32fca7065e4e86b9c5324a887cbef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
