@@ -93,6 +93,30 @@
       "revId": "7c2bb3812c26fe6a0cef2172304834ce4c1872fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97533d00_0063c43d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-17T12:37:06Z",
+      "side": 1,
+      "message": "Makes sense. Thanks.",
+      "parentUuid": "09289084_54b1427d",
+      "range": {
+        "startLine": 46,
+        "startChar": 41,
+        "endLine": 46,
+        "endChar": 72
+      },
+      "revId": "7c2bb3812c26fe6a0cef2172304834ce4c1872fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

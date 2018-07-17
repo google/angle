@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ba83ee2_bf1f9acf",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-17T12:37:06Z",
+      "side": 1,
+      "message": "can you please rename this method as well to match the new variable name.",
+      "range": {
+        "startLine": 75,
+        "startChar": 19,
+        "endLine": 75,
+        "endChar": 50
+      },
+      "revId": "595475d280e3f7bf802430b21b0a62b6c89d5c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
