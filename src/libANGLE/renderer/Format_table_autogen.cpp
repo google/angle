@@ -74,8 +74,8 @@ constexpr Format g_formatInfoTable[] = {
     { Format::ID::BC3_RGBA_UNORM_BLOCK, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
     { Format::ID::BC3_RGBA_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
     { Format::ID::D16_UNORM, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT16, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 16, 0, 2, false },
-    { Format::ID::D24_UNORM, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT24, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 24, 0, 3, false },
     { Format::ID::D24_UNORM_S8_UINT, GL_DEPTH24_STENCIL8, GL_DEPTH24_STENCIL8, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 24, 8, 4, false },
+    { Format::ID::D24_UNORM_X8_UINT, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT24, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 24, 0, 4, false },
     { Format::ID::D32_FLOAT, GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT32F, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 32, 0, 4, false },
     { Format::ID::D32_FLOAT_S8X24_UINT, GL_DEPTH32F_STENCIL8, GL_DEPTH32F_STENCIL8, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 32, 8, 8, false },
     { Format::ID::D32_UNORM, GL_DEPTH_COMPONENT32_OES, GL_DEPTH_COMPONENT32_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 32, 0, 4, false },
@@ -328,7 +328,7 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
         case GL_DEPTH_COMPONENT16:
             return Format::ID::D16_UNORM;
         case GL_DEPTH_COMPONENT24:
-            return Format::ID::D24_UNORM;
+            return Format::ID::D24_UNORM_X8_UINT;
         case GL_DEPTH_COMPONENT32F:
             return Format::ID::D32_FLOAT;
         case GL_DEPTH_COMPONENT32_OES:

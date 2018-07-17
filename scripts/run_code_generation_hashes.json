@@ -4,7 +4,7 @@
   "ANGLE format:src/libANGLE/renderer/angle_format_data.json":
     "1ab73531d2d9655e669b5560fb43c698",
   "ANGLE format:src/libANGLE/renderer/angle_format_map.json":
-    "82d80c3be2cdfcc17aec07cf2223907f",
+    "ea6dfe3ebbc86e04f0d4b9f568ba22ae",
   "ANGLE format:src/libANGLE/renderer/gen_angle_format_table.py":
     "dcb81c64e2c89f57a7105ab07ef0ffd0",
   "ANGLE load functions table:src/libANGLE/renderer/gen_load_functions_table.py":
@@ -26,7 +26,7 @@
   "DXGI format:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "DXGI format:src/libANGLE/renderer/angle_format_map.json":
-    "82d80c3be2cdfcc17aec07cf2223907f",
+    "ea6dfe3ebbc86e04f0d4b9f568ba22ae",
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/dxgi_format_data.json":
     "24f525b05dc665fbbc8c6d68fb863719",
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py":
@@ -64,7 +64,7 @@
   "Vulkan format:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "Vulkan format:src/libANGLE/renderer/angle_format_map.json":
-    "82d80c3be2cdfcc17aec07cf2223907f",
+    "ea6dfe3ebbc86e04f0d4b9f568ba22ae",
   "Vulkan format:src/libANGLE/renderer/vulkan/gen_vk_format_table.py":
     "2ecc99c12cd41bda7107a7d9ffe3786c",
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":

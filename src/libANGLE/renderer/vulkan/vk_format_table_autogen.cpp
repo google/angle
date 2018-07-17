@@ -478,10 +478,6 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             vertexLoadRequiresConversion = false;
             break;
 
-        case angle::Format::ID::D24_UNORM:
-            // This format is not implemented in Vulkan.
-            break;
-
         case angle::Format::ID::D24_UNORM_S8_UINT:
             internalFormat = GL_DEPTH24_STENCIL8;
             initTextureFallback(physicalDevice, angle::Format::ID::D24_UNORM_S8_UINT,
@@ -492,6 +488,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             vkBufferFormat               = VK_FORMAT_D24_UNORM_S8_UINT;
             vertexLoadFunction           = nullptr;
             vertexLoadRequiresConversion = false;
+            break;
+
+        case angle::Format::ID::D24_UNORM_X8_UINT:
+            // This format is not implemented in Vulkan.
             break;
 
         case angle::Format::ID::D32_FLOAT:
