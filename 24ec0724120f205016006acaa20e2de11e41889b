@@ -22,6 +22,30 @@
       "revId": "24ec0724120f205016006acaa20e2de11e41889b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afdf4329_56bc9a41",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 726,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-17T13:34:28Z",
+      "side": 1,
+      "message": "It\u0027s still needed for the call to releaseImage which calls onStateChange.",
+      "parentUuid": "55c390d4_4da947fc",
+      "range": {
+        "startLine": 726,
+        "startChar": 39,
+        "endLine": 726,
+        "endChar": 66
+      },
+      "revId": "24ec0724120f205016006acaa20e2de11e41889b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
