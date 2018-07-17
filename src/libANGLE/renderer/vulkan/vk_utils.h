@@ -276,6 +276,7 @@ class MemoryProperties final : angle::NonCopyable
                                             const VkMemoryRequirements &memoryRequirements,
                                             VkMemoryPropertyFlags memoryPropertyFlags,
                                             uint32_t *indexOut) const;
+    void destroy();
 
   private:
     VkPhysicalDeviceMemoryProperties mMemoryProperties;

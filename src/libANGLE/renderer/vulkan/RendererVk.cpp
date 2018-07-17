@@ -319,6 +319,7 @@ void RendererVk::onDestroy(vk::Context *context)
         mInstance = VK_NULL_HANDLE;
     }
 
+    mMemoryProperties.destroy();
     mPhysicalDevice = VK_NULL_HANDLE;
 }
 

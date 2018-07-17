@@ -1011,6 +1011,11 @@ void MemoryProperties::init(VkPhysicalDevice physicalDevice)
     ASSERT(mMemoryProperties.memoryTypeCount > 0);
 }
 
+void MemoryProperties::destroy()
+{
+    mMemoryProperties = {0};
+}
+
 angle::Result MemoryProperties::findCompatibleMemoryIndex(
     Context *context,
     const VkMemoryRequirements &memoryRequirements,

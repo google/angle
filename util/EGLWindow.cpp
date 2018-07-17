@@ -20,7 +20,7 @@ EGLPlatformParameters::EGLPlatformParameters()
     : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
       majorVersion(EGL_DONT_CARE),
       minorVersion(EGL_DONT_CARE),
-      deviceType(EGL_DONT_CARE),
+      deviceType(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE),
       presentPath(EGL_DONT_CARE)
 {
 }
@@ -29,24 +29,19 @@ EGLPlatformParameters::EGLPlatformParameters(EGLint renderer)
     : renderer(renderer),
       majorVersion(EGL_DONT_CARE),
       minorVersion(EGL_DONT_CARE),
-      deviceType(EGL_DONT_CARE),
+      deviceType(EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE),
       presentPath(EGL_DONT_CARE)
 {
-    if (renderer == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE ||
-        renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        deviceType = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
-    }
 }
 
 EGLPlatformParameters::EGLPlatformParameters(EGLint renderer,
                                              EGLint majorVersion,
                                              EGLint minorVersion,
-                                             EGLint useWarp)
+                                             EGLint deviceType)
     : renderer(renderer),
       majorVersion(majorVersion),
       minorVersion(minorVersion),
-      deviceType(useWarp),
+      deviceType(deviceType),
       presentPath(EGL_DONT_CARE)
 {
 }
@@ -54,12 +49,12 @@ EGLPlatformParameters::EGLPlatformParameters(EGLint renderer,
 EGLPlatformParameters::EGLPlatformParameters(EGLint renderer,
                                              EGLint majorVersion,
                                              EGLint minorVersion,
-                                             EGLint useWarp,
+                                             EGLint deviceType,
                                              EGLint presentPath)
     : renderer(renderer),
       majorVersion(majorVersion),
       minorVersion(minorVersion),
-      deviceType(useWarp),
+      deviceType(deviceType),
       presentPath(presentPath)
 {
 }
