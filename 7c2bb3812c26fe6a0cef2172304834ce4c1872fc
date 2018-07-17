@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "926004d7_e5343a75",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-17T08:23:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94f117c4_5fb66b5b",
+      "range": {
+        "startLine": 96,
+        "startChar": 59,
+        "endLine": 96,
+        "endChar": 89
+      },
+      "revId": "7c2bb3812c26fe6a0cef2172304834ce4c1872fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e28c8db_033af105",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2018-07-16T14:59:34Z",
       "side": 1,
       "message": "trying to understand why you need to set other attributes dirty if the pointer changes. This shouldn\u0027t modify any of the binding state.",
+      "range": {
+        "startLine": 46,
+        "startChar": 41,
+        "endLine": 46,
+        "endChar": 72
+      },
+      "revId": "7c2bb3812c26fe6a0cef2172304834ce4c1872fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09289084_54b1427d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-17T08:23:49Z",
+      "side": 1,
+      "message": "According to ES 3.1 SPEC (Chapter 10.3.1 Page 245), VertexAttrib*Pointer controls a vertex attribute state, a vertex buffer binding and the mapping between a vertex attribute and a vertex binding, and BindVertexBuffer is implicitly called in the definition of VertexAttrib*Pointer.\n\nSo calling VertexAttrib*Pointer on INDEX will affect all the attributes that are using the binding INDEX.",
+      "parentUuid": "3e28c8db_033af105",
       "range": {
         "startLine": 46,
         "startChar": 41,
