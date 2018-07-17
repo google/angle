@@ -47,6 +47,30 @@
       "revId": "73f6bac582f3fe1248b6848ace369298e189e8c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a615011_692e5401",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2018-07-17T14:07:28Z",
+      "side": 1,
+      "message": "I redid the Android version of EVENT to use snprintf. I still get complaints about the format not matching the datatype.\nE.g.\n../../third_party/angle/src/libGLESv2/entry_points_egl.cpp:69:51: error: precision used with \u0027p\u0027 conversion specifier, resulting in undefined behavior [-Werror,-Wformat]\n    EVENT(\"(EGLNativeDisplayType display_id \u003d 0x%0.8p)\", display_id);\n\nI\u0027m not sure what else I could do.",
+      "parentUuid": "db7ca499_0f4da95f",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 249,
+        "endChar": 28
+      },
+      "revId": "73f6bac582f3fe1248b6848ace369298e189e8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
