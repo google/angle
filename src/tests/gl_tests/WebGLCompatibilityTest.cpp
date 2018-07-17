@@ -1470,6 +1470,51 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsNonInstanced)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test that index values outside of the 32-bit integer range do not read out of bounds
+TEST_P(WebGLCompatibilityTest, LargeIndexRange)
+{
+    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_OES_element_index_uint"));
+
+    const std::string &vert =
+        "attribute vec4 a_Position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = a_Position;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, essl1_shaders::fs::Red());
+    glUseProgram(program.get());
+
+    glEnableVertexAttribArray(glGetAttribLocation(program, "a_Position"));
+
+    constexpr float kVertexData[] = {
+        1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+    };
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kVertexData), kVertexData, GL_STREAM_DRAW);
+
+    constexpr GLuint kMaxIntAsGLuint = static_cast<GLuint>(std::numeric_limits<GLint>::max());
+    constexpr GLuint kIndexData[]    = {
+        kMaxIntAsGLuint, kMaxIntAsGLuint + 1, kMaxIntAsGLuint + 2, kMaxIntAsGLuint + 3,
+    };
+
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kIndexData), kIndexData, GL_DYNAMIC_DRAW);
+
+    EXPECT_GL_NO_ERROR();
+
+    // First index is representable as 32-bit int but second is not
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Neither index is representable as 32-bit int
+    glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, reinterpret_cast<void *>(sizeof(GLuint) * 2));
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Test for drawing with a null index buffer
 TEST_P(WebGLCompatibilityTest, NullIndexBuffer)
 {

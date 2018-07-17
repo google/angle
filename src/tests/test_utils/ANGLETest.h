@@ -323,6 +323,7 @@ class ANGLETestBase
     static GLuint compileShader(GLenum type, const std::string &source);
     static bool extensionEnabled(const std::string &extName);
     static bool extensionRequestable(const std::string &extName);
+    static bool ensureExtensionEnabled(const std::string &extName);
     static bool eglClientExtensionEnabled(const std::string &extName);
     static bool eglDeviceExtensionEnabled(EGLDeviceEXT device, const std::string &extName);
 

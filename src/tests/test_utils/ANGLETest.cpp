@@ -838,6 +838,16 @@ bool ANGLETestBase::extensionRequestable(const std::string &extName)
         reinterpret_cast<const char *>(glGetString(GL_REQUESTABLE_EXTENSIONS_ANGLE)), extName);
 }
 
+bool ANGLETestBase::ensureExtensionEnabled(const std::string &extName)
+{
+    if (extensionEnabled("GL_ANGLE_request_extension") && extensionRequestable(extName))
+    {
+        glRequestExtensionANGLE(extName.c_str());
+    }
+
+    return extensionEnabled(extName);
+}
+
 bool ANGLETestBase::eglDisplayExtensionEnabled(EGLDisplay display, const std::string &extName)
 {
     return CheckExtensionExists(eglQueryString(display, EGL_EXTENSIONS), extName);
