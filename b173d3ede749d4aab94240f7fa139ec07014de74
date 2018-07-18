@@ -22,6 +22,30 @@
       "revId": "b173d3ede749d4aab94240f7fa139ec07014de74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "312503a4_3d220e15",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-18T16:46:24Z",
+      "side": 1,
+      "message": "Whoops misread this. Would only apply to stencil_index8.",
+      "parentUuid": "830984f5_79bdb1f1",
+      "range": {
+        "startLine": 229,
+        "startChar": 24,
+        "endLine": 229,
+        "endChar": 41
+      },
+      "revId": "b173d3ede749d4aab94240f7fa139ec07014de74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
