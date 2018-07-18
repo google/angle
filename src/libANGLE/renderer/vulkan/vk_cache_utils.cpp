@@ -748,9 +748,13 @@ void PipelineDesc::updateColorWriteMask(VkColorComponentFlags colorComponentFlag
     }
 }
 
-void PipelineDesc::updateDepthTestEnabled(const gl::DepthStencilState &depthStencilState)
+void PipelineDesc::updateDepthTestEnabled(const gl::DepthStencilState &depthStencilState,
+                                          const gl::Framebuffer *drawFramebuffer)
 {
-    mDepthStencilStateInfo.depthTestEnable = static_cast<uint8_t>(depthStencilState.depthTest);
+    // Only enable the depth test if the draw framebuffer has a depth buffer.  It's possible that
+    // we're emulating a stencil-only buffer with a depth-stencil buffer
+    mDepthStencilStateInfo.depthTestEnable =
+        static_cast<uint8_t>(depthStencilState.depthTest && drawFramebuffer->hasDepth());
 }
 
 void PipelineDesc::updateDepthFunc(const gl::DepthStencilState &depthStencilState)
@@ -758,14 +762,21 @@ void PipelineDesc::updateDepthFunc(const gl::DepthStencilState &depthStencilStat
     mDepthStencilStateInfo.depthCompareOp = PackGLCompareFunc(depthStencilState.depthFunc);
 }
 
-void PipelineDesc::updateDepthWriteEnabled(const gl::DepthStencilState &depthStencilState)
+void PipelineDesc::updateDepthWriteEnabled(const gl::DepthStencilState &depthStencilState,
+                                           const gl::Framebuffer *drawFramebuffer)
 {
-    mDepthStencilStateInfo.depthWriteEnable = (depthStencilState.depthMask == GL_FALSE ? 0 : 1);
+    // Don't write to depth buffers that should not exist
+    mDepthStencilStateInfo.depthWriteEnable =
+        static_cast<uint8_t>(drawFramebuffer->hasDepth() ? depthStencilState.depthMask : 0);
 }
 
-void PipelineDesc::updateStencilTestEnabled(const gl::DepthStencilState &depthStencilState)
+void PipelineDesc::updateStencilTestEnabled(const gl::DepthStencilState &depthStencilState,
+                                            const gl::Framebuffer *drawFramebuffer)
 {
-    mDepthStencilStateInfo.stencilTestEnable = static_cast<uint8_t>(depthStencilState.stencilTest);
+    // Only enable the stencil test if the draw framebuffer has a stencil buffer.  It's possible
+    // that we're emulating a depth-only buffer with a depth-stencil buffer
+    mDepthStencilStateInfo.stencilTestEnable =
+        static_cast<uint8_t>(depthStencilState.stencilTest && drawFramebuffer->hasStencil());
 }
 
 void PipelineDesc::updateStencilFrontFuncs(GLint ref,
@@ -801,16 +812,20 @@ void PipelineDesc::updateStencilBackOps(const gl::DepthStencilState &depthStenci
         PackGLStencilOp(depthStencilState.stencilBackPassDepthFail);
 }
 
-void PipelineDesc::updateStencilFrontWriteMask(const gl::DepthStencilState &depthStencilState)
+void PipelineDesc::updateStencilFrontWriteMask(const gl::DepthStencilState &depthStencilState,
+                                               const gl::Framebuffer *drawFramebuffer)
 {
-    mDepthStencilStateInfo.front.writeMask =
-        static_cast<uint32_t>(depthStencilState.stencilWritemask);
+    // Don't write to stencil buffers that should not exist
+    mDepthStencilStateInfo.front.writeMask = static_cast<uint32_t>(
+        drawFramebuffer->hasStencil() ? depthStencilState.stencilWritemask : 0);
 }
 
-void PipelineDesc::updateStencilBackWriteMask(const gl::DepthStencilState &depthStencilState)
+void PipelineDesc::updateStencilBackWriteMask(const gl::DepthStencilState &depthStencilState,
+                                              const gl::Framebuffer *drawFramebuffer)
 {
-    mDepthStencilStateInfo.back.writeMask =
-        static_cast<uint32_t>(depthStencilState.stencilBackWritemask);
+    // Don't write to stencil buffers that should not exist
+    mDepthStencilStateInfo.back.writeMask = static_cast<uint32_t>(
+        drawFramebuffer->hasStencil() ? depthStencilState.stencilBackWritemask : 0);
 }
 
 void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)

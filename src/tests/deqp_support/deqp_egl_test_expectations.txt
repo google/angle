@@ -174,8 +174,6 @@
 2715 WIN VULKAN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgb888_no_depth_no_stencil = FAIL
 2715 WIN VULKAN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_depth_no_stencil = FAIL
 2715 WIN VULKAN : dEQP-EGL.functional.query_surface.simple.pbuffer.rgba8888_no_depth_no_stencil = FAIL
-2739 WIN VULKAN : dEQP-EGL.functional.render.multi_context.gles2.* = FAIL
-2739 WIN VULKAN : dEQP-EGL.functional.render.single_context.gles2.* = FAIL
 2635 WIN VULKAN : dEQP-EGL.functional.resize.surface_size.grow = FAIL
 2635 WIN VULKAN : dEQP-EGL.functional.resize.surface_size.stretch_height = FAIL
 2635 WIN VULKAN : dEQP-EGL.functional.resize.surface_size.stretch_width = FAIL
