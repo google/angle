@@ -9,6 +9,8 @@
 #ifndef COMMON_COLOR_H_
 #define COMMON_COLOR_H_
 
+#include <cstdint>
+
 namespace angle
 {
 
@@ -46,6 +48,14 @@ typedef Color<float> ColorF;
 typedef Color<int> ColorI;
 typedef Color<unsigned int> ColorUI;
 
+struct DepthStencil
+{
+    DepthStencil() : depth(0), stencil(0) {}
+
+    // Double is needed to represent the 32-bit integer range of GL_DEPTH_COMPONENT32.
+    double depth;
+    uint32_t stencil;
+};
 }  // namespace angle
 
 // TODO: Move this fully into the angle namespace

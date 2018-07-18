@@ -73,12 +73,12 @@ constexpr Format g_formatInfoTable[] = {
     { FormatID::BC2_RGBA_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
     { FormatID::BC3_RGBA_UNORM_BLOCK, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
     { FormatID::BC3_RGBA_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
-    { FormatID::D16_UNORM, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT16, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 16, 0, 2, false },
-    { FormatID::D24_UNORM_S8_UINT, GL_DEPTH24_STENCIL8, GL_DEPTH24_STENCIL8, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 24, 8, 4, false },
-    { FormatID::D24_UNORM_X8_UINT, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT24, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 24, 0, 4, false },
-    { FormatID::D32_FLOAT, GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT32F, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 32, 0, 4, false },
-    { FormatID::D32_FLOAT_S8X24_UINT, GL_DEPTH32F_STENCIL8, GL_DEPTH32F_STENCIL8, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 32, 8, 8, false },
-    { FormatID::D32_UNORM, GL_DEPTH_COMPONENT32_OES, GL_DEPTH_COMPONENT32_OES, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 32, 0, 4, false },
+    { FormatID::D16_UNORM, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT16, nullptr, NoCopyFunctions, ReadDepthStencil<D16>, WriteDepthStencil<D16>, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 16, 0, 2, false },
+    { FormatID::D24_UNORM_S8_UINT, GL_DEPTH24_STENCIL8, GL_DEPTH24_STENCIL8, nullptr, NoCopyFunctions, ReadDepthStencil<D24S8>, WriteDepthStencil<D24S8>, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 24, 8, 4, false },
+    { FormatID::D24_UNORM_X8_UINT, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT24, nullptr, NoCopyFunctions, ReadDepthStencil<D24>, WriteDepthStencil<D24>, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 24, 0, 4, false },
+    { FormatID::D32_FLOAT, GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT32F, nullptr, NoCopyFunctions, ReadDepthStencil<D32F>, WriteDepthStencil<D32F>, GL_FLOAT, 0, 0, 0, 0, 32, 0, 4, false },
+    { FormatID::D32_FLOAT_S8X24_UINT, GL_DEPTH32F_STENCIL8, GL_DEPTH32F_STENCIL8, nullptr, NoCopyFunctions, ReadDepthStencil<D32FS8>, WriteDepthStencil<D32FS8>, GL_FLOAT, 0, 0, 0, 0, 32, 8, 8, false },
+    { FormatID::D32_UNORM, GL_DEPTH_COMPONENT32_OES, GL_DEPTH_COMPONENT32_OES, nullptr, NoCopyFunctions, ReadDepthStencil<D32>, WriteDepthStencil<D32>, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 32, 0, 4, false },
     { FormatID::EAC_R11G11_SNORM_BLOCK, GL_COMPRESSED_SIGNED_RG11_EAC, GL_COMPRESSED_SIGNED_RG11_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_SIGNED_NORMALIZED, 11, 11, 0, 0, 0, 0, 2, true },
     { FormatID::EAC_R11G11_UNORM_BLOCK, GL_COMPRESSED_RG11_EAC, GL_COMPRESSED_RG11_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 11, 11, 0, 0, 0, 0, 2, true },
     { FormatID::EAC_R11_SNORM_BLOCK, GL_COMPRESSED_SIGNED_R11_EAC, GL_COMPRESSED_SIGNED_R11_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_SIGNED_NORMALIZED, 11, 0, 0, 0, 0, 0, 1, true },
@@ -196,7 +196,7 @@ constexpr Format g_formatInfoTable[] = {
     { FormatID::R8_UNORM, GL_R8, GL_R8, GenerateMip<R8>, NoCopyFunctions, ReadColor<R8, GLfloat>, WriteColor<R8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 0, 0, 0, 0, 0, 1, false },
     { FormatID::R8_USCALED, GL_R8_USCALED_ANGLEX, GL_R8_USCALED_ANGLEX, GenerateMip<R8>, NoCopyFunctions, ReadColor<R8, GLuint>, WriteColor<R8, GLuint>, GL_UNSIGNED_INT, 8, 0, 0, 0, 0, 0, 1, false },
     { FormatID::R9G9B9E5_SHAREDEXP, GL_RGB9_E5, GL_RGB9_E5, GenerateMip<R9G9B9E5>, NoCopyFunctions, ReadColor<R9G9B9E5, GLfloat>, WriteColor<R9G9B9E5, GLfloat>, GL_FLOAT, 9, 9, 9, 0, 0, 0, 3, false },
-    { FormatID::S8_UINT, GL_STENCIL_INDEX8, GL_STENCIL_INDEX8, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_INT, 0, 0, 0, 0, 0, 8, 1, false },
+    { FormatID::S8_UINT, GL_STENCIL_INDEX8, GL_STENCIL_INDEX8, nullptr, NoCopyFunctions, ReadDepthStencil<S8>, WriteDepthStencil<S8>, GL_UNSIGNED_INT, 0, 0, 0, 0, 0, 8, 1, false },
     // clang-format on
 };
 

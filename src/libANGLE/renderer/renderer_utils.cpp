@@ -236,8 +236,9 @@ void PackPixels(const PackPixelsParams &params,
     // Maximum size of any Color<T> type used.
     uint8_t temp[16];
     static_assert(sizeof(temp) >= sizeof(gl::ColorF) && sizeof(temp) >= sizeof(gl::ColorUI) &&
-                      sizeof(temp) >= sizeof(gl::ColorI),
-                  "Unexpected size of gl::Color struct.");
+                      sizeof(temp) >= sizeof(gl::ColorI) &&
+                      sizeof(temp) >= sizeof(angle::DepthStencil),
+                  "Unexpected size of pixel struct.");
 
     ColorReadFunction colorReadFunction = sourceFormat.colorReadFunction;
     ASSERT(colorReadFunction != nullptr);

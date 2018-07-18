@@ -85,19 +85,31 @@ const Format &Format::Get(FormatID id)
 }}  // namespace angle
 """
 
+def is_depth_stencil(angle_format):
+    if not 'channels' in angle_format or not angle_format['channels']:
+        return False
+    return 'd' in angle_format['channels'] or 's' in angle_format['channels']
+
+def get_component_suffix(angle_format):
+    if angle_format['componentType'] == 'float':
+        return 'F'
+    if angle_format['componentType'] == 'int' or angle_format['componentType'] == 'snorm':
+        return 'S'
+    return ""
+
 def get_channel_struct(angle_format):
     if 'bits' not in angle_format or angle_format['bits'] is None:
         return None
     if 'BLOCK' in angle_format['id']:
         return None
     bits = angle_format['bits']
-    if 'D' in bits or 'S' in bits:
-        return None
 
     if 'channelStruct' in angle_format:
         return angle_format['channelStruct']
 
     struct_name = ''
+    component_suffix = get_component_suffix(angle_format)
+
     for channel in angle_format['channels']:
         if channel == 'r':
             struct_name += 'R{}'.format(bits['R'])
@@ -109,15 +121,19 @@ def get_channel_struct(angle_format):
             struct_name += 'A{}'.format(bits['A'])
         if channel == 'l':
             struct_name += 'L{}'.format(bits['L'])
-    if angle_format['componentType'] == 'float':
-        struct_name += 'F'
-    if angle_format['componentType'] == 'int' or angle_format['componentType'] == 'snorm':
-        struct_name += 'S'
+        if channel == 'd':
+            struct_name += 'D{}'.format(bits['D']) + component_suffix
+        if channel == 's':
+            struct_name += 'S{}'.format(bits['S'])
+
+    if not is_depth_stencil(angle_format):
+        struct_name += component_suffix
+
     return struct_name
 
 def get_mip_generation_function(angle_format):
     channel_struct = get_channel_struct(angle_format)
-    if channel_struct == None or "BLOCK" in angle_format["id"]:
+    if is_depth_stencil(angle_format) or channel_struct == None or "BLOCK" in angle_format["id"]:
         return 'nullptr'
     return 'GenerateMip<' + channel_struct + '>'
 
@@ -135,6 +151,10 @@ def get_color_read_function(angle_format):
     channel_struct = get_channel_struct(angle_format)
     if channel_struct == None:
         return 'nullptr'
+
+    if is_depth_stencil(angle_format):
+        return 'ReadDepthStencil<' + channel_struct + '>'
+
     read_component_type = get_color_read_write_component_type(angle_format)
     return 'ReadColor<' + channel_struct + ', '+ read_component_type + '>'
 
@@ -142,6 +162,10 @@ def get_color_write_function(angle_format):
     channel_struct = get_channel_struct(angle_format)
     if channel_struct == None:
         return 'nullptr'
+
+    if is_depth_stencil(angle_format):
+        return 'WriteDepthStencil<' + channel_struct + '>'
+
     write_component_type = get_color_read_write_component_type(angle_format)
     return 'WriteColor<' + channel_struct + ', '+ write_component_type + '>'
 

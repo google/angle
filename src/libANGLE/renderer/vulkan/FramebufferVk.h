@@ -98,7 +98,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     angle::Result readPixelsImpl(ContextVk *contextVk,
                                  const gl::Rectangle &area,
                                  const PackPixelsParams &packPixelsParams,
-                                 const VkImageAspectFlags &copyAspectFlags,
+                                 VkImageAspectFlagBits copyAspectFlags,
                                  RenderTargetVk *renderTarget,
                                  void *pixels);
 
@@ -135,8 +135,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
 
     angle::Result blitWithReadback(ContextVk *contextVk,
                                    const gl::Rectangle &copyArea,
-                                   bool blitDepthBuffer,
-                                   bool blitStencilBuffer,
+                                   VkImageAspectFlagBits aspect,
                                    vk::CommandBuffer *commandBuffer,
                                    RenderTargetVk *readRenderTarget,
                                    RenderTargetVk *drawRenderTarget);
