@@ -22,6 +22,30 @@
       "revId": "595475d280e3f7bf802430b21b0a62b6c89d5c0a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7eb89290_2742bc2a",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2018-07-18T03:08:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ba83ee2_bf1f9acf",
+      "range": {
+        "startLine": 75,
+        "startChar": 19,
+        "endLine": 75,
+        "endChar": 50
+      },
+      "revId": "595475d280e3f7bf802430b21b0a62b6c89d5c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
