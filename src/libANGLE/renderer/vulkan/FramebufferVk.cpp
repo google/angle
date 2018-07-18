@@ -344,13 +344,10 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     outputSkipBytes += (clippedArea.x - area.x) * sizedFormatInfo.pixelBytes +
                        (clippedArea.y - area.y) * outputPitch;
 
-    PackPixelsParams params;
-    params.area        = flippedArea;
-    params.format      = format;
-    params.type        = type;
-    params.outputPitch = outputPitch;
-    params.packBuffer  = glState.getTargetBuffer(gl::BufferBinding::PixelPack);
-    params.pack        = packState;
+    const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
+
+    PackPixelsParams params(flippedArea, angleFormat, outputPitch, packState,
+                            glState.getTargetBuffer(gl::BufferBinding::PixelPack), 0);
 
     ANGLE_TRY(readPixelsImpl(contextVk, flippedArea, params, VK_IMAGE_ASPECT_COLOR_BIT,
                              getColorReadRenderTarget(),
@@ -408,8 +405,6 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
     vk::ImageHelper *imageForRead = readRenderTarget->getImageForRead(
         this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, commandBuffer);
     const angle::Format &drawFormat = drawRenderTarget->getImageFormat().angleFormat();
-    const gl::InternalFormat &sizedInternalDrawFormat =
-        gl::GetSizedInternalFormatInfo(drawFormat.glInternalFormat);
 
     GLuint outputPitch = 0;
 
@@ -429,8 +424,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
     PackPixelsParams packPixelsParams;
     packPixelsParams.pack.alignment       = 1;
     packPixelsParams.pack.reverseRowOrder = true;
-    packPixelsParams.type                 = sizedInternalDrawFormat.type;
-    packPixelsParams.format               = sizedInternalDrawFormat.format;
+    packPixelsParams.destFormat           = &drawFormat;
     packPixelsParams.area.height          = copyArea.height;
     packPixelsParams.area.width           = copyArea.width;
     packPixelsParams.area.x               = copyArea.x;

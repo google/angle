@@ -42,6 +42,8 @@ struct Format final : private angle::NonCopyable
 
     constexpr bool hasDepthOrStencilBits() const;
 
+    bool operator==(const Format &other) const { return this->id == other.id; }
+
     FormatID id;
 
     // The closest matching GL internal format for the storage this format uses. Note that this

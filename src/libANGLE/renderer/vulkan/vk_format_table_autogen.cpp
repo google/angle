@@ -593,10 +593,10 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
 
         case angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK:
             internalFormat             = GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2;
-            textureFormatID            = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
+            textureFormatID              = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
             vkTextureFormat            = VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
             textureInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
-            bufferFormatID             = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
+            bufferFormatID               = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
             vkBufferFormat             = VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK;
             vertexLoadFunction         = CopyNativeVertexData<GLubyte, 4, 4, 0>;
             vertexLoadRequiresConversion = false;

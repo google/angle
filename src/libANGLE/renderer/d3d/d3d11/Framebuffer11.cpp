@@ -139,30 +139,31 @@ gl::Error Framebuffer11::invalidateBase(const gl::Context *context,
         return gl::NoError();
     }
 
-    bool foundDepth = false;
+    bool foundDepth   = false;
     bool foundStencil = false;
 
     for (size_t i = 0; i < count; ++i)
     {
         switch (attachments[i])
         {
-          // Handle depth and stencil attachments. Defer discarding until later.
-          case GL_DEPTH_STENCIL_ATTACHMENT:
-            foundDepth = true;
-            foundStencil = true;
-            break;
-          case GL_DEPTH_EXT:
-          case GL_DEPTH_ATTACHMENT:
-            foundDepth = true;
-            break;
-          case GL_STENCIL_EXT:
-          case GL_STENCIL_ATTACHMENT:
-            foundStencil = true;
-            break;
-          default:
+            // Handle depth and stencil attachments. Defer discarding until later.
+            case GL_DEPTH_STENCIL_ATTACHMENT:
+                foundDepth   = true;
+                foundStencil = true;
+                break;
+            case GL_DEPTH_EXT:
+            case GL_DEPTH_ATTACHMENT:
+                foundDepth = true;
+                break;
+            case GL_STENCIL_EXT:
+            case GL_STENCIL_ATTACHMENT:
+                foundStencil = true;
+                break;
+            default:
             {
                 // Handle color attachments
-                ASSERT((attachments[i] >= GL_COLOR_ATTACHMENT0 && attachments[i] <= GL_COLOR_ATTACHMENT15) ||
+                ASSERT((attachments[i] >= GL_COLOR_ATTACHMENT0 &&
+                        attachments[i] <= GL_COLOR_ATTACHMENT15) ||
                        (attachments[i] == GL_COLOR));
 
                 size_t colorIndex =
@@ -178,14 +179,15 @@ gl::Error Framebuffer11::invalidateBase(const gl::Context *context,
         }
     }
 
-    bool discardDepth = false;
+    bool discardDepth   = false;
     bool discardStencil = false;
 
     // The D3D11 renderer uses the same view for depth and stencil buffers, so we must be careful.
     if (useEXTBehavior)
     {
         // In the extension, if the app discards only one of the depth and stencil attachments, but
-        // those are backed by the same packed_depth_stencil buffer, then both images become undefined.
+        // those are backed by the same packed_depth_stencil buffer, then both images become
+        // undefined.
         discardDepth = foundDepth;
 
         // Don't bother discarding the stencil buffer if the depth buffer will already do it
@@ -195,8 +197,9 @@ gl::Error Framebuffer11::invalidateBase(const gl::Context *context,
     {
         // In ES 3.0.4, if a specified attachment has base internal format DEPTH_STENCIL but the
         // attachments list does not include DEPTH_STENCIL_ATTACHMENT or both DEPTH_ATTACHMENT and
-        // STENCIL_ATTACHMENT, then only the specified portion of every pixel in the subregion of pixels
-        // of the DEPTH_STENCIL buffer may be invalidated, and the other portion must be preserved.
+        // STENCIL_ATTACHMENT, then only the specified portion of every pixel in the subregion of
+        // pixels of the DEPTH_STENCIL buffer may be invalidated, and the other portion must be
+        // preserved.
         discardDepth = (foundDepth && foundStencil) ||
                        (foundDepth && (mState.getStencilAttachment() == nullptr));
         discardStencil = (foundStencil && (mState.getDepthAttachment() == nullptr));
@@ -257,8 +260,9 @@ gl::Error Framebuffer11::readPixelsImpl(const gl::Context *context,
     gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(gl::BufferBinding::PixelPack);
     if (packBuffer != nullptr)
     {
-        Buffer11 *packBufferStorage = GetImplAs<Buffer11>(packBuffer);
-        PackPixelsParams packParams(area, format, type, static_cast<GLuint>(outputPitch), pack,
+        Buffer11 *packBufferStorage      = GetImplAs<Buffer11>(packBuffer);
+        const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
+        PackPixelsParams packParams(area, angleFormat, static_cast<GLuint>(outputPitch), pack,
                                     packBuffer, reinterpret_cast<ptrdiff_t>(pixels));
 
         return packBufferStorage->packPixels(context, *readAttachment, packParams);
@@ -290,12 +294,12 @@ gl::Error Framebuffer11::blitImpl(const gl::Context *context,
         const auto &colorAttachments = mState.getColorAttachments();
         const auto &drawBufferStates = mState.getDrawBufferStates();
 
-        for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
+        for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size();
+             colorAttachment++)
         {
             const gl::FramebufferAttachment &drawBuffer = colorAttachments[colorAttachment];
 
-            if (drawBuffer.isAttached() &&
-                drawBufferStates[colorAttachment] != GL_NONE)
+            if (drawBuffer.isAttached() && drawBufferStates[colorAttachment] != GL_NONE)
             {
                 RenderTargetD3D *drawRenderTarget = nullptr;
                 ANGLE_TRY(drawBuffer.getRenderTarget(context, &drawRenderTarget));
@@ -306,8 +310,8 @@ gl::Error Framebuffer11::blitImpl(const gl::Context *context,
                 if (invertColorSource)
                 {
                     RenderTarget11 *readRenderTarget11 = GetAs<RenderTarget11>(readRenderTarget);
-                    actualSourceArea.y                 = readRenderTarget11->getHeight() - sourceArea.y;
-                    actualSourceArea.height            = -sourceArea.height;
+                    actualSourceArea.y      = readRenderTarget11->getHeight() - sourceArea.y;
+                    actualSourceArea.height = -sourceArea.height;
                 }
 
                 const bool invertColorDest   = UsePresentPathFast(mRenderer, &drawBuffer);
@@ -315,8 +319,8 @@ gl::Error Framebuffer11::blitImpl(const gl::Context *context,
                 if (invertColorDest)
                 {
                     RenderTarget11 *drawRenderTarget11 = GetAs<RenderTarget11>(drawRenderTarget);
-                    actualDestArea.y                   = drawRenderTarget11->getHeight() - destArea.y;
-                    actualDestArea.height              = -destArea.height;
+                    actualDestArea.y      = drawRenderTarget11->getHeight() - destArea.y;
+                    actualDestArea.height = -destArea.height;
                 }
 
                 ANGLE_TRY(mRenderer->blitRenderbufferRect(

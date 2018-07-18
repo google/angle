@@ -26,132 +26,6 @@ namespace rx
 
 namespace
 {
-typedef std::pair<gl::FormatType, ColorWriteFunction> FormatWriteFunctionPair;
-typedef std::map<gl::FormatType, ColorWriteFunction> FormatWriteFunctionMap;
-
-static inline void InsertFormatWriteFunctionMapping(FormatWriteFunctionMap *map,
-                                                    GLenum format,
-                                                    GLenum type,
-                                                    ColorWriteFunction writeFunc)
-{
-    map->insert(FormatWriteFunctionPair(gl::FormatType(format, type), writeFunc));
-}
-
-static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
-{
-    using namespace angle;  //  For image writing functions
-
-    FormatWriteFunctionMap map;
-
-    // clang-format off
-    //                                    | Format               | Type                             | Color write function             |
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8A8, GLfloat>     );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_BYTE,                           WriteColor<R8G8B8A8S, GLfloat>    );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_UNSIGNED_SHORT_4_4_4_4,         WriteColor<R4G4B4A4, GLfloat>     );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_UNSIGNED_SHORT_5_5_5_1,         WriteColor<R5G5B5A1, GLfloat>     );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_UNSIGNED_INT_2_10_10_10_REV,    WriteColor<R10G10B10A2, GLfloat>  );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_FLOAT,                          WriteColor<R32G32B32A32F, GLfloat>);
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_HALF_FLOAT,                     WriteColor<R16G16B16A16F, GLfloat>);
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_HALF_FLOAT_OES,                 WriteColor<R16G16B16A16F, GLfloat>);
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA, GL_UNSIGNED_SHORT,
-                                     WriteColor<R16G16B16A16, GLfloat>);
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA, GL_SHORT, WriteColor<R16G16B16A16S, GLfloat>);
-
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA_INTEGER,       GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8A8, GLuint>      );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA_INTEGER,       GL_BYTE,                           WriteColor<R8G8B8A8S, GLint>      );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA_INTEGER,       GL_UNSIGNED_SHORT,                 WriteColor<R16G16B16A16, GLuint>  );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA_INTEGER,       GL_SHORT,                          WriteColor<R16G16B16A16S, GLint>  );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA_INTEGER,       GL_UNSIGNED_INT,                   WriteColor<R32G32B32A32, GLuint>  );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA_INTEGER,       GL_INT,                            WriteColor<R32G32B32A32S, GLint>  );
-    InsertFormatWriteFunctionMapping(&map, GL_RGBA_INTEGER,       GL_UNSIGNED_INT_2_10_10_10_REV,    WriteColor<R10G10B10A2, GLuint>   );
-
-    InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8, GLfloat>       );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_BYTE,                           WriteColor<R8G8B8S, GLfloat>      );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_UNSIGNED_SHORT_5_6_5,           WriteColor<R5G6B5, GLfloat>       );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_UNSIGNED_INT_10F_11F_11F_REV,   WriteColor<R11G11B10F, GLfloat>   );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_UNSIGNED_INT_5_9_9_9_REV,       WriteColor<R9G9B9E5, GLfloat>     );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_FLOAT,                          WriteColor<R32G32B32F, GLfloat>   );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_HALF_FLOAT,                     WriteColor<R16G16B16F, GLfloat>   );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_HALF_FLOAT_OES,                 WriteColor<R16G16B16F, GLfloat>   );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB, GL_UNSIGNED_SHORT,
-                                     WriteColor<R16G16B16, GLfloat>);
-    InsertFormatWriteFunctionMapping(&map, GL_RGB, GL_SHORT, WriteColor<R16G16B16S, GLfloat>);
-
-    InsertFormatWriteFunctionMapping(&map, GL_RGB_INTEGER,        GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8, GLuint>        );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB_INTEGER,        GL_BYTE,                           WriteColor<R8G8B8S, GLint>        );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB_INTEGER,        GL_UNSIGNED_SHORT,                 WriteColor<R16G16B16, GLuint>     );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB_INTEGER,        GL_SHORT,                          WriteColor<R16G16B16S, GLint>     );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB_INTEGER,        GL_UNSIGNED_INT,                   WriteColor<R32G32B32, GLuint>     );
-    InsertFormatWriteFunctionMapping(&map, GL_RGB_INTEGER,        GL_INT,                            WriteColor<R32G32B32S, GLint>     );
-
-    InsertFormatWriteFunctionMapping(&map, GL_RG,                 GL_UNSIGNED_BYTE,                  WriteColor<R8G8, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_RG,                 GL_BYTE,                           WriteColor<R8G8S, GLfloat>        );
-    InsertFormatWriteFunctionMapping(&map, GL_RG,                 GL_FLOAT,                          WriteColor<R32G32F, GLfloat>      );
-    InsertFormatWriteFunctionMapping(&map, GL_RG,                 GL_HALF_FLOAT,                     WriteColor<R16G16F, GLfloat>      );
-    InsertFormatWriteFunctionMapping(&map, GL_RG,                 GL_HALF_FLOAT_OES,                 WriteColor<R16G16F, GLfloat>      );
-    InsertFormatWriteFunctionMapping(&map, GL_RG, GL_UNSIGNED_SHORT, WriteColor<R16G16, GLfloat>);
-    InsertFormatWriteFunctionMapping(&map, GL_RG, GL_SHORT, WriteColor<R16G16S, GLfloat>);
-
-    InsertFormatWriteFunctionMapping(&map, GL_RG_INTEGER,         GL_UNSIGNED_BYTE,                  WriteColor<R8G8, GLuint>          );
-    InsertFormatWriteFunctionMapping(&map, GL_RG_INTEGER,         GL_BYTE,                           WriteColor<R8G8S, GLint>          );
-    InsertFormatWriteFunctionMapping(&map, GL_RG_INTEGER,         GL_UNSIGNED_SHORT,                 WriteColor<R16G16, GLuint>        );
-    InsertFormatWriteFunctionMapping(&map, GL_RG_INTEGER,         GL_SHORT,                          WriteColor<R16G16S, GLint>        );
-    InsertFormatWriteFunctionMapping(&map, GL_RG_INTEGER,         GL_UNSIGNED_INT,                   WriteColor<R32G32, GLuint>        );
-    InsertFormatWriteFunctionMapping(&map, GL_RG_INTEGER,         GL_INT,                            WriteColor<R32G32S, GLint>        );
-
-    InsertFormatWriteFunctionMapping(&map, GL_RED,                GL_UNSIGNED_BYTE,                  WriteColor<R8, GLfloat>           );
-    InsertFormatWriteFunctionMapping(&map, GL_RED,                GL_BYTE,                           WriteColor<R8S, GLfloat>          );
-    InsertFormatWriteFunctionMapping(&map, GL_RED,                GL_FLOAT,                          WriteColor<R32F, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_RED,                GL_HALF_FLOAT,                     WriteColor<R16F, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_RED,                GL_HALF_FLOAT_OES,                 WriteColor<R16F, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_RED, GL_UNSIGNED_SHORT, WriteColor<R16, GLfloat>);
-    InsertFormatWriteFunctionMapping(&map, GL_RED, GL_SHORT, WriteColor<R16S, GLfloat>);
-
-    InsertFormatWriteFunctionMapping(&map, GL_RED_INTEGER,        GL_UNSIGNED_BYTE,                  WriteColor<R8, GLuint>            );
-    InsertFormatWriteFunctionMapping(&map, GL_RED_INTEGER,        GL_BYTE,                           WriteColor<R8S, GLint>            );
-    InsertFormatWriteFunctionMapping(&map, GL_RED_INTEGER,        GL_UNSIGNED_SHORT,                 WriteColor<R16, GLuint>           );
-    InsertFormatWriteFunctionMapping(&map, GL_RED_INTEGER,        GL_SHORT,                          WriteColor<R16S, GLint>           );
-    InsertFormatWriteFunctionMapping(&map, GL_RED_INTEGER,        GL_UNSIGNED_INT,                   WriteColor<R32, GLuint>           );
-    InsertFormatWriteFunctionMapping(&map, GL_RED_INTEGER,        GL_INT,                            WriteColor<R32S, GLint>           );
-
-    InsertFormatWriteFunctionMapping(&map, GL_LUMINANCE_ALPHA,    GL_UNSIGNED_BYTE,                  WriteColor<L8A8, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_LUMINANCE,          GL_UNSIGNED_BYTE,                  WriteColor<L8, GLfloat>           );
-    InsertFormatWriteFunctionMapping(&map, GL_ALPHA,              GL_UNSIGNED_BYTE,                  WriteColor<A8, GLfloat>           );
-    InsertFormatWriteFunctionMapping(&map, GL_LUMINANCE_ALPHA,    GL_FLOAT,                          WriteColor<L32A32F, GLfloat>      );
-    InsertFormatWriteFunctionMapping(&map, GL_LUMINANCE,          GL_FLOAT,                          WriteColor<L32F, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_ALPHA,              GL_FLOAT,                          WriteColor<A32F, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_LUMINANCE_ALPHA,    GL_HALF_FLOAT,                     WriteColor<L16A16F, GLfloat>      );
-    InsertFormatWriteFunctionMapping(&map, GL_LUMINANCE_ALPHA,    GL_HALF_FLOAT_OES,                 WriteColor<L16A16F, GLfloat>      );
-    InsertFormatWriteFunctionMapping(&map, GL_LUMINANCE,          GL_HALF_FLOAT,                     WriteColor<L16F, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_LUMINANCE,          GL_HALF_FLOAT_OES,                 WriteColor<L16F, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_ALPHA,              GL_HALF_FLOAT,                     WriteColor<A16F, GLfloat>         );
-    InsertFormatWriteFunctionMapping(&map, GL_ALPHA,              GL_HALF_FLOAT_OES,                 WriteColor<A16F, GLfloat>         );
-
-    InsertFormatWriteFunctionMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_BYTE,                  WriteColor<B8G8R8A8, GLfloat>     );
-    InsertFormatWriteFunctionMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, WriteColor<A4R4G4B4, GLfloat>     );
-    InsertFormatWriteFunctionMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, WriteColor<A1R5G5B5, GLfloat>     );
-
-    InsertFormatWriteFunctionMapping(&map, GL_SRGB_EXT,           GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8, GLfloat>       );
-    InsertFormatWriteFunctionMapping(&map, GL_SRGB_ALPHA_EXT,     GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8A8, GLfloat>     );
-
-    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    GL_UNSIGNED_BYTE,     nullptr                              );
-    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   GL_UNSIGNED_BYTE,     nullptr                              );
-    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, GL_UNSIGNED_BYTE,     nullptr                              );
-    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_UNSIGNED_BYTE,     nullptr                              );
-
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_SHORT,                 nullptr                              );
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_INT,                   nullptr                              );
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_COMPONENT,    GL_FLOAT,                          nullptr                              );
-
-    InsertFormatWriteFunctionMapping(&map, GL_STENCIL,            GL_UNSIGNED_BYTE,                  nullptr                              );
-
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_STENCIL,      GL_UNSIGNED_INT_24_8,              nullptr                              );
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_STENCIL,      GL_FLOAT_32_UNSIGNED_INT_24_8_REV, nullptr                              );
-    // clang-format on
-
-    return map;
-}
-
 void CopyColor(gl::ColorF *color)
 {
     // No-op
@@ -285,24 +159,21 @@ bool ExpandMatrix(T *target, const GLfloat *value)
     memcpy(target, staging, kTargetWidth * kTargetHeight * sizeof(T));
     return true;
 }
-
 }  // anonymous namespace
 
 PackPixelsParams::PackPixelsParams()
-    : format(GL_NONE), type(GL_NONE), outputPitch(0), packBuffer(nullptr), offset(0)
+    : destFormat(nullptr), outputPitch(0), packBuffer(nullptr), offset(0)
 {
 }
 
 PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
-                                   GLenum formatIn,
-                                   GLenum typeIn,
+                                   const angle::Format &destFormat,
                                    GLuint outputPitchIn,
                                    const gl::PixelPackState &packIn,
                                    gl::Buffer *packBufferIn,
                                    ptrdiff_t offsetIn)
     : area(areaIn),
-      format(formatIn),
-      type(typeIn),
+      destFormat(&destFormat),
       outputPitch(outputPitchIn),
       packBuffer(packBufferIn),
       pack(),
@@ -329,10 +200,7 @@ void PackPixels(const PackPixelsParams &params,
         inputPitch = -inputPitch;
     }
 
-    const gl::InternalFormat &internalFormat =
-        gl::GetInternalFormatInfo(params.format, params.type);
-
-    if (sourceFormat.glInternalFormat == internalFormat.sizedInternalFormat)
+    if (sourceFormat == *params.destFormat)
     {
         // Direct copy possible
         for (int y = 0; y < params.area.height; ++y)
@@ -343,10 +211,7 @@ void PackPixels(const PackPixelsParams &params,
         return;
     }
 
-    gl::FormatType formatType(params.format, params.type);
-    ColorCopyFunction fastCopyFunc =
-        GetFastCopyFunction(sourceFormat.fastCopyFunctions, formatType);
-    const auto &destFormatInfo = gl::GetInternalFormatInfo(formatType.format, formatType.type);
+    ColorCopyFunction fastCopyFunc = sourceFormat.fastCopyFunctions.get(params.destFormat->id);
 
     if (fastCopyFunc)
     {
@@ -356,7 +221,7 @@ void PackPixels(const PackPixelsParams &params,
             for (int x = 0; x < params.area.width; ++x)
             {
                 uint8_t *dest =
-                    destWithOffset + y * params.outputPitch + x * destFormatInfo.pixelBytes;
+                    destWithOffset + y * params.outputPitch + x * params.destFormat->pixelBytes;
                 const uint8_t *src = source + y * inputPitch + x * sourceFormat.pixelBytes;
 
                 fastCopyFunc(src, dest);
@@ -365,7 +230,7 @@ void PackPixels(const PackPixelsParams &params,
         return;
     }
 
-    ColorWriteFunction colorWriteFunction = GetColorWriteFunction(formatType);
+    ColorWriteFunction colorWriteFunction = params.destFormat->colorWriteFunction;
     ASSERT(colorWriteFunction != nullptr);
 
     // Maximum size of any Color<T> type used.
@@ -374,13 +239,15 @@ void PackPixels(const PackPixelsParams &params,
                       sizeof(temp) >= sizeof(gl::ColorI),
                   "Unexpected size of gl::Color struct.");
 
-    const auto &colorReadFunction = sourceFormat.colorReadFunction;
+    ColorReadFunction colorReadFunction = sourceFormat.colorReadFunction;
+    ASSERT(colorReadFunction != nullptr);
 
     for (int y = 0; y < params.area.height; ++y)
     {
         for (int x = 0; x < params.area.width; ++x)
         {
-            uint8_t *dest      = destWithOffset + y * params.outputPitch + x * destFormatInfo.pixelBytes;
+            uint8_t *dest =
+                destWithOffset + y * params.outputPitch + x * params.destFormat->pixelBytes;
             const uint8_t *src = source + y * inputPitch + x * sourceFormat.pixelBytes;
 
             // readFunc and writeFunc will be using the same type of color, CopyTexImage
@@ -391,37 +258,16 @@ void PackPixels(const PackPixelsParams &params,
     }
 }
 
-ColorWriteFunction GetColorWriteFunction(const gl::FormatType &formatType)
+bool FastCopyFunctionMap::has(angle::FormatID formatID) const
 {
-    static const FormatWriteFunctionMap formatTypeMap = BuildFormatWriteFunctionMap();
-    auto iter = formatTypeMap.find(formatType);
-    ASSERT(iter != formatTypeMap.end());
-    if (iter != formatTypeMap.end())
-    {
-        return iter->second;
-    }
-    else
-    {
-        return nullptr;
-    }
+    return (get(formatID) != nullptr);
 }
 
-ColorCopyFunction GetFastCopyFunction(const FastCopyFunctionMap &fastCopyFunctions,
-                                      const gl::FormatType &formatType)
-{
-    return fastCopyFunctions.get(formatType);
-}
-
-bool FastCopyFunctionMap::has(const gl::FormatType &formatType) const
-{
-    return (get(formatType) != nullptr);
-}
-
-ColorCopyFunction FastCopyFunctionMap::get(const gl::FormatType &formatType) const
+ColorCopyFunction FastCopyFunctionMap::get(angle::FormatID formatID) const
 {
     for (size_t index = 0; index < mSize; ++index)
     {
-        if (mData[index].format == formatType.format && mData[index].type == formatType.type)
+        if (mData[index].formatID == formatID)
         {
             return mData[index].func;
         }
@@ -696,4 +542,10 @@ void GetMatrixUniform(GLenum type, NonFloatT *dataOut, const NonFloatT *source, 
     UNREACHABLE();
 }
 
+const angle::Format &GetFormatFromFormatType(GLenum format, GLenum type)
+{
+    GLenum sizedInternalFormat    = gl::GetInternalFormatInfo(format, type).sizedInternalFormat;
+    angle::FormatID angleFormatID = angle::Format::InternalFormatToID(sizedInternalFormat);
+    return angle::Format::Get(angleFormatID);
+}
 }  // namespace rx

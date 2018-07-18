@@ -188,6 +188,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Context *context,
     int inputPitch  = lock.Pitch;
 
     const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
+
     gl::FormatType formatType(format, type);
 
     PackPixelsParams packParams;
@@ -195,8 +196,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Context *context,
     packParams.area.y      = rect.top;
     packParams.area.width  = rect.right - rect.left;
     packParams.area.height = rect.bottom - rect.top;
-    packParams.format      = format;
-    packParams.type        = type;
+    packParams.destFormat  = &GetFormatFromFormatType(format, type);
     packParams.outputPitch = static_cast<GLuint>(outputPitch);
     packParams.pack        = pack;
 

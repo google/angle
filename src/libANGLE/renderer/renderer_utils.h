@@ -21,6 +21,7 @@
 namespace angle
 {
 struct Format;
+enum class FormatID;
 }  // namespace angle
 
 namespace gl
@@ -130,8 +131,7 @@ class FastCopyFunctionMap
   public:
     struct Entry
     {
-        GLenum format;
-        GLenum type;
+        angle::FormatID formatID;
         ColorCopyFunction func;
     };
 
@@ -139,8 +139,8 @@ class FastCopyFunctionMap
 
     constexpr FastCopyFunctionMap(const Entry *data, size_t size) : mSize(size), mData(data) {}
 
-    bool has(const gl::FormatType &formatType) const;
-    ColorCopyFunction get(const gl::FormatType &formatType) const;
+    bool has(angle::FormatID formatID) const;
+    ColorCopyFunction get(angle::FormatID formatID) const;
 
   private:
     size_t mSize;
@@ -151,16 +151,14 @@ struct PackPixelsParams
 {
     PackPixelsParams();
     PackPixelsParams(const gl::Rectangle &area,
-                     GLenum format,
-                     GLenum type,
+                     const angle::Format &destFormat,
                      GLuint outputPitch,
                      const gl::PixelPackState &pack,
                      gl::Buffer *packBufferIn,
                      ptrdiff_t offset);
 
     gl::Rectangle area;
-    GLenum format;
-    GLenum type;
+    const angle::Format *destFormat;
     GLuint outputPitch;
     gl::Buffer *packBuffer;
     gl::PixelPackState pack;
@@ -172,10 +170,6 @@ void PackPixels(const PackPixelsParams &params,
                 int inputPitch,
                 const uint8_t *source,
                 uint8_t *destination);
-
-ColorWriteFunction GetColorWriteFunction(const gl::FormatType &formatType);
-ColorCopyFunction GetFastCopyFunction(const FastCopyFunctionMap &fastCopyFunctions,
-                                      const gl::FormatType &formatType);
 
 using InitializeTextureDataFunction = void (*)(size_t width,
                                                size_t height,
@@ -274,6 +268,7 @@ void GetMatrixUniform(GLenum type, GLfloat *dataOut, const GLfloat *source, bool
 template <typename NonFloatT>
 void GetMatrixUniform(GLenum type, NonFloatT *dataOut, const NonFloatT *source, bool transpose);
 
+const angle::Format &GetFormatFromFormatType(GLenum format, GLenum type);
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_RENDERER_UTILS_H_

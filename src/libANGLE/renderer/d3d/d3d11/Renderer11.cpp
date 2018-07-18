@@ -3119,10 +3119,11 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
     mDeviceContext->CopySubresourceRegion(stagingHelper.get(), 0, 0, 0, 0, srcTexture->get(),
                                           sourceSubResource, &srcBox);
 
+    const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
     gl::Buffer *packBuffer = context->getGLState().getTargetBuffer(gl::BufferBinding::PixelPack);
     if (!invertTexture)
     {
-        PackPixelsParams packParams(safeArea, format, type, outputPitch, pack, packBuffer, 0);
+        PackPixelsParams packParams(safeArea, angleFormat, outputPitch, pack, packBuffer, 0);
         return packPixels(stagingHelper, packParams, pixelsOut);
     }
 
@@ -3134,7 +3135,7 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
     invertTexturePack.alignment       = pack.alignment;
     invertTexturePack.reverseRowOrder = !pack.reverseRowOrder;
 
-    PackPixelsParams packParams(safeArea, format, type, outputPitch, invertTexturePack, packBuffer,
+    PackPixelsParams packParams(safeArea, angleFormat, outputPitch, invertTexturePack, packBuffer,
                                 0);
     gl::Error error = packPixels(stagingHelper, packParams, pixelsOut);
     ANGLE_TRY(error);
