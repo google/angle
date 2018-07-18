@@ -93,11 +93,11 @@ void GetFormatProperties(VkPhysicalDevice physicalDevice,
 
 // Format implementation.
 Format::Format()
-    : angleFormatID(angle::Format::ID::NONE),
+    : angleFormatID(angle::FormatID::NONE),
       internalFormat(GL_NONE),
-      textureFormatID(angle::Format::ID::NONE),
+      textureFormatID(angle::FormatID::NONE),
       vkTextureFormat(VK_FORMAT_UNDEFINED),
-      bufferFormatID(angle::Format::ID::NONE),
+      bufferFormatID(angle::FormatID::NONE),
       vkBufferFormat(VK_FORMAT_UNDEFINED),
       textureInitializerFunction(nullptr),
       textureLoadFunctions()
@@ -105,15 +105,15 @@ Format::Format()
 }
 
 void Format::initTextureFallback(VkPhysicalDevice physicalDevice,
-                                 angle::Format::ID format,
+                                 angle::FormatID format,
                                  VkFormat vkFormat,
                                  InitializeTextureDataFunction initializer,
-                                 angle::Format::ID fallbackFormat,
+                                 angle::FormatID fallbackFormat,
                                  VkFormat fallbackVkFormat,
                                  InitializeTextureDataFunction fallbackInitializer)
 {
-    ASSERT(format != angle::Format::ID::NONE);
-    ASSERT(fallbackFormat != angle::Format::ID::NONE);
+    ASSERT(format != angle::FormatID::NONE);
+    ASSERT(fallbackFormat != angle::FormatID::NONE);
 
     if (HasFullTextureFormatSupport(physicalDevice, vkFormat))
     {
@@ -131,16 +131,16 @@ void Format::initTextureFallback(VkPhysicalDevice physicalDevice,
 }
 
 void Format::initBufferFallback(VkPhysicalDevice physicalDevice,
-                                angle::Format::ID format,
+                                angle::FormatID format,
                                 VkFormat vkFormat,
                                 VertexCopyFunction function,
                                 bool functionConverts,
-                                angle::Format::ID fallbackFormat,
+                                angle::FormatID fallbackFormat,
                                 VkFormat fallbackVkFormat,
                                 VertexCopyFunction fallbackFunction)
 {
-    ASSERT(format != angle::Format::ID::NONE);
-    ASSERT(fallbackFormat != angle::Format::ID::NONE);
+    ASSERT(format != angle::FormatID::NONE);
+    ASSERT(fallbackFormat != angle::FormatID::NONE);
 
     if (HasFullBufferFormatSupport(physicalDevice, vkFormat))
     {
@@ -199,7 +199,7 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice,
 {
     for (size_t formatIndex = 0; formatIndex < angle::kNumANGLEFormats; ++formatIndex)
     {
-        const auto formatID              = static_cast<angle::Format::ID>(formatIndex);
+        const auto formatID              = static_cast<angle::FormatID>(formatIndex);
         const angle::Format &angleFormat = angle::Format::Get(formatID);
         mFormatData[formatIndex].initialize(physicalDevice, angleFormat);
         const GLenum internalFormat = mFormatData[formatIndex].internalFormat;
@@ -231,11 +231,11 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice,
 
 const Format &FormatTable::operator[](GLenum internalFormat) const
 {
-    angle::Format::ID formatID = angle::Format::InternalFormatToID(internalFormat);
+    angle::FormatID formatID = angle::Format::InternalFormatToID(internalFormat);
     return mFormatData[static_cast<size_t>(formatID)];
 }
 
-const Format &FormatTable::operator[](angle::Format::ID formatID) const
+const Format &FormatTable::operator[](angle::FormatID formatID) const
 {
     return mFormatData[static_cast<size_t>(formatID)];
 }

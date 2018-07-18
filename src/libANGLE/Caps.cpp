@@ -102,8 +102,8 @@ TextureCapsMap::~TextureCapsMap()
 
 void TextureCapsMap::insert(GLenum internalFormat, const TextureCaps &caps)
 {
-    angle::Format::ID formatID = angle::Format::InternalFormatToID(internalFormat);
-    get(formatID)              = caps;
+    angle::FormatID formatID = angle::Format::InternalFormatToID(internalFormat);
+    get(formatID)            = caps;
 }
 
 void TextureCapsMap::clear()
@@ -113,21 +113,21 @@ void TextureCapsMap::clear()
 
 const TextureCaps &TextureCapsMap::get(GLenum internalFormat) const
 {
-    angle::Format::ID formatID = angle::Format::InternalFormatToID(internalFormat);
+    angle::FormatID formatID = angle::Format::InternalFormatToID(internalFormat);
     return get(formatID);
 }
 
-const TextureCaps &TextureCapsMap::get(angle::Format::ID formatID) const
+const TextureCaps &TextureCapsMap::get(angle::FormatID formatID) const
 {
     return mFormatData[static_cast<size_t>(formatID)];
 }
 
-TextureCaps &TextureCapsMap::get(angle::Format::ID formatID)
+TextureCaps &TextureCapsMap::get(angle::FormatID formatID)
 {
     return mFormatData[static_cast<size_t>(formatID)];
 }
 
-void TextureCapsMap::set(angle::Format::ID formatID, const TextureCaps &caps)
+void TextureCapsMap::set(angle::FormatID formatID, const TextureCaps &caps)
 {
     get(formatID) = caps;
 }

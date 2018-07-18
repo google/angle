@@ -10,7 +10,7 @@
 namespace angle
 {
 
-enum class Format::ID
+enum class FormatID
 {
     NONE,
     A16_FLOAT,

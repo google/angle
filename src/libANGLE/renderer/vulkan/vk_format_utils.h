@@ -43,19 +43,19 @@ struct Format final : private angle::NonCopyable
     void initialize(VkPhysicalDevice physicalDevice, const angle::Format &angleFormat);
 
     void initTextureFallback(VkPhysicalDevice physicalDevice,
-                             angle::Format::ID format,
+                             angle::FormatID format,
                              VkFormat vkFormat,
                              InitializeTextureDataFunction initializer,
-                             angle::Format::ID fallbackFormat,
+                             angle::FormatID fallbackFormat,
                              VkFormat fallbackVkFormat,
                              InitializeTextureDataFunction fallbackInitializer);
 
     void initBufferFallback(VkPhysicalDevice physicalDevice,
-                            angle::Format::ID format,
+                            angle::FormatID format,
                             VkFormat vkFormat,
                             VertexCopyFunction function,
                             bool functionConverts,
-                            angle::Format::ID fallbackFormat,
+                            angle::FormatID fallbackFormat,
                             VkFormat fallbackVkFormat,
                             VertexCopyFunction fallbackFunction);
 
@@ -63,11 +63,11 @@ struct Format final : private angle::NonCopyable
     const angle::Format &bufferFormat() const;
     const angle::Format &angleFormat() const;
 
-    angle::Format::ID angleFormatID;
+    angle::FormatID angleFormatID;
     GLenum internalFormat;
-    angle::Format::ID textureFormatID;
+    angle::FormatID textureFormatID;
     VkFormat vkTextureFormat;
-    angle::Format::ID bufferFormatID;
+    angle::FormatID bufferFormatID;
     VkFormat vkBufferFormat;
     InitializeTextureDataFunction textureInitializerFunction;
     LoadFunctionMap textureLoadFunctions;
@@ -90,10 +90,10 @@ class FormatTable final : angle::NonCopyable
                     std::vector<GLenum> *outCompressedTextureFormats);
 
     const Format &operator[](GLenum internalFormat) const;
-    const Format &operator[](angle::Format::ID formatID) const;
+    const Format &operator[](angle::FormatID formatID) const;
 
   private:
-    // The table data is indexed by angle::Format::ID.
+    // The table data is indexed by angle::FormatID.
     std::array<Format, angle::kNumANGLEFormats> mFormatData;
 };
 

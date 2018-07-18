@@ -75,7 +75,7 @@ void UnreachableLoadFunction(size_t width,
 
 {load_functions_data}}}  // namespace
 
-LoadFunctionMap GetLoadFunctionsMap(GLenum {internal_format}, Format::ID {angle_format})
+LoadFunctionMap GetLoadFunctionsMap(GLenum {internal_format}, FormatID {angle_format})
 {{
     // clang-format off
     switch ({internal_format})
@@ -151,7 +151,7 @@ def parse_json(json_data):
             func_name = load_functions_name(internal_format, angle_format)
 
             # Main case statements
-            table_data += s + 'case Format::ID::' + angle_format + ':\n'
+            table_data += s + 'case FormatID::' + angle_format + ':\n'
             table_data += s + '    return ' + func_name + ';\n'
 
             if angle_format_unknown in angle_to_type_map:

@@ -314,11 +314,11 @@ struct VertexFormat : private angle::NonCopyable
     bool pureInteger;
 };
 
-angle::Format::ID GetVertexFormatID(GLenum type,
-                                    GLboolean normalized,
-                                    GLuint components,
-                                    bool pureInteger);
-angle::Format::ID GetVertexFormatID(const VertexAttribute &attrib);
+angle::FormatID GetVertexFormatID(GLenum type,
+                                  GLboolean normalized,
+                                  GLuint components,
+                                  bool pureInteger);
+angle::FormatID GetVertexFormatID(const VertexAttribute &attrib);
 VertexFormatType GetVertexFormatType(GLenum type,
                                      GLboolean normalized,
                                      GLuint components,

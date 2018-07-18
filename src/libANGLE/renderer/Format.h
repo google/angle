@@ -16,12 +16,11 @@
 
 namespace angle
 {
+enum class FormatID;
 
 struct Format final : private angle::NonCopyable
 {
-    enum class ID;
-
-    constexpr Format(ID id,
+    constexpr Format(FormatID id,
                      GLenum glFormat,
                      GLenum fboFormat,
                      rx::MipGenerationFunction mipGen,
@@ -38,12 +37,12 @@ struct Format final : private angle::NonCopyable
                      GLuint pixelBytes,
                      bool isBlock);
 
-    static const Format &Get(ID id);
-    static ID InternalFormatToID(GLenum internalFormat);
+    static const Format &Get(FormatID id);
+    static FormatID InternalFormatToID(GLenum internalFormat);
 
     constexpr bool hasDepthOrStencilBits() const;
 
-    ID id;
+    FormatID id;
 
     // The closest matching GL internal format for the storage this format uses. Note that this
     // may be a different internal format than the one this ANGLE format is used for.
@@ -75,7 +74,7 @@ struct Format final : private angle::NonCopyable
     bool isBlock;
 };
 
-constexpr Format::Format(ID id,
+constexpr Format::Format(FormatID id,
                          GLenum glFormat,
                          GLenum fboFormat,
                          rx::MipGenerationFunction mipGen,
@@ -116,6 +115,6 @@ constexpr bool Format::hasDepthOrStencilBits() const
 }
 }  // namespace angle
 
-#include "libANGLE/renderer/Format_ID_autogen.inl"
+#include "libANGLE/renderer/FormatID_autogen.inc"
 
 #endif  // LIBANGLE_RENDERER_FORMAT_H_

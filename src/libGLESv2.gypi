@@ -275,7 +275,7 @@
             'libANGLE/renderer/DisplayImpl.h',
             'libANGLE/renderer/EGLImplFactory.h',
             'libANGLE/renderer/FenceNVImpl.h',
-            'libANGLE/renderer/Format_ID_autogen.inl',
+            'libANGLE/renderer/FormatID_autogen.inc',
             'libANGLE/renderer/Format_table_autogen.cpp',
             'libANGLE/renderer/Format.h',
             'libANGLE/renderer/FramebufferAttachmentObjectImpl.h',

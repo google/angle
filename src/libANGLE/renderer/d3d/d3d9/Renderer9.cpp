@@ -780,7 +780,7 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *config,
     if (angleFormat)
     {
         const auto &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
-        ASSERT(d3dFormatInfo.info().id != angle::Format::ID::NONE);
+        ASSERT(d3dFormatInfo.info().id != angle::FormatID::NONE);
         *angleFormat = &d3dFormatInfo.info();
     }
 
@@ -1004,7 +1004,7 @@ gl::Error Renderer9::setTexture(const gl::Context *context,
                                 gl::Texture *texture)
 {
     int d3dSamplerOffset = (type == gl::ShaderType::Fragment) ? 0 : D3DVERTEXTEXTURESAMPLER0;
-    int d3dSampler                    = index + d3dSamplerOffset;
+    int d3dSampler       = index + d3dSamplerOffset;
     IDirect3DBaseTexture9 *d3dTexture = nullptr;
     bool forceSetTexture              = false;
 

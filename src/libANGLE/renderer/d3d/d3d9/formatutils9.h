@@ -41,7 +41,7 @@ struct D3DFormat
               GLuint luminanceBits,
               GLuint depthBits,
               GLuint stencilBits,
-              angle::Format::ID formatID);
+              angle::FormatID formatID);
 
     const angle::Format &info() const { return angle::Format::Get(formatID); }
 
@@ -58,7 +58,7 @@ struct D3DFormat
     GLuint depthBits;
     GLuint stencilBits;
 
-    angle::Format::ID formatID;
+    angle::FormatID formatID;
 };
 
 const D3DFormat &GetD3DFormatInfo(D3DFORMAT format);
@@ -73,7 +73,8 @@ struct VertexFormat
     D3DDECLTYPE nativeFormat;
     GLenum componentType;
 };
-const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, gl::VertexFormatType vertexFormatType);
+const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes,
+                                        gl::VertexFormatType vertexFormatType);
 
 struct TextureFormat
 {
@@ -87,9 +88,7 @@ struct TextureFormat
     LoadImageFunction loadFunction;
 };
 const TextureFormat &GetTextureFormatInfo(GLenum internalFormat);
-
+}
 }
 
-}
-
-#endif // LIBANGLE_RENDERER_D3D_D3D9_FORMATUTILS9_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D9_FORMATUTILS9_H_

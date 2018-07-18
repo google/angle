@@ -27,7 +27,7 @@ template_autogen_h = """// GENERATED FILE - DO NOT EDIT.
 namespace angle
 {{
 
-enum class Format::ID
+enum class FormatID
 {{
 {angle_format_enum}
 }};
@@ -63,12 +63,12 @@ static constexpr rx::FastCopyFunctionMap NoCopyFunctions;
 
 constexpr Format g_formatInfoTable[] = {{
     // clang-format off
-    {{ Format::ID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0, 0, false }},
+    {{ FormatID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0, 0, false }},
 {angle_format_info_cases}    // clang-format on
 }};
 
 // static
-Format::ID Format::InternalFormatToID(GLenum internalFormat)
+FormatID Format::InternalFormatToID(GLenum internalFormat)
 {{
     switch (internalFormat)
     {{
@@ -77,7 +77,7 @@ Format::ID Format::InternalFormatToID(GLenum internalFormat)
 }}
 
 // static
-const Format &Format::Get(ID id)
+const Format &Format::Get(FormatID id)
 {{
     return g_formatInfoTable[static_cast<size_t>(id)];
 }}
@@ -146,7 +146,7 @@ def get_color_write_function(angle_format):
     return 'WriteColor<' + channel_struct + ', '+ write_component_type + '>'
 
 
-format_entry_template = """    {{ Format::ID::{id}, {glInternalFormat}, {fboImplementationInternalFormat}, {mipGenerationFunction}, {fastCopyFunctions}, {colorReadFunction}, {colorWriteFunction}, {namedComponentType}, {R}, {G}, {B}, {A}, {D}, {S}, {pixelBytes}, {isBlock} }},
+format_entry_template = """    {{ FormatID::{id}, {glInternalFormat}, {fboImplementationInternalFormat}, {mipGenerationFunction}, {fastCopyFunctions}, {colorReadFunction}, {colorWriteFunction}, {namedComponentType}, {R}, {G}, {B}, {A}, {D}, {S}, {pixelBytes}, {isBlock} }},
 """
 
 def get_named_component_type(component_type):
@@ -234,7 +234,7 @@ def gen_enum_string(all_angle):
     return enum_data
 
 case_template = """        case {gl_format}:
-            return Format::ID::{angle_format};
+            return FormatID::{angle_format};
 """
 
 def gen_map_switch_string(gl_to_angle):
@@ -245,7 +245,7 @@ def gen_map_switch_string(gl_to_angle):
             gl_format=gl_format,
             angle_format=angle_format)
     switch_data += "        default:\n"
-    switch_data += "            return Format::ID::NONE;"
+    switch_data += "            return FormatID::NONE;"
     return switch_data;
 
 gl_to_angle = angle_format.load_forward_table('angle_format_map.json')
@@ -275,6 +275,6 @@ output_h = template_autogen_h.format(
     angle_format_enum = enum_data,
     data_source_name = data_source_name,
     num_angle_formats = num_angle_formats)
-with open('Format_ID_autogen.inl', 'wt') as out_file:
+with open('FormatID_autogen.inc', 'wt') as out_file:
     out_file.write(output_h)
     out_file.close()

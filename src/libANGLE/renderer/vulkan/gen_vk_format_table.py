@@ -57,41 +57,41 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
 }}  // namespace rx
 """
 
-empty_format_entry_template = """case angle::Format::ID::{format_id}:
+empty_format_entry_template = """case angle::FormatID::{format_id}:
 // This format is not implemented in Vulkan.
 break;
 """
 
-format_entry_template = """case angle::Format::ID::{format_id}:
+format_entry_template = """case angle::FormatID::{format_id}:
 internalFormat = {internal_format};
 {texture_template}
 {buffer_template}
 break;
 """
 
-texture_basic_template = """textureFormatID = angle::Format::ID::{texture};
+texture_basic_template = """textureFormatID = angle::FormatID::{texture};
 vkTextureFormat = {vk_texture_format};
 textureInitializerFunction = {texture_initializer};"""
 
 texture_fallback_template = """initTextureFallback(physicalDevice,
-angle::Format::ID::{texture},
+angle::FormatID::{texture},
 {vk_texture_format},
 {texture_initializer},
-angle::Format::ID::{texture_fallback},
+angle::FormatID::{texture_fallback},
 {vk_texture_format_fallback},
 {texture_initializer_fallback});"""
 
-buffer_basic_template = """bufferFormatID = angle::Format::ID::{buffer};
+buffer_basic_template = """bufferFormatID = angle::FormatID::{buffer};
 vkBufferFormat = {vk_buffer_format};
 vertexLoadFunction = {vertex_load_function};
 vertexLoadRequiresConversion = {vertex_load_converts};"""
 
 buffer_fallback_template = """initBufferFallback(physicalDevice,
-angle::Format::ID::{buffer},
+angle::FormatID::{buffer},
 {vk_buffer_format},
 {vertex_load_function},
 {vertex_load_converts},
-angle::Format::ID::{buffer_fallback},
+angle::FormatID::{buffer_fallback},
 {vk_buffer_format_fallback},
 {vertex_load_function_fallback});"""
 

@@ -282,7 +282,7 @@ void VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         mCurrentArrayBufferOffsets[attribIndex]   = 0;
         mCurrentArrayBufferStrides[attribIndex]   = 0;
         mCurrentArrayBufferFormats[attribIndex] =
-            &renderer->getFormat(angle::Format::ID::R32G32B32A32_FLOAT);
+            &renderer->getFormat(angle::FormatID::R32G32B32A32_FLOAT);
     }
 }
 
@@ -610,7 +610,7 @@ void VertexArrayVk::updateDefaultAttrib(RendererVk *renderer,
         mCurrentArrayBufferResources[attribIndex] = nullptr;
         mCurrentArrayBufferStrides[attribIndex]   = 0;
         mCurrentArrayBufferFormats[attribIndex] =
-            &renderer->getFormat(angle::Format::ID::R32G32B32A32_FIXED);
+            &renderer->getFormat(angle::FormatID::R32G32B32A32_FIXED);
         mDirtyPackedInputs.set(attribIndex);
     }
 }

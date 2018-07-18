@@ -95,13 +95,13 @@ class RendererVk : angle::NonCopyable
 
     const vk::MemoryProperties &getMemoryProperties() const { return mMemoryProperties; }
 
-    // TODO(jmadill): We could pass angle::Format::ID here.
+    // TODO(jmadill): We could pass angle::FormatID here.
     const vk::Format &getFormat(GLenum internalFormat) const
     {
         return mFormatTable[internalFormat];
     }
 
-    const vk::Format &getFormat(angle::Format::ID formatID) const { return mFormatTable[formatID]; }
+    const vk::Format &getFormat(angle::FormatID formatID) const { return mFormatTable[formatID]; }
 
     angle::Result getCompatibleRenderPass(vk::Context *context,
                                           const vk::RenderPassDesc &desc,

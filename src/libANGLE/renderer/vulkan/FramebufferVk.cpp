@@ -498,9 +498,9 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
 
     const gl::State &glState                 = context->getGLState();
     const gl::Framebuffer *sourceFramebuffer = glState.getReadFramebuffer();
-    bool blitColorBuffer         = (mask & GL_COLOR_BUFFER_BIT) != 0;
-    bool blitDepthBuffer         = (mask & GL_DEPTH_BUFFER_BIT) != 0;
-    bool blitStencilBuffer       = (mask & GL_STENCIL_BUFFER_BIT) != 0;
+    bool blitColorBuffer                     = (mask & GL_COLOR_BUFFER_BIT) != 0;
+    bool blitDepthBuffer                     = (mask & GL_DEPTH_BUFFER_BIT) != 0;
+    bool blitStencilBuffer                   = (mask & GL_STENCIL_BUFFER_BIT) != 0;
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
@@ -637,11 +637,11 @@ void FramebufferVk::blitWithCommand(vk::CommandBuffer *commandBuffer,
         readRect.y = sourceFrameBufferExtents.height - readRect.y - readRect.height;
     }
 
-    VkImageBlit blit                   = {};
-    blit.srcOffsets[0] = {readRect.x0(), flipSource ? readRect.y1() : readRect.y0(), 0};
-    blit.srcOffsets[1] = {readRect.x1(), flipSource ? readRect.y0() : readRect.y1(), 1};
-    blit.srcSubresource.aspectMask     = aspectMask;
-    blit.srcSubresource.mipLevel       = 0;
+    VkImageBlit blit               = {};
+    blit.srcOffsets[0]             = {readRect.x0(), flipSource ? readRect.y1() : readRect.y0(), 0};
+    blit.srcOffsets[1]             = {readRect.x1(), flipSource ? readRect.y0() : readRect.y1(), 1};
+    blit.srcSubresource.aspectMask = aspectMask;
+    blit.srcSubresource.mipLevel   = 0;
     blit.srcSubresource.baseArrayLayer = 0;
     blit.srcSubresource.layerCount     = 1;
     blit.dstSubresource.aspectMask     = aspectMask;
@@ -1148,11 +1148,11 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
         pixelBytes = angleFormat.stencilBits / 8;
     }
 
-    VkBuffer bufferHandle            = VK_NULL_HANDLE;
-    uint8_t *readPixelBuffer         = nullptr;
-    bool newBufferAllocated          = false;
-    uint32_t stagingOffset           = 0;
-    size_t allocationSize            = area.width * pixelBytes * area.height;
+    VkBuffer bufferHandle    = VK_NULL_HANDLE;
+    uint8_t *readPixelBuffer = nullptr;
+    bool newBufferAllocated  = false;
+    uint32_t stagingOffset   = 0;
+    size_t allocationSize    = area.width * pixelBytes * area.height;
 
     ANGLE_TRY(mReadPixelBuffer.allocate(contextVk, allocationSize, &readPixelBuffer, &bufferHandle,
                                         &stagingOffset, &newBufferAllocated));

@@ -141,7 +141,7 @@ def get_blit_srv_format(angle_format):
 
 format_entry_template = """{space}{{
 {space}    static constexpr Format info({internalFormat},
-{space}                                 angle::Format::ID::{formatName},
+{space}                                 angle::FormatID::{formatName},
 {space}                                 {texFormat},
 {space}                                 {srvFormat},
 {space}                                 {uavFormat},
@@ -157,7 +157,7 @@ format_entry_template = """{space}{{
 split_format_entry_template = """{space}    {condition}
 {space}    {{
 {space}        static constexpr Format info({internalFormat},
-{space}                                     angle::Format::ID::{formatName},
+{space}                                     angle::FormatID::{formatName},
 {space}                                     {texFormat},
 {space}                                     {srvFormat},
 {space}                                     {uavFormat},

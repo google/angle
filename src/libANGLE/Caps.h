@@ -71,13 +71,13 @@ class TextureCapsMap final : angle::NonCopyable
     void clear();
 
     // Prefer using angle::Format methods.
-    const TextureCaps &get(angle::Format::ID formatID) const;
-    void set(angle::Format::ID formatID, const TextureCaps &caps);
+    const TextureCaps &get(angle::FormatID formatID) const;
+    void set(angle::FormatID formatID, const TextureCaps &caps);
 
   private:
-    TextureCaps &get(angle::Format::ID formatID);
+    TextureCaps &get(angle::FormatID formatID);
 
-    // Indexed by angle::Format::ID
+    // Indexed by angle::FormatID
     std::array<TextureCaps, angle::kNumANGLEFormats> mFormatData;
 };
 

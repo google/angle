@@ -134,7 +134,7 @@ egl::Error GetD3D9TextureInfo(EGLenum buftype,
     if (angleFormat)
     {
         const auto &d3dFormatInfo = d3d9::GetD3DFormatInfo(surfaceDesc.Format);
-        ASSERT(d3dFormatInfo.info().id != angle::Format::ID::NONE);
+        ASSERT(d3dFormatInfo.info().id != angle::FormatID::NONE);
         *angleFormat = &d3dFormatInfo.info();
     }
 
@@ -306,8 +306,8 @@ egl::Error D3DTextureSurfaceWGL::initialize(const egl::Display *display)
     {
         if (mState.attributes.contains(EGL_GL_COLORSPACE))
         {
-            if (mColorFormat->id != angle::Format::ID::R8G8B8A8_TYPELESS &&
-                mColorFormat->id != angle::Format::ID::B8G8R8A8_TYPELESS)
+            if (mColorFormat->id != angle::FormatID::R8G8B8A8_TYPELESS &&
+                mColorFormat->id != angle::FormatID::B8G8R8A8_TYPELESS)
             {
                 return egl::EglBadMatch()
                        << "EGL_GL_COLORSPACE may only be specified for TYPELESS textures";
