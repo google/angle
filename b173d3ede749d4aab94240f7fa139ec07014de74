@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "830984f5_79bdb1f1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-07-18T16:37:35Z",
+      "side": 1,
+      "message": "this format isn\u0027t guaranteed to be available in Vulkan. In fact no specific DS format is guaranteed. It\u0027s a bit unfortunate but the way the table is right now we can\u0027t express the necessary logic. See the spec:\n\nhttps://www.khronos.org/registry/vulkan/specs/1.0-wsi_extensions/html/vkspec.html#features-formats\n\nVK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT feature must be supported for at least one of VK_FORMAT_X8_D24_UNORM_PACK32 and VK_FORMAT_D32_SFLOAT, and must be supported for at least one of VK_FORMAT_D24_UNORM_S8_UINT and VK_FORMAT_D32_SFLOAT_S8_UINT.\n\nMaybe we can change the table init to fall back to whatever the fall back is for the specified entry. But that would require some kind of ordering guarantee.",
+      "range": {
+        "startLine": 229,
+        "startChar": 24,
+        "endLine": 229,
+        "endChar": 41
+      },
+      "revId": "b173d3ede749d4aab94240f7fa139ec07014de74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
