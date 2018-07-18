@@ -26,12 +26,13 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
 {
   public:
     // Factory methods so we don't have to use constructors with overloads.
-    static FramebufferVk *CreateUserFBO(const gl::FramebufferState &state);
+    static FramebufferVk *CreateUserFBO(RendererVk *renderer, const gl::FramebufferState &state);
 
     // The passed-in SurfaceVK must be destroyed after this FBO is destroyed. Our Surface code is
     // ref-counted on the number of 'current' contexts, so we shouldn't get any dangling surface
     // references. See Surface::setIsCurrent(bool).
-    static FramebufferVk *CreateDefaultFBO(const gl::FramebufferState &state,
+    static FramebufferVk *CreateDefaultFBO(RendererVk *renderer,
+                                           const gl::FramebufferState &state,
                                            WindowSurfaceVk *backbuffer);
 
     ~FramebufferVk() override;
@@ -107,8 +108,9 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     RenderTargetVk *getColorReadRenderTarget() const;
 
   private:
-    FramebufferVk(const gl::FramebufferState &state);
-    FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer);
+    FramebufferVk(RendererVk *renderer,
+                  const gl::FramebufferState &state,
+                  WindowSurfaceVk *backbuffer);
 
     void blitUsingCopy(vk::CommandBuffer *commandBuffer,
                        const gl::Rectangle &readArea,

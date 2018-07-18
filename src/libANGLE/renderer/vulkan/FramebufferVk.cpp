@@ -61,34 +61,33 @@ bool HasSrcAndDstBlitProperties(const VkPhysicalDevice &physicalDevice,
 }  // anonymous namespace
 
 // static
-FramebufferVk *FramebufferVk::CreateUserFBO(const gl::FramebufferState &state)
+FramebufferVk *FramebufferVk::CreateUserFBO(RendererVk *renderer, const gl::FramebufferState &state)
 {
-    return new FramebufferVk(state);
+    return new FramebufferVk(renderer, state, nullptr);
 }
 
 // static
-FramebufferVk *FramebufferVk::CreateDefaultFBO(const gl::FramebufferState &state,
+FramebufferVk *FramebufferVk::CreateDefaultFBO(RendererVk *renderer,
+                                               const gl::FramebufferState &state,
                                                WindowSurfaceVk *backbuffer)
 {
-    return new FramebufferVk(state, backbuffer);
+    return new FramebufferVk(renderer, state, backbuffer);
 }
 
-FramebufferVk::FramebufferVk(const gl::FramebufferState &state)
-    : FramebufferImpl(state),
-      mBackbuffer(nullptr),
-      mActiveColorComponents(0),
-      mReadPixelsBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT, kMinReadPixelsBufferSize),
-      mBlitPixelBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, kMinReadPixelsBufferSize)
-{
-}
-
-FramebufferVk::FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer)
+FramebufferVk::FramebufferVk(RendererVk *renderer,
+                             const gl::FramebufferState &state,
+                             WindowSurfaceVk *backbuffer)
     : FramebufferImpl(state),
       mBackbuffer(backbuffer),
       mActiveColorComponents(0),
       mReadPixelsBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT, kMinReadPixelsBufferSize),
       mBlitPixelBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, kMinReadPixelsBufferSize)
 {
+    mBlitPixelBuffer.init(1, renderer);
+    ASSERT(mBlitPixelBuffer.valid());
+
+    mReadPixelsBuffer.init(1, renderer);
+    ASSERT(mReadPixelsBuffer.valid());
 }
 
 FramebufferVk::~FramebufferVk() = default;
@@ -476,12 +475,6 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
     uint8_t *copyPtr   = nullptr;
     VkBuffer handleOut = VK_NULL_HANDLE;
     uint32_t offsetOut = 0;
-
-    if (!mBlitPixelBuffer.valid())
-    {
-        mBlitPixelBuffer.init(1, renderer);
-        ASSERT(mBlitPixelBuffer.valid());
-    }
 
     VkImageAspectFlags copyFlags =
         vk::GetDepthStencilAspectFlagsForCopy(blitDepthBuffer, blitStencilBuffer);
@@ -1153,12 +1146,6 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
                                             void *pixels)
 {
     RendererVk *renderer = contextVk->getRenderer();
-
-    if (!mReadPixelsBuffer.valid())
-    {
-        mReadPixelsBuffer.init(1, renderer);
-        ASSERT(mReadPixelsBuffer.valid());
-    }
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));

@@ -13,6 +13,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -151,8 +152,10 @@ void OffscreenSurfaceVk::destroy(const egl::Display *display)
 FramebufferImpl *OffscreenSurfaceVk::createDefaultFramebuffer(const gl::Context *context,
                                                               const gl::FramebufferState &state)
 {
+    RendererVk *renderer = vk::GetImpl(context)->getRenderer();
+
     // Use a user FBO for an offscreen RT.
-    return FramebufferVk::CreateUserFBO(state);
+    return FramebufferVk::CreateUserFBO(renderer, state);
 }
 
 egl::Error OffscreenSurfaceVk::swap(const gl::Context *context)
@@ -537,7 +540,8 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Context *context,
                                                            const gl::FramebufferState &state)
 {
-    return FramebufferVk::CreateDefaultFBO(state, this);
+    RendererVk *renderer = vk::GetImpl(context)->getRenderer();
+    return FramebufferVk::CreateDefaultFBO(renderer, state, this);
 }
 
 egl::Error WindowSurfaceVk::swap(const gl::Context *context)
