@@ -799,7 +799,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     region.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     region.imageSubresource.baseArrayLayer = 0;
     region.imageSubresource.layerCount     = 1;
-    region.imageSubresource.mipLevel       = sourceLevel;
+    region.imageSubresource.mipLevel       = static_cast<uint32_t>(sourceLevel);
 
     commandBuffer->copyImageToBuffer(mImage.getImage(), mImage.getCurrentLayout(), copyBufferHandle,
                                      1, &region);
