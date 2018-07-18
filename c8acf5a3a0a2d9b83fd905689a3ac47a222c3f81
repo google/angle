@@ -1,0 +1,441 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "98d424eb_ce9ff03c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5544,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Do we have to make this check?  It makes sure we go through the same code paths when the program simply finishes the link immediately with LinkEventDone and asynchronously.",
+      "range": {
+        "startLine": 5544,
+        "startChar": 45,
+        "endLine": 5544,
+        "endChar": 83
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc96de86_1df9d98a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5544,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Can you refactor this into a new method on program? Maybe isActive or isInUse.\n\nIs it possible for us to make this check weaker? What about \u0027program is active AND program is already linked\u0027?  I think that this case would be very rare.",
+      "range": {
+        "startLine": 5544,
+        "startChar": 8,
+        "endLine": 5544,
+        "endChar": 41
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "354977a6_90bd224e",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "How about turning this into a function and returning something like...\n\n   return std::max(std::thread::hardware_concurrency(), 1) - 1;\n\nWhich has the effect of using all available threads except for the current one.",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 52
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd5533e9_5a6131c4",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "I believe this will leak if we allocate a new thread pool.",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 100,
+        "endChar": 26
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9834d842_d438a03c",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "I think this is a good spot for std::shared_ptr (and don\u0027t change the base class of WorkerThreadPool to ref counted) because we\u0027re only storing it by shared_ptr here and can pass it around by raw pointer later.",
+      "range": {
+        "startLine": 87,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 40
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee2360dd_d666f3ee",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "nit: for structs, we usually don\u0027t use the m prefix on variables.",
+      "range": {
+        "startLine": 604,
+        "startChar": 19,
+        "endLine": 604,
+        "endChar": 20
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3090f7db_5cd4e5ec",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "This can be retrieved from mContext.",
+      "range": {
+        "startLine": 607,
+        "startChar": 4,
+        "endLine": 607,
+        "endChar": 31
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b96b77a_64ceb5fc",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Let\u0027s remove this argument and just query it from the context.",
+      "range": {
+        "startLine": 502,
+        "startChar": 37,
+        "endLine": 502,
+        "endChar": 74
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c36ae871_dcc10168",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Because some of these functions that call resolveLink can be hot spots, we should try to inline some of the resolveLink function.  Can you split it like this:\n\n    // Waits until the linking tasks are done.\n    void resolveLink() const\n    {\n        if (mLinking)\n        {\n            const_cast\u003cProgram *\u003e(this)-\u003eresolveLinkImpl();\n        }\n    }\n\n    // Block until linking is finished and resolve it.  Can assert that mLinking is true.\n    void resolveLinkImpl();\n\nThis will keep the fast path inlined.",
+      "range": {
+        "startLine": 911,
+        "startChar": 0,
+        "endLine": 914,
+        "endChar": 83
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73dbbb44_e71e9d84",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Can replace this with mLinkingState !\u003d nullptr?",
+      "range": {
+        "startLine": 931,
+        "startChar": 4,
+        "endLine": 931,
+        "endChar": 18
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60a3f6f0_6c37cdb8",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "A thread pool shouldn\u0027t simply run the task on the current thread when the pool is at it\u0027s maximum thread count.  It should enqueue the task to be run once one of the running tasks is finished so that there are always mMaxThreads tasks running simultaneously.\n\nYou can use a semaphore (in c++ this can be done with a mutex and condion_variable) and have each task block until there are fewer than mMaxThreads active tasks before executing.\n\nI think this would also allow us to remove the mEvents list and not pass to the pool to the event constructor.",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 105,
+        "endChar": 99
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff66844d_84b6bf0a",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "const method",
+      "range": {
+        "startLine": 232,
+        "startChar": 26,
+        "endLine": 232,
+        "endChar": 27
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "355ef2ce_ef48a668",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "nit:make this private and call getMaxThreads",
+      "range": {
+        "startLine": 234,
+        "startChar": 2,
+        "endLine": 234,
+        "endChar": 11
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5c4b48e_8e4b0c06",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Can you store these as std::unique_ptr?",
+      "range": {
+        "startLine": 278,
+        "startChar": 14,
+        "endLine": 278,
+        "endChar": 34
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2b60fca_54a9d136",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "this can return std::unique_ptr\u003cLinkEvent\u003e",
+      "range": {
+        "startLine": 75,
+        "startChar": 12,
+        "endLine": 75,
+        "endChar": 23
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d92b9a4_c9cb57ee",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Let\u0027s query this from the context.",
+      "range": {
+        "startLine": 76,
+        "startChar": 28,
+        "endLine": 76,
+        "endChar": 63
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec53de03_82f26868",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1450,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Let\u0027s pass them in by unique_ptr",
+      "range": {
+        "startLine": 1448,
+        "startChar": 30,
+        "endLine": 1450,
+        "endChar": 82
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c3e21bc_2e3b03d7",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1501,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Let\u0027s refactor this a bit into a helper, something like:\n\n  bool checkTask(task, infoLog)\n  { \n      if (task-\u003egetInfoLog().empty()) { ... log it ... }\n      ... check  for error ...\n      return true;\n  }",
+      "range": {
+        "startLine": 1471,
+        "startChar": 8,
+        "endLine": 1501,
+        "endChar": 0
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05bd6a69_1fcdca57",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-18T19:07:18Z",
+      "side": 1,
+      "message": "Create these as unique_ptr",
+      "range": {
+        "startLine": 1562,
+        "startChar": 0,
+        "endLine": 1564,
+        "endChar": 70
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
