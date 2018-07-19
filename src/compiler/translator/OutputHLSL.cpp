@@ -453,12 +453,11 @@ void OutputHLSL::writeReferencedVaryings(TInfoSinkBase &out) const
     for (const auto &varying : mReferencedVaryings)
     {
         const TType &type           = varying.second->getType();
-        const ImmutableString &name = varying.second->name();
 
         // Program linking depends on this exact format
         out << "static " << InterpolationString(type.getQualifier()) << " " << TypeString(type)
-            << " " << Decorate(name) << ArrayString(type) << " = " << zeroInitializer(type)
-            << ";\n";
+            << " " << DecorateVariableIfNeeded(*varying.second) << ArrayString(type) << " = "
+            << zeroInitializer(type) << ";\n";
     }
 }
 
@@ -958,8 +957,8 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         else if (IsVarying(qualifier))
         {
             mReferencedVaryings[uniqueId.get()] = &variable;
-            out << Decorate(name);
-            if (name == "ViewID_OVR")
+            out << DecorateVariableIfNeeded(variable);
+            if (variable.symbolType() == SymbolType::AngleInternal && name == "ViewID_OVR")
             {
                 mUsesViewID = true;
             }

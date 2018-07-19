@@ -516,17 +516,17 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
 
     if (vertexBuiltins.glViewIDOVR.enabled)
     {
-        vertexStream << "    output.gl_ViewID_OVR = _ViewID_OVR;\n";
+        vertexStream << "    output.gl_ViewID_OVR = ViewID_OVR;\n";
     }
     if (programMetadata.hasANGLEMultiviewEnabled() && programMetadata.canSelectViewInVertexShader())
     {
         ASSERT(vertexBuiltins.glViewportIndex.enabled && vertexBuiltins.glLayer.enabled);
         vertexStream << "    if (multiviewSelectViewportIndex)\n"
                      << "    {\n"
-                     << "         output.gl_ViewportIndex = _ViewID_OVR;\n"
+                     << "         output.gl_ViewportIndex = ViewID_OVR;\n"
                      << "    } else {\n"
                      << "         output.gl_ViewportIndex = 0;\n"
-                     << "         output.gl_Layer = _ViewID_OVR;\n"
+                     << "         output.gl_Layer = ViewID_OVR;\n"
                      << "    }\n";
     }
 
@@ -694,7 +694,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
     if (fragmentShader->usesViewID())
     {
         ASSERT(pixelBuiltins.glViewIDOVR.enabled);
-        pixelStream << "    _ViewID_OVR = input.gl_ViewID_OVR;\n";
+        pixelStream << "    ViewID_OVR = input.gl_ViewID_OVR;\n";
     }
 
     if (pixelBuiltins.glFragCoord.enabled)

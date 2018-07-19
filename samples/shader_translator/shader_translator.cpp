@@ -282,6 +282,17 @@ int main(int argc, char *argv[])
             }
             if (compiler)
             {
+                switch (output)
+                {
+                    case SH_HLSL_3_0_OUTPUT:
+                    case SH_HLSL_4_1_OUTPUT:
+                    case SH_HLSL_4_0_FL9_3_OUTPUT:
+                        compileOptions &= ~SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER;
+                        break;
+                    default:
+                        break;
+                }
+
                 bool compiled = CompileFile(argv[0], compiler, compileOptions);
 
                 LogMsg("BEGIN", "COMPILER", numCompiles, "INFO LOG");

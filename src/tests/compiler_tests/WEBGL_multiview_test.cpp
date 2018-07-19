@@ -558,6 +558,9 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewIDAndInstanceIDHaveCorrectV
     EXPECT_TRUE(foundInAllGLSLCode("InstanceID = int((uint(gl_InstanceID) / 3u))"));
 
     EXPECT_TRUE(foundInHLSLCode("ViewID_OVR = (uint_ctor(gl_InstanceID) % 3)"));
+#if defined(ANGLE_ENABLE_HLSL)
+    EXPECT_FALSE(foundInHLSLCode("_ViewID_OVR = (uint_ctor(gl_InstanceID) % 3)"));
+#endif
     EXPECT_TRUE(foundInHLSLCode("InstanceID = int_ctor((uint_ctor(gl_InstanceID) / 3))"));
 }
 
