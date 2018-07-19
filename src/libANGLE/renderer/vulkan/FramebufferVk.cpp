@@ -127,10 +127,7 @@ FramebufferVk::FramebufferVk(RendererVk *renderer,
       mBlitPixelBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, kMinReadPixelsBufferSize)
 {
     mBlitPixelBuffer.init(1, renderer);
-    ASSERT(mBlitPixelBuffer.valid());
-
     mReadPixelBuffer.init(1, renderer);
-    ASSERT(mReadPixelBuffer.valid());
 }
 
 FramebufferVk::~FramebufferVk() = default;

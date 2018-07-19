@@ -37,8 +37,6 @@ class DynamicBuffer : angle::NonCopyable
     // Init is called after the buffer creation so that the alignment can be specified later.
     void init(size_t alignment, RendererVk *renderer);
 
-    bool valid();
-
     // This call will allocate a new region at the end of the buffer. It internally may trigger
     // a new buffer to be created (which is returned in 'newBufferAllocatedOut'. This param may
     // be nullptr.
@@ -70,6 +68,9 @@ class DynamicBuffer : angle::NonCopyable
     void setMinimumSizeForTesting(size_t minSize);
 
   private:
+    void unmap(VkDevice device);
+    void reset();
+
     VkBufferUsageFlags mUsage;
     size_t mMinSize;
     Buffer mBuffer;

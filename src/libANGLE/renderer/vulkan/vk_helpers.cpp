@@ -100,12 +100,6 @@ void DynamicBuffer::init(size_t alignment, RendererVk *renderer)
 
 DynamicBuffer::~DynamicBuffer()
 {
-    ASSERT(mAlignment == 0);
-}
-
-bool DynamicBuffer::valid()
-{
-    return mAlignment > 0;
 }
 
 angle::Result DynamicBuffer::allocate(Context *context,
@@ -115,8 +109,6 @@ angle::Result DynamicBuffer::allocate(Context *context,
                                       uint32_t *offsetOut,
                                       bool *newBufferAllocatedOut)
 {
-    ASSERT(valid());
-
     size_t sizeToAllocate = roundUp(sizeInBytes, mAlignment);
 
     angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextAllocationOffset;
@@ -127,8 +119,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
         if (mMappedMemory)
         {
             ANGLE_TRY(flush(context));
-            mMemory.unmap(context->getDevice());
-            mMappedMemory = nullptr;
+            unmap(context->getDevice());
         }
 
         mRetainedBuffers.emplace_back(std::move(mBuffer), std::move(mMemory));
@@ -213,9 +204,10 @@ angle::Result DynamicBuffer::invalidate(Context *context)
 
 void DynamicBuffer::release(RendererVk *renderer)
 {
+    unmap(renderer->getDevice());
+    reset();
     releaseRetainedBuffers(renderer);
 
-    mAlignment           = 0;
     Serial currentSerial = renderer->getCurrentQueueSerial();
     renderer->releaseObject(currentSerial, &mBuffer);
     renderer->releaseObject(currentSerial, &mMemory);
@@ -235,6 +227,9 @@ void DynamicBuffer::releaseRetainedBuffers(RendererVk *renderer)
 
 void DynamicBuffer::destroy(VkDevice device)
 {
+    unmap(device);
+    reset();
+
     for (BufferAndMemory &toFree : mRetainedBuffers)
     {
         toFree.buffer.destroy(device);
@@ -243,7 +238,6 @@ void DynamicBuffer::destroy(VkDevice device)
 
     mRetainedBuffers.clear();
 
-    mAlignment = 0;
     mBuffer.destroy(device);
     mMemory.destroy(device);
 }
@@ -260,6 +254,22 @@ void DynamicBuffer::setMinimumSizeForTesting(size_t minSize)
 
     // Forces a new allocation on the next allocate.
     mSize = 0;
+}
+
+void DynamicBuffer::unmap(VkDevice device)
+{
+    if (mMappedMemory)
+    {
+        mMemory.unmap(device);
+        mMappedMemory = nullptr;
+    }
+}
+
+void DynamicBuffer::reset()
+{
+    mSize                        = 0;
+    mNextAllocationOffset        = 0;
+    mLastFlushOrInvalidateOffset = 0;
 }
 
 // DynamicDescriptorPool implementation.

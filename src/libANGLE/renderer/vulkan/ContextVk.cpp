@@ -134,6 +134,10 @@ gl::Error ContextVk::initialize()
     ANGLE_TRY(mDynamicDescriptorPools[kDriverUniformsDescriptorSetIndex].init(
         this, driverUniformsPoolSize));
 
+    size_t minAlignment = static_cast<size_t>(
+        mRenderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
+    mDriverUniformsBuffer.init(minAlignment, mRenderer);
+
     mPipelineDesc.reset(new vk::PipelineDesc());
     mPipelineDesc->initDefaults();
 
@@ -888,13 +892,6 @@ const FeaturesVk &ContextVk::getFeatures() const
 
 angle::Result ContextVk::updateDriverUniforms(const gl::State &glState)
 {
-    if (!mDriverUniformsBuffer.valid())
-    {
-        size_t minAlignment = static_cast<size_t>(
-            mRenderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
-        mDriverUniformsBuffer.init(minAlignment, mRenderer);
-    }
-
     // Release any previously retained buffers.
     mDriverUniformsBuffer.releaseRetainedBuffers(mRenderer);
 
