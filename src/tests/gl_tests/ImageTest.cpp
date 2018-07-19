@@ -11,6 +11,19 @@
 
 namespace angle
 {
+namespace
+{
+constexpr char kOESExt[]           = "GL_OES_EGL_image";
+constexpr char kExternalExt[]      = "GL_OES_EGL_image_external";
+constexpr char kExternalESSL3Ext[] = "GL_OES_EGL_image_external_essl3";
+constexpr char kBaseExt[]          = "EGL_KHR_image_base";
+constexpr char k2DTextureExt[]     = "EGL_KHR_gl_texture_2D_image";
+constexpr char k3DTextureExt[]     = "EGL_KHR_gl_texture_3D_image";
+constexpr char kPixmapExt[]        = "EGL_KHR_image_pixmap";
+constexpr char kRenderbufferExt[]  = "EGL_KHR_gl_renderbuffer_image";
+constexpr char kCubemapExt[]       = "EGL_KHR_gl_texture_cubemap_image";
+}  // anonymous namespace
+
 class ImageTest : public ANGLETest
 {
   protected:
@@ -388,6 +401,42 @@ class ImageTest : public ANGLETest
         return reinterpret_cast<destType>(sourceSizeT);
     }
 
+    bool hasOESExt() const { return extensionEnabled(kOESExt); }
+
+    bool hasExternalExt() const { return extensionEnabled(kExternalExt); }
+
+    bool hasExternalESSL3Ext() const { return extensionEnabled(kExternalESSL3Ext); }
+
+    bool hasBaseExt() const
+    {
+        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kBaseExt);
+    }
+
+    bool has2DTextureExt() const
+    {
+        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), k2DTextureExt);
+    }
+
+    bool has3DTextureExt() const
+    {
+        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), k3DTextureExt);
+    }
+
+    bool hasPixmapExt() const
+    {
+        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kPixmapExt);
+    }
+
+    bool hasRenderbufferExt() const
+    {
+        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kRenderbufferExt);
+    }
+
+    bool hasCubemapExt() const
+    {
+        return eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kCubemapExt);
+    }
+
     GLuint mTextureProgram;
     GLint mTextureUniformLocation;
 
@@ -405,14 +454,58 @@ class ImageTestES3 : public ImageTest
 {
 };
 
+// Tests that the extension is exposed on the platforms we think it should be. Please modify this as
+// you change extension availability.
+TEST_P(ImageTest, ANGLEExtensionAvailability)
+{
+    if (IsD3D11() || IsD3D9())
+    {
+        EXPECT_TRUE(hasOESExt());
+        EXPECT_TRUE(hasExternalExt());
+        EXPECT_TRUE(hasBaseExt());
+        EXPECT_TRUE(has2DTextureExt());
+        EXPECT_TRUE(hasRenderbufferExt());
+
+        if (IsD3D11())
+        {
+            EXPECT_TRUE(hasCubemapExt());
+
+            if (getClientMajorVersion() >= 3)
+            {
+                EXPECT_TRUE(hasExternalESSL3Ext());
+            }
+            else
+            {
+                EXPECT_FALSE(hasExternalESSL3Ext());
+            }
+        }
+        else
+        {
+            EXPECT_FALSE(hasCubemapExt());
+            EXPECT_FALSE(hasExternalESSL3Ext());
+        }
+    }
+    else
+    {
+        EXPECT_FALSE(hasOESExt());
+        EXPECT_FALSE(hasExternalExt());
+        EXPECT_FALSE(hasExternalESSL3Ext());
+        EXPECT_FALSE(hasBaseExt());
+        EXPECT_FALSE(has2DTextureExt());
+        EXPECT_FALSE(has3DTextureExt());
+        EXPECT_FALSE(hasRenderbufferExt());
+    }
+
+    // These extensions are not yet available on any platform.
+    EXPECT_FALSE(hasPixmapExt());
+    EXPECT_FALSE(has3DTextureExt());
+}
+
 // Check validation from the EGL_KHR_image_base extension
 TEST_P(ImageTest, ValidationImageBase)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLuint glTexture2D;
     glGenTextures(1, &glTexture2D);
@@ -529,28 +622,18 @@ TEST_P(ImageTest, ValidationImageBase)
     EXPECT_GL_NO_ERROR();
 }
 
-// Check validation from the EGL_KHR_gl_texture_2D_image extension
-TEST_P(ImageTest, ValidationImagePixmap)
-{
-    // This extension is not implemented anywhere yet.  This makes sure that it is tested once it is
-    // added.
-    EGLWindow *window = getEGLWindow();
-    EXPECT_FALSE(eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_pixmap"));
-}
-
 // Check validation from the EGL_KHR_gl_texture_2D_image, EGL_KHR_gl_texture_cubemap_image,
 // EGL_KHR_gl_texture_3D_image and EGL_KHR_gl_renderbuffer_image extensions
 TEST_P(ImageTest, ValidationGLImage)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("OES_EGL_image") ||
-                       !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt());
 
     EGLDisplay display = window->getDisplay();
     EGLContext context = window->getContext();
     EGLImageKHR image  = EGL_NO_IMAGE_KHR;
 
-    if (eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
+    if (has2DTextureExt())
     {
         // If <target> is EGL_GL_TEXTURE_2D_KHR, EGL_GL_TEXTURE_CUBE_MAP_*_KHR or
         // EGL_GL_TEXTURE_3D_KHR and <buffer> is not the name of a texture object of type <target>,
@@ -634,7 +717,7 @@ TEST_P(ImageTest, ValidationGLImage)
         EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
     }
 
-    if (eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"))
+    if (hasCubemapExt())
     {
         // If EGL_GL_TEXTURE_LEVEL_KHR is 0, <target> is EGL_GL_TEXTURE_CUBE_MAP_*_KHR, <buffer> is
         // not the name of a complete GL texture object, and one or more faces do not have mipmap
@@ -682,8 +765,7 @@ TEST_P(ImageTest, ValidationGLImage)
         EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
     }
 
-    if (eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image") &&
-        getClientMajorVersion() >= 3)
+    if (has3DTextureExt() && getClientMajorVersion() >= 3)
     {
         // If <target> is EGL_GL_TEXTURE_3D_KHR, and the value specified in <attr_list> for
         // EGL_GL_TEXTURE_ZOFFSET_KHR exceeds the depth of the specified mipmap level - of - detail
@@ -712,7 +794,7 @@ TEST_P(ImageTest, ValidationGLImage)
     }
     else
     {
-        if (eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
+        if (has2DTextureExt())
         {
             GLuint texture2D;
             glGenTextures(1, &texture2D);
@@ -748,7 +830,7 @@ TEST_P(ImageTest, ValidationGLImage)
         }
     }
 
-    if (eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"))
+    if (hasRenderbufferExt())
     {
         // If <target> is EGL_GL_RENDERBUFFER_KHR and <buffer> is not the name of a renderbuffer
         // object, or if <buffer> is the name of a multisampled renderbuffer object, the error
@@ -792,11 +874,7 @@ TEST_P(ImageTest, ValidationGLImage)
 // Check validation from the GL_OES_EGL_image extension
 TEST_P(ImageTest, ValidationGLEGLImage)
 {
-    EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -835,7 +913,7 @@ TEST_P(ImageTest, ValidationGLEGLImage)
 
     // Clean up
     glDeleteTextures(1, &source);
-    eglDestroyImageKHR(window->getDisplay(), image);
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
     glDeleteTextures(1, &texture);
     glDeleteRenderbuffers(1, &renderbuffer);
 }
@@ -843,7 +921,7 @@ TEST_P(ImageTest, ValidationGLEGLImage)
 // Check validation from the GL_OES_EGL_image_external extension
 TEST_P(ImageTest, ValidationGLEGLImageExternal)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_EGL_image_external"));
+    ANGLE_SKIP_TEST_IF(!hasExternalExt());
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -921,7 +999,7 @@ TEST_P(ImageTest, ValidationGLEGLImageExternal)
 // Check validation from the GL_OES_EGL_image_external_essl3 extension
 TEST_P(ImageTest, ValidationGLEGLImageExternalESSL3)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_EGL_image_external_essl3"));
+    ANGLE_SKIP_TEST_IF(!hasExternalESSL3Ext());
 
     // Make sure this extension is not exposed without ES3.
     ASSERT_GE(getClientMajorVersion(), 3);
@@ -946,10 +1024,7 @@ TEST_P(ImageTest, ValidationGLEGLImageExternalESSL3)
 TEST_P(ImageTest, Source2DTarget2D)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -974,10 +1049,7 @@ TEST_P(ImageTest, Source2DTarget2D)
 TEST_P(ImageTest, Source2DTargetRenderbuffer)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1002,10 +1074,7 @@ TEST_P(ImageTest, Source2DTargetRenderbuffer)
 TEST_P(ImageTest, Source2DTargetExternal)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasExternalExt());
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1030,10 +1099,8 @@ TEST_P(ImageTest, Source2DTargetExternal)
 TEST_P(ImageTestES3, Source2DTargetExternalESSL3)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() ||
+                       !hasExternalESSL3Ext());
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1058,10 +1125,7 @@ TEST_P(ImageTestES3, Source2DTargetExternalESSL3)
 TEST_P(ImageTest, SourceCubeTarget2D)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasCubemapExt());
 
     GLubyte data[24] = {
         255, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255,
@@ -1094,10 +1158,7 @@ TEST_P(ImageTest, SourceCubeTarget2D)
 TEST_P(ImageTest, SourceCubeTargetRenderbuffer)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasCubemapExt());
 
     GLubyte data[24] = {
         255, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255,
@@ -1131,10 +1192,7 @@ TEST_P(ImageTest, SourceCubeTargetRenderbuffer)
 TEST_P(ImageTest, SourceCubeTargetExternal)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasCubemapExt() || !hasExternalExt());
 
     GLubyte data[24] = {
         255, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255,
@@ -1168,10 +1226,7 @@ TEST_P(ImageTest, SourceCubeTargetExternal)
 TEST_P(ImageTestES3, SourceCubeTargetExternalESSL3)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_cubemap_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalESSL3Ext() || !hasBaseExt() || !hasCubemapExt());
 
     GLubyte data[24] = {
         255, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255,
@@ -1204,10 +1259,7 @@ TEST_P(ImageTestES3, SourceCubeTargetExternalESSL3)
 TEST_P(ImageTest, Source3DTargetTexture)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has3DTextureExt());
 
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
 
@@ -1241,10 +1293,7 @@ TEST_P(ImageTest, Source3DTargetTexture)
 TEST_P(ImageTest, Source3DTargetRenderbuffer)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has3DTextureExt());
 
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
 
@@ -1279,10 +1328,7 @@ TEST_P(ImageTest, Source3DTargetRenderbuffer)
 TEST_P(ImageTest, Source3DTargetExternal)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalExt() || !hasBaseExt() || !has3DTextureExt());
 
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
 
@@ -1317,10 +1363,8 @@ TEST_P(ImageTest, Source3DTargetExternal)
 TEST_P(ImageTestES3, Source3DTargetExternalESSL3)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_3D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalESSL3Ext() || !hasBaseExt() ||
+                       !has3DTextureExt());
 
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_texture_3D"));
 
@@ -1354,10 +1398,7 @@ TEST_P(ImageTestES3, Source3DTargetExternalESSL3)
 TEST_P(ImageTest, SourceRenderbufferTargetTexture)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasRenderbufferExt());
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1383,10 +1424,7 @@ TEST_P(ImageTest, SourceRenderbufferTargetTexture)
 TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalExt() || !hasBaseExt() || !hasRenderbufferExt());
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1412,10 +1450,8 @@ TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal)
 TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") || !extensionEnabled("OES_EGL_image_external_essl3") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasExternalESSL3Ext() || !hasBaseExt() ||
+                       !hasRenderbufferExt());
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1440,10 +1476,7 @@ TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3)
 TEST_P(ImageTest, SourceRenderbufferTargetRenderbuffer)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_renderbuffer_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasRenderbufferExt());
 
     GLubyte data[4] = {255, 0, 255, 255};
 
@@ -1471,10 +1504,7 @@ TEST_P(ImageTest, SourceRenderbufferTargetRenderbuffer)
 TEST_P(ImageTest, Deletion)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLubyte originalData[4] = {255, 0, 255, 255};
     GLubyte updateData[4]   = {0, 255, 0, 255};
@@ -1527,10 +1557,7 @@ TEST_P(ImageTest, Deletion)
 TEST_P(ImageTest, MipLevels)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     const size_t mipLevels   = 3;
     const size_t textureSize = 4;
@@ -1595,10 +1622,7 @@ TEST_P(ImageTest, MipLevels)
 TEST_P(ImageTest, Respecification)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLubyte originalData[4] = {255, 0, 255, 255};
     GLubyte updateData[4]   = {0, 255, 0, 255};
@@ -1633,10 +1657,7 @@ TEST_P(ImageTest, Respecification)
 TEST_P(ImageTest, RespecificationWithFBO)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLuint program = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     ASSERT_NE(0u, program);
@@ -1685,10 +1706,7 @@ TEST_P(ImageTest, RespecificationWithFBO)
 TEST_P(ImageTest, RespecificationOfOtherLevel)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLubyte originalData[2 * 2 * 4] = {
         255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255,
@@ -1738,10 +1756,7 @@ TEST_P(ImageTest, RespecificationOfOtherLevel)
 TEST_P(ImageTest, UpdatedData)
 {
     EGLWindow *window = getEGLWindow();
-    ANGLE_SKIP_TEST_IF(
-        !extensionEnabled("OES_EGL_image") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
-        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
     GLubyte originalData[4] = {255, 0, 255, 255};
     GLubyte updateData[4]   = {0, 255, 0, 255};
