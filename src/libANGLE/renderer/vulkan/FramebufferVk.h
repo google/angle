@@ -112,17 +112,29 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                   const gl::FramebufferState &state,
                   WindowSurfaceVk *backbuffer);
 
-    void blitUsingCopy(vk::CommandBuffer *commandBuffer,
-                       const gl::Rectangle &readArea,
-                       const gl::Rectangle &destArea,
-                       RenderTargetVk *readRenderTarget,
-                       RenderTargetVk *drawRenderTarget,
-                       const gl::Rectangle *scissor,
-                       bool blitDepthBuffer,
-                       bool blitStencilBuffer);
+    // The 'in' rectangles must be clipped to the scissor and FBO. The clipping is done in 'blit'.
+    void blitWithCommand(vk::CommandBuffer *commandBuffer,
+                         const gl::Rectangle &readRectIn,
+                         const gl::Rectangle &drawRectIn,
+                         RenderTargetVk *readRenderTarget,
+                         RenderTargetVk *drawRenderTarget,
+                         GLenum filter,
+                         bool colorBlit,
+                         bool depthBlit,
+                         bool stencilBlit,
+                         bool flipSource,
+                         bool flipDest);
+
+    // Note that 'copyArea' must be clipped to the scissor and FBO. The clipping is done in 'blit'.
+    void blitWithCopy(vk::CommandBuffer *commandBuffer,
+                      const gl::Rectangle &copyArea,
+                      RenderTargetVk *readRenderTarget,
+                      RenderTargetVk *drawRenderTarget,
+                      bool blitDepthBuffer,
+                      bool blitStencilBuffer);
+
     angle::Result blitWithReadback(ContextVk *contextVk,
-                                   const gl::Rectangle &sourceArea,
-                                   const gl::Rectangle &destArea,
+                                   const gl::Rectangle &copyArea,
                                    bool blitDepthBuffer,
                                    bool blitStencilBuffer,
                                    vk::CommandBuffer *commandBuffer,
@@ -138,19 +150,6 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     angle::Result clearWithDraw(ContextVk *contextVk, VkColorComponentFlags colorMaskFlags);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
 
-    void blitImpl(vk::CommandBuffer *commandBuffer,
-                  const gl::Rectangle &readRectIn,
-                  const gl::Rectangle &drawRectIn,
-                  RenderTargetVk *readRenderTarget,
-                  RenderTargetVk *drawRenderTarget,
-                  GLenum filter,
-                  const gl::Rectangle *scissor,
-                  bool colorBlit,
-                  bool depthBlit,
-                  bool stencilBlit,
-                  bool flipSource,
-                  bool flipDest);
-
     WindowSurfaceVk *mBackbuffer;
 
     Optional<vk::RenderPassDesc> mRenderPassDesc;
@@ -162,7 +161,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     // if the masked out channel is present in any of the attachments.
     VkColorComponentFlags mActiveColorComponents;
     gl::DrawBufferMask mActiveColorComponentMasksForClear[4];
-    vk::DynamicBuffer mReadPixelsBuffer;
+    vk::DynamicBuffer mReadPixelBuffer;
     vk::DynamicBuffer mBlitPixelBuffer;
 
     // When we draw to the framebuffer, and the real format has an alpha channel but the format of

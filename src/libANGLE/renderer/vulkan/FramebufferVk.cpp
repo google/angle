@@ -40,6 +40,15 @@ const gl::InternalFormat &GetReadAttachmentInfo(const gl::Context *context,
     return gl::GetSizedInternalFormatInfo(implFormat);
 }
 
+bool ClipToRenderTarget(const gl::Rectangle &area,
+                        RenderTargetVk *renderTarget,
+                        gl::Rectangle *rectOut)
+{
+    const gl::Extents &renderTargetExtents = renderTarget->getImageExtents();
+    gl::Rectangle renderTargetRect(0, 0, renderTargetExtents.width, renderTargetExtents.height);
+    return ClipRectangle(area, renderTargetRect, rectOut);
+}
+
 bool HasSrcAndDstBlitProperties(const VkPhysicalDevice &physicalDevice,
                                 RenderTargetVk *srcRenderTarget,
                                 RenderTargetVk *dstRenderTarget)
@@ -80,14 +89,14 @@ FramebufferVk::FramebufferVk(RendererVk *renderer,
     : FramebufferImpl(state),
       mBackbuffer(backbuffer),
       mActiveColorComponents(0),
-      mReadPixelsBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT, kMinReadPixelsBufferSize),
+      mReadPixelBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT, kMinReadPixelsBufferSize),
       mBlitPixelBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, kMinReadPixelsBufferSize)
 {
     mBlitPixelBuffer.init(1, renderer);
     ASSERT(mBlitPixelBuffer.valid());
 
-    mReadPixelsBuffer.init(1, renderer);
-    ASSERT(mReadPixelsBuffer.valid());
+    mReadPixelBuffer.init(1, renderer);
+    ASSERT(mReadPixelBuffer.valid());
 }
 
 FramebufferVk::~FramebufferVk() = default;
@@ -98,7 +107,7 @@ void FramebufferVk::destroy(const gl::Context *context)
     RendererVk *renderer = contextVk->getRenderer();
     renderer->releaseObject(getStoredQueueSerial(), &mFramebuffer);
 
-    mReadPixelsBuffer.destroy(contextVk->getDevice());
+    mReadPixelBuffer.destroy(contextVk->getDevice());
     mBlitPixelBuffer.destroy(contextVk->getDevice());
 }
 
@@ -346,7 +355,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     ANGLE_TRY(readPixelsImpl(contextVk, flippedArea, params, VK_IMAGE_ASPECT_COLOR_BIT,
                              getColorReadRenderTarget(),
                              static_cast<uint8_t *>(pixels) + outputSkipBytes));
-    mReadPixelsBuffer.releaseRetainedBuffers(renderer);
+    mReadPixelBuffer.releaseRetainedBuffers(renderer);
     return gl::NoError();
 }
 
@@ -355,53 +364,13 @@ RenderTargetVk *FramebufferVk::getDepthStencilRenderTarget() const
     return mRenderTargetCache.getDepthStencil();
 }
 
-void FramebufferVk::blitUsingCopy(vk::CommandBuffer *commandBuffer,
-                                  const gl::Rectangle &readArea,
-                                  const gl::Rectangle &destArea,
-                                  RenderTargetVk *readRenderTarget,
-                                  RenderTargetVk *drawRenderTarget,
-                                  const gl::Rectangle *scissor,
-                                  bool blitDepthBuffer,
-                                  bool blitStencilBuffer)
+void FramebufferVk::blitWithCopy(vk::CommandBuffer *commandBuffer,
+                                 const gl::Rectangle &copyArea,
+                                 RenderTargetVk *readRenderTarget,
+                                 RenderTargetVk *drawRenderTarget,
+                                 bool blitDepthBuffer,
+                                 bool blitStencilBuffer)
 {
-    gl::Rectangle scissoredDrawRect = destArea;
-    gl::Rectangle scissoredReadRect = readArea;
-
-    if (scissor)
-    {
-        if (!ClipRectangle(destArea, *scissor, &scissoredDrawRect))
-        {
-            return;
-        }
-
-        if (!ClipRectangle(readArea, *scissor, &scissoredReadRect))
-        {
-            return;
-        }
-    }
-
-    const gl::Extents sourceFrameBufferExtents = readRenderTarget->getImageExtents();
-    const gl::Extents drawFrameBufferExtents   = drawRenderTarget->getImageExtents();
-
-    // After cropping for the scissor, we also want to crop for the size of the buffers.
-    gl::Rectangle readFrameBufferBounds(0, 0, sourceFrameBufferExtents.width,
-                                        sourceFrameBufferExtents.height);
-    gl::Rectangle drawFrameBufferBounds(0, 0, drawFrameBufferExtents.width,
-                                        drawFrameBufferExtents.height);
-    if (!ClipRectangle(scissoredReadRect, readFrameBufferBounds, &scissoredReadRect))
-    {
-        return;
-    }
-
-    if (!ClipRectangle(scissoredDrawRect, drawFrameBufferBounds, &scissoredDrawRect))
-    {
-        return;
-    }
-
-    ASSERT(readFrameBufferBounds == drawFrameBufferBounds);
-    ASSERT(scissoredReadRect == readFrameBufferBounds);
-    ASSERT(scissoredDrawRect == drawFrameBufferBounds);
-
     VkFlags aspectFlags =
         vk::GetDepthStencilAspectFlags(readRenderTarget->getImageFormat().textureFormat());
     vk::ImageHelper *readImage = readRenderTarget->getImageForRead(
@@ -416,8 +385,8 @@ void FramebufferVk::blitUsingCopy(vk::CommandBuffer *commandBuffer,
     VkImageAspectFlags aspectMask =
         vk::GetDepthStencilAspectFlagsForCopy(blitDepthBuffer, blitStencilBuffer);
     vk::ImageHelper::Copy(readImage, writeImage, gl::Offset(), gl::Offset(),
-                          gl::Extents(scissoredDrawRect.width, scissoredDrawRect.height, 1),
-                          aspectMask, commandBuffer);
+                          gl::Extents(copyArea.width, copyArea.height, 1), aspectMask,
+                          commandBuffer);
 }
 
 RenderTargetVk *FramebufferVk::getColorReadRenderTarget() const
@@ -428,8 +397,7 @@ RenderTargetVk *FramebufferVk::getColorReadRenderTarget() const
 }
 
 angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
-                                              const gl::Rectangle &sourceArea,
-                                              const gl::Rectangle &destArea,
+                                              const gl::Rectangle &copyArea,
                                               bool blitDepthBuffer,
                                               bool blitStencilBuffer,
                                               vk::CommandBuffer *commandBuffer,
@@ -451,11 +419,11 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
         // because in Vulkan, if we copy the stencil out of a any texture, the stencil
         // will be tightly packed in an S8 buffer (as specified in the spec here
         // https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkBufferImageCopy.html)
-        outputPitch = destArea.width * (drawFormat.stencilBits / 8);
+        outputPitch = copyArea.width * (drawFormat.stencilBits / 8);
     }
     else
     {
-        outputPitch = destArea.width * drawFormat.pixelBytes;
+        outputPitch = copyArea.width * drawFormat.pixelBytes;
     }
 
     PackPixelsParams packPixelsParams;
@@ -463,14 +431,14 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
     packPixelsParams.pack.reverseRowOrder = true;
     packPixelsParams.type                 = sizedInternalDrawFormat.type;
     packPixelsParams.format               = sizedInternalDrawFormat.format;
-    packPixelsParams.area.height          = destArea.height;
-    packPixelsParams.area.width           = destArea.width;
-    packPixelsParams.area.x               = destArea.x;
-    packPixelsParams.area.y               = destArea.y;
+    packPixelsParams.area.height          = copyArea.height;
+    packPixelsParams.area.width           = copyArea.width;
+    packPixelsParams.area.x               = copyArea.x;
+    packPixelsParams.area.y               = copyArea.y;
     packPixelsParams.outputPitch          = outputPitch;
 
     GLuint pixelBytes    = imageForRead->getFormat().angleFormat().pixelBytes;
-    GLuint sizeToRequest = sourceArea.width * sourceArea.height * pixelBytes;
+    GLuint sizeToRequest = copyArea.width * copyArea.height * pixelBytes;
 
     uint8_t *copyPtr   = nullptr;
     VkBuffer handleOut = VK_NULL_HANDLE;
@@ -481,7 +449,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
 
     ANGLE_TRY(mBlitPixelBuffer.allocate(contextVk, sizeToRequest, &copyPtr, &handleOut, &offsetOut,
                                         nullptr));
-    ANGLE_TRY(readPixelsImpl(contextVk, sourceArea, packPixelsParams, copyFlags, readRenderTarget,
+    ANGLE_TRY(readPixelsImpl(contextVk, copyArea, packPixelsParams, copyFlags, readRenderTarget,
                              copyPtr));
     ANGLE_TRY(mBlitPixelBuffer.flush(contextVk));
 
@@ -499,17 +467,17 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
 
     VkBufferImageCopy region;
     region.bufferOffset                    = offsetOut;
-    region.bufferImageHeight               = sourceArea.height;
-    region.bufferRowLength                 = sourceArea.width;
-    region.imageExtent.width               = destArea.width;
-    region.imageExtent.height              = destArea.height;
+    region.bufferImageHeight               = copyArea.height;
+    region.bufferRowLength                 = copyArea.width;
+    region.imageExtent.width               = copyArea.width;
+    region.imageExtent.height              = copyArea.height;
     region.imageExtent.depth               = 1;
     region.imageSubresource.mipLevel       = 0;
     region.imageSubresource.aspectMask     = copyFlags;
     region.imageSubresource.baseArrayLayer = 0;
     region.imageSubresource.layerCount     = 1;
-    region.imageOffset.x                   = destArea.x;
-    region.imageOffset.y                   = destArea.y;
+    region.imageOffset.x                   = copyArea.x;
+    region.imageOffset.y                   = copyArea.y;
     region.imageOffset.z                   = 0;
 
     commandBuffer->copyBufferToImage(handleOut, imageForWrite->getImage(),
@@ -530,7 +498,6 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
 
     const gl::State &glState                 = context->getGLState();
     const gl::Framebuffer *sourceFramebuffer = glState.getReadFramebuffer();
-    const gl::Rectangle *scissor = glState.isScissorTestEnabled() ? &glState.getScissor() : nullptr;
     bool blitColorBuffer         = (mask & GL_COLOR_BUFFER_BIT) != 0;
     bool blitDepthBuffer         = (mask & GL_DEPTH_BUFFER_BIT) != 0;
     bool blitStencilBuffer       = (mask & GL_STENCIL_BUFFER_BIT) != 0;
@@ -541,9 +508,34 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
     bool flipSource                    = contextVk->isViewportFlipEnabledForReadFBO();
     bool flipDest                      = contextVk->isViewportFlipEnabledForDrawFBO();
 
+    gl::Rectangle readRect = sourceArea;
+    gl::Rectangle drawRect = destArea;
+
+    if (glState.isScissorTestEnabled())
+    {
+        const gl::Rectangle scissorRect = glState.getScissor();
+        if (!ClipRectangle(sourceArea, scissorRect, &readRect))
+        {
+            return gl::NoError();
+        }
+
+        if (!ClipRectangle(destArea, scissorRect, &drawRect))
+        {
+            return gl::NoError();
+        }
+    }
+
+    // After cropping for the scissor, we also want to crop for the size of the buffers.
+
     if (blitColorBuffer)
     {
         RenderTargetVk *readRenderTarget = sourceFramebufferVk->getColorReadRenderTarget();
+
+        gl::Rectangle readRenderTargetRect;
+        if (!ClipToRenderTarget(readRect, readRenderTarget, &readRenderTargetRect))
+        {
+            return gl::NoError();
+        }
 
         for (size_t colorAttachment : mState.getEnabledDrawBuffers())
         {
@@ -551,8 +543,16 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
             ASSERT(drawRenderTarget);
             ASSERT(HasSrcAndDstBlitProperties(renderer->getPhysicalDevice(), readRenderTarget,
                                               drawRenderTarget));
-            blitImpl(commandBuffer, sourceArea, destArea, readRenderTarget, drawRenderTarget,
-                     filter, scissor, true, false, false, flipSource, flipDest);
+
+            gl::Rectangle drawRenderTargetRect;
+            if (!ClipToRenderTarget(drawRect, drawRenderTarget, &drawRenderTargetRect))
+            {
+                return gl::NoError();
+            }
+
+            blitWithCommand(commandBuffer, readRenderTargetRect, drawRenderTargetRect,
+                            readRenderTarget, drawRenderTarget, filter, true, false, false,
+                            flipSource, flipDest);
         }
     }
 
@@ -561,28 +561,43 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
         RenderTargetVk *readRenderTarget = sourceFramebufferVk->getDepthStencilRenderTarget();
         ASSERT(readRenderTarget);
 
+        gl::Rectangle readRenderTargetRect;
+        if (!ClipToRenderTarget(readRect, readRenderTarget, &readRenderTargetRect))
+        {
+            return gl::NoError();
+        }
+
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getDepthStencil();
+        ASSERT(drawRenderTarget);
+
+        gl::Rectangle drawRenderTargetRect;
+        if (!ClipToRenderTarget(drawRect, drawRenderTarget, &drawRenderTargetRect))
+        {
+            return gl::NoError();
+        }
+
+        ASSERT(readRenderTargetRect == drawRenderTargetRect);
+        ASSERT(filter == GL_NEAREST);
 
         if (HasSrcAndDstBlitProperties(renderer->getPhysicalDevice(), readRenderTarget,
                                        drawRenderTarget))
         {
-            blitImpl(commandBuffer, sourceArea, destArea, readRenderTarget, drawRenderTarget,
-                     filter, scissor, false, blitDepthBuffer, blitStencilBuffer, flipSource,
-                     flipDest);
+            blitWithCommand(commandBuffer, readRenderTargetRect, drawRenderTargetRect,
+                            readRenderTarget, drawRenderTarget, filter, false, blitDepthBuffer,
+                            blitStencilBuffer, flipSource, flipDest);
         }
         else
         {
-            ASSERT(filter == GL_NEAREST);
             if (flipSource || flipDest)
             {
-                ANGLE_TRY(blitWithReadback(contextVk, sourceArea, destArea, blitDepthBuffer,
+                ANGLE_TRY(blitWithReadback(contextVk, readRenderTargetRect, blitDepthBuffer,
                                            blitStencilBuffer, commandBuffer, readRenderTarget,
                                            drawRenderTarget));
             }
             else
             {
-                blitUsingCopy(commandBuffer, sourceArea, destArea, readRenderTarget,
-                              drawRenderTarget, scissor, blitDepthBuffer, blitStencilBuffer);
+                blitWithCopy(commandBuffer, readRenderTargetRect, readRenderTarget,
+                             drawRenderTarget, blitDepthBuffer, blitStencilBuffer);
             }
         }
     }
@@ -590,49 +605,22 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
     return gl::NoError();
 }
 
-void FramebufferVk::blitImpl(vk::CommandBuffer *commandBuffer,
-                             const gl::Rectangle &readRectIn,
-                             const gl::Rectangle &drawRectIn,
-                             RenderTargetVk *readRenderTarget,
-                             RenderTargetVk *drawRenderTarget,
-                             GLenum filter,
-                             const gl::Rectangle *scissor,
-                             bool colorBlit,
-                             bool depthBlit,
-                             bool stencilBlit,
-                             bool flipSource,
-                             bool flipDest)
+void FramebufferVk::blitWithCommand(vk::CommandBuffer *commandBuffer,
+                                    const gl::Rectangle &readRectIn,
+                                    const gl::Rectangle &drawRectIn,
+                                    RenderTargetVk *readRenderTarget,
+                                    RenderTargetVk *drawRenderTarget,
+                                    GLenum filter,
+                                    bool colorBlit,
+                                    bool depthBlit,
+                                    bool stencilBlit,
+                                    bool flipSource,
+                                    bool flipDest)
 {
     // Since blitRenderbufferRect is called for each render buffer that needs to be blitted,
     // it should never be the case that both color and depth/stencil need to be blitted at
     // at the same time.
     ASSERT(colorBlit != (depthBlit || stencilBlit));
-
-    gl::Rectangle scissoredDrawRect = drawRectIn;
-    gl::Rectangle scissoredReadRect = readRectIn;
-
-    if (scissor)
-    {
-        if (!ClipRectangle(drawRectIn, *scissor, &scissoredDrawRect))
-        {
-            return;
-        }
-
-        if (!ClipRectangle(readRectIn, *scissor, &scissoredReadRect))
-        {
-            return;
-        }
-    }
-
-    const gl::Extents sourceFrameBufferExtents = readRenderTarget->getImageExtents();
-
-    // After cropping for the scissor, we also want to crop for the size of the buffers.
-    gl::Rectangle readFrameBufferBounds(0, 0, sourceFrameBufferExtents.width,
-                                        sourceFrameBufferExtents.height);
-    if (!ClipRectangle(scissoredReadRect, readFrameBufferBounds, &scissoredReadRect))
-    {
-        return;
-    }
 
     const vk::Format &readImageFormat = readRenderTarget->getImageFormat();
     VkImageAspectFlags aspectMask =
@@ -641,17 +629,17 @@ void FramebufferVk::blitImpl(vk::CommandBuffer *commandBuffer,
     vk::ImageHelper *srcImage = readRenderTarget->getImageForRead(
         this, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, commandBuffer);
 
+    const gl::Extents sourceFrameBufferExtents = readRenderTarget->getImageExtents();
+    gl::Rectangle readRect                     = readRectIn;
+
     if (flipSource)
     {
-        scissoredReadRect.y =
-            sourceFrameBufferExtents.height - scissoredReadRect.y - scissoredReadRect.height;
+        readRect.y = sourceFrameBufferExtents.height - readRect.y - readRect.height;
     }
 
     VkImageBlit blit                   = {};
-    blit.srcOffsets[0]                 = {scissoredReadRect.x0(),
-                          flipSource ? scissoredReadRect.y1() : scissoredReadRect.y0(), 0};
-    blit.srcOffsets[1]                 = {scissoredReadRect.x1(),
-                          flipSource ? scissoredReadRect.y0() : scissoredReadRect.y1(), 1};
+    blit.srcOffsets[0] = {readRect.x0(), flipSource ? readRect.y1() : readRect.y0(), 0};
+    blit.srcOffsets[1] = {readRect.x1(), flipSource ? readRect.y0() : readRect.y1(), 1};
     blit.srcSubresource.aspectMask     = aspectMask;
     blit.srcSubresource.mipLevel       = 0;
     blit.srcSubresource.baseArrayLayer = 0;
@@ -662,23 +650,15 @@ void FramebufferVk::blitImpl(vk::CommandBuffer *commandBuffer,
     blit.dstSubresource.layerCount     = 1;
 
     const gl::Extents &drawFrameBufferExtents = drawRenderTarget->getImageExtents();
-    gl::Rectangle drawFrameBufferBounds(0, 0, drawFrameBufferExtents.width,
-                                        drawFrameBufferExtents.height);
-    if (!ClipRectangle(scissoredDrawRect, drawFrameBufferBounds, &scissoredDrawRect))
-    {
-        return;
-    }
+    gl::Rectangle drawRect                    = drawRectIn;
 
     if (flipDest)
     {
-        scissoredDrawRect.y =
-            drawFrameBufferBounds.height - scissoredDrawRect.y - scissoredDrawRect.height;
+        drawRect.y = drawFrameBufferExtents.height - drawRect.y - drawRect.height;
     }
 
-    blit.dstOffsets[0] = {scissoredDrawRect.x0(),
-                          flipDest ? scissoredDrawRect.y1() : scissoredDrawRect.y0(), 0};
-    blit.dstOffsets[1] = {scissoredDrawRect.x1(),
-                          flipDest ? scissoredDrawRect.y0() : scissoredDrawRect.y1(), 1};
+    blit.dstOffsets[0] = {drawRect.x0(), flipDest ? drawRect.y1() : drawRect.y0(), 0};
+    blit.dstOffsets[1] = {drawRect.x1(), flipDest ? drawRect.y0() : drawRect.y1(), 1};
 
     vk::ImageHelper *dstImage = drawRenderTarget->getImageForWrite(this);
 
@@ -1174,8 +1154,8 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     uint32_t stagingOffset           = 0;
     size_t allocationSize            = area.width * pixelBytes * area.height;
 
-    ANGLE_TRY(mReadPixelsBuffer.allocate(contextVk, allocationSize, &readPixelBuffer, &bufferHandle,
-                                         &stagingOffset, &newBufferAllocated));
+    ANGLE_TRY(mReadPixelBuffer.allocate(contextVk, allocationSize, &readPixelBuffer, &bufferHandle,
+                                        &stagingOffset, &newBufferAllocated));
 
     VkBufferImageCopy region;
     region.bufferImageHeight               = area.height;
@@ -1201,7 +1181,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
 
     // The buffer we copied to needs to be invalidated before we read from it because its not been
     // created with the host coherent bit.
-    ANGLE_TRY(mReadPixelsBuffer.invalidate(contextVk));
+    ANGLE_TRY(mReadPixelBuffer.invalidate(contextVk));
 
     PackPixels(packPixelsParams, angleFormat, area.width * pixelBytes, readPixelBuffer,
                static_cast<uint8_t *>(pixels));
