@@ -250,9 +250,6 @@ std::string ToString(const T &value)
 #define GL_RGB10_A2_SSCALED_ANGLEX 0x6AEC
 #define GL_RGB10_A2_USCALED_ANGLEX 0x6AED
 
-// TODO(jmadill): Clean this up at some point.
-#define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999
-
 // This internal enum is used to filter internal errors that are already handled.
 // TODO(jmadill): Remove this when refactor is done. http://anglebug.com/2491
 #define GL_INTERNAL_ERROR_ANGLEX 0x6AEE

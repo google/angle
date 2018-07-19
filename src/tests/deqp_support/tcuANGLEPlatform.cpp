@@ -30,9 +30,6 @@
 
 static_assert(EGL_DONT_CARE == -1, "Unexpected value for EGL_DONT_CARE");
 
-// We should clean this up at some point by making it a properly exposed enum.
-#define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999
-
 namespace tcu
 {
 ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc)

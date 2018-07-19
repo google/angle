@@ -12,9 +12,7 @@
 #include "EGLWindow.h"
 #include "OSWindow.h"
 #include "common/debug.h"
-
-// TODO(jmadill): Clean this up at some point.
-#define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999
+#include "platform/Platform.h"
 
 EGLPlatformParameters::EGLPlatformParameters()
     : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
