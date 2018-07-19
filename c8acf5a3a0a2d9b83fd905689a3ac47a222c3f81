@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "b69a544b_37af2b72",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5544,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "That\u0027s a good point to weaken the check. If a program other than zero is in use, it must have been linked. So \"already linked\" is implicitly covered by \"is active\".",
+      "parentUuid": "bc96de86_1df9d98a",
+      "range": {
+        "startLine": 5544,
+        "startChar": 8,
+        "endLine": 5544,
+        "endChar": 41
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89cda07f_4a0a4e06",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5544,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Even the link finishes asynchronously, the below \"mGLState.onProgramExecutableChange(programObject);\" will block on \"onProgramExecutableChange-\u003eisLinked-\u003eresolveLink\". So from the view of glLinkProgram callers, it\u0027s still a synchronous call. By this check, we can make sure that glLinkProgram is always synchronous if the extension is not enabled.",
+      "parentUuid": "98d424eb_ce9ff03c",
+      "range": {
+        "startLine": 5544,
+        "startChar": 45,
+        "endLine": 5544,
+        "endChar": 83
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "354977a6_90bd224e",
         "filename": "src/libANGLE/ContextState.cpp",
         "patchSetId": 14
@@ -68,6 +116,30 @@
       "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8390f9ec_43b286d5",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "That\u0027s a good idea. Tried to add it to getDefaultParrallelCompileThreads() in Context. But a few bots failed ,as std::thread is not available in clang.",
+      "parentUuid": "354977a6_90bd224e",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 52
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "0ff6e3f8_a64840b0",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "fd5533e9_5a6131c4",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 100,
+        "endChar": 26
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9834d842_d438a03c",
         "filename": "src/libANGLE/ContextState.h",
         "patchSetId": 14
@@ -114,6 +210,30 @@
       "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf5f6b88_ad98875f",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9834d842_d438a03c",
+      "range": {
+        "startLine": 87,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 40
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "527742ea_c2f50c2a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee2360dd_d666f3ee",
+      "range": {
+        "startLine": 604,
+        "startChar": 19,
+        "endLine": 604,
+        "endChar": 20
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3090f7db_5cd4e5ec",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 14
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "f5dbdd78_dbe1f988",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3090f7db_5cd4e5ec",
+      "range": {
+        "startLine": 607,
+        "startChar": 4,
+        "endLine": 607,
+        "endChar": 31
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b96b77a_64ceb5fc",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 14
@@ -174,6 +342,30 @@
       "writtenOn": "2018-07-18T19:07:18Z",
       "side": 1,
       "message": "Let\u0027s remove this argument and just query it from the context.",
+      "range": {
+        "startLine": 502,
+        "startChar": 37,
+        "endLine": 502,
+        "endChar": 74
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b1f7eb3_2d677457",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done. The cost is that we have to use a \u0027mutable\u0027 for it.",
+      "parentUuid": "7b96b77a_64ceb5fc",
       "range": {
         "startLine": 502,
         "startChar": 37,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "486561e7_23fc56c5",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Makes sense.",
+      "parentUuid": "c36ae871_dcc10168",
+      "range": {
+        "startLine": 911,
+        "startChar": 0,
+        "endLine": 914,
+        "endChar": 83
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73dbbb44_e71e9d84",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 14
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "cb624e33_851483c6",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73dbbb44_e71e9d84",
+      "range": {
+        "startLine": 931,
+        "startChar": 4,
+        "endLine": 931,
+        "endChar": 18
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60a3f6f0_6c37cdb8",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 14
@@ -243,6 +483,30 @@
       "writtenOn": "2018-07-18T19:07:18Z",
       "side": 1,
       "message": "A thread pool shouldn\u0027t simply run the task on the current thread when the pool is at it\u0027s maximum thread count.  It should enqueue the task to be run once one of the running tasks is finished so that there are always mMaxThreads tasks running simultaneously.\n\nYou can use a semaphore (in c++ this can be done with a mutex and condion_variable) and have each task block until there are fewer than mMaxThreads active tasks before executing.\n\nI think this would also allow us to remove the mEvents list and not pass to the pool to the event constructor.",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 105,
+        "endChar": 99
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc88cc56_e97007e7",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "My intent is to make WorkerThreadPool both synchronous and asynchronous, as Ken once concerned  that some GL drivers may be buggy if linking programs in another thread context. So if the pool thread number is 0, we can still use it synchronously.",
+      "parentUuid": "60a3f6f0_6c37cdb8",
       "range": {
         "startLine": 103,
         "startChar": 8,
@@ -278,6 +542,30 @@
     },
     {
       "key": {
+        "uuid": "4629b269_2a1d36a3",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff66844d_84b6bf0a",
+      "range": {
+        "startLine": 232,
+        "startChar": 26,
+        "endLine": 232,
+        "endChar": 27
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "355ef2ce_ef48a668",
         "filename": "src/libANGLE/WorkerThread.h",
         "patchSetId": 14
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "3137c64a_ca8f192e",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "355ef2ce_ef48a668",
+      "range": {
+        "startLine": 234,
+        "startChar": 2,
+        "endLine": 234,
+        "endChar": 11
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5c4b48e_8e4b0c06",
         "filename": "src/libANGLE/WorkerThread.h",
         "patchSetId": 14
@@ -312,6 +624,30 @@
       "writtenOn": "2018-07-18T19:07:18Z",
       "side": 1,
       "message": "Can you store these as std::unique_ptr?",
+      "range": {
+        "startLine": 278,
+        "startChar": 14,
+        "endLine": 278,
+        "endChar": 34
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a84ac151_fa7bb8d6",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "The pool is just a factory of events, and the consumers are the owner of events. To some extent unique_ptr has a ownership semantic. So I hesitated to use unique_ptr here.",
+      "parentUuid": "f5c4b48e_8e4b0c06",
       "range": {
         "startLine": 278,
         "startChar": 14,
@@ -347,6 +683,30 @@
     },
     {
       "key": {
+        "uuid": "0aae035b_297f9bbe",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2b60fca_54a9d136",
+      "range": {
+        "startLine": 75,
+        "startChar": 12,
+        "endLine": 75,
+        "endChar": 23
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d92b9a4_c9cb57ee",
         "filename": "src/libANGLE/renderer/ProgramImpl.h",
         "patchSetId": 14
@@ -367,6 +727,30 @@
       "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04d16628_a516b40a",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d92b9a4_c9cb57ee",
+      "range": {
+        "startLine": 76,
+        "startChar": 28,
+        "endLine": 76,
+        "endChar": 63
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -393,6 +777,30 @@
     },
     {
       "key": {
+        "uuid": "5d4dc76f_33fc2396",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1450,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec53de03_82f26868",
+      "range": {
+        "startLine": 1448,
+        "startChar": 30,
+        "endLine": 1450,
+        "endChar": 82
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c3e21bc_2e3b03d7",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 14
@@ -413,6 +821,30 @@
       "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d675da62_9b77f34c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1501,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-19T15:05:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c3e21bc_2e3b03d7",
+      "range": {
+        "startLine": 1471,
+        "startChar": 8,
+        "endLine": 1501,
+        "endChar": 0
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
