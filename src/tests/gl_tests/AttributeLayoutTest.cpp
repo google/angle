@@ -396,17 +396,18 @@ void AttributeLayoutTest::GetTestCases(void)
 
     if (IsVulkan())
     {
-        std::cout << "cases skipped on Vulkan: fixed or non-normalized byte/short data, non-zero "
-                     "buffer offsets"
-                  << std::endl;
-        return;
+        std::cout << "cases skipped on Vulkan: fixed format vertex data" << std::endl;
+        mTestCases.push_back({});
+        mTestCases.push_back({});
     }
+    else
+    {
+        // 10. one buffer, sequential
+        mTestCases.push_back({Fixed(B0, 0, 8, mCoord), Float(B0, 96, 12, mColor)});
 
-    // 10. one buffer, sequential
-    mTestCases.push_back({Fixed(B0, 0, 8, mCoord), Float(B0, 96, 12, mColor)});
-
-    // 11. one buffer, interleaved
-    mTestCases.push_back({Fixed(B0, 0, 20, mCoord), Float(B0, 8, 20, mColor)});
+        // 11. one buffer, interleaved
+        mTestCases.push_back({Fixed(B0, 0, 20, mCoord), Float(B0, 8, 20, mColor)});
+    }
 
     // 12. memory and buffer, float and integer
     mTestCases.push_back({Float(M0, 0, 8, mCoord), SByte(B0, 0, 12, mColor)});

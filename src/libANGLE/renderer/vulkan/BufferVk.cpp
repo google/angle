@@ -151,14 +151,17 @@ gl::Error BufferVk::mapRange(const gl::Context *context,
 
 gl::Error BufferVk::unmap(const gl::Context *context, GLboolean *result)
 {
+    return unmapImpl(vk::GetImpl(context));
+}
+
+angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
+{
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBufferMemory.getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = vk::GetImpl(context)->getDevice();
+    mBufferMemory.unmap(contextVk->getDevice());
 
-    mBufferMemory.unmap(device);
-
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error BufferVk::getIndexRange(const gl::Context *context,

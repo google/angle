@@ -216,36 +216,6 @@
 2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.random = SKIP
 2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.supported = SKIP
 2609 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.first.byte_first* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_1_17_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_1_2_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_1_32_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_17_17_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_17_2_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_17_32_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_32_17_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_32_2_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_32_32_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_4_17_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_4_2_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_4_32_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_17_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_2_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_32_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_32_short* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_3_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_4_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_4_short* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_6_short* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_8_short* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_0_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_0_short* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_17_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_2_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_byte* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_short* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_4_short* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_8_short* = SKIP
 
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.red_unsigned_byte = FAIL
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.rg_unsigned_byte = FAIL
@@ -262,9 +232,6 @@
 2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
 2601 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP
 2353 VULKAN : dEQP-GLES2.functional.polygon_offset.* = SKIP
-
-// Random draw tests often require non-float vertex data.
-2405 VULKAN : dEQP-GLES2.functional.draw.random.* = SKIP
 
 // fixed format vertex data
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.input_types.3_byte2_vec2_byte2_vec2_fixed* = SKIP
@@ -302,46 +269,39 @@
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_0_fixed* = SKIP
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_fixed* = SKIP
 2405 VULKAN : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_8_fixed* = SKIP
+2405 VULKAN : dEQP-GLES2.functional.draw.random.9 = SKIP
+2405 VULKAN : dEQP-GLES2.functional.draw.random.28 = SKIP
+2405 VULKAN : dEQP-GLES2.functional.draw.random.38 = SKIP
+2405 VULKAN : dEQP-GLES2.functional.draw.random.39 = SKIP
+2405 VULKAN : dEQP-GLES2.functional.draw.random.42 = SKIP
+2405 VULKAN : dEQP-GLES2.functional.draw.random.56 = SKIP
+2405 VULKAN : dEQP-GLES2.functional.draw.random.59 = SKIP
+2405 VULKAN : dEQP-GLES2.functional.draw.random.61 = SKIP
 
 // Vulkan AMD Windows specific failures
 2602 VULKAN WIN AMD : dEQP-GLES2.functional.buffer.write.* = SKIP
 
-// TODO(fjhenigman): Try these again once vertex format support is farther along.
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_32_float* = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_float* = SKIP
-
-// TODO(fjhenigman): Try these again once vertex format support is farther along.
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.first.float_first24* = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.first.float_first6* = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_32* = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_4* = SKIP
-
-// AMD is known to require proper alignment which is probably why 17 is a bad number for it
-// TODO(fjhenigman): Implement realigning.
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_0_float2_0_float2_17 = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_0_float2_17* = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_0_float2_32_float2_17 = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_0_float2_8_float2_17 = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_17* = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_32_float2_0_float2_17 = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_32_float2_17* = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_32_float2_32_float2_17 = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_32_float2_8_float2_17 = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_8_float2_0_float2_17 = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_8_float2_17* = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_8_float2_32_float2_17 = SKIP
-2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.multiple_attributes.stride.3_float2_8_float2_8_float2_17 = SKIP
-
-// TODO(fjhenigman): Try these again once vertex format support is farther along.
+// TODO(fjhenigman): Figure out why these don't work.
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.draw.random.14 = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.draw.random.30 = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.draw.random.41 = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.first.byte_first* = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.first.float_first* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_1_17_byte* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_1_2_byte* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_1_32_byte* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_17_17_byte* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_17_2_byte* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_17_32_byte* = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_32_17_byte* = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_32_32_byte* = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_32_32_float* = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_4_17_byte* = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_4_32_byte* = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.offset.buffer_4_32_float* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_17_byte* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_32_byte* = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_32_float* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_32_short* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_3_byte* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.strides.buffer_0_6_short* = SKIP
@@ -349,14 +309,8 @@
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_0_short* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_17_byte* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_byte* = SKIP
+2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_float* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_short* = SKIP
-
-// Failures because of unsupported vertex formats on Android.
-2405 VULKAN ANDROID : dEQP-GLES2.functional.buffer.write.* = FAIL
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.normalize.user_ptr_0_0_byte3_normalized_vec4_dynamic_draw_quads_1 = FAIL
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.normalize.user_ptr_0_0_byte3_normalized_vec4_dynamic_draw_quads_256 = FAIL
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.normalize.user_ptr_0_0_unsigned_byte3_normalized_vec4_dynamic_draw_quads_1 = FAIL
-2405 VULKAN ANDROID : dEQP-GLES2.functional.vertex_arrays.single_attribute.normalize.user_ptr_0_0_unsigned_byte3_normalized_vec4_dynamic_draw_quads_256 = FAIL
 
 // Failing on the Pixel 2.
 2727 VULKAN ANDROID : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = FAIL

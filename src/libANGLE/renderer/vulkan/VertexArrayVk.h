@@ -26,7 +26,6 @@ class BufferVk;
 namespace vk
 {
 class CommandGraphResource;
-class DynamicBuffer;
 }  // namespace vk
 
 class VertexArrayVk : public VertexArrayImpl
@@ -88,6 +87,11 @@ class VertexArrayVk : public VertexArrayImpl
                                    const gl::DrawCallParams &drawCallParams);
 
     angle::Result streamIndexData(ContextVk *contextVk, const gl::DrawCallParams &drawCallParams);
+    angle::Result convertVertexBuffer(ContextVk *contextVk,
+                                      BufferVk *srcBuffer,
+                                      const gl::VertexBinding &binding,
+                                      size_t attribIndex);
+    void ensureConversionReleased(RendererVk *renderer, size_t attribIndex);
 
     gl::Error onDraw(const gl::Context *context,
                      const gl::DrawCallParams &drawCallParams,
@@ -98,16 +102,18 @@ class VertexArrayVk : public VertexArrayImpl
                             vk::CommandBuffer *commandBuffer,
                             bool newCommandBuffer);
 
-    void syncDirtyAttrib(ContextVk *contextVk,
-                         const gl::VertexAttribute &attrib,
-                         const gl::VertexBinding &binding,
-                         size_t attribIndex);
+    angle::Result syncDirtyAttrib(ContextVk *contextVk,
+                                  const gl::VertexAttribute &attrib,
+                                  const gl::VertexBinding &binding,
+                                  size_t attribIndex);
 
     gl::AttribArray<VkBuffer> mCurrentArrayBufferHandles;
     gl::AttribArray<VkDeviceSize> mCurrentArrayBufferOffsets;
     gl::AttribArray<vk::CommandGraphResource *> mCurrentArrayBufferResources;
     gl::AttribArray<const vk::Format *> mCurrentArrayBufferFormats;
     gl::AttribArray<GLuint> mCurrentArrayBufferStrides;
+    gl::AttribArray<vk::DynamicBuffer> mCurrentArrayBufferConversion;
+    gl::AttribArray<bool> mCurrentArrayBufferConversionCanRelease;
     VkBuffer mCurrentElementArrayBufferHandle;
     VkDeviceSize mCurrentElementArrayBufferOffset;
     vk::CommandGraphResource *mCurrentElementArrayBufferResource;
