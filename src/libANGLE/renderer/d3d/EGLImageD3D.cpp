@@ -37,7 +37,7 @@ EGLImageD3D::~EGLImageD3D()
     SafeDelete(mRenderTarget);
 }
 
-egl::Error EGLImageD3D::initialize()
+egl::Error EGLImageD3D::initialize(const egl::Display *display)
 {
     return egl::NoError();
 }

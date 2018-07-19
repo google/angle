@@ -133,6 +133,7 @@ SurfaceImpl *DisplayVk::createPixmapSurface(const egl::SurfaceState &state,
 }
 
 ImageImpl *DisplayVk::createImage(const egl::ImageState &state,
+                                  const gl::Context *context,
                                   EGLenum target,
                                   const egl::AttributeMap &attribs)
 {

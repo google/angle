@@ -20,7 +20,7 @@ class ImageNULL : public ImageImpl
   public:
     ImageNULL(const egl::ImageState &state);
     ~ImageNULL() override;
-    egl::Error initialize() override;
+    egl::Error initialize(const egl::Display *display) override;
 
     gl::Error orphan(const gl::Context *context, egl::ImageSibling *sibling) override;
 };

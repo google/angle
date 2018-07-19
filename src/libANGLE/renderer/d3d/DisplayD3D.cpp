@@ -189,6 +189,7 @@ SurfaceImpl *DisplayD3D::createPixmapSurface(const egl::SurfaceState &state,
 }
 
 ImageImpl *DisplayD3D::createImage(const egl::ImageState &state,
+                                   const gl::Context *context,
                                    EGLenum target,
                                    const egl::AttributeMap &attribs)
 {

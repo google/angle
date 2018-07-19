@@ -41,6 +41,7 @@ void DisplayGL::terminate()
 }
 
 ImageImpl *DisplayGL::createImage(const egl::ImageState &state,
+                                  const gl::Context *context,
                                   EGLenum target,
                                   const egl::AttributeMap &attribs)
 {

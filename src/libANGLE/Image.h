@@ -28,6 +28,7 @@ class ImageImpl;
 namespace egl
 {
 class Image;
+class Display;
 
 // Only currently Renderbuffers and Textures can be bound with images. This makes the relationship
 // explicit, and also ensures that an image sibling can determine if it's been initialized or not,
@@ -77,6 +78,7 @@ class Image final : public gl::RefCountObject, public LabeledObject
 {
   public:
     Image(rx::EGLImplFactory *factory,
+          const gl::Context *context,
           EGLenum target,
           ImageSibling *buffer,
           const AttributeMap &attribs);
@@ -92,7 +94,7 @@ class Image final : public gl::RefCountObject, public LabeledObject
     size_t getHeight() const;
     size_t getSamples() const;
 
-    Error initialize();
+    Error initialize(const Display *display);
 
     rx::ImageImpl *getImplementation() const;
 

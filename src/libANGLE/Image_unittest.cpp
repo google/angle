@@ -24,7 +24,7 @@ namespace angle
 {
 ACTION(CreateMockImageImpl)
 {
-    return new rx::MockImageImpl(arg0, arg1, arg2);
+    return new rx::MockImageImpl(arg0);
 }
 
 // Verify ref counts are maintained between images and their siblings when objects are deleted
@@ -39,12 +39,12 @@ TEST(ImageTest, RefCounting)
     gl::Texture *texture = new gl::Texture(&mockGLFactory, 1, gl::TextureType::_2D);
     texture->addRef();
 
-    EXPECT_CALL(mockEGLFactory, createImage(_, _, _))
+    EXPECT_CALL(mockEGLFactory, createImage(_, _, _, _))
         .WillOnce(CreateMockImageImpl())
         .RetiresOnSaturation();
 
     egl::Image *image =
-        new egl::Image(&mockEGLFactory, EGL_GL_TEXTURE_2D, texture, egl::AttributeMap());
+        new egl::Image(&mockEGLFactory, nullptr, EGL_GL_TEXTURE_2D, texture, egl::AttributeMap());
     image->addRef();
 
     // Verify that the image added a ref to the texture and the texture has not added a ref to the
@@ -116,12 +116,12 @@ TEST(ImageTest, RespecificationReleasesReferences)
                                 gl::Extents(1, 1, 1), GL_RGBA, GL_UNSIGNED_BYTE, nullptr)
                      .isError());
 
-    EXPECT_CALL(mockEGLFactory, createImage(_, _, _))
+    EXPECT_CALL(mockEGLFactory, createImage(_, _, _, _))
         .WillOnce(CreateMockImageImpl())
         .RetiresOnSaturation();
 
     egl::Image *image =
-        new egl::Image(&mockEGLFactory, EGL_GL_TEXTURE_2D, texture, egl::AttributeMap());
+        new egl::Image(&mockEGLFactory, nullptr, EGL_GL_TEXTURE_2D, texture, egl::AttributeMap());
     image->addRef();
 
     // Verify that the image added a ref to the texture and the texture has not added a ref to the

@@ -127,12 +127,13 @@ ImageState::~ImageState()
 }
 
 Image::Image(rx::EGLImplFactory *factory,
+             const gl::Context *context,
              EGLenum target,
              ImageSibling *buffer,
              const AttributeMap &attribs)
     : RefCountObject(0),
       mState(target, buffer, attribs),
-      mImplementation(factory->createImage(mState, target, attribs)),
+      mImplementation(factory->createImage(mState, context, target, attribs)),
       mOrphanedAndNeedsInit(false)
 {
     ASSERT(mImplementation != nullptr);
@@ -222,9 +223,9 @@ rx::ImageImpl *Image::getImplementation() const
     return mImplementation;
 }
 
-Error Image::initialize()
+Error Image::initialize(const Display *display)
 {
-    return mImplementation->initialize();
+    return mImplementation->initialize(display);
 }
 
 bool Image::orphaned() const

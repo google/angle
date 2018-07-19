@@ -22,7 +22,7 @@ ImageNULL::~ImageNULL()
 {
 }
 
-egl::Error ImageNULL::initialize()
+egl::Error ImageNULL::initialize(const egl::Display *display)
 {
     return egl::NoError();
 }

@@ -22,7 +22,7 @@ ImageVk::~ImageVk()
 {
 }
 
-egl::Error ImageVk::initialize()
+egl::Error ImageVk::initialize(const egl::Display *display)
 {
     UNIMPLEMENTED();
     return egl::EglBadAccess();

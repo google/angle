@@ -54,6 +54,7 @@ class DisplayVk : public DisplayImpl, public vk::Context
                                      const egl::AttributeMap &attribs) override;
 
     ImageImpl *createImage(const egl::ImageState &state,
+                           const gl::Context *context,
                            EGLenum target,
                            const egl::AttributeMap &attribs) override;
 

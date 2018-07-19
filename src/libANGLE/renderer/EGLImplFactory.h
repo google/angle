@@ -53,6 +53,7 @@ class EGLImplFactory : angle::NonCopyable
                                              const egl::AttributeMap &attribs) = 0;
 
     virtual ImageImpl *createImage(const egl::ImageState &state,
+                                   const gl::Context *context,
                                    EGLenum target,
                                    const egl::AttributeMap &attribs) = 0;
 

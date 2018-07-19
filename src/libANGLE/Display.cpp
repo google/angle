@@ -730,8 +730,8 @@ Error Display::createImage(const gl::Context *context,
     ASSERT(sibling != nullptr);
 
     angle::UniqueObjectPointer<Image, gl::Context> imagePtr(
-        new Image(mImplementation, target, sibling, attribs), context);
-    ANGLE_TRY(imagePtr->initialize());
+        new Image(mImplementation, context, target, sibling, attribs), context);
+    ANGLE_TRY(imagePtr->initialize(this));
 
     Image *image = imagePtr.release();
 
