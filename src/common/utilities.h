@@ -161,6 +161,7 @@ GLuint EGLClientBufferToGLObjectHandle(EGLClientBuffer buffer);
 namespace gl_egl
 {
 EGLenum GLComponentTypeToEGLColorComponentType(GLenum glComponentType);
+EGLClientBuffer GLObjectHandleToEGLClientBuffer(GLuint handle);
 }  // namespace gl_egl
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)

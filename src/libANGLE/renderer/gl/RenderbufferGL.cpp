@@ -13,6 +13,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/ImageGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
@@ -99,10 +100,8 @@ gl::Error RenderbufferGL::setStorageMultisample(const gl::Context *context,
 
 gl::Error RenderbufferGL::setStorageEGLImageTarget(const gl::Context *context, egl::Image *image)
 {
-    // TODO(geofflang): If implemented, be sure to update mNativeInternalFormat.
-    // http://anglebug.com/2412
-    UNREACHABLE();
-    return gl::InternalError();
+    ImageGL *imageGL = GetImplAs<ImageGL>(image);
+    return imageGL->setRenderbufferStorage(context, this, &mNativeInternalFormat);
 }
 
 GLuint RenderbufferGL::getRenderbufferID() const
@@ -114,6 +113,11 @@ gl::Error RenderbufferGL::initializeContents(const gl::Context *context,
                                              const gl::ImageIndex &imageIndex)
 {
     return mBlitter->clearRenderbuffer(this, mNativeInternalFormat);
+}
+
+GLenum RenderbufferGL::getNativeInternalFormat() const
+{
+    return mNativeInternalFormat;
 }
 
 }  // namespace rx

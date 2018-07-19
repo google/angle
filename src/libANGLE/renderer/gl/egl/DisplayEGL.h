@@ -21,6 +21,11 @@ class DisplayEGL : public DisplayGL
     DisplayEGL(const egl::DisplayState &state);
     ~DisplayEGL() override;
 
+    ImageImpl *createImage(const egl::ImageState &state,
+                           const gl::Context *context,
+                           EGLenum target,
+                           const egl::AttributeMap &attribs) override;
+
     std::string getVendorString() const override;
 
     virtual void destroyNativeContext(EGLContext context) = 0;

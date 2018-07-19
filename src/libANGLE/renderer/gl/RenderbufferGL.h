@@ -50,6 +50,7 @@ class RenderbufferGL : public RenderbufferImpl
                                  const gl::ImageIndex &imageIndex) override;
 
     GLuint getRenderbufferID() const;
+    GLenum getNativeInternalFormat() const;
 
   private:
     const FunctionsGL *mFunctions;

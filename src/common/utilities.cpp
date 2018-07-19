@@ -970,6 +970,12 @@ EGLenum GLComponentTypeToEGLColorComponentType(GLenum glComponentType)
             return EGL_NONE;
     }
 }
+
+EGLClientBuffer GLObjectHandleToEGLClientBuffer(GLuint handle)
+{
+    return reinterpret_cast<EGLClientBuffer>(static_cast<uintptr_t>(handle));
+}
+
 }  // namespace gl_egl
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)

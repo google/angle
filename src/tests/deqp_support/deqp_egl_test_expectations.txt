@@ -236,6 +236,14 @@
 2546 MAC : dEQP-EGL.functional.color_clears.multi_thread.* = SKIP
 2546 MAC : dEQP-EGL.functional.thread_cleanup.* = SKIP
 
+// Android GLES-only failues
+2567 ANDROID GLES : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_red = FAIL
+2567 ANDROID GLES : dEQP-EGL.functional.image.api.create_image_gles2_tex2d_rg = FAIL
+2507 ANDROID GLES : dEQP-EGL.functional.image.modify.renderbuffer_rgb565_tex_subimage_rgb8 = FAIL
+2507 ANDROID GLES : dEQP-EGL.functional.image.modify.renderbuffer_rgba4_tex_subimage_rgba8 = FAIL
+2507 ANDROID GLES : dEQP-EGL.functional.image.modify.tex_rgb565_tex_subimage_rgb8 = FAIL
+2507 ANDROID GLES : dEQP-EGL.functional.image.modify.tex_rgba4_tex_subimage_rgba8 = FAIL
+
 // Android failures
 2546 ANDROID : dEQP-EGL.functional.multithread.* = SKIP
 2546 ANDROID : dEQP-EGL.functional.render.multi_thread.* = SKIP

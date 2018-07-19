@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/ImageGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
@@ -1104,8 +1105,15 @@ gl::Error TextureGL::setEGLImageTarget(const gl::Context *context,
                                        gl::TextureType type,
                                        egl::Image *image)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ImageGL *imageGL = GetImplAs<ImageGL>(image);
+
+    GLenum imageNativeInternalFormat = GL_NONE;
+    ANGLE_TRY(imageGL->setTexture2D(context, type, this, &imageNativeInternalFormat));
+
+    setLevelInfo(type, 0, 1,
+                 GetLevelInfo(image->getFormat().info->internalFormat, imageNativeInternalFormat));
+
+    return gl::NoError();
 }
 
 gl::Error TextureGL::syncState(const gl::Context *context, const gl::Texture::DirtyBits &dirtyBits)
@@ -1308,6 +1316,11 @@ void TextureGL::setSwizzle(const gl::Context *context, GLint swizzle[4])
         stateManager->bindTexture(getType(), mTextureID);
         functions->texParameteriv(ToGLenum(getType()), GL_TEXTURE_SWIZZLE_RGBA, swizzle);
     }
+}
+
+GLenum TextureGL::getNativeInternalFormat(const gl::ImageIndex &index) const
+{
+    return getLevelInfo(index.getTarget(), index.getLevelIndex()).nativeInternalFormat;
 }
 
 void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions,

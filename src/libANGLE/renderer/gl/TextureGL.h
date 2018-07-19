@@ -177,6 +177,8 @@ class TextureGL : public TextureImpl
 
     void setSwizzle(const gl::Context *context, GLint swizzle[4]);
 
+    GLenum getNativeInternalFormat(const gl::ImageIndex &index) const;
+
   private:
     void setImageHelper(const gl::Context *context,
                         gl::TextureTarget target,
