@@ -16,6 +16,71 @@ namespace sh
 {
 namespace
 {
+// Helper method to get the sampler extracted struct type of a parameter.
+TType *GetStructSamplerParameterType(TSymbolTable *symbolTable, const TVariable &param)
+{
+    const TStructure *structure = param.getType().getStruct();
+    const TSymbol *structSymbol = symbolTable->findUserDefined(structure->name());
+    ASSERT(structSymbol && structSymbol->isStruct());
+    const TStructure *structVar = static_cast<const TStructure *>(structSymbol);
+    TType *structType           = new TType(structVar, false);
+
+    if (param.getType().isArray())
+    {
+        structType->makeArrays(*param.getType().getArraySizes());
+    }
+
+    ASSERT(!structType->isStructureContainingSamplers());
+
+    return structType;
+}
+
+TIntermSymbol *ReplaceTypeOfSymbolNode(TIntermSymbol *symbolNode, TSymbolTable *symbolTable)
+{
+    const TVariable &oldVariable = symbolNode->variable();
+
+    TType *newType = GetStructSamplerParameterType(symbolTable, oldVariable);
+
+    TVariable *newVariable =
+        new TVariable(oldVariable.uniqueId(), oldVariable.name(), oldVariable.symbolType(),
+                      oldVariable.extension(), newType);
+    return new TIntermSymbol(newVariable);
+}
+
+TIntermTyped *ReplaceTypeOfTypedStructNode(TIntermTyped *argument, TSymbolTable *symbolTable)
+{
+    TIntermSymbol *asSymbol = argument->getAsSymbolNode();
+    if (asSymbol)
+    {
+        ASSERT(asSymbol->getType().getStruct());
+        return ReplaceTypeOfSymbolNode(asSymbol, symbolTable);
+    }
+
+    TIntermTyped *replacement = argument->deepCopy();
+    TIntermBinary *binary     = replacement->getAsBinaryNode();
+    ASSERT(binary);
+
+    while (binary)
+    {
+        ASSERT(binary->getOp() == EOpIndexDirectStruct || binary->getOp() == EOpIndexDirect);
+
+        asSymbol = binary->getLeft()->getAsSymbolNode();
+
+        if (asSymbol)
+        {
+            ASSERT(asSymbol->getType().getStruct());
+            TIntermSymbol *newSymbol = ReplaceTypeOfSymbolNode(asSymbol, symbolTable);
+            binary->replaceChildNode(binary->getLeft(), newSymbol);
+            return replacement;
+        }
+
+        binary = binary->getLeft()->getAsBinaryNode();
+    }
+
+    UNREACHABLE();
+    return nullptr;
+}
+
 // Maximum string size of a hex unsigned int.
 constexpr size_t kHexSize = ImmutableStringBuilder::GetHexCharCount<unsigned int>();
 
@@ -214,7 +279,25 @@ class Traverser final : public TIntermTraverser
             const TType &fieldType = *field->type();
             if (!fieldType.isSampler() && !isRemovedStructType(fieldType))
             {
-                TType *newType = new TType(fieldType);
+                TType *newType = nullptr;
+
+                if (fieldType.isStructureContainingSamplers())
+                {
+                    const TSymbol *structSymbol =
+                        mSymbolTable->findUserDefined(fieldType.getStruct()->name());
+                    ASSERT(structSymbol && structSymbol->isStruct());
+                    const TStructure *fieldStruct = static_cast<const TStructure *>(structSymbol);
+                    newType                       = new TType(fieldStruct, true);
+                    if (fieldType.isArray())
+                    {
+                        newType->makeArrays(*fieldType.getArraySizes());
+                    }
+                }
+                else
+                {
+                    newType = new TType(fieldType);
+                }
+
                 TField *newField =
                     new TField(newType, field->name(), field->line(), field->symbolType());
                 newFieldList->push_back(newField);
@@ -416,21 +499,6 @@ class Traverser final : public TIntermTraverser
         virtual void visitStructParam(const TFunction *function, size_t paramIndex)            = 0;
         virtual void visitNonStructParam(const TFunction *function, size_t paramIndex)         = 0;
 
-      protected:
-        // Helper method to get the sampler extracted struct type of a parameter.
-        TType *getStructSamplerParameterType(TSymbolTable *symbolTable, const TVariable *param)
-        {
-            const TStructure *structure = param->getType().getStruct();
-            const TSymbol *structSymbol = symbolTable->findUserDefined(structure->name());
-            ASSERT(structSymbol && structSymbol->isStruct());
-            const TStructure *structVar = static_cast<const TStructure *>(structSymbol);
-            TType *structType           = new TType(structVar, false);
-
-            ASSERT(!structType->isStructureContainingSamplers());
-
-            return structType;
-        }
-
       private:
         bool traverseStructContainingSamplers(const ImmutableString &baseName,
                                               const TType &structType)
@@ -537,7 +605,7 @@ class Traverser final : public TIntermTraverser
         void visitStructParam(const TFunction *function, size_t paramIndex) override
         {
             const TVariable *param = function->getParam(paramIndex);
-            TType *structType      = getStructSamplerParameterType(mSymbolTable, param);
+            TType *structType      = GetStructSamplerParameterType(mSymbolTable, *param);
             TVariable *newParam =
                 new TVariable(mSymbolTable, param->name(), structType, param->symbolType());
             mNewFunction->addParameter(newParam);
@@ -588,10 +656,11 @@ class Traverser final : public TIntermTraverser
 
         void visitStructParam(const TFunction *function, size_t paramIndex) override
         {
-            // The prior struct type is left intact. This leaves the tree in an inconsistent state.
-            // TODO(jmadill): Fix tree structure. http://anglebug.com/2494
+            // The tree structure of the parameter is modified to point to the new type. This leaves
+            // the tree in a consistent state.
             TIntermTyped *argument = (*mArguments)[paramIndex]->getAsTyped();
-            mNewArguments->push_back(argument);
+            TIntermTyped *replacement = ReplaceTypeOfTypedStructNode(argument, mSymbolTable);
+            mNewArguments->push_back(replacement);
         }
 
         void visitNonStructParam(const TFunction *function, size_t paramIndex) override
