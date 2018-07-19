@@ -325,12 +325,12 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
     // Invalidate the input description for pipelines.
     mDirtyPackedInputs.set(attribIndex);
 
-    RendererVk *renderer = contextVk->getRenderer();
+    RendererVk *renderer   = contextVk->getRenderer();
     bool releaseConversion = true;
 
     if (attrib.enabled)
     {
-        gl::Buffer *bufferGL = binding.getBuffer().get();
+        gl::Buffer *bufferGL                    = binding.getBuffer().get();
         mCurrentArrayBufferFormats[attribIndex] = &renderer->getFormat(GetVertexFormatID(attrib));
 
         if (bufferGL)

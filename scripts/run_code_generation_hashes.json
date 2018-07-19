@@ -68,7 +68,7 @@
   "Vulkan format:src/libANGLE/renderer/vulkan/gen_vk_format_table.py":
     "4a69cb1e69194ca237b94642edbd3f69",
   "Vulkan format:src/libANGLE/renderer/vulkan/vk_format_map.json":
-    "d1afcd16318ca0a19550d713eb23b85a",
+    "f7cb189ab41f1ce48ff26e7c328c5cd0",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/gen_vk_internal_shaders.py":
     "c1cc895645db3fe1cd284352890c219e",
   "Vulkan internal shader programs:src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":
@@ -82,7 +82,7 @@
   "Vulkan mandatory format support table:src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json":
     "fa2bd54c1bb0ab2cf1d386061a4bc5c5",
   "Vulkan mandatory format support table:third_party/vulkan-headers/src/registry/vk.xml":
-    "e21d71df417d9f90ef01417b25e78575",
+    "c73903f9411b54db01d4891bc24ebd0e",
   "packed enum:src/common/gen_packed_gl_enums.py":
     "a9b1c38b4e4d8a1038e743be323f1a51",
   "packed enum:src/common/packed_egl_enums.json":
