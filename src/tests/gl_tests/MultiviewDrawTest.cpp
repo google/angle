@@ -764,6 +764,11 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
 {
     ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
 
+    if (extensionRequestable("GL_EXT_disjoint_timer_query"))
+    {
+        glRequestExtensionANGLE("GL_EXT_disjoint_timer_query");
+    }
+
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_disjoint_timer_query"));
 
     const GLint viewportOffsets[4] = {0, 0, 2, 0};
@@ -787,6 +792,8 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
     {
         glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTex2d,
                                                      0, 2, &viewportOffsets[0]);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
@@ -795,6 +802,8 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
     {
         glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTex2d,
                                                      0, 1, &viewportOffsets[0]);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_GL_NO_ERROR();
         glDrawArrays(GL_TRIANGLES, 0, 3);
         EXPECT_GL_NO_ERROR();
     }

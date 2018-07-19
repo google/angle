@@ -2554,6 +2554,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
 bool ValidateClear(Context *context, GLbitfield mask)
 {
     Framebuffer *fbo = context->getGLState().getDrawFramebuffer();
+    const Extensions &extensions = context->getExtensions();
 
     if (!ValidateFramebufferComplete(context, fbo))
     {
@@ -2566,7 +2567,7 @@ bool ValidateClear(Context *context, GLbitfield mask)
         return false;
     }
 
-    if (context->getExtensions().webglCompatibility && (mask & GL_COLOR_BUFFER_BIT) != 0)
+    if (extensions.webglCompatibility && (mask & GL_COLOR_BUFFER_BIT) != 0)
     {
         constexpr GLenum validComponentTypes[] = {GL_FLOAT, GL_UNSIGNED_NORMALIZED,
                                                   GL_SIGNED_NORMALIZED};
@@ -2579,6 +2580,20 @@ bool ValidateClear(Context *context, GLbitfield mask)
             {
                 return false;
             }
+        }
+    }
+
+    if (extensions.multiview && extensions.disjointTimerQuery)
+    {
+        const State &state       = context->getGLState();
+        Framebuffer *framebuffer = state.getDrawFramebuffer();
+        if (framebuffer->getNumViews() > 1 && state.isQueryActive(QueryType::TimeElapsed))
+        {
+            context->handleError(InvalidOperation() << "There is an active query for target "
+                                                       "GL_TIME_ELAPSED_EXT when the number of "
+                                                       "views in the active draw framebuffer is "
+                                                       "greater than 1.");
+            return false;
         }
     }
 
