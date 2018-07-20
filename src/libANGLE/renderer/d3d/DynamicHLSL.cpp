@@ -400,17 +400,6 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
                    << ";\n";
     }
 
-    if (builtins.glViewportIndex.enabled)
-    {
-        hlslStream << "    nointerpolation uint gl_ViewportIndex : "
-                   << builtins.glViewportIndex.str() << ";\n";
-    }
-
-    if (builtins.glLayer.enabled)
-    {
-        hlslStream << "    nointerpolation uint gl_Layer : " << builtins.glLayer.str() << ";\n";
-    }
-
     std::string varyingSemantic =
         GetVaryingSemantic(mRenderer->getMajorShaderModel(), programUsesPointSize);
 
@@ -448,6 +437,20 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
         int columnCount       = gl::VariableColumnCount(transposedType);
         HLSLComponentTypeString(hlslStream, componentType, columnCount);
         hlslStream << " v" << registerIndex << " : " << varyingSemantic << registerIndex << ";\n";
+    }
+
+    // Note that the following outputs need to be declared after the others to make multiview
+    // shaders with a flat varying to work correctly. This is a workaround for a D3D bug.
+
+    if (builtins.glViewportIndex.enabled)
+    {
+        hlslStream << "    nointerpolation uint gl_ViewportIndex : "
+                   << builtins.glViewportIndex.str() << ";\n";
+    }
+
+    if (builtins.glLayer.enabled)
+    {
+        hlslStream << "    nointerpolation uint gl_Layer : " << builtins.glLayer.str() << ";\n";
     }
 
     hlslStream << "};\n";

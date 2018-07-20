@@ -2023,13 +2023,6 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
         return;
     }
 
-    // Test failing on P400 graphics card (anglebug.com/2228)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsNVIDIA());
-
-    // TODO(mradev): Find out why this fails on Win10 Intel HD 630 D3D11
-    // (http://anglebug.com/2062)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsD3D11());
-
     const std::string vsSource =
         "#version 300 es\n"
         "#extension GL_OVR_multiview : require\n"
@@ -2054,6 +2047,52 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
         "       discard;\n"
         "    }\n"
         "    if (gl_ViewID_OVR == 0u) {\n"
+        "       col = vec4(1,0,0,1);\n"
+        "    } else {\n"
+        "       col = vec4(0,1,0,1);\n"
+        "    }\n"
+        "}\n";
+
+    createFBO(1, 1, 2);
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+
+    drawQuad(program, "vPosition", 0.0f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
+}
+
+// This test assigns gl_ViewID_OVR to a flat int varying and then sets the color based on that
+// varying in the fragment shader.
+TEST_P(MultiviewRenderTest, FlatInterpolation2)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const std::string vsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "layout(num_views = 2) in;\n"
+        "in vec3 vPosition;\n"
+        "flat out int flatVarying;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position = vec4(vPosition, 1.);\n"
+        "   flatVarying = int(gl_ViewID_OVR);\n"
+        "}\n";
+
+    const std::string fsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "precision mediump float;\n"
+        "flat in int flatVarying;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "    if (flatVarying == 0) {\n"
         "       col = vec4(1,0,0,1);\n"
         "    } else {\n"
         "       col = vec4(0,1,0,1);\n"
