@@ -53,6 +53,7 @@ class OutputHLSL : public TIntermTraverser
                int numRenderTargets,
                const std::vector<Uniform> &uniforms,
                ShCompileOptions compileOptions,
+               sh::WorkGroupSize workGroupSize,
                TSymbolTable *symbolTable,
                PerformanceDiagnostics *perfDiagnostics);
 
@@ -146,6 +147,9 @@ class OutputHLSL : public TIntermTraverser
     // Ensures if the type is a struct, the struct is defined
     void ensureStructDefined(const TType &type);
 
+    bool shaderNeedsGenerateOutput() const;
+    const char *generateOutputCall() const;
+
     sh::GLenum mShaderType;
     int mShaderVersion;
     const TExtensionBehavior &mExtensionBehavior;
@@ -154,6 +158,7 @@ class OutputHLSL : public TIntermTraverser
     ShCompileOptions mCompileOptions;
 
     bool mInsideFunction;
+    bool mInsideMain;
 
     // Output streams
     TInfoSinkBase mHeader;
@@ -249,6 +254,8 @@ class OutputHLSL : public TIntermTraverser
     // parameter with the other N parameters of the function. This is used to work around that
     // arrays can't be return values in HLSL.
     std::vector<ArrayHelperFunction> mArrayConstructIntoFunctions;
+
+    sh::WorkGroupSize mWorkGroupSize;
 
     PerformanceDiagnostics *mPerfDiagnostics;
 

@@ -145,8 +145,11 @@ void WriteArrayString(std::ostringstream &strstr, unsigned int i)
     strstr << "]";
 }
 
-constexpr const char *VERTEX_ATTRIBUTE_STUB_STRING = "@@ VERTEX ATTRIBUTES @@";
-constexpr const char *PIXEL_OUTPUT_STUB_STRING     = "@@ PIXEL OUTPUT @@";
+constexpr const char *VERTEX_ATTRIBUTE_STUB_STRING      = "@@ VERTEX ATTRIBUTES @@";
+constexpr const char *VERTEX_OUTPUT_STUB_STRING         = "@@ VERTEX OUTPUT @@";
+constexpr const char *PIXEL_OUTPUT_STUB_STRING          = "@@ PIXEL OUTPUT @@";
+constexpr const char *PIXEL_MAIN_PARAMETERS_STUB_STRING = "@@ PIXEL MAIN PARAMETERS @@";
+constexpr const char *MAIN_PROLOGUE_STUB_STRING         = "@@ MAIN PROLOGUE @@";
 }  // anonymous namespace
 
 // BuiltinInfo implementation
@@ -478,7 +481,10 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
     ASSERT(!fragmentShader->usesFragColor() || !fragmentShader->usesFragData());
 
     std::ostringstream vertexStream;
-    vertexStream << vertexShaderGL->getTranslatedSource(context);
+    vertexStream << "struct VS_OUTPUT\n";
+    const auto &vertexBuiltins = builtinsD3D[gl::ShaderType::Vertex];
+    generateVaryingLinkHLSL(varyingPacking, vertexBuiltins, builtinsD3D.usesPointSize(),
+                            vertexStream);
 
     // Instanced PointSprite emulation requires additional entries originally generated in the
     // GeometryShader HLSL. These include pointsize clamp values.
@@ -490,69 +496,56 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
                      << static_cast<int>(data.getCaps().maxAliasedPointSize) << ".0f;\n";
     }
 
-    // Add stub string to be replaced when shader is dynamically defined by its layout
-    vertexStream << "\n" << std::string(VERTEX_ATTRIBUTE_STUB_STRING) << "\n";
-
-    const auto &vertexBuiltins = builtinsD3D[gl::ShaderType::Vertex];
-
-    // Write the HLSL input/output declarations
-    vertexStream << "struct VS_OUTPUT\n";
-    generateVaryingLinkHLSL(varyingPacking, vertexBuiltins, builtinsD3D.usesPointSize(),
-                            vertexStream);
-    vertexStream << "\n"
-                 << "VS_OUTPUT main(VS_INPUT input)\n"
-                 << "{\n"
-                 << "    initAttributes(input);\n";
-
-    vertexStream << "\n"
-                 << "    gl_main();\n"
-                 << "\n"
-                 << "    VS_OUTPUT output;\n";
+    std::ostringstream vertexGenerateOutput;
+    vertexGenerateOutput << "VS_OUTPUT generateOutput(VS_INPUT input)\n"
+                         << "{\n"
+                         << "    VS_OUTPUT output;\n";
 
     if (vertexBuiltins.glPosition.enabled)
     {
-        vertexStream << "    output.gl_Position = gl_Position;\n";
+        vertexGenerateOutput << "    output.gl_Position = gl_Position;\n";
     }
 
     if (vertexBuiltins.glViewIDOVR.enabled)
     {
-        vertexStream << "    output.gl_ViewID_OVR = ViewID_OVR;\n";
+        vertexGenerateOutput << "    output.gl_ViewID_OVR = ViewID_OVR;\n";
     }
     if (programMetadata.hasANGLEMultiviewEnabled() && programMetadata.canSelectViewInVertexShader())
     {
         ASSERT(vertexBuiltins.glViewportIndex.enabled && vertexBuiltins.glLayer.enabled);
-        vertexStream << "    if (multiviewSelectViewportIndex)\n"
-                     << "    {\n"
-                     << "         output.gl_ViewportIndex = ViewID_OVR;\n"
-                     << "    } else {\n"
-                     << "         output.gl_ViewportIndex = 0;\n"
-                     << "         output.gl_Layer = ViewID_OVR;\n"
-                     << "    }\n";
+        vertexGenerateOutput << "    if (multiviewSelectViewportIndex)\n"
+                             << "    {\n"
+                             << "         output.gl_ViewportIndex = ViewID_OVR;\n"
+                             << "    } else {\n"
+                             << "         output.gl_ViewportIndex = 0;\n"
+                             << "         output.gl_Layer = ViewID_OVR;\n"
+                             << "    }\n";
     }
 
     // On D3D9 or D3D11 Feature Level 9, we need to emulate large viewports using dx_ViewAdjust.
     if (shaderModel >= 4 && mRenderer->getShaderModelSuffix() == "")
     {
-        vertexStream << "    output.dx_Position.x = gl_Position.x;\n";
+        vertexGenerateOutput << "    output.dx_Position.x = gl_Position.x;\n";
 
         if (programMetadata.usesViewScale())
         {
             // This code assumes that dx_ViewScale.y = -1.0f when rendering to texture, and +1.0f
             // when rendering to the default framebuffer. No other values are valid.
-            vertexStream << "    output.dx_Position.y = dx_ViewScale.y * gl_Position.y;\n";
+            vertexGenerateOutput << "    output.dx_Position.y = dx_ViewScale.y * gl_Position.y;\n";
         }
         else
         {
-            vertexStream << "    output.dx_Position.y = - gl_Position.y;\n";
+            vertexGenerateOutput << "    output.dx_Position.y = - gl_Position.y;\n";
         }
 
-        vertexStream << "    output.dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
-                     << "    output.dx_Position.w = gl_Position.w;\n";
+        vertexGenerateOutput
+            << "    output.dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
+            << "    output.dx_Position.w = gl_Position.w;\n";
     }
     else
     {
-        vertexStream << "    output.dx_Position.x = gl_Position.x * dx_ViewAdjust.z + "
-                        "dx_ViewAdjust.x * gl_Position.w;\n";
+        vertexGenerateOutput << "    output.dx_Position.x = gl_Position.x * dx_ViewAdjust.z + "
+                                "dx_ViewAdjust.x * gl_Position.w;\n";
 
         // If usesViewScale() is true and we're using the D3D11 renderer via Feature Level 9_*,
         // then we need to multiply the gl_Position.y by the viewScale.
@@ -560,28 +553,30 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         if (programMetadata.usesViewScale() &&
             (shaderModel >= 4 && mRenderer->getShaderModelSuffix() != ""))
         {
-            vertexStream << "    output.dx_Position.y = dx_ViewScale.y * (gl_Position.y * "
-                            "dx_ViewAdjust.w + dx_ViewAdjust.y * gl_Position.w);\n";
+            vertexGenerateOutput << "    output.dx_Position.y = dx_ViewScale.y * (gl_Position.y * "
+                                    "dx_ViewAdjust.w + dx_ViewAdjust.y * gl_Position.w);\n";
         }
         else
         {
-            vertexStream << "    output.dx_Position.y = -(gl_Position.y * dx_ViewAdjust.w + "
-                            "dx_ViewAdjust.y * gl_Position.w);\n";
+            vertexGenerateOutput
+                << "    output.dx_Position.y = -(gl_Position.y * dx_ViewAdjust.w + "
+                   "dx_ViewAdjust.y * gl_Position.w);\n";
         }
 
-        vertexStream << "    output.dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
-                     << "    output.dx_Position.w = gl_Position.w;\n";
+        vertexGenerateOutput
+            << "    output.dx_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
+            << "    output.dx_Position.w = gl_Position.w;\n";
     }
 
     // We don't need to output gl_PointSize if we use are emulating point sprites via instancing.
     if (vertexBuiltins.glPointSize.enabled)
     {
-        vertexStream << "    output.gl_PointSize = gl_PointSize;\n";
+        vertexGenerateOutput << "    output.gl_PointSize = gl_PointSize;\n";
     }
 
     if (vertexBuiltins.glFragCoord.enabled)
     {
-        vertexStream << "    output.gl_FragCoord = gl_Position;\n";
+        vertexGenerateOutput << "    output.gl_FragCoord = gl_Position;\n";
     }
 
     const auto &registerInfos = varyingPacking.getRegisterList();
@@ -592,58 +587,62 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         const auto &varying = *packedVarying.varying;
         ASSERT(!varying.isStruct());
 
-        vertexStream << "    output.v" << registerIndex << " = ";
+        vertexGenerateOutput << "    output.v" << registerIndex << " = ";
 
         if (packedVarying.isStructField())
         {
-            vertexStream << DecorateVariable(packedVarying.parentStructName) << ".";
+            vertexGenerateOutput << DecorateVariable(packedVarying.parentStructName) << ".";
         }
 
-        vertexStream << DecorateVariable(varying.name);
+        vertexGenerateOutput << DecorateVariable(varying.name);
 
         if (varying.isArray())
         {
-            WriteArrayString(vertexStream, registerInfo.varyingArrayIndex);
+            WriteArrayString(vertexGenerateOutput, registerInfo.varyingArrayIndex);
         }
 
         if (VariableRowCount(varying.type) > 1)
         {
-            WriteArrayString(vertexStream, registerInfo.varyingRowIndex);
+            WriteArrayString(vertexGenerateOutput, registerInfo.varyingRowIndex);
         }
 
-        vertexStream << ";\n";
+        vertexGenerateOutput << ";\n";
     }
 
     // Instanced PointSprite emulation requires additional entries to calculate
     // the final output vertex positions of the quad that represents each sprite.
     if (useInstancedPointSpriteEmulation)
     {
-        vertexStream << "\n"
-                     << "    gl_PointSize = clamp(gl_PointSize, minPointSize, maxPointSize);\n";
+        vertexGenerateOutput
+            << "\n"
+            << "    gl_PointSize = clamp(gl_PointSize, minPointSize, maxPointSize);\n";
 
-        vertexStream << "    output.dx_Position.x += (input.spriteVertexPos.x * gl_PointSize / "
-                        "(dx_ViewCoords.x*2)) * output.dx_Position.w;";
+        vertexGenerateOutput
+            << "    output.dx_Position.x += (input.spriteVertexPos.x * gl_PointSize / "
+               "(dx_ViewCoords.x*2)) * output.dx_Position.w;";
 
         if (programMetadata.usesViewScale())
         {
             // Multiply by ViewScale to invert the rendering when appropriate
-            vertexStream << "    output.dx_Position.y += (-dx_ViewScale.y * "
-                            "input.spriteVertexPos.y * gl_PointSize / (dx_ViewCoords.y*2)) * "
-                            "output.dx_Position.w;";
+            vertexGenerateOutput
+                << "    output.dx_Position.y += (-dx_ViewScale.y * "
+                   "input.spriteVertexPos.y * gl_PointSize / (dx_ViewCoords.y*2)) * "
+                   "output.dx_Position.w;";
         }
         else
         {
-            vertexStream << "    output.dx_Position.y += (input.spriteVertexPos.y * gl_PointSize / "
-                            "(dx_ViewCoords.y*2)) * output.dx_Position.w;";
+            vertexGenerateOutput
+                << "    output.dx_Position.y += (input.spriteVertexPos.y * gl_PointSize / "
+                   "(dx_ViewCoords.y*2)) * output.dx_Position.w;";
         }
 
-        vertexStream
+        vertexGenerateOutput
             << "    output.dx_Position.z += input.spriteVertexPos.z * output.dx_Position.w;\n";
 
         if (programMetadata.usesPointCoord())
         {
-            vertexStream << "\n"
-                         << "    output.gl_PointCoord = input.spriteTexCoord;\n";
+            vertexGenerateOutput << "\n"
+                                 << "    output.gl_PointCoord = input.spriteTexCoord;\n";
         }
     }
 
@@ -653,75 +652,62 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
     if (programMetadata.usesInsertedPointCoordValue())
     {
         ASSERT(!useInstancedPointSpriteEmulation);
-        vertexStream << "\n"
-                     << "    output.gl_PointCoord = float2(0.5, 0.5);\n";
+        vertexGenerateOutput << "\n"
+                             << "    output.gl_PointCoord = float2(0.5, 0.5);\n";
     }
 
-    vertexStream << "\n"
-                 << "    return output;\n"
-                 << "}\n";
+    vertexGenerateOutput << "\n"
+                         << "    return output;\n"
+                         << "}";
+
+    std::string vertexSource = vertexShaderGL->getTranslatedSource(context);
+    angle::ReplaceSubstring(&vertexSource, std::string(MAIN_PROLOGUE_STUB_STRING),
+                            "    initAttributes(input);\n");
+    angle::ReplaceSubstring(&vertexSource, std::string(VERTEX_OUTPUT_STUB_STRING),
+                            vertexGenerateOutput.str());
+    vertexStream << vertexSource;
 
     const auto &pixelBuiltins = builtinsD3D[gl::ShaderType::Fragment];
 
     std::ostringstream pixelStream;
-    pixelStream << fragmentShaderGL->getTranslatedSource(context);
     pixelStream << "struct PS_INPUT\n";
     generateVaryingLinkHLSL(varyingPacking, pixelBuiltins, builtinsD3D.usesPointSize(),
                             pixelStream);
     pixelStream << "\n";
 
-    pixelStream << std::string(PIXEL_OUTPUT_STUB_STRING) << "\n";
-
-    if (fragmentShader->usesFrontFacing())
-    {
-        if (shaderModel >= 4)
-        {
-            pixelStream << "PS_OUTPUT main(PS_INPUT input, bool isFrontFace : SV_IsFrontFace)\n"
-                        << "{\n";
-        }
-        else
-        {
-            pixelStream << "PS_OUTPUT main(PS_INPUT input, float vFace : VFACE)\n"
-                        << "{\n";
-        }
-    }
-    else
-    {
-        pixelStream << "PS_OUTPUT main(PS_INPUT input)\n"
-                    << "{\n";
-    }
-
+    std::ostringstream pixelPrologue;
     if (fragmentShader->usesViewID())
     {
         ASSERT(pixelBuiltins.glViewIDOVR.enabled);
-        pixelStream << "    ViewID_OVR = input.gl_ViewID_OVR;\n";
+        pixelPrologue << "    ViewID_OVR = input.gl_ViewID_OVR;\n";
     }
 
     if (pixelBuiltins.glFragCoord.enabled)
     {
-        pixelStream << "    float rhw = 1.0 / input.gl_FragCoord.w;\n";
+        pixelPrologue << "    float rhw = 1.0 / input.gl_FragCoord.w;\n";
 
         // Certain Shader Models (4_0+ and 3_0) allow reading from dx_Position in the pixel shader.
         // Other Shader Models (4_0_level_9_3 and 2_x) don't support this, so we emulate it using
         // dx_ViewCoords.
         if (shaderModel >= 4 && mRenderer->getShaderModelSuffix() == "")
         {
-            pixelStream << "    gl_FragCoord.x = input.dx_Position.x;\n"
-                        << "    gl_FragCoord.y = input.dx_Position.y;\n";
+            pixelPrologue << "    gl_FragCoord.x = input.dx_Position.x;\n"
+                          << "    gl_FragCoord.y = input.dx_Position.y;\n";
         }
         else if (shaderModel == 3)
         {
-            pixelStream << "    gl_FragCoord.x = input.dx_Position.x + 0.5;\n"
-                        << "    gl_FragCoord.y = input.dx_Position.y + 0.5;\n";
+            pixelPrologue << "    gl_FragCoord.x = input.dx_Position.x + 0.5;\n"
+                          << "    gl_FragCoord.y = input.dx_Position.y + 0.5;\n";
         }
         else
         {
             // dx_ViewCoords contains the viewport width/2, height/2, center.x and center.y. See
             // Renderer::setViewport()
-            pixelStream << "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_ViewCoords.x + "
-                           "dx_ViewCoords.z;\n"
-                        << "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_ViewCoords.y + "
-                           "dx_ViewCoords.w;\n";
+            pixelPrologue
+                << "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_ViewCoords.x + "
+                   "dx_ViewCoords.z;\n"
+                << "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_ViewCoords.y + "
+                   "dx_ViewCoords.w;\n";
         }
 
         if (programMetadata.usesViewScale())
@@ -761,32 +747,32 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
                 //    gl_FragCoord.y"
                 //
                 // Simplifying, this becomes:
-                pixelStream
+                pixelPrologue
                     << "    gl_FragCoord.y = (1.0f + dx_ViewScale.y) * gl_FragCoord.y /"
                        "(1.0f - input.gl_FragCoord.y * rhw)  - dx_ViewScale.y * gl_FragCoord.y;\n";
             }
         }
 
-        pixelStream << "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_DepthFront.x + "
-                       "dx_DepthFront.y;\n"
-                    << "    gl_FragCoord.w = rhw;\n";
+        pixelPrologue << "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_DepthFront.x + "
+                         "dx_DepthFront.y;\n"
+                      << "    gl_FragCoord.w = rhw;\n";
     }
 
     if (pixelBuiltins.glPointCoord.enabled && shaderModel >= 3)
     {
-        pixelStream << "    gl_PointCoord.x = input.gl_PointCoord.x;\n"
-                    << "    gl_PointCoord.y = 1.0 - input.gl_PointCoord.y;\n";
+        pixelPrologue << "    gl_PointCoord.x = input.gl_PointCoord.x;\n"
+                      << "    gl_PointCoord.y = 1.0 - input.gl_PointCoord.y;\n";
     }
 
     if (fragmentShader->usesFrontFacing())
     {
         if (shaderModel <= 3)
         {
-            pixelStream << "    gl_FrontFacing = (vFace * dx_DepthFront.z >= 0.0);\n";
+            pixelPrologue << "    gl_FrontFacing = (vFace * dx_DepthFront.z >= 0.0);\n";
         }
         else
         {
-            pixelStream << "    gl_FrontFacing = isFrontFace;\n";
+            pixelPrologue << "    gl_FrontFacing = isFrontFace;\n";
         }
     }
 
@@ -802,52 +788,71 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
         if (packedVarying.vertexOnly || !varying.active)
             continue;
 
-        pixelStream << "    ";
+        pixelPrologue << "    ";
 
         if (packedVarying.isStructField())
         {
-            pixelStream << DecorateVariable(packedVarying.parentStructName) << ".";
+            pixelPrologue << DecorateVariable(packedVarying.parentStructName) << ".";
         }
 
-        pixelStream << DecorateVariable(varying.name);
+        pixelPrologue << DecorateVariable(varying.name);
 
         if (varying.isArray())
         {
-            WriteArrayString(pixelStream, registerInfo.varyingArrayIndex);
+            WriteArrayString(pixelPrologue, registerInfo.varyingArrayIndex);
         }
 
         GLenum transposedType = TransposeMatrixType(varying.type);
         if (VariableRowCount(transposedType) > 1)
         {
-            WriteArrayString(pixelStream, registerInfo.varyingRowIndex);
+            WriteArrayString(pixelPrologue, registerInfo.varyingRowIndex);
         }
 
-        pixelStream << " = input.v" << registerIndex;
+        pixelPrologue << " = input.v" << registerIndex;
 
         switch (VariableColumnCount(transposedType))
         {
             case 1:
-                pixelStream << ".x";
+                pixelPrologue << ".x";
                 break;
             case 2:
-                pixelStream << ".xy";
+                pixelPrologue << ".xy";
                 break;
             case 3:
-                pixelStream << ".xyz";
+                pixelPrologue << ".xyz";
                 break;
             case 4:
                 break;
             default:
                 UNREACHABLE();
         }
-        pixelStream << ";\n";
+        pixelPrologue << ";\n";
     }
 
-    pixelStream << "\n"
-                << "    gl_main();\n"
-                << "\n"
-                << "    return generateOutput();\n"
-                << "}\n";
+    std::string pixelSource = fragmentShaderGL->getTranslatedSource(context);
+
+    if (fragmentShader->usesFrontFacing())
+    {
+        if (shaderModel >= 4)
+        {
+            angle::ReplaceSubstring(&pixelSource, std::string(PIXEL_MAIN_PARAMETERS_STUB_STRING),
+                                    "PS_INPUT input, bool isFrontFace : SV_IsFrontFace");
+        }
+        else
+        {
+            angle::ReplaceSubstring(&pixelSource, std::string(PIXEL_MAIN_PARAMETERS_STUB_STRING),
+                                    "PS_INPUT input, float vFace : VFACE");
+        }
+    }
+    else
+    {
+        angle::ReplaceSubstring(&pixelSource, std::string(PIXEL_MAIN_PARAMETERS_STUB_STRING),
+                                "PS_INPUT input");
+    }
+
+    angle::ReplaceSubstring(&pixelSource, std::string(MAIN_PROLOGUE_STUB_STRING),
+                            pixelPrologue.str());
+    pixelStream << pixelSource;
 
     (*shaderHLSL)[gl::ShaderType::Vertex]   = vertexStream.str();
     (*shaderHLSL)[gl::ShaderType::Fragment] = pixelStream.str();
@@ -858,9 +863,8 @@ std::string DynamicHLSL::generateComputeShaderLinkHLSL(const gl::Context *contex
 {
     gl::Shader *computeShaderGL = programData.getAttachedShader(ShaderType::Compute);
     std::stringstream computeStream;
-    std::string translatedSource = computeShaderGL->getTranslatedSource(context);
-    computeStream << translatedSource;
 
+    std::string translatedSource = computeShaderGL->getTranslatedSource(context);
     bool usesWorkGroupID = translatedSource.find("GL_USES_WORK_GROUP_ID") != std::string::npos;
     bool usesLocalInvocationID =
         translatedSource.find("GL_USES_LOCAL_INVOCATION_ID") != std::string::npos;
@@ -896,33 +900,28 @@ std::string DynamicHLSL::generateComputeShaderLinkHLSL(const gl::Context *contex
 
     computeStream << "};\n\n";
 
-    const sh::WorkGroupSize &localSize = computeShaderGL->getWorkGroupSize(context);
-    computeStream << "[numthreads(" << localSize[0] << ", " << localSize[1] << ", " << localSize[2]
-                  << ")]\n";
-
-    computeStream << "void main(CS_INPUT input)\n"
-                  << "{\n";
+    std::ostringstream computePrologue;
 
     if (usesWorkGroupID)
     {
-        computeStream << "    gl_WorkGroupID = input.dx_WorkGroupID;\n";
+        computePrologue << "    gl_WorkGroupID = input.dx_WorkGroupID;\n";
     }
     if (usesLocalInvocationID)
     {
-        computeStream << "    gl_LocalInvocationID = input.dx_LocalInvocationID;\n";
+        computePrologue << "    gl_LocalInvocationID = input.dx_LocalInvocationID;\n";
     }
     if (usesGlobalInvocationID)
     {
-        computeStream << "    gl_GlobalInvocationID = input.dx_GlobalInvocationID;\n";
+        computePrologue << "    gl_GlobalInvocationID = input.dx_GlobalInvocationID;\n";
     }
     if (usesLocalInvocationIndex)
     {
-        computeStream << "    gl_LocalInvocationIndex = input.dx_LocalInvocationIndex;\n";
+        computePrologue << "    gl_LocalInvocationIndex = input.dx_LocalInvocationIndex;\n";
     }
 
-    computeStream << "\n"
-                  << "    gl_main();\n"
-                  << "}\n";
+    angle::ReplaceSubstring(&translatedSource, std::string(MAIN_PROLOGUE_STUB_STRING),
+                            computePrologue.str());
+    computeStream << translatedSource;
 
     return computeStream.str();
 }

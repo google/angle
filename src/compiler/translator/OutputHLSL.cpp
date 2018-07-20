@@ -182,6 +182,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
                        int numRenderTargets,
                        const std::vector<Uniform> &uniforms,
                        ShCompileOptions compileOptions,
+                       sh::WorkGroupSize workGroupSize,
                        TSymbolTable *symbolTable,
                        PerformanceDiagnostics *perfDiagnostics)
     : TIntermTraverser(true, true, true, symbolTable),
@@ -191,12 +192,13 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
       mSourcePath(sourcePath),
       mOutputType(outputType),
       mCompileOptions(compileOptions),
+      mInsideFunction(false),
+      mInsideMain(false),
       mNumRenderTargets(numRenderTargets),
       mCurrentFunctionMetadata(nullptr),
+      mWorkGroupSize(workGroupSize),
       mPerfDiagnostics(perfDiagnostics)
 {
-    mInsideFunction = false;
-
     mUsesFragColor   = false;
     mUsesFragData    = false;
     mUsesDepthRange  = false;
@@ -1743,10 +1745,16 @@ bool OutputHLSL::visitBlock(Visit visit, TIntermBlock *node)
 {
     TInfoSinkBase &out = getInfoSink();
 
+    bool isMainBlock = mInsideMain && getParentNode()->getAsFunctionDefinition();
+
     if (mInsideFunction)
     {
         outputLineDirective(out, node->getLine().first_line);
         out << "{\n";
+        if (isMainBlock)
+        {
+            out << "@@ MAIN PROLOGUE @@\n";
+        }
     }
 
     for (TIntermNode *statement : *node->getSequence())
@@ -1781,6 +1789,19 @@ bool OutputHLSL::visitBlock(Visit visit, TIntermBlock *node)
     if (mInsideFunction)
     {
         outputLineDirective(out, node->getLine().last_line);
+        if (isMainBlock && shaderNeedsGenerateOutput())
+        {
+            // We could have an empty main, a main function without a branch at the end, or a main
+            // function with a discard statement at the end. In these cases we need to add a return
+            // statement.
+            bool needReturnStatement =
+                node->getSequence()->empty() || !node->getSequence()->back()->getAsBranchNode() ||
+                node->getSequence()->back()->getAsBranchNode()->getFlowOp() != EOpReturn;
+            if (needReturnStatement)
+            {
+                out << "return " << generateOutputCall() << ";\n";
+            }
+        }
         out << "}\n";
     }
 
@@ -1797,40 +1818,64 @@ bool OutputHLSL::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition 
     ASSERT(index != CallDAG::InvalidIndex);
     mCurrentFunctionMetadata = &mASTMetadataList[index];
 
-    out << TypeString(node->getFunctionPrototype()->getType()) << " ";
-
     const TFunction *func = node->getFunction();
 
     if (func->isMain())
     {
-        out << "gl_main(";
+        // The stub strings below are replaced when shader is dynamically defined by its layout:
+        switch (mShaderType)
+        {
+            case GL_VERTEX_SHADER:
+                out << "@@ VERTEX ATTRIBUTES @@\n\n"
+                    << "@@ VERTEX OUTPUT @@\n\n"
+                    << "VS_OUTPUT main(VS_INPUT input)";
+                break;
+            case GL_FRAGMENT_SHADER:
+                out << "@@ PIXEL OUTPUT @@\n\n"
+                    << "PS_OUTPUT main(@@ PIXEL MAIN PARAMETERS @@)";
+                break;
+            case GL_COMPUTE_SHADER:
+                out << "[numthreads(" << mWorkGroupSize[0] << ", " << mWorkGroupSize[1] << ", "
+                    << mWorkGroupSize[2] << ")]\n";
+                out << "void main(CS_INPUT input)";
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
     }
     else
     {
+        out << TypeString(node->getFunctionPrototype()->getType()) << " ";
         out << DecorateFunctionIfNeeded(func) << DisambiguateFunctionName(func)
             << (mOutputLod0Function ? "Lod0(" : "(");
-    }
 
-    size_t paramCount = func->getParamCount();
-    for (unsigned int i = 0; i < paramCount; i++)
-    {
-        const TVariable *param = func->getParam(i);
-        ensureStructDefined(param->getType());
-
-        writeParameter(param, out);
-
-        if (i < paramCount - 1)
+        size_t paramCount = func->getParamCount();
+        for (unsigned int i = 0; i < paramCount; i++)
         {
-            out << ", ";
-        }
-    }
+            const TVariable *param = func->getParam(i);
+            ensureStructDefined(param->getType());
 
-    out << ")\n";
+            writeParameter(param, out);
+
+            if (i < paramCount - 1)
+            {
+                out << ", ";
+            }
+        }
+
+        out << ")\n";
+    }
 
     mInsideFunction = true;
+    if (func->isMain())
+    {
+        mInsideMain = true;
+    }
     // The function body node will output braces.
     node->getBody()->traverse(this);
     mInsideFunction = false;
+    mInsideMain     = false;
 
     mCurrentFunctionMetadata = nullptr;
 
@@ -2455,11 +2500,19 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
             case EOpReturn:
                 if (node->getExpression())
                 {
+                    ASSERT(!mInsideMain);
                     out << "return ";
                 }
                 else
                 {
-                    out << "return";
+                    if (mInsideMain && shaderNeedsGenerateOutput())
+                    {
+                        out << "return " << generateOutputCall();
+                    }
+                    else
+                    {
+                        out << "return";
+                    }
                 }
                 break;
             default:
@@ -3151,6 +3204,23 @@ void OutputHLSL::ensureStructDefined(const TType &type)
     {
         ASSERT(type.getBasicType() == EbtStruct);
         mStructureHLSL->ensureStructDefined(*structure);
+    }
+}
+
+bool OutputHLSL::shaderNeedsGenerateOutput() const
+{
+    return mShaderType == GL_VERTEX_SHADER || mShaderType == GL_FRAGMENT_SHADER;
+}
+
+const char *OutputHLSL::generateOutputCall() const
+{
+    if (mShaderType == GL_VERTEX_SHADER)
+    {
+        return "generateOutput(input)";
+    }
+    else
+    {
+        return "generateOutput()";
     }
 }
 

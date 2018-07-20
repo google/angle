@@ -4615,6 +4615,40 @@ TEST_P(GLSLTest_ES3, AssignAssignmentToSwizzled)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
 }
 
+// Test a fragment shader that returns inside if (that being the only branch that actually gets
+// executed). Regression test for http://anglebug.com/2325
+TEST_P(GLSLTest, IfElseIfAndReturn)
+{
+    const std::string &vertexShader =
+        R"(attribute vec4 a_position;
+        varying vec2 vPos;
+        void main()
+        {
+            gl_Position = a_position;
+            vPos = a_position.xy;
+        })";
+
+    const std::string &fragmentShader =
+        R"(precision mediump float;
+        varying vec2 vPos;
+        void main()
+        {
+            if (vPos.x < 1.0) // This colors the whole canvas green
+            {
+                gl_FragColor = vec4(0, 1, 0, 1);
+                return;
+            }
+            else if (vPos.x < 1.1) // This should have no effect
+            {
+                gl_FragColor = vec4(1, 0, 0, 1);
+            }
+        })";
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    drawQuad(program.get(), "a_position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
