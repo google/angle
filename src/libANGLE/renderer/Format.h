@@ -25,8 +25,8 @@ struct Format final : private angle::NonCopyable
                      GLenum fboFormat,
                      rx::MipGenerationFunction mipGen,
                      const rx::FastCopyFunctionMap &fastCopyFunctions,
-                     rx::ColorReadFunction colorRead,
-                     rx::ColorWriteFunction colorWrite,
+                     rx::PixelReadFunction colorRead,
+                     rx::PixelWriteFunction colorWrite,
                      GLenum componentType,
                      GLuint redBits,
                      GLuint greenBits,
@@ -56,8 +56,8 @@ struct Format final : private angle::NonCopyable
     GLenum fboImplementationInternalFormat;
 
     rx::MipGenerationFunction mipGenerationFunction;
-    rx::ColorReadFunction colorReadFunction;
-    rx::ColorWriteFunction colorWriteFunction;
+    rx::PixelReadFunction pixelReadFunction;
+    rx::PixelWriteFunction pixelWriteFunction;
 
     // A map from a gl::FormatType to a fast pixel copy function for this format.
     const rx::FastCopyFunctionMap &fastCopyFunctions;
@@ -81,8 +81,8 @@ constexpr Format::Format(FormatID id,
                          GLenum fboFormat,
                          rx::MipGenerationFunction mipGen,
                          const rx::FastCopyFunctionMap &fastCopyFunctions,
-                         rx::ColorReadFunction colorRead,
-                         rx::ColorWriteFunction colorWrite,
+                         rx::PixelReadFunction colorRead,
+                         rx::PixelWriteFunction colorWrite,
                          GLenum componentType,
                          GLuint redBits,
                          GLuint greenBits,
@@ -96,8 +96,8 @@ constexpr Format::Format(FormatID id,
       glInternalFormat(glFormat),
       fboImplementationInternalFormat(fboFormat),
       mipGenerationFunction(mipGen),
-      colorReadFunction(colorRead),
-      colorWriteFunction(colorWrite),
+      pixelReadFunction(colorRead),
+      pixelWriteFunction(colorWrite),
       fastCopyFunctions(fastCopyFunctions),
       componentType(componentType),
       redBits(redBits),

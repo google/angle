@@ -669,8 +669,8 @@ gl::Error TextureVk::copySubTextureImpl(ContextVk *contextVk,
     GLuint destDataRowPitch   = sourceArea.width * destAngleFormat.pixelBytes;
 
     CopyImageCHROMIUM(sourceData, sourceDataRowPitch, sourceAngleFormat.pixelBytes,
-                      sourceAngleFormat.colorReadFunction, destData, destDataRowPitch,
-                      destAngleFormat.pixelBytes, destAngleFormat.colorWriteFunction,
+                      sourceAngleFormat.pixelReadFunction, destData, destDataRowPitch,
+                      destAngleFormat.pixelBytes, destAngleFormat.pixelWriteFunction,
                       destFormat.format, destFormat.componentType, sourceArea.width,
                       sourceArea.height, unpackFlipY, unpackPremultiplyAlpha,
                       unpackUnmultiplyAlpha);

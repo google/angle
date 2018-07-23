@@ -118,8 +118,8 @@ gl::Error Image11::CopyImage(const gl::Context *context,
                         destOffset.y * destMapped.RowPitch;
 
     CopyImageCHROMIUM(sourceData, srcMapped.RowPitch, sourcePixelBytes,
-                      sourceFormat.colorReadFunction, destData, destMapped.RowPitch, destPixelBytes,
-                      destFormat.colorWriteFunction, destUnsizedFormat,
+                      sourceFormat.pixelReadFunction, destData, destMapped.RowPitch, destPixelBytes,
+                      destFormat.pixelWriteFunction, destUnsizedFormat,
                       destFormatInfo.componentType, sourceRect.width, sourceRect.height,
                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 

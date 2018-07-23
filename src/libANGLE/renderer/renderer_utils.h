@@ -122,9 +122,9 @@ using MipGenerationFunction = void (*)(size_t sourceWidth,
                                        size_t destRowPitch,
                                        size_t destDepthPitch);
 
-typedef void (*ColorReadFunction)(const uint8_t *source, uint8_t *dest);
-typedef void (*ColorWriteFunction)(const uint8_t *source, uint8_t *dest);
-typedef void (*ColorCopyFunction)(const uint8_t *source, uint8_t *dest);
+typedef void (*PixelReadFunction)(const uint8_t *source, uint8_t *dest);
+typedef void (*PixelWriteFunction)(const uint8_t *source, uint8_t *dest);
+typedef void (*PixelCopyFunction)(const uint8_t *source, uint8_t *dest);
 
 class FastCopyFunctionMap
 {
@@ -132,7 +132,7 @@ class FastCopyFunctionMap
     struct Entry
     {
         angle::FormatID formatID;
-        ColorCopyFunction func;
+        PixelCopyFunction func;
     };
 
     constexpr FastCopyFunctionMap() : FastCopyFunctionMap(nullptr, 0) {}
@@ -140,7 +140,7 @@ class FastCopyFunctionMap
     constexpr FastCopyFunctionMap(const Entry *data, size_t size) : mSize(size), mData(data) {}
 
     bool has(angle::FormatID formatID) const;
-    ColorCopyFunction get(angle::FormatID formatID) const;
+    PixelCopyFunction get(angle::FormatID formatID) const;
 
   private:
     size_t mSize;
@@ -208,11 +208,11 @@ bool ShouldUseVirtualizedContexts(const egl::AttributeMap &attribs, bool default
 void CopyImageCHROMIUM(const uint8_t *sourceData,
                        size_t sourceRowPitch,
                        size_t sourcePixelBytes,
-                       ColorReadFunction readFunction,
+                       PixelReadFunction pixelReadFunction,
                        uint8_t *destData,
                        size_t destRowPitch,
                        size_t destPixelBytes,
-                       ColorWriteFunction colorWriteFunction,
+                       PixelWriteFunction pixelWriteFunction,
                        GLenum destUnsizedFormat,
                        GLenum destComponentType,
                        size_t width,

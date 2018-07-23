@@ -226,8 +226,8 @@ gl::Error Image9::CopyImage(const gl::Context *context,
     ASSERT(sourceData && destData);
 
     CopyImageCHROMIUM(sourceData, sourceLocked.Pitch, sourceD3DFormatInfo.pixelBytes,
-                      sourceD3DFormatInfo.info().colorReadFunction, destData, destLocked.Pitch,
-                      destD3DFormatInfo.pixelBytes, destD3DFormatInfo.info().colorWriteFunction,
+                      sourceD3DFormatInfo.info().pixelReadFunction, destData, destLocked.Pitch,
+                      destD3DFormatInfo.pixelBytes, destD3DFormatInfo.info().pixelWriteFunction,
                       gl::GetUnsizedFormat(dest->getInternalFormat()),
                       destD3DFormatInfo.info().componentType, sourceRect.width, sourceRect.height,
                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);

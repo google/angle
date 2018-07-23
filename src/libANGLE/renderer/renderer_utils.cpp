@@ -84,7 +84,7 @@ void ClipChannelsNoOp(gl::ColorF *color)
 }
 
 void WriteUintColor(const gl::ColorF &color,
-                    ColorWriteFunction colorWriteFunction,
+                    PixelWriteFunction colorWriteFunction,
                     uint8_t *destPixelData)
 {
     gl::ColorUI destColor(
@@ -94,7 +94,7 @@ void WriteUintColor(const gl::ColorF &color,
 }
 
 void WriteFloatColor(const gl::ColorF &color,
-                     ColorWriteFunction colorWriteFunction,
+                     PixelWriteFunction colorWriteFunction,
                      uint8_t *destPixelData)
 {
     colorWriteFunction(reinterpret_cast<const uint8_t *>(&color), destPixelData);
@@ -211,7 +211,7 @@ void PackPixels(const PackPixelsParams &params,
         return;
     }
 
-    ColorCopyFunction fastCopyFunc = sourceFormat.fastCopyFunctions.get(params.destFormat->id);
+    PixelCopyFunction fastCopyFunc = sourceFormat.fastCopyFunctions.get(params.destFormat->id);
 
     if (fastCopyFunc)
     {
@@ -230,8 +230,8 @@ void PackPixels(const PackPixelsParams &params,
         return;
     }
 
-    ColorWriteFunction colorWriteFunction = params.destFormat->colorWriteFunction;
-    ASSERT(colorWriteFunction != nullptr);
+    PixelWriteFunction pixelWriteFunction = params.destFormat->pixelWriteFunction;
+    ASSERT(pixelWriteFunction != nullptr);
 
     // Maximum size of any Color<T> type used.
     uint8_t temp[16];
@@ -240,8 +240,8 @@ void PackPixels(const PackPixelsParams &params,
                       sizeof(temp) >= sizeof(angle::DepthStencil),
                   "Unexpected size of pixel struct.");
 
-    ColorReadFunction colorReadFunction = sourceFormat.colorReadFunction;
-    ASSERT(colorReadFunction != nullptr);
+    PixelReadFunction pixelReadFunction = sourceFormat.pixelReadFunction;
+    ASSERT(pixelReadFunction != nullptr);
 
     for (int y = 0; y < params.area.height; ++y)
     {
@@ -253,8 +253,8 @@ void PackPixels(const PackPixelsParams &params,
 
             // readFunc and writeFunc will be using the same type of color, CopyTexImage
             // will not allow the copy otherwise.
-            colorReadFunction(src, temp);
-            colorWriteFunction(temp, dest);
+            pixelReadFunction(src, temp);
+            pixelWriteFunction(temp, dest);
         }
     }
 }
@@ -264,7 +264,7 @@ bool FastCopyFunctionMap::has(angle::FormatID formatID) const
     return (get(formatID) != nullptr);
 }
 
-ColorCopyFunction FastCopyFunctionMap::get(angle::FormatID formatID) const
+PixelCopyFunction FastCopyFunctionMap::get(angle::FormatID formatID) const
 {
     for (size_t index = 0; index < mSize; ++index)
     {
@@ -307,11 +307,11 @@ bool ShouldUseVirtualizedContexts(const egl::AttributeMap &attribs, bool default
 void CopyImageCHROMIUM(const uint8_t *sourceData,
                        size_t sourceRowPitch,
                        size_t sourcePixelBytes,
-                       ColorReadFunction colorReadFunction,
+                       PixelReadFunction pixelReadFunction,
                        uint8_t *destData,
                        size_t destRowPitch,
                        size_t destPixelBytes,
-                       ColorWriteFunction colorWriteFunction,
+                       PixelWriteFunction pixelWriteFunction,
                        GLenum destUnsizedFormat,
                        GLenum destComponentType,
                        size_t width,
@@ -363,7 +363,7 @@ void CopyImageCHROMIUM(const uint8_t *sourceData,
             const uint8_t *sourcePixelData = sourceData + y * sourceRowPitch + x * sourcePixelBytes;
 
             gl::ColorF sourceColor;
-            colorReadFunction(sourcePixelData, reinterpret_cast<uint8_t *>(&sourceColor));
+            pixelReadFunction(sourcePixelData, reinterpret_cast<uint8_t *>(&sourceColor));
 
             conversionFunction(&sourceColor);
             clipChannelsFunction(&sourceColor);
@@ -380,7 +380,7 @@ void CopyImageCHROMIUM(const uint8_t *sourceData,
             }
 
             uint8_t *destPixelData = destData + destY * destRowPitch + x * destPixelBytes;
-            writeFunction(sourceColor, colorWriteFunction, destPixelData);
+            writeFunction(sourceColor, pixelWriteFunction, destPixelData);
         }
     }
 }

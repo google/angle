@@ -607,7 +607,7 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     uint8_t *destMemory   = buffer->data() + sourceBufferSize;
 
     GLenum readPixelsFormat        = GL_NONE;
-    ColorReadFunction readFunction = nullptr;
+    PixelReadFunction readFunction = nullptr;
     if (sourceComponentType == GL_UNSIGNED_INT)
     {
         readPixelsFormat = GL_RGBA_INTEGER;
@@ -633,7 +633,7 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
     CopyImageCHROMIUM(
         sourceMemory, sourceArea.width * sourcePixelSize, sourcePixelSize, readFunction, destMemory,
         sourceArea.width * destInternalFormatInfo.pixelBytes, destInternalFormatInfo.pixelBytes,
-        destFormatInfo.colorWriteFunction, destInternalFormatInfo.format,
+        destFormatInfo.pixelWriteFunction, destInternalFormatInfo.format,
         destInternalFormatInfo.componentType, sourceArea.width, sourceArea.height, unpackFlipY,
         unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 
