@@ -6056,13 +6056,6 @@ bool ValidateFramebufferTexture2D(Context *context,
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
                 return false;
         }
-
-        const Format &format = tex->getFormat(textarget, level);
-        if (format.info->compressed)
-        {
-            context->handleError(InvalidOperation());
-            return false;
-        }
     }
 
     return true;
