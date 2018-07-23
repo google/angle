@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6c036c7_2509dc47",
+        "filename": "src/common/Color.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-23T16:57:12Z",
+      "side": 1,
+      "message": "nit: a comment to clarify that this is needed to represent both 32-bit unorm and float depth ranges.",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 11
+      },
+      "revId": "f24502114243b6bae6f3c7dbe6f62f8435a5e998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
