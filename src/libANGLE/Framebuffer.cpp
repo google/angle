@@ -1353,8 +1353,8 @@ bool Framebuffer::partialClearNeedsInit(const Context *context,
     }
 
     const auto &depthStencil = glState.getDepthStencilState();
-    ASSERT(depthStencil.stencilBackMask == depthStencil.stencilMask);
-    if (stencil && depthStencil.stencilMask != depthStencil.stencilWritemask)
+    if (stencil && (depthStencil.stencilMask != depthStencil.stencilWritemask ||
+                    depthStencil.stencilBackMask != depthStencil.stencilBackWritemask))
     {
         return true;
     }
