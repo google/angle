@@ -96,6 +96,54 @@
     },
     {
       "key": {
+        "uuid": "6b92e55c_f461d325",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5544,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-23T17:24:34Z",
+      "side": 1,
+      "message": "I believe it\u0027s valid to call glUseProgram on a program that has not been linked yet.",
+      "parentUuid": "b69a544b_37af2b72",
+      "range": {
+        "startLine": 5544,
+        "startChar": 8,
+        "endLine": 5544,
+        "endChar": 41
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69c4aa47_d13c9c91",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5544,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-23T17:24:34Z",
+      "side": 1,
+      "message": "Ok, I understand your point. I don\u0027t think we need to force it to resolve when the extension is not present, it only limits optimizations the backends may do.",
+      "parentUuid": "89cda07f_4a0a4e06",
+      "range": {
+        "startLine": 5544,
+        "startChar": 45,
+        "endLine": 5544,
+        "endChar": 83
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "354977a6_90bd224e",
         "filename": "src/libANGLE/ContextState.cpp",
         "patchSetId": 14
@@ -131,6 +179,30 @@
       "side": 1,
       "message": "That\u0027s a good idea. Tried to add it to getDefaultParrallelCompileThreads() in Context. But a few bots failed ,as std::thread is not available in clang.",
       "parentUuid": "354977a6_90bd224e",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 52
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0d13892_d3572be5",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-23T17:24:34Z",
+      "side": 1,
+      "message": "We already use the stl threading library in ANGLE, is it just the hardware_concurrency function that doesn\u0027t work?",
+      "parentUuid": "8390f9ec_43b286d5",
       "range": {
         "startLine": 64,
         "startChar": 0,
@@ -507,6 +579,30 @@
       "side": 1,
       "message": "My intent is to make WorkerThreadPool both synchronous and asynchronous, as Ken once concerned  that some GL drivers may be buggy if linking programs in another thread context. So if the pool thread number is 0, we can still use it synchronously.",
       "parentUuid": "60a3f6f0_6c37cdb8",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 105,
+        "endChar": 99
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c78ff827_368ea961",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-23T17:24:34Z",
+      "side": 1,
+      "message": "When the pool is written like this, it will have very poor behaviour in some use cases.  For example if mMaxThreads is 2 and the user submits 10 programs to link, 2 threads will be started to perform asynchronous links and all the rest will block on the main thread.  The behaviour we want is that the main thread is always free when this extension is being used, it just queues up more jobs for the other threads.\n\nI think making the pool synchronous and asynchronous should be done in the back-ends themselves as workarounds, not part of the thread pool in the front end.  They can just execute the task immediately instead of submitting it to the pool.",
+      "parentUuid": "bc88cc56_e97007e7",
       "range": {
         "startLine": 103,
         "startChar": 8,

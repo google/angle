@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56b7cd6b_bdbfb605",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 7545,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-23T17:24:34Z",
+      "side": 1,
+      "message": "I\u0027m not positive that this is the best way to \"merge\" the max compiler threads settings from multiple contexts because it overwrites the values from all other contexts.  I think ideally it would be the max of all the compiler threads counts from all contexts in the share group but we don\u0027t have access to the whole share group from the context right now to compute that.\n\nThis is fine for now but can you add a comment that it will overwrite the settings from other contexts?",
+      "range": {
+        "startLine": 7545,
+        "startChar": 4,
+        "endLine": 7545,
+        "endChar": 45
+      },
+      "revId": "d61492ee2916e6f77e0af238e71baf81cd005afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
