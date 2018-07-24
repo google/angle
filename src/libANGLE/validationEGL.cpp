@@ -1869,6 +1869,12 @@ Error ValidateCreateImageKHR(const Display *display,
                    << "invalid target: 0x" << std::hex << std::uppercase << target;
     }
 
+    if (attributes.contains(EGL_GL_TEXTURE_ZOFFSET_KHR) && target != EGL_GL_TEXTURE_3D_KHR)
+    {
+        return EglBadParameter()
+               << "EGL_GL_TEXTURE_ZOFFSET_KHR must be used with a 3D texture target.";
+    }
+
     return NoError();
 }
 
