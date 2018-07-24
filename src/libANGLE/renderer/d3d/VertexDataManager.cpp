@@ -128,18 +128,21 @@ TranslatedAttribute::TranslatedAttribute()
 
 TranslatedAttribute::TranslatedAttribute(const TranslatedAttribute &other) = default;
 
-gl::ErrorOrResult<unsigned int> TranslatedAttribute::computeOffset(GLint startVertex) const
+gl::Error TranslatedAttribute::computeOffset(GLint startVertex, unsigned int *offsetOut) const
 {
     if (!usesFirstVertexOffset)
     {
-        return baseOffset;
+        *offsetOut = baseOffset;
+        return gl::NoError();
     }
 
-    CheckedNumeric<unsigned int> offset;
+    CheckedNumeric<unsigned int> offset(baseOffset);
+    CheckedNumeric<unsigned int> checkedStride(stride);
 
-    offset = baseOffset + stride * static_cast<unsigned int>(startVertex);
+    offset += checkedStride * static_cast<unsigned int>(startVertex);
     ANGLE_TRY_CHECKED_MATH(offset.IsValid());
-    return offset.ValueOrDie();
+    *offsetOut = offset.ValueOrDie();
+    return gl::NoError();
 }
 
 // Warning: you should ensure binding really matches attrib.bindingIndex before using this function.

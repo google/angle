@@ -52,7 +52,7 @@ struct TranslatedAttribute
 
     // Computes the correct offset from baseOffset, usesFirstVertexOffset, stride and startVertex.
     // Can throw an error on integer overflow.
-    gl::ErrorOrResult<unsigned int> computeOffset(GLint startVertex) const;
+    gl::Error computeOffset(GLint startVertex, unsigned int *offsetOut) const;
 
     bool active;
 

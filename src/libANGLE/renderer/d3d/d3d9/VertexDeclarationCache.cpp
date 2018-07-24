@@ -152,7 +152,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(
             VertexBuffer9 *vertexBuffer = GetAs<VertexBuffer9>(attributes[i].vertexBuffer.get());
 
             unsigned int offset = 0;
-            ANGLE_TRY_RESULT(attributes[i].computeOffset(start), offset);
+            ANGLE_TRY(attributes[i].computeOffset(start, &offset));
 
             if (mAppliedVBs[stream].serial != attributes[i].serial ||
                 mAppliedVBs[stream].stride != attributes[i].stride ||

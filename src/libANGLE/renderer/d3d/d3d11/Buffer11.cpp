@@ -1270,7 +1270,7 @@ gl::Error Buffer11::EmulatedIndexedStorage::getBuffer(SourceIndexData *indexInfo
     if (!mBuffer.valid())
     {
         unsigned int offset = 0;
-        ANGLE_TRY_RESULT(attribute.computeOffset(startVertex), offset);
+        ANGLE_TRY(attribute.computeOffset(startVertex, &offset));
 
         // Expand the memory storage upon request and cache the results.
         unsigned int expandedDataSize =

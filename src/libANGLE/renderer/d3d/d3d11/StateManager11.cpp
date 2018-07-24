@@ -2756,7 +2756,7 @@ gl::Error StateManager11::applyVertexBuffers(const gl::Context *context,
             }
 
             vertexStride = attrib.stride;
-            ANGLE_TRY_RESULT(attrib.computeOffset(drawCallParams.firstVertex()), vertexOffset);
+            ANGLE_TRY(attrib.computeOffset(drawCallParams.firstVertex(), &vertexOffset));
         }
 
         size_t bufferIndex = reservedBuffers + attribIndex;
@@ -2921,7 +2921,7 @@ gl::Error StateManager11::updateVertexOffsetsForPointSpritesEmulation(GLint star
         if (attrib.divisor > 0)
         {
             unsigned int offset = 0;
-            ANGLE_TRY_RESULT(attrib.computeOffset(startVertex), offset);
+            ANGLE_TRY(attrib.computeOffset(startVertex, &offset));
             offset += (attrib.stride * (emulatedInstanceId / attrib.divisor));
             if (offset != mCurrentVertexOffsets[bufferIndex])
             {
