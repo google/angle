@@ -424,6 +424,9 @@ TEST_P(BlitFramebufferANGLETest, ReverseColorBlit)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
 
+    // TODO(jmadill): Fix this. http://anglebug.com/2743
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -489,6 +492,9 @@ TEST_P(BlitFramebufferANGLETest, ScissoredBlit)
 TEST_P(BlitFramebufferANGLETest, ReverseScissoredBlit)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+
+    // TODO(jmadill): Fix this. http://anglebug.com/2743
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
@@ -559,6 +565,9 @@ TEST_P(BlitFramebufferANGLETest, OversizedBlit)
 TEST_P(BlitFramebufferANGLETest, ReverseOversizedBlit)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_ANGLE_framebuffer_blit"));
+
+    // TODO(jmadill): Fix this. http://anglebug.com/2743
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
