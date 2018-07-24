@@ -53,19 +53,21 @@ class Buffer11 : public BufferD3D
     Buffer11(const gl::BufferState &state, Renderer11 *renderer);
     ~Buffer11() override;
 
-    gl::ErrorOrResult<ID3D11Buffer *> getBuffer(const gl::Context *context, BufferUsage usage);
-    gl::ErrorOrResult<ID3D11Buffer *> getEmulatedIndexedBuffer(const gl::Context *context,
-                                                               SourceIndexData *indexInfo,
-                                                               const TranslatedAttribute &attribute,
-                                                               GLint startVertex);
+    gl::Error getBuffer(const gl::Context *context, BufferUsage usage, ID3D11Buffer **bufferOut);
+    gl::Error getEmulatedIndexedBuffer(const gl::Context *context,
+                                       SourceIndexData *indexInfo,
+                                       const TranslatedAttribute &attribute,
+                                       GLint startVertex,
+                                       ID3D11Buffer **bufferOut);
     gl::Error getConstantBufferRange(const gl::Context *context,
                                      GLintptr offset,
                                      GLsizeiptr size,
                                      const d3d11::Buffer **bufferOut,
                                      UINT *firstConstantOut,
                                      UINT *numConstantsOut);
-    gl::ErrorOrResult<const d3d11::ShaderResourceView *> getSRV(const gl::Context *context,
-                                                                DXGI_FORMAT srvFormat);
+    gl::Error getSRV(const gl::Context *context,
+                     DXGI_FORMAT srvFormat,
+                     const d3d11::ShaderResourceView **srvOut);
     bool isMapped() const { return mMappedStorage != nullptr; }
     gl::Error packPixels(const gl::Context *context,
                          const gl::FramebufferAttachment &readAttachment,
@@ -121,21 +123,26 @@ class Buffer11 : public BufferD3D
 
     void markBufferUsage(BufferUsage usage);
     gl::Error garbageCollection(const gl::Context *context, BufferUsage currentUsage);
-    gl::ErrorOrResult<NativeStorage *> getStagingStorage(const gl::Context *context);
-    gl::ErrorOrResult<PackStorage *> getPackStorage(const gl::Context *context);
-    gl::ErrorOrResult<SystemMemoryStorage *> getSystemMemoryStorage(const gl::Context *context);
 
     gl::Error updateBufferStorage(const gl::Context *context,
                                   BufferStorage *storage,
                                   size_t sourceOffset,
                                   size_t storageSize);
-    gl::ErrorOrResult<BufferStorage *> getBufferStorage(const gl::Context *context,
-                                                        BufferUsage usage);
-    gl::ErrorOrResult<BufferStorage *> getLatestBufferStorage(const gl::Context *context) const;
 
-    gl::ErrorOrResult<BufferStorage *> getConstantBufferRangeStorage(const gl::Context *context,
-                                                                     GLintptr offset,
-                                                                     GLsizeiptr size);
+    template <typename StorageOutT>
+    gl::Error getBufferStorage(const gl::Context *context,
+                               BufferUsage usage,
+                               StorageOutT **storageOut);
+
+    template <typename StorageOutT>
+    gl::Error getStagingStorage(const gl::Context *context, StorageOutT **storageOut);
+
+    gl::Error getLatestBufferStorage(const gl::Context *context, BufferStorage **storageOut) const;
+
+    gl::Error getConstantBufferRangeStorage(const gl::Context *context,
+                                            GLintptr offset,
+                                            GLsizeiptr size,
+                                            NativeStorage **storageOut);
 
     BufferStorage *allocateStorage(BufferUsage usage);
     void updateDeallocThreshold(BufferUsage usage);

@@ -2743,18 +2743,16 @@ gl::Error StateManager11::applyVertexBuffers(const gl::Context *context,
                     indexInfo.srcIndexData.srcIndices = bufferData + offset;
                 }
 
-                ANGLE_TRY_RESULT(
-                    bufferStorage->getEmulatedIndexedBuffer(context, &indexInfo.srcIndexData,
-                                                            attrib, drawCallParams.firstVertex()),
-                    buffer);
+                ANGLE_TRY(bufferStorage->getEmulatedIndexedBuffer(
+                    context, &indexInfo.srcIndexData, attrib, drawCallParams.firstVertex(),
+                    &buffer));
 
                 mVertexArray11->updateCachedIndexInfo(indexInfo);
             }
             else
             {
-                ANGLE_TRY_RESULT(
-                    bufferStorage->getBuffer(context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK),
-                    buffer);
+                ANGLE_TRY(bufferStorage->getBuffer(
+                    context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK, &buffer));
             }
 
             vertexStride = attrib.stride;
@@ -2865,7 +2863,7 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
     if (indexInfo.storage)
     {
         Buffer11 *storage = GetAs<Buffer11>(indexInfo.storage);
-        ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDEX), buffer);
+        ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDEX, &buffer));
     }
     else
     {

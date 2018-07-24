@@ -1639,7 +1639,7 @@ gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
     uintptr_t offset = reinterpret_cast<uintptr_t>(params.indirect());
 
     ID3D11Buffer *buffer = nullptr;
-    ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDIRECT), buffer);
+    ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDIRECT, &buffer));
     mDeviceContext->DrawInstancedIndirect(buffer, static_cast<unsigned int>(offset));
     return gl::NoError();
 }
@@ -1661,7 +1661,7 @@ gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
     uintptr_t offset  = reinterpret_cast<uintptr_t>(params.indirect());
 
     ID3D11Buffer *buffer = nullptr;
-    ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDIRECT), buffer);
+    ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDIRECT, &buffer));
     mDeviceContext->DrawIndexedInstancedIndirect(buffer, static_cast<unsigned int>(offset));
     return gl::NoError();
 }
