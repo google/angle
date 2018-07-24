@@ -1471,10 +1471,9 @@ gl::Error Buffer11::PackStorage::packPixels(const gl::Context *context,
     if (!mStagingTexture.get() || mStagingTexture.getFormat() != srcTexture.getFormat() ||
         mStagingTexture.getExtents() != srcTextureSize)
     {
-        ANGLE_TRY_RESULT(
-            mRenderer->createStagingTexture(srcTexture.getTextureType(), srcTexture.getFormatSet(),
-                                            srcTextureSize, StagingAccess::READ),
-            mStagingTexture);
+        ANGLE_TRY(mRenderer->createStagingTexture(srcTexture.getTextureType(),
+                                                  srcTexture.getFormatSet(), srcTextureSize,
+                                                  StagingAccess::READ, &mStagingTexture));
     }
 
     // ReadPixels from multisampled FBOs isn't supported in current GL

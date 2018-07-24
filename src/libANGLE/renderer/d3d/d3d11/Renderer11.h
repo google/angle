@@ -395,10 +395,11 @@ class Renderer11 : public RendererD3D
                               GLuint numGroupsZ);
     gl::Error applyComputeShader(const gl::Context *context);
 
-    gl::ErrorOrResult<TextureHelper11> createStagingTexture(ResourceType textureType,
-                                                            const d3d11::Format &formatSet,
-                                                            const gl::Extents &size,
-                                                            StagingAccess readAndWriteAccess);
+    gl::Error createStagingTexture(ResourceType textureType,
+                                   const d3d11::Format &formatSet,
+                                   const gl::Extents &size,
+                                   StagingAccess readAndWriteAccess,
+                                   TextureHelper11 *textureOut);
 
     template <typename DescT, typename ResourceT>
     gl::Error allocateResource(const DescT &desc, ResourceT *resourceOut)

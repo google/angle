@@ -3064,10 +3064,8 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
 
     gl::Extents safeSize(safeArea.width, safeArea.height, 1);
     TextureHelper11 stagingHelper;
-    ANGLE_TRY_RESULT(
-        createStagingTexture(textureHelper.getTextureType(), textureHelper.getFormatSet(), safeSize,
-                             StagingAccess::READ),
-        stagingHelper);
+    ANGLE_TRY(createStagingTexture(textureHelper.getTextureType(), textureHelper.getFormatSet(),
+                                   safeSize, StagingAccess::READ, &stagingHelper));
     stagingHelper.setDebugName("readFromAttachment::stagingHelper");
 
     TextureHelper11 resolvedTextureHelper;
@@ -3694,11 +3692,11 @@ gl::Error Renderer11::dispatchCompute(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::ErrorOrResult<TextureHelper11> Renderer11::createStagingTexture(
-    ResourceType textureType,
-    const d3d11::Format &formatSet,
-    const gl::Extents &size,
-    StagingAccess readAndWriteAccess)
+gl::Error Renderer11::createStagingTexture(ResourceType textureType,
+                                           const d3d11::Format &formatSet,
+                                           const gl::Extents &size,
+                                           StagingAccess readAndWriteAccess,
+                                           TextureHelper11 *textureOut)
 {
     if (textureType == ResourceType::Texture2D)
     {
@@ -3720,9 +3718,8 @@ gl::ErrorOrResult<TextureHelper11> Renderer11::createStagingTexture(
             stagingDesc.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
         }
 
-        TextureHelper11 stagingTex;
-        ANGLE_TRY(allocateTexture(stagingDesc, formatSet, &stagingTex));
-        return stagingTex;
+        ANGLE_TRY(allocateTexture(stagingDesc, formatSet, textureOut));
+        return gl::NoError();
     }
     ASSERT(textureType == ResourceType::Texture3D);
 
@@ -3737,9 +3734,8 @@ gl::ErrorOrResult<TextureHelper11> Renderer11::createStagingTexture(
     stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
     stagingDesc.MiscFlags      = 0;
 
-    TextureHelper11 stagingTex;
-    ANGLE_TRY(allocateTexture(stagingDesc, formatSet, &stagingTex));
-    return stagingTex;
+    ANGLE_TRY(allocateTexture(stagingDesc, formatSet, textureOut));
+    return gl::NoError();
 }
 
 gl::Error Renderer11::allocateTexture(const D3D11_TEXTURE2D_DESC &desc,
