@@ -477,10 +477,11 @@ class Renderer11 : public RendererD3D
                               int baseVertex,
                               int instances);
 
-    gl::ErrorOrResult<TextureHelper11> resolveMultisampledTexture(const gl::Context *context,
-                                                                  RenderTarget11 *renderTarget,
-                                                                  bool depth,
-                                                                  bool stencil);
+    gl::Error resolveMultisampledTexture(const gl::Context *context,
+                                         RenderTarget11 *renderTarget,
+                                         bool depth,
+                                         bool stencil,
+                                         TextureHelper11 *textureOut);
 
     void populateRenderer11DeviceCaps();
 

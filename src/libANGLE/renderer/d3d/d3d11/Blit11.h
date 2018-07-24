@@ -70,7 +70,8 @@ class Blit11 : angle::NonCopyable
                         const gl::Extents &destSize,
                         const gl::Rectangle *scissor);
 
-    gl::Error copyDepthStencil(const TextureHelper11 &source,
+    gl::Error copyDepthStencil(const gl::Context *context,
+                               const TextureHelper11 &source,
                                unsigned int sourceSubresource,
                                const gl::Box &sourceArea,
                                const gl::Extents &sourceSize,
@@ -80,12 +81,14 @@ class Blit11 : angle::NonCopyable
                                const gl::Extents &destSize,
                                const gl::Rectangle *scissor);
 
-    gl::ErrorOrResult<TextureHelper11> resolveDepth(const gl::Context *context,
-                                                    RenderTarget11 *depth);
+    gl::Error resolveDepth(const gl::Context *context,
+                           RenderTarget11 *depth,
+                           TextureHelper11 *textureOut);
 
-    gl::ErrorOrResult<TextureHelper11> resolveStencil(const gl::Context *context,
-                                                      RenderTarget11 *depthStencil,
-                                                      bool alsoDepth);
+    gl::Error resolveStencil(const gl::Context *context,
+                             RenderTarget11 *depthStencil,
+                             bool alsoDepth,
+                             TextureHelper11 *textureOut);
 
     using BlitConvertFunction = void(const gl::Box &sourceArea,
                                      const gl::Box &destArea,
@@ -226,9 +229,11 @@ class Blit11 : angle::NonCopyable
         WriteVertexFunction vertexWriteFunction;
     };
 
-    gl::Error initResources();
+    gl::Error initResources(const gl::Context *context);
 
-    gl::Error getShaderSupport(const Shader &shader, ShaderSupport *supportOut);
+    gl::Error getShaderSupport(const gl::Context *context,
+                               const Shader &shader,
+                               ShaderSupport *supportOut);
 
     static BlitShaderType GetBlitShaderType(GLenum destinationFormat,
                                             GLenum sourceFormat,
@@ -239,7 +244,8 @@ class Blit11 : angle::NonCopyable
                                             ShaderDimension dimension);
     static SwizzleShaderType GetSwizzleShaderType(GLenum type, D3D11_SRV_DIMENSION dimensionality);
 
-    gl::Error copyDepthStencilImpl(const TextureHelper11 &source,
+    gl::Error copyDepthStencilImpl(const gl::Context *context,
+                                   const TextureHelper11 &source,
                                    unsigned int sourceSubresource,
                                    const gl::Box &sourceArea,
                                    const gl::Extents &sourceSize,
@@ -250,7 +256,8 @@ class Blit11 : angle::NonCopyable
                                    const gl::Rectangle *scissor,
                                    bool stencilOnly);
 
-    gl::Error copyAndConvertImpl(const TextureHelper11 &source,
+    gl::Error copyAndConvertImpl(const gl::Context *context,
+                                 const TextureHelper11 &source,
                                  unsigned int sourceSubresource,
                                  const gl::Box &sourceArea,
                                  const gl::Extents &sourceSize,
@@ -265,7 +272,8 @@ class Blit11 : angle::NonCopyable
                                  size_t destPixelStride,
                                  BlitConvertFunction *convertFunction);
 
-    gl::Error copyAndConvert(const TextureHelper11 &source,
+    gl::Error copyAndConvert(const gl::Context *context,
+                             const TextureHelper11 &source,
                              unsigned int sourceSubresource,
                              const gl::Box &sourceArea,
                              const gl::Extents &sourceSize,
@@ -281,12 +289,14 @@ class Blit11 : angle::NonCopyable
                              size_t destPixelStride,
                              BlitConvertFunction *convertFunction);
 
-    gl::Error addBlitShaderToMap(BlitShaderType blitShaderType,
+    gl::Error addBlitShaderToMap(const gl::Context *context,
+                                 BlitShaderType blitShaderType,
                                  ShaderDimension dimension,
                                  const ShaderData &shaderData,
                                  const char *name);
 
-    gl::Error getBlitShader(GLenum destFormat,
+    gl::Error getBlitShader(const gl::Context *context,
+                            GLenum destFormat,
                             GLenum sourceFormat,
                             bool isSigned,
                             bool unpackPremultiplyAlpha,
@@ -294,19 +304,23 @@ class Blit11 : angle::NonCopyable
                             GLenum destTypeForDownsampling,
                             ShaderDimension dimension,
                             const Shader **shaderOut);
-    gl::Error getSwizzleShader(GLenum type,
+    gl::Error getSwizzleShader(const gl::Context *context,
+                               GLenum type,
                                D3D11_SRV_DIMENSION viewDimension,
                                const Shader **shaderOut);
 
-    gl::Error addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType,
+    gl::Error addSwizzleShaderToMap(const gl::Context *context,
+                                    SwizzleShaderType swizzleShaderType,
                                     ShaderDimension dimension,
                                     const ShaderData &shaderData,
                                     const char *name);
 
     void clearShaderMap();
     void releaseResolveDepthStencilResources();
-    gl::Error initResolveDepthOnly(const d3d11::Format &format, const gl::Extents &extents);
-    gl::Error initResolveDepthStencil(const gl::Extents &extents);
+    gl::Error initResolveDepthOnly(const gl::Context *context,
+                                   const d3d11::Format &format,
+                                   const gl::Extents &extents);
+    gl::Error initResolveDepthStencil(const gl::Context *context, const gl::Extents &extents);
 
     Renderer11 *mRenderer;
 

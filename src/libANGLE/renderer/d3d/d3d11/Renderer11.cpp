@@ -2217,10 +2217,9 @@ gl::Error Renderer11::copyImageInternal(const gl::Context *context,
     if (sourceRenderTarget->getTexture().is2D() && sourceRenderTarget->isMultisampled())
     {
         TextureHelper11 tex;
-        ANGLE_TRY_RESULT(
-            resolveMultisampledTexture(context, sourceRenderTarget, colorAttachment->getDepthSize(),
-                                       colorAttachment->getStencilSize()),
-            tex);
+        ANGLE_TRY(resolveMultisampledTexture(context, sourceRenderTarget,
+                                             colorAttachment->getDepthSize(),
+                                             colorAttachment->getStencilSize(), &tex));
 
         D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
         viewDesc.Format                    = sourceRenderTarget->getFormatSet().srvFormat;
@@ -3201,9 +3200,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Context *context,
 
     if (readRenderTarget->isMultisampled())
     {
-        ANGLE_TRY_RESULT(
-            resolveMultisampledTexture(context, readRenderTarget11, depthBlit, stencilBlit),
-            readTexture);
+        ANGLE_TRY(resolveMultisampledTexture(context, readRenderTarget11, depthBlit, stencilBlit,
+                                             &readTexture));
 
         if (!stencilBlit)
         {
@@ -3406,9 +3404,9 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Context *context,
 
         if (depthBlit && stencilBlit)
         {
-            ANGLE_TRY(mBlit->copyDepthStencil(readTexture, readSubresource, readArea, readSize,
-                                              drawTexture, drawSubresource, drawArea, drawSize,
-                                              scissor));
+            ANGLE_TRY(mBlit->copyDepthStencil(context, readTexture, readSubresource, readArea,
+                                              readSize, drawTexture, drawSubresource, drawArea,
+                                              drawSize, scissor));
         }
         else if (depthBlit)
         {
@@ -3491,20 +3489,20 @@ void Renderer11::onBufferDelete(const Buffer11 *deleted)
     mAliveBuffers.erase(deleted);
 }
 
-gl::ErrorOrResult<TextureHelper11> Renderer11::resolveMultisampledTexture(
-    const gl::Context *context,
-    RenderTarget11 *renderTarget,
-    bool depth,
-    bool stencil)
+gl::Error Renderer11::resolveMultisampledTexture(const gl::Context *context,
+                                                 RenderTarget11 *renderTarget,
+                                                 bool depth,
+                                                 bool stencil,
+                                                 TextureHelper11 *textureOut)
 {
     if (depth && !stencil)
     {
-        return mBlit->resolveDepth(context, renderTarget);
+        return mBlit->resolveDepth(context, renderTarget, textureOut);
     }
 
     if (stencil)
     {
-        return mBlit->resolveStencil(context, renderTarget, depth);
+        return mBlit->resolveStencil(context, renderTarget, depth, textureOut);
     }
 
     const auto &formatSet = renderTarget->getFormatSet();
@@ -3539,7 +3537,8 @@ gl::ErrorOrResult<TextureHelper11> Renderer11::resolveMultisampledTexture(
     mDeviceContext->ResolveSubresource(mCachedResolveTexture.get(), 0,
                                        renderTarget->getTexture().get(),
                                        renderTarget->getSubresourceIndex(), formatSet.texFormat);
-    return mCachedResolveTexture;
+    *textureOut = mCachedResolveTexture;
+    return gl::NoError();
 }
 
 bool Renderer11::getLUID(LUID *adapterLuid) const

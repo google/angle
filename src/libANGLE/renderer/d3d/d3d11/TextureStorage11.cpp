@@ -544,7 +544,7 @@ gl::Error TextureStorage11::updateSubresourceLevel(const gl::Context *context,
     {
         // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
         Blit11 *blitter = mRenderer->getBlitter();
-        return blitter->copyDepthStencil(srcTexture, sourceSubresource, copyArea, texSize,
+        return blitter->copyDepthStencil(context, srcTexture, sourceSubresource, copyArea, texSize,
                                          *dstTexture, dstSubresource, copyArea, texSize, nullptr);
     }
 
@@ -2424,8 +2424,8 @@ gl::Error TextureStorage11::initDropStencilTexture(const gl::Context *context,
         gl::Extents wholeSize(wholeArea.width, wholeArea.height, 1);
         UINT subresource = getSubresourceIndex(index);
         ANGLE_TRY(mRenderer->getBlitter()->copyDepthStencil(
-            *sourceTexture, subresource, wholeArea, wholeSize, mDropStencilTexture, subresource,
-            wholeArea, wholeSize, nullptr));
+            context, *sourceTexture, subresource, wholeArea, wholeSize, mDropStencilTexture,
+            subresource, wholeArea, wholeSize, nullptr));
     }
 
     return gl::NoError();
