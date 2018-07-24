@@ -3329,7 +3329,7 @@ gl::Error StateManager11::syncTransformFeedbackBuffers(const gl::Context *contex
     }
 
     const std::vector<ID3D11Buffer *> *soBuffers = nullptr;
-    ANGLE_TRY_RESULT(tf11->getSOBuffers(context), soBuffers);
+    ANGLE_TRY(tf11->getSOBuffers(context, &soBuffers));
     const std::vector<UINT> &soOffsets = tf11->getSOBufferOffsets();
 
     deviceContext->SOSetTargets(tf11->getNumSOBuffers(), soBuffers->data(), soOffsets.data());

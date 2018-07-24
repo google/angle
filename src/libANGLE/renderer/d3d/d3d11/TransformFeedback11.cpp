@@ -100,8 +100,8 @@ UINT TransformFeedback11::getNumSOBuffers() const
     return static_cast<UINT>(mBuffers.size());
 }
 
-gl::ErrorOrResult<const std::vector<ID3D11Buffer *> *> TransformFeedback11::getSOBuffers(
-    const gl::Context *context)
+gl::Error TransformFeedback11::getSOBuffers(const gl::Context *context,
+                                            const std::vector<ID3D11Buffer *> **buffersOut)
 {
     for (size_t bindingIdx = 0; bindingIdx < mBuffers.size(); bindingIdx++)
     {
@@ -114,7 +114,8 @@ gl::ErrorOrResult<const std::vector<ID3D11Buffer *> *> TransformFeedback11::getS
         }
     }
 
-    return &mBuffers;
+    *buffersOut = &mBuffers;
+    return gl::NoError();
 }
 
 const std::vector<UINT> &TransformFeedback11::getSOBufferOffsets() const
