@@ -254,7 +254,7 @@ gl::Error TextureStorage11::getSRVForSampler(const gl::Context *context,
     {
         // Ensure drop texture gets created.
         DropStencil result = DropStencil::CREATED;
-        ANGLE_TRY_RESULT(ensureDropStencilTexture(context), result);
+        ANGLE_TRY(ensureDropStencilTexture(context, &result));
 
         // Clear the SRV cache if necessary.
         // TODO(jmadill): Re-use find query result.
@@ -800,8 +800,8 @@ gl::Error TextureStorage11::setData(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11::ensureDropStencilTexture(
-    const gl::Context *context)
+gl::Error TextureStorage11::ensureDropStencilTexture(const gl::Context *context,
+                                                     TextureStorage11::DropStencil *dropStencilOut)
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "Drop stencil texture not implemented.";
@@ -1354,12 +1354,13 @@ gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel,
     return gl::NoError();
 }
 
-gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_2D::ensureDropStencilTexture(
-    const gl::Context *context)
+gl::Error TextureStorage11_2D::ensureDropStencilTexture(const gl::Context *context,
+                                                        DropStencil *dropStencilOut)
 {
     if (mDropStencilTexture.valid())
     {
-        return DropStencil::ALREADY_EXISTS;
+        *dropStencilOut = DropStencil::ALREADY_EXISTS;
+        return gl::NoError();
     }
 
     D3D11_TEXTURE2D_DESC dropDesc = {};
@@ -1382,7 +1383,8 @@ gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_2D::ensureDrop
 
     ANGLE_TRY(initDropStencilTexture(context, gl::ImageIndexIterator::Make2D(0, mMipLevels)));
 
-    return DropStencil::CREATED;
+    *dropStencilOut = DropStencil::CREATED;
+    return gl::NoError();
 }
 
 TextureStorage11_External::TextureStorage11_External(
@@ -2421,12 +2423,13 @@ gl::Error TextureStorage11::initDropStencilTexture(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_Cube::ensureDropStencilTexture(
-    const gl::Context *context)
+gl::Error TextureStorage11_Cube::ensureDropStencilTexture(const gl::Context *context,
+                                                          DropStencil *dropStencilOut)
 {
     if (mDropStencilTexture.valid())
     {
-        return DropStencil::ALREADY_EXISTS;
+        *dropStencilOut = DropStencil::ALREADY_EXISTS;
+        return gl::NoError();
     }
 
     D3D11_TEXTURE2D_DESC dropDesc = {};
@@ -2449,7 +2452,8 @@ gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_Cube::ensureDr
 
     ANGLE_TRY(initDropStencilTexture(context, gl::ImageIndexIterator::MakeCube(0, mMipLevels)));
 
-    return DropStencil::CREATED;
+    *dropStencilOut = DropStencil::CREATED;
+    return gl::NoError();
 }
 
 TextureStorage11_3D::TextureStorage11_3D(Renderer11 *renderer,
@@ -3137,12 +3141,13 @@ gl::Error TextureStorage11_2DArray::getSwizzleRenderTarget(int mipLevel,
     return gl::NoError();
 }
 
-gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_2DArray::ensureDropStencilTexture(
-    const gl::Context *context)
+gl::Error TextureStorage11_2DArray::ensureDropStencilTexture(const gl::Context *context,
+                                                             DropStencil *dropStencilOut)
 {
     if (mDropStencilTexture.valid())
     {
-        return DropStencil::ALREADY_EXISTS;
+        *dropStencilOut = DropStencil::ALREADY_EXISTS;
+        return gl::NoError();
     }
 
     D3D11_TEXTURE2D_DESC dropDesc = {};
@@ -3168,7 +3173,8 @@ gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_2DArray::ensur
     ANGLE_TRY(initDropStencilTexture(
         context, gl::ImageIndexIterator::Make2DArray(0, mMipLevels, layerCounts.data())));
 
-    return DropStencil::CREATED;
+    *dropStencilOut = DropStencil::CREATED;
+    return gl::NoError();
 }
 
 TextureStorage11_2DMultisample::TextureStorage11_2DMultisample(Renderer11 *renderer,
@@ -3390,8 +3396,8 @@ gl::Error TextureStorage11_2DMultisample::getSwizzleRenderTarget(
     return gl::InternalError() << "getSwizzleRenderTarget is unimplemented.";
 }
 
-gl::ErrorOrResult<TextureStorage11::DropStencil>
-TextureStorage11_2DMultisample::ensureDropStencilTexture(const gl::Context *context)
+gl::Error TextureStorage11_2DMultisample::ensureDropStencilTexture(const gl::Context *context,
+                                                                   DropStencil *dropStencilOut)
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "Drop stencil texture not implemented.";

@@ -139,7 +139,8 @@ class TextureStorage11 : public TextureStorage
         CREATED,
         ALREADY_EXISTS
     };
-    virtual gl::ErrorOrResult<DropStencil> ensureDropStencilTexture(const gl::Context *context);
+    virtual gl::Error ensureDropStencilTexture(const gl::Context *context,
+                                               DropStencil *dropStencilOut);
     gl::Error initDropStencilTexture(const gl::Context *context, const gl::ImageIndexIterator &it);
 
     // The baseLevel parameter should *not* have mTopLevel applied.
@@ -267,7 +268,8 @@ class TextureStorage11_2D : public TextureStorage11
     gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
-    gl::ErrorOrResult<DropStencil> ensureDropStencilTexture(const gl::Context *context) override;
+    gl::Error ensureDropStencilTexture(const gl::Context *context,
+                                       DropStencil *dropStencilOut) override;
 
     gl::Error ensureTextureExists(int mipLevels);
 
@@ -474,7 +476,8 @@ class TextureStorage11_Cube : public TextureStorage11
     gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
-    gl::ErrorOrResult<DropStencil> ensureDropStencilTexture(const gl::Context *context) override;
+    gl::Error ensureDropStencilTexture(const gl::Context *context,
+                                       DropStencil *dropStencilOut) override;
 
     gl::Error ensureTextureExists(int mipLevels);
 
@@ -607,7 +610,8 @@ class TextureStorage11_2DArray : public TextureStorage11
     gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
-    gl::ErrorOrResult<DropStencil> ensureDropStencilTexture(const gl::Context *context) override;
+    gl::Error ensureDropStencilTexture(const gl::Context *context,
+                                       DropStencil *dropStencilOut) override;
 
   private:
     struct LevelLayerRangeKey
@@ -698,7 +702,8 @@ class TextureStorage11_2DMultisample : public TextureStorage11
     gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
-    gl::ErrorOrResult<DropStencil> ensureDropStencilTexture(const gl::Context *context) override;
+    gl::Error ensureDropStencilTexture(const gl::Context *context,
+                                       DropStencil *dropStencilOut) override;
 
     gl::Error ensureTextureExists(int mipLevels);
 
