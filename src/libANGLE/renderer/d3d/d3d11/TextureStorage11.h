@@ -125,8 +125,10 @@ class TextureStorage11 : public TextureStorage
     virtual gl::Error getMippedResource(const gl::Context *context,
                                         const TextureHelper11 **outResource);
 
-    virtual gl::Error getSwizzleTexture(const TextureHelper11 **outTexture)          = 0;
-    virtual gl::Error getSwizzleRenderTarget(int mipLevel,
+    virtual gl::Error getSwizzleTexture(const gl::Context *context,
+                                        const TextureHelper11 **outTexture)          = 0;
+    virtual gl::Error getSwizzleRenderTarget(const gl::Context *context,
+                                             int mipLevel,
                                              const d3d11::RenderTargetView **outRTV) = 0;
     gl::Error getSRVLevel(const gl::Context *context,
                           int mipLevel,
@@ -265,8 +267,11 @@ class TextureStorage11_2D : public TextureStorage11
                                             bool useLevelZeroTexture) override;
 
   protected:
-    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
+    gl::Error getSwizzleTexture(const gl::Context *context,
+                                const TextureHelper11 **outTexture) override;
+    gl::Error getSwizzleRenderTarget(const gl::Context *context,
+                                     int mipLevel,
+                                     const d3d11::RenderTargetView **outRTV) override;
 
     gl::Error ensureDropStencilTexture(const gl::Context *context,
                                        DropStencil *dropStencilOut) override;
@@ -344,8 +349,11 @@ class TextureStorage11_External : public TextureStorage11
                                      Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
+    gl::Error getSwizzleTexture(const gl::Context *context,
+                                const TextureHelper11 **outTexture) override;
+    gl::Error getSwizzleRenderTarget(const gl::Context *context,
+                                     int mipLevel,
+                                     const d3d11::RenderTargetView **outRTV) override;
 
   private:
     gl::Error createSRVForSampler(const gl::Context *context,
@@ -403,8 +411,11 @@ class TextureStorage11_EGLImage final : public TextureStorage11
                                             bool useLevelZeroTexture) override;
 
   protected:
-    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
+    gl::Error getSwizzleTexture(const gl::Context *context,
+                                const TextureHelper11 **outTexture) override;
+    gl::Error getSwizzleRenderTarget(const gl::Context *context,
+                                     int mipLevel,
+                                     const d3d11::RenderTargetView **outRTV) override;
 
   private:
     // Check if the EGL image's render target has been updated due to orphaning and delete
@@ -473,8 +484,11 @@ class TextureStorage11_Cube : public TextureStorage11
                                             bool useLevelZeroTexture) override;
 
   protected:
-    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
+    gl::Error getSwizzleTexture(const gl::Context *context,
+                                const TextureHelper11 **outTexture) override;
+    gl::Error getSwizzleRenderTarget(const gl::Context *context,
+                                     int mipLevel,
+                                     const d3d11::RenderTargetView **outRTV) override;
 
     gl::Error ensureDropStencilTexture(const gl::Context *context,
                                        DropStencil *dropStencilOut) override;
@@ -547,8 +561,11 @@ class TextureStorage11_3D : public TextureStorage11
                                      Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
+    gl::Error getSwizzleTexture(const gl::Context *context,
+                                const TextureHelper11 **outTexture) override;
+    gl::Error getSwizzleRenderTarget(const gl::Context *context,
+                                     int mipLevel,
+                                     const d3d11::RenderTargetView **outRTV) override;
 
   private:
     gl::Error createSRVForSampler(const gl::Context *context,
@@ -607,8 +624,11 @@ class TextureStorage11_2DArray : public TextureStorage11
                                      Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
+    gl::Error getSwizzleTexture(const gl::Context *context,
+                                const TextureHelper11 **outTexture) override;
+    gl::Error getSwizzleRenderTarget(const gl::Context *context,
+                                     int mipLevel,
+                                     const d3d11::RenderTargetView **outRTV) override;
 
     gl::Error ensureDropStencilTexture(const gl::Context *context,
                                        DropStencil *dropStencilOut) override;
@@ -699,8 +719,11 @@ class TextureStorage11_2DMultisample : public TextureStorage11
                                      Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
+    gl::Error getSwizzleTexture(const gl::Context *context,
+                                const TextureHelper11 **outTexture) override;
+    gl::Error getSwizzleRenderTarget(const gl::Context *context,
+                                     int mipLevel,
+                                     const d3d11::RenderTargetView **outRTV) override;
 
     gl::Error ensureDropStencilTexture(const gl::Context *context,
                                        DropStencil *dropStencilOut) override;

@@ -289,7 +289,7 @@ gl::Error TextureStorage11::getCachedOrCreateSRVForSampler(const gl::Context *co
         const auto &swizzleFormat =
             mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps());
         ASSERT(!key.dropStencil || swizzleFormat.format().stencilBits == 0);
-        ANGLE_TRY(getSwizzleTexture(&texture));
+        ANGLE_TRY(getSwizzleTexture(context, &texture));
         format = swizzleFormat.srvFormat;
     }
     else if (key.dropStencil)
@@ -460,7 +460,7 @@ gl::Error TextureStorage11::generateSwizzles(const gl::Context *context,
             ANGLE_TRY(getSRVLevel(context, level, true, &sourceSRV));
 
             const d3d11::RenderTargetView *destRTV;
-            ANGLE_TRY(getSwizzleRenderTarget(level, &destRTV));
+            ANGLE_TRY(getSwizzleRenderTarget(context, level, &destRTV));
 
             gl::Extents size(getLevelWidth(level), getLevelHeight(level), getLevelDepth(level));
 
@@ -1300,7 +1300,8 @@ gl::Error TextureStorage11_2D::createUAVForImage(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2D::getSwizzleTexture(const TextureHelper11 **outTexture)
+gl::Error TextureStorage11_2D::getSwizzleTexture(const gl::Context *context,
+                                                 const TextureHelper11 **outTexture)
 {
     ASSERT(outTexture);
 
@@ -1329,7 +1330,8 @@ gl::Error TextureStorage11_2D::getSwizzleTexture(const TextureHelper11 **outText
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel,
+gl::Error TextureStorage11_2D::getSwizzleRenderTarget(const gl::Context *context,
+                                                      int mipLevel,
                                                       const d3d11::RenderTargetView **outRTV)
 {
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
@@ -1338,7 +1340,7 @@ gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel,
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
         const TextureHelper11 *swizzleTexture = nullptr;
-        ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
+        ANGLE_TRY(getSwizzleTexture(context, &swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
         rtvDesc.Format =
@@ -1537,13 +1539,15 @@ gl::Error TextureStorage11_External::createUAVForImage(const gl::Context *contex
     return gl::InternalError();
 }
 
-gl::Error TextureStorage11_External::getSwizzleTexture(const TextureHelper11 **outTexture)
+gl::Error TextureStorage11_External::getSwizzleTexture(const gl::Context *context,
+                                                       const TextureHelper11 **outTexture)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error TextureStorage11_External::getSwizzleRenderTarget(int mipLevel,
+gl::Error TextureStorage11_External::getSwizzleRenderTarget(const gl::Context *context,
+                                                            int mipLevel,
                                                             const d3d11::RenderTargetView **outRTV)
 {
     UNIMPLEMENTED();
@@ -1658,7 +1662,8 @@ gl::Error TextureStorage11_EGLImage::useLevelZeroWorkaroundTexture(const gl::Con
     return gl::InternalError();
 }
 
-gl::Error TextureStorage11_EGLImage::getSwizzleTexture(const TextureHelper11 **outTexture)
+gl::Error TextureStorage11_EGLImage::getSwizzleTexture(const gl::Context *context,
+                                                       const TextureHelper11 **outTexture)
 {
     ASSERT(outTexture);
 
@@ -1687,7 +1692,8 @@ gl::Error TextureStorage11_EGLImage::getSwizzleTexture(const TextureHelper11 **o
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_EGLImage::getSwizzleRenderTarget(int mipLevel,
+gl::Error TextureStorage11_EGLImage::getSwizzleRenderTarget(const gl::Context *context,
+                                                            int mipLevel,
                                                             const d3d11::RenderTargetView **outRTV)
 {
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
@@ -1696,7 +1702,7 @@ gl::Error TextureStorage11_EGLImage::getSwizzleRenderTarget(int mipLevel,
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
         const TextureHelper11 *swizzleTexture = nullptr;
-        ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
+        ANGLE_TRY(getSwizzleTexture(context, &swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
         rtvDesc.Format =
@@ -2344,7 +2350,8 @@ gl::Error TextureStorage11_Cube::createUAVForImage(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_Cube::getSwizzleTexture(const TextureHelper11 **outTexture)
+gl::Error TextureStorage11_Cube::getSwizzleTexture(const gl::Context *context,
+                                                   const TextureHelper11 **outTexture)
 {
     ASSERT(outTexture);
 
@@ -2373,7 +2380,8 @@ gl::Error TextureStorage11_Cube::getSwizzleTexture(const TextureHelper11 **outTe
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(int mipLevel,
+gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(const gl::Context *context,
+                                                        int mipLevel,
                                                         const d3d11::RenderTargetView **outRTV)
 {
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
@@ -2382,7 +2390,7 @@ gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(int mipLevel,
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
         const TextureHelper11 *swizzleTexture = nullptr;
-        ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
+        ANGLE_TRY(getSwizzleTexture(context, &swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
         rtvDesc.Format =
@@ -2729,7 +2737,8 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_3D::getSwizzleTexture(const TextureHelper11 **outTexture)
+gl::Error TextureStorage11_3D::getSwizzleTexture(const gl::Context *context,
+                                                 const TextureHelper11 **outTexture)
 {
     ASSERT(outTexture);
 
@@ -2756,7 +2765,8 @@ gl::Error TextureStorage11_3D::getSwizzleTexture(const TextureHelper11 **outText
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel,
+gl::Error TextureStorage11_3D::getSwizzleRenderTarget(const gl::Context *context,
+                                                      int mipLevel,
                                                       const d3d11::RenderTargetView **outRTV)
 {
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
@@ -2765,7 +2775,7 @@ gl::Error TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel,
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
         const TextureHelper11 *swizzleTexture = nullptr;
-        ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
+        ANGLE_TRY(getSwizzleTexture(context, &swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
         rtvDesc.Format =
@@ -3087,7 +3097,8 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2DArray::getSwizzleTexture(const TextureHelper11 **outTexture)
+gl::Error TextureStorage11_2DArray::getSwizzleTexture(const gl::Context *context,
+                                                      const TextureHelper11 **outTexture)
 {
     if (!mSwizzleTexture.valid())
     {
@@ -3114,7 +3125,8 @@ gl::Error TextureStorage11_2DArray::getSwizzleTexture(const TextureHelper11 **ou
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2DArray::getSwizzleRenderTarget(int mipLevel,
+gl::Error TextureStorage11_2DArray::getSwizzleRenderTarget(const gl::Context *context,
+                                                           int mipLevel,
                                                            const d3d11::RenderTargetView **outRTV)
 {
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
@@ -3123,7 +3135,7 @@ gl::Error TextureStorage11_2DArray::getSwizzleRenderTarget(int mipLevel,
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
         const TextureHelper11 *swizzleTexture = nullptr;
-        ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
+        ANGLE_TRY(getSwizzleTexture(context, &swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
         rtvDesc.Format =
@@ -3382,13 +3394,15 @@ gl::Error TextureStorage11_2DMultisample::createUAVForImage(const gl::Context *c
     return gl::InternalError();
 }
 
-gl::Error TextureStorage11_2DMultisample::getSwizzleTexture(const TextureHelper11 **outTexture)
+gl::Error TextureStorage11_2DMultisample::getSwizzleTexture(const gl::Context *context,
+                                                            const TextureHelper11 **outTexture)
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "getSwizzleTexture is unimplemented.";
 }
 
 gl::Error TextureStorage11_2DMultisample::getSwizzleRenderTarget(
+    const gl::Context *context,
     int mipLevel,
     const d3d11::RenderTargetView **outRTV)
 {
