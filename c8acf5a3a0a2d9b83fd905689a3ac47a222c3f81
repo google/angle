@@ -144,6 +144,54 @@
     },
     {
       "key": {
+        "uuid": "22699a60_9d9c0518",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5544,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-25T08:44:09Z",
+      "side": 1,
+      "message": "Got it, thanks for clarification.",
+      "parentUuid": "69c4aa47_d13c9c91",
+      "range": {
+        "startLine": 5544,
+        "startChar": 45,
+        "endLine": 5544,
+        "endChar": 83
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1651deb0_600ed180",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5544,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-25T08:44:09Z",
+      "side": 1,
+      "message": "ES 3.10, Section 7.3, Page 72:\nAn INVALID_OPERATION error is generated if program has not been\nlinked, or was last linked unsuccessfully. The current rendering state is not\nmodified.",
+      "parentUuid": "6b92e55c_f461d325",
+      "range": {
+        "startLine": 5544,
+        "startChar": 8,
+        "endLine": 5544,
+        "endChar": 41
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "354977a6_90bd224e",
         "filename": "src/libANGLE/ContextState.cpp",
         "patchSetId": 14
@@ -203,6 +251,30 @@
       "side": 1,
       "message": "We already use the stl threading library in ANGLE, is it just the hardware_concurrency function that doesn\u0027t work?",
       "parentUuid": "8390f9ec_43b286d5",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 52
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3ca168a_25ef8593",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-25T08:44:09Z",
+      "side": 1,
+      "message": "It was a compile error of missing std::thread header.\nI solved the bots error by explicitly including the header.",
+      "parentUuid": "f0d13892_d3572be5",
       "range": {
         "startLine": 64,
         "startChar": 0,
@@ -603,6 +675,30 @@
       "side": 1,
       "message": "When the pool is written like this, it will have very poor behaviour in some use cases.  For example if mMaxThreads is 2 and the user submits 10 programs to link, 2 threads will be started to perform asynchronous links and all the rest will block on the main thread.  The behaviour we want is that the main thread is always free when this extension is being used, it just queues up more jobs for the other threads.\n\nI think making the pool synchronous and asynchronous should be done in the back-ends themselves as workarounds, not part of the thread pool in the front end.  They can just execute the task immediately instead of submitting it to the pool.",
       "parentUuid": "bc88cc56_e97007e7",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 105,
+        "endChar": 99
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cd704c6_ff54c122",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-25T08:44:09Z",
+      "side": 1,
+      "message": "Convinced, thanks for your patient clarification.\n\nI rewrote the WorkerThreadPool using std::mutex and condition_variable. Now there has to be \nan extra pending-in-queue state to wait in AsyncWaitableEvent.\n\nI also added factory method WaitableEvent::Create() to make decision on which type of pool to use. We can add more GPU info matching logic later if needed.",
+      "parentUuid": "c78ff827_368ea961",
       "range": {
         "startLine": 103,
         "startChar": 8,

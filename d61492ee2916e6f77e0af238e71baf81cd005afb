@@ -22,6 +22,30 @@
       "revId": "d61492ee2916e6f77e0af238e71baf81cd005afb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe8369dd_5e91a73e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 7545,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-25T08:44:09Z",
+      "side": 1,
+      "message": "That\u0027s a good point. One worker pool per group seems not a ideal choice here. Take a group of 2 contexts for example, one context is enabled with the extension, but the other not. They need to use a synchronous pool, and an asynchronous pool respectively. It\u0027s not appropriate for them to share a common pool. For this consideration, I changed to use one worker pool per context instead.",
+      "parentUuid": "56b7cd6b_bdbfb605",
+      "range": {
+        "startLine": 7545,
+        "startChar": 4,
+        "endLine": 7545,
+        "endChar": 45
+      },
+      "revId": "d61492ee2916e6f77e0af238e71baf81cd005afb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
