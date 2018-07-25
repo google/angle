@@ -85,18 +85,18 @@ StandardQueryGL::~StandardQueryGL()
     }
 }
 
-gl::Error StandardQueryGL::begin()
+gl::Error StandardQueryGL::begin(const gl::Context *context)
 {
     mResultSum = 0;
     return resume();
 }
 
-gl::Error StandardQueryGL::end()
+gl::Error StandardQueryGL::end(const gl::Context *context)
 {
     return pause();
 }
 
-gl::Error StandardQueryGL::queryCounter()
+gl::Error StandardQueryGL::queryCounter(const gl::Context *context)
 {
     ASSERT(mType == gl::QueryType::Timestamp);
 
@@ -127,27 +127,27 @@ gl::Error StandardQueryGL::getResultBase(T *params)
     return gl::NoError();
 }
 
-gl::Error StandardQueryGL::getResult(GLint *params)
+gl::Error StandardQueryGL::getResult(const gl::Context *context, GLint *params)
 {
     return getResultBase(params);
 }
 
-gl::Error StandardQueryGL::getResult(GLuint *params)
+gl::Error StandardQueryGL::getResult(const gl::Context *context, GLuint *params)
 {
     return getResultBase(params);
 }
 
-gl::Error StandardQueryGL::getResult(GLint64 *params)
+gl::Error StandardQueryGL::getResult(const gl::Context *context, GLint64 *params)
 {
     return getResultBase(params);
 }
 
-gl::Error StandardQueryGL::getResult(GLuint64 *params)
+gl::Error StandardQueryGL::getResult(const gl::Context *context, GLuint64 *params)
 {
     return getResultBase(params);
 }
 
-gl::Error StandardQueryGL::isResultAvailable(bool *available)
+gl::Error StandardQueryGL::isResultAvailable(const gl::Context *context, bool *available)
 {
     ASSERT(mActiveQuery == 0);
 
@@ -339,12 +339,12 @@ bool SyncQueryGL::IsSupported(const FunctionsGL *functions)
     return nativegl::SupportsFenceSync(functions) || nativegl::SupportsOcclusionQueries(functions);
 }
 
-gl::Error SyncQueryGL::begin()
+gl::Error SyncQueryGL::begin(const gl::Context *context)
 {
     return gl::NoError();
 }
 
-gl::Error SyncQueryGL::end()
+gl::Error SyncQueryGL::end(const gl::Context *context)
 {
     if (nativegl::SupportsFenceSync(mFunctions))
     {
@@ -363,33 +363,33 @@ gl::Error SyncQueryGL::end()
     return gl::NoError();
 }
 
-gl::Error SyncQueryGL::queryCounter()
+gl::Error SyncQueryGL::queryCounter(const gl::Context *context)
 {
     UNREACHABLE();
     return gl::NoError();
 }
 
-gl::Error SyncQueryGL::getResult(GLint *params)
+gl::Error SyncQueryGL::getResult(const gl::Context *context, GLint *params)
 {
     return getResultBase(params);
 }
 
-gl::Error SyncQueryGL::getResult(GLuint *params)
+gl::Error SyncQueryGL::getResult(const gl::Context *context, GLuint *params)
 {
     return getResultBase(params);
 }
 
-gl::Error SyncQueryGL::getResult(GLint64 *params)
+gl::Error SyncQueryGL::getResult(const gl::Context *context, GLint64 *params)
 {
     return getResultBase(params);
 }
 
-gl::Error SyncQueryGL::getResult(GLuint64 *params)
+gl::Error SyncQueryGL::getResult(const gl::Context *context, GLuint64 *params)
 {
     return getResultBase(params);
 }
 
-gl::Error SyncQueryGL::isResultAvailable(bool *available)
+gl::Error SyncQueryGL::isResultAvailable(const gl::Context *context, bool *available)
 {
     ANGLE_TRY(flush(false));
     *available = mFinished;

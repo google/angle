@@ -68,19 +68,19 @@ Query11::~Query11()
     mRenderer->getStateManager()->onDeleteQueryObject(this);
 }
 
-gl::Error Query11::begin()
+gl::Error Query11::begin(const gl::Context *context)
 {
     mResultSum = 0;
     mRenderer->getStateManager()->onBeginQuery(this);
     return resume();
 }
 
-gl::Error Query11::end()
+gl::Error Query11::end(const gl::Context *context)
 {
     return pause();
 }
 
-gl::Error Query11::queryCounter()
+gl::Error Query11::queryCounter(const gl::Context *context)
 {
     // This doesn't do anything for D3D11 as we don't support timestamps
     ASSERT(getType() == gl::QueryType::Timestamp);
@@ -100,27 +100,27 @@ gl::Error Query11::getResultBase(T *params)
     return gl::NoError();
 }
 
-gl::Error Query11::getResult(GLint *params)
+gl::Error Query11::getResult(const gl::Context *context, GLint *params)
 {
     return getResultBase(params);
 }
 
-gl::Error Query11::getResult(GLuint *params)
+gl::Error Query11::getResult(const gl::Context *context, GLuint *params)
 {
     return getResultBase(params);
 }
 
-gl::Error Query11::getResult(GLint64 *params)
+gl::Error Query11::getResult(const gl::Context *context, GLint64 *params)
 {
     return getResultBase(params);
 }
 
-gl::Error Query11::getResult(GLuint64 *params)
+gl::Error Query11::getResult(const gl::Context *context, GLuint64 *params)
 {
     return getResultBase(params);
 }
 
-gl::Error Query11::isResultAvailable(bool *available)
+gl::Error Query11::isResultAvailable(const gl::Context *context, bool *available)
 {
     ANGLE_TRY(flush(false));
 

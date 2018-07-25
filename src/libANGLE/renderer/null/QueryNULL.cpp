@@ -22,46 +22,46 @@ QueryNULL::~QueryNULL()
 {
 }
 
-gl::Error QueryNULL::begin()
+gl::Error QueryNULL::begin(const gl::Context *context)
 {
     return gl::NoError();
 }
 
-gl::Error QueryNULL::end()
+gl::Error QueryNULL::end(const gl::Context *context)
 {
     return gl::NoError();
 }
 
-gl::Error QueryNULL::queryCounter()
+gl::Error QueryNULL::queryCounter(const gl::Context *context)
 {
     return gl::NoError();
 }
 
-gl::Error QueryNULL::getResult(GLint *params)
-{
-    *params = 0;
-    return gl::NoError();
-}
-
-gl::Error QueryNULL::getResult(GLuint *params)
+gl::Error QueryNULL::getResult(const gl::Context *context, GLint *params)
 {
     *params = 0;
     return gl::NoError();
 }
 
-gl::Error QueryNULL::getResult(GLint64 *params)
+gl::Error QueryNULL::getResult(const gl::Context *context, GLuint *params)
 {
     *params = 0;
     return gl::NoError();
 }
 
-gl::Error QueryNULL::getResult(GLuint64 *params)
+gl::Error QueryNULL::getResult(const gl::Context *context, GLint64 *params)
 {
     *params = 0;
     return gl::NoError();
 }
 
-gl::Error QueryNULL::isResultAvailable(bool *available)
+gl::Error QueryNULL::getResult(const gl::Context *context, GLuint64 *params)
+{
+    *params = 0;
+    return gl::NoError();
+}
+
+gl::Error QueryNULL::isResultAvailable(const gl::Context *context, bool *available)
 {
     *available = true;
     return gl::NoError();

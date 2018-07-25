@@ -107,18 +107,21 @@ std::vector<gl::Path *> GatherPaths(gl::PathManager &resourceManager,
 }
 
 template <typename T>
-gl::Error GetQueryObjectParameter(gl::Query *query, GLenum pname, T *params)
+gl::Error GetQueryObjectParameter(const gl::Context *context,
+                                  gl::Query *query,
+                                  GLenum pname,
+                                  T *params)
 {
     ASSERT(query != nullptr);
 
     switch (pname)
     {
         case GL_QUERY_RESULT_EXT:
-            return query->getResult(params);
+            return query->getResult(context, params);
         case GL_QUERY_RESULT_AVAILABLE_EXT:
         {
             bool available;
-            gl::Error error = query->isResultAvailable(&available);
+            gl::Error error = query->isResultAvailable(context, &available);
             if (!error.isError())
             {
                 *params = gl::CastFromStateValue<T>(pname, static_cast<GLuint>(available));
@@ -1147,7 +1150,7 @@ void Context::beginQuery(QueryType target, GLuint query)
     ASSERT(queryObject);
 
     // begin query
-    ANGLE_CONTEXT_TRY(queryObject->begin());
+    ANGLE_CONTEXT_TRY(queryObject->begin(this));
 
     // set query as active for specified target only if begin succeeded
     mGLState.setActiveQuery(this, target, queryObject);
@@ -1158,7 +1161,7 @@ void Context::endQuery(QueryType target)
     Query *queryObject = mGLState.getActiveQuery(target);
     ASSERT(queryObject);
 
-    handleError(queryObject->end());
+    handleError(queryObject->end(this));
 
     // Always unbind the query, even if there was an error. This may delete the query object.
     mGLState.setActiveQuery(this, target, nullptr);
@@ -1171,7 +1174,7 @@ void Context::queryCounter(GLuint id, QueryType target)
     Query *queryObject = getQuery(id, true, target);
     ASSERT(queryObject);
 
-    handleError(queryObject->queryCounter());
+    handleError(queryObject->queryCounter(this));
 }
 
 void Context::getQueryiv(QueryType target, GLenum pname, GLint *params)
@@ -1213,7 +1216,7 @@ void Context::getQueryivRobust(QueryType target,
 
 void Context::getQueryObjectiv(GLuint id, GLenum pname, GLint *params)
 {
-    handleError(GetQueryObjectParameter(getQuery(id), pname, params));
+    handleError(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
 void Context::getQueryObjectivRobust(GLuint id,
@@ -1227,7 +1230,7 @@ void Context::getQueryObjectivRobust(GLuint id,
 
 void Context::getQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 {
-    handleError(GetQueryObjectParameter(getQuery(id), pname, params));
+    handleError(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
 void Context::getQueryObjectuivRobust(GLuint id,
@@ -1241,7 +1244,7 @@ void Context::getQueryObjectuivRobust(GLuint id,
 
 void Context::getQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params)
 {
-    handleError(GetQueryObjectParameter(getQuery(id), pname, params));
+    handleError(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
 void Context::getQueryObjecti64vRobust(GLuint id,
@@ -1255,7 +1258,7 @@ void Context::getQueryObjecti64vRobust(GLuint id,
 
 void Context::getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params)
 {
-    handleError(GetQueryObjectParameter(getQuery(id), pname, params));
+    handleError(GetQueryObjectParameter(this, getQuery(id), pname, params));
 }
 
 void Context::getQueryObjectui64vRobust(GLuint id,

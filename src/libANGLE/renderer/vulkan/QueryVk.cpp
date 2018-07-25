@@ -22,49 +22,49 @@ QueryVk::~QueryVk()
 {
 }
 
-gl::Error QueryVk::begin()
+gl::Error QueryVk::begin(const gl::Context *context)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error QueryVk::end()
+gl::Error QueryVk::end(const gl::Context *context)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error QueryVk::queryCounter()
+gl::Error QueryVk::queryCounter(const gl::Context *context)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error QueryVk::getResult(GLint *params)
+gl::Error QueryVk::getResult(const gl::Context *context, GLint *params)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error QueryVk::getResult(GLuint *params)
+gl::Error QueryVk::getResult(const gl::Context *context, GLuint *params)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error QueryVk::getResult(GLint64 *params)
+gl::Error QueryVk::getResult(const gl::Context *context, GLint64 *params)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error QueryVk::getResult(GLuint64 *params)
+gl::Error QueryVk::getResult(const gl::Context *context, GLuint64 *params)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error QueryVk::isResultAvailable(bool *available)
+gl::Error QueryVk::isResultAvailable(const gl::Context *context, bool *available)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
