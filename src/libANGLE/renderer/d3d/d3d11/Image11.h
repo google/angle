@@ -88,14 +88,16 @@ class Image11 : public ImageD3D
     void unmap();
 
   private:
-    gl::Error copyWithoutConversion(const gl::Offset &destOffset,
+    gl::Error copyWithoutConversion(const gl::Context *context,
+                                    const gl::Offset &destOffset,
                                     const gl::Box &sourceArea,
                                     const TextureHelper11 &textureHelper,
                                     UINT sourceSubResource);
 
-    gl::Error getStagingTexture(const TextureHelper11 **outStagingTexture,
+    gl::Error getStagingTexture(const gl::Context *context,
+                                const TextureHelper11 **outStagingTexture,
                                 unsigned int *outSubresourceIndex);
-    gl::Error createStagingTexture();
+    gl::Error createStagingTexture(const gl::Context *context);
     void releaseStagingTexture();
 
     Renderer11 *mRenderer;
