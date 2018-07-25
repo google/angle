@@ -2030,14 +2030,14 @@ void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsi
     }
 }
 
-void GenerateInitialTextureData(GLint internalFormat,
-                                const Renderer11DeviceCaps &renderer11DeviceCaps,
-                                GLuint width,
-                                GLuint height,
-                                GLuint depth,
-                                GLuint mipLevels,
-                                std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData,
-                                std::vector<std::vector<BYTE>> *outData)
+gl::Error GenerateInitialTextureData(const gl::Context *context,
+                                     GLint internalFormat,
+                                     const Renderer11DeviceCaps &renderer11DeviceCaps,
+                                     GLuint width,
+                                     GLuint height,
+                                     GLuint depth,
+                                     GLuint mipLevels,
+                                     gl::TexLevelArray<D3D11_SUBRESOURCE_DATA> *outSubresourceData)
 {
     const d3d11::Format &d3dFormatInfo = d3d11::Format::Get(internalFormat, renderer11DeviceCaps);
     ASSERT(d3dFormatInfo.dataInitializerFunction != nullptr);
@@ -2045,25 +2045,30 @@ void GenerateInitialTextureData(GLint internalFormat,
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
         d3d11::GetDXGIFormatSizeInfo(d3dFormatInfo.texFormat);
 
-    outSubresourceData->resize(mipLevels);
-    outData->resize(mipLevels);
+    unsigned int rowPitch     = dxgiFormatInfo.pixelBytes * width;
+    unsigned int depthPitch   = rowPitch * height;
+    unsigned int maxImageSize = depthPitch * depth;
+
+    angle::MemoryBuffer *scratchBuffer = nullptr;
+    ANGLE_TRY_ALLOCATION(context->getScratchBuffer(maxImageSize, &scratchBuffer));
+
+    d3dFormatInfo.dataInitializerFunction(width, height, depth, scratchBuffer->data(), rowPitch,
+                                          depthPitch);
 
     for (unsigned int i = 0; i < mipLevels; i++)
     {
         unsigned int mipWidth = std::max(width >> i, 1U);
         unsigned int mipHeight = std::max(height >> i, 1U);
-        unsigned int mipDepth = std::max(depth >> i, 1U);
 
-        unsigned int rowWidth = dxgiFormatInfo.pixelBytes * mipWidth;
-        unsigned int imageSize = rowWidth * height;
+        unsigned int mipRowPitch   = dxgiFormatInfo.pixelBytes * mipWidth;
+        unsigned int mipDepthPitch = mipRowPitch * mipHeight;
 
-        outData->at(i).resize(rowWidth * mipHeight * mipDepth);
-        d3dFormatInfo.dataInitializerFunction(mipWidth, mipHeight, mipDepth, outData->at(i).data(), rowWidth, imageSize);
-
-        outSubresourceData->at(i).pSysMem = outData->at(i).data();
-        outSubresourceData->at(i).SysMemPitch = rowWidth;
-        outSubresourceData->at(i).SysMemSlicePitch = imageSize;
+        outSubresourceData->at(i).pSysMem          = scratchBuffer->data();
+        outSubresourceData->at(i).SysMemPitch      = mipRowPitch;
+        outSubresourceData->at(i).SysMemSlicePitch = mipDepthPitch;
     }
+
+    return gl::NoError();
 }
 
 UINT GetPrimitiveRestartIndex()

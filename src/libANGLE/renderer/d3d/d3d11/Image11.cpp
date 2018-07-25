@@ -561,11 +561,10 @@ gl::Error Image11::createStagingTexture(const gl::Context *context)
 
             if (formatInfo.dataInitializerFunction != nullptr)
             {
-                std::vector<D3D11_SUBRESOURCE_DATA> initialData;
-                std::vector<std::vector<BYTE>> textureData;
-                d3d11::GenerateInitialTextureData(
-                    mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height, mDepth,
-                    lodOffset + 1, &initialData, &textureData);
+                gl::TexLevelArray<D3D11_SUBRESOURCE_DATA> initialData;
+                ANGLE_TRY(d3d11::GenerateInitialTextureData(
+                    context, mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height,
+                    mDepth, lodOffset + 1, &initialData));
 
                 ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, initialData.data(),
                                                      &mStagingTexture));
@@ -599,11 +598,10 @@ gl::Error Image11::createStagingTexture(const gl::Context *context)
 
             if (formatInfo.dataInitializerFunction != nullptr)
             {
-                std::vector<D3D11_SUBRESOURCE_DATA> initialData;
-                std::vector<std::vector<BYTE>> textureData;
-                d3d11::GenerateInitialTextureData(
-                    mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height, 1,
-                    lodOffset + 1, &initialData, &textureData);
+                gl::TexLevelArray<D3D11_SUBRESOURCE_DATA> initialData;
+                ANGLE_TRY(d3d11::GenerateInitialTextureData(
+                    context, mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height,
+                    1, lodOffset + 1, &initialData));
 
                 ANGLE_TRY(mRenderer->allocateTexture(desc, formatInfo, initialData.data(),
                                                      &mStagingTexture));

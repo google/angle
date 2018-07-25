@@ -97,14 +97,14 @@ ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device);
 
 void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
 
-void GenerateInitialTextureData(GLint internalFormat,
-                                const Renderer11DeviceCaps &renderer11DeviceCaps,
-                                GLuint width,
-                                GLuint height,
-                                GLuint depth,
-                                GLuint mipLevels,
-                                std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData,
-                                std::vector<std::vector<BYTE>> *outData);
+gl::Error GenerateInitialTextureData(const gl::Context *context,
+                                     GLint internalFormat,
+                                     const Renderer11DeviceCaps &renderer11DeviceCaps,
+                                     GLuint width,
+                                     GLuint height,
+                                     GLuint depth,
+                                     GLuint mipLevels,
+                                     gl::TexLevelArray<D3D11_SUBRESOURCE_DATA> *outSubresourceData);
 
 UINT GetPrimitiveRestartIndex();
 
