@@ -22,7 +22,7 @@ FenceNV9::~FenceNV9()
     SafeRelease(mQuery);
 }
 
-gl::Error FenceNV9::set(GLenum condition)
+gl::Error FenceNV9::set(const gl::Context *context, GLenum condition)
 {
     if (!mQuery)
     {
@@ -44,12 +44,12 @@ gl::Error FenceNV9::set(GLenum condition)
     return gl::NoError();
 }
 
-gl::Error FenceNV9::test(GLboolean *outFinished)
+gl::Error FenceNV9::test(const gl::Context *context, GLboolean *outFinished)
 {
     return testHelper(true, outFinished);
 }
 
-gl::Error FenceNV9::finish()
+gl::Error FenceNV9::finish(const gl::Context *context)
 {
     GLboolean finished = GL_FALSE;
     while (finished != GL_TRUE)
@@ -88,4 +88,4 @@ gl::Error FenceNV9::testHelper(bool flushCommandBuffer, GLboolean *outFinished)
     return gl::NoError();
 }
 
-}
+}  // namespace rx

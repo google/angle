@@ -14,19 +14,20 @@
 
 namespace rx
 {
-
 class SyncNULL : public SyncImpl
 {
   public:
     SyncNULL();
     ~SyncNULL() override;
 
-    gl::Error set(GLenum condition, GLbitfield flags) override;
-    gl::Error clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult) override;
-    gl::Error serverWait(GLbitfield flags, GLuint64 timeout) override;
-    gl::Error getStatus(GLint *outResult) override;
+    gl::Error set(const gl::Context *context, GLenum condition, GLbitfield flags) override;
+    gl::Error clientWait(const gl::Context *context,
+                         GLbitfield flags,
+                         GLuint64 timeout,
+                         GLenum *outResult) override;
+    gl::Error serverWait(const gl::Context *context, GLbitfield flags, GLuint64 timeout) override;
+    gl::Error getStatus(const gl::Context *context, GLint *outResult) override;
 };
-
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_NULL_FENCESYNCNULL_H_

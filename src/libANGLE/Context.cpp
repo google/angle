@@ -4987,7 +4987,7 @@ void Context::renderbufferStorageMultisample(GLenum target,
 void Context::getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
 {
     const Sync *syncObject = getSync(sync);
-    handleError(QuerySynciv(syncObject, pname, bufSize, length, values));
+    handleError(QuerySynciv(this, syncObject, pname, bufSize, length, values));
 }
 
 void Context::getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params)
@@ -6119,7 +6119,7 @@ GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
     GLsync syncHandle = reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
 
     Sync *syncObject = getSync(syncHandle);
-    Error error      = syncObject->set(condition, flags);
+    Error error      = syncObject->set(this, condition, flags);
     if (error.isError())
     {
         deleteSync(syncHandle);
@@ -6140,14 +6140,14 @@ GLenum Context::clientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
     Sync *syncObject = getSync(sync);
 
     GLenum result = GL_WAIT_FAILED;
-    handleError(syncObject->clientWait(flags, timeout, &result));
+    handleError(syncObject->clientWait(this, flags, timeout, &result));
     return result;
 }
 
 void Context::waitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
     Sync *syncObject = getSync(sync);
-    handleError(syncObject->serverWait(flags, timeout));
+    handleError(syncObject->serverWait(this, flags, timeout));
 }
 
 void Context::getInteger64v(GLenum pname, GLint64 *params)
@@ -6550,7 +6550,7 @@ void Context::finishFenceNV(GLuint fence)
     FenceNV *fenceObject = getFenceNV(fence);
 
     ASSERT(fenceObject && fenceObject->isSet());
-    handleError(fenceObject->finish());
+    handleError(fenceObject->finish(this));
 }
 
 void Context::getFenceivNV(GLuint fence, GLenum pname, GLint *params)
@@ -6570,7 +6570,7 @@ void Context::getFenceivNV(GLuint fence, GLenum pname, GLint *params)
             GLboolean status = GL_TRUE;
             if (fenceObject->getStatus() != GL_TRUE)
             {
-                ANGLE_CONTEXT_TRY(fenceObject->test(&status));
+                ANGLE_CONTEXT_TRY(fenceObject->test(this, &status));
             }
             *params = status;
             break;
@@ -6673,7 +6673,7 @@ void Context::setFenceNV(GLuint fence, GLenum condition)
 
     FenceNV *fenceObject = getFenceNV(fence);
     ASSERT(fenceObject != nullptr);
-    handleError(fenceObject->set(condition));
+    handleError(fenceObject->set(this, condition));
 }
 
 GLboolean Context::testFenceNV(GLuint fence)
@@ -6684,7 +6684,7 @@ GLboolean Context::testFenceNV(GLuint fence)
     ASSERT(fenceObject->isSet() == GL_TRUE);
 
     GLboolean result = GL_TRUE;
-    Error error      = fenceObject->test(&result);
+    Error error      = fenceObject->test(this, &result);
     if (error.isError())
     {
         handleError(error);

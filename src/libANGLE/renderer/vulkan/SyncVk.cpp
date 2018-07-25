@@ -22,25 +22,28 @@ SyncVk::~SyncVk()
 {
 }
 
-gl::Error SyncVk::set(GLenum condition, GLbitfield flags)
+gl::Error SyncVk::set(const gl::Context *context, GLenum condition, GLbitfield flags)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error SyncVk::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
+gl::Error SyncVk::clientWait(const gl::Context *context,
+                             GLbitfield flags,
+                             GLuint64 timeout,
+                             GLenum *outResult)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error SyncVk::serverWait(GLbitfield flags, GLuint64 timeout)
+gl::Error SyncVk::serverWait(const gl::Context *context, GLbitfield flags, GLuint64 timeout)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error SyncVk::getStatus(GLint *outResult)
+gl::Error SyncVk::getStatus(const gl::Context *context, GLint *outResult)
 {
     UNIMPLEMENTED();
     return gl::InternalError();

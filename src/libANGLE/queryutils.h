@@ -100,7 +100,12 @@ void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufS
 
 void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, GLint *params);
 
-Error QuerySynciv(const Sync *sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values);
+Error QuerySynciv(const Context *context,
+                  const Sync *sync,
+                  GLenum pname,
+                  GLsizei bufSize,
+                  GLsizei *length,
+                  GLint *values);
 
 void SetTexParameterf(Context *context, Texture *texture, GLenum pname, GLfloat param);
 void SetTexParameterfv(Context *context, Texture *texture, GLenum pname, const GLfloat *params);

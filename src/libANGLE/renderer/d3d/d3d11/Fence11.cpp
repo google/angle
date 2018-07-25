@@ -71,17 +71,17 @@ FenceNV11::~FenceNV11()
     SafeRelease(mQuery);
 }
 
-gl::Error FenceNV11::set(GLenum condition)
+gl::Error FenceNV11::set(const gl::Context *context, GLenum condition)
 {
     return FenceSetHelper(this);
 }
 
-gl::Error FenceNV11::test(GLboolean *outFinished)
+gl::Error FenceNV11::test(const gl::Context *context, GLboolean *outFinished)
 {
     return FenceTestHelper(this, true, outFinished);
 }
 
-gl::Error FenceNV11::finish()
+gl::Error FenceNV11::finish(const gl::Context *context)
 {
     GLboolean finished = GL_FALSE;
 
@@ -132,13 +132,16 @@ Sync11::~Sync11()
     SafeRelease(mQuery);
 }
 
-gl::Error Sync11::set(GLenum condition, GLbitfield flags)
+gl::Error Sync11::set(const gl::Context *context, GLenum condition, GLbitfield flags)
 {
     ASSERT(condition == GL_SYNC_GPU_COMMANDS_COMPLETE && flags == 0);
     return FenceSetHelper(this);
 }
 
-gl::Error Sync11::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
+gl::Error Sync11::clientWait(const gl::Context *context,
+                             GLbitfield flags,
+                             GLuint64 timeout,
+                             GLenum *outResult)
 {
     ASSERT(outResult);
 
@@ -212,7 +215,7 @@ gl::Error Sync11::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResu
     return gl::NoError();
 }
 
-gl::Error Sync11::serverWait(GLbitfield flags, GLuint64 timeout)
+gl::Error Sync11::serverWait(const gl::Context *context, GLbitfield flags, GLuint64 timeout)
 {
     // Because our API is currently designed to be called from a single thread, we don't need to do
     // extra work for a server-side fence. GPU commands issued after the fence is created will
@@ -220,7 +223,7 @@ gl::Error Sync11::serverWait(GLbitfield flags, GLuint64 timeout)
     return gl::NoError();
 }
 
-gl::Error Sync11::getStatus(GLint *outResult)
+gl::Error Sync11::getStatus(const gl::Context *context, GLint *outResult)
 {
     GLboolean result = GL_FALSE;
     gl::Error error  = FenceTestHelper(this, false, &result);

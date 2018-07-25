@@ -22,18 +22,18 @@ FenceNVNULL::~FenceNVNULL()
 {
 }
 
-gl::Error FenceNVNULL::set(GLenum condition)
+gl::Error FenceNVNULL::set(const gl::Context *context, GLenum condition)
 {
     return gl::NoError();
 }
 
-gl::Error FenceNVNULL::test(GLboolean *outFinished)
+gl::Error FenceNVNULL::test(const gl::Context *context, GLboolean *outFinished)
 {
     *outFinished = GL_TRUE;
     return gl::NoError();
 }
 
-gl::Error FenceNVNULL::finish()
+gl::Error FenceNVNULL::finish(const gl::Context *context)
 {
     return gl::NoError();
 }

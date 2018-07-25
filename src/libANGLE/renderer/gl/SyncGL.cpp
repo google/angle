@@ -27,7 +27,7 @@ SyncGL::~SyncGL()
     }
 }
 
-gl::Error SyncGL::set(GLenum condition, GLbitfield flags)
+gl::Error SyncGL::set(const gl::Context *context, GLenum condition, GLbitfield flags)
 {
     ASSERT(condition == GL_SYNC_GPU_COMMANDS_COMPLETE && flags == 0);
     mSyncObject = mFunctions->fenceSync(condition, flags);
@@ -40,21 +40,24 @@ gl::Error SyncGL::set(GLenum condition, GLbitfield flags)
     return gl::NoError();
 }
 
-gl::Error SyncGL::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
+gl::Error SyncGL::clientWait(const gl::Context *context,
+                             GLbitfield flags,
+                             GLuint64 timeout,
+                             GLenum *outResult)
 {
     ASSERT(mSyncObject != 0);
     *outResult = mFunctions->clientWaitSync(mSyncObject, flags, timeout);
     return gl::NoError();
 }
 
-gl::Error SyncGL::serverWait(GLbitfield flags, GLuint64 timeout)
+gl::Error SyncGL::serverWait(const gl::Context *context, GLbitfield flags, GLuint64 timeout)
 {
     ASSERT(mSyncObject != 0);
     mFunctions->waitSync(mSyncObject, flags, timeout);
     return gl::NoError();
 }
 
-gl::Error SyncGL::getStatus(GLint *outResult)
+gl::Error SyncGL::getStatus(const gl::Context *context, GLint *outResult)
 {
     ASSERT(mSyncObject != 0);
     mFunctions->getSynciv(mSyncObject, GL_SYNC_STATUS, 1, nullptr, outResult);

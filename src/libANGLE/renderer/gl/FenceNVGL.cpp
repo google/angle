@@ -28,21 +28,21 @@ FenceNVGL::~FenceNVGL()
     mFence = 0;
 }
 
-gl::Error FenceNVGL::set(GLenum condition)
+gl::Error FenceNVGL::set(const gl::Context *context, GLenum condition)
 {
     ASSERT(condition == GL_ALL_COMPLETED_NV);
     mFunctions->setFenceNV(mFence, condition);
     return gl::NoError();
 }
 
-gl::Error FenceNVGL::test(GLboolean *outFinished)
+gl::Error FenceNVGL::test(const gl::Context *context, GLboolean *outFinished)
 {
     ASSERT(outFinished);
     *outFinished = mFunctions->testFenceNV(mFence);
     return gl::NoError();
 }
 
-gl::Error FenceNVGL::finish()
+gl::Error FenceNVGL::finish(const gl::Context *context)
 {
     mFunctions->finishFenceNV(mFence);
     return gl::NoError();

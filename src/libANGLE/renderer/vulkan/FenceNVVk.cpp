@@ -22,19 +22,19 @@ FenceNVVk::~FenceNVVk()
 {
 }
 
-gl::Error FenceNVVk::set(GLenum condition)
+gl::Error FenceNVVk::set(const gl::Context *context, GLenum condition)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error FenceNVVk::test(GLboolean *outFinished)
+gl::Error FenceNVVk::test(const gl::Context *context, GLboolean *outFinished)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error FenceNVVk::finish()
+gl::Error FenceNVVk::finish(const gl::Context *context)
 {
     UNIMPLEMENTED();
     return gl::InternalError();

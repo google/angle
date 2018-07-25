@@ -22,23 +22,26 @@ SyncNULL::~SyncNULL()
 {
 }
 
-gl::Error SyncNULL::set(GLenum condition, GLbitfield flags)
+gl::Error SyncNULL::set(const gl::Context *context, GLenum condition, GLbitfield flags)
 {
     return gl::NoError();
 }
 
-gl::Error SyncNULL::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
+gl::Error SyncNULL::clientWait(const gl::Context *context,
+                               GLbitfield flags,
+                               GLuint64 timeout,
+                               GLenum *outResult)
 {
     *outResult = GL_ALREADY_SIGNALED;
     return gl::NoError();
 }
 
-gl::Error SyncNULL::serverWait(GLbitfield flags, GLuint64 timeout)
+gl::Error SyncNULL::serverWait(const gl::Context *context, GLbitfield flags, GLuint64 timeout)
 {
     return gl::NoError();
 }
 
-gl::Error SyncNULL::getStatus(GLint *outResult)
+gl::Error SyncNULL::getStatus(const gl::Context *context, GLint *outResult)
 {
     *outResult = GL_SIGNALED;
     return gl::NoError();

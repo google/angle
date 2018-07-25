@@ -14,18 +14,16 @@
 
 namespace rx
 {
-
 class FenceNVVk : public FenceNVImpl
 {
   public:
     FenceNVVk();
     ~FenceNVVk() override;
 
-    gl::Error set(GLenum condition) override;
-    gl::Error test(GLboolean *outFinished) override;
-    gl::Error finish() override;
+    gl::Error set(const gl::Context *context, GLenum condition) override;
+    gl::Error test(const gl::Context *context, GLboolean *outFinished) override;
+    gl::Error finish(const gl::Context *context) override;
 };
-
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_FENCENVVK_H_

@@ -1330,7 +1330,12 @@ void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, G
     }
 }
 
-Error QuerySynciv(const Sync *sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
+Error QuerySynciv(const Context *context,
+                  const Sync *sync,
+                  GLenum pname,
+                  GLsizei bufSize,
+                  GLsizei *length,
+                  GLint *values)
 {
     ASSERT(sync);
 
@@ -1356,7 +1361,7 @@ Error QuerySynciv(const Sync *sync, GLenum pname, GLsizei bufSize, GLsizei *leng
             *values = clampCast<GLint>(sync->getFlags());
             break;
         case GL_SYNC_STATUS:
-            ANGLE_TRY(sync->getStatus(values));
+            ANGLE_TRY(sync->getStatus(context, values));
             break;
 
         default:
