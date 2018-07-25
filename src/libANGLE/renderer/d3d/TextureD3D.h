@@ -29,9 +29,6 @@ class RendererD3D;
 class RenderTargetD3D;
 class TextureStorage;
 
-template <typename T>
-using TexLevelsArray = std::array<T, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS>;
-
 class TextureD3D : public TextureImpl
 {
   public:
@@ -314,7 +311,7 @@ class TextureD3D_2D : public TextureD3D
                             bool forceRelease);
 
     bool mEGLImageTarget;
-    TexLevelsArray<std::unique_ptr<ImageD3D>> mImageArray;
+    gl::TexLevelArray<std::unique_ptr<ImageD3D>> mImageArray;
 };
 
 class TextureD3D_Cube : public TextureD3D
@@ -441,7 +438,7 @@ class TextureD3D_Cube : public TextureD3D
                             const gl::Extents &size,
                             bool forceRelease);
 
-    std::array<TexLevelsArray<std::unique_ptr<ImageD3D>>, 6> mImageArray;
+    std::array<gl::TexLevelArray<std::unique_ptr<ImageD3D>>, 6> mImageArray;
 };
 
 class TextureD3D_3D : public TextureD3D
@@ -550,7 +547,7 @@ class TextureD3D_3D : public TextureD3D
                             const gl::Extents &size,
                             bool forceRelease);
 
-    TexLevelsArray<std::unique_ptr<ImageD3D>> mImageArray;
+    gl::TexLevelArray<std::unique_ptr<ImageD3D>> mImageArray;
 };
 
 class TextureD3D_2DArray : public TextureD3D

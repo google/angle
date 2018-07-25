@@ -289,6 +289,9 @@ using UniformBlockBindingMask = angle::BitSet<IMPLEMENTATION_MAX_COMBINED_SHADER
 // Used in Framebuffer / Program
 using DrawBufferMask = angle::BitSet<IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 
+template <typename T>
+using TexLevelArray = std::array<T, IMPLEMENTATION_MAX_TEXTURE_LEVELS>;
+
 constexpr size_t MAX_COMPONENT_TYPE_MASK_INDEX = 16;
 struct ComponentTypeMask final
 {
