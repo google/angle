@@ -454,7 +454,7 @@ void OutputHLSL::writeReferencedVaryings(TInfoSinkBase &out) const
 {
     for (const auto &varying : mReferencedVaryings)
     {
-        const TType &type           = varying.second->getType();
+        const TType &type = varying.second->getType();
 
         // Program linking depends on this exact format
         out << "static " << InterpolationString(type.getQualifier()) << " " << TypeString(type)
@@ -782,28 +782,51 @@ void OutputHLSL::header(TInfoSinkBase &out,
         mUniformHLSL->samplerMetadataUniforms(out, "c1");
         out << "};\n";
 
-        // Follow built-in variables would be initialized in
-        // DynamicHLSL::generateComputeShaderLinkHLSL, if they
-        // are used in compute shader.
+        std::ostringstream systemValueDeclaration;
+        std::ostringstream glBuiltinInitialization;
+
+        systemValueDeclaration << "\nstruct CS_INPUT\n{\n";
+        glBuiltinInitialization << "\nvoid initGLBuiltins(CS_INPUT input)\n"
+                                << "{\n";
+
         if (mUsesWorkGroupID)
         {
             out << "static uint3 gl_WorkGroupID = uint3(0, 0, 0);\n";
+            systemValueDeclaration << "    uint3 dx_WorkGroupID : "
+                                   << "SV_GroupID;\n";
+            glBuiltinInitialization << "    gl_WorkGroupID = input.dx_WorkGroupID;\n";
         }
 
         if (mUsesLocalInvocationID)
         {
             out << "static uint3 gl_LocalInvocationID = uint3(0, 0, 0);\n";
+            systemValueDeclaration << "    uint3 dx_LocalInvocationID : "
+                                   << "SV_GroupThreadID;\n";
+            glBuiltinInitialization << "    gl_LocalInvocationID = input.dx_LocalInvocationID;\n";
         }
 
         if (mUsesGlobalInvocationID)
         {
             out << "static uint3 gl_GlobalInvocationID = uint3(0, 0, 0);\n";
+            systemValueDeclaration << "    uint3 dx_GlobalInvocationID : "
+                                   << "SV_DispatchThreadID;\n";
+            glBuiltinInitialization << "    gl_GlobalInvocationID = input.dx_GlobalInvocationID;\n";
         }
 
         if (mUsesLocalInvocationIndex)
         {
             out << "static uint gl_LocalInvocationIndex = uint(0);\n";
+            systemValueDeclaration << "    uint dx_LocalInvocationIndex : "
+                                   << "SV_GroupIndex;\n";
+            glBuiltinInitialization
+                << "    gl_LocalInvocationIndex = input.dx_LocalInvocationIndex;\n";
         }
+
+        systemValueDeclaration << "};\n\n";
+        glBuiltinInitialization << "};\n\n";
+
+        out << systemValueDeclaration.str();
+        out << glBuiltinInitialization.str();
     }
 
     if (!mappedStructs.empty())
@@ -857,31 +880,6 @@ void OutputHLSL::header(TInfoSinkBase &out,
     if (mUsesDepthRange)
     {
         out << "#define GL_USES_DEPTH_RANGE\n";
-    }
-
-    if (mUsesNumWorkGroups)
-    {
-        out << "#define GL_USES_NUM_WORK_GROUPS\n";
-    }
-
-    if (mUsesWorkGroupID)
-    {
-        out << "#define GL_USES_WORK_GROUP_ID\n";
-    }
-
-    if (mUsesLocalInvocationID)
-    {
-        out << "#define GL_USES_LOCAL_INVOCATION_ID\n";
-    }
-
-    if (mUsesGlobalInvocationID)
-    {
-        out << "#define GL_USES_GLOBAL_INVOCATION_ID\n";
-    }
-
-    if (mUsesLocalInvocationIndex)
-    {
-        out << "#define GL_USES_LOCAL_INVOCATION_INDEX\n";
     }
 
     if (mUsesXor)
@@ -1753,7 +1751,14 @@ bool OutputHLSL::visitBlock(Visit visit, TIntermBlock *node)
         out << "{\n";
         if (isMainBlock)
         {
-            out << "@@ MAIN PROLOGUE @@\n";
+            if (mShaderType == GL_COMPUTE_SHADER)
+            {
+                out << "initGLBuiltins(input);\n";
+            }
+            else
+            {
+                out << "@@ MAIN PROLOGUE @@\n";
+            }
         }
     }
 
@@ -2041,7 +2046,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else if (node->getFunction()->isImageFunction())
             {
-                const ImmutableString &name = node->getFunction()->name();
+                const ImmutableString &name              = node->getFunction()->name();
                 TType type                               = (*arguments)[0]->getAsTyped()->getType();
                 const ImmutableString &imageFunctionName = mImageFunctionHLSL->useImageFunction(
                     name, type.getBasicType(), type.getLayoutQualifier().imageInternalFormat,

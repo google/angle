@@ -1513,7 +1513,9 @@ gl::LinkResult ProgramD3D::compileComputeExecutable(const gl::Context *context,
     // Ensure the compiler is initialized to avoid race conditions.
     ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized());
 
-    std::string computeShader = mDynamicHLSL->generateComputeShaderLinkHLSL(context, mState);
+    gl::Shader *computeShaderGL = mState.getAttachedShader(gl::ShaderType::Compute);
+    ASSERT(computeShaderGL);
+    std::string computeShader = computeShaderGL->getTranslatedSource(context);
 
     ShaderExecutableD3D *computeExecutable = nullptr;
     ANGLE_TRY(mRenderer->compileToExecutable(infoLog, computeShader, gl::ShaderType::Compute,
