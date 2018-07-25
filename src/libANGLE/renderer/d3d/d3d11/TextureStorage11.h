@@ -36,9 +36,6 @@ class Image11;
 struct Renderer11DeviceCaps;
 
 template <typename T>
-using TexLevelArray = std::array<T, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS>;
-
-template <typename T>
 using CubeFaceArray = std::array<T, gl::CUBE_FACE_COUNT>;
 
 class TextureStorage11 : public TextureStorage
@@ -177,7 +174,7 @@ class TextureStorage11 : public TextureStorage
     unsigned int mTextureHeight;
     unsigned int mTextureDepth;
 
-    TexLevelArray<gl::SwizzleState> mSwizzleCache;
+    gl::TexLevelArray<gl::SwizzleState> mSwizzleCache;
     TextureHelper11 mDropStencilTexture;
 
   private:
@@ -228,8 +225,8 @@ class TextureStorage11 : public TextureStorage
     using UAVCacheForImage = std::map<ImageKey, d3d11::SharedUAV>;
     UAVCacheForImage mUavCacheForImage;
 
-    TexLevelArray<d3d11::SharedSRV> mLevelSRVs;
-    TexLevelArray<d3d11::SharedSRV> mLevelBlitSRVs;
+    gl::TexLevelArray<d3d11::SharedSRV> mLevelSRVs;
+    gl::TexLevelArray<d3d11::SharedSRV> mLevelBlitSRVs;
 };
 
 class TextureStorage11_2D : public TextureStorage11
@@ -297,7 +294,7 @@ class TextureStorage11_2D : public TextureStorage11
                                 d3d11::SharedUAV *outUAV) override;
 
     TextureHelper11 mTexture;
-    TexLevelArray<std::unique_ptr<RenderTarget11>> mRenderTarget;
+    gl::TexLevelArray<std::unique_ptr<RenderTarget11>> mRenderTarget;
     bool mHasKeyedMutex;
 
     // These are members related to the zero max-LOD workaround.
@@ -317,9 +314,9 @@ class TextureStorage11_2D : public TextureStorage11
 
     // Swizzle-related variables
     TextureHelper11 mSwizzleTexture;
-    TexLevelArray<d3d11::RenderTargetView> mSwizzleRenderTargets;
+    gl::TexLevelArray<d3d11::RenderTargetView> mSwizzleRenderTargets;
 
-    TexLevelArray<Image11 *> mAssociatedImages;
+    gl::TexLevelArray<Image11 *> mAssociatedImages;
 };
 
 class TextureStorage11_External : public TextureStorage11
@@ -518,7 +515,7 @@ class TextureStorage11_Cube : public TextureStorage11
                                     d3d11::SharedSRV *srv) const;
 
     TextureHelper11 mTexture;
-    CubeFaceArray<TexLevelArray<std::unique_ptr<RenderTarget11>>> mRenderTarget;
+    CubeFaceArray<gl::TexLevelArray<std::unique_ptr<RenderTarget11>>> mRenderTarget;
 
     // Level-zero workaround members. See TextureStorage11_2D's workaround members for a
     // description.
@@ -527,9 +524,9 @@ class TextureStorage11_Cube : public TextureStorage11
     bool mUseLevelZeroTexture;
 
     TextureHelper11 mSwizzleTexture;
-    TexLevelArray<d3d11::RenderTargetView> mSwizzleRenderTargets;
+    gl::TexLevelArray<d3d11::RenderTargetView> mSwizzleRenderTargets;
 
-    CubeFaceArray<TexLevelArray<Image11 *>> mAssociatedImages;
+    CubeFaceArray<gl::TexLevelArray<Image11 *>> mAssociatedImages;
 };
 
 class TextureStorage11_3D : public TextureStorage11
@@ -588,13 +585,13 @@ class TextureStorage11_3D : public TextureStorage11
     typedef std::pair<int, int> LevelLayerKey;
     std::map<LevelLayerKey, std::unique_ptr<RenderTarget11>> mLevelLayerRenderTargets;
 
-    TexLevelArray<std::unique_ptr<RenderTarget11>> mLevelRenderTargets;
+    gl::TexLevelArray<std::unique_ptr<RenderTarget11>> mLevelRenderTargets;
 
     TextureHelper11 mTexture;
     TextureHelper11 mSwizzleTexture;
-    TexLevelArray<d3d11::RenderTargetView> mSwizzleRenderTargets;
+    gl::TexLevelArray<d3d11::RenderTargetView> mSwizzleRenderTargets;
 
-    TexLevelArray<Image11 *> mAssociatedImages;
+    gl::TexLevelArray<Image11 *> mAssociatedImages;
 };
 
 class TextureStorage11_2DArray : public TextureStorage11
@@ -684,7 +681,7 @@ class TextureStorage11_2DArray : public TextureStorage11
     TextureHelper11 mTexture;
 
     TextureHelper11 mSwizzleTexture;
-    TexLevelArray<d3d11::RenderTargetView> mSwizzleRenderTargets;
+    gl::TexLevelArray<d3d11::RenderTargetView> mSwizzleRenderTargets;
 
     typedef std::map<LevelLayerRangeKey, Image11 *> ImageMap;
     ImageMap mAssociatedImages;
