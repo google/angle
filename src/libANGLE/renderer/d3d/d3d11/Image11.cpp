@@ -172,7 +172,7 @@ gl::Error Image11::copyToStorage(const gl::Context *context,
 
     const TextureHelper11 *stagingTexture = nullptr;
     unsigned int stagingSubresourceIndex = 0;
-    ANGLE_TRY(getStagingTexture(&stagingTexture, &stagingSubresourceIndex));
+    ANGLE_TRY(getStagingTexture(context, &stagingTexture, &stagingSubresourceIndex));
     ANGLE_TRY(storage11->updateSubresourceLevel(context, *stagingTexture, stagingSubresourceIndex,
                                                 index, region));
 
@@ -198,7 +198,7 @@ gl::Error Image11::recoverFromAssociatedStorage(const gl::Context *context)
 {
     if (mRecoverFromStorage)
     {
-        ANGLE_TRY(createStagingTexture());
+        ANGLE_TRY(createStagingTexture(context));
 
         mAssociatedStorage->verifyAssociatedImageValid(mAssociatedImageIndex, this);
 
@@ -368,7 +368,8 @@ gl::Error Image11::copyFromTexStorage(const gl::Context *context,
     UINT subresourceIndex = storage11->getSubresourceIndex(imageIndex);
 
     gl::Box sourceBox(0, 0, 0, mWidth, mHeight, mDepth);
-    return copyWithoutConversion(gl::Offset(), sourceBox, *textureHelper, subresourceIndex);
+    return copyWithoutConversion(context, gl::Offset(), sourceBox, *textureHelper,
+                                 subresourceIndex);
 }
 
 gl::Error Image11::copyFromFramebuffer(const gl::Context *context,
@@ -393,7 +394,8 @@ gl::Error Image11::copyFromFramebuffer(const gl::Context *context,
         unsigned int sourceSubResource = rt11->getSubresourceIndex();
 
         gl::Box sourceBox(sourceArea.x, sourceArea.y, 0, sourceArea.width, sourceArea.height, 1);
-        return copyWithoutConversion(destOffset, sourceBox, textureHelper, sourceSubResource);
+        return copyWithoutConversion(context, destOffset, sourceBox, textureHelper,
+                                     sourceSubResource);
     }
 
     // This format requires conversion, so we must copy the texture to staging and manually convert
@@ -447,7 +449,8 @@ gl::Error Image11::copyFromFramebuffer(const gl::Context *context,
     return error;
 }
 
-gl::Error Image11::copyWithoutConversion(const gl::Offset &destOffset,
+gl::Error Image11::copyWithoutConversion(const gl::Context *context,
+                                         const gl::Offset &destOffset,
                                          const gl::Box &sourceArea,
                                          const TextureHelper11 &textureHelper,
                                          UINT sourceSubResource)
@@ -455,7 +458,7 @@ gl::Error Image11::copyWithoutConversion(const gl::Offset &destOffset,
     // No conversion needed-- use copyback fastpath
     const TextureHelper11 *stagingTexture = nullptr;
     unsigned int stagingSubresourceIndex = 0;
-    ANGLE_TRY(getStagingTexture(&stagingTexture, &stagingSubresourceIndex));
+    ANGLE_TRY(getStagingTexture(context, &stagingTexture, &stagingSubresourceIndex));
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
@@ -505,10 +508,11 @@ gl::Error Image11::copyWithoutConversion(const gl::Offset &destOffset,
     return gl::NoError();
 }
 
-gl::Error Image11::getStagingTexture(const TextureHelper11 **outStagingTexture,
+gl::Error Image11::getStagingTexture(const gl::Context *context,
+                                     const TextureHelper11 **outStagingTexture,
                                      unsigned int *outSubresourceIndex)
 {
-    ANGLE_TRY(createStagingTexture());
+    ANGLE_TRY(createStagingTexture(context));
 
     *outStagingTexture   = &mStagingTexture;
     *outSubresourceIndex = mStagingSubresource;
@@ -520,7 +524,7 @@ void Image11::releaseStagingTexture()
     mStagingTexture.reset();
 }
 
-gl::Error Image11::createStagingTexture()
+gl::Error Image11::createStagingTexture(const gl::Context *context)
 {
     if (mStagingTexture.valid())
     {
@@ -629,7 +633,7 @@ gl::Error Image11::map(const gl::Context *context, D3D11_MAP mapType, D3D11_MAPP
 
     const TextureHelper11 *stagingTexture = nullptr;
     unsigned int subresourceIndex  = 0;
-    ANGLE_TRY(getStagingTexture(&stagingTexture, &subresourceIndex));
+    ANGLE_TRY(getStagingTexture(context, &stagingTexture, &subresourceIndex));
 
     ASSERT(stagingTexture && stagingTexture->valid());
 
