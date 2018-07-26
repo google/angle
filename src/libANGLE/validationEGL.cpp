@@ -7,6 +7,7 @@
 // validationEGL.cpp: Validation functions for generic EGL entry point parameters
 
 #include "libANGLE/validationEGL.h"
+#include "libGLESv2/global_state.h"
 
 #include "common/utilities.h"
 #include "libANGLE/Config.h"
@@ -2466,6 +2467,24 @@ Error ValidateGetSyncValuesCHROMIUM(const Display *display,
     if (sbc == nullptr)
     {
         return EglBadParameter() << "sbc is null";
+    }
+
+    return NoError();
+}
+
+Error ValidateSwapBuffers(Thread *thread, const Display *display, const Surface *eglSurface)
+{
+    ANGLE_TRY(ValidateSurface(display, eglSurface));
+
+    if (display->isDeviceLost())
+    {
+        return EglContextLost();
+    }
+
+    if (eglSurface == EGL_NO_SURFACE || !thread->getContext() ||
+        thread->getCurrentDrawSurface() != eglSurface)
+    {
+        return EglBadSurface();
     }
 
     return NoError();

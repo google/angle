@@ -657,42 +657,11 @@ EGLBoolean EGLAPIENTRY SwapBuffers(EGLDisplay dpy, EGLSurface surface)
     Display *display    = static_cast<Display *>(dpy);
     Surface *eglSurface = (Surface *)surface;
 
-    Error error = ValidateSurface(display, eglSurface);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglSwapBuffers",
-                         GetSurfaceIfValid(display, eglSurface));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateSwapBuffers(thread, display, eglSurface), "eglSwapBuffers",
+                         GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
-    if (display->isDeviceLost())
-    {
-        thread->setError(EglContextLost(), GetDebug(), "eglSwapBuffers",
-                         GetSurfaceIfValid(display, eglSurface));
-        return EGL_FALSE;
-    }
-
-    if (surface == EGL_NO_SURFACE)
-    {
-        thread->setError(EglBadSurface(), GetDebug(), "eglSwapBuffers",
-                         GetSurfaceIfValid(display, eglSurface));
-        return EGL_FALSE;
-    }
-
-    if (!thread->getContext() || thread->getCurrentDrawSurface() != eglSurface)
-    {
-        thread->setError(EglBadSurface(), GetDebug(), "eglSwapBuffers",
-                         GetSurfaceIfValid(display, eglSurface));
-        return EGL_FALSE;
-    }
-
-    error = eglSurface->swap(thread->getContext());
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglSwapBuffers",
-                         GetSurfaceIfValid(display, eglSurface));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, eglSurface->swap(thread->getContext()), "eglSwapBuffers",
+                         GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;
