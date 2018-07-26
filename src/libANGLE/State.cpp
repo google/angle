@@ -2629,14 +2629,6 @@ bool State::hasMappedBuffer(BufferBinding target) const
     }
 }
 
-Error State::syncDirtyObjects(const Context *context)
-{
-    if (!mDirtyObjects.any())
-        return NoError();
-
-    return syncDirtyObjects(context, mDirtyObjects);
-}
-
 Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
 {
     const DirtyObjects &dirtyObjects = mDirtyObjects & bitset;
@@ -2882,7 +2874,7 @@ Error State::clearUnclearedActiveTextures(const Context *context)
         return NoError();
     }
 
-    ASSERT(!mDirtyObjects.any());
+    ASSERT(!mDirtyObjects[DIRTY_OBJECT_PROGRAM_TEXTURES]);
 
     for (auto textureIndex : mActiveTexturesMask)
     {

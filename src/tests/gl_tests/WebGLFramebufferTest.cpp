@@ -144,14 +144,17 @@ TEST_P(WebGLFramebufferTest, TestFramebufferRequiredCombinations)
     checkBufferBits(GL_DEPTH_ATTACHMENT, GL_NONE);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
 
-    // 3. COLOR_ATTACHMENT0 = RGBA/UNSIGNED_BYTE texture + DEPTH_STENCIL_ATTACHMENT = DEPTH_STENCIL
-    // renderbuffer
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                              renderbuffer);
-    EXPECT_GL_NO_ERROR();
-    checkFramebufferForAllowedStatuses(ALLOW_COMPLETE);
-    checkBufferBits(GL_DEPTH_STENCIL_ATTACHMENT, GL_NONE);
+    if (getClientMajorVersion() == 2)
+    {
+        // 3. COLOR_ATTACHMENT0 = RGBA/UNSIGNED_BYTE texture + DEPTH_STENCIL_ATTACHMENT =
+        // DEPTH_STENCIL renderbuffer
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                                  renderbuffer);
+        EXPECT_GL_NO_ERROR();
+        checkFramebufferForAllowedStatuses(ALLOW_COMPLETE);
+        checkBufferBits(GL_DEPTH_STENCIL_ATTACHMENT, GL_NONE);
+    }
 }
 
 void testAttachment(GLint width,
@@ -370,6 +373,9 @@ void WebGLFramebufferTest::testDepthStencilRenderbuffer(GLint width,
 // Test various attachment combinations with WebGL framebuffers.
 TEST_P(WebGLFramebufferTest, TestAttachments)
 {
+    // GL_DEPTH_STENCIL renderbuffer format is only valid for WebGL1
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() != 2);
+
     for (GLint width = 2; width <= 2; width += 2)
     {
         for (GLint height = 2; height <= 2; height += 2)
@@ -856,6 +862,9 @@ ANGLE_INSTANTIATE_TEST(WebGLFramebufferTest,
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
-                       ES2_OPENGLES());
+                       ES2_OPENGLES(),
+                       ES3_D3D11(),
+                       ES3_OPENGL(),
+                       ES3_OPENGLES());
 
 }  // namespace

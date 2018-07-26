@@ -1498,15 +1498,14 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     Error prepareForDraw(PrimitiveMode mode);
     Error prepareForClear(GLbitfield mask);
     Error prepareForClearBuffer(GLenum buffer, GLint drawbuffer);
-    Error syncState();
     Error syncState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
     Error syncDirtyBits();
     Error syncDirtyBits(const State::DirtyBits &bitMask);
-    Error syncDirtyObjects();
     Error syncDirtyObjects(const State::DirtyObjects &objectMask);
     Error syncStateForReadPixels();
     Error syncStateForTexImage();
     Error syncStateForBlit();
+    Error syncStateForPathOperation();
 
     VertexArray *checkVertexArrayAllocation(GLuint vertexArrayHandle);
     TransformFeedback *checkTransformFeedbackAllocation(GLuint transformFeedback);
@@ -1609,6 +1608,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     const bool mExtensionsEnabled;
     MemoryProgramCache *mMemoryProgramCache;
 
+    State::DirtyObjects mDrawDirtyObjects;
+    State::DirtyObjects mPathOperationDirtyObjects;
     State::DirtyBits mTexImageDirtyBits;
     State::DirtyObjects mTexImageDirtyObjects;
     State::DirtyBits mReadPixelsDirtyBits;
