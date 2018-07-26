@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85160dae_4fe9108e",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "If it\u0027s no longer shared, we can store it by value in Context.",
+      "range": {
+        "startLine": 87,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 65
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2e05d7a_87edacb5",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "I don\u0027t think these are needed.  The way you have it set up, AsyncWorkerPool makes sure that only mMaxThreads tasks are running at once so the tasks don\u0027t need to do any synchronization themselves.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 39
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "322b2216_f25934bc",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "nit: use a scope to do the unlocking.",
+      "range": {
+        "startLine": 164,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 18
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db4a020d_dbeef623",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "Assert that mRunningThreads is not 0.",
+      "range": {
+        "startLine": 184,
+        "startChar": 16,
+        "endLine": 184,
+        "endChar": 34
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c55e8430_fe6c0b1e",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "Merging this into one call would be good, I don\u0027t think the lock is needed.  Something like:\n\n   waitable-\u003esetFuture(std::async(std::launch::async, [closure, this] { ... }));\n\nWhich can set mIsPending to false and assign the future inside the waitable.",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 51
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9ee5d0e_a5d335a4",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "I\u0027d like to remove the dependency on gl::Context from this file.  I think any workaround should be done in the backend by choosing between using the pool or simply executing the link right away.\n\nWe don\u0027t need to solve the workaround case yet.",
+      "range": {
+        "startLine": 202,
+        "startChar": 0,
+        "endLine": 202,
+        "endChar": 86
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5895592e_a5358b3d",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "Move as many of these into the cpp file as possible.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 17
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f975f066_1e6c4f18",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "Could be pure virtual.",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 56
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11f325bb_4db27715",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "Let\u0027s move this to AsyncWorkerPool only.",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 23
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd3a707d_bef3118b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 1474,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "nit: merge this right into the if-statement instead of storing it in a variable.",
+      "range": {
+        "startLine": 1472,
+        "startChar": 8,
+        "endLine": 1474,
+        "endChar": 16
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "673a34fe_5e11d2fd",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 1514,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-26T18:26:24Z",
+      "side": 1,
+      "message": "nit: use a loop",
+      "range": {
+        "startLine": 1513,
+        "startChar": 15,
+        "endLine": 1514,
+        "endChar": 44
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
