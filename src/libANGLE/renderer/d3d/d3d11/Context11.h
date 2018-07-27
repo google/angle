@@ -12,11 +12,13 @@
 
 #include "libANGLE/renderer/ContextImpl.h"
 
+#include "libANGLE/renderer/d3d/RendererD3D.h"
+
 namespace rx
 {
 class Renderer11;
 
-class Context11 : public ContextImpl, public MultisampleTextureInitializer
+class Context11 : public ContextImpl, public MultisampleTextureInitializer, public d3d::Context
 {
   public:
     Context11(const gl::ContextState &state, Renderer11 *renderer);
@@ -161,7 +163,7 @@ class Context11 : public ContextImpl, public MultisampleTextureInitializer
                      const char *message,
                      const char *file,
                      const char *function,
-                     unsigned int line);
+                     unsigned int line) override;
 
     // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2738
     void handleError(const gl::Error &error);
@@ -173,7 +175,6 @@ class Context11 : public ContextImpl, public MultisampleTextureInitializer
     Renderer11 *mRenderer;
     IncompleteTextureSet mIncompleteTextures;
 };
-
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_D3D_D3D11_CONTEXT11_H_
