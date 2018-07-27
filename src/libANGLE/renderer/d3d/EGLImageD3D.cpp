@@ -44,7 +44,7 @@ egl::Error EGLImageD3D::initialize(const egl::Display *display)
 
 gl::Error EGLImageD3D::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
-    if (sibling == mState.source.get())
+    if (sibling == mState.source)
     {
         ANGLE_TRY(copyToLocalRendertarget(context));
     }
@@ -54,7 +54,7 @@ gl::Error EGLImageD3D::orphan(const gl::Context *context, egl::ImageSibling *sib
 
 gl::Error EGLImageD3D::getRenderTarget(const gl::Context *context, RenderTargetD3D **outRT) const
 {
-    if (mState.source.get())
+    if (mState.source != nullptr)
     {
         ASSERT(!mRenderTarget);
         FramebufferAttachmentRenderTarget *rt = nullptr;
@@ -73,7 +73,7 @@ gl::Error EGLImageD3D::getRenderTarget(const gl::Context *context, RenderTargetD
 
 gl::Error EGLImageD3D::copyToLocalRendertarget(const gl::Context *context)
 {
-    ASSERT(mState.source.get() != nullptr);
+    ASSERT(mState.source != nullptr);
     ASSERT(mRenderTarget == nullptr);
 
     RenderTargetD3D *curRenderTarget = nullptr;

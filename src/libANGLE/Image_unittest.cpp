@@ -45,11 +45,12 @@ TEST(ImageTest, RefCounting)
 
     egl::Image *image =
         new egl::Image(&mockEGLFactory, nullptr, EGL_GL_TEXTURE_2D, texture, egl::AttributeMap());
+    rx::MockImageImpl *imageImpl = static_cast<rx::MockImageImpl *>(image->getImplementation());
     image->addRef();
 
-    // Verify that the image added a ref to the texture and the texture has not added a ref to the
-    // image
-    EXPECT_EQ(2u, texture->getRefCount());
+    // Verify that the image does not add a ref to its source so that the source may still be
+    // deleted
+    EXPECT_EQ(1u, texture->getRefCount());
     EXPECT_EQ(1u, image->getRefCount());
 
     // Create a renderbuffer and set it as a target of the EGL image
@@ -65,30 +66,27 @@ TEST(ImageTest, RefCounting)
 
     // Verify that the renderbuffer added a ref to the image and the image did not add a ref to
     // the renderbuffer
-    EXPECT_EQ(2u, texture->getRefCount());
+    EXPECT_EQ(1u, texture->getRefCount());
     EXPECT_EQ(2u, image->getRefCount());
     EXPECT_EQ(1u, renderbuffer->getRefCount());
 
-    // Simulate deletion of the texture and verify that it still exists because the image holds a
-    // ref
+    // Simulate deletion of the texture and verify that it is deleted but the image still exists
+    EXPECT_CALL(*imageImpl, orphan(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
+    EXPECT_CALL(*textureImpl, destructor()).Times(1).RetiresOnSaturation();
     texture->release(nullptr);
-    EXPECT_EQ(1u, texture->getRefCount());
     EXPECT_EQ(2u, image->getRefCount());
     EXPECT_EQ(1u, renderbuffer->getRefCount());
 
     // Simulate deletion of the image and verify that it still exists because the renderbuffer holds
     // a ref
     image->release(nullptr);
-    EXPECT_EQ(1u, texture->getRefCount());
     EXPECT_EQ(1u, image->getRefCount());
     EXPECT_EQ(1u, renderbuffer->getRefCount());
 
     // Simulate deletion of the renderbuffer and verify that the deletion cascades to all objects
-    rx::MockImageImpl *imageImpl = static_cast<rx::MockImageImpl *>(image->getImplementation());
     EXPECT_CALL(*imageImpl, destructor()).Times(1).RetiresOnSaturation();
     EXPECT_CALL(*imageImpl, orphan(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
 
-    EXPECT_CALL(*textureImpl, destructor()).Times(1).RetiresOnSaturation();
     EXPECT_CALL(*renderbufferImpl, destructor()).Times(1).RetiresOnSaturation();
 
     renderbuffer->release(nullptr);
@@ -124,12 +122,11 @@ TEST(ImageTest, RespecificationReleasesReferences)
         new egl::Image(&mockEGLFactory, nullptr, EGL_GL_TEXTURE_2D, texture, egl::AttributeMap());
     image->addRef();
 
-    // Verify that the image added a ref to the texture and the texture has not added a ref to the
-    // image
-    EXPECT_EQ(2u, texture->getRefCount());
+    // Verify that the image did not add a ref to it's source.
+    EXPECT_EQ(1u, texture->getRefCount());
     EXPECT_EQ(1u, image->getRefCount());
 
-    // Respecify the texture and verify that the image releases its reference
+    // Respecify the texture and verify that the image is orpahaned
     rx::MockImageImpl *imageImpl = static_cast<rx::MockImageImpl *>(image->getImplementation());
     EXPECT_CALL(*imageImpl, orphan(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
     EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _))

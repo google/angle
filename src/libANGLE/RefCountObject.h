@@ -207,4 +207,15 @@ class OffsetBindingPointer : public gl::BindingPointer<ObjectType>
 };
 }  // namespace gl
 
+namespace egl
+{
+class Display;
+
+using RefCountObject = angle::RefCountObject<Display, Error>;
+
+template <class ObjectType>
+using BindingPointer = angle::BindingPointer<ObjectType, Display, Error>;
+
+}  // namespace egl
+
 #endif   // LIBANGLE_REFCOUNTOBJECT_H_

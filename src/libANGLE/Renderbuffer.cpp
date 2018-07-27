@@ -66,7 +66,7 @@ void RenderbufferState::update(GLsizei width,
 
 // Renderbuffer implementation.
 Renderbuffer::Renderbuffer(rx::GLImplFactory *implFactory, GLuint id)
-    : egl::ImageSibling(id),
+    : RefCountObject(id),
       mState(),
       mImplementation(implFactory->createRenderbuffer(mState)),
       mLabel()

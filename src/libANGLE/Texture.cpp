@@ -580,7 +580,7 @@ void TextureState::clearImageDescs()
 }
 
 Texture::Texture(rx::GLImplFactory *factory, GLuint id, TextureType type)
-    : egl::ImageSibling(id),
+    : RefCountObject(id),
       mState(type),
       mTexture(factory->createTexture(mState)),
       mLabel(),

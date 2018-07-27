@@ -729,8 +729,8 @@ Error Display::createImage(const gl::Context *context,
     }
     ASSERT(sibling != nullptr);
 
-    angle::UniqueObjectPointer<Image, gl::Context> imagePtr(
-        new Image(mImplementation, context, target, sibling, attribs), context);
+    angle::UniqueObjectPointer<Image, Display> imagePtr(
+        new Image(mImplementation, context, target, sibling, attribs), this);
     ANGLE_TRY(imagePtr->initialize(this));
 
     Image *image = imagePtr.release();
@@ -876,7 +876,7 @@ void Display::destroyImage(egl::Image *image)
 {
     auto iter = mImageSet.find(image);
     ASSERT(iter != mImageSet.end());
-    (*iter)->release(mProxyContext.get());
+    (*iter)->release(this);
     mImageSet.erase(iter);
 }
 

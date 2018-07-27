@@ -10,6 +10,7 @@
 
 #include "common/debug.h"
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/angletypes.h"
@@ -43,10 +44,15 @@ gl::ImageIndex GetImageIndex(EGLenum eglTarget, const egl::AttributeMap &attribs
         return gl::ImageIndex::MakeFromTarget(target, mip);
     }
 }
+
+const Display *DisplayFromContext(const gl::Context *context)
+{
+    return (context ? context->getCurrentDisplay() : nullptr);
+}
+
 }  // anonymous namespace
 
-ImageSibling::ImageSibling(GLuint id)
-    : RefCountObject(id), FramebufferAttachmentObject(), mSourcesOf(), mTargetOf()
+ImageSibling::ImageSibling() : FramebufferAttachmentObject(), mSourcesOf(), mTargetOf()
 {
 }
 
@@ -62,7 +68,7 @@ ImageSibling::~ImageSibling()
 void ImageSibling::setTargetImage(const gl::Context *context, egl::Image *imageTarget)
 {
     ASSERT(imageTarget != nullptr);
-    mTargetOf.set(context, imageTarget);
+    mTargetOf.set(DisplayFromContext(context), imageTarget);
     imageTarget->addTargetSibling(this);
 }
 
@@ -74,11 +80,11 @@ gl::Error ImageSibling::orphanImages(const gl::Context *context)
         ASSERT(mSourcesOf.empty());
 
         ANGLE_TRY(mTargetOf->orphanSibling(context, this));
-        mTargetOf.set(context, nullptr);
+        mTargetOf.set(DisplayFromContext(context), nullptr);
     }
     else
     {
-        for (egl::Image *sourceImage : mSourcesOf)
+        for (Image *sourceImage : mSourcesOf)
         {
             ANGLE_TRY(sourceImage->orphanSibling(context, this));
         }
@@ -137,8 +143,7 @@ Image::Image(rx::EGLImplFactory *factory,
              EGLenum target,
              ImageSibling *buffer,
              const AttributeMap &attribs)
-    : RefCountObject(0),
-      mState(target, buffer, attribs),
+    : mState(target, buffer, attribs),
       mImplementation(factory->createImage(mState, context, target, attribs)),
       mOrphanedAndNeedsInit(false)
 {
@@ -148,19 +153,20 @@ Image::Image(rx::EGLImplFactory *factory,
     mState.source->addImageSource(this);
 }
 
-gl::Error Image::onDestroy(const gl::Context *context)
+Error Image::onDestroy(const Display *display)
 {
     // All targets should hold a ref to the egl image and it should not be deleted until there are
     // no siblings left.
     ASSERT(mState.targets.empty());
 
     // Tell the source that it is no longer used by this image
-    if (mState.source.get() != nullptr)
+    if (mState.source != nullptr)
     {
         mState.source->removeImageSource(this);
-        mState.source.set(context, nullptr);
+        mState.source = nullptr;
     }
-    return gl::NoError();
+
+    return NoError();
 }
 
 Image::~Image()
@@ -185,14 +191,16 @@ void Image::addTargetSibling(ImageSibling *sibling)
 
 gl::Error Image::orphanSibling(const gl::Context *context, ImageSibling *sibling)
 {
+    ASSERT(sibling != nullptr);
+
     // notify impl
     ANGLE_TRY(mImplementation->orphan(context, sibling));
 
-    if (mState.source.get() == sibling)
+    if (mState.source == sibling)
     {
         // If the sibling is the source, it cannot be a target.
         ASSERT(mState.targets.find(sibling) == mState.targets.end());
-        mState.source.set(context, nullptr);
+        mState.source = nullptr;
         mOrphanedAndNeedsInit =
             (sibling->initState(mState.imageIndex) == gl::InitState::MayNeedInit);
     }
@@ -236,7 +244,7 @@ Error Image::initialize(const Display *display)
 
 bool Image::orphaned() const
 {
-    return (mState.source.get() == nullptr);
+    return (mState.source == nullptr);
 }
 
 gl::InitState Image::sourceInitState() const

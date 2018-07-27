@@ -187,7 +187,7 @@ struct TextureState final : private angle::NonCopyable
 bool operator==(const TextureState &a, const TextureState &b);
 bool operator!=(const TextureState &a, const TextureState &b);
 
-class Texture final : public egl::ImageSibling, public LabeledObject
+class Texture final : public RefCountObject, public egl::ImageSibling, public LabeledObject
 {
   public:
     Texture(rx::GLImplFactory *factory, GLuint id, TextureType type);
