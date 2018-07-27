@@ -66,6 +66,7 @@ VertexBufferInterface::~VertexBufferInterface()
     if (mVertexBuffer)
     {
         mVertexBuffer->release();
+        mVertexBuffer = nullptr;
     }
 }
 
@@ -122,12 +123,23 @@ VertexBuffer *VertexBufferInterface::getVertexBuffer() const
 }
 
 // StreamingVertexBufferInterface Implementation
-StreamingVertexBufferInterface::StreamingVertexBufferInterface(BufferFactoryD3D *factory,
-                                                               std::size_t initialSize)
+StreamingVertexBufferInterface::StreamingVertexBufferInterface(BufferFactoryD3D *factory)
     : VertexBufferInterface(factory, true), mWritePosition(0), mReservedSpace(0)
 {
-    // TODO(jmadill): Make an initialize method that can return an error.
-    ANGLE_SWALLOW_ERR(setBufferSize(static_cast<unsigned int>(initialSize)));
+}
+
+gl::Error StreamingVertexBufferInterface::initialize(std::size_t initialSize)
+{
+    return setBufferSize(static_cast<unsigned int>(initialSize));
+}
+
+void StreamingVertexBufferInterface::reset()
+{
+    if (mVertexBuffer)
+    {
+        mVertexBuffer->release();
+        mVertexBuffer = nullptr;
+    }
 }
 
 StreamingVertexBufferInterface::~StreamingVertexBufferInterface()

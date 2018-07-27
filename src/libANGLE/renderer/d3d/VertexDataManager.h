@@ -14,6 +14,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/VertexAttribute.h"
+#include "libANGLE/renderer/d3d/VertexBuffer.h"
 
 namespace gl
 {
@@ -132,17 +133,17 @@ class VertexDataManager : angle::NonCopyable
     gl::Error reserveSpaceForAttrib(const TranslatedAttribute &translatedAttrib,
                                     GLint start,
                                     size_t count,
-                                    GLsizei instances) const;
+                                    GLsizei instances);
 
     gl::Error storeDynamicAttrib(const gl::Context *context,
                                  TranslatedAttribute *translated,
                                  GLint start,
                                  size_t count,
-                                 GLsizei instances) const;
+                                 GLsizei instances);
 
     BufferFactoryD3D *const mFactory;
 
-    std::unique_ptr<StreamingVertexBufferInterface> mStreamingBuffer;
+    StreamingVertexBufferInterface mStreamingBuffer;
     std::vector<CurrentValueState> mCurrentValueCache;
     gl::AttributesMask mDynamicAttribsMaskCache;
 };

@@ -197,7 +197,7 @@ VertexDataManager::CurrentValueState::~CurrentValueState()
 }
 
 VertexDataManager::VertexDataManager(BufferFactoryD3D *factory)
-    : mFactory(factory), mStreamingBuffer(), mCurrentValueCache(gl::MAX_VERTEX_ATTRIBS)
+    : mFactory(factory), mStreamingBuffer(factory), mCurrentValueCache(gl::MAX_VERTEX_ATTRIBS)
 {
 }
 
@@ -207,10 +207,7 @@ VertexDataManager::~VertexDataManager()
 
 gl::Error VertexDataManager::initialize()
 {
-    mStreamingBuffer.reset(
-        new StreamingVertexBufferInterface(mFactory, INITIAL_STREAM_BUFFER_SIZE));
-    ANGLE_TRY_ALLOCATION(mStreamingBuffer);
-    return gl::NoError();
+    return mStreamingBuffer.initialize(INITIAL_STREAM_BUFFER_SIZE);
 }
 
 void VertexDataManager::deinitialize()
@@ -225,8 +222,6 @@ gl::Error VertexDataManager::prepareVertexData(const gl::Context *context,
                                                std::vector<TranslatedAttribute> *translatedAttribs,
                                                GLsizei instances)
 {
-    ASSERT(mStreamingBuffer);
-
     const gl::State &state             = context->getGLState();
     const gl::VertexArray *vertexArray = state.getVertexArray();
     const auto &vertexAttributes       = vertexArray->getVertexAttributes();
@@ -410,7 +405,7 @@ gl::Error VertexDataManager::storeDynamicAttribs(
     };
 
     // Will trigger unmapping on return.
-    StreamingBufferUnmapper localUnmapper(mStreamingBuffer.get());
+    StreamingBufferUnmapper localUnmapper(&mStreamingBuffer);
 
     // Reserve the required space for the dynamic buffers.
     for (auto attribIndex : dynamicAttribsMask)
@@ -455,7 +450,7 @@ void VertexDataManager::PromoteDynamicAttribs(
 gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &translatedAttrib,
                                                    GLint start,
                                                    size_t count,
-                                                   GLsizei instances) const
+                                                   GLsizei instances)
 {
     ASSERT(translatedAttrib.attribute && translatedAttrib.binding);
     const auto &attrib  = *translatedAttrib.attribute;
@@ -486,14 +481,14 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &tr
             return gl::InvalidOperation() << "Vertex buffer is not big enough for the draw call.";
         }
     }
-    return mStreamingBuffer->reserveVertexSpace(attrib, binding, totalCount, instances);
+    return mStreamingBuffer.reserveVertexSpace(attrib, binding, totalCount, instances);
 }
 
 gl::Error VertexDataManager::storeDynamicAttrib(const gl::Context *context,
                                                 TranslatedAttribute *translated,
                                                 GLint start,
                                                 size_t count,
-                                                GLsizei instances) const
+                                                GLsizei instances)
 {
     ASSERT(translated->attribute && translated->binding);
     const auto &attrib  = *translated->attribute;
@@ -531,11 +526,11 @@ gl::Error VertexDataManager::storeDynamicAttrib(const gl::Context *context,
     size_t totalCount = gl::ComputeVertexBindingElementCount(binding.getDivisor(), count,
                                                              static_cast<size_t>(instances));
 
-    ANGLE_TRY(mStreamingBuffer->storeDynamicAttribute(
+    ANGLE_TRY(mStreamingBuffer.storeDynamicAttribute(
         attrib, binding, translated->currentValueType, firstVertexIndex,
         static_cast<GLsizei>(totalCount), instances, &streamOffset, sourceData));
 
-    VertexBuffer *vertexBuffer = mStreamingBuffer->getVertexBuffer();
+    VertexBuffer *vertexBuffer = mStreamingBuffer.getVertexBuffer();
 
     translated->vertexBuffer.set(vertexBuffer);
     translated->serial = vertexBuffer->getSerial();
@@ -554,7 +549,8 @@ gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribCurrentValu
 
     if (!buffer)
     {
-        buffer.reset(new StreamingVertexBufferInterface(mFactory, CONSTANT_VERTEX_BUFFER_SIZE));
+        buffer.reset(new StreamingVertexBufferInterface(mFactory));
+        ANGLE_TRY(buffer->initialize(CONSTANT_VERTEX_BUFFER_SIZE));
     }
 
     if (cachedState->data != currentValue)
