@@ -262,6 +262,30 @@
     },
     {
       "key": {
+        "uuid": "3849423d_c58784f9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1292,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-07-27T21:51:15Z",
+      "side": 1,
+      "message": "Sorry to bother you, I didn\u0027t want just this instance to be special, I\u0027d rather wanted to make the rest of code more similar.\nIf you don\u0027t plan wrapping all the rest of context-\u003ehandleError() in a macro, could you please restore this place to this version in the https://chromium-review.googlesource.com/1153634 follow up?",
+      "parentUuid": "ef8d2098_b9c4b46a",
+      "range": {
+        "startLine": 1292,
+        "startChar": 12,
+        "endLine": 1292,
+        "endChar": 33
+      },
+      "revId": "17636531abc98a063517531d9123d694038b436e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "044a3029_b726e5dd",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
         "patchSetId": 5
