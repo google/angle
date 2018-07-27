@@ -98,8 +98,8 @@ gl::ErrorOrResult<unsigned int> VertexBufferInterface::getSpaceRequired(
     GLsizei instances) const
 {
     unsigned int spaceRequired = 0;
-    ANGLE_TRY_RESULT(mFactory->getVertexSpaceRequired(context, attrib, binding, count, instances),
-                     spaceRequired);
+    ANGLE_TRY(mFactory->getVertexSpaceRequired(context, attrib, binding, count, instances,
+                                               &spaceRequired));
 
     // Align to 16-byte boundary
     unsigned int alignedSpaceRequired = roundUp(spaceRequired, 16u);
@@ -212,8 +212,8 @@ gl::Error StreamingVertexBufferInterface::reserveVertexSpace(const gl::Context *
                                                              GLsizei instances)
 {
     unsigned int requiredSpace = 0;
-    ANGLE_TRY_RESULT(mFactory->getVertexSpaceRequired(context, attrib, binding, count, instances),
-                     requiredSpace);
+    ANGLE_TRY(mFactory->getVertexSpaceRequired(context, attrib, binding, count, instances,
+                                               &requiredSpace));
 
     // Align to 16-byte boundary
     auto alignedRequiredSpace = rx::CheckedRoundUp(requiredSpace, 16u);

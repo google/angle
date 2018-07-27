@@ -93,12 +93,12 @@ class BufferFactoryD3D : angle::NonCopyable
 
     // Warning: you should ensure binding really matches attrib.bindingIndex before using this
     // function.
-    virtual gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(
-        const gl::Context *context,
-        const gl::VertexAttribute &attrib,
-        const gl::VertexBinding &binding,
-        size_t count,
-        GLsizei instances) const = 0;
+    virtual gl::Error getVertexSpaceRequired(const gl::Context *context,
+                                             const gl::VertexAttribute &attrib,
+                                             const gl::VertexBinding &binding,
+                                             size_t count,
+                                             GLsizei instances,
+                                             unsigned int *bytesRequiredOut) const = 0;
 };
 
 using AttribIndexArray = gl::AttribArray<int>;

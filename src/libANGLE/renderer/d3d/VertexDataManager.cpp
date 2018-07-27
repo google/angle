@@ -96,14 +96,11 @@ bool DirectStoragePossible(const gl::Context *context,
 
     if (attrib.type != GL_FLOAT)
     {
-        auto errorOrElementSize = factory->getVertexSpaceRequired(context, attrib, binding, 1, 0);
-        if (errorOrElementSize.isError())
-        {
-            ERR() << "Unlogged error in DirectStoragePossible.";
-            return false;
-        }
-
-        alignment = std::min<size_t>(errorOrElementSize.getResult(), 4);
+        unsigned int elementSize = 0;
+        gl::Error error =
+            factory->getVertexSpaceRequired(context, attrib, binding, 1, 0, &elementSize);
+        ASSERT(!error.isError());
+        alignment = std::min<size_t>(elementSize, 4);
     }
 
     GLintptr offset = ComputeVertexAttributeOffset(attrib, binding);
@@ -355,9 +352,8 @@ gl::Error VertexDataManager::StoreStaticAttrib(const gl::Context *context,
     unsigned int streamOffset = 0;
 
     translated->storage = nullptr;
-    ANGLE_TRY_RESULT(
-        bufferD3D->getFactory()->getVertexSpaceRequired(context, attrib, binding, 1, 0),
-        translated->stride);
+    ANGLE_TRY(bufferD3D->getFactory()->getVertexSpaceRequired(context, attrib, binding, 1, 0,
+                                                              &translated->stride));
 
     auto *staticBuffer = bufferD3D->getStaticVertexBuffer(attrib, binding);
     ASSERT(staticBuffer);
@@ -539,8 +535,8 @@ gl::Error VertexDataManager::storeDynamicAttrib(const gl::Context *context,
     unsigned int streamOffset = 0;
 
     translated->storage = nullptr;
-    ANGLE_TRY_RESULT(mFactory->getVertexSpaceRequired(context, attrib, binding, 1, 0),
-                     translated->stride);
+    ANGLE_TRY(
+        mFactory->getVertexSpaceRequired(context, attrib, binding, 1, 0, &translated->stride));
 
     size_t totalCount = gl::ComputeVertexBindingElementCount(binding.getDivisor(), count,
                                                              static_cast<size_t>(instances));

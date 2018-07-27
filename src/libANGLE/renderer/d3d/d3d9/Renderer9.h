@@ -351,11 +351,12 @@ class Renderer9 : public RendererD3D
 
     // Warning: you should ensure binding really matches attrib.bindingIndex before using this
     // function.
-    gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(const gl::Context *context,
-                                                           const gl::VertexAttribute &attrib,
-                                                           const gl::VertexBinding &binding,
-                                                           size_t count,
-                                                           GLsizei instances) const override;
+    gl::Error getVertexSpaceRequired(const gl::Context *context,
+                                     const gl::VertexAttribute &attrib,
+                                     const gl::VertexBinding &binding,
+                                     size_t count,
+                                     GLsizei instances,
+                                     unsigned int *bytesRequiredOut) const override;
 
     gl::Error copyToRenderTarget(IDirect3DSurface9 *dest,
                                  IDirect3DSurface9 *source,

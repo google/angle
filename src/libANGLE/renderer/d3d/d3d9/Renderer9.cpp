@@ -2961,15 +2961,17 @@ GLenum Renderer9::getVertexComponentType(gl::VertexFormatType vertexFormatType) 
     return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatType).componentType;
 }
 
-gl::ErrorOrResult<unsigned int> Renderer9::getVertexSpaceRequired(const gl::Context *context,
-                                                                  const gl::VertexAttribute &attrib,
-                                                                  const gl::VertexBinding &binding,
-                                                                  size_t count,
-                                                                  GLsizei instances) const
+gl::Error Renderer9::getVertexSpaceRequired(const gl::Context *context,
+                                            const gl::VertexAttribute &attrib,
+                                            const gl::VertexBinding &binding,
+                                            size_t count,
+                                            GLsizei instances,
+                                            unsigned int *bytesRequiredOut) const
 {
     if (!attrib.enabled)
     {
-        return 16u;
+        *bytesRequiredOut = 16u;
+        return gl::NoError();
     }
 
     gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, GL_FLOAT);
@@ -2993,7 +2995,8 @@ gl::ErrorOrResult<unsigned int> Renderer9::getVertexSpaceRequired(const gl::Cont
         return gl::OutOfMemory() << "New vertex buffer size would result in an overflow.";
     }
 
-    return static_cast<unsigned int>(d3d9VertexInfo.outputElementSize) * elementCount;
+    *bytesRequiredOut = static_cast<unsigned int>(d3d9VertexInfo.outputElementSize) * elementCount;
+    return gl::NoError();
 }
 
 void Renderer9::generateCaps(gl::Caps *outCaps,

@@ -55,12 +55,13 @@ class MockBufferFactoryD3D : public rx::BufferFactoryD3D
     MOCK_METHOD0(createVertexBuffer, rx::VertexBuffer *());
     MOCK_CONST_METHOD1(getVertexConversionType, rx::VertexConversionType(gl::VertexFormatType));
     MOCK_CONST_METHOD1(getVertexComponentType, GLenum(gl::VertexFormatType));
-    MOCK_CONST_METHOD5(getVertexSpaceRequired,
-                       gl::ErrorOrResult<unsigned int>(const gl::Context *,
-                                                       const gl::VertexAttribute &,
-                                                       const gl::VertexBinding &,
-                                                       size_t,
-                                                       GLsizei));
+    MOCK_CONST_METHOD6(getVertexSpaceRequired,
+                       gl::Error(const gl::Context *,
+                                 const gl::VertexAttribute &,
+                                 const gl::VertexBinding &,
+                                 size_t,
+                                 GLsizei,
+                                 unsigned int *));
 
     // Dependency injection
     rx::IndexBuffer *createIndexBuffer() override

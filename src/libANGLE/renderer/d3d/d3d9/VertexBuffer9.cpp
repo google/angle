@@ -81,14 +81,9 @@ gl::Error VertexBuffer9::storeVertexAttributes(const gl::Context *context,
 
     uint8_t *mapPtr = nullptr;
 
-    auto errorOrMapSize =
-        mRenderer->getVertexSpaceRequired(context, attrib, binding, count, instances);
-    if (errorOrMapSize.isError())
-    {
-        return errorOrMapSize.getError();
-    }
-
-    unsigned int mapSize = errorOrMapSize.getResult();
+    unsigned int mapSize = 0;
+    ANGLE_TRY(
+        mRenderer->getVertexSpaceRequired(context, attrib, binding, count, instances, &mapSize));
 
     HRESULT result = mVertexBuffer->Lock(offset, mapSize, reinterpret_cast<void**>(&mapPtr), lockFlags);
     if (FAILED(result))
