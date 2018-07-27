@@ -14,6 +14,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
@@ -155,12 +156,14 @@ angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *con
                                                           const d3d11::GeometryShader **gs,
                                                           const d3d11::PixelShader **ps)
 {
+    Context11 *context11 = GetImplAs<Context11>(context);
+
     if (renderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
         ASSERT(clearType == GL_FLOAT);
 
-        ANGLE_TRY_HANDLE(context, mVs9.resolve(renderer));
-        ANGLE_TRY_HANDLE(context, mPsFloat9.resolve(renderer));
+        ANGLE_TRY(mVs9.resolve(context11, renderer));
+        ANGLE_TRY(mPsFloat9.resolve(context11, renderer));
 
         if (!mIl9.valid())
         {
@@ -170,8 +173,7 @@ angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *con
             InputElementArray ilDescArray(ilDesc);
             ShaderData vertexShader(g_VS_Clear_FL9);
 
-            ANGLE_TRY_HANDLE(context,
-                             renderer->allocateResource(ilDescArray, &vertexShader, &mIl9));
+            ANGLE_TRY(renderer->allocateResource(context11, ilDescArray, &vertexShader, &mIl9));
         }
 
         *vs = &mVs9.getObj();
@@ -183,15 +185,15 @@ angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *con
 
     if (!hasLayeredLayout)
     {
-        ANGLE_TRY_HANDLE(context, mVs.resolve(renderer));
+        ANGLE_TRY(mVs.resolve(context11, renderer));
         *vs = &mVs.getObj();
         *gs = nullptr;
     }
     else
     {
         // For layered framebuffers we have to use the multi-view versions of the VS and GS.
-        ANGLE_TRY_HANDLE(context, mVsMultiview.resolve(renderer));
-        ANGLE_TRY_HANDLE(context, mGsMultiview.resolve(renderer));
+        ANGLE_TRY(mVsMultiview.resolve(context11, renderer));
+        ANGLE_TRY(mGsMultiview.resolve(context11, renderer));
         *vs = &mVsMultiview.getObj();
         *gs = &mGsMultiview.getObj();
     }
@@ -200,7 +202,7 @@ angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *con
 
     if (numRTs == 0)
     {
-        ANGLE_TRY_HANDLE(context, mPsDepth.resolve(renderer));
+        ANGLE_TRY(mPsDepth.resolve(context11, renderer));
         *ps = &mPsDepth.getObj();
         return angle::Result::Continue();
     }
@@ -208,15 +210,15 @@ angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *con
     switch (clearType)
     {
         case GL_FLOAT:
-            ANGLE_TRY_HANDLE(context, mPsFloat[numRTs - 1].resolve(renderer));
+            ANGLE_TRY(mPsFloat[numRTs - 1].resolve(context11, renderer));
             *ps = &mPsFloat[numRTs - 1].getObj();
             break;
         case GL_UNSIGNED_INT:
-            ANGLE_TRY_HANDLE(context, mPsUInt[numRTs - 1].resolve(renderer));
+            ANGLE_TRY(mPsUInt[numRTs - 1].resolve(context11, renderer));
             *ps = &mPsUInt[numRTs - 1].getObj();
             break;
         case GL_INT:
-            ANGLE_TRY_HANDLE(context, mPsSInt[numRTs - 1].resolve(renderer));
+            ANGLE_TRY(mPsSInt[numRTs - 1].resolve(context11, renderer));
             *ps = &mPsSInt[numRTs - 1].getObj();
             break;
         default:
@@ -275,12 +277,13 @@ angle::Result Clear11::ensureResourcesInitialized(const gl::Context *context)
     rsDesc.MultisampleEnable     = FALSE;
     rsDesc.AntialiasedLineEnable = FALSE;
 
-    ANGLE_TRY_HANDLE(context,
-                     mRenderer->allocateResource(rsDesc, &mScissorDisabledRasterizerState));
+    Context11 *context11 = GetImplAs<Context11>(context);
+
+    ANGLE_TRY(mRenderer->allocateResource(context11, rsDesc, &mScissorDisabledRasterizerState));
     mScissorDisabledRasterizerState.setDebugName("Clear11 Rasterizer State with scissor disabled");
 
     rsDesc.ScissorEnable = TRUE;
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(rsDesc, &mScissorEnabledRasterizerState));
+    ANGLE_TRY(mRenderer->allocateResource(context11, rsDesc, &mScissorEnabledRasterizerState));
     mScissorEnabledRasterizerState.setDebugName("Clear11 Rasterizer State with scissor enabled");
 
     // Initialize Depthstencil state with defaults
@@ -343,8 +346,8 @@ angle::Result Clear11::ensureConstantBufferCreated(const gl::Context *context)
     initialData.SysMemPitch      = g_ConstantBufferSize;
     initialData.SysMemSlicePitch = g_ConstantBufferSize;
 
-    ANGLE_TRY_HANDLE(context,
-                     mRenderer->allocateResource(bufferDesc, &initialData, &mConstantBuffer));
+    ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), bufferDesc, &initialData,
+                                          &mConstantBuffer));
     mConstantBuffer.setDebugName("Clear11 Constant Buffer");
     return angle::Result::Continue();
 }
@@ -381,8 +384,8 @@ angle::Result Clear11::ensureVertexBufferCreated(const gl::Context *context)
     initialData.SysMemPitch      = vbSize;
     initialData.SysMemSlicePitch = initialData.SysMemPitch;
 
-    ANGLE_TRY_HANDLE(context,
-                     mRenderer->allocateResource(bufferDesc, &initialData, &mVertexBuffer));
+    ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), bufferDesc, &initialData,
+                                          &mVertexBuffer));
     mVertexBuffer.setDebugName("Clear11 Vertex Buffer");
     return angle::Result::Continue();
 }

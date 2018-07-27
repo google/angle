@@ -301,8 +301,8 @@ angle::Result InputLayoutCache::createInputLayout(
     InputElementArray inputElementArray(inputElements.data(), inputElementCount);
     ShaderData vertexShaderData(shader11->getFunction(), shader11->getLength());
 
-    ANGLE_TRY_HANDLE(
-        context, renderer->allocateResource(inputElementArray, &vertexShaderData, inputLayoutOut));
+    ANGLE_TRY(renderer->allocateResource(GetImplAs<Context11>(context), inputElementArray,
+                                         &vertexShaderData, inputLayoutOut));
     return angle::Result::Continue();
 }
 

@@ -9,11 +9,13 @@
 #include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
 
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace rx
@@ -50,7 +52,7 @@ gl::Error VertexBuffer11::initialize(const gl::Context *context,
         bufferDesc.MiscFlags           = 0;
         bufferDesc.StructureByteStride = 0;
 
-        ANGLE_TRY(mRenderer->allocateResource(bufferDesc, &mBuffer));
+        ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), bufferDesc, &mBuffer));
 
         if (dynamicUsage)
         {

@@ -15,6 +15,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
@@ -115,7 +116,7 @@ angle::Result RenderStateCache::getBlendState(const gl::Context *context,
     }
 
     d3d11::BlendState d3dBlendState;
-    ANGLE_TRY_HANDLE(context, renderer->allocateResource(blendDesc, &d3dBlendState));
+    ANGLE_TRY(renderer->allocateResource(GetImplAs<Context11>(context), blendDesc, &d3dBlendState));
     const auto &iter = mBlendStateCache.Put(key, std::move(d3dBlendState));
 
     *outBlendState = &iter->second;
@@ -174,7 +175,8 @@ angle::Result RenderStateCache::getRasterizerState(const gl::Context *context,
     }
 
     d3d11::RasterizerState dx11RasterizerState;
-    ANGLE_TRY_HANDLE(context, renderer->allocateResource(rasterDesc, &dx11RasterizerState));
+    ANGLE_TRY(renderer->allocateResource(GetImplAs<Context11>(context), rasterDesc,
+                                         &dx11RasterizerState));
     *outRasterizerState = dx11RasterizerState.get();
     mRasterizerStateCache.Put(key, std::move(dx11RasterizerState));
 
@@ -212,7 +214,8 @@ angle::Result RenderStateCache::getDepthStencilState(const gl::Context *context,
     dsDesc.BackFace.StencilFunc         = ConvertComparison(glState.stencilBackFunc);
 
     d3d11::DepthStencilState dx11DepthStencilState;
-    ANGLE_TRY_HANDLE(context, renderer->allocateResource(dsDesc, &dx11DepthStencilState));
+    ANGLE_TRY(
+        renderer->allocateResource(GetImplAs<Context11>(context), dsDesc, &dx11DepthStencilState));
     const auto &iter = mDepthStencilStateCache.Put(glState, std::move(dx11DepthStencilState));
 
     *outDSState = &iter->second;
@@ -267,7 +270,8 @@ angle::Result RenderStateCache::getSamplerState(const gl::Context *context,
     }
 
     d3d11::SamplerState dx11SamplerState;
-    ANGLE_TRY_HANDLE(context, renderer->allocateResource(samplerDesc, &dx11SamplerState));
+    ANGLE_TRY(
+        renderer->allocateResource(GetImplAs<Context11>(context), samplerDesc, &dx11SamplerState));
     *outSamplerState = dx11SamplerState.get();
     mSamplerStateCache.Put(samplerState, std::move(dx11SamplerState));
 

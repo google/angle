@@ -14,6 +14,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
@@ -477,7 +478,8 @@ angle::Result Image11::copyWithoutConversion(const gl::Context *context,
         resolveDesc.MiscFlags          = 0;
 
         d3d11::Texture2D resolveTex;
-        ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(resolveDesc, &resolveTex));
+        ANGLE_TRY(
+            mRenderer->allocateResource(GetImplAs<Context11>(context), resolveDesc, &resolveTex));
 
         deviceContext->ResolveSubresource(resolveTex.get(), 0, textureHelper.get(),
                                           sourceSubResource, textureHelper.getFormat());
@@ -533,6 +535,8 @@ angle::Result Image11::createStagingTexture(const gl::Context *context)
     // adjust size if needed for compressed textures
     d3d11::MakeValidSize(false, dxgiFormat, &width, &height, &lodOffset);
 
+    Context11 *context11 = GetImplAs<Context11>(context);
+
     switch (mType)
     {
         case gl::TextureType::_3D:
@@ -555,14 +559,13 @@ angle::Result Image11::createStagingTexture(const gl::Context *context)
                     context, mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height,
                     mDepth, lodOffset + 1, &initialData));
 
-                ANGLE_TRY_HANDLE(context,
-                                 mRenderer->allocateTexture(desc, formatInfo, initialData.data(),
-                                                            &mStagingTexture));
+                ANGLE_TRY(mRenderer->allocateTexture(context11, desc, formatInfo,
+                                                     initialData.data(), &mStagingTexture));
             }
             else
             {
-                ANGLE_TRY_HANDLE(context,
-                                 mRenderer->allocateTexture(desc, formatInfo, &mStagingTexture));
+                ANGLE_TRY(
+                    mRenderer->allocateTexture(context11, desc, formatInfo, &mStagingTexture));
             }
 
             mStagingTexture.setDebugName("Image11::StagingTexture3D");
@@ -594,14 +597,13 @@ angle::Result Image11::createStagingTexture(const gl::Context *context)
                     context, mInternalFormat, mRenderer->getRenderer11DeviceCaps(), width, height,
                     1, lodOffset + 1, &initialData));
 
-                ANGLE_TRY_HANDLE(context,
-                                 mRenderer->allocateTexture(desc, formatInfo, initialData.data(),
-                                                            &mStagingTexture));
+                ANGLE_TRY(mRenderer->allocateTexture(context11, desc, formatInfo,
+                                                     initialData.data(), &mStagingTexture));
             }
             else
             {
-                ANGLE_TRY_HANDLE(context,
-                                 mRenderer->allocateTexture(desc, formatInfo, &mStagingTexture));
+                ANGLE_TRY(
+                    mRenderer->allocateTexture(context11, desc, formatInfo, &mStagingTexture));
             }
 
             mStagingTexture.setDebugName("Image11::StagingTexture2D");

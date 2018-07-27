@@ -2791,6 +2791,8 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
         queueVertexBufferChange(bufferIndex, buffer, vertexStride, vertexOffset);
     }
 
+    Context11 *context11 = GetImplAs<Context11>(context);
+
     // Instanced PointSprite emulation requires two additional ID3D11Buffers. A vertex buffer needs
     // to be created and added to the list of current buffers, strides and offsets collections.
     // This buffer contains the vertices for a single PointSprite quad.
@@ -2823,9 +2825,8 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
             vertexBufferDesc.MiscFlags           = 0;
             vertexBufferDesc.StructureByteStride = 0;
 
-            ANGLE_TRY_HANDLE(context,
-                             mRenderer->allocateResource(vertexBufferDesc, &vertexBufferData,
-                                                         &mPointSpriteVertexBuffer));
+            ANGLE_TRY(mRenderer->allocateResource(context11, vertexBufferDesc, &vertexBufferData,
+                                                  &mPointSpriteVertexBuffer));
         }
 
         // Set the stride to 0 if GL_POINTS mode is not being used to instruct the driver to avoid
@@ -2849,8 +2850,8 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
             indexBufferDesc.MiscFlags           = 0;
             indexBufferDesc.StructureByteStride = 0;
 
-            ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(indexBufferDesc, &indexBufferData,
-                                                                  &mPointSpriteIndexBuffer));
+            ANGLE_TRY(mRenderer->allocateResource(context11, indexBufferDesc, &indexBufferData,
+                                                  &mPointSpriteIndexBuffer));
         }
 
         if (instancedPointSpritesActive)
@@ -3100,8 +3101,8 @@ angle::Result StateManager11::applyDriverUniformsForShader(const gl::Context *co
 
         D3D11_BUFFER_DESC constantBufferDescription = {0};
         d3d11::InitConstantBufferDesc(&constantBufferDescription, requiredSize);
-        ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(constantBufferDescription,
-                                                              &shaderDriverConstantBuffer));
+        ANGLE_TRY(mRenderer->allocateResource(
+            GetImplAs<Context11>(context), constantBufferDescription, &shaderDriverConstantBuffer));
 
         ID3D11Buffer *driverConstants = shaderDriverConstantBuffer.get();
         switch (shaderType)
@@ -3196,9 +3197,9 @@ angle::Result StateManager11::applyComputeUniforms(const gl::Context *context,
 
         D3D11_BUFFER_DESC constantBufferDescription = {0};
         d3d11::InitConstantBufferDesc(&constantBufferDescription, requiredSize);
-        ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(
-                                      constantBufferDescription,
-                                      &mShaderDriverConstantBuffers[gl::ShaderType::Compute]));
+        ANGLE_TRY(
+            mRenderer->allocateResource(GetImplAs<Context11>(context), constantBufferDescription,
+                                        &mShaderDriverConstantBuffers[gl::ShaderType::Compute]));
         ID3D11Buffer *buffer = mShaderDriverConstantBuffers[gl::ShaderType::Compute].get();
         deviceContext->CSSetConstantBuffers(d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DRIVER, 1,
                                             &buffer);

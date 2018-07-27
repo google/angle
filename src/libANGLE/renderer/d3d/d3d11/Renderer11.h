@@ -124,8 +124,8 @@ class Renderer11 : public RendererD3D
 
     ContextImpl *createContext(const gl::ContextState &state) override;
 
-    gl::Error flush();
-    gl::Error finish();
+    gl::Error flush(Context11 *context11);
+    gl::Error finish(Context11 *context11);
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
     NativeWindowD3D *createNativeWindow(EGLNativeWindowType window,
@@ -415,40 +415,48 @@ class Renderer11 : public RendererD3D
                                        TextureHelper11 *textureOut);
 
     template <typename DescT, typename ResourceT>
-    gl::Error allocateResource(const DescT &desc, ResourceT *resourceOut)
+    angle::Result allocateResource(d3d::Context *context, const DescT &desc, ResourceT *resourceOut)
     {
-        return mResourceManager11.allocate(this, &desc, nullptr, resourceOut);
+        return mResourceManager11.allocate(context, this, &desc, nullptr, resourceOut);
     }
 
     template <typename DescT, typename InitDataT, typename ResourceT>
-    gl::Error allocateResource(const DescT &desc, InitDataT *initData, ResourceT *resourceOut)
+    angle::Result allocateResource(d3d::Context *context,
+                                   const DescT &desc,
+                                   InitDataT *initData,
+                                   ResourceT *resourceOut)
     {
-        return mResourceManager11.allocate(this, &desc, initData, resourceOut);
+        return mResourceManager11.allocate(context, this, &desc, initData, resourceOut);
     }
 
     template <typename InitDataT, typename ResourceT>
-    gl::Error allocateResourceNoDesc(InitDataT *initData, ResourceT *resourceOut)
+    angle::Result allocateResourceNoDesc(d3d::Context *context,
+                                         InitDataT *initData,
+                                         ResourceT *resourceOut)
     {
-        return mResourceManager11.allocate(this, nullptr, initData, resourceOut);
+        return mResourceManager11.allocate(context, this, nullptr, initData, resourceOut);
     }
 
     template <typename DescT>
-    gl::Error allocateTexture(const DescT &desc,
-                              const d3d11::Format &format,
-                              TextureHelper11 *textureOut)
+    angle::Result allocateTexture(d3d::Context *context,
+                                  const DescT &desc,
+                                  const d3d11::Format &format,
+                                  TextureHelper11 *textureOut)
     {
-        return allocateTexture(desc, format, nullptr, textureOut);
+        return allocateTexture(context, desc, format, nullptr, textureOut);
     }
 
-    gl::Error allocateTexture(const D3D11_TEXTURE2D_DESC &desc,
-                              const d3d11::Format &format,
-                              const D3D11_SUBRESOURCE_DATA *initData,
-                              TextureHelper11 *textureOut);
+    angle::Result allocateTexture(d3d::Context *context,
+                                  const D3D11_TEXTURE2D_DESC &desc,
+                                  const d3d11::Format &format,
+                                  const D3D11_SUBRESOURCE_DATA *initData,
+                                  TextureHelper11 *textureOut);
 
-    gl::Error allocateTexture(const D3D11_TEXTURE3D_DESC &desc,
-                              const d3d11::Format &format,
-                              const D3D11_SUBRESOURCE_DATA *initData,
-                              TextureHelper11 *textureOut);
+    angle::Result allocateTexture(d3d::Context *context,
+                                  const D3D11_TEXTURE3D_DESC &desc,
+                                  const d3d11::Format &format,
+                                  const D3D11_SUBRESOURCE_DATA *initData,
+                                  TextureHelper11 *textureOut);
 
     gl::Error clearRenderTarget(const gl::Context *context,
                                 RenderTargetD3D *renderTarget,

@@ -2170,45 +2170,54 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 // allocateResource is only compatible with Clang and MSVS, which support calling a
 // method on a forward declared class in a template.
 template <ResourceType ResourceT>
-gl::Error LazyResource<ResourceT>::resolveImpl(Renderer11 *renderer,
-                                               const GetDescType<ResourceT> &desc,
-                                               GetInitDataType<ResourceT> *initData,
-                                               const char *name)
+angle::Result LazyResource<ResourceT>::resolveImpl(d3d::Context *context,
+                                                   Renderer11 *renderer,
+                                                   const GetDescType<ResourceT> &desc,
+                                                   GetInitDataType<ResourceT> *initData,
+                                                   const char *name)
 {
     if (!mResource.valid())
     {
-        ANGLE_TRY(renderer->allocateResource(desc, initData, &mResource));
+        ANGLE_TRY(renderer->allocateResource(context, desc, initData, &mResource));
         mResource.setDebugName(name);
     }
     return angle::Result::Continue();
 }
 
-template gl::Error LazyResource<ResourceType::BlendState>::resolveImpl(Renderer11 *renderer,
-                                                                       const D3D11_BLEND_DESC &desc,
-                                                                       void *initData,
-                                                                       const char *name);
-template gl::Error LazyResource<ResourceType::ComputeShader>::resolveImpl(Renderer11 *renderer,
-                                                                          const ShaderData &desc,
-                                                                          void *initData,
-                                                                          const char *name);
-template gl::Error LazyResource<ResourceType::GeometryShader>::resolveImpl(
+template angle::Result LazyResource<ResourceType::BlendState>::resolveImpl(
+    d3d::Context *context,
+    Renderer11 *renderer,
+    const D3D11_BLEND_DESC &desc,
+    void *initData,
+    const char *name);
+template angle::Result LazyResource<ResourceType::ComputeShader>::resolveImpl(
+    d3d::Context *context,
+    Renderer11 *renderer,
+    const ShaderData &desc,
+    void *initData,
+    const char *name);
+template angle::Result LazyResource<ResourceType::GeometryShader>::resolveImpl(
+    d3d::Context *context,
     Renderer11 *renderer,
     const ShaderData &desc,
     const std::vector<D3D11_SO_DECLARATION_ENTRY> *initData,
     const char *name);
-template gl::Error LazyResource<ResourceType::InputLayout>::resolveImpl(
+template angle::Result LazyResource<ResourceType::InputLayout>::resolveImpl(
+    d3d::Context *context,
     Renderer11 *renderer,
     const InputElementArray &desc,
     const ShaderData *initData,
     const char *name);
-template gl::Error LazyResource<ResourceType::PixelShader>::resolveImpl(Renderer11 *renderer,
-                                                                        const ShaderData &desc,
-                                                                        void *initData,
-                                                                        const char *name);
-template gl::Error LazyResource<ResourceType::VertexShader>::resolveImpl(Renderer11 *renderer,
-                                                                         const ShaderData &desc,
-                                                                         void *initData,
-                                                                         const char *name);
+template angle::Result LazyResource<ResourceType::PixelShader>::resolveImpl(d3d::Context *context,
+                                                                            Renderer11 *renderer,
+                                                                            const ShaderData &desc,
+                                                                            void *initData,
+                                                                            const char *name);
+template angle::Result LazyResource<ResourceType::VertexShader>::resolveImpl(d3d::Context *context,
+                                                                             Renderer11 *renderer,
+                                                                             const ShaderData &desc,
+                                                                             void *initData,
+                                                                             const char *name);
 
 LazyInputLayout::LazyInputLayout(const D3D11_INPUT_ELEMENT_DESC *inputDesc,
                                  size_t inputDescLen,
@@ -2223,9 +2232,9 @@ LazyInputLayout::~LazyInputLayout()
 {
 }
 
-gl::Error LazyInputLayout::resolve(Renderer11 *renderer)
+angle::Result LazyInputLayout::resolve(d3d::Context *context, Renderer11 *renderer)
 {
-    return resolveImpl(renderer, mInputDesc, &mByteCode, mDebugName);
+    return resolveImpl(context, renderer, mInputDesc, &mByteCode, mDebugName);
 }
 
 LazyBlendState::LazyBlendState(const D3D11_BLEND_DESC &desc, const char *debugName)
@@ -2233,9 +2242,9 @@ LazyBlendState::LazyBlendState(const D3D11_BLEND_DESC &desc, const char *debugNa
 {
 }
 
-gl::Error LazyBlendState::resolve(Renderer11 *renderer)
+angle::Result LazyBlendState::resolve(d3d::Context *context, Renderer11 *renderer)
 {
-    return resolveImpl(renderer, mDesc, nullptr, mDebugName);
+    return resolveImpl(context, renderer, mDesc, nullptr, mDebugName);
 }
 
 angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,

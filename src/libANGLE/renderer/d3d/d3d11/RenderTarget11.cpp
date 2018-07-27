@@ -9,6 +9,8 @@
 
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 
+#include "libANGLE/Context.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/SwapChain11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
@@ -280,12 +282,14 @@ const d3d11::DepthStencilView &TextureRenderTarget11::getDepthStencilView() cons
     return mDepthStencil;
 }
 
-const d3d11::SharedSRV &TextureRenderTarget11::getShaderResourceView() const
+const d3d11::SharedSRV &TextureRenderTarget11::getShaderResourceView(
+    const gl::Context *context) const
 {
     return mShaderResource;
 }
 
-const d3d11::SharedSRV &TextureRenderTarget11::getBlitShaderResourceView() const
+const d3d11::SharedSRV &TextureRenderTarget11::getBlitShaderResourceView(
+    const gl::Context *context) const
 {
     return mBlitShaderResource;
 }
@@ -376,16 +380,18 @@ const d3d11::DepthStencilView &SurfaceRenderTarget11::getDepthStencilView() cons
     return mSwapChain->getDepthStencil();
 }
 
-const d3d11::SharedSRV &SurfaceRenderTarget11::getShaderResourceView() const
+const d3d11::SharedSRV &SurfaceRenderTarget11::getShaderResourceView(
+    const gl::Context *context) const
 {
     return (mDepth ? mSwapChain->getDepthStencilShaderResource()
-                   : mSwapChain->getRenderTargetShaderResource());
+                   : mSwapChain->getRenderTargetShaderResource(GetImplAs<Context11>(context)));
 }
 
-const d3d11::SharedSRV &SurfaceRenderTarget11::getBlitShaderResourceView() const
+const d3d11::SharedSRV &SurfaceRenderTarget11::getBlitShaderResourceView(
+    const gl::Context *context) const
 {
     // The SurfaceRenderTargetView format should always be such that the normal SRV works for blits.
-    return getShaderResourceView();
+    return getShaderResourceView(context);
 }
 
 unsigned int SurfaceRenderTarget11::getSubresourceIndex() const

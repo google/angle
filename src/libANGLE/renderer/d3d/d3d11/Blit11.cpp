@@ -643,7 +643,9 @@ angle::Result Blit11::initResources(const gl::Context *context)
     vbDesc.MiscFlags           = 0;
     vbDesc.StructureByteStride = 0;
 
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(vbDesc, &mVertexBuffer));
+    Context11 *context11 = GetImplAs<Context11>(context);
+
+    ANGLE_TRY(mRenderer->allocateResource(context11, vbDesc, &mVertexBuffer));
     mVertexBuffer.setDebugName("Blit11 vertex buffer");
 
     D3D11_SAMPLER_DESC pointSamplerDesc;
@@ -661,7 +663,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     pointSamplerDesc.MinLOD         = 0.0f;
     pointSamplerDesc.MaxLOD         = FLT_MAX;
 
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(pointSamplerDesc, &mPointSampler));
+    ANGLE_TRY(mRenderer->allocateResource(context11, pointSamplerDesc, &mPointSampler));
     mPointSampler.setDebugName("Blit11 point sampler");
 
     D3D11_SAMPLER_DESC linearSamplerDesc;
@@ -679,7 +681,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     linearSamplerDesc.MinLOD         = 0.0f;
     linearSamplerDesc.MaxLOD         = FLT_MAX;
 
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(linearSamplerDesc, &mLinearSampler));
+    ANGLE_TRY(mRenderer->allocateResource(context11, linearSamplerDesc, &mLinearSampler));
     mLinearSampler.setDebugName("Blit11 linear sampler");
 
     // Use a rasterizer state that will not cull so that inverted quads will not be culled
@@ -695,13 +697,11 @@ angle::Result Blit11::initResources(const gl::Context *context)
     rasterDesc.AntialiasedLineEnable = FALSE;
 
     rasterDesc.ScissorEnable = TRUE;
-    ANGLE_TRY_HANDLE(context,
-                     mRenderer->allocateResource(rasterDesc, &mScissorEnabledRasterizerState));
+    ANGLE_TRY(mRenderer->allocateResource(context11, rasterDesc, &mScissorEnabledRasterizerState));
     mScissorEnabledRasterizerState.setDebugName("Blit11 scissoring rasterizer state");
 
     rasterDesc.ScissorEnable = FALSE;
-    ANGLE_TRY_HANDLE(context,
-                     mRenderer->allocateResource(rasterDesc, &mScissorDisabledRasterizerState));
+    ANGLE_TRY(mRenderer->allocateResource(context11, rasterDesc, &mScissorDisabledRasterizerState));
     mScissorDisabledRasterizerState.setDebugName("Blit11 no scissoring rasterizer state");
 
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -720,7 +720,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     depthStencilDesc.BackFace.StencilPassOp       = D3D11_STENCIL_OP_KEEP;
     depthStencilDesc.BackFace.StencilFunc         = D3D11_COMPARISON_ALWAYS;
 
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(depthStencilDesc, &mDepthStencilState));
+    ANGLE_TRY(mRenderer->allocateResource(context11, depthStencilDesc, &mDepthStencilState));
     mDepthStencilState.setDebugName("Blit11 depth stencil state");
 
     D3D11_BUFFER_DESC swizzleBufferDesc;
@@ -731,7 +731,7 @@ angle::Result Blit11::initResources(const gl::Context *context)
     swizzleBufferDesc.MiscFlags           = 0;
     swizzleBufferDesc.StructureByteStride = 0;
 
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(swizzleBufferDesc, &mSwizzleCB));
+    ANGLE_TRY(mRenderer->allocateResource(context11, swizzleBufferDesc, &mSwizzleCB));
     mSwizzleCB.setDebugName("Blit11 swizzle constant buffer");
 
     mResourcesInitialized = true;
@@ -1041,10 +1041,11 @@ angle::Result Blit11::getShaderSupport(const gl::Context *context,
                                        const Shader &shader,
                                        Blit11::ShaderSupport *supportOut)
 {
+    Context11 *context11 = GetImplAs<Context11>(context);
     if (shader.dimension == SHADER_2D)
     {
-        ANGLE_TRY_HANDLE(context, mQuad2DIL.resolve(mRenderer));
-        ANGLE_TRY_HANDLE(context, mQuad2DVS.resolve(mRenderer));
+        ANGLE_TRY(mQuad2DIL.resolve(context11, mRenderer));
+        ANGLE_TRY(mQuad2DVS.resolve(context11, mRenderer));
         supportOut->inputLayout         = &mQuad2DIL.getObj();
         supportOut->vertexShader        = &mQuad2DVS.getObj();
         supportOut->geometryShader      = nullptr;
@@ -1053,9 +1054,9 @@ angle::Result Blit11::getShaderSupport(const gl::Context *context,
     else
     {
         ASSERT(shader.dimension == SHADER_3D);
-        ANGLE_TRY_HANDLE(context, mQuad3DIL.resolve(mRenderer));
-        ANGLE_TRY_HANDLE(context, mQuad3DVS.resolve(mRenderer));
-        ANGLE_TRY_HANDLE(context, mQuad3DGS.resolve(mRenderer));
+        ANGLE_TRY(mQuad3DIL.resolve(context11, mRenderer));
+        ANGLE_TRY(mQuad3DVS.resolve(context11, mRenderer));
+        ANGLE_TRY(mQuad3DGS.resolve(context11, mRenderer));
         supportOut->inputLayout         = &mQuad2DIL.getObj();
         supportOut->vertexShader        = &mQuad3DVS.getObj();
         supportOut->geometryShader      = &mQuad3DGS.getObj();
@@ -1246,7 +1247,7 @@ angle::Result Blit11::copyTexture(const gl::Context *context,
     // Apply state
     if (maskOffAlpha)
     {
-        ANGLE_TRY_HANDLE(context, mAlphaMaskBlendState.resolve(mRenderer));
+        ANGLE_TRY(mAlphaMaskBlendState.resolve(GetImplAs<Context11>(context), mRenderer));
         stateManager->setSimpleBlendState(&mAlphaMaskBlendState.getObj());
     }
     else
@@ -1361,9 +1362,11 @@ angle::Result Blit11::copyDepth(const gl::Context *context,
         stateManager->setRasterizerState(&mScissorDisabledRasterizerState);
     }
 
-    ANGLE_TRY_HANDLE(context, mQuad2DIL.resolve(mRenderer));
-    ANGLE_TRY_HANDLE(context, mQuad2DVS.resolve(mRenderer));
-    ANGLE_TRY_HANDLE(context, mDepthPS.resolve(mRenderer));
+    Context11 *context11 = GetImplAs<Context11>(context);
+
+    ANGLE_TRY(mQuad2DIL.resolve(context11, mRenderer));
+    ANGLE_TRY(mQuad2DVS.resolve(context11, mRenderer));
+    ANGLE_TRY(mDepthPS.resolve(context11, mRenderer));
 
     // Apply shaders
     stateManager->setInputLayout(&mQuad2DIL.getObj());
@@ -1589,7 +1592,7 @@ angle::Result Blit11::addBlitShaderToMap(const gl::Context *context,
     ASSERT(mBlitShaderMap.find(blitShaderType) == mBlitShaderMap.end());
 
     d3d11::PixelShader ps;
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(shaderData, &ps));
+    ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), shaderData, &ps));
     ps.setDebugName(name);
 
     Shader shader;
@@ -1609,7 +1612,7 @@ angle::Result Blit11::addSwizzleShaderToMap(const gl::Context *context,
     ASSERT(mSwizzleShaderMap.find(swizzleShaderType) == mSwizzleShaderMap.end());
 
     d3d11::PixelShader ps;
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(shaderData, &ps));
+    ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), shaderData, &ps));
     ps.setDebugName(name);
 
     Shader shader;
@@ -2067,8 +2070,10 @@ angle::Result Blit11::resolveDepth(const gl::Context *context,
 
     ANGLE_TRY(initResolveDepthOnly(context, depth->getFormatSet(), extents));
 
-    ANGLE_TRY_HANDLE(context, mResolveDepthStencilVS.resolve(mRenderer));
-    ANGLE_TRY_HANDLE(context, mResolveDepthPS.resolve(mRenderer));
+    Context11 *context11 = GetImplAs<Context11>(context);
+
+    ANGLE_TRY(mResolveDepthStencilVS.resolve(context11, mRenderer));
+    ANGLE_TRY(mResolveDepthPS.resolve(context11, mRenderer));
 
     // Apply the necessary state changes to the D3D11 immediate device context.
     stateManager->setInputLayout(nullptr);
@@ -2083,7 +2088,7 @@ angle::Result Blit11::resolveDepth(const gl::Context *context,
 
     // Set the viewport
     stateManager->setShaderResourceShared(gl::ShaderType::Fragment, 0,
-                                          &depth->getShaderResourceView());
+                                          &depth->getShaderResourceView(context));
 
     // Trigger the blit on the GPU.
     deviceContext->Draw(6, 0);
@@ -2115,7 +2120,9 @@ angle::Result Blit11::initResolveDepthOnly(const gl::Context *context,
     textureDesc.CPUAccessFlags     = 0;
     textureDesc.MiscFlags          = 0;
 
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateTexture(textureDesc, format, &mResolvedDepth));
+    Context11 *context11 = GetImplAs<Context11>(context);
+
+    ANGLE_TRY(mRenderer->allocateTexture(context11, textureDesc, format, &mResolvedDepth));
     mResolvedDepth.setDebugName("Blit11::mResolvedDepth");
 
     D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
@@ -2124,8 +2131,8 @@ angle::Result Blit11::initResolveDepthOnly(const gl::Context *context,
     dsvDesc.Texture2D.MipSlice = 0;
     dsvDesc.ViewDimension      = D3D11_DSV_DIMENSION_TEXTURE2D;
 
-    ANGLE_TRY_HANDLE(
-        context, mRenderer->allocateResource(dsvDesc, mResolvedDepth.get(), &mResolvedDepthDSView));
+    ANGLE_TRY(mRenderer->allocateResource(context11, dsvDesc, mResolvedDepth.get(),
+                                          &mResolvedDepthDSView));
     mResolvedDepthDSView.setDebugName("Blit11::mResolvedDepthDSView");
 
     // Possibly D3D11 bug or undefined behaviour: Clear the DSV so that our first render
@@ -2166,12 +2173,14 @@ angle::Result Blit11::initResolveDepthStencil(const gl::Context *context,
     textureDesc.CPUAccessFlags     = 0;
     textureDesc.MiscFlags          = 0;
 
-    ANGLE_TRY_HANDLE(context,
-                     mRenderer->allocateTexture(textureDesc, formatSet, &mResolvedDepthStencil));
+    Context11 *context11 = GetImplAs<Context11>(context);
+
+    ANGLE_TRY(
+        mRenderer->allocateTexture(context11, textureDesc, formatSet, &mResolvedDepthStencil));
     mResolvedDepthStencil.setDebugName("Blit11::mResolvedDepthStencil");
 
-    ANGLE_TRY_HANDLE(context, mRenderer->allocateResourceNoDesc(mResolvedDepthStencil.get(),
-                                                                &mResolvedDepthStencilRTView));
+    ANGLE_TRY(mRenderer->allocateResourceNoDesc(context11, mResolvedDepthStencil.get(),
+                                                &mResolvedDepthStencilRTView));
     mResolvedDepthStencilRTView.setDebugName("Blit11::mResolvedDepthStencilRTView");
 
     return angle::Result::Continue();
@@ -2209,19 +2218,21 @@ angle::Result Blit11::resolveStencil(const gl::Context *context,
         SafeRelease(priorResource);
     }
 
+    Context11 *context11 = GetImplAs<Context11>(context);
+
     if (!mStencilSRV.valid())
     {
         D3D11_SHADER_RESOURCE_VIEW_DESC srViewDesc;
         srViewDesc.Format        = GetStencilSRVFormat(depthStencil->getFormatSet());
         srViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 
-        ANGLE_TRY_HANDLE(context,
-                         mRenderer->allocateResource(srViewDesc, stencilResource, &mStencilSRV));
+        ANGLE_TRY(
+            mRenderer->allocateResource(context11, srViewDesc, stencilResource, &mStencilSRV));
         mStencilSRV.setDebugName("Blit11::mStencilSRV");
     }
 
     // Notify the Renderer that all state should be invalidated.
-    ANGLE_TRY_HANDLE(context, mResolveDepthStencilVS.resolve(mRenderer));
+    ANGLE_TRY(mResolveDepthStencilVS.resolve(context11, mRenderer));
 
     // Resolving the depth buffer works by sampling the depth in the shader using a SRV, then
     // writing to the resolved depth buffer using SV_Depth. We can't use this method for stencil
@@ -2229,12 +2240,12 @@ angle::Result Blit11::resolveStencil(const gl::Context *context,
     const d3d11::PixelShader *pixelShader = nullptr;
     if (alsoDepth)
     {
-        ANGLE_TRY_HANDLE(context, mResolveDepthStencilPS.resolve(mRenderer));
+        ANGLE_TRY(mResolveDepthStencilPS.resolve(context11, mRenderer));
         pixelShader = &mResolveDepthStencilPS.getObj();
     }
     else
     {
-        ANGLE_TRY_HANDLE(context, mResolveStencilPS.resolve(mRenderer));
+        ANGLE_TRY(mResolveStencilPS.resolve(context11, mRenderer));
         pixelShader = &mResolveStencilPS.getObj();
     }
 
@@ -2250,7 +2261,7 @@ angle::Result Blit11::resolveStencil(const gl::Context *context,
     // Set the viewport
     stateManager->setSimpleViewport(extents);
     stateManager->setShaderResourceShared(gl::ShaderType::Fragment, 0,
-                                          &depthStencil->getShaderResourceView());
+                                          &depthStencil->getShaderResourceView(context));
     stateManager->setShaderResource(gl::ShaderType::Fragment, 1, &mStencilSRV);
 
     // Trigger the blit on the GPU.

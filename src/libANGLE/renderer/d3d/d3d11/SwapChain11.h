@@ -48,7 +48,7 @@ class SwapChain11 final : public SwapChainD3D
 
     const TextureHelper11 &getOffscreenTexture();
     const d3d11::RenderTargetView &getRenderTarget();
-    const d3d11::SharedSRV &getRenderTargetShaderResource();
+    const d3d11::SharedSRV &getRenderTargetShaderResource(d3d::Context *context);
 
     const TextureHelper11 &getDepthStencilTexture();
     const d3d11::DepthStencilView &getDepthStencil();
@@ -63,7 +63,7 @@ class SwapChain11 final : public SwapChainD3D
 
   private:
     void release();
-    void initPassThroughResources();
+    angle::Result initPassThroughResources(DisplayD3D *displayD3D);
 
     void releaseOffscreenColorBuffer();
     void releaseOffscreenDepthBuffer();
@@ -71,7 +71,9 @@ class SwapChain11 final : public SwapChainD3D
     EGLint resetOffscreenColorBuffer(DisplayD3D *displayD3D,
                                      int backbufferWidth,
                                      int backbufferHeight);
-    EGLint resetOffscreenDepthBuffer(int backbufferWidth, int backbufferHeight);
+    EGLint resetOffscreenDepthBuffer(DisplayD3D *displayD3D,
+                                     int backbufferWidth,
+                                     int backbufferHeight);
 
     DXGI_FORMAT getSwapChainNativeFormat() const;
 

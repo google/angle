@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
 
 #include "libANGLE/Context.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 
 namespace rx
@@ -113,7 +114,8 @@ angle::Result UniformStorage11::getConstantBuffer(const gl::Context *context,
         desc.Usage             = D3D11_USAGE_DEFAULT;
         desc.BindFlags         = D3D11_BIND_CONSTANT_BUFFER;
 
-        ANGLE_TRY_HANDLE(context, renderer->allocateResource(desc, &mConstantBuffer));
+        ANGLE_TRY(
+            renderer->allocateResource(GetImplAs<Context11>(context), desc, &mConstantBuffer));
     }
 
     *bufferOut = &mConstantBuffer;

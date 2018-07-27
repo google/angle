@@ -8,6 +8,8 @@
 
 #include "libANGLE/renderer/d3d/d3d11/IndexBuffer11.h"
 
+#include "libANGLE/Context.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
@@ -42,7 +44,7 @@ gl::Error IndexBuffer11::initialize(const gl::Context *context,
         bufferDesc.MiscFlags = 0;
         bufferDesc.StructureByteStride = 0;
 
-        ANGLE_TRY(mRenderer->allocateResource(bufferDesc, &mBuffer));
+        ANGLE_TRY(mRenderer->allocateResource(GetImplAs<Context11>(context), bufferDesc, &mBuffer));
 
         if (dynamic)
         {

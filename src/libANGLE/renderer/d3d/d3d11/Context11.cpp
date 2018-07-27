@@ -241,12 +241,12 @@ std::vector<PathImpl *> Context11::createPaths(GLsizei)
 
 gl::Error Context11::flush(const gl::Context *context)
 {
-    return mRenderer->flush();
+    return mRenderer->flush(this);
 }
 
 gl::Error Context11::finish(const gl::Context *context)
 {
-    return mRenderer->finish();
+    return mRenderer->finish(this);
 }
 
 gl::Error Context11::drawArrays(const gl::Context *context,

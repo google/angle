@@ -165,7 +165,7 @@ angle::Result Query11::resume(Context11 *context11)
         queryDesc.Query     = d3dQueryType;
         queryDesc.MiscFlags = 0;
 
-        ANGLE_TRY_HANDLE(context11, mRenderer->allocateResource(queryDesc, &mActiveQuery->query));
+        ANGLE_TRY(mRenderer->allocateResource(context11, queryDesc, &mActiveQuery->query));
 
         // If we are doing time elapsed we also need a query to actually query the timestamp
         if (type == gl::QueryType::TimeElapsed)
@@ -174,10 +174,8 @@ angle::Result Query11::resume(Context11 *context11)
             desc.Query     = D3D11_QUERY_TIMESTAMP;
             desc.MiscFlags = 0;
 
-            ANGLE_TRY_HANDLE(context11,
-                             mRenderer->allocateResource(desc, &mActiveQuery->beginTimestamp));
-            ANGLE_TRY_HANDLE(context11,
-                             mRenderer->allocateResource(desc, &mActiveQuery->endTimestamp));
+            ANGLE_TRY(mRenderer->allocateResource(context11, desc, &mActiveQuery->beginTimestamp));
+            ANGLE_TRY(mRenderer->allocateResource(context11, desc, &mActiveQuery->endTimestamp));
         }
 
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();

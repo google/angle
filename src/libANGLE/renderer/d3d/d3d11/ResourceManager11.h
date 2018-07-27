@@ -32,6 +32,11 @@ HRESULT SetDebugName(angle::ComPtr<T> &resource, const char *name)
 }
 }  // namespace d3d11
 
+namespace d3d
+{
+class Context;
+}  // namespace d3d
+
 class Renderer11;
 class ResourceManager11;
 template <typename T>
@@ -294,19 +299,21 @@ class ResourceManager11 final : angle::NonCopyable
     ~ResourceManager11();
 
     template <typename T>
-    gl::Error allocate(Renderer11 *renderer,
-                       const GetDescFromD3D11<T> *desc,
-                       GetInitDataFromD3D11<T> *initData,
-                       Resource11<T> *resourceOut);
+    angle::Result allocate(d3d::Context *context,
+                           Renderer11 *renderer,
+                           const GetDescFromD3D11<T> *desc,
+                           GetInitDataFromD3D11<T> *initData,
+                           Resource11<T> *resourceOut);
 
     template <typename T>
-    gl::Error allocate(Renderer11 *renderer,
-                       const GetDescFromD3D11<T> *desc,
-                       GetInitDataFromD3D11<T> *initData,
-                       SharedResource11<T> *sharedRes)
+    angle::Result allocate(d3d::Context *context,
+                           Renderer11 *renderer,
+                           const GetDescFromD3D11<T> *desc,
+                           GetInitDataFromD3D11<T> *initData,
+                           SharedResource11<T> *sharedRes)
     {
         Resource11<T> res;
-        ANGLE_TRY(allocate(renderer, desc, initData, &res));
+        ANGLE_TRY(allocate(context, renderer, desc, initData, &res));
         *sharedRes = std::move(res);
         return angle::Result::Continue();
     }
