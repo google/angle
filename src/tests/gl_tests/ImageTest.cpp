@@ -1585,6 +1585,8 @@ TEST_P(ImageTest, MipLevels)
 {
     // Driver returns OOM in read pixels, some internal error.
     ANGLE_SKIP_TEST_IF(IsOzone() && IsOpenGLES());
+    // Also fails on NVIDIA Shield TV bot.
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
