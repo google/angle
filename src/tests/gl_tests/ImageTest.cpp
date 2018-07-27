@@ -165,9 +165,14 @@ class ImageTest : public ANGLETest
 
         // Create an image from the source texture
         EGLWindow *window = getEGLWindow();
+
+        EGLint attribs[] = {
+            EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE,
+        };
+
         EGLImageKHR image =
             eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_2D_KHR,
-                              reinterpretHelper<EGLClientBuffer>(source), nullptr);
+                              reinterpretHelper<EGLClientBuffer>(source), attribs);
 
         ASSERT_EGL_SUCCESS();
 
@@ -205,9 +210,14 @@ class ImageTest : public ANGLETest
 
         // Create an image from the source texture
         EGLWindow *window = getEGLWindow();
+
+        EGLint attribs[] = {
+            EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE,
+        };
+
         EGLImageKHR image =
             eglCreateImageKHR(window->getDisplay(), window->getContext(), imageTarget,
-                              reinterpretHelper<EGLClientBuffer>(source), nullptr);
+                              reinterpretHelper<EGLClientBuffer>(source), attribs);
 
         ASSERT_EGL_SUCCESS();
 
@@ -244,7 +254,11 @@ class ImageTest : public ANGLETest
         EGLWindow *window = getEGLWindow();
 
         EGLint attribs[] = {
-            EGL_GL_TEXTURE_ZOFFSET_KHR, static_cast<EGLint>(imageLayer), EGL_NONE,
+            EGL_GL_TEXTURE_ZOFFSET_KHR,
+            static_cast<EGLint>(imageLayer),
+            EGL_IMAGE_PRESERVED,
+            EGL_TRUE,
+            EGL_NONE,
         };
         EGLImageKHR image =
             eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_3D_KHR,
@@ -285,9 +299,14 @@ class ImageTest : public ANGLETest
 
         // Create an image from the source renderbuffer
         EGLWindow *window = getEGLWindow();
+
+        EGLint attribs[] = {
+            EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE,
+        };
+
         EGLImageKHR image =
             eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_RENDERBUFFER_KHR,
-                              reinterpretHelper<EGLClientBuffer>(source), nullptr);
+                              reinterpretHelper<EGLClientBuffer>(source), attribs);
 
         ASSERT_EGL_SUCCESS();
 
@@ -458,8 +477,9 @@ class ImageTestES3 : public ImageTest
 // you change extension availability.
 TEST_P(ImageTest, ANGLEExtensionAvailability)
 {
-    // Android support is based on driver extension availability.
+    // EGL support is based on driver extension availability.
     ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsAndroid());
+    ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsOzone());
 
     if (IsD3D11() || IsD3D9())
     {
@@ -1563,6 +1583,9 @@ TEST_P(ImageTest, Deletion)
 
 TEST_P(ImageTest, MipLevels)
 {
+    // Driver returns OOM in read pixels, some internal error.
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsOpenGLES());
+
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
@@ -1631,6 +1654,7 @@ TEST_P(ImageTest, Respecification)
     // Respecification of textures that does not change the size of the level attached to the EGL
     // image does not cause orphaning on Qualcomm devices. http://anglebug.com/2744
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+    ANGLE_SKIP_TEST_IF(IsOzone() && IsOpenGLES());
 
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
