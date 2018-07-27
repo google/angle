@@ -10,13 +10,14 @@
 
 #include <algorithm>
 
+#include "libANGLE/Context.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "third_party/trace_event/trace_event.h"
 
 // Precompiled shaders
@@ -144,21 +145,22 @@ Clear11::ShaderManager::~ShaderManager()
 {
 }
 
-gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
-                                                      const INT clearType,
-                                                      const uint32_t numRTs,
-                                                      const bool hasLayeredLayout,
-                                                      const d3d11::InputLayout **il,
-                                                      const d3d11::VertexShader **vs,
-                                                      const d3d11::GeometryShader **gs,
-                                                      const d3d11::PixelShader **ps)
+angle::Result Clear11::ShaderManager::getShadersAndLayout(const gl::Context *context,
+                                                          Renderer11 *renderer,
+                                                          const INT clearType,
+                                                          const uint32_t numRTs,
+                                                          const bool hasLayeredLayout,
+                                                          const d3d11::InputLayout **il,
+                                                          const d3d11::VertexShader **vs,
+                                                          const d3d11::GeometryShader **gs,
+                                                          const d3d11::PixelShader **ps)
 {
     if (renderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
         ASSERT(clearType == GL_FLOAT);
 
-        ANGLE_TRY(mVs9.resolve(renderer));
-        ANGLE_TRY(mPsFloat9.resolve(renderer));
+        ANGLE_TRY_HANDLE(context, mVs9.resolve(renderer));
+        ANGLE_TRY_HANDLE(context, mPsFloat9.resolve(renderer));
 
         if (!mIl9.valid())
         {
@@ -168,26 +170,28 @@ gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
             InputElementArray ilDescArray(ilDesc);
             ShaderData vertexShader(g_VS_Clear_FL9);
 
-            ANGLE_TRY(renderer->allocateResource(ilDescArray, &vertexShader, &mIl9));
+            ANGLE_TRY_HANDLE(context,
+                             renderer->allocateResource(ilDescArray, &vertexShader, &mIl9));
         }
 
         *vs = &mVs9.getObj();
         *gs = nullptr;
         *il = &mIl9;
         *ps = &mPsFloat9.getObj();
-        return gl::NoError();
+        return angle::Result::Continue();
     }
+
     if (!hasLayeredLayout)
     {
-        ANGLE_TRY(mVs.resolve(renderer));
+        ANGLE_TRY_HANDLE(context, mVs.resolve(renderer));
         *vs = &mVs.getObj();
         *gs = nullptr;
     }
     else
     {
         // For layered framebuffers we have to use the multi-view versions of the VS and GS.
-        ANGLE_TRY(mVsMultiview.resolve(renderer));
-        ANGLE_TRY(mGsMultiview.resolve(renderer));
+        ANGLE_TRY_HANDLE(context, mVsMultiview.resolve(renderer));
+        ANGLE_TRY_HANDLE(context, mGsMultiview.resolve(renderer));
         *vs = &mVsMultiview.getObj();
         *gs = &mGsMultiview.getObj();
     }
@@ -196,23 +200,23 @@ gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
 
     if (numRTs == 0)
     {
-        ANGLE_TRY(mPsDepth.resolve(renderer));
+        ANGLE_TRY_HANDLE(context, mPsDepth.resolve(renderer));
         *ps = &mPsDepth.getObj();
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     switch (clearType)
     {
         case GL_FLOAT:
-            ANGLE_TRY(mPsFloat[numRTs - 1].resolve(renderer));
+            ANGLE_TRY_HANDLE(context, mPsFloat[numRTs - 1].resolve(renderer));
             *ps = &mPsFloat[numRTs - 1].getObj();
             break;
         case GL_UNSIGNED_INT:
-            ANGLE_TRY(mPsUInt[numRTs - 1].resolve(renderer));
+            ANGLE_TRY_HANDLE(context, mPsUInt[numRTs - 1].resolve(renderer));
             *ps = &mPsUInt[numRTs - 1].getObj();
             break;
         case GL_INT:
-            ANGLE_TRY(mPsSInt[numRTs - 1].resolve(renderer));
+            ANGLE_TRY_HANDLE(context, mPsSInt[numRTs - 1].resolve(renderer));
             *ps = &mPsSInt[numRTs - 1].getObj();
             break;
         default:
@@ -220,7 +224,7 @@ gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
             break;
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 Clear11::Clear11(Renderer11 *renderer)
@@ -239,11 +243,11 @@ Clear11::~Clear11()
 {
 }
 
-gl::Error Clear11::ensureResourcesInitialized()
+angle::Result Clear11::ensureResourcesInitialized(const gl::Context *context)
 {
     if (mResourcesInitialized)
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     TRACE_EVENT0("gpu.angle", "Clear11::ensureResourcesInitialized");
@@ -271,11 +275,12 @@ gl::Error Clear11::ensureResourcesInitialized()
     rsDesc.MultisampleEnable     = FALSE;
     rsDesc.AntialiasedLineEnable = FALSE;
 
-    ANGLE_TRY(mRenderer->allocateResource(rsDesc, &mScissorDisabledRasterizerState));
+    ANGLE_TRY_HANDLE(context,
+                     mRenderer->allocateResource(rsDesc, &mScissorDisabledRasterizerState));
     mScissorDisabledRasterizerState.setDebugName("Clear11 Rasterizer State with scissor disabled");
 
     rsDesc.ScissorEnable = TRUE;
-    ANGLE_TRY(mRenderer->allocateResource(rsDesc, &mScissorEnabledRasterizerState));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(rsDesc, &mScissorEnabledRasterizerState));
     mScissorEnabledRasterizerState.setDebugName("Clear11 Rasterizer State with scissor enabled");
 
     // Initialize Depthstencil state with defaults
@@ -308,7 +313,7 @@ gl::Error Clear11::ensureResourcesInitialized()
     mBlendStateKey.blendState.dither                = true;
 
     mResourcesInitialized = true;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 bool Clear11::useVertexBuffer() const
@@ -316,11 +321,11 @@ bool Clear11::useVertexBuffer() const
     return (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3);
 }
 
-gl::Error Clear11::ensureConstantBufferCreated()
+angle::Result Clear11::ensureConstantBufferCreated(const gl::Context *context)
 {
     if (mConstantBuffer.valid())
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     // Create constant buffer for color & depth data
@@ -338,18 +343,19 @@ gl::Error Clear11::ensureConstantBufferCreated()
     initialData.SysMemPitch      = g_ConstantBufferSize;
     initialData.SysMemSlicePitch = g_ConstantBufferSize;
 
-    ANGLE_TRY(mRenderer->allocateResource(bufferDesc, &initialData, &mConstantBuffer));
+    ANGLE_TRY_HANDLE(context,
+                     mRenderer->allocateResource(bufferDesc, &initialData, &mConstantBuffer));
     mConstantBuffer.setDebugName("Clear11 Constant Buffer");
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Clear11::ensureVertexBufferCreated()
+angle::Result Clear11::ensureVertexBufferCreated(const gl::Context *context)
 {
     ASSERT(useVertexBuffer());
 
     if (mVertexBuffer.valid())
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     // Create vertex buffer with vertices for a quad covering the entire surface
@@ -375,16 +381,17 @@ gl::Error Clear11::ensureVertexBufferCreated()
     initialData.SysMemPitch      = vbSize;
     initialData.SysMemSlicePitch = initialData.SysMemPitch;
 
-    ANGLE_TRY(mRenderer->allocateResource(bufferDesc, &initialData, &mVertexBuffer));
+    ANGLE_TRY_HANDLE(context,
+                     mRenderer->allocateResource(bufferDesc, &initialData, &mVertexBuffer));
     mVertexBuffer.setDebugName("Clear11 Vertex Buffer");
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Clear11::clearFramebuffer(const gl::Context *context,
-                                    const ClearParameters &clearParams,
-                                    const gl::FramebufferState &fboData)
+angle::Result Clear11::clearFramebuffer(const gl::Context *context,
+                                        const ClearParameters &clearParams,
+                                        const gl::FramebufferState &fboData)
 {
-    ANGLE_TRY(ensureResourcesInitialized());
+    ANGLE_TRY(ensureResourcesInitialized(context));
 
     // Iterate over the color buffers which require clearing and determine if they can be
     // cleared with ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView.
@@ -423,13 +430,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     else
     {
         const gl::FramebufferAttachment *colorAttachment = fboData.getFirstColorAttachment();
-
-        if (!colorAttachment)
-        {
-            UNREACHABLE();
-            return gl::InternalError();
-        }
-
+        ASSERT(colorAttachment);
         framebufferSize = colorAttachment->getSize();
     }
 
@@ -450,7 +451,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
             // The check assumes that the viewport offsets are not negative as according to the
             // ANGLE_multiview spec.
             // Scissor rect is outside the renderbuffer or is an empty rect.
-            return gl::NoError();
+            return angle::Result::Continue();
         }
 
         if (isSideBySideFBO)
@@ -466,7 +467,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
                 clearParams.scissor.y + clearParams.scissor.height <= 0)
             {
                 // Scissor rect is outside the renderbuffer.
-                return gl::NoError();
+                return angle::Result::Continue();
             }
             needScissoredClear =
                 clearParams.scissor.x > 0 || clearParams.scissor.y > 0 ||
@@ -517,7 +518,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
         }
 
         RenderTarget11 *renderTarget = nullptr;
-        ANGLE_TRY(attachment.getRenderTarget(context, &renderTarget));
+        ANGLE_TRY_HANDLE(context, attachment.getRenderTarget(context, &renderTarget));
 
         const gl::InternalFormat &formatInfo = *attachment.getFormat().info;
 
@@ -619,7 +620,8 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
         RenderTarget11 *depthStencilRenderTarget = nullptr;
 
         ASSERT(depthStencilAttachment != nullptr);
-        ANGLE_TRY(depthStencilAttachment->getRenderTarget(context, &depthStencilRenderTarget));
+        ANGLE_TRY_HANDLE(
+            context, depthStencilAttachment->getRenderTarget(context, &depthStencilRenderTarget));
 
         dsv = depthStencilRenderTarget->getDepthStencilView().get();
         ASSERT(dsv != nullptr);
@@ -648,7 +650,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
 
     if (numRtvs == 0 && dsv == nullptr)
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     // Clear the remaining render targets and depth stencil in one pass by rendering a quad:
@@ -694,7 +696,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
 
     // Get BlendState
     const d3d11::BlendState *blendState = nullptr;
-    ANGLE_TRY(mRenderer->getBlendState(mBlendStateKey, &blendState));
+    ANGLE_TRY(mRenderer->getBlendState(context, mBlendStateKey, &blendState));
 
     const d3d11::DepthStencilState *dsState = nullptr;
     const float *zValue              = nullptr;
@@ -708,7 +710,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
         mDepthStencilStateKey.stencilTest      = clearParams.clearStencil;
 
         // Get DepthStencilState
-        ANGLE_TRY(mRenderer->getDepthStencilState(mDepthStencilStateKey, &dsState));
+        ANGLE_TRY(mRenderer->getDepthStencilState(context, mDepthStencilStateKey, &dsState));
         zValue = clearParams.clearDepth ? &clearParams.depthValue : nullptr;
     }
 
@@ -733,7 +735,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
             break;
     }
 
-    ANGLE_TRY(ensureConstantBufferCreated());
+    ANGLE_TRY(ensureConstantBufferCreated(context));
 
     if (dirtyCb)
     {
@@ -774,7 +776,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     const d3d11::PixelShader *ps  = nullptr;
     const bool hasLayeredLayout =
         (fboData.getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE);
-    ANGLE_TRY(mShaderManager.getShadersAndLayout(mRenderer, clearParams.colorType, numRtvs,
+    ANGLE_TRY(mShaderManager.getShadersAndLayout(context, mRenderer, clearParams.colorType, numRtvs,
                                                  hasLayeredLayout, &il, &vs, &gs, &ps));
 
     // Apply Shaders
@@ -787,7 +789,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
 
     if (useVertexBuffer())
     {
-        ANGLE_TRY(ensureVertexBufferCreated());
+        ANGLE_TRY(ensureVertexBufferCreated(context));
         stateManager->setSingleVertexBuffer(&mVertexBuffer, g_VertexSize, 0);
     }
     else
@@ -822,7 +824,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
         }
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

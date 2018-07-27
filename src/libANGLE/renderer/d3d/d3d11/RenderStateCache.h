@@ -70,19 +70,23 @@ class RenderStateCache : angle::NonCopyable
     static d3d11::BlendStateKey GetBlendStateKey(const gl::Context *context,
                                                  Framebuffer11 *framebuffer11,
                                                  const gl::BlendState &blendState);
-    gl::Error getBlendState(Renderer11 *renderer,
-                            const d3d11::BlendStateKey &key,
-                            const d3d11::BlendState **outBlendState);
-    gl::Error getRasterizerState(Renderer11 *renderer,
-                                 const gl::RasterizerState &rasterState,
-                                 bool scissorEnabled,
-                                 ID3D11RasterizerState **outRasterizerState);
-    gl::Error getDepthStencilState(Renderer11 *renderer,
-                                   const gl::DepthStencilState &dsState,
-                                   const d3d11::DepthStencilState **outDSState);
-    gl::Error getSamplerState(Renderer11 *renderer,
-                              const gl::SamplerState &samplerState,
-                              ID3D11SamplerState **outSamplerState);
+    angle::Result getBlendState(const gl::Context *context,
+                                Renderer11 *renderer,
+                                const d3d11::BlendStateKey &key,
+                                const d3d11::BlendState **outBlendState);
+    angle::Result getRasterizerState(const gl::Context *context,
+                                     Renderer11 *renderer,
+                                     const gl::RasterizerState &rasterState,
+                                     bool scissorEnabled,
+                                     ID3D11RasterizerState **outRasterizerState);
+    angle::Result getDepthStencilState(const gl::Context *context,
+                                       Renderer11 *renderer,
+                                       const gl::DepthStencilState &dsState,
+                                       const d3d11::DepthStencilState **outDSState);
+    angle::Result getSamplerState(const gl::Context *context,
+                                  Renderer11 *renderer,
+                                  const gl::SamplerState &samplerState,
+                                  ID3D11SamplerState **outSamplerState);
 
   private:
     // MSDN's documentation of ID3D11Device::CreateBlendState, ID3D11Device::CreateRasterizerState,

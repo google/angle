@@ -73,6 +73,32 @@ enum RendererClass
     RENDERER_D3D9
 };
 
+// ANGLE_TRY for HRESULT errors.
+#define ANGLE_TRY_HR(CONTEXT, EXPR, MESSAGE)                                                    \
+    \
+{                                                                                        \
+        auto ANGLE_LOCAL_VAR = (EXPR);                                                          \
+        if (ANGLE_UNLIKELY(FAILED(ANGLE_LOCAL_VAR)))                                            \
+        {                                                                                       \
+            CONTEXT->handleError(ANGLE_LOCAL_VAR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
+            return angle::Result::Stop();                                                       \
+        }                                                                                       \
+    \
+}
+
+#define ANGLE_CHECK_HR(CONTEXT, EXPR, MESSAGE, ERROR)                                 \
+                                                                                      \
+    {                                                                                 \
+        if (ANGLE_UNLIKELY(!(EXPR)))                                                  \
+        {                                                                             \
+            CONTEXT->handleError(ERROR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
+            return angle::Result::Stop();                                             \
+        }                                                                             \
+    }
+
+#define ANGLE_CHECK_HR_ALLOC(context, result) \
+    ANGLE_CHECK_HR(context, result, "Failed to allocate host memory", E_OUTOFMEMORY)
+
 // Check if the device is lost every 10 failures to get the query data
 constexpr unsigned int kPollingD3DDeviceLostCheckFrequency = 10;
 

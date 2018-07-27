@@ -34,7 +34,7 @@ class Framebuffer11 : public FramebufferD3D
                             const gl::Rectangle &area) override;
 
     // Invalidate the cached swizzles of all bound texture attachments.
-    gl::Error markAttachmentsDirty(const gl::Context *context) const;
+    angle::Result markAttachmentsDirty(const gl::Context *context) const;
 
     gl::Error syncState(const gl::Context *context,
                         const gl::Framebuffer::DirtyBits &dirtyBits) override;

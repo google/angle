@@ -21,6 +21,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/dxgi_support_table.h"
@@ -2030,14 +2031,15 @@ void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsi
     }
 }
 
-gl::Error GenerateInitialTextureData(const gl::Context *context,
-                                     GLint internalFormat,
-                                     const Renderer11DeviceCaps &renderer11DeviceCaps,
-                                     GLuint width,
-                                     GLuint height,
-                                     GLuint depth,
-                                     GLuint mipLevels,
-                                     gl::TexLevelArray<D3D11_SUBRESOURCE_DATA> *outSubresourceData)
+angle::Result GenerateInitialTextureData(
+    const gl::Context *context,
+    GLint internalFormat,
+    const Renderer11DeviceCaps &renderer11DeviceCaps,
+    GLuint width,
+    GLuint height,
+    GLuint depth,
+    GLuint mipLevels,
+    gl::TexLevelArray<D3D11_SUBRESOURCE_DATA> *outSubresourceData)
 {
     const d3d11::Format &d3dFormatInfo = d3d11::Format::Get(internalFormat, renderer11DeviceCaps);
     ASSERT(d3dFormatInfo.dataInitializerFunction != nullptr);
@@ -2050,7 +2052,8 @@ gl::Error GenerateInitialTextureData(const gl::Context *context,
     unsigned int maxImageSize = depthPitch * depth;
 
     angle::MemoryBuffer *scratchBuffer = nullptr;
-    ANGLE_TRY_ALLOCATION(context->getScratchBuffer(maxImageSize, &scratchBuffer));
+    ANGLE_CHECK_HR_ALLOC(GetImplAs<Context11>(context),
+                         context->getScratchBuffer(maxImageSize, &scratchBuffer));
 
     d3dFormatInfo.dataInitializerFunction(width, height, depth, scratchBuffer->data(), rowPitch,
                                           depthPitch);
@@ -2068,7 +2071,7 @@ gl::Error GenerateInitialTextureData(const gl::Context *context,
         outSubresourceData->at(i).SysMemSlicePitch = mipDepthPitch;
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 UINT GetPrimitiveRestartIndex()
@@ -2177,7 +2180,7 @@ gl::Error LazyResource<ResourceT>::resolveImpl(Renderer11 *renderer,
         ANGLE_TRY(renderer->allocateResource(desc, initData, &mResource));
         mResource.setDebugName(name);
     }
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 template gl::Error LazyResource<ResourceType::BlendState>::resolveImpl(Renderer11 *renderer,

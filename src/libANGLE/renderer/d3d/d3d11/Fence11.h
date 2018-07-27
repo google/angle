@@ -28,8 +28,13 @@ class FenceNV11 : public FenceNVImpl
     gl::Error finish(const gl::Context *context) override;
 
   private:
-    template<class T> friend gl::Error FenceSetHelper(T *fence);
-    template<class T> friend gl::Error FenceTestHelper(T *fence, bool flushCommandBuffer, GLboolean *outFinished);
+    template <class T>
+    friend angle::Result FenceSetHelper(const gl::Context *context, T *fence);
+    template <class T>
+    friend angle::Result FenceTestHelper(const gl::Context *context,
+                                         T *fence,
+                                         bool flushCommandBuffer,
+                                         GLboolean *outFinished);
 
     Renderer11 *mRenderer;
     ID3D11Query *mQuery;
@@ -50,8 +55,13 @@ class Sync11 : public SyncImpl
     gl::Error getStatus(const gl::Context *context, GLint *outResult) override;
 
   private:
-    template<class T> friend gl::Error FenceSetHelper(T *fence);
-    template<class T> friend gl::Error FenceTestHelper(T *fence, bool flushCommandBuffer, GLboolean *outFinished);
+    template <class T>
+    friend angle::Result FenceSetHelper(const gl::Context *context, T *fence);
+    template <class T>
+    friend angle::Result FenceTestHelper(const gl::Context *context,
+                                         T *fence,
+                                         bool flushCommandBuffer,
+                                         GLboolean *outFinished);
 
     Renderer11 *mRenderer;
     ID3D11Query *mQuery;

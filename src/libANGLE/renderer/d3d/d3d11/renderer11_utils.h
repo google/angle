@@ -97,14 +97,15 @@ ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device);
 
 void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
 
-gl::Error GenerateInitialTextureData(const gl::Context *context,
-                                     GLint internalFormat,
-                                     const Renderer11DeviceCaps &renderer11DeviceCaps,
-                                     GLuint width,
-                                     GLuint height,
-                                     GLuint depth,
-                                     GLuint mipLevels,
-                                     gl::TexLevelArray<D3D11_SUBRESOURCE_DATA> *outSubresourceData);
+angle::Result GenerateInitialTextureData(
+    const gl::Context *context,
+    GLint internalFormat,
+    const Renderer11DeviceCaps &renderer11DeviceCaps,
+    GLuint width,
+    GLuint height,
+    GLuint depth,
+    GLuint mipLevels,
+    gl::TexLevelArray<D3D11_SUBRESOURCE_DATA> *outSubresourceData);
 
 UINT GetPrimitiveRestartIndex();
 
@@ -303,6 +304,18 @@ enum ReservedConstantBufferSlot
 };
 
 void InitConstantBufferDesc(D3D11_BUFFER_DESC *constantBufferDescription, size_t byteWidth);
+
+// Helper class for RAII patterning.
+template <typename T>
+class ScopedUnmapper final : angle::NonCopyable
+{
+  public:
+    ScopedUnmapper(T *object) : mObject(object) {}
+    ~ScopedUnmapper() { mObject->unmap(); }
+
+  private:
+    T *mObject;
+};
 }  // namespace d3d11
 
 struct GenericData

@@ -308,7 +308,7 @@ class ResourceManager11 final : angle::NonCopyable
         Resource11<T> res;
         ANGLE_TRY(allocate(renderer, desc, initData, &res));
         *sharedRes = std::move(res);
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     template <typename T>

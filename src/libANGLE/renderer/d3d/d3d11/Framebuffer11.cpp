@@ -30,8 +30,8 @@ namespace rx
 
 namespace
 {
-gl::Error MarkAttachmentsDirty(const gl::Context *context,
-                               const gl::FramebufferAttachment *attachment)
+angle::Result MarkAttachmentsDirty(const gl::Context *context,
+                                   const gl::FramebufferAttachment *attachment)
 {
     if (attachment->type() == GL_TEXTURE)
     {
@@ -40,7 +40,7 @@ gl::Error MarkAttachmentsDirty(const gl::Context *context,
         TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
 
         TextureStorage *texStorage = nullptr;
-        ANGLE_TRY(textureD3D->getNativeTexture(context, &texStorage));
+        ANGLE_TRY_HANDLE(context, textureD3D->getNativeTexture(context, &texStorage));
 
         if (texStorage)
         {
@@ -51,7 +51,7 @@ gl::Error MarkAttachmentsDirty(const gl::Context *context,
         }
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 }  // anonymous namespace
 
@@ -65,7 +65,7 @@ Framebuffer11::~Framebuffer11()
 {
 }
 
-gl::Error Framebuffer11::markAttachmentsDirty(const gl::Context *context) const
+angle::Result Framebuffer11::markAttachmentsDirty(const gl::Context *context) const
 {
     const auto &colorAttachments = mState.getColorAttachments();
     for (size_t drawBuffer : mState.getEnabledDrawBuffers())
@@ -81,7 +81,7 @@ gl::Error Framebuffer11::markAttachmentsDirty(const gl::Context *context) const
         ANGLE_TRY(MarkAttachmentsDirty(context, dsAttachment));
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error Framebuffer11::clearImpl(const gl::Context *context, const ClearParameters &clearParams)

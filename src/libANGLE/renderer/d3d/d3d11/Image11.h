@@ -20,6 +20,12 @@ namespace gl
 class Framebuffer;
 }
 
+namespace d3d11
+{
+template <typename T>
+class ScopedUnmapper;
+}  // namespace d3d11
+
 namespace rx
 {
 class Renderer11;
@@ -33,19 +39,19 @@ class Image11 : public ImageD3D
     Image11(Renderer11 *renderer);
     ~Image11() override;
 
-    static gl::Error GenerateMipmap(const gl::Context *context,
-                                    Image11 *dest,
-                                    Image11 *src,
-                                    const Renderer11DeviceCaps &rendererCaps);
-    static gl::Error CopyImage(const gl::Context *context,
-                               Image11 *dest,
-                               Image11 *source,
-                               const gl::Rectangle &sourceRect,
-                               const gl::Offset &destOffset,
-                               bool unpackFlipY,
-                               bool unpackPremultiplyAlpha,
-                               bool unpackUnmultiplyAlpha,
-                               const Renderer11DeviceCaps &rendererCaps);
+    static angle::Result GenerateMipmap(const gl::Context *context,
+                                        Image11 *dest,
+                                        Image11 *src,
+                                        const Renderer11DeviceCaps &rendererCaps);
+    static angle::Result CopyImage(const gl::Context *context,
+                                   Image11 *dest,
+                                   Image11 *source,
+                                   const gl::Rectangle &sourceRect,
+                                   const gl::Offset &destOffset,
+                                   bool unpackFlipY,
+                                   bool unpackPremultiplyAlpha,
+                                   bool unpackUnmultiplyAlpha,
+                                   const Renderer11DeviceCaps &rendererCaps);
 
     bool isDirty() const override;
 
@@ -79,25 +85,27 @@ class Image11 : public ImageD3D
                                   const gl::Rectangle &sourceArea,
                                   const gl::Framebuffer *source) override;
 
-    gl::Error recoverFromAssociatedStorage(const gl::Context *context);
+    angle::Result recoverFromAssociatedStorage(const gl::Context *context);
     void verifyAssociatedStorageValid(TextureStorage11 *textureStorage) const;
     void disassociateStorage();
 
   protected:
-    gl::Error map(const gl::Context *context, D3D11_MAP mapType, D3D11_MAPPED_SUBRESOURCE *map);
+    template <typename T>
+    friend class d3d11::ScopedUnmapper;
+    angle::Result map(const gl::Context *context, D3D11_MAP mapType, D3D11_MAPPED_SUBRESOURCE *map);
     void unmap();
 
   private:
-    gl::Error copyWithoutConversion(const gl::Context *context,
-                                    const gl::Offset &destOffset,
-                                    const gl::Box &sourceArea,
-                                    const TextureHelper11 &textureHelper,
-                                    UINT sourceSubResource);
+    angle::Result copyWithoutConversion(const gl::Context *context,
+                                        const gl::Offset &destOffset,
+                                        const gl::Box &sourceArea,
+                                        const TextureHelper11 &textureHelper,
+                                        UINT sourceSubResource);
 
-    gl::Error getStagingTexture(const gl::Context *context,
-                                const TextureHelper11 **outStagingTexture,
-                                unsigned int *outSubresourceIndex);
-    gl::Error createStagingTexture(const gl::Context *context);
+    angle::Result getStagingTexture(const gl::Context *context,
+                                    const TextureHelper11 **outStagingTexture,
+                                    unsigned int *outSubresourceIndex);
+    angle::Result createStagingTexture(const gl::Context *context);
     void releaseStagingTexture();
 
     Renderer11 *mRenderer;

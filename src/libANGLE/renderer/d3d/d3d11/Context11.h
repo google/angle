@@ -147,8 +147,8 @@ class Context11 : public ContextImpl, public MultisampleTextureInitializer
     gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
     gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
-    gl::Error triggerDrawCallProgramRecompilation(const gl::Context *context,
-                                                  gl::PrimitiveMode drawMode);
+    angle::Result triggerDrawCallProgramRecompilation(const gl::Context *context,
+                                                      gl::PrimitiveMode drawMode);
 
     gl::Error getIncompleteTexture(const gl::Context *context,
                                    gl::TextureType type,
@@ -157,9 +157,18 @@ class Context11 : public ContextImpl, public MultisampleTextureInitializer
     gl::Error initializeMultisampleTextureToBlack(const gl::Context *context,
                                                   gl::Texture *glTexture) override;
 
+    void handleError(HRESULT hr,
+                     const char *message,
+                     const char *file,
+                     const char *function,
+                     unsigned int line);
+
+    // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2738
+    void handleError(const gl::Error &error);
+
   private:
-    gl::Error prepareForDrawCall(const gl::Context *context,
-                                 const gl::DrawCallParams &drawCallParams);
+    angle::Result prepareForDrawCall(const gl::Context *context,
+                                     const gl::DrawCallParams &drawCallParams);
 
     Renderer11 *mRenderer;
     IncompleteTextureSet mIncompleteTextures;

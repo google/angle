@@ -3052,8 +3052,9 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
 
     gl::Extents safeSize(safeArea.width, safeArea.height, 1);
     TextureHelper11 stagingHelper;
-    ANGLE_TRY(createStagingTexture(textureHelper.getTextureType(), textureHelper.getFormatSet(),
-                                   safeSize, StagingAccess::READ, &stagingHelper));
+    ANGLE_TRY(createStagingTexture(context, textureHelper.getTextureType(),
+                                   textureHelper.getFormatSet(), safeSize, StagingAccess::READ,
+                                   &stagingHelper));
     stagingHelper.setDebugName("readFromAttachment::stagingHelper");
 
     TextureHelper11 resolvedTextureHelper;
@@ -3126,10 +3127,10 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
     return packPixels(context, stagingHelper, packParams, pixelsOut);
 }
 
-gl::Error Renderer11::packPixels(const gl::Context *context,
-                                 const TextureHelper11 &textureHelper,
-                                 const PackPixelsParams &params,
-                                 uint8_t *pixelsOut)
+angle::Result Renderer11::packPixels(const gl::Context *context,
+                                     const TextureHelper11 &textureHelper,
+                                     const PackPixelsParams &params,
+                                     uint8_t *pixelsOut)
 {
     ID3D11Resource *readResource = textureHelper.get();
 
@@ -3146,7 +3147,7 @@ gl::Error Renderer11::packPixels(const gl::Context *context,
 
     mDeviceContext->Unmap(readResource, 0);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error Renderer11::blitRenderbufferRect(const gl::Context *context,
@@ -3682,11 +3683,12 @@ gl::Error Renderer11::dispatchCompute(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error Renderer11::createStagingTexture(ResourceType textureType,
-                                           const d3d11::Format &formatSet,
-                                           const gl::Extents &size,
-                                           StagingAccess readAndWriteAccess,
-                                           TextureHelper11 *textureOut)
+angle::Result Renderer11::createStagingTexture(const gl::Context *context,
+                                               ResourceType textureType,
+                                               const d3d11::Format &formatSet,
+                                               const gl::Extents &size,
+                                               StagingAccess readAndWriteAccess,
+                                               TextureHelper11 *textureOut)
 {
     if (textureType == ResourceType::Texture2D)
     {
@@ -3708,8 +3710,8 @@ gl::Error Renderer11::createStagingTexture(ResourceType textureType,
             stagingDesc.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
         }
 
-        ANGLE_TRY(allocateTexture(stagingDesc, formatSet, textureOut));
-        return gl::NoError();
+        ANGLE_TRY_HANDLE(context, allocateTexture(stagingDesc, formatSet, textureOut));
+        return angle::Result::Continue();
     }
     ASSERT(textureType == ResourceType::Texture3D);
 
@@ -3724,8 +3726,8 @@ gl::Error Renderer11::createStagingTexture(ResourceType textureType,
     stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
     stagingDesc.MiscFlags      = 0;
 
-    ANGLE_TRY(allocateTexture(stagingDesc, formatSet, textureOut));
-    return gl::NoError();
+    ANGLE_TRY_HANDLE(context, allocateTexture(stagingDesc, formatSet, textureOut));
+    return angle::Result::Continue();
 }
 
 gl::Error Renderer11::allocateTexture(const D3D11_TEXTURE2D_DESC &desc,
@@ -3736,7 +3738,7 @@ gl::Error Renderer11::allocateTexture(const D3D11_TEXTURE2D_DESC &desc,
     d3d11::Texture2D texture;
     ANGLE_TRY(mResourceManager11.allocate(this, &desc, initData, &texture));
     textureOut->init(std::move(texture), desc, format);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error Renderer11::allocateTexture(const D3D11_TEXTURE3D_DESC &desc,
@@ -3747,32 +3749,37 @@ gl::Error Renderer11::allocateTexture(const D3D11_TEXTURE3D_DESC &desc,
     d3d11::Texture3D texture;
     ANGLE_TRY(mResourceManager11.allocate(this, &desc, initData, &texture));
     textureOut->init(std::move(texture), desc, format);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Renderer11::getBlendState(const d3d11::BlendStateKey &key,
-                                    const d3d11::BlendState **outBlendState)
+angle::Result Renderer11::getBlendState(const gl::Context *context,
+                                        const d3d11::BlendStateKey &key,
+                                        const d3d11::BlendState **outBlendState)
 {
-    return mStateCache.getBlendState(this, key, outBlendState);
+    return mStateCache.getBlendState(context, this, key, outBlendState);
 }
 
-gl::Error Renderer11::getRasterizerState(const gl::RasterizerState &rasterState,
-                                         bool scissorEnabled,
-                                         ID3D11RasterizerState **outRasterizerState)
+angle::Result Renderer11::getRasterizerState(const gl::Context *context,
+                                             const gl::RasterizerState &rasterState,
+                                             bool scissorEnabled,
+                                             ID3D11RasterizerState **outRasterizerState)
 {
-    return mStateCache.getRasterizerState(this, rasterState, scissorEnabled, outRasterizerState);
+    return mStateCache.getRasterizerState(context, this, rasterState, scissorEnabled,
+                                          outRasterizerState);
 }
 
-gl::Error Renderer11::getDepthStencilState(const gl::DepthStencilState &dsState,
-                                           const d3d11::DepthStencilState **outDSState)
+angle::Result Renderer11::getDepthStencilState(const gl::Context *context,
+                                               const gl::DepthStencilState &dsState,
+                                               const d3d11::DepthStencilState **outDSState)
 {
-    return mStateCache.getDepthStencilState(this, dsState, outDSState);
+    return mStateCache.getDepthStencilState(context, this, dsState, outDSState);
 }
 
-gl::Error Renderer11::getSamplerState(const gl::SamplerState &samplerState,
-                                      ID3D11SamplerState **outSamplerState)
+angle::Result Renderer11::getSamplerState(const gl::Context *context,
+                                          const gl::SamplerState &samplerState,
+                                          ID3D11SamplerState **outSamplerState)
 {
-    return mStateCache.getSamplerState(this, samplerState, outSamplerState);
+    return mStateCache.getSamplerState(context, this, samplerState, outSamplerState);
 }
 
 gl::Error Renderer11::clearRenderTarget(const gl::Context *context,
@@ -3823,28 +3830,16 @@ bool Renderer11::canSelectViewInVertexShader() const
            getRenderer11DeviceCaps().supportsVpRtIndexWriteFromVertexShader;
 }
 
-gl::Error Renderer11::mapResource(const gl::Context *context,
-                                  ID3D11Resource *resource,
-                                  UINT subResource,
-                                  D3D11_MAP mapType,
-                                  UINT mapFlags,
-                                  D3D11_MAPPED_SUBRESOURCE *mappedResource)
+angle::Result Renderer11::mapResource(const gl::Context *context,
+                                      ID3D11Resource *resource,
+                                      UINT subResource,
+                                      D3D11_MAP mapType,
+                                      UINT mapFlags,
+                                      D3D11_MAPPED_SUBRESOURCE *mappedResource)
 {
     HRESULT hr = mDeviceContext->Map(resource, subResource, mapType, mapFlags, mappedResource);
-    if (FAILED(hr))
-    {
-        if (d3d11::isDeviceLostError(hr))
-        {
-            this->notifyDeviceLost();
-        }
-
-        // Note: gl::OutOfMemory is used instead of gl::InternalError to avoid requiring
-        // additional context queries. This is needed as gl::InternalError corresponds to
-        // GL_INVALID_OPERATION, which does not uniquely identify a device reset error.
-        return gl::OutOfMemory() << "Failed to map D3D11 resource." << gl::FmtHR(hr);
-    }
-
-    return gl::NoError();
+    ANGLE_TRY_HR(GetImplAs<Context11>(context), hr, "Failed to map D3D11 resource.");
+    return angle::Result::Continue();
 }
 
 gl::Error Renderer11::markTransformFeedbackUsage(const gl::Context *context)

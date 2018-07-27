@@ -106,6 +106,16 @@ gl::Error ReadbackIndirectBuffer(const gl::Context *context,
     return gl::NoError();
 }
 
+GLenum DefaultGLErrorCode(HRESULT hr)
+{
+    switch (hr)
+    {
+        case E_OUTOFMEMORY:
+            return GL_OUT_OF_MEMORY;
+        default:
+            return GL_INVALID_OPERATION;
+    }
+}
 }  // anonymous namespace
 
 Context11::Context11(const gl::ContextState &state, Renderer11 *renderer)
@@ -485,8 +495,8 @@ gl::Error Context11::dispatchComputeIndirect(const gl::Context *context, GLintpt
     return gl::InternalError();
 }
 
-gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *context,
-                                                         gl::PrimitiveMode drawMode)
+angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *context,
+                                                             gl::PrimitiveMode drawMode)
 {
     const auto &glState    = context->getGLState();
     const auto *va11       = GetImplAs<VertexArray11>(glState.getVertexArray());
@@ -503,53 +513,50 @@ gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *cont
 
     if (!recompileVS && !recompileGS && !recompilePS)
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     // Load the compiler if necessary and recompile the programs.
-    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized(context));
+    ANGLE_TRY_HANDLE(context, mRenderer->ensureHLSLCompilerInitialized(context));
 
     gl::InfoLog infoLog;
 
     if (recompileVS)
     {
         ShaderExecutableD3D *vertexExe = nullptr;
-        ANGLE_TRY(
-            programD3D->getVertexExecutableForCachedInputLayout(context, &vertexExe, &infoLog));
+        ANGLE_TRY_HANDLE(context, programD3D->getVertexExecutableForCachedInputLayout(
+                                      context, &vertexExe, &infoLog));
         if (!programD3D->hasVertexExecutableForCachedInputLayout())
         {
             ASSERT(infoLog.getLength() > 0);
-            ERR() << "Dynamic recompilation error log: " << infoLog.str();
-            return gl::InternalError()
-                   << "Error compiling dynamic vertex executable:" << infoLog.str();
+            ERR() << "Error compiling dynamic vertex executable: " << infoLog.str();
+            ANGLE_TRY_HR(this, E_FAIL, "Error compiling dynamic vertex executable");
         }
     }
 
     if (recompileGS)
     {
         ShaderExecutableD3D *geometryExe = nullptr;
-        ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(context, drawMode, &geometryExe,
-                                                                    &infoLog));
+        ANGLE_TRY_HANDLE(context, programD3D->getGeometryExecutableForPrimitiveType(
+                                      context, drawMode, &geometryExe, &infoLog));
         if (!programD3D->hasGeometryExecutableForPrimitiveType(drawMode))
         {
             ASSERT(infoLog.getLength() > 0);
-            ERR() << "Dynamic recompilation error log: " << infoLog.str();
-            return gl::InternalError()
-                   << "Error compiling dynamic geometry executable:" << infoLog.str();
+            ERR() << "Error compiling dynamic geometry executable: " << infoLog.str();
+            ANGLE_TRY_HR(this, E_FAIL, "Error compiling dynamic geometry executable");
         }
     }
 
     if (recompilePS)
     {
         ShaderExecutableD3D *pixelExe = nullptr;
-        ANGLE_TRY(
-            programD3D->getPixelExecutableForCachedOutputLayout(context, &pixelExe, &infoLog));
+        ANGLE_TRY_HANDLE(context, programD3D->getPixelExecutableForCachedOutputLayout(
+                                      context, &pixelExe, &infoLog));
         if (!programD3D->hasPixelExecutableForCachedOutputLayout())
         {
             ASSERT(infoLog.getLength() > 0);
-            ERR() << "Dynamic recompilation error log: " << infoLog.str();
-            return gl::InternalError()
-                   << "Error compiling dynamic pixel executable:" << infoLog.str();
+            ERR() << "Error compiling dynamic pixel executable: " << infoLog.str();
+            ANGLE_TRY_HR(this, E_FAIL, "Error compiling dynamic pixel executable");
         }
     }
 
@@ -559,14 +566,14 @@ gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *cont
         mMemoryProgramCache->updateProgram(context, program);
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Context11::prepareForDrawCall(const gl::Context *context,
-                                        const gl::DrawCallParams &drawCallParams)
+angle::Result Context11::prepareForDrawCall(const gl::Context *context,
+                                            const gl::DrawCallParams &drawCallParams)
 {
     ANGLE_TRY(mRenderer->getStateManager()->updateState(context, drawCallParams));
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error Context11::memoryBarrier(const gl::Context *context, GLbitfield barriers)
@@ -596,5 +603,33 @@ gl::Error Context11::initializeMultisampleTextureToBlack(const gl::Context *cont
     ANGLE_TRY(textureD3D->getRenderTarget(context, index, &renderTarget));
     return mRenderer->clearRenderTarget(context, renderTarget, gl::ColorF(0.0f, 0.0f, 0.0f, 1.0f),
                                         1.0f, 0);
+}
+
+void Context11::handleError(HRESULT hr,
+                            const char *message,
+                            const char *file,
+                            const char *function,
+                            unsigned int line)
+{
+    ASSERT(FAILED(hr));
+
+    if (d3d11::isDeviceLostError(hr))
+    {
+        mRenderer->notifyDeviceLost();
+    }
+
+    GLenum glErrorCode = DefaultGLErrorCode(hr);
+
+    std::stringstream errorStream;
+    errorStream << "Internal D3D11 error: " << gl::FmtHR(hr) << ", in " << file << ", " << function
+                << ":" << line << ". " << message;
+
+    mErrors->handleError(gl::Error(glErrorCode, glErrorCode, errorStream.str()));
+}
+
+// TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2738
+void Context11::handleError(const gl::Error &error)
+{
+    mErrors->handleError(error);
 }
 }  // namespace rx

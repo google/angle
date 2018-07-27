@@ -54,25 +54,26 @@ class TextureStorage11 : public TextureStorage
     UINT getBindFlags() const;
     UINT getMiscFlags() const;
     const d3d11::Format &getFormatSet() const;
-    gl::Error getSRVLevels(const gl::Context *context,
-                           GLint baseLevel,
-                           GLint maxLevel,
-                           const d3d11::SharedSRV **outSRV);
-    gl::Error generateSwizzles(const gl::Context *context, const gl::SwizzleState &swizzleTarget);
+    angle::Result getSRVLevels(const gl::Context *context,
+                               GLint baseLevel,
+                               GLint maxLevel,
+                               const d3d11::SharedSRV **outSRV);
+    angle::Result generateSwizzles(const gl::Context *context,
+                                   const gl::SwizzleState &swizzleTarget);
     void markLevelDirty(int mipLevel);
     void markDirty();
 
-    gl::Error updateSubresourceLevel(const gl::Context *context,
-                                     const TextureHelper11 &texture,
-                                     unsigned int sourceSubresource,
-                                     const gl::ImageIndex &index,
-                                     const gl::Box &copyArea);
+    angle::Result updateSubresourceLevel(const gl::Context *context,
+                                         const TextureHelper11 &texture,
+                                         unsigned int sourceSubresource,
+                                         const gl::ImageIndex &index,
+                                         const gl::Box &copyArea);
 
-    gl::Error copySubresourceLevel(const gl::Context *context,
-                                   const TextureHelper11 &dstTexture,
-                                   unsigned int dstSubresource,
-                                   const gl::ImageIndex &index,
-                                   const gl::Box &region);
+    angle::Result copySubresourceLevel(const gl::Context *context,
+                                       const TextureHelper11 &dstTexture,
+                                       unsigned int dstSubresource,
+                                       const gl::ImageIndex &index,
+                                       const gl::Box &region);
 
     // TextureStorage virtual functions
     int getTopLevel() const override;
@@ -92,25 +93,25 @@ class TextureStorage11 : public TextureStorage
                       const gl::PixelUnpackState &unpack,
                       const uint8_t *pixelData) override;
 
-    virtual gl::Error getSRVForSampler(const gl::Context *context,
-                                       const gl::TextureState &textureState,
-                                       const d3d11::SharedSRV **outSRV);
-    gl::Error getSRVForImage(const gl::Context *context,
-                             const gl::ImageUnit &imageUnit,
-                             const d3d11::SharedSRV **outSRV);
-    gl::Error getUAVForImage(const gl::Context *context,
-                             const gl::ImageUnit &imageUnit,
-                             const d3d11::SharedUAV **outUAV);
+    virtual angle::Result getSRVForSampler(const gl::Context *context,
+                                           const gl::TextureState &textureState,
+                                           const d3d11::SharedSRV **outSRV);
+    angle::Result getSRVForImage(const gl::Context *context,
+                                 const gl::ImageUnit &imageUnit,
+                                 const d3d11::SharedSRV **outSRV);
+    angle::Result getUAVForImage(const gl::Context *context,
+                                 const gl::ImageUnit &imageUnit,
+                                 const d3d11::SharedUAV **outUAV);
     virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
-    virtual gl::Error getResource(const gl::Context *context,
-                                  const TextureHelper11 **outResource)                  = 0;
+    virtual angle::Result getResource(const gl::Context *context,
+                                      const TextureHelper11 **outResource)              = 0;
     virtual void associateImage(Image11 *image, const gl::ImageIndex &index)            = 0;
     virtual void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) = 0;
     virtual void verifyAssociatedImageValid(const gl::ImageIndex &index,
                                             Image11 *expectedImage)                     = 0;
-    virtual gl::Error releaseAssociatedImage(const gl::Context *context,
-                                             const gl::ImageIndex &index,
-                                             Image11 *incomingImage)                    = 0;
+    virtual angle::Result releaseAssociatedImage(const gl::Context *context,
+                                                 const gl::ImageIndex &index,
+                                                 Image11 *incomingImage)                = 0;
 
   protected:
     TextureStorage11(Renderer11 *renderer, UINT bindFlags, UINT miscFlags, GLenum internalFormat);
@@ -119,18 +120,18 @@ class TextureStorage11 : public TextureStorage
     int getLevelDepth(int mipLevel) const;
 
     // Some classes (e.g. TextureStorage11_2D) will override getMippedResource.
-    virtual gl::Error getMippedResource(const gl::Context *context,
-                                        const TextureHelper11 **outResource);
+    virtual angle::Result getMippedResource(const gl::Context *context,
+                                            const TextureHelper11 **outResource);
 
-    virtual gl::Error getSwizzleTexture(const gl::Context *context,
-                                        const TextureHelper11 **outTexture)          = 0;
-    virtual gl::Error getSwizzleRenderTarget(const gl::Context *context,
-                                             int mipLevel,
-                                             const d3d11::RenderTargetView **outRTV) = 0;
-    gl::Error getSRVLevel(const gl::Context *context,
-                          int mipLevel,
-                          bool blitSRV,
-                          const d3d11::SharedSRV **outSRV);
+    virtual angle::Result getSwizzleTexture(const gl::Context *context,
+                                            const TextureHelper11 **outTexture)          = 0;
+    virtual angle::Result getSwizzleRenderTarget(const gl::Context *context,
+                                                 int mipLevel,
+                                                 const d3d11::RenderTargetView **outRTV) = 0;
+    angle::Result getSRVLevel(const gl::Context *context,
+                              int mipLevel,
+                              bool blitSRV,
+                              const d3d11::SharedSRV **outSRV);
 
     // Get a version of a depth texture with only depth information, not stencil.
     enum DropStencil
@@ -138,27 +139,28 @@ class TextureStorage11 : public TextureStorage
         CREATED,
         ALREADY_EXISTS
     };
-    virtual gl::Error ensureDropStencilTexture(const gl::Context *context,
-                                               DropStencil *dropStencilOut);
-    gl::Error initDropStencilTexture(const gl::Context *context, const gl::ImageIndexIterator &it);
+    virtual angle::Result ensureDropStencilTexture(const gl::Context *context,
+                                                   DropStencil *dropStencilOut);
+    angle::Result initDropStencilTexture(const gl::Context *context,
+                                         const gl::ImageIndexIterator &it);
 
     // The baseLevel parameter should *not* have mTopLevel applied.
-    virtual gl::Error createSRVForSampler(const gl::Context *context,
-                                          int baseLevel,
-                                          int mipLevels,
-                                          DXGI_FORMAT format,
-                                          const TextureHelper11 &texture,
-                                          d3d11::SharedSRV *outSRV) = 0;
-    virtual gl::Error createSRVForImage(const gl::Context *context,
-                                        int level,
-                                        DXGI_FORMAT format,
-                                        const TextureHelper11 &texture,
-                                        d3d11::SharedSRV *outSRV)   = 0;
-    virtual gl::Error createUAVForImage(const gl::Context *context,
-                                        int level,
-                                        DXGI_FORMAT format,
-                                        const TextureHelper11 &texture,
-                                        d3d11::SharedUAV *outUAV)   = 0;
+    virtual angle::Result createSRVForSampler(const gl::Context *context,
+                                              int baseLevel,
+                                              int mipLevels,
+                                              DXGI_FORMAT format,
+                                              const TextureHelper11 &texture,
+                                              d3d11::SharedSRV *outSRV) = 0;
+    virtual angle::Result createSRVForImage(const gl::Context *context,
+                                            int level,
+                                            DXGI_FORMAT format,
+                                            const TextureHelper11 &texture,
+                                            d3d11::SharedSRV *outSRV)   = 0;
+    virtual angle::Result createUAVForImage(const gl::Context *context,
+                                            int level,
+                                            DXGI_FORMAT format,
+                                            const TextureHelper11 &texture,
+                                            d3d11::SharedUAV *outUAV)   = 0;
 
     void verifySwizzleExists(const gl::SwizzleState &swizzleState);
 
@@ -194,9 +196,9 @@ class TextureStorage11 : public TextureStorage
         bool dropStencil;
     };
 
-    gl::Error getCachedOrCreateSRVForSampler(const gl::Context *context,
-                                             const SamplerKey &key,
-                                             const d3d11::SharedSRV **outSRV);
+    angle::Result getCachedOrCreateSRVForSampler(const gl::Context *context,
+                                                 const SamplerKey &key,
+                                                 const d3d11::SharedSRV **outSRV);
 
     using SRVCacheForSampler = std::map<SamplerKey, d3d11::SharedSRV>;
     SRVCacheForSampler mSrvCacheForSampler;
@@ -213,12 +215,12 @@ class TextureStorage11 : public TextureStorage
         GLenum format;
     };
 
-    gl::Error getCachedOrCreateSRVForImage(const gl::Context *context,
-                                           const ImageKey &key,
-                                           const d3d11::SharedSRV **outSRV);
-    gl::Error getCachedOrCreateUAVForImage(const gl::Context *context,
-                                           const ImageKey &key,
-                                           const d3d11::SharedUAV **outUAV);
+    angle::Result getCachedOrCreateSRVForImage(const gl::Context *context,
+                                               const ImageKey &key,
+                                               const d3d11::SharedSRV **outSRV);
+    angle::Result getCachedOrCreateUAVForImage(const gl::Context *context,
+                                               const ImageKey &key,
+                                               const d3d11::SharedUAV **outUAV);
 
     using SRVCacheForImage = std::map<ImageKey, d3d11::SharedSRV>;
     SRVCacheForImage mSrvCacheForImage;
@@ -244,9 +246,10 @@ class TextureStorage11_2D : public TextureStorage11
 
     gl::Error onDestroy(const gl::Context *context) override;
 
-    gl::Error getResource(const gl::Context *context, const TextureHelper11 **outResource) override;
-    gl::Error getMippedResource(const gl::Context *context,
-                                const TextureHelper11 **outResource) override;
+    angle::Result getResource(const gl::Context *context,
+                              const TextureHelper11 **outResource) override;
+    angle::Result getMippedResource(const gl::Context *context,
+                                    const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::Context *context,
                               const gl::ImageIndex &index,
                               RenderTargetD3D **outRT) override;
@@ -256,42 +259,42 @@ class TextureStorage11_2D : public TextureStorage11
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
     void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    gl::Error releaseAssociatedImage(const gl::Context *context,
-                                     const gl::ImageIndex &index,
-                                     Image11 *incomingImage) override;
+    angle::Result releaseAssociatedImage(const gl::Context *context,
+                                         const gl::ImageIndex &index,
+                                         Image11 *incomingImage) override;
 
     gl::Error useLevelZeroWorkaroundTexture(const gl::Context *context,
                                             bool useLevelZeroTexture) override;
 
   protected:
-    gl::Error getSwizzleTexture(const gl::Context *context,
-                                const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(const gl::Context *context,
-                                     int mipLevel,
-                                     const d3d11::RenderTargetView **outRTV) override;
+    angle::Result getSwizzleTexture(const gl::Context *context,
+                                    const TextureHelper11 **outTexture) override;
+    angle::Result getSwizzleRenderTarget(const gl::Context *context,
+                                         int mipLevel,
+                                         const d3d11::RenderTargetView **outRTV) override;
 
-    gl::Error ensureDropStencilTexture(const gl::Context *context,
-                                       DropStencil *dropStencilOut) override;
+    angle::Result ensureDropStencilTexture(const gl::Context *context,
+                                           DropStencil *dropStencilOut) override;
 
-    gl::Error ensureTextureExists(const gl::Context *context, int mipLevels);
+    angle::Result ensureTextureExists(const gl::Context *context, int mipLevels);
 
   private:
-    gl::Error createSRVForSampler(const gl::Context *context,
-                                  int baseLevel,
-                                  int mipLevels,
-                                  DXGI_FORMAT format,
-                                  const TextureHelper11 &texture,
-                                  d3d11::SharedSRV *outSRV) override;
-    gl::Error createSRVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedSRV *outSRV) override;
-    gl::Error createUAVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedUAV *outUAV) override;
+    angle::Result createSRVForSampler(const gl::Context *context,
+                                      int baseLevel,
+                                      int mipLevels,
+                                      DXGI_FORMAT format,
+                                      const TextureHelper11 &texture,
+                                      d3d11::SharedSRV *outSRV) override;
+    angle::Result createSRVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedSRV *outSRV) override;
+    angle::Result createUAVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedUAV *outUAV) override;
 
     TextureHelper11 mTexture;
     gl::TexLevelArray<std::unique_ptr<RenderTarget11>> mRenderTarget;
@@ -329,9 +332,10 @@ class TextureStorage11_External : public TextureStorage11
 
     gl::Error onDestroy(const gl::Context *context) override;
 
-    gl::Error getResource(const gl::Context *context, const TextureHelper11 **outResource) override;
-    gl::Error getMippedResource(const gl::Context *context,
-                                const TextureHelper11 **outResource) override;
+    angle::Result getResource(const gl::Context *context,
+                              const TextureHelper11 **outResource) override;
+    angle::Result getMippedResource(const gl::Context *context,
+                                    const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::Context *context,
                               const gl::ImageIndex &index,
                               RenderTargetD3D **outRT) override;
@@ -341,34 +345,34 @@ class TextureStorage11_External : public TextureStorage11
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
     void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    gl::Error releaseAssociatedImage(const gl::Context *context,
-                                     const gl::ImageIndex &index,
-                                     Image11 *incomingImage) override;
+    angle::Result releaseAssociatedImage(const gl::Context *context,
+                                         const gl::ImageIndex &index,
+                                         Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(const gl::Context *context,
-                                const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(const gl::Context *context,
-                                     int mipLevel,
-                                     const d3d11::RenderTargetView **outRTV) override;
+    angle::Result getSwizzleTexture(const gl::Context *context,
+                                    const TextureHelper11 **outTexture) override;
+    angle::Result getSwizzleRenderTarget(const gl::Context *context,
+                                         int mipLevel,
+                                         const d3d11::RenderTargetView **outRTV) override;
 
   private:
-    gl::Error createSRVForSampler(const gl::Context *context,
-                                  int baseLevel,
-                                  int mipLevels,
-                                  DXGI_FORMAT format,
-                                  const TextureHelper11 &texture,
-                                  d3d11::SharedSRV *outSRV) override;
-    gl::Error createSRVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedSRV *outSRV) override;
-    gl::Error createUAVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedUAV *outUAV) override;
+    angle::Result createSRVForSampler(const gl::Context *context,
+                                      int baseLevel,
+                                      int mipLevels,
+                                      DXGI_FORMAT format,
+                                      const TextureHelper11 &texture,
+                                      d3d11::SharedSRV *outSRV) override;
+    angle::Result createSRVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedSRV *outSRV) override;
+    angle::Result createUAVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedUAV *outUAV) override;
 
     TextureHelper11 mTexture;
     int mSubresourceIndex;
@@ -385,12 +389,13 @@ class TextureStorage11_EGLImage final : public TextureStorage11
                               RenderTarget11 *renderTarget11);
     ~TextureStorage11_EGLImage() override;
 
-    gl::Error getResource(const gl::Context *context, const TextureHelper11 **outResource) override;
-    gl::Error getSRVForSampler(const gl::Context *context,
-                               const gl::TextureState &textureState,
-                               const d3d11::SharedSRV **outSRV) override;
-    gl::Error getMippedResource(const gl::Context *context,
-                                const TextureHelper11 **outResource) override;
+    angle::Result getResource(const gl::Context *context,
+                              const TextureHelper11 **outResource) override;
+    angle::Result getSRVForSampler(const gl::Context *context,
+                                   const gl::TextureState &textureState,
+                                   const d3d11::SharedSRV **outSRV) override;
+    angle::Result getMippedResource(const gl::Context *context,
+                                    const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::Context *context,
                               const gl::ImageIndex &index,
                               RenderTargetD3D **outRT) override;
@@ -400,43 +405,43 @@ class TextureStorage11_EGLImage final : public TextureStorage11
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
     void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    gl::Error releaseAssociatedImage(const gl::Context *context,
-                                     const gl::ImageIndex &index,
-                                     Image11 *incomingImage) override;
+    angle::Result releaseAssociatedImage(const gl::Context *context,
+                                         const gl::ImageIndex &index,
+                                         Image11 *incomingImage) override;
 
     gl::Error useLevelZeroWorkaroundTexture(const gl::Context *context,
                                             bool useLevelZeroTexture) override;
 
   protected:
-    gl::Error getSwizzleTexture(const gl::Context *context,
-                                const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(const gl::Context *context,
-                                     int mipLevel,
-                                     const d3d11::RenderTargetView **outRTV) override;
+    angle::Result getSwizzleTexture(const gl::Context *context,
+                                    const TextureHelper11 **outTexture) override;
+    angle::Result getSwizzleRenderTarget(const gl::Context *context,
+                                         int mipLevel,
+                                         const d3d11::RenderTargetView **outRTV) override;
 
   private:
     // Check if the EGL image's render target has been updated due to orphaning and delete
     // any SRVs and other resources based on the image's old render target.
-    gl::Error checkForUpdatedRenderTarget(const gl::Context *context);
+    angle::Result checkForUpdatedRenderTarget(const gl::Context *context);
 
-    gl::Error createSRVForSampler(const gl::Context *context,
-                                  int baseLevel,
-                                  int mipLevels,
-                                  DXGI_FORMAT format,
-                                  const TextureHelper11 &texture,
-                                  d3d11::SharedSRV *outSRV) override;
-    gl::Error createSRVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedSRV *outSRV) override;
-    gl::Error createUAVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedUAV *outUAV) override;
+    angle::Result createSRVForSampler(const gl::Context *context,
+                                      int baseLevel,
+                                      int mipLevels,
+                                      DXGI_FORMAT format,
+                                      const TextureHelper11 &texture,
+                                      d3d11::SharedSRV *outSRV) override;
+    angle::Result createSRVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedSRV *outSRV) override;
+    angle::Result createUAVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedUAV *outUAV) override;
 
-    gl::Error getImageRenderTarget(const gl::Context *context, RenderTarget11 **outRT) const;
+    angle::Result getImageRenderTarget(const gl::Context *context, RenderTarget11 **outRT) const;
 
     EGLImageD3D *mImage;
     uintptr_t mCurrentRenderTarget;
@@ -461,9 +466,10 @@ class TextureStorage11_Cube : public TextureStorage11
 
     UINT getSubresourceIndex(const gl::ImageIndex &index) const override;
 
-    gl::Error getResource(const gl::Context *context, const TextureHelper11 **outResource) override;
-    gl::Error getMippedResource(const gl::Context *context,
-                                const TextureHelper11 **outResource) override;
+    angle::Result getResource(const gl::Context *context,
+                              const TextureHelper11 **outResource) override;
+    angle::Result getMippedResource(const gl::Context *context,
+                                    const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::Context *context,
                               const gl::ImageIndex &index,
                               RenderTargetD3D **outRT) override;
@@ -473,47 +479,47 @@ class TextureStorage11_Cube : public TextureStorage11
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
     void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    gl::Error releaseAssociatedImage(const gl::Context *context,
-                                     const gl::ImageIndex &index,
-                                     Image11 *incomingImage) override;
+    angle::Result releaseAssociatedImage(const gl::Context *context,
+                                         const gl::ImageIndex &index,
+                                         Image11 *incomingImage) override;
 
     gl::Error useLevelZeroWorkaroundTexture(const gl::Context *context,
                                             bool useLevelZeroTexture) override;
 
   protected:
-    gl::Error getSwizzleTexture(const gl::Context *context,
-                                const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(const gl::Context *context,
-                                     int mipLevel,
-                                     const d3d11::RenderTargetView **outRTV) override;
+    angle::Result getSwizzleTexture(const gl::Context *context,
+                                    const TextureHelper11 **outTexture) override;
+    angle::Result getSwizzleRenderTarget(const gl::Context *context,
+                                         int mipLevel,
+                                         const d3d11::RenderTargetView **outRTV) override;
 
-    gl::Error ensureDropStencilTexture(const gl::Context *context,
-                                       DropStencil *dropStencilOut) override;
+    angle::Result ensureDropStencilTexture(const gl::Context *context,
+                                           DropStencil *dropStencilOut) override;
 
-    gl::Error ensureTextureExists(const gl::Context *context, int mipLevels);
+    angle::Result ensureTextureExists(const gl::Context *context, int mipLevels);
 
   private:
-    gl::Error createSRVForSampler(const gl::Context *context,
-                                  int baseLevel,
-                                  int mipLevels,
-                                  DXGI_FORMAT format,
-                                  const TextureHelper11 &texture,
-                                  d3d11::SharedSRV *outSRV) override;
-    gl::Error createSRVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedSRV *outSRV) override;
-    gl::Error createUAVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedUAV *outUAV) override;
-    gl::Error createRenderTargetSRV(const gl::Context *context,
+    angle::Result createSRVForSampler(const gl::Context *context,
+                                      int baseLevel,
+                                      int mipLevels,
+                                      DXGI_FORMAT format,
+                                      const TextureHelper11 &texture,
+                                      d3d11::SharedSRV *outSRV) override;
+    angle::Result createSRVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
                                     const TextureHelper11 &texture,
-                                    const gl::ImageIndex &index,
-                                    DXGI_FORMAT resourceFormat,
-                                    d3d11::SharedSRV *srv) const;
+                                    d3d11::SharedSRV *outSRV) override;
+    angle::Result createUAVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedUAV *outUAV) override;
+    angle::Result createRenderTargetSRV(const gl::Context *context,
+                                        const TextureHelper11 &texture,
+                                        const gl::ImageIndex &index,
+                                        DXGI_FORMAT resourceFormat,
+                                        d3d11::SharedSRV *srv) const;
 
     TextureHelper11 mTexture;
     CubeFaceArray<gl::TexLevelArray<std::unique_ptr<RenderTarget11>>> mRenderTarget;
@@ -544,7 +550,8 @@ class TextureStorage11_3D : public TextureStorage11
 
     gl::Error onDestroy(const gl::Context *context) override;
 
-    gl::Error getResource(const gl::Context *context, const TextureHelper11 **outResource) override;
+    angle::Result getResource(const gl::Context *context,
+                              const TextureHelper11 **outResource) override;
 
     // Handles both layer and non-layer RTs
     gl::Error getRenderTarget(const gl::Context *context,
@@ -554,34 +561,34 @@ class TextureStorage11_3D : public TextureStorage11
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
     void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    gl::Error releaseAssociatedImage(const gl::Context *context,
-                                     const gl::ImageIndex &index,
-                                     Image11 *incomingImage) override;
+    angle::Result releaseAssociatedImage(const gl::Context *context,
+                                         const gl::ImageIndex &index,
+                                         Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(const gl::Context *context,
-                                const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(const gl::Context *context,
-                                     int mipLevel,
-                                     const d3d11::RenderTargetView **outRTV) override;
+    angle::Result getSwizzleTexture(const gl::Context *context,
+                                    const TextureHelper11 **outTexture) override;
+    angle::Result getSwizzleRenderTarget(const gl::Context *context,
+                                         int mipLevel,
+                                         const d3d11::RenderTargetView **outRTV) override;
 
   private:
-    gl::Error createSRVForSampler(const gl::Context *context,
-                                  int baseLevel,
-                                  int mipLevels,
-                                  DXGI_FORMAT format,
-                                  const TextureHelper11 &texture,
-                                  d3d11::SharedSRV *outSRV) override;
-    gl::Error createSRVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedSRV *outSRV) override;
-    gl::Error createUAVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedUAV *outUAV) override;
+    angle::Result createSRVForSampler(const gl::Context *context,
+                                      int baseLevel,
+                                      int mipLevels,
+                                      DXGI_FORMAT format,
+                                      const TextureHelper11 &texture,
+                                      d3d11::SharedSRV *outSRV) override;
+    angle::Result createSRVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedSRV *outSRV) override;
+    angle::Result createUAVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedUAV *outUAV) override;
 
     typedef std::pair<int, int> LevelLayerKey;
     std::map<LevelLayerKey, std::unique_ptr<RenderTarget11>> mLevelLayerRenderTargets;
@@ -609,7 +616,8 @@ class TextureStorage11_2DArray : public TextureStorage11
 
     gl::Error onDestroy(const gl::Context *context) override;
 
-    gl::Error getResource(const gl::Context *context, const TextureHelper11 **outResource) override;
+    angle::Result getResource(const gl::Context *context,
+                              const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::Context *context,
                               const gl::ImageIndex &index,
                               RenderTargetD3D **outRT) override;
@@ -617,19 +625,19 @@ class TextureStorage11_2DArray : public TextureStorage11
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
     void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    gl::Error releaseAssociatedImage(const gl::Context *context,
-                                     const gl::ImageIndex &index,
-                                     Image11 *incomingImage) override;
+    angle::Result releaseAssociatedImage(const gl::Context *context,
+                                         const gl::ImageIndex &index,
+                                         Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(const gl::Context *context,
-                                const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(const gl::Context *context,
-                                     int mipLevel,
-                                     const d3d11::RenderTargetView **outRTV) override;
+    angle::Result getSwizzleTexture(const gl::Context *context,
+                                    const TextureHelper11 **outTexture) override;
+    angle::Result getSwizzleRenderTarget(const gl::Context *context,
+                                         int mipLevel,
+                                         const d3d11::RenderTargetView **outRTV) override;
 
-    gl::Error ensureDropStencilTexture(const gl::Context *context,
-                                       DropStencil *dropStencilOut) override;
+    angle::Result ensureDropStencilTexture(const gl::Context *context,
+                                           DropStencil *dropStencilOut) override;
 
   private:
     struct LevelLayerRangeKey
@@ -656,27 +664,27 @@ class TextureStorage11_2DArray : public TextureStorage11
     };
 
   private:
-    gl::Error createSRVForSampler(const gl::Context *context,
-                                  int baseLevel,
-                                  int mipLevels,
-                                  DXGI_FORMAT format,
-                                  const TextureHelper11 &texture,
-                                  d3d11::SharedSRV *outSRV) override;
-    gl::Error createSRVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedSRV *outSRV) override;
-    gl::Error createUAVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedUAV *outUAV) override;
-    gl::Error createRenderTargetSRV(const gl::Context *context,
+    angle::Result createSRVForSampler(const gl::Context *context,
+                                      int baseLevel,
+                                      int mipLevels,
+                                      DXGI_FORMAT format,
+                                      const TextureHelper11 &texture,
+                                      d3d11::SharedSRV *outSRV) override;
+    angle::Result createSRVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
                                     const TextureHelper11 &texture,
-                                    const gl::ImageIndex &index,
-                                    DXGI_FORMAT resourceFormat,
-                                    d3d11::SharedSRV *srv) const;
+                                    d3d11::SharedSRV *outSRV) override;
+    angle::Result createUAVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedUAV *outUAV) override;
+    angle::Result createRenderTargetSRV(const gl::Context *context,
+                                        const TextureHelper11 &texture,
+                                        const gl::ImageIndex &index,
+                                        DXGI_FORMAT resourceFormat,
+                                        d3d11::SharedSRV *srv) const;
 
     std::map<LevelLayerRangeKey, std::unique_ptr<RenderTarget11>> mRenderTargets;
 
@@ -703,7 +711,8 @@ class TextureStorage11_2DMultisample : public TextureStorage11
 
     gl::Error onDestroy(const gl::Context *context) override;
 
-    gl::Error getResource(const gl::Context *context, const TextureHelper11 **outResource) override;
+    angle::Result getResource(const gl::Context *context,
+                              const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::Context *context,
                               const gl::ImageIndex &index,
                               RenderTargetD3D **outRT) override;
@@ -713,39 +722,39 @@ class TextureStorage11_2DMultisample : public TextureStorage11
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
     void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    gl::Error releaseAssociatedImage(const gl::Context *context,
-                                     const gl::ImageIndex &index,
-                                     Image11 *incomingImage) override;
+    angle::Result releaseAssociatedImage(const gl::Context *context,
+                                         const gl::ImageIndex &index,
+                                         Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(const gl::Context *context,
-                                const TextureHelper11 **outTexture) override;
-    gl::Error getSwizzleRenderTarget(const gl::Context *context,
-                                     int mipLevel,
-                                     const d3d11::RenderTargetView **outRTV) override;
+    angle::Result getSwizzleTexture(const gl::Context *context,
+                                    const TextureHelper11 **outTexture) override;
+    angle::Result getSwizzleRenderTarget(const gl::Context *context,
+                                         int mipLevel,
+                                         const d3d11::RenderTargetView **outRTV) override;
 
-    gl::Error ensureDropStencilTexture(const gl::Context *context,
-                                       DropStencil *dropStencilOut) override;
+    angle::Result ensureDropStencilTexture(const gl::Context *context,
+                                           DropStencil *dropStencilOut) override;
 
-    gl::Error ensureTextureExists(const gl::Context *context, int mipLevels);
+    angle::Result ensureTextureExists(const gl::Context *context, int mipLevels);
 
   private:
-    gl::Error createSRVForSampler(const gl::Context *context,
-                                  int baseLevel,
-                                  int mipLevels,
-                                  DXGI_FORMAT format,
-                                  const TextureHelper11 &texture,
-                                  d3d11::SharedSRV *outSRV) override;
-    gl::Error createSRVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedSRV *outSRV) override;
-    gl::Error createUAVForImage(const gl::Context *context,
-                                int level,
-                                DXGI_FORMAT format,
-                                const TextureHelper11 &texture,
-                                d3d11::SharedUAV *outUAV) override;
+    angle::Result createSRVForSampler(const gl::Context *context,
+                                      int baseLevel,
+                                      int mipLevels,
+                                      DXGI_FORMAT format,
+                                      const TextureHelper11 &texture,
+                                      d3d11::SharedSRV *outSRV) override;
+    angle::Result createSRVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedSRV *outSRV) override;
+    angle::Result createUAVForImage(const gl::Context *context,
+                                    int level,
+                                    DXGI_FORMAT format,
+                                    const TextureHelper11 &texture,
+                                    d3d11::SharedUAV *outUAV) override;
 
     TextureHelper11 mTexture;
     std::unique_ptr<RenderTarget11> mRenderTarget;

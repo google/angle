@@ -11,7 +11,9 @@
 #include <float.h>
 
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
@@ -621,11 +623,11 @@ Blit11::~Blit11()
 {
 }
 
-gl::Error Blit11::initResources(const gl::Context *context)
+angle::Result Blit11::initResources(const gl::Context *context)
 {
     if (mResourcesInitialized)
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     TRACE_EVENT0("gpu.angle", "Blit11::initResources");
@@ -641,7 +643,7 @@ gl::Error Blit11::initResources(const gl::Context *context)
     vbDesc.MiscFlags           = 0;
     vbDesc.StructureByteStride = 0;
 
-    ANGLE_TRY(mRenderer->allocateResource(vbDesc, &mVertexBuffer));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(vbDesc, &mVertexBuffer));
     mVertexBuffer.setDebugName("Blit11 vertex buffer");
 
     D3D11_SAMPLER_DESC pointSamplerDesc;
@@ -659,7 +661,7 @@ gl::Error Blit11::initResources(const gl::Context *context)
     pointSamplerDesc.MinLOD         = 0.0f;
     pointSamplerDesc.MaxLOD         = FLT_MAX;
 
-    ANGLE_TRY(mRenderer->allocateResource(pointSamplerDesc, &mPointSampler));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(pointSamplerDesc, &mPointSampler));
     mPointSampler.setDebugName("Blit11 point sampler");
 
     D3D11_SAMPLER_DESC linearSamplerDesc;
@@ -677,7 +679,7 @@ gl::Error Blit11::initResources(const gl::Context *context)
     linearSamplerDesc.MinLOD         = 0.0f;
     linearSamplerDesc.MaxLOD         = FLT_MAX;
 
-    ANGLE_TRY(mRenderer->allocateResource(linearSamplerDesc, &mLinearSampler));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(linearSamplerDesc, &mLinearSampler));
     mLinearSampler.setDebugName("Blit11 linear sampler");
 
     // Use a rasterizer state that will not cull so that inverted quads will not be culled
@@ -693,11 +695,13 @@ gl::Error Blit11::initResources(const gl::Context *context)
     rasterDesc.AntialiasedLineEnable = FALSE;
 
     rasterDesc.ScissorEnable = TRUE;
-    ANGLE_TRY(mRenderer->allocateResource(rasterDesc, &mScissorEnabledRasterizerState));
+    ANGLE_TRY_HANDLE(context,
+                     mRenderer->allocateResource(rasterDesc, &mScissorEnabledRasterizerState));
     mScissorEnabledRasterizerState.setDebugName("Blit11 scissoring rasterizer state");
 
     rasterDesc.ScissorEnable = FALSE;
-    ANGLE_TRY(mRenderer->allocateResource(rasterDesc, &mScissorDisabledRasterizerState));
+    ANGLE_TRY_HANDLE(context,
+                     mRenderer->allocateResource(rasterDesc, &mScissorDisabledRasterizerState));
     mScissorDisabledRasterizerState.setDebugName("Blit11 no scissoring rasterizer state");
 
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -716,7 +720,7 @@ gl::Error Blit11::initResources(const gl::Context *context)
     depthStencilDesc.BackFace.StencilPassOp       = D3D11_STENCIL_OP_KEEP;
     depthStencilDesc.BackFace.StencilFunc         = D3D11_COMPARISON_ALWAYS;
 
-    ANGLE_TRY(mRenderer->allocateResource(depthStencilDesc, &mDepthStencilState));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(depthStencilDesc, &mDepthStencilState));
     mDepthStencilState.setDebugName("Blit11 depth stencil state");
 
     D3D11_BUFFER_DESC swizzleBufferDesc;
@@ -727,12 +731,12 @@ gl::Error Blit11::initResources(const gl::Context *context)
     swizzleBufferDesc.MiscFlags           = 0;
     swizzleBufferDesc.StructureByteStride = 0;
 
-    ANGLE_TRY(mRenderer->allocateResource(swizzleBufferDesc, &mSwizzleCB));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(swizzleBufferDesc, &mSwizzleCB));
     mSwizzleCB.setDebugName("Blit11 swizzle constant buffer");
 
     mResourcesInitialized = true;
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 // static
@@ -1033,14 +1037,14 @@ Blit11::SwizzleShaderType Blit11::GetSwizzleShaderType(GLenum type,
     }
 }
 
-gl::Error Blit11::getShaderSupport(const gl::Context *context,
-                                   const Shader &shader,
-                                   Blit11::ShaderSupport *supportOut)
+angle::Result Blit11::getShaderSupport(const gl::Context *context,
+                                       const Shader &shader,
+                                       Blit11::ShaderSupport *supportOut)
 {
     if (shader.dimension == SHADER_2D)
     {
-        ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
-        ANGLE_TRY(mQuad2DVS.resolve(mRenderer));
+        ANGLE_TRY_HANDLE(context, mQuad2DIL.resolve(mRenderer));
+        ANGLE_TRY_HANDLE(context, mQuad2DVS.resolve(mRenderer));
         supportOut->inputLayout         = &mQuad2DIL.getObj();
         supportOut->vertexShader        = &mQuad2DVS.getObj();
         supportOut->geometryShader      = nullptr;
@@ -1049,23 +1053,23 @@ gl::Error Blit11::getShaderSupport(const gl::Context *context,
     else
     {
         ASSERT(shader.dimension == SHADER_3D);
-        ANGLE_TRY(mQuad3DIL.resolve(mRenderer));
-        ANGLE_TRY(mQuad3DVS.resolve(mRenderer));
-        ANGLE_TRY(mQuad3DGS.resolve(mRenderer));
+        ANGLE_TRY_HANDLE(context, mQuad3DIL.resolve(mRenderer));
+        ANGLE_TRY_HANDLE(context, mQuad3DVS.resolve(mRenderer));
+        ANGLE_TRY_HANDLE(context, mQuad3DGS.resolve(mRenderer));
         supportOut->inputLayout         = &mQuad2DIL.getObj();
         supportOut->vertexShader        = &mQuad3DVS.getObj();
         supportOut->geometryShader      = &mQuad3DGS.getObj();
         supportOut->vertexWriteFunction = Write3DVertices;
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::swizzleTexture(const gl::Context *context,
-                                 const d3d11::SharedSRV &source,
-                                 const d3d11::RenderTargetView &dest,
-                                 const gl::Extents &size,
-                                 const gl::SwizzleState &swizzleTarget)
+angle::Result Blit11::swizzleTexture(const gl::Context *context,
+                                     const d3d11::SharedSRV &source,
+                                     const d3d11::RenderTargetView &dest,
+                                     const gl::Extents &size,
+                                     const gl::SwizzleState &swizzleTarget)
 {
     ANGLE_TRY(initResources(context));
 
@@ -1176,24 +1180,24 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::copyTexture(const gl::Context *context,
-                              const d3d11::SharedSRV &source,
-                              const gl::Box &sourceArea,
-                              const gl::Extents &sourceSize,
-                              GLenum sourceFormat,
-                              const d3d11::RenderTargetView &dest,
-                              const gl::Box &destArea,
-                              const gl::Extents &destSize,
-                              const gl::Rectangle *scissor,
-                              GLenum destFormat,
-                              GLenum destTypeForDownsampling,
-                              GLenum filter,
-                              bool maskOffAlpha,
-                              bool unpackPremultiplyAlpha,
-                              bool unpackUnmultiplyAlpha)
+angle::Result Blit11::copyTexture(const gl::Context *context,
+                                  const d3d11::SharedSRV &source,
+                                  const gl::Box &sourceArea,
+                                  const gl::Extents &sourceSize,
+                                  GLenum sourceFormat,
+                                  const d3d11::RenderTargetView &dest,
+                                  const gl::Box &destArea,
+                                  const gl::Extents &destSize,
+                                  const gl::Rectangle *scissor,
+                                  GLenum destFormat,
+                                  GLenum destTypeForDownsampling,
+                                  GLenum filter,
+                                  bool maskOffAlpha,
+                                  bool unpackPremultiplyAlpha,
+                                  bool unpackUnmultiplyAlpha)
 {
     ANGLE_TRY(initResources(context));
 
@@ -1242,7 +1246,7 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     // Apply state
     if (maskOffAlpha)
     {
-        ANGLE_TRY(mAlphaMaskBlendState.resolve(mRenderer));
+        ANGLE_TRY_HANDLE(context, mAlphaMaskBlendState.resolve(mRenderer));
         stateManager->setSimpleBlendState(&mAlphaMaskBlendState.getObj());
     }
     else
@@ -1286,38 +1290,39 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
 
         default:
             UNREACHABLE();
-            return gl::InternalError() << "Internal error, unknown blit filter mode.";
+            ANGLE_TRY_HR(GetImplAs<Context11>(context), E_FAIL,
+                         "Internal error, unknown blit filter mode.");
     }
 
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::copyStencil(const gl::Context *context,
-                              const TextureHelper11 &source,
-                              unsigned int sourceSubresource,
-                              const gl::Box &sourceArea,
-                              const gl::Extents &sourceSize,
-                              const TextureHelper11 &dest,
-                              unsigned int destSubresource,
-                              const gl::Box &destArea,
-                              const gl::Extents &destSize,
-                              const gl::Rectangle *scissor)
+angle::Result Blit11::copyStencil(const gl::Context *context,
+                                  const TextureHelper11 &source,
+                                  unsigned int sourceSubresource,
+                                  const gl::Box &sourceArea,
+                                  const gl::Extents &sourceSize,
+                                  const TextureHelper11 &dest,
+                                  unsigned int destSubresource,
+                                  const gl::Box &destArea,
+                                  const gl::Extents &destSize,
+                                  const gl::Rectangle *scissor)
 {
     return copyDepthStencilImpl(context, source, sourceSubresource, sourceArea, sourceSize, dest,
                                 destSubresource, destArea, destSize, scissor, true);
 }
 
-gl::Error Blit11::copyDepth(const gl::Context *context,
-                            const d3d11::SharedSRV &source,
-                            const gl::Box &sourceArea,
-                            const gl::Extents &sourceSize,
-                            const d3d11::DepthStencilView &dest,
-                            const gl::Box &destArea,
-                            const gl::Extents &destSize,
-                            const gl::Rectangle *scissor)
+angle::Result Blit11::copyDepth(const gl::Context *context,
+                                const d3d11::SharedSRV &source,
+                                const gl::Box &sourceArea,
+                                const gl::Extents &sourceSize,
+                                const d3d11::DepthStencilView &dest,
+                                const gl::Box &destArea,
+                                const gl::Extents &destSize,
+                                const gl::Rectangle *scissor)
 {
     ANGLE_TRY(initResources(context));
 
@@ -1356,9 +1361,9 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
         stateManager->setRasterizerState(&mScissorDisabledRasterizerState);
     }
 
-    ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
-    ANGLE_TRY(mQuad2DVS.resolve(mRenderer));
-    ANGLE_TRY(mDepthPS.resolve(mRenderer));
+    ANGLE_TRY_HANDLE(context, mQuad2DIL.resolve(mRenderer));
+    ANGLE_TRY_HANDLE(context, mQuad2DVS.resolve(mRenderer));
+    ANGLE_TRY_HANDLE(context, mDepthPS.resolve(mRenderer));
 
     // Apply shaders
     stateManager->setInputLayout(&mQuad2DIL.getObj());
@@ -1378,25 +1383,10 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::copyDepthStencil(const gl::Context *context,
-                                   const TextureHelper11 &source,
-                                   unsigned int sourceSubresource,
-                                   const gl::Box &sourceArea,
-                                   const gl::Extents &sourceSize,
-                                   const TextureHelper11 &dest,
-                                   unsigned int destSubresource,
-                                   const gl::Box &destArea,
-                                   const gl::Extents &destSize,
-                                   const gl::Rectangle *scissor)
-{
-    return copyDepthStencilImpl(context, source, sourceSubresource, sourceArea, sourceSize, dest,
-                                destSubresource, destArea, destSize, scissor, false);
-}
-
-gl::Error Blit11::copyDepthStencilImpl(const gl::Context *context,
+angle::Result Blit11::copyDepthStencil(const gl::Context *context,
                                        const TextureHelper11 &source,
                                        unsigned int sourceSubresource,
                                        const gl::Box &sourceArea,
@@ -1405,8 +1395,23 @@ gl::Error Blit11::copyDepthStencilImpl(const gl::Context *context,
                                        unsigned int destSubresource,
                                        const gl::Box &destArea,
                                        const gl::Extents &destSize,
-                                       const gl::Rectangle *scissor,
-                                       bool stencilOnly)
+                                       const gl::Rectangle *scissor)
+{
+    return copyDepthStencilImpl(context, source, sourceSubresource, sourceArea, sourceSize, dest,
+                                destSubresource, destArea, destSize, scissor, false);
+}
+
+angle::Result Blit11::copyDepthStencilImpl(const gl::Context *context,
+                                           const TextureHelper11 &source,
+                                           unsigned int sourceSubresource,
+                                           const gl::Box &sourceArea,
+                                           const gl::Extents &sourceSize,
+                                           const TextureHelper11 &dest,
+                                           unsigned int destSubresource,
+                                           const gl::Box &destArea,
+                                           const gl::Extents &destSize,
+                                           const gl::Rectangle *scissor,
+                                           bool stencilOnly)
 {
     auto srcDXGIFormat         = source.getFormat();
     const auto &srcSizeInfo    = d3d11::GetDXGIFormatSizeInfo(srcDXGIFormat);
@@ -1457,12 +1462,77 @@ gl::Error Blit11::copyDepthStencilImpl(const gl::Context *context,
                           copySize, srcPixelSize, destPixelSize, StretchedBlitNearest);
 }
 
-gl::Error Blit11::copyAndConvertImpl(const gl::Context *context,
+angle::Result Blit11::copyAndConvertImpl(const gl::Context *context,
+                                         const TextureHelper11 &source,
+                                         unsigned int sourceSubresource,
+                                         const gl::Box &sourceArea,
+                                         const gl::Extents &sourceSize,
+                                         const TextureHelper11 &destStaging,
+                                         const gl::Box &destArea,
+                                         const gl::Extents &destSize,
+                                         const gl::Rectangle *scissor,
+                                         size_t readOffset,
+                                         size_t writeOffset,
+                                         size_t copySize,
+                                         size_t srcPixelStride,
+                                         size_t destPixelStride,
+                                         BlitConvertFunction *convertFunction)
+{
+    ANGLE_TRY(initResources(context));
+
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    TextureHelper11 sourceStaging;
+    ANGLE_TRY(mRenderer->createStagingTexture(context, ResourceType::Texture2D,
+                                              source.getFormatSet(), sourceSize,
+                                              StagingAccess::READ, &sourceStaging));
+
+    deviceContext->CopySubresourceRegion(sourceStaging.get(), 0, 0, 0, 0, source.get(),
+                                         sourceSubresource, nullptr);
+
+    D3D11_MAPPED_SUBRESOURCE sourceMapping;
+    ANGLE_TRY(
+        mRenderer->mapResource(context, sourceStaging.get(), 0, D3D11_MAP_READ, 0, &sourceMapping));
+
+    D3D11_MAPPED_SUBRESOURCE destMapping;
+    angle::Result error =
+        mRenderer->mapResource(context, destStaging.get(), 0, D3D11_MAP_WRITE, 0, &destMapping);
+    if (error == angle::Result::Stop())
+    {
+        deviceContext->Unmap(sourceStaging.get(), 0);
+        return error;
+    }
+
+    // Clip dest area to the destination size
+    gl::Rectangle clipRect = gl::Rectangle(0, 0, destSize.width, destSize.height);
+
+    // Clip dest area to the scissor
+    if (scissor)
+    {
+        if (!gl::ClipRectangle(clipRect, *scissor, &clipRect))
+        {
+            return angle::Result::Continue();
+        }
+    }
+
+    convertFunction(sourceArea, destArea, clipRect, sourceSize, sourceMapping.RowPitch,
+                    destMapping.RowPitch, readOffset, writeOffset, copySize, srcPixelStride,
+                    destPixelStride, static_cast<const uint8_t *>(sourceMapping.pData),
+                    static_cast<uint8_t *>(destMapping.pData));
+
+    deviceContext->Unmap(sourceStaging.get(), 0);
+    deviceContext->Unmap(destStaging.get(), 0);
+
+    return angle::Result::Continue();
+}
+
+angle::Result Blit11::copyAndConvert(const gl::Context *context,
                                      const TextureHelper11 &source,
                                      unsigned int sourceSubresource,
                                      const gl::Box &sourceArea,
                                      const gl::Extents &sourceSize,
-                                     const TextureHelper11 &destStaging,
+                                     const TextureHelper11 &dest,
+                                     unsigned int destSubresource,
                                      const gl::Box &destArea,
                                      const gl::Extents &destSize,
                                      const gl::Rectangle *scissor,
@@ -1477,75 +1547,11 @@ gl::Error Blit11::copyAndConvertImpl(const gl::Context *context,
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
-    TextureHelper11 sourceStaging;
-    ANGLE_TRY(mRenderer->createStagingTexture(ResourceType::Texture2D, source.getFormatSet(),
-                                              sourceSize, StagingAccess::READ, &sourceStaging));
-
-    deviceContext->CopySubresourceRegion(sourceStaging.get(), 0, 0, 0, 0, source.get(),
-                                         sourceSubresource, nullptr);
-
-    D3D11_MAPPED_SUBRESOURCE sourceMapping;
-    ANGLE_TRY(
-        mRenderer->mapResource(context, sourceStaging.get(), 0, D3D11_MAP_READ, 0, &sourceMapping));
-
-    D3D11_MAPPED_SUBRESOURCE destMapping;
-    gl::Error error =
-        mRenderer->mapResource(context, destStaging.get(), 0, D3D11_MAP_WRITE, 0, &destMapping);
-    if (error.isError())
-    {
-        deviceContext->Unmap(sourceStaging.get(), 0);
-        return error;
-    }
-
-    // Clip dest area to the destination size
-    gl::Rectangle clipRect = gl::Rectangle(0, 0, destSize.width, destSize.height);
-
-    // Clip dest area to the scissor
-    if (scissor)
-    {
-        if (!gl::ClipRectangle(clipRect, *scissor, &clipRect))
-        {
-            return gl::NoError();
-        }
-    }
-
-    convertFunction(sourceArea, destArea, clipRect, sourceSize, sourceMapping.RowPitch,
-                    destMapping.RowPitch, readOffset, writeOffset, copySize, srcPixelStride,
-                    destPixelStride, static_cast<const uint8_t *>(sourceMapping.pData),
-                    static_cast<uint8_t *>(destMapping.pData));
-
-    deviceContext->Unmap(sourceStaging.get(), 0);
-    deviceContext->Unmap(destStaging.get(), 0);
-
-    return gl::NoError();
-}
-
-gl::Error Blit11::copyAndConvert(const gl::Context *context,
-                                 const TextureHelper11 &source,
-                                 unsigned int sourceSubresource,
-                                 const gl::Box &sourceArea,
-                                 const gl::Extents &sourceSize,
-                                 const TextureHelper11 &dest,
-                                 unsigned int destSubresource,
-                                 const gl::Box &destArea,
-                                 const gl::Extents &destSize,
-                                 const gl::Rectangle *scissor,
-                                 size_t readOffset,
-                                 size_t writeOffset,
-                                 size_t copySize,
-                                 size_t srcPixelStride,
-                                 size_t destPixelStride,
-                                 BlitConvertFunction *convertFunction)
-{
-    ANGLE_TRY(initResources(context));
-
-    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-
     // HACK: Create the destination staging buffer as a read/write texture so
     // ID3D11DevicContext::UpdateSubresource can be called
     //       using it's mapped data as a source
     TextureHelper11 destStaging;
-    ANGLE_TRY(mRenderer->createStagingTexture(ResourceType::Texture2D, dest.getFormatSet(),
+    ANGLE_TRY(mRenderer->createStagingTexture(context, ResourceType::Texture2D, dest.getFormatSet(),
                                               destSize, StagingAccess::READ_WRITE, &destStaging));
 
     deviceContext->CopySubresourceRegion(destStaging.get(), 0, 0, 0, 0, dest.get(), destSubresource,
@@ -1571,19 +1577,19 @@ gl::Error Blit11::copyAndConvert(const gl::Context *context,
                                              destStaging.get(), 0, nullptr);
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::addBlitShaderToMap(const gl::Context *context,
-                                     BlitShaderType blitShaderType,
-                                     ShaderDimension dimension,
-                                     const ShaderData &shaderData,
-                                     const char *name)
+angle::Result Blit11::addBlitShaderToMap(const gl::Context *context,
+                                         BlitShaderType blitShaderType,
+                                         ShaderDimension dimension,
+                                         const ShaderData &shaderData,
+                                         const char *name)
 {
     ASSERT(mBlitShaderMap.find(blitShaderType) == mBlitShaderMap.end());
 
     d3d11::PixelShader ps;
-    ANGLE_TRY(mRenderer->allocateResource(shaderData, &ps));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(shaderData, &ps));
     ps.setDebugName(name);
 
     Shader shader;
@@ -1591,19 +1597,19 @@ gl::Error Blit11::addBlitShaderToMap(const gl::Context *context,
     shader.pixelShader = std::move(ps);
 
     mBlitShaderMap[blitShaderType] = std::move(shader);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::addSwizzleShaderToMap(const gl::Context *context,
-                                        SwizzleShaderType swizzleShaderType,
-                                        ShaderDimension dimension,
-                                        const ShaderData &shaderData,
-                                        const char *name)
+angle::Result Blit11::addSwizzleShaderToMap(const gl::Context *context,
+                                            SwizzleShaderType swizzleShaderType,
+                                            ShaderDimension dimension,
+                                            const ShaderData &shaderData,
+                                            const char *name)
 {
     ASSERT(mSwizzleShaderMap.find(swizzleShaderType) == mSwizzleShaderMap.end());
 
     d3d11::PixelShader ps;
-    ANGLE_TRY(mRenderer->allocateResource(shaderData, &ps));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateResource(shaderData, &ps));
     ps.setDebugName(name);
 
     Shader shader;
@@ -1611,7 +1617,7 @@ gl::Error Blit11::addSwizzleShaderToMap(const gl::Context *context,
     shader.pixelShader = std::move(ps);
 
     mSwizzleShaderMap[swizzleShaderType] = std::move(shader);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void Blit11::clearShaderMap()
@@ -1620,15 +1626,15 @@ void Blit11::clearShaderMap()
     mSwizzleShaderMap.clear();
 }
 
-gl::Error Blit11::getBlitShader(const gl::Context *context,
-                                GLenum destFormat,
-                                GLenum sourceFormat,
-                                bool isSigned,
-                                bool unpackPremultiplyAlpha,
-                                bool unpackUnmultiplyAlpha,
-                                GLenum destTypeForDownsampling,
-                                ShaderDimension dimension,
-                                const Shader **shader)
+angle::Result Blit11::getBlitShader(const gl::Context *context,
+                                    GLenum destFormat,
+                                    GLenum sourceFormat,
+                                    bool isSigned,
+                                    bool unpackPremultiplyAlpha,
+                                    bool unpackUnmultiplyAlpha,
+                                    GLenum destTypeForDownsampling,
+                                    ShaderDimension dimension,
+                                    const Shader **shader)
 {
     BlitShaderType blitShaderType =
         GetBlitShaderType(destFormat, sourceFormat, isSigned, unpackPremultiplyAlpha,
@@ -1636,14 +1642,15 @@ gl::Error Blit11::getBlitShader(const gl::Context *context,
 
     if (blitShaderType == BLITSHADER_INVALID)
     {
-        return gl::InternalError() << "Internal blit shader type mismatch";
+        context->handleError(gl::InternalError() << "Internal blit shader type mismatch");
+        return angle::Result::Stop();
     }
 
     auto blitShaderIt = mBlitShaderMap.find(blitShaderType);
     if (blitShaderIt != mBlitShaderMap.end())
     {
         *shader = &blitShaderIt->second;
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     ASSERT(dimension == SHADER_2D || mRenderer->isES3Capable());
@@ -1938,32 +1945,34 @@ gl::Error Blit11::getBlitShader(const gl::Context *context,
 
         default:
             UNREACHABLE();
-            return gl::InternalError() << "Internal error";
+            context->handleError(gl::InternalError());
+            return angle::Result::Stop();
     }
 
     blitShaderIt = mBlitShaderMap.find(blitShaderType);
     ASSERT(blitShaderIt != mBlitShaderMap.end());
     *shader = &blitShaderIt->second;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::getSwizzleShader(const gl::Context *context,
-                                   GLenum type,
-                                   D3D11_SRV_DIMENSION viewDimension,
-                                   const Shader **shader)
+angle::Result Blit11::getSwizzleShader(const gl::Context *context,
+                                       GLenum type,
+                                       D3D11_SRV_DIMENSION viewDimension,
+                                       const Shader **shader)
 {
     SwizzleShaderType swizzleShaderType = GetSwizzleShaderType(type, viewDimension);
 
     if (swizzleShaderType == SWIZZLESHADER_INVALID)
     {
-        return gl::InternalError() << "Swizzle shader type not found";
+        context->handleError(gl::InternalError() << "Swizzle shader type not found");
+        return angle::Result::Stop();
     }
 
     auto swizzleShaderIt = mSwizzleShaderMap.find(swizzleShaderType);
     if (swizzleShaderIt != mSwizzleShaderMap.end())
     {
         *shader = &swizzleShaderIt->second;
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     // Swizzling shaders (OpenGL ES 3+)
@@ -2033,18 +2042,19 @@ gl::Error Blit11::getSwizzleShader(const gl::Context *context,
             break;
         default:
             UNREACHABLE();
-            return gl::InternalError() << "Internal error";
+            context->handleError(gl::InternalError());
+            return angle::Result::Stop();
     }
 
     swizzleShaderIt = mSwizzleShaderMap.find(swizzleShaderType);
     ASSERT(swizzleShaderIt != mSwizzleShaderMap.end());
     *shader = &swizzleShaderIt->second;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::resolveDepth(const gl::Context *context,
-                               RenderTarget11 *depth,
-                               TextureHelper11 *textureOut)
+angle::Result Blit11::resolveDepth(const gl::Context *context,
+                                   RenderTarget11 *depth,
+                                   TextureHelper11 *textureOut)
 {
     ANGLE_TRY(initResources(context));
 
@@ -2057,8 +2067,8 @@ gl::Error Blit11::resolveDepth(const gl::Context *context,
 
     ANGLE_TRY(initResolveDepthOnly(context, depth->getFormatSet(), extents));
 
-    ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
-    ANGLE_TRY(mResolveDepthPS.resolve(mRenderer));
+    ANGLE_TRY_HANDLE(context, mResolveDepthStencilVS.resolve(mRenderer));
+    ANGLE_TRY_HANDLE(context, mResolveDepthPS.resolve(mRenderer));
 
     // Apply the necessary state changes to the D3D11 immediate device context.
     stateManager->setInputLayout(nullptr);
@@ -2079,17 +2089,17 @@ gl::Error Blit11::resolveDepth(const gl::Context *context,
     deviceContext->Draw(6, 0);
 
     *textureOut = mResolvedDepth;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::initResolveDepthOnly(const gl::Context *context,
-                                       const d3d11::Format &format,
-                                       const gl::Extents &extents)
+angle::Result Blit11::initResolveDepthOnly(const gl::Context *context,
+                                           const d3d11::Format &format,
+                                           const gl::Extents &extents)
 {
     if (mResolvedDepth.valid() && extents == mResolvedDepth.getExtents() &&
         format.texFormat == mResolvedDepth.getFormat())
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     D3D11_TEXTURE2D_DESC textureDesc;
@@ -2105,7 +2115,7 @@ gl::Error Blit11::initResolveDepthOnly(const gl::Context *context,
     textureDesc.CPUAccessFlags     = 0;
     textureDesc.MiscFlags          = 0;
 
-    ANGLE_TRY(mRenderer->allocateTexture(textureDesc, format, &mResolvedDepth));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateTexture(textureDesc, format, &mResolvedDepth));
     mResolvedDepth.setDebugName("Blit11::mResolvedDepth");
 
     D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
@@ -2114,7 +2124,8 @@ gl::Error Blit11::initResolveDepthOnly(const gl::Context *context,
     dsvDesc.Texture2D.MipSlice = 0;
     dsvDesc.ViewDimension      = D3D11_DSV_DIMENSION_TEXTURE2D;
 
-    ANGLE_TRY(mRenderer->allocateResource(dsvDesc, mResolvedDepth.get(), &mResolvedDepthDSView));
+    ANGLE_TRY_HANDLE(
+        context, mRenderer->allocateResource(dsvDesc, mResolvedDepth.get(), &mResolvedDepthDSView));
     mResolvedDepthDSView.setDebugName("Blit11::mResolvedDepthDSView");
 
     // Possibly D3D11 bug or undefined behaviour: Clear the DSV so that our first render
@@ -2122,16 +2133,17 @@ gl::Error Blit11::initResolveDepthOnly(const gl::Context *context,
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
     deviceContext->ClearDepthStencilView(mResolvedDepthDSView.get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::initResolveDepthStencil(const gl::Context *context, const gl::Extents &extents)
+angle::Result Blit11::initResolveDepthStencil(const gl::Context *context,
+                                              const gl::Extents &extents)
 {
     // Check if we need to recreate depth stencil view
     if (mResolvedDepthStencil.valid() && extents == mResolvedDepthStencil.getExtents())
     {
         ASSERT(mResolvedDepthStencil.getFormat() == DXGI_FORMAT_R32G32_FLOAT);
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     if (mResolvedDepthStencil.valid())
@@ -2154,20 +2166,21 @@ gl::Error Blit11::initResolveDepthStencil(const gl::Context *context, const gl::
     textureDesc.CPUAccessFlags     = 0;
     textureDesc.MiscFlags          = 0;
 
-    ANGLE_TRY(mRenderer->allocateTexture(textureDesc, formatSet, &mResolvedDepthStencil));
+    ANGLE_TRY_HANDLE(context,
+                     mRenderer->allocateTexture(textureDesc, formatSet, &mResolvedDepthStencil));
     mResolvedDepthStencil.setDebugName("Blit11::mResolvedDepthStencil");
 
-    ANGLE_TRY(mRenderer->allocateResourceNoDesc(mResolvedDepthStencil.get(),
-                                                &mResolvedDepthStencilRTView));
+    ANGLE_TRY_HANDLE(context, mRenderer->allocateResourceNoDesc(mResolvedDepthStencil.get(),
+                                                                &mResolvedDepthStencilRTView));
     mResolvedDepthStencilRTView.setDebugName("Blit11::mResolvedDepthStencilRTView");
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Blit11::resolveStencil(const gl::Context *context,
-                                 RenderTarget11 *depthStencil,
-                                 bool alsoDepth,
-                                 TextureHelper11 *textureOut)
+angle::Result Blit11::resolveStencil(const gl::Context *context,
+                                     RenderTarget11 *depthStencil,
+                                     bool alsoDepth,
+                                     TextureHelper11 *textureOut)
 {
     ANGLE_TRY(initResources(context));
 
@@ -2202,12 +2215,13 @@ gl::Error Blit11::resolveStencil(const gl::Context *context,
         srViewDesc.Format        = GetStencilSRVFormat(depthStencil->getFormatSet());
         srViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 
-        ANGLE_TRY(mRenderer->allocateResource(srViewDesc, stencilResource, &mStencilSRV));
+        ANGLE_TRY_HANDLE(context,
+                         mRenderer->allocateResource(srViewDesc, stencilResource, &mStencilSRV));
         mStencilSRV.setDebugName("Blit11::mStencilSRV");
     }
 
     // Notify the Renderer that all state should be invalidated.
-    ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
+    ANGLE_TRY_HANDLE(context, mResolveDepthStencilVS.resolve(mRenderer));
 
     // Resolving the depth buffer works by sampling the depth in the shader using a SRV, then
     // writing to the resolved depth buffer using SV_Depth. We can't use this method for stencil
@@ -2215,12 +2229,12 @@ gl::Error Blit11::resolveStencil(const gl::Context *context,
     const d3d11::PixelShader *pixelShader = nullptr;
     if (alsoDepth)
     {
-        ANGLE_TRY(mResolveDepthStencilPS.resolve(mRenderer));
+        ANGLE_TRY_HANDLE(context, mResolveDepthStencilPS.resolve(mRenderer));
         pixelShader = &mResolveDepthStencilPS.getObj();
     }
     else
     {
-        ANGLE_TRY(mResolveStencilPS.resolve(mRenderer));
+        ANGLE_TRY_HANDLE(context, mResolveStencilPS.resolve(mRenderer));
         pixelShader = &mResolveStencilPS.getObj();
     }
 
@@ -2244,8 +2258,9 @@ gl::Error Blit11::resolveStencil(const gl::Context *context,
 
     gl::Box copyBox(0, 0, 0, extents.width, extents.height, 1);
 
-    ANGLE_TRY(mRenderer->createStagingTexture(ResourceType::Texture2D, depthStencil->getFormatSet(),
-                                              extents, StagingAccess::READ_WRITE, textureOut));
+    ANGLE_TRY(mRenderer->createStagingTexture(context, ResourceType::Texture2D,
+                                              depthStencil->getFormatSet(), extents,
+                                              StagingAccess::READ_WRITE, textureOut));
 
     const auto &copyFunction = GetCopyDepthStencilFunction(depthStencil->getInternalFormat());
     const auto &dsFormatSet  = depthStencil->getFormatSet();
@@ -2255,7 +2270,7 @@ gl::Error Blit11::resolveStencil(const gl::Context *context,
                                  copyBox, extents, nullptr, 0, 0, 0, 8u, dsDxgiInfo.pixelBytes,
                                  copyFunction));
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void Blit11::releaseResolveDepthStencilResources()

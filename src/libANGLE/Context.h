@@ -69,13 +69,16 @@ class ErrorSet : angle::NonCopyable
     explicit ErrorSet(Context *context);
     ~ErrorSet();
 
-    void handleError(const Error &error);
+    // TODO(jmadill): Remove const. http://anglebug.com/2378
+    void handleError(const Error &error) const;
     bool empty() const;
     GLenum popError();
 
   private:
     Context *mContext;
-    std::set<GLenum> mErrors;
+
+    // TODO(jmadill): Remove mutable. http://anglebug.com/2378
+    mutable std::set<GLenum> mErrors;
 };
 
 class Context final : public egl::LabeledObject, angle::NonCopyable
@@ -1395,7 +1398,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     void framebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level);
 
     // Consumes the error.
-    void handleError(const Error &error);
+    // TODO(jmadill): Remove const. http://anglebug.com/2378
+    void handleError(const Error &error) const;
 
     GLenum getError();
     void markContextLost();
