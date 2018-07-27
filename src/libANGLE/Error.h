@@ -241,15 +241,15 @@ inline Error NoError()
 #define ANGLE_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_RETURN);
 
 // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2738
-#define ANGLE_TRY_HANDLE(CONTEXT, EXPR)            \
+#define ANGLE_TRY_HANDLE(CONTEXT, EXPR)                \
     \
-{                                           \
-        auto ANGLE_LOCAL_VAR = (EXPR);             \
-        if (ANGLE_LOCAL_VAR.isError())             \
-        {                                          \
-            CONTEXT->handleError(ANGLE_LOCAL_VAR); \
-            return angle::Result::Stop();          \
-        }                                          \
+{                                               \
+        auto ANGLE_LOCAL_VAR = (EXPR);                 \
+        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR.isError())) \
+        {                                              \
+            CONTEXT->handleError(ANGLE_LOCAL_VAR);     \
+            return angle::Result::Stop();              \
+        }                                              \
     \
 }
 
