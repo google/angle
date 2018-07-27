@@ -911,7 +911,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
 
         ShaderExecutableD3D *shaderExecutable = nullptr;
 
-        ANGLE_TRY(mRenderer->loadExecutable(vertexShaderFunction, vertexShaderSize,
+        ANGLE_TRY(mRenderer->loadExecutable(context, vertexShaderFunction, vertexShaderSize,
                                             gl::ShaderType::Vertex, mStreamOutVaryings,
                                             separateAttribs, &shaderExecutable));
 
@@ -946,7 +946,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
         const unsigned char *pixelShaderFunction = binary + stream->offset();
         ShaderExecutableD3D *shaderExecutable    = nullptr;
 
-        ANGLE_TRY(mRenderer->loadExecutable(pixelShaderFunction, pixelShaderSize,
+        ANGLE_TRY(mRenderer->loadExecutable(context, pixelShaderFunction, pixelShaderSize,
                                             gl::ShaderType::Fragment, mStreamOutVaryings,
                                             separateAttribs, &shaderExecutable));
 
@@ -974,7 +974,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
         const unsigned char *geometryShaderFunction = binary + stream->offset();
 
         ShaderExecutableD3D *geometryExecutable = nullptr;
-        ANGLE_TRY(mRenderer->loadExecutable(geometryShaderFunction, geometryShaderSize,
+        ANGLE_TRY(mRenderer->loadExecutable(context, geometryShaderFunction, geometryShaderSize,
                                             gl::ShaderType::Geometry, mStreamOutVaryings,
                                             separateAttribs, &geometryExecutable));
 
@@ -995,7 +995,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
         const unsigned char *computeShaderFunction = binary + stream->offset();
 
         ShaderExecutableD3D *computeExecutable = nullptr;
-        ANGLE_TRY(mRenderer->loadExecutable(computeShaderFunction, computeShaderSize,
+        ANGLE_TRY(mRenderer->loadExecutable(context, computeShaderFunction, computeShaderSize,
                                             gl::ShaderType::Compute, std::vector<D3DVarying>(),
                                             false, &computeExecutable));
 
@@ -1193,7 +1193,8 @@ void ProgramD3D::setSeparable(bool /* separable */)
 {
 }
 
-gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(ShaderExecutableD3D **outExecutable,
+gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(const gl::Context *context,
+                                                              ShaderExecutableD3D **outExecutable,
                                                               gl::InfoLog *infoLog)
 {
     if (mCachedPixelExecutableIndex.valid())
@@ -1213,7 +1214,7 @@ gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(ShaderExecutableD3
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
 
     ANGLE_TRY(mRenderer->compileToExecutable(
-        *currentInfoLog, finalPixelHLSL, gl::ShaderType::Fragment, mStreamOutVaryings,
+        context, *currentInfoLog, finalPixelHLSL, gl::ShaderType::Fragment, mStreamOutVaryings,
         (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS),
         mShaderWorkarounds[gl::ShaderType::Fragment], &pixelExecutable));
 
@@ -1233,7 +1234,8 @@ gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(ShaderExecutableD3
     return gl::NoError();
 }
 
-gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(ShaderExecutableD3D **outExectuable,
+gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(const gl::Context *context,
+                                                              ShaderExecutableD3D **outExectuable,
                                                               gl::InfoLog *infoLog)
 {
     if (mCachedVertexExecutableIndex.valid())
@@ -1254,7 +1256,7 @@ gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(ShaderExecutableD3
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
 
     ANGLE_TRY(mRenderer->compileToExecutable(
-        *currentInfoLog, finalVertexHLSL, gl::ShaderType::Vertex, mStreamOutVaryings,
+        context, *currentInfoLog, finalVertexHLSL, gl::ShaderType::Vertex, mStreamOutVaryings,
         (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS),
         mShaderWorkarounds[gl::ShaderType::Vertex], &vertexExecutable));
 
@@ -1311,7 +1313,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *c
 
     ShaderExecutableD3D *geometryExecutable = nullptr;
     gl::Error error                         = mRenderer->compileToExecutable(
-        *currentInfoLog, geometryHLSL, gl::ShaderType::Geometry, mStreamOutVaryings,
+        context, *currentInfoLog, geometryHLSL, gl::ShaderType::Geometry, mStreamOutVaryings,
         (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS),
         angle::CompilerWorkaroundsD3D(), &geometryExecutable);
 
@@ -1336,8 +1338,8 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *c
 class ProgramD3D::GetExecutableTask : public Closure
 {
   public:
-    GetExecutableTask(ProgramD3D *program)
-        : mProgram(program), mError(gl::NoError()), mInfoLog(), mResult(nullptr)
+    GetExecutableTask(ProgramD3D *program, const gl::Context *context)
+        : mProgram(program), mError(gl::NoError()), mInfoLog(), mResult(nullptr), mContext(context)
     {
     }
 
@@ -1354,26 +1356,24 @@ class ProgramD3D::GetExecutableTask : public Closure
     gl::Error mError;
     gl::InfoLog mInfoLog;
     ShaderExecutableD3D *mResult;
+    const gl::Context *mContext;
 };
 
 class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
 {
   public:
     GetVertexExecutableTask(ProgramD3D *program, const gl::Context *context)
-        : GetExecutableTask(program), mContext(context)
+        : GetExecutableTask(program, context)
     {
     }
     gl::Error run() override
     {
         mProgram->updateCachedInputLayoutFromShader(mContext);
 
-        ANGLE_TRY(mProgram->getVertexExecutableForCachedInputLayout(&mResult, &mInfoLog));
+        ANGLE_TRY(mProgram->getVertexExecutableForCachedInputLayout(mContext, &mResult, &mInfoLog));
 
         return gl::NoError();
     }
-
-  private:
-    const gl::Context *mContext;
 };
 
 void ProgramD3D::updateCachedInputLayoutFromShader(const gl::Context *context)
@@ -1387,12 +1387,15 @@ void ProgramD3D::updateCachedInputLayoutFromShader(const gl::Context *context)
 class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
 {
   public:
-    GetPixelExecutableTask(ProgramD3D *program) : GetExecutableTask(program) {}
+    GetPixelExecutableTask(ProgramD3D *program, const gl::Context *context)
+        : GetExecutableTask(program, context)
+    {
+    }
     gl::Error run() override
     {
         mProgram->updateCachedOutputLayoutFromShader();
 
-        ANGLE_TRY(mProgram->getPixelExecutableForCachedOutputLayout(&mResult, &mInfoLog));
+        ANGLE_TRY(mProgram->getPixelExecutableForCachedOutputLayout(mContext, &mResult, &mInfoLog));
 
         return gl::NoError();
     }
@@ -1408,7 +1411,7 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
 {
   public:
     GetGeometryExecutableTask(ProgramD3D *program, const gl::Context *context)
-        : GetExecutableTask(program), mContext(context)
+        : GetExecutableTask(program, context)
     {
     }
 
@@ -1424,9 +1427,6 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
 
         return gl::NoError();
     }
-
-  private:
-    const gl::Context *mContext;
 };
 
 gl::Error ProgramD3D::getComputeExecutable(ShaderExecutableD3D **outExecutable)
@@ -1443,12 +1443,12 @@ gl::LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context,
                                                      gl::InfoLog &infoLog)
 {
     // Ensure the compiler is initialized to avoid race conditions.
-    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized());
+    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized(context));
 
     WorkerThreadPool *workerPool = mRenderer->getWorkerThreadPool();
 
     GetVertexExecutableTask vertexTask(this, context);
-    GetPixelExecutableTask pixelTask(this);
+    GetPixelExecutableTask pixelTask(this, context);
     GetGeometryExecutableTask geometryTask(this, context);
 
     std::array<WaitableEvent, 3> waitEvents = {{workerPool->postWorkerTask(&vertexTask),
@@ -1511,16 +1511,16 @@ gl::LinkResult ProgramD3D::compileComputeExecutable(const gl::Context *context,
                                                     gl::InfoLog &infoLog)
 {
     // Ensure the compiler is initialized to avoid race conditions.
-    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized());
+    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized(context));
 
     gl::Shader *computeShaderGL = mState.getAttachedShader(gl::ShaderType::Compute);
     ASSERT(computeShaderGL);
     std::string computeShader = computeShaderGL->getTranslatedSource(context);
 
     ShaderExecutableD3D *computeExecutable = nullptr;
-    ANGLE_TRY(mRenderer->compileToExecutable(infoLog, computeShader, gl::ShaderType::Compute,
-                                             std::vector<D3DVarying>(), false,
-                                             angle::CompilerWorkaroundsD3D(), &computeExecutable));
+    ANGLE_TRY(mRenderer->compileToExecutable(
+        context, infoLog, computeShader, gl::ShaderType::Compute, std::vector<D3DVarying>(), false,
+        angle::CompilerWorkaroundsD3D(), &computeExecutable));
 
     if (computeExecutable == nullptr)
     {

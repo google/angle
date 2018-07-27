@@ -59,7 +59,8 @@ class VertexArray11 : public VertexArrayImpl
     GLenum getCachedDestinationIndexType() const;
 
   private:
-    void updateVertexAttribStorage(StateManager11 *stateManager,
+    void updateVertexAttribStorage(const gl::Context *context,
+                                   StateManager11 *stateManager,
                                    size_t attribIndex);
     gl::Error updateDirtyAttribs(const gl::Context *context,
                                  const gl::AttributesMask &activeDirtyAttribs);

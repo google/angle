@@ -23,7 +23,10 @@ IndexBuffer11::~IndexBuffer11()
 {
 }
 
-gl::Error IndexBuffer11::initialize(unsigned int bufferSize, GLenum indexType, bool dynamic)
+gl::Error IndexBuffer11::initialize(const gl::Context *context,
+                                    unsigned int bufferSize,
+                                    GLenum indexType,
+                                    bool dynamic)
 {
     mBuffer.reset();
 
@@ -58,7 +61,10 @@ gl::Error IndexBuffer11::initialize(unsigned int bufferSize, GLenum indexType, b
     return gl::NoError();
 }
 
-gl::Error IndexBuffer11::mapBuffer(unsigned int offset, unsigned int size, void** outMappedMemory)
+gl::Error IndexBuffer11::mapBuffer(const gl::Context *context,
+                                   unsigned int offset,
+                                   unsigned int size,
+                                   void **outMappedMemory)
 {
     if (!mBuffer.valid())
     {
@@ -72,14 +78,14 @@ gl::Error IndexBuffer11::mapBuffer(unsigned int offset, unsigned int size, void*
     }
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    ANGLE_TRY(
-        mRenderer->mapResource(mBuffer.get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource));
+    ANGLE_TRY(mRenderer->mapResource(context, mBuffer.get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0,
+                                     &mappedResource));
 
     *outMappedMemory = static_cast<char *>(mappedResource.pData) + offset;
     return gl::NoError();
 }
 
-gl::Error IndexBuffer11::unmapBuffer()
+gl::Error IndexBuffer11::unmapBuffer(const gl::Context *context)
 {
     if (!mBuffer.valid())
     {
@@ -101,11 +107,13 @@ unsigned int IndexBuffer11::getBufferSize() const
     return mBufferSize;
 }
 
-gl::Error IndexBuffer11::setSize(unsigned int bufferSize, GLenum indexType)
+gl::Error IndexBuffer11::setSize(const gl::Context *context,
+                                 unsigned int bufferSize,
+                                 GLenum indexType)
 {
     if (bufferSize > mBufferSize || indexType != mIndexType)
     {
-        return initialize(bufferSize, indexType, mDynamicUsage);
+        return initialize(context, bufferSize, indexType, mDynamicUsage);
     }
     else
     {
@@ -113,7 +121,7 @@ gl::Error IndexBuffer11::setSize(unsigned int bufferSize, GLenum indexType)
     }
 }
 
-gl::Error IndexBuffer11::discard()
+gl::Error IndexBuffer11::discard(const gl::Context *context)
 {
     if (!mBuffer.valid())
     {
@@ -123,8 +131,8 @@ gl::Error IndexBuffer11::discard()
     ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    ANGLE_TRY(
-        mRenderer->mapResource(mBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+    ANGLE_TRY(mRenderer->mapResource(context, mBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
+                                     &mappedResource));
 
     dxContext->Unmap(mBuffer.get(), 0);
 

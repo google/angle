@@ -187,9 +187,9 @@ bool InstancedPointSpritesActive(ProgramD3D *programD3D, gl::PrimitiveMode mode)
            mode == gl::PrimitiveMode::Points;
 }
 
-gl::Error RendererD3D::initRenderTarget(RenderTargetD3D *renderTarget)
+gl::Error RendererD3D::initRenderTarget(const gl::Context *context, RenderTargetD3D *renderTarget)
 {
-    return clearRenderTarget(renderTarget, gl::ColorF(0, 0, 0, 0), 1, 0);
+    return clearRenderTarget(context, renderTarget, gl::ColorF(0, 0, 0, 0), 1, 0);
 }
 
 void RendererD3D::onDirtyUniformBlockBinding(GLuint /*uniformBlockIndex*/)

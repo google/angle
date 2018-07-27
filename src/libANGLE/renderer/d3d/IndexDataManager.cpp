@@ -82,7 +82,8 @@ void ConvertIndices(GLenum sourceType,
         UNREACHABLE();
 }
 
-gl::Error StreamInIndexBuffer(IndexBufferInterface *buffer,
+gl::Error StreamInIndexBuffer(const gl::Context *context,
+                              IndexBufferInterface *buffer,
                               const void *data,
                               unsigned int count,
                               GLenum srcType,
@@ -99,14 +100,14 @@ gl::Error StreamInIndexBuffer(IndexBufferInterface *buffer,
     }
 
     unsigned int bufferSizeRequired = count << dstTypeInfo.bytesShift;
-    ANGLE_TRY(buffer->reserveBufferSpace(bufferSizeRequired, dstType));
+    ANGLE_TRY(buffer->reserveBufferSpace(context, bufferSizeRequired, dstType));
 
     void *output = nullptr;
-    ANGLE_TRY(buffer->mapBuffer(bufferSizeRequired, &output, offset));
+    ANGLE_TRY(buffer->mapBuffer(context, bufferSizeRequired, &output, offset));
 
     ConvertIndices(srcType, dstType, data, count, output, usePrimitiveRestartFixedIndex);
 
-    ANGLE_TRY(buffer->unmapBuffer());
+    ANGLE_TRY(buffer->unmapBuffer(context));
     return gl::NoError();
 }
 
@@ -184,8 +185,8 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
     if (glBuffer == nullptr)
     {
         translated->storage = nullptr;
-        return streamIndexData(indices, count, srcType, dstType, primitiveRestartFixedIndexEnabled,
-                               translated);
+        return streamIndexData(context, indices, count, srcType, dstType,
+                               primitiveRestartFixedIndexEnabled, translated);
     }
 
     // Case 2: the indices are already in a buffer
@@ -226,7 +227,7 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
         ANGLE_TRY(buffer->getData(context, &bufferData));
         ASSERT(bufferData != nullptr);
 
-        ANGLE_TRY(streamIndexData(bufferData + offset, count, srcType, dstType,
+        ANGLE_TRY(streamIndexData(context, bufferData + offset, count, srcType, dstType,
                                   primitiveRestartFixedIndexEnabled, translated));
         buffer->promoteStaticUsage(context, count << srcTypeInfo.bytesShift);
     }
@@ -240,8 +241,8 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
 
             unsigned int convertCount =
                 static_cast<unsigned int>(buffer->getSize()) >> srcTypeInfo.bytesShift;
-            ANGLE_TRY(StreamInIndexBuffer(staticBuffer, bufferData, convertCount, srcType, dstType,
-                                          primitiveRestartFixedIndexEnabled, nullptr));
+            ANGLE_TRY(StreamInIndexBuffer(context, staticBuffer, bufferData, convertCount, srcType,
+                                          dstType, primitiveRestartFixedIndexEnabled, nullptr));
         }
         ASSERT(offsetAligned && staticBuffer->getIndexType() == dstType);
 
@@ -254,7 +255,8 @@ gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error IndexDataManager::streamIndexData(const void *data,
+gl::Error IndexDataManager::streamIndexData(const gl::Context *context,
+                                            const void *data,
                                             unsigned int count,
                                             GLenum srcType,
                                             GLenum dstType,
@@ -264,11 +266,11 @@ gl::Error IndexDataManager::streamIndexData(const void *data,
     const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
 
     IndexBufferInterface *indexBuffer = nullptr;
-    ANGLE_TRY(getStreamingIndexBuffer(dstType, &indexBuffer));
+    ANGLE_TRY(getStreamingIndexBuffer(context, dstType, &indexBuffer));
     ASSERT(indexBuffer != nullptr);
 
     unsigned int offset;
-    ANGLE_TRY(StreamInIndexBuffer(indexBuffer, data, count, srcType, dstType,
+    ANGLE_TRY(StreamInIndexBuffer(context, indexBuffer, data, count, srcType, dstType,
                                   usePrimitiveRestartFixedIndex, &offset));
 
     translated->indexBuffer = indexBuffer->getIndexBuffer();
@@ -279,7 +281,8 @@ gl::Error IndexDataManager::streamIndexData(const void *data,
     return gl::NoError();
 }
 
-gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
+gl::Error IndexDataManager::getStreamingIndexBuffer(const gl::Context *context,
+                                                    GLenum destinationIndexType,
                                                     IndexBufferInterface **outBuffer)
 {
     ASSERT(outBuffer);
@@ -291,7 +294,8 @@ gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
     if (!streamingBuffer)
     {
         StreamingBuffer newBuffer(new StreamingIndexBufferInterface(mFactory));
-        ANGLE_TRY(newBuffer->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, destinationIndexType));
+        ANGLE_TRY(newBuffer->reserveBufferSpace(context, INITIAL_INDEX_BUFFER_SIZE,
+                                                destinationIndexType));
         streamingBuffer = std::move(newBuffer);
     }
 

@@ -955,7 +955,7 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(const gl::Context *
     {
         if (!mUseLevelZeroTexture && mTexture.valid())
         {
-            ANGLE_TRY(ensureTextureExists(1));
+            ANGLE_TRY(ensureTextureExists(context, 1));
 
             // Pull data back from the mipped texture if necessary.
             ASSERT(mLevelZeroTexture.valid());
@@ -970,7 +970,7 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(const gl::Context *
     {
         if (mUseLevelZeroTexture && mLevelZeroTexture.valid())
         {
-            ANGLE_TRY(ensureTextureExists(mMipLevels));
+            ANGLE_TRY(ensureTextureExists(context, mMipLevels));
 
             // Pull data back from the level zero texture if necessary.
             ASSERT(mTexture.valid());
@@ -1055,13 +1055,13 @@ gl::Error TextureStorage11_2D::getResource(const gl::Context *context,
 {
     if (mUseLevelZeroTexture && mMipLevels > 1)
     {
-        ANGLE_TRY(ensureTextureExists(1));
+        ANGLE_TRY(ensureTextureExists(context, 1));
 
         *outResource = &mLevelZeroTexture;
         return gl::NoError();
     }
 
-    ANGLE_TRY(ensureTextureExists(mMipLevels));
+    ANGLE_TRY(ensureTextureExists(context, mMipLevels));
 
     *outResource = &mTexture;
     return gl::NoError();
@@ -1073,13 +1073,13 @@ gl::Error TextureStorage11_2D::getMippedResource(const gl::Context *context,
     // This shouldn't be called unless the zero max LOD workaround is active.
     ASSERT(mRenderer->getWorkarounds().zeroMaxLodWorkaround);
 
-    ANGLE_TRY(ensureTextureExists(mMipLevels));
+    ANGLE_TRY(ensureTextureExists(context, mMipLevels));
 
     *outResource = &mTexture;
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2D::ensureTextureExists(int mipLevels)
+gl::Error TextureStorage11_2D::ensureTextureExists(const gl::Context *context, int mipLevels)
 {
     // If mMipLevels = 1 then always use mTexture rather than mLevelZeroTexture.
     bool useLevelZeroTexture = mRenderer->getWorkarounds().zeroMaxLodWorkaround
@@ -1250,7 +1250,7 @@ gl::Error TextureStorage11_2D::createSRVForSampler(const gl::Context *context,
         if (mipLevels == 1 && mMipLevels > 1)
         {
             // We must use a SRV on the level-zero-only texture.
-            ANGLE_TRY(ensureTextureExists(1));
+            ANGLE_TRY(ensureTextureExists(context, 1));
             srvTexture = &mLevelZeroTexture;
         }
         else
@@ -1944,7 +1944,7 @@ gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(const gl::Context
     {
         if (!mUseLevelZeroTexture && mTexture.valid())
         {
-            ANGLE_TRY(ensureTextureExists(1));
+            ANGLE_TRY(ensureTextureExists(context, 1));
 
             // Pull data back from the mipped texture if necessary.
             ASSERT(mLevelZeroTexture.valid());
@@ -1964,7 +1964,7 @@ gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(const gl::Context
     {
         if (mUseLevelZeroTexture && mLevelZeroTexture.valid())
         {
-            ANGLE_TRY(ensureTextureExists(mMipLevels));
+            ANGLE_TRY(ensureTextureExists(context, mMipLevels));
 
             // Pull data back from the level zero texture if necessary.
             ASSERT(mTexture.valid());
@@ -2065,13 +2065,13 @@ gl::Error TextureStorage11_Cube::getResource(const gl::Context *context,
 {
     if (mUseLevelZeroTexture && mMipLevels > 1)
     {
-        ANGLE_TRY(ensureTextureExists(1));
+        ANGLE_TRY(ensureTextureExists(context, 1));
         *outResource = &mLevelZeroTexture;
         return gl::NoError();
     }
     else
     {
-        ANGLE_TRY(ensureTextureExists(mMipLevels));
+        ANGLE_TRY(ensureTextureExists(context, mMipLevels));
         *outResource = &mTexture;
         return gl::NoError();
     }
@@ -2083,12 +2083,12 @@ gl::Error TextureStorage11_Cube::getMippedResource(const gl::Context *context,
     // This shouldn't be called unless the zero max LOD workaround is active.
     ASSERT(mRenderer->getWorkarounds().zeroMaxLodWorkaround);
 
-    ANGLE_TRY(ensureTextureExists(mMipLevels));
+    ANGLE_TRY(ensureTextureExists(context, mMipLevels));
     *outResource = &mTexture;
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_Cube::ensureTextureExists(int mipLevels)
+gl::Error TextureStorage11_Cube::ensureTextureExists(const gl::Context *context, int mipLevels)
 {
     // If mMipLevels = 1 then always use mTexture rather than mLevelZeroTexture.
     bool useLevelZeroTexture = mRenderer->getWorkarounds().zeroMaxLodWorkaround
@@ -2122,7 +2122,8 @@ gl::Error TextureStorage11_Cube::ensureTextureExists(int mipLevels)
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_Cube::createRenderTargetSRV(const TextureHelper11 &texture,
+gl::Error TextureStorage11_Cube::createRenderTargetSRV(const gl::Context *context,
+                                                       const TextureHelper11 &texture,
                                                        const gl::ImageIndex &index,
                                                        DXGI_FORMAT resourceFormat,
                                                        d3d11::SharedSRV *srv) const
@@ -2195,11 +2196,12 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::Context *context,
         }
 
         d3d11::SharedSRV srv;
-        ANGLE_TRY(createRenderTargetSRV(*texture, index, mFormatInfo.srvFormat, &srv));
+        ANGLE_TRY(createRenderTargetSRV(context, *texture, index, mFormatInfo.srvFormat, &srv));
         d3d11::SharedSRV blitSRV;
         if (mFormatInfo.blitSRVFormat != mFormatInfo.srvFormat)
         {
-            ANGLE_TRY(createRenderTargetSRV(*texture, index, mFormatInfo.blitSRVFormat, &blitSRV));
+            ANGLE_TRY(createRenderTargetSRV(context, *texture, index, mFormatInfo.blitSRVFormat,
+                                            &blitSRV));
         }
         else
         {
@@ -2296,7 +2298,7 @@ gl::Error TextureStorage11_Cube::createSRVForSampler(const gl::Context *context,
         if (mipLevels == 1 && mMipLevels > 1)
         {
             // We must use a SRV on the level-zero-only texture.
-            ANGLE_TRY(ensureTextureExists(1));
+            ANGLE_TRY(ensureTextureExists(context, 1));
             srvTexture = &mLevelZeroTexture;
         }
         else
@@ -3004,7 +3006,8 @@ gl::Error TextureStorage11_2DArray::createUAVForImage(const gl::Context *context
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2DArray::createRenderTargetSRV(const TextureHelper11 &texture,
+gl::Error TextureStorage11_2DArray::createRenderTargetSRV(const gl::Context *context,
+                                                          const TextureHelper11 &texture,
                                                           const gl::ImageIndex &index,
                                                           DXGI_FORMAT resourceFormat,
                                                           d3d11::SharedSRV *srv) const
@@ -3040,11 +3043,12 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::Context *context,
         const TextureHelper11 *texture = nullptr;
         ANGLE_TRY(getResource(context, &texture));
         d3d11::SharedSRV srv;
-        ANGLE_TRY(createRenderTargetSRV(*texture, index, mFormatInfo.srvFormat, &srv));
+        ANGLE_TRY(createRenderTargetSRV(context, *texture, index, mFormatInfo.srvFormat, &srv));
         d3d11::SharedSRV blitSRV;
         if (mFormatInfo.blitSRVFormat != mFormatInfo.srvFormat)
         {
-            ANGLE_TRY(createRenderTargetSRV(*texture, index, mFormatInfo.blitSRVFormat, &blitSRV));
+            ANGLE_TRY(createRenderTargetSRV(context, *texture, index, mFormatInfo.blitSRVFormat,
+                                            &blitSRV));
         }
         else
         {
@@ -3256,13 +3260,14 @@ gl::Error TextureStorage11_2DMultisample::releaseAssociatedImage(const gl::Conte
 gl::Error TextureStorage11_2DMultisample::getResource(const gl::Context *context,
                                                       const TextureHelper11 **outResource)
 {
-    ANGLE_TRY(ensureTextureExists(1));
+    ANGLE_TRY(ensureTextureExists(context, 1));
 
     *outResource = &mTexture;
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2DMultisample::ensureTextureExists(int mipLevels)
+gl::Error TextureStorage11_2DMultisample::ensureTextureExists(const gl::Context *context,
+                                                              int mipLevels)
 {
     // For Multisampled textures, mipLevels always equals 1.
     ASSERT(mipLevels == 1);

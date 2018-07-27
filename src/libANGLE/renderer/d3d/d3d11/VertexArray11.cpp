@@ -112,7 +112,7 @@ gl::Error VertexArray11::syncState(const gl::Context *context,
 
     for (size_t attribIndex : attributesToUpdate)
     {
-        updateVertexAttribStorage(stateManager, attribIndex);
+        updateVertexAttribStorage(context, stateManager, attribIndex);
     }
 
     if (invalidateVertexBuffer)
@@ -205,12 +205,14 @@ gl::Error VertexArray11::updateElementArrayStorage(const gl::Context *context,
     return gl::NoError();
 }
 
-void VertexArray11::updateVertexAttribStorage(StateManager11 *stateManager, size_t attribIndex)
+void VertexArray11::updateVertexAttribStorage(const gl::Context *context,
+                                              StateManager11 *stateManager,
+                                              size_t attribIndex)
 {
     const gl::VertexAttribute &attrib = mState.getVertexAttribute(attribIndex);
     const gl::VertexBinding &binding  = mState.getBindingFromAttribIndex(attribIndex);
 
-    VertexStorageType newStorageType = ClassifyAttributeStorage(attrib, binding);
+    VertexStorageType newStorageType = ClassifyAttributeStorage(context, attrib, binding);
 
     // Note: having an unchanged storage type doesn't mean the attribute is clean.
     mAttribsToTranslate.set(attribIndex, newStorageType != VertexStorageType::DYNAMIC);
@@ -259,7 +261,7 @@ gl::Error VertexArray11::updateDirtyAttribs(const gl::Context *context,
         switch (mAttributeStorageTypes[dirtyAttribIndex])
         {
             case VertexStorageType::DIRECT:
-                VertexDataManager::StoreDirectAttrib(translatedAttrib);
+                VertexDataManager::StoreDirectAttrib(context, translatedAttrib);
                 break;
             case VertexStorageType::STATIC:
             {

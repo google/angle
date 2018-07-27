@@ -470,7 +470,8 @@ void ShaderConstants11::onSamplerChange(gl::ShaderType shaderType,
     }
 }
 
-gl::Error ShaderConstants11::updateBuffer(Renderer11 *renderer,
+gl::Error ShaderConstants11::updateBuffer(const gl::Context *context,
+                                          Renderer11 *renderer,
                                           gl::ShaderType shaderType,
                                           const ProgramD3D &programD3D,
                                           const d3d11::Buffer &driverConstantBuffer)
@@ -514,8 +515,8 @@ gl::Error ShaderConstants11::updateBuffer(Renderer11 *renderer,
 
     // Previous buffer contents are discarded, so we need to refresh the whole buffer.
     D3D11_MAPPED_SUBRESOURCE mapping = {0};
-    ANGLE_TRY(
-        renderer->mapResource(driverConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapping));
+    ANGLE_TRY(renderer->mapResource(context, driverConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD,
+                                    0, &mapping));
 
     memcpy(mapping.pData, data, dataSize);
     memcpy(static_cast<uint8_t *>(mapping.pData) + dataSize, samplerData,
@@ -1110,8 +1111,10 @@ gl::Error StateManager11::syncBlendState(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error StateManager11::syncDepthStencilState(const gl::State &glState)
+gl::Error StateManager11::syncDepthStencilState(const gl::Context *context)
 {
+    const gl::State &glState = context->getGLState();
+
     mCurDepthStencilState = glState.getDepthStencilState();
     mCurStencilRef        = glState.getStencilRef();
     mCurStencilBackRef    = glState.getStencilBackRef();
@@ -1549,6 +1552,8 @@ void StateManager11::onDeleteQueryObject(Query11 *query)
 
 gl::Error StateManager11::onMakeCurrent(const gl::Context *context)
 {
+    ANGLE_TRY(ensureInitialized(context));
+
     const gl::State &state = context->getGLState();
 
     for (Query11 *query : mCurrentQueries)
@@ -1696,8 +1701,13 @@ void StateManager11::unsetConflictingAttachmentResources(
     }
 }
 
-gl::Error StateManager11::initialize(const gl::Caps &caps, const gl::Extensions &extensions)
+gl::Error StateManager11::ensureInitialized(const gl::Context *context)
 {
+    Renderer11 *renderer = GetImplAs<Context11>(context)->getRenderer();
+
+    const gl::Caps &caps             = renderer->getNativeCaps();
+    const gl::Extensions &extensions = renderer->getNativeExtensions();
+
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         const GLuint maxShaderTextureImageUnits = caps.maxShaderTextureImageUnits[shaderType];
@@ -1721,7 +1731,7 @@ gl::Error StateManager11::initialize(const gl::Caps &caps, const gl::Extensions 
     mIsMultiviewEnabled = extensions.multiview;
     mViewportOffsets.resize(1u);
 
-    ANGLE_TRY(mVertexDataManager.initialize());
+    ANGLE_TRY(mVertexDataManager.initialize(context));
 
     mCurrentAttributes.reserve(gl::MAX_VERTEX_ATTRIBS);
 
@@ -1832,6 +1842,7 @@ void StateManager11::invalidateCurrentValueAttrib(size_t attribIndex)
 }
 
 gl::Error StateManager11::syncCurrentValueAttribs(
+    const gl::Context *context,
     const std::vector<gl::VertexAttribCurrentValueData> &currentValues)
 {
     const auto &activeAttribsMask  = mProgramD3D->getState().getActiveAttribLocationsMask();
@@ -1860,7 +1871,7 @@ gl::Error StateManager11::syncCurrentValueAttribs(
 
         mDirtyVertexBufferRange.extend(static_cast<unsigned int>(attribIndex));
 
-        ANGLE_TRY(mVertexDataManager.storeCurrentValue(currentValue, currentValueAttrib,
+        ANGLE_TRY(mVertexDataManager.storeCurrentValue(context, currentValue, currentValueAttrib,
                                                        static_cast<size_t>(attribIndex)));
     }
 
@@ -2042,18 +2053,18 @@ gl::Error StateManager11::updateState(const gl::Context *context,
                                          sampleMask));
                 break;
             case DIRTY_BIT_DEPTH_STENCIL_STATE:
-                ANGLE_TRY(syncDepthStencilState(glState));
+                ANGLE_TRY(syncDepthStencilState(context));
                 break;
             case DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE:
                 // TODO(jmadill): More fine-grained update.
                 ANGLE_TRY(syncTextures(context));
                 break;
             case DIRTY_BIT_PROGRAM_UNIFORMS:
-                ANGLE_TRY(applyUniforms());
+                ANGLE_TRY(applyUniforms(context));
                 break;
             case DIRTY_BIT_DRIVER_UNIFORMS:
                 // This must happen after viewport sync; the viewport affects builtin uniforms.
-                ANGLE_TRY(applyDriverUniforms());
+                ANGLE_TRY(applyDriverUniforms(context));
                 break;
             case DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS:
                 ANGLE_TRY(syncUniformBuffers(context));
@@ -2062,7 +2073,7 @@ gl::Error StateManager11::updateState(const gl::Context *context,
                 ANGLE_TRY(syncProgram(context, drawCallParams.mode()));
                 break;
             case DIRTY_BIT_CURRENT_VALUE_ATTRIBS:
-                ANGLE_TRY(syncCurrentValueAttribs(glState.getVertexAttribCurrentValues()));
+                ANGLE_TRY(syncCurrentValueAttribs(context, glState.getVertexAttribCurrentValues()));
                 break;
             case DIRTY_BIT_TRANSFORM_FEEDBACK:
                 ANGLE_TRY(syncTransformFeedbackBuffers(context));
@@ -2615,10 +2626,10 @@ gl::Error StateManager11::syncProgram(const gl::Context *context, gl::PrimitiveM
     ASSERT(mProgramD3D->hasPixelExecutableForCachedOutputLayout());
 
     ShaderExecutableD3D *vertexExe = nullptr;
-    ANGLE_TRY(mProgramD3D->getVertexExecutableForCachedInputLayout(&vertexExe, nullptr));
+    ANGLE_TRY(mProgramD3D->getVertexExecutableForCachedInputLayout(context, &vertexExe, nullptr));
 
     ShaderExecutableD3D *pixelExe = nullptr;
-    ANGLE_TRY(mProgramD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, nullptr));
+    ANGLE_TRY(mProgramD3D->getPixelExecutableForCachedOutputLayout(context, &pixelExe, nullptr));
 
     ShaderExecutableD3D *geometryExe = nullptr;
     ANGLE_TRY(mProgramD3D->getGeometryExecutableForPrimitiveType(context, drawMode, &geometryExe,
@@ -2684,8 +2695,9 @@ gl::Error StateManager11::syncVertexBuffersAndInputLayout(const gl::Context *con
     // Update the applied input layout by querying the cache.
     const gl::State &state                = context->getGLState();
     const d3d11::InputLayout *inputLayout = nullptr;
-    ANGLE_TRY(mInputLayoutCache.getInputLayout(
-        mRenderer, state, mCurrentAttributes, sortedSemanticIndices, drawCallParams, &inputLayout));
+    ANGLE_TRY(mInputLayoutCache.getInputLayout(context, mRenderer, state, mCurrentAttributes,
+                                               sortedSemanticIndices, drawCallParams,
+                                               &inputLayout));
     setInputLayoutInternal(inputLayout);
 
     // Update the applied vertex buffers.
@@ -2909,7 +2921,8 @@ bool StateManager11::syncIndexBuffer(ID3D11Buffer *buffer,
 }
 
 // Vertex buffer is invalidated outside this function.
-gl::Error StateManager11::updateVertexOffsetsForPointSpritesEmulation(GLint startVertex,
+gl::Error StateManager11::updateVertexOffsetsForPointSpritesEmulation(const gl::Context *context,
+                                                                      GLint startVertex,
                                                                       GLsizei emulatedInstanceId)
 {
     size_t reservedBuffers = GetReservedBufferCount(true);
@@ -2989,7 +3002,8 @@ gl::Error StateManager11::generateSwizzles(const gl::Context *context)
     return gl::NoError();
 }
 
-gl::Error StateManager11::applyUniformsForShader(gl::ShaderType shaderType)
+gl::Error StateManager11::applyUniformsForShader(const gl::Context *context,
+                                                 gl::ShaderType shaderType)
 {
     UniformStorage11 *shaderUniformStorage =
         GetAs<UniformStorage11>(mProgramD3D->getShaderUniformStorage(shaderType));
@@ -3042,13 +3056,13 @@ gl::Error StateManager11::applyUniformsForShader(gl::ShaderType shaderType)
     return gl::NoError();
 }
 
-gl::Error StateManager11::applyUniforms()
+gl::Error StateManager11::applyUniforms(const gl::Context *context)
 {
-    ANGLE_TRY(applyUniformsForShader(gl::ShaderType::Vertex));
-    ANGLE_TRY(applyUniformsForShader(gl::ShaderType::Fragment));
+    ANGLE_TRY(applyUniformsForShader(context, gl::ShaderType::Vertex));
+    ANGLE_TRY(applyUniformsForShader(context, gl::ShaderType::Fragment));
     if (mProgramD3D->hasShaderStage(gl::ShaderType::Geometry))
     {
-        ANGLE_TRY(applyUniformsForShader(gl::ShaderType::Geometry));
+        ANGLE_TRY(applyUniformsForShader(context, gl::ShaderType::Geometry));
     }
 
     mProgramD3D->markUniformsClean();
@@ -3056,7 +3070,8 @@ gl::Error StateManager11::applyUniforms()
     return gl::NoError();
 }
 
-gl::Error StateManager11::applyDriverUniformsForShader(gl::ShaderType shaderType)
+gl::Error StateManager11::applyDriverUniformsForShader(const gl::Context *context,
+                                                       gl::ShaderType shaderType)
 {
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
@@ -3096,21 +3111,21 @@ gl::Error StateManager11::applyDriverUniformsForShader(gl::ShaderType shaderType
 
     // Sampler metadata and driver constants need to coexist in the same constant buffer to
     // conserve constant buffer slots. We update both in the constant buffer if needed.
-    ANGLE_TRY(mShaderConstants.updateBuffer(mRenderer, shaderType, *mProgramD3D,
+    ANGLE_TRY(mShaderConstants.updateBuffer(context, mRenderer, shaderType, *mProgramD3D,
                                             shaderDriverConstantBuffer));
 
     return gl::NoError();
 }
 
-gl::Error StateManager11::applyDriverUniforms()
+gl::Error StateManager11::applyDriverUniforms(const gl::Context *context)
 {
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
-    ANGLE_TRY(applyDriverUniformsForShader(gl::ShaderType::Vertex));
-    ANGLE_TRY(applyDriverUniformsForShader(gl::ShaderType::Fragment));
+    ANGLE_TRY(applyDriverUniformsForShader(context, gl::ShaderType::Vertex));
+    ANGLE_TRY(applyDriverUniformsForShader(context, gl::ShaderType::Fragment));
     if (mProgramD3D->hasShaderStage(gl::ShaderType::Geometry))
     {
-        ANGLE_TRY(applyDriverUniformsForShader(gl::ShaderType::Geometry));
+        ANGLE_TRY(applyDriverUniformsForShader(context, gl::ShaderType::Geometry));
     }
 
     // needed for the point sprite geometry shader
@@ -3130,7 +3145,7 @@ gl::Error StateManager11::applyDriverUniforms()
     return gl::NoError();
 }
 
-gl::Error StateManager11::applyComputeUniforms(ProgramD3D *programD3D)
+gl::Error StateManager11::applyComputeUniforms(const gl::Context *context, ProgramD3D *programD3D)
 {
     UniformStorage11 *computeUniformStorage =
         GetAs<UniformStorage11>(programD3D->getShaderUniformStorage(gl::ShaderType::Compute));
@@ -3169,7 +3184,8 @@ gl::Error StateManager11::applyComputeUniforms(ProgramD3D *programD3D)
                                             &buffer);
     }
 
-    ANGLE_TRY(mShaderConstants.updateBuffer(mRenderer, gl::ShaderType::Compute, *programD3D,
+    ANGLE_TRY(mShaderConstants.updateBuffer(context, mRenderer, gl::ShaderType::Compute,
+                                            *programD3D,
                                             mShaderDriverConstantBuffers[gl::ShaderType::Compute]));
 
     return gl::NoError();

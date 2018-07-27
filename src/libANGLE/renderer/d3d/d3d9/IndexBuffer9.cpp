@@ -25,7 +25,10 @@ IndexBuffer9::~IndexBuffer9()
     SafeRelease(mIndexBuffer);
 }
 
-gl::Error IndexBuffer9::initialize(unsigned int bufferSize, GLenum indexType, bool dynamic)
+gl::Error IndexBuffer9::initialize(const gl::Context *context,
+                                   unsigned int bufferSize,
+                                   GLenum indexType,
+                                   bool dynamic)
 {
     SafeRelease(mIndexBuffer);
 
@@ -66,7 +69,10 @@ gl::Error IndexBuffer9::initialize(unsigned int bufferSize, GLenum indexType, bo
     return gl::NoError();
 }
 
-gl::Error IndexBuffer9::mapBuffer(unsigned int offset, unsigned int size, void** outMappedMemory)
+gl::Error IndexBuffer9::mapBuffer(const gl::Context *context,
+                                  unsigned int offset,
+                                  unsigned int size,
+                                  void **outMappedMemory)
 {
     if (!mIndexBuffer)
     {
@@ -86,7 +92,7 @@ gl::Error IndexBuffer9::mapBuffer(unsigned int offset, unsigned int size, void**
     return gl::NoError();
 }
 
-gl::Error IndexBuffer9::unmapBuffer()
+gl::Error IndexBuffer9::unmapBuffer(const gl::Context *context)
 {
     if (!mIndexBuffer)
     {
@@ -112,11 +118,13 @@ unsigned int IndexBuffer9::getBufferSize() const
     return mBufferSize;
 }
 
-gl::Error IndexBuffer9::setSize(unsigned int bufferSize, GLenum indexType)
+gl::Error IndexBuffer9::setSize(const gl::Context *context,
+                                unsigned int bufferSize,
+                                GLenum indexType)
 {
     if (bufferSize > mBufferSize || indexType != mIndexType)
     {
-        return initialize(bufferSize, indexType, mDynamic);
+        return initialize(context, bufferSize, indexType, mDynamic);
     }
     else
     {
@@ -124,7 +132,7 @@ gl::Error IndexBuffer9::setSize(unsigned int bufferSize, GLenum indexType)
     }
 }
 
-gl::Error IndexBuffer9::discard()
+gl::Error IndexBuffer9::discard(const gl::Context *context)
 {
     if (!mIndexBuffer)
     {

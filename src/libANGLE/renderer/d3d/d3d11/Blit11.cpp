@@ -1116,7 +1116,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
 
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    ANGLE_TRY(mRenderer->mapResource(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
+    ANGLE_TRY(mRenderer->mapResource(context, mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
                                      &mappedResource));
 
     ShaderSupport support;
@@ -1133,8 +1133,8 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     deviceContext->Unmap(mVertexBuffer.get(), 0);
 
     // Set constant buffer
-    ANGLE_TRY(
-        mRenderer->mapResource(mSwizzleCB.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource));
+    ANGLE_TRY(mRenderer->mapResource(context, mSwizzleCB.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
+                                     &mappedResource));
 
     unsigned int *swizzleIndices = static_cast<unsigned int *>(mappedResource.pData);
     swizzleIndices[0]            = GetSwizzleIndex(swizzleTarget.swizzleRed);
@@ -1222,7 +1222,7 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
 
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    ANGLE_TRY(mRenderer->mapResource(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
+    ANGLE_TRY(mRenderer->mapResource(context, mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
                                      &mappedResource));
 
     UINT stride    = 0;
@@ -1325,7 +1325,7 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
 
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    ANGLE_TRY(mRenderer->mapResource(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
+    ANGLE_TRY(mRenderer->mapResource(context, mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
                                      &mappedResource));
 
     UINT stride    = 0;
@@ -1485,11 +1485,12 @@ gl::Error Blit11::copyAndConvertImpl(const gl::Context *context,
                                          sourceSubresource, nullptr);
 
     D3D11_MAPPED_SUBRESOURCE sourceMapping;
-    ANGLE_TRY(mRenderer->mapResource(sourceStaging.get(), 0, D3D11_MAP_READ, 0, &sourceMapping));
+    ANGLE_TRY(
+        mRenderer->mapResource(context, sourceStaging.get(), 0, D3D11_MAP_READ, 0, &sourceMapping));
 
     D3D11_MAPPED_SUBRESOURCE destMapping;
     gl::Error error =
-        mRenderer->mapResource(destStaging.get(), 0, D3D11_MAP_WRITE, 0, &destMapping);
+        mRenderer->mapResource(context, destStaging.get(), 0, D3D11_MAP_WRITE, 0, &destMapping);
     if (error.isError())
     {
         deviceContext->Unmap(sourceStaging.get(), 0);
@@ -1558,7 +1559,8 @@ gl::Error Blit11::copyAndConvert(const gl::Context *context,
     if (mRenderer->getWorkarounds().depthStencilBlitExtraCopy)
     {
         D3D11_MAPPED_SUBRESOURCE mapped;
-        ANGLE_TRY(mRenderer->mapResource(destStaging.get(), 0, D3D11_MAP_READ, 0, &mapped));
+        ANGLE_TRY(
+            mRenderer->mapResource(context, destStaging.get(), 0, D3D11_MAP_READ, 0, &mapped));
         deviceContext->UpdateSubresource(dest.get(), destSubresource, nullptr, mapped.pData,
                                          mapped.RowPitch, mapped.DepthPitch);
         deviceContext->Unmap(destStaging.get(), 0);

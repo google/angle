@@ -21,16 +21,24 @@ class IndexBuffer9 : public IndexBuffer
     explicit IndexBuffer9(Renderer9 *const renderer);
     ~IndexBuffer9() override;
 
-    gl::Error initialize(unsigned int bufferSize, GLenum indexType, bool dynamic) override;
+    gl::Error initialize(const gl::Context *context,
+                         unsigned int bufferSize,
+                         GLenum indexType,
+                         bool dynamic) override;
 
-    gl::Error mapBuffer(unsigned int offset, unsigned int size, void **outMappedMemory) override;
-    gl::Error unmapBuffer() override;
+    gl::Error mapBuffer(const gl::Context *context,
+                        unsigned int offset,
+                        unsigned int size,
+                        void **outMappedMemory) override;
+    gl::Error unmapBuffer(const gl::Context *context) override;
 
     GLenum getIndexType() const override;
     unsigned int getBufferSize() const override;
-    gl::Error setSize(unsigned int bufferSize, GLenum indexType) override;
+    gl::Error setSize(const gl::Context *context,
+                      unsigned int bufferSize,
+                      GLenum indexType) override;
 
-    gl::Error discard() override;
+    gl::Error discard(const gl::Context *context) override;
 
     D3DFORMAT getIndexFormat() const;
     IDirect3DIndexBuffer9 *getBuffer() const;

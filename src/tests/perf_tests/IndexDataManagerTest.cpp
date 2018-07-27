@@ -29,11 +29,11 @@ class MockIndexBuffer : public rx::IndexBuffer
     {
     }
 
-    MOCK_METHOD3(initialize, gl::Error(unsigned int, GLenum, bool));
-    MOCK_METHOD3(mapBuffer, gl::Error(unsigned int, unsigned int, void **));
-    MOCK_METHOD0(unmapBuffer, gl::Error());
-    MOCK_METHOD0(discard, gl::Error());
-    MOCK_METHOD2(setSize, gl::Error(unsigned int, GLenum));
+    MOCK_METHOD4(initialize, gl::Error(const gl::Context *, unsigned int, GLenum, bool));
+    MOCK_METHOD4(mapBuffer, gl::Error(const gl::Context *, unsigned int, unsigned int, void **));
+    MOCK_METHOD1(unmapBuffer, gl::Error(const gl::Context *));
+    MOCK_METHOD1(discard, gl::Error(const gl::Context *));
+    MOCK_METHOD3(setSize, gl::Error(const gl::Context *, unsigned int, GLenum));
 
     // inlined for speed
     GLenum getIndexType() const override { return mIndexType; }
@@ -55,8 +55,9 @@ class MockBufferFactoryD3D : public rx::BufferFactoryD3D
     MOCK_METHOD0(createVertexBuffer, rx::VertexBuffer *());
     MOCK_CONST_METHOD1(getVertexConversionType, rx::VertexConversionType(gl::VertexFormatType));
     MOCK_CONST_METHOD1(getVertexComponentType, GLenum(gl::VertexFormatType));
-    MOCK_CONST_METHOD4(getVertexSpaceRequired,
-                       gl::ErrorOrResult<unsigned int>(const gl::VertexAttribute &,
+    MOCK_CONST_METHOD5(getVertexSpaceRequired,
+                       gl::ErrorOrResult<unsigned int>(const gl::Context *,
+                                                       const gl::VertexAttribute &,
                                                        const gl::VertexBinding &,
                                                        size_t,
                                                        GLsizei));

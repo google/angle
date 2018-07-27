@@ -707,7 +707,7 @@ gl::Error TextureD3D::initializeContents(const gl::Context *context,
         ASSERT(mTexStorage);
         RenderTargetD3D *renderTarget = nullptr;
         ANGLE_TRY(mTexStorage->getRenderTarget(context, imageIndex, &renderTarget));
-        ANGLE_TRY(mRenderer->initRenderTarget(renderTarget));
+        ANGLE_TRY(mRenderer->initRenderTarget(context, renderTarget));
         return gl::NoError();
     }
 

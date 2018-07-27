@@ -240,28 +240,33 @@ class Renderer9 : public RendererD3D
                                     GLint destLevel) override;
 
     // RenderTarget creation
-    gl::Error createRenderTarget(int width,
+    gl::Error createRenderTarget(const gl::Context *context,
+                                 int width,
                                  int height,
                                  GLenum format,
                                  GLsizei samples,
                                  RenderTargetD3D **outRT) override;
-    gl::Error createRenderTargetCopy(RenderTargetD3D *source, RenderTargetD3D **outRT) override;
+    gl::Error createRenderTargetCopy(const gl::Context *context,
+                                     RenderTargetD3D *source,
+                                     RenderTargetD3D **outRT) override;
 
     // Shader operations
-    gl::Error loadExecutable(const uint8_t *function,
+    gl::Error loadExecutable(const gl::Context *context,
+                             const uint8_t *function,
                              size_t length,
                              gl::ShaderType type,
                              const std::vector<D3DVarying> &streamOutVaryings,
                              bool separatedOutputBuffers,
                              ShaderExecutableD3D **outExecutable) override;
-    gl::Error compileToExecutable(gl::InfoLog &infoLog,
+    gl::Error compileToExecutable(const gl::Context *context,
+                                  gl::InfoLog &infoLog,
                                   const std::string &shaderHLSL,
                                   gl::ShaderType type,
                                   const std::vector<D3DVarying> &streamOutVaryings,
                                   bool separatedOutputBuffers,
                                   const angle::CompilerWorkaroundsD3D &workarounds,
                                   ShaderExecutableD3D **outExectuable) override;
-    gl::Error ensureHLSLCompilerInitialized() override;
+    gl::Error ensureHLSLCompilerInitialized(const gl::Context *context) override;
 
     UniformStorageD3D *createUniformStorage(size_t storageSize) override;
 
@@ -346,7 +351,8 @@ class Renderer9 : public RendererD3D
 
     // Warning: you should ensure binding really matches attrib.bindingIndex before using this
     // function.
-    gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(const gl::VertexAttribute &attrib,
+    gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(const gl::Context *context,
+                                                           const gl::VertexAttribute &attrib,
                                                            const gl::VertexBinding &binding,
                                                            size_t count,
                                                            GLsizei instances) const override;
@@ -383,7 +389,8 @@ class Renderer9 : public RendererD3D
 
     gl::Version getMaxSupportedESVersion() const override;
 
-    gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
+    gl::Error clearRenderTarget(const gl::Context *context,
+                                RenderTargetD3D *renderTarget,
                                 const gl::ColorF &clearColorValue,
                                 const float clearDepthValue,
                                 const unsigned int clearStencilValue) override;
@@ -393,6 +400,8 @@ class Renderer9 : public RendererD3D
     gl::Error getIncompleteTexture(const gl::Context *context,
                                    gl::TextureType type,
                                    gl::Texture **textureOut) override;
+
+    gl::Error ensureVertexDataManagerInitialized(const gl::Context *context);
 
   private:
     gl::Error drawArraysImpl(const gl::Context *context,
@@ -440,7 +449,9 @@ class Renderer9 : public RendererD3D
                                 int minIndex,
                                 gl::Buffer *elementArrayBuffer);
 
-    gl::Error getCountingIB(size_t count, StaticIndexBufferInterface **outIB);
+    gl::Error getCountingIB(const gl::Context *context,
+                            size_t count,
+                            StaticIndexBufferInterface **outIB);
 
     gl::Error getNullColorRenderTarget(const gl::Context *context,
                                        const RenderTarget9 *depthRenderTarget,

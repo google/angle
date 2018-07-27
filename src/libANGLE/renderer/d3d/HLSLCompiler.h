@@ -19,6 +19,7 @@
 
 namespace gl
 {
+class Context;
 class InfoLog;
 }
 
@@ -44,12 +45,19 @@ class HLSLCompiler : angle::NonCopyable
 
     // Attempt to compile a HLSL shader using the supplied configurations, may output a NULL compiled blob
     // even if no GL errors are returned.
-    gl::Error compileToBinary(gl::InfoLog &infoLog, const std::string &hlsl, const std::string &profile,
-                              const std::vector<CompileConfig> &configs, const D3D_SHADER_MACRO *overrideMacros,
-                              ID3DBlob **outCompiledBlob, std::string *outDebugInfo);
+    gl::Error compileToBinary(const gl::Context *context,
+                              gl::InfoLog &infoLog,
+                              const std::string &hlsl,
+                              const std::string &profile,
+                              const std::vector<CompileConfig> &configs,
+                              const D3D_SHADER_MACRO *overrideMacros,
+                              ID3DBlob **outCompiledBlob,
+                              std::string *outDebugInfo);
 
-    gl::Error disassembleBinary(ID3DBlob *shaderBinary, std::string *disassemblyOut);
-    gl::Error ensureInitialized();
+    gl::Error disassembleBinary(const gl::Context *context,
+                                ID3DBlob *shaderBinary,
+                                std::string *disassemblyOut);
+    gl::Error ensureInitialized(const gl::Context *context);
 
   private:
 

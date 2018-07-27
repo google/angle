@@ -507,14 +507,15 @@ gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *cont
     }
 
     // Load the compiler if necessary and recompile the programs.
-    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized());
+    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized(context));
 
     gl::InfoLog infoLog;
 
     if (recompileVS)
     {
         ShaderExecutableD3D *vertexExe = nullptr;
-        ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(&vertexExe, &infoLog));
+        ANGLE_TRY(
+            programD3D->getVertexExecutableForCachedInputLayout(context, &vertexExe, &infoLog));
         if (!programD3D->hasVertexExecutableForCachedInputLayout())
         {
             ASSERT(infoLog.getLength() > 0);
@@ -541,7 +542,8 @@ gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *cont
     if (recompilePS)
     {
         ShaderExecutableD3D *pixelExe = nullptr;
-        ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, &infoLog));
+        ANGLE_TRY(
+            programD3D->getPixelExecutableForCachedOutputLayout(context, &pixelExe, &infoLog));
         if (!programD3D->hasPixelExecutableForCachedOutputLayout())
         {
             ASSERT(infoLog.getLength() > 0);
@@ -592,6 +594,7 @@ gl::Error Context11::initializeMultisampleTextureToBlack(const gl::Context *cont
     gl::ImageIndex index          = gl::ImageIndex::Make2DMultisample();
     RenderTargetD3D *renderTarget = nullptr;
     ANGLE_TRY(textureD3D->getRenderTarget(context, index, &renderTarget));
-    return mRenderer->clearRenderTarget(renderTarget, gl::ColorF(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0);
+    return mRenderer->clearRenderTarget(context, renderTarget, gl::ColorF(0.0f, 0.0f, 0.0f, 1.0f),
+                                        1.0f, 0);
 }
 }  // namespace rx

@@ -94,6 +94,7 @@ class BufferFactoryD3D : angle::NonCopyable
     // Warning: you should ensure binding really matches attrib.bindingIndex before using this
     // function.
     virtual gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(
+        const gl::Context *context,
         const gl::VertexAttribute &attrib,
         const gl::VertexBinding &binding,
         size_t count,
@@ -199,28 +200,33 @@ class RendererD3D : public BufferFactoryD3D
                                             GLint destLevel)  = 0;
 
     // RenderTarget creation
-    virtual gl::Error createRenderTarget(int width,
+    virtual gl::Error createRenderTarget(const gl::Context *context,
+                                         int width,
                                          int height,
                                          GLenum format,
                                          GLsizei samples,
-                                         RenderTargetD3D **outRT)                              = 0;
-    virtual gl::Error createRenderTargetCopy(RenderTargetD3D *source, RenderTargetD3D **outRT) = 0;
+                                         RenderTargetD3D **outRT)     = 0;
+    virtual gl::Error createRenderTargetCopy(const gl::Context *context,
+                                             RenderTargetD3D *source,
+                                             RenderTargetD3D **outRT) = 0;
 
     // Shader operations
-    virtual gl::Error loadExecutable(const uint8_t *function,
+    virtual gl::Error loadExecutable(const gl::Context *context,
+                                     const uint8_t *function,
                                      size_t length,
                                      gl::ShaderType type,
                                      const std::vector<D3DVarying> &streamOutVaryings,
                                      bool separatedOutputBuffers,
-                                     ShaderExecutableD3D **outExecutable)      = 0;
-    virtual gl::Error compileToExecutable(gl::InfoLog &infoLog,
+                                     ShaderExecutableD3D **outExecutable)       = 0;
+    virtual gl::Error compileToExecutable(const gl::Context *context,
+                                          gl::InfoLog &infoLog,
                                           const std::string &shaderHLSL,
                                           gl::ShaderType type,
                                           const std::vector<D3DVarying> &streamOutVaryings,
                                           bool separatedOutputBuffers,
                                           const angle::CompilerWorkaroundsD3D &workarounds,
-                                          ShaderExecutableD3D **outExectuable) = 0;
-    virtual gl::Error ensureHLSLCompilerInitialized()                          = 0;
+                                          ShaderExecutableD3D **outExectuable)  = 0;
+    virtual gl::Error ensureHLSLCompilerInitialized(const gl::Context *context) = 0;
 
     virtual UniformStorageD3D *createUniformStorage(size_t storageSize) = 0;
 
@@ -301,7 +307,8 @@ class RendererD3D : public BufferFactoryD3D
     GLint getGPUDisjoint();
     GLint64 getTimestamp();
 
-    virtual gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
+    virtual gl::Error clearRenderTarget(const gl::Context *context,
+                                        RenderTargetD3D *renderTarget,
                                         const gl::ColorF &clearColorValue,
                                         const float clearDepthValue,
                                         const unsigned int clearStencilValue) = 0;
@@ -325,7 +332,7 @@ class RendererD3D : public BufferFactoryD3D
 
     virtual gl::Version getMaxSupportedESVersion() const = 0;
 
-    gl::Error initRenderTarget(RenderTargetD3D *renderTarget);
+    gl::Error initRenderTarget(const gl::Context *context, RenderTargetD3D *renderTarget);
 
     angle::WorkerThreadPool *getWorkerThreadPool();
 

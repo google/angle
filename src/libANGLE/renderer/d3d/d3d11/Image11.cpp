@@ -635,7 +635,8 @@ gl::Error Image11::map(const gl::Context *context, D3D11_MAP mapType, D3D11_MAPP
 
     ASSERT(stagingTexture && stagingTexture->valid());
 
-    ANGLE_TRY(mRenderer->mapResource(stagingTexture->get(), subresourceIndex, mapType, 0, map));
+    ANGLE_TRY(
+        mRenderer->mapResource(context, stagingTexture->get(), subresourceIndex, mapType, 0, map));
 
     mDirty = true;
 

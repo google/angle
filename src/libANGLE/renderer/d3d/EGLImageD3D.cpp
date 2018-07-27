@@ -85,6 +85,6 @@ gl::Error EGLImageD3D::copyToLocalRendertarget(const gl::Context *context)
         target->getSubject()->onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
     }
 
-    return mRenderer->createRenderTargetCopy(curRenderTarget, &mRenderTarget);
+    return mRenderer->createRenderTargetCopy(context, curRenderTarget, &mRenderTarget);
 }
 }  // namespace rx

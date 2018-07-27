@@ -186,13 +186,15 @@ class ProgramD3D : public ProgramImpl
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
-    gl::Error getVertexExecutableForCachedInputLayout(ShaderExecutableD3D **outExectuable,
+    gl::Error getVertexExecutableForCachedInputLayout(const gl::Context *context,
+                                                      ShaderExecutableD3D **outExectuable,
                                                       gl::InfoLog *infoLog);
     gl::Error getGeometryExecutableForPrimitiveType(const gl::Context *context,
                                                     gl::PrimitiveMode drawMode,
                                                     ShaderExecutableD3D **outExecutable,
                                                     gl::InfoLog *infoLog);
-    gl::Error getPixelExecutableForCachedOutputLayout(ShaderExecutableD3D **outExectuable,
+    gl::Error getPixelExecutableForCachedOutputLayout(const gl::Context *context,
+                                                      ShaderExecutableD3D **outExectuable,
                                                       gl::InfoLog *infoLog);
     gl::Error getComputeExecutable(ShaderExecutableD3D **outExecutable);
     gl::LinkResult link(const gl::Context *context,

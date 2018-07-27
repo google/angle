@@ -29,7 +29,9 @@ VertexBuffer9::~VertexBuffer9()
     SafeRelease(mVertexBuffer);
 }
 
-gl::Error VertexBuffer9::initialize(unsigned int size, bool dynamicUsage)
+gl::Error VertexBuffer9::initialize(const gl::Context *context,
+                                    unsigned int size,
+                                    bool dynamicUsage)
 {
     SafeRelease(mVertexBuffer);
 
@@ -57,7 +59,8 @@ gl::Error VertexBuffer9::initialize(unsigned int size, bool dynamicUsage)
     return gl::NoError();
 }
 
-gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib,
+gl::Error VertexBuffer9::storeVertexAttributes(const gl::Context *context,
+                                               const gl::VertexAttribute &attrib,
                                                const gl::VertexBinding &binding,
                                                GLenum currentValueType,
                                                GLint start,
@@ -78,7 +81,8 @@ gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib
 
     uint8_t *mapPtr = nullptr;
 
-    auto errorOrMapSize = mRenderer->getVertexSpaceRequired(attrib, binding, count, instances);
+    auto errorOrMapSize =
+        mRenderer->getVertexSpaceRequired(context, attrib, binding, count, instances);
     if (errorOrMapSize.isError())
     {
         return errorOrMapSize.getError();
@@ -123,11 +127,11 @@ unsigned int VertexBuffer9::getBufferSize() const
     return mBufferSize;
 }
 
-gl::Error VertexBuffer9::setBufferSize(unsigned int size)
+gl::Error VertexBuffer9::setBufferSize(const gl::Context *context, unsigned int size)
 {
     if (size > mBufferSize)
     {
-        return initialize(size, mDynamicUsage);
+        return initialize(context, size, mDynamicUsage);
     }
     else
     {
@@ -135,7 +139,7 @@ gl::Error VertexBuffer9::setBufferSize(unsigned int size)
     }
 }
 
-gl::Error VertexBuffer9::discard()
+gl::Error VertexBuffer9::discard(const gl::Context *context)
 {
     if (!mVertexBuffer)
     {

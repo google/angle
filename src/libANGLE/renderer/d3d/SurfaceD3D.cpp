@@ -420,16 +420,16 @@ gl::Error SurfaceD3D::getAttachmentRenderTarget(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error SurfaceD3D::initializeContents(const gl::Context * /*context*/,
+gl::Error SurfaceD3D::initializeContents(const gl::Context *context,
                                          const gl::ImageIndex & /*imageIndex*/)
 {
     if (mState.config->renderTargetFormat != GL_NONE)
     {
-        ANGLE_TRY(mRenderer->initRenderTarget(mSwapChain->getColorRenderTarget()));
+        ANGLE_TRY(mRenderer->initRenderTarget(context, mSwapChain->getColorRenderTarget()));
     }
     if (mState.config->depthStencilFormat != GL_NONE)
     {
-        ANGLE_TRY(mRenderer->initRenderTarget(mSwapChain->getDepthStencilRenderTarget()));
+        ANGLE_TRY(mRenderer->initRenderTarget(context, mSwapChain->getDepthStencilRenderTarget()));
     }
     return gl::NoError();
 }

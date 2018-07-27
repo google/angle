@@ -78,13 +78,15 @@ class IndexDataManager : angle::NonCopyable
                                TranslatedIndexData *translated);
 
   private:
-    gl::Error streamIndexData(const void *data,
+    gl::Error streamIndexData(const gl::Context *context,
+                              const void *data,
                               unsigned int count,
                               GLenum srcType,
                               GLenum dstType,
                               bool usePrimitiveRestartFixedIndex,
                               TranslatedIndexData *translated);
-    gl::Error getStreamingIndexBuffer(GLenum destinationIndexType,
+    gl::Error getStreamingIndexBuffer(const gl::Context *context,
+                                      GLenum destinationIndexType,
                                       IndexBufferInterface **outBuffer);
 
     using StreamingBuffer = std::unique_ptr<StreamingIndexBufferInterface>;

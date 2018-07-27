@@ -273,7 +273,7 @@ class TextureStorage11_2D : public TextureStorage11
     gl::Error ensureDropStencilTexture(const gl::Context *context,
                                        DropStencil *dropStencilOut) override;
 
-    gl::Error ensureTextureExists(int mipLevels);
+    gl::Error ensureTextureExists(const gl::Context *context, int mipLevels);
 
   private:
     gl::Error createSRVForSampler(const gl::Context *context,
@@ -490,7 +490,7 @@ class TextureStorage11_Cube : public TextureStorage11
     gl::Error ensureDropStencilTexture(const gl::Context *context,
                                        DropStencil *dropStencilOut) override;
 
-    gl::Error ensureTextureExists(int mipLevels);
+    gl::Error ensureTextureExists(const gl::Context *context, int mipLevels);
 
   private:
     gl::Error createSRVForSampler(const gl::Context *context,
@@ -509,7 +509,8 @@ class TextureStorage11_Cube : public TextureStorage11
                                 DXGI_FORMAT format,
                                 const TextureHelper11 &texture,
                                 d3d11::SharedUAV *outUAV) override;
-    gl::Error createRenderTargetSRV(const TextureHelper11 &texture,
+    gl::Error createRenderTargetSRV(const gl::Context *context,
+                                    const TextureHelper11 &texture,
                                     const gl::ImageIndex &index,
                                     DXGI_FORMAT resourceFormat,
                                     d3d11::SharedSRV *srv) const;
@@ -671,7 +672,8 @@ class TextureStorage11_2DArray : public TextureStorage11
                                 DXGI_FORMAT format,
                                 const TextureHelper11 &texture,
                                 d3d11::SharedUAV *outUAV) override;
-    gl::Error createRenderTargetSRV(const TextureHelper11 &texture,
+    gl::Error createRenderTargetSRV(const gl::Context *context,
+                                    const TextureHelper11 &texture,
                                     const gl::ImageIndex &index,
                                     DXGI_FORMAT resourceFormat,
                                     d3d11::SharedSRV *srv) const;
@@ -725,7 +727,7 @@ class TextureStorage11_2DMultisample : public TextureStorage11
     gl::Error ensureDropStencilTexture(const gl::Context *context,
                                        DropStencil *dropStencilOut) override;
 
-    gl::Error ensureTextureExists(int mipLevels);
+    gl::Error ensureTextureExists(const gl::Context *context, int mipLevels);
 
   private:
     gl::Error createSRVForSampler(const gl::Context *context,

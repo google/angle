@@ -375,13 +375,7 @@ egl::Error Renderer9::initializeDevice()
     ANGLE_TRY(mBlit->initialize());
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);
-    mVertexDataManager = new VertexDataManager(this);
     mIndexDataManager  = new IndexDataManager(this);
-
-    if (mVertexDataManager->initialize().isError())
-    {
-        return egl::EglBadAlloc() << "Error initializing VertexDataManager";
-    }
 
     mTranslatedAttribCache.resize(getNativeCaps().maxVertexAttributes);
 
@@ -1191,7 +1185,7 @@ gl::Error Renderer9::getNullColorRenderTarget(const gl::Context *context,
     }
 
     RenderTargetD3D *nullRenderTarget = nullptr;
-    ANGLE_TRY(createRenderTarget(size.width, size.height, GL_NONE, 0, &nullRenderTarget));
+    ANGLE_TRY(createRenderTarget(context, size.width, size.height, GL_NONE, 0, &nullRenderTarget));
 
     // add nullbuffer to the cache
     NullRenderTargetCacheEntry *oldest = &mNullRenderTargetCache[0];
@@ -1363,14 +1357,11 @@ gl::Error Renderer9::drawArraysImpl(const gl::Context *context,
     {
         return drawLineLoop(context, count, GL_NONE, nullptr, 0, nullptr);
     }
-    else if (instances > 0)
+
+    if (instances > 0)
     {
         StaticIndexBufferInterface *countingIB = nullptr;
-        gl::Error error                        = getCountingIB(count, &countingIB);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(getCountingIB(context, count, &countingIB));
 
         if (mAppliedIBSerial != countingIB->getSerial())
         {
@@ -1387,11 +1378,10 @@ gl::Error Renderer9::drawArraysImpl(const gl::Context *context,
 
         return gl::NoError();
     }
-    else  // Regular case
-    {
-        mDevice->DrawPrimitive(mPrimitiveType, 0, mPrimitiveCount);
-        return gl::NoError();
-    }
+
+    // Regular case
+    mDevice->DrawPrimitive(mPrimitiveType, 0, mPrimitiveCount);
+    return gl::NoError();
 }
 
 gl::Error Renderer9::drawElementsImpl(const gl::Context *context,
@@ -1453,11 +1443,7 @@ gl::Error Renderer9::drawLineLoop(const gl::Context *context,
         BufferD3D *storage        = GetImplAs<BufferD3D>(elementArrayBuffer);
         intptr_t offset           = reinterpret_cast<intptr_t>(indices);
         const uint8_t *bufferData = nullptr;
-        gl::Error error           = storage->getData(context, &bufferData);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(storage->getData(context, &bufferData));
         indices = bufferData + offset;
     }
 
@@ -1468,13 +1454,8 @@ gl::Error Renderer9::drawLineLoop(const gl::Context *context,
         if (!mLineLoopIB)
         {
             mLineLoopIB = new StreamingIndexBufferInterface(this);
-            gl::Error error =
-                mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT);
-            if (error.isError())
-            {
-                SafeDelete(mLineLoopIB);
-                return error;
-            }
+            ANGLE_TRY(mLineLoopIB->reserveBufferSpace(context, INITIAL_INDEX_BUFFER_SIZE,
+                                                      GL_UNSIGNED_INT));
         }
 
         // Checked by Renderer9::applyPrimitiveType
@@ -1489,19 +1470,11 @@ gl::Error Renderer9::drawLineLoop(const gl::Context *context,
 
         const unsigned int spaceNeeded =
             (static_cast<unsigned int>(count) + 1) * sizeof(unsigned int);
-        gl::Error error = mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(mLineLoopIB->reserveBufferSpace(context, spaceNeeded, GL_UNSIGNED_INT));
 
         void *mappedMemory  = nullptr;
         unsigned int offset = 0;
-        error               = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(mLineLoopIB->mapBuffer(context, spaceNeeded, &mappedMemory, &offset));
 
         startIndex         = static_cast<unsigned int>(offset) / 4;
         unsigned int *data = static_cast<unsigned int *>(mappedMemory);
@@ -1540,24 +1513,15 @@ gl::Error Renderer9::drawLineLoop(const gl::Context *context,
                 UNREACHABLE();
         }
 
-        error = mLineLoopIB->unmapBuffer();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(mLineLoopIB->unmapBuffer(context));
     }
     else
     {
         if (!mLineLoopIB)
         {
             mLineLoopIB = new StreamingIndexBufferInterface(this);
-            gl::Error error =
-                mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_SHORT);
-            if (error.isError())
-            {
-                SafeDelete(mLineLoopIB);
-                return error;
-            }
+            ANGLE_TRY(mLineLoopIB->reserveBufferSpace(context, INITIAL_INDEX_BUFFER_SIZE,
+                                                      GL_UNSIGNED_SHORT));
         }
 
         // Checked by Renderer9::applyPrimitiveType
@@ -1572,19 +1536,11 @@ gl::Error Renderer9::drawLineLoop(const gl::Context *context,
 
         const unsigned int spaceNeeded =
             (static_cast<unsigned int>(count) + 1) * sizeof(unsigned short);
-        gl::Error error = mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(mLineLoopIB->reserveBufferSpace(context, spaceNeeded, GL_UNSIGNED_SHORT));
 
         void *mappedMemory = nullptr;
         unsigned int offset;
-        error = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(mLineLoopIB->mapBuffer(context, spaceNeeded, &mappedMemory, &offset));
 
         startIndex           = static_cast<unsigned int>(offset) / 2;
         unsigned short *data = static_cast<unsigned short *>(mappedMemory);
@@ -1623,11 +1579,7 @@ gl::Error Renderer9::drawLineLoop(const gl::Context *context,
                 UNREACHABLE();
         }
 
-        error = mLineLoopIB->unmapBuffer();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(mLineLoopIB->unmapBuffer(context));
     }
 
     if (mAppliedIBSerial != mLineLoopIB->getSerial())
@@ -1698,7 +1650,9 @@ gl::Error Renderer9::drawIndexedPoints(const gl::Context *context,
     }
 }
 
-gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **outIB)
+gl::Error Renderer9::getCountingIB(const gl::Context *context,
+                                   size_t count,
+                                   StaticIndexBufferInterface **outIB)
 {
     // Update the counting index buffer if it is not large enough or has not been created yet.
     if (count <= 65536)  // 16-bit indices
@@ -1709,10 +1663,10 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
         {
             SafeDelete(mCountingIB);
             mCountingIB = new StaticIndexBufferInterface(this);
-            ANGLE_TRY(mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT));
+            ANGLE_TRY(mCountingIB->reserveBufferSpace(context, spaceNeeded, GL_UNSIGNED_SHORT));
 
             void *mappedMemory = nullptr;
-            ANGLE_TRY(mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr));
+            ANGLE_TRY(mCountingIB->mapBuffer(context, spaceNeeded, &mappedMemory, nullptr));
 
             unsigned short *data = static_cast<unsigned short *>(mappedMemory);
             for (size_t i = 0; i < count; i++)
@@ -1720,7 +1674,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
                 data[i] = static_cast<unsigned short>(i);
             }
 
-            ANGLE_TRY(mCountingIB->unmapBuffer());
+            ANGLE_TRY(mCountingIB->unmapBuffer(context));
         }
     }
     else if (getNativeExtensions().elementIndexUint)
@@ -1731,10 +1685,10 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
         {
             SafeDelete(mCountingIB);
             mCountingIB = new StaticIndexBufferInterface(this);
-            ANGLE_TRY(mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT));
+            ANGLE_TRY(mCountingIB->reserveBufferSpace(context, spaceNeeded, GL_UNSIGNED_INT));
 
             void *mappedMemory = nullptr;
-            ANGLE_TRY(mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr));
+            ANGLE_TRY(mCountingIB->mapBuffer(context, spaceNeeded, &mappedMemory, nullptr));
 
             unsigned int *data = static_cast<unsigned int *>(mappedMemory);
             for (unsigned int i = 0; i < count; i++)
@@ -1742,7 +1696,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
                 data[i] = i;
             }
 
-            ANGLE_TRY(mCountingIB->unmapBuffer());
+            ANGLE_TRY(mCountingIB->unmapBuffer(context));
         }
     }
     else
@@ -1759,20 +1713,20 @@ gl::Error Renderer9::applyShaders(const gl::Context *context, gl::PrimitiveMode 
 {
     const gl::State &state = context->getContextState().getState();
     // This method is called single-threaded.
-    ANGLE_TRY(ensureHLSLCompilerInitialized());
+    ANGLE_TRY(ensureHLSLCompilerInitialized(context));
 
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(state.getProgram());
     VertexArray9 *vao      = GetImplAs<VertexArray9>(state.getVertexArray());
     programD3D->updateCachedInputLayout(vao->getCurrentStateSerial(), state);
 
     ShaderExecutableD3D *vertexExe = nullptr;
-    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(&vertexExe, nullptr));
+    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(context, &vertexExe, nullptr));
 
     const gl::Framebuffer *drawFramebuffer = state.getDrawFramebuffer();
     programD3D->updateCachedOutputLayout(context, drawFramebuffer);
 
     ShaderExecutableD3D *pixelExe = nullptr;
-    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, nullptr));
+    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(context, &pixelExe, nullptr));
 
     IDirect3DVertexShader9 *vertexShader =
         (vertexExe ? GetAs<ShaderExecutable9>(vertexExe)->getVertexShader() : nullptr);
@@ -2557,7 +2511,8 @@ gl::Error Renderer9::copyCompressedTexture(const gl::Context *context,
     return gl::InternalError();
 }
 
-gl::Error Renderer9::createRenderTarget(int width,
+gl::Error Renderer9::createRenderTarget(const gl::Context *context,
+                                        int width,
                                         int height,
                                         GLenum format,
                                         GLsizei samples,
@@ -2627,17 +2582,15 @@ gl::Error Renderer9::createRenderTarget(int width,
     return gl::NoError();
 }
 
-gl::Error Renderer9::createRenderTargetCopy(RenderTargetD3D *source, RenderTargetD3D **outRT)
+gl::Error Renderer9::createRenderTargetCopy(const gl::Context *context,
+                                            RenderTargetD3D *source,
+                                            RenderTargetD3D **outRT)
 {
     ASSERT(source != nullptr);
 
     RenderTargetD3D *newRT = nullptr;
-    gl::Error error        = createRenderTarget(source->getWidth(), source->getHeight(),
-                                         source->getInternalFormat(), source->getSamples(), &newRT);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(createRenderTarget(context, source->getWidth(), source->getHeight(),
+                                 source->getInternalFormat(), source->getSamples(), &newRT));
 
     RenderTarget9 *source9 = GetAs<RenderTarget9>(source);
     RenderTarget9 *dest9   = GetAs<RenderTarget9>(newRT);
@@ -2654,7 +2607,8 @@ gl::Error Renderer9::createRenderTargetCopy(RenderTargetD3D *source, RenderTarge
     return gl::NoError();
 }
 
-gl::Error Renderer9::loadExecutable(const uint8_t *function,
+gl::Error Renderer9::loadExecutable(const gl::Context *context,
+                                    const uint8_t *function,
                                     size_t length,
                                     gl::ShaderType type,
                                     const std::vector<D3DVarying> &streamOutVaryings,
@@ -2696,7 +2650,8 @@ gl::Error Renderer9::loadExecutable(const uint8_t *function,
     return gl::NoError();
 }
 
-gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
+gl::Error Renderer9::compileToExecutable(const gl::Context *context,
+                                         gl::InfoLog &infoLog,
                                          const std::string &shaderHLSL,
                                          gl::ShaderType type,
                                          const std::vector<D3DVarying> &streamOutVaryings,
@@ -2758,8 +2713,8 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
 
     ID3DBlob *binary = nullptr;
     std::string debugInfo;
-    gl::Error error = mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, nullptr,
-                                                &binary, &debugInfo);
+    gl::Error error = mCompiler.compileToBinary(context, infoLog, shaderHLSL, profile, configs,
+                                                nullptr, &binary, &debugInfo);
     if (error.isError())
     {
         return error;
@@ -2774,7 +2729,7 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
         return gl::NoError();
     }
 
-    error = loadExecutable(reinterpret_cast<const uint8_t *>(binary->GetBufferPointer()),
+    error = loadExecutable(context, reinterpret_cast<const uint8_t *>(binary->GetBufferPointer()),
                            binary->GetBufferSize(), type, streamOutVaryings, separatedOutputBuffers,
                            outExectuable);
 
@@ -2792,9 +2747,9 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
     return gl::NoError();
 }
 
-gl::Error Renderer9::ensureHLSLCompilerInitialized()
+gl::Error Renderer9::ensureHLSLCompilerInitialized(const gl::Context *context)
 {
-    return mCompiler.ensureInitialized();
+    return mCompiler.ensureInitialized(context);
 }
 
 UniformStorageD3D *Renderer9::createUniformStorage(size_t storageSize)
@@ -3006,7 +2961,8 @@ GLenum Renderer9::getVertexComponentType(gl::VertexFormatType vertexFormatType) 
     return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatType).componentType;
 }
 
-gl::ErrorOrResult<unsigned int> Renderer9::getVertexSpaceRequired(const gl::VertexAttribute &attrib,
+gl::ErrorOrResult<unsigned int> Renderer9::getVertexSpaceRequired(const gl::Context *context,
+                                                                  const gl::VertexAttribute &attrib,
                                                                   const gl::VertexBinding &binding,
                                                                   size_t count,
                                                                   GLsizei instances) const
@@ -3137,7 +3093,8 @@ gl::Version Renderer9::getMaxSupportedESVersion() const
     return gl::Version(2, 0);
 }
 
-gl::Error Renderer9::clearRenderTarget(RenderTargetD3D *renderTarget,
+gl::Error Renderer9::clearRenderTarget(const gl::Context *context,
+                                       RenderTargetD3D *renderTarget,
                                        const gl::ColorF &clearColorValue,
                                        const float clearDepthValue,
                                        const unsigned int clearStencilValue)
@@ -3270,5 +3227,16 @@ gl::Error Renderer9::getIncompleteTexture(const gl::Context *context,
                                           gl::Texture **textureOut)
 {
     return GetImplAs<Context9>(context)->getIncompleteTexture(context, type, textureOut);
+}
+
+gl::Error Renderer9::ensureVertexDataManagerInitialized(const gl::Context *context)
+{
+    if (!mVertexDataManager)
+    {
+        mVertexDataManager = new VertexDataManager(this);
+        ANGLE_TRY(mVertexDataManager->initialize(context));
+    }
+
+    return gl::NoError();
 }
 }  // namespace rx

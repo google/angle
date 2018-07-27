@@ -88,7 +88,8 @@ class InputLayoutCache : angle::NonCopyable
     // Useful for testing
     void setCacheSize(size_t newCacheSize);
 
-    gl::Error getInputLayout(Renderer11 *renderer,
+    gl::Error getInputLayout(const gl::Context *context,
+                             Renderer11 *renderer,
                              const gl::State &state,
                              const std::vector<const TranslatedAttribute *> &currentAttributes,
                              const AttribIndexArray &sortedSemanticIndices,
@@ -96,7 +97,8 @@ class InputLayoutCache : angle::NonCopyable
                              const d3d11::InputLayout **inputLayoutOut);
 
   private:
-    gl::Error createInputLayout(Renderer11 *renderer,
+    gl::Error createInputLayout(const gl::Context *context,
+                                Renderer11 *renderer,
                                 const AttribIndexArray &sortedSemanticIndices,
                                 const std::vector<const TranslatedAttribute *> &currentAttributes,
                                 gl::Program *program,

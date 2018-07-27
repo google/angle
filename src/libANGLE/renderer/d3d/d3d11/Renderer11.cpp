@@ -867,13 +867,6 @@ egl::Error Renderer11::initializeDevice()
     ASSERT(!mPixelTransfer);
     mPixelTransfer = new PixelTransfer11(this);
 
-    const gl::Caps &rendererCaps = getNativeCaps();
-
-    if (mStateManager.initialize(rendererCaps, getNativeExtensions()).isError())
-    {
-        return egl::EglBadAlloc() << "Error initializing state manager.";
-    }
-
     // Gather stats on DXGI and D3D feature level
     ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.SupportsDXGI1_2", mRenderer11DeviceCaps.supportsDXGI1_2);
 
@@ -1427,7 +1420,7 @@ gl::Error Renderer11::drawWithGeometryShaderAndTransformFeedback(const gl::Conte
     }
 
     rx::ShaderExecutableD3D *pixelExe = nullptr;
-    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, nullptr));
+    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(context, &pixelExe, nullptr));
 
     // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
     if (!pixelExe || glState.getRasterizerState().rasterizerDiscard)
@@ -1513,7 +1506,7 @@ gl::Error Renderer11::drawArrays(const gl::Context *context, const gl::DrawCallP
                 for (GLsizei i = 0; i < params.instances(); i++)
                 {
                     ANGLE_TRY(mStateManager.updateVertexOffsetsForPointSpritesEmulation(
-                        params.baseVertex(), i));
+                        context, params.baseVertex(), i));
                     mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, 0, 0);
                 }
 
@@ -1614,7 +1607,8 @@ gl::Error Renderer11::drawElements(const gl::Context *context, const gl::DrawCal
     // Each instance being rendered requires the inputlayout cache to reapply buffers and offsets.
     for (GLsizei i = 0; i < params.instances(); i++)
     {
-        ANGLE_TRY(mStateManager.updateVertexOffsetsForPointSpritesEmulation(startVertex, i));
+        ANGLE_TRY(
+            mStateManager.updateVertexOffsetsForPointSpritesEmulation(context, startVertex, i));
         mDeviceContext->DrawIndexedInstanced(6, clampedVertexCount, 0, 0, 0);
     }
     mStateManager.invalidateVertexBuffer();
@@ -1694,13 +1688,8 @@ gl::Error Renderer11::drawLineLoop(const gl::Context *context,
     if (!mLineLoopIB)
     {
         mLineLoopIB = new StreamingIndexBufferInterface(this);
-        gl::Error error =
-            mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT);
-        if (error.isError())
-        {
-            SafeDelete(mLineLoopIB);
-            return error;
-        }
+        ANGLE_TRY(
+            mLineLoopIB->reserveBufferSpace(context, INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT));
     }
 
     // Checked by Renderer11::applyPrimitiveType
@@ -1716,17 +1705,17 @@ gl::Error Renderer11::drawLineLoop(const gl::Context *context,
 
     unsigned int spaceNeeded =
         static_cast<unsigned int>(sizeof(GLuint) * mScratchIndexDataBuffer.size());
-    ANGLE_TRY(mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT));
+    ANGLE_TRY(mLineLoopIB->reserveBufferSpace(context, spaceNeeded, GL_UNSIGNED_INT));
 
     void *mappedMemory = nullptr;
     unsigned int offset;
-    ANGLE_TRY(mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset));
+    ANGLE_TRY(mLineLoopIB->mapBuffer(context, spaceNeeded, &mappedMemory, &offset));
 
     // Copy over the converted index data.
     memcpy(mappedMemory, &mScratchIndexDataBuffer[0],
            sizeof(GLuint) * mScratchIndexDataBuffer.size());
 
-    ANGLE_TRY(mLineLoopIB->unmapBuffer());
+    ANGLE_TRY(mLineLoopIB->unmapBuffer(context));
 
     IndexBuffer11 *indexBuffer          = GetAs<IndexBuffer11>(mLineLoopIB->getIndexBuffer());
     const d3d11::Buffer &d3dIndexBuffer = indexBuffer->getBuffer();
@@ -1776,13 +1765,8 @@ gl::Error Renderer11::drawTriangleFan(const gl::Context *context,
     if (!mTriangleFanIB)
     {
         mTriangleFanIB = new StreamingIndexBufferInterface(this);
-        gl::Error error =
-            mTriangleFanIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT);
-        if (error.isError())
-        {
-            SafeDelete(mTriangleFanIB);
-            return error;
-        }
+        ANGLE_TRY(mTriangleFanIB->reserveBufferSpace(context, INITIAL_INDEX_BUFFER_SIZE,
+                                                     GL_UNSIGNED_INT));
     }
 
     // Checked by Renderer11::applyPrimitiveType
@@ -1801,15 +1785,15 @@ gl::Error Renderer11::drawTriangleFan(const gl::Context *context,
 
     const unsigned int spaceNeeded =
         static_cast<unsigned int>(mScratchIndexDataBuffer.size() * sizeof(unsigned int));
-    ANGLE_TRY(mTriangleFanIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT));
+    ANGLE_TRY(mTriangleFanIB->reserveBufferSpace(context, spaceNeeded, GL_UNSIGNED_INT));
 
     void *mappedMemory = nullptr;
     unsigned int offset;
-    ANGLE_TRY(mTriangleFanIB->mapBuffer(spaceNeeded, &mappedMemory, &offset));
+    ANGLE_TRY(mTriangleFanIB->mapBuffer(context, spaceNeeded, &mappedMemory, &offset));
 
     memcpy(mappedMemory, &mScratchIndexDataBuffer[0], spaceNeeded);
 
-    ANGLE_TRY(mTriangleFanIB->unmapBuffer());
+    ANGLE_TRY(mTriangleFanIB->unmapBuffer(context));
 
     IndexBuffer11 *indexBuffer          = GetAs<IndexBuffer11>(mTriangleFanIB->getIndexBuffer());
     const d3d11::Buffer &d3dIndexBuffer = indexBuffer->getBuffer();
@@ -2481,7 +2465,8 @@ gl::Error Renderer11::copyCompressedTexture(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error Renderer11::createRenderTarget(int width,
+gl::Error Renderer11::createRenderTarget(const gl::Context *context,
+                                         int width,
                                          int height,
                                          GLenum format,
                                          GLsizei samples,
@@ -2619,12 +2604,14 @@ gl::Error Renderer11::createRenderTarget(int width,
     return gl::NoError();
 }
 
-gl::Error Renderer11::createRenderTargetCopy(RenderTargetD3D *source, RenderTargetD3D **outRT)
+gl::Error Renderer11::createRenderTargetCopy(const gl::Context *context,
+                                             RenderTargetD3D *source,
+                                             RenderTargetD3D **outRT)
 {
     ASSERT(source != nullptr);
 
     RenderTargetD3D *newRT = nullptr;
-    ANGLE_TRY(createRenderTarget(source->getWidth(), source->getHeight(),
+    ANGLE_TRY(createRenderTarget(context, source->getWidth(), source->getHeight(),
                                  source->getInternalFormat(), source->getSamples(), &newRT));
 
     RenderTarget11 *source11 = GetAs<RenderTarget11>(source);
@@ -2637,7 +2624,8 @@ gl::Error Renderer11::createRenderTargetCopy(RenderTargetD3D *source, RenderTarg
     return gl::NoError();
 }
 
-gl::Error Renderer11::loadExecutable(const uint8_t *function,
+gl::Error Renderer11::loadExecutable(const gl::Context *context,
+                                     const uint8_t *function,
                                      size_t length,
                                      gl::ShaderType type,
                                      const std::vector<D3DVarying> &streamOutVaryings,
@@ -2708,7 +2696,8 @@ gl::Error Renderer11::loadExecutable(const uint8_t *function,
     return gl::NoError();
 }
 
-gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
+gl::Error Renderer11::compileToExecutable(const gl::Context *context,
+                                          gl::InfoLog &infoLog,
                                           const std::string &shaderHLSL,
                                           gl::ShaderType type,
                                           const std::vector<D3DVarying> &streamOutVaryings,
@@ -2777,8 +2766,8 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
     // TODO(jmadill): Use ComPtr?
     ID3DBlob *binary = nullptr;
     std::string debugInfo;
-    ANGLE_TRY(mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, loopMacros, &binary,
-                                        &debugInfo));
+    ANGLE_TRY(mCompiler.compileToBinary(context, infoLog, shaderHLSL, profile, configs, loopMacros,
+                                        &binary, &debugInfo));
 
     // It's possible that binary is NULL if the compiler failed in all configurations.  Set the
     // executable to NULL and return GL_NO_ERROR to signify that there was a link error but the
@@ -2789,9 +2778,9 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
         return gl::NoError();
     }
 
-    gl::Error error = loadExecutable(static_cast<const uint8_t *>(binary->GetBufferPointer()),
-                                     binary->GetBufferSize(), type, streamOutVaryings,
-                                     separatedOutputBuffers, outExectuable);
+    gl::Error error = loadExecutable(
+        context, static_cast<const uint8_t *>(binary->GetBufferPointer()), binary->GetBufferSize(),
+        type, streamOutVaryings, separatedOutputBuffers, outExectuable);
 
     SafeRelease(binary);
     if (error.isError())
@@ -2807,9 +2796,9 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
     return gl::NoError();
 }
 
-gl::Error Renderer11::ensureHLSLCompilerInitialized()
+gl::Error Renderer11::ensureHLSLCompilerInitialized(const gl::Context *context)
 {
-    return mCompiler.ensureInitialized();
+    return mCompiler.ensureInitialized(context);
 }
 
 UniformStorageD3D *Renderer11::createUniformStorage(size_t storageSize)
@@ -3121,7 +3110,7 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
     if (!invertTexture)
     {
         PackPixelsParams packParams(safeArea, angleFormat, outputPitch, pack, packBuffer, 0);
-        return packPixels(stagingHelper, packParams, pixelsOut);
+        return packPixels(context, stagingHelper, packParams, pixelsOut);
     }
 
     // Create a new PixelPackState with reversed row order. Note that we can't just assign
@@ -3134,19 +3123,18 @@ gl::Error Renderer11::readFromAttachment(const gl::Context *context,
 
     PackPixelsParams packParams(safeArea, angleFormat, outputPitch, invertTexturePack, packBuffer,
                                 0);
-    gl::Error error = packPixels(stagingHelper, packParams, pixelsOut);
-    ANGLE_TRY(error);
-    return gl::NoError();
+    return packPixels(context, stagingHelper, packParams, pixelsOut);
 }
 
-gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
+gl::Error Renderer11::packPixels(const gl::Context *context,
+                                 const TextureHelper11 &textureHelper,
                                  const PackPixelsParams &params,
                                  uint8_t *pixelsOut)
 {
     ID3D11Resource *readResource = textureHelper.get();
 
     D3D11_MAPPED_SUBRESOURCE mapping;
-    ANGLE_TRY(mapResource(readResource, 0, D3D11_MAP_READ, 0, &mapping));
+    ANGLE_TRY(mapResource(context, readResource, 0, D3D11_MAP_READ, 0, &mapping));
 
     uint8_t *source = static_cast<uint8_t *>(mapping.pData);
     int inputPitch  = static_cast<int>(mapping.RowPitch);
@@ -3576,6 +3564,7 @@ GLenum Renderer11::getVertexComponentType(gl::VertexFormatType vertexFormatType)
 }
 
 gl::ErrorOrResult<unsigned int> Renderer11::getVertexSpaceRequired(
+    const gl::Context *context,
     const gl::VertexAttribute &attrib,
     const gl::VertexBinding &binding,
     size_t count,
@@ -3663,7 +3652,7 @@ gl::DebugAnnotator *Renderer11::getAnnotator()
 
 gl::Error Renderer11::applyComputeShader(const gl::Context *context)
 {
-    ANGLE_TRY(ensureHLSLCompilerInitialized());
+    ANGLE_TRY(ensureHLSLCompilerInitialized(context));
 
     const auto &glState    = context->getGLState();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
@@ -3673,7 +3662,7 @@ gl::Error Renderer11::applyComputeShader(const gl::Context *context)
     ASSERT(computeExe != nullptr);
 
     mStateManager.setComputeShader(&GetAs<ShaderExecutable11>(computeExe)->getComputeShader());
-    ANGLE_TRY(mStateManager.applyComputeUniforms(programD3D));
+    ANGLE_TRY(mStateManager.applyComputeUniforms(context, programD3D));
 
     return gl::NoError();
 }
@@ -3784,7 +3773,8 @@ gl::Error Renderer11::getSamplerState(const gl::SamplerState &samplerState,
     return mStateCache.getSamplerState(this, samplerState, outSamplerState);
 }
 
-gl::Error Renderer11::clearRenderTarget(RenderTargetD3D *renderTarget,
+gl::Error Renderer11::clearRenderTarget(const gl::Context *context,
+                                        RenderTargetD3D *renderTarget,
                                         const gl::ColorF &clearColorValue,
                                         const float clearDepthValue,
                                         const unsigned int clearStencilValue)
@@ -3831,7 +3821,8 @@ bool Renderer11::canSelectViewInVertexShader() const
            getRenderer11DeviceCaps().supportsVpRtIndexWriteFromVertexShader;
 }
 
-gl::Error Renderer11::mapResource(ID3D11Resource *resource,
+gl::Error Renderer11::mapResource(const gl::Context *context,
+                                  ID3D11Resource *resource,
                                   UINT subResource,
                                   D3D11_MAP mapType,
                                   UINT mapFlags,

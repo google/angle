@@ -48,7 +48,8 @@ class ShaderConstants11 : angle::NonCopyable
                          unsigned int samplerIndex,
                          const gl::Texture &texture);
 
-    gl::Error updateBuffer(Renderer11 *renderer,
+    gl::Error updateBuffer(const gl::Context *context,
+                           Renderer11 *renderer,
                            gl::ShaderType shaderType,
                            const ProgramD3D &programD3D,
                            const d3d11::Buffer &driverConstantBuffer);
@@ -144,7 +145,6 @@ class StateManager11 final : angle::NonCopyable
     StateManager11(Renderer11 *renderer);
     ~StateManager11();
 
-    gl::Error initialize(const gl::Caps &caps, const gl::Extensions &extensions);
     void deinitialize();
 
     void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits);
@@ -234,11 +234,12 @@ class StateManager11 final : angle::NonCopyable
 
     void setIndexBuffer(ID3D11Buffer *buffer, DXGI_FORMAT indexFormat, unsigned int offset);
 
-    gl::Error updateVertexOffsetsForPointSpritesEmulation(GLint startVertex,
+    gl::Error updateVertexOffsetsForPointSpritesEmulation(const gl::Context *context,
+                                                          GLint startVertex,
                                                           GLsizei emulatedInstanceId);
 
     // TODO(jmadill): Should be private.
-    gl::Error applyComputeUniforms(ProgramD3D *programD3D);
+    gl::Error applyComputeUniforms(const gl::Context *context, ProgramD3D *programD3D);
 
     // Only used in testing.
     InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
@@ -249,6 +250,8 @@ class StateManager11 final : angle::NonCopyable
     ProgramD3D *getProgramD3D() const { return mProgramD3D; }
 
   private:
+    gl::Error ensureInitialized(const gl::Context *context);
+
     template <typename SRVType>
     void setShaderResourceInternal(gl::ShaderType shaderType,
                                    UINT resourceSlot,
@@ -270,7 +273,7 @@ class StateManager11 final : angle::NonCopyable
                              const gl::ColorF &blendColor,
                              unsigned int sampleMask);
 
-    gl::Error syncDepthStencilState(const gl::State &glState);
+    gl::Error syncDepthStencilState(const gl::Context *context);
 
     gl::Error syncRasterizerState(const gl::Context *context,
                                   const gl::DrawCallParams &drawCallParams);
@@ -309,16 +312,17 @@ class StateManager11 final : angle::NonCopyable
     void handleMultiviewDrawFramebufferChange(const gl::Context *context);
 
     gl::Error syncCurrentValueAttribs(
+        const gl::Context *context,
         const std::vector<gl::VertexAttribCurrentValueData> &currentValues);
 
     gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
     gl::Error generateSwizzlesForShader(const gl::Context *context, gl::ShaderType type);
     gl::Error generateSwizzles(const gl::Context *context);
 
-    gl::Error applyDriverUniforms();
-    gl::Error applyDriverUniformsForShader(gl::ShaderType shaderType);
-    gl::Error applyUniforms();
-    gl::Error applyUniformsForShader(gl::ShaderType shaderType);
+    gl::Error applyDriverUniforms(const gl::Context *context);
+    gl::Error applyDriverUniformsForShader(const gl::Context *context, gl::ShaderType shaderType);
+    gl::Error applyUniforms(const gl::Context *context);
+    gl::Error applyUniformsForShader(const gl::Context *context, gl::ShaderType shaderType);
 
     gl::Error syncUniformBuffers(const gl::Context *context);
     gl::Error syncUniformBuffersForShader(const gl::Context *context, gl::ShaderType shaderType);

@@ -108,7 +108,7 @@ HLSLCompiler::~HLSLCompiler()
     release();
 }
 
-gl::Error HLSLCompiler::ensureInitialized()
+gl::Error HLSLCompiler::ensureInitialized(const gl::Context *context)
 {
     if (mInitialized)
     {
@@ -177,9 +177,14 @@ void HLSLCompiler::release()
     }
 }
 
-gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string &hlsl, const std::string &profile,
-                                        const std::vector<CompileConfig> &configs, const D3D_SHADER_MACRO *overrideMacros,
-                                        ID3DBlob **outCompiledBlob, std::string *outDebugInfo)
+gl::Error HLSLCompiler::compileToBinary(const gl::Context *context,
+                                        gl::InfoLog &infoLog,
+                                        const std::string &hlsl,
+                                        const std::string &profile,
+                                        const std::vector<CompileConfig> &configs,
+                                        const D3D_SHADER_MACRO *overrideMacros,
+                                        ID3DBlob **outCompiledBlob,
+                                        std::string *outDebugInfo)
 {
     ASSERT(mInitialized);
 
@@ -273,7 +278,7 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
             }
 
             std::string disassembly;
-            ANGLE_TRY(disassembleBinary(binary, &disassembly));
+            ANGLE_TRY(disassembleBinary(context, binary, &disassembly));
             (*outDebugInfo) += "\n" + disassembly + "\n// ASSEMBLY END\n";
 #endif  // ANGLE_APPEND_ASSEMBLY_TO_SHADER_DEBUG_INFO == ANGLE_ENABLED
             return gl::NoError();
@@ -300,9 +305,11 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
     return gl::NoError();
 }
 
-gl::Error HLSLCompiler::disassembleBinary(ID3DBlob *shaderBinary, std::string *disassemblyOut)
+gl::Error HLSLCompiler::disassembleBinary(const gl::Context *context,
+                                          ID3DBlob *shaderBinary,
+                                          std::string *disassemblyOut)
 {
-    ANGLE_TRY(ensureInitialized());
+    ANGLE_TRY(ensureInitialized(context));
 
     // Retrieve disassembly
     UINT flags = D3D_DISASM_ENABLE_DEFAULT_VALUE_PRINTS | D3D_DISASM_ENABLE_INSTRUCTION_NUMBERING;

@@ -740,8 +740,8 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
         // Update the constant buffer with the updated cache contents
         // TODO(Shahmeer): Consider using UpdateSubresource1 D3D11_COPY_DISCARD where possible.
         D3D11_MAPPED_SUBRESOURCE mappedResource;
-        ANGLE_TRY(mRenderer->mapResource(mConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
-                                         &mappedResource));
+        ANGLE_TRY(mRenderer->mapResource(context, mConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD,
+                                         0, &mappedResource));
 
         memcpy(mappedResource.pData, &mShaderData, g_ConstantBufferSize);
         deviceContext->Unmap(mConstantBuffer.get(), 0);

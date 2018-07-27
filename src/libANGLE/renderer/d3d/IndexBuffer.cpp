@@ -66,7 +66,10 @@ unsigned int IndexBufferInterface::getSerial() const
     return mIndexBuffer->getSerial();
 }
 
-gl::Error IndexBufferInterface::mapBuffer(unsigned int size, void **outMappedMemory, unsigned int *streamOffset)
+gl::Error IndexBufferInterface::mapBuffer(const gl::Context *context,
+                                          unsigned int size,
+                                          void **outMappedMemory,
+                                          unsigned int *streamOffset)
 {
     // Protect against integer overflow
     if (mWritePosition + size < mWritePosition)
@@ -75,7 +78,7 @@ gl::Error IndexBufferInterface::mapBuffer(unsigned int size, void **outMappedMem
                << "Mapping of internal index buffer would cause an integer overflow.";
     }
 
-    gl::Error error = mIndexBuffer->mapBuffer(mWritePosition, size, outMappedMemory);
+    gl::Error error = mIndexBuffer->mapBuffer(context, mWritePosition, size, outMappedMemory);
     if (error.isError())
     {
         if (outMappedMemory)
@@ -94,9 +97,9 @@ gl::Error IndexBufferInterface::mapBuffer(unsigned int size, void **outMappedMem
     return gl::NoError();
 }
 
-gl::Error IndexBufferInterface::unmapBuffer()
+gl::Error IndexBufferInterface::unmapBuffer(const gl::Context *context)
 {
-    return mIndexBuffer->unmapBuffer();
+    return mIndexBuffer->unmapBuffer(context);
 }
 
 IndexBuffer * IndexBufferInterface::getIndexBuffer() const
@@ -114,20 +117,22 @@ void IndexBufferInterface::setWritePosition(unsigned int writePosition)
     mWritePosition = writePosition;
 }
 
-gl::Error IndexBufferInterface::discard()
+gl::Error IndexBufferInterface::discard(const gl::Context *context)
 {
-    return mIndexBuffer->discard();
+    return mIndexBuffer->discard(context);
 }
 
-gl::Error IndexBufferInterface::setBufferSize(unsigned int bufferSize, GLenum indexType)
+gl::Error IndexBufferInterface::setBufferSize(const gl::Context *context,
+                                              unsigned int bufferSize,
+                                              GLenum indexType)
 {
     if (mIndexBuffer->getBufferSize() == 0)
     {
-        return mIndexBuffer->initialize(bufferSize, indexType, mDynamic);
+        return mIndexBuffer->initialize(context, bufferSize, indexType, mDynamic);
     }
     else
     {
-        return mIndexBuffer->setSize(bufferSize, indexType);
+        return mIndexBuffer->setSize(context, bufferSize, indexType);
     }
 }
 
@@ -140,18 +145,20 @@ StreamingIndexBufferInterface::~StreamingIndexBufferInterface()
 {
 }
 
-gl::Error StreamingIndexBufferInterface::reserveBufferSpace(unsigned int size, GLenum indexType)
+gl::Error StreamingIndexBufferInterface::reserveBufferSpace(const gl::Context *context,
+                                                            unsigned int size,
+                                                            GLenum indexType)
 {
     unsigned int curBufferSize = getBufferSize();
     unsigned int writePos = getWritePosition();
     if (size > curBufferSize)
     {
-        ANGLE_TRY(setBufferSize(std::max(size, 2 * curBufferSize), indexType));
+        ANGLE_TRY(setBufferSize(context, std::max(size, 2 * curBufferSize), indexType));
         setWritePosition(0);
     }
     else if (writePos + size > curBufferSize || writePos + size < writePos)
     {
-        ANGLE_TRY(discard());
+        ANGLE_TRY(discard(context));
         setWritePosition(0);
     }
 
@@ -168,12 +175,14 @@ StaticIndexBufferInterface::~StaticIndexBufferInterface()
 {
 }
 
-gl::Error StaticIndexBufferInterface::reserveBufferSpace(unsigned int size, GLenum indexType)
+gl::Error StaticIndexBufferInterface::reserveBufferSpace(const gl::Context *context,
+                                                         unsigned int size,
+                                                         GLenum indexType)
 {
     unsigned int curSize = getBufferSize();
     if (curSize == 0)
     {
-        return setBufferSize(size, indexType);
+        return setBufferSize(context, size, indexType);
     }
     else if (curSize >= size && indexType == getIndexType())
     {

@@ -278,7 +278,7 @@ GLint64 Context9::getTimestamp()
 
 gl::Error Context9::onMakeCurrent(const gl::Context *context)
 {
-    return gl::NoError();
+    return mRenderer->ensureVertexDataManagerInitialized(context);
 }
 
 gl::Caps Context9::getNativeCaps() const
