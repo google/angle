@@ -129,7 +129,7 @@ Additions to the OpenGL ES Specification:
     to indicate the maximum number of values that can be read from or written
     to the provided buffer.  INVALID_OPERATION is generated if <bufSize> is not
     large enough.  The optional <length> specifies an address of a variable to
-    recieve the number of values written to the buffer.  When an error is
+    receive the number of values written to the buffer.  When an error is
     generated nothing will be written to <length>.
 
     The <columns> and <rows> parameters of ReadPixelsRobustANGLE and
