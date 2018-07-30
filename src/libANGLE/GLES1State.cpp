@@ -10,6 +10,7 @@
 #include "libANGLE/GLES1State.h"
 
 #include "libANGLE/Context.h"
+#include "libANGLE/GLES1Renderer.h"
 
 namespace gl
 {
@@ -416,4 +417,26 @@ const PointParameters &GLES1State::pointParameters() const
     return mPointParameters;
 }
 
+AttributesMask GLES1State::getVertexArraysAttributeMask() const
+{
+    AttributesMask attribsMask;
+
+    ClientVertexArrayType nonTexcoordArrays[] = {
+        ClientVertexArrayType::Vertex, ClientVertexArrayType::Normal, ClientVertexArrayType::Color,
+        ClientVertexArrayType::PointSize,
+    };
+
+    for (const ClientVertexArrayType attrib : nonTexcoordArrays)
+    {
+        attribsMask.set(GLES1Renderer::VertexArrayIndex(attrib, *this),
+                        isClientStateEnabled(attrib));
+    }
+
+    for (unsigned int i = 0; i < GLES1Renderer::kTexUnitCount; i++)
+    {
+        attribsMask.set(GLES1Renderer::TexCoordArrayIndex(i), isTexCoordArrayEnabled(i));
+    }
+
+    return attribsMask;
+}
 }  // namespace gl

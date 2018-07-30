@@ -1458,6 +1458,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     const Extensions &getExtensions() const { return mState.getExtensions(); }
     const Limitations &getLimitations() const { return mState.getLimitations(); }
     bool skipValidation() const { return mSkipValidation; }
+    bool isGLES1() const;
 
     // Specific methods needed for validation.
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
@@ -1488,10 +1489,11 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     // GLES1 emulation: Renderer level (for validation)
     int vertexArrayIndex(ClientVertexArrayType type) const;
     static int TexCoordArrayIndex(unsigned int unit);
-    AttributesMask getVertexArraysAttributeMask() const;
 
     // GL_KHR_parallel_shader_compile
     void maxShaderCompilerThreads(GLuint count);
+
+    AttributesMask getActiveBufferedAttribsMask() const;
 
   private:
     void initialize();

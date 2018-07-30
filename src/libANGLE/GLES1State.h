@@ -190,6 +190,8 @@ class GLES1State final : angle::NonCopyable
     PointParameters &pointParameters();
     const PointParameters &pointParameters() const;
 
+    AttributesMask getVertexArraysAttributeMask() const;
+
   private:
     friend class State;
     friend class GLES1Renderer;

@@ -709,7 +709,7 @@ void Context::texGenxv(GLenum coord, GLenum pname, const GLint *params)
 
 int Context::vertexArrayIndex(ClientVertexArrayType type) const
 {
-    return mGLES1Renderer->vertexArrayIndex(type, &mGLState);
+    return GLES1Renderer::VertexArrayIndex(type, mGLState.gles1());
 }
 
 // static
@@ -717,11 +717,4 @@ int Context::TexCoordArrayIndex(unsigned int unit)
 {
     return GLES1Renderer::TexCoordArrayIndex(unit);
 }
-
-AttributesMask Context::getVertexArraysAttributeMask() const
-{
-    return mGLES1Renderer->getVertexArraysAttributeMask(&mGLState);
-}
-
-// static
 }  // namespace gl

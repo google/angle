@@ -118,11 +118,7 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
     const auto &vertexAttribs  = vao->getVertexAttributes();
     const auto &vertexBindings = vao->getVertexBindings();
 
-    bool isGLES1 = context->getClientVersion() < Version(2, 0);
-
-    const AttributesMask &activeAttribs = ((isGLES1 ? context->getVertexArraysAttributeMask()
-                                                    : program->getActiveAttribLocationsMask()) &
-                                           vao->getEnabledAttributesMask() & ~clientAttribs);
+    const AttributesMask &activeAttribs = context->getActiveBufferedAttribsMask();
 
     for (size_t attributeIndex : activeAttribs)
     {
@@ -130,7 +126,7 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
         ASSERT(attrib.enabled);
 
         const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
-        ASSERT(isGLES1 || program->isAttribLocationActive(attributeIndex));
+        ASSERT(context->isGLES1() || program->isAttribLocationActive(attributeIndex));
 
         GLint maxVertexElement = maxVertex;
         GLuint divisor         = binding.getDivisor();

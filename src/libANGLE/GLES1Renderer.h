@@ -20,8 +20,8 @@
 
 namespace gl
 {
-
 class Context;
+class GLES1State;
 class Program;
 class State;
 class Shader;
@@ -37,9 +37,8 @@ class GLES1Renderer final : angle::NonCopyable
 
     Error prepareForDraw(PrimitiveMode mode, Context *context, State *glState);
 
-    int vertexArrayIndex(ClientVertexArrayType type, const State *glState) const;
+    static int VertexArrayIndex(ClientVertexArrayType type, const GLES1State &gles1);
     static int TexCoordArrayIndex(unsigned int unit);
-    AttributesMask getVertexArraysAttributeMask(const State *glState) const;
 
     void drawTexture(Context *context,
                      State *glState,
@@ -48,6 +47,8 @@ class GLES1Renderer final : angle::NonCopyable
                      float z,
                      float width,
                      float height);
+
+    static constexpr int kTexUnitCount = 4;
 
   private:
     using Mat4Uniform = float[16];
@@ -84,7 +85,6 @@ class GLES1Renderer final : angle::NonCopyable
 
     void setAttributesEnabled(Context *context, State *glState, AttributesMask mask);
 
-    static constexpr int kTexUnitCount   = 4;
     static constexpr int kLightCount     = 8;
     static constexpr int kClipPlaneCount = 6;
 

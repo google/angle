@@ -397,7 +397,8 @@ Error GLES1Renderer::prepareForDraw(PrimitiveMode mode, Context *context, State 
     return NoError();
 }
 
-int GLES1Renderer::vertexArrayIndex(ClientVertexArrayType type, const State *glState) const
+// static
+int GLES1Renderer::VertexArrayIndex(ClientVertexArrayType type, const GLES1State &gles1)
 {
     switch (type)
     {
@@ -410,7 +411,7 @@ int GLES1Renderer::vertexArrayIndex(ClientVertexArrayType type, const State *glS
         case ClientVertexArrayType::PointSize:
             return kPointSizeAttribIndex;
         case ClientVertexArrayType::TextureCoord:
-            return kTextureCoordAttribIndexBase + glState->gles1().getClientTextureUnit();
+            return kTextureCoordAttribIndexBase + gles1.getClientTextureUnit();
         default:
             UNREACHABLE();
             return 0;
@@ -421,29 +422,6 @@ int GLES1Renderer::vertexArrayIndex(ClientVertexArrayType type, const State *glS
 int GLES1Renderer::TexCoordArrayIndex(unsigned int unit)
 {
     return kTextureCoordAttribIndexBase + unit;
-}
-
-AttributesMask GLES1Renderer::getVertexArraysAttributeMask(const State *glState) const
-{
-    AttributesMask res;
-    const GLES1State &gles1 = glState->gles1();
-
-    ClientVertexArrayType nonTexcoordArrays[] = {
-        ClientVertexArrayType::Vertex, ClientVertexArrayType::Normal, ClientVertexArrayType::Color,
-        ClientVertexArrayType::PointSize,
-    };
-
-    for (const ClientVertexArrayType attrib : nonTexcoordArrays)
-    {
-        res.set(vertexArrayIndex(attrib, glState), gles1.isClientStateEnabled(attrib));
-    }
-
-    for (unsigned int i = 0; i < kTexUnitCount; i++)
-    {
-        res.set(TexCoordArrayIndex(i), gles1.isTexCoordArrayEnabled(i));
-    }
-
-    return res;
 }
 
 void GLES1Renderer::drawTexture(Context *context,
@@ -476,7 +454,7 @@ void GLES1Renderer::drawTexture(Context *context,
 
     mDrawTextureEnabled = true;
 
-    AttributesMask prevAttributesMask = getVertexArraysAttributeMask(glState);
+    AttributesMask prevAttributesMask = glState->gles1().getVertexArraysAttributeMask();
 
     setAttributesEnabled(context, glState, AttributesMask());
 
@@ -832,7 +810,7 @@ void GLES1Renderer::setAttributesEnabled(Context *context, State *glState, Attri
 
     for (const ClientVertexArrayType attrib : nonTexcoordArrays)
     {
-        int index = vertexArrayIndex(attrib, glState);
+        int index = VertexArrayIndex(attrib, glState->gles1());
 
         if (mask.test(index))
         {
