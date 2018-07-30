@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "18abe056_34f7eb53",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-30T21:24:02Z",
+      "side": 1,
+      "message": "Good point.  What holds references to the thread pool if a context is destroyed while a program is linking?",
+      "parentUuid": "ceba43dc_32078745",
+      "range": {
+        "startLine": 87,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 65
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d2e05d7a_87edacb5",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 27
@@ -93,6 +117,30 @@
       "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f2447f0_a69381ae",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-30T21:24:02Z",
+      "side": 1,
+      "message": "Ok.",
+      "parentUuid": "bfc1f514_a6690fc3",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 39
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {

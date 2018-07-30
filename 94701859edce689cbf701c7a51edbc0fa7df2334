@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "027e7038_e205bd2f",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-30T21:24:02Z",
+      "side": 1,
+      "message": "this can be: mCondition.wait(lock, [this]{ return !mIsPending; });",
+      "range": {
+        "startLine": 119,
+        "startChar": 8,
+        "endLine": 122,
+        "endChar": 9
+      },
+      "revId": "94701859edce689cbf701c7a51edbc0fa7df2334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5554a0b8_eb1f794f",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-30T21:24:02Z",
+      "side": 1,
+      "message": "nit: refactor this like:\n\n    #if (ANGLE_STD_ASYNC_WORKERS \u003d\u003d ANGLE_ENABLED)\n        if (isParallelShaderCompileEnabled)\n        {\n            pool \u003d std::shared_ptr\u003cWorkerThreadPool\u003e(static_cast\u003cWorkerThreadPool *\u003e(\n                new AsyncWorkerPool(std::thread::hardware_concurrency())));\n        }\n    #endif\n\n        if (!pool)\n        {\n            pool \u003d std::shared_ptr\u003cWorkerThreadPool\u003e(\n                static_cast\u003cWorkerThreadPool *\u003e(new SingleThreadedWorkerPool()));\n        }\n\n        return pool;",
+      "range": {
+        "startLine": 234,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 5
+      },
+      "revId": "94701859edce689cbf701c7a51edbc0fa7df2334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a98fdbfc_b7fe95ce",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-07-30T21:24:02Z",
+      "side": 1,
+      "message": "can remove this now.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "94701859edce689cbf701c7a51edbc0fa7df2334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
