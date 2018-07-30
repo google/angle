@@ -72,6 +72,10 @@ struct ImageState : private angle::NonCopyable
     gl::ImageIndex imageIndex;
     gl::BindingPointer<ImageSibling> source;
     std::set<ImageSibling *> targets;
+
+    gl::Format format;
+    gl::Extents size;
+    size_t samples;
 };
 
 class Image final : public gl::RefCountObject, public LabeledObject
@@ -89,7 +93,7 @@ class Image final : public gl::RefCountObject, public LabeledObject
     void setLabel(EGLLabelKHR label) override;
     EGLLabelKHR getLabel() const override;
 
-    gl::Format getFormat() const;
+    const gl::Format &getFormat() const;
     size_t getWidth() const;
     size_t getHeight() const;
     size_t getSamples() const;

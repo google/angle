@@ -118,7 +118,13 @@ void ImageSibling::setSourceEGLImageInitState(gl::InitState initState) const
 }
 
 ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs)
-    : label(nullptr), imageIndex(GetImageIndex(target, attribs)), source(buffer), targets()
+    : label(nullptr),
+      imageIndex(GetImageIndex(target, attribs)),
+      source(buffer),
+      targets(),
+      format(buffer->getAttachmentFormat(GL_NONE, imageIndex)),
+      size(buffer->getAttachmentSize(imageIndex)),
+      samples(buffer->getAttachmentSamples(imageIndex))
 {
 }
 
@@ -198,24 +204,24 @@ gl::Error Image::orphanSibling(const gl::Context *context, ImageSibling *sibling
     return gl::NoError();
 }
 
-gl::Format Image::getFormat() const
+const gl::Format &Image::getFormat() const
 {
-    return mState.source->getAttachmentFormat(GL_NONE, mState.imageIndex);
+    return mState.format;
 }
 
 size_t Image::getWidth() const
 {
-    return mState.source->getAttachmentSize(mState.imageIndex).width;
+    return mState.size.width;
 }
 
 size_t Image::getHeight() const
 {
-    return mState.source->getAttachmentSize(mState.imageIndex).height;
+    return mState.size.height;
 }
 
 size_t Image::getSamples() const
 {
-    return mState.source->getAttachmentSamples(mState.imageIndex);
+    return mState.samples;
 }
 
 rx::ImageImpl *Image::getImplementation() const
