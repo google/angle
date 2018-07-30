@@ -259,8 +259,7 @@ class VertexArray final : public angle::ObserverInterface, public LabeledObject
                               angle::SubjectIndex index);
 
     // These are used to optimize draw call validation.
-    void updateCachedVertexAttributeSize(size_t attribIndex);
-    void updateCachedBufferBindingSize(size_t bindingIndex);
+    void updateCachedBufferBindingSize(VertexBinding *binding);
     void updateCachedTransformFeedbackBindingValidation(size_t bindingIndex, const Buffer *buffer);
 
     GLuint mId;

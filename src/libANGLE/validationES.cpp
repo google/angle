@@ -137,45 +137,19 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
         const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
         ASSERT(context->isGLES1() || program->isAttribLocationActive(attributeIndex));
 
-        GLint maxVertexElement = maxVertex;
-        GLuint divisor         = binding.getDivisor();
-        if (divisor != 0)
+        GLint maxVertexElement = binding.getDivisor() != 0 ? (primcount - 1) : maxVertex;
+
+        if (maxVertexElement > attrib.getCachedElementLimit())
         {
-            maxVertexElement = (primcount - 1) / divisor;
-        }
+            // An overflow can happen when adding the offset. Negative indicates overflow.
+            if (attrib.getCachedElementLimit() < 0)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
+                return false;
+            }
 
-        // We do manual overflow checks here instead of using safe_math.h because it was
-        // a bottleneck. Thanks to some properties of GL we know inequalities that can
-        // help us make the overflow checks faster.
-
-        // The max possible attribSize is 16 for a vector of 4 32 bit values.
-        constexpr uint64_t kMaxAttribSize = 16;
-        constexpr uint64_t kIntMax        = std::numeric_limits<int>::max();
-        constexpr uint64_t kUint64Max     = std::numeric_limits<uint64_t>::max();
-
-        // We know attribStride is given as a GLsizei which is typedefed to int.
-        // We also know an upper bound for attribSize.
-        static_assert(std::is_same<int, GLsizei>::value, "Unexpected type");
-        ASSERT(ComputeVertexAttributeStride(attrib, binding) == binding.getStride());
-        uint64_t attribStride = binding.getStride();
-        ASSERT(attribStride <= kIntMax && ComputeVertexAttributeTypeSize(attrib) <= kMaxAttribSize);
-
-        // Computing the product of two 32-bit ints will fit in 64 bits without overflow.
-        static_assert(kIntMax * kIntMax < kUint64Max, "Unexpected overflow");
-        uint64_t attribDataSizeMinusAttribSize = maxVertexElement * attribStride;
-
-        // An overflow can happen when adding the offset, check for it.
-        if (attribDataSizeMinusAttribSize > kUint64Max - attrib.cachedSizePlusRelativeOffset)
-        {
-            ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
-            return false;
-        }
-
-        // [OpenGL ES 3.0.2] section 2.9.4 page 40:
-        // We can return INVALID_OPERATION if our array buffer does not have enough backing data.
-        if (attribDataSizeMinusAttribSize + attrib.cachedSizePlusRelativeOffset >
-            binding.getCachedBufferSizeMinusOffset())
-        {
+            // [OpenGL ES 3.0.2] section 2.9.4 page 40:
+            // We can return INVALID_OPERATION if our buffer does not have enough backing data.
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), InsufficientVertexBufferSize);
             return false;
         }

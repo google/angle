@@ -43,15 +43,7 @@ class VertexBinding final : angle::NonCopyable
 
     void onContainerBindingChanged(const Context *context, bool bound) const;
 
-    GLuint64 getCachedBufferSizeMinusOffset() const
-    {
-        return mCachedBufferSizeMinusOffset;
-    }
-
     const AttributesMask &getBoundAttributesMask() const { return mBoundAttributesMask; }
-
-    // Called from VertexArray.
-    void updateCachedBufferSizeMinusOffset();
 
     void setBoundAttribute(size_t index) { mBoundAttributesMask.set(index); }
 
@@ -66,9 +58,6 @@ class VertexBinding final : angle::NonCopyable
 
     // Mapping from this binding to all of the attributes that are using this binding.
     AttributesMask mBoundAttributesMask;
-
-    // This is kept in sync by the VertexArray. It is used to optimize draw call validation.
-    GLuint64 mCachedBufferSizeMinusOffset;
 };
 
 //
@@ -81,7 +70,8 @@ struct VertexAttribute final : private angle::NonCopyable
     VertexAttribute &operator=(VertexAttribute &&attrib);
 
     // Called from VertexArray.
-    void updateCachedSizePlusRelativeOffset();
+    void updateCachedElementLimit(const VertexBinding &binding);
+    GLint64 getCachedElementLimit() const { return mCachedElementLimit; }
 
     bool enabled;  // For glEnable/DisableVertexAttribArray
     GLenum type;
@@ -95,8 +85,9 @@ struct VertexAttribute final : private angle::NonCopyable
     GLuint vertexAttribArrayStride;  // ONLY for queries of VERTEX_ATTRIB_ARRAY_STRIDE
     GLuint bindingIndex;
 
+  private:
     // This is kept in sync by the VertexArray. It is used to optimize draw call validation.
-    GLuint64 cachedSizePlusRelativeOffset;
+    GLint64 mCachedElementLimit;
 };
 
 size_t ComputeVertexAttributeTypeSize(const VertexAttribute &attrib);

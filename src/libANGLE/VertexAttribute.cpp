@@ -17,8 +17,7 @@ VertexBinding::VertexBinding() : VertexBinding(0)
 {
 }
 
-VertexBinding::VertexBinding(GLuint boundAttribute)
-    : mStride(16u), mDivisor(0), mOffset(0), mCachedBufferSizeMinusOffset(0)
+VertexBinding::VertexBinding(GLuint boundAttribute) : mStride(16u), mDivisor(0), mOffset(0)
 {
     mBoundAttributesMask.set(boundAttribute);
 }
@@ -41,7 +40,6 @@ VertexBinding &VertexBinding::operator=(VertexBinding &&binding)
         mOffset  = binding.mOffset;
         mBoundAttributesMask = binding.mBoundAttributesMask;
         std::swap(binding.mBuffer, mBuffer);
-        mCachedBufferSizeMinusOffset = binding.mCachedBufferSizeMinusOffset;
     }
     return *this;
 }
@@ -61,22 +59,6 @@ void VertexBinding::onContainerBindingChanged(const Context *context, bool bound
         mBuffer->onBindingChanged(context, bound, BufferBinding::Array, true);
 }
 
-void VertexBinding::updateCachedBufferSizeMinusOffset()
-{
-    if (mBuffer.get())
-    {
-        angle::CheckedNumeric<GLuint64> checkedSize(mBuffer->getSize());
-        angle::CheckedNumeric<GLuint64> checkedOffset(mOffset);
-
-        // Use a default value of zero so checks will fail on overflow.
-        mCachedBufferSizeMinusOffset = (checkedSize - checkedOffset).ValueOrDefault(0);
-    }
-    else
-    {
-        mCachedBufferSizeMinusOffset = 0;
-    }
-}
-
 VertexAttribute::VertexAttribute(GLuint bindingIndex)
     : enabled(false),
       type(GL_FLOAT),
@@ -87,7 +69,7 @@ VertexAttribute::VertexAttribute(GLuint bindingIndex)
       relativeOffset(0),
       vertexAttribArrayStride(0),
       bindingIndex(bindingIndex),
-      cachedSizePlusRelativeOffset(16)
+      mCachedElementLimit(0)
 {
 }
 
@@ -101,7 +83,7 @@ VertexAttribute::VertexAttribute(VertexAttribute &&attrib)
       relativeOffset(attrib.relativeOffset),
       vertexAttribArrayStride(attrib.vertexAttribArrayStride),
       bindingIndex(attrib.bindingIndex),
-      cachedSizePlusRelativeOffset(attrib.cachedSizePlusRelativeOffset)
+      mCachedElementLimit(attrib.mCachedElementLimit)
 {
 }
 
@@ -118,17 +100,56 @@ VertexAttribute &VertexAttribute::operator=(VertexAttribute &&attrib)
         relativeOffset          = attrib.relativeOffset;
         vertexAttribArrayStride = attrib.vertexAttribArrayStride;
         bindingIndex            = attrib.bindingIndex;
-        cachedSizePlusRelativeOffset = attrib.cachedSizePlusRelativeOffset;
+        mCachedElementLimit     = attrib.mCachedElementLimit;
     }
     return *this;
 }
 
-void VertexAttribute::updateCachedSizePlusRelativeOffset()
+void VertexAttribute::updateCachedElementLimit(const VertexBinding &binding)
 {
-    ASSERT(relativeOffset <=
-           std::numeric_limits<GLuint64>::max() - ComputeVertexAttributeTypeSize(*this));
-    cachedSizePlusRelativeOffset =
-        relativeOffset + static_cast<GLuint64>(ComputeVertexAttributeTypeSize(*this));
+    Buffer *buffer = binding.getBuffer().get();
+    if (!buffer)
+    {
+        mCachedElementLimit = 0;
+        return;
+    }
+
+    angle::CheckedNumeric<GLint64> bufferSize(buffer->getSize());
+    angle::CheckedNumeric<GLint64> bufferOffset(binding.getOffset());
+    angle::CheckedNumeric<GLint64> attribOffset(relativeOffset);
+    angle::CheckedNumeric<GLint64> attribSize(ComputeVertexAttributeTypeSize(*this));
+
+    // (buffer.size - buffer.offset - attrib.relativeOffset - attrib.size) / binding.stride
+    angle::CheckedNumeric<GLint64> elementLimit =
+        (bufferSize - bufferOffset - attribOffset - attribSize);
+
+    if (binding.getStride() > 0)
+    {
+        angle::CheckedNumeric<GLint64> bindingStride(binding.getStride());
+        elementLimit /= bindingStride;
+    }
+    else
+    {
+        // Special case for a zero stride. If we can fit one vertex we can fit infinite vertices.
+        mCachedElementLimit = elementLimit.ValueOrDefault(-1);
+        if (mCachedElementLimit >= 0)
+        {
+            mCachedElementLimit = std::numeric_limits<GLint64>::max();
+        }
+        return;
+    }
+
+    if (binding.getDivisor() > 0)
+    {
+        // For instanced draws, the element count is floor(instanceCount - 1) / binding.divisor.
+        angle::CheckedNumeric<GLint64> bindingDivisor(binding.getDivisor());
+        elementLimit *= bindingDivisor;
+
+        // We account for the floor() part rounding by adding a rounding constant.
+        elementLimit += bindingDivisor - 1;
+    }
+
+    mCachedElementLimit = elementLimit.ValueOrDefault(-1);
 }
 
 size_t ComputeVertexAttributeTypeSize(const VertexAttribute& attrib)
