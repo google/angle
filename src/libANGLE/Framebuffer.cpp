@@ -2057,6 +2057,12 @@ GLenum Framebuffer::getMultiviewLayout() const
     return mState.getMultiviewLayout();
 }
 
+bool Framebuffer::readDisallowedByMultiview() const
+{
+    return (mState.getMultiviewLayout() != GL_NONE && mState.getNumViews() > 1) ||
+           mState.getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE;
+}
+
 Error Framebuffer::ensureClearAttachmentsInitialized(const Context *context, GLbitfield mask)
 {
     const auto &glState = context->getGLState();

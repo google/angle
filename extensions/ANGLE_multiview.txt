@@ -24,7 +24,7 @@ Status
 
 Version
 
-    Last Modified Date: July 14, 2017
+    Last Modified Date: July 31, 2018
     Author Revision: 1
 
 Number
@@ -128,7 +128,9 @@ Additions to Chapter 3 of the OpenGL ES 3.0 Specification (Rasterization)
 
     "Calling CopyTexSubImage3D, CopyTexImage2D, or CopyTexSubImage2D will
     result in an INVALID_FRAMEBUFFER_OPERATION error if the multi-view
-    layout of the current read framebuffer is not NONE."
+    layout of the current read framebuffer is
+    FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE or the number of views in the
+    current read framebuffer is more than one."
 
 Additions to Chapter 4 of the OpenGL ES 3.0 Specification
 (Per-Fragment Operations and the Framebuffer)
@@ -169,7 +171,9 @@ Additions to Chapter 4 of the OpenGL ES 3.0 Specification
     Add to the end of the section:
 
     "   ReadPixels generates an INVALID_FRAMEBUFFER_OPERATION error if
-    the multi-view layout of the current read framebuffer is not NONE."
+    the multi-view layout of the current read framebuffer is
+    FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE or the number of views in the
+    current read framebuffer is more than one."
 
     Modify section 4.3.3 (Copying pixels), p. 198
 
@@ -181,8 +185,10 @@ Additions to Chapter 4 of the OpenGL ES 3.0 Specification
     add a new paragraph:
 
     "Calling BlitFramebuffer will result in an INVALID_FRAMEBUFFER_OPERATION
-    error if the multi-view layout of the current draw framebuffer or
-    read framebuffer is not NONE."
+    error if the multi-view layout of the current draw framebuffer is not NONE,
+    or the multi-view layout of the current read framebuffer is
+    FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, or the number of views in the
+    current read framebuffer is more than one."
 
 
     Modify section 4.4.2 (Attaching Images to Framebuffer Objects), p. 202

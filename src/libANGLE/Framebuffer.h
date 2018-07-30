@@ -195,6 +195,7 @@ class Framebuffer final : public angle::ObserverInterface, public LabeledObject
 
     const FramebufferAttachment *getAttachment(const Context *context, GLenum attachment) const;
     GLenum getMultiviewLayout() const;
+    bool readDisallowedByMultiview() const;
     GLsizei getNumViews() const;
     GLint getBaseViewIndex() const;
     const std::vector<Offset> *getViewportOffsets() const;

@@ -1506,8 +1506,10 @@ bool ValidateBlitFramebufferParameters(Context *context,
 
     // ANGLE_multiview, Revision 1:
     // Calling BlitFramebuffer will result in an INVALID_FRAMEBUFFER_OPERATION error if the
-    // multi-view layout of the current draw framebuffer or read framebuffer is not NONE.
-    if (readFramebuffer->getMultiviewLayout() != GL_NONE)
+    // multi-view layout of the current draw framebuffer is not NONE, or if the multi-view layout of
+    // the current read framebuffer is FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE or the number of
+    // views in the current read framebuffer is more than one.
+    if (readFramebuffer->readDisallowedByMultiview())
     {
         context->handleError(InvalidFramebufferOperation()
                              << "Attempt to read from a multi-view framebuffer.");
@@ -2522,8 +2524,9 @@ bool ValidateCopyTexImageParametersBase(Context *context,
     // ANGLE_multiview spec, Revision 1:
     // Calling CopyTexSubImage3D, CopyTexImage2D, or CopyTexSubImage2D will result in an
     // INVALID_FRAMEBUFFER_OPERATION error if the multi-view layout of the current read framebuffer
-    // is not NONE.
-    if (source->getMultiviewLayout() != GL_NONE)
+    // is FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE or the number of views in the current read
+    // framebuffer is more than one.
+    if (readFramebuffer->readDisallowedByMultiview())
     {
         context->handleError(InvalidFramebufferOperation()
                              << "The active read framebuffer object has multiview attachments.");
@@ -5707,8 +5710,9 @@ bool ValidateReadPixelsBase(Context *context,
 
     // ANGLE_multiview, Revision 1:
     // ReadPixels generates an INVALID_FRAMEBUFFER_OPERATION error if the multi-view layout of the
-    // current read framebuffer is not NONE.
-    if (readBuffer->getMultiviewLayout() != GL_NONE)
+    // current read framebuffer is FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE or the number of views
+    // in the current read framebuffer is more than one.
+    if (framebuffer->readDisallowedByMultiview())
     {
         context->handleError(InvalidFramebufferOperation()
                              << "Attempting to read from a multi-view framebuffer.");

@@ -231,6 +231,7 @@ ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
       mQuadVertexBuffer(0),
       mQuadIndexBuffer(0),
       m2DTexturedQuadProgram(0),
+      m3DTexturedQuadProgram(0),
       mDeferContextInit(false)
 {
     mEGLWindow = new EGLWindow(params.majorVersion, params.minorVersion, params.eglParameters);
@@ -268,6 +269,10 @@ ANGLETestBase::~ANGLETestBase()
     if (m2DTexturedQuadProgram)
     {
         glDeleteProgram(m2DTexturedQuadProgram);
+    }
+    if (m3DTexturedQuadProgram)
+    {
+        glDeleteProgram(m3DTexturedQuadProgram);
     }
     SafeDelete(mEGLWindow);
 }
@@ -639,13 +644,72 @@ GLuint ANGLETestBase::get2DTexturedQuadProgram()
     return m2DTexturedQuadProgram;
 }
 
+GLuint ANGLETestBase::get3DTexturedQuadProgram()
+{
+    if (m3DTexturedQuadProgram)
+    {
+        return m3DTexturedQuadProgram;
+    }
+
+    const std::string &vs =
+        R"(#version 300 es
+        in vec2 position;
+        out vec2 texCoord;
+        void main()
+        {
+            gl_Position = vec4(position, 0, 1);
+            texCoord = position * 0.5 + vec2(0.5);
+        })";
+
+    const std::string &fs =
+        R"(#version 300 es
+        precision highp float;
+
+        in vec2 texCoord;
+        out vec4 my_FragColor;
+
+        uniform highp sampler3D tex;
+        uniform float u_layer;
+
+        void main()
+        {
+            my_FragColor = texture(tex, vec3(texCoord, u_layer));
+        })";
+
+    m3DTexturedQuadProgram = CompileProgram(vs, fs);
+    return m3DTexturedQuadProgram;
+}
+
 void ANGLETestBase::draw2DTexturedQuad(GLfloat positionAttribZ,
                                        GLfloat positionAttribXYScale,
                                        bool useVertexBuffer)
 {
     ASSERT_NE(0u, get2DTexturedQuadProgram());
-    return drawQuad(get2DTexturedQuadProgram(), "position", positionAttribZ, positionAttribXYScale,
-                    useVertexBuffer);
+    drawQuad(get2DTexturedQuadProgram(), "position", positionAttribZ, positionAttribXYScale,
+             useVertexBuffer);
+}
+
+void ANGLETestBase::draw3DTexturedQuad(GLfloat positionAttribZ,
+                                       GLfloat positionAttribXYScale,
+                                       bool useVertexBuffer,
+                                       float layer)
+{
+    GLuint program = get3DTexturedQuadProgram();
+    ASSERT_NE(0u, program);
+    GLint activeProgram = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &activeProgram);
+    if (static_cast<GLuint>(activeProgram) != program)
+    {
+        glUseProgram(program);
+    }
+    glUniform1f(glGetUniformLocation(program, "u_layer"), layer);
+
+    drawQuad(program, "position", positionAttribZ, positionAttribXYScale, useVertexBuffer);
+
+    if (static_cast<GLuint>(activeProgram) != program)
+    {
+        glUseProgram(static_cast<GLuint>(activeProgram));
+    }
 }
 
 GLuint ANGLETestBase::compileShader(GLenum type, const std::string &source)

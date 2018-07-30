@@ -314,6 +314,12 @@ class ANGLETestBase
                             GLfloat positionAttribXYScale,
                             bool useVertexBuffer);
 
+    // The layer parameter chooses the 3D texture layer to sample from.
+    void draw3DTexturedQuad(GLfloat positionAttribZ,
+                            GLfloat positionAttribXYScale,
+                            bool useVertexBuffer,
+                            float layer);
+
     static GLuint compileShader(GLenum type, const std::string &source);
     static bool extensionEnabled(const std::string &extName);
     static bool extensionRequestable(const std::string &extName);
@@ -362,6 +368,9 @@ class ANGLETestBase
 
     GLuint get2DTexturedQuadProgram();
 
+    // Has a float uniform "u_layer" to choose the 3D texture layer.
+    GLuint get3DTexturedQuadProgram();
+
     angle::PlatformMethods mPlatformMethods;
 
     class ScopedIgnorePlatformMessages : angle::NonCopyable
@@ -399,6 +408,7 @@ class ANGLETestBase
 
     // Used for texture rendering.
     GLuint m2DTexturedQuadProgram;
+    GLuint m3DTexturedQuadProgram;
 
     TestPlatformContext mPlatformContext;
 
