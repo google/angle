@@ -941,7 +941,7 @@ if (is_android) {
     # supported on M or later releases (which is true for Vulkan).
     # Allows tool to optimize for that.
     requires_sdk_api_level_23 = true
-    apk_name = "AngleLibraries"
+    apk_name = "ANGLEPrebuilt"
     uncompress_shared_libraries = true
     shared_libraries = [
       "//third_party/angle:libEGL${angle_libs_suffix}",
