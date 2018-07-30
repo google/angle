@@ -438,7 +438,7 @@ void VertexArray::setDependentDirtyBit(const gl::Context *context,
     DirtyBitType dirtyBit = getDirtyBitFromIndex(contentsChanged, index);
     ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(dirtyBit));
     mDirtyBits.set(dirtyBit);
-    context->getGLState().setVertexArrayDirty(this);
+    onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 }
 
 void VertexArray::updateObserverBinding(size_t bindingIndex)

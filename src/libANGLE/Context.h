@@ -107,7 +107,7 @@ class StateCache final : angle::NonCopyable
     bool mCachedHasAnyEnabledClientAttrib;
 };
 
-class Context final : public egl::LabeledObject, angle::NonCopyable
+class Context final : public egl::LabeledObject, angle::NonCopyable, public angle::ObserverInterface
 {
   public:
     Context(rx::EGLImplFactory *implFactory,
@@ -1521,6 +1521,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
 
     const StateCache &getStateCache() const { return mStateCache; }
 
+    void onSubjectStateChange(const Context *context,
+                              angle::SubjectIndex index,
+                              angle::SubjectMessage message) override;
+
   private:
     void initialize();
 
@@ -1657,6 +1661,11 @@ class Context final : public egl::LabeledObject, angle::NonCopyable
     State::DirtyObjects mComputeDirtyObjects;
 
     Workarounds mWorkarounds;
+
+    // Binding to container objects that use dependent state updates.
+    angle::ObserverBinding mVertexArrayObserverBinding;
+    angle::ObserverBinding mDrawFramebufferObserverBinding;
+    angle::ObserverBinding mReadFramebufferObserverBinding;
 
     // Not really a property of context state. The size and contexts change per-api-call.
     mutable angle::ScratchBuffer mScratchBuffer;

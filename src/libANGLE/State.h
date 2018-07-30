@@ -453,8 +453,6 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     Error syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
     Error syncDirtyObject(const Context *context, GLenum target);
     void setObjectDirty(GLenum target);
-    void setFramebufferDirty(const Framebuffer *framebuffer) const;
-    void setVertexArrayDirty(const VertexArray *vertexArray) const;
 
     // This actually clears the current value dirty bits.
     // TODO(jmadill): Pass mutable dirty bits into Impl.
@@ -621,7 +619,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     GLES1State mGLES1State;
 
     DirtyBits mDirtyBits;
-    mutable DirtyObjects mDirtyObjects;
+    DirtyObjects mDirtyObjects;
     mutable AttributesMask mDirtyCurrentValues;
 };
 

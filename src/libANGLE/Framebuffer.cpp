@@ -1851,7 +1851,7 @@ void Framebuffer::onSubjectStateChange(const Context *context,
     {
         ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(index));
         mDirtyBits.set(index);
-        context->getGLState().setFramebufferDirty(this);
+        onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
         return;
     }
 

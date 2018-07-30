@@ -88,7 +88,9 @@ class VertexArrayState final : angle::NonCopyable
     gl::AttributesMask mNullPointerClientMemoryAttribsMask;
 };
 
-class VertexArray final : public angle::ObserverInterface, public LabeledObject
+class VertexArray final : public angle::ObserverInterface,
+                          public LabeledObject,
+                          public angle::Subject
 {
   public:
     VertexArray(rx::GLImplFactory *factory, GLuint id, size_t maxAttribs, size_t maxAttribBindings);
