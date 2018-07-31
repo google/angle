@@ -77,8 +77,8 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mBuffers(),
       mIndexedBuffers(),
       mTextureUnitIndex(0),
-      mTextures(),
-      mSamplers(rendererCaps.maxCombinedTextureImageUnits, 0),
+      mTextures{},
+      mSamplers{},
       mImages(rendererCaps.maxImageUnits, ImageUnitBinding()),
       mTransformFeedback(0),
       mCurrentTransformFeedback(nullptr),
@@ -168,13 +168,6 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
     ASSERT(mFunctions);
     ASSERT(extensions.maxViews >= 1u);
 
-    mTextures[gl::TextureType::_2D].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[gl::TextureType::Rectangle].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[gl::TextureType::CubeMap].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[gl::TextureType::_2DArray].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[gl::TextureType::_3D].resize(rendererCaps.maxCombinedTextureImageUnits);
-    mTextures[gl::TextureType::_2DMultisample].resize(rendererCaps.maxCombinedTextureImageUnits);
-
     mIndexedBuffers[gl::BufferBinding::Uniform].resize(rendererCaps.maxUniformBufferBindings);
     mIndexedBuffers[gl::BufferBinding::AtomicCounter].resize(
         rendererCaps.maxAtomicCounterBufferBindings);
@@ -240,7 +233,7 @@ void StateManagerGL::deleteTexture(GLuint texture)
     {
         for (gl::TextureType type : angle::AllEnums<gl::TextureType>())
         {
-            const std::vector<GLuint> &textureVector = mTextures[type];
+            const auto &textureVector = mTextures[type];
             for (size_t textureUnitIndex = 0; textureUnitIndex < textureVector.size();
                  textureUnitIndex++)
             {
