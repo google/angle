@@ -122,6 +122,29 @@
     },
     {
       "key": {
+        "uuid": "1d26d009_e73a8770",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-07-31T20:33:11Z",
+      "side": 1,
+      "message": "Was it the intent to call checkToRunPendingTasks on the same background threads that the standard library might have allocated to run the closures? It seems to me that the main thread should be responsible for checking for tasks on the queue and dispatching them.",
+      "range": {
+        "startLine": 212,
+        "startChar": 12,
+        "endLine": 212,
+        "endChar": 34
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cc6f79e7_179711c0",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 29
@@ -179,6 +202,23 @@
       "writtenOn": "2018-07-31T16:04:23Z",
       "side": 1,
       "message": "When is it allowed to call this and who is allowed to call reset? Could it be an implementation detail that\u0027s not exposed? Same for signal().",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a01be840_53e494d6",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2018-07-31T20:33:11Z",
+      "side": 1,
+      "message": "Typo: compilation",
       "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
