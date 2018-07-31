@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "e32ea6b2_1d6fabfb",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 27
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-07-31T03:14:07Z",
+      "side": 1,
+      "message": "The context releases its ref to Program when being destroyed. Program\u0027s release() will block it on resolveLink() if linking is ongoing.",
+      "parentUuid": "18abe056_34f7eb53",
+      "range": {
+        "startLine": 87,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 65
+      },
+      "revId": "64d5f281ee1c3e40516b330845f3be5e1ffb73ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d2e05d7a_87edacb5",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 27
