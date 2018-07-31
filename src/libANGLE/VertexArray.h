@@ -69,7 +69,7 @@ class VertexArrayState final : angle::NonCopyable
     bool hasEnabledNullPointerClientArray() const;
 
     // Get all the attributes in an AttributesMask that are using the given binding.
-    AttributesMask getBindingToAttributeMasks(GLuint bindingIndex) const;
+    AttributesMask getBindingToAttributesMask(GLuint bindingIndex) const;
 
   private:
     friend class VertexArray;
@@ -86,11 +86,6 @@ class VertexArrayState final : angle::NonCopyable
     // attribs.
     gl::AttributesMask mClientMemoryAttribsMask;
     gl::AttributesMask mNullPointerClientMemoryAttribsMask;
-
-    // Records the mappings from each binding to all of the attributes that are using that binding.
-    // It is used to label all the relevant attributes dirty when we are updating a dirty binding in
-    // VertexArray11::syncStates().
-    std::array<AttributesMask, MAX_VERTEX_ATTRIB_BINDINGS> mBindingToAttributeMasks;
 };
 
 class VertexArray final : public angle::ObserverInterface, public LabeledObject

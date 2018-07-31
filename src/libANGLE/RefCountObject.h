@@ -105,7 +105,10 @@ class BindingPointer
 
     BindingPointer(const BindingPointer<ObjectType> &other) : mObject(other.mObject)
     {
-        mObject->addRef();
+        if (mObject)
+        {
+            mObject->addRef();
+        }
     }
 
     BindingPointer &operator=(BindingPointer<ObjectType> &&other)

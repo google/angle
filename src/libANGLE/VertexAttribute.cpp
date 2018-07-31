@@ -13,9 +13,14 @@ namespace gl
 
 // [OpenGL ES 3.1] (November 3, 2016) Section 20 Page 361
 // Table 20.2: Vertex Array Object State
-VertexBinding::VertexBinding()
+VertexBinding::VertexBinding() : VertexBinding(0)
+{
+}
+
+VertexBinding::VertexBinding(GLuint boundAttribute)
     : mStride(16u), mDivisor(0), mOffset(0), mCachedBufferSizeMinusOffset(0)
 {
+    mBoundAttributesMask.set(boundAttribute);
 }
 
 VertexBinding::VertexBinding(VertexBinding &&binding)
@@ -34,6 +39,7 @@ VertexBinding &VertexBinding::operator=(VertexBinding &&binding)
         mStride  = binding.mStride;
         mDivisor = binding.mDivisor;
         mOffset  = binding.mOffset;
+        mBoundAttributesMask = binding.mBoundAttributesMask;
         std::swap(binding.mBuffer, mBuffer);
         mCachedBufferSizeMinusOffset = binding.mCachedBufferSizeMinusOffset;
     }
