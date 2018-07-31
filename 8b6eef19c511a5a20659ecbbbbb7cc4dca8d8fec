@@ -1,0 +1,261 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3db37d1e_89bfeb20",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 1635,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "I don\u0027t think this is needed.",
+      "range": {
+        "startLine": 1635,
+        "startChar": 4,
+        "endLine": 1635,
+        "endChar": 11
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1dadd18_3257c568",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "nit: format\n\n override\u003cspace\u003e{\n\nAlso this could be defined outside of the class to be consistent with the rest of the file.",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99e8b028_0f922e73",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "Can we have comments saying what is synchronized by the mutex? Same for the worker pool.",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "409a4530_f9720dcd",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "That the condition is to wait until the future is started is weird. Could we have the condition be signaled inside the future instead so that waiting on the condition is enough?",
+      "range": {
+        "startLine": 118,
+        "startChar": 1,
+        "endLine": 127,
+        "endChar": 13
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4526b8b5_7de2444c",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "This reset policy is always automatic, maybe it could be removed? Also mSignaled false at the end of the function, is that expected?",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30b9adba_a8db4bb3",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "Could we just return mIsReady that\u0027s set at the end of the future?",
+      "range": {
+        "startLine": 142,
+        "startChar": 2,
+        "endLine": 150,
+        "endChar": 82
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc6f79e7_179711c0",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "The future could have run already, waitable-\u003emMutex needs to be already locked when std::async is called.",
+      "range": {
+        "startLine": 217,
+        "startChar": 6,
+        "endLine": 221,
+        "endChar": 9
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cde4c51_dc373e87",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "nit: call this \"multithreaded\" instead?",
+      "range": {
+        "startLine": 228,
+        "startChar": 64,
+        "endLine": 228,
+        "endChar": 94
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df77628f_4d3c98ba",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "When is it allowed to call this and who is allowed to call reset? Could it be an implementation detail that\u0027s not exposed? Same for signal().",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65d43074_2c505c7f",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "Can this say what the boolean it returns means?",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f22948a6_79d15672",
+        "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "nit: ASSERT_TRUE",
+      "range": {
+        "startLine": 127,
+        "startChar": 8,
+        "endLine": 127,
+        "endChar": 14
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48bf7f83_b3757f02",
+        "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "No need for this condition since we assert just above.",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "556c8496_268e4d2e",
+        "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-07-31T16:04:23Z",
+      "side": 1,
+      "message": "This will skip the next task.",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
