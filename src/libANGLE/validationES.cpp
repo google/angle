@@ -83,13 +83,11 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
 {
     const gl::State &state     = context->getGLState();
     const gl::Program *program = state.getProgram();
+    const VertexArray *vao     = state.getVertexArray();
 
     bool webglCompatibility = context->getExtensions().webglCompatibility;
 
-    const VertexArray *vao              = state.getVertexArray();
-    const AttributesMask &clientAttribs = vao->getEnabledClientMemoryAttribsMask();
-
-    if (clientAttribs.any())
+    if (context->getStateCache().hasAnyEnabledClientAttrib())
     {
         if (webglCompatibility || !state.areClientArraysEnabled())
         {
@@ -118,7 +116,7 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
     const auto &vertexAttribs  = vao->getVertexAttributes();
     const auto &vertexBindings = vao->getVertexBindings();
 
-    const AttributesMask &activeAttribs = context->getActiveBufferedAttribsMask();
+    const AttributesMask &activeAttribs = context->getStateCache().getActiveBufferedAttribsMask();
 
     for (size_t attributeIndex : activeAttribs)
     {

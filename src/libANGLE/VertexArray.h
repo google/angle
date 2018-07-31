@@ -65,9 +65,6 @@ class VertexArrayState final : angle::NonCopyable
 
     void setAttribBinding(size_t attribIndex, GLuint newBindingIndex);
 
-    // Combines mClientMemoryAttribsMask with mEnabledAttributesMask.
-    gl::AttributesMask getEnabledClientMemoryAttribsMask() const;
-
     // Extra validation performed on the Vertex Array.
     bool hasEnabledNullPointerClientArray() const;
 
@@ -177,10 +174,7 @@ class VertexArray final : public angle::ObserverInterface, public LabeledObject
         return mState.getEnabledAttributesMask();
     }
 
-    gl::AttributesMask getEnabledClientMemoryAttribsMask() const
-    {
-        return mState.getEnabledClientMemoryAttribsMask();
-    }
+    gl::AttributesMask getClientAttribsMask() const { return mState.mClientMemoryAttribsMask; }
 
     bool hasEnabledNullPointerClientArray() const
     {

@@ -13,6 +13,7 @@
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
@@ -149,7 +150,7 @@ gl::Error VertexArrayGL::syncDrawState(const gl::Context *context,
     // Check if any attributes need to be streamed, determines if the index range needs to be
     // computed
     const gl::AttributesMask &needsStreamingAttribs =
-        (mState.getEnabledClientMemoryAttribsMask() & activeAttributesMask);
+        context->getStateCache().getActiveClientAttribsMask();
 
     // Determine if an index buffer needs to be streamed and the range of vertices that need to be
     // copied

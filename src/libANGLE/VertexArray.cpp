@@ -26,15 +26,13 @@ VertexArrayState::VertexArrayState(size_t maxAttribs, size_t maxAttribBindings)
         mVertexAttributes.emplace_back(static_cast<GLuint>(i));
         mBindingToAttributeMasks[i].set(i);
     }
+
+    // Initially all attributes start as "client" with no buffer bound.
+    mClientMemoryAttribsMask.set();
 }
 
 VertexArrayState::~VertexArrayState()
 {
-}
-
-gl::AttributesMask VertexArrayState::getEnabledClientMemoryAttribsMask() const
-{
-    return (mClientMemoryAttribsMask & mEnabledAttributesMask);
 }
 
 bool VertexArrayState::hasEnabledNullPointerClientArray() const
@@ -189,6 +187,16 @@ void VertexArray::bindVertexBufferImpl(const Context *context,
     updateObserverBinding(bindingIndex);
     updateCachedBufferBindingSize(bindingIndex);
     updateCachedTransformFeedbackBindingValidation(bindingIndex, boundBuffer);
+
+    // Update client memory attribute pointers. Affects all bound attributes.
+    if (boundBuffer)
+    {
+        mState.mClientMemoryAttribsMask &= ~mState.mBindingToAttributeMasks[bindingIndex];
+    }
+    else
+    {
+        mState.mClientMemoryAttribsMask |= mState.mBindingToAttributeMasks[bindingIndex];
+    }
 }
 
 void VertexArray::bindVertexBuffer(const Context *context,
@@ -215,6 +223,10 @@ void VertexArray::setVertexAttribBinding(const Context *context,
         mState.setAttribBinding(attribIndex, bindingIndex);
 
         setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_BINDING);
+
+        // Update client attribs mask.
+        bool hasBuffer = mState.mVertexBindings[bindingIndex].getBuffer().get() != nullptr;
+        mState.mClientMemoryAttribsMask.set(attribIndex, !hasBuffer);
     }
 }
 
@@ -307,7 +319,6 @@ void VertexArray::setVertexAttribPointer(const Context *context,
 
     setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER);
 
-    mState.mClientMemoryAttribsMask.set(attribIndex, boundBuffer == nullptr);
     mState.mNullPointerClientMemoryAttribsMask.set(attribIndex,
                                                    boundBuffer == nullptr && pointer == nullptr);
 }

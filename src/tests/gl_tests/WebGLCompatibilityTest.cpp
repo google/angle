@@ -4163,12 +4163,18 @@ TEST_P(WebGL2CompatibilityTest, TransformFeedbackCheckNullDeref)
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
 
-    GLBuffer buffer;
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glEnableVertexAttribArray(0);
     glDrawArrays(GL_POINTS, 0, 1);
 
-    // This should fail because it is trying to pull one vertex from an empty buffer.
+    // This should fail because it is trying to pull a vertex with no buffer.
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    // This should fail because it is trying to pull a vertex from an empty buffer.
+    glDrawArrays(GL_POINTS, 0, 1);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
