@@ -79,32 +79,42 @@ bool DifferenceCanOverflow(GLint a, GLint b)
     return !checkedA.IsValid();
 }
 
+bool ValidateDrawClientAttribs(Context *context)
+{
+    if (!context->getStateCache().hasAnyEnabledClientAttrib())
+        return true;
+
+    const gl::State &state = context->getGLState();
+
+    if (context->getExtensions().webglCompatibility || !state.areClientArraysEnabled())
+    {
+        // [WebGL 1.0] Section 6.5 Enabled Vertex Attributes and Range Checking
+        // If a vertex attribute is enabled as an array via enableVertexAttribArray but no
+        // buffer is bound to that attribute via bindBuffer and vertexAttribPointer, then calls
+        // to drawArrays or drawElements will generate an INVALID_OPERATION error.
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBuffer);
+        return false;
+    }
+
+    if (state.getVertexArray()->hasEnabledNullPointerClientArray())
+    {
+        // This is an application error that would normally result in a crash, but we catch it
+        // and return an error
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBufferPointer);
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLint vertexCount)
 {
     const gl::State &state     = context->getGLState();
     const gl::Program *program = state.getProgram();
-    const VertexArray *vao     = state.getVertexArray();
 
-    bool webglCompatibility = context->getExtensions().webglCompatibility;
-
-    if (context->getStateCache().hasAnyEnabledClientAttrib())
+    if (!ValidateDrawClientAttribs(context))
     {
-        if (webglCompatibility || !state.areClientArraysEnabled())
-        {
-            // [WebGL 1.0] Section 6.5 Enabled Vertex Attributes and Range Checking
-            // If a vertex attribute is enabled as an array via enableVertexAttribArray but no
-            // buffer is bound to that attribute via bindBuffer and vertexAttribPointer, then calls
-            // to drawArrays or drawElements will generate an INVALID_OPERATION error.
-            ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBuffer);
-            return false;
-        }
-        else if (vao->hasEnabledNullPointerClientArray())
-        {
-            // This is an application error that would normally result in a crash, but we catch it
-            // and return an error
-            ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBufferPointer);
-            return false;
-        }
+        return false;
     }
 
     // If we're drawing zero vertices, we have enough data.
@@ -113,6 +123,7 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
         return true;
     }
 
+    const VertexArray *vao     = state.getVertexArray();
     const auto &vertexAttribs  = vao->getVertexAttributes();
     const auto &vertexBindings = vao->getVertexBindings();
 
@@ -168,12 +179,6 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex, GLi
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), InsufficientVertexBufferSize);
             return false;
         }
-    }
-
-    if (webglCompatibility && vao->hasTransformFeedbackBindingConflict(activeAttribs))
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexBufferBoundForTransformFeedback);
-        return false;
     }
 
     return true;
@@ -2873,6 +2878,17 @@ bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
             {
                 return false;
             }
+
+            if (count > 0)
+            {
+                const VertexArray *vao = context->getGLState().getVertexArray();
+                if (vao->hasTransformFeedbackBindingConflict(context))
+                {
+                    ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                         VertexBufferBoundForTransformFeedback);
+                    return false;
+                }
+            }
         }
     }
 
@@ -3135,20 +3151,10 @@ bool ValidateDrawElementsCommon(Context *context,
         }
     }
 
-    if (context->getExtensions().robustBufferAccessBehavior)
+    if (context->getExtensions().robustBufferAccessBehavior || count == 0)
     {
-        // Here we use maxVertex = 0 and vertexCount = 1 to avoid retrieving IndexRange when robust
-        // access is enabled.
-        if (!ValidateDrawAttribs(context, primcount, 0, 1))
-        {
-            return false;
-        }
-    }
-    else if (count == 0)
-    {
-        // ValidateDrawAttribs also does some extra validation that is independent of the vertex
-        // count.
-        if (!ValidateDrawAttribs(context, 0, 0, 0))
+        // Special checks are needed for client attribs. But we don't need to validate overflows.
+        if (!ValidateDrawClientAttribs(context))
         {
             return false;
         }

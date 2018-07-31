@@ -451,13 +451,15 @@ void VertexArray::updateCachedTransformFeedbackBindingValidation(size_t bindingI
     mCachedTransformFeedbackConflictedBindingsMask.set(bindingIndex, hasConflict);
 }
 
-bool VertexArray::hasTransformFeedbackBindingConflict(const AttributesMask &activeAttribues) const
+bool VertexArray::hasTransformFeedbackBindingConflict(const gl::Context *context) const
 {
     // Fast check first.
     if (!mCachedTransformFeedbackConflictedBindingsMask.any())
     {
         return false;
     }
+
+    const AttributesMask &activeAttribues = context->getStateCache().getActiveBufferedAttribsMask();
 
     // Slow check. We must ensure that the conflicting attributes are enabled/active.
     for (size_t attribIndex : activeAttribues)
