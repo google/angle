@@ -342,6 +342,30 @@
     },
     {
       "key": {
+        "uuid": "4beb67c9_3231791e",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-01T11:34:26Z",
+      "side": 1,
+      "message": "I was confused about mPending, I don\u0027t have concerns anymore.",
+      "parentUuid": "13b20710_4e2d722b",
+      "range": {
+        "startLine": 217,
+        "startChar": 6,
+        "endLine": 221,
+        "endChar": 9
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7cde4c51_dc373e87",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 29
