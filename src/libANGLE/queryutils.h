@@ -117,7 +117,10 @@ void SetSamplerParameterfv(Sampler *sampler, GLenum pname, const GLfloat *params
 void SetSamplerParameteri(Sampler *sampler, GLenum pname, GLint param);
 void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params);
 
-void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint param);
+void SetFramebufferParameteri(const Context *context,
+                              Framebuffer *framebuffer,
+                              GLenum pname,
+                              GLint param);
 
 void SetProgramParameteri(Program *program, GLenum pname, GLint value);
 

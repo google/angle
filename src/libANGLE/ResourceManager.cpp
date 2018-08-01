@@ -444,13 +444,13 @@ void FramebufferManager::setDefaultFramebuffer(Framebuffer *framebuffer)
     mObjectMap.assign(0, framebuffer);
 }
 
-void FramebufferManager::invalidateFramebufferComplenessCache() const
+void FramebufferManager::invalidateFramebufferComplenessCache(const Context *context) const
 {
     for (const auto &framebuffer : mObjectMap)
     {
         if (framebuffer.second)
         {
-            framebuffer.second->invalidateCompletenessCache();
+            framebuffer.second->invalidateCompletenessCache(context);
         }
     }
 }

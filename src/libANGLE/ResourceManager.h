@@ -249,7 +249,7 @@ class FramebufferManager
     Framebuffer *getFramebuffer(GLuint handle) const;
     void setDefaultFramebuffer(Framebuffer *framebuffer);
 
-    void invalidateFramebufferComplenessCache() const;
+    void invalidateFramebufferComplenessCache(const Context *context) const;
 
     Framebuffer *checkFramebufferAllocation(rx::GLImplFactory *factory,
                                             const Caps &caps,

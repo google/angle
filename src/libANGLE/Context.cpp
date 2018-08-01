@@ -3071,7 +3071,7 @@ void Context::requestExtension(const char *name)
         }
     }
 
-    mState.mFramebuffers->invalidateFramebufferComplenessCache();
+    mState.mFramebuffers->invalidateFramebufferComplenessCache(this);
 }
 
 size_t Context::getRequestableExtensionStringCount() const
@@ -5038,7 +5038,7 @@ void Context::getFramebufferParameterivRobust(GLenum target,
 void Context::framebufferParameteri(GLenum target, GLenum pname, GLint param)
 {
     Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
-    SetFramebufferParameteri(framebuffer, pname, param);
+    SetFramebufferParameteri(this, framebuffer, pname, param);
 }
 
 bool Context::getScratchBuffer(size_t requstedSizeBytes,

@@ -994,7 +994,7 @@ bool Framebuffer::usingExtendedDrawBuffers() const
     return false;
 }
 
-void Framebuffer::invalidateCompletenessCache()
+void Framebuffer::invalidateCompletenessCache(const Context *context)
 {
     if (mState.mId != 0)
     {
@@ -1812,7 +1812,7 @@ void Framebuffer::updateAttachment(const Context *context,
     mState.mResourceNeedsInit.set(dirtyBit, attachment->initState() == InitState::MayNeedInit);
     onDirtyBinding->bind(resource ? resource->getSubject() : nullptr);
 
-    invalidateCompletenessCache();
+    invalidateCompletenessCache(context);
 }
 
 void Framebuffer::resetAttachment(const Context *context, GLenum binding)
@@ -1844,13 +1844,7 @@ void Framebuffer::onSubjectStateChange(const Context *context,
         return;
     }
 
-    // Only reset the cached status if this is not the default framebuffer.  The default framebuffer
-    // will still use this channel to mark itself dirty.
-    if (mState.mId != 0)
-    {
-        // TOOD(jmadill): Make this only update individual attachments to do less work.
-        mCachedStatus.reset();
-    }
+    invalidateCompletenessCache(context);
 
     FramebufferAttachment *attachment = getAttachmentFromSubjectIndex(index);
 
@@ -1987,32 +1981,33 @@ GLint Framebuffer::getDefaultLayers() const
     return mState.getDefaultLayers();
 }
 
-void Framebuffer::setDefaultWidth(GLint defaultWidth)
+void Framebuffer::setDefaultWidth(const Context *context, GLint defaultWidth)
 {
     mState.mDefaultWidth = defaultWidth;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_WIDTH);
-    invalidateCompletenessCache();
+    invalidateCompletenessCache(context);
 }
 
-void Framebuffer::setDefaultHeight(GLint defaultHeight)
+void Framebuffer::setDefaultHeight(const Context *context, GLint defaultHeight)
 {
     mState.mDefaultHeight = defaultHeight;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_HEIGHT);
-    invalidateCompletenessCache();
+    invalidateCompletenessCache(context);
 }
 
-void Framebuffer::setDefaultSamples(GLint defaultSamples)
+void Framebuffer::setDefaultSamples(const Context *context, GLint defaultSamples)
 {
     mState.mDefaultSamples = defaultSamples;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_SAMPLES);
-    invalidateCompletenessCache();
+    invalidateCompletenessCache(context);
 }
 
-void Framebuffer::setDefaultFixedSampleLocations(bool defaultFixedSampleLocations)
+void Framebuffer::setDefaultFixedSampleLocations(const Context *context,
+                                                 bool defaultFixedSampleLocations)
 {
     mState.mDefaultFixedSampleLocations = defaultFixedSampleLocations;
     mDirtyBits.set(DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS);
-    invalidateCompletenessCache();
+    invalidateCompletenessCache(context);
 }
 
 void Framebuffer::setDefaultLayers(GLint defaultLayers)

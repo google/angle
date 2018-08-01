@@ -1417,23 +1417,26 @@ void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params)
     SetSamplerParameterBase(sampler, pname, params);
 }
 
-void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint param)
+void SetFramebufferParameteri(const Context *context,
+                              Framebuffer *framebuffer,
+                              GLenum pname,
+                              GLint param)
 {
     ASSERT(framebuffer);
 
     switch (pname)
     {
         case GL_FRAMEBUFFER_DEFAULT_WIDTH:
-            framebuffer->setDefaultWidth(param);
+            framebuffer->setDefaultWidth(context, param);
             break;
         case GL_FRAMEBUFFER_DEFAULT_HEIGHT:
-            framebuffer->setDefaultHeight(param);
+            framebuffer->setDefaultHeight(context, param);
             break;
         case GL_FRAMEBUFFER_DEFAULT_SAMPLES:
-            framebuffer->setDefaultSamples(param);
+            framebuffer->setDefaultSamples(context, param);
             break;
         case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
-            framebuffer->setDefaultFixedSampleLocations(ConvertToBool(param));
+            framebuffer->setDefaultFixedSampleLocations(context, ConvertToBool(param));
             break;
         case GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT:
             framebuffer->setDefaultLayers(param);

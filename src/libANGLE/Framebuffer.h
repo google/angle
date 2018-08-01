@@ -232,13 +232,13 @@ class Framebuffer final : public angle::ObserverInterface,
     GLint getDefaultSamples() const;
     bool getDefaultFixedSampleLocations() const;
     GLint getDefaultLayers() const;
-    void setDefaultWidth(GLint defaultWidth);
-    void setDefaultHeight(GLint defaultHeight);
-    void setDefaultSamples(GLint defaultSamples);
-    void setDefaultFixedSampleLocations(bool defaultFixedSampleLocations);
+    void setDefaultWidth(const Context *context, GLint defaultWidth);
+    void setDefaultHeight(const Context *context, GLint defaultHeight);
+    void setDefaultSamples(const Context *context, GLint defaultSamples);
+    void setDefaultFixedSampleLocations(const Context *context, bool defaultFixedSampleLocations);
     void setDefaultLayers(GLint defaultLayers);
 
-    void invalidateCompletenessCache();
+    void invalidateCompletenessCache(const Context *context);
 
     GLenum checkStatus(const Context *context)
     {
