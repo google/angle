@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c83d7962_4bfee21d",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-08-01T18:30:55Z",
+      "side": 1,
+      "message": "Say elementLimit is -4 at this point and the next thing that happens is dividing by a bindingStride of 8.  -4/8 \u003d\u003d 0",
+      "parentUuid": "653a70d0_29097c78",
+      "range": {
+        "startLine": 123,
+        "startChar": 35,
+        "endLine": 123,
+        "endChar": 47
+      },
+      "revId": "c866f45e629cbfc67961137b06495f8b341a2f49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea1f279c_5d98d95e",
         "filename": "src/libANGLE/VertexAttribute.cpp",
         "patchSetId": 16
