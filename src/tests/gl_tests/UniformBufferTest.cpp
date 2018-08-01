@@ -195,10 +195,9 @@ TEST_P(UniformBufferTest, UniformBufferBindings)
     EXPECT_PIXEL_EQ(px, py, 10, 20, 30, 40);
 }
 
-// Test that ANGLE handles used but unbound UBO.
-// TODO: A test case shouldn't depend on the error code of an undefined behaviour. Move this to unit
-// tests of the validation layer.
-TEST_P(UniformBufferTest, UnboundUniformBuffer)
+// Test that ANGLE handles used but unbound UBO. Assumes we are running on ANGLE and produce
+// optional but not mandatory errors.
+TEST_P(UniformBufferTest, ANGLEUnboundUniformBuffer)
 {
     glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, 0);
