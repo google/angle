@@ -2344,31 +2344,32 @@ bool Framebuffer::hasTextureAttachment(const Texture *texture) const
 {
     if (!mAttachedTextures.valid())
     {
-        std::set<const FramebufferAttachmentObject *> attachedTextures;
+        FramebufferTextureAttachmentVector attachedTextures;
 
         for (const auto &colorAttachment : mState.mColorAttachments)
         {
             if (colorAttachment.isAttached() && colorAttachment.type() == GL_TEXTURE)
             {
-                attachedTextures.insert(colorAttachment.getResource());
+                attachedTextures.push_back(colorAttachment.getResource());
             }
         }
 
         if (mState.mDepthAttachment.isAttached() && mState.mDepthAttachment.type() == GL_TEXTURE)
         {
-            attachedTextures.insert(mState.mDepthAttachment.getResource());
+            attachedTextures.push_back(mState.mDepthAttachment.getResource());
         }
 
         if (mState.mStencilAttachment.isAttached() &&
             mState.mStencilAttachment.type() == GL_TEXTURE)
         {
-            attachedTextures.insert(mState.mStencilAttachment.getResource());
+            attachedTextures.push_back(mState.mStencilAttachment.getResource());
         }
 
         mAttachedTextures = std::move(attachedTextures);
     }
 
-    return (mAttachedTextures.value().count(texture) > 0);
+    return std::find(mAttachedTextures.value().begin(), mAttachedTextures.value().end(), texture) !=
+           mAttachedTextures.value().end();
 }
 
 }  // namespace gl
