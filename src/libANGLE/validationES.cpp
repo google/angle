@@ -83,7 +83,7 @@ bool ValidateDrawClientAttribs(Context *context)
 {
     ASSERT(context->getStateCache().hasAnyEnabledClientAttrib());
 
-    const gl::State &state = context->getGLState();
+    const State &state = context->getGLState();
 
     if (context->getExtensions().webglCompatibility || !state.areClientArraysEnabled())
     {
@@ -773,7 +773,7 @@ bool ValidMipLevel(const Context *context, TextureType type, GLint level)
             UNREACHABLE();
     }
 
-    return level <= gl::log2(static_cast<int>(maxDimension)) && level >= 0;
+    return level <= log2(static_cast<int>(maxDimension)) && level >= 0;
 }
 
 bool ValidImageSizeParameters(Context *context,
@@ -794,7 +794,7 @@ bool ValidImageSizeParameters(Context *context,
     bool hasNPOTSupport =
         context->getExtensions().textureNPOT || context->getClientVersion() >= Version(3, 0);
     if (!isSubImage && !hasNPOTSupport &&
-        (level != 0 && (!gl::isPow2(width) || !gl::isPow2(height) || !gl::isPow2(depth))))
+        (level != 0 && (!isPow2(width) || !isPow2(height) || !isPow2(depth))))
     {
         ANGLE_VALIDATION_ERR(context, InvalidValue(), TextureNotPow2);
         return false;
@@ -821,7 +821,7 @@ bool ValidCompressedImageSize(const Context *context,
                               GLsizei width,
                               GLsizei height)
 {
-    const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalFormat);
     if (!formatInfo.compressed)
     {
         return false;
@@ -860,7 +860,7 @@ bool ValidCompressedSubImageSize(const Context *context,
                                  size_t textureWidth,
                                  size_t textureHeight)
 {
-    const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalFormat);
     if (!formatInfo.compressed)
     {
         return false;
@@ -905,8 +905,7 @@ bool ValidImageDataSize(Context *context,
                         const void *pixels,
                         GLsizei imageSize)
 {
-    gl::Buffer *pixelUnpackBuffer =
-        context->getGLState().getTargetBuffer(BufferBinding::PixelUnpack);
+    Buffer *pixelUnpackBuffer = context->getGLState().getTargetBuffer(BufferBinding::PixelUnpack);
     if (pixelUnpackBuffer == nullptr && imageSize < 0)
     {
         // Checks are not required
@@ -915,9 +914,9 @@ bool ValidImageDataSize(Context *context,
 
     // ...the data would be unpacked from the buffer object such that the memory reads required
     // would exceed the data store size.
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format, type);
+    const InternalFormat &formatInfo = GetInternalFormatInfo(format, type);
     ASSERT(formatInfo.internalFormat != GL_NONE);
-    const gl::Extents size(width, height, depth);
+    const Extents size(width, height, depth);
     const auto &unpack = context->getGLState().getUnpackState();
 
     bool targetIs3D   = texType == TextureType::_3D || texType == TextureType::_2DArray;
@@ -1079,7 +1078,7 @@ Shader *GetValidShader(Context *context, GLuint id)
     return validShader;
 }
 
-bool ValidateAttachmentTarget(gl::Context *context, GLenum attachment)
+bool ValidateAttachmentTarget(Context *context, GLenum attachment)
 {
     if (attachment >= GL_COLOR_ATTACHMENT1_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
     {
@@ -1159,7 +1158,7 @@ bool ValidateRenderbufferStorageParametersBase(Context *context,
     // ANGLE_framebuffer_multisample does not explicitly state that the internal format must be
     // sized but it does state that the format must be in the ES2.0 spec table 4.5 which contains
     // only sized internal formats.
-    const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(convertedInternalFormat);
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(convertedInternalFormat);
     if (formatInfo.internalFormat == GL_NONE)
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidRenderbufferInternalFormat);
@@ -1182,7 +1181,7 @@ bool ValidateRenderbufferStorageParametersBase(Context *context,
     return true;
 }
 
-bool ValidateFramebufferRenderbufferParameters(gl::Context *context,
+bool ValidateFramebufferRenderbufferParameters(Context *context,
                                                GLenum target,
                                                GLenum attachment,
                                                GLenum renderbuffertarget,
@@ -1194,7 +1193,7 @@ bool ValidateFramebufferRenderbufferParameters(gl::Context *context,
         return false;
     }
 
-    gl::Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
+    Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
 
     ASSERT(framebuffer);
     if (framebuffer->id() == 0)
@@ -1262,8 +1261,8 @@ bool ValidateBlitFramebufferParameters(Context *context,
     }
 
     const auto &glState              = context->getGLState();
-    gl::Framebuffer *readFramebuffer = glState.getReadFramebuffer();
-    gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
+    Framebuffer *readFramebuffer     = glState.getReadFramebuffer();
+    Framebuffer *drawFramebuffer     = glState.getDrawFramebuffer();
 
     if (!readFramebuffer || !drawFramebuffer)
     {
@@ -1305,7 +1304,7 @@ bool ValidateBlitFramebufferParameters(Context *context,
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        const gl::FramebufferAttachment *readColorBuffer = readFramebuffer->getReadColorbuffer();
+        const FramebufferAttachment *readColorBuffer     = readFramebuffer->getReadColorbuffer();
         const Extensions &extensions                     = context->getExtensions();
 
         if (readColorBuffer)
@@ -1416,9 +1415,9 @@ bool ValidateBlitFramebufferParameters(Context *context,
     {
         if (mask & masks[i])
         {
-            const gl::FramebufferAttachment *readBuffer =
+            const FramebufferAttachment *readBuffer =
                 readFramebuffer->getAttachment(context, attachments[i]);
-            const gl::FramebufferAttachment *drawBuffer =
+            const FramebufferAttachment *drawBuffer =
                 drawFramebuffer->getAttachment(context, attachments[i]);
 
             if (readBuffer && drawBuffer)
@@ -1575,7 +1574,7 @@ bool ValidateReadnPixelsRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, GLuint *ids)
+bool ValidateGenQueriesEXT(Context *context, GLsizei n, GLuint *ids)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
@@ -1587,7 +1586,7 @@ bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, GLuint *ids)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids)
+bool ValidateDeleteQueriesEXT(Context *context, GLsizei n, const GLuint *ids)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
@@ -1599,7 +1598,7 @@ bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateIsQueryEXT(gl::Context *context, GLuint id)
+bool ValidateIsQueryEXT(Context *context, GLuint id)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
@@ -1611,7 +1610,7 @@ bool ValidateIsQueryEXT(gl::Context *context, GLuint id)
     return true;
 }
 
-bool ValidateBeginQueryBase(gl::Context *context, QueryType target, GLuint id)
+bool ValidateBeginQueryBase(Context *context, QueryType target, GLuint id)
 {
     if (!ValidQueryType(context, target))
     {
@@ -1666,7 +1665,7 @@ bool ValidateBeginQueryBase(gl::Context *context, QueryType target, GLuint id)
     return true;
 }
 
-bool ValidateBeginQueryEXT(gl::Context *context, QueryType target, GLuint id)
+bool ValidateBeginQueryEXT(Context *context, QueryType target, GLuint id)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery && !context->getExtensions().syncQuery)
@@ -1678,7 +1677,7 @@ bool ValidateBeginQueryEXT(gl::Context *context, QueryType target, GLuint id)
     return ValidateBeginQueryBase(context, target, id);
 }
 
-bool ValidateEndQueryBase(gl::Context *context, QueryType target)
+bool ValidateEndQueryBase(Context *context, QueryType target)
 {
     if (!ValidQueryType(context, target))
     {
@@ -1697,7 +1696,7 @@ bool ValidateEndQueryBase(gl::Context *context, QueryType target)
     return true;
 }
 
-bool ValidateEndQueryEXT(gl::Context *context, QueryType target)
+bool ValidateEndQueryEXT(Context *context, QueryType target)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery && !context->getExtensions().syncQuery)
@@ -2047,7 +2046,7 @@ bool ValidateGetQueryObjectui64vRobustANGLE(Context *context,
 }
 
 bool ValidateUniformCommonBase(Context *context,
-                               gl::Program *program,
+                               Program *program,
                                GLint location,
                                GLsizei count,
                                const LinkedUniform **uniformOut)
@@ -2171,7 +2170,7 @@ bool ValidateUniformMatrixValue(Context *context, GLenum valueType, GLenum unifo
 bool ValidateUniform(Context *context, GLenum valueType, GLint location, GLsizei count)
 {
     const LinkedUniform *uniform = nullptr;
-    gl::Program *programObject   = context->getGLState().getProgram();
+    Program *programObject       = context->getGLState().getProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformValue(context, valueType, uniform->type);
 }
@@ -2179,7 +2178,7 @@ bool ValidateUniform(Context *context, GLenum valueType, GLint location, GLsizei
 bool ValidateUniform1iv(Context *context, GLint location, GLsizei count, const GLint *value)
 {
     const LinkedUniform *uniform = nullptr;
-    gl::Program *programObject   = context->getGLState().getProgram();
+    Program *programObject       = context->getGLState().getProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniform1ivValue(context, uniform->type, count, value);
 }
@@ -2197,7 +2196,7 @@ bool ValidateUniformMatrix(Context *context,
     }
 
     const LinkedUniform *uniform = nullptr;
-    gl::Program *programObject   = context->getGLState().getProgram();
+    Program *programObject       = context->getGLState().getProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformMatrixValue(context, valueType, uniform->type);
 }
@@ -2442,7 +2441,7 @@ bool ValidateCopyTexImageParametersBase(Context *context,
         return false;
     }
 
-    const gl::State &state       = context->getGLState();
+    const State &state           = context->getGLState();
     Framebuffer *readFramebuffer = state.getReadFramebuffer();
     if (!ValidateFramebufferComplete(context, readFramebuffer))
     {
@@ -2483,7 +2482,7 @@ bool ValidateCopyTexImageParametersBase(Context *context,
         return false;
     }
 
-    const gl::Caps &caps = context->getCaps();
+    const Caps &caps = context->getCaps();
 
     GLuint maxDimension = 0;
     switch (texType)
@@ -2513,7 +2512,7 @@ bool ValidateCopyTexImageParametersBase(Context *context,
             return false;
     }
 
-    gl::Texture *texture = state.getTargetTexture(texType);
+    Texture *texture = state.getTargetTexture(texType);
     if (!texture)
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), TextureNotBound);
@@ -2526,9 +2525,9 @@ bool ValidateCopyTexImageParametersBase(Context *context,
         return false;
     }
 
-    const gl::InternalFormat &formatInfo =
+    const InternalFormat &formatInfo =
         isSubImage ? *texture->getFormat(target, level).info
-                   : gl::GetInternalFormatInfo(internalformat, GL_UNSIGNED_BYTE);
+                   : GetInternalFormatInfo(internalformat, GL_UNSIGNED_BYTE);
 
     if (formatInfo.depthBits > 0 || formatInfo.compressed)
     {
@@ -2687,7 +2686,7 @@ bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
     // If we are running GLES1, there is no current program.
     if (context->getClientVersion() >= Version(2, 0))
     {
-        gl::Program *program = state.getProgram();
+        Program *program = state.getProgram();
         if (!program)
         {
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotBound);
@@ -2764,8 +2763,7 @@ bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
         for (unsigned int uniformBlockIndex = 0;
              uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
         {
-            const gl::InterfaceBlock &uniformBlock =
-                program->getUniformBlockByIndex(uniformBlockIndex);
+            const InterfaceBlock &uniformBlock = program->getUniformBlockByIndex(uniformBlockIndex);
             GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
             const OffsetBindingPointer<Buffer> &uniformBuffer =
                 state.getIndexedUniformBuffer(blockBinding);
@@ -2857,7 +2855,7 @@ bool ValidateDrawArraysCommon(Context *context,
     }
 
     const State &state                          = context->getGLState();
-    gl::TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
+    TransformFeedback *curTransformFeedback     = state.getCurrentTransformFeedback();
     if (curTransformFeedback && curTransformFeedback->isActive() &&
         !curTransformFeedback->isPaused())
     {
@@ -2944,7 +2942,7 @@ bool ValidateDrawElementsBase(Context *context, PrimitiveMode mode, GLenum type)
 
     const State &state = context->getGLState();
 
-    gl::TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
+    TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
     if (curTransformFeedback && curTransformFeedback->isActive() &&
         !curTransformFeedback->isPaused())
     {
@@ -2990,10 +2988,10 @@ bool ValidateDrawElementsCommon(Context *context,
         return false;
     }
 
-    const gl::VertexArray *vao     = state.getVertexArray();
-    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    const VertexArray *vao     = state.getVertexArray();
+    Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
-    GLuint typeBytes = gl::GetTypeInfo(type).bytes;
+    GLuint typeBytes = GetTypeInfo(type).bytes;
 
     if (context->getExtensions().webglCompatibility)
     {
@@ -3172,7 +3170,7 @@ bool ValidateFramebufferTextureBase(Context *context,
 
     if (texture != 0)
     {
-        gl::Texture *tex = context->getTexture(texture);
+        Texture *tex = context->getTexture(texture);
 
         if (tex == nullptr)
         {
@@ -3187,7 +3185,7 @@ bool ValidateFramebufferTextureBase(Context *context,
         }
     }
 
-    const gl::Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
+    const Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
     if (framebuffer->id() == 0)
@@ -3207,7 +3205,7 @@ bool ValidateGetUniformBase(Context *context, GLuint program, GLint location)
         return false;
     }
 
-    gl::Program *programObject = GetValidProgram(context, program);
+    Program *programObject = GetValidProgram(context, program);
     if (!programObject)
     {
         return false;
@@ -3250,7 +3248,7 @@ static bool ValidateSizedGetUniform(Context *context,
         return false;
     }
 
-    gl::Program *programObject = context->getProgram(program);
+    Program *programObject = context->getProgram(program);
     ASSERT(programObject);
 
     // sized queries -- ensure the provided buffer is large enough
@@ -5168,8 +5166,7 @@ bool ValidateRobustCompressedTexImageBase(Context *context, GLsizei imageSize, G
         return false;
     }
 
-    gl::Buffer *pixelUnpackBuffer =
-        context->getGLState().getTargetBuffer(BufferBinding::PixelUnpack);
+    Buffer *pixelUnpackBuffer = context->getGLState().getTargetBuffer(BufferBinding::PixelUnpack);
     if (pixelUnpackBuffer == nullptr)
     {
         if (dataSize < imageSize)
@@ -5697,7 +5694,7 @@ bool ValidateReadPixelsBase(Context *context,
     }
 
     // Check for pixel pack buffer related API errors
-    gl::Buffer *pixelPackBuffer = context->getGLState().getTargetBuffer(BufferBinding::PixelPack);
+    Buffer *pixelPackBuffer = context->getGLState().getTargetBuffer(BufferBinding::PixelPack);
     if (pixelPackBuffer != nullptr && pixelPackBuffer->isMapped())
     {
         // ...the buffer object's data store is currently mapped.
@@ -5714,7 +5711,7 @@ bool ValidateReadPixelsBase(Context *context,
     // ..  the data would be packed to the buffer object such that the memory writes required
     // would exceed the data store size.
     const InternalFormat &formatInfo = GetInternalFormatInfo(format, type);
-    const gl::Extents size(width, height, 1);
+    const Extents size(width, height, 1);
     const auto &pack = context->getGLState().getPackState();
 
     GLuint endByte = 0;
