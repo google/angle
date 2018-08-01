@@ -98,13 +98,27 @@ class StateCache final : angle::NonCopyable
     AttributesMask getActiveClientAttribsMask() const { return mCachedActiveClientAttribsMask; }
     bool hasAnyEnabledClientAttrib() const { return mCachedHasAnyEnabledClientAttrib; }
 
+    // Places that can trigger updateVertexElementLimits:
+    // 1. Context: bindVertexArray.
+    // 2. Context: any executable change (linkProgram/useProgram/programBinary).
+    // 3. Vertex Array: any state change call.
+    // 4. Buffer: a dependent buffer resize.
+    GLint64 getNonInstancedVertexElementLimit() const
+    {
+        return mCachedNonInstancedVertexElementLimit;
+    }
+    GLint64 getInstancedVertexElementLimit() const { return mCachedInstancedVertexElementLimit; }
+
     // Cache update functions.
     void updateActiveAttribsMask(Context *context);
+    void updateVertexElementLimits(Context *context);
 
   private:
     AttributesMask mCachedActiveBufferedAttribsMask;
     AttributesMask mCachedActiveClientAttribsMask;
     bool mCachedHasAnyEnabledClientAttrib;
+    GLint64 mCachedNonInstancedVertexElementLimit;
+    GLint64 mCachedInstancedVertexElementLimit;
 };
 
 class Context final : public egl::LabeledObject, angle::NonCopyable, public angle::ObserverInterface

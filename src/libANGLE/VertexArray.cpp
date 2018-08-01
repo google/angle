@@ -410,11 +410,11 @@ void VertexArray::onSubjectStateChange(const gl::Context *context,
             break;
 
         case angle::SubjectMessage::STORAGE_CHANGED:
-            setDependentDirtyBit(context, false, index);
             if (index < mArrayBufferObserverBindings.size())
             {
                 updateCachedBufferBindingSize(&mState.mVertexBindings[index]);
             }
+            setDependentDirtyBit(context, false, index);
             break;
 
         case angle::SubjectMessage::BINDING_CHANGED:

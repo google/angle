@@ -1590,32 +1590,32 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsInstancedANGLE)
     // Test touching the last element is valid.
     glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 12);
     glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 4);
-    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR() << "touching the last element.";
 
     // Test touching the last element + 1 is invalid.
     glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 13);
     glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 4);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "touching the last element + 1.";
 
     // Test touching the last element is valid, using a stride.
     glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 9);
     glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 4);
-    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR() << "touching the last element using a stride.";
 
     // Test touching the last element + 1 is invalid, using a stride.
     glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 2, zeroOffset + 10);
     glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 4);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "touching the last element + 1 using a stride.";
 
     // Test any offset is valid if no vertices are drawn.
     glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
     glDrawArraysInstancedANGLE(GL_POINTS, 0, 0, 1);
-    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR() << "any offset with no vertices.";
 
     // Test any offset is valid if no primitives are drawn.
     glVertexAttribPointer(wLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
     glDrawArraysInstancedANGLE(GL_POINTS, 0, 1, 0);
-    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_NO_ERROR() << "any offset with primitives.";
 }
 
 // Test the checks for OOB reads in the index buffer

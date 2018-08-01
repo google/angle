@@ -1108,6 +1108,7 @@ void Context::bindVertexArray(GLuint vertexArrayHandle)
     mGLState.setVertexArrayBinding(this, vertexArray);
     mVertexArrayObserverBinding.bind(vertexArray);
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::bindVertexBuffer(GLuint bindingIndex,
@@ -1144,6 +1145,7 @@ void Context::useProgram(GLuint program)
 {
     mGLState.setProgram(this, getProgram(program));
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::useProgramStages(GLuint pipeline, GLbitfield stages, GLuint program)
@@ -2798,6 +2800,7 @@ void Context::vertexAttribDivisor(GLuint index, GLuint divisor)
 {
     mGLState.setVertexAttribDivisor(this, index, divisor);
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::samplerParameteri(GLuint sampler, GLenum pname, GLint param)
@@ -4405,6 +4408,7 @@ void Context::disableVertexAttribArray(GLuint index)
 {
     mGLState.setEnableVertexAttribArray(index, false);
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::enable(GLenum cap)
@@ -4416,6 +4420,7 @@ void Context::enableVertexAttribArray(GLuint index)
 {
     mGLState.setEnableVertexAttribArray(index, true);
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::frontFace(GLenum mode)
@@ -4624,6 +4629,7 @@ void Context::vertexAttribPointer(GLuint index,
     mGLState.setVertexAttribPointer(this, index, mGLState.getTargetBuffer(BufferBinding::Array),
                                     size, type, ConvertToBool(normalized), false, stride, ptr);
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::vertexAttribFormat(GLuint attribIndex,
@@ -4634,6 +4640,7 @@ void Context::vertexAttribFormat(GLuint attribIndex,
 {
     mGLState.setVertexAttribFormat(attribIndex, size, type, ConvertToBool(normalized), false,
                                    relativeOffset);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::vertexAttribIFormat(GLuint attribIndex,
@@ -4642,17 +4649,20 @@ void Context::vertexAttribIFormat(GLuint attribIndex,
                                   GLuint relativeOffset)
 {
     mGLState.setVertexAttribFormat(attribIndex, size, type, false, true, relativeOffset);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::vertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
 {
     mGLState.setVertexAttribBinding(this, attribIndex, bindingIndex);
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::vertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
 {
     mGLState.setVertexBindingDivisor(bindingIndex, divisor);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::viewport(GLint x, GLint y, GLsizei width, GLsizei height)
@@ -4669,6 +4679,7 @@ void Context::vertexAttribIPointer(GLuint index,
     mGLState.setVertexAttribPointer(this, index, mGLState.getTargetBuffer(BufferBinding::Array),
                                     size, type, false, true, stride, pointer);
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::vertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w)
@@ -5555,6 +5566,7 @@ void Context::linkProgram(GLuint program)
     handleError(programObject->link(this));
     mGLState.onProgramExecutableChange(programObject);
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::releaseShaderCompiler()
@@ -5763,6 +5775,7 @@ void Context::programBinary(GLuint program, GLenum binaryFormat, const void *bin
 
     handleError(programObject->loadBinary(this, binaryFormat, binary, length));
     mStateCache.updateActiveAttribsMask(this);
+    mStateCache.updateVertexElementLimits(this);
 }
 
 void Context::uniform1ui(GLint location, GLuint v0)
@@ -7567,6 +7580,7 @@ void Context::onSubjectStateChange(const Context *context,
     {
         case kVertexArraySubjectIndex:
             mGLState.setObjectDirty(GL_VERTEX_ARRAY);
+            mStateCache.updateVertexElementLimits(this);
             break;
 
         case kReadFramebufferSubjectIndex:
@@ -7629,7 +7643,10 @@ GLenum ErrorSet::popError()
 }
 
 // StateCache implementation.
-StateCache::StateCache() : mCachedHasAnyEnabledClientAttrib(false)
+StateCache::StateCache()
+    : mCachedHasAnyEnabledClientAttrib(false),
+      mCachedNonInstancedVertexElementLimit(0),
+      mCachedInstancedVertexElementLimit(0)
 {
 }
 
@@ -7661,5 +7678,45 @@ void StateCache::updateActiveAttribsMask(Context *context)
     mCachedActiveClientAttribsMask   = activeAttribs & clientAttribs;
     mCachedActiveBufferedAttribsMask = activeAttribs & ~clientAttribs;
     mCachedHasAnyEnabledClientAttrib = (clientAttribs & enabledAttribs).any();
+}
+
+void StateCache::updateVertexElementLimits(Context *context)
+{
+    const VertexArray *vao = context->getGLState().getVertexArray();
+
+    mCachedNonInstancedVertexElementLimit = std::numeric_limits<GLint64>::max();
+    mCachedInstancedVertexElementLimit    = std::numeric_limits<GLint64>::max();
+
+    // VAO can be null on Context startup. If we make this computation lazier we could ASSERT.
+    // If there are no buffered attributes then we should not limit the draw call count.
+    if (!vao || !mCachedActiveBufferedAttribsMask.any())
+    {
+        return;
+    }
+
+    const auto &vertexAttribs  = vao->getVertexAttributes();
+    const auto &vertexBindings = vao->getVertexBindings();
+
+    for (size_t attributeIndex : mCachedActiveBufferedAttribsMask)
+    {
+        const VertexAttribute &attrib = vertexAttribs[attributeIndex];
+        ASSERT(attrib.enabled);
+
+        const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
+        ASSERT(context->isGLES1() ||
+               context->getGLState().getProgram()->isAttribLocationActive(attributeIndex));
+
+        GLint64 limit = attrib.getCachedElementLimit();
+        if (binding.getDivisor() > 0)
+        {
+            mCachedInstancedVertexElementLimit =
+                std::min(mCachedInstancedVertexElementLimit, limit);
+        }
+        else
+        {
+            mCachedNonInstancedVertexElementLimit =
+                std::min(mCachedNonInstancedVertexElementLimit, limit);
+        }
+    }
 }
 }  // namespace gl
