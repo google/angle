@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3494a335_57f4167e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 5551,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "you can wrap comments to 100 characters",
+      "range": {
+        "startLine": 5551,
+        "startChar": 7,
+        "endLine": 5551,
+        "endChar": 72
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df9341e7_a76b3407",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 5555,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "draw calls after link use the new executable or the old one depending on the link result",
+      "range": {
+        "startLine": 5553,
+        "startChar": 11,
+        "endLine": 5555,
+        "endChar": 27
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3271fa06_1f71d0b2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 5557,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "a chance",
+      "range": {
+        "startLine": 5557,
+        "startChar": 68,
+        "endLine": 5557,
+        "endChar": 75
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef088306_c797c629",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 31
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "-actual.",
+      "range": {
+        "startLine": 492,
+        "startChar": 34,
+        "endLine": 492,
+        "endChar": 41
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2ede8a3_b1fa8832",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 31
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "put in cpp",
+      "range": {
+        "startLine": 803,
+        "startChar": 0,
+        "endLine": 809,
+        "endChar": 5
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a461673a_b113fbc0",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 31
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "these should go in the cpp file",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 39
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aaa18826_80352062",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 31
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "these should also go in the cpp file.",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 42
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1fdc472_5bbb9f1a",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "compilation. also tag with the bug if you intend to implement this. if you don\u0027t intend to do this you can remove the todo.",
+      "range": {
+        "startLine": 1169,
+        "startChar": 62,
+        "endLine": 1169,
+        "endChar": 74
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c3cc419_1e19d0ce",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 31
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "how about GraphicsProgramLinkEvent",
+      "range": {
+        "startLine": 315,
+        "startChar": 10,
+        "endLine": 315,
+        "endChar": 35
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ce68c39_24edb91a",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-01T15:32:27Z",
+      "side": 1,
+      "message": "use a bug tag or make this a comment instead of a TODO. If you don\u0027t intend to implement this you can omit the TODO.",
+      "range": {
+        "startLine": 257,
+        "startChar": 0,
+        "endLine": 257,
+        "endChar": 55
+      },
+      "revId": "c75569fb0f9d3c8b1458ec69b8e461aa5551833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
