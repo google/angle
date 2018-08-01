@@ -486,4 +486,21 @@ bool VertexArray::hasTransformFeedbackBindingConflict(const gl::Context *context
     return false;
 }
 
+bool VertexArray::hasMappedEnabledArrayBuffer() const
+{
+    // TODO(jmadill): Cache this. http://anglebug.com/2746
+    for (size_t attribIndex : mState.mEnabledAttributesMask)
+    {
+        const VertexAttribute &vertexAttrib = mState.mVertexAttributes[attribIndex];
+        ASSERT(vertexAttrib.enabled);
+        const VertexBinding &vertexBinding = mState.mVertexBindings[vertexAttrib.bindingIndex];
+        gl::Buffer *boundBuffer            = vertexBinding.getBuffer().get();
+        if (boundBuffer && boundBuffer->isMapped())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 }  // namespace gl

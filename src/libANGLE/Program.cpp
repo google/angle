@@ -1321,12 +1321,6 @@ void Program::unlink()
     mInfoLog.reset();
 }
 
-bool Program::hasLinkedShaderStage(ShaderType shaderType) const
-{
-    ASSERT(shaderType != ShaderType::InvalidEnum);
-    return mState.mLinkedShaderStages[shaderType];
-}
-
 Error Program::loadBinary(const Context *context,
                           GLenum binaryFormat,
                           const void *binary,
@@ -2050,15 +2044,8 @@ void Program::validate(const Caps &caps)
     }
 }
 
-bool Program::validateSamplers(InfoLog *infoLog, const Caps &caps)
+bool Program::validateSamplersImpl(InfoLog *infoLog, const Caps &caps)
 {
-    // Skip cache if we're using an infolog, so we get the full error.
-    // Also skip the cache if the sample mapping has changed, or if we haven't ever validated.
-    if (infoLog == nullptr && mCachedValidateSamplersResult.valid())
-    {
-        return mCachedValidateSamplersResult.value();
-    }
-
     if (mTextureUnitTypesCache.empty())
     {
         mTextureUnitTypesCache.resize(caps.maxCombinedTextureImageUnits, TextureType::InvalidEnum);
@@ -2123,11 +2110,6 @@ bool Program::validateSamplers(InfoLog *infoLog, const Caps &caps)
 bool Program::isValidated() const
 {
     return mValidated;
-}
-
-GLuint Program::getActiveUniformBlockCount() const
-{
-    return static_cast<GLuint>(mState.mUniformBlocks.size());
 }
 
 GLuint Program::getActiveAtomicCounterBufferCount() const

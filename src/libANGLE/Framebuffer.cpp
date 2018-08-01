@@ -1002,36 +1002,25 @@ void Framebuffer::invalidateCompletenessCache()
     }
 }
 
-GLenum Framebuffer::checkStatus(const Context *context)
+GLenum Framebuffer::checkStatusImpl(const Context *context)
 {
-    // The default framebuffer is always complete except when it is surfaceless in which
-    // case it is always unsupported. We return early because the default framebuffer may
-    // not be subject to the same rules as application FBOs. ie, it could have 0x0 size.
-    if (mState.mId == 0)
-    {
-        ASSERT(mCachedStatus.valid());
-        ASSERT(mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE ||
-               mCachedStatus.value() == GL_FRAMEBUFFER_UNDEFINED_OES);
-        return mCachedStatus.value();
-    }
+    ASSERT(!isDefault());
+    ASSERT(hasAnyDirtyBit() || !mCachedStatus.valid());
 
-    if (hasAnyDirtyBit() || !mCachedStatus.valid())
-    {
-        mCachedStatus = checkStatusWithGLFrontEnd(context);
+    mCachedStatus = checkStatusWithGLFrontEnd(context);
 
-        if (mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE)
+    if (mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE)
+    {
+        Error err = syncState(context);
+        if (err.isError())
         {
-            Error err = syncState(context);
-            if (err.isError())
-            {
-                // TODO(jmadill): Remove when refactor complete. http://anglebug.com/2491
-                const_cast<Context *>(context)->handleError(err);
-                return GetDefaultReturnValue<EntryPoint::CheckFramebufferStatus, GLenum>();
-            }
-            if (!mImpl->checkStatus(context))
-            {
-                mCachedStatus = GL_FRAMEBUFFER_UNSUPPORTED;
-            }
+            // TODO(jmadill): Remove when refactor complete. http://anglebug.com/2491
+            const_cast<Context *>(context)->handleError(err);
+            return GetDefaultReturnValue<EntryPoint::CheckFramebufferStatus, GLenum>();
+        }
+        if (!mImpl->checkStatus(context))
+        {
+            mCachedStatus = GL_FRAMEBUFFER_UNSUPPORTED;
         }
     }
 
@@ -1882,11 +1871,6 @@ FramebufferAttachment *Framebuffer::getAttachmentFromSubjectIndex(angle::Subject
             ASSERT(colorIndex < mState.mColorAttachments.size());
             return &mState.mColorAttachments[colorIndex];
     }
-}
-
-bool Framebuffer::isComplete(const Context *context)
-{
-    return (checkStatus(context) == GL_FRAMEBUFFER_COMPLETE);
 }
 
 bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const

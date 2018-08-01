@@ -490,7 +490,11 @@ class Program final : angle::NonCopyable, public LabeledObject
     Error link(const Context *context);
     bool isLinked() const { return mLinked; }
 
-    bool hasLinkedShaderStage(ShaderType shaderType) const;
+    bool hasLinkedShaderStage(ShaderType shaderType) const
+    {
+        ASSERT(shaderType != ShaderType::InvalidEnum);
+        return mState.mLinkedShaderStages[shaderType];
+    }
 
     Error loadBinary(const Context *context,
                      GLenum binaryFormat,
@@ -627,7 +631,11 @@ class Program final : angle::NonCopyable, public LabeledObject
                                          GLsizei bufSize,
                                          GLsizei *length,
                                          GLchar *blockName) const;
-    GLuint getActiveUniformBlockCount() const;
+    GLuint getActiveUniformBlockCount() const
+    {
+        return static_cast<GLuint>(mState.mUniformBlocks.size());
+    }
+
     GLuint getActiveAtomicCounterBufferCount() const;
     GLuint getActiveShaderStorageBlockCount() const;
     GLint getActiveUniformBlockMaxNameLength() const;
@@ -665,7 +673,18 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool isFlaggedForDeletion() const;
 
     void validate(const Caps &caps);
-    bool validateSamplers(InfoLog *infoLog, const Caps &caps);
+    bool validateSamplers(InfoLog *infoLog, const Caps &caps)
+    {
+        // Skip cache if we're using an infolog, so we get the full error.
+        // Also skip the cache if the sample mapping has changed, or if we haven't ever validated.
+        if (infoLog == nullptr && mCachedValidateSamplersResult.valid())
+        {
+            return mCachedValidateSamplersResult.value();
+        }
+
+        return validateSamplersImpl(infoLog, caps);
+    }
+
     bool isValidated() const;
     bool samplesFromTexture(const State &state, GLuint textureID) const;
 
@@ -820,6 +839,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLint getActiveInterfaceBlockMaxNameLength(const std::vector<T> &resources) const;
 
     GLuint getSamplerUniformBinding(const VariableLocation &uniformLocation) const;
+
+    bool validateSamplersImpl(InfoLog *infoLog, const Caps &caps);
 
     ProgramState mState;
     rx::ProgramImpl *mProgram;

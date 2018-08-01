@@ -2628,15 +2628,10 @@ bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
     // WebGL buffers cannot be mapped/unmapped because the MapBufferRange, FlushMappedBufferRange,
     // and UnmapBuffer entry points are removed from the WebGL 2.0 API.
     // https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
-    if (!extensions.webglCompatibility)
+    if (!extensions.webglCompatibility && state.getVertexArray()->hasMappedEnabledArrayBuffer())
     {
-        // Check for mapped buffers
-        // TODO(jmadill): Optimize this check for non - WebGL contexts.
-        if (state.hasMappedBuffer(BufferBinding::Array))
-        {
-            context->handleError(InvalidOperation());
-            return false;
-        }
+        context->handleError(InvalidOperation());
+        return false;
     }
 
     // Note: these separate values are not supported in WebGL, due to D3D's limitations. See
@@ -2692,7 +2687,6 @@ bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
     // If we are running GLES1, there is no current program.
     if (context->getClientVersion() >= Version(2, 0))
     {
-
         gl::Program *program = state.getProgram();
         if (!program)
         {
@@ -2996,20 +2990,6 @@ bool ValidateDrawElementsCommon(Context *context,
         return false;
     }
 
-    // WebGL buffers cannot be mapped/unmapped because the MapBufferRange, FlushMappedBufferRange,
-    // and UnmapBuffer entry points are removed from the WebGL 2.0 API.
-    // https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
-    if (!context->getExtensions().webglCompatibility)
-    {
-        // Check for mapped buffers
-        // TODO(jmadill): Optimize this check for non - WebGL contexts.
-        if (state.hasMappedBuffer(gl::BufferBinding::ElementArray))
-        {
-            context->handleError(InvalidOperation() << "Index buffer is mapped.");
-            return false;
-        }
-    }
-
     const gl::VertexArray *vao     = state.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
@@ -3035,6 +3015,14 @@ bool ValidateDrawElementsCommon(Context *context,
             ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeOffset);
             return false;
         }
+    }
+    else if (elementArrayBuffer && elementArrayBuffer->isMapped())
+    {
+        // WebGL buffers cannot be mapped/unmapped because the MapBufferRange,
+        // FlushMappedBufferRange, and UnmapBuffer entry points are removed from the WebGL 2.0 API.
+        // https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
+        context->handleError(InvalidOperation() << "Index buffer is mapped.");
+        return false;
     }
 
     if (context->getExtensions().webglCompatibility ||

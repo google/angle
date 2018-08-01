@@ -349,7 +349,6 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     void getInteger64i_v(GLenum target, GLuint index, GLint64 *data);
     void getBooleani_v(GLenum target, GLuint index, GLboolean *data);
 
-    bool hasMappedBuffer(BufferBinding target) const;
     bool isRobustResourceInitEnabled() const { return mRobustResourceInit; }
 
     // Sets the dirty bit for the program executable.

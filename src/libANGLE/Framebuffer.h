@@ -239,13 +239,27 @@ class Framebuffer final : public angle::ObserverInterface,
 
     void invalidateCompletenessCache();
 
-    GLenum checkStatus(const Context *context);
+    GLenum checkStatus(const Context *context)
+    {
+        // The default framebuffer is always complete except when it is surfaceless in which
+        // case it is always unsupported.
+        ASSERT(mState.mId != 0 || mCachedStatus.valid());
+        if (mState.mId == 0 || (!hasAnyDirtyBit() && mCachedStatus.valid()))
+        {
+            return mCachedStatus.value();
+        }
+
+        return checkStatusImpl(context);
+    }
 
     // For when we don't want to check completeness in getSamples().
     int getCachedSamples(const Context *context);
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
-    bool isComplete(const Context *context);
+    bool isComplete(const Context *context)
+    {
+        return (checkStatus(context) == GL_FRAMEBUFFER_COMPLETE);
+    }
 
     bool hasValidDepthStencil() const;
 
@@ -343,6 +357,7 @@ class Framebuffer final : public angle::ObserverInterface,
                                   GLuint matchId,
                                   size_t dirtyBit);
     GLenum checkStatusWithGLFrontEnd(const Context *context);
+    GLenum checkStatusImpl(const Context *context);
     void setAttachment(const Context *context,
                        GLenum type,
                        GLenum binding,

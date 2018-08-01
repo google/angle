@@ -2603,32 +2603,6 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
 }
 
-bool State::hasMappedBuffer(BufferBinding target) const
-{
-    if (target == BufferBinding::Array)
-    {
-        const VertexArray *vao     = getVertexArray();
-        const auto &vertexAttribs  = vao->getVertexAttributes();
-        const auto &vertexBindings = vao->getVertexBindings();
-        for (size_t attribIndex : vao->getEnabledAttributesMask())
-        {
-            const VertexAttribute &vertexAttrib = vertexAttribs[attribIndex];
-            auto *boundBuffer = vertexBindings[vertexAttrib.bindingIndex].getBuffer().get();
-            if (vertexAttrib.enabled && boundBuffer && boundBuffer->isMapped())
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-    else
-    {
-        Buffer *buffer = getTargetBuffer(target);
-        return (buffer && buffer->isMapped());
-    }
-}
-
 Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
 {
     const DirtyObjects &dirtyObjects = mDirtyObjects & bitset;
