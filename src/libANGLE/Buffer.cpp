@@ -145,6 +145,9 @@ Error Buffer::map(const Context *context, GLenum access)
     mState.mAccessFlags = GL_MAP_WRITE_BIT;
     mIndexRangeCache.clear();
 
+    // Notify when state changes.
+    mImpl->onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
+
     return NoError();
 }
 
@@ -175,6 +178,9 @@ Error Buffer::mapRange(const Context *context,
         mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset), static_cast<unsigned int>(length));
     }
 
+    // Notify when state changes.
+    mImpl->onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
+
     return NoError();
 }
 
@@ -193,7 +199,7 @@ Error Buffer::unmap(const Context *context, GLboolean *result)
     mState.mAccessFlags = 0;
 
     // Notify when data changes.
-    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+    mImpl->onStateChange(context, angle::SubjectMessage::RESOURCE_UNMAPPED);
 
     return NoError();
 }

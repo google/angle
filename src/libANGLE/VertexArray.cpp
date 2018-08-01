@@ -15,6 +15,14 @@
 
 namespace gl
 {
+namespace
+{
+bool IsElementArrayBufferSubjectIndex(angle::SubjectIndex subjectIndex)
+{
+    return (subjectIndex == MAX_VERTEX_ATTRIBS);
+}
+}  // anonymous namespce
+
 // VertexArrayState implementation.
 VertexArrayState::VertexArrayState(size_t maxAttribs, size_t maxAttribBindings)
     : mLabel(), mVertexBindings()
@@ -57,15 +65,22 @@ void VertexArrayState::setAttribBinding(size_t attribIndex, GLuint newBindingInd
     const GLuint oldBindingIndex = attrib.bindingIndex;
     ASSERT(oldBindingIndex != newBindingIndex);
 
-    ASSERT(mVertexBindings[oldBindingIndex].getBoundAttributesMask().test(attribIndex) &&
-           !mVertexBindings[newBindingIndex].getBoundAttributesMask().test(attribIndex));
+    VertexBinding &oldBinding = mVertexBindings[oldBindingIndex];
+    VertexBinding &newBinding = mVertexBindings[newBindingIndex];
 
-    mVertexBindings[oldBindingIndex].resetBoundAttribute(attribIndex);
-    mVertexBindings[newBindingIndex].setBoundAttribute(attribIndex);
+    ASSERT(oldBinding.getBoundAttributesMask().test(attribIndex) &&
+           !newBinding.getBoundAttributesMask().test(attribIndex));
+
+    oldBinding.resetBoundAttribute(attribIndex);
+    newBinding.setBoundAttribute(attribIndex);
 
     // Set the attribute using the new binding.
     attrib.bindingIndex = newBindingIndex;
-    attrib.updateCachedElementLimit(mVertexBindings[newBindingIndex]);
+    attrib.updateCachedElementLimit(newBinding);
+
+    bool isMapped = newBinding.getBuffer().get() && newBinding.getBuffer()->isMapped();
+    mCachedMappedArrayBuffers.set(attribIndex, isMapped);
+    mCachedEnabledMappedArrayBuffers.set(attribIndex, isMapped && attrib.enabled);
 }
 
 // VertexArray implementation.
@@ -76,7 +91,7 @@ VertexArray::VertexArray(rx::GLImplFactory *factory,
     : mId(id),
       mState(maxAttribs, maxAttribBindings),
       mVertexArray(factory->createVertexArray(mState)),
-      mElementArrayBufferObserverBinding(this, maxAttribBindings)
+      mElementArrayBufferObserverBinding(this, MAX_VERTEX_ATTRIBS)
 {
     for (size_t attribIndex = 0; attribIndex < maxAttribBindings; ++attribIndex)
     {
@@ -190,6 +205,7 @@ void VertexArray::bindVertexBufferImpl(const Context *context,
     updateObserverBinding(bindingIndex);
     updateCachedBufferBindingSize(binding);
     updateCachedTransformFeedbackBindingValidation(bindingIndex, boundBuffer);
+    updateCachedMappedArrayBuffers(binding);
 
     // Update client memory attribute pointers. Affects all bound attributes.
     if (boundBuffer)
@@ -303,6 +319,8 @@ void VertexArray::enableAttribute(size_t attribIndex, bool enabledState)
 
     // Update state cache
     mState.mEnabledAttributesMask.set(attribIndex, enabledState);
+    mState.mCachedEnabledMappedArrayBuffers =
+        mState.mCachedMappedArrayBuffers & mState.mEnabledAttributesMask;
 }
 
 void VertexArray::setVertexAttribPointer(const Context *context,
@@ -385,7 +403,7 @@ void VertexArray::onBindingChanged(const Context *context, bool bound)
 VertexArray::DirtyBitType VertexArray::getDirtyBitFromIndex(bool contentsChanged,
                                                             angle::SubjectIndex index) const
 {
-    if (index == mArrayBufferObserverBindings.size())
+    if (IsElementArrayBufferSubjectIndex(index))
     {
         return contentsChanged ? DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA
                                : DIRTY_BIT_ELEMENT_ARRAY_BUFFER;
@@ -410,7 +428,7 @@ void VertexArray::onSubjectStateChange(const gl::Context *context,
             break;
 
         case angle::SubjectMessage::STORAGE_CHANGED:
-            if (index < mArrayBufferObserverBindings.size())
+            if (!IsElementArrayBufferSubjectIndex(index))
             {
                 updateCachedBufferBindingSize(&mState.mVertexBindings[index]);
             }
@@ -418,10 +436,26 @@ void VertexArray::onSubjectStateChange(const gl::Context *context,
             break;
 
         case angle::SubjectMessage::BINDING_CHANGED:
-            if (index < mArrayBufferObserverBindings.size())
+            if (!IsElementArrayBufferSubjectIndex(index))
             {
                 const Buffer *buffer = mState.mVertexBindings[index].getBuffer().get();
                 updateCachedTransformFeedbackBindingValidation(index, buffer);
+            }
+            break;
+
+        case angle::SubjectMessage::RESOURCE_MAPPED:
+            if (!IsElementArrayBufferSubjectIndex(index))
+            {
+                updateCachedMappedArrayBuffers(&mState.mVertexBindings[index]);
+            }
+            break;
+
+        case angle::SubjectMessage::RESOURCE_UNMAPPED:
+            setDependentDirtyBit(context, true, index);
+
+            if (!IsElementArrayBufferSubjectIndex(index))
+            {
+                updateCachedMappedArrayBuffers(&mState.mVertexBindings[index]);
             }
             break;
 
@@ -486,21 +520,19 @@ bool VertexArray::hasTransformFeedbackBindingConflict(const gl::Context *context
     return false;
 }
 
-bool VertexArray::hasMappedEnabledArrayBuffer() const
+void VertexArray::updateCachedMappedArrayBuffers(VertexBinding *binding)
 {
-    // TODO(jmadill): Cache this. http://anglebug.com/2746
-    for (size_t attribIndex : mState.mEnabledAttributesMask)
+    Buffer *buffer = binding->getBuffer().get();
+    if (buffer && buffer->isMapped())
     {
-        const VertexAttribute &vertexAttrib = mState.mVertexAttributes[attribIndex];
-        ASSERT(vertexAttrib.enabled);
-        const VertexBinding &vertexBinding = mState.mVertexBindings[vertexAttrib.bindingIndex];
-        gl::Buffer *boundBuffer            = vertexBinding.getBuffer().get();
-        if (boundBuffer && boundBuffer->isMapped())
-        {
-            return true;
-        }
+        mState.mCachedMappedArrayBuffers |= binding->getBoundAttributesMask();
+    }
+    else
+    {
+        mState.mCachedMappedArrayBuffers &= ~binding->getBoundAttributesMask();
     }
 
-    return false;
+    mState.mCachedEnabledMappedArrayBuffers =
+        mState.mCachedMappedArrayBuffers & mState.mEnabledAttributesMask;
 }
 }  // namespace gl

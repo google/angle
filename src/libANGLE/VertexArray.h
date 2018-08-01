@@ -86,6 +86,10 @@ class VertexArrayState final : angle::NonCopyable
     // attribs.
     gl::AttributesMask mClientMemoryAttribsMask;
     gl::AttributesMask mNullPointerClientMemoryAttribsMask;
+
+    // Used for validation cache. Indexed by attribute.
+    AttributesMask mCachedMappedArrayBuffers;
+    AttributesMask mCachedEnabledMappedArrayBuffers;
 };
 
 class VertexArray final : public angle::ObserverInterface,
@@ -178,7 +182,10 @@ class VertexArray final : public angle::ObserverInterface,
         return mState.hasEnabledNullPointerClientArray();
     }
 
-    bool hasMappedEnabledArrayBuffer() const;
+    bool hasMappedEnabledArrayBuffer() const
+    {
+        return mState.mCachedEnabledMappedArrayBuffers.any();
+    }
 
     // Observer implementation
     void onSubjectStateChange(const gl::Context *context,
@@ -265,6 +272,7 @@ class VertexArray final : public angle::ObserverInterface,
     // These are used to optimize draw call validation.
     void updateCachedBufferBindingSize(VertexBinding *binding);
     void updateCachedTransformFeedbackBindingValidation(size_t bindingIndex, const Buffer *buffer);
+    void updateCachedMappedArrayBuffers(VertexBinding *binding);
 
     GLuint mId;
 
