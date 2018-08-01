@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4d6005c1_82fc195a",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 1635,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "This is no longer needed. Thanks!",
+      "parentUuid": "3db37d1e_89bfeb20",
+      "range": {
+        "startLine": 1635,
+        "startChar": 4,
+        "endLine": 1635,
+        "endChar": 11
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d1dadd18_3257c568",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 29
@@ -39,6 +63,24 @@
       "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f49b155_4d2b9f03",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1dadd18_3257c568",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "186d349b_04f05d82",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99e8b028_0f922e73",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "409a4530_f9720dcd",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 29
@@ -70,6 +130,30 @@
       "writtenOn": "2018-07-31T16:04:23Z",
       "side": 1,
       "message": "That the condition is to wait until the future is started is weird. Could we have the condition be signaled inside the future instead so that waiting on the condition is enough?",
+      "range": {
+        "startLine": 118,
+        "startChar": 1,
+        "endLine": 127,
+        "endChar": 13
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b8f67aa_d68fa926",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "We should not stop people linking a new program even there are mMaxThreads linking tasks ongoing already. What we can do is just to store the linking task in queue, and start a future for it later when there is a running task done. When it\u0027s in queue, it\u0027s yet to have a future. So I am not sure how to have the condition signaled inside the future, as there no future yet.",
+      "parentUuid": "409a4530_f9720dcd",
       "range": {
         "startLine": 118,
         "startChar": 1,
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "bfe075ea_821ad199",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Removed all the legacy signal/reset code.",
+      "parentUuid": "4526b8b5_7de2444c",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "30b9adba_a8db4bb3",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 29
@@ -110,6 +212,30 @@
       "writtenOn": "2018-07-31T16:04:23Z",
       "side": 1,
       "message": "Could we just return mIsReady that\u0027s set at the end of the future?",
+      "range": {
+        "startLine": 142,
+        "startChar": 2,
+        "endLine": 150,
+        "endChar": 82
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "394650fe_e6b68c3a",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "We may have no future yet.",
+      "parentUuid": "30b9adba_a8db4bb3",
       "range": {
         "startLine": 142,
         "startChar": 2,
@@ -145,6 +271,30 @@
     },
     {
       "key": {
+        "uuid": "6115d3a3_9a19ce25",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "It\u0027s expected to be called when posting new task from the main thread, or exiting from the done background threads. As the main thread doesn\u0027t always post new tasks, or even can sleep somewhere, if we only dispatches from the main thread, the pending tasks in queue may not be run timely, or even never be run.",
+      "parentUuid": "1d26d009_e73a8770",
+      "range": {
+        "startLine": 212,
+        "startChar": 12,
+        "endLine": 212,
+        "endChar": 34
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cc6f79e7_179711c0",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 29
@@ -156,6 +306,30 @@
       "writtenOn": "2018-07-31T16:04:23Z",
       "side": 1,
       "message": "The future could have run already, waitable-\u003emMutex needs to be already locked when std::async is called.",
+      "range": {
+        "startLine": 217,
+        "startChar": 6,
+        "endLine": 221,
+        "endChar": 9
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13b20710_4e2d722b",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "I am not quite clear about this comment. Could you explain it a bit more?",
+      "parentUuid": "cc6f79e7_179711c0",
       "range": {
         "startLine": 217,
         "startChar": 6,
@@ -191,6 +365,30 @@
     },
     {
       "key": {
+        "uuid": "0ab8cffd_c3c5a472",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7cde4c51_dc373e87",
+      "range": {
+        "startLine": 228,
+        "startChar": 64,
+        "endLine": 228,
+        "endChar": 94
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df77628f_4d3c98ba",
         "filename": "src/libANGLE/WorkerThread.h",
         "patchSetId": 29
@@ -205,6 +403,24 @@
       "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bee0712_2a921944",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df77628f_4d3c98ba",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -225,6 +441,24 @@
     },
     {
       "key": {
+        "uuid": "d15231b1_cef69c50",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a01be840_53e494d6",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65d43074_2c505c7f",
         "filename": "src/libANGLE/renderer/ProgramImpl.h",
         "patchSetId": 29
@@ -239,6 +473,24 @@
       "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01301a37_d59f4174",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65d43074_2c505c7f",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -265,6 +517,30 @@
     },
     {
       "key": {
+        "uuid": "ead58d0c_a31550e7",
+        "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f22948a6_79d15672",
+      "range": {
+        "startLine": 127,
+        "startChar": 8,
+        "endLine": 127,
+        "endChar": 14
+      },
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48bf7f83_b3757f02",
         "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
         "patchSetId": 29
@@ -282,6 +558,24 @@
     },
     {
       "key": {
+        "uuid": "add3c1f7_fe1f98ee",
+        "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48bf7f83_b3757f02",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "556c8496_268e4d2e",
         "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
         "patchSetId": 29
@@ -293,6 +587,24 @@
       "writtenOn": "2018-07-31T16:04:23Z",
       "side": 1,
       "message": "This will skip the next task.",
+      "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0d2b556_d2772079",
+        "filename": "src/tests/gl_tests/ParallelShaderCompileTest.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Good catch, thanks!",
+      "parentUuid": "556c8496_268e4d2e",
       "revId": "8b6eef19c511a5a20659ecbbbbb7cc4dca8d8fec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true

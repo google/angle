@@ -522,6 +522,30 @@
     },
     {
       "key": {
+        "uuid": "ee9dfec7_a0c2c3e3",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Okay, removed all such inlines.",
+      "parentUuid": "e13b2dd6_85a1be2a",
+      "range": {
+        "startLine": 466,
+        "startChar": 0,
+        "endLine": 470,
+        "endChar": 5
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e6260460_0403eb2d",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 14
@@ -542,6 +566,30 @@
       "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1456aae_71b199ed",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6260460_0403eb2d",
+      "range": {
+        "startLine": 475,
+        "startChar": 0,
+        "endLine": 479,
+        "endChar": 5
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -615,6 +663,30 @@
     },
     {
       "key": {
+        "uuid": "2d334cbf_9b27ba14",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f176e36_caf6617a",
+      "range": {
+        "startLine": 507,
+        "startChar": 0,
+        "endLine": 512,
+        "endChar": 0
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1a1dad9_5a3200cf",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 14
@@ -626,6 +698,30 @@
       "writtenOn": "2018-07-31T14:22:06Z",
       "side": 1,
       "message": "how is it this can\u0027t return an error?",
+      "range": {
+        "startLine": 912,
+        "startChar": 9,
+        "endLine": 912,
+        "endChar": 20
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a711e76e_19d8828d",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "resolveLink() can be called by many methods of Program. Most of them have no knowledge to handle the error properly. And it would be distracting for them to do so.",
+      "parentUuid": "d1a1dad9_5a3200cf",
       "range": {
         "startLine": 912,
         "startChar": 9,
@@ -1199,6 +1295,30 @@
       "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78118bcc_ebe1379f",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-08-01T08:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45279ead_062e283c",
+      "range": {
+        "startLine": 208,
+        "startChar": 7,
+        "endLine": 208,
+        "endChar": 33
+      },
+      "revId": "c8acf5a3a0a2d9b83fd905689a3ac47a222c3f81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
