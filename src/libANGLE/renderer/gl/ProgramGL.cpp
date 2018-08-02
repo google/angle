@@ -710,7 +710,7 @@ bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
     mFunctions->getProgramiv(mProgramID, GL_LINK_STATUS, &linkStatus);
     if (linkStatus == GL_FALSE)
     {
-        // Linking failed, put the error into the info log
+        // Linking or program binary loading failed, put the error into the info log.
         GLint infoLogLength = 0;
         mFunctions->getProgramiv(mProgramID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
@@ -721,19 +721,18 @@ bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
             std::vector<char> buf(infoLogLength);
             mFunctions->getProgramInfoLog(mProgramID, infoLogLength, nullptr, &buf[0]);
 
-            mFunctions->deleteProgram(mProgramID);
-            mProgramID = 0;
-
             infoLog << buf.data();
 
-            WARN() << "Program link failed unexpectedly: " << buf.data();
+            WARN() << "Program link or binary loading failed: " << buf.data();
         }
         else
         {
-            WARN() << "Program link failed unexpectedly with no info log.";
+            WARN() << "Program link or binary loading failed with no info log.";
         }
 
-        // TODO, return GL_OUT_OF_MEMORY or just fail the link? This is an unexpected case
+        // This may happen under normal circumstances if we're loading program binaries and the
+        // driver or hardware has changed.
+        ASSERT(mProgramID != 0);
         return false;
     }
 
