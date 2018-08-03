@@ -289,7 +289,8 @@ class StateManager11 final : angle::NonCopyable
     angle::Result syncProgram(const gl::Context *context, gl::PrimitiveMode drawMode);
 
     angle::Result syncTextures(const gl::Context *context);
-    angle::Result applyTextures(const gl::Context *context, gl::ShaderType shaderType);
+    angle::Result applyTexturesForSamplers(const gl::Context *context, gl::ShaderType shaderType);
+    angle::Result applyTexturesForImages(const gl::Context *context, gl::ShaderType shaderType);
     angle::Result syncTexturesForCompute(const gl::Context *context);
 
     angle::Result setSamplerState(const gl::Context *context,
@@ -297,11 +298,11 @@ class StateManager11 final : angle::NonCopyable
                                   int index,
                                   gl::Texture *texture,
                                   const gl::SamplerState &sampler);
-    angle::Result setTexture(const gl::Context *context,
-                             gl::ShaderType type,
-                             int index,
-                             gl::Texture *texture,
-                             const gl::SamplerState &sampler);
+    angle::Result setTextureForSampler(const gl::Context *context,
+                                       gl::ShaderType type,
+                                       int index,
+                                       gl::Texture *texture,
+                                       const gl::SamplerState &sampler);
     angle::Result setTextureForImage(const gl::Context *context,
                                      gl::ShaderType type,
                                      int index,

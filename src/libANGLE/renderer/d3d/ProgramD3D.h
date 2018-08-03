@@ -156,7 +156,7 @@ class ProgramD3D : public ProgramImpl
                             unsigned int samplerIndex,
                             const gl::Caps &caps) const;
     gl::TextureType getSamplerTextureType(gl::ShaderType type, unsigned int samplerIndex) const;
-    GLuint getUsedSamplerRange(gl::ShaderType type) const;
+    gl::RangeUI getUsedSamplerRange(gl::ShaderType type) const;
 
     enum SamplerMapping
     {
@@ -170,7 +170,7 @@ class ProgramD3D : public ProgramImpl
                           unsigned int imageIndex,
                           bool readonly,
                           const gl::Caps &caps) const;
-    GLuint getUsedImageRange(gl::ShaderType type, bool readonly) const;
+    gl::RangeUI getUsedImageRange(gl::ShaderType type, bool readonly) const;
 
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesPointSpriteEmulation() const;
@@ -421,7 +421,7 @@ class ProgramD3D : public ProgramImpl
                                const gl::UniformTypeInfo &typeInfo,
                                unsigned int samplerCount,
                                std::vector<Sampler> &outSamplers,
-                               GLuint *outUsedRange);
+                               gl::RangeUI *outUsedRange);
 
     void assignAllImageRegisters();
     void assignImageRegisters(size_t uniformIndex);
@@ -429,7 +429,7 @@ class ProgramD3D : public ProgramImpl
                              int startLogicalImageUnit,
                              unsigned int imageCount,
                              std::vector<Image> &outImages,
-                             GLuint *outUsedRange);
+                             gl::RangeUI *outUsedRange);
 
     template <typename DestT>
     void getUniformInternal(GLint location, DestT *dataOut) const;
@@ -500,13 +500,13 @@ class ProgramD3D : public ProgramImpl
     gl::ShaderMap<std::unique_ptr<UniformStorageD3D>> mShaderUniformStorages;
 
     gl::ShaderMap<std::vector<Sampler>> mShaderSamplers;
-    gl::ShaderMap<GLuint> mUsedShaderSamplerRanges;
+    gl::ShaderMap<gl::RangeUI> mUsedShaderSamplerRanges;
     bool mDirtySamplerMapping;
 
     std::vector<Image> mImagesCS;
     std::vector<Image> mReadonlyImagesCS;
-    GLuint mUsedComputeImageRange;
-    GLuint mUsedComputeReadonlyImageRange;
+    gl::RangeUI mUsedComputeImageRange;
+    gl::RangeUI mUsedComputeReadonlyImageRange;
 
     // Cache for pixel shader output layout to save reallocations.
     std::vector<GLenum> mPixelShaderOutputLayoutCache;
