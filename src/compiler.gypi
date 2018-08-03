@@ -155,6 +155,8 @@
             'compiler/translator/tree_ops/RemovePow.h',
             'compiler/translator/tree_ops/RemoveUnreferencedVariables.cpp',
             'compiler/translator/tree_ops/RemoveUnreferencedVariables.h',
+            'compiler/translator/tree_ops/RewriteAtomicFunctionExpressions.cpp',
+            'compiler/translator/tree_ops/RewriteAtomicFunctionExpressions.h',
             'compiler/translator/tree_ops/RewriteDoWhile.cpp',
             'compiler/translator/tree_ops/RewriteDoWhile.h',
             'compiler/translator/tree_ops/RewriteStructSamplers.cpp',

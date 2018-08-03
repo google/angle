@@ -1446,7 +1446,6 @@ TEST_P(ComputeShaderTest, StructArrayAsSharedVariable)
 }
 
 // Verify using atomic functions without return value can work correctly.
-// TODO(jiawei.shao@intel.com): add test on atomicExchange and atomicCompSwap.
 TEST_P(ComputeShaderTest, AtomicFunctionsNoReturnValue)
 {
     // TODO(jiawei.shao@intel.com): find out why this shader causes a link error on Android Nexus 5
@@ -1455,7 +1454,7 @@ TEST_P(ComputeShaderTest, AtomicFunctionsNoReturnValue)
 
     const char kCSShader[] =
         R"(#version 310 es
-        layout (local_size_x = 6, local_size_y = 1, local_size_z = 1) in;
+        layout (local_size_x = 8, local_size_y = 1, local_size_z = 1) in;
         layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
         layout (r32ui, binding = 1) writeonly uniform highp uimage2D dstImage;
 
@@ -1465,14 +1464,20 @@ TEST_P(ComputeShaderTest, AtomicFunctionsNoReturnValue)
         const uint kOrIndex = 3u;
         const uint kAndIndex = 4u;
         const uint kXorIndex = 5u;
+        const uint kExchangeIndex = 6u;
+        const uint kCompSwapIndex = 7u;
 
-        shared highp uint results[6];
+        shared highp uint results[8];
 
         void main()
         {
             if (gl_LocalInvocationID.x == kMinIndex || gl_LocalInvocationID.x == kAndIndex)
             {
                 results[gl_LocalInvocationID.x] = 0xFFFFu;
+            }
+            else if (gl_LocalInvocationID.x == kCompSwapIndex)
+            {
+                results[gl_LocalInvocationID.x] = 1u;
             }
             else
             {
@@ -1488,6 +1493,8 @@ TEST_P(ComputeShaderTest, AtomicFunctionsNoReturnValue)
             atomicOr(results[kOrIndex], value);
             atomicAnd(results[kAndIndex], value);
             atomicXor(results[kXorIndex], value);
+            atomicExchange(results[kExchangeIndex], value);
+            atomicCompSwap(results[kCompSwapIndex], value, 256u);
             memoryBarrierShared();
             barrier();
 
@@ -1495,9 +1502,9 @@ TEST_P(ComputeShaderTest, AtomicFunctionsNoReturnValue)
                        uvec4(results[gl_LocalInvocationID.x]));
         })";
 
-    const std::array<GLuint, 6> inputData      = {{1, 2, 4, 8, 16, 32}};
-    const std::array<GLuint, 6> expectedValues = {{63, 1, 32, 63, 0, 63}};
-    runSharedMemoryTest<GLuint, 6, 1>(kCSShader, GL_R32UI, GL_UNSIGNED_INT, inputData,
+    const std::array<GLuint, 8> inputData      = {{1, 2, 4, 8, 16, 32, 64, 128}};
+    const std::array<GLuint, 8> expectedValues = {{255, 1, 128, 255, 0, 255, 128, 256}};
+    runSharedMemoryTest<GLuint, 8, 1>(kCSShader, GL_R32UI, GL_UNSIGNED_INT, inputData,
                                       expectedValues);
 }
 
