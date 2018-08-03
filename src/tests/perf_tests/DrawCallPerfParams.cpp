@@ -11,6 +11,21 @@
 
 #include <sstream>
 
+DrawCallPerfParams::DrawCallPerfParams()
+{
+    majorVersion = 2;
+    minorVersion = 0;
+    windowWidth  = 256;
+    windowHeight = 256;
+
+    iterations     = 50;
+    runTimeSeconds = 10.0;
+    numTris        = 1;
+    useFBO         = false;
+}
+
+DrawCallPerfParams::~DrawCallPerfParams() = default;
+
 std::string DrawCallPerfParams::suffix() const
 {
     std::stringstream strstr;

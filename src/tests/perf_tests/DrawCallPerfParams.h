@@ -17,21 +17,15 @@
 struct DrawCallPerfParams : public RenderTestParams
 {
     // Common default options
-    DrawCallPerfParams()
-    {
-        majorVersion = 2;
-        minorVersion = 0;
-        windowWidth  = 256;
-        windowHeight = 256;
-    }
-    virtual ~DrawCallPerfParams() {}
+    DrawCallPerfParams();
+    virtual ~DrawCallPerfParams();
 
     std::string suffix() const override;
 
-    unsigned int iterations = 50;
-    double runTimeSeconds   = 10.0;
-    int numTris             = 1;
-    bool useFBO             = false;
+    unsigned int iterations;
+    double runTimeSeconds;
+    int numTris;
+    bool useFBO;
 };
 
 DrawCallPerfParams DrawCallPerfD3D11Params(bool useNullDevice, bool renderToTexture);
