@@ -370,9 +370,16 @@ config("vulkan_core_validation_config") {
   include_dirs = [ "$angle_root/third_party/glslang/src" ]
 }
 
+if (build_with_chromium) {
+  spvtools_dir = "//third_party/SPIRV-Tools/src"
+} else {
+  spvtools_dir = "${angle_root}/third_party/spirv-tools/src"
+}
+
 source_set("vulkan_core_validation_glslang") {
   public_deps = [
-    "$angle_root/third_party/spirv-tools:spirv_tools",
+    "${spvtools_dir}:spvtools",
+    "${spvtools_dir}:spvtools_val",
   ]
   public_configs = [ ":vulkan_core_validation_config" ]
 }
