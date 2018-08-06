@@ -59,6 +59,13 @@
         [
             '<(angle_path)/src/tests/perf_tests/VulkanPipelineCachePerf.cpp',
         ],
+        # Currently Vulkan Command Buffer Perf Tests compile on Android/Linux
+        'angle_perf_tests_vulkan_command_buffer_sources':
+        [
+            '<(angle_path)/src/tests/perf_tests/VulkanCommandBufferPerf.cpp',
+            '<(angle_path)/src/tests/test_utils/third_party/vulkan_command_buffer_utils.cpp',
+            '<(angle_path)/src/tests/test_utils/third_party/vulkan_command_buffer_utils.h'
+        ],
     },
     # Everything below (except WinRT-related config) must be also maintained for GN.
     # If you change anything below, also update angle/src/tests/BUILD.gn.
