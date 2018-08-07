@@ -1625,6 +1625,68 @@ TEST_P(ComputeShaderTest, AtomicFunctionsInNonInitializerSingleAssignment)
     runSharedMemoryTest<GLint, 9, 1>(kCSShader, GL_R32I, GL_INT, inputData, expectedValues);
 }
 
+// Basic uniform buffer functionality.
+TEST_P(ComputeShaderTest, UniformBuffer)
+{
+    GLTexture texture;
+    GLBuffer buffer;
+    GLFramebuffer framebuffer;
+    const std::string csSource =
+        R"(#version 310 es
+        layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+        uniform uni
+        {
+            uvec4 value;
+        };
+        layout(rgba32ui, binding = 0) writeonly uniform highp uimage2D uImage;
+        void main()
+        {
+            imageStore(uImage, ivec2(gl_LocalInvocationID.xy), value);
+        })";
+
+    constexpr int kWidth = 1, kHeight = 1;
+    constexpr GLuint kInputValues[4] = {56, 57, 58, 59};
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32UI, kWidth, kHeight);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA_INTEGER, GL_UNSIGNED_INT,
+                    kInputValues);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    glUseProgram(program.get());
+
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "uni");
+    EXPECT_NE(uniformBufferIndex, -1);
+    GLuint data[4] = {201, 202, 203, 204};
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(GLuint) * 4, data, GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    GLuint outputValues[kWidth * kHeight * 4];
+    glUseProgram(0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, kWidth, kHeight, GL_RGBA_INTEGER, GL_UNSIGNED_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < kWidth * kHeight * 4; i++)
+    {
+        EXPECT_EQ(data[i], outputValues[i]);
+    }
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)

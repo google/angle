@@ -549,6 +549,14 @@ class StateManager11 final : angle::NonCopyable
     FragmentConstantBufferArray<GLintptr> mCurrentConstantBufferPSOffset;
     FragmentConstantBufferArray<GLsizeiptr> mCurrentConstantBufferPSSize;
 
+    template <typename T>
+    using ComputeConstantBufferArray =
+        std::array<T, gl::IMPLEMENTATION_MAX_COMPUTE_SHADER_UNIFORM_BUFFERS>;
+
+    ComputeConstantBufferArray<ResourceSerial> mCurrentConstantBufferCS;
+    ComputeConstantBufferArray<GLintptr> mCurrentConstantBufferCSOffset;
+    ComputeConstantBufferArray<GLsizeiptr> mCurrentConstantBufferCSSize;
+
     // Currently applied transform feedback buffers
     Serial mAppliedTFSerial;
 
