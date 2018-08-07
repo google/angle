@@ -379,6 +379,9 @@ if (angle_use_commit_id) {
       commit_id_output_file,
     ]
 
+    # commit id should depend on angle's HEAD revision
+    inputs = [ ".git/HEAD" ]
+
     args = [
       "gen",
       rebase_path(".", root_build_dir),
