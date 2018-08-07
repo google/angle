@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc26671c_b4b81101",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-07T13:50:53Z",
+      "side": 1,
+      "message": "wait, what is an \u0027intputs\u0027? should this be inputs?",
+      "range": {
+        "startLine": 383,
+        "startChar": 4,
+        "endLine": 383,
+        "endChar": 12
+      },
+      "revId": "ed7321756a6e7347eb97e94e9596f5d900977f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
