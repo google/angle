@@ -10,6 +10,7 @@
 #   deviation of the population continuously.
 #
 
+import glob
 import subprocess
 import sys
 import os
@@ -17,15 +18,8 @@ import re
 
 base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
-# You might have to re-order these to find the specific version you want.
-perftests_paths = [
-    os.path.join('src', 'tests', 'Release_x64'),
-    os.path.join('src', 'tests', 'Release_Win32'),
-    os.path.join('out', 'Release_x64'),
-    os.path.join('out', 'Release'),
-    os.path.join('gyp', 'Release_x64'),
-    os.path.join('gyp', 'Release_Win32')
-]
+# Might have to add lower case "release" in some configurations.
+perftests_paths = glob.glob('out/*Release*')
 metric = 'score'
 
 binary_name = 'angle_perftests'

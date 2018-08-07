@@ -41,6 +41,17 @@ const char *SimpleDrawVertexShaderSource()
         })";
 }
 
+const char *SimpleTexCoordVertexShaderSource()
+{
+    return R"(attribute vec2 vPosition;
+varying vec2 texCoord;
+void main()
+{
+    gl_Position = vec4(vPosition, 0, 1);
+    texCoord = vPosition * 0.5 + vec2(0.5);
+})";
+}
+
 const char *SimpleFragmentShaderSource()
 {
     return
@@ -49,6 +60,17 @@ const char *SimpleFragmentShaderSource()
         {
             gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
         })";
+}
+
+const char *SimpleTextureFragmentShaderSource()
+{
+    return R"(precision mediump float;
+varying vec2 texCoord;
+uniform sampler2D tex;
+void main()
+{
+    gl_FragColor = texture2D(tex, texCoord);
+})";
 }
 
 void Generate2DTriangleData(size_t numTris, std::vector<float> *floatData)
@@ -93,6 +115,22 @@ GLuint SetupSimpleDrawProgram()
 {
     const std::string vs = SimpleDrawVertexShaderSource();
     const std::string fs = SimpleFragmentShaderSource();
+    GLuint program       = CompileProgram(vs, fs);
+    if (program == 0u)
+    {
+        return program;
+    }
+
+    // Use the program object
+    glUseProgram(program);
+
+    return program;
+}
+
+GLuint SetupSimpleTextureProgram()
+{
+    const std::string vs = SimpleTexCoordVertexShaderSource();
+    const std::string fs = SimpleTextureFragmentShaderSource();
     GLuint program       = CompileProgram(vs, fs);
     if (program == 0u)
     {
