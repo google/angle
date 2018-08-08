@@ -95,11 +95,12 @@ class VertexBufferInterface : angle::NonCopyable
 
     gl::Error setBufferSize(const gl::Context *context, unsigned int size);
 
-    gl::ErrorOrResult<unsigned int> getSpaceRequired(const gl::Context *context,
-                                                     const gl::VertexAttribute &attrib,
-                                                     const gl::VertexBinding &binding,
-                                                     size_t count,
-                                                     GLsizei instances) const;
+    gl::Error getSpaceRequired(const gl::Context *context,
+                               const gl::VertexAttribute &attrib,
+                               const gl::VertexBinding &binding,
+                               size_t count,
+                               GLsizei instances,
+                               unsigned int *spaceInBytesOut) const;
     BufferFactoryD3D *const mFactory;
     VertexBuffer *mVertexBuffer;
     bool mDynamic;

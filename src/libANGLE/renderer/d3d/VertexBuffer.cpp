@@ -90,12 +90,12 @@ gl::Error VertexBufferInterface::setBufferSize(const gl::Context *context, unsig
     return mVertexBuffer->setBufferSize(context, size);
 }
 
-gl::ErrorOrResult<unsigned int> VertexBufferInterface::getSpaceRequired(
-    const gl::Context *context,
-    const gl::VertexAttribute &attrib,
-    const gl::VertexBinding &binding,
-    size_t count,
-    GLsizei instances) const
+gl::Error VertexBufferInterface::getSpaceRequired(const gl::Context *context,
+                                                  const gl::VertexAttribute &attrib,
+                                                  const gl::VertexBinding &binding,
+                                                  size_t count,
+                                                  GLsizei instances,
+                                                  unsigned int *spaceInBytesOut) const
 {
     unsigned int spaceRequired = 0;
     ANGLE_TRY(mFactory->getVertexSpaceRequired(context, attrib, binding, count, instances,
@@ -110,7 +110,8 @@ gl::ErrorOrResult<unsigned int> VertexBufferInterface::getSpaceRequired(
                << "Vertex buffer overflow in VertexBufferInterface::getSpaceRequired.";
     }
 
-    return alignedSpaceRequired;
+    *spaceInBytesOut = alignedSpaceRequired;
+    return gl::NoError();
 }
 
 gl::Error VertexBufferInterface::discard(const gl::Context *context)
@@ -177,7 +178,7 @@ gl::Error StreamingVertexBufferInterface::storeDynamicAttribute(const gl::Contex
                                                                 const uint8_t *sourceData)
 {
     unsigned int spaceRequired = 0;
-    ANGLE_TRY_RESULT(getSpaceRequired(context, attrib, binding, count, instances), spaceRequired);
+    ANGLE_TRY(getSpaceRequired(context, attrib, binding, count, instances, &spaceRequired));
 
     // Protect against integer overflow
     angle::CheckedNumeric<unsigned int> checkedPosition(mWritePosition);
@@ -297,7 +298,7 @@ gl::Error StaticVertexBufferInterface::storeStaticAttribute(const gl::Context *c
                                                             const uint8_t *sourceData)
 {
     unsigned int spaceRequired = 0;
-    ANGLE_TRY_RESULT(getSpaceRequired(context, attrib, binding, count, instances), spaceRequired);
+    ANGLE_TRY(getSpaceRequired(context, attrib, binding, count, instances, &spaceRequired));
     ANGLE_TRY(setBufferSize(context, spaceRequired));
 
     ASSERT(attrib.enabled);
