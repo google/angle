@@ -171,6 +171,17 @@ ERRMSG(MismatchedTypeAndFormat, "Invalid format and type combination.");
 ERRMSG(MismatchedVariableProgram, "Variable is not part of the current program.");
 ERRMSG(MissingReadAttachment, "Missing read attachment.");
 ERRMSG(MustHaveElementArrayBinding, "Must have element array buffer binding.");
+ERRMSG(MultiviewMismatch,
+       "The number of views in the active program and draw "
+       "framebuffer does not match.");
+ERRMSG(MultiviewTransformFeedback,
+       "There is an active transform feedback object when "
+       "the number of views in the active draw framebuffer "
+       "is greater than 1.");
+ERRMSG(MultiviewTimerQuery,
+       "There is an active query for target "
+       "GL_TIME_ELAPSED_EXT when the number of views in the "
+       "active draw framebuffer is greater than 1.");
 ERRMSG(NameBeginsWithGL, "Attributes that begin with 'gl_' are not allowed.");
 ERRMSG(NegativeAttachments, "Negative number of attachments.");
 ERRMSG(NegativeBufferSize, "Negative buffer size.");
@@ -184,6 +195,9 @@ ERRMSG(NegativeStart, "Cannot have negative start.");
 ERRMSG(NegativeStride, "Cannot have negative stride.");
 ERRMSG(NoActiveComputeShaderStage, "No active compute shader stage in this program.");
 ERRMSG(NoActiveGeometryShaderStage, "No active geometry shader stage in this program.");
+ERRMSG(
+    NoActiveGraphicsShaderStage,
+    "It is a undefined behaviour to render without vertex shader stage or fragment shader stage.");
 ERRMSG(NoActiveProgramWithComputeShader, "No active program for the compute shader stage.");
 ERRMSG(NonPositiveDrawTextureDimension,
        "Both width and height argument of drawn texture must be positive.");
@@ -236,6 +250,10 @@ ERRMSG(TypeMismatch,
 ERRMSG(TypeNotUnsignedShortByte, "Only UNSIGNED_SHORT and UNSIGNED_BYTE types are supported.");
 ERRMSG(UniformBufferBoundForTransformFeedback,
        "It is undefined behavior to use an uniform buffer that is bound for transform feedback.");
+ERRMSG(UniformBufferTooSmall,
+       "It is undefined behaviour to use a uniform buffer that is too small.");
+ERRMSG(UniformBufferUnbound,
+       "It is undefined behaviour to have a used but unbound uniform buffer.");
 ERRMSG(UniformSizeMismatch, "Uniform size does not match uniform method.");
 ERRMSG(UnknownParameter, "Unknown parameter value.");
 ERRMSG(UnsupportedDrawModeForTransformFeedback,
