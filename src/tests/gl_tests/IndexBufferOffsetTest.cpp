@@ -122,11 +122,6 @@ TEST_P(IndexBufferOffsetTest, UInt8Index)
 // Test using an offset for an UInt16 index buffer
 TEST_P(IndexBufferOffsetTest, UInt16Index)
 {
-    // TODO(jie.a.chen@intel.com): Re-enable the test once the driver fix is
-    // available in public release.
-    // http://anglebug.com/2663
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsVulkan());
-
     GLushort indexData[] = {0, 1, 2, 1, 2, 3};
     runTest(GL_UNSIGNED_SHORT, 2, indexData);
 }

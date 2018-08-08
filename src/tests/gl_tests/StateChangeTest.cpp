@@ -890,11 +890,6 @@ TEST_P(StateChangeRenderTestES3, InvalidateNonCurrentFramebuffer)
 // Tests that D3D11 dirty bit updates don't forget about BufferSubData attrib updates.
 TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
 {
-    // TODO(jie.a.chen@intel.com): Re-enable the test once the driver fix is
-    // available in public release.
-    // http://anglebug.com/2664.
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel());
-
     constexpr char kVS[] =
         "attribute vec2 position;\n"
         "attribute vec4 color;\n"
