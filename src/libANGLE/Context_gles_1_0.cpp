@@ -59,7 +59,7 @@ void Context::clearDepthx(GLfixed depth)
 void Context::clientActiveTexture(GLenum texture)
 {
     mGLState.gles1().setClientTextureUnit(texture - GL_TEXTURE0);
-    mStateCache.updateActiveAttribsMask(this);
+    mStateCache.onGLES1ClientStateChange(this);
 }
 
 void Context::clipPlanef(GLenum p, const GLfloat *eqn)
@@ -110,14 +110,14 @@ void Context::disableClientState(ClientVertexArrayType clientState)
 {
     mGLState.gles1().setClientStateEnabled(clientState, false);
     disableVertexAttribArray(vertexArrayIndex(clientState));
-    mStateCache.updateActiveAttribsMask(this);
+    mStateCache.onGLES1ClientStateChange(this);
 }
 
 void Context::enableClientState(ClientVertexArrayType clientState)
 {
     mGLState.gles1().setClientStateEnabled(clientState, true);
     enableVertexAttribArray(vertexArrayIndex(clientState));
-    mStateCache.updateActiveAttribsMask(this);
+    mStateCache.onGLES1ClientStateChange(this);
 }
 
 void Context::fogf(GLenum pname, GLfloat param)

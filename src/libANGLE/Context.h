@@ -89,31 +89,37 @@ class StateCache final : angle::NonCopyable
     ~StateCache();
 
     // Places that can trigger updateActiveAttribsMask:
-    // 1. GLES1: clientActiveTexture.
-    // 2. GLES1: disableClientState/enableClientState.
-    // 3. Context: linkProgram/useProgram/programBinary. Note: should check programBinary bits.
-    // 4. Context: bindVertexArray.
-    // 5. Vertex Array: most any state change.
+    // 1. onVertexArrayBindingChange.
+    // 2. onProgramExecutableChange.
+    // 3. onVertexArrayStateChange.
+    // 4. onGLES1ClientStateChange.
     AttributesMask getActiveBufferedAttribsMask() const { return mCachedActiveBufferedAttribsMask; }
     AttributesMask getActiveClientAttribsMask() const { return mCachedActiveClientAttribsMask; }
     bool hasAnyEnabledClientAttrib() const { return mCachedHasAnyEnabledClientAttrib; }
 
     // Places that can trigger updateVertexElementLimits:
-    // 1. Context: bindVertexArray.
-    // 2. Context: any executable change (linkProgram/useProgram/programBinary).
-    // 3. Vertex Array: any state change call.
-    // 4. Buffer: a dependent buffer resize.
+    // 1. onVertexArrayBindingChange.
+    // 2. onProgramExecutableChange.
+    // 3. onVertexArraySizeChange.
+    // 4. onVertexArrayStateChange.
     GLint64 getNonInstancedVertexElementLimit() const
     {
         return mCachedNonInstancedVertexElementLimit;
     }
     GLint64 getInstancedVertexElementLimit() const { return mCachedInstancedVertexElementLimit; }
 
+    // State change notifications.
+    void onVertexArrayBindingChange(Context *context);
+    void onProgramExecutableChange(Context *context);
+    void onVertexArraySizeChange(Context *context);
+    void onVertexArrayStateChange(Context *context);
+    void onGLES1ClientStateChange(Context *context);
+
+  private:
     // Cache update functions.
     void updateActiveAttribsMask(Context *context);
     void updateVertexElementLimits(Context *context);
 
-  private:
     AttributesMask mCachedActiveBufferedAttribsMask;
     AttributesMask mCachedActiveClientAttribsMask;
     bool mCachedHasAnyEnabledClientAttrib;

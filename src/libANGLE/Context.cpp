@@ -1107,8 +1107,7 @@ void Context::bindVertexArray(GLuint vertexArrayHandle)
     VertexArray *vertexArray = checkVertexArrayAllocation(vertexArrayHandle);
     mGLState.setVertexArrayBinding(this, vertexArray);
     mVertexArrayObserverBinding.bind(vertexArray);
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArrayBindingChange(this);
 }
 
 void Context::bindVertexBuffer(GLuint bindingIndex,
@@ -1118,7 +1117,7 @@ void Context::bindVertexBuffer(GLuint bindingIndex,
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.bindVertexBuffer(this, bindingIndex, buffer, offset, stride);
-    mStateCache.updateActiveAttribsMask(this);
+    mStateCache.onVertexArrayStateChange(this);
 }
 
 void Context::bindSampler(GLuint textureUnit, GLuint samplerHandle)
@@ -1144,8 +1143,7 @@ void Context::bindImageTexture(GLuint unit,
 void Context::useProgram(GLuint program)
 {
     mGLState.setProgram(this, getProgram(program));
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onProgramExecutableChange(this);
 }
 
 void Context::useProgramStages(GLuint pipeline, GLbitfield stages, GLuint program)
@@ -2799,8 +2797,7 @@ void Context::detachProgramPipeline(GLuint pipeline)
 void Context::vertexAttribDivisor(GLuint index, GLuint divisor)
 {
     mGLState.setVertexAttribDivisor(this, index, divisor);
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArrayStateChange(this);
 }
 
 void Context::samplerParameteri(GLuint sampler, GLenum pname, GLint param)
@@ -4407,8 +4404,7 @@ void Context::disable(GLenum cap)
 void Context::disableVertexAttribArray(GLuint index)
 {
     mGLState.setEnableVertexAttribArray(index, false);
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArrayStateChange(this);
 }
 
 void Context::enable(GLenum cap)
@@ -4419,8 +4415,7 @@ void Context::enable(GLenum cap)
 void Context::enableVertexAttribArray(GLuint index)
 {
     mGLState.setEnableVertexAttribArray(index, true);
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArrayStateChange(this);
 }
 
 void Context::frontFace(GLenum mode)
@@ -4628,8 +4623,7 @@ void Context::vertexAttribPointer(GLuint index,
 {
     mGLState.setVertexAttribPointer(this, index, mGLState.getTargetBuffer(BufferBinding::Array),
                                     size, type, ConvertToBool(normalized), false, stride, ptr);
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArrayStateChange(this);
 }
 
 void Context::vertexAttribFormat(GLuint attribIndex,
@@ -4640,7 +4634,7 @@ void Context::vertexAttribFormat(GLuint attribIndex,
 {
     mGLState.setVertexAttribFormat(attribIndex, size, type, ConvertToBool(normalized), false,
                                    relativeOffset);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArraySizeChange(this);
 }
 
 void Context::vertexAttribIFormat(GLuint attribIndex,
@@ -4649,20 +4643,19 @@ void Context::vertexAttribIFormat(GLuint attribIndex,
                                   GLuint relativeOffset)
 {
     mGLState.setVertexAttribFormat(attribIndex, size, type, false, true, relativeOffset);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArraySizeChange(this);
 }
 
 void Context::vertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
 {
     mGLState.setVertexAttribBinding(this, attribIndex, bindingIndex);
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArrayStateChange(this);
 }
 
 void Context::vertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
 {
     mGLState.setVertexBindingDivisor(bindingIndex, divisor);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArraySizeChange(this);
 }
 
 void Context::viewport(GLint x, GLint y, GLsizei width, GLsizei height)
@@ -4678,8 +4671,7 @@ void Context::vertexAttribIPointer(GLuint index,
 {
     mGLState.setVertexAttribPointer(this, index, mGLState.getTargetBuffer(BufferBinding::Array),
                                     size, type, false, true, stride, pointer);
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onVertexArrayStateChange(this);
 }
 
 void Context::vertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w)
@@ -5565,8 +5557,7 @@ void Context::linkProgram(GLuint program)
     ASSERT(programObject);
     handleError(programObject->link(this));
     mGLState.onProgramExecutableChange(programObject);
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onProgramExecutableChange(this);
 }
 
 void Context::releaseShaderCompiler()
@@ -5774,8 +5765,7 @@ void Context::programBinary(GLuint program, GLenum binaryFormat, const void *bin
     ASSERT(programObject != nullptr);
 
     handleError(programObject->loadBinary(this, binaryFormat, binary, length));
-    mStateCache.updateActiveAttribsMask(this);
-    mStateCache.updateVertexElementLimits(this);
+    mStateCache.onProgramExecutableChange(this);
 }
 
 void Context::uniform1ui(GLint location, GLuint v0)
@@ -7580,7 +7570,7 @@ void Context::onSubjectStateChange(const Context *context,
     {
         case kVertexArraySubjectIndex:
             mGLState.setObjectDirty(GL_VERTEX_ARRAY);
-            mStateCache.updateVertexElementLimits(this);
+            mStateCache.onVertexArraySizeChange(this);
             break;
 
         case kReadFramebufferSubjectIndex:
@@ -7718,5 +7708,33 @@ void StateCache::updateVertexElementLimits(Context *context)
                 std::min(mCachedNonInstancedVertexElementLimit, limit);
         }
     }
+}
+
+void StateCache::onVertexArrayBindingChange(Context *context)
+{
+    updateActiveAttribsMask(context);
+    updateVertexElementLimits(context);
+}
+
+void StateCache::onProgramExecutableChange(Context *context)
+{
+    updateActiveAttribsMask(context);
+    updateVertexElementLimits(context);
+}
+
+void StateCache::onVertexArraySizeChange(Context *context)
+{
+    updateVertexElementLimits(context);
+}
+
+void StateCache::onVertexArrayStateChange(Context *context)
+{
+    updateActiveAttribsMask(context);
+    updateVertexElementLimits(context);
+}
+
+void StateCache::onGLES1ClientStateChange(Context *context)
+{
+    updateActiveAttribsMask(context);
 }
 }  // namespace gl
