@@ -62,9 +62,11 @@ std::vector<Vector2> ConvertPixelCoordinatesToClipSpace(const std::vector<Vector
 
 struct MultiviewImplementationParams : public PlatformParameters
 {
-    MultiviewImplementationParams(bool forceUseGeometryShaderOnD3D,
+    MultiviewImplementationParams(GLint majorVersion,
+                                  GLint minorVersion,
+                                  bool forceUseGeometryShaderOnD3D,
                                   const EGLPlatformParameters &eglPlatformParameters)
-        : PlatformParameters(3, 0, eglPlatformParameters),
+        : PlatformParameters(majorVersion, minorVersion, eglPlatformParameters),
           mForceUseGeometryShaderOnD3D(forceUseGeometryShaderOnD3D)
     {
     }
@@ -153,41 +155,6 @@ class MultiviewDrawTest : public ANGLETestBase
     }
 
     PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
-};
-
-class MultiviewDrawValidationTest : public MultiviewDrawTest,
-                                    public ::testing::TestWithParam<PlatformParameters>
-{
-  protected:
-    MultiviewDrawValidationTest() : MultiviewDrawTest(GetParam()) {}
-
-    void SetUp() override
-    {
-        MultiviewDrawTest::DrawTestSetUp();
-
-        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
-
-        glBindTexture(GL_TEXTURE_2D, mTex2d);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
-        glBindVertexArray(mVao);
-
-        const float kVertexData[3] = {0.0f};
-        glBindBuffer(GL_ARRAY_BUFFER, mVbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3u, &kVertexData[0], GL_STATIC_DRAW);
-
-        const unsigned int kIndices[3] = {0u, 1u, 2u};
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIbo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 3, &kIndices[0],
-                     GL_STATIC_DRAW);
-        ASSERT_GL_NO_ERROR();
-    }
-
-    GLTexture mTex2d;
-    GLVertexArray mVao;
-    GLBuffer mVbo;
-    GLBuffer mIbo;
-    GLFramebuffer mFramebuffer;
 };
 
 class MultiviewRenderTestBase : public MultiviewDrawTest
@@ -373,6 +340,25 @@ class MultiviewRenderTest : public MultiviewRenderTestBase,
     }
 };
 
+constexpr char kDualViewVSSource[] = R"(#version 300 es
+#extension GL_OVR_multiview : require
+layout(num_views = 2) in;
+in vec4 vPosition;
+void main()
+{
+   gl_Position.x = (gl_ViewID_OVR == 0u ? vPosition.x*0.5 + 0.5 : vPosition.x*0.5);
+   gl_Position.yzw = vPosition.yzw;
+})";
+
+constexpr char kDualViewFSSource[] = R"(#version 300 es
+#extension GL_OVR_multiview : require
+precision mediump float;
+out vec4 col;
+void main()
+{
+   col = vec4(0,1,0,1);
+})";
+
 class MultiviewRenderDualViewTest : public MultiviewRenderTest
 {
   protected:
@@ -394,29 +380,8 @@ class MultiviewRenderDualViewTest : public MultiviewRenderTest
             return;
         }
 
-        const std::string vsSource =
-            "#version 300 es\n"
-            "#extension GL_OVR_multiview : require\n"
-            "layout(num_views = 2) in;\n"
-            "in vec4 vPosition;\n"
-            "void main()\n"
-            "{\n"
-            "   gl_Position.x = (gl_ViewID_OVR == 0u ? vPosition.x*0.5 + 0.5 : vPosition.x*0.5);\n"
-            "   gl_Position.yzw = vPosition.yzw;\n"
-            "}\n";
-
-        const std::string fsSource =
-            "#version 300 es\n"
-            "#extension GL_OVR_multiview : require\n"
-            "precision mediump float;\n"
-            "out vec4 col;\n"
-            "void main()\n"
-            "{\n"
-            "   col = vec4(0,1,0,1);\n"
-            "}\n";
-
         createFBO(2, 1, 2);
-        mProgram = CompileProgram(vsSource, fsSource);
+        mProgram = CompileProgram(kDualViewVSSource, kDualViewFSSource);
         ASSERT_NE(mProgram, 0u);
         glUseProgram(mProgram);
         ASSERT_GL_NO_ERROR();
@@ -431,6 +396,40 @@ class MultiviewRenderDualViewTest : public MultiviewRenderTest
     }
 
     GLuint mProgram;
+};
+
+class MultiviewDrawValidationTest : public MultiviewRenderDualViewTest
+{
+  protected:
+    MultiviewDrawValidationTest() {}
+
+    void SetUp() override
+    {
+        MultiviewRenderDualViewTest::SetUp();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+
+        glBindTexture(GL_TEXTURE_2D, mTex2d);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        glBindVertexArray(mVao);
+
+        const float kVertexData[3] = {0.0f};
+        glBindBuffer(GL_ARRAY_BUFFER, mVbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3u, &kVertexData[0], GL_STATIC_DRAW);
+
+        const unsigned int kIndices[3] = {0u, 1u, 2u};
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIbo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 3, &kIndices[0],
+                     GL_STATIC_DRAW);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    GLTexture mTex2d;
+    GLVertexArray mVao;
+    GLBuffer mVbo;
+    GLBuffer mIbo;
+    GLFramebuffer mFramebuffer;
 };
 
 class MultiviewOcclusionQueryTest : public MultiviewRenderTest
@@ -717,21 +716,27 @@ TEST_P(MultiviewDrawValidationTest, ActiveTransformFeedback)
         precision mediump float;
         void main()
         {})";
+
     std::vector<std::string> tfVaryings;
-    tfVaryings.push_back(std::string("tfVarying"));
-    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program, vsSource, fsSource, tfVaryings,
+    tfVaryings.emplace_back("tfVarying");
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(singleViewProgram, vsSource, fsSource, tfVaryings,
                                         GL_SEPARATE_ATTRIBS);
-    glUseProgram(program);
+
+    std::vector<std::string> dualViewTFVaryings;
+    dualViewTFVaryings.emplace_back("gl_Position");
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(dualViewProgram, kDualViewVSSource, kDualViewFSSource,
+                                        dualViewTFVaryings, GL_SEPARATE_ATTRIBS);
 
     GLBuffer tbo;
     glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, tbo);
-    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(float) * 4u, nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(float) * 16u, nullptr, GL_STATIC_DRAW);
 
     GLTransformFeedback transformFeedback;
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback);
 
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, tbo);
 
+    glUseProgram(dualViewProgram);
     glBeginTransformFeedback(GL_TRIANGLES);
     ASSERT_GL_NO_ERROR();
 
@@ -743,6 +748,39 @@ TEST_P(MultiviewDrawValidationTest, ActiveTransformFeedback)
         glDrawArrays(GL_TRIANGLES, 0, 3);
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
+
+    glEndTransformFeedback();
+
+    // Ending transform feedback should allow the draw to succeed.
+    {
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    // A paused transform feedback should still trigger an error.
+    glBeginTransformFeedback(GL_TRIANGLES);
+    glPauseTransformFeedback();
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Unbind transform feedback - should succeed.
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+
+    // Rebind paused transform feedback - should fail.
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glResumeTransformFeedback();
+    glEndTransformFeedback();
+
+    glUseProgram(singleViewProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    ASSERT_GL_NO_ERROR();
 
     // Check that drawArrays does not generate an error when the number of views in the draw
     // framebuffer is 1.
@@ -781,8 +819,8 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
         "precision mediump float;\n"
         "void main()\n"
         "{}\n";
-    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
-    glUseProgram(program);
+    ANGLE_GL_PROGRAM(singleViewProgram, vsSource, fsSource);
+    glUseProgram(singleViewProgram);
 
     GLuint query = 0u;
     glGenQueriesEXT(1, &query);
@@ -790,6 +828,7 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
 
     // Check first case.
     {
+        glUseProgram(mProgram);
         glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTex2d,
                                                      0, 2, &viewportOffsets[0]);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -800,6 +839,7 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
 
     // Check second case.
     {
+        glUseProgram(singleViewProgram);
         glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTex2d,
                                                      0, 1, &viewportOffsets[0]);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -810,6 +850,29 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
 
     glEndQueryEXT(GL_TIME_ELAPSED_EXT);
     glDeleteQueries(1, &query);
+
+    // Check starting a query after a successful draw.
+    {
+        glUseProgram(mProgram);
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTex2d,
+                                                     0, 2, &viewportOffsets[0]);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_GL_NO_ERROR();
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        EXPECT_GL_NO_ERROR();
+
+        glGenQueriesEXT(1, &query);
+        glBeginQueryEXT(GL_TIME_ELAPSED_EXT, query);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        glEndQueryEXT(GL_TIME_ELAPSED_EXT);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        EXPECT_GL_NO_ERROR();
+
+        glDeleteQueries(1, &query);
+    }
 }
 
 // The test checks that glDrawArrays can be used to render into two views.
@@ -2162,52 +2225,56 @@ TEST_P(MultiviewSideBySideRenderTest, ViewportOffsetsAppliedBugCoverage)
     EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
 }
 
-MultiviewImplementationParams VertexShaderOpenGL()
+MultiviewImplementationParams VertexShaderOpenGL(GLint majorVersion, GLint minorVersion)
 {
-    return MultiviewImplementationParams(false, egl_platform::OPENGL());
+    return MultiviewImplementationParams(majorVersion, minorVersion, false, egl_platform::OPENGL());
 }
 
-MultiviewImplementationParams VertexShaderD3D11()
+MultiviewImplementationParams VertexShaderD3D11(GLint majorVersion, GLint minorVersion)
 {
-    return MultiviewImplementationParams(false, egl_platform::D3D11());
+    return MultiviewImplementationParams(majorVersion, minorVersion, false, egl_platform::D3D11());
 }
 
-MultiviewImplementationParams GeomShaderD3D11()
+MultiviewImplementationParams GeomShaderD3D11(GLint majorVersion, GLint minorVersion)
 {
-    return MultiviewImplementationParams(true, egl_platform::D3D11());
+    return MultiviewImplementationParams(majorVersion, minorVersion, true, egl_platform::D3D11());
 }
 
-MultiviewTestParams SideBySideVertexShaderOpenGL()
+MultiviewTestParams SideBySideVertexShaderOpenGL(GLint majorVersion = 3, GLint minorVersion = 0)
 {
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, VertexShaderOpenGL());
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE,
+                               VertexShaderOpenGL(majorVersion, minorVersion));
 }
 
 MultiviewTestParams LayeredVertexShaderOpenGL()
 {
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, VertexShaderOpenGL());
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, VertexShaderOpenGL(3, 0));
 }
 
 MultiviewTestParams SideBySideGeomShaderD3D11()
 {
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, GeomShaderD3D11());
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, GeomShaderD3D11(3, 0));
 }
 
 MultiviewTestParams LayeredGeomShaderD3D11()
 {
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, GeomShaderD3D11());
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, GeomShaderD3D11(3, 0));
 }
 
-MultiviewTestParams SideBySideVertexShaderD3D11()
+MultiviewTestParams SideBySideVertexShaderD3D11(GLint majorVersion = 3, GLint minorVersion = 0)
 {
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, VertexShaderD3D11());
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE,
+                               VertexShaderD3D11(majorVersion, minorVersion));
 }
 
 MultiviewTestParams LayeredVertexShaderD3D11()
 {
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, VertexShaderD3D11());
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, VertexShaderD3D11(3, 0));
 }
 
-ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest, ES31_OPENGL());
+ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest,
+                       SideBySideVertexShaderOpenGL(3, 1),
+                       SideBySideVertexShaderD3D11(3, 1));
 ANGLE_INSTANTIATE_TEST(MultiviewRenderDualViewTest,
                        SideBySideVertexShaderOpenGL(),
                        LayeredVertexShaderOpenGL(),
@@ -2243,5 +2310,7 @@ ANGLE_INSTANTIATE_TEST(MultiviewRenderPrimitiveTest,
                        SideBySideVertexShaderD3D11(),
                        LayeredGeomShaderD3D11(),
                        LayeredVertexShaderD3D11());
-ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderTest, VertexShaderOpenGL(), GeomShaderD3D11());
-ANGLE_INSTANTIATE_TEST(MultiviewLayeredRenderTest, VertexShaderOpenGL(), GeomShaderD3D11());
+ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderTest,
+                       VertexShaderOpenGL(3, 0),
+                       GeomShaderD3D11(3, 0));
+ANGLE_INSTANTIATE_TEST(MultiviewLayeredRenderTest, VertexShaderOpenGL(3, 0), GeomShaderD3D11(3, 0));
