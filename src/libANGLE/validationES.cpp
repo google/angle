@@ -2726,6 +2726,12 @@ ErrorAndMessage ValidateDrawStates(Context *context)
             {
                 return {GL_INVALID_OPERATION, kErrorDrawBufferTypeMismatch};
             }
+
+            const VertexArray *vao = context->getGLState().getVertexArray();
+            if (vao->hasTransformFeedbackBindingConflict(context))
+            {
+                return {GL_INVALID_OPERATION, kErrorVertexBufferBoundForTransformFeedback};
+            }
         }
     }
 
@@ -2798,17 +2804,6 @@ bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(),
                                      IncompatibleDrawModeAgainstGeometryShader);
-                return false;
-            }
-        }
-
-        if (extensions.webglCompatibility && count > 0)
-        {
-            const VertexArray *vao = context->getGLState().getVertexArray();
-            if (vao->hasTransformFeedbackBindingConflict(context))
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(),
-                                     VertexBufferBoundForTransformFeedback);
                 return false;
             }
         }
