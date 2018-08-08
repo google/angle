@@ -105,17 +105,6 @@ gl::Error ReadbackIndirectBuffer(const gl::Context *context,
     *bufferPtrOut = reinterpret_cast<const IndirectBufferT *>(bufferData + offset);
     return gl::NoError();
 }
-
-GLenum DefaultGLErrorCode(HRESULT hr)
-{
-    switch (hr)
-    {
-        case E_OUTOFMEMORY:
-            return GL_OUT_OF_MEMORY;
-        default:
-            return GL_INVALID_OPERATION;
-    }
-}
 }  // anonymous namespace
 
 Context11::Context11(const gl::ContextState &state, Renderer11 *renderer)

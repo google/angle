@@ -427,7 +427,7 @@ class RendererD3D : public BufferFactoryD3D
 
 unsigned int GetBlendSampleMask(const gl::State &glState, int samples);
 bool InstancedPointSpritesActive(ProgramD3D *programD3D, gl::PrimitiveMode mode);
-
+GLenum DefaultGLErrorCode(HRESULT hr);
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_D3D_RENDERERD3D_H_

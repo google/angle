@@ -238,4 +238,15 @@ unsigned int GetBlendSampleMask(const gl::State &glState, int samples)
     return mask;
 }
 
+GLenum DefaultGLErrorCode(HRESULT hr)
+{
+    switch (hr)
+    {
+        case D3DERR_OUTOFVIDEOMEMORY:
+        case E_OUTOFMEMORY:
+            return GL_OUT_OF_MEMORY;
+        default:
+            return GL_INVALID_OPERATION;
+    }
+}
 }  // namespace rx

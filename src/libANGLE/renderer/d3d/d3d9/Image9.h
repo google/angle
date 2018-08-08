@@ -20,6 +20,7 @@ class Framebuffer;
 
 namespace rx
 {
+class Context9;
 class Renderer9;
 
 class Image9 : public ImageD3D
@@ -28,17 +29,21 @@ class Image9 : public ImageD3D
     Image9(Renderer9 *renderer);
     ~Image9() override;
 
-    static gl::Error generateMipmap(Image9 *dest, Image9 *source);
-    static gl::Error generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface);
-    static gl::Error copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
-    static gl::Error CopyImage(const gl::Context *context,
-                               Image9 *dest,
-                               Image9 *source,
-                               const gl::Rectangle &sourceRect,
-                               const gl::Offset &destOffset,
-                               bool unpackFlipY,
-                               bool unpackPremultiplyAlpha,
-                               bool unpackUnmultiplyAlpha);
+    static angle::Result GenerateMipmap(Context9 *context9, Image9 *dest, Image9 *source);
+    static angle::Result GenerateMip(Context9 *context9,
+                                     IDirect3DSurface9 *destSurface,
+                                     IDirect3DSurface9 *sourceSurface);
+    static angle::Result CopyLockableSurfaces(Context9 *context9,
+                                              IDirect3DSurface9 *dest,
+                                              IDirect3DSurface9 *source);
+    static angle::Result CopyImage(const gl::Context *context,
+                                   Image9 *dest,
+                                   Image9 *source,
+                                   const gl::Rectangle &sourceRect,
+                                   const gl::Offset &destOffset,
+                                   bool unpackFlipY,
+                                   bool unpackPremultiplyAlpha,
+                                   bool unpackUnmultiplyAlpha);
 
     bool redefine(gl::TextureType type,
                   GLenum internalformat,
@@ -80,18 +85,19 @@ class Image9 : public ImageD3D
                                   const gl::Framebuffer *source) override;
 
   private:
-    gl::Error getSurface(IDirect3DSurface9 **outSurface);
+    angle::Result getSurface(Context9 *context9, IDirect3DSurface9 **outSurface);
 
-    gl::Error createSurface();
-    gl::Error setManagedSurface(IDirect3DSurface9 *surface);
-    gl::Error copyToSurface(IDirect3DSurface9 *dest, const gl::Box &area);
+    angle::Result createSurface(Context9 *context9);
+    angle::Result setManagedSurface(Context9 *context9, IDirect3DSurface9 *surface);
+    angle::Result copyToSurface(Context9 *context9, IDirect3DSurface9 *dest, const gl::Box &area);
 
-    gl::Error lock(D3DLOCKED_RECT *lockedRect, const RECT &rect);
+    angle::Result lock(Context9 *context9, D3DLOCKED_RECT *lockedRect, const RECT &rect);
     void unlock();
 
-    gl::Error copyFromRTInternal(const gl::Offset &destOffset,
-                                 const gl::Rectangle &sourceArea,
-                                 RenderTargetD3D *source);
+    angle::Result copyFromRTInternal(Context9 *context9,
+                                     const gl::Offset &destOffset,
+                                     const gl::Rectangle &sourceArea,
+                                     RenderTargetD3D *source);
 
     Renderer9 *mRenderer;
 

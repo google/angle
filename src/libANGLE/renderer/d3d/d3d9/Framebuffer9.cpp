@@ -71,8 +71,9 @@ gl::Error Framebuffer9::clearImpl(const gl::Context *context, const ClearParamet
 
     mRenderer->setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
 
-    return mRenderer->clear(context, clearParams, mRenderTargetCache.getColors()[0],
-                            mRenderTargetCache.getDepthStencil());
+    mRenderer->clear(clearParams, mRenderTargetCache.getColors()[0],
+                     mRenderTargetCache.getDepthStencil());
+    return gl::NoError();
 }
 
 gl::Error Framebuffer9::readPixelsImpl(const gl::Context *context,

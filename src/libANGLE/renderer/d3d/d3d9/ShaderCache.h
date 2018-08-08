@@ -13,6 +13,7 @@
 #include "libANGLE/Error.h"
 
 #include "common/debug.h"
+#include "libANGLE/renderer/d3d/d3d9/Context9.h"
 
 #include <cstddef>
 #include <unordered_map>
@@ -37,7 +38,10 @@ class ShaderCache : angle::NonCopyable
         mDevice = device;
     }
 
-    gl::Error create(const DWORD *function, size_t length, ShaderObject **outShaderObject)
+    angle::Result create(Context9 *context9,
+                         const DWORD *function,
+                         size_t length,
+                         ShaderObject **outShaderObject)
     {
         std::string key(reinterpret_cast<const char*>(function), length);
         typename Map::iterator it = mMap.find(key);
@@ -45,15 +49,12 @@ class ShaderCache : angle::NonCopyable
         {
             it->second->AddRef();
             *outShaderObject = it->second;
-            return gl::NoError();
+            return angle::Result::Continue();
         }
 
         ShaderObject *shader;
         HRESULT result = createShader(function, &shader);
-        if (FAILED(result))
-        {
-            return gl::OutOfMemory() << "Failed to create shader, " << gl::FmtHR(result);
-        }
+        ANGLE_TRY_HR(context9, result, "Failed to create shader");
 
         // Random eviction policy.
         if (mMap.size() >= kMaxMapSize)
@@ -66,7 +67,7 @@ class ShaderCache : angle::NonCopyable
         mMap[key] = shader;
 
         *outShaderObject = shader;
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     void clear()

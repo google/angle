@@ -138,12 +138,12 @@ std::vector<PathImpl *> Context9::createPaths(GLsizei)
 
 gl::Error Context9::flush(const gl::Context *context)
 {
-    return mRenderer->flush();
+    return mRenderer->flush(context);
 }
 
 gl::Error Context9::finish(const gl::Context *context)
 {
-    return mRenderer->finish();
+    return mRenderer->finish(context);
 }
 
 gl::Error Context9::drawArrays(const gl::Context *context,
@@ -333,5 +333,27 @@ gl::Error Context9::getIncompleteTexture(const gl::Context *context,
                                          gl::Texture **textureOut)
 {
     return mIncompleteTextures.getIncompleteTexture(context, type, nullptr, textureOut);
+}
+
+void Context9::handleError(HRESULT hr,
+                           const char *message,
+                           const char *file,
+                           const char *function,
+                           unsigned int line)
+{
+    ASSERT(FAILED(hr));
+
+    if (d3d9::isDeviceLostError(hr))
+    {
+        mRenderer->notifyDeviceLost();
+    }
+
+    GLenum glErrorCode = DefaultGLErrorCode(hr);
+
+    std::stringstream errorStream;
+    errorStream << "Internal D3D9 error: " << gl::FmtHR(hr) << ", in " << file << ", " << function
+                << ":" << line << ". " << message;
+
+    mErrors->handleError(gl::Error(glErrorCode, glErrorCode, errorStream.str()));
 }
 }  // namespace rx

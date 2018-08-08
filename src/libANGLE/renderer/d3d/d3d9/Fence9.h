@@ -14,6 +14,7 @@
 
 namespace rx
 {
+class Context9;
 class Renderer9;
 
 class FenceNV9 : public FenceNVImpl
@@ -27,7 +28,7 @@ class FenceNV9 : public FenceNVImpl
     gl::Error finish(const gl::Context *context) override;
 
   private:
-    gl::Error testHelper(bool flushCommandBuffer, GLboolean *outFinished);
+    angle::Result testHelper(Context9 *context9, bool flushCommandBuffer, GLboolean *outFinished);
 
     Renderer9 *mRenderer;
     IDirect3DQuery9 *mQuery;

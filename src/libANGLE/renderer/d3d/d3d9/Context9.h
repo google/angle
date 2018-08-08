@@ -151,6 +151,12 @@ class Context9 : public ContextImpl
                                    gl::TextureType type,
                                    gl::Texture **textureOut);
 
+    void handleError(HRESULT hr,
+                     const char *message,
+                     const char *file,
+                     const char *function,
+                     unsigned int line);
+
   private:
     Renderer9 *mRenderer;
     IncompleteTextureSet mIncompleteTextures;

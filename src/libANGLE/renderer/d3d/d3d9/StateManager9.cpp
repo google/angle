@@ -377,8 +377,7 @@ void StateManager9::syncState(const gl::State &state, const gl::State::DirtyBits
     }
 }
 
-gl::Error StateManager9::setBlendDepthRasterStates(const gl::State &glState,
-                                                   unsigned int sampleMask)
+void StateManager9::setBlendDepthRasterStates(const gl::State &glState, unsigned int sampleMask)
 {
     const gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
 
@@ -470,8 +469,6 @@ gl::Error StateManager9::setBlendDepthRasterStates(const gl::State &glState,
     {
         setSampleMask(sampleMask);
     }
-
-    return gl::NoError();
 }
 
 void StateManager9::setViewportState(const gl::Rectangle &viewport,
