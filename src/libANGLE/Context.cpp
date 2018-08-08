@@ -5612,22 +5612,22 @@ void Context::uniform1fv(GLint location, GLsizei count, const GLfloat *v)
     program->setUniform1fv(location, count, v);
 }
 
-void Context::uniform1i(GLint location, GLint x)
+void Context::setUniform1iImpl(Program *program, GLint location, GLsizei count, const GLint *v)
 {
-    Program *program = mGLState.getProgram();
-    if (program->setUniform1iv(location, 1, &x) == Program::SetUniformResult::SamplerChanged)
+    if (program->setUniform1iv(location, count, v) == Program::SetUniformResult::SamplerChanged)
     {
         mGLState.setObjectDirty(GL_PROGRAM);
     }
 }
 
+void Context::uniform1i(GLint location, GLint x)
+{
+    setUniform1iImpl(mGLState.getProgram(), location, 1, &x);
+}
+
 void Context::uniform1iv(GLint location, GLsizei count, const GLint *v)
 {
-    Program *program = mGLState.getProgram();
-    if (program->setUniform1iv(location, count, v) == Program::SetUniformResult::SamplerChanged)
-    {
-        mGLState.setObjectDirty(GL_PROGRAM);
-    }
+    setUniform1iImpl(mGLState.getProgram(), location, count, v);
 }
 
 void Context::uniform2f(GLint location, GLfloat x, GLfloat y)
@@ -6341,11 +6341,7 @@ void Context::programUniform1iv(GLuint program, GLint location, GLsizei count, c
 {
     Program *programObject = getProgram(program);
     ASSERT(programObject);
-    if (programObject->setUniform1iv(location, count, value) ==
-        Program::SetUniformResult::SamplerChanged)
-    {
-        mGLState.setObjectDirty(GL_PROGRAM);
-    }
+    setUniform1iImpl(programObject, location, count, value);
 }
 
 void Context::programUniform2iv(GLuint program, GLint location, GLsizei count, const GLint *value)

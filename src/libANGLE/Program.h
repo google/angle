@@ -353,6 +353,10 @@ class ProgramState final : angle::NonCopyable
     friend class Program;
 
     void updateTransformFeedbackStrides();
+    void updateActiveSamplers();
+
+    // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
+    TextureType getSamplerUniformTextureType(size_t textureUnitIndex) const;
 
     std::string mLabel;
 
@@ -427,6 +431,11 @@ class ProgramState final : angle::NonCopyable
 
     // The size of the data written to each transform feedback buffer per vertex.
     std::vector<GLsizei> mTransformFeedbackStrides;
+
+    // Cached mask of active samplers and sampler types.
+    ActiveTextureMask mActiveSamplersMask;
+    ActiveTextureArray<uint32_t> mActiveSamplerRefCounts;
+    ActiveTextureArray<TextureType> mActiveSamplerTypes;
 };
 
 class ProgramBindings final : angle::NonCopyable
@@ -752,6 +761,13 @@ class Program final : angle::NonCopyable, public LabeledObject
         return mState.mTransformFeedbackStrides;
     }
 
+    const ActiveTextureMask &getActiveSamplersMask() const { return mState.mActiveSamplersMask; }
+
+    const ActiveTextureArray<TextureType> &getActiveSamplerTypes() const
+    {
+        return mState.mActiveSamplerTypes;
+    }
+
   private:
     ~Program() override;
 
@@ -868,7 +884,6 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     // Cache for sampler validation
     Optional<bool> mCachedValidateSamplersResult;
-    std::vector<TextureType> mTextureUnitTypesCache;
 };
 }  // namespace gl
 

@@ -2653,60 +2653,56 @@ Error State::syncProgramTextures(const Context *context)
     // initialized.
     mCachedTexturesInitState = InitState::Initialized;
 
-    for (const SamplerBinding &samplerBinding : mProgram->getSamplerBindings())
+    const ActiveTextureMask &activeTextures             = mProgram->getActiveSamplersMask();
+    const ActiveTextureArray<TextureType> &textureTypes = mProgram->getActiveSamplerTypes();
+
+    for (size_t textureUnitIndex : activeTextures)
     {
-        if (samplerBinding.unreferenced)
-            continue;
+        TextureType textureType = textureTypes[textureUnitIndex];
 
-        TextureType textureType = samplerBinding.textureType;
-        for (GLuint textureUnitIndex : samplerBinding.boundTextureUnits)
+        Texture *texture = getSamplerTexture(textureUnitIndex, textureType);
+        Sampler *sampler = getSampler(textureUnitIndex);
+        ASSERT(static_cast<size_t>(textureUnitIndex) < mCompleteTextureCache.size());
+        ASSERT(static_cast<size_t>(textureUnitIndex) < newActiveTextures.size());
+
+        ASSERT(texture);
+
+        // Mark the texture binding bit as dirty if the texture completeness changes.
+        // TODO(jmadill): Use specific dirty bit for completeness change.
+        if (texture->isSamplerComplete(context, sampler) &&
+            !mDrawFramebuffer->hasTextureAttachment(texture))
         {
-            Texture *texture = getSamplerTexture(textureUnitIndex, textureType);
-            Sampler *sampler = getSampler(textureUnitIndex);
-            ASSERT(static_cast<size_t>(textureUnitIndex) < mCompleteTextureCache.size());
-            ASSERT(static_cast<size_t>(textureUnitIndex) < newActiveTextures.size());
+            ANGLE_TRY(texture->syncState(context));
+            mCompleteTextureCache[textureUnitIndex] = texture;
+        }
+        else
+        {
+            mCompleteTextureCache[textureUnitIndex] = nullptr;
+        }
 
-            ASSERT(texture);
+        // Bind the texture unconditionally, to recieve completeness change notifications.
+        mCompleteTextureBindings[textureUnitIndex].bind(texture->getSubject());
+        newActiveTextures.set(textureUnitIndex);
 
-            // Mark the texture binding bit as dirty if the texture completeness changes.
-            // TODO(jmadill): Use specific dirty bit for completeness change.
-            if (texture->isSamplerComplete(context, sampler) &&
-                !mDrawFramebuffer->hasTextureAttachment(texture))
-            {
-                ANGLE_TRY(texture->syncState(context));
-                mCompleteTextureCache[textureUnitIndex] = texture;
-            }
-            else
-            {
-                mCompleteTextureCache[textureUnitIndex] = nullptr;
-            }
+        if (sampler != nullptr)
+        {
+            sampler->syncState(context);
+        }
 
-            // Bind the texture unconditionally, to recieve completeness change notifications.
-            mCompleteTextureBindings[textureUnitIndex].bind(texture->getSubject());
-            mActiveTexturesMask.set(textureUnitIndex);
-            newActiveTextures.set(textureUnitIndex);
-
-            if (sampler != nullptr)
-            {
-                sampler->syncState(context);
-            }
-
-            if (texture->initState() == InitState::MayNeedInit)
-            {
-                mCachedTexturesInitState = InitState::MayNeedInit;
-            }
+        if (texture->initState() == InitState::MayNeedInit)
+        {
+            mCachedTexturesInitState = InitState::MayNeedInit;
         }
     }
 
     // Unset now missing textures.
-    ActiveTextureMask negativeMask = mActiveTexturesMask & ~newActiveTextures;
+    ActiveTextureMask negativeMask = activeTextures & ~newActiveTextures;
     if (negativeMask.any())
     {
         for (auto textureIndex : negativeMask)
         {
             mCompleteTextureBindings[textureIndex].reset();
             mCompleteTextureCache[textureIndex] = nullptr;
-            mActiveTexturesMask.reset(textureIndex);
         }
     }
 
@@ -2830,7 +2826,10 @@ Error State::clearUnclearedActiveTextures(const Context *context)
 
     ASSERT(!mDirtyObjects[DIRTY_OBJECT_PROGRAM_TEXTURES]);
 
-    for (auto textureIndex : mActiveTexturesMask)
+    if (!mProgram)
+        return NoError();
+
+    for (auto textureIndex : mProgram->getActiveSamplersMask())
     {
         Texture *texture = mCompleteTextureCache[textureIndex];
         if (texture)

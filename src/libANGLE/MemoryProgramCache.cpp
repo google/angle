@@ -434,6 +434,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     state->mLinkedShaderStages = ShaderBitSet(stream.readInt<uint8_t>());
 
     state->updateTransformFeedbackStrides();
+    state->updateActiveSamplers();
 
     return program->getImplementation()->load(context, infoLog, &stream);
 }

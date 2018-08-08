@@ -1587,6 +1587,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     gl::LabeledObject *getLabeledObject(GLenum identifier, GLuint name) const;
     gl::LabeledObject *getLabeledObjectFromPtr(const void *ptr) const;
 
+    void setUniform1iImpl(Program *program, GLint location, GLsizei count, const GLint *v);
+
     ContextState mState;
     bool mSkipValidation;
     bool mDisplayTextureShareGroup;

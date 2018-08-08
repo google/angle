@@ -251,7 +251,7 @@ gl::Error ContextVk::setupDraw(const gl::Context *context,
         mTexturesDirty = false;
 
         // TODO(jmadill): Should probably merge this for loop with programVk's descriptor update.
-        for (size_t textureIndex : state.getActiveTexturesMask())
+        for (size_t textureIndex : programGL->getActiveSamplersMask())
         {
             TextureVk *textureVk = mActiveTextures[textureIndex];
             ANGLE_TRY(textureVk->ensureImageInitialized(this));

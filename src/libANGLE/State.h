@@ -467,7 +467,6 @@ class State : public angle::ObserverInterface, angle::NonCopyable
                       GLenum format);
 
     const ImageUnit &getImageUnit(GLuint unit) const;
-    const ActiveTextureMask &getActiveTexturesMask() const { return mActiveTexturesMask; }
     const std::vector<Texture *> &getCompleteTextureCache() const { return mCompleteTextureCache; }
     ComponentTypeMask getCurrentValuesTypeMask() const { return mCurrentValuesTypeMask; }
 
@@ -559,7 +558,6 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     std::vector<Texture *> mCompleteTextureCache;
     std::vector<angle::ObserverBinding> mCompleteTextureBindings;
     InitState mCachedTexturesInitState;
-    ActiveTextureMask mActiveTexturesMask;
 
     using SamplerBindingVector = std::vector<BindingPointer<Sampler>>;
     SamplerBindingVector mSamplers;
