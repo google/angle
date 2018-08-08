@@ -106,6 +106,8 @@ State::State(bool debug,
       mProgram(nullptr),
       mVertexArray(nullptr),
       mActiveSampler(0),
+      mActiveTexturesCache{},
+      mCachedTexturesInitState(InitState::MayNeedInit),
       mPrimitiveRestart(false),
       mDebug(debug),
       mMultiSampling(false),
@@ -211,7 +213,6 @@ void State::initialize(const Context *context)
     {
         mSamplerTextures[TextureType::External].resize(caps.maxCombinedTextureImageUnits);
     }
-    mCompleteTextureCache.resize(caps.maxCombinedTextureImageUnits, nullptr);
     mCompleteTextureBindings.reserve(caps.maxCombinedTextureImageUnits);
     mCachedTexturesInitState = InitState::MayNeedInit;
     for (uint32_t textureIndex = 0; textureIndex < caps.maxCombinedTextureImageUnits;
@@ -1089,11 +1090,6 @@ GLuint State::getSamplerId(GLuint textureUnit) const
 {
     ASSERT(textureUnit < mSamplers.size());
     return mSamplers[textureUnit].id();
-}
-
-Sampler *State::getSampler(GLuint textureUnit) const
-{
-    return mSamplers[textureUnit].get();
 }
 
 void State::detachSampler(const Context *context, GLuint sampler)
@@ -2662,7 +2658,7 @@ Error State::syncProgramTextures(const Context *context)
 
         Texture *texture = getSamplerTexture(textureUnitIndex, textureType);
         Sampler *sampler = getSampler(textureUnitIndex);
-        ASSERT(static_cast<size_t>(textureUnitIndex) < mCompleteTextureCache.size());
+        ASSERT(static_cast<size_t>(textureUnitIndex) < mActiveTexturesCache.size());
         ASSERT(static_cast<size_t>(textureUnitIndex) < newActiveTextures.size());
 
         ASSERT(texture);
@@ -2673,11 +2669,11 @@ Error State::syncProgramTextures(const Context *context)
             !mDrawFramebuffer->hasTextureAttachment(texture))
         {
             ANGLE_TRY(texture->syncState(context));
-            mCompleteTextureCache[textureUnitIndex] = texture;
+            mActiveTexturesCache[textureUnitIndex] = texture;
         }
         else
         {
-            mCompleteTextureCache[textureUnitIndex] = nullptr;
+            mActiveTexturesCache[textureUnitIndex] = nullptr;
         }
 
         // Bind the texture unconditionally, to recieve completeness change notifications.
@@ -2702,7 +2698,7 @@ Error State::syncProgramTextures(const Context *context)
         for (auto textureIndex : negativeMask)
         {
             mCompleteTextureBindings[textureIndex].reset();
-            mCompleteTextureCache[textureIndex] = nullptr;
+            mActiveTexturesCache[textureIndex] = nullptr;
         }
     }
 
@@ -2808,8 +2804,8 @@ void State::onSubjectStateChange(const Context *context,
     // TODO(jmadill): More fine-grained update.
     mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
 
-    if (!mCompleteTextureCache[index] ||
-        mCompleteTextureCache[index]->initState() == InitState::MayNeedInit)
+    if (!mActiveTexturesCache[index] ||
+        mActiveTexturesCache[index]->initState() == InitState::MayNeedInit)
     {
         mCachedTexturesInitState = InitState::MayNeedInit;
     }
@@ -2831,7 +2827,7 @@ Error State::clearUnclearedActiveTextures(const Context *context)
 
     for (auto textureIndex : mProgram->getActiveSamplersMask())
     {
-        Texture *texture = mCompleteTextureCache[textureIndex];
+        Texture *texture = mActiveTexturesCache[textureIndex];
         if (texture)
         {
             ANGLE_TRY(texture->ensureInitialized(context));

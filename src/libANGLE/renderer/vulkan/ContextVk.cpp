@@ -969,27 +969,27 @@ void ContextVk::handleError(VkResult errorCode, const char *file, unsigned int l
 
 gl::Error ContextVk::updateActiveTextures(const gl::Context *context)
 {
-    const auto &completeTextures = mState.getState().getCompleteTextureCache();
-    const gl::Program *program   = mState.getState().getProgram();
+    const gl::State &glState   = mState.getState();
+    const gl::Program *program = glState.getProgram();
 
     mActiveTextures.fill(nullptr);
 
-    for (const gl::SamplerBinding &samplerBinding : program->getSamplerBindings())
+    const gl::ActiveTexturePointerArray &textures  = glState.getActiveTexturesCache();
+    const gl::ActiveTextureMask &activeTextures    = program->getActiveSamplersMask();
+    const gl::ActiveTextureTypeArray &textureTypes = program->getActiveSamplerTypes();
+
+    for (size_t textureUnit : activeTextures)
     {
-        ASSERT(!samplerBinding.unreferenced);
+        gl::Texture *texture        = textures[textureUnit];
+        gl::TextureType textureType = textureTypes[textureUnit];
 
-        for (GLuint textureUnit : samplerBinding.boundTextureUnits)
+        // Null textures represent incomplete textures.
+        if (texture == nullptr)
         {
-            gl::Texture *texture = completeTextures[textureUnit];
-
-            // Null textures represent incomplete textures.
-            if (texture == nullptr)
-            {
-                ANGLE_TRY(getIncompleteTexture(context, samplerBinding.textureType, &texture));
-            }
-
-            mActiveTextures[textureUnit] = vk::GetImpl(texture);
+            ANGLE_TRY(getIncompleteTexture(context, textureType, &texture));
         }
+
+        mActiveTextures[textureUnit] = vk::GetImpl(texture);
     }
 
     return gl::NoError();

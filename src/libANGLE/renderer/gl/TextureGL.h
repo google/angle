@@ -160,7 +160,8 @@ class TextureGL : public TextureImpl
                                 gl::TextureType type,
                                 egl::Image *image) override;
 
-    GLuint getTextureID() const;
+    GLuint getTextureID() const { return mTextureID; }
+
     gl::TextureType getType() const;
 
     gl::Error syncState(const gl::Context *context,

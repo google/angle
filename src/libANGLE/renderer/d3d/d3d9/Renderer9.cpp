@@ -3147,14 +3147,14 @@ angle::Result Renderer9::applyTextures(const gl::Context *context, gl::ShaderTyp
     ASSERT(!programD3D->isSamplerMappingDirty());
 
     // TODO(jmadill): Use the Program's sampler bindings.
-    const auto &completeTextures = glState.getCompleteTextureCache();
+    const gl::ActiveTexturePointerArray &activeTextures = glState.getActiveTexturesCache();
 
     unsigned int samplerRange = programD3D->getUsedSamplerRange(shaderType);
     for (unsigned int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
         GLint textureUnit = programD3D->getSamplerMapping(shaderType, samplerIndex, caps);
         ASSERT(textureUnit != -1);
-        gl::Texture *texture = completeTextures[textureUnit];
+        gl::Texture *texture = activeTextures[textureUnit];
 
         // A nullptr texture indicates incomplete.
         if (texture)

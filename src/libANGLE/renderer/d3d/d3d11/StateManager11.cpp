@@ -2375,7 +2375,7 @@ angle::Result StateManager11::applyTextures(const gl::Context *context, gl::Shad
     ASSERT(!mProgramD3D->isSamplerMappingDirty());
 
     // TODO(jmadill): Use the Program's sampler bindings.
-    const auto &completeTextures = glState.getCompleteTextureCache();
+    const gl::ActiveTexturePointerArray &completeTextures = glState.getActiveTexturesCache();
 
     unsigned int samplerRange = mProgramD3D->getUsedSamplerRange(shaderType);
     for (unsigned int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)

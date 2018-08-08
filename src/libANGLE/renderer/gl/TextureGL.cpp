@@ -1497,11 +1497,6 @@ const LevelInfoGL &TextureGL::getBaseLevelInfo() const
     return getLevelInfo(target, effectiveBaseLevel);
 }
 
-GLuint TextureGL::getTextureID() const
-{
-    return mTextureID;
-}
-
 gl::TextureType TextureGL::getType() const
 {
     return mState.mType;

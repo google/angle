@@ -184,7 +184,9 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     // Sampler object binding manipulation
     void setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler);
     GLuint getSamplerId(GLuint textureUnit) const;
-    Sampler *getSampler(GLuint textureUnit) const;
+
+    Sampler *getSampler(GLuint textureUnit) const { return mSamplers[textureUnit].get(); }
+
     void detachSampler(const Context *context, GLuint sampler);
 
     // Renderbuffer binding manipulation
@@ -467,7 +469,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
                       GLenum format);
 
     const ImageUnit &getImageUnit(GLuint unit) const;
-    const std::vector<Texture *> &getCompleteTextureCache() const { return mCompleteTextureCache; }
+    const ActiveTexturePointerArray &getActiveTexturesCache() const { return mActiveTexturesCache; }
     ComponentTypeMask getCurrentValuesTypeMask() const { return mCurrentValuesTypeMask; }
 
     // Observer implementation.
@@ -555,7 +557,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     // A cache of complete textures. nullptr indicates unbound or incomplete.
     // Don't use BindingPointer because this cache is only valid within a draw call.
     // Also stores a notification channel to the texture itself to handle texture change events.
-    std::vector<Texture *> mCompleteTextureCache;
+    ActiveTexturePointerArray mActiveTexturesCache;
     std::vector<angle::ObserverBinding> mCompleteTextureBindings;
     InitState mCachedTexturesInitState;
 
