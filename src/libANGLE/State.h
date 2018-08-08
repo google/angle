@@ -35,7 +35,7 @@ class VertexArray;
 class Context;
 struct Caps;
 
-class State : public angle::ObserverInterface, angle::NonCopyable
+class State : angle::NonCopyable
 {
   public:
     State(bool debug,
@@ -43,9 +43,9 @@ class State : public angle::ObserverInterface, angle::NonCopyable
           bool clientArraysEnabled,
           bool robustResourceInit,
           bool programBinaryCacheEnabled);
-    ~State() override;
+    ~State();
 
-    void initialize(const Context *context);
+    void initialize(Context *context);
     void reset(const Context *context);
 
     // State chunk getters
@@ -472,10 +472,7 @@ class State : public angle::ObserverInterface, angle::NonCopyable
     const ActiveTexturePointerArray &getActiveTexturesCache() const { return mActiveTexturesCache; }
     ComponentTypeMask getCurrentValuesTypeMask() const { return mCurrentValuesTypeMask; }
 
-    // Observer implementation.
-    void onSubjectStateChange(const Context *context,
-                              angle::SubjectIndex index,
-                              angle::SubjectMessage message) override;
+    void onActiveTextureStateChange(size_t textureIndex);
 
     Error clearUnclearedActiveTextures(const Context *context);
 

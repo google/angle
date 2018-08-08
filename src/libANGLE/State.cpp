@@ -123,7 +123,7 @@ State::~State()
 {
 }
 
-void State::initialize(const Context *context)
+void State::initialize(Context *context)
 {
     const Caps &caps                   = context->getCaps();
     const Extensions &extensions       = context->getExtensions();
@@ -218,7 +218,7 @@ void State::initialize(const Context *context)
     for (uint32_t textureIndex = 0; textureIndex < caps.maxCombinedTextureImageUnits;
          ++textureIndex)
     {
-        mCompleteTextureBindings.emplace_back(this, textureIndex);
+        mCompleteTextureBindings.emplace_back(context, textureIndex);
     }
 
     mSamplers.resize(caps.maxCombinedTextureImageUnits);
@@ -2796,16 +2796,14 @@ const ImageUnit &State::getImageUnit(GLuint unit) const
 }
 
 // Handle a dirty texture event.
-void State::onSubjectStateChange(const Context *context,
-                                 angle::SubjectIndex index,
-                                 angle::SubjectMessage message)
+void State::onActiveTextureStateChange(size_t textureIndex)
 {
     // Conservatively assume all textures are dirty.
     // TODO(jmadill): More fine-grained update.
     mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
 
-    if (!mActiveTexturesCache[index] ||
-        mActiveTexturesCache[index]->initState() == InitState::MayNeedInit)
+    if (!mActiveTexturesCache[textureIndex] ||
+        mActiveTexturesCache[textureIndex]->initState() == InitState::MayNeedInit)
     {
         mCachedTexturesInitState = InitState::MayNeedInit;
     }
