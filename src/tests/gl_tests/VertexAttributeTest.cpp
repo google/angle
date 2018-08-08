@@ -749,8 +749,12 @@ TEST_P(VertexAttributeTest, SimpleBindAttribLocation)
 }
 
 // Verify that drawing with a large out-of-range offset generates INVALID_OPERATION.
-TEST_P(VertexAttributeTest, DrawArraysBufferTooSmall)
+// Requires an ANGLE or similar implementation that checks buffer bounds.
+TEST_P(VertexAttributeTest, ANGLEDrawArraysBufferTooSmall)
 {
+    // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
+    ANGLE_SKIP_TEST_IF(extensionEnabled("GL_KHR_robust_buffer_access_behavior"));
+
     std::array<GLfloat, kVertexCount> inputData;
     std::array<GLfloat, kVertexCount> expectedData;
     InitTestData(inputData, expectedData);
@@ -764,7 +768,8 @@ TEST_P(VertexAttributeTest, DrawArraysBufferTooSmall)
 }
 
 // Verify that index draw with an out-of-range offset generates INVALID_OPERATION.
-TEST_P(VertexAttributeTest, DrawElementsBufferTooSmall)
+// Requires an ANGLE or similar implementation that checks buffer bounds.
+TEST_P(VertexAttributeTest, ANGLEDrawElementsBufferTooSmall)
 {
     // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
     ANGLE_SKIP_TEST_IF(extensionEnabled("GL_KHR_robust_buffer_access_behavior"));
@@ -777,6 +782,26 @@ TEST_P(VertexAttributeTest, DrawElementsBufferTooSmall)
     data.bufferOffset = (kVertexCount - 3) * TypeStride(GL_FLOAT);
 
     setupTest(data, 1);
+    drawIndexedQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+TEST_P(VertexAttributeTest, ANGLEDrawArraysOutOfBoundsCases)
+{
+    // Test skipped due to supporting GL_KHR_robust_buffer_access_behavior
+    ANGLE_SKIP_TEST_IF(extensionEnabled("GL_KHR_robust_buffer_access_behavior"));
+
+    initBasicProgram();
+
+    GLfloat singleFloat = 1.0f;
+    GLsizei dataSize    = TypeStride(GL_FLOAT);
+
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBufferData(GL_ARRAY_BUFFER, dataSize, &singleFloat, GL_STATIC_DRAW);
+    glVertexAttribPointer(mTestAttrib, 2, GL_FLOAT, GL_FALSE, 8, 0);
+    glEnableVertexAttribArray(mTestAttrib);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     drawIndexedQuad(mProgram, "position", 0.5f);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }

@@ -85,6 +85,9 @@ struct VertexAttribute final : private angle::NonCopyable
     GLuint vertexAttribArrayStride;  // ONLY for queries of VERTEX_ATTRIB_ARRAY_STRIDE
     GLuint bindingIndex;
 
+    // Special value for the cached element limit on the integer overflow case.
+    static constexpr GLint64 kIntegerOverflow = std::numeric_limits<GLint64>::min();
+
   private:
     // This is kept in sync by the VertexArray. It is used to optimize draw call validation.
     GLint64 mCachedElementLimit;

@@ -117,9 +117,11 @@ bool ValidateDrawAttribs(Context *context, GLint primcount, GLint maxVertex)
         return true;
     }
 
-    // An overflow can happen when adding the offset. Negative indicates overflow.
-    if (context->getStateCache().getNonInstancedVertexElementLimit() < 0 ||
-        context->getStateCache().getInstancedVertexElementLimit() < 0)
+    // An overflow can happen when adding the offset. Check against a special constant.
+    if (context->getStateCache().getNonInstancedVertexElementLimit() ==
+            VertexAttribute::kIntegerOverflow ||
+        context->getStateCache().getInstancedVertexElementLimit() ==
+            VertexAttribute::kIntegerOverflow)
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
         return false;
