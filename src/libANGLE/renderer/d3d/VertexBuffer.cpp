@@ -72,16 +72,19 @@ VertexBufferInterface::~VertexBufferInterface()
 
 unsigned int VertexBufferInterface::getSerial() const
 {
+    ASSERT(mVertexBuffer);
     return mVertexBuffer->getSerial();
 }
 
 unsigned int VertexBufferInterface::getBufferSize() const
 {
+    ASSERT(mVertexBuffer);
     return mVertexBuffer->getBufferSize();
 }
 
 gl::Error VertexBufferInterface::setBufferSize(const gl::Context *context, unsigned int size)
 {
+    ASSERT(mVertexBuffer);
     if (mVertexBuffer->getBufferSize() == 0)
     {
         return mVertexBuffer->initialize(context, size, mDynamic);
@@ -116,11 +119,13 @@ gl::Error VertexBufferInterface::getSpaceRequired(const gl::Context *context,
 
 gl::Error VertexBufferInterface::discard(const gl::Context *context)
 {
+    ASSERT(mVertexBuffer);
     return mVertexBuffer->discard(context);
 }
 
 VertexBuffer *VertexBufferInterface::getVertexBuffer() const
 {
+    ASSERT(mVertexBuffer);
     return mVertexBuffer;
 }
 
@@ -141,7 +146,7 @@ void StreamingVertexBufferInterface::reset()
     if (mVertexBuffer)
     {
         mVertexBuffer->release();
-        mVertexBuffer = nullptr;
+        mVertexBuffer = mFactory->createVertexBuffer();
     }
 }
 
