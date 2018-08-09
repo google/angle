@@ -164,14 +164,6 @@ DispatchComputePerfParams DispatchComputePerfOpenGLOrGLESParams(bool useNullDevi
     return params;
 }
 
-DispatchComputePerfParams DispatchComputePerfVulkanParams(bool useNullDevice)
-{
-    DispatchComputePerfParams params;
-    params.eglParameters =
-        useNullDevice ? angle::egl_platform::VULKAN() : angle::egl_platform::VULKAN_NULL();
-    return params;
-}
-
 TEST_P(DispatchComputePerfBenchmark, Run)
 {
     run();
@@ -179,8 +171,6 @@ TEST_P(DispatchComputePerfBenchmark, Run)
 
 ANGLE_INSTANTIATE_TEST(DispatchComputePerfBenchmark,
                        DispatchComputePerfOpenGLOrGLESParams(true),
-                       DispatchComputePerfOpenGLOrGLESParams(false),
-                       DispatchComputePerfVulkanParams(true),
-                       DispatchComputePerfVulkanParams(false));
+                       DispatchComputePerfOpenGLOrGLESParams(false));
 
 }  // namespace
