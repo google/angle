@@ -136,13 +136,14 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
                 mEnableMockICD = false;
             }
         }
-        if (mEnableValidationLayers)
+        if (mEnableValidationLayers || mEnableMockICD)
         {
             const auto &cwd = angle::GetCWD();
             if (!cwd.valid())
             {
                 ERR() << "Error getting CWD for Vulkan layers init.";
                 mEnableValidationLayers = false;
+                mEnableMockICD          = false;
             }
             else
             {
@@ -153,6 +154,7 @@ class ScopedVkLoaderEnvironment : angle::NonCopyable
                 {
                     ERR() << "Error setting CWD for Vulkan layers init.";
                     mEnableValidationLayers = false;
+                    mEnableMockICD          = false;
                 }
             }
         }
