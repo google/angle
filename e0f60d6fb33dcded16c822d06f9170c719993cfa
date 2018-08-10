@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "e6aba50b_3e9cf2f0",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2708,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-10T15:20:48Z",
+      "side": 1,
+      "message": "Instead of looping over the whole array of 64 textures, you want to have the program object track a bitmask of which image units it references and loop over those indicies.  See how we loop over the activeTextures mask above.",
+      "range": {
+        "startLine": 2708,
+        "startChar": 4,
+        "endLine": 2708,
+        "endChar": 50
+      },
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf8ae699_e4b3c768",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2714,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-10T15:20:48Z",
+      "side": 1,
+      "message": "This function is a very hot path for draw calls, can you only do this loop if we are \u003e\u003d ES 3.1?",
+      "range": {
+        "startLine": 2708,
+        "startChar": 4,
+        "endLine": 2714,
+        "endChar": 5
+      },
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58345127_891459b7",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2846,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-10T15:20:48Z",
+      "side": 1,
+      "message": "Same here for looping over a mask instead of the whole array.",
+      "range": {
+        "startLine": 2846,
+        "startChar": 29,
+        "endLine": 2846,
+        "endChar": 53
+      },
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ba0d6fc5_496c6bd4",
         "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
         "patchSetId": 3
