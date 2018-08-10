@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba0d6fc5_496c6bd4",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-10T11:14:50Z",
+      "side": 1,
+      "message": "The test doesn\u0027t need an input texture and could write a hardcoded value to the output texture for the same effect.",
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3aec51cf_0acc445d",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1028,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-10T11:14:50Z",
+      "side": 1,
+      "message": "We might not need kWidth and kHeight if it is just 1.",
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17c92302_f9718b11",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-10T11:14:50Z",
+      "side": 1,
+      "message": "nit: this isn\u0027t needed.",
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "392b0119_acea0d4d",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1057,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-10T11:14:50Z",
+      "side": 1,
+      "message": "nit: or just GLuint outputValue.",
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
