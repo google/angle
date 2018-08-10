@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd725dc2_26dcbdee",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-10T19:56:20Z",
+      "side": 1,
+      "message": "thanks. Please remember to not close this bug until you either implement this feature or remove the TODO.",
+      "range": {
+        "startLine": 258,
+        "startChar": 4,
+        "endLine": 258,
+        "endChar": 30
+      },
+      "revId": "4f61679713879d5083cef32ac60cb2c43c4d572e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
