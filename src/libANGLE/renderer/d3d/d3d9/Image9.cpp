@@ -361,9 +361,9 @@ angle::Result Image9::getSurface(Context9 *context9, IDirect3DSurface9 **outSurf
     return angle::Result::Continue();
 }
 
-gl::Error Image9::setManagedSurface2D(const gl::Context *context,
-                                      TextureStorage *storage,
-                                      int level)
+angle::Result Image9::setManagedSurface2D(const gl::Context *context,
+                                          TextureStorage *storage,
+                                          int level)
 {
     IDirect3DSurface9 *surface = nullptr;
     TextureStorage9 *storage9  = GetAs<TextureStorage9>(storage);
@@ -371,10 +371,10 @@ gl::Error Image9::setManagedSurface2D(const gl::Context *context,
     return setManagedSurface(GetImplAs<Context9>(context), surface);
 }
 
-gl::Error Image9::setManagedSurfaceCube(const gl::Context *context,
-                                        TextureStorage *storage,
-                                        int face,
-                                        int level)
+angle::Result Image9::setManagedSurfaceCube(const gl::Context *context,
+                                            TextureStorage *storage,
+                                            int face,
+                                            int level)
 {
     IDirect3DSurface9 *surface = nullptr;
     TextureStorage9 *storage9 = GetAs<TextureStorage9>(storage);
@@ -405,10 +405,10 @@ angle::Result Image9::setManagedSurface(Context9 *context9, IDirect3DSurface9 *s
     return angle::Result::Continue();
 }
 
-gl::Error Image9::copyToStorage(const gl::Context *context,
-                                TextureStorage *storage,
-                                const gl::ImageIndex &index,
-                                const gl::Box &region)
+angle::Result Image9::copyToStorage(const gl::Context *context,
+                                    TextureStorage *storage,
+                                    const gl::ImageIndex &index,
+                                    const gl::Box &region)
 {
     ANGLE_TRY(createSurface(GetImplAs<Context9>(context)));
 
@@ -474,20 +474,22 @@ angle::Result Image9::copyToSurface(Context9 *context9,
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
-gl::Error Image9::loadData(const gl::Context *context,
-                           const gl::Box &area,
-                           const gl::PixelUnpackState &unpack,
-                           GLenum type,
-                           const void *input,
-                           bool applySkipImages)
+angle::Result Image9::loadData(const gl::Context *context,
+                               const gl::Box &area,
+                               const gl::PixelUnpackState &unpack,
+                               GLenum type,
+                               const void *input,
+                               bool applySkipImages)
 {
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(area.z == 0 && area.depth == 1);
 
+    Context9 *context9 = GetImplAs<Context9>(context);
+
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(mInternalFormat);
     GLuint inputRowPitch                 = 0;
-    ANGLE_TRY_CHECKED_MATH(formatInfo.computeRowPitch(type, area.width, unpack.alignment,
-                                                      unpack.rowLength, &inputRowPitch));
+    ANGLE_CHECK_HR_MATH(context9, formatInfo.computeRowPitch(type, area.width, unpack.alignment,
+                                                             unpack.rowLength, &inputRowPitch));
     ASSERT(!applySkipImages);
     ASSERT(unpack.skipPixels == 0);
     ASSERT(unpack.skipRows == 0);
@@ -510,24 +512,26 @@ gl::Error Image9::loadData(const gl::Context *context,
 
     unlock();
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Image9::loadCompressedData(const gl::Context *context,
-                                     const gl::Box &area,
-                                     const void *input)
+angle::Result Image9::loadCompressedData(const gl::Context *context,
+                                         const gl::Box &area,
+                                         const void *input)
 {
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(area.z == 0 && area.depth == 1);
 
+    Context9 *context9 = GetImplAs<Context9>(context);
+
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(mInternalFormat);
     GLuint inputRowPitch                 = 0;
-    ANGLE_TRY_CHECKED_MATH(
-        formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0, &inputRowPitch));
+    ANGLE_CHECK_HR_MATH(
+        context9, formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0, &inputRowPitch));
 
     GLuint inputDepthPitch = 0;
-    ANGLE_TRY_CHECKED_MATH(
-        formatInfo.computeDepthPitch(area.height, 0, inputRowPitch, &inputDepthPitch));
+    ANGLE_CHECK_HR_MATH(
+        context9, formatInfo.computeDepthPitch(area.height, 0, inputRowPitch, &inputDepthPitch));
 
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(mInternalFormat);
 
@@ -551,7 +555,7 @@ gl::Error Image9::loadCompressedData(const gl::Context *context,
 
     unlock();
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
@@ -769,9 +773,9 @@ angle::Result Image9::copyFromRTInternal(Context9 *context9,
     return angle::Result::Continue();
 }
 
-gl::Error Image9::copyFromTexStorage(const gl::Context *context,
-                                     const gl::ImageIndex &imageIndex,
-                                     TextureStorage *source)
+angle::Result Image9::copyFromTexStorage(const gl::Context *context,
+                                         const gl::ImageIndex &imageIndex,
+                                         TextureStorage *source)
 {
     RenderTargetD3D *renderTarget = nullptr;
     ANGLE_TRY(source->getRenderTarget(context, imageIndex, &renderTarget));
@@ -780,16 +784,16 @@ gl::Error Image9::copyFromTexStorage(const gl::Context *context,
     return copyFromRTInternal(GetImplAs<Context9>(context), gl::Offset(), sourceArea, renderTarget);
 }
 
-gl::Error Image9::copyFromFramebuffer(const gl::Context *context,
-                                      const gl::Offset &destOffset,
-                                      const gl::Rectangle &sourceArea,
-                                      const gl::Framebuffer *source)
+angle::Result Image9::copyFromFramebuffer(const gl::Context *context,
+                                          const gl::Offset &destOffset,
+                                          const gl::Rectangle &sourceArea,
+                                          const gl::Framebuffer *source)
 {
     const gl::FramebufferAttachment *srcAttachment = source->getReadColorbuffer();
     ASSERT(srcAttachment);
 
     RenderTargetD3D *renderTarget = nullptr;
-    ANGLE_TRY(srcAttachment->getRenderTarget(context, &renderTarget));
+    ANGLE_TRY_HANDLE(context, srcAttachment->getRenderTarget(context, &renderTarget));
     ASSERT(renderTarget);
     return copyFromRTInternal(GetImplAs<Context9>(context), destOffset, sourceArea, renderTarget);
 }

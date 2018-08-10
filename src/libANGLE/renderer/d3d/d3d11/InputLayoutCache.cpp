@@ -293,8 +293,7 @@ angle::Result InputLayoutCache::createInputLayout(
     }
 
     ShaderExecutableD3D *shader = nullptr;
-    ANGLE_TRY_HANDLE(
-        context, programD3D->getVertexExecutableForCachedInputLayout(context, &shader, nullptr));
+    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(context, &shader, nullptr));
 
     ShaderExecutableD3D *shader11 = GetAs<ShaderExecutable11>(shader);
 

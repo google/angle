@@ -171,7 +171,6 @@ class ProgramD3D : public ProgramImpl
                           bool readonly,
                           const gl::Caps &caps) const;
     GLuint getUsedImageRange(gl::ShaderType type, bool readonly) const;
-    GLenum getImageTextureType(gl::ShaderType type, unsigned int imageIndex, bool readonly) const;
 
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesPointSpriteEmulation() const;
@@ -186,17 +185,17 @@ class ProgramD3D : public ProgramImpl
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
-    gl::Error getVertexExecutableForCachedInputLayout(const gl::Context *context,
-                                                      ShaderExecutableD3D **outExectuable,
-                                                      gl::InfoLog *infoLog);
-    gl::Error getGeometryExecutableForPrimitiveType(const gl::Context *context,
-                                                    gl::PrimitiveMode drawMode,
-                                                    ShaderExecutableD3D **outExecutable,
-                                                    gl::InfoLog *infoLog);
-    gl::Error getPixelExecutableForCachedOutputLayout(const gl::Context *context,
-                                                      ShaderExecutableD3D **outExectuable,
-                                                      gl::InfoLog *infoLog);
-    gl::Error getComputeExecutable(ShaderExecutableD3D **outExecutable);
+    angle::Result getVertexExecutableForCachedInputLayout(const gl::Context *context,
+                                                          ShaderExecutableD3D **outExectuable,
+                                                          gl::InfoLog *infoLog);
+    angle::Result getGeometryExecutableForPrimitiveType(const gl::Context *context,
+                                                        gl::PrimitiveMode drawMode,
+                                                        ShaderExecutableD3D **outExecutable,
+                                                        gl::InfoLog *infoLog);
+    angle::Result getPixelExecutableForCachedOutputLayout(const gl::Context *context,
+                                                          ShaderExecutableD3D **outExectuable,
+                                                          gl::InfoLog *infoLog);
+    angle::Result getComputeExecutable(ShaderExecutableD3D **outExecutable);
     gl::LinkResult link(const gl::Context *context,
                         const gl::ProgramLinkedResources &resources,
                         gl::InfoLog &infoLog) override;

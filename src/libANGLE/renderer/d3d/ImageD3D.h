@@ -56,42 +56,42 @@ class ImageD3D : angle::NonCopyable
                           const gl::Extents &size,
                           bool forceRelease) = 0;
 
-    virtual gl::Error loadData(const gl::Context *context,
-                               const gl::Box &area,
-                               const gl::PixelUnpackState &unpack,
-                               GLenum type,
-                               const void *input,
-                               bool applySkipImages)        = 0;
-    virtual gl::Error loadCompressedData(const gl::Context *context,
-                                         const gl::Box &area,
-                                         const void *input) = 0;
+    virtual angle::Result loadData(const gl::Context *context,
+                                   const gl::Box &area,
+                                   const gl::PixelUnpackState &unpack,
+                                   GLenum type,
+                                   const void *input,
+                                   bool applySkipImages)        = 0;
+    virtual angle::Result loadCompressedData(const gl::Context *context,
+                                             const gl::Box &area,
+                                             const void *input) = 0;
 
-    virtual gl::Error setManagedSurface2D(const gl::Context *context,
-                                          TextureStorage *storage,
-                                          int level);
-    virtual gl::Error setManagedSurfaceCube(const gl::Context *context,
-                                            TextureStorage *storage,
-                                            int face,
-                                            int level);
-    virtual gl::Error setManagedSurface3D(const gl::Context *context,
-                                          TextureStorage *storage,
-                                          int level);
-    virtual gl::Error setManagedSurface2DArray(const gl::Context *context,
-                                               TextureStorage *storage,
-                                               int layer,
-                                               int level);
-    virtual gl::Error copyToStorage(const gl::Context *context,
-                                    TextureStorage *storage,
-                                    const gl::ImageIndex &index,
-                                    const gl::Box &region) = 0;
+    virtual angle::Result setManagedSurface2D(const gl::Context *context,
+                                              TextureStorage *storage,
+                                              int level);
+    virtual angle::Result setManagedSurfaceCube(const gl::Context *context,
+                                                TextureStorage *storage,
+                                                int face,
+                                                int level);
+    virtual angle::Result setManagedSurface3D(const gl::Context *context,
+                                              TextureStorage *storage,
+                                              int level);
+    virtual angle::Result setManagedSurface2DArray(const gl::Context *context,
+                                                   TextureStorage *storage,
+                                                   int layer,
+                                                   int level);
+    virtual angle::Result copyToStorage(const gl::Context *context,
+                                        TextureStorage *storage,
+                                        const gl::ImageIndex &index,
+                                        const gl::Box &region) = 0;
 
-    virtual gl::Error copyFromTexStorage(const gl::Context *context,
-                                         const gl::ImageIndex &imageIndex,
-                                         TextureStorage *source)         = 0;
-    virtual gl::Error copyFromFramebuffer(const gl::Context *context,
-                                          const gl::Offset &destOffset,
-                                          const gl::Rectangle &sourceArea,
-                                          const gl::Framebuffer *source) = 0;
+    virtual angle::Result copyFromTexStorage(const gl::Context *context,
+                                             const gl::ImageIndex &imageIndex,
+                                             TextureStorage *source)         = 0;
+    virtual angle::Result copyFromFramebuffer(const gl::Context *context,
+                                              const gl::Offset &destOffset,
+                                              const gl::Rectangle &sourceArea,
+                                              const gl::Framebuffer *source) = 0;
 
   protected:
     GLsizei mWidth;

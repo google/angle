@@ -1193,14 +1193,15 @@ void ProgramD3D::setSeparable(bool /* separable */)
 {
 }
 
-gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(const gl::Context *context,
-                                                              ShaderExecutableD3D **outExecutable,
-                                                              gl::InfoLog *infoLog)
+angle::Result ProgramD3D::getPixelExecutableForCachedOutputLayout(
+    const gl::Context *context,
+    ShaderExecutableD3D **outExecutable,
+    gl::InfoLog *infoLog)
 {
     if (mCachedPixelExecutableIndex.valid())
     {
         *outExecutable = mPixelExecutables[mCachedPixelExecutableIndex.value()]->shaderExecutable();
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     std::string finalPixelHLSL = mDynamicHLSL->generatePixelShaderForOutputSignature(
@@ -1231,18 +1232,19 @@ gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(const gl::Context 
     }
 
     *outExecutable = pixelExecutable;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(const gl::Context *context,
-                                                              ShaderExecutableD3D **outExectuable,
-                                                              gl::InfoLog *infoLog)
+angle::Result ProgramD3D::getVertexExecutableForCachedInputLayout(
+    const gl::Context *context,
+    ShaderExecutableD3D **outExectuable,
+    gl::InfoLog *infoLog)
 {
     if (mCachedVertexExecutableIndex.valid())
     {
         *outExectuable =
             mVertexExecutables[mCachedVertexExecutableIndex.value()]->shaderExecutable();
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     // Generate new dynamic layout with attribute conversions
@@ -1273,13 +1275,13 @@ gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(const gl::Context 
     }
 
     *outExectuable = vertexExecutable;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *context,
-                                                            gl::PrimitiveMode drawMode,
-                                                            ShaderExecutableD3D **outExecutable,
-                                                            gl::InfoLog *infoLog)
+angle::Result ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *context,
+                                                                gl::PrimitiveMode drawMode,
+                                                                ShaderExecutableD3D **outExecutable,
+                                                                gl::InfoLog *infoLog)
 {
     if (outExecutable)
     {
@@ -1289,7 +1291,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *c
     // Return a null shader if the current rendering doesn't use a geometry shader
     if (!usesGeometryShader(drawMode))
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     gl::PrimitiveMode geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
@@ -1300,7 +1302,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *c
         {
             *outExecutable = mGeometryExecutables[geometryShaderType].get();
         }
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
@@ -1312,12 +1314,12 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *c
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
 
     ShaderExecutableD3D *geometryExecutable = nullptr;
-    gl::Error error                         = mRenderer->compileToExecutable(
+    angle::Result result                    = mRenderer->compileToExecutable(
         context, *currentInfoLog, geometryHLSL, gl::ShaderType::Geometry, mStreamOutVaryings,
         (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS),
         angle::CompilerWorkaroundsD3D(), &geometryExecutable);
 
-    if (!infoLog && error.isError())
+    if (!infoLog && result == angle::Result::Stop())
     {
         ERR() << "Error compiling dynamic geometry executable:" << std::endl
               << tempInfoLog.str() << std::endl;
@@ -1332,30 +1334,34 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *c
     {
         *outExecutable = mGeometryExecutables[geometryShaderType].get();
     }
-    return error;
+    return result;
 }
 
 class ProgramD3D::GetExecutableTask : public Closure
 {
   public:
     GetExecutableTask(ProgramD3D *program, const gl::Context *context)
-        : mProgram(program), mError(gl::NoError()), mInfoLog(), mResult(nullptr), mContext(context)
+        : mProgram(program),
+          mResult(angle::Result::Continue()),
+          mInfoLog(),
+          mExecutable(nullptr),
+          mContext(context)
     {
     }
 
-    virtual gl::Error run() = 0;
+    virtual angle::Result run() = 0;
 
-    void operator()() override { mError = run(); }
+    void operator()() override { mResult = run(); }
 
-    const gl::Error &getError() const { return mError; }
+    angle::Result getResult() const { return mResult; }
     const gl::InfoLog &getInfoLog() const { return mInfoLog; }
-    ShaderExecutableD3D *getResult() { return mResult; }
+    ShaderExecutableD3D *getExecutable() { return mExecutable; }
 
   protected:
     ProgramD3D *mProgram;
-    gl::Error mError;
+    angle::Result mResult;
     gl::InfoLog mInfoLog;
-    ShaderExecutableD3D *mResult;
+    ShaderExecutableD3D *mExecutable;
     const gl::Context *mContext;
 };
 
@@ -1366,13 +1372,14 @@ class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
         : GetExecutableTask(program, context)
     {
     }
-    gl::Error run() override
+    angle::Result run() override
     {
         mProgram->updateCachedInputLayoutFromShader(mContext);
 
-        ANGLE_TRY(mProgram->getVertexExecutableForCachedInputLayout(mContext, &mResult, &mInfoLog));
+        ANGLE_TRY(
+            mProgram->getVertexExecutableForCachedInputLayout(mContext, &mExecutable, &mInfoLog));
 
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 };
 
@@ -1391,13 +1398,14 @@ class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
         : GetExecutableTask(program, context)
     {
     }
-    gl::Error run() override
+    angle::Result run() override
     {
         mProgram->updateCachedOutputLayoutFromShader();
 
-        ANGLE_TRY(mProgram->getPixelExecutableForCachedOutputLayout(mContext, &mResult, &mInfoLog));
+        ANGLE_TRY(
+            mProgram->getPixelExecutableForCachedOutputLayout(mContext, &mExecutable, &mInfoLog));
 
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 };
 
@@ -1415,28 +1423,28 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
     {
     }
 
-    gl::Error run() override
+    angle::Result run() override
     {
         // Auto-generate the geometry shader here, if we expect to be using point rendering in
         // D3D11.
         if (mProgram->usesGeometryShader(gl::PrimitiveMode::Points))
         {
             ANGLE_TRY(mProgram->getGeometryExecutableForPrimitiveType(
-                mContext, gl::PrimitiveMode::Points, &mResult, &mInfoLog));
+                mContext, gl::PrimitiveMode::Points, &mExecutable, &mInfoLog));
         }
 
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 };
 
-gl::Error ProgramD3D::getComputeExecutable(ShaderExecutableD3D **outExecutable)
+angle::Result ProgramD3D::getComputeExecutable(ShaderExecutableD3D **outExecutable)
 {
     if (outExecutable)
     {
         *outExecutable = mComputeExecutable.get();
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context,
@@ -1470,13 +1478,13 @@ gl::LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context,
         infoLog << geometryTask.getInfoLog().str();
     }
 
-    ANGLE_TRY(vertexTask.getError());
-    ANGLE_TRY(pixelTask.getError());
-    ANGLE_TRY(geometryTask.getError());
+    ANGLE_TRY(vertexTask.getResult());
+    ANGLE_TRY(pixelTask.getResult());
+    ANGLE_TRY(geometryTask.getResult());
 
-    ShaderExecutableD3D *defaultVertexExecutable = vertexTask.getResult();
-    ShaderExecutableD3D *defaultPixelExecutable  = pixelTask.getResult();
-    ShaderExecutableD3D *pointGS                 = geometryTask.getResult();
+    ShaderExecutableD3D *defaultVertexExecutable = vertexTask.getExecutable();
+    ShaderExecutableD3D *defaultPixelExecutable  = pixelTask.getExecutable();
+    ShaderExecutableD3D *pointGS                 = geometryTask.getExecutable();
 
     const ShaderD3D *vertexShaderD3D =
         GetImplAs<ShaderD3D>(mState.getAttachedShader(gl::ShaderType::Vertex));

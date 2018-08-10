@@ -346,7 +346,7 @@ gl::Error Buffer11::setData(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error Buffer11::getData(const gl::Context *context, const uint8_t **outData)
+angle::Result Buffer11::getData(const gl::Context *context, const uint8_t **outData)
 {
     SystemMemoryStorage *systemMemoryStorage = nullptr;
     ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_SYSTEM_MEMORY, &systemMemoryStorage));
@@ -354,7 +354,7 @@ gl::Error Buffer11::getData(const gl::Context *context, const uint8_t **outData)
     ASSERT(systemMemoryStorage->getSize() >= mSize);
 
     *outData = systemMemoryStorage->getSystemCopy()->data();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error Buffer11::setSubData(const gl::Context *context,
@@ -542,7 +542,7 @@ gl::Error Buffer11::unmap(const gl::Context *context, GLboolean *result)
     return gl::NoError();
 }
 
-gl::Error Buffer11::markTransformFeedbackUsage(const gl::Context *context)
+angle::Result Buffer11::markTransformFeedbackUsage(const gl::Context *context)
 {
     BufferStorage *transformFeedbackStorage = nullptr;
     ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK,
@@ -554,7 +554,7 @@ gl::Error Buffer11::markTransformFeedbackUsage(const gl::Context *context)
     }
 
     invalidateStaticData(context);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void Buffer11::updateDeallocThreshold(BufferUsage usage)
@@ -1290,7 +1290,7 @@ angle::Result Buffer11::EmulatedIndexedStorage::getBuffer(const gl::Context *con
     if (!mBuffer.valid())
     {
         unsigned int offset = 0;
-        ANGLE_TRY_HANDLE(context11, attribute.computeOffset(startVertex, &offset));
+        ANGLE_TRY(attribute.computeOffset(context, startVertex, &offset));
 
         // Expand the memory storage upon request and cache the results.
         unsigned int expandedDataSize =

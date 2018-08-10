@@ -12,13 +12,13 @@
 
 #include "libANGLE/renderer/ContextImpl.h"
 
-#include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/ContextD3D.h"
 
 namespace rx
 {
 class Renderer11;
 
-class Context11 : public ContextImpl, public MultisampleTextureInitializer, public d3d::Context
+class Context11 : public ContextD3D, public MultisampleTextureInitializer
 {
   public:
     Context11(const gl::ContextState &state, Renderer11 *renderer);
@@ -152,9 +152,9 @@ class Context11 : public ContextImpl, public MultisampleTextureInitializer, publ
     angle::Result triggerDrawCallProgramRecompilation(const gl::Context *context,
                                                       gl::PrimitiveMode drawMode);
 
-    gl::Error getIncompleteTexture(const gl::Context *context,
-                                   gl::TextureType type,
-                                   gl::Texture **textureOut);
+    angle::Result getIncompleteTexture(const gl::Context *context,
+                                       gl::TextureType type,
+                                       gl::Texture **textureOut);
 
     gl::Error initializeMultisampleTextureToBlack(const gl::Context *context,
                                                   gl::Texture *glTexture) override;

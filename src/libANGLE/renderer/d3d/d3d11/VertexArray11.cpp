@@ -192,9 +192,8 @@ angle::Result VertexArray11::updateElementArrayStorage(const gl::Context *contex
     bool usePrimitiveRestartWorkaround =
         UsePrimitiveRestartWorkaround(restartEnabled, drawCallParams.type());
 
-    ANGLE_TRY_HANDLE(
-        context, GetIndexTranslationDestType(context, drawCallParams, usePrimitiveRestartWorkaround,
-                                             &mCachedDestinationIndexType));
+    ANGLE_TRY(GetIndexTranslationDestType(context, drawCallParams, usePrimitiveRestartWorkaround,
+                                          &mCachedDestinationIndexType));
 
     unsigned int offset =
         static_cast<unsigned int>(reinterpret_cast<uintptr_t>(drawCallParams.indices()));
@@ -266,8 +265,7 @@ angle::Result VertexArray11::updateDirtyAttribs(const gl::Context *context,
                 break;
             case VertexStorageType::STATIC:
             {
-                ANGLE_TRY_HANDLE(context,
-                                 VertexDataManager::StoreStaticAttrib(context, translatedAttrib));
+                ANGLE_TRY(VertexDataManager::StoreStaticAttrib(context, translatedAttrib));
                 break;
             }
             case VertexStorageType::CURRENT_VALUE:
@@ -305,10 +303,9 @@ angle::Result VertexArray11::updateDynamicAttribs(const gl::Context *context,
         dynamicAttrib->divisor = dynamicAttrib->binding->getDivisor() * mAppliedNumViewsToDivisor;
     }
 
-    ANGLE_TRY_HANDLE(context, vertexDataManager->storeDynamicAttribs(
-                                  context, &mTranslatedAttribs, activeDynamicAttribs,
-                                  drawCallParams.firstVertex(), drawCallParams.vertexCount(),
-                                  drawCallParams.instances()));
+    ANGLE_TRY(vertexDataManager->storeDynamicAttribs(
+        context, &mTranslatedAttribs, activeDynamicAttribs, drawCallParams.firstVertex(),
+        drawCallParams.vertexCount(), drawCallParams.instances()));
 
     VertexDataManager::PromoteDynamicAttribs(context, mTranslatedAttribs, activeDynamicAttribs,
                                              drawCallParams.vertexCount());

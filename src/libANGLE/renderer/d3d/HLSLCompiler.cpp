@@ -9,9 +9,11 @@
 #include <sstream>
 
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/features.h"
 #include "libANGLE/histogram_macros.h"
+#include "libANGLE/renderer/d3d/ContextD3D.h"
 #include "third_party/trace_event/trace_event.h"
 
 #if ANGLE_APPEND_ASSEMBLY_TO_SHADER_DEBUG_INFO == ANGLE_ENABLED
@@ -108,11 +110,11 @@ HLSLCompiler::~HLSLCompiler()
     release();
 }
 
-gl::Error HLSLCompiler::ensureInitialized(const gl::Context *context)
+angle::Result HLSLCompiler::ensureInitialized(const gl::Context *context)
 {
     if (mInitialized)
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     TRACE_EVENT0("gpu.angle", "HLSLCompiler::initialize");
@@ -136,10 +138,12 @@ gl::Error HLSLCompiler::ensureInitialized(const gl::Context *context)
         mD3DCompilerModule = LoadLibrary(D3DCOMPILER_DLL);
     }
 
+    ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
+
     if (!mD3DCompilerModule)
     {
         ERR() << "D3D compiler module not found.";
-        return gl::OutOfMemory() << "D3D compiler module not found.";
+        ANGLE_TRY_HR(contextD3D, E_OUTOFMEMORY, "D3D compiler module not found.");
     }
 
     mD3DCompileFunc = reinterpret_cast<pD3DCompile>(GetProcAddress(mD3DCompilerModule, "D3DCompile"));
@@ -156,13 +160,11 @@ gl::Error HLSLCompiler::ensureInitialized(const gl::Context *context)
     mD3DDisassembleFunc = reinterpret_cast<pD3DDisassemble>(D3DDisassemble);
 #endif
 
-    if (mD3DCompileFunc == nullptr)
-    {
-        return gl::OutOfMemory() << "Error finding D3DCompile entry point.";
-    }
+    ANGLE_CHECK_HR(contextD3D, mD3DCompileFunc, "Error finding D3DCompile entry point.",
+                   E_OUTOFMEMORY);
 
     mInitialized = true;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void HLSLCompiler::release()
@@ -177,14 +179,14 @@ void HLSLCompiler::release()
     }
 }
 
-gl::Error HLSLCompiler::compileToBinary(const gl::Context *context,
-                                        gl::InfoLog &infoLog,
-                                        const std::string &hlsl,
-                                        const std::string &profile,
-                                        const std::vector<CompileConfig> &configs,
-                                        const D3D_SHADER_MACRO *overrideMacros,
-                                        ID3DBlob **outCompiledBlob,
-                                        std::string *outDebugInfo)
+angle::Result HLSLCompiler::compileToBinary(const gl::Context *context,
+                                            gl::InfoLog &infoLog,
+                                            const std::string &hlsl,
+                                            const std::string &profile,
+                                            const std::vector<CompileConfig> &configs,
+                                            const D3D_SHADER_MACRO *overrideMacros,
+                                            ID3DBlob **outCompiledBlob,
+                                            std::string *outDebugInfo)
 {
     ASSERT(mInitialized);
 
@@ -281,14 +283,14 @@ gl::Error HLSLCompiler::compileToBinary(const gl::Context *context,
             ANGLE_TRY(disassembleBinary(context, binary, &disassembly));
             (*outDebugInfo) += "\n" + disassembly + "\n// ASSEMBLY END\n";
 #endif  // ANGLE_APPEND_ASSEMBLY_TO_SHADER_DEBUG_INFO == ANGLE_ENABLED
-            return gl::NoError();
+            return angle::Result::Continue();
         }
 
         if (result == E_OUTOFMEMORY)
         {
             *outCompiledBlob = nullptr;
-            return gl::OutOfMemory()
-                   << "HLSL compiler had an unexpected failure, " << gl::FmtHR(result);
+            ANGLE_TRY_HR(GetImplAs<ContextD3D>(context), result,
+                         "HLSL compiler had an unexpected failure");
         }
 
         infoLog << "Warning: D3D shader compilation failed with " << configs[i].name << " flags. ("
@@ -302,12 +304,12 @@ gl::Error HLSLCompiler::compileToBinary(const gl::Context *context,
 
     // None of the configurations succeeded in compiling this shader but the compiler is still intact
     *outCompiledBlob = nullptr;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error HLSLCompiler::disassembleBinary(const gl::Context *context,
-                                          ID3DBlob *shaderBinary,
-                                          std::string *disassemblyOut)
+angle::Result HLSLCompiler::disassembleBinary(const gl::Context *context,
+                                              ID3DBlob *shaderBinary,
+                                              std::string *disassemblyOut)
 {
     ANGLE_TRY(ensureInitialized(context));
 
@@ -330,7 +332,7 @@ gl::Error HLSLCompiler::disassembleBinary(const gl::Context *context,
 
     SafeRelease(disassembly);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

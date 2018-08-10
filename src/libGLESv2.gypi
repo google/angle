@@ -324,6 +324,7 @@
             'libANGLE/renderer/d3d/BufferD3D.h',
             'libANGLE/renderer/d3d/CompilerD3D.cpp',
             'libANGLE/renderer/d3d/CompilerD3D.h',
+            'libANGLE/renderer/d3d/ContextD3D.h',
             'libANGLE/renderer/d3d/DeviceD3D.cpp',
             'libANGLE/renderer/d3d/DeviceD3D.h',
             'libANGLE/renderer/d3d/DisplayD3D.cpp',

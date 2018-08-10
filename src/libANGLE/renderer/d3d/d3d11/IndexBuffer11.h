@@ -22,24 +22,24 @@ class IndexBuffer11 : public IndexBuffer
     explicit IndexBuffer11(Renderer11 *const renderer);
     ~IndexBuffer11() override;
 
-    gl::Error initialize(const gl::Context *context,
-                         unsigned int bufferSize,
-                         GLenum indexType,
-                         bool dynamic) override;
+    angle::Result initialize(const gl::Context *context,
+                             unsigned int bufferSize,
+                             GLenum indexType,
+                             bool dynamic) override;
 
-    gl::Error mapBuffer(const gl::Context *context,
-                        unsigned int offset,
-                        unsigned int size,
-                        void **outMappedMemory) override;
-    gl::Error unmapBuffer(const gl::Context *context) override;
+    angle::Result mapBuffer(const gl::Context *context,
+                            unsigned int offset,
+                            unsigned int size,
+                            void **outMappedMemory) override;
+    angle::Result unmapBuffer(const gl::Context *context) override;
 
     GLenum getIndexType() const override;
     unsigned int getBufferSize() const override;
-    gl::Error setSize(const gl::Context *context,
-                      unsigned int bufferSize,
-                      GLenum indexType) override;
+    angle::Result setSize(const gl::Context *context,
+                          unsigned int bufferSize,
+                          GLenum indexType) override;
 
-    gl::Error discard(const gl::Context *context) override;
+    angle::Result discard(const gl::Context *context) override;
 
     DXGI_FORMAT getIndexFormat() const;
     const d3d11::Buffer &getBuffer() const;

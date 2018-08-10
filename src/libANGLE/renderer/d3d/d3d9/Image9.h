@@ -54,35 +54,35 @@ class Image9 : public ImageD3D
 
     bool isDirty() const override;
 
-    gl::Error setManagedSurface2D(const gl::Context *context,
-                                  TextureStorage *storage,
-                                  int level) override;
-    gl::Error setManagedSurfaceCube(const gl::Context *context,
-                                    TextureStorage *storage,
-                                    int face,
-                                    int level) override;
-    gl::Error copyToStorage(const gl::Context *context,
-                            TextureStorage *storage,
-                            const gl::ImageIndex &index,
-                            const gl::Box &region) override;
+    angle::Result setManagedSurface2D(const gl::Context *context,
+                                      TextureStorage *storage,
+                                      int level) override;
+    angle::Result setManagedSurfaceCube(const gl::Context *context,
+                                        TextureStorage *storage,
+                                        int face,
+                                        int level) override;
+    angle::Result copyToStorage(const gl::Context *context,
+                                TextureStorage *storage,
+                                const gl::ImageIndex &index,
+                                const gl::Box &region) override;
 
-    gl::Error loadData(const gl::Context *context,
-                       const gl::Box &area,
-                       const gl::PixelUnpackState &unpack,
-                       GLenum type,
-                       const void *input,
-                       bool applySkipImages) override;
-    gl::Error loadCompressedData(const gl::Context *context,
-                                 const gl::Box &area,
-                                 const void *input) override;
+    angle::Result loadData(const gl::Context *context,
+                           const gl::Box &area,
+                           const gl::PixelUnpackState &unpack,
+                           GLenum type,
+                           const void *input,
+                           bool applySkipImages) override;
+    angle::Result loadCompressedData(const gl::Context *context,
+                                     const gl::Box &area,
+                                     const void *input) override;
 
-    gl::Error copyFromTexStorage(const gl::Context *context,
-                                 const gl::ImageIndex &imageIndex,
-                                 TextureStorage *source) override;
-    gl::Error copyFromFramebuffer(const gl::Context *context,
-                                  const gl::Offset &destOffset,
-                                  const gl::Rectangle &sourceArea,
-                                  const gl::Framebuffer *source) override;
+    angle::Result copyFromTexStorage(const gl::Context *context,
+                                     const gl::ImageIndex &imageIndex,
+                                     TextureStorage *source) override;
+    angle::Result copyFromFramebuffer(const gl::Context *context,
+                                      const gl::Offset &destOffset,
+                                      const gl::Rectangle &sourceArea,
+                                      const gl::Framebuffer *source) override;
 
   private:
     angle::Result getSurface(Context9 *context9, IDirect3DSurface9 **outSurface);

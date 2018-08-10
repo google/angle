@@ -46,13 +46,13 @@ class TextureStorage9 : public TextureStorage
     bool supportsNativeMipmapFunction() const override;
     int getLevelCount() const override;
 
-    gl::Error setData(const gl::Context *context,
-                      const gl::ImageIndex &index,
-                      ImageD3D *image,
-                      const gl::Box *destBox,
-                      GLenum type,
-                      const gl::PixelUnpackState &unpack,
-                      const uint8_t *pixelData) override;
+    angle::Result setData(const gl::Context *context,
+                          const gl::ImageIndex &index,
+                          ImageD3D *image,
+                          const gl::Box *destBox,
+                          GLenum type,
+                          const gl::PixelUnpackState &unpack,
+                          const uint8_t *pixelData) override;
 
   protected:
     int mTopLevel;
@@ -83,15 +83,15 @@ class TextureStorage9_2D : public TextureStorage9
                                   int level,
                                   bool dirty,
                                   IDirect3DSurface9 **outSurface) override;
-    gl::Error getRenderTarget(const gl::Context *context,
-                              const gl::ImageIndex &index,
-                              RenderTargetD3D **outRT) override;
+    angle::Result getRenderTarget(const gl::Context *context,
+                                  const gl::ImageIndex &index,
+                                  RenderTargetD3D **outRT) override;
     angle::Result getBaseTexture(const gl::Context *context,
                                  IDirect3DBaseTexture9 **outTexture) override;
-    gl::Error generateMipmap(const gl::Context *context,
-                             const gl::ImageIndex &sourceIndex,
-                             const gl::ImageIndex &destIndex) override;
-    gl::Error copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
+    angle::Result generateMipmap(const gl::Context *context,
+                                 const gl::ImageIndex &sourceIndex,
+                                 const gl::ImageIndex &destIndex) override;
+    angle::Result copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
 
   private:
     IDirect3DTexture9 *mTexture;
@@ -109,15 +109,15 @@ class TextureStorage9_EGLImage final : public TextureStorage9
                                   int level,
                                   bool dirty,
                                   IDirect3DSurface9 **outSurface) override;
-    gl::Error getRenderTarget(const gl::Context *context,
-                              const gl::ImageIndex &index,
-                              RenderTargetD3D **outRT) override;
+    angle::Result getRenderTarget(const gl::Context *context,
+                                  const gl::ImageIndex &index,
+                                  RenderTargetD3D **outRT) override;
     angle::Result getBaseTexture(const gl::Context *context,
                                  IDirect3DBaseTexture9 **outTexture) override;
-    gl::Error generateMipmap(const gl::Context *context,
-                             const gl::ImageIndex &sourceIndex,
-                             const gl::ImageIndex &destIndex) override;
-    gl::Error copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
+    angle::Result generateMipmap(const gl::Context *context,
+                                 const gl::ImageIndex &sourceIndex,
+                                 const gl::ImageIndex &destIndex) override;
+    angle::Result copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
 
   private:
     EGLImageD3D *mImage;
@@ -134,15 +134,15 @@ class TextureStorage9_Cube : public TextureStorage9
                                   int level,
                                   bool dirty,
                                   IDirect3DSurface9 **outSurface) override;
-    gl::Error getRenderTarget(const gl::Context *context,
-                              const gl::ImageIndex &index,
-                              RenderTargetD3D **outRT) override;
+    angle::Result getRenderTarget(const gl::Context *context,
+                                  const gl::ImageIndex &index,
+                                  RenderTargetD3D **outRT) override;
     angle::Result getBaseTexture(const gl::Context *context,
                                  IDirect3DBaseTexture9 **outTexture) override;
-    gl::Error generateMipmap(const gl::Context *context,
-                             const gl::ImageIndex &sourceIndex,
-                             const gl::ImageIndex &destIndex) override;
-    gl::Error copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
+    angle::Result generateMipmap(const gl::Context *context,
+                                 const gl::ImageIndex &sourceIndex,
+                                 const gl::ImageIndex &destIndex) override;
+    angle::Result copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
 
   private:
     IDirect3DCubeTexture9 *mTexture;

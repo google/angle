@@ -53,7 +53,9 @@ struct TranslatedAttribute
 
     // Computes the correct offset from baseOffset, usesFirstVertexOffset, stride and startVertex.
     // Can throw an error on integer overflow.
-    gl::Error computeOffset(GLint startVertex, unsigned int *offsetOut) const;
+    angle::Result computeOffset(const gl::Context *context,
+                                GLint startVertex,
+                                unsigned int *offsetOut) const;
 
     bool active;
 
@@ -90,25 +92,26 @@ class VertexDataManager : angle::NonCopyable
     VertexDataManager(BufferFactoryD3D *factory);
     virtual ~VertexDataManager();
 
-    gl::Error initialize(const gl::Context *context);
+    angle::Result initialize(const gl::Context *context);
     void deinitialize();
 
-    gl::Error prepareVertexData(const gl::Context *context,
-                                GLint start,
-                                GLsizei count,
-                                std::vector<TranslatedAttribute> *translatedAttribs,
-                                GLsizei instances);
+    angle::Result prepareVertexData(const gl::Context *context,
+                                    GLint start,
+                                    GLsizei count,
+                                    std::vector<TranslatedAttribute> *translatedAttribs,
+                                    GLsizei instances);
 
     static void StoreDirectAttrib(const gl::Context *context, TranslatedAttribute *directAttrib);
 
-    static gl::Error StoreStaticAttrib(const gl::Context *context, TranslatedAttribute *translated);
+    static angle::Result StoreStaticAttrib(const gl::Context *context,
+                                           TranslatedAttribute *translated);
 
-    gl::Error storeDynamicAttribs(const gl::Context *context,
-                                  std::vector<TranslatedAttribute> *translatedAttribs,
-                                  const gl::AttributesMask &dynamicAttribsMask,
-                                  GLint start,
-                                  size_t count,
-                                  GLsizei instances);
+    angle::Result storeDynamicAttribs(const gl::Context *context,
+                                      std::vector<TranslatedAttribute> *translatedAttribs,
+                                      const gl::AttributesMask &dynamicAttribsMask,
+                                      GLint start,
+                                      size_t count,
+                                      GLsizei instances);
 
     // Promote static usage of dynamic buffers.
     static void PromoteDynamicAttribs(const gl::Context *context,
@@ -116,10 +119,10 @@ class VertexDataManager : angle::NonCopyable
                                       const gl::AttributesMask &dynamicAttribsMask,
                                       size_t count);
 
-    gl::Error storeCurrentValue(const gl::Context *context,
-                                const gl::VertexAttribCurrentValueData &currentValue,
-                                TranslatedAttribute *translated,
-                                size_t attribIndex);
+    angle::Result storeCurrentValue(const gl::Context *context,
+                                    const gl::VertexAttribCurrentValueData &currentValue,
+                                    TranslatedAttribute *translated,
+                                    size_t attribIndex);
 
   private:
     struct CurrentValueState final : angle::NonCopyable
@@ -133,17 +136,17 @@ class VertexDataManager : angle::NonCopyable
         size_t offset;
     };
 
-    gl::Error reserveSpaceForAttrib(const gl::Context *context,
-                                    const TranslatedAttribute &translatedAttrib,
-                                    GLint start,
-                                    size_t count,
-                                    GLsizei instances);
+    angle::Result reserveSpaceForAttrib(const gl::Context *context,
+                                        const TranslatedAttribute &translatedAttrib,
+                                        GLint start,
+                                        size_t count,
+                                        GLsizei instances);
 
-    gl::Error storeDynamicAttrib(const gl::Context *context,
-                                 TranslatedAttribute *translated,
-                                 GLint start,
-                                 size_t count,
-                                 GLsizei instances);
+    angle::Result storeDynamicAttrib(const gl::Context *context,
+                                     TranslatedAttribute *translated,
+                                     GLint start,
+                                     size_t count,
+                                     GLsizei instances);
 
     BufferFactoryD3D *const mFactory;
 

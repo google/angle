@@ -55,10 +55,10 @@ class Image11 : public ImageD3D
 
     bool isDirty() const override;
 
-    gl::Error copyToStorage(const gl::Context *context,
-                            TextureStorage *storage,
-                            const gl::ImageIndex &index,
-                            const gl::Box &region) override;
+    angle::Result copyToStorage(const gl::Context *context,
+                                TextureStorage *storage,
+                                const gl::ImageIndex &index,
+                                const gl::Box &region) override;
 
     bool redefine(gl::TextureType type,
                   GLenum internalformat,
@@ -67,23 +67,23 @@ class Image11 : public ImageD3D
 
     DXGI_FORMAT getDXGIFormat() const;
 
-    gl::Error loadData(const gl::Context *context,
-                       const gl::Box &area,
-                       const gl::PixelUnpackState &unpack,
-                       GLenum type,
-                       const void *input,
-                       bool applySkipImages) override;
-    gl::Error loadCompressedData(const gl::Context *context,
-                                 const gl::Box &area,
-                                 const void *input) override;
+    angle::Result loadData(const gl::Context *context,
+                           const gl::Box &area,
+                           const gl::PixelUnpackState &unpack,
+                           GLenum type,
+                           const void *input,
+                           bool applySkipImages) override;
+    angle::Result loadCompressedData(const gl::Context *context,
+                                     const gl::Box &area,
+                                     const void *input) override;
 
-    gl::Error copyFromTexStorage(const gl::Context *context,
-                                 const gl::ImageIndex &imageIndex,
-                                 TextureStorage *source) override;
-    gl::Error copyFromFramebuffer(const gl::Context *context,
-                                  const gl::Offset &destOffset,
-                                  const gl::Rectangle &sourceArea,
-                                  const gl::Framebuffer *source) override;
+    angle::Result copyFromTexStorage(const gl::Context *context,
+                                     const gl::ImageIndex &imageIndex,
+                                     TextureStorage *source) override;
+    angle::Result copyFromFramebuffer(const gl::Context *context,
+                                      const gl::Offset &destOffset,
+                                      const gl::Rectangle &sourceArea,
+                                      const gl::Framebuffer *source) override;
 
     angle::Result recoverFromAssociatedStorage(const gl::Context *context);
     void verifyAssociatedStorageValid(TextureStorage11 *textureStorage) const;
@@ -120,6 +120,6 @@ class Image11 : public ImageD3D
     unsigned int mRecoveredFromStorageCount;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_

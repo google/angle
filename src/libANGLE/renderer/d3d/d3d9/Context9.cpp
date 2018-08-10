@@ -28,7 +28,7 @@ namespace rx
 {
 
 Context9::Context9(const gl::ContextState &state, Renderer9 *renderer)
-    : ContextImpl(state), mRenderer(renderer)
+    : ContextD3D(state), mRenderer(renderer)
 {
 }
 
@@ -328,11 +328,13 @@ gl::Error Context9::memoryBarrierByRegion(const gl::Context *context, GLbitfield
     return gl::InternalError() << "D3D9 doesn't support ES 3.1 memoryBarrierByRegion API";
 }
 
-gl::Error Context9::getIncompleteTexture(const gl::Context *context,
-                                         gl::TextureType type,
-                                         gl::Texture **textureOut)
+angle::Result Context9::getIncompleteTexture(const gl::Context *context,
+                                             gl::TextureType type,
+                                             gl::Texture **textureOut)
 {
-    return mIncompleteTextures.getIncompleteTexture(context, type, nullptr, textureOut);
+    ANGLE_TRY_HANDLE(context,
+                     mIncompleteTextures.getIncompleteTexture(context, type, nullptr, textureOut));
+    return angle::Result::Continue();
 }
 
 void Context9::handleError(HRESULT hr,

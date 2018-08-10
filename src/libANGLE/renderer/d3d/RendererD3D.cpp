@@ -187,7 +187,8 @@ bool InstancedPointSpritesActive(ProgramD3D *programD3D, gl::PrimitiveMode mode)
            mode == gl::PrimitiveMode::Points;
 }
 
-gl::Error RendererD3D::initRenderTarget(const gl::Context *context, RenderTargetD3D *renderTarget)
+angle::Result RendererD3D::initRenderTarget(const gl::Context *context,
+                                            RenderTargetD3D *renderTarget)
 {
     return clearRenderTarget(context, renderTarget, gl::ColorF(0, 0, 0, 0), 1, 0);
 }

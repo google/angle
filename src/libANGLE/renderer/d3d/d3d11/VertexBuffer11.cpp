@@ -35,9 +35,9 @@ VertexBuffer11::~VertexBuffer11()
     ASSERT(mMappedResourceData == nullptr);
 }
 
-gl::Error VertexBuffer11::initialize(const gl::Context *context,
-                                     unsigned int size,
-                                     bool dynamicUsage)
+angle::Result VertexBuffer11::initialize(const gl::Context *context,
+                                         unsigned int size,
+                                         bool dynamicUsage)
 {
     mBuffer.reset();
     updateSerial();
@@ -67,10 +67,10 @@ gl::Error VertexBuffer11::initialize(const gl::Context *context,
     mBufferSize   = size;
     mDynamicUsage = dynamicUsage;
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error VertexBuffer11::mapResource(const gl::Context *context)
+angle::Result VertexBuffer11::mapResource(const gl::Context *context)
 {
     if (mMappedResourceData == nullptr)
     {
@@ -82,7 +82,7 @@ gl::Error VertexBuffer11::mapResource(const gl::Context *context)
         mMappedResourceData = static_cast<uint8_t *>(mappedResource.pData);
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void VertexBuffer11::hintUnmapResource()
@@ -96,20 +96,17 @@ void VertexBuffer11::hintUnmapResource()
     }
 }
 
-gl::Error VertexBuffer11::storeVertexAttributes(const gl::Context *context,
-                                                const gl::VertexAttribute &attrib,
-                                                const gl::VertexBinding &binding,
-                                                GLenum currentValueType,
-                                                GLint start,
-                                                size_t count,
-                                                GLsizei instances,
-                                                unsigned int offset,
-                                                const uint8_t *sourceData)
+angle::Result VertexBuffer11::storeVertexAttributes(const gl::Context *context,
+                                                    const gl::VertexAttribute &attrib,
+                                                    const gl::VertexBinding &binding,
+                                                    GLenum currentValueType,
+                                                    GLint start,
+                                                    size_t count,
+                                                    GLsizei instances,
+                                                    unsigned int offset,
+                                                    const uint8_t *sourceData)
 {
-    if (!mBuffer.valid())
-    {
-        return gl::OutOfMemory() << "Internal vertex buffer is not initialized.";
-    }
+    ASSERT(mBuffer.valid());
 
     int inputStride = static_cast<int>(ComputeVertexAttributeStride(attrib, binding));
 
@@ -132,7 +129,7 @@ gl::Error VertexBuffer11::storeVertexAttributes(const gl::Context *context,
     ASSERT(vertexFormatInfo.copyFunction != nullptr);
     vertexFormatInfo.copyFunction(input, inputStride, count, output);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 unsigned int VertexBuffer11::getBufferSize() const
@@ -140,24 +137,19 @@ unsigned int VertexBuffer11::getBufferSize() const
     return mBufferSize;
 }
 
-gl::Error VertexBuffer11::setBufferSize(const gl::Context *context, unsigned int size)
+angle::Result VertexBuffer11::setBufferSize(const gl::Context *context, unsigned int size)
 {
     if (size > mBufferSize)
     {
         return initialize(context, size, mDynamicUsage);
     }
-    else
-    {
-        return gl::NoError();
-    }
+
+    return angle::Result::Continue();
 }
 
-gl::Error VertexBuffer11::discard(const gl::Context *context)
+angle::Result VertexBuffer11::discard(const gl::Context *context)
 {
-    if (!mBuffer.valid())
-    {
-        return gl::OutOfMemory() << "Internal vertex buffer is not initialized.";
-    }
+    ASSERT(mBuffer.valid());
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     ANGLE_TRY(mRenderer->mapResource(context, mBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
@@ -165,7 +157,7 @@ gl::Error VertexBuffer11::discard(const gl::Context *context)
 
     mRenderer->getDeviceContext()->Unmap(mBuffer.get(), 0);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 const d3d11::Buffer &VertexBuffer11::getBuffer() const

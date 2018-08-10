@@ -122,9 +122,4 @@ void ContextImpl::setErrorSet(gl::ErrorSet *errorSet)
 {
     mErrors = errorSet;
 }
-
-void ContextImpl::handleError(const gl::Error &error)
-{
-    mErrors->handleError(error);
-}
 }  // namespace rx

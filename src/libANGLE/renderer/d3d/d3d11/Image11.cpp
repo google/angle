@@ -140,10 +140,10 @@ bool Image11::isDirty() const
     return mDirty;
 }
 
-gl::Error Image11::copyToStorage(const gl::Context *context,
-                                 TextureStorage *storage,
-                                 const gl::ImageIndex &index,
-                                 const gl::Box &region)
+angle::Result Image11::copyToStorage(const gl::Context *context,
+                                     TextureStorage *storage,
+                                     const gl::ImageIndex &index,
+                                     const gl::Box &region)
 {
     TextureStorage11 *storage11 = GetAs<TextureStorage11>(storage);
 
@@ -176,7 +176,7 @@ gl::Error Image11::copyToStorage(const gl::Context *context,
         mAssociatedImageIndex = index;
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void Image11::verifyAssociatedStorageValid(TextureStorage11 *textureStorage) const
@@ -264,23 +264,26 @@ DXGI_FORMAT Image11::getDXGIFormat() const
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as
 // format/type at input
 // into the target pixel rectangle.
-gl::Error Image11::loadData(const gl::Context *context,
-                            const gl::Box &area,
-                            const gl::PixelUnpackState &unpack,
-                            GLenum type,
-                            const void *input,
-                            bool applySkipImages)
+angle::Result Image11::loadData(const gl::Context *context,
+                                const gl::Box &area,
+                                const gl::PixelUnpackState &unpack,
+                                GLenum type,
+                                const void *input,
+                                bool applySkipImages)
 {
+    Context11 *context11 = GetImplAs<Context11>(context);
+
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(mInternalFormat);
     GLuint inputRowPitch                 = 0;
-    ANGLE_TRY_CHECKED_MATH(formatInfo.computeRowPitch(type, area.width, unpack.alignment,
-                                                      unpack.rowLength, &inputRowPitch));
+    ANGLE_CHECK_HR_MATH(context11, formatInfo.computeRowPitch(type, area.width, unpack.alignment,
+                                                              unpack.rowLength, &inputRowPitch));
     GLuint inputDepthPitch = 0;
-    ANGLE_TRY_CHECKED_MATH(formatInfo.computeDepthPitch(area.height, unpack.imageHeight,
-                                                        inputRowPitch, &inputDepthPitch));
+    ANGLE_CHECK_HR_MATH(context11, formatInfo.computeDepthPitch(area.height, unpack.imageHeight,
+                                                                inputRowPitch, &inputDepthPitch));
     GLuint inputSkipBytes = 0;
-    ANGLE_TRY_CHECKED_MATH(formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
-                                                       applySkipImages, &inputSkipBytes));
+    ANGLE_CHECK_HR_MATH(context11,
+                        formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
+                                                    applySkipImages, &inputSkipBytes));
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(mDXGIFormat);
     GLuint outputPixelSize                      = dxgiFormatInfo.pixelBytes;
@@ -301,20 +304,22 @@ gl::Error Image11::loadData(const gl::Context *context,
 
     unmap();
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Image11::loadCompressedData(const gl::Context *context,
-                                      const gl::Box &area,
-                                      const void *input)
+angle::Result Image11::loadCompressedData(const gl::Context *context,
+                                          const gl::Box &area,
+                                          const void *input)
 {
+    Context11 *context11 = GetImplAs<Context11>(context);
+
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(mInternalFormat);
     GLuint inputRowPitch                 = 0;
-    ANGLE_TRY_CHECKED_MATH(
-        formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0, &inputRowPitch));
+    ANGLE_CHECK_HR_MATH(
+        context11, formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0, &inputRowPitch));
     GLuint inputDepthPitch = 0;
-    ANGLE_TRY_CHECKED_MATH(
-        formatInfo.computeDepthPitch(area.height, 0, inputRowPitch, &inputDepthPitch));
+    ANGLE_CHECK_HR_MATH(
+        context11, formatInfo.computeDepthPitch(area.height, 0, inputRowPitch, &inputDepthPitch));
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(mDXGIFormat);
     GLuint outputPixelSize                      = dxgiFormatInfo.pixelBytes;
@@ -343,12 +348,12 @@ gl::Error Image11::loadCompressedData(const gl::Context *context,
 
     unmap();
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Image11::copyFromTexStorage(const gl::Context *context,
-                                      const gl::ImageIndex &imageIndex,
-                                      TextureStorage *source)
+angle::Result Image11::copyFromTexStorage(const gl::Context *context,
+                                          const gl::ImageIndex &imageIndex,
+                                          TextureStorage *source)
 {
     TextureStorage11 *storage11 = GetAs<TextureStorage11>(source);
 
@@ -362,10 +367,10 @@ gl::Error Image11::copyFromTexStorage(const gl::Context *context,
                                  subresourceIndex);
 }
 
-gl::Error Image11::copyFromFramebuffer(const gl::Context *context,
-                                       const gl::Offset &destOffset,
-                                       const gl::Rectangle &sourceArea,
-                                       const gl::Framebuffer *sourceFBO)
+angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
+                                           const gl::Offset &destOffset,
+                                           const gl::Rectangle &sourceArea,
+                                           const gl::Framebuffer *sourceFBO)
 {
     const gl::FramebufferAttachment *srcAttachment = sourceFBO->getReadColorbuffer();
     ASSERT(srcAttachment);
@@ -377,7 +382,7 @@ gl::Error Image11::copyFromFramebuffer(const gl::Context *context,
     if (d3d11Format.texFormat == mDXGIFormat && sourceInternalFormat == mInternalFormat)
     {
         RenderTarget11 *rt11 = nullptr;
-        ANGLE_TRY(srcAttachment->getRenderTarget(context, &rt11));
+        ANGLE_TRY_HANDLE(context, srcAttachment->getRenderTarget(context, &rt11));
         ASSERT(rt11->getTexture().get());
 
         TextureHelper11 textureHelper  = rt11->getTexture();
@@ -406,12 +411,13 @@ gl::Error Image11::copyFromFramebuffer(const gl::Context *context,
         d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
 
     auto loadFunction = destD3D11Format.getLoadFunctions()(destFormatInfo.type);
-    gl::Error error   = gl::NoError();
+    angle::Result error = angle::Result::Continue();
     if (loadFunction.requiresConversion)
     {
         size_t bufferSize = destFormatInfo.pixelBytes * sourceArea.width * sourceArea.height;
         angle::MemoryBuffer *memoryBuffer = nullptr;
-        error = mRenderer->getScratchMemoryBuffer(bufferSize, &memoryBuffer);
+        error = mRenderer->getScratchMemoryBuffer(GetImplAs<Context11>(context), bufferSize,
+                                                  &memoryBuffer);
 
         if (!error.isError())
         {

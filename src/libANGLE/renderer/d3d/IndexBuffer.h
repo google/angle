@@ -28,24 +28,24 @@ class IndexBuffer : angle::NonCopyable
     IndexBuffer();
     virtual ~IndexBuffer();
 
-    virtual gl::Error initialize(const gl::Context *context,
-                                 unsigned int bufferSize,
-                                 GLenum indexType,
-                                 bool dynamic) = 0;
+    virtual angle::Result initialize(const gl::Context *context,
+                                     unsigned int bufferSize,
+                                     GLenum indexType,
+                                     bool dynamic) = 0;
 
-    virtual gl::Error mapBuffer(const gl::Context *context,
-                                unsigned int offset,
-                                unsigned int size,
-                                void **outMappedMemory)       = 0;
-    virtual gl::Error unmapBuffer(const gl::Context *context) = 0;
+    virtual angle::Result mapBuffer(const gl::Context *context,
+                                    unsigned int offset,
+                                    unsigned int size,
+                                    void **outMappedMemory)       = 0;
+    virtual angle::Result unmapBuffer(const gl::Context *context) = 0;
 
-    virtual gl::Error discard(const gl::Context *context) = 0;
+    virtual angle::Result discard(const gl::Context *context) = 0;
 
     virtual GLenum getIndexType() const = 0;
     virtual unsigned int getBufferSize() const = 0;
-    virtual gl::Error setSize(const gl::Context *context,
-                              unsigned int bufferSize,
-                              GLenum indexType) = 0;
+    virtual angle::Result setSize(const gl::Context *context,
+                                  unsigned int bufferSize,
+                                  GLenum indexType) = 0;
 
     unsigned int getSerial() const;
 
@@ -63,20 +63,20 @@ class IndexBufferInterface : angle::NonCopyable
     IndexBufferInterface(BufferFactoryD3D *factory, bool dynamic);
     virtual ~IndexBufferInterface();
 
-    virtual gl::Error reserveBufferSpace(const gl::Context *context,
-                                         unsigned int size,
-                                         GLenum indexType) = 0;
+    virtual angle::Result reserveBufferSpace(const gl::Context *context,
+                                             unsigned int size,
+                                             GLenum indexType) = 0;
 
     GLenum getIndexType() const;
     unsigned int getBufferSize() const;
 
     unsigned int getSerial() const;
 
-    gl::Error mapBuffer(const gl::Context *context,
-                        unsigned int size,
-                        void **outMappedMemory,
-                        unsigned int *streamOffset);
-    gl::Error unmapBuffer(const gl::Context *context);
+    angle::Result mapBuffer(const gl::Context *context,
+                            unsigned int size,
+                            void **outMappedMemory,
+                            unsigned int *streamOffset);
+    angle::Result unmapBuffer(const gl::Context *context);
 
     IndexBuffer *getIndexBuffer() const;
 
@@ -84,9 +84,11 @@ class IndexBufferInterface : angle::NonCopyable
     unsigned int getWritePosition() const;
     void setWritePosition(unsigned int writePosition);
 
-    gl::Error discard(const gl::Context *context);
+    angle::Result discard(const gl::Context *context);
 
-    gl::Error setBufferSize(const gl::Context *context, unsigned int bufferSize, GLenum indexType);
+    angle::Result setBufferSize(const gl::Context *context,
+                                unsigned int bufferSize,
+                                GLenum indexType);
 
   private:
     IndexBuffer *mIndexBuffer;
@@ -101,9 +103,9 @@ class StreamingIndexBufferInterface : public IndexBufferInterface
     explicit StreamingIndexBufferInterface(BufferFactoryD3D *factory);
     ~StreamingIndexBufferInterface() override;
 
-    gl::Error reserveBufferSpace(const gl::Context *context,
-                                 unsigned int size,
-                                 GLenum indexType) override;
+    angle::Result reserveBufferSpace(const gl::Context *context,
+                                     unsigned int size,
+                                     GLenum indexType) override;
 };
 
 class StaticIndexBufferInterface : public IndexBufferInterface
@@ -112,9 +114,9 @@ class StaticIndexBufferInterface : public IndexBufferInterface
     explicit StaticIndexBufferInterface(BufferFactoryD3D *factory);
     ~StaticIndexBufferInterface() override;
 
-    gl::Error reserveBufferSpace(const gl::Context *context,
-                                 unsigned int size,
-                                 GLenum indexType) override;
+    angle::Result reserveBufferSpace(const gl::Context *context,
+                                     unsigned int size,
+                                     GLenum indexType) override;
 };
 
 }  // namespace rx

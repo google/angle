@@ -310,7 +310,7 @@ angle::Result Blit9::copyTexture(const gl::Context *context,
     TextureD3D *sourceD3D = GetImplAs<TextureD3D>(source);
 
     TextureStorage *sourceStorage = nullptr;
-    ANGLE_TRY_HANDLE(context, sourceD3D->getNativeTexture(context, &sourceStorage));
+    ANGLE_TRY(sourceD3D->getNativeTexture(context, &sourceStorage));
 
     TextureStorage9_2D *sourceStorage9 = GetAs<TextureStorage9_2D>(sourceStorage);
     ASSERT(sourceStorage9);

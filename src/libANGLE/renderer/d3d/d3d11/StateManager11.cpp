@@ -1739,7 +1739,7 @@ angle::Result StateManager11::ensureInitialized(const gl::Context *context)
     mIsMultiviewEnabled = extensions.multiview;
     mViewportOffsets.resize(1u);
 
-    ANGLE_TRY_HANDLE(context, mVertexDataManager.initialize(context));
+    ANGLE_TRY(mVertexDataManager.initialize(context));
 
     mCurrentAttributes.reserve(gl::MAX_VERTEX_ATTRIBS);
 
@@ -1879,9 +1879,8 @@ angle::Result StateManager11::syncCurrentValueAttribs(
 
         mDirtyVertexBufferRange.extend(static_cast<unsigned int>(attribIndex));
 
-        ANGLE_TRY_HANDLE(
-            context, mVertexDataManager.storeCurrentValue(context, currentValue, currentValueAttrib,
-                                                          static_cast<size_t>(attribIndex)));
+        ANGLE_TRY(mVertexDataManager.storeCurrentValue(context, currentValue, currentValueAttrib,
+                                                       static_cast<size_t>(attribIndex)));
     }
 
     return angle::Result::Continue();
@@ -2403,8 +2402,7 @@ angle::Result StateManager11::applyTextures(const gl::Context *context, gl::Shad
             // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
             // incomplete texture.
             gl::Texture *incompleteTexture = nullptr;
-            ANGLE_TRY_HANDLE(
-                context, mRenderer->getIncompleteTexture(context, textureType, &incompleteTexture));
+            ANGLE_TRY(mRenderer->getIncompleteTexture(context, textureType, &incompleteTexture));
             ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, incompleteTexture,
                                       incompleteTexture->getSamplerState()));
             ANGLE_TRY(setTexture(context, shaderType, samplerIndex, incompleteTexture));
@@ -2440,7 +2438,7 @@ angle::Result StateManager11::setSamplerState(const gl::Context *context,
     // Storage should exist, texture should be complete. Only verified in Debug.
     TextureD3D *textureD3D  = GetImplAs<TextureD3D>(texture);
     TextureStorage *storage = nullptr;
-    ANGLE_TRY_HANDLE(context, textureD3D->getNativeTexture(context, &storage));
+    ANGLE_TRY(textureD3D->getNativeTexture(context, &storage));
     ASSERT(storage);
 #endif  // !defined(NDEBUG)
 
@@ -2503,7 +2501,7 @@ angle::Result StateManager11::setTexture(const gl::Context *context,
         TextureD3D *textureImpl = GetImplAs<TextureD3D>(texture);
 
         TextureStorage *texStorage = nullptr;
-        ANGLE_TRY_HANDLE(context, textureImpl->getNativeTexture(context, &texStorage));
+        ANGLE_TRY(textureImpl->getNativeTexture(context, &texStorage));
 
         // Texture should be complete and have a storage
         ASSERT(texStorage);
@@ -2582,7 +2580,7 @@ angle::Result StateManager11::setTextureForImage(const gl::Context *context,
 
     textureImpl                = GetImplAs<TextureD3D>(imageUnit.texture.get());
     TextureStorage *texStorage = nullptr;
-    ANGLE_TRY_HANDLE(context, textureImpl->getNativeTexture(context, &texStorage));
+    ANGLE_TRY(textureImpl->getNativeTexture(context, &texStorage));
     // Texture should be complete and have a storage
     ASSERT(texStorage);
     TextureStorage11 *storage11 = GetAs<TextureStorage11>(texStorage);
@@ -2636,16 +2634,14 @@ angle::Result StateManager11::syncProgram(const gl::Context *context, gl::Primit
     ASSERT(mProgramD3D->hasPixelExecutableForCachedOutputLayout());
 
     ShaderExecutableD3D *vertexExe = nullptr;
-    ANGLE_TRY_HANDLE(context, mProgramD3D->getVertexExecutableForCachedInputLayout(
-                                  context, &vertexExe, nullptr));
+    ANGLE_TRY(mProgramD3D->getVertexExecutableForCachedInputLayout(context, &vertexExe, nullptr));
 
     ShaderExecutableD3D *pixelExe = nullptr;
-    ANGLE_TRY_HANDLE(
-        context, mProgramD3D->getPixelExecutableForCachedOutputLayout(context, &pixelExe, nullptr));
+    ANGLE_TRY(mProgramD3D->getPixelExecutableForCachedOutputLayout(context, &pixelExe, nullptr));
 
     ShaderExecutableD3D *geometryExe = nullptr;
-    ANGLE_TRY_HANDLE(context, mProgramD3D->getGeometryExecutableForPrimitiveType(
-                                  context, drawMode, &geometryExe, nullptr));
+    ANGLE_TRY(mProgramD3D->getGeometryExecutableForPrimitiveType(context, drawMode, &geometryExe,
+                                                                 nullptr));
 
     const d3d11::VertexShader *vertexShader =
         (vertexExe ? &GetAs<ShaderExecutable11>(vertexExe)->getVertexShader() : nullptr);
@@ -2759,8 +2755,7 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
                 if (indexInfo.srcIndexData.srcBuffer != nullptr)
                 {
                     const uint8_t *bufferData = nullptr;
-                    ANGLE_TRY_HANDLE(
-                        context, indexInfo.srcIndexData.srcBuffer->getData(context, &bufferData));
+                    ANGLE_TRY(indexInfo.srcIndexData.srcBuffer->getData(context, &bufferData));
                     ASSERT(bufferData != nullptr);
 
                     ptrdiff_t offset =
@@ -2782,8 +2777,7 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
             }
 
             vertexStride = attrib.stride;
-            ANGLE_TRY_HANDLE(context,
-                             attrib.computeOffset(drawCallParams.firstVertex(), &vertexOffset));
+            ANGLE_TRY(attrib.computeOffset(context, drawCallParams.firstVertex(), &vertexOffset));
         }
 
         size_t bufferIndex = reservedBuffers + attribIndex;
@@ -2881,9 +2875,9 @@ angle::Result StateManager11::applyIndexBuffer(const gl::Context *context,
     gl::Buffer *elementArrayBuffer = mVertexArray11->getState().getElementArrayBuffer().get();
 
     TranslatedIndexData indexInfo;
-    ANGLE_TRY_HANDLE(context, mIndexDataManager.prepareIndexData(
-                                  context, params.type(), destElementType, params.indexCount(),
-                                  elementArrayBuffer, params.indices(), &indexInfo));
+    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, params.type(), destElementType,
+                                                 params.indexCount(), elementArrayBuffer,
+                                                 params.indices(), &indexInfo));
 
     ID3D11Buffer *buffer = nullptr;
     DXGI_FORMAT bufferFormat =
@@ -2952,7 +2946,7 @@ angle::Result StateManager11::updateVertexOffsetsForPointSpritesEmulation(
         if (attrib.divisor > 0)
         {
             unsigned int offset = 0;
-            ANGLE_TRY_HANDLE(context, attrib.computeOffset(startVertex, &offset));
+            ANGLE_TRY(attrib.computeOffset(context, startVertex, &offset));
             offset += (attrib.stride * (emulatedInstanceId / attrib.divisor));
             if (offset != mCurrentVertexOffsets[bufferIndex])
             {
@@ -2978,7 +2972,7 @@ angle::Result StateManager11::generateSwizzle(const gl::Context *context, gl::Te
     ASSERT(textureD3D);
 
     TextureStorage *texStorage = nullptr;
-    ANGLE_TRY_HANDLE(context, textureD3D->getNativeTexture(context, &texStorage));
+    ANGLE_TRY(textureD3D->getNativeTexture(context, &texStorage));
 
     if (texStorage)
     {

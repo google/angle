@@ -29,11 +29,12 @@ class MockIndexBuffer : public rx::IndexBuffer
     {
     }
 
-    MOCK_METHOD4(initialize, gl::Error(const gl::Context *, unsigned int, GLenum, bool));
-    MOCK_METHOD4(mapBuffer, gl::Error(const gl::Context *, unsigned int, unsigned int, void **));
-    MOCK_METHOD1(unmapBuffer, gl::Error(const gl::Context *));
-    MOCK_METHOD1(discard, gl::Error(const gl::Context *));
-    MOCK_METHOD3(setSize, gl::Error(const gl::Context *, unsigned int, GLenum));
+    MOCK_METHOD4(initialize, angle::Result(const gl::Context *, unsigned int, GLenum, bool));
+    MOCK_METHOD4(mapBuffer,
+                 angle::Result(const gl::Context *, unsigned int, unsigned int, void **));
+    MOCK_METHOD1(unmapBuffer, angle::Result(const gl::Context *));
+    MOCK_METHOD1(discard, angle::Result(const gl::Context *));
+    MOCK_METHOD3(setSize, angle::Result(const gl::Context *, unsigned int, GLenum));
 
     // inlined for speed
     GLenum getIndexType() const override { return mIndexType; }
@@ -56,12 +57,12 @@ class MockBufferFactoryD3D : public rx::BufferFactoryD3D
     MOCK_CONST_METHOD1(getVertexConversionType, rx::VertexConversionType(gl::VertexFormatType));
     MOCK_CONST_METHOD1(getVertexComponentType, GLenum(gl::VertexFormatType));
     MOCK_CONST_METHOD6(getVertexSpaceRequired,
-                       gl::Error(const gl::Context *,
-                                 const gl::VertexAttribute &,
-                                 const gl::VertexBinding &,
-                                 size_t,
-                                 GLsizei,
-                                 unsigned int *));
+                       angle::Result(const gl::Context *,
+                                     const gl::VertexAttribute &,
+                                     const gl::VertexBinding &,
+                                     size_t,
+                                     GLsizei,
+                                     unsigned int *));
 
     // Dependency injection
     rx::IndexBuffer *createIndexBuffer() override
@@ -103,16 +104,16 @@ class MockBufferD3D : public rx::BufferD3D
     MOCK_METHOD2(unmap, gl::Error(const gl::Context *context, GLboolean *));
 
     // BufferD3D
-    MOCK_METHOD1(markTransformFeedbackUsage, gl::Error(const gl::Context *));
+    MOCK_METHOD1(markTransformFeedbackUsage, angle::Result(const gl::Context *));
 
     // inlined for speed
     bool supportsDirectBinding() const override { return false; }
     size_t getSize() const override { return mData.size(); }
 
-    gl::Error getData(const gl::Context *context, const uint8_t **outData) override
+    angle::Result getData(const gl::Context *context, const uint8_t **outData) override
     {
         *outData = &mData[0];
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
   private:

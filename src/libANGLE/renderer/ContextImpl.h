@@ -185,8 +185,6 @@ class ContextImpl : public GLImplFactory
     // TODO(jmadill): Move init into the constructor. http://anglebug.com/2491
     void setErrorSet(gl::ErrorSet *errorSet);
 
-    void handleError(const gl::Error &error);
-
   protected:
     const gl::ContextState &mState;
     gl::MemoryProgramCache *mMemoryProgramCache;

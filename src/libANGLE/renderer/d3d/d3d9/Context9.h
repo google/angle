@@ -10,13 +10,13 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_CONTEXT9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_CONTEXT9_H_
 
-#include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/d3d/ContextD3D.h"
 
 namespace rx
 {
 class Renderer9;
 
-class Context9 : public ContextImpl
+class Context9 : public ContextD3D
 {
   public:
     Context9(const gl::ContextState &state, Renderer9 *renderer);
@@ -147,15 +147,15 @@ class Context9 : public ContextImpl
 
     Renderer9 *getRenderer() const { return mRenderer; }
 
-    gl::Error getIncompleteTexture(const gl::Context *context,
-                                   gl::TextureType type,
-                                   gl::Texture **textureOut);
+    angle::Result getIncompleteTexture(const gl::Context *context,
+                                       gl::TextureType type,
+                                       gl::Texture **textureOut);
 
     void handleError(HRESULT hr,
                      const char *message,
                      const char *file,
                      const char *function,
-                     unsigned int line);
+                     unsigned int line) override;
 
   private:
     Renderer9 *mRenderer;
