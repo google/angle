@@ -770,10 +770,11 @@ ProgramBindings::const_iterator ProgramBindings::end() const
 }
 
 // ImageBinding implementation.
-ImageBinding::ImageBinding(size_t count) : boundImageUnits(count, 0)
+ImageBinding::ImageBinding(size_t count) : boundImageUnits(count, 0), unreferenced(false)
 {
 }
-ImageBinding::ImageBinding(GLuint imageUnit, size_t count)
+ImageBinding::ImageBinding(GLuint imageUnit, size_t count, bool unreferenced)
+    : unreferenced(unreferenced)
 {
     for (size_t index = 0; index < count; ++index)
     {
@@ -859,6 +860,17 @@ GLuint ProgramState::getSamplerIndexFromUniformIndex(GLuint uniformIndex) const
 {
     ASSERT(isSamplerUniformIndex(uniformIndex));
     return uniformIndex - mSamplerUniformRange.low();
+}
+
+bool ProgramState::isImageUniformIndex(GLuint index) const
+{
+    return mImageUniformRange.contains(index);
+}
+
+GLuint ProgramState::getImageIndexFromUniformIndex(GLuint uniformIndex) const
+{
+    ASSERT(isImageUniformIndex(uniformIndex));
+    return uniformIndex - mImageUniformRange.low();
 }
 
 GLuint ProgramState::getAttributeLocation(const std::string &name) const
@@ -1291,10 +1303,12 @@ void Program::resolveLinkImpl()
     updateLinkedShaderStages();
 
     // Mark implementation-specific unreferenced uniforms as ignored.
-    mProgram->markUnusedUniformLocations(&mState.mUniformLocations, &mState.mSamplerBindings);
+    mProgram->markUnusedUniformLocations(&mState.mUniformLocations, &mState.mSamplerBindings,
+                                         &mState.mImageBindings);
 
     // Must be called after markUnusedUniformLocations.
     mState.updateActiveSamplers();
+    mState.updateActiveImages();
 
     setUniformValuesFromBindingQualifiers();
 
@@ -1361,6 +1375,20 @@ void ProgramState::updateActiveSamplers()
     }
 }
 
+void ProgramState::updateActiveImages()
+{
+    for (ImageBinding &imageBinding : mImageBindings)
+    {
+        if (imageBinding.unreferenced)
+            continue;
+
+        for (GLint imageUnit : imageBinding.boundImageUnits)
+        {
+            mActiveImagesMask.set(imageUnit);
+        }
+    }
+}
+
 // Returns the program object to an unlinked state, before re-linking, or at destruction
 void Program::unlink()
 {
@@ -1383,6 +1411,7 @@ void Program::unlink()
     mState.mComputeShaderLocalSize.fill(1);
     mState.mSamplerBindings.clear();
     mState.mImageBindings.clear();
+    mState.mActiveImagesMask.reset();
     mState.mNumViews                          = -1;
     mState.mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
     mState.mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
@@ -2860,7 +2889,7 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
         else
         {
             mState.mImageBindings.emplace_back(
-                ImageBinding(imageUniform.binding, imageUniform.getBasicTypeElementCount()));
+                ImageBinding(imageUniform.binding, imageUniform.getBasicTypeElementCount(), false));
         }
 
         GLuint arraySize = imageUniform.isArray() ? imageUniform.arraySizes[0] : 1u;

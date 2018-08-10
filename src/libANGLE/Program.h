@@ -264,11 +264,14 @@ struct TransformFeedbackVarying : public sh::Varying
 struct ImageBinding
 {
     ImageBinding(size_t count);
-    ImageBinding(GLuint imageUnit, size_t count);
+    ImageBinding(GLuint imageUnit, size_t count, bool unreferenced);
     ImageBinding(const ImageBinding &other);
     ~ImageBinding();
 
     std::vector<GLuint> boundImageUnits;
+
+    // A note if this image unit is an unreferenced uniform.
+    bool unreferenced;
 };
 
 class ProgramState final : angle::NonCopyable
@@ -338,6 +341,8 @@ class ProgramState final : angle::NonCopyable
     Optional<GLuint> getSamplerIndex(GLint location) const;
     bool isSamplerUniformIndex(GLuint index) const;
     GLuint getSamplerIndexFromUniformIndex(GLuint uniformIndex) const;
+    bool isImageUniformIndex(GLuint index) const;
+    GLuint getImageIndexFromUniformIndex(GLuint uniformIndex) const;
     GLuint getAttributeLocation(const std::string &name) const;
 
     GLuint getBufferVariableIndexFromName(const std::string &name) const;
@@ -355,6 +360,7 @@ class ProgramState final : angle::NonCopyable
 
     void updateTransformFeedbackStrides();
     void updateActiveSamplers();
+    void updateActiveImages();
 
     // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
     TextureType getSamplerUniformTextureType(size_t textureUnitIndex) const;
@@ -437,6 +443,9 @@ class ProgramState final : angle::NonCopyable
     ActiveTextureMask mActiveSamplersMask;
     ActiveTextureArray<uint32_t> mActiveSamplerRefCounts;
     ActiveTextureArray<TextureType> mActiveSamplerTypes;
+
+    // Cached mask of active images.
+    ActiveTextureMask mActiveImagesMask;
 };
 
 class ProgramBindings final : angle::NonCopyable
@@ -748,6 +757,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     const std::vector<GLsizei> &getTransformFeedbackStrides() const;
 
     const ActiveTextureMask &getActiveSamplersMask() const { return mState.mActiveSamplersMask; }
+    const ActiveTextureMask &getActiveImagesMask() const { return mState.mActiveImagesMask; }
 
     const ActiveTextureArray<TextureType> &getActiveSamplerTypes() const
     {

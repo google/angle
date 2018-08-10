@@ -890,7 +890,8 @@ void ProgramGL::getUniformuiv(const gl::Context *context, GLint location, GLuint
 }
 
 void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *uniformLocations,
-                                           std::vector<gl::SamplerBinding> *samplerBindings)
+                                           std::vector<gl::SamplerBinding> *samplerBindings,
+                                           std::vector<gl::ImageBinding> *imageBindings)
 {
     GLint maxLocation = static_cast<GLint>(uniformLocations->size());
     for (GLint location = 0; location < maxLocation; ++location)
@@ -902,6 +903,11 @@ void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *un
             {
                 GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(locationRef.index);
                 (*samplerBindings)[samplerIndex].unreferenced = true;
+            }
+            else if (mState.isImageUniformIndex(locationRef.index))
+            {
+                GLuint imageIndex = mState.getImageIndexFromUniformIndex(locationRef.index);
+                (*imageBindings)[imageIndex].unreferenced = true;
             }
             locationRef.markUnused();
         }

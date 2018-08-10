@@ -564,6 +564,8 @@ class State : angle::NonCopyable
     std::vector<angle::ObserverBinding> mCompleteTextureBindings;
     InitState mCachedTexturesInitState;
 
+    InitState mCachedImageTexturesInitState;
+
     using SamplerBindingVector = std::vector<BindingPointer<Sampler>>;
     SamplerBindingVector mSamplers;
 
