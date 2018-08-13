@@ -123,14 +123,15 @@ Shader::Shader(ShaderProgramManager *manager,
       mType(type),
       mRefCount(0),
       mDeleteStatus(false),
-      mResourceManager(manager)
+      mResourceManager(manager),
+      mCurrentMaxComputeWorkGroupInvocations(0u)
 {
     ASSERT(mImplementation);
 }
 
 void Shader::onDestroy(const gl::Context *context)
 {
-    mImplementation->destroy(context);
+    mImplementation->destroy();
     mBoundCompiler.set(context, nullptr);
     mImplementation.reset(nullptr);
     delete this;
@@ -175,9 +176,9 @@ void Shader::setSource(GLsizei count, const char *const *string, const GLint *le
     mState.mSource = stream.str();
 }
 
-int Shader::getInfoLogLength(const Context *context)
+int Shader::getInfoLogLength()
 {
-    resolveCompile(context);
+    resolveCompile();
     if (mInfoLog.empty())
     {
         return 0;
@@ -186,9 +187,9 @@ int Shader::getInfoLogLength(const Context *context)
     return (static_cast<int>(mInfoLog.length()) + 1);
 }
 
-void Shader::getInfoLog(const Context *context, GLsizei bufSize, GLsizei *length, char *infoLog)
+void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
 {
-    resolveCompile(context);
+    resolveCompile();
 
     int index = 0;
 
@@ -211,9 +212,9 @@ int Shader::getSourceLength() const
     return mState.mSource.empty() ? 0 : (static_cast<int>(mState.mSource.length()) + 1);
 }
 
-int Shader::getTranslatedSourceLength(const Context *context)
+int Shader::getTranslatedSourceLength()
 {
-    resolveCompile(context);
+    resolveCompile();
 
     if (mState.mTranslatedSource.empty())
     {
@@ -223,11 +224,11 @@ int Shader::getTranslatedSourceLength(const Context *context)
     return (static_cast<int>(mState.mTranslatedSource.length()) + 1);
 }
 
-int Shader::getTranslatedSourceWithDebugInfoLength(const Context *context)
+int Shader::getTranslatedSourceWithDebugInfoLength()
 {
-    resolveCompile(context);
+    resolveCompile();
 
-    const std::string &debugInfo = mImplementation->getDebugInfo(context);
+    const std::string &debugInfo = mImplementation->getDebugInfo();
     if (debugInfo.empty())
     {
         return 0;
@@ -263,27 +264,21 @@ void Shader::getSource(GLsizei bufSize, GLsizei *length, char *buffer) const
     GetSourceImpl(mState.mSource, bufSize, length, buffer);
 }
 
-void Shader::getTranslatedSource(const Context *context,
-                                 GLsizei bufSize,
-                                 GLsizei *length,
-                                 char *buffer)
+void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer)
 {
-    GetSourceImpl(getTranslatedSource(context), bufSize, length, buffer);
+    GetSourceImpl(getTranslatedSource(), bufSize, length, buffer);
 }
 
-const std::string &Shader::getTranslatedSource(const Context *context)
+const std::string &Shader::getTranslatedSource()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.mTranslatedSource;
 }
 
-void Shader::getTranslatedSourceWithDebugInfo(const Context *context,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              char *buffer)
+void Shader::getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, char *buffer)
 {
-    resolveCompile(context);
-    const std::string &debugInfo = mImplementation->getDebugInfo(context);
+    resolveCompile();
+    const std::string &debugInfo = mImplementation->getDebugInfo();
     GetSourceImpl(debugInfo, bufSize, length, buffer);
 }
 
@@ -334,9 +329,11 @@ void Shader::compile(const Context *context)
     {
         mLastCompileOptions |= SH_VALIDATE_LOOP_INDEXING;
     }
+
+    mCurrentMaxComputeWorkGroupInvocations = context->getCaps().maxComputeWorkGroupInvocations;
 }
 
-void Shader::resolveCompile(const Context *context)
+void Shader::resolveCompile()
 {
     if (!mState.compilePending())
     {
@@ -413,7 +410,7 @@ void Shader::resolveCompile(const Context *context)
                     return;
                 }
                 if (checked_local_size_product.ValueOrDie() >
-                    context->getCaps().maxComputeWorkGroupInvocations)
+                    mCurrentMaxComputeWorkGroupInvocations)
                 {
                     WARN() << std::endl
                            << "The total number of invocations within a work group exceeds "
@@ -472,7 +469,7 @@ void Shader::resolveCompile(const Context *context)
 
     ASSERT(!mState.mTranslatedSource.empty());
 
-    bool success = mImplementation->postTranslateCompile(context, mBoundCompiler.get(), &mInfoLog);
+    bool success          = mImplementation->postTranslateCompile(mBoundCompiler.get(), &mInfoLog);
     mState.mCompileStatus = success ? CompileStatus::COMPILED : CompileStatus::NOT_COMPILED;
 }
 
@@ -506,72 +503,71 @@ void Shader::flagForDeletion()
     mDeleteStatus = true;
 }
 
-bool Shader::isCompiled(const Context *context)
+bool Shader::isCompiled()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.mCompileStatus == CompileStatus::COMPILED;
 }
 
-int Shader::getShaderVersion(const Context *context)
+int Shader::getShaderVersion()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.mShaderVersion;
 }
 
-const std::vector<sh::Varying> &Shader::getInputVaryings(const Context *context)
+const std::vector<sh::Varying> &Shader::getInputVaryings()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.getInputVaryings();
 }
 
-const std::vector<sh::Varying> &Shader::getOutputVaryings(const Context *context)
+const std::vector<sh::Varying> &Shader::getOutputVaryings()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.getOutputVaryings();
 }
 
-const std::vector<sh::Uniform> &Shader::getUniforms(const Context *context)
+const std::vector<sh::Uniform> &Shader::getUniforms()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.getUniforms();
 }
 
-const std::vector<sh::InterfaceBlock> &Shader::getUniformBlocks(const Context *context)
+const std::vector<sh::InterfaceBlock> &Shader::getUniformBlocks()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.getUniformBlocks();
 }
 
-const std::vector<sh::InterfaceBlock> &Shader::getShaderStorageBlocks(const Context *context)
+const std::vector<sh::InterfaceBlock> &Shader::getShaderStorageBlocks()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.getShaderStorageBlocks();
 }
 
-const std::vector<sh::Attribute> &Shader::getActiveAttributes(const Context *context)
+const std::vector<sh::Attribute> &Shader::getActiveAttributes()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.getActiveAttributes();
 }
 
-const std::vector<sh::Attribute> &Shader::getAllAttributes(const Context *context)
+const std::vector<sh::Attribute> &Shader::getAllAttributes()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.getAllAttributes();
 }
 
-const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables(const Context *context)
+const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.getActiveOutputVariables();
 }
 
-std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfVaryingName,
-                                                          const Context *context)
+std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfVaryingName)
 {
     // TODO(jiawei.shao@intel.com): support transform feedback on geometry shader.
     ASSERT(mState.getShaderType() == ShaderType::Vertex);
-    const auto &varyings = getOutputVaryings(context);
+    const auto &varyings = getOutputVaryings();
     auto bracketPos      = tfVaryingName.find("[");
     if (bracketPos != std::string::npos)
     {
@@ -606,39 +602,39 @@ std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfV
     return std::string();
 }
 
-const sh::WorkGroupSize &Shader::getWorkGroupSize(const Context *context)
+const sh::WorkGroupSize &Shader::getWorkGroupSize()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.mLocalSize;
 }
 
-int Shader::getNumViews(const Context *context)
+int Shader::getNumViews()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.mNumViews;
 }
 
-Optional<PrimitiveMode> Shader::getGeometryShaderInputPrimitiveType(const Context *context)
+Optional<PrimitiveMode> Shader::getGeometryShaderInputPrimitiveType()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.mGeometryShaderInputPrimitiveType;
 }
 
-Optional<PrimitiveMode> Shader::getGeometryShaderOutputPrimitiveType(const Context *context)
+Optional<PrimitiveMode> Shader::getGeometryShaderOutputPrimitiveType()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.mGeometryShaderOutputPrimitiveType;
 }
 
-int Shader::getGeometryShaderInvocations(const Context *context)
+int Shader::getGeometryShaderInvocations()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.mGeometryShaderInvocations;
 }
 
-Optional<GLint> Shader::getGeometryShaderMaxVertices(const Context *context)
+Optional<GLint> Shader::getGeometryShaderMaxVertices()
 {
-    resolveCompile(context);
+    resolveCompile();
     return mState.mGeometryShaderMaxVertices;
 }
 

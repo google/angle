@@ -135,8 +135,7 @@ void GlslangWrapper::Release()
 }
 
 // static
-void GlslangWrapper::GetShaderSource(const gl::Context *glContext,
-                                     const gl::ProgramState &programState,
+void GlslangWrapper::GetShaderSource(const gl::ProgramState &programState,
                                      const gl::ProgramLinkedResources &resources,
                                      std::string *vertexSourceOut,
                                      std::string *fragmentSourceOut)
@@ -144,8 +143,8 @@ void GlslangWrapper::GetShaderSource(const gl::Context *glContext,
     gl::Shader *glVertexShader   = programState.getAttachedShader(gl::ShaderType::Vertex);
     gl::Shader *glFragmentShader = programState.getAttachedShader(gl::ShaderType::Fragment);
 
-    std::string vertexSource   = glVertexShader->getTranslatedSource(glContext);
-    std::string fragmentSource = glFragmentShader->getTranslatedSource(glContext);
+    std::string vertexSource   = glVertexShader->getTranslatedSource();
+    std::string fragmentSource = glFragmentShader->getTranslatedSource();
 
     // Parse attribute locations and replace them in the vertex shader.
     // See corresponding code in OutputVulkanGLSL.cpp.
@@ -164,7 +163,7 @@ void GlslangWrapper::GetShaderSource(const gl::Context *glContext,
     // The attributes in the programState could have been filled with active attributes only
     // depending on the shader version. If there is inactive attributes left, we have to remove
     // their @@ QUALIFIER and @@ LAYOUT markers.
-    for (const sh::Attribute &attribute : glVertexShader->getAllAttributes(glContext))
+    for (const sh::Attribute &attribute : glVertexShader->getAllAttributes())
     {
         if (attribute.active)
         {

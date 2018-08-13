@@ -128,7 +128,7 @@ class DynamicHLSL : angle::NonCopyable
         const std::vector<PixelShaderOutputVariable> &outputVariables,
         bool usesFragDepth,
         const std::vector<GLenum> &outputLayout) const;
-    void generateShaderLinkHLSL(const gl::Context *context,
+    void generateShaderLinkHLSL(const gl::Caps &caps,
                                 const gl::ProgramState &programData,
                                 const ProgramD3DMetadata &programMetadata,
                                 const gl::VaryingPacking &varyingPacking,
@@ -140,7 +140,7 @@ class DynamicHLSL : angle::NonCopyable
                                                const bool hasANGLEMultiviewEnabled,
                                                const bool selectViewInVS) const;
 
-    std::string generateGeometryShaderHLSL(const gl::Context *context,
+    std::string generateGeometryShaderHLSL(const gl::Caps &caps,
                                            gl::PrimitiveMode primitiveType,
                                            const gl::ProgramState &programData,
                                            const bool useViewScale,

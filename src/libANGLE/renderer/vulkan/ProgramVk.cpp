@@ -268,7 +268,7 @@ gl::LinkResult ProgramVk::linkImpl(const gl::Context *glContext,
 
     ANGLE_TRY(reset(contextVk));
 
-    GlslangWrapper::GetShaderSource(glContext, mState, resources, &mVertexSource, &mFragmentSource);
+    GlslangWrapper::GetShaderSource(mState, resources, &mVertexSource, &mFragmentSource);
 
     ANGLE_TRY(initDefaultUniformBlocks(glContext));
 
@@ -355,7 +355,7 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
     {
         gl::ShaderType glShaderType = static_cast<gl::ShaderType>(shaderType);
         gl::Shader *shader                       = mState.getAttachedShader(glShaderType);
-        const std::vector<sh::Uniform> &uniforms = shader->getUniforms(glContext);
+        const std::vector<sh::Uniform> &uniforms = shader->getUniforms();
         InitDefaultUniformBlock(uniforms, shader, &layoutMap[shaderType],
                                 &requiredBufferSize[shaderType]);
     }

@@ -496,11 +496,11 @@ Error GLES1Renderer::compileShader(Context *context,
 
     *shaderOut = shader;
 
-    if (!shaderObject->isCompiled(context))
+    if (!shaderObject->isCompiled())
     {
-        GLint infoLogLength = shaderObject->getInfoLogLength(context);
+        GLint infoLogLength = shaderObject->getInfoLogLength();
         std::vector<char> infoLog(infoLogLength, 0);
-        shaderObject->getInfoLog(context, infoLogLength - 1, nullptr, infoLog.data());
+        shaderObject->getInfoLog(infoLogLength - 1, nullptr, infoLog.data());
         fprintf(stderr, "GLES1Renderer::%s: Info log: %s\n", __func__, infoLog.data());
         return InternalError() << "GLES1Renderer shader compile failed. Source: " << src
                                << " Info log: " << infoLog.data();

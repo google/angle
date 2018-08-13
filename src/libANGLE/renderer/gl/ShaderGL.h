@@ -22,25 +22,25 @@ class ShaderGL : public ShaderImpl
   public:
     ShaderGL(const gl::ShaderState &data,
              GLuint shaderID,
-             MultiviewImplementationTypeGL multiviewImplementationType);
+             MultiviewImplementationTypeGL multiviewImplementationType,
+             const FunctionsGL *functions);
     ~ShaderGL() override;
 
-    void destroy(const gl::Context *context) override;
+    void destroy() override;
 
     // ShaderImpl implementation
     ShCompileOptions prepareSourceAndReturnOptions(const gl::Context *context,
                                                    std::stringstream *sourceStream,
                                                    std::string *sourcePath) override;
-    bool postTranslateCompile(const gl::Context *context,
-                              gl::Compiler *compiler,
-                              std::string *infoLog) override;
-    std::string getDebugInfo(const gl::Context *context) const override;
+    bool postTranslateCompile(gl::Compiler *compiler, std::string *infoLog) override;
+    std::string getDebugInfo() const override;
 
     GLuint getShaderID() const;
 
   private:
     GLuint mShaderID;
     MultiviewImplementationTypeGL mMultiviewImplementationType;
+    const FunctionsGL *mFunctions;
 };
 
 }

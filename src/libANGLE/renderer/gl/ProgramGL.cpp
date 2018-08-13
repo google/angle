@@ -160,7 +160,7 @@ gl::LinkResult ProgramGL::linkImpl(const gl::Context *context,
         {
             std::string tfVaryingMappedName =
                 mState.getAttachedShader(gl::ShaderType::Vertex)
-                    ->getTransformFeedbackVaryingMappedName(tfVarying, context);
+                    ->getTransformFeedbackVaryingMappedName(tfVarying);
             transformFeedbackVaryingMappedNames.push_back(tfVaryingMappedName);
         }
 

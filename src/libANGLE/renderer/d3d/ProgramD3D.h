@@ -387,7 +387,7 @@ class ProgramD3D : public ProgramImpl
 
     void initializeUniformStorage(const gl::ShaderBitSet &availableShaderStages);
 
-    void defineUniformsAndAssignRegisters(const gl::Context *context);
+    void defineUniformsAndAssignRegisters();
     void defineUniformBase(const gl::Shader *shader,
                            const sh::Uniform &uniform,
                            D3DUniformMap *uniformMap);
@@ -462,17 +462,17 @@ class ProgramD3D : public ProgramImpl
     D3DUniform *getD3DUniformFromLocation(GLint location);
     const D3DUniform *getD3DUniformFromLocation(GLint location) const;
 
-    void initAttribLocationsToD3DSemantic(const gl::Context *context);
+    void initAttribLocationsToD3DSemantic();
 
     void reset();
     void initializeUniformBlocks();
 
-    void updateCachedInputLayoutFromShader(const gl::Context *context);
+    void updateCachedInputLayoutFromShader();
     void updateCachedOutputLayoutFromShader();
     void updateCachedVertexExecutableIndex();
     void updateCachedPixelExecutableIndex();
 
-    void linkResources(const gl::Context *context, const gl::ProgramLinkedResources &resources);
+    void linkResources(const gl::ProgramLinkedResources &resources);
 
     RendererD3D *mRenderer;
     DynamicHLSL *mDynamicHLSL;

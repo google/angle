@@ -55,7 +55,7 @@ ShaderImpl *ContextGL::createShader(const gl::ShaderState &data)
     const FunctionsGL *functions = getFunctions();
     GLuint shader                = functions->createShader(ToGLenum(data.getShaderType()));
 
-    return new ShaderGL(data, shader, mRenderer->getMultiviewImplementationType());
+    return new ShaderGL(data, shader, mRenderer->getMultiviewImplementationType(), functions);
 }
 
 ProgramImpl *ContextGL::createProgram(const gl::ProgramState &data)

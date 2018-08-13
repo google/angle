@@ -101,15 +101,14 @@ LinkMismatchError LinkValidateUniforms(const sh::Uniform &uniform1,
 
 using ShaderUniform = std::pair<ShaderType, const sh::Uniform *>;
 
-bool ValidateGraphicsUniformsPerShader(const Context *context,
-                                       Shader *shaderToLink,
+bool ValidateGraphicsUniformsPerShader(Shader *shaderToLink,
                                        bool extendLinkedUniforms,
                                        std::map<std::string, ShaderUniform> *linkedUniforms,
                                        InfoLog &infoLog)
 {
-    ASSERT(context && shaderToLink && linkedUniforms);
+    ASSERT(shaderToLink && linkedUniforms);
 
-    for (const sh::Uniform &uniform : shaderToLink->getUniforms(context))
+    for (const sh::Uniform &uniform : shaderToLink->getUniforms())
     {
         const auto &entry = linkedUniforms->find(uniform.name);
         if (entry != linkedUniforms->end())
@@ -261,7 +260,7 @@ void UniformLinker::getResults(std::vector<LinkedUniform> *uniforms,
     uniformLocations->swap(mUniformLocations);
 }
 
-bool UniformLinker::link(const Context *context,
+bool UniformLinker::link(const Caps &caps,
                          InfoLog &infoLog,
                          const ProgramBindings &uniformLocationBindings)
 {
@@ -269,7 +268,7 @@ bool UniformLinker::link(const Context *context,
         mState.getAttachedShader(ShaderType::Fragment))
     {
         ASSERT(mState.getAttachedShader(ShaderType::Compute) == nullptr);
-        if (!validateGraphicsUniforms(context, infoLog))
+        if (!validateGraphicsUniforms(infoLog))
         {
             return false;
         }
@@ -277,12 +276,12 @@ bool UniformLinker::link(const Context *context,
 
     // Flatten the uniforms list (nested fields) into a simple list (no nesting).
     // Also check the maximum uniform vector and sampler counts.
-    if (!flattenUniformsAndCheckCaps(context, infoLog))
+    if (!flattenUniformsAndCheckCaps(caps, infoLog))
     {
         return false;
     }
 
-    if (!checkMaxCombinedAtomicCounters(context->getCaps(), infoLog))
+    if (!checkMaxCombinedAtomicCounters(caps, infoLog))
     {
         return false;
     }
@@ -295,7 +294,7 @@ bool UniformLinker::link(const Context *context,
     return true;
 }
 
-bool UniformLinker::validateGraphicsUniforms(const Context *context, InfoLog &infoLog) const
+bool UniformLinker::validateGraphicsUniforms(InfoLog &infoLog) const
 {
     // Check that uniforms defined in the graphics shaders are identical
     std::map<std::string, ShaderUniform> linkedUniforms;
@@ -307,7 +306,7 @@ bool UniformLinker::validateGraphicsUniforms(const Context *context, InfoLog &in
         {
             if (shaderType == ShaderType::Vertex)
             {
-                for (const sh::Uniform &vertexUniform : currentShader->getUniforms(context))
+                for (const sh::Uniform &vertexUniform : currentShader->getUniforms())
                 {
                     linkedUniforms[vertexUniform.name] =
                         std::make_pair(ShaderType::Vertex, &vertexUniform);
@@ -316,7 +315,7 @@ bool UniformLinker::validateGraphicsUniforms(const Context *context, InfoLog &in
             else
             {
                 bool isLastShader = (shaderType == ShaderType::Fragment);
-                if (!ValidateGraphicsUniformsPerShader(context, currentShader, !isLastShader,
+                if (!ValidateGraphicsUniformsPerShader(currentShader, !isLastShader,
                                                        &linkedUniforms, infoLog))
                 {
                     return false;
@@ -510,7 +509,6 @@ void UniformLinker::pruneUnusedUniforms()
 }
 
 bool UniformLinker::flattenUniformsAndCheckCapsForShader(
-    const Context *context,
     Shader *shader,
     const Caps &caps,
     std::vector<LinkedUniform> &samplerUniforms,
@@ -520,7 +518,7 @@ bool UniformLinker::flattenUniformsAndCheckCapsForShader(
     InfoLog &infoLog)
 {
     ShaderUniformCount shaderUniformCount;
-    for (const sh::Uniform &uniform : shader->getUniforms(context))
+    for (const sh::Uniform &uniform : shader->getUniforms())
     {
         shaderUniformCount +=
             flattenUniform(uniform, &samplerUniforms, &imageUniforms, &atomicCounterUniforms,
@@ -573,14 +571,13 @@ bool UniformLinker::flattenUniformsAndCheckCapsForShader(
     return true;
 }
 
-bool UniformLinker::flattenUniformsAndCheckCaps(const Context *context, InfoLog &infoLog)
+bool UniformLinker::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog)
 {
     std::vector<LinkedUniform> samplerUniforms;
     std::vector<LinkedUniform> imageUniforms;
     std::vector<LinkedUniform> atomicCounterUniforms;
     std::vector<UnusedUniform> unusedUniforms;
 
-    const Caps &caps = context->getCaps();
     for (ShaderType shaderType : AllShaderTypes())
     {
         Shader *shader = mState.getAttachedShader(shaderType);
@@ -589,9 +586,8 @@ bool UniformLinker::flattenUniformsAndCheckCaps(const Context *context, InfoLog 
             continue;
         }
 
-        if (!flattenUniformsAndCheckCapsForShader(context, shader, caps, samplerUniforms,
-                                                  imageUniforms, atomicCounterUniforms,
-                                                  unusedUniforms, infoLog))
+        if (!flattenUniformsAndCheckCapsForShader(shader, caps, samplerUniforms, imageUniforms,
+                                                  atomicCounterUniforms, unusedUniforms, infoLog))
         {
             return false;
         }

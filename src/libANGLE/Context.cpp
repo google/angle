@@ -2503,7 +2503,7 @@ void Context::programPathFragmentInputGen(GLuint program,
 {
     auto *programObject = getProgram(program);
 
-    programObject->pathFragmentInputGen(this, location, genMode, components, coeffs);
+    programObject->pathFragmentInputGen(location, genMode, components, coeffs);
 }
 
 GLuint Context::getProgramResourceIndex(GLuint program, GLenum programInterface, const GLchar *name)
@@ -5355,7 +5355,7 @@ void Context::getShaderiv(GLuint shader, GLenum pname, GLint *params)
 {
     Shader *shaderObject = getShader(shader);
     ASSERT(shaderObject);
-    QueryShaderiv(this, shaderObject, pname, params);
+    QueryShaderiv(shaderObject, pname, params);
 }
 
 void Context::getShaderivRobust(GLuint shader,
@@ -5371,7 +5371,7 @@ void Context::getShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei *length, 
 {
     Shader *shaderObject = getShader(shader);
     ASSERT(shaderObject);
-    shaderObject->getInfoLog(this, bufsize, length, infolog);
+    shaderObject->getInfoLog(bufsize, length, infolog);
 }
 
 void Context::getShaderPrecisionFormat(GLenum shadertype,
@@ -6633,7 +6633,7 @@ void Context::getTranslatedShaderSource(GLuint shader,
 {
     Shader *shaderObject = getShader(shader);
     ASSERT(shaderObject);
-    shaderObject->getTranslatedSourceWithDebugInfo(this, bufsize, length, source);
+    shaderObject->getTranslatedSourceWithDebugInfo(bufsize, length, source);
 }
 
 void Context::getnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params)

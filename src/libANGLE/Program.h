@@ -50,6 +50,7 @@ class State;
 class InfoLog;
 class Buffer;
 class Framebuffer;
+struct Version;
 
 extern const char *const g_fakepath;
 
@@ -488,13 +489,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     void bindUniformLocation(GLuint index, const char *name);
 
     // CHROMIUM_path_rendering
-    BindingInfo getFragmentInputBindingInfo(const Context *context, GLint index) const;
+    BindingInfo getFragmentInputBindingInfo(GLint index) const;
     void bindFragmentInputLocation(GLint index, const char *name);
-    void pathFragmentInputGen(const Context *context,
-                              GLint index,
-                              GLenum genMode,
-                              GLint components,
-                              const GLfloat *coeffs);
+    void pathFragmentInputGen(GLint index, GLenum genMode, GLint components, const GLfloat *coeffs);
 
     // KHR_parallel_shader_compile
     // Try to link the program asynchrously. As a result, background threads may be launched to
@@ -751,14 +748,16 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void unlink();
 
-    bool linkValidateShaders(const Context *context, InfoLog &infoLog);
-    bool linkAttributes(const Context *context, InfoLog &infoLog);
-    bool linkInterfaceBlocks(const Context *context,
+    bool linkValidateShaders(InfoLog &infoLog);
+    bool linkAttributes(const Caps &caps, InfoLog &infoLog);
+    bool linkInterfaceBlocks(const Caps &caps,
+                             const Version &version,
+                             bool webglCompatibility,
                              InfoLog &infoLog,
                              GLuint *combinedShaderStorageBlocksCount);
-    bool linkVaryings(const Context *context, InfoLog &infoLog) const;
+    bool linkVaryings(InfoLog &infoLog) const;
 
-    bool linkUniforms(const Context *context,
+    bool linkUniforms(const Caps &caps,
                       InfoLog &infoLog,
                       const ProgramBindings &uniformLocationBindings,
                       GLuint *combinedImageUniformsCount,
@@ -774,26 +773,26 @@ class Program final : angle::NonCopyable, public LabeledObject
                                                   bool validateGeometryShaderInputVarying,
                                                   std::string *mismatchedStructFieldName);
 
-    bool linkValidateShaderInterfaceMatching(const Context *context,
-                                             Shader *generatingShader,
+    bool linkValidateShaderInterfaceMatching(Shader *generatingShader,
                                              Shader *consumingShader,
                                              InfoLog &infoLog) const;
 
     // Check for aliased path rendering input bindings (if any).
     // If more than one binding refer statically to the same location the link must fail.
-    bool linkValidateFragmentInputBindings(const Context *context, InfoLog &infoLog) const;
+    bool linkValidateFragmentInputBindings(InfoLog &infoLog) const;
 
-    bool linkValidateBuiltInVaryings(const Context *context, InfoLog &infoLog) const;
-    bool linkValidateTransformFeedback(const Context *context,
+    bool linkValidateBuiltInVaryings(InfoLog &infoLog) const;
+    bool linkValidateTransformFeedback(const Version &version,
                                        InfoLog &infoLog,
                                        const ProgramMergedVaryings &linkedVaryings,
                                        const Caps &caps) const;
-    bool linkValidateGlobalNames(const Context *context, InfoLog &infoLog) const;
+    bool linkValidateGlobalNames(InfoLog &infoLog) const;
 
     void gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings);
 
-    ProgramMergedVaryings getMergedVaryings(const Context *context) const;
-    bool linkOutputVariables(const Context *context,
+    ProgramMergedVaryings getMergedVaryings() const;
+    bool linkOutputVariables(const Caps &caps,
+                             const Version &version,
                              GLuint combinedImageUniformsCount,
                              GLuint combinedShaderStorageBlocksCount);
 

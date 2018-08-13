@@ -50,9 +50,7 @@ class UniformLinker final : angle::NonCopyable
     UniformLinker(const ProgramState &state);
     ~UniformLinker();
 
-    bool link(const Context *context,
-              InfoLog &infoLog,
-              const ProgramBindings &uniformLocationBindings);
+    bool link(const Caps &caps, InfoLog &infoLog, const ProgramBindings &uniformLocationBindings);
 
     void getResults(std::vector<LinkedUniform> *uniforms,
                     std::vector<UnusedUniform> *unusedUniforms,
@@ -82,10 +80,9 @@ class UniformLinker final : angle::NonCopyable
         unsigned int atomicCounterCount;
     };
 
-    bool validateGraphicsUniforms(const Context *context, InfoLog &infoLog) const;
+    bool validateGraphicsUniforms(InfoLog &infoLog) const;
 
-    bool flattenUniformsAndCheckCapsForShader(const Context *context,
-                                              Shader *shader,
+    bool flattenUniformsAndCheckCapsForShader(Shader *shader,
                                               const Caps &caps,
                                               std::vector<LinkedUniform> &samplerUniforms,
                                               std::vector<LinkedUniform> &imageUniforms,
@@ -93,7 +90,7 @@ class UniformLinker final : angle::NonCopyable
                                               std::vector<UnusedUniform> &unusedUniforms,
                                               InfoLog &infoLog);
 
-    bool flattenUniformsAndCheckCaps(const Context *context, InfoLog &infoLog);
+    bool flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog);
     bool checkMaxCombinedAtomicCounters(const Caps &caps, InfoLog &infoLog);
 
     ShaderUniformCount flattenUniform(const sh::Uniform &uniform,

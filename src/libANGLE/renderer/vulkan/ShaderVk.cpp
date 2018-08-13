@@ -30,15 +30,13 @@ ShCompileOptions ShaderVk::prepareSourceAndReturnOptions(const gl::Context *cont
     return SH_INITIALIZE_UNINITIALIZED_LOCALS;
 }
 
-bool ShaderVk::postTranslateCompile(const gl::Context *context,
-                                    gl::Compiler *compiler,
-                                    std::string *infoLog)
+bool ShaderVk::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog)
 {
     // No work to do here.
     return true;
 }
 
-std::string ShaderVk::getDebugInfo(const gl::Context *context) const
+std::string ShaderVk::getDebugInfo() const
 {
     return std::string();
 }

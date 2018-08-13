@@ -26,11 +26,9 @@ class ShaderVk : public ShaderImpl
                                                    std::stringstream *sourceStream,
                                                    std::string *sourcePath) override;
     // Returns success for compiling on the driver. Returns success.
-    bool postTranslateCompile(const gl::Context *context,
-                              gl::Compiler *compiler,
-                              std::string *infoLog) override;
+    bool postTranslateCompile(gl::Compiler *compiler, std::string *infoLog) override;
 
-    std::string getDebugInfo(const gl::Context *context) const override;
+    std::string getDebugInfo() const override;
 };
 
 }  // namespace rx

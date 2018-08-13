@@ -3849,7 +3849,7 @@ bool ValidateProgramPathFragmentInputGenCHROMIUM(Context *context,
     if (location == -1)
         return true;
 
-    const auto &binding = programObject->getFragmentInputBindingInfo(context, location);
+    const auto &binding = programObject->getFragmentInputBindingInfo(location);
 
     if (!binding.valid)
     {
