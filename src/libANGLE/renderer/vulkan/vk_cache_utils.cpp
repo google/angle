@@ -828,6 +828,17 @@ void PipelineDesc::updateStencilBackWriteMask(const gl::DepthStencilState &depth
         drawFramebuffer->hasStencil() ? depthStencilState.stencilBackWritemask : 0);
 }
 
+void PipelineDesc::updatePolygonOffsetFillEnabled(bool enabled)
+{
+    mRasterizationStateInfo.depthBiasEnable = enabled;
+}
+
+void PipelineDesc::updatePolygonOffset(const gl::RasterizerState &rasterState)
+{
+    mRasterizationStateInfo.depthBiasSlopeFactor    = rasterState.polygonOffsetFactor;
+    mRasterizationStateInfo.depthBiasConstantFactor = rasterState.polygonOffsetUnits;
+}
+
 void PipelineDesc::updateRenderPassDesc(const RenderPassDesc &renderPassDesc)
 {
     mRenderPassDesc = renderPassDesc;

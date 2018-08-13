@@ -553,8 +553,10 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                                                isViewportFlipEnabledForDrawFBO());
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED:
+                mPipelineDesc->updatePolygonOffsetFillEnabled(glState.isPolygonOffsetFillEnabled());
                 break;
             case gl::State::DIRTY_BIT_POLYGON_OFFSET:
+                mPipelineDesc->updatePolygonOffset(glState.getRasterizerState());
                 break;
             case gl::State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED:
                 break;

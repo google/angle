@@ -408,6 +408,10 @@ class PipelineDesc final
     void updateStencilBackWriteMask(const gl::DepthStencilState &depthStencilState,
                                     const gl::Framebuffer *drawFramebuffer);
 
+    // Depth offset.
+    void updatePolygonOffsetFillEnabled(bool enabled);
+    void updatePolygonOffset(const gl::RasterizerState &rasterState);
+
   private:
     // TODO(jmadill): Use gl::ShaderMap when we can pack into fewer bits. http://anglebug.com/2522
     ShaderStageInfo mShaderStageInfo;
