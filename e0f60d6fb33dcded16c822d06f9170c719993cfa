@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bcf3182b_cd19bd0c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2708,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-13T06:32:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6aba50b_3e9cf2f0",
+      "range": {
+        "startLine": 2708,
+        "startChar": 4,
+        "endLine": 2708,
+        "endChar": 50
+      },
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf8ae699_e4b3c768",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2018-08-10T15:20:48Z",
       "side": 1,
       "message": "This function is a very hot path for draw calls, can you only do this loop if we are \u003e\u003d ES 3.1?",
+      "range": {
+        "startLine": 2708,
+        "startChar": 4,
+        "endLine": 2714,
+        "endChar": 5
+      },
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37ce6244_f46e23c3",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2714,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-13T06:32:30Z",
+      "side": 1,
+      "message": "If the context version is \u003e\u003dES31, the active image textures mask will be zero. So it won\u0027t enter into the loop body. Maybe we don\u0027t need additional check for \u003e\u003d ES31?",
+      "parentUuid": "cf8ae699_e4b3c768",
       "range": {
         "startLine": 2708,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6df9ab1a_6cf63be9",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2846,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-13T06:32:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58345127_891459b7",
+      "range": {
+        "startLine": 2846,
+        "startChar": 29,
+        "endLine": 2846,
+        "endChar": 53
+      },
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba0d6fc5_496c6bd4",
         "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
         "patchSetId": 3
@@ -85,6 +157,24 @@
       "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56952284_a8000704",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-13T06:32:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba0d6fc5_496c6bd4",
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -105,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "91c87105_a89e322e",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1028,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-13T06:32:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3aec51cf_0acc445d",
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "17c92302_f9718b11",
         "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
         "patchSetId": 3
@@ -122,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "b07bdb9c_cc00c01b",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-13T06:32:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17c92302_f9718b11",
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "392b0119_acea0d4d",
         "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
         "patchSetId": 3
@@ -136,6 +262,24 @@
       "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f19a00ff_40760173",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1057,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-13T06:32:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "392b0119_acea0d4d",
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
