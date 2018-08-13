@@ -983,7 +983,7 @@ void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *c
             }
         }
 
-        const gl::Sampler *sampler = glState.getSampler(textureUnitIndex);
+        const gl::Sampler *sampler = glState.getSampler(static_cast<GLuint>(textureUnitIndex));
         if (sampler != nullptr)
         {
             SamplerGL *samplerGL = GetImplAs<SamplerGL>(sampler);

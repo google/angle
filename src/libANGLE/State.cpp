@@ -2656,8 +2656,9 @@ Error State::syncProgramTextures(const Context *context)
     {
         TextureType textureType = textureTypes[textureUnitIndex];
 
-        Texture *texture = getSamplerTexture(textureUnitIndex, textureType);
-        Sampler *sampler = getSampler(textureUnitIndex);
+        Texture *texture =
+            getSamplerTexture(static_cast<unsigned int>(textureUnitIndex), textureType);
+        Sampler *sampler = getSampler(static_cast<GLuint>(textureUnitIndex));
         ASSERT(static_cast<size_t>(textureUnitIndex) < mActiveTexturesCache.size());
         ASSERT(static_cast<size_t>(textureUnitIndex) < newActiveTextures.size());
 
