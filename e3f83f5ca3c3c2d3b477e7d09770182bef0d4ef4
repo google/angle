@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61d330b9_3dfcb6c7",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2709,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-13T20:34:22Z",
+      "side": 1,
+      "message": "Instead of iterating over all of the currently bound images, we should iterate over all the image units referenced by the program like the mProgram-\u003egetActiveSamplersMask() call above.  To do this, we need to update Program to keep a mask of all image units currently referenced.",
+      "range": {
+        "startLine": 2709,
+        "startChar": 29,
+        "endLine": 2709,
+        "endChar": 53
+      },
+      "revId": "e3f83f5ca3c3c2d3b477e7d09770182bef0d4ef4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd526ef0_0eefdf17",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2713,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-13T20:34:22Z",
+      "side": 1,
+      "message": "We call texture-\u003esyncState above in the loop above, does that need to happen here too?",
+      "revId": "e3f83f5ca3c3c2d3b477e7d09770182bef0d4ef4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "25d0c92d_9c1766b7",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2714,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-13T20:34:22Z",
+      "side": 1,
+      "message": "You\u0027re right, it will probably be fine if we\u0027re checking a mask.",
+      "parentUuid": "37ce6244_f46e23c3",
+      "range": {
+        "startLine": 2708,
+        "startChar": 4,
+        "endLine": 2714,
+        "endChar": 5
+      },
+      "revId": "e0f60d6fb33dcded16c822d06f9170c719993cfa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "58345127_891459b7",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 3
