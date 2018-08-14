@@ -41,6 +41,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
+#include "libANGLE/renderer/BufferImpl.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/EGLImplFactory.h"
 #include "libANGLE/renderer/Format.h"
@@ -298,11 +299,17 @@ static_assert(static_cast<gl::PrimitiveMode>(10) == gl::PrimitiveMode::TriangleS
 static_assert(static_cast<gl::PrimitiveMode>(11) == gl::PrimitiveMode::EnumCount,
               "gl::PrimitiveMode enum values have changed, update kMinimumPrimitiveCounts.");
 
-constexpr angle::SubjectIndex kVertexArraySubjectIndex = gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES + 0;
-constexpr angle::SubjectIndex kReadFramebufferSubjectIndex =
-    gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES + 1;
-constexpr angle::SubjectIndex kDrawFramebufferSubjectIndex =
-    gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES + 2;
+enum SubjectIndexes : angle::SubjectIndex
+{
+    kTexture0SubjectIndex       = 0,
+    kTextureMaxSubjectIndex     = kTexture0SubjectIndex + gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
+    kUniformBuffer0SubjectIndex = kTextureMaxSubjectIndex,
+    kUniformBufferMaxSubjectIndex =
+        kUniformBuffer0SubjectIndex + gl::IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS,
+    kVertexArraySubjectIndex = kUniformBufferMaxSubjectIndex,
+    kReadFramebufferSubjectIndex,
+    kDrawFramebufferSubjectIndex
+};
 }  // anonymous namespace
 
 namespace gl
@@ -362,6 +369,12 @@ Context::Context(rx::EGLImplFactory *implFactory,
     // Needed to solve a Clang warning of unused variables.
     ANGLE_UNUSED_VARIABLE(mSavedArgsType);
     ANGLE_UNUSED_VARIABLE(mParamsBuffer);
+
+    for (angle::SubjectIndex uboIndex = kUniformBuffer0SubjectIndex;
+         uboIndex < kUniformBufferMaxSubjectIndex; ++uboIndex)
+    {
+        mUniformBufferObserverBindings.emplace_back(this, uboIndex);
+    }
 }
 
 void Context::initialize()
@@ -3233,6 +3246,8 @@ void Context::initCaps()
 
     LimitCap(&mCaps.maxShaderUniformBlocks[ShaderType::Vertex],
              IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
+    LimitCap(&mCaps.maxUniformBufferBindings, IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS);
+
     LimitCap(&mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
     LimitCap(&mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
 
@@ -4937,8 +4952,12 @@ void Context::bindBufferRange(BufferBinding target,
                               GLintptr offset,
                               GLsizeiptr size)
 {
-    Buffer *bufferObject = mState.mBuffers->checkBufferAllocation(mImplementation.get(), buffer);
-    mGLState.setIndexedBufferBinding(this, target, index, bufferObject, offset, size);
+    Buffer *object = mState.mBuffers->checkBufferAllocation(mImplementation.get(), buffer);
+    mGLState.setIndexedBufferBinding(this, target, index, object, offset, size);
+    if (target == BufferBinding::Uniform)
+    {
+        mUniformBufferObserverBindings[index].bind(object ? object->getImplementation() : nullptr);
+    }
 }
 
 void Context::bindFramebuffer(GLenum target, GLuint framebuffer)
@@ -7633,8 +7652,15 @@ void Context::onSubjectStateChange(const Context *context,
             break;
 
         default:
-            ASSERT(index < mGLState.getActiveTexturesCache().size());
-            mGLState.onActiveTextureStateChange(index);
+            if (index < kTextureMaxSubjectIndex)
+            {
+                mGLState.onActiveTextureStateChange(index);
+            }
+            else
+            {
+                ASSERT(index < kUniformBufferMaxSubjectIndex);
+                mGLState.onUniformBufferStateChange(index - kUniformBuffer0SubjectIndex);
+            }
             break;
     }
 }

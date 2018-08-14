@@ -2876,6 +2876,12 @@ void State::onActiveTextureStateChange(size_t textureIndex)
     }
 }
 
+void State::onUniformBufferStateChange(size_t uniformBufferIndex)
+{
+    // This could be represented by a different dirty bit. Using the same one keeps it simple.
+    mDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
+}
+
 Error State::clearUnclearedActiveTextures(const Context *context)
 {
     ASSERT(mRobustResourceInit);

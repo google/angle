@@ -3314,8 +3314,6 @@ angle::Result StateManager11::syncUniformBuffersForShader(const gl::Context *con
             default:
                 UNREACHABLE();
         }
-
-        mConstantBufferObserver.bindToShader(shaderType, bufferIndex, bufferStorage);
     }
 
     return angle::Result::Continue();
@@ -3325,8 +3323,6 @@ angle::Result StateManager11::syncUniformBuffers(const gl::Context *context)
 {
     gl::ShaderMap<unsigned int> shaderReservedUBOs = mRenderer->getReservedShaderUniformBuffers();
     mProgramD3D->updateUniformBufferCache(context->getCaps(), shaderReservedUBOs);
-
-    mConstantBufferObserver.reset();
 
     ANGLE_TRY(syncUniformBuffersForShader(context, gl::ShaderType::Vertex));
     ANGLE_TRY(syncUniformBuffersForShader(context, gl::ShaderType::Fragment));
@@ -3372,60 +3368,6 @@ angle::Result StateManager11::syncTransformFeedbackBuffers(const gl::Context *co
     tf11->onApply();
 
     return angle::Result::Continue();
-}
-
-// ConstantBufferObserver implementation.
-// TODO(jiawei.shao@intel.com): add constant buffer observers for geometry shader.
-StateManager11::ConstantBufferObserver::ConstantBufferObserver()
-{
-    for (size_t vsIndex = 0; vsIndex < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS;
-         ++vsIndex)
-    {
-        mShaderBindings[gl::ShaderType::Vertex].emplace_back(this, vsIndex);
-    }
-
-    for (size_t fsIndex = 0; fsIndex < gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS;
-         ++fsIndex)
-    {
-        mShaderBindings[gl::ShaderType::Fragment].emplace_back(this, fsIndex);
-    }
-}
-
-StateManager11::ConstantBufferObserver::~ConstantBufferObserver()
-{
-}
-
-void StateManager11::ConstantBufferObserver::onSubjectStateChange(const gl::Context *context,
-                                                                  angle::SubjectIndex index,
-                                                                  angle::SubjectMessage message)
-{
-    if (message == angle::SubjectMessage::STORAGE_CHANGED)
-    {
-        StateManager11 *stateManager =
-            GetImplAs<Context11>(context)->getRenderer()->getStateManager();
-        stateManager->invalidateProgramUniformBuffers();
-    }
-}
-
-void StateManager11::ConstantBufferObserver::bindToShader(gl::ShaderType shaderType,
-                                                          size_t index,
-                                                          Buffer11 *buffer)
-{
-    ASSERT(buffer);
-    ASSERT(shaderType != gl::ShaderType::InvalidEnum);
-    ASSERT(index < mShaderBindings[shaderType].size());
-    mShaderBindings[shaderType][index].bind(buffer);
-}
-
-void StateManager11::ConstantBufferObserver::reset()
-{
-    for (std::vector<angle::ObserverBinding> &shaderBindings : mShaderBindings)
-    {
-        for (angle::ObserverBinding &shaderBinding : shaderBindings)
-        {
-            shaderBinding.bind(nullptr);
-        }
-    }
 }
 
 void StateManager11::syncPrimitiveTopology(const gl::State &glState,

@@ -548,24 +548,6 @@ class StateManager11 final : angle::NonCopyable
     FragmentConstantBufferArray<GLintptr> mCurrentConstantBufferPSOffset;
     FragmentConstantBufferArray<GLsizeiptr> mCurrentConstantBufferPSSize;
 
-    class ConstantBufferObserver : public angle::ObserverInterface
-    {
-      public:
-        ConstantBufferObserver();
-        ~ConstantBufferObserver() override;
-
-        void onSubjectStateChange(const gl::Context *context,
-                                  angle::SubjectIndex index,
-                                  angle::SubjectMessage message) override;
-
-        void reset();
-        void bindToShader(gl::ShaderType shaderType, size_t index, Buffer11 *buffer);
-
-      private:
-        gl::ShaderMap<std::vector<angle::ObserverBinding>> mShaderBindings;
-    };
-    ConstantBufferObserver mConstantBufferObserver;
-
     // Currently applied transform feedback buffers
     Serial mAppliedTFSerial;
 
