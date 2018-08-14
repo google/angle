@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "41f88569_763db980",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2709,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-14T09:05:17Z",
+      "side": 1,
+      "message": "Done. Sorry for the iterations.",
+      "parentUuid": "61d330b9_3dfcb6c7",
+      "range": {
+        "startLine": 2709,
+        "startChar": 29,
+        "endLine": 2709,
+        "endChar": 53
+      },
+      "revId": "e3f83f5ca3c3c2d3b477e7d09770182bef0d4ef4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fd526ef0_0eefdf17",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2018-08-13T20:34:22Z",
       "side": 1,
       "message": "We call texture-\u003esyncState above in the loop above, does that need to happen here too?",
+      "revId": "e3f83f5ca3c3c2d3b477e7d09770182bef0d4ef4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fa2f961_084bbf79",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2713,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-14T09:05:17Z",
+      "side": 1,
+      "message": "texture-\u003esyncState is used to sync texture parameters which are mainly used for sampling. So I think we don\u0027t need it here.",
+      "parentUuid": "fd526ef0_0eefdf17",
       "revId": "e3f83f5ca3c3c2d3b477e7d09770182bef0d4ef4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
