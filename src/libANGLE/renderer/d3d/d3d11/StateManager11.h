@@ -300,7 +300,8 @@ class StateManager11 final : angle::NonCopyable
     angle::Result setTexture(const gl::Context *context,
                              gl::ShaderType type,
                              int index,
-                             gl::Texture *texture);
+                             gl::Texture *texture,
+                             const gl::SamplerState &sampler);
     angle::Result setTextureForImage(const gl::Context *context,
                                      gl::ShaderType type,
                                      int index,
