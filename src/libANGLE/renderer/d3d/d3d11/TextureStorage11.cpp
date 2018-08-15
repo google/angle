@@ -210,12 +210,13 @@ UINT TextureStorage11::getSubresourceIndex(const gl::ImageIndex &index) const
 
 angle::Result TextureStorage11::getSRVForSampler(const gl::Context *context,
                                                  const gl::TextureState &textureState,
+                                                 const gl::SamplerState &sampler,
                                                  const d3d11::SharedSRV **outSRV)
 {
     // Make sure to add the level offset for our tiny compressed texture workaround
     const GLuint effectiveBaseLevel = textureState.getEffectiveBaseLevel();
-    bool swizzleRequired            = textureState.swizzleRequired();
-    bool mipmapping                 = gl::IsMipmapFiltered(textureState.getSamplerState());
+    const bool swizzleRequired      = textureState.swizzleRequired();
+    const bool mipmapping           = gl::IsMipmapFiltered(sampler);
     unsigned int mipLevels =
         mipmapping ? (textureState.getEffectiveMaxLevel() - effectiveBaseLevel + 1) : 1;
 
@@ -242,16 +243,16 @@ angle::Result TextureStorage11::getSRVForSampler(const gl::Context *context,
 
     // We drop the stencil when sampling from the SRV if three conditions hold:
     // 1. the drop stencil workaround is enabled.
-    bool workaround = mRenderer->getWorkarounds().emulateTinyStencilTextures;
+    const bool workaround = mRenderer->getWorkarounds().emulateTinyStencilTextures;
     // 2. this is a stencil texture.
-    bool hasStencil = (mFormatInfo.format().stencilBits > 0);
+    const bool hasStencil = (mFormatInfo.format().stencilBits > 0);
     // 3. the texture has a 1x1 or 2x2 mip.
-    int effectiveTopLevel = effectiveBaseLevel + mipLevels - 1;
-    bool hasSmallMips =
+    const int effectiveTopLevel = effectiveBaseLevel + mipLevels - 1;
+    const bool hasSmallMips =
         (getLevelWidth(effectiveTopLevel) <= 2 || getLevelHeight(effectiveTopLevel) <= 2);
 
-    bool useDropStencil = (workaround && hasStencil && hasSmallMips);
-    SamplerKey key(effectiveBaseLevel, mipLevels, swizzleRequired, useDropStencil);
+    const bool useDropStencil = (workaround && hasStencil && hasSmallMips);
+    const SamplerKey key(effectiveBaseLevel, mipLevels, swizzleRequired, useDropStencil);
     if (useDropStencil)
     {
         // Ensure drop texture gets created.
@@ -260,7 +261,7 @@ angle::Result TextureStorage11::getSRVForSampler(const gl::Context *context,
 
         // Clear the SRV cache if necessary.
         // TODO(jmadill): Re-use find query result.
-        auto srvEntry = mSrvCacheForSampler.find(key);
+        const auto srvEntry = mSrvCacheForSampler.find(key);
         if (result == DropStencil::CREATED && srvEntry != mSrvCacheForSampler.end())
         {
             mSrvCacheForSampler.erase(key);
@@ -1638,10 +1639,11 @@ angle::Result TextureStorage11_EGLImage::getResource(const gl::Context *context,
 
 angle::Result TextureStorage11_EGLImage::getSRVForSampler(const gl::Context *context,
                                                           const gl::TextureState &textureState,
+                                                          const gl::SamplerState &sampler,
                                                           const d3d11::SharedSRV **outSRV)
 {
     ANGLE_TRY(checkForUpdatedRenderTarget(context));
-    return TextureStorage11::getSRVForSampler(context, textureState, outSRV);
+    return TextureStorage11::getSRVForSampler(context, textureState, sampler, outSRV);
 }
 
 angle::Result TextureStorage11_EGLImage::getMippedResource(const gl::Context *context,

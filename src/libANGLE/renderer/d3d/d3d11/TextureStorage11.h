@@ -95,6 +95,7 @@ class TextureStorage11 : public TextureStorage
 
     virtual angle::Result getSRVForSampler(const gl::Context *context,
                                            const gl::TextureState &textureState,
+                                           const gl::SamplerState &sampler,
                                            const d3d11::SharedSRV **outSRV);
     angle::Result getSRVForImage(const gl::Context *context,
                                  const gl::ImageUnit &imageUnit,
@@ -393,6 +394,7 @@ class TextureStorage11_EGLImage final : public TextureStorage11
                               const TextureHelper11 **outResource) override;
     angle::Result getSRVForSampler(const gl::Context *context,
                                    const gl::TextureState &textureState,
+                                   const gl::SamplerState &sampler,
                                    const d3d11::SharedSRV **outSRV) override;
     angle::Result getMippedResource(const gl::Context *context,
                                     const TextureHelper11 **outResource) override;
