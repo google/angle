@@ -1594,11 +1594,7 @@ TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
     glGenTextures(1, &tex2D);
     glBindTexture(GL_TEXTURE_2D, tex2D);
 
-    std::vector<GLubyte> pixels(1 * npotTexSize * npotTexSize);
-    for (size_t pixelId = 0; pixelId < npotTexSize * npotTexSize; ++pixelId)
-    {
-        pixels[pixelId] = 64;
-    }
+    const std::vector<GLubyte> pixels(1 * npotTexSize * npotTexSize, 64);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -3754,7 +3750,7 @@ TEST_P(Texture2DTestES3, GenerateMipmapAndBaseLevelLUMA)
     EXPECT_PIXEL_COLOR_EQ(0, 0, angle::GLColor::white);
 }
 
-// Covers a bug in the D3D11 backend:
+// Covers a bug in the D3D11 backend (see https://github.com/google/angle/pull/23):
 // When using a sampler the texture was created as if it has mipmaps, regardless what you
 // specified in GL_TEXTURE_MIN_FILTER via glSamplerParameteri() --
 // mistakenly the default value GL_NEAREST_MIPMAP_LINEAR or the value set by
@@ -3795,7 +3791,7 @@ TEST_P(Texture2DTestES3, MinificationWithSamplerNoMipmapping)
 
     const GLsizei texWidth = getWindowWidth();
     const GLsizei texHeight = getWindowHeight();
-    std::vector<GLColor> whiteData(texWidth * texHeight, GLColor::white);
+    const std::vector<GLColor> whiteData(texWidth * texHeight, GLColor::white);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA,
         GL_UNSIGNED_BYTE, whiteData.data());
