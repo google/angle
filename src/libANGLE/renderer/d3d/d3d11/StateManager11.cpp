@@ -2392,7 +2392,7 @@ angle::Result StateManager11::applyTextures(const gl::Context *context, gl::Shad
                 samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
 
             ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, texture, samplerState));
-            ANGLE_TRY(setTexture(context, shaderType, samplerIndex, texture));
+            ANGLE_TRY(setTexture(context, shaderType, samplerIndex, texture, samplerState));
         }
         else
         {
@@ -2405,7 +2405,8 @@ angle::Result StateManager11::applyTextures(const gl::Context *context, gl::Shad
             ANGLE_TRY(mRenderer->getIncompleteTexture(context, textureType, &incompleteTexture));
             ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, incompleteTexture,
                                       incompleteTexture->getSamplerState()));
-            ANGLE_TRY(setTexture(context, shaderType, samplerIndex, incompleteTexture));
+            ANGLE_TRY(setTexture(context, shaderType, samplerIndex, incompleteTexture,
+                                 incompleteTexture->getSamplerState()));
         }
     }
 
@@ -2491,7 +2492,8 @@ angle::Result StateManager11::setSamplerState(const gl::Context *context,
 angle::Result StateManager11::setTexture(const gl::Context *context,
                                          gl::ShaderType type,
                                          int index,
-                                         gl::Texture *texture)
+                                         gl::Texture *texture,
+                                         const gl::SamplerState &sampler)
 {
     ASSERT(type != gl::ShaderType::Compute);
     const d3d11::SharedSRV *textureSRV = nullptr;
@@ -2508,7 +2510,8 @@ angle::Result StateManager11::setTexture(const gl::Context *context,
 
         TextureStorage11 *storage11 = GetAs<TextureStorage11>(texStorage);
 
-        ANGLE_TRY(storage11->getSRVForSampler(context, texture->getTextureState(), &textureSRV));
+        ANGLE_TRY(
+            storage11->getSRVForSampler(context, texture->getTextureState(), sampler, &textureSRV));
 
         // If we get an invalid SRV here, something went wrong in the texture class and we're
         // unexpectedly missing the shader resource view.

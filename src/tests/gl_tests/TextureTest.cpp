@@ -1594,11 +1594,7 @@ TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
     glGenTextures(1, &tex2D);
     glBindTexture(GL_TEXTURE_2D, tex2D);
 
-    std::vector<GLubyte> pixels(1 * npotTexSize * npotTexSize);
-    for (size_t pixelId = 0; pixelId < npotTexSize * npotTexSize; ++pixelId)
-    {
-        pixels[pixelId] = 64;
-    }
+    const std::vector<GLubyte> pixels(1 * npotTexSize * npotTexSize, 64);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -3752,6 +3748,58 @@ TEST_P(Texture2DTestES3, GenerateMipmapAndBaseLevelLUMA)
 
     drawQuad(mProgram, "position", 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, angle::GLColor::white);
+}
+
+// Covers a bug in the D3D11 backend: http://anglebug.com/2772
+// When using a sampler the texture was created as if it has mipmaps,
+// regardless what you specified in GL_TEXTURE_MIN_FILTER via
+// glSamplerParameteri() -- mistakenly the default value
+// GL_NEAREST_MIPMAP_LINEAR or the value set via glTexParameteri() was
+// evaluated.
+// If you didn't provide mipmaps and didn't let the driver generate them
+// this led to not sampling your texture data when minification occurred.
+TEST_P(Texture2DTestES3, MinificationWithSamplerNoMipmapping)
+{
+    const std::string vs =
+        "#version 300 es\n"
+        "out vec2 texcoord;\n"
+        "in vec4 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position.xy * 0.1, 0.0, 1.0);\n"
+        "    texcoord = (position.xy * 0.5) + 0.5;\n"
+        "}\n";
+
+    const std::string fs =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "uniform highp sampler2D tex;\n"
+        "in vec2 texcoord;\n"
+        "out vec4 fragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    fragColor = texture(tex, texcoord);\n"
+        "}\n";
+    ANGLE_GL_PROGRAM(program, vs, fs);
+
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+    glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    const GLsizei texWidth  = getWindowWidth();
+    const GLsizei texHeight = getWindowHeight();
+    const std::vector<GLColor> whiteData(texWidth * texHeight, GLColor::white);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 whiteData.data());
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(program, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, angle::GLColor::white);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
