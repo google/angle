@@ -55,7 +55,7 @@ class Path final : angle::NonCopyable
     rx::PathImpl *mPath;
 
     // a Path object is not actually considered "a path"
-    // untill it has been specified with data. So we'll
+    // until it has been specified with data. So we'll
     // keep this flag to support this semantics.
     bool mHasData;
 

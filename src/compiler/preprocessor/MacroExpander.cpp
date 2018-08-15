@@ -344,7 +344,7 @@ bool MacroExpander::collectMacroArgs(const Macro &macro,
             case ',':
                 // The individual arguments are separated by comma tokens, but
                 // the comma tokens between matching inner parentheses do not
-                // seperate arguments.
+                // separate arguments.
                 if (openParens == 1)
                     args->push_back(MacroArg());
                 isArg = openParens != 1;

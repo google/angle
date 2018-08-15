@@ -210,7 +210,7 @@ TEST_P(CHROMIUMPathRenderingTest, TestGenDelete)
     glDeletePathsCHROMIUM(first_path, big_range);
     ASSERT_GL_NO_ERROR();
 
-    // Test glIsPathCHROMIUM(). A path object is not considered a path untill
+    // Test glIsPathCHROMIUM(). A path object is not considered a path until
     // it has actually been specified with a path data.
 
     path = glGenPathsCHROMIUM(1);

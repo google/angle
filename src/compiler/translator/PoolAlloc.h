@@ -66,7 +66,7 @@ class TAllocation
 
     void checkAllocList() const;
 
-    // Return total size needed to accomodate user buffer of 'size',
+    // Return total size needed to accommodate user buffer of 'size',
     // plus our tracking data.
     inline static size_t allocationSize(size_t size)
     {
