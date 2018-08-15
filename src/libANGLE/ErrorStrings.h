@@ -17,6 +17,58 @@
 namespace gl
 {
 ERRMSG(BlitDimensionsOutOfRange, "BlitFramebuffer dimensions out of 32-bit integer range.");
+ERRMSG(BlitExtensionDepthStencilWholeBufferBlit,
+       "Only whole-buffer depth and stencil blits are supported by this extension.");
+ERRMSG(BlitExtensionFormatMismatch,
+       "Attempting to blit and the read and draw buffer formats don't match.");
+ERRMSG(BlitExtensionFromInvalidAttachmentType,
+       "Blits are only supported from 2D texture, renderbuffer or default framebuffer attachments "
+       "in this extension.");
+ERRMSG(BlitExtensionLinear, "Linear blit not supported in this extension.");
+ERRMSG(BlitExtensionMultisampledDepthOrStencil,
+       "Multisampled depth/stencil blit is not supported by this extension.");
+ERRMSG(BlitExtensionMultisampledWholeBufferBlit,
+       "Only whole-buffer blit is supported from a multisampled read buffer in this extension.");
+ERRMSG(BlitExtensionNotAvailable, "Blit extension not available.");
+ERRMSG(BlitExtensionScaleOrFlip,
+       "Scaling and flipping in BlitFramebufferANGLE not supported by this implementation.");
+ERRMSG(BlitExtensionToInvalidAttachmentType,
+       "Blits are only supported to 2D texture, renderbuffer or default framebuffer attachments in "
+       "this extension.");
+ERRMSG(BlitFeedbackLoop, "Blit feedback loop: the read and draw framebuffers are the same.");
+ERRMSG(BlitFramebufferMissing, "Read and draw framebuffers must both exist for a blit to succeed.");
+ERRMSG(BlitFromMultiview, "Attempt to read from a multi-view framebuffer.");
+ERRMSG(BlitDepthOrStencilFormatMismatch,
+       "Depth/stencil buffer format combination not allowed for blit.");
+ERRMSG(BlitIntegerWithLinearFilter,
+       "Cannot use GL_LINEAR filter when blitting a integer framebuffer.");
+ERRMSG(BlitInvalidFilter, "Invalid blit filter.");
+ERRMSG(BlitInvalidMask, "Invalid blit mask.");
+ERRMSG(BlitMissingColor,
+       "Attempt to read from a missing color attachment of a complete framebuffer.");
+ERRMSG(BlitMissingDepthOrStencil,
+       "Attempt to read from a missing depth/stencil attachment of a complete framebuffer.");
+ERRMSG(BlitOnlyNearestForNonColor,
+       "Only nearest filtering can be used when blitting buffers other than the color buffer.");
+ERRMSG(BlitToMultiview, "Attempt to write to a multi-view framebuffer.");
+ERRMSG(BlitTypeMismatchFixedOrFloat,
+       "If the read buffer contains fixed-point or floating-point values, the draw buffer must as "
+       "well.");
+ERRMSG(BlitTypeMismatchFixedPoint,
+       "If the read buffer contains fixed-point values, the draw buffer must as well.");
+ERRMSG(BlitTypeMismatchSignedInteger,
+       "If the read buffer contains signed integer values the draw buffer must as well.");
+ERRMSG(BlitTypeMismatchUnsignedInteger,
+       "If the read buffer contains unsigned integer values the draw buffer must as well.");
+ERRMSG(BlitMultisampledBoundsMismatch,
+       "Attempt to blit from a multisampled framebuffer and the bounds don't match with the draw "
+       "framebuffer.");
+ERRMSG(BlitMultisampledFormatOrBoundsMismatch,
+       "Attempt to blit from a multisampled framebuffer and the bounds or format of the color "
+       "buffer don't match with the draw framebuffer.");
+ERRMSG(BlitSameImageColor, "Read and write color attachments cannot be the same image.");
+ERRMSG(BlitSameImageDepthOrStencil,
+       "Read and write depth stencil attachments cannot be the same image.");
 ERRMSG(BufferBoundForTransformFeedback, "Buffer is bound for transform feedback.");
 ERRMSG(BufferNotBound, "A buffer must be bound.");
 ERRMSG(CompressedTextureDimensionsMustMatchData,
@@ -108,6 +160,7 @@ ERRMSG(InvalidMemoryBarrierBit, "Invalid memory barrier bit.");
 ERRMSG(InvalidMipLevel, "Level of detail outside of range.");
 ERRMSG(InvalidMultitextureUnit,
        "Specified unit must be in [GL_TEXTURE0, GL_TEXTURE0 + GL_MAX_TEXTURE_UNITS)");
+ERRMSG(InvalidMultisampledFramebufferOperation, "Invalid operation on multisampled framebuffer");
 ERRMSG(InvalidName, "Invalid name.");
 ERRMSG(InvalidNameCharacters, "Name contains invalid characters.");
 ERRMSG(InvalidPname, "Invalid pname.");

@@ -2440,22 +2440,20 @@ bool ValidateBlitFramebufferANGLE(Context *context,
 {
     if (!context->getExtensions().framebufferBlit)
     {
-        context->handleError(InvalidOperation() << "Blit extension not available.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), BlitExtensionNotAvailable);
         return false;
     }
 
     if (srcX1 - srcX0 != dstX1 - dstX0 || srcY1 - srcY0 != dstY1 - dstY0)
     {
         // TODO(jmadill): Determine if this should be available on other implementations.
-        context->handleError(InvalidOperation() << "Scaling and flipping in "
-                                                   "BlitFramebufferANGLE not supported by this "
-                                                   "implementation.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), BlitExtensionScaleOrFlip);
         return false;
     }
 
     if (filter == GL_LINEAR)
     {
-        context->handleError(InvalidEnum() << "Linear blit not supported in this extension");
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), BlitExtensionLinear);
         return false;
     }
 
@@ -2474,7 +2472,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                 readColorAttachment->type() != GL_RENDERBUFFER &&
                 readColorAttachment->type() != GL_FRAMEBUFFER_DEFAULT)
             {
-                context->handleError(InvalidOperation());
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                     BlitExtensionFromInvalidAttachmentType);
                 return false;
             }
 
@@ -2490,7 +2489,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                         attachment->type() != GL_RENDERBUFFER &&
                         attachment->type() != GL_FRAMEBUFFER_DEFAULT)
                     {
-                        context->handleError(InvalidOperation());
+                        ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                             BlitExtensionToInvalidAttachmentType);
                         return false;
                     }
 
@@ -2498,7 +2498,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                     if (!Format::EquivalentForBlit(attachment->getFormat(),
                                                    readColorAttachment->getFormat()))
                     {
-                        context->handleError(InvalidOperation());
+                        ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                             BlitExtensionFormatMismatch);
                         return false;
                     }
                 }
@@ -2509,7 +2510,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                 IsPartialBlit(context, readColorAttachment, drawColorAttachment, srcX0, srcY0,
                               srcX1, srcY1, dstX0, dstY0, dstX1, dstY1))
             {
-                context->handleError(InvalidOperation());
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                     BlitExtensionMultisampledWholeBufferBlit);
                 return false;
             }
         }
@@ -2532,15 +2534,15 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                                   dstX0, dstY0, dstX1, dstY1))
                 {
                     // only whole-buffer copies are permitted
-                    context->handleError(InvalidOperation() << "Only whole-buffer depth and "
-                                                               "stencil blits are supported by "
-                                                               "this extension.");
+                    ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                         BlitExtensionDepthStencilWholeBufferBlit);
                     return false;
                 }
 
                 if (readBuffer->getSamples() != 0 || drawBuffer->getSamples() != 0)
                 {
-                    context->handleError(InvalidOperation());
+                    ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                         BlitExtensionMultisampledDepthOrStencil);
                     return false;
                 }
             }

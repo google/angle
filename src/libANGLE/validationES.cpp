@@ -1206,13 +1206,13 @@ bool ValidateBlitFramebufferParameters(Context *context,
         case GL_LINEAR:
             break;
         default:
-            context->handleError(InvalidEnum());
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), BlitInvalidFilter);
             return false;
     }
 
     if ((mask & ~(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)) != 0)
     {
-        context->handleError(InvalidValue());
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), BlitInvalidMask);
         return false;
     }
 
@@ -1220,7 +1220,7 @@ bool ValidateBlitFramebufferParameters(Context *context,
     // color buffer, leaving only nearest being unfiltered from above
     if ((mask & ~GL_COLOR_BUFFER_BIT) != 0 && filter != GL_NEAREST)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), BlitOnlyNearestForNonColor);
         return false;
     }
 
@@ -1230,7 +1230,7 @@ bool ValidateBlitFramebufferParameters(Context *context,
 
     if (!readFramebuffer || !drawFramebuffer)
     {
-        context->handleError(InvalidFramebufferOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidFramebufferOperation(), BlitFramebufferMissing);
         return false;
     }
 
@@ -1246,7 +1246,7 @@ bool ValidateBlitFramebufferParameters(Context *context,
 
     if (readFramebuffer->id() == drawFramebuffer->id())
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), BlitFeedbackLoop);
         return false;
     }
 
@@ -1306,47 +1306,45 @@ bool ValidateBlitFramebufferParameters(Context *context,
 
                         if (readFixedOrFloat != drawFixedOrFloat)
                         {
-                            context->handleError(InvalidOperation()
-                                                 << "If the read buffer contains fixed-point or "
-                                                    "floating-point values, the draw buffer must "
-                                                    "as well.");
+                            ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                                 BlitTypeMismatchFixedOrFloat);
                             return false;
                         }
                     }
                     else if (readFixedPoint != drawFixedPoint)
                     {
-                        context->handleError(InvalidOperation()
-                                             << "If the read buffer contains fixed-point values, "
-                                                "the draw buffer must as well.");
+                        ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                             BlitTypeMismatchFixedPoint);
                         return false;
                     }
 
                     if (readComponentType == GL_UNSIGNED_INT &&
                         drawComponentType != GL_UNSIGNED_INT)
                     {
-                        context->handleError(InvalidOperation());
+                        ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                             BlitTypeMismatchUnsignedInteger);
                         return false;
                     }
 
                     if (readComponentType == GL_INT && drawComponentType != GL_INT)
                     {
-                        context->handleError(InvalidOperation());
+                        ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                             BlitTypeMismatchSignedInteger);
                         return false;
                     }
 
                     if (readColorBuffer->getSamples() > 0 &&
                         (!Format::EquivalentForBlit(readFormat, drawFormat) || !sameBounds))
                     {
-                        context->handleError(InvalidOperation());
+                        ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                             BlitMultisampledFormatOrBoundsMismatch);
                         return false;
                     }
 
                     if (context->getExtensions().webglCompatibility &&
                         *readColorBuffer == *attachment)
                     {
-                        context->handleError(
-                            InvalidOperation()
-                            << "Read and write color attachments cannot be the same image.");
+                        ANGLE_VALIDATION_ERR(context, InvalidOperation(), BlitSameImageColor);
                         return false;
                     }
                 }
@@ -1356,7 +1354,7 @@ bool ValidateBlitFramebufferParameters(Context *context,
                  readFormat.info->componentType == GL_UNSIGNED_INT) &&
                 filter == GL_LINEAR)
             {
-                context->handleError(InvalidOperation());
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), BlitIntegerWithLinearFilter);
                 return false;
             }
         }
@@ -1366,9 +1364,7 @@ bool ValidateBlitFramebufferParameters(Context *context,
         // situation is an application error that would lead to a crash in ANGLE.
         else if (drawFramebuffer->hasEnabledDrawBuffer())
         {
-            context->handleError(
-                InvalidOperation()
-                << "Attempt to read from a missing color attachment of a complete framebuffer.");
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), BlitMissingColor);
             return false;
         }
     }
@@ -1388,30 +1384,28 @@ bool ValidateBlitFramebufferParameters(Context *context,
             {
                 if (!Format::EquivalentForBlit(readBuffer->getFormat(), drawBuffer->getFormat()))
                 {
-                    context->handleError(InvalidOperation());
+                    ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                         BlitDepthOrStencilFormatMismatch);
                     return false;
                 }
 
                 if (readBuffer->getSamples() > 0 && !sameBounds)
                 {
-                    context->handleError(InvalidOperation());
+                    ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                         BlitMultisampledBoundsMismatch);
                     return false;
                 }
 
                 if (context->getExtensions().webglCompatibility && *readBuffer == *drawBuffer)
                 {
-                    context->handleError(
-                        InvalidOperation()
-                        << "Read and write depth stencil attachments cannot be the same image.");
+                    ANGLE_VALIDATION_ERR(context, InvalidOperation(), BlitSameImageDepthOrStencil);
                     return false;
                 }
             }
             // WebGL 2.0 BlitFramebuffer when blitting from a missing attachment
             else if (drawBuffer)
             {
-                context->handleError(InvalidOperation() << "Attempt to read from a missing "
-                                                           "depth/stencil attachment of a "
-                                                           "complete framebuffer.");
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), BlitMissingDepthOrStencil);
                 return false;
             }
         }
@@ -1424,14 +1418,12 @@ bool ValidateBlitFramebufferParameters(Context *context,
     // views in the current read framebuffer is more than one.
     if (readFramebuffer->readDisallowedByMultiview())
     {
-        context->handleError(InvalidFramebufferOperation()
-                             << "Attempt to read from a multi-view framebuffer.");
+        ANGLE_VALIDATION_ERR(context, InvalidFramebufferOperation(), BlitFromMultiview);
         return false;
     }
     if (drawFramebuffer->getMultiviewLayout() != GL_NONE)
     {
-        context->handleError(InvalidFramebufferOperation()
-                             << "Attempt to write to a multi-view framebuffer.");
+        ANGLE_VALIDATION_ERR(context, InvalidFramebufferOperation(), BlitToMultiview);
         return false;
     }
 
@@ -6368,7 +6360,7 @@ bool ValidateFramebufferNotMultisampled(Context *context, Framebuffer *framebuff
 {
     if (framebuffer->getSamples(context) != 0)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidMultisampledFramebufferOperation);
         return false;
     }
     return true;
