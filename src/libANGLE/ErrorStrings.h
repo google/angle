@@ -153,6 +153,7 @@ ERRMSG(InvalidInternalFormat, "Invalid internal format.");
 ERRMSG(InvalidLight, "Invalid light.");
 ERRMSG(InvalidLightModelParameter, "Invalid light model parameter.");
 ERRMSG(InvalidLightParameter, "Invalid light parameter.");
+ERRMSG(InvalidLogicOp, "Invalid logical operation.");
 ERRMSG(InvalidMaterialFace, "Invalid material face.");
 ERRMSG(InvalidMaterialParameter, "Invalid material parameter.");
 ERRMSG(InvalidMatrixMode, "Invalid matrix mode.");

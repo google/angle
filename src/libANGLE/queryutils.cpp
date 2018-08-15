@@ -838,8 +838,7 @@ bool IsTextureEnvEnumParameter(TextureEnvParameter pname)
         case TextureEnvParameter::Op0Alpha:
         case TextureEnvParameter::Op1Alpha:
         case TextureEnvParameter::Op2Alpha:
-        case TextureEnvParameter::RgbScale:
-        case TextureEnvParameter::AlphaScale:
+        case TextureEnvParameter::PointCoordReplace:
             return true;
         default:
             return false;
@@ -2175,6 +2174,7 @@ unsigned int GetTextureEnvParameterCount(TextureEnvParameter pname)
         case TextureEnvParameter::Op2Alpha:
         case TextureEnvParameter::RgbScale:
         case TextureEnvParameter::AlphaScale:
+        case TextureEnvParameter::PointCoordReplace:
             return 1;
         case TextureEnvParameter::Color:
             return 4;
@@ -2228,7 +2228,6 @@ void ConvertTextureEnvFromFixed(TextureEnvParameter pname, const GLfixed *input,
             {
                 output[i] = FixedToFloat(input[i]);
             }
-            break;
             break;
         default:
             UNREACHABLE();

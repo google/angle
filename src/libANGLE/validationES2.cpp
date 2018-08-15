@@ -819,6 +819,8 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_CLIP_PLANE5:
         case GL_FOG:
         case GL_POINT_SMOOTH:
+        case GL_LINE_SMOOTH:
+        case GL_COLOR_LOGIC_OP:
             return context->getClientVersion() < Version(2, 0);
         case GL_POINT_SIZE_ARRAY_OES:
             return context->getClientVersion() < Version(2, 0) &&
@@ -2555,7 +2557,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
 
 bool ValidateClear(Context *context, GLbitfield mask)
 {
-    Framebuffer *fbo = context->getGLState().getDrawFramebuffer();
+    Framebuffer *fbo             = context->getGLState().getDrawFramebuffer();
     const Extensions &extensions = context->getExtensions();
 
     if (!ValidateFramebufferComplete(context, fbo))
@@ -5344,6 +5346,17 @@ bool ValidateHint(Context *context, GLenum target, GLenum mode)
                 !context->getExtensions().standardDerivatives)
             {
                 context->handleError(InvalidEnum() << "hint requires OES_standard_derivatives.");
+                return false;
+            }
+            break;
+
+        case GL_PERSPECTIVE_CORRECTION_HINT:
+        case GL_POINT_SMOOTH_HINT:
+        case GL_LINE_SMOOTH_HINT:
+        case GL_FOG_HINT:
+            if (context->getClientMajorVersion() >= 2)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
                 return false;
             }
             break;

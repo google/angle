@@ -327,9 +327,9 @@ void Context::loadMatrixx(const GLfixed *m)
     mGLState.gles1().loadMatrix(FixedMatrixToMat4(m));
 }
 
-void Context::logicOp(GLenum opcode)
+void Context::logicOp(LogicalOperation opcodePacked)
 {
-    UNIMPLEMENTED();
+    mGLState.gles1().setLogicOp(opcodePacked);
 }
 
 void Context::materialf(GLenum face, MaterialParameter pname, GLfloat param)

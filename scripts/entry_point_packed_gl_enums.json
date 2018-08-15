@@ -244,6 +244,9 @@
     "glLightxv" : {
         "pname" : "LightParameter"
     },
+    "glLogicOp" : {
+        "opcode" : "LogicalOperation"
+    },
     "glMapBuffer": {
         "target": "BufferBinding"
     },

@@ -44,6 +44,7 @@ QueryT CastFromStateValueToInt(GLenum pname, NativeT value)
             // ExpandFloatToInteger rather than rounding. See GLES 1.1 spec 6.1.2 "Data
             // Conversions".
             case GL_ALPHA_TEST_REF:
+            case GL_CURRENT_COLOR:
                 return clampCast<QueryT>(ExpandFloatToInteger(static_cast<GLfloat>(value)));
             default:
                 return clampCast<QueryT>(std::round(value));

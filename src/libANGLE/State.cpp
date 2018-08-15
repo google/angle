@@ -819,8 +819,14 @@ void State::setEnableFeature(GLenum feature, bool enabled)
         case GL_POINT_SMOOTH:
             mGLES1State.mPointSmoothEnabled = enabled;
             break;
+        case GL_LINE_SMOOTH:
+            mGLES1State.mLineSmoothEnabled = enabled;
+            break;
         case GL_POINT_SPRITE_OES:
             mGLES1State.mPointSpriteEnabled = enabled;
+            break;
+        case GL_COLOR_LOGIC_OP:
+            mGLES1State.mLogicOpEnabled = enabled;
             break;
         default:
             UNREACHABLE();
@@ -919,8 +925,12 @@ bool State::getEnableFeature(GLenum feature) const
             return mGLES1State.mFogEnabled;
         case GL_POINT_SMOOTH:
             return mGLES1State.mPointSmoothEnabled;
+        case GL_LINE_SMOOTH:
+            return mGLES1State.mLineSmoothEnabled;
         case GL_POINT_SPRITE_OES:
             return mGLES1State.mPointSpriteEnabled;
+        case GL_COLOR_LOGIC_OP:
+            return mGLES1State.mLogicOpEnabled;
         default:
             UNREACHABLE();
             return false;
@@ -2443,6 +2453,26 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
             break;
         case GL_SHADE_MODEL:
             *params = ToGLenum(mGLES1State.mShadeModel);
+            break;
+        case GL_MODELVIEW_STACK_DEPTH:
+        case GL_PROJECTION_STACK_DEPTH:
+        case GL_TEXTURE_STACK_DEPTH:
+            *params = mGLES1State.getCurrentMatrixStackDepth(pname);
+            break;
+        case GL_LOGIC_OP_MODE:
+            *params = ToGLenum(mGLES1State.mLogicOp);
+            break;
+        case GL_BLEND_SRC:
+            *params = mBlend.sourceBlendRGB;
+            break;
+        case GL_BLEND_DST:
+            *params = mBlend.destBlendRGB;
+            break;
+        case GL_PERSPECTIVE_CORRECTION_HINT:
+        case GL_POINT_SMOOTH_HINT:
+        case GL_LINE_SMOOTH_HINT:
+        case GL_FOG_HINT:
+            *params = mGLES1State.getHint(pname);
             break;
         default:
             UNREACHABLE();

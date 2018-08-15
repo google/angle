@@ -206,6 +206,22 @@ MatrixType GLES1State::getMatrixMode() const
     return mMatrixMode;
 }
 
+int GLES1State::getCurrentMatrixStackDepth(GLenum queryType) const
+{
+    switch (queryType)
+    {
+        case GL_MODELVIEW_STACK_DEPTH:
+            return mModelviewMatrices.size();
+        case GL_PROJECTION_STACK_DEPTH:
+            return mProjectionMatrices.size();
+        case GL_TEXTURE_STACK_DEPTH:
+            return mTextureMatrices[mGLState->getActiveSampler()].size();
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 void GLES1State::pushMatrix()
 {
     auto &stack = currentMatrixStack();
@@ -264,6 +280,11 @@ void GLES1State::multMatrix(const angle::Mat4 &m)
 {
     angle::Mat4 currentMatrix   = currentMatrixStack().back();
     currentMatrixStack().back() = currentMatrix.product(m);
+}
+
+void GLES1State::setLogicOp(LogicalOperation opcodePacked)
+{
+    mLogicOp = opcodePacked;
 }
 
 void GLES1State::setClientStateEnabled(ClientVertexArrayType clientState, bool enable)
@@ -438,5 +459,45 @@ AttributesMask GLES1State::getVertexArraysAttributeMask() const
     }
 
     return attribsMask;
+}
+
+void GLES1State::setHint(GLenum target, GLenum mode)
+{
+    HintSetting setting = FromGLenum<HintSetting>(mode);
+    switch (target)
+    {
+        case GL_PERSPECTIVE_CORRECTION_HINT:
+            mPerspectiveCorrectionHint = setting;
+            break;
+        case GL_POINT_SMOOTH_HINT:
+            mPointSmoothHint = setting;
+            break;
+        case GL_LINE_SMOOTH_HINT:
+            mLineSmoothHint = setting;
+            break;
+        case GL_FOG_HINT:
+            mFogHint = setting;
+            break;
+        default:
+            UNREACHABLE();
+    }
+}
+
+GLenum GLES1State::getHint(GLenum target)
+{
+    switch (target)
+    {
+        case GL_PERSPECTIVE_CORRECTION_HINT:
+            return ToGLenum(mPerspectiveCorrectionHint);
+        case GL_POINT_SMOOTH_HINT:
+            return ToGLenum(mPointSmoothHint);
+        case GL_LINE_SMOOTH_HINT:
+            return ToGLenum(mLineSmoothHint);
+        case GL_FOG_HINT:
+            return ToGLenum(mFogHint);
+        default:
+            UNREACHABLE();
+            return 0;
+    }
 }
 }  // namespace gl

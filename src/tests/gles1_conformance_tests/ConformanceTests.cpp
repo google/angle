@@ -534,7 +534,6 @@ TEST_P(GLES1ConformanceTest, MatrixGetTest)
 
 TEST_P(GLES1ConformanceTest, Gets)
 {
-    ANGLE_SKIP_TEST_IF(true);
     ASSERT_NE(CONFORMANCE_TEST_ERROR, GetsExec());
 }
 

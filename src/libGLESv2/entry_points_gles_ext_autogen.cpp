@@ -10620,11 +10620,12 @@ void GL_APIENTRY LogicOpContextANGLE(GLeglContext ctx, GLenum opcode)
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
-        context->gatherParams<EntryPoint::LogicOp>(opcode);
+        LogicalOperation opcodePacked = FromGLenum<LogicalOperation>(opcode);
+        context->gatherParams<EntryPoint::LogicOp>(opcodePacked);
 
-        if (context->skipValidation() || ValidateLogicOp(context, opcode))
+        if (context->skipValidation() || ValidateLogicOp(context, opcodePacked))
         {
-            context->logicOp(opcode);
+            context->logicOp(opcodePacked);
         }
     }
 }

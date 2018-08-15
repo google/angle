@@ -89,7 +89,7 @@ bool ValidateLineWidthx(Context *context, GLfixed width);
 bool ValidateLoadIdentity(Context *context);
 bool ValidateLoadMatrixf(Context *context, const GLfloat *m);
 bool ValidateLoadMatrixx(Context *context, const GLfixed *m);
-bool ValidateLogicOp(Context *context, GLenum opcode);
+bool ValidateLogicOp(Context *context, LogicalOperation opcode);
 bool ValidateMaterialf(Context *context, GLenum face, MaterialParameter pname, GLfloat param);
 bool ValidateMaterialfv(Context *context,
                         GLenum face,

@@ -54,12 +54,12 @@ TEST_P(MaterialsTest, InitialState)
 
     for (size_t i = 0; i < pnames.size(); i++)
     {
-        glGetMaterialfv(GL_FRONT_AND_BACK, pnames[i], &actualColor.R);
+        glGetMaterialfv(GL_FRONT, pnames[i], &actualColor.R);
         EXPECT_GL_NO_ERROR();
         EXPECT_EQ(colors[i], actualColor);
     }
 
-    glGetMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &actualShininess);
+    glGetMaterialfv(GL_FRONT, GL_SHININESS, &actualShininess);
     EXPECT_GL_NO_ERROR();
     EXPECT_EQ(kShininessInitial, actualShininess);
 }
@@ -67,13 +67,16 @@ TEST_P(MaterialsTest, InitialState)
 // Check for invalid parameter names.
 TEST_P(MaterialsTest, InvalidParameter)
 {
-    glGetMaterialfv(GL_FRONT_AND_BACK, 0, nullptr);
+    glGetMaterialfv(GL_FRONT, 0, nullptr);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-    glGetMaterialfv(GL_FRONT, GL_AMBIENT, nullptr);
+    glGetMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, nullptr);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-    glGetMaterialfv(GL_BACK, GL_AMBIENT, nullptr);
+    glMaterialf(GL_FRONT_AND_BACK, GL_AMBIENT, 0.0f);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, nullptr);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 
@@ -101,14 +104,14 @@ TEST_P(MaterialsTest, SetParameters)
     {
         glMaterialfv(GL_FRONT_AND_BACK, pnames[i], &colors[i].R);
         EXPECT_GL_NO_ERROR();
-        glGetMaterialfv(GL_FRONT_AND_BACK, pnames[i], &actualColor.R);
+        glGetMaterialfv(GL_FRONT, pnames[i], &actualColor.R);
         EXPECT_GL_NO_ERROR();
         EXPECT_EQ(colors[i], actualColor);
     }
 
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, kShininessTestValue);
     EXPECT_GL_NO_ERROR();
-    glGetMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &actualShininess);
+    glGetMaterialfv(GL_FRONT, GL_SHININESS, &actualShininess);
     EXPECT_GL_NO_ERROR();
     EXPECT_EQ(kShininessTestValue, actualShininess);
 }

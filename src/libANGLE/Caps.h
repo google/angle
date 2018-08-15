@@ -634,6 +634,8 @@ struct Caps
     GLuint maxTextureMatrixStackDepth;
     GLfloat minSmoothPointSize;
     GLfloat maxSmoothPointSize;
+    GLfloat minSmoothLineWidth;
+    GLfloat maxSmoothLineWidth;
 };
 
 Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensions);

@@ -57,7 +57,7 @@
     void loadIdentity();                                                                         \
     void loadMatrixf(const GLfloat *m);                                                          \
     void loadMatrixx(const GLfixed *m);                                                          \
-    void logicOp(GLenum opcode);                                                                 \
+    void logicOp(LogicalOperation opcodePacked);                                                 \
     void materialf(GLenum face, MaterialParameter pnamePacked, GLfloat param);                   \
     void materialfv(GLenum face, MaterialParameter pnamePacked, const GLfloat *params);          \
     void materialx(GLenum face, MaterialParameter pnamePacked, GLfixed param);                   \

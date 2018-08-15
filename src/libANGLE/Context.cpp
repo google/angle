@@ -1384,6 +1384,10 @@ void Context::getFloatvImpl(GLenum pname, GLfloat *params)
             params[0] = mCaps.minSmoothPointSize;
             params[1] = mCaps.maxSmoothPointSize;
             break;
+        case GL_SMOOTH_LINE_WIDTH_RANGE:
+            params[0] = mCaps.minSmoothLineWidth;
+            params[1] = mCaps.maxSmoothLineWidth;
+            break;
         case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
             ASSERT(mExtensions.textureFilterAnisotropic);
             *params = mExtensions.maxTextureAnisotropy;
@@ -3207,6 +3211,8 @@ void Context::initCaps()
         mCaps.maxTextureMatrixStackDepth    = Caps::GlobalMatrixStackDepth;
         mCaps.minSmoothPointSize            = 1.0f;
         mCaps.maxSmoothPointSize            = 1.0f;
+        mCaps.minSmoothLineWidth            = 1.0f;
+        mCaps.maxSmoothLineWidth            = 1.0f;
     }
 
     // Apply/Verify implementation limits
@@ -4442,6 +4448,12 @@ void Context::hint(GLenum target, GLenum mode)
             mGLState.setFragmentShaderDerivativeHint(mode);
             break;
 
+        case GL_PERSPECTIVE_CORRECTION_HINT:
+        case GL_POINT_SMOOTH_HINT:
+        case GL_LINE_SMOOTH_HINT:
+        case GL_FOG_HINT:
+            mGLState.gles1().setHint(target, mode);
+            break;
         default:
             UNREACHABLE();
             return;
@@ -7220,6 +7232,16 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             case GL_POINT_SIZE_ARRAY_TYPE_OES:
             case GL_POINT_SIZE_ARRAY_BUFFER_BINDING_OES:
             case GL_SHADE_MODEL:
+            case GL_MODELVIEW_STACK_DEPTH:
+            case GL_PROJECTION_STACK_DEPTH:
+            case GL_TEXTURE_STACK_DEPTH:
+            case GL_LOGIC_OP_MODE:
+            case GL_BLEND_SRC:
+            case GL_BLEND_DST:
+            case GL_PERSPECTIVE_CORRECTION_HINT:
+            case GL_POINT_SMOOTH_HINT:
+            case GL_LINE_SMOOTH_HINT:
+            case GL_FOG_HINT:
                 *type      = GL_INT;
                 *numParams = 1;
                 return true;
@@ -7236,6 +7258,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
                 *numParams = 1;
                 return true;
             case GL_SMOOTH_POINT_SIZE_RANGE:
+            case GL_SMOOTH_LINE_WIDTH_RANGE:
                 *type      = GL_FLOAT;
                 *numParams = 2;
                 return true;
