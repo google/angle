@@ -10,6 +10,7 @@
 #define LIBANGLE_RENDERER_D3D_D3D11_RESOURCEFACTORY11_H_
 
 #include <array>
+#include <atomic>
 #include <memory>
 
 #include "common/MemoryBuffer.h"
@@ -337,8 +338,8 @@ class ResourceManager11 final : angle::NonCopyable
 
     bool mInitializeAllocations;
 
-    std::array<size_t, NumResourceTypes> mAllocatedResourceCounts;
-    std::array<uint64_t, NumResourceTypes> mAllocatedResourceDeviceMemory;
+    std::array<std::atomic_size_t, NumResourceTypes> mAllocatedResourceCounts;
+    std::array<std::atomic_uint64_t, NumResourceTypes> mAllocatedResourceDeviceMemory;
     angle::MemoryBuffer mZeroMemory;
 
     std::vector<D3D11_SUBRESOURCE_DATA> mShadowInitData;

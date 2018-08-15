@@ -16,8 +16,9 @@
 #include "libANGLE/renderer/d3d/d3d9/Context9.h"
 
 #include <cstddef>
-#include <unordered_map>
+#include <mutex>
 #include <string>
+#include <unordered_map>
 
 namespace rx
 {
@@ -43,6 +44,8 @@ class ShaderCache : angle::NonCopyable
                          size_t length,
                          ShaderObject **outShaderObject)
     {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         std::string key(reinterpret_cast<const char*>(function), length);
         typename Map::iterator it = mMap.find(key);
         if (it != mMap.end())
@@ -72,6 +75,8 @@ class ShaderCache : angle::NonCopyable
 
     void clear()
     {
+        std::lock_guard<std::mutex> lock(mMutex);
+
         for (typename Map::iterator it = mMap.begin(); it != mMap.end(); ++it)
         {
             SafeRelease(it->second);
@@ -95,6 +100,7 @@ class ShaderCache : angle::NonCopyable
 
     typedef std::unordered_map<std::string, ShaderObject*> Map;
     Map mMap;
+    std::mutex mMutex;
 
     IDirect3DDevice9 *mDevice;
 };

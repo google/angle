@@ -348,11 +348,16 @@ static_assert(kResourceTypeErrors[NumResourceTypes - 1] != nullptr,
 }  // anonymous namespace
 
 // ResourceManager11 Implementation.
-ResourceManager11::ResourceManager11()
-    : mInitializeAllocations(false),
-      mAllocatedResourceCounts({{}}),
-      mAllocatedResourceDeviceMemory({{}})
+ResourceManager11::ResourceManager11() : mInitializeAllocations(false)
 {
+    for (auto &count : mAllocatedResourceCounts)
+    {
+        count = 0;
+    }
+    for (auto &memorySize : mAllocatedResourceDeviceMemory)
+    {
+        memorySize = 0;
+    }
 }
 
 ResourceManager11::~ResourceManager11()
