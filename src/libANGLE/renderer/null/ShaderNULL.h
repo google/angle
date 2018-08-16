@@ -26,7 +26,7 @@ class ShaderNULL : public ShaderImpl
                                                    std::stringstream *sourceStream,
                                                    std::string *sourcePath) override;
     // Returns success for compiling on the driver. Returns success.
-    bool postTranslateCompile(gl::Compiler *compiler, std::string *infoLog) override;
+    bool postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog) override;
 
     std::string getDebugInfo() const override;
 };

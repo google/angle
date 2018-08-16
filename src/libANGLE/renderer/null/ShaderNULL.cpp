@@ -30,7 +30,7 @@ ShCompileOptions ShaderNULL::prepareSourceAndReturnOptions(const gl::Context *co
     return 0;
 }
 
-bool ShaderNULL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog)
+bool ShaderNULL::postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog)
 {
     return true;
 }

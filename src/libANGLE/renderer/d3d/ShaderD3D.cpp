@@ -174,7 +174,7 @@ const std::map<std::string, unsigned int> &GetUniformRegisterMap(
     return *uniformRegisterMap;
 }
 
-bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog)
+bool ShaderD3D::postTranslateCompile(gl::ShCompilerInstance *compiler, std::string *infoLog)
 {
     // TODO(jmadill): We shouldn't need to cache this.
     mCompilerOutputType = compiler->getShaderOutputType();
@@ -199,7 +199,7 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
     mRequiresIEEEStrictCompiling =
         translatedSource.find("ANGLE_REQUIRES_IEEE_STRICT_COMPILING") != std::string::npos;
 
-    ShHandle compilerHandle = compiler->getCompilerHandle(mData.getShaderType());
+    ShHandle compilerHandle = compiler->getHandle();
 
     mUniformRegisterMap = GetUniformRegisterMap(sh::GetUniformRegisterMap(compilerHandle));
 

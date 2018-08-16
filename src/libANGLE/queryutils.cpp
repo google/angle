@@ -1167,9 +1167,7 @@ void QueryShaderiv(Shader *shader, GLenum pname, GLint *params)
             *params = shader->isCompiled() ? GL_TRUE : GL_FALSE;
             return;
         case GL_COMPLETION_STATUS_KHR:
-            // TODO(jie.a.chen@intel.com): Parallelize shader compilation.
-            // http://crbug.com/849576
-            *params = shader->isCompiled() ? GL_TRUE : GL_FALSE;
+            *params = shader->isCompleted() ? GL_TRUE : GL_FALSE;
             return;
         case GL_INFO_LOG_LENGTH:
             *params = shader->getInfoLogLength();

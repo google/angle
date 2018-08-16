@@ -205,12 +205,6 @@ GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource)
     return CompileProgramWithGS(vsSource, "", fsSource);
 }
 
-GLuint CompileProgramParallel(const std::string &vsSource, const std::string &fsSource)
-{
-    std::vector<std::string> emptyVector;
-    return CompileAndLinkProgram(vsSource, "", fsSource, emptyVector, GL_NONE);
-}
-
 GLuint CompileProgramWithGS(const std::string &vsSource,
                             const std::string &gsSource,
                             const std::string &fsSource)

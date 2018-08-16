@@ -51,11 +51,39 @@ class ParallelShaderCompileTest : public ANGLETest
       public:
         ClearColorWithDraw(GLubyte color) : mColor(color, color, color, 255) {}
 
-        bool compileAndLink()
+        bool compile()
         {
-            mProgram =
-                CompileProgramParallel(insertRandomString(essl1_shaders::vs::Simple()),
-                                       insertRandomString(essl1_shaders::fs::UniformColor()));
+            mVertexShader =
+                compileShader(GL_VERTEX_SHADER, insertRandomString(essl1_shaders::vs::Simple()));
+            mFragmentShader = compileShader(GL_FRAGMENT_SHADER,
+                                            insertRandomString(essl1_shaders::fs::UniformColor()));
+            return (mVertexShader != 0 && mFragmentShader != 0);
+        }
+
+        bool isCompileCompleted()
+        {
+            GLint status;
+            glGetShaderiv(mVertexShader, GL_COMPLETION_STATUS_KHR, &status);
+            if (status == GL_TRUE)
+            {
+                glGetShaderiv(mFragmentShader, GL_COMPLETION_STATUS_KHR, &status);
+                return (status == GL_TRUE);
+            }
+            return false;
+        }
+
+        bool link()
+        {
+            mProgram = 0;
+            if (checkShader(mVertexShader) && checkShader(mFragmentShader))
+            {
+                mProgram = glCreateProgram();
+                glAttachShader(mProgram, mVertexShader);
+                glAttachShader(mProgram, mFragmentShader);
+                glLinkProgram(mProgram);
+            }
+            glDeleteShader(mVertexShader);
+            glDeleteShader(mFragmentShader);
             return (mProgram != 0);
         }
 
@@ -95,7 +123,47 @@ class ParallelShaderCompileTest : public ANGLETest
             return ostream.str();
         }
 
+        GLuint compileShader(GLenum type, const std::string &source)
+        {
+            GLuint shader = glCreateShader(type);
+
+            const char *sourceArray[1] = {source.c_str()};
+            glShaderSource(shader, 1, sourceArray, nullptr);
+            glCompileShader(shader);
+            return shader;
+        }
+
+        bool checkShader(GLuint shader)
+        {
+            GLint compileResult;
+            glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+
+            if (compileResult == 0)
+            {
+                GLint infoLogLength;
+                glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+                // Info log length includes the null terminator, so 1 means that the info log is an
+                // empty string.
+                if (infoLogLength > 1)
+                {
+                    std::vector<GLchar> infoLog(infoLogLength);
+                    glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr,
+                                       &infoLog[0]);
+                    std::cerr << "shader compilation failed: " << &infoLog[0];
+                }
+                else
+                {
+                    std::cerr << "shader compilation failed. <Empty log message>";
+                }
+                std::cerr << std::endl;
+            }
+            return (compileResult == GL_TRUE);
+        }
+
         GLColor mColor;
+        GLuint mVertexShader;
+        GLuint mFragmentShader;
         GLuint mProgram;
     };
 };
@@ -118,25 +186,48 @@ TEST_P(ParallelShaderCompileTest, LinkAndDrawManyPrograms)
 {
     ANGLE_SKIP_TEST_IF(!ensureParallelShaderCompileExtensionAvailable());
 
-    std::vector<std::unique_ptr<ClearColorWithDraw>> tasks;
+    std::vector<std::unique_ptr<ClearColorWithDraw>> compileTasks;
     constexpr int kTaskCount = 32;
     for (int i = 0; i < kTaskCount; ++i)
     {
         std::unique_ptr<ClearColorWithDraw> task(new ClearColorWithDraw(i * 255 / kTaskCount));
-        bool isLinking = task->compileAndLink();
-        ASSERT_TRUE(isLinking);
-        tasks.push_back(std::move(task));
+        bool isCompiling = task->compile();
+        ASSERT_TRUE(isCompiling);
+        compileTasks.push_back(std::move(task));
     }
+
     constexpr unsigned int kPollInterval = 100;
-    while (!tasks.empty())
+
+    std::vector<std::unique_ptr<ClearColorWithDraw>> linkTasks;
+    while (!compileTasks.empty())
     {
-        for (unsigned int i = 0; i < tasks.size();)
+        for (unsigned int i = 0; i < compileTasks.size();)
         {
-            auto &task = tasks[i];
+            auto &task = compileTasks[i];
+
+            if (task->isCompileCompleted())
+            {
+                bool isLinking = task->link();
+                ASSERT_TRUE(isLinking);
+                linkTasks.push_back(std::move(task));
+                compileTasks.erase(compileTasks.begin() + i);
+                continue;
+            }
+            ++i;
+        }
+        Sleep(kPollInterval);
+    }
+
+    while (!linkTasks.empty())
+    {
+        for (unsigned int i = 0; i < linkTasks.size();)
+        {
+            auto &task = linkTasks[i];
+
             if (task->isLinkCompleted())
             {
                 task->drawAndVerify(this);
-                tasks.erase(tasks.begin() + i);
+                linkTasks.erase(linkTasks.begin() + i);
                 continue;
             }
             ++i;
