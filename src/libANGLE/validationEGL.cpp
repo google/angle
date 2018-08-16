@@ -610,9 +610,8 @@ Error ValidateLabeledObject(Thread *thread,
     return NoError();
 }
 
-}  // namespace
-
-Error ValidateDisplay(const Display *display)
+// This is a common sub-check of Display status that's shared by multiple functions
+Error ValidateDisplayPointer(const Display *display)
 {
     if (display == EGL_NO_DISPLAY)
     {
@@ -623,6 +622,15 @@ Error ValidateDisplay(const Display *display)
     {
         return EglBadDisplay() << "display is not a valid display.";
     }
+
+    return NoError();
+}
+
+}  // namespace
+
+Error ValidateDisplay(const Display *display)
+{
+    ANGLE_TRY(ValidateDisplayPointer(display));
 
     if (!display->isInitialized())
     {
@@ -778,6 +786,16 @@ LabeledObject *GetLabeledObjectIfValid(Thread *thread,
     }
 
     return labeledObject;
+}
+
+Error ValidateInitialize(const Display *display)
+{
+    return ValidateDisplayPointer(display);
+}
+
+Error ValidateTerminate(const Display *display)
+{
+    return ValidateDisplayPointer(display);
 }
 
 Error ValidateCreateContext(Display *display,
@@ -2472,6 +2490,34 @@ Error ValidateGetSyncValuesCHROMIUM(const Display *display,
     return NoError();
 }
 
+Error ValidateDestroySurface(const Display *display,
+                             const Surface *surface,
+                             const EGLSurface eglSurface)
+{
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (eglSurface == EGL_NO_SURFACE)
+    {
+        return EglBadSurface();
+    }
+
+    return NoError();
+}
+
+Error ValidateDestroyContext(const Display *display,
+                             const gl::Context *glCtx,
+                             const EGLContext eglCtx)
+{
+    ANGLE_TRY(ValidateContext(display, glCtx));
+
+    if (eglCtx == EGL_NO_CONTEXT)
+    {
+        return EglBadContext();
+    }
+
+    return NoError();
+}
+
 Error ValidateSwapBuffers(Thread *thread, const Display *display, const Surface *eglSurface)
 {
     ANGLE_TRY(ValidateSurface(display, eglSurface));
@@ -2485,6 +2531,18 @@ Error ValidateSwapBuffers(Thread *thread, const Display *display, const Surface 
         thread->getCurrentDrawSurface() != eglSurface)
     {
         return EglBadSurface();
+    }
+
+    return NoError();
+}
+
+Error ValidateWaitNative(const Display *display, const EGLint engine)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (engine != EGL_CORE_NATIVE_ENGINE)
+    {
+        return EglBadParameter() << "the 'engine' parameter has an unrecognized value";
     }
 
     return NoError();

@@ -77,18 +77,11 @@ EGLBoolean EGLAPIENTRY Initialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
     Thread *thread = GetCurrentThread();
 
     Display *display = static_cast<Display *>(dpy);
-    if (dpy == EGL_NO_DISPLAY || !Display::isValidDisplay(display))
-    {
-        thread->setError(EglBadDisplay(), GetDebug(), "eglInitialize", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateInitialize(display), "eglInitialize",
+                         GetDisplayIfValid(display), EGL_FALSE);
 
-    Error error = display->initialize();
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglInitialize", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, display->initialize(), "eglInitialize", GetDisplayIfValid(display),
+                         EGL_FALSE);
 
     if (major)
         *major = 1;
@@ -105,23 +98,16 @@ EGLBoolean EGLAPIENTRY Terminate(EGLDisplay dpy)
     Thread *thread = GetCurrentThread();
 
     Display *display = static_cast<Display *>(dpy);
-    if (dpy == EGL_NO_DISPLAY || !Display::isValidDisplay(display))
-    {
-        thread->setError(EglBadDisplay(), GetDebug(), "eglTerminate", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateTerminate(display), "eglTerminate",
+                         GetDisplayIfValid(display), EGL_FALSE);
 
     if (display->isValidContext(thread->getContext()))
     {
         thread->setCurrent(nullptr);
     }
 
-    Error error = display->terminate(thread);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglTerminate", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, display->terminate(thread), "eglTerminate",
+                         GetDisplayIfValid(display), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;
@@ -135,12 +121,8 @@ const char *EGLAPIENTRY QueryString(EGLDisplay dpy, EGLint name)
     Display *display = static_cast<Display *>(dpy);
     if (!(display == EGL_NO_DISPLAY && name == EGL_EXTENSIONS))
     {
-        Error error = ValidateDisplay(display);
-        if (error.isError())
-        {
-            thread->setError(error, GetDebug(), "eglQueryString", GetDisplayIfValid(display));
-            return nullptr;
-        }
+        ANGLE_EGL_TRY_RETURN(thread, ValidateDisplay(display), "eglQueryString",
+                             GetDisplayIfValid(display), nullptr);
     }
 
     const char *result;
@@ -188,12 +170,8 @@ EGLBoolean EGLAPIENTRY GetConfigs(EGLDisplay dpy,
 
     Display *display = static_cast<Display *>(dpy);
 
-    Error error = ValidateGetConfigs(display, config_size, num_config);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglGetConfigs", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateGetConfigs(display, config_size, num_config),
+                         "eglGetConfigs", GetDisplayIfValid(display), EGL_FALSE);
 
     ClipConfigs(display->getConfigs(AttributeMap()), configs, config_size, num_config);
 
@@ -216,12 +194,8 @@ EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy,
     Display *display       = static_cast<Display *>(dpy);
     AttributeMap attribMap = AttributeMap::CreateFromIntArray(attrib_list);
 
-    Error error = ValidateChooseConfig(display, attribMap, config_size, num_config);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglChooseConfig", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateChooseConfig(display, attribMap, config_size, num_config),
+                         "eglChooseConfig", GetDisplayIfValid(display), EGL_FALSE);
 
     ClipConfigs(display->getConfigs(attribMap), configs, config_size, num_config);
 
@@ -243,12 +217,8 @@ EGLBoolean EGLAPIENTRY GetConfigAttrib(EGLDisplay dpy,
     Display *display      = static_cast<Display *>(dpy);
     Config *configuration = static_cast<Config *>(config);
 
-    Error error = ValidateGetConfigAttrib(display, configuration, attribute);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglGetConfigAttrib", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateGetConfigAttrib(display, configuration, attribute),
+                         "eglGetConfigAttrib", GetDisplayIfValid(display), EGL_FALSE);
 
     QueryConfigAttrib(configuration, attribute, value);
 
@@ -271,20 +241,14 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy,
     Config *configuration   = static_cast<Config *>(config);
     AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
-    Error error = ValidateCreateWindowSurface(display, configuration, win, attributes);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglCreateWindowSurface", GetDisplayIfValid(display));
-        return EGL_NO_SURFACE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread,
+                         ValidateCreateWindowSurface(display, configuration, win, attributes),
+                         "eglCreateWindowSurface", GetDisplayIfValid(display), EGL_NO_SURFACE);
 
     egl::Surface *surface = nullptr;
-    error                 = display->createWindowSurface(configuration, win, attributes, &surface);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglCreateWindowSurface", GetDisplayIfValid(display));
-        return EGL_NO_SURFACE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread,
+                         display->createWindowSurface(configuration, win, attributes, &surface),
+                         "eglCreateWindowSurface", GetDisplayIfValid(display), EGL_NO_SURFACE);
 
     return static_cast<EGLSurface>(surface);
 }
@@ -303,20 +267,12 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy,
     Config *configuration   = static_cast<Config *>(config);
     AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
-    Error error = ValidateCreatePbufferSurface(display, configuration, attributes);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglCreatePbufferSurface", GetDisplayIfValid(display));
-        return EGL_NO_SURFACE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateCreatePbufferSurface(display, configuration, attributes),
+                         "eglCreatePbufferSurface", GetDisplayIfValid(display), EGL_NO_SURFACE);
 
     egl::Surface *surface = nullptr;
-    error                 = display->createPbufferSurface(configuration, attributes, &surface);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglCreatePbufferSurface", GetDisplayIfValid(display));
-        return EGL_NO_SURFACE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, display->createPbufferSurface(configuration, attributes, &surface),
+                         "eglCreatePbufferSurface", GetDisplayIfValid(display), EGL_NO_SURFACE);
 
     return static_cast<EGLSurface>(surface);
 }
@@ -336,12 +292,8 @@ EGLSurface EGLAPIENTRY CreatePixmapSurface(EGLDisplay dpy,
     Display *display      = static_cast<Display *>(dpy);
     Config *configuration = static_cast<Config *>(config);
 
-    Error error = ValidateConfig(display, configuration);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglCreatePixmapSurface", GetDisplayIfValid(display));
-        return EGL_NO_SURFACE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateConfig(display, configuration), "eglCreatePixmapSurface",
+                         GetDisplayIfValid(display), EGL_NO_SURFACE);
 
     UNIMPLEMENTED();  // FIXME
 
@@ -357,28 +309,11 @@ EGLBoolean EGLAPIENTRY DestroySurface(EGLDisplay dpy, EGLSurface surface)
     Display *display    = static_cast<Display *>(dpy);
     Surface *eglSurface = static_cast<Surface *>(surface);
 
-    Error error = ValidateSurface(display, eglSurface);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglDestroySurface",
-                         GetSurfaceIfValid(display, eglSurface));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateDestroySurface(display, eglSurface, surface),
+                         "eglDestroySurface", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
-    if (surface == EGL_NO_SURFACE)
-    {
-        thread->setError(EglBadSurface(), GetDebug(), "eglDestroySurface",
-                         GetSurfaceIfValid(display, eglSurface));
-        return EGL_FALSE;
-    }
-
-    error = display->destroySurface(eglSurface);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglDestroySurface",
-                         GetSurfaceIfValid(display, eglSurface));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, display->destroySurface(eglSurface), "eglDestroySurface",
+                         GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;
@@ -398,13 +333,8 @@ EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy,
     const Display *display    = static_cast<const Display *>(dpy);
     const Surface *eglSurface = static_cast<const Surface *>(surface);
 
-    Error error = ValidateQuerySurface(display, eglSurface, attribute, value);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglQuerySurface",
-                         GetSurfaceIfValid(display, eglSurface));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateQuerySurface(display, eglSurface, attribute, value),
+                         "eglQuerySurface", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
     QuerySurfaceAttrib(eglSurface, attribute, value);
 
@@ -429,20 +359,14 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy,
     gl::Context *sharedGLContext = static_cast<gl::Context *>(share_context);
     AttributeMap attributes      = AttributeMap::CreateFromIntArray(attrib_list);
 
-    Error error = ValidateCreateContext(display, configuration, sharedGLContext, attributes);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglCreateContext", GetDisplayIfValid(display));
-        return EGL_NO_CONTEXT;
-    }
+    ANGLE_EGL_TRY_RETURN(thread,
+                         ValidateCreateContext(display, configuration, sharedGLContext, attributes),
+                         "eglCreateContext", GetDisplayIfValid(display), EGL_NO_CONTEXT);
 
     gl::Context *context = nullptr;
-    error = display->createContext(configuration, sharedGLContext, attributes, &context);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglCreateContext", GetDisplayIfValid(display));
-        return EGL_NO_CONTEXT;
-    }
+    ANGLE_EGL_TRY_RETURN(
+        thread, display->createContext(configuration, sharedGLContext, attributes, &context),
+        "eglCreateContext", GetDisplayIfValid(display), EGL_NO_CONTEXT);
 
     thread->setSuccess();
     return static_cast<EGLContext>(context);
@@ -456,30 +380,13 @@ EGLBoolean EGLAPIENTRY DestroyContext(EGLDisplay dpy, EGLContext ctx)
     Display *display     = static_cast<Display *>(dpy);
     gl::Context *context = static_cast<gl::Context *>(ctx);
 
-    Error error = ValidateContext(display, context);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglDestroyContext",
-                         GetContextIfValid(display, context));
-        return EGL_FALSE;
-    }
-
-    if (ctx == EGL_NO_CONTEXT)
-    {
-        thread->setError(EglBadContext(), GetDebug(), "eglDestroyContext",
-                         GetContextIfValid(display, context));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateDestroyContext(display, context, ctx), "eglDestroyContext",
+                         GetContextIfValid(display, context), EGL_FALSE);
 
     bool contextWasCurrent = context == thread->getContext();
 
-    error = display->destroyContext(thread, context);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglDestroyContext",
-                         GetContextIfValid(display, context));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, display->destroyContext(thread, context), "eglDestroyContext",
+                         GetContextIfValid(display, context), EGL_FALSE);
 
     if (contextWasCurrent)
     {
@@ -577,12 +484,8 @@ EGLBoolean EGLAPIENTRY QueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attri
     Display *display     = static_cast<Display *>(dpy);
     gl::Context *context = static_cast<gl::Context *>(ctx);
 
-    Error error = ValidateQueryContext(display, context, attribute, value);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglQueryContext", GetContextIfValid(display, context));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateQueryContext(display, context, attribute, value),
+                         "eglQueryContext", GetContextIfValid(display, context), EGL_FALSE);
 
     QueryContextAttrib(context, attribute, value);
 
@@ -597,21 +500,13 @@ EGLBoolean EGLAPIENTRY WaitGL(void)
 
     Display *display = thread->getCurrentDisplay();
 
-    Error error = ValidateDisplay(display);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglWaitGL", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateDisplay(display), "eglWaitGL", GetDisplayIfValid(display),
+                         EGL_FALSE);
 
     // eglWaitGL like calling eglWaitClient with the OpenGL ES API bound. Since we only implement
     // OpenGL ES we can do the call directly.
-    error = display->waitClient(thread->getContext());
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglWaitGL", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, display->waitClient(thread->getContext()), "eglWaitGL",
+                         GetDisplayIfValid(display), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;
@@ -624,26 +519,11 @@ EGLBoolean EGLAPIENTRY WaitNative(EGLint engine)
 
     Display *display = thread->getCurrentDisplay();
 
-    Error error = ValidateDisplay(display);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglWaitNative", GetThreadIfValid(thread));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, ValidateWaitNative(display, engine), "eglWaitNative",
+                         GetThreadIfValid(thread), EGL_FALSE);
 
-    if (engine != EGL_CORE_NATIVE_ENGINE)
-    {
-        thread->setError(EglBadParameter() << "the 'engine' parameter has an unrecognized value",
-                         GetDebug(), "eglWaitNative", GetDisplayIfValid(display));
-        return EGL_FALSE;
-    }
-
-    error = display->waitNative(thread->getContext(), engine);
-    if (error.isError())
-    {
-        thread->setError(error, GetDebug(), "eglWaitNative", GetThreadIfValid(thread));
-        return EGL_FALSE;
-    }
+    ANGLE_EGL_TRY_RETURN(thread, display->waitNative(thread->getContext(), engine), "eglWaitNative",
+                         GetThreadIfValid(thread), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;
