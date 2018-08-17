@@ -36,14 +36,58 @@ class FramebufferMultiviewTest : public MultiviewTest
 class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
 {
   protected:
-    FramebufferMultiviewSideBySideClearTest() {}
+    FramebufferMultiviewSideBySideClearTest()
+        : mMultiviewFBO(0u), mNonMultiviewFBO(0u), mDepthTex(0u), mDepthStencilTex(0u)
+    {
+    }
+
+    void TearDown() override
+    {
+        if (mMultiviewFBO != 0)
+        {
+            glDeleteFramebuffers(1, &mMultiviewFBO);
+            mMultiviewFBO = 0u;
+        }
+        if (mNonMultiviewFBO != 0)
+        {
+            glDeleteTextures(1, &mNonMultiviewFBO);
+            mNonMultiviewFBO = 0u;
+        }
+        if (!mColorTex.empty())
+        {
+            glDeleteTextures(mColorTex.size(), mColorTex.data());
+            mColorTex.clear();
+        }
+        if (mDepthStencilTex != 0u)
+        {
+            glDeleteTextures(1, &mDepthStencilTex);
+            mDepthStencilTex = 0u;
+        }
+        if (mDepthTex != 0u)
+        {
+            glDeleteTextures(1, &mDepthTex);
+            mDepthTex = 0u;
+        }
+        MultiviewTest::TearDown();
+    }
 
     void initializeFBOs(size_t numColorBuffers, bool stencil, bool depth)
     {
         const std::vector<GLenum> &drawBuffers = GetDrawBufferRange(2);
 
         // Generate textures.
+        // Generate textures.
         mColorTex.resize(numColorBuffers);
+        glGenTextures(mColorTex.size(), mColorTex.data());
+        if (stencil)
+        {
+            glGenTextures(1, &mDepthStencilTex);
+        }
+        else if (depth)
+        {
+            glGenTextures(1, &mDepthTex);
+        }
+
         for (size_t i = 0u; i < numColorBuffers; ++i)
         {
             glBindTexture(GL_TEXTURE_2D, mColorTex[i]);
@@ -52,7 +96,7 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
 
         if (stencil)
         {
-            glBindTexture(GL_TEXTURE_2D, mStencilTex);
+            glBindTexture(GL_TEXTURE_2D, mDepthStencilTex);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, 4, 2, 0, GL_DEPTH_STENCIL,
                          GL_UNSIGNED_INT_24_8, nullptr);
         }
@@ -62,6 +106,9 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
             glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, 4, 2, 0, GL_DEPTH_COMPONENT,
                          GL_FLOAT, nullptr);
         }
+
+        glGenFramebuffers(1, &mMultiviewFBO);
+        glGenFramebuffers(1, &mNonMultiviewFBO);
 
         // Generate multiview fbo and attach textures.
         const GLint kViewportOffsets[4] = {1, 0, 3, 0};
@@ -76,9 +123,9 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
 
         if (stencil)
         {
-            glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER,
-                                                         GL_DEPTH_STENCIL_ATTACHMENT, mStencilTex,
-                                                         0, 2, &kViewportOffsets[0]);
+            glFramebufferTextureMultiviewSideBySideANGLE(
+                GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, mDepthStencilTex, 0, 2,
+                &kViewportOffsets[0]);
         }
         else if (depth)
         {
@@ -97,7 +144,7 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
         if (stencil)
         {
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
-                                   mStencilTex, 0);
+                                   mDepthStencilTex, 0);
         }
         else if (depth)
         {
@@ -128,17 +175,49 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
         EXPECT_PIXEL_COLOR_EQ(3, 1, GLColor::green);
     }
 
-    GLFramebuffer mMultiviewFBO;
-    GLFramebuffer mNonMultiviewFBO;
-    std::vector<GLTexture> mColorTex;
-    GLTexture mDepthTex;
-    GLTexture mStencilTex;
+    GLuint mMultiviewFBO;
+    GLuint mNonMultiviewFBO;
+
+  private:
+    std::vector<GLuint> mColorTex;
+    GLuint mDepthTex;
+    GLuint mDepthStencilTex;
 };
 
 class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
 {
   protected:
-    FramebufferMultiviewLayeredClearTest() {}
+    FramebufferMultiviewLayeredClearTest() : mMultiviewFBO(0), mDepthTex(0), mDepthStencilTex(0) {}
+
+    void TearDown() override
+    {
+        if (mMultiviewFBO != 0)
+        {
+            glDeleteFramebuffers(1, &mMultiviewFBO);
+            mMultiviewFBO = 0u;
+        }
+        if (!mNonMultiviewFBO.empty())
+        {
+            glDeleteTextures(mNonMultiviewFBO.size(), mNonMultiviewFBO.data());
+            mNonMultiviewFBO.clear();
+        }
+        if (!mColorTex.empty())
+        {
+            glDeleteTextures(mColorTex.size(), mColorTex.data());
+            mColorTex.clear();
+        }
+        if (mDepthStencilTex != 0u)
+        {
+            glDeleteTextures(1, &mDepthStencilTex);
+            mDepthStencilTex = 0u;
+        }
+        if (mDepthTex != 0u)
+        {
+            glDeleteTextures(1, &mDepthTex);
+            mDepthTex = 0u;
+        }
+        MultiviewTest::TearDown();
+    }
 
     void initializeFBOs(int width,
                         int height,
@@ -153,6 +232,16 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
 
         // Generate textures.
         mColorTex.resize(numColorAttachments);
+        glGenTextures(mColorTex.size(), mColorTex.data());
+        if (stencil)
+        {
+            glGenTextures(1, &mDepthStencilTex);
+        }
+        else if (depth)
+        {
+            glGenTextures(1, &mDepthTex);
+        }
+
         for (int i = 0; i < numColorAttachments; ++i)
         {
             glBindTexture(GL_TEXTURE_2D_ARRAY, mColorTex[i]);
@@ -162,7 +251,7 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
 
         if (stencil)
         {
-            glBindTexture(GL_TEXTURE_2D_ARRAY, mStencilTex);
+            glBindTexture(GL_TEXTURE_2D_ARRAY, mDepthStencilTex);
             glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH24_STENCIL8, width, height, numLayers, 0,
                          GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
         }
@@ -172,6 +261,8 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
             glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, width, height, numLayers, 0,
                          GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
         }
+
+        glGenFramebuffers(1, &mMultiviewFBO);
 
         // Generate multiview FBO and attach textures.
         glBindFramebuffer(GL_FRAMEBUFFER, mMultiviewFBO);
@@ -185,7 +276,7 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
         if (stencil)
         {
             glFramebufferTextureMultiviewLayeredANGLE(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                                                      mStencilTex, 0, baseViewIndex, numViews);
+                                                      mDepthStencilTex, 0, baseViewIndex, numViews);
         }
         else if (depth)
         {
@@ -195,6 +286,9 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
 
         const auto &drawBuffers = GetDrawBufferRange(numColorAttachments);
         glDrawBuffers(numColorAttachments, drawBuffers.data());
+
+        mNonMultiviewFBO.resize(numLayers);
+        glGenFramebuffers(mNonMultiviewFBO.size(), mNonMultiviewFBO.data());
 
         // Generate non-multiview FBOs and attach textures.
         mNonMultiviewFBO.resize(numLayers);
@@ -209,8 +303,8 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
             }
             if (stencil)
             {
-                glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, mStencilTex,
-                                          0, i);
+                glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                          mDepthStencilTex, 0, i);
             }
             else if (depth)
             {
@@ -238,11 +332,13 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
         return getLayerColor(layer, attachment, 0, 0);
     }
 
-    GLFramebuffer mMultiviewFBO;
-    std::vector<GLFramebuffer> mNonMultiviewFBO;
-    std::vector<GLTexture> mColorTex;
-    GLTexture mDepthTex;
-    GLTexture mStencilTex;
+    GLuint mMultiviewFBO;
+    std::vector<GLuint> mNonMultiviewFBO;
+
+  private:
+    std::vector<GLuint> mColorTex;
+    GLuint mDepthTex;
+    GLuint mDepthStencilTex;
 };
 
 // Test that the framebuffer tokens introduced by ANGLE_multiview can be used to query the
