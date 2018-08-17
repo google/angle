@@ -377,7 +377,7 @@ class MultiviewOcclusionQueryTest : public MultiviewRenderTest
     }
 };
 
-class MultiviewProgramGenerationTest : public MultiviewRenderTest
+class MultiviewProgramGenerationTest : public MultiviewTest
 {
   protected:
     MultiviewProgramGenerationTest() {}
@@ -2199,12 +2199,9 @@ ANGLE_INSTANTIATE_TEST(MultiviewOcclusionQueryTest,
                        LayeredGeomShaderD3D11(),
                        LayeredVertexShaderD3D11());
 ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest,
-                       SideBySideVertexShaderOpenGL(),
-                       LayeredVertexShaderOpenGL(),
-                       SideBySideGeomShaderD3D11(),
-                       SideBySideVertexShaderD3D11(),
-                       LayeredGeomShaderD3D11(),
-                       LayeredVertexShaderD3D11());
+                       VertexShaderOpenGL(3, 0),
+                       GeomShaderD3D11(3, 0),
+                       VertexShaderD3D11(3, 0));
 ANGLE_INSTANTIATE_TEST(MultiviewRenderPrimitiveTest,
                        SideBySideVertexShaderOpenGL(),
                        LayeredVertexShaderOpenGL(),
