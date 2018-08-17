@@ -890,6 +890,7 @@ Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, GLui
     : mProgram(factory->createProgram(mState)),
       mValidated(false),
       mLinked(false),
+      mLinkResolved(true),
       mDeleteStatus(false),
       mRefCount(0),
       mResourceManager(manager),
@@ -1254,6 +1255,7 @@ Error Program::link(const gl::Context *context)
     mLinkingState->programHash = programHash;
     mLinkingState->linkEvent   = mProgram->link(context, *resources, mInfoLog);
     mLinkingState->resources   = std::move(resources);
+    mLinkResolved              = false;
 
     return NoError();
 }
@@ -1269,19 +1271,12 @@ bool Program::isLinked() const
     return mLinked;
 }
 
-void Program::resolveLink() const
-{
-    if (mLinkingState.get())
-    {
-        return const_cast<Program *>(this)->resolveLinkImpl();
-    }
-}
-
 void Program::resolveLinkImpl()
 {
     ASSERT(mLinkingState.get());
 
     mLinked           = mLinkingState->linkEvent->wait();
+    mLinkResolved     = true;
     auto linkingState = std::move(mLinkingState);
     if (!mLinked)
     {

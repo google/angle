@@ -835,7 +835,15 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     bool validateSamplersImpl(InfoLog *infoLog, const Caps &caps);
     // Try to resolve linking.
-    void resolveLink() const;
+    // Note: this method is frequently called in each draw call. Please make sure its overhead
+    // is as low as possible.
+    void resolveLink() const
+    {
+        if (!mLinkResolved)
+        {
+            return const_cast<Program *>(this)->resolveLinkImpl();
+        }
+    }
     // Block until linking is finished and resolve it.
     void resolveLinkImpl();
 
@@ -854,6 +862,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     ProgramBindings mFragmentInputBindings;
 
     bool mLinked;
+    bool mLinkResolved;
     std::unique_ptr<LinkingState> mLinkingState;
     bool mDeleteStatus;  // Flag to indicate that the program can be deleted when no longer in use
 
