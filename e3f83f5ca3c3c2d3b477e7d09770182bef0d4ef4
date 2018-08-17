@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f37d4257_449ba422",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2709,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-17T15:09:54Z",
+      "side": 1,
+      "message": "No problem, the end result is really good now.  It does the minimal amount of work.",
+      "parentUuid": "41f88569_763db980",
+      "range": {
+        "startLine": 2709,
+        "startChar": 29,
+        "endLine": 2709,
+        "endChar": 53
+      },
+      "revId": "e3f83f5ca3c3c2d3b477e7d09770182bef0d4ef4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fd526ef0_0eefdf17",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 4
@@ -78,6 +102,24 @@
       "side": 1,
       "message": "texture-\u003esyncState is used to sync texture parameters which are mainly used for sampling. So I think we don\u0027t need it here.",
       "parentUuid": "fd526ef0_0eefdf17",
+      "revId": "e3f83f5ca3c3c2d3b477e7d09770182bef0d4ef4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32f71745_e1bf14d9",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2713,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-17T15:09:54Z",
+      "side": 1,
+      "message": "I think we should still call it, in some of our backends syncState is what creates the actual data storage.",
+      "parentUuid": "5fa2f961_084bbf79",
       "revId": "e3f83f5ca3c3c2d3b477e7d09770182bef0d4ef4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
