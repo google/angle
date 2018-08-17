@@ -141,6 +141,8 @@
             '<(angle_path)/src/tests/egl_tests/EGLThreadTest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.cpp',
             '<(angle_path)/src/tests/test_utils/ANGLETest.h',
+            '<(angle_path)/src/tests/test_utils/MultiviewTest.cpp',
+            '<(angle_path)/src/tests/test_utils/MultiviewTest.h',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.cpp',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
             '<(angle_path)/src/tests/test_utils/angle_test_instantiate.cpp',

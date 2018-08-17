@@ -8,39 +8,13 @@
 //
 
 #include "platform/WorkaroundsD3D.h"
-#include "test_utils/ANGLETest.h"
+#include "test_utils/MultiviewTest.h"
 #include "test_utils/gl_raii.h"
 
 using namespace angle;
 
 namespace
 {
-GLuint CreateSimplePassthroughProgram(int numViews)
-{
-    const std::string vsSource =
-        "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
-        "layout(num_views = " +
-        ToString(numViews) +
-        ") in;\n"
-        "layout(location=0) in vec2 vPosition;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_PointSize = 1.;\n"
-        "   gl_Position = vec4(vPosition.xy, 0.0, 1.0);\n"
-        "}\n";
-
-    const std::string fsSource =
-        "#version 300 es\n"
-        "#extension GL_OVR_multiview : require\n"
-        "precision mediump float;\n"
-        "out vec4 col;\n"
-        "void main()\n"
-        "{\n"
-        "   col = vec4(0,1,0,1);\n"
-        "}\n";
-    return CompileProgram(vsSource, fsSource);
-}
 
 std::vector<Vector2> ConvertPixelCoordinatesToClipSpace(const std::vector<Vector2I> &pixels,
                                                         int width,
@@ -60,38 +34,10 @@ std::vector<Vector2> ConvertPixelCoordinatesToClipSpace(const std::vector<Vector
 }
 }  // namespace
 
-struct MultiviewImplementationParams : public PlatformParameters
+struct MultiviewRenderTestParams final : public MultiviewImplementationParams
 {
-    MultiviewImplementationParams(GLint majorVersion,
-                                  GLint minorVersion,
-                                  bool forceUseGeometryShaderOnD3D,
-                                  const EGLPlatformParameters &eglPlatformParameters)
-        : PlatformParameters(majorVersion, minorVersion, eglPlatformParameters),
-          mForceUseGeometryShaderOnD3D(forceUseGeometryShaderOnD3D)
-    {
-    }
-    bool mForceUseGeometryShaderOnD3D;
-};
-
-std::ostream &operator<<(std::ostream &os, const MultiviewImplementationParams &params)
-{
-    const PlatformParameters &base = static_cast<const PlatformParameters &>(params);
-    os << base;
-    if (params.mForceUseGeometryShaderOnD3D)
-    {
-        os << "_force_geom_shader";
-    }
-    else
-    {
-        os << "_vertex_shader";
-    }
-    return os;
-}
-
-struct MultiviewTestParams final : public MultiviewImplementationParams
-{
-    MultiviewTestParams(GLenum multiviewLayout,
-                        const MultiviewImplementationParams &implementationParams)
+    MultiviewRenderTestParams(GLenum multiviewLayout,
+                              const MultiviewImplementationParams &implementationParams)
         : MultiviewImplementationParams(implementationParams), mMultiviewLayout(multiviewLayout)
     {
         ASSERT(multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE ||
@@ -100,7 +46,7 @@ struct MultiviewTestParams final : public MultiviewImplementationParams
     GLenum mMultiviewLayout;
 };
 
-std::ostream &operator<<(std::ostream &os, const MultiviewTestParams &params)
+std::ostream &operator<<(std::ostream &os, const MultiviewRenderTestParams &params)
 {
     const MultiviewImplementationParams &base =
         static_cast<const MultiviewImplementationParams &>(params);
@@ -119,56 +65,18 @@ std::ostream &operator<<(std::ostream &os, const MultiviewTestParams &params)
     return os;
 }
 
-class MultiviewDrawTest : public ANGLETestBase
-{
-  protected:
-    MultiviewDrawTest(const PlatformParameters &params) : ANGLETestBase(params)
-    {
-        setWindowWidth(128);
-        setWindowHeight(128);
-        setWebGLCompatibilityEnabled(true);
-    }
-    virtual ~MultiviewDrawTest() {}
-
-    void DrawTestSetUp()
-    {
-        ANGLETestBase::ANGLETestSetUp();
-
-        glRequestExtensionANGLE = reinterpret_cast<PFNGLREQUESTEXTENSIONANGLEPROC>(
-            eglGetProcAddress("glRequestExtensionANGLE"));
-    }
-
-    // Requests the ANGLE_multiview extension and returns true if the operation succeeds.
-    bool requestMultiviewExtension()
-    {
-        if (extensionRequestable("GL_ANGLE_multiview"))
-        {
-            glRequestExtensionANGLE("GL_ANGLE_multiview");
-        }
-
-        if (!extensionEnabled("GL_ANGLE_multiview"))
-        {
-            std::cout << "Test skipped due to missing GL_ANGLE_multiview." << std::endl;
-            return false;
-        }
-        return true;
-    }
-
-    PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
-};
-
-class MultiviewRenderTestBase : public MultiviewDrawTest
+class MultiviewRenderTestBase : public MultiviewTestBase
 {
   protected:
     MultiviewRenderTestBase(const PlatformParameters &params, GLenum multiviewLayout)
-        : MultiviewDrawTest(params),
+        : MultiviewTestBase(params),
           mMultiviewLayout(multiviewLayout),
           mViewWidth(0),
           mViewHeight(0),
           mNumViews(0)
     {
     }
-    void RenderTestSetUp() { MultiviewDrawTest::DrawTestSetUp(); }
+    void RenderTestSetUp() { MultiviewTestBase::MultiviewTestBaseSetUp(); }
     void createFBO(int viewWidth, int height, int numViews, int numLayers, int baseViewIndex)
     {
         ASSERT(numViews + baseViewIndex <= numLayers);
@@ -328,7 +236,7 @@ class MultiviewRenderTestBase : public MultiviewDrawTest
 };
 
 class MultiviewRenderTest : public MultiviewRenderTestBase,
-                            public ::testing::TestWithParam<MultiviewTestParams>
+                            public ::testing::TestWithParam<MultiviewRenderTestParams>
 {
   protected:
     MultiviewRenderTest() : MultiviewRenderTestBase(GetParam(), GetParam().mMultiviewLayout) {}
@@ -2225,51 +2133,41 @@ TEST_P(MultiviewSideBySideRenderTest, ViewportOffsetsAppliedBugCoverage)
     EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
 }
 
-MultiviewImplementationParams VertexShaderOpenGL(GLint majorVersion, GLint minorVersion)
+MultiviewRenderTestParams SideBySideVertexShaderOpenGL(GLint majorVersion = 3,
+                                                       GLint minorVersion = 0)
 {
-    return MultiviewImplementationParams(majorVersion, minorVersion, false, egl_platform::OPENGL());
+    return MultiviewRenderTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE,
+                                     VertexShaderOpenGL(majorVersion, minorVersion));
 }
 
-MultiviewImplementationParams VertexShaderD3D11(GLint majorVersion, GLint minorVersion)
+MultiviewRenderTestParams LayeredVertexShaderOpenGL()
 {
-    return MultiviewImplementationParams(majorVersion, minorVersion, false, egl_platform::D3D11());
+    return MultiviewRenderTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE,
+                                     VertexShaderOpenGL(3, 0));
 }
 
-MultiviewImplementationParams GeomShaderD3D11(GLint majorVersion, GLint minorVersion)
+MultiviewRenderTestParams SideBySideGeomShaderD3D11()
 {
-    return MultiviewImplementationParams(majorVersion, minorVersion, true, egl_platform::D3D11());
+    return MultiviewRenderTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE,
+                                     GeomShaderD3D11(3, 0));
 }
 
-MultiviewTestParams SideBySideVertexShaderOpenGL(GLint majorVersion = 3, GLint minorVersion = 0)
+MultiviewRenderTestParams LayeredGeomShaderD3D11()
 {
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE,
-                               VertexShaderOpenGL(majorVersion, minorVersion));
+    return MultiviewRenderTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, GeomShaderD3D11(3, 0));
 }
 
-MultiviewTestParams LayeredVertexShaderOpenGL()
+MultiviewRenderTestParams SideBySideVertexShaderD3D11(GLint majorVersion = 3,
+                                                      GLint minorVersion = 0)
 {
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, VertexShaderOpenGL(3, 0));
+    return MultiviewRenderTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE,
+                                     VertexShaderD3D11(majorVersion, minorVersion));
 }
 
-MultiviewTestParams SideBySideGeomShaderD3D11()
+MultiviewRenderTestParams LayeredVertexShaderD3D11()
 {
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, GeomShaderD3D11(3, 0));
-}
-
-MultiviewTestParams LayeredGeomShaderD3D11()
-{
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, GeomShaderD3D11(3, 0));
-}
-
-MultiviewTestParams SideBySideVertexShaderD3D11(GLint majorVersion = 3, GLint minorVersion = 0)
-{
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE,
-                               VertexShaderD3D11(majorVersion, minorVersion));
-}
-
-MultiviewTestParams LayeredVertexShaderD3D11()
-{
-    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, VertexShaderD3D11(3, 0));
+    return MultiviewRenderTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE,
+                                     VertexShaderD3D11(3, 0));
 }
 
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest,

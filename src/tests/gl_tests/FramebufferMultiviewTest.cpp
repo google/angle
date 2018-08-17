@@ -7,7 +7,7 @@
 // The tests modify and examine the multiview state.
 //
 
-#include "test_utils/ANGLETest.h"
+#include "test_utils/MultiviewTest.h"
 #include "test_utils/gl_raii.h"
 
 using namespace angle;
@@ -26,39 +26,11 @@ std::vector<GLenum> GetDrawBufferRange(size_t numColorAttachments)
 }
 }  // namespace
 
-class FramebufferMultiviewTest : public ANGLETest
+// Base class for tests that care mostly about draw call validity and not rendering results.
+class FramebufferMultiviewTest : public MultiviewTest
 {
   protected:
-    FramebufferMultiviewTest()
-    {
-        setWindowWidth(128);
-        setWindowHeight(128);
-        setWebGLCompatibilityEnabled(true);
-    }
-
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-        glRequestExtensionANGLE = reinterpret_cast<PFNGLREQUESTEXTENSIONANGLEPROC>(
-            eglGetProcAddress("glRequestExtensionANGLE"));
-    }
-
-    // Requests the ANGLE_multiview extension and returns true if the operation succeeds.
-    bool requestMultiviewExtension()
-    {
-        if (extensionRequestable("GL_ANGLE_multiview"))
-        {
-            glRequestExtensionANGLE("GL_ANGLE_multiview");
-        }
-
-        if (!extensionEnabled("GL_ANGLE_multiview"))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
+    FramebufferMultiviewTest() : MultiviewTest() {}
 };
 
 class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
@@ -1398,6 +1370,10 @@ TEST_P(FramebufferMultiviewLayeredClearTest, ColorBufferClearAllLayersAttached)
     EXPECT_EQ(GLColor::green, getLayerColor(1, GL_COLOR_ATTACHMENT0));
 }
 
-ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, ES3_OPENGL(), ES3_D3D11());
-ANGLE_INSTANTIATE_TEST(FramebufferMultiviewSideBySideClearTest, ES3_OPENGL(), ES3_D3D11());
-ANGLE_INSTANTIATE_TEST(FramebufferMultiviewLayeredClearTest, ES3_OPENGL(), ES3_D3D11());
+ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, VertexShaderOpenGL(3, 0), GeomShaderD3D11(3, 0));
+ANGLE_INSTANTIATE_TEST(FramebufferMultiviewSideBySideClearTest,
+                       VertexShaderOpenGL(3, 0),
+                       GeomShaderD3D11(3, 0));
+ANGLE_INSTANTIATE_TEST(FramebufferMultiviewLayeredClearTest,
+                       VertexShaderOpenGL(3, 0),
+                       GeomShaderD3D11(3, 0));
