@@ -148,7 +148,7 @@ class GLES1State final : angle::NonCopyable
     void setMatrixMode(MatrixType mode);
     MatrixType getMatrixMode() const;
 
-    int getCurrentMatrixStackDepth(GLenum param) const;
+    GLint getCurrentMatrixStackDepth(GLenum param) const;
 
     void pushMatrix();
     void popMatrix();

@@ -206,16 +206,16 @@ MatrixType GLES1State::getMatrixMode() const
     return mMatrixMode;
 }
 
-int GLES1State::getCurrentMatrixStackDepth(GLenum queryType) const
+GLint GLES1State::getCurrentMatrixStackDepth(GLenum queryType) const
 {
     switch (queryType)
     {
         case GL_MODELVIEW_STACK_DEPTH:
-            return mModelviewMatrices.size();
+            return clampCast<GLint>(mModelviewMatrices.size());
         case GL_PROJECTION_STACK_DEPTH:
-            return mProjectionMatrices.size();
+            return clampCast<GLint>(mProjectionMatrices.size());
         case GL_TEXTURE_STACK_DEPTH:
-            return mTextureMatrices[mGLState->getActiveSampler()].size();
+            return clampCast<GLint>(mTextureMatrices[mGLState->getActiveSampler()].size());
         default:
             UNREACHABLE();
             return 0;
