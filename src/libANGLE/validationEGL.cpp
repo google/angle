@@ -2536,18 +2536,6 @@ Error ValidateSwapBuffers(Thread *thread, const Display *display, const Surface 
     return NoError();
 }
 
-Error ValidateWaitNative(const Display *display, const EGLint engine)
-{
-    ANGLE_TRY(ValidateDisplay(display));
-
-    if (engine != EGL_CORE_NATIVE_ENGINE)
-    {
-        return EglBadParameter() << "the 'engine' parameter has an unrecognized value";
-    }
-
-    return NoError();
-}
-
 Error ValidateSwapBuffersWithDamageKHR(const Display *display,
                                        const Surface *surface,
                                        EGLint *rects,
@@ -2582,6 +2570,129 @@ Error ValidateSwapBuffersWithDamageKHR(const Display *display,
     }
 
     // TODO(jmadill): Validate Surface is bound to the thread.
+
+    return NoError();
+}
+
+Error ValidateWaitNative(const Display *display, const EGLint engine)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (engine != EGL_CORE_NATIVE_ENGINE)
+    {
+        return EglBadParameter() << "the 'engine' parameter has an unrecognized value";
+    }
+
+    return NoError();
+}
+
+Error ValidateCopyBuffers(Display *display, const Surface *surface)
+{
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (display->testDeviceLost())
+    {
+        return EglContextLost();
+    }
+
+    return NoError();
+}
+
+// Validate state for eglBindTexImage. If context is non-null then textureObject will be set to
+// surface's texture that will have an image bound to it
+Error ValidateBindTexImage(const Display *display,
+                           const Surface *surface,
+                           const EGLSurface eglSurface,
+                           const EGLint buffer,
+                           const gl::Context *context,
+                           gl::Texture **textureObject)
+{
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (buffer != EGL_BACK_BUFFER)
+    {
+        return EglBadParameter();
+    }
+
+    if (eglSurface == EGL_NO_SURFACE || surface->getType() == EGL_WINDOW_BIT)
+    {
+        return EglBadSurface();
+    }
+
+    if (surface->getBoundTexture())
+    {
+        return EglBadAccess();
+    }
+
+    if (surface->getTextureFormat() == TextureFormat::NoTexture)
+    {
+        return EglBadMatch();
+    }
+
+    if (context)
+    {
+        gl::TextureType type = egl_gl::EGLTextureTargetToTextureType(surface->getTextureTarget());
+        *textureObject       = context->getTargetTexture(type);
+        ASSERT(*textureObject != nullptr);
+
+        if ((*textureObject)->getImmutableFormat())
+        {
+            return EglBadMatch();
+        }
+    }
+
+    return NoError();
+}
+
+Error ValidateReleaseTexImage(const Display *display,
+                              const Surface *surface,
+                              const EGLSurface eglSurface,
+                              const EGLint buffer)
+{
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (buffer != EGL_BACK_BUFFER)
+    {
+        return EglBadParameter();
+    }
+
+    if (eglSurface == EGL_NO_SURFACE || surface->getType() == EGL_WINDOW_BIT)
+    {
+        return EglBadSurface();
+    }
+
+    if (surface->getTextureFormat() == TextureFormat::NoTexture)
+    {
+        return EglBadMatch();
+    }
+
+    return NoError();
+}
+
+Error ValidateSwapInterval(const Display *display, const Surface *draw_surface)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (draw_surface == nullptr)
+    {
+        return EglBadSurface();
+    }
+
+    return NoError();
+}
+
+Error ValidateBindAPI(const EGLenum api)
+{
+    switch (api)
+    {
+        case EGL_OPENGL_API:
+        case EGL_OPENVG_API:
+            return EglBadParameter();  // Not supported by this implementation
+        case EGL_OPENGL_ES_API:
+            break;
+        default:
+            return EglBadParameter();
+    }
 
     return NoError();
 }

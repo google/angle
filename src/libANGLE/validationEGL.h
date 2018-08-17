@@ -11,6 +11,7 @@
 
 #include "common/PackedEnums.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/Texture.h"
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -146,10 +147,28 @@ Error ValidateSwapBuffers(Thread *thread, const Display *display, const Surface 
 
 Error ValidateWaitNative(const Display *display, const EGLint engine);
 
+Error ValidateCopyBuffers(Display *display, const Surface *surface);
+
 Error ValidateSwapBuffersWithDamageKHR(const Display *display,
                                        const Surface *surface,
                                        EGLint *rects,
                                        EGLint n_rects);
+
+Error ValidateBindTexImage(const Display *display,
+                           const Surface *surface,
+                           const EGLSurface eglSurface,
+                           const EGLint buffer,
+                           const gl::Context *context,
+                           gl::Texture **textureObject);
+
+Error ValidateReleaseTexImage(const Display *display,
+                              const Surface *surface,
+                              const EGLSurface eglSurface,
+                              const EGLint buffer);
+
+Error ValidateSwapInterval(const Display *display, const Surface *draw_surface);
+
+Error ValidateBindAPI(const EGLenum api);
 
 Error ValidatePresentationTimeANDROID(const Display *display,
                                       const Surface *surface,
