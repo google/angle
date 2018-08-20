@@ -29,7 +29,6 @@
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
-#include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
@@ -44,6 +43,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Image11.h"
 #include "libANGLE/renderer/d3d/d3d11/IndexBuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/PixelTransfer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Program11.h"
 #include "libANGLE/renderer/d3d/d3d11/Query11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
@@ -3859,11 +3859,6 @@ angle::Result Renderer11::markTransformFeedbackUsage(const gl::Context *context)
     }
 
     return angle::Result::Continue();
-}
-
-void Renderer11::onDirtyUniformBlockBinding(GLuint /*uniformBlockIndex*/)
-{
-    mStateManager.invalidateProgramUniformBuffers();
 }
 
 angle::Result Renderer11::getIncompleteTexture(const gl::Context *context,

@@ -265,8 +265,6 @@ class ProgramD3D : public ProgramImpl
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
     void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
 
-    void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) override;
-
     UniformStorageD3D *getShaderUniformStorage(gl::ShaderType shaderType) const
     {
         return mShaderUniformStorages[shaderType].get();

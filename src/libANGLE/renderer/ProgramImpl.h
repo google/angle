@@ -109,9 +109,6 @@ class ProgramImpl : angle::NonCopyable
                                GLint location,
                                GLuint *params) const = 0;
 
-    // TODO: synchronize in syncState when dirty bits exist.
-    virtual void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) = 0;
-
     // CHROMIUM_path_rendering
     // Set parameters to control fragment shader input variable interpolation
     virtual void setPathFragmentInputGen(const std::string &inputName,
@@ -129,9 +126,18 @@ class ProgramImpl : angle::NonCopyable
 
     const gl::ProgramState &getState() const { return mState; }
 
+    virtual gl::Error syncState(const gl::Context *context,
+                                const gl::Program::DirtyBits &dirtyBits);
+
   protected:
     const gl::ProgramState &mState;
 };
+
+inline gl::Error ProgramImpl::syncState(const gl::Context *context,
+                                        const gl::Program::DirtyBits &dirtyBits)
+{
+    return gl::NoError();
+}
 
 }  // namespace rx
 

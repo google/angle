@@ -349,10 +349,6 @@ TEST_P(ProgramBinaryES3Test, UniformBlockBindingWithDraw)
 // http://anglebug.com/1637
 TEST_P(ProgramBinaryES3Test, UniformBlockBindingNoDraw)
 {
-    // TODO(jmadill): Investigate Intel failure.
-    // http://anglebug.com/1637
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL() && IsIntel());
-
     testBinaryAndUBOBlockIndexes(false);
 }
 

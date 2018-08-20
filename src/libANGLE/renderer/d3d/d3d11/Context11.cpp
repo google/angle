@@ -13,7 +13,6 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/MemoryProgramCache.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
-#include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 #include "libANGLE/renderer/d3d/SamplerD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
@@ -22,6 +21,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Fence11.h"
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/IndexBuffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Program11.h"
 #include "libANGLE/renderer/d3d/d3d11/ProgramPipeline11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/StateManager11.h"
@@ -145,7 +145,7 @@ ShaderImpl *Context11::createShader(const gl::ShaderState &data)
 
 ProgramImpl *Context11::createProgram(const gl::ProgramState &data)
 {
-    return new ProgramD3D(data, mRenderer);
+    return new Program11(data, mRenderer);
 }
 
 FramebufferImpl *Context11::createFramebuffer(const gl::FramebufferState &data)

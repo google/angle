@@ -438,6 +438,7 @@ class State : angle::NonCopyable
         // Use a very coarse bit for any program or texture change.
         // TODO(jmadill): Fine-grained dirty bits for each texture/sampler.
         DIRTY_OBJECT_PROGRAM_TEXTURES,
+        DIRTY_OBJECT_PROGRAM,
         DIRTY_OBJECT_UNKNOWN,
         DIRTY_OBJECT_MAX = DIRTY_OBJECT_UNKNOWN,
     };

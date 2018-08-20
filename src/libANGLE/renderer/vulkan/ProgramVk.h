@@ -90,9 +90,6 @@ class ProgramVk : public ProgramImpl
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
     void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
 
-    // TODO: synchronize in syncState when dirty bits exist.
-    void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) override;
-
     void setPathFragmentInputGen(const std::string &inputName,
                                  GLenum genMode,
                                  GLint components,

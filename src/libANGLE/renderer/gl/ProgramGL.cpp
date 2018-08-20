@@ -942,4 +942,13 @@ void ProgramGL::linkResources(const gl::ProgramLinkedResources &resources)
     resources.atomicCounterBufferLinker.link(sizeMap);
 }
 
+gl::Error ProgramGL::syncState(const gl::Context *context, const gl::Program::DirtyBits &dirtyBits)
+{
+    for (size_t dirtyBit : dirtyBits)
+    {
+        ASSERT(dirtyBit <= gl::Program::DIRTY_BIT_UNIFORM_BLOCK_BINDING_MAX);
+        setUniformBlockBinding(dirtyBit, mState.getUniformBlockBinding(dirtyBit));
+    }
+    return gl::NoError();
+}
 }  // namespace rx

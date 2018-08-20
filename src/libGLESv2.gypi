@@ -455,6 +455,8 @@
             'libANGLE/renderer/d3d/d3d11/NativeWindow11.h',
             'libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp',
             'libANGLE/renderer/d3d/d3d11/PixelTransfer11.h',
+            'libANGLE/renderer/d3d/d3d11/Program11.cpp',
+            'libANGLE/renderer/d3d/d3d11/Program11.h',
             'libANGLE/renderer/d3d/d3d11/ProgramPipeline11.cpp',
             'libANGLE/renderer/d3d/d3d11/ProgramPipeline11.h',
             'libANGLE/renderer/d3d/d3d11/Query11.cpp',

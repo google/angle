@@ -741,6 +741,20 @@ class Program final : angle::NonCopyable, public LabeledObject
         return mState.mActiveSamplerTypes;
     }
 
+    // Program dirty bits.
+    enum DirtyBitType
+    {
+        DIRTY_BIT_UNIFORM_BLOCK_BINDING_0,
+        DIRTY_BIT_UNIFORM_BLOCK_BINDING_MAX =
+            DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 + IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS,
+
+        DIRTY_BIT_COUNT = DIRTY_BIT_UNIFORM_BLOCK_BINDING_MAX,
+    };
+
+    using DirtyBits = angle::BitSet<DIRTY_BIT_COUNT>;
+
+    Error syncState(const Context *context);
+
   private:
     struct LinkingState;
 
@@ -875,6 +889,8 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     // Cache for sampler validation
     Optional<bool> mCachedValidateSamplersResult;
+
+    DirtyBits mDirtyBits;
 };
 }  // namespace gl
 

@@ -187,11 +187,6 @@ angle::Result RendererD3D::initRenderTarget(const gl::Context *context,
     return clearRenderTarget(context, renderTarget, gl::ColorF(0, 0, 0, 0), 1, 0);
 }
 
-void RendererD3D::onDirtyUniformBlockBinding(GLuint /*uniformBlockIndex*/)
-{
-    // No-op by default. Only implemented in D3D11.
-}
-
 unsigned int GetBlendSampleMask(const gl::State &glState, int samples)
 {
     unsigned int mask = 0;

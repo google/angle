@@ -86,9 +86,6 @@ class ProgramNULL : public ProgramImpl
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
     void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
 
-    // TODO: synchronize in syncState when dirty bits exist.
-    void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) override;
-
     // CHROMIUM_path_rendering
     // Set parameters to control fragment shader input variable interpolation
     void setPathFragmentInputGen(const std::string &inputName,

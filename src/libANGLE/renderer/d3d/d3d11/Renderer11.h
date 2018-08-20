@@ -471,8 +471,6 @@ class Renderer11 : public RendererD3D
 
     bool canSelectViewInVertexShader() const override;
 
-    void onDirtyUniformBlockBinding(GLuint uniformBlockIndex) override;
-
     angle::Result mapResource(const gl::Context *context,
                               ID3D11Resource *resource,
                               UINT subResource,

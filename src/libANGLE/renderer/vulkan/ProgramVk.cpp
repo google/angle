@@ -723,11 +723,6 @@ void ProgramVk::setUniformMatrix4x3fv(GLint location,
     setUniformMatrixfv<4, 3>(location, count, transpose, value);
 }
 
-void ProgramVk::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
-{
-    UNIMPLEMENTED();
-}
-
 void ProgramVk::setPathFragmentInputGen(const std::string &inputName,
                                         GLenum genMode,
                                         GLint components,

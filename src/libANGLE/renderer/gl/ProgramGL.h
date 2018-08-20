@@ -69,8 +69,6 @@ class ProgramGL : public ProgramImpl
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
     void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
 
-    void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) override;
-
     void setPathFragmentInputGen(const std::string &inputName,
                                  GLenum genMode,
                                  GLint components,
@@ -83,6 +81,9 @@ class ProgramGL : public ProgramImpl
 
     void enableSideBySideRenderingPath() const;
     void enableLayeredRenderingPath(int baseViewIndex) const;
+
+    gl::Error syncState(const gl::Context *context,
+                        const gl::Program::DirtyBits &dirtyBits) override;
 
   private:
     void preLink();
@@ -109,6 +110,7 @@ class ProgramGL : public ProgramImpl
     void getAtomicCounterBufferSizeMap(std::map<int, unsigned int> *sizeMapOut) const;
 
     void linkResources(const gl::ProgramLinkedResources &resources);
+    void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding);
 
     // Helper function, makes it simpler to type.
     GLint uniLoc(GLint glLocation) const { return mUniformRealLocationMap[glLocation]; }

@@ -1420,6 +1420,12 @@ Error Program::loadBinary(const Context *context,
     // Currently we require the full shader text to compute the program hash.
     // TODO(jmadill): Store the binary in the internal program cache.
 
+    for (size_t uniformBlockIndex = 0; uniformBlockIndex < mState.mUniformBlocks.size();
+         ++uniformBlockIndex)
+    {
+        mDirtyBits.set(uniformBlockIndex);
+    }
+
     return NoError();
 #endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
 }
@@ -2437,7 +2443,7 @@ void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBind
     resolveLink();
     mState.mUniformBlocks[uniformBlockIndex].binding = uniformBlockBinding;
     mState.mActiveUniformBlockBindings.set(uniformBlockIndex, uniformBlockBinding != 0);
-    mProgram->setUniformBlockBinding(uniformBlockIndex, uniformBlockBinding);
+    mDirtyBits.set(DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 + uniformBlockIndex);
 }
 
 GLuint Program::getUniformBlockBinding(GLuint uniformBlockIndex) const
@@ -3921,4 +3927,15 @@ bool Program::samplesFromTexture(const gl::State &state, GLuint textureID) const
     return false;
 }
 
+Error Program::syncState(const Context *context)
+{
+    if (mDirtyBits.any())
+    {
+        resolveLink();
+        ANGLE_TRY(mProgram->syncState(context, mDirtyBits));
+        mDirtyBits.reset();
+    }
+
+    return NoError();
+}
 }  // namespace gl

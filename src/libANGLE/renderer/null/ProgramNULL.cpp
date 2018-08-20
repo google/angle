@@ -179,10 +179,6 @@ void ProgramNULL::getUniformuiv(const gl::Context *context, GLint location, GLui
     // TODO(jmadill): Write some values.
 }
 
-void ProgramNULL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
-{
-}
-
 void ProgramNULL::setPathFragmentInputGen(const std::string &inputName,
                                           GLenum genMode,
                                           GLint components,
