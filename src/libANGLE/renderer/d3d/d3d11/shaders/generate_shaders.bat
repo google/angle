@@ -35,6 +35,8 @@ call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2D_4444 ps_4_0_level_9_3
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGB2D_565   ps_4_0_level_9_3 compiled\passthroughrgb2d_565_11ps.h   %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2D_5551 ps_4_0_level_9_3 compiled\passthroughrgba2d_5551_11ps.h %debug%
 
+call:BuildShader ResolveColor.hlsl PS_ResolveColor2D ps_4_1 compiled\resolvecolor2dps.h %debug%
+
 call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_RGBA ps_4_0 compiled\multiplyalpha_ftof_pm_rgba_ps.h %debug%
 call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_RGBA ps_4_0 compiled\multiplyalpha_ftof_um_rgba_ps.h %debug%
 call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_RGB  ps_4_0 compiled\multiplyalpha_ftof_pm_rgb_ps.h  %debug%
