@@ -2542,7 +2542,9 @@ bool ValidateCopyTexImageParametersBase(Context *context,
     return true;
 }
 
-ErrorAndMessage ValidateDrawStates(Context *context)
+// Note all errors returned from this function are INVALID_OPERATION except for the draw framebuffer
+// completeness check.
+const char *ValidateDrawStates(Context *context)
 {
     const Extensions &extensions = context->getExtensions();
     const State &state = context->getGLState();
@@ -2552,7 +2554,7 @@ ErrorAndMessage ValidateDrawStates(Context *context)
     // https://www.khronos.org/registry/webgl/specs/latest/2.0/#5.14
     if (!extensions.webglCompatibility && state.getVertexArray()->hasMappedEnabledArrayBuffer())
     {
-        return {GL_INVALID_OPERATION, nullptr};
+        return kErrorBufferMapped;
     }
 
     // Note: these separate values are not supported in WebGL, due to D3D's limitations. See
@@ -2586,14 +2588,15 @@ ErrorAndMessage ValidateDrawStates(Context *context)
                     WARN() << "This ANGLE implementation does not support separate front/back "
                               "stencil writemasks, reference values, or stencil mask values.";
                 }
-                return {GL_INVALID_OPERATION, kErrorStencilReferenceMaskOrMismatch};
+                return kErrorStencilReferenceMaskOrMismatch;
             }
         }
     }
 
     if (!framebuffer->isComplete(context))
     {
-        return {GL_INVALID_FRAMEBUFFER_OPERATION, nullptr};
+        // Note: this error should be generated as INVALID_FRAMEBUFFER_OPERATION.
+        return kErrorDrawFramebufferIncomplete;
     }
 
     if (context->getStateCache().hasAnyEnabledClientAttrib())
@@ -2604,14 +2607,14 @@ ErrorAndMessage ValidateDrawStates(Context *context)
             // If a vertex attribute is enabled as an array via enableVertexAttribArray but no
             // buffer is bound to that attribute via bindBuffer and vertexAttribPointer, then calls
             // to drawArrays or drawElements will generate an INVALID_OPERATION error.
-            return {GL_INVALID_OPERATION, kErrorVertexArrayNoBuffer};
+            return kErrorVertexArrayNoBuffer;
         }
 
         if (state.getVertexArray()->hasEnabledNullPointerClientArray())
         {
             // This is an application error that would normally result in a crash, but we catch it
             // and return an error
-            return {GL_INVALID_OPERATION, kErrorVertexArrayNoBufferPointer};
+            return kErrorVertexArrayNoBufferPointer;
         }
     }
 
@@ -2621,7 +2624,7 @@ ErrorAndMessage ValidateDrawStates(Context *context)
         Program *program = state.getProgram();
         if (!program)
         {
-            return {GL_INVALID_OPERATION, kErrorProgramNotBound};
+            return kErrorProgramNotBound;
         }
 
         // In OpenGL ES spec for UseProgram at section 7.3, trying to render without
@@ -2631,12 +2634,12 @@ ErrorAndMessage ValidateDrawStates(Context *context)
         if (!program->hasLinkedShaderStage(ShaderType::Vertex) ||
             !program->hasLinkedShaderStage(ShaderType::Fragment))
         {
-            return {GL_INVALID_OPERATION, kErrorNoActiveGraphicsShaderStage};
+            return kErrorNoActiveGraphicsShaderStage;
         }
 
         if (!program->validateSamplers(nullptr, context->getCaps()))
         {
-            return {GL_INVALID_OPERATION, nullptr};
+            return kErrorTextureTypeConflict;
         }
 
         if (extensions.multiview)
@@ -2645,20 +2648,20 @@ ErrorAndMessage ValidateDrawStates(Context *context)
             const int framebufferNumViews = framebuffer->getNumViews();
             if (framebufferNumViews != programNumViews)
             {
-                return {GL_INVALID_OPERATION, kErrorMultiviewMismatch};
+                return kErrorMultiviewMismatch;
             }
 
             const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
             if (transformFeedbackObject != nullptr && transformFeedbackObject->isActive() &&
                 framebufferNumViews > 1)
             {
-                return {GL_INVALID_OPERATION, kErrorMultiviewTransformFeedback};
+                return kErrorMultiviewTransformFeedback;
             }
 
             if (extensions.disjointTimerQuery && framebufferNumViews > 1 &&
                 state.isQueryActive(QueryType::TimeElapsed))
             {
-                return {GL_INVALID_OPERATION, kErrorMultiviewTimerQuery};
+                return kErrorMultiviewTimerQuery;
             }
         }
 
@@ -2674,20 +2677,20 @@ ErrorAndMessage ValidateDrawStates(Context *context)
             if (uniformBuffer.get() == nullptr)
             {
                 // undefined behaviour
-                return {GL_INVALID_OPERATION, kErrorUniformBufferUnbound};
+                return kErrorUniformBufferUnbound;
             }
 
             size_t uniformBufferSize = GetBoundBufferAvailableSize(uniformBuffer);
             if (uniformBufferSize < uniformBlock.dataSize)
             {
                 // undefined behaviour
-                return {GL_INVALID_OPERATION, kErrorUniformBufferTooSmall};
+                return kErrorUniformBufferTooSmall;
             }
 
             if (extensions.webglCompatibility &&
                 uniformBuffer->isBoundForTransformFeedbackAndOtherUse())
             {
-                return {GL_INVALID_OPERATION, kErrorUniformBufferBoundForTransformFeedback};
+                return kErrorUniformBufferBoundForTransformFeedback;
             }
         }
 
@@ -2698,36 +2701,36 @@ ErrorAndMessage ValidateDrawStates(Context *context)
             if (transformFeedbackObject != nullptr && transformFeedbackObject->isActive() &&
                 transformFeedbackObject->buffersBoundForOtherUse())
             {
-                return {GL_INVALID_OPERATION, kErrorTransformFeedbackBufferDoubleBound};
+                return kErrorTransformFeedbackBufferDoubleBound;
             }
 
             // Detect rendering feedback loops for WebGL.
             if (framebuffer->formsRenderingFeedbackLoopWith(state))
             {
-                return {GL_INVALID_OPERATION, kErrorFeedbackLoop};
+                return kErrorFeedbackLoop;
             }
 
             // Detect that the vertex shader input types match the attribute types
             if (!ValidateVertexShaderAttributeTypeMatch(context))
             {
-                return {GL_INVALID_OPERATION, kErrorVertexShaderTypeMismatch};
+                return kErrorVertexShaderTypeMismatch;
             }
 
             // Detect that the color buffer types match the fragment shader output types
             if (!ValidateFragmentShaderColorBufferTypeMatch(context))
             {
-                return {GL_INVALID_OPERATION, kErrorDrawBufferTypeMismatch};
+                return kErrorDrawBufferTypeMismatch;
             }
 
             const VertexArray *vao = context->getGLState().getVertexArray();
             if (vao->hasTransformFeedbackBindingConflict(context))
             {
-                return {GL_INVALID_OPERATION, kErrorVertexBufferBoundForTransformFeedback};
+                return kErrorVertexBufferBoundForTransformFeedback;
             }
         }
     }
 
-    return {GL_NO_ERROR, nullptr};
+    return nullptr;
 }
 
 bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
@@ -2768,17 +2771,15 @@ bool ValidateDrawBase(Context *context, PrimitiveMode mode, GLsizei count)
 
     const State &state = context->getGLState();
 
-    const ErrorAndMessage &errorAndMessage = ValidateDrawStates(context);
-    if (errorAndMessage.errorType != GL_NO_ERROR)
+    const char *errorMessage = ValidateDrawStates(context);
+    if (errorMessage)
     {
-        if (errorAndMessage.message)
-        {
-            context->handleError(Error(errorAndMessage.errorType, errorAndMessage.message));
-        }
-        else
-        {
-            context->handleError(Error(errorAndMessage.errorType));
-        }
+        // All errors from ValidateDrawStates should return INVALID_OPERATION except Framebuffer
+        // Incomplete.
+        GLenum errorCode =
+            (errorMessage == kErrorDrawFramebufferIncomplete ? GL_INVALID_FRAMEBUFFER_OPERATION
+                                                             : GL_INVALID_OPERATION);
+        context->handleError(Error(errorCode, errorMessage));
         return false;
     }
 

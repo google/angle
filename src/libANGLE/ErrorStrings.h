@@ -71,6 +71,7 @@ ERRMSG(BlitSameImageDepthOrStencil,
        "Read and write depth stencil attachments cannot be the same image.");
 ERRMSG(BufferBoundForTransformFeedback, "Buffer is bound for transform feedback.");
 ERRMSG(BufferNotBound, "A buffer must be bound.");
+ERRMSG(BufferMapped, "An active buffer is mapped");
 ERRMSG(CompressedTextureDimensionsMustMatchData,
        "Compressed texture dimensions must exactly match the dimensions of the data passed in.");
 ERRMSG(CompressedTexturesNotAttachable, "Compressed textures cannot be attached to a framebuffer.");
@@ -83,6 +84,7 @@ ERRMSG(DefaultFramebufferTarget, "It is invalid to change default FBO's attachme
 ERRMSG(DispatchIndirectBufferNotBound, "Dispatch indirect buffer must be bound.");
 ERRMSG(DrawBufferTypeMismatch,
        "Fragment shader output type does not match the bound framebuffer attachment type.");
+ERRMSG(DrawFramebufferIncomplete, "Draw framebuffer is incomplete");
 ERRMSG(ElementArrayBufferBoundForTransformFeedback,
        "It is undefined behavior to use an element array buffer that is bound for transform "
        "feedback.");
@@ -293,6 +295,7 @@ ERRMSG(StencilReferenceMaskOrMismatch,
 ERRMSG(StrideMustBeMultipleOfType, "Stride must be a multiple of the passed in datatype.");
 ERRMSG(TextureNotBound, "A texture must be bound.");
 ERRMSG(TextureNotPow2, "The texture is a non-power-of-two texture.");
+ERRMSG(TextureTypeConflict, "Two textures of different types use the same sampler location.");
 ERRMSG(TransformFeedbackBufferDoubleBound,
        "A transform feedback buffer that would be written to is also bound to a "
        "non-transform-feedback target, which would cause undefined behavior.");
