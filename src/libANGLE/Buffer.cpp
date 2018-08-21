@@ -256,26 +256,20 @@ bool Buffer::isBoundForTransformFeedbackAndOtherUse() const
                mState.mBindingCount - mState.mTransformFeedbackGenericBindingCount;
 }
 
-void Buffer::onBindingChanged(const Context *context,
-                              bool bound,
-                              BufferBinding target,
-                              bool indexed)
+void Buffer::onTFBindingChanged(const Context *context, bool bound, bool indexed)
 {
     ASSERT(bound || mState.mBindingCount > 0);
     mState.mBindingCount += bound ? 1 : -1;
-    if (target == BufferBinding::TransformFeedback)
+    if (indexed)
     {
-        if (indexed)
-        {
-            ASSERT(bound || mState.mTransformFeedbackIndexedBindingCount > 0);
-            mState.mTransformFeedbackIndexedBindingCount += bound ? 1 : -1;
+        ASSERT(bound || mState.mTransformFeedbackIndexedBindingCount > 0);
+        mState.mTransformFeedbackIndexedBindingCount += bound ? 1 : -1;
 
-            mImpl->onStateChange(context, angle::SubjectMessage::BINDING_CHANGED);
-        }
-        else
-        {
-            mState.mTransformFeedbackGenericBindingCount += bound ? 1 : -1;
-        }
+        mImpl->onStateChange(context, angle::SubjectMessage::BINDING_CHANGED);
+    }
+    else
+    {
+        mState.mTransformFeedbackGenericBindingCount += bound ? 1 : -1;
     }
 }
 

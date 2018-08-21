@@ -477,7 +477,8 @@ class State : angle::NonCopyable
     Error clearUnclearedActiveTextures(const Context *context);
 
     bool isCurrentTransformFeedback(const TransformFeedback *tf) const;
-    bool isCurrentVertexArray(const VertexArray *va) const;
+
+    bool isCurrentVertexArray(const VertexArray *va) const { return va == mVertexArray; }
 
     GLES1State &gles1() { return mGLES1State; }
     const GLES1State &gles1() const { return mGLES1State; }

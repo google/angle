@@ -49,32 +49,56 @@ bool GetAlternativeQueryType(QueryType type, QueryType *alternativeType)
 
 }  // anonymous namepace
 
-void UpdateBufferBinding(const Context *context,
-                         BindingPointer<Buffer> *binding,
-                         Buffer *buffer,
-                         BufferBinding target,
-                         bool indexed)
+template <typename BindingT, typename... ArgsT>
+void UpdateNonTFBufferBinding(const Context *context, BindingT *binding, ArgsT... args)
 {
     if (binding->get())
-        (*binding)->onBindingChanged(context, false, target, indexed);
-    binding->set(context, buffer);
+        (*binding)->onNonTFBindingChanged(context, -1);
+    binding->set(context, args...);
     if (binding->get())
-        (*binding)->onBindingChanged(context, true, target, indexed);
+        (*binding)->onNonTFBindingChanged(context, 1);
+}
+
+template <typename BindingT, typename... ArgsT>
+void UpdateTFBufferBinding(const Context *context, BindingT *binding, bool indexed, ArgsT... args)
+{
+    if (binding->get())
+        (*binding)->onTFBindingChanged(context, false, indexed);
+    binding->set(context, args...);
+    if (binding->get())
+        (*binding)->onTFBindingChanged(context, true, indexed);
 }
 
 void UpdateBufferBinding(const Context *context,
-                         OffsetBindingPointer<Buffer> *binding,
+                         BindingPointer<Buffer> *binding,
                          Buffer *buffer,
-                         BufferBinding target,
-                         bool indexed,
-                         GLintptr offset,
-                         GLsizeiptr size)
+                         BufferBinding target)
 {
-    if (binding->get())
-        (*binding)->onBindingChanged(context, false, target, indexed);
-    binding->set(context, buffer, offset, size);
-    if (binding->get())
-        (*binding)->onBindingChanged(context, true, target, indexed);
+    if (target == BufferBinding::TransformFeedback)
+    {
+        UpdateTFBufferBinding(context, binding, false, buffer);
+    }
+    else
+    {
+        UpdateNonTFBufferBinding(context, binding, buffer);
+    }
+}
+
+void UpdateIndexedBufferBinding(const Context *context,
+                                OffsetBindingPointer<Buffer> *binding,
+                                Buffer *buffer,
+                                BufferBinding target,
+                                GLintptr offset,
+                                GLsizeiptr size)
+{
+    if (target == BufferBinding::TransformFeedback)
+    {
+        UpdateTFBufferBinding(context, binding, true, buffer, offset, size);
+    }
+    else
+    {
+        UpdateNonTFBufferBinding(context, binding, buffer, offset, size);
+    }
 }
 
 State::State(bool debug,
@@ -284,7 +308,7 @@ void State::reset(const Context *context)
 
     for (auto type : angle::AllEnums<BufferBinding>())
     {
-        UpdateBufferBinding(context, &mBoundBuffers[type], nullptr, type, false);
+        UpdateBufferBinding(context, &mBoundBuffers[type], nullptr, type);
     }
 
     if (mProgram)
@@ -306,17 +330,17 @@ void State::reset(const Context *context)
 
     for (auto &buf : mUniformBuffers)
     {
-        UpdateBufferBinding(context, &buf, nullptr, BufferBinding::Uniform, true);
+        UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::Uniform, 0, 0);
     }
 
     for (auto &buf : mAtomicCounterBuffers)
     {
-        UpdateBufferBinding(context, &buf, nullptr, BufferBinding::AtomicCounter, true);
+        UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::AtomicCounter, 0, 0);
     }
 
     for (auto &buf : mShaderStorageBuffers)
     {
-        UpdateBufferBinding(context, &buf, nullptr, BufferBinding::ShaderStorage, true);
+        UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::ShaderStorage, 0, 0);
     }
 
     angle::Matrix<GLfloat>::setToIdentity(mPathMatrixProj);
@@ -1243,10 +1267,10 @@ void State::setVertexArrayBinding(const Context *context, VertexArray *vertexArr
     if (mVertexArray == vertexArray)
         return;
     if (mVertexArray)
-        mVertexArray->onBindingChanged(context, false);
+        mVertexArray->onBindingChanged(context, -1);
     mVertexArray = vertexArray;
     if (vertexArray)
-        vertexArray->onBindingChanged(context, true);
+        vertexArray->onBindingChanged(context, 1);
     mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_BINDING);
 
     if (mVertexArray && mVertexArray->hasAnyDirtyBit())
@@ -1265,7 +1289,7 @@ bool State::removeVertexArrayBinding(const Context *context, GLuint vertexArray)
 {
     if (mVertexArray && mVertexArray->id() == vertexArray)
     {
-        mVertexArray->onBindingChanged(context, false);
+        mVertexArray->onBindingChanged(context, -1);
         mVertexArray = nullptr;
         mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_BINDING);
         mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
@@ -1425,19 +1449,19 @@ void State::setBufferBinding(const Context *context, BufferBinding target, Buffe
     switch (target)
     {
         case BufferBinding::PixelPack:
-            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target, false);
+            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target);
             mDirtyBits.set(DIRTY_BIT_PACK_BUFFER_BINDING);
             break;
         case BufferBinding::PixelUnpack:
-            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target, false);
+            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target);
             mDirtyBits.set(DIRTY_BIT_UNPACK_BUFFER_BINDING);
             break;
         case BufferBinding::DrawIndirect:
-            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target, false);
+            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target);
             mDirtyBits.set(DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING);
             break;
         case BufferBinding::DispatchIndirect:
-            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target, false);
+            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target);
             mDirtyBits.set(DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
             break;
         case BufferBinding::ElementArray:
@@ -1445,11 +1469,11 @@ void State::setBufferBinding(const Context *context, BufferBinding target, Buffe
             mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
             break;
         case BufferBinding::ShaderStorage:
-            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target, false);
+            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target);
             mDirtyBits.set(DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
             break;
         default:
-            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target, false);
+            UpdateBufferBinding(context, &mBoundBuffers[target], buffer, target);
             break;
     }
 }
@@ -1470,17 +1494,17 @@ void State::setIndexedBufferBinding(const Context *context,
             setBufferBinding(context, target, buffer);
             break;
         case BufferBinding::Uniform:
-            UpdateBufferBinding(context, &mUniformBuffers[index], buffer, target, true, offset,
-                                size);
+            UpdateIndexedBufferBinding(context, &mUniformBuffers[index], buffer, target, offset,
+                                       size);
             mDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
             break;
         case BufferBinding::AtomicCounter:
-            UpdateBufferBinding(context, &mAtomicCounterBuffers[index], buffer, target, true,
-                                offset, size);
+            UpdateIndexedBufferBinding(context, &mAtomicCounterBuffers[index], buffer, target,
+                                       offset, size);
             break;
         case BufferBinding::ShaderStorage:
-            UpdateBufferBinding(context, &mShaderStorageBuffers[index], buffer, target, true,
-                                offset, size);
+            UpdateIndexedBufferBinding(context, &mShaderStorageBuffers[index], buffer, target,
+                                       offset, size);
             break;
         default:
             UNREACHABLE();
@@ -1528,7 +1552,7 @@ void State::detachBuffer(const Context *context, const Buffer *buffer)
     {
         if (mBoundBuffers[target].id() == bufferName)
         {
-            UpdateBufferBinding(context, &mBoundBuffers[target], nullptr, target, false);
+            UpdateBufferBinding(context, &mBoundBuffers[target], nullptr, target);
         }
     }
 
@@ -1544,7 +1568,7 @@ void State::detachBuffer(const Context *context, const Buffer *buffer)
     {
         if (buf.id() == bufferName)
         {
-            UpdateBufferBinding(context, &buf, nullptr, BufferBinding::Uniform, true);
+            UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::Uniform, 0, 0);
         }
     }
 
@@ -1552,7 +1576,7 @@ void State::detachBuffer(const Context *context, const Buffer *buffer)
     {
         if (buf.id() == bufferName)
         {
-            UpdateBufferBinding(context, &buf, nullptr, BufferBinding::AtomicCounter, true);
+            UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::AtomicCounter, 0, 0);
         }
     }
 
@@ -1560,7 +1584,7 @@ void State::detachBuffer(const Context *context, const Buffer *buffer)
     {
         if (buf.id() == bufferName)
         {
-            UpdateBufferBinding(context, &buf, nullptr, BufferBinding::ShaderStorage, true);
+            UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::ShaderStorage, 0, 0);
         }
     }
 }
@@ -2879,9 +2903,4 @@ bool State::isCurrentTransformFeedback(const TransformFeedback *tf) const
 {
     return tf == mTransformFeedback.get();
 }
-bool State::isCurrentVertexArray(const VertexArray *va) const
-{
-    return va == mVertexArray;
-}
-
 }  // namespace gl

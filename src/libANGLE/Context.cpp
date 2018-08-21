@@ -6562,10 +6562,6 @@ bool Context::isCurrentTransformFeedback(const TransformFeedback *tf) const
 {
     return mGLState.isCurrentTransformFeedback(tf);
 }
-bool Context::isCurrentVertexArray(const VertexArray *va) const
-{
-    return mGLState.isCurrentVertexArray(va);
-}
 
 void Context::genProgramPipelines(GLsizei count, GLuint *pipelines)
 {

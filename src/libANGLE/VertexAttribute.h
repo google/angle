@@ -41,7 +41,7 @@ class VertexBinding final : angle::NonCopyable
     const BindingPointer<Buffer> &getBuffer() const { return mBuffer; }
     void setBuffer(const gl::Context *context, Buffer *bufferIn, bool containerIsBound);
 
-    void onContainerBindingChanged(const Context *context, bool bound) const;
+    void onContainerBindingChanged(const Context *context, int incr) const;
 
     const AttributesMask &getBoundAttributesMask() const { return mBoundAttributesMask; }
 

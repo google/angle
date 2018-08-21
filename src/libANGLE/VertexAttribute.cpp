@@ -46,17 +46,20 @@ VertexBinding &VertexBinding::operator=(VertexBinding &&binding)
 
 void VertexBinding::setBuffer(const gl::Context *context, Buffer *bufferIn, bool containerIsBound)
 {
-    if (mBuffer.get() && containerIsBound)
-        mBuffer->onBindingChanged(context, false, BufferBinding::Array, true);
+    if (containerIsBound)
+    {
+        if (mBuffer.get())
+            mBuffer->onNonTFBindingChanged(context, -1);
+        if (bufferIn)
+            bufferIn->onNonTFBindingChanged(context, 1);
+    }
     mBuffer.set(context, bufferIn);
-    if (mBuffer.get() && containerIsBound)
-        mBuffer->onBindingChanged(context, true, BufferBinding::Array, true);
 }
 
-void VertexBinding::onContainerBindingChanged(const Context *context, bool bound) const
+void VertexBinding::onContainerBindingChanged(const Context *context, int incr) const
 {
     if (mBuffer.get())
-        mBuffer->onBindingChanged(context, bound, BufferBinding::Array, true);
+        mBuffer->onNonTFBindingChanged(context, incr);
 }
 
 VertexAttribute::VertexAttribute(GLuint bindingIndex)
