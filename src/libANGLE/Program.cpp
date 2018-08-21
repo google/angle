@@ -1668,23 +1668,12 @@ const std::vector<sh::Attribute> &Program::getAttributes() const
     return mState.mAttributes;
 }
 
-const AttributesMask &Program::getActiveAttribLocationsMask() const
-{
-    resolveLink();
-    return mState.mActiveAttribLocationsMask;
-}
-
 const std::vector<SamplerBinding> &Program::getSamplerBindings() const
 {
     resolveLink();
     return mState.mSamplerBindings;
 }
 
-const std::vector<ImageBinding> &Program::getImageBindings() const
-{
-    resolveLink();
-    return mState.mImageBindings;
-}
 const sh::WorkGroupSize &Program::getComputeShaderLocalSize() const
 {
     resolveLink();
@@ -1710,12 +1699,6 @@ GLint Program::getGeometryShaderMaxVertices() const
 {
     resolveLink();
     return mState.mGeometryShaderMaxVertices;
-}
-
-const ProgramState &Program::getState() const
-{
-    resolveLink();
-    return mState;
 }
 
 GLuint Program::getInputResourceIndex(const GLchar *name) const
@@ -1846,11 +1829,6 @@ int Program::getNumViews() const
 {
     resolveLink();
     return mState.getNumViews();
-}
-bool Program::usesMultiview() const
-{
-    resolveLink();
-    return mState.usesMultiview();
 }
 
 ComponentTypeMask Program::getDrawBufferTypeMask() const

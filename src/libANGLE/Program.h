@@ -691,16 +691,29 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool isValidated() const;
     bool samplesFromTexture(const State &state, GLuint textureID) const;
 
-    const AttributesMask &getActiveAttribLocationsMask() const;
+    const AttributesMask &getActiveAttribLocationsMask() const
+    {
+        resolveLink();
+        return mState.mActiveAttribLocationsMask;
+    }
+
     const std::vector<SamplerBinding> &getSamplerBindings() const;
-    const std::vector<ImageBinding> &getImageBindings() const;
+    const std::vector<ImageBinding> &getImageBindings() const
+    {
+        resolveLink();
+        return mState.mImageBindings;
+    }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const;
     PrimitiveMode getGeometryShaderInputPrimitiveType() const;
     PrimitiveMode getGeometryShaderOutputPrimitiveType() const;
     GLint getGeometryShaderInvocations() const;
     GLint getGeometryShaderMaxVertices() const;
 
-    const ProgramState &getState() const;
+    const ProgramState &getState() const
+    {
+        resolveLink();
+        return mState;
+    }
 
     static LinkMismatchError LinkValidateVariablesBase(
         const sh::ShaderVariable &variable1,
@@ -726,7 +739,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     const ProgramBindings &getFragmentInputBindings() const;
 
     int getNumViews() const;
-    bool usesMultiview() const;
+    bool usesMultiview() const { return mState.usesMultiview(); }
 
     ComponentTypeMask getDrawBufferTypeMask() const;
     ComponentTypeMask getAttributesTypeMask() const;
