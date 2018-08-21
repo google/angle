@@ -32,6 +32,8 @@ ANGLE implements a no-op driver for OpenGL, D3D11 and Vulkan. To run on these co
     * `repeating`: Skip the update of uniforms before each draw call.
 * [`DrawElementsPerfBenchmark`](DrawElementsPerf.cpp): Similar to `DrawCallPerfBenchmark` but for indexed DrawElements calls.
 * [`BindingsBenchmark`](BindingPerf.cpp): Tests Buffer binding performance. Does no draw call operations.
+    * `100_objects_allocated_every_iteration`: Tests repeated glBindBuffer with new buffers allocated each iteration.
+    * `100_objects_allocated_at_initialization`: Tests repeated glBindBuffer the same objects each iteration.
 * [`TexSubImageBenchmark`](TexSubImage.cpp): Tests `glTexSubImage` update performance.
 * [`BufferSubDataBenchmark`](BufferSubData.cpp): Tests `glBufferSubData` update performance.
 * [`TextureSamplingBenchmark`](TextureSampling.cpp): Tests Texture sampling performance.

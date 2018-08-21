@@ -37,7 +37,7 @@
       * If you aren't a browser developer, you should be able to drop your compiled DLLs into a Chrome installation, in place of those distributed with Chrome, to check WebGL conformance. [Chrome Canary](https://www.google.com/chrome/browser/canary.html) is well-suited for this.
     * If your code isn't covered by an existing test, you are *strongly encouraged* to add new test coverage. This both ensures that your code is correct and that new contributors won't break it in the future.
     * Add new tests to `angle_end2end_tests` for OpenGL-based API tests, `angle_unittests` for cross-platform internal tests, and `angle_white_box_tests` for rendering tests which also need visibility into internal ANGLE classes.
-   * If you are submitting a performance fix, test your code with `angle_perftests` and add a new performance test if it is not covered by the existing benchmarks.
+   * If you are submitting a performance fix, test your code with `angle_perftests` and add a new performance test if it is not covered by the existing benchmarks. For more documentation on `angle_perftests` see the [README](../src/tests/perf_tests/README.md).
    * The [Chromium GPU FYI bot waterfall](http://build.chromium.org/p/chromium.gpu.fyi/console) provides continuous integration for ANGLE patches that have been committed.  There may be hardware configurations that are not tested by the ANGLE trybots, if you notice breakage on this waterfall after landing a patch, please notify a project member.
    * ANGLE also includes the [drawElements Quality Program (dEQP)](dEQP.md) for additional testing. If you're working on a new feature, there may be some extensive tests for it already written.
 
@@ -121,5 +121,4 @@ See also:
 * [ANGLE Gerrit](https://chromium-review.googlesource.com/q/project:angle/angle)
 * [Chromium Projects: Contributing Code](http://www.chromium.org/developers/contributing-code/)
 * [depot_tools tutorial](http://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html)
-
-
+* [angle_perftests README](../src/tests/perf_tests/README.md)
