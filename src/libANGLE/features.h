@@ -62,4 +62,9 @@
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 #endif  // !defined(ANGLE_STD_ASYNC_WORKERS)
 
-#endif // LIBANGLE_FEATURES_H_
+// Force thread safety in all of ANGLE by locking a global mutex in every ANGLE entry point.
+#if !defined(ANGLE_FORCE_THREAD_SAFETY)
+#define ANGLE_FORCE_THREAD_SAFETY ANGLE_DISABLED
+#endif  // !defined(ANGLE_FORCE_THREAD_SAFETY)
+
+#endif  // LIBANGLE_FEATURES_H_

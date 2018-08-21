@@ -76,6 +76,10 @@ config("internal_config") {
   } else {
     defines += [ "ANGLE_IS_32_BIT_CPU" ]
   }
+
+  if (angle_force_thread_safety) {
+    defines += [ "ANGLE_FORCE_THREAD_SAFETY=1" ]
+  }
 }
 
 config("extra_warnings") {

@@ -181,6 +181,7 @@ template_entry_point_decl = """ANGLE_EXPORT {return_type}GL_APIENTRY {name}{expl
 
 template_entry_point_def = """{return_type}GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
+    ANGLE_SCOPED_GLOBAL_LOCK();
     {event_comment}EVENT("({format_params})"{comma_if_needed}{pass_params});
 
     Context *context = {context_getter};

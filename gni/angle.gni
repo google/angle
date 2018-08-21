@@ -64,6 +64,7 @@ declare_args() {
   angle_enable_null = true
   angle_enable_essl = true
   angle_enable_glsl = true
+  angle_force_thread_safety = false
 }
 
 declare_args() {

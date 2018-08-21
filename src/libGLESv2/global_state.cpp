@@ -93,6 +93,21 @@ Debug *GetDebug()
 
 }  // namespace egl
 
+#if ANGLE_FORCE_THREAD_SAFETY == ANGLE_ENABLED
+namespace angle
+{
+namespace
+{
+std::mutex g_Mutex;
+}  // anonymous namespace
+
+std::mutex &GetGlobalMutex()
+{
+    return g_Mutex;
+}
+}  // namespace angle
+#endif
+
 #ifdef ANGLE_PLATFORM_WINDOWS
 namespace egl
 {
