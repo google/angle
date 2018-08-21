@@ -19,6 +19,46 @@ namespace angle
 // fragments.
 GLuint CreateSimplePassthroughProgram(int numViews);
 
+// Create a set of textures to use for multiview rendering. If multiviewLayout is
+// GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, then 2D textures are created. If multiviewLayout is
+// GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, then 2D texture arrays are created. Texture ids should be
+// created beforehand. If depthTexture or stencilTexture is 0, it will not be initialized.
+void CreateMultiviewBackingTextures(GLenum multiviewLayout,
+                                    int viewWidth,
+                                    int height,
+                                    int numLayers,
+                                    std::vector<GLuint> colorTextures,
+                                    GLuint depthTexture,
+                                    GLuint depthStencilTexture);
+void CreateMultiviewBackingTextures(GLenum multiviewLayout,
+                                    int viewWidth,
+                                    int height,
+                                    int numLayers,
+                                    GLuint colorTexture,
+                                    GLuint depthTexture,
+                                    GLuint depthStencilTexture);
+
+// Attach multiview textures to the framebuffer denoted by target. If there are multiple color
+// textures they get attached to different color attachments starting from 0. If multiviewLayout is
+// GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, then the viewport offsets are set so that the views
+// are tightly packed inside the attachments.
+void AttachMultiviewTextures(GLenum target,
+                             GLenum multiviewLayout,
+                             int viewWidth,
+                             int numViews,
+                             int baseViewIndex,
+                             std::vector<GLuint> colorTextures,
+                             GLuint depthTexture,
+                             GLuint depthStencilTexture);
+void AttachMultiviewTextures(GLenum target,
+                             GLenum multiviewLayout,
+                             int viewWidth,
+                             int numViews,
+                             int baseViewIndex,
+                             GLuint colorTexture,
+                             GLuint depthTexture,
+                             GLuint depthStencilTexture);
+
 struct MultiviewImplementationParams : public PlatformParameters
 {
     MultiviewImplementationParams(GLint majorVersion,

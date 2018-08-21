@@ -101,78 +101,16 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
         glGenTextures(1, &mColorTexture);
         glGenTextures(1, &mDepthTexture);
 
-        // Create color and depth textures.
-        switch (mMultiviewLayout)
-        {
-            case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
-            {
-                int textureWidth = viewWidth * numViews;
-                glBindTexture(GL_TEXTURE_2D, mColorTexture);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, textureWidth, height, 0, GL_RGBA,
-                             GL_UNSIGNED_BYTE, nullptr);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-                glBindTexture(GL_TEXTURE_2D, mDepthTexture);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, textureWidth, height, 0,
-                             GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-                glBindTexture(GL_TEXTURE_2D, 0);
-                break;
-            }
-            case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
-                glBindTexture(GL_TEXTURE_2D_ARRAY, mColorTexture);
-                glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, viewWidth, height, numLayers, 0,
-                             GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-                glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-                glBindTexture(GL_TEXTURE_2D_ARRAY, mDepthTexture);
-                glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, viewWidth, height,
-                             numLayers, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-                glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
-                break;
-            default:
-                UNREACHABLE();
-        }
-        ASSERT_GL_NO_ERROR();
+        CreateMultiviewBackingTextures(mMultiviewLayout, viewWidth, height, numLayers,
+                                       mColorTexture, mDepthTexture, 0u);
 
         glGenFramebuffers(1, &mDrawFramebuffer);
 
         // Create draw framebuffer to be used for multiview rendering.
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawFramebuffer);
-        switch (mMultiviewLayout)
-        {
-            case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
-            {
-                std::vector<GLint> viewportOffsets(numViews * 2);
-                for (int i = 0u; i < numViews; ++i)
-                {
-                    viewportOffsets[i * 2]     = i * viewWidth;
-                    viewportOffsets[i * 2 + 1] = 0;
-                }
-                glFramebufferTextureMultiviewSideBySideANGLE(GL_DRAW_FRAMEBUFFER,
-                                                             GL_COLOR_ATTACHMENT0, mColorTexture, 0,
-                                                             numViews, &viewportOffsets[0]);
-                glFramebufferTextureMultiviewSideBySideANGLE(GL_DRAW_FRAMEBUFFER,
-                                                             GL_DEPTH_ATTACHMENT, mDepthTexture, 0,
-                                                             numViews, &viewportOffsets[0]);
-                break;
-            }
-            case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
-                glFramebufferTextureMultiviewLayeredANGLE(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                                          mColorTexture, 0, baseViewIndex,
-                                                          numViews);
-                glFramebufferTextureMultiviewLayeredANGLE(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                                          mDepthTexture, 0, baseViewIndex,
-                                                          numViews);
-                break;
-            default:
-                UNREACHABLE();
-        }
+        AttachMultiviewTextures(GL_DRAW_FRAMEBUFFER, mMultiviewLayout, viewWidth, numViews,
+                                baseViewIndex, mColorTexture, mDepthTexture, 0u);
 
-        GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-        glDrawBuffers(1, DrawBuffers);
-        ASSERT_GL_NO_ERROR();
         ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER));
 
         // Create read framebuffer to be used to retrieve the pixel information for testing
@@ -193,15 +131,12 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
                 glGenFramebuffers(mReadFramebuffer.size(), mReadFramebuffer.data());
                 for (int i = 0; i < numLayers; ++i)
                 {
-                    glBindFramebuffer(GL_FRAMEBUFFER, mReadFramebuffer[i]);
-                    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mColorTexture,
-                                              0, i);
-                    glClearColor(0, 0, 0, 0);
-                    glClear(GL_COLOR_BUFFER_BIT);
+                    glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer[i]);
+                    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                              mColorTexture, 0, i);
                     ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE,
                                      glCheckFramebufferStatus(GL_READ_FRAMEBUFFER));
                 }
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawFramebuffer);
                 break;
             default:
                 UNREACHABLE();
@@ -215,8 +150,6 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
             glEnable(GL_SCISSOR_TEST);
             glScissor(0, 0, viewWidth, height);
         }
-        glClearColor(0, 0, 0, 1);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     void updateFBOs(int viewWidth, int height, int numViews)
@@ -231,6 +164,7 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
         switch (mMultiviewLayout)
         {
             case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer[0]);
                 return ReadColor(view * mViewWidth + x, y);
             case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
                 ASSERT(static_cast<size_t>(view) < mReadFramebuffer.size());
@@ -346,10 +280,10 @@ class MultiviewRenderDualViewTest : public MultiviewRenderTest
 
     void checkOutput()
     {
-        EXPECT_EQ(GLColor::black, GetViewColor(0, 0, 0));
+        EXPECT_EQ(GLColor::transparentBlack, GetViewColor(0, 0, 0));
         EXPECT_EQ(GLColor::green, GetViewColor(1, 0, 0));
         EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
-        EXPECT_EQ(GLColor::black, GetViewColor(1, 0, 1));
+        EXPECT_EQ(GLColor::transparentBlack, GetViewColor(1, 0, 1));
     }
 
     GLuint mProgram;
@@ -464,7 +398,8 @@ class MultiviewRenderPrimitiveTest : public MultiviewRenderTest
                 {
                     size_t flatIndex =
                         static_cast<size_t>(view * mViewWidth * mViewHeight + mViewWidth * h + w);
-                    EXPECT_EQ(GLColor(0, expectedGreenChannelData[flatIndex], 0, 255),
+                    EXPECT_EQ(GLColor(0, expectedGreenChannelData[flatIndex], 0,
+                                      expectedGreenChannelData[flatIndex]),
                               GetViewColor(w, h, view));
                 }
             }
@@ -996,7 +931,7 @@ TEST_P(MultiviewRenderTest, DrawArraysFourViews)
             }
             else
             {
-                EXPECT_EQ(GLColor::black, GetViewColor(j, 0, i));
+                EXPECT_EQ(GLColor::transparentBlack, GetViewColor(j, 0, i));
             }
         }
     }
@@ -1056,7 +991,8 @@ TEST_P(MultiviewRenderTest, DrawArraysInstanced)
         {
             for (int x = 0; x < 2; ++x)
             {
-                EXPECT_EQ(GLColor(0, expectedGreenChannel[view][y][x], 0, 255),
+                EXPECT_EQ(GLColor(0, expectedGreenChannel[view][y][x], 0,
+                                  expectedGreenChannel[view][y][x]),
                           GetViewColor(x, y, view));
             }
         }
@@ -1145,7 +1081,8 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
         {
             for (int col = 0; col < 4; ++col)
             {
-                EXPECT_EQ(GLColor(0, expectedGreenChannel[view][row][col], 0, 255),
+                EXPECT_EQ(GLColor(0, expectedGreenChannel[view][row][col], 0,
+                                  expectedGreenChannel[view][row][col]),
                           GetViewColor(col, row, view));
             }
         }
@@ -1812,9 +1749,9 @@ TEST_P(MultiviewSideBySideRenderTest, NoLeakingFragments)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDrawArrays(GL_POINTS, 0, 2);
-        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
         EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::red);
-        EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::black);
+        EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::transparentBlack);
         EXPECT_PIXEL_COLOR_EQ(3, 0, GLColor::green);
     }
 
@@ -1823,9 +1760,9 @@ TEST_P(MultiviewSideBySideRenderTest, NoLeakingFragments)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glLineWidth(10.f);
         glDrawArrays(GL_LINES, 0, 2);
-        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
         EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::red);
-        EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::black);
+        EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::transparentBlack);
         EXPECT_PIXEL_COLOR_EQ(3, 0, GLColor::green);
     }
 }
@@ -2027,7 +1964,7 @@ TEST_P(MultiviewRenderTest, DivisorUpdatedOnProgramChange)
             }
             for (int j = numViews; j < 4; ++j)
             {
-                EXPECT_EQ(GLColor::black, GetViewColor(j, 0, view));
+                EXPECT_EQ(GLColor::transparentBlack, GetViewColor(j, 0, view));
             }
         }
 
