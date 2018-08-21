@@ -5,14 +5,7 @@
 import("../../gni/angle.gni")
 import("//build/config/chromecast_build.gni")
 import("//testing/test.gni")
-
-unittests_gypi = exec_script("//build/gypi_to_gn.py",
-                             [
-                               rebase_path("angle_unittests.gypi"),
-                               "--replace=<(angle_path)=.",
-                             ],
-                             "scope",
-                             [ "angle_unittests.gypi" ])
+import("angle_unittests.gypi")
 
 declare_args() {
   # Don't build dEQP by default.
@@ -96,11 +89,10 @@ if (build_with_chromium) {
 test("angle_unittests") {
   include_dirs = [ "$angle_root/src" ]
 
-  sources = rebase_path(unittests_gypi.angle_unittests_sources, ".", "../..")
+  sources = rebase_path(angle_unittests_sources, ".", "../..")
 
   if (angle_enable_hlsl) {
-    sources +=
-        rebase_path(unittests_gypi.angle_unittests_hlsl_sources, ".", "../..")
+    sources += rebase_path(angle_unittests_hlsl_sources, ".", "../..")
     defines = [ "ANGLE_ENABLE_HLSL" ]
   }
 
@@ -118,13 +110,7 @@ test("angle_unittests") {
 }
 
 if (is_win || is_linux || is_mac || is_android) {
-  end2end_gypi = exec_script("//build/gypi_to_gn.py",
-                             [
-                               rebase_path("angle_end2end_tests.gypi"),
-                               "--replace=<(angle_path)=.",
-                             ],
-                             "scope",
-                             [ "angle_end2end_tests.gypi" ])
+  import("angle_end2end_tests.gypi")
 
   test("angle_end2end_tests") {
     include_dirs = [
@@ -140,28 +126,21 @@ if (is_win || is_linux || is_mac || is_android) {
       use_native_activity = true
     }
 
-    sources =
-        rebase_path(end2end_gypi.angle_end2end_tests_sources, ".", "../..")
+    sources = rebase_path(angle_end2end_tests_sources, ".", "../..")
     libs = []
 
     if (is_mac) {
-      sources += rebase_path(end2end_gypi.angle_end2end_tests_mac_sources,
-                             ".",
-                             "../..")
+      sources += rebase_path(angle_end2end_tests_mac_sources, ".", "../..")
       libs += [
         "CoreFoundation.framework",
         "IOSurface.framework",
       ]
     }
     if (is_win) {
-      sources += rebase_path(end2end_gypi.angle_end2end_tests_win_sources,
-                             ".",
-                             "../..")
+      sources += rebase_path(angle_end2end_tests_win_sources, ".", "../..")
     }
     if (use_x11) {
-      sources += rebase_path(end2end_gypi.angle_end2end_tests_x11_sources,
-                             ".",
-                             "../..")
+      sources += rebase_path(angle_end2end_tests_x11_sources, ".", "../..")
     }
 
     if (build_with_chromium) {
@@ -191,13 +170,7 @@ if (is_win || is_linux || is_mac || is_android) {
            ]
   }
 
-  white_box_gypi = exec_script("//build/gypi_to_gn.py",
-                               [
-                                 rebase_path("angle_white_box_tests.gypi"),
-                                 "--replace=<(angle_path)=.",
-                               ],
-                               "scope",
-                               [ "angle_white_box_tests.gypi" ])
+  import("angle_white_box_tests.gypi")
 
   test("angle_white_box_tests") {
     include_dirs = [
@@ -209,13 +182,10 @@ if (is_win || is_linux || is_mac || is_android) {
       use_native_activity = true
     }
 
-    sources =
-        rebase_path(white_box_gypi.angle_white_box_tests_sources, ".", "../..")
+    sources = rebase_path(angle_white_box_tests_sources, ".", "../..")
 
     if (is_win) {
-      sources += rebase_path(white_box_gypi.angle_white_box_tests_win_sources,
-                             ".",
-                             "../..")
+      sources += rebase_path(angle_white_box_tests_win_sources, ".", "../..")
     }
 
     # Share the same main file as end2end_tests.
@@ -253,13 +223,7 @@ if (is_win || is_linux || is_mac || is_android) {
 }
 
 if (is_win || is_linux || is_android || is_mac) {
-  perftests_gypi = exec_script("//build/gypi_to_gn.py",
-                               [
-                                 rebase_path("angle_perftests.gypi"),
-                                 "--replace=<(angle_path)=.",
-                               ],
-                               "scope",
-                               [ "angle_perftests.gypi" ])
+  import("angle_perftests.gypi")
 
   test("angle_perftests") {
     include_dirs = [
@@ -267,7 +231,7 @@ if (is_win || is_linux || is_android || is_mac) {
       "../../util",
     ]
 
-    sources = rebase_path(perftests_gypi.angle_perf_tests_sources, ".", "../..")
+    sources = rebase_path(angle_perf_tests_sources, ".", "../..")
 
     deps = googletest_deps + [
              angle_root + ":angle_util_static",
@@ -282,19 +246,15 @@ if (is_win || is_linux || is_android || is_mac) {
     }
 
     if (is_win) {
-      sources +=
-          rebase_path(perftests_gypi.angle_perf_tests_win_sources, ".", "../..")
+      sources += rebase_path(angle_perf_tests_win_sources, ".", "../..")
     }
 
     if (angle_enable_vulkan) {
-      sources += rebase_path(perftests_gypi.angle_perf_tests_vulkan_sources,
-                             ".",
-                             "../..")
+      sources += rebase_path(angle_perf_tests_vulkan_sources, ".", "../..")
       if (is_android || is_linux) {
-        sources += rebase_path(
-                perftests_gypi.angle_perf_tests_vulkan_command_buffer_sources,
-                ".",
-                "../..")
+        sources += rebase_path(angle_perf_tests_vulkan_command_buffer_sources,
+                               ".",
+                               "../..")
       }
       deps += [ "$angle_root/third_party/glslang:glslang" ]
       public_configs = [ "$angle_root/third_party/glslang:glslang_config" ]
@@ -527,29 +487,51 @@ if (build_angle_gles1_conform_tests) {
 ###-----------------------------------------------------
 
 if (build_angle_deqp_tests) {
-  deqp_gypi =
-      exec_script("//build/gypi_to_gn.py",
-                  [
-                    rebase_path("deqp.gypi"),
-                    "--replace=<(angle_path)=.",
-                    "--replace=<(deqp_path)=$angle_root/third_party/deqp/src",
-                  ],
-                  "scope",
-                  [ "deqp.gypi" ])
+  import("deqp.gypi")
 
   config("angle_deqp_support") {
-    include_dirs = rebase_path(deqp_gypi.deqp_include_dirs, ".", "../..")
+    include_dirs = rebase_path(deqp_include_dirs, ".", "../..")
     if (is_win && !is_clang) {
       include_dirs +=
           [ "$angle_root/third_party/deqp/src/framework/platform/win32" ]
-      cflags = deqp_gypi.deqp_win_cflags
+      cflags = [
+        "/EHsc",  # dEQP requires exceptions
+        "/wd4091",  # typedef ignored when no variable is declared
+        "/wd4100",
+        "/wd4125",  # decimal digit terminates octal escape sequence
+        "/wd4127",  # conditional expression constant
+        "/wd4244",  # possible loss of data
+        "/wd4245",  # argument signed/unsigned mismatch
+        "/wd4297",  # function assumed not to throw an exception but does
+        "/wd4389",  # signed/unsigned mismatch
+        "/wd4510",  # default constructor could not be generated
+        "/wd4512",
+        "/wd4610",  # cannot be instantiated
+        "/wd4611",  # setjmp interaction non-portable
+        "/wd4701",  # potentially uninit used
+        "/wd4702",  # unreachable code
+        "/wd4706",  # assignment within conditional expression
+        "/wd4838",  # conversion requires a narrowing conversion
+        "/wd4996",  # deprecated
+      ]
     }
     if (is_android) {
       include_dirs +=
           [ "$angle_root/third_party/deqp/src/framework/platform/android" ]
     }
-    defines = deqp_gypi.deqp_defines
-    defines += [ "_MBCS" ]
+    defines = [
+      "DEQP_SUPPORT_GLES31=1",
+      "DEQP_SUPPORT_GLES3=1",
+      "DEQP_SUPPORT_GLES2=1",
+      "DEQP_SUPPORT_EGL=1",
+      "DEQP_TARGET_NAME=\"angle\"",
+      "DEQP_GLES31_RUNTIME_LOAD=1",
+      "DEQP_GLES3_RUNTIME_LOAD=1",
+      "DEQP_GLES2_RUNTIME_LOAD=1",
+      "QP_SUPPORT_PNG=1",
+      "_HAS_EXCEPTIONS=1",
+      "_MBCS",
+    ]
 
     if (is_clang) {
       # TODO(jmadill): Remove this once we fix dEQP.
@@ -600,7 +582,7 @@ if (build_angle_deqp_tests) {
       ]
     }
 
-    sources = rebase_path(deqp_gypi.deqp_libtester_decpp_sources, ".", "../..")
+    sources = rebase_path(deqp_libtester_decpp_sources, ".", "../..")
   }
 
   config("angle_deqp_libtester_config") {
@@ -633,17 +615,15 @@ if (build_angle_deqp_tests) {
 
     configs -= deqp_undefine_configs
     public_configs = [ ":angle_deqp_libtester_config" ]
-    sources = rebase_path(deqp_gypi.deqp_libtester_sources, ".", "../..")
+    sources = rebase_path(deqp_libtester_sources, ".", "../..")
     if (is_win) {
-      sources += rebase_path(deqp_gypi.deqp_libtester_sources_win, ".", "../..")
+      sources += rebase_path(deqp_libtester_sources_win, ".", "../..")
     }
     if (is_linux || is_android || is_mac) {
-      sources +=
-          rebase_path(deqp_gypi.deqp_libtester_sources_unix, ".", "../..")
+      sources += rebase_path(deqp_libtester_sources_unix, ".", "../..")
     }
     if (is_android) {
-      sources +=
-          rebase_path(deqp_gypi.deqp_libtester_sources_android, ".", "../..")
+      sources += rebase_path(deqp_libtester_sources_android, ".", "../..")
       libs = [ "log" ]
     }
   }
@@ -662,9 +642,9 @@ if (build_angle_deqp_tests) {
 
     public_configs = [ ":angle_deqp_gtest_support_config" ]
 
-    sources = deqp_gypi.deqp_gpu_test_expectations_sources
+    sources = deqp_gpu_test_expectations_sources
     if (is_mac) {
-      sources += deqp_gypi.deqp_gpu_test_expectations_sources_mac
+      sources += deqp_gpu_test_expectations_sources_mac
       libs = [ "Cocoa.framework" ]
     }
 
@@ -692,10 +672,10 @@ if (build_angle_deqp_tests) {
     "ANGLE_DEQP_EGL_TESTS",
   ]
   target_sources = [
-    deqp_gypi.deqp_gles2_sources,
-    deqp_gypi.deqp_gles3_sources,
-    deqp_gypi.deqp_gles31_sources,
-    deqp_gypi.deqp_egl_sources,
+    deqp_gles2_sources,
+    deqp_gles3_sources,
+    deqp_gles31_sources,
+    deqp_egl_sources,
   ]
 
   foreach(index,

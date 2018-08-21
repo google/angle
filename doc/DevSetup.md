@@ -10,7 +10,7 @@ ANGLE uses git for version control. If you are not familiar with git, helpful do
 ### Required Tools
 On all platforms:
 
- * GN is the supported build system.  GYP is deprecated and support will be removed in the future but [instructions are available](gyp.md).
+ * GN is the build system.  GYP support has been removed.
  * Clang will be set up by the build system and used by default.  See below for platform-specific compiler choices.
  * [depot_tools](http://dev.chromium.org/developers/how-tos/install-depot-tools)
    * Required to generate projects and build files, contribute patches, run the unit tests or build the shader compiler on non-Windows systems.

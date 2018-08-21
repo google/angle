@@ -273,7 +273,7 @@ for impl_class in impl_classes:
     h_file.close()
     cpp_file.close()
 
-# Print a block of source files to add to the GYP
+# Print a block of source files to add to the build
 print("Generated files:")
 for impl_class in impl_classes:
     path = "libANGLE/renderer/" + renderer_name + "/" + impl_class + renderer_suffix

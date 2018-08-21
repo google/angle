@@ -49,15 +49,8 @@ angle_git_is_present = exec_script("src/commit_id.py",
 
 angle_use_commit_id = angle_git_is_present == 1
 
-gles_gypi = exec_script("//build/gypi_to_gn.py",
-                        [ rebase_path("src/libGLESv2.gypi") ],
-                        "scope",
-                        [ "src/libGLESv2.gypi" ])
-
-compiler_gypi = exec_script("//build/gypi_to_gn.py",
-                            [ rebase_path("src/compiler.gypi") ],
-                            "scope",
-                            [ "src/compiler.gypi" ])
+import("src/libGLESv2.gypi")
+import("src/compiler.gypi")
 
 # This config is exported to dependent targets (and also applied to internal
 # ones).
@@ -132,11 +125,11 @@ angle_undefine_configs = [ "//build/config/compiler:default_include_dirs" ]
 
 # Holds the shared includes so we only need to list them once.
 source_set("includes") {
-  sources = rebase_path(gles_gypi.libangle_includes, ".", "src")
+  sources = rebase_path(libangle_includes, ".", "src")
 }
 
 static_library("preprocessor") {
-  sources = rebase_path(compiler_gypi.angle_preprocessor_sources, ".", "src")
+  sources = rebase_path(angle_preprocessor_sources, ".", "src")
 
   configs -= angle_undefine_configs
   configs += [
@@ -173,18 +166,18 @@ config("angle_common_config") {
 }
 
 static_library("angle_common") {
-  sources = rebase_path(gles_gypi.libangle_common_sources, ".", "src")
+  sources = rebase_path(libangle_common_sources, ".", "src")
 
   if (is_linux || is_android || is_fuchsia) {
-    sources += rebase_path(gles_gypi.libangle_common_linux_sources, ".", "src")
+    sources += rebase_path(libangle_common_linux_sources, ".", "src")
   }
 
   if (is_mac) {
-    sources += rebase_path(gles_gypi.libangle_common_mac_sources, ".", "src")
+    sources += rebase_path(libangle_common_mac_sources, ".", "src")
   }
 
   if (is_win) {
-    sources += rebase_path(gles_gypi.libangle_common_win_sources, ".", "src")
+    sources += rebase_path(libangle_common_win_sources, ".", "src")
   }
 
   configs -= angle_undefine_configs
@@ -211,7 +204,7 @@ config("angle_image_util_config") {
 }
 
 static_library("angle_image_util") {
-  sources = rebase_path(gles_gypi.libangle_image_util_sources, ".", "src")
+  sources = rebase_path(libangle_image_util_sources, ".", "src")
 
   configs -= angle_undefine_configs
   configs += [
@@ -246,7 +239,7 @@ static_library("angle_gpu_info_util") {
     ":angle_common",
   ]
 
-  sources = rebase_path(gles_gypi.libangle_gpu_info_util_sources, ".", "src")
+  sources = rebase_path(libangle_gpu_info_util_sources, ".", "src")
   deps = []
   libs = []
   defines = []
@@ -256,19 +249,16 @@ static_library("angle_gpu_info_util") {
   }
 
   if (is_win) {
-    sources +=
-        rebase_path(gles_gypi.libangle_gpu_info_util_win_sources, ".", "src")
+    sources += rebase_path(libangle_gpu_info_util_win_sources, ".", "src")
     libs += [ "setupapi.lib" ]
     defines += [ "GPU_INFO_USE_SETUPAPI" ]
   }
 
   if (is_linux) {
-    sources +=
-        rebase_path(gles_gypi.libangle_gpu_info_util_linux_sources, ".", "src")
+    sources += rebase_path(libangle_gpu_info_util_linux_sources, ".", "src")
 
     if (use_x11) {
-      sources +=
-          rebase_path(gles_gypi.libangle_gpu_info_util_x11_sources, ".", "src")
+      sources += rebase_path(libangle_gpu_info_util_x11_sources, ".", "src")
       deps += [ "src/third_party/libXNVCtrl:libXNVCtrl" ]
       defines += [ "GPU_INFO_USE_X11" ]
       libs += [
@@ -280,15 +270,13 @@ static_library("angle_gpu_info_util") {
   }
 
   if (use_libpci) {
-    sources +=
-        rebase_path(gles_gypi.libangle_gpu_info_util_libpci_sources, ".", "src")
+    sources += rebase_path(libangle_gpu_info_util_libpci_sources, ".", "src")
     defines += [ "GPU_INFO_USE_LIBPCI" ]
     libs += [ "pci" ]
   }
 
   if (is_mac) {
-    sources +=
-        rebase_path(gles_gypi.libangle_gpu_info_util_mac_sources, ".", "src")
+    sources += rebase_path(libangle_gpu_info_util_mac_sources, ".", "src")
     libs += [
       "IOKit.framework",
       "CoreFoundation.framework",
@@ -298,31 +286,26 @@ static_library("angle_gpu_info_util") {
 }
 
 static_library("translator") {
-  sources = rebase_path(compiler_gypi.angle_translator_sources, ".", "src")
+  sources = rebase_path(angle_translator_sources, ".", "src")
   defines = []
 
   if (angle_enable_essl || use_fuzzing_engine) {
-    sources +=
-        rebase_path(compiler_gypi.angle_translator_essl_sources, ".", "src")
+    sources += rebase_path(angle_translator_essl_sources, ".", "src")
     defines += [ "ANGLE_ENABLE_ESSL" ]
   }
 
   if (angle_enable_glsl || use_fuzzing_engine) {
-    sources +=
-        rebase_path(compiler_gypi.angle_translator_glsl_sources, ".", "src")
+    sources += rebase_path(angle_translator_glsl_sources, ".", "src")
     defines += [ "ANGLE_ENABLE_GLSL" ]
   }
 
   if (angle_enable_hlsl || use_fuzzing_engine) {
-    sources +=
-        rebase_path(compiler_gypi.angle_translator_hlsl_sources, ".", "src")
+    sources += rebase_path(angle_translator_hlsl_sources, ".", "src")
     defines += [ "ANGLE_ENABLE_HLSL" ]
   }
 
   if (angle_enable_vulkan || use_fuzzing_engine) {
-    sources += rebase_path(compiler_gypi.angle_translator_lib_vulkan_sources,
-                           ".",
-                           "src")
+    sources += rebase_path(angle_translator_lib_vulkan_sources, ".", "src")
     defines += [ "ANGLE_ENABLE_VULKAN" ]
   }
 
@@ -380,7 +363,9 @@ if (angle_use_commit_id) {
     ]
 
     # commit id should depend on angle's HEAD revision
-    inputs = [ ".git/HEAD" ]
+    inputs = [
+      ".git/HEAD",
+    ]
 
     args = [
       "gen",
@@ -464,7 +449,7 @@ if (angle_enable_vulkan) {
 }
 
 static_library("libANGLE") {
-  sources = rebase_path(gles_gypi.libangle_sources, ".", "src")
+  sources = rebase_path(libangle_sources, ".", "src")
 
   include_dirs = []
   libs = []
@@ -486,34 +471,34 @@ static_library("libANGLE") {
 
   # Shared D3D sources.
   if (angle_enable_d3d9 || angle_enable_d3d11) {
-    sources += rebase_path(gles_gypi.libangle_d3d_shared_sources, ".", "src")
+    sources += rebase_path(libangle_d3d_shared_sources, ".", "src")
 
     defines += [ "ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ " + "\"d3dcompiler_47.dll\", \"d3dcompiler_46.dll\", \"d3dcompiler_43.dll\" }" ]
   }
 
   if (angle_enable_d3d9) {
-    sources += rebase_path(gles_gypi.libangle_d3d9_sources, ".", "src")
+    sources += rebase_path(libangle_d3d9_sources, ".", "src")
     libs += [ "d3d9.lib" ]
   }
 
   if (angle_enable_d3d11) {
-    sources += rebase_path(gles_gypi.libangle_d3d11_sources, ".", "src")
-    sources += rebase_path(gles_gypi.libangle_d3d11_win32_sources, ".", "src")
+    sources += rebase_path(libangle_d3d11_sources, ".", "src")
+    sources += rebase_path(libangle_d3d11_win32_sources, ".", "src")
     libs += [ "dxguid.lib" ]
   }
 
   if (angle_enable_gl) {
-    sources += rebase_path(gles_gypi.libangle_gl_sources, ".", "src")
+    sources += rebase_path(libangle_gl_sources, ".", "src")
     include_dirs += [ "src/third_party/khronos" ]
 
     if (angle_enable_gl_null) {
-      sources += rebase_path(gles_gypi.libangle_gl_null_sources, ".", "src")
+      sources += rebase_path(libangle_gl_null_sources, ".", "src")
     }
     if (is_win) {
-      sources += rebase_path(gles_gypi.libangle_gl_wgl_sources, ".", "src")
+      sources += rebase_path(libangle_gl_wgl_sources, ".", "src")
     }
     if (use_x11) {
-      sources += rebase_path(gles_gypi.libangle_gl_glx_sources, ".", "src")
+      sources += rebase_path(libangle_gl_glx_sources, ".", "src")
       deps += [ "src/third_party/libXNVCtrl:libXNVCtrl" ]
       libs += [
         "X11",
@@ -522,7 +507,7 @@ static_library("libANGLE") {
       ]
     }
     if (is_mac) {
-      sources += rebase_path(gles_gypi.libangle_gl_cgl_sources, ".", "src")
+      sources += rebase_path(libangle_gl_cgl_sources, ".", "src")
       libs += [
         "Cocoa.framework",
         "IOSurface.framework",
@@ -531,10 +516,9 @@ static_library("libANGLE") {
       ]
     }
     if (is_android) {
-      sources += rebase_path(gles_gypi.libangle_gl_egl_sources, ".", "src")
-      sources += rebase_path(gles_gypi.libangle_gl_egl_dl_sources, ".", "src")
-      sources +=
-          rebase_path(gles_gypi.libangle_gl_egl_android_sources, ".", "src")
+      sources += rebase_path(libangle_gl_egl_sources, ".", "src")
+      sources += rebase_path(libangle_gl_egl_dl_sources, ".", "src")
+      sources += rebase_path(libangle_gl_egl_android_sources, ".", "src")
       if (ndk_supports_nativewindow) {
         libs += [ "nativewindow" ]
       } else {
@@ -546,24 +530,22 @@ static_library("libANGLE") {
       configs += [ ":libdrm" ]
       defines += [ "ANGLE_USE_OZONE" ]
       deps += [ "//third_party/minigbm" ]
-      sources += rebase_path(gles_gypi.libangle_gl_egl_sources, ".", "src")
-      sources += rebase_path(gles_gypi.libangle_gl_egl_dl_sources, ".", "src")
-      sources += rebase_path(gles_gypi.libangle_gl_ozone_sources, ".", "src")
+      sources += rebase_path(libangle_gl_egl_sources, ".", "src")
+      sources += rebase_path(libangle_gl_egl_dl_sources, ".", "src")
+      sources += rebase_path(libangle_gl_ozone_sources, ".", "src")
     }
   }
 
   if (angle_enable_vulkan) {
-    sources += rebase_path(gles_gypi.libangle_vulkan_sources, ".", "src")
+    sources += rebase_path(libangle_vulkan_sources, ".", "src")
     if (is_win) {
-      sources +=
-          rebase_path(gles_gypi.libangle_vulkan_win32_sources, ".", "src")
+      sources += rebase_path(libangle_vulkan_win32_sources, ".", "src")
     }
     if (is_linux) {
-      sources += rebase_path(gles_gypi.libangle_vulkan_xcb_sources, ".", "src")
+      sources += rebase_path(libangle_vulkan_xcb_sources, ".", "src")
     }
     if (is_android) {
-      sources +=
-          rebase_path(gles_gypi.libangle_vulkan_android_sources, ".", "src")
+      sources += rebase_path(libangle_vulkan_android_sources, ".", "src")
     }
     deps += [ ":angle_vulkan" ]
     public_deps += [ "$angle_root/third_party/vulkan-headers:vulkan_headers" ]
@@ -574,7 +556,7 @@ static_library("libANGLE") {
   }
 
   if (angle_enable_null) {
-    sources += rebase_path(gles_gypi.libangle_null_sources, ".", "src")
+    sources += rebase_path(libangle_null_sources, ".", "src")
   }
 
   if (is_debug) {
@@ -621,7 +603,7 @@ config("angle_static") {
 }
 
 shared_library("libGLESv2${angle_libs_suffix}") {
-  sources = rebase_path(gles_gypi.libglesv2_sources, ".", "src")
+  sources = rebase_path(libglesv2_sources, ".", "src")
 
   if (is_android) {
     configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
@@ -669,7 +651,7 @@ shared_library("libGLESv2${angle_libs_suffix}") {
 }
 
 static_library("libGLESv2_static") {
-  sources = rebase_path(gles_gypi.libglesv2_sources, ".", "src")
+  sources = rebase_path(libglesv2_sources, ".", "src")
 
   configs -= angle_undefine_configs
   configs += [
@@ -688,7 +670,7 @@ static_library("libGLESv2_static") {
 }
 
 shared_library("libGLESv1_CM${angle_libs_suffix}") {
-  sources = rebase_path(gles_gypi.libglesv1_cm_sources, ".", "src")
+  sources = rebase_path(libglesv1_cm_sources, ".", "src")
 
   if (is_android) {
     configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
@@ -731,7 +713,7 @@ shared_library("libGLESv1_CM${angle_libs_suffix}") {
 }
 
 static_library("libGLESv1_CM_static") {
-  sources = rebase_path(gles_gypi.libglesv1_cm_sources, ".", "src")
+  sources = rebase_path(libglesv1_cm_sources, ".", "src")
 
   configs -= angle_undefine_configs
   configs += [
@@ -750,7 +732,7 @@ static_library("libGLESv1_CM_static") {
 }
 
 shared_library("libEGL${angle_libs_suffix}") {
-  sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
+  sources = rebase_path(libegl_sources, ".", "src")
 
   if (is_android) {
     configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
@@ -790,7 +772,7 @@ shared_library("libEGL${angle_libs_suffix}") {
 }
 
 static_library("libEGL_static") {
-  sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
+  sources = rebase_path(libegl_sources, ".", "src")
 
   configs -= angle_undefine_configs
   configs += [
@@ -808,10 +790,7 @@ static_library("libEGL_static") {
   ]
 }
 
-util_gypi = exec_script("//build/gypi_to_gn.py",
-                        [ rebase_path("util/util.gyp") ],
-                        "scope",
-                        [ "util/util.gyp" ])
+import("util/util.gyp")
 
 config("angle_util_config") {
   include_dirs = [ "util" ]
@@ -836,15 +815,15 @@ foreach(is_shared_library,
   }
 
   target(library_type, library_name) {
-    sources = rebase_path(util_gypi.util_sources, ".", "util")
+    sources = rebase_path(util_sources, ".", "util")
 
     if (is_win) {
-      sources += rebase_path(util_gypi.util_win32_sources, ".", "util")
+      sources += rebase_path(util_win32_sources, ".", "util")
     }
 
     libs = []
     if (is_linux) {
-      sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
+      sources += rebase_path(util_linux_sources, ".", "util")
       libs += [
         "rt",
         "dl",
@@ -852,7 +831,7 @@ foreach(is_shared_library,
     }
 
     if (is_mac) {
-      sources += rebase_path(util_gypi.util_osx_sources, ".", "util")
+      sources += rebase_path(util_osx_sources, ".", "util")
       libs += [
         "AppKit.framework",
         "QuartzCore.framework",
@@ -860,7 +839,7 @@ foreach(is_shared_library,
     }
 
     if (use_x11) {
-      sources += rebase_path(util_gypi.util_x11_sources, ".", "util")
+      sources += rebase_path(util_x11_sources, ".", "util")
     }
 
     if (is_android) {
@@ -870,8 +849,8 @@ foreach(is_shared_library,
 
       # To prevent linux sources filtering on android
       set_sources_assignment_filter([])
-      sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
-      sources += rebase_path(util_gypi.util_android_sources, ".", "util")
+      sources += rebase_path(util_linux_sources, ".", "util")
+      sources += rebase_path(util_android_sources, ".", "util")
       libs += [
         "android",
         "log",
@@ -879,7 +858,7 @@ foreach(is_shared_library,
     }
 
     if (use_ozone) {
-      sources += rebase_path(util_gypi.util_ozone_sources, ".", "util")
+      sources += rebase_path(util_ozone_sources, ".", "util")
     }
 
     configs += [

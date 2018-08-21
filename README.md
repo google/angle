@@ -49,7 +49,7 @@ ANGLE repository is hosted by Chromium project and can be
 
 ## Building
 
-View the [Dev setup instructions](doc/DevSetup.md). For generating a Windows Store version of ANGLE view the [Windows Store instructions](doc/BuildingAngleForWindowsStore.md)
+View the [Dev setup instructions](doc/DevSetup.md).
 
 ## Contributing
 
