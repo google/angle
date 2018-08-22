@@ -1077,9 +1077,9 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
         return;
     }
 
-    // Looks like an incorrect D3D debug layer message is generated on Windows / AMD.
+    // Looks like an incorrect D3D debug layer message is generated on Windows AMD and NVIDIA.
     // May be specific to Windows 7 / Windows Server 2008. http://anglebug.com/2778
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsAMD());
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && (IsAMD() || IsNVIDIA()));
 
     const std::string &vsSource =
         "#version 300 es\n"
@@ -1837,9 +1837,9 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
         return;
     }
 
-    // Looks like an incorrect D3D debug layer message is generated on Windows / AMD.
+    // Looks like an incorrect D3D debug layer message is generated on Windows AMD and NVIDIA.
     // May be specific to Windows 7 / Windows Server 2008. http://anglebug.com/2778
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsAMD());
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && (IsAMD() || IsNVIDIA()));
 
     const int kViewWidth  = 4;
     const int kViewHeight = 1;
