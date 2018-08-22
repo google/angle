@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ea9aa6a_918d3907",
+        "filename": ".gitignore",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-22T23:09:49Z",
+      "side": 1,
+      "message": "side question: where did these show up? I haven\u0027t seem them in ANGLE\u0027s repo.",
+      "range": {
+        "startLine": 17,
+        "startChar": 2,
+        "endLine": 17,
+        "endChar": 8
+      },
+      "revId": "106985457a12d4437a84c1854f1cbc65b5dda69d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d5cc041_f5aa7995",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-22T23:09:49Z",
+      "side": 1,
+      "message": "can you tag this with Bug: angleproject:2740 ? This will create a link in the CL review and will trigger a bit to automatically update the issue.",
+      "revId": "106985457a12d4437a84c1854f1cbc65b5dda69d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d49348ec_1cc18ec2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-22T23:09:49Z",
+      "side": 1,
+      "message": "you can omit the signed-off-by tag.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 54
+      },
+      "revId": "106985457a12d4437a84c1854f1cbc65b5dda69d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef4a515d_cf620e71",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-22T23:09:49Z",
+      "side": 1,
+      "message": "can you run git cl format to wrap the lkines here?",
+      "range": {
+        "startLine": 131,
+        "startChar": 28,
+        "endLine": 131,
+        "endChar": 51
+      },
+      "revId": "106985457a12d4437a84c1854f1cbc65b5dda69d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
