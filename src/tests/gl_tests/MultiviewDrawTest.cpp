@@ -1079,7 +1079,10 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
 
     // Looks like an incorrect D3D debug layer message is generated on Windows AMD and NVIDIA.
     // May be specific to Windows 7 / Windows Server 2008. http://anglebug.com/2778
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && (IsAMD() || IsNVIDIA()));
+    if (IsWindows() && IsD3D11())
+    {
+        ignoreD3D11SDKLayersWarnings();
+    }
 
     const std::string &vsSource =
         "#version 300 es\n"
@@ -1839,7 +1842,10 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
 
     // Looks like an incorrect D3D debug layer message is generated on Windows AMD and NVIDIA.
     // May be specific to Windows 7 / Windows Server 2008. http://anglebug.com/2778
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && (IsAMD() || IsNVIDIA()));
+    if (IsWindows() && IsD3D11())
+    {
+        ignoreD3D11SDKLayersWarnings();
+    }
 
     const int kViewWidth  = 4;
     const int kViewHeight = 1;
@@ -1979,7 +1985,10 @@ TEST_P(MultiviewRenderTest, DivisorUpdatedOnProgramChange)
 
     // Looks like an incorrect D3D debug layer message is generated on Windows / AMD.
     // May be specific to Windows 7 / Windows Server 2008. http://anglebug.com/2778
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11() && IsAMD());
+    if (IsWindows() && IsD3D11())
+    {
+        ignoreD3D11SDKLayersWarnings();
+    }
 
     GLVertexArray vao;
     glBindVertexArray(vao);
