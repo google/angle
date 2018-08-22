@@ -1687,21 +1687,28 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleFan)
 // bounds. The test does not rely on the actual line width being greater than 1.0.
 TEST_P(MultiviewSideBySideRenderTest, NoLeakingFragments)
 {
-    // TODO(oetuaho): Diagnose and fix http://anglebug.com/2687
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
-
     if (!requestMultiviewExtension())
     {
         return;
     }
 
-    updateFBOs(2, 1, 2);
+    GLTexture colorTexture;
 
+    CreateMultiviewBackingTextures(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, 2, 1, 2,
+                                   colorTexture, 0u, 0u);
+
+    GLFramebuffer drawFramebuffer;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFramebuffer);
     GLint viewportOffsets[4] = {1, 0, 3, 0};
     glFramebufferTextureMultiviewSideBySideANGLE(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                                 mColorTexture, 0, 2, &viewportOffsets[0]);
-    glFramebufferTextureMultiviewSideBySideANGLE(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                                 mDepthTexture, 0, 2, &viewportOffsets[0]);
+                                                 colorTexture, 0, 2, &viewportOffsets[0]);
+
+    GLFramebuffer readFramebuffer;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFramebuffer);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture,
+                           0);
+
+    ASSERT_GL_NO_ERROR();
 
     glViewport(0, 0, 1, 1);
     glScissor(0, 0, 1, 1);
