@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "20310743_d90371e7",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1300106
+      },
+      "writtenOn": "2018-08-22T21:19:25Z",
+      "side": 0,
+      "message": "This looks redundant. The setVertexAttribFormatImpl above already sets this, and from what I can make out, we can\u0027t have this be called and not the other.",
+      "revId": "2c650b35004398c9b4218c5298273f4859d55c63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75111c91_de13cdf7",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1300106
+      },
+      "writtenOn": "2018-08-22T21:19:25Z",
+      "side": 1,
+      "message": "Avoid unnecessarily setting the dirty flag if the state is not actually changing, although I presume this wouldn\u0027t happen very often in practice.",
+      "revId": "d26182c6c5f1929cd3c9e365b7397b1bd9c98b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c40c43ca_75fdf4c2",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1300106
+      },
+      "writtenOn": "2018-08-22T21:19:25Z",
+      "side": 1,
+      "message": "There are two copies of the active attribute mask in the program, this one is with and there is another one without the default attributes. I added the assert as I wasn\u0027t sure whether mEnabledAttributesMask would be with or without the default. It looks like it\u0027s with, but please confirm if you can.",
+      "revId": "d26182c6c5f1929cd3c9e365b7397b1bd9c98b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "286aba4b_bc36238c",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1300106
+      },
+      "writtenOn": "2018-08-22T21:19:25Z",
+      "side": 1,
+      "message": "If we enable C++17 at some point, I would have liked to add [[gnu::unused]] here to explicitly say that this is not going to be used (i.e., it\u0027s an OpenGL thing). Unfortunately, using an `unused` variable doesn\u0027t generate an error.\n\nI could also remove the variable name.",
+      "revId": "d26182c6c5f1929cd3c9e365b7397b1bd9c98b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
