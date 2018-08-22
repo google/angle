@@ -193,7 +193,7 @@ class StateManagerGL final : angle::NonCopyable
                                             const gl::Framebuffer &drawFramebuffer);
     void applyViewportOffsetsAndSetViewports(const gl::Rectangle &viewport,
                                              const gl::Framebuffer &drawFramebuffer);
-    void propagateNumViewsToVAO(const gl::Program *program, VertexArrayGL *vao);
+    void propagateProgramToVAO(const gl::Program *program, VertexArrayGL *vao);
 
     void updateProgramTextureAndSamplerBindings(const gl::Context *context);
     void updateProgramStorageBufferBindings(const gl::Context *context);

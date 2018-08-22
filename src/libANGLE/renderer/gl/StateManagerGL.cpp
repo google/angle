@@ -1945,8 +1945,8 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
                 const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(state.getVertexArray());
                 bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
 
-                propagateNumViewsToVAO(state.getProgram(),
-                                       GetImplAs<VertexArrayGL>(state.getVertexArray()));
+                propagateProgramToVAO(state.getProgram(),
+                                      GetImplAs<VertexArrayGL>(state.getVertexArray()));
                 break;
             }
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
@@ -1978,8 +1978,8 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
                 mProgramTexturesAndSamplersDirty = true;
                 mProgramStorageBuffersDirty      = true;
-                propagateNumViewsToVAO(state.getProgram(),
-                                       GetImplAs<VertexArrayGL>(state.getVertexArray()));
+                propagateProgramToVAO(state.getProgram(),
+                                      GetImplAs<VertexArrayGL>(state.getVertexArray()));
                 updateMultiviewBaseViewLayerIndexUniform(
                     state.getProgram(),
                     state.getDrawFramebuffer()->getImplementation()->getState());
@@ -2238,9 +2238,15 @@ void StateManagerGL::applyViewportOffsetsAndSetViewports(const gl::Rectangle &vi
     setViewportArrayv(0u, viewportArray);
 }
 
-void StateManagerGL::propagateNumViewsToVAO(const gl::Program *program, VertexArrayGL *vao)
+void StateManagerGL::propagateProgramToVAO(const gl::Program *program, VertexArrayGL *vao)
 {
-    if (mIsMultiviewEnabled && vao != nullptr)
+    if (vao == nullptr)
+    {
+        return;
+    }
+
+    // Number of views:
+    if (mIsMultiviewEnabled)
     {
         int programNumViews = 1;
         if (program && program->usesMultiview())
@@ -2248,6 +2254,12 @@ void StateManagerGL::propagateNumViewsToVAO(const gl::Program *program, VertexAr
             programNumViews = program->getNumViews();
         }
         vao->applyNumViewsToDivisor(programNumViews);
+    }
+
+    // Attribute enabled mask:
+    if (program)
+    {
+        vao->applyActiveAttribLocationsMask(program->getActiveAttribLocationsMask());
     }
 }
 
