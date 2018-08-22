@@ -126,6 +126,7 @@ class FramebufferAttachment final
     GLsizei getSamples() const;
     GLenum type() const { return mType; }
     bool isAttached() const { return mType != GL_NONE; }
+    bool isRenderable(const Context *context) const;
 
     Renderbuffer *getRenderbuffer() const;
     Texture *getTexture() const;
@@ -199,6 +200,9 @@ class FramebufferAttachmentObject
     virtual Extents getAttachmentSize(const ImageIndex &imageIndex) const                  = 0;
     virtual Format getAttachmentFormat(GLenum binding, const ImageIndex &imageIndex) const = 0;
     virtual GLsizei getAttachmentSamples(const ImageIndex &imageIndex) const               = 0;
+    virtual bool isRenderable(const Context *context,
+                              GLenum binding,
+                              const ImageIndex &imageIndex) const                          = 0;
 
     virtual void onAttach(const Context *context) = 0;
     virtual void onDetach(const Context *context) = 0;
@@ -247,6 +251,12 @@ inline gl::Error FramebufferAttachment::getRenderTargetImpl(
     ASSERT(mResource);
     return mResource->getAttachmentRenderTarget(context, mTarget.binding(), mTarget.textureIndex(),
                                                 rtOut);
+}
+
+inline bool FramebufferAttachment::isRenderable(const Context *context) const
+{
+    ASSERT(mResource);
+    return mResource->isRenderable(context, mTarget.binding(), mTarget.textureIndex());
 }
 
 }  // namespace gl

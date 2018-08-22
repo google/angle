@@ -43,6 +43,10 @@ class ImageSibling : public gl::FramebufferAttachmentObject
     gl::InitState sourceEGLImageInitState() const;
     void setSourceEGLImageInitState(gl::InitState initState) const;
 
+    bool isRenderable(const gl::Context *context,
+                      GLenum binding,
+                      const gl::ImageIndex &imageIndex) const override;
+
   protected:
     // Set the image target of this sibling
     void setTargetImage(const gl::Context *context, egl::Image *imageTarget);
@@ -76,6 +80,7 @@ struct ImageState : private angle::NonCopyable
     gl::Format format;
     gl::Extents size;
     size_t samples;
+    EGLenum sourceType;
 };
 
 class Image final : public RefCountObject, public LabeledObject
@@ -94,6 +99,8 @@ class Image final : public RefCountObject, public LabeledObject
     EGLLabelKHR getLabel() const override;
 
     const gl::Format &getFormat() const;
+    bool isRenderable(const gl::Context *context) const;
+    bool isTexturable(const gl::Context *context) const;
     size_t getWidth() const;
     size_t getHeight() const;
     size_t getSamples() const;

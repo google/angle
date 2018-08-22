@@ -11,6 +11,7 @@
 #include "libANGLE/Renderbuffer.h"
 
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/Renderbuffer.h"
@@ -229,6 +230,18 @@ Format Renderbuffer::getAttachmentFormat(GLenum /*binding*/,
 GLsizei Renderbuffer::getAttachmentSamples(const ImageIndex & /*imageIndex*/) const
 {
     return getSamples();
+}
+
+bool Renderbuffer::isRenderable(const Context *context,
+                                GLenum binding,
+                                const ImageIndex &imageIndex) const
+{
+    if (isEGLImageTarget())
+    {
+        return ImageSibling::isRenderable(context, binding, imageIndex);
+    }
+    return getFormat().info->renderbufferSupport(context->getClientVersion(),
+                                                 context->getExtensions());
 }
 
 InitState Renderbuffer::initState(const gl::ImageIndex & /*imageIndex*/) const

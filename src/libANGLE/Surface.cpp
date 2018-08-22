@@ -450,6 +450,13 @@ GLsizei Surface::getAttachmentSamples(const gl::ImageIndex &target) const
     return getConfig()->samples;
 }
 
+bool Surface::isRenderable(const gl::Context *context,
+                           GLenum binding,
+                           const gl::ImageIndex &imageIndex) const
+{
+    return true;
+}
+
 GLuint Surface::getId() const
 {
     UNREACHABLE();

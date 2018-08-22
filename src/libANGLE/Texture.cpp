@@ -1454,6 +1454,18 @@ GLsizei Texture::getAttachmentSamples(const ImageIndex &imageIndex) const
     return getSamples(imageIndex.getTarget(), imageIndex.getLevelIndex());
 }
 
+bool Texture::isRenderable(const Context *context,
+                           GLenum binding,
+                           const ImageIndex &imageIndex) const
+{
+    if (isEGLImageTarget())
+    {
+        return ImageSibling::isRenderable(context, binding, imageIndex);
+    }
+    return getAttachmentFormat(binding, imageIndex)
+        .info->textureAttachmentSupport(context->getClientVersion(), context->getExtensions());
+}
+
 bool Texture::getAttachmentFixedSampleLocations(const ImageIndex &imageIndex) const
 {
     // We do not allow querying TextureTarget by an ImageIndex that represents an entire level of a

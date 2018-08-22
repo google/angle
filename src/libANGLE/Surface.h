@@ -117,6 +117,9 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     gl::Extents getAttachmentSize(const gl::ImageIndex &imageIndex) const override;
     gl::Format getAttachmentFormat(GLenum binding, const gl::ImageIndex &imageIndex) const override;
     GLsizei getAttachmentSamples(const gl::ImageIndex &imageIndex) const override;
+    bool isRenderable(const gl::Context *context,
+                      GLenum binding,
+                      const gl::ImageIndex &imageIndex) const override;
 
     void onAttach(const gl::Context *context) override {}
     void onDetach(const gl::Context *context) override {}
