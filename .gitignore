@@ -14,11 +14,13 @@
 *.TMP
 *.VC.db
 *.VC.opendb
+*.vcproj
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
 *.vsp
 *~
+.*.sw*
 .gclient
 .gclient_entries
 /src/tests/third_party/gles_conformance_tests

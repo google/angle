@@ -128,7 +128,8 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
                 break;
             case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
                 mReadFramebuffer.resize(numLayers);
-                glGenFramebuffers(mReadFramebuffer.size(), mReadFramebuffer.data());
+                glGenFramebuffers(static_cast<GLsizei>(mReadFramebuffer.size()),
+                                  mReadFramebuffer.data());
                 for (int i = 0; i < numLayers; ++i)
                 {
                     glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer[i]);
@@ -197,7 +198,8 @@ class MultiviewFramebufferTestBase : public MultiviewTestBase
         }
         if (!mReadFramebuffer.empty())
         {
-            glDeleteFramebuffers(mReadFramebuffer.size(), mReadFramebuffer.data());
+            GLsizei framebufferCount = static_cast<GLsizei>(mReadFramebuffer.size());
+            glDeleteFramebuffers(framebufferCount, mReadFramebuffer.data());
             mReadFramebuffer.clear();
         }
         if (mDepthTexture)

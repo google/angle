@@ -150,9 +150,9 @@ void AttachMultiviewTextures(GLenum target,
             }
             for (size_t i = 0; i < colorTextures.size(); ++i)
             {
-                glFramebufferTextureMultiviewSideBySideANGLE(target, GL_COLOR_ATTACHMENT0 + i,
-                                                             colorTextures[i], 0, numViews,
-                                                             viewportOffsets.data());
+                GLenum attachment = static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+                glFramebufferTextureMultiviewSideBySideANGLE(target, attachment, colorTextures[i],
+                                                             0, numViews, viewportOffsets.data());
             }
             if (depthTexture)
             {
@@ -170,8 +170,9 @@ void AttachMultiviewTextures(GLenum target,
         case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
             for (size_t i = 0; i < colorTextures.size(); ++i)
             {
-                glFramebufferTextureMultiviewLayeredANGLE(
-                    target, GL_COLOR_ATTACHMENT0 + i, colorTextures[i], 0, baseViewIndex, numViews);
+                GLenum attachment = static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+                glFramebufferTextureMultiviewLayeredANGLE(target, attachment, colorTextures[i], 0,
+                                                          baseViewIndex, numViews);
             }
             if (depthTexture)
             {

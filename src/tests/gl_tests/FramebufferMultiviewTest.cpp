@@ -55,7 +55,8 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
         }
         if (!mColorTex.empty())
         {
-            glDeleteTextures(mColorTex.size(), mColorTex.data());
+            GLsizei textureCount = static_cast<GLsizei>(mColorTex.size());
+            glDeleteTextures(textureCount, mColorTex.data());
             mColorTex.clear();
         }
         if (mDepthStencilTex != 0u)
@@ -78,7 +79,8 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
 
         // Generate textures.
         mColorTex.resize(numColorBuffers);
-        glGenTextures(mColorTex.size(), mColorTex.data());
+        GLsizei textureCount = static_cast<GLsizei>(mColorTex.size());
+        glGenTextures(textureCount, mColorTex.data());
         if (stencil)
         {
             glGenTextures(1, &mDepthStencilTex);
@@ -182,12 +184,14 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
         }
         if (!mNonMultiviewFBO.empty())
         {
-            glDeleteTextures(mNonMultiviewFBO.size(), mNonMultiviewFBO.data());
+            GLsizei textureCount = static_cast<GLsizei>(mNonMultiviewFBO.size());
+            glDeleteTextures(textureCount, mNonMultiviewFBO.data());
             mNonMultiviewFBO.clear();
         }
         if (!mColorTex.empty())
         {
-            glDeleteTextures(mColorTex.size(), mColorTex.data());
+            GLsizei textureCount = static_cast<GLsizei>(mColorTex.size());
+            glDeleteTextures(textureCount, mColorTex.data());
             mColorTex.clear();
         }
         if (mDepthStencilTex != 0u)
@@ -217,7 +221,8 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
 
         // Generate textures.
         mColorTex.resize(numColorAttachments);
-        glGenTextures(mColorTex.size(), mColorTex.data());
+        GLsizei textureCount = static_cast<GLsizei>(mColorTex.size());
+        glGenTextures(textureCount, mColorTex.data());
         if (stencil)
         {
             glGenTextures(1, &mDepthStencilTex);
@@ -242,7 +247,8 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
 
         // Generate non-multiview FBOs and attach textures.
         mNonMultiviewFBO.resize(numLayers);
-        glGenFramebuffers(mNonMultiviewFBO.size(), mNonMultiviewFBO.data());
+        GLsizei framebufferCount = static_cast<GLsizei>(mNonMultiviewFBO.size());
+        glGenFramebuffers(framebufferCount, mNonMultiviewFBO.data());
         for (int i = 0; i < numLayers; ++i)
         {
             glBindFramebuffer(GL_FRAMEBUFFER, mNonMultiviewFBO[i]);
