@@ -3347,7 +3347,14 @@ bool ValidateGetActiveUniformsiv(Context *context,
     {
         case GL_UNIFORM_TYPE:
         case GL_UNIFORM_SIZE:
+            break;
         case GL_UNIFORM_NAME_LENGTH:
+            if (context->getExtensions().webglCompatibility)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
+                return false;
+            }
+            break;
         case GL_UNIFORM_BLOCK_INDEX:
         case GL_UNIFORM_OFFSET:
         case GL_UNIFORM_ARRAY_STRIDE:

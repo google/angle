@@ -4223,6 +4223,21 @@ TEST_P(WebGL2CompatibilityTest, TransformFeedbackCheckNullDeref)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Check the return type of a given parameter upon getting the active uniforms.
+TEST_P(WebGL2CompatibilityTest, UniformVariablesReturnTypes)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+
+    std::vector<GLuint> validUniformIndices = {0};
+    std::vector<GLint> uniformNameLengthBuf(validUniformIndices.size());
+
+    // This should fail because GL_UNIFORM_NAME_LENGTH cannot be used in WebGL2.
+    glGetActiveUniformsiv(program, static_cast<GLsizei>(validUniformIndices.size()),
+                          &validUniformIndices[0], GL_UNIFORM_NAME_LENGTH,
+                          &uniformNameLengthBuf[0]);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,
