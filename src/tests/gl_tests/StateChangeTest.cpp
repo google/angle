@@ -2092,6 +2092,12 @@ class ValidationStateChangeTest : public ANGLETest
     }
 };
 
+class WebGL2ValidationStateChangeTest : public ValidationStateChangeTest
+{
+  protected:
+    WebGL2ValidationStateChangeTest() { setWebGLCompatibilityEnabled(true); }
+};
+
 class ValidationStateChangeTestES31 : public ANGLETest
 {
 };
@@ -2391,6 +2397,200 @@ void main()
     glDrawArrays(GL_TRIANGLES, 0, 6);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Invalid buffer size should fail";
 }
+
+// Tests various state change effects on draw framebuffer validation.
+TEST_P(WebGL2ValidationStateChangeTest, DrawFramebufferNegativeAPI)
+{
+    // Set up a simple draw from a Texture to a user Framebuffer.
+    GLuint program = get2DTexturedQuadProgram();
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, posLoc);
+
+    const auto &quadVertices = GetQuadVertices();
+
+    GLBuffer positionBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3) * quadVertices.size(), quadVertices.data(),
+                 GL_STATIC_DRAW);
+
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+
+    constexpr size_t kSize = 2;
+
+    GLTexture colorBufferTexture;
+    glBindTexture(GL_TEXTURE_2D, colorBufferTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTexture,
+                           0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    std::vector<GLColor> greenColor(kSize * kSize, GLColor::green);
+
+    GLTexture greenTexture;
+    glBindTexture(GL_TEXTURE_2D, greenTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 greenColor.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Second framebuffer with a feedback loop. Initially unbound.
+    GLFramebuffer loopedFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, loopedFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, greenTexture, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Create a rendering feedback loop. Should fail.
+    glBindTexture(GL_TEXTURE_2D, colorBufferTexture);
+    ASSERT_GL_NO_ERROR();
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Reset to a valid state.
+    glBindTexture(GL_TEXTURE_2D, greenTexture);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Bind a second framebuffer with a feedback loop.
+    glBindFramebuffer(GL_FRAMEBUFFER, loopedFramebuffer);
+    ASSERT_GL_NO_ERROR();
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Update the framebuffer texture attachment. Should succeed.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTexture,
+                           0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Tests various state change effects on draw framebuffer validation with MRT.
+TEST_P(WebGL2ValidationStateChangeTest, MultiAttachmentDrawFramebufferNegativeAPI)
+{
+    // Set up a program that writes to two outputs: one int and one float.
+    constexpr char kVS[] = R"(#version 300 es
+layout(location = 0) in vec2 position;
+out vec2 texCoord;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    texCoord = position * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+in vec2 texCoord;
+layout(location = 0) out vec4 outFloat;
+layout(location = 1) out uvec4 outInt;
+void main()
+{
+    outFloat = vec4(0, 1, 0, 1);
+    outInt = uvec4(0, 1, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    constexpr GLint kPosLoc = 0;
+
+    const auto &quadVertices = GetQuadVertices();
+
+    GLBuffer positionBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3) * quadVertices.size(), quadVertices.data(),
+                 GL_STATIC_DRAW);
+
+    glVertexAttribPointer(kPosLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(kPosLoc);
+
+    constexpr size_t kSize = 2;
+
+    GLFramebuffer floatFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, floatFramebuffer);
+
+    GLTexture floatTextures[2];
+    for (int i = 0; i < 2; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, floatTextures[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D,
+                               floatTextures[i], 0);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    GLFramebuffer intFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, intFramebuffer);
+
+    GLTexture intTextures[2];
+    for (int i = 0; i < 2; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, intTextures[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8UI, kSize, kSize, 0, GL_RGBA_INTEGER,
+                     GL_UNSIGNED_BYTE, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D,
+                               intTextures[i], 0);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ASSERT_GL_NO_ERROR();
+
+    constexpr GLenum kColor0Enabled[]     = {GL_COLOR_ATTACHMENT0, GL_NONE};
+    constexpr GLenum kColor1Enabled[]     = {GL_NONE, GL_COLOR_ATTACHMENT1};
+    constexpr GLenum kColor0And1Enabled[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+
+    // Draw float. Should work.
+    glBindFramebuffer(GL_FRAMEBUFFER, floatFramebuffer);
+    glDrawBuffers(2, kColor0Enabled);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR() << "Draw to float texture with correct mask";
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Set an invalid component write.
+    glDrawBuffers(2, kColor0And1Enabled);
+    ASSERT_GL_NO_ERROR() << "Draw to float texture with invalid mask";
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Restore state.
+    glDrawBuffers(2, kColor0Enabled);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR() << "Draw to float texture with correct mask";
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Bind an invalid framebuffer. Validate failure.
+    glBindFramebuffer(GL_FRAMEBUFFER, intFramebuffer);
+    ASSERT_GL_NO_ERROR();
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Draw to int texture with default mask";
+
+    // Set draw mask to a valid mask. Validate success.
+    glDrawBuffers(2, kColor1Enabled);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR() << "Draw to int texture with correct mask";
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
@@ -2408,4 +2608,5 @@ ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
 ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTest, ES2_VULKAN(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(WebGL2ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(ValidationStateChangeTestES31, ES31_OPENGL());
