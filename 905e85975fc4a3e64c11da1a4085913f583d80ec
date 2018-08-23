@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8acdb68e_36746fc7",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-23T21:21:33Z",
+      "side": 1,
+      "message": "I would have liked to reset the relevant dirty bit for this attribute here, but I left it for later. I\u0027m not familiar enough with the code to enable access to the variable here without making the code too ugly.",
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
