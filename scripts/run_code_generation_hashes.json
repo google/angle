@@ -32,11 +32,11 @@
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py":
     "2932a5e1c3c846be0169e29a4f9c72e8",
   "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
-    "39b92f5a4d982873d3595b70049d5160",
+    "36f9636dbfbcd6508a4b76143c5e4540",
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
     "2c0e86ff9f92f79ada03f04206e63fba",
   "ESSL static builtins:src/compiler/translator/gen_builtin_symbols.py":
-    "51afaa8fc47b537aa4e62552de9cc7c0",
+    "9a5226ee6573650897bdc21e1bb0bfd0",
   "Emulated HLSL functions:src/compiler/translator/emulated_builtin_function_data_hlsl.json":
     "002ad46d144c51fe98d73478aa554ba7",
   "Emulated HLSL functions:src/compiler/translator/gen_emulated_builtin_function_tables.py":
@@ -46,7 +46,7 @@
   "GL copy conversion table:src/libANGLE/gen_copy_conversion_table.py":
     "ac1afe23d9578bd1d2ef74f4a7aa927a",
   "GL entry point:scripts/entry_point_packed_gl_enums.json":
-    "154df93d8af5156b1f434a7a1a84b671",
+    "803930a62d35ed9b83faba037f34e293",
   "GL entry point:scripts/generate_entry_points.py":
     "c502f05207c8a2eb27ae67e48b5d02c2",
   "GL entry point:scripts/gl.xml":

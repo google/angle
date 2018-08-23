@@ -73,6 +73,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::EXT_geometry_shader] = EBhUndefined;
     }
+    if (resources.ANGLE_texture_multisample_array)
+    {
+        extBehavior[TExtension::ANGLE_texture_multisample_array] = EBhUndefined;
+    }
 }
 
 void ResetExtensionBehavior(TExtensionBehavior &extBehavior)

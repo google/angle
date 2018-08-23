@@ -52,6 +52,8 @@ const char *getBasicString(TBasicType t)
             return "sampler2DArray";
         case EbtSampler2DMS:
             return "sampler2DMS";
+        case EbtSampler2DMSArray:
+            return "sampler2DMSArray";
         case EbtISampler2D:
             return "isampler2D";
         case EbtISampler3D:
@@ -62,6 +64,8 @@ const char *getBasicString(TBasicType t)
             return "isampler2DArray";
         case EbtISampler2DMS:
             return "isampler2DMS";
+        case EbtISampler2DMSArray:
+            return "isampler2DMSArray";
         case EbtUSampler2D:
             return "usampler2D";
         case EbtUSampler3D:
@@ -72,6 +76,8 @@ const char *getBasicString(TBasicType t)
             return "usampler2DArray";
         case EbtUSampler2DMS:
             return "usampler2DMS";
+        case EbtUSampler2DMSArray:
+            return "usampler2DMSArray";
         case EbtSampler2DShadow:
             return "sampler2DShadow";
         case EbtSamplerCubeShadow:

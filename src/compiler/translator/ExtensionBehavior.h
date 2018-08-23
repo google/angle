@@ -18,6 +18,7 @@ enum class TExtension
 {
     UNDEFINED,  // Special value used to indicate no extension.
 
+    ANGLE_texture_multisample_array,
     ARB_texture_rectangle,
     ARM_shader_framebuffer_fetch,
     EXT_blend_func_extended,

@@ -17,8 +17,8 @@
 #ifdef ANGLE_ENABLE_HLSL
 #include "compiler/translator/TranslatorHLSL.h"
 #endif  // ANGLE_ENABLE_HLSL
-#include "compiler/translator/VariablePacker.h"
 #include "angle_gl.h"
+#include "compiler/translator/VariablePacker.h"
 
 namespace sh
 {
@@ -202,6 +202,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->OVR_multiview                   = 0;
     resources->EXT_YUV_target                  = 0;
     resources->EXT_geometry_shader             = 0;
+    resources->ANGLE_texture_multisample_array = 0;
 
     resources->NV_draw_buffers = 0;
 
@@ -269,7 +270,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxCombinedAtomicCounterBuffers = 1;
     resources->MaxAtomicCounterBufferSize      = 32;
 
-    resources->MaxUniformBufferBindings = 32;
+    resources->MaxUniformBufferBindings       = 32;
     resources->MaxShaderStorageBufferBindings = 4;
 
     resources->MaxGeometryUniformComponents     = 1024;

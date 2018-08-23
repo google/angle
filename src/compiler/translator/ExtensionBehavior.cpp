@@ -13,6 +13,7 @@
 #include <string.h>
 
 #define LIST_EXTENSIONS(OP)             \
+    OP(ANGLE_texture_multisample_array) \
     OP(ARB_texture_rectangle)           \
     OP(ARM_shader_framebuffer_fetch)    \
     OP(EXT_blend_func_extended)         \

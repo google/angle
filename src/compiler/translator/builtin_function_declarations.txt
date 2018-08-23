@@ -356,7 +356,6 @@ GROUP BEGIN TextureESSL300
     ivec2 textureSize(sampler2DShadow, int);
     ivec2 textureSize(samplerCubeShadow, int);
     ivec3 textureSize(sampler2DArrayShadow, int);
-    ivec2 textureSize(gsampler2DMS);
     gvec4 textureProjLod(gsampler2D, vec3, float);
     gvec4 textureProjLod(gsampler2D, vec4, float);
     gvec4 textureProjLod(gsampler3D, vec4, float);
@@ -376,6 +375,16 @@ GROUP BEGIN TextureESSL300
     gvec4 textureProjGrad(gsampler3D, vec4, vec3, vec3);
     float textureProjGrad(sampler2DShadow, vec4, vec2, vec2);
 GROUP END TextureESSL300
+
+GROUP BEGIN TextureSizeMS
+  DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction"}
+    ivec2 textureSize(gsampler2DMS);
+GROUP END TextureSizeMS
+
+GROUP BEGIN TextureSizeMSArray
+  DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "extension": "ANGLE_texture_multisample_array"}
+    ivec3 textureSize(gsampler2DMSArray);
+GROUP END TextureSizeMSArray
 
 GROUP BEGIN TextureOffsetNoBias {"queryFunction": true}
   DEFAULT METADATA {"level": "ESSL3_BUILTINS", "op": "CallBuiltInFunction"}
@@ -467,6 +476,11 @@ GROUP BEGIN TexelFetchMS
   DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction"}
     gvec4 texelFetch(gsampler2DMS, ivec2, int);
 GROUP END TexelFetchMS
+
+GROUP BEGIN TexelFetchMSArray
+  DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "extension": "ANGLE_texture_multisample_array"}
+    gvec4 texelFetch(gsampler2DMSArray, ivec3, int);
+GROUP END TexelFetchMSArray
 
 GROUP BEGIN TextureGather {"queryFunction": true}
   DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction"}
