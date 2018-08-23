@@ -1161,8 +1161,6 @@ class BlitFramebufferTest : public ANGLETest
 // Tests resolving a multisample depth buffer.
 TEST_P(BlitFramebufferTest, MultisampleDepth)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("EXT_framebuffer_blit"));
-
     // TODO(oetuaho@nvidia.com): http://crbug.com/837717
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
 
@@ -1228,8 +1226,6 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
 // Test resolving a multisampled stencil buffer.
 TEST_P(BlitFramebufferTest, MultisampleStencil)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("EXT_framebuffer_blit"));
-
     // Incorrect rendering results seen on AMD Windows OpenGL. http://anglebug.com/2486
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && IsWindows());
 
@@ -1290,8 +1286,6 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
 // Blit an SRGB framebuffer and scale it.
 TEST_P(BlitFramebufferTest, BlitSRGBToRGBAndScale)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("EXT_framebuffer_blit"));
-
     constexpr const GLsizei kWidth  = 256;
     constexpr const GLsizei kHeight = 256;
 
@@ -1347,8 +1341,6 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBAndScale)
 // Blit a subregion of an SRGB framebuffer to an RGB framebuffer.
 TEST_P(BlitFramebufferTest, PartialBlitSRGBToRGB)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("EXT_framebuffer_blit"));
-
     constexpr const GLsizei kWidth  = 256;
     constexpr const GLsizei kHeight = 256;
 
@@ -1405,8 +1397,6 @@ TEST_P(BlitFramebufferTest, PartialBlitSRGBToRGB)
 // clipped out).
 TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedSourceArea)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("EXT_framebuffer_blit"));
-
     constexpr const GLsizei kWidth  = 256;
     constexpr const GLsizei kHeight = 256;
 
@@ -1452,8 +1442,6 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedSourceArea)
 // overflows also in non-WebGL mode to avoid triggering driver bugs.
 TEST_P(BlitFramebufferTest, BlitFramebufferSizeOverflow)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("EXT_framebuffer_blit"));
-
     GLTexture textures[2];
     glBindTexture(GL_TEXTURE_2D, textures[0]);
     glTexStorage2D(GL_TEXTURE_2D, 3, GL_RGBA8, 4, 4);
