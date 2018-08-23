@@ -227,7 +227,7 @@ class VertexAttributeTest : public ANGLETest
         }
         shaderStream << "}" << std::endl;
 
-        const std::string testFragmentShaderSource =
+        constexpr char testFragmentShaderSource[] =
             "varying mediump float color;\n"
             "void main(void)\n"
             "{\n"
@@ -253,7 +253,7 @@ class VertexAttributeTest : public ANGLETest
 
     void initBasicProgram()
     {
-        const std::string testVertexShaderSource =
+        constexpr char testVertexShaderSource[] =
             "attribute mediump vec4 position;\n"
             "attribute mediump vec4 test;\n"
             "attribute mediump vec4 expected;\n"
@@ -265,7 +265,7 @@ class VertexAttributeTest : public ANGLETest
             "    color = vec4(lessThanEqual(abs(test - expected), threshold));\n"
             "}\n";
 
-        const std::string testFragmentShaderSource =
+        constexpr char testFragmentShaderSource[] =
             "varying mediump vec4 color;\n"
             "void main(void)\n"
             "{\n"
@@ -630,7 +630,7 @@ void SetupColorsForUnitQuad(GLint location, const GLColor32F &color, GLenum usag
 // Tests that rendering works as expected with VAOs.
 TEST_P(VertexAttributeTestES3, VertexArrayObjectRendering)
 {
-    const std::string kVertexShader =
+    constexpr char kVertexShader[] =
         "attribute vec4 a_position;\n"
         "attribute vec4 a_color;\n"
         "varying vec4 v_color;\n"
@@ -640,7 +640,7 @@ TEST_P(VertexAttributeTestES3, VertexArrayObjectRendering)
         "   v_color = a_color;\n"
         "}";
 
-    const std::string kFragmentShader =
+    constexpr char kFragmentShader[] =
         "precision mediump float;\n"
         "varying vec4 v_color;\n"
         "void main()\n"
@@ -889,7 +889,7 @@ TEST_P(VertexAttributeTest, DrawArraysWithDisabledAttribute)
     glEnableVertexAttribArray(mExpectedAttrib);
 
     // mProgram2 adds an attribute 'disabled' on the basis of mProgram.
-    const std::string testVertexShaderSource2 =
+    constexpr char testVertexShaderSource2[] =
         "attribute mediump vec4 position;\n"
         "attribute mediump vec4 test;\n"
         "attribute mediump vec4 expected;\n"
@@ -902,7 +902,7 @@ TEST_P(VertexAttributeTest, DrawArraysWithDisabledAttribute)
         "    color = vec4(lessThanEqual(abs(test - expected), threshold));\n"
         "}\n";
 
-    const std::string testFragmentShaderSource =
+    constexpr char testFragmentShaderSource[] =
         "varying mediump vec4 color;\n"
         "void main(void)\n"
         "{\n"
@@ -941,7 +941,7 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
     // Known failure on Retina MBP: http://crbug.com/635081
     ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
 
-    const std::string vsSource =
+    constexpr char vsSource[] =
         "attribute vec4 a_position;\n"
         "attribute vec4 a_color;\n"
         "varying vec4 v_color;\n"
@@ -953,7 +953,7 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
         "    v_color = isCorrectColor(a_color) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
         "}";
 
-    const std::string fsSource =
+    constexpr char fsSource[] =
         "varying mediump vec4 v_color;\n"
         "void main() {\n"
         "    gl_FragColor = v_color;\n"
@@ -1330,7 +1330,7 @@ class VertexAttributeCachingTest : public VertexAttributeTest
 
     void initDoubleAttribProgram()
     {
-        const std::string testVertexShaderSource =
+        constexpr char testVertexShaderSource[] =
             "attribute mediump vec4 position;\n"
             "attribute mediump vec4 test;\n"
             "attribute mediump vec4 expected;\n"
@@ -1346,7 +1346,7 @@ class VertexAttributeCachingTest : public VertexAttributeTest
             "    color += vec4(lessThanEqual(abs(test2 - expected2), threshold2));\n"
             "}\n";
 
-        const std::string testFragmentShaderSource =
+        constexpr char testFragmentShaderSource[] =
             "varying mediump vec4 color;\n"
             "void main(void)\n"
             "{\n"
@@ -1620,7 +1620,7 @@ void main()
 // shader version is >= 3.00. GLSL ES 3.00.6 section 12.46.
 TEST_P(VertexAttributeTestES3, InactiveAttributeAliasing)
 {
-    const std::string &vertexShader =
+    constexpr char vertexShader[] =
         R"(#version 300 es
         precision mediump float;
         in vec4 input_active;
@@ -1630,7 +1630,7 @@ TEST_P(VertexAttributeTestES3, InactiveAttributeAliasing)
             gl_Position = input_active;
         })";
 
-    const std::string &fragmentShader =
+    constexpr char fragmentShader[] =
         R"(#version 300 es
         precision mediump float;
         out vec4 color;
@@ -1647,6 +1647,123 @@ TEST_P(VertexAttributeTestES3, InactiveAttributeAliasing)
     GLint linkStatus = 0;
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
     EXPECT_GL_FALSE(linkStatus);
+}
+
+// Test that enabling inactive attributes doesn't cause a crash
+// shader version is >= 3.00
+TEST_P(VertexAttributeTestES3, EnabledButInactiveAttributes)
+{
+    // This is similar to runtest(), and the test is disabled there
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+
+    constexpr char testVertexShaderSource[] =
+        R"(#version 300 es
+precision mediump float;
+in vec4 position;
+layout(location = 1) in vec4 test;
+layout(location = 2) in vec4 unused1;
+layout(location = 3) in vec4 unused2;
+layout(location = 4) in vec4 unused3;
+layout(location = 5) in vec4 expected;
+out vec4 color;
+void main(void)
+{
+    gl_Position = position;
+    vec4 threshold = max(abs(expected) * 0.01, 1.0 / 64.0);
+    color = vec4(lessThanEqual(abs(test - expected), threshold));
+})";
+
+    // Same as previous one, except it uses unused1/2 instead of test/expected, leaving unused3
+    // unused
+    constexpr char testVertexShader2Source[] =
+        R"(#version 300 es
+precision mediump float;
+in vec4 position;
+layout(location = 1) in vec4 test;
+layout(location = 2) in vec4 unused1;
+layout(location = 3) in vec4 unused2;
+layout(location = 4) in vec4 unused3;
+layout(location = 5) in vec4 expected;
+out vec4 color;
+void main(void)
+{
+    gl_Position = position;
+    vec4 threshold = max(abs(unused2) * 0.01, 1.0 / 64.0);
+    color = vec4(lessThanEqual(abs(unused1 - unused2), threshold));
+})";
+
+    constexpr char testFragmentShaderSource[] =
+        R"(#version 300 es
+precision mediump float;
+in vec4 color;
+out vec4 out_color;
+void main()
+{
+    out_color = color;
+})";
+
+    std::array<GLubyte, kVertexCount> inputData = {
+        {0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255}};
+    std::array<GLubyte, kVertexCount> inputData2;
+    std::array<GLfloat, kVertexCount> expectedData;
+    std::array<GLfloat, kVertexCount> expectedData2;
+    for (size_t i = 0; i < kVertexCount; i++)
+    {
+        expectedData[i]  = inputData[i];
+        inputData2[i]    = inputData[i] > 128 ? inputData[i] - 1 : inputData[i] + 1;
+        expectedData2[i] = inputData2[i];
+    }
+
+    // Setup the program
+    mProgram = CompileProgram(testVertexShaderSource, testFragmentShaderSource);
+    ASSERT_NE(0u, mProgram);
+
+    mTestAttrib = glGetAttribLocation(mProgram, "test");
+    ASSERT_EQ(1, mTestAttrib);
+    mExpectedAttrib = glGetAttribLocation(mProgram, "expected");
+    ASSERT_EQ(5, mExpectedAttrib);
+
+    GLint unused1Attrib = 2;
+    GLint unused2Attrib = 3;
+    GLint unused3Attrib = 4;
+
+    // Test enabling an unused attribute before glUseProgram
+    glEnableVertexAttribArray(unused3Attrib);
+
+    glUseProgram(mProgram);
+
+    // Setup the test data
+    TestData data(GL_UNSIGNED_BYTE, GL_FALSE, Source::IMMEDIATE, inputData.data(),
+                  expectedData.data());
+    setupTest(data, 1);
+
+    // Test enabling an unused attribute after glUseProgram
+    glVertexAttribPointer(unused1Attrib, 1, data.type, data.normalized, 0, inputData2.data());
+    glEnableVertexAttribArray(unused1Attrib);
+
+    glVertexAttribPointer(unused2Attrib, 1, GL_FLOAT, GL_FALSE, 0, expectedData2.data());
+    glEnableVertexAttribArray(unused2Attrib);
+
+    // Run the test.  This shouldn't use the unused attributes.  Note that one of them is nullptr
+    // which can cause a crash on certain platform-driver combination.
+    drawQuad(mProgram, "position", 0.5f);
+    checkPixels();
+
+    // Now test with the same attributes enabled, but with a program with different attributes
+    // active
+    mProgram = CompileProgram(testVertexShader2Source, testFragmentShaderSource);
+    ASSERT_NE(0u, mProgram);
+
+    // Make sure all the attributes are in the same location
+    ASSERT_EQ(glGetAttribLocation(mProgram, "unused1"), unused1Attrib);
+    ASSERT_EQ(glGetAttribLocation(mProgram, "unused2"), unused2Attrib);
+
+    glUseProgram(mProgram);
+
+    // Run the test again.  unused1/2 were disabled in the previous run (as they were inactive in
+    // the shader), but should be re-enabled now.
+    drawQuad(mProgram, "position", 0.5f);
+    checkPixels();
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
