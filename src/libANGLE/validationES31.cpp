@@ -2012,4 +2012,18 @@ bool ValidateFramebufferTextureEXT(Context *context,
     return true;
 }
 
+// GL_ANGLE_texture_multisample_array
+bool ValidateTexStorage3DMultisampleANGLE(Context *context,
+                                          TextureType target,
+                                          GLsizei samples,
+                                          GLint sizedinternalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLsizei depth,
+                                          GLboolean fixedsamplelocations)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 }  // namespace gl

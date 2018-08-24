@@ -4994,6 +4994,17 @@ void Context::texStorage2DMultisample(TextureType target,
                                                ConvertToBool(fixedsamplelocations)));
 }
 
+void Context::texStorage3DMultisample(TextureType target,
+                                      GLsizei samples,
+                                      GLenum internalformat,
+                                      GLsizei width,
+                                      GLsizei height,
+                                      GLsizei depth,
+                                      GLboolean fixedsamplelocations)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
 {
     // According to spec 3.1 Table 20.49: Framebuffer Dependent Values,

@@ -362,6 +362,16 @@ bool ValidateFramebufferTextureEXT(Context *context,
                                    GLuint texture,
                                    GLint level);
 
+// GL_ANGLE_texture_multisample_array
+bool ValidateTexStorage3DMultisampleANGLE(Context *context,
+                                          TextureType target,
+                                          GLsizei samples,
+                                          GLint sizedinternalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLsizei depth,
+                                          GLboolean fixedsamplelocations);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES31_H_

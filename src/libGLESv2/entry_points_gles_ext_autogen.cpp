@@ -1932,6 +1932,37 @@ void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
     }
 }
 
+// GL_ANGLE_texture_multisample_array
+void GL_APIENTRY TexStorage3DMultisampleANGLE(GLenum target,
+                                              GLsizei samples,
+                                              GLint sizedinternalformat,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLsizei depth,
+                                              GLboolean fixedsamplelocations)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei samples = %d, GLint sizedinternalformat = %d, GLsizei "
+        "width = %d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedsamplelocations = %u)",
+        target, samples, sizedinternalformat, width, height, depth, fixedsamplelocations);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexStorage3DMultisampleANGLE>(
+            targetPacked, samples, sizedinternalformat, width, height, depth, fixedsamplelocations);
+
+        if (context->skipValidation() || ValidateTexStorage3DMultisampleANGLE(
+                                             context, targetPacked, samples, sizedinternalformat,
+                                             width, height, depth, fixedsamplelocations))
+        {
+            context->texStorage3DMultisample(targetPacked, samples, sizedinternalformat, width,
+                                             height, depth, fixedsamplelocations);
+        }
+    }
+}
+
 // GL_ANGLE_translated_shader_source
 void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
                                                 GLsizei bufsize,
@@ -17794,6 +17825,38 @@ FramebufferTextureMultiviewSideBySideANGLEContextANGLE(GLeglContext ctx,
         {
             context->framebufferTextureMultiviewSideBySide(target, attachment, texture, level,
                                                            numViews, viewportOffsets);
+        }
+    }
+}
+
+void GL_APIENTRY TexStorage3DMultisampleANGLEContextANGLE(GLeglContext ctx,
+                                                          GLenum target,
+                                                          GLsizei samples,
+                                                          GLint sizedinternalformat,
+                                                          GLsizei width,
+                                                          GLsizei height,
+                                                          GLsizei depth,
+                                                          GLboolean fixedsamplelocations)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei samples = %d, GLint sizedinternalformat = %d, GLsizei "
+        "width = %d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedsamplelocations = %u)",
+        target, samples, sizedinternalformat, width, height, depth, fixedsamplelocations);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexStorage3DMultisampleANGLE>(
+            targetPacked, samples, sizedinternalformat, width, height, depth, fixedsamplelocations);
+
+        if (context->skipValidation() || ValidateTexStorage3DMultisampleANGLE(
+                                             context, targetPacked, samples, sizedinternalformat,
+                                             width, height, depth, fixedsamplelocations))
+        {
+            context->texStorage3DMultisample(targetPacked, samples, sizedinternalformat, width,
+                                             height, depth, fixedsamplelocations);
         }
     }
 }

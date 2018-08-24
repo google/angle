@@ -1041,6 +1041,14 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                  GLsizei height,
                                  GLboolean fixedsamplelocations);
 
+    void texStorage3DMultisample(TextureType target,
+                                 GLsizei samples,
+                                 GLenum internalformat,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 GLsizei depth,
+                                 GLboolean fixedsamplelocations);
+
     void getMultisamplefv(GLenum pname, GLuint index, GLfloat *val);
     void getMultisamplefvRobust(GLenum pname,
                                 GLuint index,

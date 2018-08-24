@@ -3136,6 +3136,19 @@ void GL_APIENTRY glGetQueryObjectui64vRobustANGLE(GLuint id,
     return gl::GetQueryObjectui64vRobustANGLE(id, pname, bufSize, length, params);
 }
 
+// GL_ANGLE_texture_multisample_array
+void GL_APIENTRY glTexStorage3DMultisampleANGLE(GLenum target,
+                                                GLsizei samples,
+                                                GLint sizedinternalformat,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLsizei depth,
+                                                GLboolean fixedsamplelocations)
+{
+    return gl::TexStorage3DMultisampleANGLE(target, samples, sizedinternalformat, width, height,
+                                            depth, fixedsamplelocations);
+}
+
 // GL_ANGLE_translated_shader_source
 void GL_APIENTRY glGetTranslatedShaderSourceANGLE(GLuint shader,
                                                   GLsizei bufsize,
@@ -8725,6 +8738,19 @@ glFramebufferTextureMultiviewSideBySideANGLEContextANGLE(GLeglContext ctx,
 {
     return gl::FramebufferTextureMultiviewSideBySideANGLEContextANGLE(
         ctx, target, attachment, texture, level, numViews, viewportOffsets);
+}
+
+void GL_APIENTRY glTexStorage3DMultisampleANGLEContextANGLE(GLeglContext ctx,
+                                                            GLenum target,
+                                                            GLsizei samples,
+                                                            GLint sizedinternalformat,
+                                                            GLsizei width,
+                                                            GLsizei height,
+                                                            GLsizei depth,
+                                                            GLboolean fixedsamplelocations)
+{
+    return gl::TexStorage3DMultisampleANGLEContextANGLE(ctx, target, samples, sizedinternalformat,
+                                                        width, height, depth, fixedsamplelocations);
 }
 
 }  // extern "C"
