@@ -169,6 +169,11 @@ TextureImpl *Context11::createTexture(const gl::TextureState &state)
             return new TextureD3D_External(state, mRenderer);
         case gl::TextureType::_2DMultisample:
             return new TextureD3D_2DMultisample(state, mRenderer);
+        case gl::TextureType::_2DMultisampleArray:
+            // TODO(http://anglebug.com/2775): Proper implementation of D3D multisample array
+            // textures. Right now multisample array textures are not supported but we need to
+            // create some object so we don't end up with asserts when using the zero texture array.
+            return new TextureD3D_2DMultisample(state, mRenderer);
         default:
             UNREACHABLE();
     }

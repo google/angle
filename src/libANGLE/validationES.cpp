@@ -500,6 +500,8 @@ bool ValidTextureTarget(const Context *context, TextureType type)
 
         case TextureType::_2DMultisample:
             return (context->getClientVersion() >= Version(3, 1));
+        case TextureType::_2DMultisampleArray:
+            return context->getExtensions().textureMultisampleArray;
 
         default:
             return false;
@@ -688,6 +690,8 @@ bool ValidTexLevelDestinationTarget(const Context *context, TextureType type)
             return true;
         case TextureType::Rectangle:
             return context->getExtensions().textureRectangle;
+        case TextureType::_2DMultisampleArray:
+            return context->getExtensions().textureMultisampleArray;
         default:
             return false;
     }
@@ -723,6 +727,9 @@ bool ValidMipLevel(const Context *context, TextureType type, GLint level)
         case TextureType::_2D:
         case TextureType::_2DArray:
         case TextureType::_2DMultisample:
+        case TextureType::_2DMultisampleArray:
+            // TODO(http://anglebug.com/2775): It's a bit unclear what the "maximum allowable
+            // level-of-detail" for multisample textures should be. Could maybe make it zero.
             maxDimension = caps.max2DTextureSize;
             break;
         case TextureType::CubeMap:
@@ -2185,6 +2192,13 @@ bool ValidateStateQuery(Context *context, GLenum pname, GLenum *nativeType, unsi
         case GL_TEXTURE_BINDING_3D:
         case GL_TEXTURE_BINDING_2D_ARRAY:
         case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
+            break;
+        case GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY:
+            if (!context->getExtensions().textureMultisampleArray)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), MultisampleArrayExtensionRequired);
+                return false;
+            }
             break;
         case GL_TEXTURE_BINDING_RECTANGLE_ANGLE:
             if (!context->getExtensions().textureRectangle)
@@ -5849,7 +5863,7 @@ bool ValidateTexParameterBase(Context *context,
             break;
     }
 
-    if (target == TextureType::_2DMultisample)
+    if (target == TextureType::_2DMultisample || target == TextureType::_2DMultisampleArray)
     {
         switch (pname)
         {
@@ -5982,7 +5996,9 @@ bool ValidateTexParameterBase(Context *context,
                                      << "Base level must be 0 for external textures.");
                 return false;
             }
-            if (target == TextureType::_2DMultisample && static_cast<GLuint>(params[0]) != 0)
+            if ((target == TextureType::_2DMultisample ||
+                 target == TextureType::_2DMultisampleArray) &&
+                static_cast<GLuint>(params[0]) != 0)
             {
                 context->handleError(InvalidOperation()
                                      << "Base level must be 0 for multisampled textures.");
@@ -6315,12 +6331,17 @@ bool ValidateGetInternalFormativBase(Context *context,
         case GL_TEXTURE_2D_MULTISAMPLE:
             if (context->getClientVersion() < ES_3_1)
             {
-                context->handleError(InvalidOperation()
-                                     << "Texture target requires at least OpenGL ES 3.1.");
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), TextureTargetRequiresES31);
                 return false;
             }
             break;
-
+        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE:
+            if (!context->getExtensions().textureMultisampleArray)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), MultisampleArrayExtensionRequired);
+                return false;
+            }
+            break;
         default:
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTarget);
             return false;
@@ -6372,6 +6393,64 @@ bool ValidateMultitextureUnit(Context *context, GLenum texture)
     if (texture < GL_TEXTURE0 || texture >= GL_TEXTURE0 + context->getCaps().maxMultitextureUnits)
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidMultitextureUnit);
+        return false;
+    }
+    return true;
+}
+
+bool ValidateTexStorageMultisample(Context *context,
+                                   TextureType target,
+                                   GLsizei samples,
+                                   GLint internalFormat,
+                                   GLsizei width,
+                                   GLsizei height)
+{
+    const Caps &caps = context->getCaps();
+    if (static_cast<GLuint>(width) > caps.max2DTextureSize ||
+        static_cast<GLuint>(height) > caps.max2DTextureSize)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), TextureWidthOrHeightOutOfRange);
+        return false;
+    }
+
+    if (samples == 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), SamplesZero);
+        return false;
+    }
+
+    const TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
+    if (!formatCaps.textureAttachment)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), RenderableInternalFormat);
+        return false;
+    }
+
+    // The ES3.1 spec(section 8.8) states that an INVALID_ENUM error is generated if internalformat
+    // is one of the unsized base internalformats listed in table 8.11.
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalFormat);
+    if (formatInfo.internalFormat == GL_NONE)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), UnsizedInternalFormatUnsupported);
+        return false;
+    }
+
+    if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), SamplesOutOfRange);
+        return false;
+    }
+
+    Texture *texture = context->getTargetTexture(target);
+    if (!texture || texture->id() == 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ZeroBoundToTarget);
+        return false;
+    }
+
+    if (texture->getImmutableFormat())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ImmutableTextureBound);
         return false;
     }
     return true;

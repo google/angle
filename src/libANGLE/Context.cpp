@@ -411,9 +411,13 @@ void Context::initialize()
     }
     if (getClientVersion() >= Version(3, 1))
     {
+        // TODO(http://anglebug.com/2775): These could also be enabled via extension
         Texture *zeroTexture2DMultisample =
             new Texture(mImplementation.get(), 0, TextureType::_2DMultisample);
         mZeroTextures[TextureType::_2DMultisample].set(this, zeroTexture2DMultisample);
+        Texture *zeroTexture2DMultisampleArray =
+            new Texture(mImplementation.get(), 0, TextureType::_2DMultisampleArray);
+        mZeroTextures[TextureType::_2DMultisampleArray].set(this, zeroTexture2DMultisampleArray);
 
         for (unsigned int i = 0; i < mCaps.maxAtomicCounterBufferBindings; i++)
         {
@@ -3152,6 +3156,10 @@ Extensions Context::generateSupportedExtensions() const
     {
         // Disable ES3.1+ extensions
         supportedExtensions.geometryShader = false;
+
+        // TODO(http://anglebug.com/2775): Multisample arrays could be supported on ES 3.0 as well
+        // once 2D multisample texture extension is exposed there.
+        supportedExtensions.textureMultisampleArray = false;
     }
 
     if (getClientVersion() > ES_2_0)

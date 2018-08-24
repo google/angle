@@ -102,6 +102,9 @@ ERRMSG(FramebufferIncompleteAttachment,
 ERRMSG(GenerateMipmapNotAllowed, "Texture format does not support mipmap generation.");
 ERRMSG(GeometryShaderExtensionNotEnabled, "GL_EXT_geometry_shader extension not enabled.");
 ERRMSG(GLES1Only, "GLES1-only function.");
+ERRMSG(ImmutableTextureBound,
+       "The value of TEXTURE_IMMUTABLE_FORMAT for the texture currently bound to target on the "
+       "active texture unit is true.");
 ERRMSG(IncompatibleDrawModeAgainstGeometryShader,
        "Primitive mode is incompatible with the input primitive type of the geometry shader.");
 ERRMSG(IndexExceedsMaxActiveUniform, "Index exceeds program active uniform count.");
@@ -238,6 +241,7 @@ ERRMSG(MultiviewTimerQuery,
        "There is an active query for target "
        "GL_TIME_ELAPSED_EXT when the number of views in the "
        "active draw framebuffer is greater than 1.");
+ERRMSG(MultisampleArrayExtensionRequired, "GL_ANGLE_texture_multisample_array not enabled.");
 ERRMSG(NameBeginsWithGL, "Attributes that begin with 'gl_' are not allowed.");
 ERRMSG(NegativeAttachments, "Negative number of attachments.");
 ERRMSG(NegativeBufferSize, "Negative buffer size.");
@@ -282,8 +286,13 @@ ERRMSG(ProgramNotLinked, "Program not linked.");
 ERRMSG(QueryActive, "Query is active.");
 ERRMSG(QueryExtensionNotEnabled, "Query extension not enabled.");
 ERRMSG(ReadBufferNone, "Read buffer is GL_NONE.");
+ERRMSG(RenderableInternalFormat,
+       "SizedInternalformat must be color-renderable, depth-renderable, or stencil-renderable.");
 ERRMSG(RenderbufferNotBound, "A renderbuffer must be bound.");
 ERRMSG(ResourceMaxTextureSize, "Desired resource size is greater than max texture size.");
+ERRMSG(SamplesZero, "Samples may not be zero.");
+ERRMSG(SamplesOutOfRange,
+       "Samples must not be greater than maximum supported value for the format.");
 ERRMSG(ShaderAttachmentHasShader, "Shader attachment already has a shader.");
 ERRMSG(ShaderSourceInvalidCharacters, "Shader source contains invalid characters.");
 ERRMSG(ShaderToDetachMustBeAttached,
@@ -293,9 +302,14 @@ ERRMSG(StencilReferenceMaskOrMismatch,
        "Stencil reference and mask values must be the same for front facing and back facing "
        "triangles.");
 ERRMSG(StrideMustBeMultipleOfType, "Stride must be a multiple of the passed in datatype.");
+ERRMSG(TargetMustBeTexture2DMultisampleArrayANGLE,
+       "Target must be TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE.");
 ERRMSG(TextureNotBound, "A texture must be bound.");
 ERRMSG(TextureNotPow2, "The texture is a non-power-of-two texture.");
+ERRMSG(TextureTargetRequiresES31, "Texture target requires at least OpenGL ES 3.1.");
 ERRMSG(TextureTypeConflict, "Two textures of different types use the same sampler location.");
+ERRMSG(TextureWidthOrHeightOutOfRange,
+       "Width and height must be less than or equal to GL_MAX_TEXTURE_SIZE.");
 ERRMSG(TransformFeedbackBufferDoubleBound,
        "A transform feedback buffer that would be written to is also bound to a "
        "non-transform-feedback target, which would cause undefined behavior.");
@@ -313,6 +327,8 @@ ERRMSG(UniformBufferUnbound,
        "It is undefined behaviour to have a used but unbound uniform buffer.");
 ERRMSG(UniformSizeMismatch, "Uniform size does not match uniform method.");
 ERRMSG(UnknownParameter, "Unknown parameter value.");
+ERRMSG(UnsizedInternalFormatUnsupported,
+       "Internalformat is one of the unsupported unsized base internalformats.");
 ERRMSG(UnsupportedDrawModeForTransformFeedback,
        "The draw command is unsupported when transform feedback is active and not paused.");
 ERRMSG(VertexArrayNoBuffer, "An enabled vertex array has no buffer.");
@@ -327,6 +343,7 @@ ERRMSG(WebglBindAttribLocationReservedPrefix,
        "Attributes that begin with 'webgl_', or '_webgl_' are not allowed.");
 ERRMSG(WebglNameLengthLimitExceeded,
        "Location name lengths must not be greater than 256 characters.");
+ERRMSG(ZeroBoundToTarget, "Zero is bound to target.");
 }
 #undef ERRMSG
 #endif  // LIBANGLE_ERRORSTRINGS_H_

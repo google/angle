@@ -249,7 +249,8 @@ Extensions::Extensions()
       drawTexture(false),
       explicitContextGles1(false),
       explicitContext(false),
-      parallelShaderCompile(false)
+      parallelShaderCompile(false),
+      textureMultisampleArray(false)
 {
 }
 
@@ -854,6 +855,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_explicit_context_gles1"] = enableableExtension(&Extensions::explicitContextGles1);
         map["GL_ANGLE_explicit_context"] = enableableExtension(&Extensions::explicitContext);
         map["GL_KHR_parallel_shader_compile"] = enableableExtension(&Extensions::parallelShaderCompile);
+        map["GL_ANGLE_texture_multisample_array"] = enableableExtension(&Extensions::textureMultisampleArray);
         // GLES1 extensinos
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArray);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMap);

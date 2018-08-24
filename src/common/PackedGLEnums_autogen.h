@@ -418,21 +418,22 @@ GLenum ToGLenum(TextureSrc from);
 
 enum class TextureTarget : uint8_t
 {
-    _2D              = 0,
-    _2DArray         = 1,
-    _2DMultisample   = 2,
-    _3D              = 3,
-    External         = 4,
-    Rectangle        = 5,
-    CubeMapPositiveX = 6,
-    CubeMapNegativeX = 7,
-    CubeMapPositiveY = 8,
-    CubeMapNegativeY = 9,
-    CubeMapPositiveZ = 10,
-    CubeMapNegativeZ = 11,
+    _2D                 = 0,
+    _2DArray            = 1,
+    _2DMultisample      = 2,
+    _2DMultisampleArray = 3,
+    _3D                 = 4,
+    External            = 5,
+    Rectangle           = 6,
+    CubeMapPositiveX    = 7,
+    CubeMapNegativeX    = 8,
+    CubeMapPositiveY    = 9,
+    CubeMapNegativeY    = 10,
+    CubeMapPositiveZ    = 11,
+    CubeMapNegativeZ    = 12,
 
-    InvalidEnum = 12,
-    EnumCount   = 12,
+    InvalidEnum = 13,
+    EnumCount   = 13,
 };
 
 template <>
@@ -441,16 +442,17 @@ GLenum ToGLenum(TextureTarget from);
 
 enum class TextureType : uint8_t
 {
-    _2D            = 0,
-    _2DArray       = 1,
-    _2DMultisample = 2,
-    _3D            = 3,
-    External       = 4,
-    Rectangle      = 5,
-    CubeMap        = 6,
+    _2D                 = 0,
+    _2DArray            = 1,
+    _2DMultisample      = 2,
+    _2DMultisampleArray = 3,
+    _3D                 = 4,
+    External            = 5,
+    Rectangle           = 6,
+    CubeMap             = 7,
 
-    InvalidEnum = 7,
-    EnumCount   = 7,
+    InvalidEnum = 8,
+    EnumCount   = 8,
 };
 
 template <>

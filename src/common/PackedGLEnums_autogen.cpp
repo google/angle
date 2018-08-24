@@ -1066,6 +1066,8 @@ TextureTarget FromGLenum<TextureTarget>(GLenum from)
             return TextureTarget::_2DArray;
         case GL_TEXTURE_2D_MULTISAMPLE:
             return TextureTarget::_2DMultisample;
+        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE:
+            return TextureTarget::_2DMultisampleArray;
         case GL_TEXTURE_3D:
             return TextureTarget::_3D;
         case GL_TEXTURE_EXTERNAL_OES:
@@ -1099,6 +1101,8 @@ GLenum ToGLenum(TextureTarget from)
             return GL_TEXTURE_2D_ARRAY;
         case TextureTarget::_2DMultisample:
             return GL_TEXTURE_2D_MULTISAMPLE;
+        case TextureTarget::_2DMultisampleArray:
+            return GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE;
         case TextureTarget::_3D:
             return GL_TEXTURE_3D;
         case TextureTarget::External:
@@ -1134,6 +1138,8 @@ TextureType FromGLenum<TextureType>(GLenum from)
             return TextureType::_2DArray;
         case GL_TEXTURE_2D_MULTISAMPLE:
             return TextureType::_2DMultisample;
+        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE:
+            return TextureType::_2DMultisampleArray;
         case GL_TEXTURE_3D:
             return TextureType::_3D;
         case GL_TEXTURE_EXTERNAL_OES:
@@ -1157,6 +1163,8 @@ GLenum ToGLenum(TextureType from)
             return GL_TEXTURE_2D_ARRAY;
         case TextureType::_2DMultisample:
             return GL_TEXTURE_2D_MULTISAMPLE;
+        case TextureType::_2DMultisampleArray:
+            return GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE;
         case TextureType::_3D:
             return GL_TEXTURE_3D;
         case TextureType::External:

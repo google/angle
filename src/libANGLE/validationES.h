@@ -683,6 +683,14 @@ bool ValidateTransformFeedbackPrimitiveMode(const Context *context,
                                             PrimitiveMode transformFeedbackPrimitiveMode,
                                             PrimitiveMode renderPrimitiveMode);
 
+// Common validation for 2D and 3D variants of TexStorage*Multisample.
+bool ValidateTexStorageMultisample(Context *context,
+                                   TextureType target,
+                                   GLsizei samples,
+                                   GLint internalFormat,
+                                   GLsizei width,
+                                   GLsizei height);
+
 // Utility macro for handling implementation methods inside Validation.
 #define ANGLE_HANDLE_VALIDATION_ERR(X) \
     context->handleError(X);           \

@@ -3026,7 +3026,13 @@ bool ValidateBindTexture(Context *context, TextureType target, GLuint texture)
                 return false;
             }
             break;
-
+        case TextureType::_2DMultisampleArray:
+            if (!context->getExtensions().textureMultisampleArray)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), MultisampleArrayExtensionRequired);
+                return false;
+            }
+            break;
         case TextureType::External:
             if (!context->getExtensions().eglImageExternal &&
                 !context->getExtensions().eglStreamConsumerExternal)

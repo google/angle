@@ -34,6 +34,8 @@ TextureType TextureTargetToType(TextureTarget target)
             return TextureType::_2DArray;
         case TextureTarget::_2DMultisample:
             return TextureType::_2DMultisample;
+        case TextureTarget::_2DMultisampleArray:
+            return TextureType::_2DMultisampleArray;
         case TextureTarget::_3D:
             return TextureType::_3D;
         default:
@@ -61,6 +63,8 @@ TextureTarget NonCubeTextureTypeToTarget(TextureType type)
             return TextureTarget::_2DArray;
         case TextureType::_2DMultisample:
             return TextureTarget::_2DMultisample;
+        case TextureType::_2DMultisampleArray:
+            return TextureTarget::_2DMultisampleArray;
         case TextureType::_3D:
             return TextureTarget::_3D;
         default:
