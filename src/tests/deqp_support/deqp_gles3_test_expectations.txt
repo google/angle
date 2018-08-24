@@ -325,14 +325,12 @@
 
 // Linux Intel specific
 2349 LINUX INTEL : dEQP-GLES3.functional.fbo.blit.default_framebuffer* = FAIL
-2349 LINUX INTEL : dEQP-GLES3.functional.negative_api.shader.program_binary = FAIL
 
 // Mac failures (overbroad suppresions)
 2137 MAC : dEQP-GLES3.functional.fbo.blit.default_framebuffer.* = FAIL
 2137 MAC : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_* = FAIL
 2137 MAC : dEQP-GLES3.functional.implementation_limits.compressed_texture_formats = FAIL
 2137 MAC : dEQP-GLES3.functional.implementation_limits.num_compressed_texture_formats = FAIL
-2137 MAC : dEQP-GLES3.functional.negative_api.shader.program_binary = FAIL
 2137 MAC : dEQP-GLES3.functional.primitive_restart.* = FAIL
 2137 MAC : dEQP-GLES3.functional.shaders.linkage.varying.rules.vertex_declare_fragment_use = FAIL
 2137 MAC : dEQP-GLES3.functional.shaders.scoping.valid.function_parameter_hides_struct_type_fragment = FAIL

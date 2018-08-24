@@ -381,7 +381,7 @@ void GenerateCaps(const FunctionsGL *functions,
     if (functions->isAtLeastGL(gl::Version(4, 1)) ||
         functions->hasGLExtension("GL_ARB_get_program_binary") ||
         functions->isAtLeastGLES(gl::Version(3, 0)) ||
-        functions->hasGLExtension("GL_OES_get_program_binary"))
+        functions->hasGLESExtension("GL_OES_get_program_binary"))
     {
         // Able to support the GL_PROGRAM_BINARY_ANGLE format as long as another program binary
         // format is available.

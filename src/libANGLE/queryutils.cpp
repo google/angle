@@ -1043,7 +1043,9 @@ void QueryProgramiv(const Context *context, const Program *program, GLenum pname
             *params = program->getActiveUniformMaxLength();
             return;
         case GL_PROGRAM_BINARY_LENGTH_OES:
-            *params = program->getBinaryLength(context);
+            *params = context->getCaps().programBinaryFormats.empty()
+                          ? 0
+                          : program->getBinaryLength(context);
             return;
         case GL_ACTIVE_UNIFORM_BLOCKS:
             *params = program->getActiveUniformBlockCount();
