@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96b1005d_bb1493c0",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T14:31:51Z",
+      "side": 1,
+      "message": "same as below",
+      "range": {
+        "startLine": 362,
+        "startChar": 9,
+        "endLine": 362,
+        "endChar": 31
+      },
+      "revId": "b6a63a0d0e40006efdff84d042f9901f2a86e130",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8470c980_a6c52713",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T14:31:51Z",
+      "side": 1,
+      "message": "how about just ActiveImagesMask? this mirrors the SamplersMask.",
+      "range": {
+        "startLine": 774,
+        "startChar": 29,
+        "endLine": 774,
+        "endChar": 52
+      },
+      "revId": "b6a63a0d0e40006efdff84d042f9901f2a86e130",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14bfc1d2_fb4d62ad",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T14:31:51Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 776,
+        "startChar": 22,
+        "endLine": 776,
+        "endChar": 43
+      },
+      "revId": "b6a63a0d0e40006efdff84d042f9901f2a86e130",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2c31d45_cd4ea872",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2708,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T14:31:51Z",
+      "side": 1,
+      "message": "can you replace auto with the type?",
+      "range": {
+        "startLine": 2708,
+        "startChar": 9,
+        "endLine": 2708,
+        "endChar": 14
+      },
+      "revId": "b6a63a0d0e40006efdff84d042f9901f2a86e130",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdc9c7a1_93222758",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T14:31:51Z",
+      "side": 1,
+      "message": "nit: can you replace auto with the type?",
+      "range": {
+        "startLine": 908,
+        "startChar": 9,
+        "endLine": 908,
+        "endChar": 14
+      },
+      "revId": "b6a63a0d0e40006efdff84d042f9901f2a86e130",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
