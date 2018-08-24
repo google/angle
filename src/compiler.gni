@@ -2,8 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-angle_translator_sources =
-[
+angle_translator_sources = [
   "../include/EGL/egl.h",
   "../include/EGL/eglext.h",
   "../include/EGL/eglplatform.h",
@@ -199,15 +198,13 @@ angle_translator_sources =
   "third_party/compiler/ArrayBoundsClamper.cpp",
   "third_party/compiler/ArrayBoundsClamper.h",
 ]
-angle_translator_essl_sources =
-[
+angle_translator_essl_sources = [
   "compiler/translator/OutputESSL.cpp",
   "compiler/translator/OutputESSL.h",
   "compiler/translator/TranslatorESSL.cpp",
   "compiler/translator/TranslatorESSL.h",
 ]
-angle_translator_glsl_sources =
-[
+angle_translator_glsl_sources = [
   "compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
   "compiler/translator/BuiltInFunctionEmulatorGLSL.h",
   "compiler/translator/ExtensionGLSL.cpp",
@@ -221,8 +218,7 @@ angle_translator_glsl_sources =
   "compiler/translator/VersionGLSL.cpp",
   "compiler/translator/VersionGLSL.h",
 ]
-angle_translator_hlsl_sources =
-[
+angle_translator_hlsl_sources = [
   "compiler/translator/ASTMetadataHLSL.cpp",
   "compiler/translator/ASTMetadataHLSL.h",
   "compiler/translator/blocklayoutHLSL.cpp",
@@ -265,15 +261,13 @@ angle_translator_hlsl_sources =
   "compiler/translator/tree_ops/WrapSwitchStatementsInBlocks.cpp",
   "compiler/translator/tree_ops/WrapSwitchStatementsInBlocks.h",
 ]
-angle_translator_lib_vulkan_sources =
-[
+angle_translator_lib_vulkan_sources = [
   "compiler/translator/OutputVulkanGLSL.cpp",
   "compiler/translator/OutputVulkanGLSL.h",
   "compiler/translator/TranslatorVulkan.cpp",
   "compiler/translator/TranslatorVulkan.h",
 ]
-angle_preprocessor_sources =
-[
+angle_preprocessor_sources = [
   "compiler/preprocessor/DiagnosticsBase.cpp",
   "compiler/preprocessor/DiagnosticsBase.h",
   "compiler/preprocessor/DirectiveHandlerBase.cpp",

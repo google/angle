@@ -2,8 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-angle_white_box_tests_sources =
-[
+angle_white_box_tests_sources = [
   "src/tests/util_tests/PrintSystemInfoTest.cpp",
   "src/tests/test_utils/angle_test_configs.cpp",
   "src/tests/test_utils/angle_test_configs.h",
@@ -13,11 +12,10 @@ angle_white_box_tests_sources =
   "src/tests/test_utils/ANGLETest.h",
   "src/tests/test_utils/gl_raii.h",
 ]
-angle_white_box_tests_win_sources =
-[
+angle_white_box_tests_win_sources = [
   "src/tests/gl_tests/D3D11EmulatedIndexedBufferTest.cpp",
   "src/tests/gl_tests/D3D11FormatTablesTest.cpp",
   "src/tests/gl_tests/D3D11InputLayoutCacheTest.cpp",
   "src/tests/gl_tests/D3DTextureTest.cpp",
-  "src/tests/gl_tests/ErrorMessages.cpp"
+  "src/tests/gl_tests/ErrorMessages.cpp",
 ]

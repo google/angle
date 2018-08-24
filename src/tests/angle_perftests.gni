@@ -2,8 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-angle_perf_tests_sources =
-[
+angle_perf_tests_sources = [
   "src/tests/perf_tests/ANGLEPerfTest.cpp",
   "src/tests/perf_tests/ANGLEPerfTest.h",
   "src/tests/perf_tests/BlitFramebufferPerf.cpp",
@@ -40,17 +39,13 @@ angle_perf_tests_sources =
   "src/tests/test_utils/draw_call_perf_utils.h",
 ]
 angle_perf_tests_win_sources =
-[
-  "src/tests/perf_tests/IndexDataManagerTest.cpp",
-]
+    [ "src/tests/perf_tests/IndexDataManagerTest.cpp" ]
 angle_perf_tests_vulkan_sources =
-[
-  "src/tests/perf_tests/VulkanPipelineCachePerf.cpp",
-]
+    [ "src/tests/perf_tests/VulkanPipelineCachePerf.cpp" ]
+
 # Currently Vulkan Command Buffer Perf Tests compile on Android/Linux
-angle_perf_tests_vulkan_command_buffer_sources =
-[
+angle_perf_tests_vulkan_command_buffer_sources = [
   "src/tests/perf_tests/VulkanCommandBufferPerf.cpp",
   "src/tests/test_utils/third_party/vulkan_command_buffer_utils.cpp",
-  "src/tests/test_utils/third_party/vulkan_command_buffer_utils.h"
+  "src/tests/test_utils/third_party/vulkan_command_buffer_utils.h",
 ]

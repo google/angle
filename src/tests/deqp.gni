@@ -5,8 +5,7 @@
 # leading underscore makes this a local variable
 _deqp_path = "third_party/deqp/src"
 
-deqp_include_dirs =
-[
+deqp_include_dirs = [
   "$_deqp_path/executor",
   "$_deqp_path/execserver",
   "$_deqp_path/framework/common",
@@ -43,8 +42,7 @@ deqp_include_dirs =
   "$_deqp_path/modules/glshared",
   "$_deqp_path/modules/glusecases",
 ]
-deqp_gles2_sources =
-[
+deqp_gles2_sources = [
   "$_deqp_path/modules/gles2/accuracy/es2aAccuracyTests.cpp",
   "$_deqp_path/modules/gles2/accuracy/es2aAccuracyTests.hpp",
   "$_deqp_path/modules/gles2/accuracy/es2aTextureFilteringTests.cpp",
@@ -257,8 +255,7 @@ deqp_gles2_sources =
   "$_deqp_path/modules/gles2/tes2TestPackage.hpp",
   "$_deqp_path/modules/gles2/tes2TestPackageEntry.cpp",
 ]
-deqp_gles3_sources =
-[
+deqp_gles3_sources = [
   "$_deqp_path/modules/gles3/accuracy/es3aAccuracyTests.cpp",
   "$_deqp_path/modules/gles3/accuracy/es3aAccuracyTests.hpp",
   "$_deqp_path/modules/gles3/accuracy/es3aTextureFilteringTests.cpp",
@@ -541,8 +538,7 @@ deqp_gles3_sources =
   "$_deqp_path/modules/gles3/tes3TestPackage.hpp",
   "$_deqp_path/modules/gles3/tes3TestPackageEntry.cpp",
 ]
-deqp_gles31_sources =
-[
+deqp_gles31_sources = [
   "$_deqp_path/modules/gles31/functional/es31fAdvancedBlendTests.cpp",
   "$_deqp_path/modules/gles31/functional/es31fAdvancedBlendTests.hpp",
   "$_deqp_path/modules/gles31/functional/es31fAndroidExtensionPackES31ATests.cpp",
@@ -751,10 +747,9 @@ deqp_gles31_sources =
   "$_deqp_path/modules/gles31/tes31TestCase.hpp",
   "$_deqp_path/modules/gles31/tes31TestPackage.cpp",
   "$_deqp_path/modules/gles31/tes31TestPackage.hpp",
-  "$_deqp_path/modules/gles31/tes31TestPackageEntry.cpp"
+  "$_deqp_path/modules/gles31/tes31TestPackageEntry.cpp",
 ]
-deqp_egl_sources =
-[
+deqp_egl_sources = [
   "$_deqp_path/modules/egl/teglAndroidUtil.cpp",
   "$_deqp_path/modules/egl/teglAndroidUtil.hpp",
   "$_deqp_path/modules/egl/teglApiCase.cpp",
@@ -859,8 +854,7 @@ deqp_egl_sources =
   "$_deqp_path/modules/egl/teglWideColorTests.cpp",
   "$_deqp_path/modules/egl/teglWideColorTests.hpp",
 ]
-deqp_libtester_decpp_sources =
-[
+deqp_libtester_decpp_sources = [
   "$_deqp_path/framework/delibs/decpp/deArrayBuffer.cpp",
   "$_deqp_path/framework/delibs/decpp/deBlockBuffer.cpp",
   "$_deqp_path/framework/delibs/decpp/deCommandLine.cpp",
@@ -886,8 +880,7 @@ deqp_libtester_decpp_sources =
   "$_deqp_path/framework/delibs/decpp/deThreadSafeRingBuffer.cpp",
   "$_deqp_path/framework/delibs/decpp/deUniquePtr.cpp",
 ]
-deqp_libtester_sources =
-[
+deqp_libtester_sources = [
   "$_deqp_path/execserver/xsDefs.cpp",
   "$_deqp_path/execserver/xsExecutionServer.cpp",
   "$_deqp_path/execserver/xsPosixFileReader.cpp",
@@ -996,6 +989,7 @@ deqp_libtester_sources =
   "$_deqp_path/framework/egl/egluGLContextFactory.cpp",
   "$_deqp_path/framework/egl/egluGLFunctionLoader.cpp",
   "$_deqp_path/framework/egl/egluGLUtil.cpp",
+
   # TODO(jmadill): Remove override when upstreamed. http://anglebug.com/2564
   #"$_deqp_path/framework/egl/egluNativeDisplay.cpp",
   "src/tests/deqp_support/egluNativeDisplay_override.cpp",
@@ -1006,6 +1000,7 @@ deqp_libtester_sources =
   "$_deqp_path/framework/egl/egluStaticESLibrary.cpp",
   "$_deqp_path/framework/egl/egluStrUtil.cpp",
   "$_deqp_path/framework/egl/egluUnique.cpp",
+
   # TODO(jmadill): Remove override when upstreamed. http://anglebug.com/2564
   #"$_deqp_path/framework/egl/egluUtil.cpp",
   "src/tests/deqp_support/egluUtil_override.cpp",
@@ -1126,32 +1121,29 @@ deqp_libtester_sources =
   "$_deqp_path/modules/glshared/glsVertexArrayTests.cpp",
   "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
   "src/tests/deqp_support/tcuANGLENativeDisplayFactory.h",
+
   # TODO(jmadill): integrate with dEQP
   "src/tests/deqp_support/tcuRandomOrderExecutor.cpp",
   "src/tests/deqp_support/tcuRandomOrderExecutor.h",
 ]
-deqp_libtester_sources_win =
-[
+deqp_libtester_sources_win = [
   "$_deqp_path/framework/delibs/dethread/win32/deMutexWin32.c",
   "$_deqp_path/framework/delibs/dethread/win32/deSemaphoreWin32.c",
   "$_deqp_path/framework/delibs/dethread/win32/deThreadLocalWin32.c",
   "$_deqp_path/framework/delibs/dethread/win32/deThreadWin32.c",
 ]
-deqp_libtester_sources_unix =
-[
+deqp_libtester_sources_unix = [
   "$_deqp_path/framework/delibs/dethread/unix/deMutexUnix.c",
   "$_deqp_path/framework/delibs/dethread/unix/deNamedSemaphoreUnix.c",
   "$_deqp_path/framework/delibs/dethread/unix/deSemaphoreUnix.c",
   "$_deqp_path/framework/delibs/dethread/unix/deThreadLocalUnix.c",
   "$_deqp_path/framework/delibs/dethread/unix/deThreadUnix.c",
 ]
-deqp_libtester_sources_android =
-[
+deqp_libtester_sources_android = [
   "$_deqp_path/framework/platform/android/tcuAndroidInternals.cpp",
   "$_deqp_path/framework/platform/android/tcuAndroidInternals.hpp",
 ]
-deqp_gpu_test_expectations_sources =
-[
+deqp_gpu_test_expectations_sources = [
   "third_party/gpu_test_expectations/gpu_info.cc",
   "third_party/gpu_test_expectations/gpu_info.h",
   "third_party/gpu_test_expectations/gpu_test_config.cc",
@@ -1159,8 +1151,7 @@ deqp_gpu_test_expectations_sources =
   "third_party/gpu_test_expectations/gpu_test_expectations_parser.cc",
   "third_party/gpu_test_expectations/gpu_test_expectations_parser.h",
 ]
-deqp_gpu_test_expectations_sources_mac =
-[
+deqp_gpu_test_expectations_sources_mac = [
   "third_party/gpu_test_expectations/gpu_test_config_mac.mm",
   "third_party/gpu_test_expectations/gpu_test_config_mac.h",
 ]

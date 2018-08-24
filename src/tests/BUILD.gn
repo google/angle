@@ -5,7 +5,7 @@
 import("../../gni/angle.gni")
 import("//build/config/chromecast_build.gni")
 import("//testing/test.gni")
-import("angle_unittests.gypi")
+import("angle_unittests.gni")
 
 declare_args() {
   # Don't build dEQP by default.
@@ -110,7 +110,7 @@ test("angle_unittests") {
 }
 
 if (is_win || is_linux || is_mac || is_android) {
-  import("angle_end2end_tests.gypi")
+  import("angle_end2end_tests.gni")
 
   test("angle_end2end_tests") {
     include_dirs = [
@@ -170,7 +170,7 @@ if (is_win || is_linux || is_mac || is_android) {
            ]
   }
 
-  import("angle_white_box_tests.gypi")
+  import("angle_white_box_tests.gni")
 
   test("angle_white_box_tests") {
     include_dirs = [
@@ -223,7 +223,7 @@ if (is_win || is_linux || is_mac || is_android) {
 }
 
 if (is_win || is_linux || is_android || is_mac) {
-  import("angle_perftests.gypi")
+  import("angle_perftests.gni")
 
   test("angle_perftests") {
     include_dirs = [
@@ -487,7 +487,7 @@ if (build_angle_gles1_conform_tests) {
 ###-----------------------------------------------------
 
 if (build_angle_deqp_tests) {
-  import("deqp.gypi")
+  import("deqp.gni")
 
   config("angle_deqp_support") {
     include_dirs = rebase_path(deqp_include_dirs, ".", "../..")

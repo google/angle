@@ -2,8 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-angle_unittests_sources =
-[
+angle_unittests_sources = [
   "src/common/FixedVector_unittest.cpp",
   "src/common/Optional_unittest.cpp",
   "src/common/aligned_memory_unittest.cpp",
@@ -121,9 +120,9 @@ angle_unittests_sources =
   "src/tests/test_utils/ShaderCompileTreeTest.cpp",
   "src/tests/test_utils/ShaderExtensionTest.h",
 ]
+
 # TODO(jmadill): should probably call this windows sources
-angle_unittests_hlsl_sources =
-[
+angle_unittests_hlsl_sources = [
   "src/tests/compiler_tests/HLSLOutput_test.cpp",
   "src/tests/compiler_tests/UnrollFlatten_test.cpp",
 ]

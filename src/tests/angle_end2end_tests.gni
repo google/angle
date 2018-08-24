@@ -2,8 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-angle_end2end_tests_sources =
-[
+angle_end2end_tests_sources = [
   "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
   "src/tests/gl_tests/AttributeLayoutTest.cpp",
   "src/tests/gl_tests/BindGeneratesResourceTest.cpp",
@@ -139,11 +138,8 @@ angle_end2end_tests_sources =
   "src/tests/test_utils/gl_raii.h",
 ]
 angle_end2end_tests_mac_sources =
-[
-  "src/tests/egl_tests/EGLIOSurfaceClientBufferTest.cpp",
-]
-angle_end2end_tests_win_sources =
-[
+    [ "src/tests/egl_tests/EGLIOSurfaceClientBufferTest.cpp" ]
+angle_end2end_tests_win_sources = [
   "src/tests/gl_tests/D3DImageFormatConversionTest.cpp",
   "src/tests/egl_tests/EGLDeviceTest.cpp",
   "src/tests/egl_tests/EGLPresentPathD3D11Test.cpp",
@@ -151,7 +147,4 @@ angle_end2end_tests_win_sources =
   "src/tests/egl_tests/EGLSyncControlTest.cpp",
   "src/tests/egl_tests/media/yuvtest.inl",
 ]
-angle_end2end_tests_x11_sources =
-[
-  "src/tests/egl_tests/EGLX11VisualTest.cpp",
-]
+angle_end2end_tests_x11_sources = [ "src/tests/egl_tests/EGLX11VisualTest.cpp" ]
