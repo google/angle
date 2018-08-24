@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "257a10e9_8531b490",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-24T17:12:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3aeaf4f1_da7605c3",
+      "range": {
+        "startLine": 9,
+        "startChar": 33,
+        "endLine": 9,
+        "endChar": 50
+      },
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12d42a8c_40bbeecc",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2018-08-24T15:17:05Z",
       "side": 1,
       "message": "can we remove this line? Looking at it now I\u0027m not sure if it\u0027s necessary.",
+      "range": {
+        "startLine": 312,
+        "startChar": 4,
+        "endLine": 312,
+        "endChar": 95
+      },
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b936b62_86643046",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-24T17:12:11Z",
+      "side": 1,
+      "message": "I thought so too at first, but I put it back after a few tests started failing, but then again there were a few candidates for the failure. I could try removing it again to double check.",
+      "parentUuid": "12d42a8c_40bbeecc",
       "range": {
         "startLine": 312,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7ecb87df_5057778e",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2241,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-24T17:12:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ef4955d3_2ed17b46",
+      "range": {
+        "startLine": 2241,
+        "startChar": 21,
+        "endLine": 2241,
+        "endChar": 35
+      },
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e94c5705_4742b644",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2018-08-24T15:17:05Z",
       "side": 1,
       "message": "Instead of caching the attribs mask you could pass it in to this function (or the Context/Program). You\u0027d lose some of the benefits in applyActiveAttribLocationsMask but you would gain simpler state management. Your call.",
+      "range": {
+        "startLine": 418,
+        "startChar": 20,
+        "endLine": 418,
+        "endChar": 39
+      },
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2caba41c_b3758922",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-24T17:12:11Z",
+      "side": 1,
+      "message": "I\u0027d prefer to keep it. applyActiveAttribLocationsMask uses it to only update the attributes whose enabled state changed (as you noticed), perhaps most importantly meaning that when a program changes to another with the same active mask, there would be no update at all.\n\nIf I remove that optimization, I\u0027ll be introducing a redo-enable-disable-for-all-attributes on every program change, which wasn\u0027t there before.",
+      "parentUuid": "e94c5705_4742b644",
       "range": {
         "startLine": 418,
         "startChar": 20,
