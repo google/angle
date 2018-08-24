@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "3aeaf4f1_da7605c3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T15:17:05Z",
+      "side": 1,
+      "message": "can you make a separate line with \n\nBug: angleproject:2138\n\nA bug tag should be on pretty much every CL.",
+      "range": {
+        "startLine": 9,
+        "startChar": 33,
+        "endLine": 9,
+        "endChar": 50
+      },
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12d42a8c_40bbeecc",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T15:17:05Z",
+      "side": 1,
+      "message": "can we remove this line? Looking at it now I\u0027m not sure if it\u0027s necessary.",
+      "range": {
+        "startLine": 312,
+        "startChar": 4,
+        "endLine": 312,
+        "endChar": 95
+      },
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef4955d3_2ed17b46",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2241,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T15:17:05Z",
+      "side": 1,
+      "message": "nit: can call it propagateProgramToVAO",
+      "range": {
+        "startLine": 2241,
+        "startChar": 21,
+        "endLine": 2241,
+        "endChar": 35
+      },
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e94c5705_4742b644",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T15:17:05Z",
+      "side": 1,
+      "message": "Instead of caching the attribs mask you could pass it in to this function (or the Context/Program). You\u0027d lose some of the benefits in applyActiveAttribLocationsMask but you would gain simpler state management. Your call.",
+      "range": {
+        "startLine": 418,
+        "startChar": 20,
+        "endLine": 418,
+        "endChar": 39
+      },
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8acdb68e_36746fc7",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 5
@@ -13,6 +105,24 @@
       "writtenOn": "2018-08-23T21:21:33Z",
       "side": 1,
       "message": "I would have liked to reset the relevant dirty bit for this attribute here, but I left it for later. I\u0027m not familiar enough with the code to enable access to the variable here without making the code too ugly.",
+      "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b25fe00f_bcb121c5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-24T15:17:05Z",
+      "side": 1,
+      "message": "Dirty bits are mostly meant to be handled at the GL layer. So it\u0027s not totally simple.",
+      "parentUuid": "8acdb68e_36746fc7",
       "revId": "905e85975fc4a3e64c11da1a4085913f583d80ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
