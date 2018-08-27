@@ -493,6 +493,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     FoldExpressions(root, &mDiagnostics);
     // Folding should only be able to generate warnings.
     ASSERT(mDiagnostics.numErrors() == 0);
+    if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+    {
+        return false;
+    }
 
     // We prune no-ops to work around driver bugs and to keep AST processing and output simple.
     // The following kinds of no-ops are pruned:
@@ -502,6 +506,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     //      invalid ESSL.
     // After this empty declarations are not allowed in the AST.
     PruneNoOps(root, &mSymbolTable);
+    if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+    {
+        return false;
+    }
 
     // Create the function DAG and check there is no recursion
     if (!initCallDag(root))
@@ -525,6 +533,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (!(compileOptions & SH_DONT_PRUNE_UNUSED_FUNCTIONS))
     {
         pruneUnusedFunctions(root);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     if (mShaderVersion >= 310 && !ValidateVaryingLocations(root, &mDiagnostics, mShaderType))
@@ -558,29 +570,57 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         DeclareAndInitBuiltinsForInstancedMultiview(root, mNumViews, mShaderType, compileOptions,
                                                     mOutputType, &mSymbolTable);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     // This pass might emit short circuits so keep it before the short circuit unfolding
     if (compileOptions & SH_REWRITE_DO_WHILE_LOOPS)
+    {
         RewriteDoWhile(root, &mSymbolTable);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
+    }
 
     if (compileOptions & SH_ADD_AND_TRUE_TO_LOOP_CONDITION)
+    {
         AddAndTrueToLoopCondition(root);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
+    }
 
     if (compileOptions & SH_UNFOLD_SHORT_CIRCUIT)
     {
         UnfoldShortCircuitAST(root);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     if (compileOptions & SH_REMOVE_POW_WITH_CONSTANT_EXPONENT)
     {
         RemovePow(root, &mSymbolTable);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     if (compileOptions & SH_REGENERATE_STRUCT_NAMES)
     {
         RegenerateStructNames gen(&mSymbolTable);
         root->traverse(&gen);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     if (mShaderType == GL_VERTEX_SHADER &&
@@ -590,6 +630,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             EmulateGLDrawID(root, &mSymbolTable, &mUniforms,
                             shouldCollectVariables(compileOptions));
+            if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+            {
+                return false;
+            }
         }
     }
 
@@ -599,6 +643,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         EmulateGLFragColorBroadcast(root, mResources.MaxDrawBuffers, &mOutputVariables,
                                     &mSymbolTable, mShaderVersion);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     int simplifyScalarized = (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS)
@@ -612,17 +660,38 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                            IntermNodePatternMatcher::kMultiDeclaration |
                                IntermNodePatternMatcher::kArrayLengthMethod | simplifyScalarized,
                            &getSymbolTable());
+    if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+    {
+        return false;
+    }
 
     // Note that separate declarations need to be run before other AST transformations that
     // generate new statements from expressions.
     SeparateDeclarations(root);
+    mValidateASTOptions.validateMultiDeclarations = true;
+    if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+    {
+        return false;
+    }
 
     SplitSequenceOperator(root, IntermNodePatternMatcher::kArrayLengthMethod | simplifyScalarized,
                           &getSymbolTable());
+    if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+    {
+        return false;
+    }
 
     RemoveArrayLengthMethod(root);
+    if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+    {
+        return false;
+    }
 
     RemoveUnreferencedVariables(root, &mSymbolTable);
+    if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+    {
+        return false;
+    }
 
     // In case the last case inside a switch statement is a certain type of no-op, GLSL compilers in
     // drivers may not accept it. In this case we clean up the dead code from the end of switch
@@ -631,6 +700,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // invalid state. Relies on that PruneNoOps and RemoveUnreferencedVariables have already been
     // run.
     PruneEmptyCases(root);
+    if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+    {
+        return false;
+    }
 
     // Built-in function emulation needs to happen after validateLimitations pass.
     // TODO(jmadill): Remove global pool allocator.
@@ -644,6 +717,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS)
     {
         ScalarizeVecAndMatConstructorArgs(root, mShaderType, highPrecisionSupported, &mSymbolTable);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     if (shouldCollectVariables(compileOptions))
@@ -672,6 +749,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         if ((compileOptions & SH_INIT_OUTPUT_VARIABLES) && (mShaderType != GL_COMPUTE_SHADER))
         {
             initializeOutputVariables(root);
+            if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+            {
+                return false;
+            }
         }
     }
 
@@ -680,6 +761,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (RemoveInvariant(mShaderType, mShaderVersion, mOutputType, compileOptions))
     {
         RemoveInvariantDeclaration(root);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     // gl_Position is always written in compatibility output mode.
@@ -690,6 +775,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         initializeGLPosition(root);
         mGLPositionInitialized = true;
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     // DeferGlobalInitializers needs to be run before other AST transformations that generate new
@@ -701,6 +790,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     bool canUseLoopsToInitialize = !(compileOptions & SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES);
     DeferGlobalInitializers(root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
                             highPrecisionSupported, &mSymbolTable);
+    if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+    {
+        return false;
+    }
 
     if (initializeLocalsAndGlobals)
     {
@@ -718,30 +811,54 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                    IntermNodePatternMatcher::kArrayDeclaration |
                                        IntermNodePatternMatcher::kNamelessStructDeclaration,
                                    &getSymbolTable());
+            if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+            {
+                return false;
+            }
         }
 
         InitializeUninitializedLocals(root, getShaderVersion(), canUseLoopsToInitialize,
                                       highPrecisionSupported, &getSymbolTable());
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     if (getShaderType() == GL_VERTEX_SHADER && (compileOptions & SH_CLAMP_POINT_SIZE))
     {
         ClampPointSize(root, mResources.MaxPointSize, &getSymbolTable());
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     if (getShaderType() == GL_FRAGMENT_SHADER && (compileOptions & SH_CLAMP_FRAG_DEPTH))
     {
         ClampFragDepth(root, &getSymbolTable());
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     if (compileOptions & SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED)
     {
         sh::RewriteRepeatedAssignToSwizzled(root);
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     if (compileOptions & SH_REWRITE_VECTOR_SCALAR_ARITHMETIC)
     {
         VectorizeVectorScalarArithmetic(root, &getSymbolTable());
+        if (!ValidateAST(root, &mDiagnostics, mValidateASTOptions))
+        {
+            return false;
+        }
     }
 
     return true;

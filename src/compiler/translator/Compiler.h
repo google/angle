@@ -24,6 +24,7 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/Pragma.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/ValidateAST.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
 namespace sh
@@ -277,6 +278,9 @@ class TCompiler : public TShHandleBase
     NameMap mNameMap;
 
     TPragma mPragma;
+
+    // Track what should be validated given passes currently applied.
+    ValidateASTOptions mValidateASTOptions;
 };
 
 //

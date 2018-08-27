@@ -85,6 +85,8 @@ angle_translator_sources = [
   "src/compiler/translator/SymbolUniqueId.h",
   "src/compiler/translator/Types.cpp",
   "src/compiler/translator/Types.h",
+  "src/compiler/translator/ValidateAST.cpp",
+  "src/compiler/translator/ValidateAST.h",
   "src/compiler/translator/ValidateGlobalInitializer.cpp",
   "src/compiler/translator/ValidateGlobalInitializer.h",
   "src/compiler/translator/ValidateLimitations.cpp",
