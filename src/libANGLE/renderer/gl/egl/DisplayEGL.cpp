@@ -139,4 +139,11 @@ void DisplayEGL::generateCaps(egl::Caps *outCaps) const
     outCaps->textureNPOT = true;  // Since we request GLES >= 2
 }
 
+void DisplayEGL::setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get)
+{
+    ASSERT(mEGL->hasExtension("EGL_ANDROID_blob_cache"));
+
+    mEGL->setBlobCacheFuncsANDROID(set, get);
+}
+
 }  // namespace rx

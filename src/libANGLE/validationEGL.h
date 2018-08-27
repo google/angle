@@ -174,6 +174,10 @@ Error ValidatePresentationTimeANDROID(const Display *display,
                                       const Surface *surface,
                                       EGLnsecsANDROID time);
 
+Error ValidateSetBlobCacheANDROID(const Display *display,
+                                  EGLSetBlobFuncANDROID set,
+                                  EGLGetBlobFuncANDROID get);
+
 Error ValidateGetConfigAttrib(const Display *display, const Config *config, EGLint attribute);
 Error ValidateChooseConfig(const Display *display,
                            const AttributeMap &attribs,

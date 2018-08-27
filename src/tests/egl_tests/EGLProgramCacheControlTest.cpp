@@ -36,7 +36,7 @@ class EGLProgramCacheControlTest : public ANGLETest
     {
         mPlatformMethods.cacheProgram = &TestCacheProgram;
 
-        ANGLETestBase::ANGLETestSetUp();
+        ANGLETest::SetUp();
 
         if (extensionAvailable())
         {
@@ -48,7 +48,7 @@ class EGLProgramCacheControlTest : public ANGLETest
         getEGLWindow()->initializeContext();
     }
 
-    void TearDown() override { ANGLETestBase::ANGLETestTearDown(); }
+    void TearDown() override { ANGLETest::TearDown(); }
 
     bool extensionAvailable()
     {

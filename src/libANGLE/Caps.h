@@ -778,6 +778,9 @@ struct DisplayExtensions
 
     // EGL_ANDROID_presentation_time
     bool presentationTime;
+
+    // EGL_ANDROID_blob_cache
+    bool blobCache;
 };
 
 struct DeviceExtensions

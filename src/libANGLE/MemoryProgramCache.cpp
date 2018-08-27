@@ -26,14 +26,6 @@ namespace gl
 
 namespace
 {
-enum CacheResult
-{
-    kCacheMiss,
-    kCacheHitMemory,
-    kCacheHitDisk,
-    kCacheResultMax,
-};
-
 constexpr unsigned int kWarningLimit = 3;
 
 void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
@@ -198,8 +190,8 @@ HashStream &operator<<(HashStream &stream, const std::vector<std::string> &strin
 
 }  // anonymous namespace
 
-MemoryProgramCache::MemoryProgramCache(size_t maxCacheSizeBytes)
-    : mProgramBinaryCache(maxCacheSizeBytes), mIssuedWarnings(0)
+MemoryProgramCache::MemoryProgramCache(egl::BlobCache &blobCache)
+    : mBlobCache(blobCache), mIssuedWarnings(0)
 {
 }
 
@@ -624,7 +616,7 @@ void MemoryProgramCache::Serialize(const Context *context,
 // static
 void MemoryProgramCache::ComputeHash(const Context *context,
                                      const Program *program,
-                                     ProgramHash *hashOut)
+                                     egl::BlobCache::Key *hashOut)
 {
     // Compute the program hash. Start with the shader hashes and resource strings.
     HashStream hashStream;
@@ -652,16 +644,16 @@ void MemoryProgramCache::ComputeHash(const Context *context,
 LinkResult MemoryProgramCache::getProgram(const Context *context,
                                           const Program *program,
                                           ProgramState *state,
-                                          ProgramHash *hashOut)
+                                          egl::BlobCache::Key *hashOut)
 {
     ComputeHash(context, program, hashOut);
-    const angle::MemoryBuffer *binaryProgram = nullptr;
+    egl::BlobCache::Value binaryProgram;
     LinkResult result(false);
-    if (get(*hashOut, &binaryProgram))
+    if (get(context, *hashOut, &binaryProgram))
     {
         InfoLog infoLog;
-        ANGLE_TRY_RESULT(Deserialize(context, program, state, binaryProgram->data(),
-                                     binaryProgram->size(), infoLog),
+        ANGLE_TRY_RESULT(Deserialize(context, program, state, binaryProgram.data(),
+                                     binaryProgram.size(), infoLog),
                          result);
         ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.ProgramCache.LoadBinarySuccess", result.getResult());
         if (!result.getResult())
@@ -683,129 +675,93 @@ LinkResult MemoryProgramCache::getProgram(const Context *context,
     return result;
 }
 
-bool MemoryProgramCache::get(const ProgramHash &programHash, const angle::MemoryBuffer **programOut)
+bool MemoryProgramCache::get(const Context *context,
+                             const egl::BlobCache::Key &programHash,
+                             egl::BlobCache::Value *programOut)
 {
-    const CacheEntry *entry = nullptr;
-    if (!mProgramBinaryCache.get(programHash, &entry))
-    {
-        ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.ProgramCache.CacheResult", kCacheMiss,
-                                    kCacheResultMax);
-        return false;
-    }
-
-    if (entry->second == CacheSource::PutProgram)
-    {
-        ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.ProgramCache.CacheResult", kCacheHitMemory,
-                                    kCacheResultMax);
-    }
-    else
-    {
-        ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.ProgramCache.CacheResult", kCacheHitDisk,
-                                    kCacheResultMax);
-    }
-
-    *programOut = &entry->first;
-    return true;
+    return mBlobCache.get(context, programHash, programOut);
 }
 
 bool MemoryProgramCache::getAt(size_t index,
-                               ProgramHash *hashOut,
-                               const angle::MemoryBuffer **programOut)
+                               const egl::BlobCache::Key **hashOut,
+                               egl::BlobCache::Value *programOut)
 {
-    const CacheEntry *entry = nullptr;
-    if (!mProgramBinaryCache.getAt(index, hashOut, &entry))
-    {
-        return false;
-    }
-
-    *programOut = &entry->first;
-    return true;
+    return mBlobCache.getAt(index, hashOut, programOut);
 }
 
-void MemoryProgramCache::remove(const ProgramHash &programHash)
+void MemoryProgramCache::remove(const egl::BlobCache::Key &programHash)
 {
-    bool result = mProgramBinaryCache.eraseByKey(programHash);
-    ASSERT(result);
+    mBlobCache.remove(programHash);
 }
 
-void MemoryProgramCache::putProgram(const ProgramHash &programHash,
+void MemoryProgramCache::putProgram(const egl::BlobCache::Key &programHash,
                                     const Context *context,
                                     const Program *program)
 {
-    CacheEntry newEntry;
-    Serialize(context, program, &newEntry.first);
-    newEntry.second = CacheSource::PutProgram;
+    angle::MemoryBuffer serializedProgram;
+    Serialize(context, program, &serializedProgram);
 
     ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramBinarySizeBytes",
-                           static_cast<int>(newEntry.first.size()));
+                           static_cast<int>(serializedProgram.size()));
 
-    const CacheEntry *result =
-        mProgramBinaryCache.put(programHash, std::move(newEntry), newEntry.first.size());
-    if (!result)
-    {
-        ERR() << "Failed to store binary program in memory cache, program is too large.";
-    }
-    else
-    {
-        auto *platform = ANGLEPlatformCurrent();
-        platform->cacheProgram(platform, programHash, result->first.size(), result->first.data());
-    }
+    // TODO(syoussefi): to be removed.  Compatibility for Chrome until it supports
+    // EGL_ANDROID_blob_cache. http://anglebug.com/2516
+    auto *platform = ANGLEPlatformCurrent();
+    platform->cacheProgram(platform, programHash, serializedProgram.size(),
+                           serializedProgram.data());
+
+    mBlobCache.put(programHash, std::move(serializedProgram));
 }
 
 void MemoryProgramCache::updateProgram(const Context *context, const Program *program)
 {
-    gl::ProgramHash programHash;
+    egl::BlobCache::Key programHash;
     ComputeHash(context, program, &programHash);
     putProgram(programHash, context, program);
 }
 
-void MemoryProgramCache::putBinary(const ProgramHash &programHash,
+void MemoryProgramCache::putBinary(const egl::BlobCache::Key &programHash,
                                    const uint8_t *binary,
                                    size_t length)
 {
     // Copy the binary.
-    CacheEntry newEntry;
-    newEntry.first.resize(length);
-    memcpy(newEntry.first.data(), binary, length);
-    newEntry.second = CacheSource::PutBinary;
+    angle::MemoryBuffer newEntry;
+    newEntry.resize(length);
+    memcpy(newEntry.data(), binary, length);
 
     // Store the binary.
-    const CacheEntry *result = mProgramBinaryCache.put(programHash, std::move(newEntry), length);
-    if (!result)
-    {
-        ERR() << "Failed to store binary program in memory cache, program is too large.";
-    }
+    mBlobCache.populate(programHash, std::move(newEntry));
 }
 
 void MemoryProgramCache::clear()
 {
-    mProgramBinaryCache.clear();
+    mBlobCache.clear();
     mIssuedWarnings = 0;
 }
 
 void MemoryProgramCache::resize(size_t maxCacheSizeBytes)
 {
-    mProgramBinaryCache.resize(maxCacheSizeBytes);
+    mBlobCache.resize(maxCacheSizeBytes);
 }
 
 size_t MemoryProgramCache::entryCount() const
 {
-    return mProgramBinaryCache.entryCount();
+    return mBlobCache.entryCount();
 }
 
 size_t MemoryProgramCache::trim(size_t limit)
 {
-    return mProgramBinaryCache.shrinkToSize(limit);
+    return mBlobCache.trim(limit);
 }
 
 size_t MemoryProgramCache::size() const
 {
-    return mProgramBinaryCache.size();
+    return mBlobCache.size();
 }
 
 size_t MemoryProgramCache::maxSize() const
 {
-    return mProgramBinaryCache.maxSize();
+    return mBlobCache.maxSize();
 }
 
 }  // namespace gl

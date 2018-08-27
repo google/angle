@@ -66,7 +66,9 @@ struct FunctionsEGL::EGLDispatchTable
 
           swapBuffersWithDamageKHRPtr(nullptr),
 
-          presentationTimeANDROIDPtr(nullptr)
+          presentationTimeANDROIDPtr(nullptr),
+
+          setBlobCacheFuncsANDROIDPtr(nullptr)
     {
     }
 
@@ -108,6 +110,9 @@ struct FunctionsEGL::EGLDispatchTable
 
     // EGL_ANDROID_presentation_time
     PFNEGLPRESENTATIONTIMEANDROIDPROC presentationTimeANDROIDPtr;
+
+    // EGL_ANDROID_blob_cache
+    PFNEGLSETBLOBCACHEFUNCSANDROIDPROC setBlobCacheFuncsANDROIDPtr;
 };
 
 FunctionsEGL::FunctionsEGL()
@@ -195,6 +200,11 @@ egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
     if (hasExtension("EGL_ANDROID_presentation_time"))
     {
         ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->presentationTimeANDROIDPtr, eglPresentationTimeANDROID);
+    }
+
+    if (hasExtension("EGL_ANDROID_blob_cache"))
+    {
+        ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->setBlobCacheFuncsANDROIDPtr, eglSetBlobCacheFuncsANDROID);
     }
 
 #undef ANGLE_GET_PROC_OR_ERROR
@@ -368,5 +378,11 @@ EGLBoolean FunctionsEGL::swapBuffersWithDamageKHR(EGLSurface surface,
 EGLBoolean FunctionsEGL::presentationTimeANDROID(EGLSurface surface, EGLnsecsANDROID time) const
 {
     return mFnPtrs->presentationTimeANDROIDPtr(mEGLDisplay, surface, time);
+}
+
+void FunctionsEGL::setBlobCacheFuncsANDROID(EGLSetBlobFuncANDROID set,
+                                            EGLGetBlobFuncANDROID get) const
+{
+    return mFnPtrs->setBlobCacheFuncsANDROIDPtr(mEGLDisplay, set, get);
 }
 }  // namespace rx

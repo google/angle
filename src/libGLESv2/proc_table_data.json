@@ -840,6 +840,10 @@
         "eglPresentationTimeANDROID"
     ],
 
+    "EGL_ANDROID_blob_cache": [
+        "eglSetBlobCacheFuncsANDROID"
+    ],
+
     "EGL_ANGLE_program_cache_control": [
         "eglProgramCacheGetAttribANGLE",
         "eglProgramCacheQueryANGLE",

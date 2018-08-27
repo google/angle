@@ -116,6 +116,8 @@ libangle_sources = [
   "src/libANGLE/AttributeMap.cpp",
   "src/libANGLE/AttributeMap.h",
   "src/libANGLE/BinaryStream.h",
+  "src/libANGLE/BlobCache.cpp",
+  "src/libANGLE/BlobCache.h",
   "src/libANGLE/Buffer.cpp",
   "src/libANGLE/Buffer.h",
   "src/libANGLE/Caps.cpp",

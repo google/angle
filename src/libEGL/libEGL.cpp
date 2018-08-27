@@ -511,4 +511,11 @@ EGLint EGLAPIENTRY eglLabelObjectKHR(EGLDisplay dpy,
     return egl::LabelObjectKHR(dpy, objectType, object, label);
 }
 
+void EGLAPIENTRY eglSetBlobCacheFuncsANDROID(EGLDisplay dpy,
+                                             EGLSetBlobFuncANDROID set,
+                                             EGLGetBlobFuncANDROID get)
+{
+    return egl::SetBlobCacheFuncsANDROID(dpy, set, get);
+}
+
 }  // extern "C"

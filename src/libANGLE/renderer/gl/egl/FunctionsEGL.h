@@ -79,6 +79,8 @@ class FunctionsEGL
 
     EGLBoolean presentationTimeANDROID(EGLSurface surface, EGLnsecsANDROID time) const;
 
+    void setBlobCacheFuncsANDROID(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get) const;
+
   private:
     // So as to isolate from angle we do not include angleutils.h and cannot
     // use angle::NonCopyable so we replicated it here instead.

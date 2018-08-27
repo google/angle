@@ -55,13 +55,13 @@ class SizedMRUCache final : angle::NonCopyable
         return true;
     }
 
-    bool getAt(size_t index, Key *keyOut, const Value **valueOut)
+    bool getAt(size_t index, const Key **keyOut, const Value **valueOut)
     {
         if (index < mStore.size())
         {
             auto it = mStore.begin();
             std::advance(it, index);
-            *keyOut   = it->first;
+            *keyOut   = &it->first;
             *valueOut = &it->second.value;
             return true;
         }
@@ -158,16 +158,22 @@ void TrimCache(size_t maxStates, size_t gcLimit, const char *name, T *cache)
     }
 }
 
-// Computes a hash of struct "key". Any structs passed to this function must be multiples of
-// 4 bytes, since the PMurhHas32 method can only operate increments of 4-byte words.
+// Computes a hash of "key". Any data passed to this function must be multiples of
+// 4 bytes, since the PMurHash32 method can only operate increments of 4-byte words.
+static inline std::size_t ComputeGenericHash(const void *key, size_t keySize)
+{
+    static constexpr unsigned int seed = 0xABCDEF98;
+
+    // We can't support "odd" alignments.  ComputeGenericHash requires aligned types
+    ASSERT(keySize % 4 == 0);
+    return PMurHash32(seed, key, static_cast<int>(keySize));
+}
+
 template <typename T>
 std::size_t ComputeGenericHash(const T &key)
 {
-    static const unsigned int seed = 0xABCDEF98;
-
-    // We can't support "odd" alignments.
     static_assert(sizeof(key) % 4 == 0, "ComputeGenericHash requires aligned types");
-    return PMurHash32(seed, &key, sizeof(T));
+    return ComputeGenericHash(&key, sizeof(key));
 }
 
 }  // namespace angle

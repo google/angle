@@ -120,6 +120,11 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY PresentationTimeANDROID(EGLDisplay dpy,
                                                             EGLSurface surface,
                                                             EGLnsecsANDROID time);
 
+// EGL_ANDRIOD_blob_cache
+ANGLE_EXPORT void EGLAPIENTRY SetBlobCacheFuncsANDROID(EGLDisplay dpy,
+                                                       EGLSetBlobFuncANDROID set,
+                                                       EGLGetBlobFuncANDROID get);
+
 // EGL_ANGLE_program_cache_control
 ANGLE_EXPORT EGLint EGLAPIENTRY ProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib);
 ANGLE_EXPORT void EGLAPIENTRY ProgramCacheQueryANGLE(EGLDisplay dpy,

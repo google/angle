@@ -1318,7 +1318,8 @@ DisplayExtensions::DisplayExtensions()
       robustResourceInitialization(false),
       iosurfaceClientBuffer(false),
       createContextExtensionsEnabled(false),
-      presentationTime(false)
+      presentationTime(false),
+      blobCache(false)
 {
 }
 
@@ -1366,6 +1367,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_iosurface_client_buffer",                   iosurfaceClientBuffer,              &extensionStrings);
     InsertExtensionString("EGL_ANGLE_create_context_extensions_enabled",         createContextExtensionsEnabled,     &extensionStrings);
     InsertExtensionString("EGL_ANDROID_presentation_time",                       presentationTime,                   &extensionStrings);
+    InsertExtensionString("EGL_ANDROID_blob_cache",                              blobCache,                          &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on

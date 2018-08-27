@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "libANGLE/AttributeMap.h"
+#include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Debug.h"
@@ -134,6 +135,10 @@ class Display final : public LabeledObject, angle::NonCopyable
     bool testDeviceLost();
     void notifyDeviceLost();
 
+    void setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get);
+    bool areBlobCacheFuncsSet() const { return mBlobCache.areBlobCacheFuncsSet(); }
+    BlobCache &getBlobCache() { return mBlobCache; }
+
     Error waitClient(const gl::Context *context);
     Error waitNative(const gl::Context *context, EGLint engine);
 
@@ -208,6 +213,7 @@ class Display final : public LabeledObject, angle::NonCopyable
     angle::LoggingAnnotator mAnnotator;
 
     gl::TextureManager *mTextureManager;
+    BlobCache mBlobCache;
     gl::MemoryProgramCache mMemoryProgramCache;
     size_t mGlobalTextureShareGroupUsers;
 };

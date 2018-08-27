@@ -15,6 +15,7 @@ angle_unittests_sources = [
   "../common/vector_utils_unittest.cpp",
   "../gpu_info_util/SystemInfo_unittest.cpp",
   "../libANGLE/BinaryStream_unittest.cpp",
+  "../libANGLE/BlobCache_unittest.cpp",
   "../libANGLE/Config_unittest.cpp",
   "../libANGLE/Fence_unittest.cpp",
   "../libANGLE/HandleAllocator_unittest.cpp",

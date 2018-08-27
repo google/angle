@@ -2715,6 +2715,26 @@ Error ValidatePresentationTimeANDROID(const Display *display,
     return NoError();
 }
 
+Error ValidateSetBlobCacheANDROID(const Display *display,
+                                  EGLSetBlobFuncANDROID set,
+                                  EGLGetBlobFuncANDROID get)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (display->areBlobCacheFuncsSet())
+    {
+        return EglBadParameter()
+               << "Blob cache functions can only be set once in the lifetime of a Display";
+    }
+
+    if (set == nullptr || get == nullptr)
+    {
+        return EglBadParameter() << "Blob cache callbacks cannot be null.";
+    }
+
+    return NoError();
+}
+
 Error ValidateGetConfigAttrib(const Display *display, const Config *config, EGLint attribute)
 {
     ANGLE_TRY(ValidateConfig(display, config));
@@ -2842,7 +2862,7 @@ Error ValidateProgramCacheQueryANGLE(const Display *display,
         return EglBadParameter() << "keysize and binarysize must always be valid pointers.";
     }
 
-    if (binary && *keysize != static_cast<EGLint>(gl::kProgramHashLength))
+    if (binary && *keysize != static_cast<EGLint>(egl::BlobCache::kKeyLength))
     {
         return EglBadParameter() << "Invalid program key size.";
     }
@@ -2868,7 +2888,7 @@ Error ValidateProgramCachePopulateANGLE(const Display *display,
         return EglBadAccess() << "Extension not supported";
     }
 
-    if (keysize != static_cast<EGLint>(gl::kProgramHashLength))
+    if (keysize != static_cast<EGLint>(egl::BlobCache::kKeyLength))
     {
         return EglBadParameter() << "Invalid program key size.";
     }

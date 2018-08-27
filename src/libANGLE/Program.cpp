@@ -600,7 +600,7 @@ struct Program::LinkingState
 {
     const Context *context;
     std::unique_ptr<ProgramLinkedResources> resources;
-    ProgramHash programHash;
+    egl::BlobCache::Key programHash;
     std::unique_ptr<rx::LinkEvent> linkEvent;
 };
 
@@ -1114,7 +1114,7 @@ Error Program::link(const gl::Context *context)
         return NoError();
     }
 
-    ProgramHash programHash   = {0};
+    egl::BlobCache::Key programHash = {0};
     MemoryProgramCache *cache = context->getMemoryProgramCache();
 
     if (cache)

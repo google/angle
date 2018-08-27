@@ -386,7 +386,8 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mDevice(eglDevice),
       mPlatform(platform),
       mTextureManager(nullptr),
-      mMemoryProgramCache(gl::kDefaultMaxProgramCacheMemoryBytes),
+      mBlobCache(gl::kDefaultMaxProgramCacheMemoryBytes),
+      mMemoryProgramCache(mBlobCache),
       mGlobalTextureShareGroupUsers(0)
 {
 }
@@ -542,6 +543,7 @@ Error Display::terminate(const Thread *thread)
     }
 
     mMemoryProgramCache.clear();
+    mBlobCache.setBlobCacheFuncs(nullptr, nullptr);
 
     while (!mContextSet.empty())
     {
@@ -947,6 +949,12 @@ void Display::notifyDeviceLost()
     mDeviceLost = true;
 }
 
+void Display::setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get)
+{
+    mBlobCache.setBlobCacheFuncs(set, get);
+    mImplementation->setBlobCacheFuncs(set, get);
+}
+
 Error Display::waitClient(const gl::Context *context)
 {
     return mImplementation->waitClient(context);
@@ -1092,6 +1100,9 @@ void Display::initDisplayExtensions()
     // Request extension is implemented in the ANGLE frontend
     mDisplayExtensions.createContextExtensionsEnabled = true;
 
+    // Blob cache extension is provided by the ANGLE frontend
+    mDisplayExtensions.blobCache = true;
+
     mDisplayExtensionString = GenerateExtensionsString(mDisplayExtensions);
 }
 
@@ -1186,7 +1197,7 @@ EGLint Display::programCacheGetAttrib(EGLenum attrib) const
     switch (attrib)
     {
         case EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE:
-            return static_cast<EGLint>(gl::kProgramHashLength);
+            return static_cast<EGLint>(BlobCache::kKeyLength);
 
         case EGL_PROGRAM_CACHE_SIZE_ANGLE:
             return static_cast<EGLint>(mMemoryProgramCache.entryCount());
@@ -1205,8 +1216,8 @@ Error Display::programCacheQuery(EGLint index,
 {
     ASSERT(index >= 0 && index < static_cast<EGLint>(mMemoryProgramCache.entryCount()));
 
-    const angle::MemoryBuffer *programBinary = nullptr;
-    gl::ProgramHash programHash;
+    const BlobCache::Key *programHash = nullptr;
+    BlobCache::Value programBinary;
     // TODO(jmadill): Make this thread-safe.
     bool result =
         mMemoryProgramCache.getAt(static_cast<size_t>(index), &programHash, &programBinary);
@@ -1219,8 +1230,8 @@ Error Display::programCacheQuery(EGLint index,
 
     if (key)
     {
-        ASSERT(*keysize == static_cast<EGLint>(gl::kProgramHashLength));
-        memcpy(key, programHash.data(), gl::kProgramHashLength);
+        ASSERT(*keysize == static_cast<EGLint>(BlobCache::kKeyLength));
+        memcpy(key, programHash->data(), BlobCache::kKeyLength);
     }
 
     if (binary)
@@ -1228,16 +1239,16 @@ Error Display::programCacheQuery(EGLint index,
         // Note: we check the size here instead of in the validation code, since we need to
         // access the cache as atomically as possible. It's possible that the cache contents
         // could change between the validation size check and the retrieval.
-        if (programBinary->size() > static_cast<size_t>(*binarysize))
+        if (programBinary.size() > static_cast<size_t>(*binarysize))
         {
             return EglBadAccess() << "Program binary too large or changed during access.";
         }
 
-        memcpy(binary, programBinary->data(), programBinary->size());
+        memcpy(binary, programBinary.data(), programBinary.size());
     }
 
-    *binarysize = static_cast<EGLint>(programBinary->size());
-    *keysize    = static_cast<EGLint>(gl::kProgramHashLength);
+    *binarysize = static_cast<EGLint>(programBinary.size());
+    *keysize    = static_cast<EGLint>(BlobCache::kKeyLength);
 
     return NoError();
 }
@@ -1247,10 +1258,10 @@ Error Display::programCachePopulate(const void *key,
                                     const void *binary,
                                     EGLint binarysize)
 {
-    ASSERT(keysize == static_cast<EGLint>(gl::kProgramHashLength));
+    ASSERT(keysize == static_cast<EGLint>(BlobCache::kKeyLength));
 
-    gl::ProgramHash programHash;
-    memcpy(programHash.data(), key, gl::kProgramHashLength);
+    BlobCache::Key programHash;
+    memcpy(programHash.data(), key, BlobCache::kKeyLength);
 
     mMemoryProgramCache.putBinary(programHash, reinterpret_cast<const uint8_t *>(binary),
                                   static_cast<size_t>(binarysize));
