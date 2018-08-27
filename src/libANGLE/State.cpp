@@ -987,11 +987,6 @@ void State::setFragmentShaderDerivativeHint(GLenum hint)
     // Ignore for now. It is valid for implementations to ignore hint.
 }
 
-bool State::isBindGeneratesResourceEnabled() const
-{
-    return mBindGeneratesResource;
-}
-
 bool State::areClientArraysEnabled() const
 {
     return mClientArraysEnabled;

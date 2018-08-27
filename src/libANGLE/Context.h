@@ -25,6 +25,7 @@
 #include "libANGLE/HandleAllocator.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/ResourceMap.h"
+#include "libANGLE/ResourceManager.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/Workarounds.h"
 #include "libANGLE/angletypes.h"
@@ -1526,7 +1527,11 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Shader *getShader(GLuint handle) const;
 
     bool isTextureGenerated(GLuint texture) const;
-    bool isBufferGenerated(GLuint buffer) const;
+    bool isBufferGenerated(GLuint buffer) const
+    {
+        return mState.mBuffers->isHandleGenerated(buffer);
+    }
+
     bool isRenderbufferGenerated(GLuint renderbuffer) const;
     bool isFramebufferGenerated(GLuint framebuffer) const;
     bool isProgramPipelineGenerated(GLuint pipeline) const;

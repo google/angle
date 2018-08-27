@@ -7593,11 +7593,6 @@ bool Context::isTextureGenerated(GLuint texture) const
     return mState.mTextures->isHandleGenerated(texture);
 }
 
-bool Context::isBufferGenerated(GLuint buffer) const
-{
-    return mState.mBuffers->isHandleGenerated(buffer);
-}
-
 bool Context::isRenderbufferGenerated(GLuint renderbuffer) const
 {
     return mState.mRenderbuffers->isHandleGenerated(renderbuffer);

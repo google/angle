@@ -359,19 +359,21 @@ void VertexArray::setVertexAttribPointer(const Context *context,
 
 void VertexArray::setElementArrayBuffer(const Context *context, Buffer *buffer)
 {
-    if (context->isCurrentVertexArray(this))
+    ASSERT(context->isCurrentVertexArray(this));
+    if (mState.mElementArrayBuffer.get())
     {
-        if (mState.mElementArrayBuffer.get())
-        {
-            mState.mElementArrayBuffer->onNonTFBindingChanged(context, -1);
-        }
-        if (buffer)
-        {
-            buffer->onNonTFBindingChanged(context, 1);
-        }
+        mState.mElementArrayBuffer->onNonTFBindingChanged(context, -1);
+    }
+    if (buffer)
+    {
+        buffer->onNonTFBindingChanged(context, 1);
+        mElementArrayBufferObserverBinding.bind(buffer->getImplementation());
+    }
+    else
+    {
+        mElementArrayBufferObserverBinding.bind(nullptr);
     }
     mState.mElementArrayBuffer.set(context, buffer);
-    mElementArrayBufferObserverBinding.bind(buffer ? buffer->getImplementation() : nullptr);
     mDirtyBits.set(DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
 }
 

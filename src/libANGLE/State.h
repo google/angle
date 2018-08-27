@@ -162,7 +162,10 @@ class State : angle::NonCopyable
     void setFragmentShaderDerivativeHint(GLenum hint);
 
     // GL_CHROMIUM_bind_generates_resource
-    bool isBindGeneratesResourceEnabled() const;
+    bool isBindGeneratesResourceEnabled() const
+    {
+        return mBindGeneratesResource;
+    }
 
     // GL_ANGLE_client_arrays
     bool areClientArraysEnabled() const;
