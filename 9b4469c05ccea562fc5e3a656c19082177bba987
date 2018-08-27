@@ -1,0 +1,307 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3b8ee9f_125b3513",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "nit: qualifier",
+      "range": {
+        "startLine": 393,
+        "startChar": 19,
+        "endLine": 393,
+        "endChar": 27
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6daee373_f3ae047a",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1222,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "This could be an implementation detail of SSBOOutputHLSL:\n\n  mSSBOOutputHLSL-\u003etraverseAssignementLeftHandSide(node);",
+      "range": {
+        "startLine": 1221,
+        "startChar": 0,
+        "endLine": 1222,
+        "endChar": 59
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46038b39_9fd1e157",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1227,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "ditto with rightHandSide",
+      "range": {
+        "startLine": 1226,
+        "startChar": 0,
+        "endLine": 1227,
+        "endChar": 64
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "327813a7_1b495722",
+        "filename": "src/compiler/translator/ShaderStorageBlockFunctionHLSL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "This isn\u0027t needed, ditto for Load",
+      "range": {
+        "startLine": 48,
+        "startChar": 14,
+        "endLine": 48,
+        "endChar": 46
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69a4deba_98855515",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "Overall it would be great to have comments describing what different blocks of code are doing.",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "024f2ad5_0f003f7d",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "nit: variableName.\n\nIsn\u0027t there an existing function for this that we could reuse?",
+      "range": {
+        "startLine": 23,
+        "startChar": 72,
+        "endLine": 23,
+        "endChar": 83
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dabf698_ccbfeba2",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "This is just isRowMajorLayout",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 77
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b18a6fe_a932c553",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "memberInfo",
+      "range": {
+        "startLine": 60,
+        "startChar": 35,
+        "endLine": 60,
+        "endChar": 46
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21798cdc_517dc8c0",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "I know Olli is trying to ger rid of TString. Maybe this function could take an sink instead of returning a string?",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 7
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "390ebbd9_87a0b821",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "What does this function do? Is it checking that the current node if the end of the access chain, or is it checking that this is the root of the access chain?",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9af6af5_49bc1e59",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "Comment as to what this does please.",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a642659b_b1c71521",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "This only needs to happen at the toplevel, in OutputHLSL I suggest that there are traverseAssignementLeftHandSide and RightHandSide functions (or output... instead of traverse...).\n\nWe know the function call has to happen only at the \"top level\" node of the SSBO access chain so we can do it in traverseAssignementLeftHandSide then traverse to build the expression that computes the offset. This would avoid the need to duplicate the code here, and would also remove the need to get the variableType because it is the type of the node itself.",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82e374e0_dda3302f",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "nit: maybe this could be both the blocks and the load functions so that OutputHLSL doesn\u0027t have to know about SSBOFunctionsHLSL.",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5695c50_6b31e9ee",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "nit: the name of the file might need to be updated because it is no longer just-uniforms.",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "374cbbd1_e6ad43e5",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 17
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-27T10:07:23Z",
+      "side": 1,
+      "message": "Are these new regressions? I don\u0027t see the group of test being re-enabled.",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
