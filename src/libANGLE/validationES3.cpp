@@ -1151,13 +1151,14 @@ bool ValidateFramebufferTextureLayer(Context *context,
             {
                 if (level > gl::log2(caps.max2DTextureSize))
                 {
-                    context->handleError(InvalidValue());
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(),
+                                         FramebufferTextureInvalidMipLevel);
                     return false;
                 }
 
                 if (static_cast<GLuint>(layer) >= caps.maxArrayTextureLayers)
                 {
-                    context->handleError(InvalidValue());
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(), FramebufferTextureInvalidLayer);
                     return false;
                 }
             }
@@ -1167,20 +1168,39 @@ bool ValidateFramebufferTextureLayer(Context *context,
             {
                 if (level > gl::log2(caps.max3DTextureSize))
                 {
-                    context->handleError(InvalidValue());
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(),
+                                         FramebufferTextureInvalidMipLevel);
                     return false;
                 }
 
                 if (static_cast<GLuint>(layer) >= caps.max3DTextureSize)
                 {
-                    context->handleError(InvalidValue());
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(), FramebufferTextureInvalidLayer);
+                    return false;
+                }
+            }
+            break;
+
+            case TextureType::_2DMultisampleArray:
+            {
+                if (level != 0)
+                {
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(),
+                                         FramebufferTextureInvalidMipLevel);
+                    return false;
+                }
+
+                if (static_cast<GLuint>(layer) >= caps.maxArrayTextureLayers)
+                {
+                    ANGLE_VALIDATION_ERR(context, InvalidValue(), FramebufferTextureInvalidLayer);
                     return false;
                 }
             }
             break;
 
             default:
-                context->handleError(InvalidOperation());
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                                     FramebufferTextureLayerIncorrectTextureType);
                 return false;
         }
 

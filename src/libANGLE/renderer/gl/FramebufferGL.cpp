@@ -72,7 +72,8 @@ void BindFramebufferAttachment(const FunctionsGL *functions,
                                                 textureGL->getTextureID(), attachment->mipLevel());
             }
             else if (texture->getType() == TextureType::_2DArray ||
-                     texture->getType() == TextureType::_3D)
+                     texture->getType() == TextureType::_3D ||
+                     texture->getType() == TextureType::_2DMultisampleArray)
             {
                 if (attachment->getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE)
                 {

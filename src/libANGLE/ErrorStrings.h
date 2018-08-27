@@ -99,6 +99,10 @@ ERRMSG(ExtensionNotEnabled, "Extension is not enabled.");
 ERRMSG(FeedbackLoop, "Feedback loop formed between Framebuffer and active Texture.");
 ERRMSG(FramebufferIncompleteAttachment,
        "Attachment type must be compatible with attachment object.");
+ERRMSG(FramebufferTextureInvalidLayer, "Layer invalid for framebuffer texture attachment.");
+ERRMSG(FramebufferTextureInvalidMipLevel, "Mip level invalid for framebuffer texture attachment.");
+ERRMSG(FramebufferTextureLayerIncorrectTextureType,
+       "Texture is not a three-dimensional or two-dimensionsal array texture.");
 ERRMSG(GenerateMipmapNotAllowed, "Texture format does not support mipmap generation.");
 ERRMSG(GeometryShaderExtensionNotEnabled, "GL_EXT_geometry_shader extension not enabled.");
 ERRMSG(GLES1Only, "GLES1-only function.");

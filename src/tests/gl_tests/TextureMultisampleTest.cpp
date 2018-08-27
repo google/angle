@@ -62,6 +62,21 @@ class TextureMultisampleTest : public ANGLETest
 
     GLuint mFramebuffer = 0;
     GLuint mTexture     = 0;
+
+    // Returns a sample count that can be used with the given texture target for all the given
+    // formats. Assumes that if format A supports a number of samples N and another format B
+    // supports a number of samples M > N then format B also supports number of samples N.
+    GLint getSamplesToUse(GLenum texTarget, const std::vector<GLenum> &formats)
+    {
+        GLint maxSamples = 65536;
+        for (GLenum format : formats)
+        {
+            GLint maxSamplesFormat = 0;
+            glGetInternalformativ(texTarget, format, GL_SAMPLES, 1, &maxSamplesFormat);
+            maxSamples = std::min(maxSamples, maxSamplesFormat);
+        }
+        return maxSamples;
+    }
 };
 
 class TextureMultisampleTestES31 : public TextureMultisampleTest
@@ -281,16 +296,24 @@ TEST_P(TextureMultisampleArrayWebGLTest, MultisampleArrayTargetGetInternalFormat
     GLint maxSamplesRGBA8 = 0;
     glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_RGBA8, GL_SAMPLES, 1,
                           &maxSamplesRGBA8);
+    GLint maxSamplesDepth = 0;
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_DEPTH_COMPONENT24, GL_SAMPLES,
+                          1, &maxSamplesDepth);
     ASSERT_GL_NO_ERROR();
 
     // GLES 3.1 section 19.3.1 specifies the required minimum of how many samples are supported.
     GLint maxColorTextureSamples;
     glGetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &maxColorTextureSamples);
+    GLint maxDepthTextureSamples;
+    glGetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &maxDepthTextureSamples);
     GLint maxSamples;
     glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
-    GLint maxSamplesRGBA8Required = std::min(maxColorTextureSamples, maxSamples);
 
+    GLint maxSamplesRGBA8Required = std::min(maxColorTextureSamples, maxSamples);
     EXPECT_GE(maxSamplesRGBA8, maxSamplesRGBA8Required);
+
+    GLint maxSamplesDepthRequired = std::min(maxDepthTextureSamples, maxSamples);
+    EXPECT_GE(maxSamplesDepth, maxSamplesDepthRequired);
 }
 
 // Tests that TexImage3D call cannot be used for GL_TEXTURE_2D_MULTISAMPLE_ARRAY.
@@ -409,6 +432,132 @@ TEST_P(TextureMultisampleArrayWebGLTest, TexStorage3DMultisample)
     EXPECT_EQ(4, height);
     EXPECT_EQ(2, depth);
     EXPECT_EQ(maxSamplesRGBA8, samples);
+}
+
+// Test for invalid FramebufferTextureLayer calls with GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE
+// textures.
+TEST_P(TextureMultisampleArrayWebGLTest, InvalidFramebufferTextureLayer)
+{
+    ANGLE_SKIP_TEST_IF(!requestArrayExtension());
+
+    GLint maxSamplesRGBA8 = 0;
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_RGBA8, GL_SAMPLES, 1,
+                          &maxSamplesRGBA8);
+
+    GLint maxArrayTextureLayers;
+    glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxArrayTextureLayers);
+
+    // Test framebuffer status with just a color texture attached.
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
+    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, maxSamplesRGBA8, GL_RGBA8,
+                                   4, 4, 2, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    // Test with mip level 1 and -1 (only level 0 is valid for multisample textures).
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, 1, 0);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, -1, 0);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Test with layer -1 and layer == MAX_ARRAY_TEXTURE_LAYERS
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, 0, -1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, 0,
+                              maxArrayTextureLayers);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Attach layers of TEXTURE_2D_MULTISAMPLE_ARRAY textures to a framebuffer and check for
+// completeness.
+TEST_P(TextureMultisampleArrayWebGLTest, FramebufferCompleteness)
+{
+    ANGLE_SKIP_TEST_IF(!requestArrayExtension());
+
+    std::vector<GLenum> testFormats = {{GL_RGBA8, GL_DEPTH_COMPONENT24, GL_DEPTH24_STENCIL8}};
+    GLint samplesToUse = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, testFormats);
+
+    // Test framebuffer status with just a color texture attached.
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
+    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, samplesToUse, GL_RGBA8, 4,
+                                   4, 2, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, 0, 0);
+    ASSERT_GL_NO_ERROR();
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, status);
+
+    // Test framebuffer status with both color and depth textures attached.
+    GLTexture depthTexture;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, depthTexture);
+    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, samplesToUse,
+                                   GL_DEPTH_COMPONENT24, 4, 4, 2, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0, 0);
+    ASSERT_GL_NO_ERROR();
+
+    status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, status);
+
+    // Test with color and depth/stencil textures attached.
+    GLTexture depthStencilTexture;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, depthStencilTexture);
+    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, samplesToUse,
+                                   GL_DEPTH24_STENCIL8, 4, 4, 2, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, depthStencilTexture, 0,
+                              0);
+    ASSERT_GL_NO_ERROR();
+
+    status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, status);
+}
+
+// Attach a layer of TEXTURE_2D_MULTISAMPLE_ARRAY texture to a framebuffer, clear it, and resolve by
+// blitting.
+TEST_P(TextureMultisampleArrayWebGLTest, FramebufferColorClearAndBlit)
+{
+    ANGLE_SKIP_TEST_IF(!requestArrayExtension());
+
+    const GLsizei kWidth  = 4;
+    const GLsizei kHeight = 4;
+
+    std::vector<GLenum> testFormats = {GL_RGBA8};
+    GLint samplesToUse = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, testFormats);
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
+    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, samplesToUse, GL_RGBA8,
+                                   kWidth, kHeight, 2, GL_TRUE);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, 0, 0);
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, status);
+
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLFramebuffer resolveFramebuffer;
+    GLTexture resolveTexture;
+    glBindTexture(GL_TEXTURE_2D, resolveTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFramebuffer);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resolveTexture,
+                           0);
+    glBlitFramebuffer(0, 0, kWidth, kHeight, 0, 0, kWidth, kHeight, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFramebuffer);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
 }
 
 ANGLE_INSTANTIATE_TEST(TextureMultisampleTest,
