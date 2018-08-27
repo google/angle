@@ -380,6 +380,37 @@ TEST_P(TextureMultisampleArrayWebGLTest, InvalidTexParameteri)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test a valid TexStorage3DMultisample call and check that the queried texture level parameters
+// match. Does not do any drawing.
+TEST_P(TextureMultisampleArrayWebGLTest, TexStorage3DMultisample)
+{
+    ANGLE_SKIP_TEST_IF(!requestArrayExtension());
+
+    GLint maxSamplesRGBA8 = 0;
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_RGBA8, GL_SAMPLES, 1,
+                          &maxSamplesRGBA8);
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
+    ASSERT_GL_NO_ERROR();
+
+    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, maxSamplesRGBA8, GL_RGBA8,
+                                   8, 4, 2, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    GLint width = 0, height = 0, depth = 0, samples = 0;
+    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_TEXTURE_WIDTH, &width);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_TEXTURE_HEIGHT, &height);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_TEXTURE_DEPTH, &depth);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_TEXTURE_SAMPLES,
+                             &samples);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(8, width);
+    EXPECT_EQ(4, height);
+    EXPECT_EQ(2, depth);
+    EXPECT_EQ(maxSamplesRGBA8, samples);
+}
+
 ANGLE_INSTANTIATE_TEST(TextureMultisampleTest,
                        ES31_D3D11(),
                        ES3_OPENGL(),

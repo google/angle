@@ -561,9 +561,9 @@ void TextureState::setImageDescChainMultisample(Extents baseSize,
                                                 bool fixedSampleLocations,
                                                 InitState initState)
 {
-    ASSERT(mType == TextureType::_2DMultisample);
+    ASSERT(mType == TextureType::_2DMultisample || mType == TextureType::_2DMultisampleArray);
     ImageDesc levelInfo(baseSize, format, samples, fixedSampleLocations, initState);
-    setImageDesc(TextureTarget::_2DMultisample, 0, levelInfo);
+    setImageDesc(NonCubeTextureTypeToTarget(mType), 0, levelInfo);
 }
 
 void TextureState::clearImageDesc(TextureTarget target, size_t level)

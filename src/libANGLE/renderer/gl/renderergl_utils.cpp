@@ -1269,12 +1269,14 @@ bool SupportsNativeRendering(const FunctionsGL *functions,
 bool UseTexImage2D(gl::TextureType textureType)
 {
     return textureType == gl::TextureType::_2D || textureType == gl::TextureType::CubeMap ||
-           textureType == gl::TextureType::Rectangle;
+           textureType == gl::TextureType::Rectangle ||
+           textureType == gl::TextureType::_2DMultisample;
 }
 
 bool UseTexImage3D(gl::TextureType textureType)
 {
-    return textureType == gl::TextureType::_2DArray || textureType == gl::TextureType::_3D;
+    return textureType == gl::TextureType::_2DArray || textureType == gl::TextureType::_3D ||
+           textureType == gl::TextureType::_2DMultisampleArray;
 }
 }
 

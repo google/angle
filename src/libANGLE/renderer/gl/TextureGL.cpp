@@ -1031,11 +1031,23 @@ gl::Error TextureGL::setStorageMultisample(const gl::Context *context,
 
     stateManager->bindTexture(getType(), mTextureID);
 
-    ASSERT(size.depth == 1);
-
-    functions->texStorage2DMultisample(ToGLenum(type), samples, texStorageFormat.internalFormat,
-                                       size.width, size.height,
-                                       gl::ConvertToGLBoolean(fixedSampleLocations));
+    if (nativegl::UseTexImage2D(getType()))
+    {
+        ASSERT(size.depth == 1);
+        functions->texStorage2DMultisample(ToGLenum(type), samples, texStorageFormat.internalFormat,
+                                           size.width, size.height,
+                                           gl::ConvertToGLBoolean(fixedSampleLocations));
+    }
+    else if (nativegl::UseTexImage3D(getType()))
+    {
+        functions->texStorage3DMultisample(ToGLenum(type), samples, texStorageFormat.internalFormat,
+                                           size.width, size.height, size.depth,
+                                           gl::ConvertToGLBoolean(fixedSampleLocations));
+    }
+    else
+    {
+        UNREACHABLE();
+    }
 
     setLevelInfo(type, 0, 1, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
 

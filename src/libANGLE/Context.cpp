@@ -5010,7 +5010,10 @@ void Context::texStorage3DMultisample(TextureType target,
                                       GLsizei depth,
                                       GLboolean fixedsamplelocations)
 {
-    UNIMPLEMENTED();
+    Extents size(width, height, depth);
+    Texture *texture = getTargetTexture(target);
+    handleError(texture->setStorageMultisample(this, target, samples, internalformat, size,
+                                               ConvertToBool(fixedsamplelocations)));
 }
 
 void Context::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
