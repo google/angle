@@ -2028,15 +2028,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::ANGLE_texture_multisample_array, SAMPLER2DMSARRAY); }
+{ return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, SAMPLER2DMSARRAY); }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::ANGLE_texture_multisample_array, ISAMPLER2DMSARRAY); }
+{ return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, ISAMPLER2DMSARRAY); }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::ANGLE_texture_multisample_array, USAMPLER2DMSARRAY); }
+{ return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, USAMPLER2DMSARRAY); }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP

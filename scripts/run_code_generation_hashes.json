@@ -32,7 +32,7 @@
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py":
     "2932a5e1c3c846be0169e29a4f9c72e8",
   "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
-    "36f9636dbfbcd6508a4b76143c5e4540",
+    "336c2a275fe35bce1adc7e9b5918bdb0",
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
     "2c0e86ff9f92f79ada03f04206e63fba",
   "ESSL static builtins:src/compiler/translator/gen_builtin_symbols.py":

@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 197
+#define ANGLE_SH_VERSION 198
 
 enum ShShaderSpec
 {
@@ -313,7 +313,7 @@ struct ShBuiltInResources
     int OVR_multiview;
     int EXT_YUV_target;
     int EXT_geometry_shader;
-    int ANGLE_texture_multisample_array;
+    int OES_texture_storage_multisample_2d_array;
 
     // Set to 1 to enable replacing GL_EXT_draw_buffers #extension directives
     // with GL_NV_draw_buffers in ESSL output. This flag can be used to emulate

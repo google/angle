@@ -382,7 +382,7 @@ GROUP BEGIN TextureSizeMS
 GROUP END TextureSizeMS
 
 GROUP BEGIN TextureSizeMSArray
-  DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "extension": "ANGLE_texture_multisample_array"}
+  DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "extension": "OES_texture_storage_multisample_2d_array"}
     ivec3 textureSize(gsampler2DMSArray);
 GROUP END TextureSizeMSArray
 
@@ -478,7 +478,7 @@ GROUP BEGIN TexelFetchMS
 GROUP END TexelFetchMS
 
 GROUP BEGIN TexelFetchMSArray
-  DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "extension": "ANGLE_texture_multisample_array"}
+  DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "extension": "OES_texture_storage_multisample_2d_array"}
     gvec4 texelFetch(gsampler2DMSArray, ivec3, int);
 GROUP END TexelFetchMSArray
 

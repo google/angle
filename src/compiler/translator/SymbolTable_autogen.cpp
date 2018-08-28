@@ -8142,7 +8142,7 @@ constexpr const TFunction kFunction_textureSize_0a(
 constexpr const TFunction kFunction_textureSize_0P(
     BuiltInId::textureSize_Sampler2DMSArray1,
     BuiltInName::textureSize,
-    TExtension::ANGLE_texture_multisample_array,
+    TExtension::OES_texture_storage_multisample_2d_array,
     BuiltInParameters::p0P2C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
@@ -8151,7 +8151,7 @@ constexpr const TFunction kFunction_textureSize_0P(
 constexpr const TFunction kFunction_textureSize_0V(
     BuiltInId::textureSize_ISampler2DMSArray1,
     BuiltInName::textureSize,
-    TExtension::ANGLE_texture_multisample_array,
+    TExtension::OES_texture_storage_multisample_2d_array,
     BuiltInParameters::p0V2C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
@@ -8160,7 +8160,7 @@ constexpr const TFunction kFunction_textureSize_0V(
 constexpr const TFunction kFunction_textureSize_0b(
     BuiltInId::textureSize_USampler2DMSArray1,
     BuiltInName::textureSize,
-    TExtension::ANGLE_texture_multisample_array,
+    TExtension::OES_texture_storage_multisample_2d_array,
     BuiltInParameters::p0b2C0C,
     1,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 3, 1>(),
@@ -9384,7 +9384,7 @@ constexpr const TFunction kFunction_texelFetch_0a1C0C(
 constexpr const TFunction kFunction_texelFetch_0P2C0C(
     BuiltInId::texelFetch_Sampler2DMSArray1_Int3_Int1,
     BuiltInName::texelFetch,
-    TExtension::ANGLE_texture_multisample_array,
+    TExtension::OES_texture_storage_multisample_2d_array,
     BuiltInParameters::p0P2C0C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
@@ -9393,7 +9393,7 @@ constexpr const TFunction kFunction_texelFetch_0P2C0C(
 constexpr const TFunction kFunction_texelFetch_0V2C0C(
     BuiltInId::texelFetch_ISampler2DMSArray1_Int3_Int1,
     BuiltInName::texelFetch,
-    TExtension::ANGLE_texture_multisample_array,
+    TExtension::OES_texture_storage_multisample_2d_array,
     BuiltInParameters::p0V2C0C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
@@ -9402,7 +9402,7 @@ constexpr const TFunction kFunction_texelFetch_0V2C0C(
 constexpr const TFunction kFunction_texelFetch_0b2C0C(
     BuiltInId::texelFetch_USampler2DMSArray1_Int3_Int1,
     BuiltInName::texelFetch,
-    TExtension::ANGLE_texture_multisample_array,
+    TExtension::OES_texture_storage_multisample_2d_array,
     BuiltInParameters::p0b2C0C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),

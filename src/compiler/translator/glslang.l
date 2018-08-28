@@ -204,9 +204,9 @@ O           [0-7]
 "samplerCubeShadow"    { return ES2_ident_ES3_keyword(context, SAMPLERCUBESHADOW); }
 "sampler2DArrayShadow" { return ES2_ident_ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
 "__samplerExternal2DY2YEXT"   { return ES3_extension_keyword_else_ident(context, TExtension::EXT_YUV_target, SAMPLEREXTERNAL2DY2YEXT); }
-"sampler2DMSArray"     { return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::ANGLE_texture_multisample_array, SAMPLER2DMSARRAY); }
-"isampler2DMSArray"    { return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::ANGLE_texture_multisample_array, ISAMPLER2DMSARRAY); }
-"usampler2DMSArray"    { return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::ANGLE_texture_multisample_array, USAMPLER2DMSARRAY); }
+"sampler2DMSArray"     { return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, SAMPLER2DMSARRAY); }
+"isampler2DMSArray"    { return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, ISAMPLER2DMSARRAY); }
+"usampler2DMSArray"    { return ES2_ident_ES3_reserved_ES3_1_extension_keyword(context, TExtension::OES_texture_storage_multisample_2d_array, USAMPLER2DMSARRAY); }
 
 "struct"       { return STRUCT; }
 

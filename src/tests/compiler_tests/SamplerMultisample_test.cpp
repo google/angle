@@ -31,7 +31,7 @@ class SamplerMultisampleArrayTest : public ShaderCompileTreeTest
 
     void initResources(ShBuiltInResources *resources) override
     {
-        resources->ANGLE_texture_multisample_array = 1;
+        resources->OES_texture_storage_multisample_2d_array = 1;
     }
 
   protected:
@@ -238,7 +238,7 @@ TEST_F(SamplerMultisampleArrayTest, TexelFetchSampler2DMSArray)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_ANGLE_texture_multisample_array : require
+        #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
         uniform highp sampler2DMSArray s;
         uniform highp isampler2DMSArray is;
@@ -261,7 +261,7 @@ TEST_F(SamplerMultisampleArrayTest, TextureSizeSampler2DMSArray)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_ANGLE_texture_multisample_array : require
+        #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
         uniform highp sampler2DMSArray s;
         uniform highp isampler2DMSArray is;
@@ -284,7 +284,7 @@ TEST_F(SamplerMultisampleArrayTest, NoPrecisionSampler2DMSArray)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_ANGLE_texture_multisample_array : require
+        #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
         uniform sampler2DMSArray s;
 
@@ -301,7 +301,7 @@ TEST_F(SamplerMultisampleArrayTest, NoPrecisionISampler2DMSArray)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_ANGLE_texture_multisample_array : require
+        #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
         uniform isampler2DMSArray s;
 
@@ -318,7 +318,7 @@ TEST_F(SamplerMultisampleArrayTest, NoPrecisionUSampler2DMSArray)
 {
     const std::string &shaderString =
         R"(#version 310 es
-        #extension GL_ANGLE_texture_multisample_array : require
+        #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
         uniform usampler2DMSArray s;
 
