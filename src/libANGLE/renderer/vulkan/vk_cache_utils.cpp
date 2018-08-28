@@ -481,13 +481,10 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
     {
         const auto attribIndex = static_cast<uint32_t>(attribIndexSizeT);
 
-        VkVertexInputBindingDescription &bindingDesc       = bindingDescs[attribIndex];
-        VkVertexInputAttributeDescription &attribDesc      = attributeDescs[attribIndex];
+        VkVertexInputBindingDescription &bindingDesc       = bindingDescs[vertexAttribCount];
+        VkVertexInputAttributeDescription &attribDesc      = attributeDescs[vertexAttribCount];
         const PackedVertexInputBindingDesc &packedBinding  = mVertexInputBindings[attribIndex];
         const PackedVertexInputAttributeDesc &packedAttrib = mVertexInputAttribs[attribIndex];
-
-        // TODO(jmadill): Support for gaps in vertex attribute specification.
-        vertexAttribCount = attribIndex + 1;
 
         bindingDesc.binding   = attribIndex;
         bindingDesc.inputRate = static_cast<VkVertexInputRate>(packedBinding.inputRate);
@@ -497,6 +494,8 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
         attribDesc.format   = static_cast<VkFormat>(packedAttrib.format);
         attribDesc.location = static_cast<uint32_t>(packedAttrib.location);
         attribDesc.offset   = packedAttrib.offset;
+
+        vertexAttribCount++;
     }
 
     // The binding descriptions are filled in at draw time.

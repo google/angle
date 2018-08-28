@@ -51,6 +51,46 @@ angle::Result StreamVertexData(ContextVk *contextVk,
     ANGLE_TRY(dynamicBuffer->flush(contextVk));
     return angle::Result::Continue();
 }
+
+void BindNonNullVertexBufferRanges(vk::CommandBuffer *commandBuffer,
+                                   const gl::AttributesMask &nonNullAttribMask,
+                                   uint32_t maxAttrib,
+                                   const gl::AttribArray<VkBuffer> &arrayBufferHandles,
+                                   const gl::AttribArray<VkDeviceSize> &arrayBufferOffsets)
+{
+    // Vulkan does not allow binding a null vertex buffer but the default state of null buffers is
+    // valid.
+
+    // We can detect if there are no gaps in active attributes by using the mask of the program
+    // attribs and the max enabled attrib.
+    ASSERT(maxAttrib > 0);
+    if (nonNullAttribMask.to_ulong() == (maxAttrib - 1))
+    {
+        commandBuffer->bindVertexBuffers(0, maxAttrib, arrayBufferHandles.data(),
+                                         arrayBufferOffsets.data());
+        return;
+    }
+
+    // Find ranges of non-null buffers and bind them all together.
+    for (uint32_t attribIdx = 0; attribIdx < maxAttrib; attribIdx++)
+    {
+        if (arrayBufferHandles[attribIdx] != VK_NULL_HANDLE)
+        {
+            // Find the end of this range of non-null handles
+            uint32_t rangeCount = 1;
+            while (attribIdx + rangeCount < maxAttrib &&
+                   arrayBufferHandles[attribIdx + rangeCount] != VK_NULL_HANDLE)
+            {
+                rangeCount++;
+            }
+
+            commandBuffer->bindVertexBuffers(attribIdx, rangeCount, &arrayBufferHandles[attribIdx],
+                                             &arrayBufferOffsets[attribIdx]);
+            attribIdx += rangeCount;
+        }
+    }
+}
+
 }  // anonymous namespace
 
 #define INIT                                        \
@@ -541,6 +581,7 @@ gl::Error VertexArrayVk::onDraw(const gl::Context *context,
     ContextVk *contextVk                    = vk::GetImpl(context);
     const gl::State &state                  = context->getGLState();
     const gl::Program *programGL            = state.getProgram();
+    const gl::AttributesMask &programAttribsMask = programGL->getActiveAttribLocationsMask();
     const gl::AttributesMask &clientAttribs = context->getStateCache().getActiveClientAttribsMask();
     uint32_t maxAttrib                      = programGL->getState().getMaxActiveAttribLocation();
 
@@ -583,15 +624,15 @@ gl::Error VertexArrayVk::onDraw(const gl::Context *context,
                                        &mCurrentArrayBufferOffsets[attribIndex]));
         }
 
-        commandBuffer->bindVertexBuffers(0, maxAttrib, mCurrentArrayBufferHandles.data(),
-                                         mCurrentArrayBufferOffsets.data());
+        BindNonNullVertexBufferRanges(commandBuffer, programAttribsMask, maxAttrib,
+                                      mCurrentArrayBufferHandles, mCurrentArrayBufferOffsets);
     }
     else if (mVertexBuffersDirty || newCommandBuffer)
     {
         if (maxAttrib > 0)
         {
-            commandBuffer->bindVertexBuffers(0, maxAttrib, mCurrentArrayBufferHandles.data(),
-                                             mCurrentArrayBufferOffsets.data());
+            BindNonNullVertexBufferRanges(commandBuffer, programAttribsMask, maxAttrib,
+                                          mCurrentArrayBufferHandles, mCurrentArrayBufferOffsets);
 
             const gl::AttributesMask &bufferedAttribs =
                 context->getStateCache().getActiveBufferedAttribsMask();

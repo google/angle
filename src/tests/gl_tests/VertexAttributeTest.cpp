@@ -304,6 +304,9 @@ class VertexAttributeTest : public ANGLETest
 
 TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
 {
+    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsVulkan() && IsIntel());
+
     std::array<GLubyte, kVertexCount> inputData = {
         {0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255}};
     std::array<GLfloat, kVertexCount> expectedData;
@@ -319,6 +322,10 @@ TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
 
 TEST_P(VertexAttributeTest, UnsignedByteNormalized)
 {
+    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsVulkan() && IsIntel());
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
     std::array<GLubyte, kVertexCount> inputData = {
         {0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255}};
     std::array<GLfloat, kVertexCount> expectedData;
@@ -334,6 +341,9 @@ TEST_P(VertexAttributeTest, UnsignedByteNormalized)
 
 TEST_P(VertexAttributeTest, ByteUnnormalized)
 {
+    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsVulkan() && IsIntel());
+
     std::array<GLbyte, kVertexCount> inputData = {
         {0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126}};
     std::array<GLfloat, kVertexCount> expectedData;
@@ -348,6 +358,10 @@ TEST_P(VertexAttributeTest, ByteUnnormalized)
 
 TEST_P(VertexAttributeTest, ByteNormalized)
 {
+    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsVulkan() && IsIntel());
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
     std::array<GLbyte, kVertexCount> inputData = {
         {0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126}};
     std::array<GLfloat, kVertexCount> expectedData;
@@ -698,6 +712,9 @@ TEST_P(VertexAttributeTest, MaxAttribs)
     // TODO(jmadill): Figure out why we get this error on AMD/OpenGL.
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
+    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsVulkan() && IsIntel());
+
     GLint maxAttribs;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttribs);
     ASSERT_GL_NO_ERROR();
@@ -940,6 +957,13 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
 {
     // Known failure on Retina MBP: http://crbug.com/635081
     ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
+
+    // TODO: Support this test on Vulkan.  http://anglebug.com/2797
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsVulkan() && IsIntel());
+
+    // TODO: Fix syncing of default attributes when there is no call to enable/disable.
+    // http://anglebug.com/2800
+    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr char vsSource[] =
         "attribute vec4 a_position;\n"
@@ -1568,6 +1592,61 @@ TEST_P(VertexAttributeCachingTest, BufferMulticachingWithOneUnchangedAttrib)
     }
 }
 
+// Test that if there are gaps in the attribute indices, the attributes have their correct values.
+TEST_P(VertexAttributeTest, UnusedVertexAttribWorks)
+{
+    constexpr char kVertexShader[] = R"(attribute vec2 position;
+attribute float actualValue;
+uniform float expectedValue;
+varying float result;
+void main()
+{
+    result = (actualValue == expectedValue) ? 1.0 : 0.0;
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    constexpr char kFragmentShader[] = R"(varying mediump float result;
+void main()
+{
+    gl_FragColor = result > 0.0 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVertexShader, kFragmentShader);
+
+    // Force a gap in attributes by using location 0 and 3
+    GLint positionLocation = 0;
+    glBindAttribLocation(program, positionLocation, "position");
+
+    GLint attribLoc = 3;
+    glBindAttribLocation(program, attribLoc, "actualValue");
+
+    // Re-link the program to update the attribute locations
+    glLinkProgram(program);
+    ASSERT_TRUE(CheckLinkStatusAndReturnProgram(program, true));
+
+    glUseProgram(program);
+
+    GLint uniLoc = glGetUniformLocation(program, "expectedValue");
+    ASSERT_NE(-1, uniLoc);
+
+    glVertexAttribPointer(attribLoc, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    ASSERT_NE(-1, positionLocation);
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    std::array<GLfloat, 4> testValues = {{1, 2, 3, 4}};
+    for (GLfloat testValue : testValues)
+    {
+        glUniform1f(uniLoc, testValue);
+        glVertexAttrib1f(attribLoc, testValue);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    }
+}
+
 // Tests that repeatedly updating a disabled vertex attribute works as expected.
 // This covers an ANGLE bug where dirty bits for current values were ignoring repeated updates.
 TEST_P(VertexAttributeTest, DisabledAttribUpdates)
@@ -1777,7 +1856,8 @@ ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 
 ANGLE_INSTANTIATE_TEST(VertexAttributeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
