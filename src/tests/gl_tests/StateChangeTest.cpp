@@ -2595,6 +2595,8 @@ void main()
 // Tests negative API state change cases with Transform Feedback bindings.
 TEST_P(WebGL2ValidationStateChangeTest, TransformFeedbackNegativeAPI)
 {
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOSX());
+
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
 uniform block { vec4 color; };
