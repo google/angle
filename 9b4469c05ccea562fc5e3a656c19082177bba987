@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7255cc81_3fd3638d",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3b8ee9f_125b3513",
+      "range": {
+        "startLine": 393,
+        "startChar": 19,
+        "endLine": 393,
+        "endChar": 27
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6daee373_f3ae047a",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 17
@@ -45,6 +69,30 @@
       "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9572aaed_d8c34603",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1222,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6daee373_f3ae047a",
+      "range": {
+        "startLine": 1221,
+        "startChar": 0,
+        "endLine": 1222,
+        "endChar": 59
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "df01ef59_24cdcc5c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1227,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46038b39_9fd1e157",
+      "range": {
+        "startLine": 1226,
+        "startChar": 0,
+        "endLine": 1227,
+        "endChar": 64
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "327813a7_1b495722",
         "filename": "src/compiler/translator/ShaderStorageBlockFunctionHLSL.h",
         "patchSetId": 17
@@ -91,6 +163,30 @@
       "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92ac2e8b_7348b981",
+        "filename": "src/compiler/translator/ShaderStorageBlockFunctionHLSL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "327813a7_1b495722",
+      "range": {
+        "startLine": 48,
+        "startChar": 14,
+        "endLine": 48,
+        "endChar": 46
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -134,6 +230,30 @@
     },
     {
       "key": {
+        "uuid": "da8bb473_b0f962fe",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Sorry, I don\u0027t find one.",
+      "parentUuid": "024f2ad5_0f003f7d",
+      "range": {
+        "startLine": 23,
+        "startChar": 72,
+        "endLine": 23,
+        "endChar": 83
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1dabf698_ccbfeba2",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 17
@@ -154,6 +274,30 @@
       "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b8514af_e80e0a02",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dabf698_ccbfeba2",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 43,
+        "endChar": 77
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -180,6 +324,30 @@
     },
     {
       "key": {
+        "uuid": "4b6d60ef_bd63572b",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b18a6fe_a932c553",
+      "range": {
+        "startLine": 60,
+        "startChar": 35,
+        "endLine": 60,
+        "endChar": 46
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21798cdc_517dc8c0",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 17
@@ -203,6 +371,30 @@
     },
     {
       "key": {
+        "uuid": "81513467_3df483c9",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Change it to void.",
+      "parentUuid": "21798cdc_517dc8c0",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 7
+      },
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "390ebbd9_87a0b821",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 17
@@ -214,6 +406,24 @@
       "writtenOn": "2018-08-27T10:07:23Z",
       "side": 1,
       "message": "What does this function do? Is it checking that the current node if the end of the access chain, or is it checking that this is the root of the access chain?",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9693abaf_111f4751",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Rename it to isEndofSSBOAccessChain. Thanks.",
+      "parentUuid": "390ebbd9_87a0b821",
       "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -237,6 +447,24 @@
     },
     {
       "key": {
+        "uuid": "1b4f325e_2d896717",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "This function has been removed since we can directly use node-\u003egetType() to get the variable type.",
+      "parentUuid": "e9af6af5_49bc1e59",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a642659b_b1c71521",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 17
@@ -251,6 +479,24 @@
       "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f9e58a5_748ebf67",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a642659b_b1c71521",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -271,6 +517,24 @@
     },
     {
       "key": {
+        "uuid": "9a2c5832_480151b7",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82e374e0_dda3302f",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5695c50_6b31e9ee",
         "filename": "src/compiler/translator/UniformHLSL.h",
         "patchSetId": 17
@@ -288,6 +552,24 @@
     },
     {
       "key": {
+        "uuid": "11b6047b_e917cf6f",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "I will do it in a separate CL. Thanks.",
+      "parentUuid": "d5695c50_6b31e9ee",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "374cbbd1_e6ad43e5",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 17
@@ -299,6 +581,24 @@
       "writtenOn": "2018-08-27T10:07:23Z",
       "side": 1,
       "message": "Are these new regressions? I don\u0027t see the group of test being re-enabled.",
+      "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "becd23ae_32b61a31",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 17
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-08-28T08:25:57Z",
+      "side": 1,
+      "message": "Due to we only process assignment with ssbo_access_chain, we can\u0027t process variable * ssbo.matrix which should be translated into below style:\ntmp \u003d ssbo.matrix;\nvariable * ssbo.matrix\nIn this cl, variable * ssbo.matrix will enter into the UNREACHABLE place in OutputHLSL.cpp. So I temporarily set them to SKIP.",
+      "parentUuid": "374cbbd1_e6ad43e5",
       "revId": "9b4469c05ccea562fc5e3a656c19082177bba987",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
