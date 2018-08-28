@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "87a4e032_4082aef0",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-08-28T08:54:36Z",
+      "side": 1,
+      "message": "sizedinternalformat",
+      "range": {
+        "startLine": 306,
+        "startChar": 43,
+        "endLine": 306,
+        "endChar": 57
+      },
+      "revId": "86251ea9c0d94d71e7bef7e91c553be49e8df96a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcf441df_78d4a53c",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-08-28T08:54:36Z",
+      "side": 1,
+      "message": "dimensional",
+      "range": {
+        "startLine": 438,
+        "startChar": 24,
+        "endLine": 438,
+        "endChar": 35
+      },
+      "revId": "86251ea9c0d94d71e7bef7e91c553be49e8df96a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
