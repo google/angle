@@ -78,7 +78,7 @@ gl::Error BufferVk::setData(const gl::Context *context,
             vk::AllocateBufferMemory(contextVk, memoryPropertyFlags, &mBuffer, &mBufferMemory));
     }
 
-    if (data)
+    if (data && size > 0)
     {
         ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, 0));
     }

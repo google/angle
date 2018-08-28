@@ -4925,7 +4925,7 @@ void Context::bufferSubData(BufferBinding target,
                             GLsizeiptr size,
                             const void *data)
 {
-    if (data == nullptr)
+    if (data == nullptr || size == 0)
     {
         return;
     }

@@ -124,6 +124,9 @@ TEST_P(BufferDataTest, ZeroNonNULLData)
 
 TEST_P(BufferDataTest, NULLResolvedData)
 {
+    // TODO(jmadill) http://anglebug.com/2644
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     glBufferData(GL_ARRAY_BUFFER, 128, nullptr, GL_DYNAMIC_DRAW);
 
@@ -139,6 +142,9 @@ TEST_P(BufferDataTest, NULLResolvedData)
 // path.
 TEST_P(BufferDataTest, RepeatedDrawWithDynamic)
 {
+    // TODO(jmadill) http://anglebug.com/2644
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     std::vector<GLfloat> data;
     for (int i = 0; i < 16; ++i)
     {
@@ -479,7 +485,12 @@ TEST_P(BufferDataTestES3, NoBufferInitDataCopyBug)
 // http://anglebug.com/2644
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(BufferDataTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(BufferDataTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(BufferDataTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(IndexedBufferCopyTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
