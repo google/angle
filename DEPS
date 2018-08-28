@@ -14,6 +14,9 @@ vars = {
   # Current revision of glslang, the Khronos SPIRV compiler.
   'glslang_revision': '1ea8f595f9a9ebd938fe9e5f15ae469c7d6ebabc',
 
+  # Current revision of jsoncpp, an open-source json parser.
+  'jsoncpp_revision': '93ba642c636309a3195d6da6c11ba82f69ef45ed',
+
   # Current revision fo the SPIRV-Headers Vulkan support library.
   'spirv_headers_revision': 'ff684ffc6a35d2a58f0f63108877d0064ea33feb',
 
@@ -72,6 +75,10 @@ deps = {
   '{angle_root}/third_party/libpng/src': {
     'url': '{android_git}/platform/external/libpng@094e181e79a3d6c23fd005679025058b7df1ad6c',
     'condition': 'not build_with_chromium',
+  },
+
+  '{angle_root}/third_party/jsoncpp/src': {
+    'url': '{android_git}/platform/external/jsoncpp@{jsoncpp_revision}',
   },
 
   '{angle_root}/third_party/spirv-headers/src': {
