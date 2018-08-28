@@ -52,77 +52,6 @@ angle::Result InitAndBeginCommandBuffer(vk::Context *context,
 
 }  // anonymous namespace
 
-class CommandGraphNode final : angle::NonCopyable
-{
-  public:
-    CommandGraphNode();
-    ~CommandGraphNode();
-
-    // Immutable queries for when we're walking the commands tree.
-    CommandBuffer *getOutsideRenderPassCommands();
-    CommandBuffer *getInsideRenderPassCommands();
-
-    // For outside the render pass (copies, transitions, etc).
-    angle::Result beginOutsideRenderPassRecording(Context *context,
-                                                  const CommandPool &commandPool,
-                                                  CommandBuffer **commandsOut);
-
-    // For rendering commands (draws).
-    angle::Result beginInsideRenderPassRecording(Context *context, CommandBuffer **commandsOut);
-
-    // storeRenderPassInfo and append*RenderTarget store info relevant to the RenderPass.
-    void storeRenderPassInfo(const Framebuffer &framebuffer,
-                             const gl::Rectangle renderArea,
-                             const vk::RenderPassDesc &renderPassDesc,
-                             const std::vector<VkClearValue> &clearValues);
-
-    // Dependency commands order node execution in the command graph.
-    // Once a node has commands that must happen after it, recording is stopped and the node is
-    // frozen forever.
-    static void SetHappensBeforeDependency(CommandGraphNode *beforeNode,
-                                           CommandGraphNode *afterNode);
-    static void SetHappensBeforeDependencies(const std::vector<CommandGraphNode *> &beforeNodes,
-                                             CommandGraphNode *afterNode);
-    bool hasParents() const;
-    bool hasChildren() const;
-
-    // Commands for traversing the node on a flush operation.
-    VisitedState visitedState() const;
-    void visitParents(std::vector<CommandGraphNode *> *stack);
-    angle::Result visitAndExecute(Context *context,
-                                  Serial serial,
-                                  RenderPassCache *renderPassCache,
-                                  CommandBuffer *primaryCommandBuffer);
-
-    const gl::Rectangle &getRenderPassRenderArea() const;
-
-  private:
-    void setHasChildren();
-
-    // Used for testing only.
-    bool isChildOf(CommandGraphNode *parent);
-
-    // Only used if we need a RenderPass for these commands.
-    RenderPassDesc mRenderPassDesc;
-    Framebuffer mRenderPassFramebuffer;
-    gl::Rectangle mRenderPassRenderArea;
-    gl::AttachmentArray<VkClearValue> mRenderPassClearValues;
-
-    // Keep a separate buffers for commands inside and outside a RenderPass.
-    // TODO(jmadill): We might not need inside and outside RenderPass commands separate.
-    CommandBuffer mOutsideRenderPassCommands;
-    CommandBuffer mInsideRenderPassCommands;
-
-    // Parents are commands that must be submitted before 'this' CommandNode can be submitted.
-    std::vector<CommandGraphNode *> mParents;
-
-    // If this is true, other commands exist that must be submitted after 'this' command.
-    bool mHasChildren;
-
-    // Used when traversing the dependency graph.
-    VisitedState mVisitedState;
-};
-
 // CommandGraphResource implementation.
 CommandGraphResource::CommandGraphResource() : mCurrentWritingNode(nullptr)
 {
@@ -150,11 +79,6 @@ bool CommandGraphResource::isResourceInUse(RendererVk *renderer) const
 Serial CommandGraphResource::getStoredQueueSerial() const
 {
     return mStoredQueueSerial;
-}
-
-bool CommandGraphResource::hasChildlessWritingNode() const
-{
-    return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
 }
 
 bool CommandGraphResource::hasStartedWriteResource() const
@@ -208,11 +132,6 @@ bool CommandGraphResource::appendToStartedRenderPass(RendererVk *renderer,
     {
         return false;
     }
-}
-
-bool CommandGraphResource::hasStartedRenderPass() const
-{
-    return hasChildlessWritingNode() && mCurrentWritingNode->getInsideRenderPassCommands()->valid();
 }
 
 const gl::Rectangle &CommandGraphResource::getRenderPassRenderArea() const
@@ -304,12 +223,6 @@ CommandBuffer *CommandGraphNode::getOutsideRenderPassCommands()
 {
     ASSERT(!mHasChildren);
     return &mOutsideRenderPassCommands;
-}
-
-CommandBuffer *CommandGraphNode::getInsideRenderPassCommands()
-{
-    ASSERT(!mHasChildren);
-    return &mInsideRenderPassCommands;
 }
 
 angle::Result CommandGraphNode::beginOutsideRenderPassRecording(Context *context,
@@ -408,11 +321,6 @@ bool CommandGraphNode::hasParents() const
 void CommandGraphNode::setHasChildren()
 {
     mHasChildren = true;
-}
-
-bool CommandGraphNode::hasChildren() const
-{
-    return mHasChildren;
 }
 
 // Do not call this in anything but testing code, since it's slow.

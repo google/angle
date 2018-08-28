@@ -380,13 +380,22 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void draw(uint32_t vertexCount,
               uint32_t instanceCount,
               uint32_t firstVertex,
-              uint32_t firstInstance);
+              uint32_t firstInstance)
+    {
+        ASSERT(valid());
+        vkCmdDraw(mHandle, vertexCount, instanceCount, firstVertex, firstInstance);
+    }
 
     void drawIndexed(uint32_t indexCount,
                      uint32_t instanceCount,
                      uint32_t firstIndex,
                      int32_t vertexOffset,
-                     uint32_t firstInstance);
+                     uint32_t firstInstance)
+    {
+        ASSERT(valid());
+        vkCmdDrawIndexed(mHandle, indexCount, instanceCount, firstIndex, vertexOffset,
+                         firstInstance);
+    }
 
     void bindPipeline(VkPipelineBindPoint pipelineBindPoint, const Pipeline &pipeline);
     void bindVertexBuffers(uint32_t firstBinding,

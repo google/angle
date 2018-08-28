@@ -97,7 +97,15 @@ class DrawCallParams final : angle::NonCopyable
     PrimitiveMode mode() const { return mMode; }
 
     // This value is the sum of 'baseVertex' and the first indexed vertex for DrawElements calls.
-    GLint firstVertex() const;
+    GLint firstVertex() const
+    {
+        // In some cases we can know the first vertex will be fixed at zero, if we're on the "fast
+        // path". In these cases the index range is not resolved. If the first vertex is not zero,
+        // however, then it must be because the index range is resolved. This only applies to the
+        // D3D11 back-end currently.
+        ASSERT(mFirstVertex == 0 || (!isDrawElements() || mIndexRange.valid()));
+        return mFirstVertex;
+    }
 
     size_t vertexCount() const
     {

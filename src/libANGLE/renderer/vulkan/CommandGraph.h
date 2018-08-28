@@ -17,7 +17,89 @@ namespace rx
 
 namespace vk
 {
-class CommandGraphNode;
+enum class VisitedState
+{
+    Unvisited,
+    Ready,
+    Visited,
+};
+
+// Only used internally in the command graph. Kept in the header for better inlining performance.
+class CommandGraphNode final : angle::NonCopyable
+{
+  public:
+    CommandGraphNode();
+    ~CommandGraphNode();
+
+    // Immutable queries for when we're walking the commands tree.
+    CommandBuffer *getOutsideRenderPassCommands();
+
+    CommandBuffer *getInsideRenderPassCommands()
+    {
+        ASSERT(!mHasChildren);
+        return &mInsideRenderPassCommands;
+    }
+
+    // For outside the render pass (copies, transitions, etc).
+    angle::Result beginOutsideRenderPassRecording(Context *context,
+                                                  const CommandPool &commandPool,
+                                                  CommandBuffer **commandsOut);
+
+    // For rendering commands (draws).
+    angle::Result beginInsideRenderPassRecording(Context *context, CommandBuffer **commandsOut);
+
+    // storeRenderPassInfo and append*RenderTarget store info relevant to the RenderPass.
+    void storeRenderPassInfo(const Framebuffer &framebuffer,
+                             const gl::Rectangle renderArea,
+                             const vk::RenderPassDesc &renderPassDesc,
+                             const std::vector<VkClearValue> &clearValues);
+
+    // Dependency commands order node execution in the command graph.
+    // Once a node has commands that must happen after it, recording is stopped and the node is
+    // frozen forever.
+    static void SetHappensBeforeDependency(CommandGraphNode *beforeNode,
+                                           CommandGraphNode *afterNode);
+    static void SetHappensBeforeDependencies(const std::vector<CommandGraphNode *> &beforeNodes,
+                                             CommandGraphNode *afterNode);
+    bool hasParents() const;
+    bool hasChildren() const { return mHasChildren; }
+
+    // Commands for traversing the node on a flush operation.
+    VisitedState visitedState() const;
+    void visitParents(std::vector<CommandGraphNode *> *stack);
+    angle::Result visitAndExecute(Context *context,
+                                  Serial serial,
+                                  RenderPassCache *renderPassCache,
+                                  CommandBuffer *primaryCommandBuffer);
+
+    const gl::Rectangle &getRenderPassRenderArea() const;
+
+  private:
+    void setHasChildren();
+
+    // Used for testing only.
+    bool isChildOf(CommandGraphNode *parent);
+
+    // Only used if we need a RenderPass for these commands.
+    RenderPassDesc mRenderPassDesc;
+    Framebuffer mRenderPassFramebuffer;
+    gl::Rectangle mRenderPassRenderArea;
+    gl::AttachmentArray<VkClearValue> mRenderPassClearValues;
+
+    // Keep a separate buffers for commands inside and outside a RenderPass.
+    // TODO(jmadill): We might not need inside and outside RenderPass commands separate.
+    CommandBuffer mOutsideRenderPassCommands;
+    CommandBuffer mInsideRenderPassCommands;
+
+    // Parents are commands that must be submitted before 'this' CommandNode can be submitted.
+    std::vector<CommandGraphNode *> mParents;
+
+    // If this is true, other commands exist that must be submitted after 'this' command.
+    bool mHasChildren;
+
+    // Used when traversing the dependency graph.
+    VisitedState mVisitedState;
+};
 
 // This is a helper class for back-end objects used in Vk command buffers. It records a serial
 // at command recording times indicating an order in the queue. We use Fences to detect when
@@ -79,10 +161,17 @@ class CommandGraphResource
     void onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial);
 
     // Returns true if this node has a current writing node with no children.
-    bool hasChildlessWritingNode() const;
+    bool hasChildlessWritingNode() const
+    {
+        return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
+    }
 
     // Checks if we're in a RenderPass without children.
-    bool hasStartedRenderPass() const;
+    bool hasStartedRenderPass() const
+    {
+        return hasChildlessWritingNode() &&
+               mCurrentWritingNode->getInsideRenderPassCommands()->valid();
+    }
 
     // Updates the in-use serial tracked for this resource. Will clear dependencies if the resource
     // was not used in this set of command nodes.
@@ -91,13 +180,6 @@ class CommandGraphResource
     Serial mStoredQueueSerial;
     std::vector<CommandGraphNode *> mCurrentReadingNodes;
     CommandGraphNode *mCurrentWritingNode;
-};
-
-enum class VisitedState
-{
-    Unvisited,
-    Ready,
-    Visited,
 };
 
 // Translating OpenGL commands into Vulkan and submitting them immediately loses out on some

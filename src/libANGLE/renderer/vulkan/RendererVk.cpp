@@ -867,11 +867,6 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     return angle::Result::Continue();
 }
 
-Serial RendererVk::getCurrentQueueSerial() const
-{
-    return mCurrentQueueSerial;
-}
-
 bool RendererVk::isSerialInUse(Serial serial) const
 {
     return serial > mLastCompletedQueueSerial;
