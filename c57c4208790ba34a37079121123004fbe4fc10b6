@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ce05787c_66e55699",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Done. \n\nI added a statement in Contributors section, just as what Olli does in ANGLE_texture_multisample_array.",
+      "parentUuid": "6a87d1df_76815928",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7b21e07_cef6ebe1",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 5
@@ -57,6 +75,30 @@
       "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98c88153_880307c2",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7b21e07_cef6ebe1",
+      "range": {
+        "startLine": 36,
+        "startChar": 26,
+        "endLine": 36,
+        "endChar": 34
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -107,6 +149,30 @@
     },
     {
       "key": {
+        "uuid": "b789aa2a_1022716f",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07b1f15a_34bbb633",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 39
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f0acc9c_05989459",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 5
@@ -121,6 +187,24 @@
       "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ba31df7_2d3ca73d",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f0acc9c_05989459",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -147,6 +231,30 @@
     },
     {
       "key": {
+        "uuid": "449c8f29_f92cbccc",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11cf36b8_43a593f3",
+      "range": {
+        "startLine": 50,
+        "startChar": 29,
+        "endLine": 50,
+        "endChar": 34
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5daf24a3_b09e8f77",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 5
@@ -161,6 +269,24 @@
       "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14a0cfaf_7274433c",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5daf24a3_b09e8f77",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -187,6 +313,30 @@
     },
     {
       "key": {
+        "uuid": "d0c872b0_d5373d7d",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "daef08e9_a6150c03",
+      "range": {
+        "startLine": 58,
+        "startChar": 30,
+        "endLine": 58,
+        "endChar": 41
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91660bc5_8248ae02",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 5
@@ -201,6 +351,24 @@
       "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c4489ef_83e42679",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91660bc5_8248ae02",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -268,6 +436,30 @@
     },
     {
       "key": {
+        "uuid": "89e4083d_9096ce84",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "72c20463_cc64fede",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 149,
+        "endChar": 70
+      },
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49cd1691_480e55dc",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 5
@@ -282,6 +474,24 @@
       "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9915ab8c_2551e6e6",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-28T00:21:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49cd1691_480e55dc",
+      "revId": "c57c4208790ba34a37079121123004fbe4fc10b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
