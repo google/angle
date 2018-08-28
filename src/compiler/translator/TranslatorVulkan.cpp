@@ -188,12 +188,6 @@ void FlipGLPointCoord(TIntermBlock *root,
     TIntermConstantUnion *pointFive =
         new TIntermConstantUnion(constantValuePointFive, *constantType);
 
-    // Create a constant "-0.5"
-    TConstantUnion *constantValueMinusPointFive = new TConstantUnion();
-    constantValueMinusPointFive->setFConst(-0.5f);
-    TIntermConstantUnion *minusPointFive =
-        new TIntermConstantUnion(constantValueMinusPointFive, *constantType);
-
     // ANGLEUniforms.viewportScaleFactor
     TIntermSymbol *angleUniformsRef             = new TIntermSymbol(driverUniforms);
     TConstantUnion *viewportScaleFactorConstant = new TConstantUnion;
@@ -211,9 +205,9 @@ void FlipGLPointCoord(TIntermBlock *root,
 
     // Create the expression "(gl_PointCoord.y - 0.5) * ANGLEUniforms.viewportScaleFactor.y +
     // 0.5
-    TIntermBinary *removePointFive = new TIntermBinary(EOpAdd, pointCoordY, minusPointFive);
+    TIntermBinary *removePointFive = new TIntermBinary(EOpSub, pointCoordY, pointFive);
     TIntermBinary *inverseY        = new TIntermBinary(EOpMul, removePointFive, viewportScaleY);
-    TIntermBinary *plusPointFive   = new TIntermBinary(EOpAdd, inverseY, pointFive);
+    TIntermBinary *plusPointFive   = new TIntermBinary(EOpAdd, inverseY, pointFive->deepCopy());
 
     // Create the new vec2 using the modified Y
     TIntermSequence *sequence = new TIntermSequence();
