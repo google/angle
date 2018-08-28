@@ -17,10 +17,10 @@
 #include "compiler/translator/BuiltInFunctionEmulatorHLSL.h"
 #include "compiler/translator/ImageFunctionHLSL.h"
 #include "compiler/translator/InfoSink.h"
+#include "compiler/translator/ResourcesHLSL.h"
 #include "compiler/translator/StructureHLSL.h"
 #include "compiler/translator/TextureFunctionHLSL.h"
 #include "compiler/translator/TranslatorHLSL.h"
-#include "compiler/translator/UniformHLSL.h"
 #include "compiler/translator/UtilsHLSL.h"
 #include "compiler/translator/blocklayout.h"
 #include "compiler/translator/tree_ops/RemoveSwitchFallThrough.h"
@@ -236,7 +236,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
 
     unsigned int firstUniformRegister =
         ((compileOptions & SH_SKIP_D3D_CONSTANT_REGISTER_ZERO) != 0) ? 1u : 0u;
-    mUniformHLSL = new UniformHLSL(mStructureHLSL, outputType, uniforms, firstUniformRegister);
+    mResourcesHLSL = new ResourcesHLSL(mStructureHLSL, outputType, uniforms, firstUniformRegister);
 
     if (mOutputType == SH_HLSL_3_0_OUTPUT)
     {
@@ -244,17 +244,17 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
         // Vertex shaders need a slightly different set: dx_DepthRange, dx_ViewCoords and
         // dx_ViewAdjust.
         // In both cases total 3 uniform registers need to be reserved.
-        mUniformHLSL->reserveUniformRegisters(3);
+        mResourcesHLSL->reserveUniformRegisters(3);
     }
 
     // Reserve registers for the default uniform block and driver constants
-    mUniformHLSL->reserveUniformBlockRegisters(2);
+    mResourcesHLSL->reserveUniformBlockRegisters(2);
 }
 
 OutputHLSL::~OutputHLSL()
 {
     SafeDelete(mStructureHLSL);
-    SafeDelete(mUniformHLSL);
+    SafeDelete(mResourcesHLSL);
     SafeDelete(mTextureFunctionHLSL);
     SafeDelete(mImageFunctionHLSL);
     for (auto &eqFunction : mStructEqualityFunctions)
@@ -310,12 +310,12 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
 
 const std::map<std::string, unsigned int> &OutputHLSL::getUniformBlockRegisterMap() const
 {
-    return mUniformHLSL->getUniformBlockRegisterMap();
+    return mResourcesHLSL->getUniformBlockRegisterMap();
 }
 
 const std::map<std::string, unsigned int> &OutputHLSL::getUniformRegisterMap() const
 {
-    return mUniformHLSL->getUniformRegisterMap();
+    return mResourcesHLSL->getUniformRegisterMap();
 }
 
 TString OutputHLSL::structInitializerString(int indent,
@@ -409,7 +409,7 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
                 unsigned int instanceStringArrayIndex = GL_INVALID_INDEX;
                 if (isInstanceArray)
                     instanceStringArrayIndex = instanceArrayIndex;
-                TString instanceString = mUniformHLSL->UniformBlockInstanceString(
+                TString instanceString = mResourcesHLSL->UniformBlockInstanceString(
                     instanceName, instanceStringArrayIndex);
                 originalName += instanceString;
                 mappedName += instanceString;
@@ -471,8 +471,8 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
     out << mStructureHLSL->structsHeader();
 
-    mUniformHLSL->uniformsHeader(out, mOutputType, mReferencedUniforms, mSymbolTable);
-    out << mUniformHLSL->uniformBlocksHeader(mReferencedUniformBlocks);
+    mResourcesHLSL->uniformsHeader(out, mOutputType, mReferencedUniforms, mSymbolTable);
+    out << mResourcesHLSL->uniformBlocksHeader(mReferencedUniformBlocks);
 
     if (!mEqualityFunctions.empty())
     {
@@ -631,7 +631,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
-                mUniformHLSL->samplerMetadataUniforms(out, "c4");
+                mResourcesHLSL->samplerMetadataUniforms(out, "c4");
             }
 
             out << "};\n";
@@ -743,7 +743,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
 
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
-                mUniformHLSL->samplerMetadataUniforms(out, "c4");
+                mResourcesHLSL->samplerMetadataUniforms(out, "c4");
             }
 
             out << "};\n"
@@ -779,7 +779,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
             out << "    uint3 gl_NumWorkGroups : packoffset(c0);\n";
         }
         ASSERT(mOutputType == SH_HLSL_4_1_OUTPUT);
-        mUniformHLSL->samplerMetadataUniforms(out, "c1");
+        mResourcesHLSL->samplerMetadataUniforms(out, "c1");
         out << "};\n";
 
         std::ostringstream systemValueDeclaration;
@@ -1309,8 +1309,8 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                             new TReferencedBlock(interfaceBlock, &instanceArraySymbol->variable());
                     }
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
-                    out << mUniformHLSL->UniformBlockInstanceString(instanceArraySymbol->getName(),
-                                                                    arrayIndex);
+                    out << mResourcesHLSL->UniformBlockInstanceString(
+                        instanceArraySymbol->getName(), arrayIndex);
                     return false;
                 }
             }

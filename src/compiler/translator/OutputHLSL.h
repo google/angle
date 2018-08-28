@@ -22,13 +22,13 @@ class BuiltInFunctionEmulator;
 
 namespace sh
 {
+class ImageFunctionHLSL;
+class ResourcesHLSL;
 class StructureHLSL;
 class TextureFunctionHLSL;
 class TSymbolTable;
 class TVariable;
-class ImageFunctionHLSL;
 class UnfoldShortCircuit;
-class UniformHLSL;
 
 struct TReferencedBlock : angle::NonCopyable
 {
@@ -180,7 +180,7 @@ class OutputHLSL : public TIntermTraverser
     ReferencedVariables mReferencedOutputVariables;
 
     StructureHLSL *mStructureHLSL;
-    UniformHLSL *mUniformHLSL;
+    ResourcesHLSL *mResourcesHLSL;
     TextureFunctionHLSL *mTextureFunctionHLSL;
     ImageFunctionHLSL *mImageFunctionHLSL;
 

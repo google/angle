@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// UniformHLSL.h:
-//   Methods for GLSL to HLSL translation for uniforms and uniform blocks.
+// ResourcesHLSL.h:
+//   Methods for GLSL to HLSL translation for uniforms and interface blocks.
 //
 
-#ifndef COMPILER_TRANSLATOR_UNIFORMHLSL_H_
-#define COMPILER_TRANSLATOR_UNIFORMHLSL_H_
+#ifndef COMPILER_TRANSLATOR_RESOURCESHLSL_H_
+#define COMPILER_TRANSLATOR_RESOURCESHLSL_H_
 
 #include "compiler/translator/OutputHLSL.h"
 #include "compiler/translator/UtilsHLSL.h"
@@ -19,13 +19,13 @@ class ImmutableString;
 class StructureHLSL;
 class TSymbolTable;
 
-class UniformHLSL : angle::NonCopyable
+class ResourcesHLSL : angle::NonCopyable
 {
   public:
-    UniformHLSL(StructureHLSL *structureHLSL,
-                ShShaderOutput outputType,
-                const std::vector<Uniform> &uniforms,
-                unsigned int firstUniformRegister);
+    ResourcesHLSL(StructureHLSL *structureHLSL,
+                  ShShaderOutput outputType,
+                  const std::vector<Uniform> &uniforms,
+                  unsigned int firstUniformRegister);
 
     void reserveUniformRegisters(unsigned int registerCount);
     void reserveUniformBlockRegisters(unsigned int registerCount);
@@ -115,4 +115,4 @@ class UniformHLSL : angle::NonCopyable
 };
 }
 
-#endif  // COMPILER_TRANSLATOR_UNIFORMHLSL_H_
+#endif  // COMPILER_TRANSLATOR_RESOURCESHLSL_H_
