@@ -61,7 +61,8 @@ void BindFramebufferAttachment(const FunctionsGL *functions,
             {
                 TextureType textureType = texture->getType();
                 ASSERT(textureType == TextureType::_2DArray || textureType == TextureType::_3D ||
-                       textureType == TextureType::CubeMap);
+                       textureType == TextureType::CubeMap ||
+                       textureType == TextureType::_2DMultisampleArray);
                 functions->framebufferTexture(GL_FRAMEBUFFER, attachmentPoint,
                                               textureGL->getTextureID(), attachment->mipLevel());
             }

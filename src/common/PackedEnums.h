@@ -187,6 +187,8 @@ using ShaderMap = angle::PackedEnumMap<ShaderType, T>;
 
 TextureType SamplerTypeToTextureType(GLenum samplerType);
 
+bool IsMultisampled(gl::TextureType type);
+
 }  // namespace gl
 
 namespace egl

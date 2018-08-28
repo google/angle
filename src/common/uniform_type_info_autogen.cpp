@@ -18,7 +18,7 @@ namespace gl
 
 namespace
 {
-constexpr std::array<UniformTypeInfo, 59> kInfoTable = {
+constexpr std::array<UniformTypeInfo, 62> kInfoTable = {
     {{GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, 0, 0, 0, 0, 0 * 0, 0 * 0, false, false, false},
      {GL_BOOL, GL_BOOL, GL_NONE, GL_NONE, GL_NONE, 1, 1, 1, sizeof(GLint), sizeof(GLint) * 4,
       sizeof(GLint) * 1, false, false, false},
@@ -78,6 +78,8 @@ constexpr std::array<UniformTypeInfo, 59> kInfoTable = {
       sizeof(GLint), sizeof(GLint) * 4, sizeof(GLint) * 1, true, false, false},
      {GL_INT_SAMPLER_2D_MULTISAMPLE, GL_INT, GL_TEXTURE_2D_MULTISAMPLE, GL_NONE, GL_NONE, 1, 1, 1,
       sizeof(GLint), sizeof(GLint) * 4, sizeof(GLint) * 1, true, false, false},
+     {GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY, GL_INT, GL_TEXTURE_2D_MULTISAMPLE_ARRAY, GL_NONE,
+      GL_NONE, 1, 1, 1, sizeof(GLint), sizeof(GLint) * 4, sizeof(GLint) * 1, true, false, false},
      {GL_INT_SAMPLER_3D, GL_INT, GL_TEXTURE_3D, GL_NONE, GL_NONE, 1, 1, 1, sizeof(GLint),
       sizeof(GLint) * 4, sizeof(GLint) * 1, true, false, false},
      {GL_INT_SAMPLER_CUBE, GL_INT, GL_TEXTURE_CUBE_MAP, GL_NONE, GL_NONE, 1, 1, 1, sizeof(GLint),
@@ -96,6 +98,8 @@ constexpr std::array<UniformTypeInfo, 59> kInfoTable = {
       sizeof(GLint), sizeof(GLint) * 4, sizeof(GLint) * 1, true, false, false},
      {GL_SAMPLER_2D_MULTISAMPLE, GL_INT, GL_TEXTURE_2D_MULTISAMPLE, GL_NONE, GL_NONE, 1, 1, 1,
       sizeof(GLint), sizeof(GLint) * 4, sizeof(GLint) * 1, true, false, false},
+     {GL_SAMPLER_2D_MULTISAMPLE_ARRAY, GL_INT, GL_TEXTURE_2D_MULTISAMPLE_ARRAY, GL_NONE, GL_NONE, 1,
+      1, 1, sizeof(GLint), sizeof(GLint) * 4, sizeof(GLint) * 1, true, false, false},
      {GL_SAMPLER_2D_RECT_ANGLE, GL_INT, GL_TEXTURE_2D, GL_NONE, GL_NONE, 1, 1, 1, sizeof(GLint),
       sizeof(GLint) * 4, sizeof(GLint) * 1, true, false, false},
      {GL_SAMPLER_2D_SHADOW, GL_INT, GL_TEXTURE_2D, GL_NONE, GL_NONE, 1, 1, 1, sizeof(GLint),
@@ -126,6 +130,9 @@ constexpr std::array<UniformTypeInfo, 59> kInfoTable = {
       1, 1, sizeof(GLuint), sizeof(GLuint) * 4, sizeof(GLuint) * 1, true, false, false},
      {GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE, GL_UNSIGNED_INT, GL_TEXTURE_2D_MULTISAMPLE, GL_NONE,
       GL_NONE, 1, 1, 1, sizeof(GLuint), sizeof(GLuint) * 4, sizeof(GLuint) * 1, true, false, false},
+     {GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY, GL_UNSIGNED_INT,
+      GL_TEXTURE_2D_MULTISAMPLE_ARRAY, GL_NONE, GL_NONE, 1, 1, 1, sizeof(GLuint),
+      sizeof(GLuint) * 4, sizeof(GLuint) * 1, true, false, false},
      {GL_UNSIGNED_INT_SAMPLER_3D, GL_UNSIGNED_INT, GL_TEXTURE_3D, GL_NONE, GL_NONE, 1, 1, 1,
       sizeof(GLuint), sizeof(GLuint) * 4, sizeof(GLuint) * 1, true, false, false},
      {GL_UNSIGNED_INT_SAMPLER_CUBE, GL_UNSIGNED_INT, GL_TEXTURE_CUBE_MAP, GL_NONE, GL_NONE, 1, 1, 1,
@@ -201,64 +208,70 @@ size_t GetTypeInfoIndex(GLenum uniformType)
             return 28;
         case GL_INT_SAMPLER_2D_MULTISAMPLE:
             return 29;
-        case GL_INT_SAMPLER_3D:
+        case GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
             return 30;
-        case GL_INT_SAMPLER_CUBE:
+        case GL_INT_SAMPLER_3D:
             return 31;
-        case GL_INT_VEC2:
+        case GL_INT_SAMPLER_CUBE:
             return 32;
-        case GL_INT_VEC3:
+        case GL_INT_VEC2:
             return 33;
-        case GL_INT_VEC4:
+        case GL_INT_VEC3:
             return 34;
-        case GL_SAMPLER_2D:
+        case GL_INT_VEC4:
             return 35;
-        case GL_SAMPLER_2D_ARRAY:
+        case GL_SAMPLER_2D:
             return 36;
-        case GL_SAMPLER_2D_ARRAY_SHADOW:
+        case GL_SAMPLER_2D_ARRAY:
             return 37;
-        case GL_SAMPLER_2D_MULTISAMPLE:
+        case GL_SAMPLER_2D_ARRAY_SHADOW:
             return 38;
-        case GL_SAMPLER_2D_RECT_ANGLE:
+        case GL_SAMPLER_2D_MULTISAMPLE:
             return 39;
-        case GL_SAMPLER_2D_SHADOW:
+        case GL_SAMPLER_2D_MULTISAMPLE_ARRAY:
             return 40;
-        case GL_SAMPLER_3D:
+        case GL_SAMPLER_2D_RECT_ANGLE:
             return 41;
-        case GL_SAMPLER_CUBE:
+        case GL_SAMPLER_2D_SHADOW:
             return 42;
-        case GL_SAMPLER_CUBE_SHADOW:
+        case GL_SAMPLER_3D:
             return 43;
-        case GL_SAMPLER_EXTERNAL_OES:
+        case GL_SAMPLER_CUBE:
             return 44;
-        case GL_UNSIGNED_INT:
+        case GL_SAMPLER_CUBE_SHADOW:
             return 45;
-        case GL_UNSIGNED_INT_ATOMIC_COUNTER:
+        case GL_SAMPLER_EXTERNAL_OES:
             return 46;
-        case GL_UNSIGNED_INT_IMAGE_2D:
+        case GL_UNSIGNED_INT:
             return 47;
-        case GL_UNSIGNED_INT_IMAGE_2D_ARRAY:
+        case GL_UNSIGNED_INT_ATOMIC_COUNTER:
             return 48;
-        case GL_UNSIGNED_INT_IMAGE_3D:
+        case GL_UNSIGNED_INT_IMAGE_2D:
             return 49;
-        case GL_UNSIGNED_INT_IMAGE_CUBE:
+        case GL_UNSIGNED_INT_IMAGE_2D_ARRAY:
             return 50;
-        case GL_UNSIGNED_INT_SAMPLER_2D:
+        case GL_UNSIGNED_INT_IMAGE_3D:
             return 51;
-        case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+        case GL_UNSIGNED_INT_IMAGE_CUBE:
             return 52;
-        case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE:
+        case GL_UNSIGNED_INT_SAMPLER_2D:
             return 53;
-        case GL_UNSIGNED_INT_SAMPLER_3D:
+        case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
             return 54;
-        case GL_UNSIGNED_INT_SAMPLER_CUBE:
+        case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE:
             return 55;
-        case GL_UNSIGNED_INT_VEC2:
+        case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
             return 56;
-        case GL_UNSIGNED_INT_VEC3:
+        case GL_UNSIGNED_INT_SAMPLER_3D:
             return 57;
-        case GL_UNSIGNED_INT_VEC4:
+        case GL_UNSIGNED_INT_SAMPLER_CUBE:
             return 58;
+        case GL_UNSIGNED_INT_VEC2:
+            return 59;
+        case GL_UNSIGNED_INT_VEC3:
+            return 60;
+        case GL_UNSIGNED_INT_VEC4:
+            return 61;
         default:
             UNREACHABLE();
             return 0;

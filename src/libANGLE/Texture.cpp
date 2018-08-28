@@ -271,7 +271,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // is NEAREST_MIPMAP_LINEAR and magFilter is LINEAR(table 20.11,). For multismaple texture,
     // filter state of multisample texture is ignored(11.1.3.3). So it shouldn't be judged as
     // incomplete texture. So, we ignore filtering for multisample texture completeness here.
-    if (mType != TextureType::_2DMultisample &&
+    if (!IsMultisampled(mType) &&
         !baseImageDesc.format.info->filterSupport(data.getClientVersion(), data.getExtensions()) &&
         !IsPointSampled(samplerState))
     {
@@ -336,7 +336,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // depth and stencil format (see table 3.13), the value of TEXTURE_COMPARE_-
     // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
     // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
-    if (mType != TextureType::_2DMultisample && baseImageDesc.format.info->depthBits > 0 &&
+    if (!IsMultisampled(mType) && baseImageDesc.format.info->depthBits > 0 &&
         data.getClientMajorVersion() >= 3)
     {
         // Note: we restrict this validation to sized types. For the OES_depth_textures
@@ -363,7 +363,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // For multismaple texture, filter state of multisample texture is ignored(11.1.3.3).
     // So it shouldn't be judged as incomplete texture. So, we ignore filtering for multisample
     // texture completeness here.
-    if (mType != TextureType::_2DMultisample && baseImageDesc.format.info->depthBits > 0 &&
+    if (!IsMultisampled(mType) && baseImageDesc.format.info->depthBits > 0 &&
         mDepthStencilTextureMode == GL_STENCIL_INDEX)
     {
         if ((samplerState.minFilter != GL_NEAREST &&

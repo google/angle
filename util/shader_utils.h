@@ -130,6 +130,10 @@ ANGLE_EXPORT const char *Zero();
 // A shader that sets gl_Position to attribute a_position.
 ANGLE_EXPORT const char *Simple();
 
+// A shader that simply passes through attribute a_position, setting it to gl_Position and varying
+// v_position.
+ANGLE_EXPORT const char *Passthrough();
+
 }  // namespace vs
 
 namespace fs

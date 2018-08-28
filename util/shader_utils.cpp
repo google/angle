@@ -310,7 +310,7 @@ void main()
 }
 
 // A shader that simply passes through attribute a_position, setting it to gl_Position and varying
-// pos.
+// v_position.
 const char *Passthrough()
 {
     return R"(precision highp float;
@@ -465,6 +465,20 @@ in vec4 a_position;
 void main()
 {
     gl_Position = a_position;
+})";
+}
+
+// A shader that simply passes through attribute a_position, setting it to gl_Position and varying
+// v_position.
+const char *Passthrough()
+{
+    return R"(#version 310 es
+in vec4 a_position;
+out vec4 v_position;
+void main()
+{
+    gl_Position = a_position;
+    v_position = a_position;
 })";
 }
 

@@ -7,6 +7,8 @@
 // TextureMultisampleTest: Tests of multisampled texture
 
 #include "test_utils/ANGLETest.h"
+
+#include "shader_utils.h"
 #include "test_utils/gl_raii.h"
 
 using namespace angle;
@@ -77,6 +79,50 @@ class TextureMultisampleTest : public ANGLETest
         }
         return maxSamples;
     }
+
+    const char *blitArrayTextureLayerFragmentShader()
+    {
+        return R"(#version 310 es
+#extension GL_OES_texture_storage_multisample_2d_array : require
+precision highp float;
+precision highp int;
+
+uniform highp sampler2DMSArray tex;
+uniform int layer;
+uniform int sampleNum;
+
+in vec4 v_position;
+out vec4 my_FragColor;
+
+void main() {
+    ivec3 texSize = textureSize(tex);
+    ivec2 sampleCoords = ivec2((v_position.xy * 0.5 + 0.5) * vec2(texSize.xy - 1));
+    my_FragColor = texelFetch(tex, ivec3(sampleCoords, layer), sampleNum);
+}
+)";
+    };
+
+    const char *blitIntArrayTextureLayerFragmentShader()
+    {
+        return R"(#version 310 es
+#extension GL_OES_texture_storage_multisample_2d_array : require
+precision highp float;
+precision highp int;
+
+uniform highp isampler2DMSArray tex;
+uniform int layer;
+uniform int sampleNum;
+
+in vec4 v_position;
+out vec4 my_FragColor;
+
+void main() {
+    ivec3 texSize = textureSize(tex);
+    ivec2 sampleCoords = ivec2((v_position.xy * 0.5 + 0.5) * vec2(texSize.xy - 1));
+    my_FragColor = vec4(texelFetch(tex, ivec3(sampleCoords, layer), sampleNum));
+}
+)";
+    };
 };
 
 class TextureMultisampleTestES31 : public TextureMultisampleTest
@@ -284,6 +330,37 @@ TEST_P(TextureMultisampleArrayWebGLTest, BindMultisampleArrayTextureWithoutExten
 {
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
     ASSERT_GL_ERROR(GL_INVALID_ENUM);
+}
+
+// Try to compile shaders using GL_OES_texture_storage_multisample_2d_array when the extension is
+// not enabled.
+TEST_P(TextureMultisampleArrayWebGLTest, ShaderWithoutExtension)
+{
+    const std::string &fragmentShaderRequireExtension = R"(#version 310 es
+        #extension GL_OES_texture_storage_multisample_2d_array : require
+        out highp vec4 my_FragColor;
+
+        void main() {
+             my_FragColor = vec4(0.0);
+        }
+    )";
+
+    GLuint program = CompileProgram(essl31_shaders::vs::Simple(), fragmentShaderRequireExtension);
+    EXPECT_EQ(0u, program);
+
+    const std::string &fragmentShaderEnableAndUseExtension = R"(#version 310 es
+        #extension GL_OES_texture_storage_multisample_2d_array : enable
+
+        uniform highp sampler2DMSArray tex;
+        out highp ivec4 outSize;
+
+        void main() {
+             outSize = ivec4(textureSize(tex), 0);
+        }
+    )";
+
+    program = CompileProgram(essl31_shaders::vs::Simple(), fragmentShaderEnableAndUseExtension);
+    EXPECT_EQ(0u, program);
 }
 
 // Tests that GL_TEXTURE_2D_MULTISAMPLE_ARRAY is supported in GetInternalformativ.
@@ -556,6 +633,166 @@ TEST_P(TextureMultisampleArrayWebGLTest, FramebufferColorClearAndBlit)
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFramebuffer);
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+}
+
+// Check the size of a multisample array texture in a shader.
+TEST_P(TextureMultisampleArrayWebGLTest, TextureSizeInShader)
+{
+    ANGLE_SKIP_TEST_IF(!requestArrayExtension());
+
+    const std::string &fragmentShader = R"(#version 310 es
+        #extension GL_OES_texture_storage_multisample_2d_array : require
+
+        uniform highp sampler2DMSArray tex;
+        out highp vec4 my_FragColor;
+
+        void main() {
+             my_FragColor = (textureSize(tex) == ivec3(8, 4, 2)) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+        }
+    )";
+
+    ANGLE_GL_PROGRAM(texSizeProgram, essl31_shaders::vs::Simple(), fragmentShader);
+
+    GLint texLocation = glGetUniformLocation(texSizeProgram, "tex");
+    ASSERT_GE(texLocation, 0);
+
+    const GLsizei kWidth  = 8;
+    const GLsizei kHeight = 4;
+
+    std::vector<GLenum> testFormats = {GL_RGBA8};
+    GLint samplesToUse = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, testFormats);
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, samplesToUse, GL_RGBA8,
+                                 kWidth, kHeight, 2, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(texSizeProgram, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Clear the layers of a multisample array texture, and then sample all the samples from all the
+// layers in a shader.
+TEST_P(TextureMultisampleArrayWebGLTest, SimpleTexelFetch)
+{
+    ANGLE_SKIP_TEST_IF(!requestArrayExtension());
+
+    ANGLE_GL_PROGRAM(texelFetchProgram, essl31_shaders::vs::Passthrough(),
+                     blitArrayTextureLayerFragmentShader());
+
+    GLint texLocation = glGetUniformLocation(texelFetchProgram, "tex");
+    ASSERT_GE(texLocation, 0);
+    GLint layerLocation = glGetUniformLocation(texelFetchProgram, "layer");
+    ASSERT_GE(layerLocation, 0);
+    GLint sampleNumLocation = glGetUniformLocation(texelFetchProgram, "sampleNum");
+    ASSERT_GE(layerLocation, 0);
+
+    const GLsizei kWidth      = 4;
+    const GLsizei kHeight     = 4;
+    const GLsizei kLayerCount = 2;
+
+    std::vector<GLenum> testFormats = {GL_RGBA8};
+    GLint samplesToUse = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, testFormats);
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, samplesToUse, GL_RGBA8,
+                                 kWidth, kHeight, kLayerCount, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear layer zero to green and layer one to blue.
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    std::vector<GLColor> clearColors = {{GLColor::green, GLColor::blue}};
+    for (GLint i = 0; static_cast<GLsizei>(i) < kLayerCount; ++i)
+    {
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, 0, i);
+        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, status);
+        const GLColor &clearColor = clearColors[i];
+        glClearColor(clearColor.R / 255.0f, clearColor.G / 255.0f, clearColor.B / 255.0f,
+                     clearColor.A / 255.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glUseProgram(texelFetchProgram);
+    glViewport(0, 0, kWidth, kHeight);
+    for (GLint layer = 0; static_cast<GLsizei>(layer) < kLayerCount; ++layer)
+    {
+        glUniform1i(layerLocation, layer);
+        for (GLint sampleNum = 0; sampleNum < samplesToUse; ++sampleNum)
+        {
+            glUniform1i(sampleNumLocation, sampleNum);
+            drawQuad(texelFetchProgram, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, clearColors[layer]);
+        }
+    }
+}
+
+// Clear the layers of an integer multisample array texture, and then sample all the samples from
+// all the layers in a shader.
+TEST_P(TextureMultisampleArrayWebGLTest, IntegerTexelFetch)
+{
+    ANGLE_SKIP_TEST_IF(!requestArrayExtension());
+
+    ANGLE_GL_PROGRAM(texelFetchProgram, essl31_shaders::vs::Passthrough(),
+                     blitIntArrayTextureLayerFragmentShader());
+
+    GLint texLocation = glGetUniformLocation(texelFetchProgram, "tex");
+    ASSERT_GE(texLocation, 0);
+    GLint layerLocation = glGetUniformLocation(texelFetchProgram, "layer");
+    ASSERT_GE(layerLocation, 0);
+    GLint sampleNumLocation = glGetUniformLocation(texelFetchProgram, "sampleNum");
+    ASSERT_GE(layerLocation, 0);
+
+    const GLsizei kWidth      = 4;
+    const GLsizei kHeight     = 4;
+    const GLsizei kLayerCount = 2;
+
+    std::vector<GLenum> testFormats = {GL_RGBA8I};
+    GLint samplesToUse = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, testFormats);
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, samplesToUse, GL_RGBA8I,
+                                 kWidth, kHeight, kLayerCount, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear layer zero to green and layer one to blue.
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    std::vector<GLColor> clearColors = {{GLColor::green, GLColor::blue}};
+    for (GLint i = 0; static_cast<GLsizei>(i) < kLayerCount; ++i)
+    {
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, 0, i);
+        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, status);
+        std::array<GLint, 4> intColor;
+        for (size_t j = 0; j < intColor.size(); ++j)
+        {
+            intColor[j] = clearColors[i][j] / 255;
+        }
+        glClearBufferiv(GL_COLOR, 0, intColor.data());
+        ASSERT_GL_NO_ERROR();
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glUseProgram(texelFetchProgram);
+    glViewport(0, 0, kWidth, kHeight);
+    for (GLint layer = 0; static_cast<GLsizei>(layer) < kLayerCount; ++layer)
+    {
+        glUniform1i(layerLocation, layer);
+        for (GLint sampleNum = 0; sampleNum < samplesToUse; ++sampleNum)
+        {
+            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glUniform1i(sampleNumLocation, sampleNum);
+            drawQuad(texelFetchProgram, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, clearColors[layer]);
+        }
+    }
 }
 
 ANGLE_INSTANTIATE_TEST(TextureMultisampleTest,
