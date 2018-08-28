@@ -228,7 +228,7 @@ TEST_P(EGLRobustnessTest, DISABLED_ResettingDisplayWorks)
 // if there was a TDR caused by D3D so we don't run D3D tests at the same time as the OpenGL tests.
 #define D3D_HAS_PRIORITY 1
 #if D3D_HAS_PRIORITY && (defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11))
-ANGLE_INSTANTIATE_TEST(EGLRobustnessTest, ES2_D3D9(), ES2_D3D11());
+ANGLE_INSTANTIATE_TEST(EGLRobustnessTest, ES2_VULKAN(), ES2_D3D9(), ES2_D3D11());
 #else
-ANGLE_INSTANTIATE_TEST(EGLRobustnessTest, ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(EGLRobustnessTest, ES2_VULKAN(), ES2_OPENGL());
 #endif

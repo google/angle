@@ -48,6 +48,9 @@ class RendererVk : angle::NonCopyable
                              const char *wsiName);
     void onDestroy(vk::Context *context);
 
+    void markDeviceLost();
+    bool isDeviceLost() const;
+
     std::string getVendorString() const;
     std::string getRendererDescription() const;
 
@@ -182,6 +185,8 @@ class RendererVk : angle::NonCopyable
     SerialFactory mShaderSerialFactory;
     Serial mLastCompletedQueueSerial;
     Serial mCurrentQueueSerial;
+
+    bool mDeviceLost;
 
     struct CommandBatch final : angle::NonCopyable
     {

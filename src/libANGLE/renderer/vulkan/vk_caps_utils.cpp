@@ -46,6 +46,7 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outExtensions->framebufferBlit = true;
     outExtensions->copyTexture     = true;
     outExtensions->debugMarker     = true;
+    outExtensions->robustness      = true;
 
     // TODO(lucferron): Eventually remove everything above this line in this function as the caps
     // get implemented.

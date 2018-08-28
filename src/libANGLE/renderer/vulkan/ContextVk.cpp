@@ -563,7 +563,14 @@ gl::Error ContextVk::drawElementsIndirect(const gl::Context *context,
 
 GLenum ContextVk::getResetStatus()
 {
-    UNIMPLEMENTED();
+    if (mRenderer->isDeviceLost())
+    {
+        // TODO(geofflang): It may be possible to track which context caused the device lost and
+        // return either GL_GUILTY_CONTEXT_RESET or GL_INNOCENT_CONTEXT_RESET.
+        // http://anglebug.com/2787
+        return GL_UNKNOWN_CONTEXT_RESET;
+    }
+
     return GL_NO_ERROR;
 }
 
@@ -1174,6 +1181,11 @@ void ContextVk::handleError(VkResult errorCode, const char *file, unsigned int l
     std::stringstream errorStream;
     errorStream << "Internal Vulkan error: " << VulkanResultString(errorCode) << ", in " << file
                 << ", line " << line << ".";
+
+    if (errorCode == VK_ERROR_DEVICE_LOST)
+    {
+        mRenderer->markDeviceLost();
+    }
 
     mErrors->handleError(gl::Error(glErrorCode, glErrorCode, errorStream.str()));
 }
