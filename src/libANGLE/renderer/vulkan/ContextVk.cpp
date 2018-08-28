@@ -257,21 +257,16 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
                                    const DirtyBits &dirtyBitsMask,
                                    vk::CommandBuffer **commandBufferOut)
 {
+    // Set any dirty bits that depend on draw call parameters or other objects.
     if (drawCallParams.mode() != mCurrentDrawMode)
     {
         invalidateCurrentPipeline();
         mCurrentDrawMode = drawCallParams.mode();
     }
 
-    const gl::State &state       = mState.getState();
-    const gl::Program *programGL = state.getProgram();
-
-    vk::RecordingMode mode;
-    ANGLE_TRY(mDrawFramebuffer->getCommandBufferForDraw(this, commandBufferOut, &mode));
-
-    // Set any dirty bits that depend on draw call parameters or other objects.
-    if (mode == vk::RecordingMode::Start)
+    if (!mDrawFramebuffer->appendToStartedRenderPass(mRenderer, commandBufferOut))
     {
+        ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, commandBufferOut));
         mDirtyBits |= mNewCommandBufferDirtyBits;
     }
 
@@ -317,7 +312,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
 
                 // TODO(jmadill): Should probably merge this for loop with programVk's descriptor
                 // update.
-                for (size_t textureIndex : programGL->getActiveSamplersMask())
+                for (size_t textureIndex : mProgram->getState().getActiveSamplersMask())
                 {
                     // Ensure any writes to the textures are flushed before we read from them.
                     TextureVk *textureVk = mActiveTextures[textureIndex];
@@ -348,7 +343,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
             case DIRTY_BIT_VERTEX_BUFFERS:
             {
                 BindNonNullVertexBufferRanges(*commandBufferOut,
-                                              programGL->getActiveAttribLocationsMask(),
+                                              mProgram->getState().getActiveAttribLocationsMask(),
                                               mProgram->getState().getMaxActiveAttribLocation(),
                                               mVertexArray->getCurrentArrayBufferHandles(),
                                               mVertexArray->getCurrentArrayBufferOffsets());

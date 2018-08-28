@@ -354,6 +354,8 @@ class ProgramState final : angle::NonCopyable
 
     bool hasAttachedShader() const;
 
+    const ActiveTextureMask &getActiveSamplersMask() const { return mActiveSamplersMask; }
+
   private:
     friend class MemoryProgramCache;
     friend class Program;

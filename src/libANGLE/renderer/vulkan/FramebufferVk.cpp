@@ -1087,6 +1087,12 @@ angle::Result FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
         return angle::Result::Continue();
     }
 
+    return startNewRenderPass(contextVk, commandBufferOut);
+}
+
+angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
+                                                vk::CommandBuffer **commandBufferOut)
+{
     vk::Framebuffer *framebuffer = nullptr;
     ANGLE_TRY(getFramebuffer(contextVk, &framebuffer));
 
@@ -1120,7 +1126,6 @@ angle::Result FramebufferVk::getCommandBufferForDraw(ContextVk *contextVk,
     gl::Rectangle renderArea =
         gl::Rectangle(0, 0, mState.getDimensions().width, mState.getDimensions().height);
 
-    *modeOut = vk::RecordingMode::Start;
     return beginRenderPass(contextVk, *framebuffer, renderArea, mRenderPassDesc.value(),
                            attachmentClearValues, commandBufferOut);
 }

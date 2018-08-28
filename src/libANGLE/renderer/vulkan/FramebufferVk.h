@@ -90,9 +90,6 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
                                 GLfloat *xy) const override;
     RenderTargetVk *getDepthStencilRenderTarget() const;
     const vk::RenderPassDesc &getRenderPassDesc();
-    angle::Result getCommandBufferForDraw(ContextVk *contextVk,
-                                          vk::CommandBuffer **commandBufferOut,
-                                          vk::RecordingMode *modeOut);
 
     // Internal helper function for readPixels operations.
     angle::Result readPixelsImpl(ContextVk *contextVk,
@@ -107,10 +104,20 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     gl::DrawBufferMask getEmulatedAlphaAttachmentMask();
     RenderTargetVk *getColorReadRenderTarget() const;
 
+    // This will clear the current write operation if it is complete.
+    using CommandGraphResource::appendToStartedRenderPass;
+
+    angle::Result startNewRenderPass(ContextVk *context, vk::CommandBuffer **commandBufferOut);
+
   private:
     FramebufferVk(RendererVk *renderer,
                   const gl::FramebufferState &state,
                   WindowSurfaceVk *backbuffer);
+
+    // Helper for appendToStarted/else startNewRenderPass.
+    angle::Result getCommandBufferForDraw(ContextVk *contextVk,
+                                          vk::CommandBuffer **commandBufferOut,
+                                          vk::RecordingMode *modeOut);
 
     // The 'in' rectangles must be clipped to the scissor and FBO. The clipping is done in 'blit'.
     void blitWithCommand(vk::CommandBuffer *commandBuffer,
