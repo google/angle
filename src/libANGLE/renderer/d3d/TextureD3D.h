@@ -663,15 +663,14 @@ class TextureD3D_2DArray : public TextureD3D
     ImageD3D **mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
-class TextureD3D_External : public TextureD3D
+// Base class for immutable textures. These don't support manipulation of individual texture images.
+class TextureD3DImmutableBase : public TextureD3D
 {
   public:
-    TextureD3D_External(const gl::TextureState &data, RendererD3D *renderer);
-    ~TextureD3D_External() override;
+    TextureD3DImmutableBase(const gl::TextureState &data, RendererD3D *renderer);
+    ~TextureD3DImmutableBase() override;
 
     ImageD3D *getImage(const gl::ImageIndex &index) const override;
-    GLsizei getLayerCount(int level) const override;
-
     gl::Error setImage(const gl::Context *context,
                        const gl::ImageIndex &index,
                        GLenum internalFormat,
@@ -714,19 +713,22 @@ class TextureD3D_External : public TextureD3D
                            const gl::Rectangle &sourceArea,
                            gl::Framebuffer *source) override;
 
-    gl::Error setStorage(const gl::Context *context,
-                         gl::TextureType type,
-                         size_t levels,
-                         GLenum internalFormat,
-                         const gl::Extents &size) override;
+    gl::Error bindTexImage(const gl::Context *context, egl::Surface *surface) override;
+    gl::Error releaseTexImage(const gl::Context *context) override;
+};
+
+class TextureD3D_External : public TextureD3DImmutableBase
+{
+  public:
+    TextureD3D_External(const gl::TextureState &data, RendererD3D *renderer);
+    ~TextureD3D_External() override;
+
+    GLsizei getLayerCount(int level) const override;
 
     gl::Error setImageExternal(const gl::Context *context,
                                gl::TextureType type,
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;
-
-    gl::Error bindTexImage(const gl::Context *context, egl::Surface *surface) override;
-    gl::Error releaseTexImage(const gl::Context *context) override;
 
     gl::Error setEGLImageTarget(const gl::Context *context,
                                 gl::TextureType type,
@@ -756,54 +758,11 @@ class TextureD3D_External : public TextureD3D
     bool isImageComplete(const gl::ImageIndex &index) const override;
 };
 
-class TextureD3D_2DMultisample : public TextureD3D
+class TextureD3D_2DMultisample : public TextureD3DImmutableBase
 {
   public:
     TextureD3D_2DMultisample(const gl::TextureState &data, RendererD3D *renderer);
     ~TextureD3D_2DMultisample() override;
-
-    ImageD3D *getImage(const gl::ImageIndex &index) const override;
-    gl::Error setImage(const gl::Context *context,
-                       const gl::ImageIndex &index,
-                       GLenum internalFormat,
-                       const gl::Extents &size,
-                       GLenum format,
-                       GLenum type,
-                       const gl::PixelUnpackState &unpack,
-                       const uint8_t *pixels) override;
-    gl::Error setSubImage(const gl::Context *context,
-                          const gl::ImageIndex &index,
-                          const gl::Box &area,
-                          GLenum format,
-                          GLenum type,
-                          const gl::PixelUnpackState &unpack,
-                          const uint8_t *pixels) override;
-
-    gl::Error setCompressedImage(const gl::Context *context,
-                                 const gl::ImageIndex &index,
-                                 GLenum internalFormat,
-                                 const gl::Extents &size,
-                                 const gl::PixelUnpackState &unpack,
-                                 size_t imageSize,
-                                 const uint8_t *pixels) override;
-    gl::Error setCompressedSubImage(const gl::Context *context,
-                                    const gl::ImageIndex &index,
-                                    const gl::Box &area,
-                                    GLenum format,
-                                    const gl::PixelUnpackState &unpack,
-                                    size_t imageSize,
-                                    const uint8_t *pixels) override;
-
-    gl::Error copyImage(const gl::Context *context,
-                        const gl::ImageIndex &index,
-                        const gl::Rectangle &sourceArea,
-                        GLenum internalFormat,
-                        gl::Framebuffer *source) override;
-    gl::Error copySubImage(const gl::Context *context,
-                           const gl::ImageIndex &index,
-                           const gl::Offset &destOffset,
-                           const gl::Rectangle &sourceArea,
-                           gl::Framebuffer *source) override;
 
     gl::Error setStorageMultisample(const gl::Context *context,
                                     gl::TextureType type,
@@ -811,9 +770,6 @@ class TextureD3D_2DMultisample : public TextureD3D
                                     GLint internalFormat,
                                     const gl::Extents &size,
                                     bool fixedSampleLocations) override;
-
-    gl::Error bindTexImage(const gl::Context *context, egl::Surface *surface) override;
-    gl::Error releaseTexImage(const gl::Context *context) override;
 
     gl::Error setEGLImageTarget(const gl::Context *context,
                                 gl::TextureType type,
