@@ -39,7 +39,7 @@ class VulkanLibrary final : NonCopyable
     VkInstance getVulkanInstance()
     {
         // Find the system's Vulkan library and open it:
-        mLibVulkan = dlopen("mLibVulkan.so", RTLD_NOW | RTLD_LOCAL);
+        mLibVulkan = dlopen("libvulkan.so", RTLD_NOW | RTLD_LOCAL);
         if (!mLibVulkan)
         {
             // If Vulkan doesn't exist, bail-out early:
@@ -50,7 +50,8 @@ class VulkanLibrary final : NonCopyable
         uint32_t instanceVersion = VK_API_VERSION_1_0;
 #if defined(VK_VERSION_1_1)
         PFN_vkEnumerateInstanceVersion pfnEnumerateInstanceVersion =
-            reinterpret_cast<PFN_vkCreateInstance>(dlsym(mLibVulkan, "vkEnumerateInstanceVersion"));
+            reinterpret_cast<PFN_vkEnumerateInstanceVersion>(
+                dlsym(mLibVulkan, "vkEnumerateInstanceVersion"));
         if (!pfnEnumerateInstanceVersion ||
             pfnEnumerateInstanceVersion(&instanceVersion) != VK_SUCCESS)
         {
@@ -128,7 +129,6 @@ bool GetSystemInfo(SystemInfo *info)
     PFN_vkGetPhysicalDeviceProperties pfnGetPhysicalDeviceProperties =
         GPA(vkLibrary, PFN_vkGetPhysicalDeviceProperties, "vkGetPhysicalDeviceProperties");
     uint32_t physicalDeviceCount       = 0;
-    VkPhysicalDevice *pPhysicalDevices = nullptr;
     if (!pfnEnumeratePhysicalDevices ||
         pfnEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr) != VK_SUCCESS)
     {
@@ -147,7 +147,7 @@ bool GetSystemInfo(SystemInfo *info)
     for (uint32_t i = 0; i < physicalDeviceCount; i++)
     {
         VkPhysicalDeviceProperties properties;
-        pfnGetPhysicalDeviceProperties(pPhysicalDevices[i], &properties);
+        pfnGetPhysicalDeviceProperties(physicalDevices[i], &properties);
         // Fill in data for a given physical device (a.k.a. gpu):
         GPUDeviceInfo &gpu = info->gpus[i];
         gpu.vendorId       = properties.vendorID;
