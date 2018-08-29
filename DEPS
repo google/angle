@@ -12,7 +12,7 @@ vars = {
   'deqp_revision': '4c0f2a4fba813e1046115c43c887eccb749b7bb3',
 
   # Current revision of glslang, the Khronos SPIRV compiler.
-  'glslang_revision': '1ea8f595f9a9ebd938fe9e5f15ae469c7d6ebabc',
+  'glslang_revision': '312dcfb070a7274066d3e85e10970f57b1e3af6e',
 
   # Current revision of jsoncpp, an open-source json parser.
   'jsoncpp_revision': '93ba642c636309a3195d6da6c11ba82f69ef45ed',
@@ -24,16 +24,16 @@ vars = {
   'spirv_tools_revision': '48326d443e434f55eb50a7cfc9acdc968daad5e3',
 
   # Current revision of Khronos Vulkan-Headers.
-  'vulkan_headers_revision': 'ec4eff88f79b74c4865f41bef0d6af9a46d53896',
+  'vulkan_headers_revision': 'db09f95ac00e44149f3894bf82c918e58277cfdb',
 
   # Current revision of Khronos Vulkan-Loader.
-  'vulkan_loader_revision': 'a8358804f3c5b4e284d5e9a88b232309bb3c333d',
+  'vulkan_loader_revision': '808c5cb8f5b420adb3cf5e28aee6b6112076e27c',
 
   # Current revision of Khronos Vulkan-Tools.
-  'vulkan_tools_revision': 'b7c389c9d3efe5cea722eb7395fb70529dd27566',
+  'vulkan_tools_revision': '31030a11a6425701566d8f5194b528f4d911eab5',
 
   # Current revision of Khronos Vulkan-ValidationLayers.
-  'vulkan_validation_revision': '9e92c5c0e5b0b2264d72d8bafe15f049cba1c67d',
+  'vulkan_validation_revision': '1ffea21fdebb90f314274b8b7dadaae0ca1ffe65',
 }
 
 deps = {

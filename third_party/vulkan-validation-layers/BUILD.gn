@@ -326,28 +326,15 @@ if (!is_android) {
 
   action("vulkan_gen_json_files") {
     script = "$angle_root/scripts/generate_vulkan_layers_json.py"
-    if (is_win) {
-      sources = [
-        "src/layers/windows/VkLayer_core_validation.json",
-        "src/layers/windows/VkLayer_object_tracker.json",
-        "src/layers/windows/VkLayer_parameter_validation.json",
-        "src/layers/windows/VkLayer_standard_validation.json",
-        "src/layers/windows/VkLayer_threading.json",
-        "src/layers/windows/VkLayer_unique_objects.json",
-      ]
-      args = [ "$raw_vulkan_layers_dir/layers/windows" ]
-    }
-    if (is_linux) {
-      sources = [
-        "src/layers/linux/VkLayer_core_validation.json",
-        "src/layers/linux/VkLayer_object_tracker.json",
-        "src/layers/linux/VkLayer_parameter_validation.json",
-        "src/layers/linux/VkLayer_standard_validation.json",
-        "src/layers/linux/VkLayer_threading.json",
-        "src/layers/linux/VkLayer_unique_objects.json",
-      ]
-      args = [ "$raw_vulkan_layers_dir/layers/linux" ]
-    }
+    sources = [
+      "src/layers/json/VkLayer_core_validation.json.in",
+      "src/layers/json/VkLayer_object_tracker.json.in",
+      "src/layers/json/VkLayer_parameter_validation.json.in",
+      "src/layers/json/VkLayer_standard_validation.json.in",
+      "src/layers/json/VkLayer_threading.json.in",
+      "src/layers/json/VkLayer_unique_objects.json.in",
+    ]
+    args = [ "$raw_vulkan_layers_dir/layers/json" ]
 
     # The layer JSON files are part of the necessary data deps.
     outputs = vulkan_gen_json_files_outputs
