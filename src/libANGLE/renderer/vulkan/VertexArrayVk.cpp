@@ -122,12 +122,10 @@ angle::Result VertexArrayVk::streamVertexData(ContextVk *contextVk,
         const uint8_t *src = static_cast<const uint8_t *>(attrib.pointer) +
                              drawCallParams.firstVertex() * binding.getStride();
         uint8_t *dst    = nullptr;
-        uint32_t offset = 0;
         ANGLE_TRY(mDynamicVertexData.allocate(contextVk, bytesAllocated, &dst,
-                                              &mCurrentArrayBufferHandles[attribIndex], &offset,
-                                              nullptr));
+                                              &mCurrentArrayBufferHandles[attribIndex],
+                                              &mCurrentArrayBufferOffsets[attribIndex], nullptr));
         dst += drawCallParams.firstVertex() * mCurrentArrayBufferStrides[attribIndex];
-        mCurrentArrayBufferOffsets[attribIndex] = static_cast<VkDeviceSize>(offset);
         mCurrentArrayBufferFormats[attribIndex]->vertexLoadFunction(
             src, binding.getStride(), drawCallParams.vertexCount(), dst);
     }
@@ -142,13 +140,11 @@ angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,
 {
     ASSERT(!mState.getElementArrayBuffer().get());
 
-    uint32_t offset = 0;
-
     const GLsizei amount = sizeof(GLushort) * drawCallParams.indexCount();
     GLubyte *dst         = nullptr;
 
     ANGLE_TRY(mDynamicIndexData.allocate(contextVk, amount, &dst, &mCurrentElementArrayBufferHandle,
-                                         &offset, nullptr));
+                                         &mCurrentElementArrayBufferOffset, nullptr));
     if (drawCallParams.type() == GL_UNSIGNED_BYTE)
     {
         // Unsigned bytes don't have direct support in Vulkan so we have to expand the
@@ -166,7 +162,6 @@ angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,
     }
     ANGLE_TRY(mDynamicIndexData.flush(contextVk));
     mDynamicIndexData.releaseRetainedBuffers(contextVk->getRenderer());
-    mCurrentElementArrayBufferOffset = offset;
     return angle::Result::Continue();
 }
 
@@ -201,11 +196,10 @@ angle::Result VertexArrayVk::convertVertexBuffer(ContextVk *context,
 
     void *src       = nullptr;
     uint8_t *dst    = nullptr;
-    uint32_t offset = 0;
 
     ANGLE_TRY(mCurrentArrayBufferConversion[attribIndex].allocate(
         context, numVertices * dstFormatSize, &dst, &mCurrentArrayBufferHandles[attribIndex],
-        &offset, nullptr));
+        &mCurrentArrayBufferOffsets[attribIndex], nullptr));
     ANGLE_TRY(srcBuffer->mapImpl(context, &src));
     mCurrentArrayBufferFormats[attribIndex]->vertexLoadFunction(
         static_cast<const uint8_t *>(src) + binding.getOffset(), binding.getStride(), numVertices,
@@ -214,7 +208,6 @@ angle::Result VertexArrayVk::convertVertexBuffer(ContextVk *context,
     ANGLE_TRY(mCurrentArrayBufferConversion[attribIndex].flush(context));
 
     mCurrentArrayBufferConversionCanRelease[attribIndex] = true;
-    mCurrentArrayBufferOffsets[attribIndex]              = offset;
     mCurrentArrayBufferStrides[attribIndex]              = dstFormatSize;
 
     return angle::Result::Continue();
@@ -644,11 +637,10 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
             // go from unsigned byte to unsigned short.
             uint8_t *allocatedData      = nullptr;
             bool newBufferAllocated     = false;
-            uint32_t expandedDataOffset = 0;
             ANGLE_TRY(mTranslatedByteIndexData.allocate(
                 contextVk, static_cast<size_t>(bufferVk->getSize()) * 2, &allocatedData,
-                &mCurrentElementArrayBufferHandle, &expandedDataOffset, &newBufferAllocated));
-            mCurrentElementArrayBufferOffset = static_cast<VkDeviceSize>(expandedDataOffset);
+                &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset,
+                &newBufferAllocated));
 
             // Expand the source into the destination
             ASSERT(!context->getGLState().isPrimitiveRestartEnabled());

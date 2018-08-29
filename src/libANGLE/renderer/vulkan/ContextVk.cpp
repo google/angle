@@ -902,7 +902,7 @@ angle::Result ContextVk::updateDriverUniforms(const gl::State &glState)
     // Allocate a new region in the dynamic buffer.
     uint8_t *ptr            = nullptr;
     VkBuffer buffer         = VK_NULL_HANDLE;
-    uint32_t offset         = 0;
+    VkDeviceSize offset     = 0;
     bool newBufferAllocated = false;
     ANGLE_TRY(mDriverUniformsBuffer.allocate(this, sizeof(DriverUniforms), &ptr, &buffer, &offset,
                                              &newBufferAllocated));
@@ -1034,7 +1034,7 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
 
     uint8_t *ptr;
     VkBuffer bufferHandle = VK_NULL_HANDLE;
-    uint32_t offset       = 0;
+    VkDeviceSize offset   = 0;
     ANGLE_TRY(
         defaultBuffer.allocate(this, kDefaultValueSize, &ptr, &bufferHandle, &offset, nullptr));
 
@@ -1049,7 +1049,8 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
     ANGLE_TRY(defaultBuffer.flush(this));
 
     VertexArrayVk *vertexArrayVk = vk::GetImpl(glState.getVertexArray());
-    vertexArrayVk->updateDefaultAttrib(mRenderer, attribIndex, bufferHandle, offset);
+    vertexArrayVk->updateDefaultAttrib(mRenderer, attribIndex, bufferHandle,
+                                       static_cast<uint32_t>(offset));
     return angle::Result::Continue();
 }
 }  // namespace rx

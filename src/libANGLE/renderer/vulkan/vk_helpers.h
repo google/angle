@@ -44,7 +44,7 @@ class DynamicBuffer : angle::NonCopyable
                            size_t sizeInBytes,
                            uint8_t **ptrOut,
                            VkBuffer *handleOut,
-                           uint32_t *offsetOut,
+                           VkDeviceSize *offsetOut,
                            bool *newBufferAllocatedOut);
 
     // After a sequence of writes, call flush to ensure the data is visible to the device.

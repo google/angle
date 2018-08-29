@@ -106,7 +106,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
                                       size_t sizeInBytes,
                                       uint8_t **ptrOut,
                                       VkBuffer *handleOut,
-                                      uint32_t *offsetOut,
+                                      VkDeviceSize *offsetOut,
                                       bool *newBufferAllocatedOut)
 {
     size_t sizeToAllocate = roundUp(sizeInBytes, mAlignment);
@@ -163,7 +163,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
 
     ASSERT(mMappedMemory);
     *ptrOut    = mMappedMemory + mNextAllocationOffset;
-    *offsetOut = mNextAllocationOffset;
+    *offsetOut = static_cast<VkDeviceSize>(mNextAllocationOffset);
     mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
     return angle::Result::Continue();
 }
@@ -373,13 +373,11 @@ angle::Result LineLoopHelper::getIndexBufferForDrawArrays(Context *context,
 {
     uint32_t *indices    = nullptr;
     size_t allocateBytes = sizeof(uint32_t) * (drawCallParams.vertexCount() + 1);
-    uint32_t offset      = 0;
 
     mDynamicIndexBuffer.releaseRetainedBuffers(context->getRenderer());
     ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
-                                           &offset, nullptr));
-    *offsetOut = static_cast<VkDeviceSize>(offset);
+                                           offsetOut, nullptr));
 
     uint32_t clampedVertexCount = drawCallParams.getClampedVertexCount<uint32_t>();
 
@@ -411,7 +409,6 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(Context *conte
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
 
     uint32_t *indices          = nullptr;
-    uint32_t destinationOffset = 0;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (indexCount + 1);
@@ -419,13 +416,12 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(Context *conte
     mDynamicIndexBuffer.releaseRetainedBuffers(context->getRenderer());
     ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
-                                           &destinationOffset, nullptr));
-    *bufferOffsetOut = static_cast<VkDeviceSize>(destinationOffset);
+                                           bufferOffsetOut, nullptr));
 
     VkDeviceSize sourceOffset = static_cast<VkDeviceSize>(elementArrayOffset);
     uint64_t unitCount        = static_cast<VkDeviceSize>(indexCount);
-    VkBufferCopy copy1        = {sourceOffset, destinationOffset, unitCount * unitSize};
-    VkBufferCopy copy2        = {sourceOffset, destinationOffset + unitCount * unitSize, unitSize};
+    VkBufferCopy copy1        = {sourceOffset, *bufferOffsetOut, unitCount * unitSize};
+    VkBufferCopy copy2        = {sourceOffset, *bufferOffsetOut + unitCount * unitSize, unitSize};
     std::array<VkBufferCopy, 2> copies = {{copy1, copy2}};
 
     vk::CommandBuffer *commandBuffer;
@@ -448,14 +444,12 @@ angle::Result LineLoopHelper::getIndexBufferForClientElementArray(
     VkIndexType indexType = gl_vk::GetIndexType(drawCallParams.type());
 
     uint8_t *indices = nullptr;
-    uint32_t offset  = 0;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (drawCallParams.indexCount() + 1);
     ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
-                                           &offset, nullptr));
-    *bufferOffsetOut = static_cast<VkDeviceSize>(offset);
+                                           bufferOffsetOut, nullptr));
 
     if (drawCallParams.type() == GL_UNSIGNED_BYTE)
     {

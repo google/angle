@@ -120,10 +120,10 @@ angle::Result SyncDefaultUniformBlock(ContextVk *contextVk,
     ASSERT(!bufferData.empty());
     uint8_t *data       = nullptr;
     VkBuffer *outBuffer = nullptr;
-    uint32_t offset;
+    VkDeviceSize offset = 0;
     ANGLE_TRY(dynamicBuffer->allocate(contextVk, bufferData.size(), &data, outBuffer, &offset,
                                       outBufferModified));
-    *outOffset = offset;
+    *outOffset = static_cast<uint32_t>(offset);
     memcpy(data, bufferData.data(), bufferData.size());
     ANGLE_TRY(dynamicBuffer->flush(contextVk));
     return angle::Result::Continue();
