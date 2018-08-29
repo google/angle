@@ -180,6 +180,14 @@ class TIntermTraverser : angle::NonCopyable
     // Helper to insert a single statement.
     void insertStatementInParentBlock(TIntermNode *statement);
 
+    // Explicitly specify where to insert statements. The statements are inserted before and after
+    // the specified position. The statements will be inserted once updateTree is called. Note that
+    // two insertions to the same position in the same block are not supported.
+    void insertStatementsInBlockAtPosition(TIntermBlock *parent,
+                                           size_t position,
+                                           const TIntermSequence &insertionsBefore,
+                                           const TIntermSequence &insertionsAfter);
+
     enum class OriginalNode
     {
         BECOMES_CHILD,

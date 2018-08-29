@@ -1681,6 +1681,158 @@ TEST_P(ComputeShaderTest, AtomicFunctionsInNonInitializerSingleAssignment)
     runSharedMemoryTest<GLint, 9, 1>(kCSShader, GL_R32I, GL_INT, inputData, expectedValues);
 }
 
+// Verify using atomic functions in an initializers and using unsigned int works correctly.
+TEST_P(ComputeShaderTest, AtomicFunctionsInitializerWithUnsigned)
+{
+    constexpr char kCShader[] =
+        R"(#version 310 es
+layout (local_size_x = 9, local_size_y = 1, local_size_z = 1) in;
+layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
+layout (r32ui, binding = 1) writeonly uniform highp uimage2D dstImage;
+
+shared highp uint sharedVariable;
+
+shared highp uint inputData[9];
+shared highp uint outputData[9];
+
+void main()
+{
+    uint inputValue = imageLoad(srcImage, ivec2(gl_LocalInvocationID.xy)).x;
+    inputData[gl_LocalInvocationID.x] = inputValue;
+    memoryBarrierShared();
+    barrier();
+
+    if (gl_LocalInvocationID.x == 0u)
+    {
+        sharedVariable = 0u;
+
+        uint addValue = atomicAdd(sharedVariable, inputData[0]);
+        outputData[0] = addValue;
+        uint minValue = atomicMin(sharedVariable, inputData[1]);
+        outputData[1] = minValue;
+        uint maxValue = atomicMax(sharedVariable, inputData[2]);
+        outputData[2] = maxValue;
+        uint andValue = atomicAnd(sharedVariable, inputData[3]);
+        outputData[3] = andValue;
+        uint orValue = atomicOr(sharedVariable, inputData[4]);
+        outputData[4] = orValue;
+        uint xorValue = atomicXor(sharedVariable, inputData[5]);
+        outputData[5] = xorValue;
+        uint exchangeValue = atomicExchange(sharedVariable, inputData[6]);
+        outputData[6] = exchangeValue;
+        uint compSwapValue = atomicCompSwap(sharedVariable, 64u, inputData[7]);
+        outputData[7] = compSwapValue;
+        uint sharedVariable = atomicAdd(sharedVariable, inputData[8]);
+        outputData[8] = sharedVariable;
+
+    }
+    memoryBarrierShared();
+    barrier();
+
+    imageStore(dstImage, ivec2(gl_LocalInvocationID.xy),
+                uvec4(outputData[gl_LocalInvocationID.x]));
+})";
+
+    constexpr std::array<GLuint, 9> kInputData      = {{1, 2, 4, 8, 16, 32, 64, 128, 1}};
+    constexpr std::array<GLuint, 9> kExpectedValues = {{0, 1, 1, 4, 0, 16, 48, 64, 128}};
+    runSharedMemoryTest<GLuint, 9, 1>(kCShader, GL_R32UI, GL_UNSIGNED_INT, kInputData,
+                                      kExpectedValues);
+}
+
+// Verify using atomic functions inside expressions as unsigned int.
+TEST_P(ComputeShaderTest, AtomicFunctionsReturnWithUnsigned)
+{
+    constexpr char kCShader[] =
+        R"(#version 310 es
+layout (local_size_x = 9, local_size_y = 1, local_size_z = 1) in;
+layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
+layout (r32ui, binding = 1) writeonly uniform highp uimage2D dstImage;
+
+shared highp uint sharedVariable;
+
+shared highp uint inputData[9];
+shared highp uint outputData[9];
+
+void main()
+{
+    uint inputValue = imageLoad(srcImage, ivec2(gl_LocalInvocationID.xy)).x;
+    inputData[gl_LocalInvocationID.x] = inputValue;
+    memoryBarrierShared();
+    barrier();
+
+    if (gl_LocalInvocationID.x == 0u)
+    {
+        sharedVariable = 0u;
+
+        outputData[0] = 1u + atomicAdd(sharedVariable, inputData[0]);
+        outputData[1] = 1u + atomicMin(sharedVariable, inputData[1]);
+        outputData[2] = 1u + atomicMax(sharedVariable, inputData[2]);
+        outputData[3] = 1u + atomicAnd(sharedVariable, inputData[3]);
+        outputData[4] = 1u + atomicOr(sharedVariable, inputData[4]);
+        outputData[5] = 1u + atomicXor(sharedVariable, inputData[5]);
+        outputData[6] = 1u + atomicExchange(sharedVariable, inputData[6]);
+        outputData[7] = 1u + atomicCompSwap(sharedVariable, 64u, inputData[7]);
+        outputData[8] = 1u + atomicAdd(sharedVariable, inputData[8]);
+    }
+    memoryBarrierShared();
+    barrier();
+
+    imageStore(dstImage, ivec2(gl_LocalInvocationID.xy),
+                uvec4(outputData[gl_LocalInvocationID.x]));
+})";
+
+    constexpr std::array<GLuint, 9> kInputData      = {{1, 2, 4, 8, 16, 32, 64, 128, 1}};
+    constexpr std::array<GLuint, 9> kExpectedValues = {{1, 2, 2, 5, 1, 17, 49, 65, 129}};
+    runSharedMemoryTest<GLuint, 9, 1>(kCShader, GL_R32UI, GL_UNSIGNED_INT, kInputData,
+                                      kExpectedValues);
+}
+
+// Verify using nested atomic functions in expressions.
+TEST_P(ComputeShaderTest, AtomicFunctionsReturnWithMultipleTypes)
+{
+    constexpr char kCShader[] =
+        R"(#version 310 es
+layout (local_size_x = 4, local_size_y = 1, local_size_z = 1) in;
+layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
+layout (r32ui, binding = 1) writeonly uniform highp uimage2D dstImage;
+
+shared highp uint sharedVariable;
+shared highp int  indexVariable;
+
+shared highp uint inputData[4];
+shared highp uint outputData[4];
+
+void main()
+{
+    uint inputValue = imageLoad(srcImage, ivec2(gl_LocalInvocationID.xy)).x;
+    inputData[gl_LocalInvocationID.x] = inputValue;
+    memoryBarrierShared();
+    barrier();
+
+    if (gl_LocalInvocationID.x == 0u)
+    {
+        sharedVariable = 0u;
+        indexVariable = 2;
+
+        outputData[0] = 1u + atomicAdd(sharedVariable, inputData[atomicAdd(indexVariable, -1)]);
+        outputData[1] = 1u + atomicAdd(sharedVariable, inputData[atomicAdd(indexVariable, -1)]);
+        outputData[2] = 1u + atomicAdd(sharedVariable, inputData[atomicAdd(indexVariable, -1)]);
+        outputData[3] = atomicAdd(sharedVariable, 0u);
+
+    }
+    memoryBarrierShared();
+    barrier();
+
+    imageStore(dstImage, ivec2(gl_LocalInvocationID.xy),
+                uvec4(outputData[gl_LocalInvocationID.x]));
+})";
+
+    constexpr std::array<GLuint, 4> kInputData      = {{1, 2, 3, 0}};
+    constexpr std::array<GLuint, 4> kExpectedValues = {{1, 4, 6, 6}};
+    runSharedMemoryTest<GLuint, 4, 1>(kCShader, GL_R32UI, GL_UNSIGNED_INT, kInputData,
+                                      kExpectedValues);
+}
+
 // Basic uniform buffer functionality.
 TEST_P(ComputeShaderTest, UniformBuffer)
 {

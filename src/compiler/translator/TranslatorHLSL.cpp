@@ -129,7 +129,7 @@ void TranslatorHLSL::translate(TIntermBlock *root,
 
     if (getShaderVersion() >= 310)
     {
-        sh::RewriteAtomicFunctionExpressions(root, &getSymbolTable());
+        sh::RewriteAtomicFunctionExpressions(root, &getSymbolTable(), getShaderVersion());
     }
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),
