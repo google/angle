@@ -3790,4 +3790,125 @@ bool TextureD3D_2DMultisample::isImageComplete(const gl::ImageIndex &index) cons
     return true;
 }
 
+TextureD3D_2DMultisampleArray::TextureD3D_2DMultisampleArray(const gl::TextureState &state,
+                                                             RendererD3D *renderer)
+    : TextureD3DImmutableBase(state, renderer)
+{
+}
+
+TextureD3D_2DMultisampleArray::~TextureD3D_2DMultisampleArray()
+{
+}
+
+gl::Error TextureD3D_2DMultisampleArray::setStorageMultisample(const gl::Context *context,
+                                                               gl::TextureType type,
+                                                               GLsizei samples,
+                                                               GLint internalFormat,
+                                                               const gl::Extents &size,
+                                                               bool fixedSampleLocations)
+{
+    ASSERT(type == gl::TextureType::_2DMultisampleArray);
+
+    mLayerCount = size.depth;
+
+    TexStoragePointer storage(context);
+    storage.reset(mRenderer->createTextureStorage2DMultisampleArray(
+        internalFormat, size.width, size.height, size.depth, static_cast<int>(0), samples,
+        fixedSampleLocations));
+
+    ANGLE_TRY(setCompleteTexStorage(context, storage.get()));
+    storage.release();
+
+    mImmutable = true;
+
+    return gl::NoError();
+}
+
+gl::Error TextureD3D_2DMultisampleArray::setEGLImageTarget(const gl::Context *context,
+                                                           gl::TextureType type,
+                                                           egl::Image *image)
+{
+    UNREACHABLE();
+    return gl::InternalError();
+}
+
+gl::Error TextureD3D_2DMultisampleArray::getRenderTarget(const gl::Context *context,
+                                                         const gl::ImageIndex &index,
+                                                         RenderTargetD3D **outRT)
+{
+    // ensure the underlying texture is created
+    ANGLE_TRY(ensureRenderTarget(context));
+
+    return mTexStorage->getRenderTarget(context, index, outRT);
+}
+
+gl::ImageIndexIterator TextureD3D_2DMultisampleArray::imageIterator() const
+{
+    return gl::ImageIndexIterator::Make2DMultisampleArray(&mLayerCount);
+}
+
+gl::ImageIndex TextureD3D_2DMultisampleArray::getImageIndex(GLint mip, GLint layer) const
+{
+    return gl::ImageIndex::Make2DMultisampleArray(layer);
+}
+
+bool TextureD3D_2DMultisampleArray::isValidIndex(const gl::ImageIndex &index) const
+{
+    return (mTexStorage && index.getType() == gl::TextureType::_2DMultisampleArray &&
+            index.getLevelIndex() == 0);
+}
+
+GLsizei TextureD3D_2DMultisampleArray::getLayerCount(int level) const
+{
+    return mLayerCount;
+}
+
+void TextureD3D_2DMultisampleArray::markAllImagesDirty()
+{
+}
+
+angle::Result TextureD3D_2DMultisampleArray::initializeStorage(const gl::Context *context,
+                                                               bool renderTarget)
+{
+    // initializeStorage should only be called in a situation where the texture already has storage
+    // associated with it (storage is created in setStorageMultisample).
+    ASSERT(mTexStorage);
+    return angle::Result::Continue();
+}
+
+angle::Result TextureD3D_2DMultisampleArray::createCompleteStorage(
+    bool renderTarget,
+    TexStoragePointer *outStorage) const
+{
+    UNREACHABLE();
+    outStorage->reset(mTexStorage);
+    return angle::Result::Continue();
+}
+
+angle::Result TextureD3D_2DMultisampleArray::setCompleteTexStorage(
+    const gl::Context *context,
+    TextureStorage *newCompleteTexStorage)
+{
+    // These textures are immutable, so this should only be ever called once.
+    ASSERT(!mTexStorage);
+    mTexStorage = newCompleteTexStorage;
+    return angle::Result::Continue();
+}
+
+angle::Result TextureD3D_2DMultisampleArray::updateStorage(const gl::Context *context)
+{
+    return angle::Result::Continue();
+}
+
+angle::Result TextureD3D_2DMultisampleArray::initMipmapImages(const gl::Context *context)
+{
+    UNIMPLEMENTED();
+    return angle::Result::Continue();
+}
+
+bool TextureD3D_2DMultisampleArray::isImageComplete(const gl::ImageIndex &index) const
+{
+    return true;
+}
+
 }  // namespace rx

@@ -794,17 +794,64 @@ class TextureD3D_2DMultisample : public TextureD3DImmutableBase
   protected:
     void markAllImagesDirty() override;
 
-  private:
-    angle::Result initializeStorage(const gl::Context *context, bool renderTarget) override;
-    angle::Result createCompleteStorage(bool renderTarget,
-                                        TexStoragePointer *outTexStorage) const override;
     angle::Result setCompleteTexStorage(const gl::Context *context,
                                         TextureStorage *newCompleteTexStorage) override;
 
     angle::Result updateStorage(const gl::Context *context) override;
+
+  private:
+    angle::Result initializeStorage(const gl::Context *context, bool renderTarget) override;
+    angle::Result createCompleteStorage(bool renderTarget,
+                                        TexStoragePointer *outTexStorage) const override;
     angle::Result initMipmapImages(const gl::Context *context) override;
 
     bool isImageComplete(const gl::ImageIndex &index) const override;
+};
+
+class TextureD3D_2DMultisampleArray : public TextureD3DImmutableBase
+{
+  public:
+    TextureD3D_2DMultisampleArray(const gl::TextureState &data, RendererD3D *renderer);
+    ~TextureD3D_2DMultisampleArray() override;
+
+    gl::Error setStorageMultisample(const gl::Context *context,
+                                    gl::TextureType type,
+                                    GLsizei samples,
+                                    GLint internalFormat,
+                                    const gl::Extents &size,
+                                    bool fixedSampleLocations) override;
+
+    gl::Error setEGLImageTarget(const gl::Context *context,
+                                gl::TextureType type,
+                                egl::Image *image) override;
+
+    gl::Error getRenderTarget(const gl::Context *context,
+                              const gl::ImageIndex &index,
+                              RenderTargetD3D **outRT) override;
+
+    gl::ImageIndexIterator imageIterator() const override;
+    gl::ImageIndex getImageIndex(GLint mip, GLint layer) const override;
+    bool isValidIndex(const gl::ImageIndex &index) const override;
+
+    GLsizei getLayerCount(int level) const override;
+
+  protected:
+    void markAllImagesDirty() override;
+
+    angle::Result setCompleteTexStorage(const gl::Context *context,
+                                        TextureStorage *newCompleteTexStorage) override;
+
+    angle::Result updateStorage(const gl::Context *context) override;
+
+  private:
+    angle::Result initializeStorage(const gl::Context *context, bool renderTarget) override;
+    angle::Result createCompleteStorage(bool renderTarget,
+                                        TexStoragePointer *outTexStorage) const override;
+    angle::Result initMipmapImages(const gl::Context *context) override;
+
+    bool isImageComplete(const gl::ImageIndex &index) const override;
+
+    GLsizei mLayerCount;
 };
 }
 

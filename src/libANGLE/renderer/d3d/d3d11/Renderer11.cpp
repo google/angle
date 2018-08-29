@@ -3003,6 +3003,18 @@ TextureStorage *Renderer11::createTextureStorage2DMultisample(GLenum internalfor
                                               fixedSampleLocations);
 }
 
+TextureStorage *Renderer11::createTextureStorage2DMultisampleArray(GLenum internalformat,
+                                                                   GLsizei width,
+                                                                   GLsizei height,
+                                                                   GLsizei depth,
+                                                                   int levels,
+                                                                   int samples,
+                                                                   bool fixedSampleLocations)
+{
+    return new TextureStorage11_2DMultisampleArray(this, internalformat, width, height, depth,
+                                                   levels, samples, fixedSampleLocations);
+}
+
 angle::Result Renderer11::readFromAttachment(const gl::Context *context,
                                              const gl::FramebufferAttachment &srcAttachment,
                                              const gl::Rectangle &sourceArea,
@@ -3495,7 +3507,8 @@ angle::Result Renderer11::resolveMultisampledTexture(const gl::Context *context,
     const d3d11::SharedSRV &sourceSRV = renderTarget->getShaderResourceView(context);
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     sourceSRV.get()->GetDesc(&sourceSRVDesc);
-    ASSERT(sourceSRVDesc.ViewDimension == D3D_SRV_DIMENSION_TEXTURE2DMS);
+    ASSERT(sourceSRVDesc.ViewDimension == D3D_SRV_DIMENSION_TEXTURE2DMS ||
+           sourceSRVDesc.ViewDimension == D3D_SRV_DIMENSION_TEXTURE2DMSARRAY);
 
     if (!mCachedResolveTexture.valid() ||
         mCachedResolveTexture.getExtents().width != renderTarget->getWidth() ||

@@ -44,6 +44,8 @@ GLint TextureTargetToLayer(TextureTarget target)
             return ImageIndex::kEntireLevel;
         case TextureTarget::_2DMultisample:
             return ImageIndex::kEntireLevel;
+        case TextureTarget::_2DMultisampleArray:
+            return ImageIndex::kEntireLevel;
         case TextureTarget::_3D:
             return ImageIndex::kEntireLevel;
         default:
@@ -183,6 +185,11 @@ ImageIndex ImageIndex::Make2DMultisample()
     return ImageIndex(TextureType::_2DMultisample, 0, kEntireLevel, 1);
 }
 
+ImageIndex ImageIndex::Make2DMultisampleArray(GLint layerIndex)
+{
+    return ImageIndex(TextureType::_2DMultisampleArray, 0, layerIndex, 1);
+}
+
 bool ImageIndex::operator<(const ImageIndex &b) const
 {
     return std::tie(mType, mLevelIndex, mLayerIndex, mLayerCount) <
@@ -252,6 +259,13 @@ ImageIndexIterator ImageIndexIterator::Make2DMultisample()
     return ImageIndexIterator(TextureType::_2DMultisample, Range<GLint>(0, 0),
                               Range<GLint>(ImageIndex::kEntireLevel, ImageIndex::kEntireLevel),
                               nullptr);
+}
+
+ImageIndexIterator ImageIndexIterator::Make2DMultisampleArray(const GLsizei *layerCounts)
+{
+    return ImageIndexIterator(TextureType::_2DMultisampleArray, Range<GLint>(0, 0),
+                              Range<GLint>(0, IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS),
+                              layerCounts);
 }
 
 ImageIndexIterator ImageIndexIterator::MakeGeneric(TextureType type,

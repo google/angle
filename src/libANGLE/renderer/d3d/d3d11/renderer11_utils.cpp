@@ -1562,6 +1562,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->syncQuery                 = GetEventQuerySupport(featureLevel);
     extensions->copyTexture               = true;
     extensions->copyCompressedTexture     = true;
+    extensions->textureStorageMultisample2DArray = true;
 
     // D3D11 Feature Level 10_0+ uses SV_IsFrontFace in HLSL to emulate gl_FrontFacing.
     // D3D11 Feature Level 9_3 doesn't support SV_IsFrontFace, and has no equivalent, so can't support gl_FrontFacing.
