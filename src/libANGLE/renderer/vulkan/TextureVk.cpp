@@ -772,8 +772,6 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     ANGLE_TRY(ensureImageInitialized(contextVk));
 
     const angle::Format &angleFormat = getImage().getFormat().textureFormat();
-    const gl::Extents imageSize =
-        mState.getImageDesc(NonCubeTextureTypeToTarget(mState.getType()), sourceLevel).size;
     size_t sourceCopyAllocationSize = sourceArea.width * sourceArea.height * angleFormat.pixelBytes;
 
     vk::CommandBuffer *commandBuffer = nullptr;
@@ -794,8 +792,8 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
 
     VkBufferImageCopy region;
     region.bufferOffset                    = sourceCopyOffset;
-    region.bufferRowLength                 = imageSize.width;
-    region.bufferImageHeight               = imageSize.height;
+    region.bufferRowLength                 = 0;
+    region.bufferImageHeight               = 0;
     region.imageExtent.width               = sourceArea.width;
     region.imageExtent.height              = sourceArea.height;
     region.imageExtent.depth               = 1;
