@@ -256,7 +256,7 @@ void ReplaceGLDepthRangeWithDriverUniform(TIntermBlock *root,
 // Transformations".
 // The equations reduce to an expression:
 //
-//     z_vk = w_gl * (0.5 * z_gl + 0.5)
+//     z_vk = 0.5 * (w_gl + z_gl)
 //
 // where z_vk is the depth output of a Vulkan vertex shader and z_gl is the same for GL.
 void AppendVertexShaderDepthCorrectionToMain(TIntermBlock *root, TSymbolTable *symbolTable)
@@ -276,21 +276,18 @@ void AppendVertexShaderDepthCorrectionToMain(TIntermBlock *root, TSymbolTable *s
     constantValue->setFConst(0.5f);
     TIntermConstantUnion *oneHalf = new TIntermConstantUnion(constantValue, *constantType);
 
-    // Create the expression "gl_Position.z * 0.5 + 0.5"
-    TIntermBinary *halfZ         = new TIntermBinary(TOperator::EOpMul, positionZ, oneHalf);
-    TIntermBinary *halfZPlusHalf = new TIntermBinary(TOperator::EOpAdd, halfZ, oneHalf->deepCopy());
-
     // Create a swizzle to "gl_Position.w"
     TVector<int> swizzleOffsetW;
     swizzleOffsetW.push_back(3);
     TIntermSwizzle *positionW = new TIntermSwizzle(positionRef->deepCopy(), swizzleOffsetW);
 
-    // Create the expression "gl_Position.w * (gl_Position.z * 0.5 + 0.5)"
-    TIntermBinary *vulkanZ = new TIntermBinary(TOperator::EOpMul, positionW, halfZPlusHalf);
+    // Create the expression "(gl_Position.z + gl_Position.w) * 0.5".
+    TIntermBinary *zPlusW = new TIntermBinary(EOpAdd, positionZ->deepCopy(), positionW->deepCopy());
+    TIntermBinary *halfZPlusW = new TIntermBinary(EOpMul, zPlusW, oneHalf->deepCopy());
 
-    // Create the assignment "gl_Position.z = gl_Position.w * (gl_Position.z * 0.5 + 0.5)"
+    // Create the assignment "gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5"
     TIntermTyped *positionZLHS = positionZ->deepCopy();
-    TIntermBinary *assignment  = new TIntermBinary(TOperator::EOpAssign, positionZLHS, vulkanZ);
+    TIntermBinary *assignment  = new TIntermBinary(TOperator::EOpAssign, positionZLHS, halfZPlusW);
 
     // Append the assignment as a statement at the end of the shader.
     RunAtTheEndOfShader(root, assignment, symbolTable);

@@ -219,6 +219,9 @@
 2405 VULKAN ANDROID : dEQP-GLES2.functional.draw.random.42 = SKIP
 2405 VULKAN ANDROID : dEQP-GLES2.functional.draw.random.59 = SKIP
 
+// Fails on Nexus 5x only. TODO(jmadill): Remove suppression when possible. http://anglebug.com/2791
+2791 VULKAN ANDROID : dEQP-GLES2.functional.clipping.* = SKIP
+
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.red_unsigned_byte = FAIL
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.rg_unsigned_byte = FAIL
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.red_unsigned_byte = FAIL
@@ -232,10 +235,16 @@
 // Vulkan failures
 2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
 2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
-2601 VULKAN : dEQP-GLES2.functional.clipping.* = SKIP
+2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_z_clip = SKIP
+2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_z_clip_viewport_center = SKIP
+2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_z_clip_viewport_corner = SKIP
+2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_clip = SKIP
+2598 VULKAN : dEQP-GLES2.functional.clipping.line.long_wide_line_clip = SKIP
+2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_attrib_clip = SKIP
 
 // Vulkan AMD Windows specific failures
 2602 VULKAN WIN AMD : dEQP-GLES2.functional.buffer.write.* = SKIP
+2795 VULKAN WIN AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL
 
 // TODO(fjhenigman): Figure out why these don't work.
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.draw.random.14 = SKIP
