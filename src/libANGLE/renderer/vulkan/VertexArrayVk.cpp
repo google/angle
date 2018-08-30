@@ -156,33 +156,36 @@ void VertexArrayVk::destroy(const gl::Context *context)
 }
 
 angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,
-                                             const gl::DrawCallParams &drawCallParams)
+                                             GLenum indexType,
+                                             size_t indexCount,
+                                             const void *sourcePointer,
+                                             vk::DynamicBuffer *dynamicBuffer)
 {
-    ASSERT(!mState.getElementArrayBuffer().get());
+    ASSERT(!mState.getElementArrayBuffer().get() || indexType == GL_UNSIGNED_BYTE);
 
-    mDynamicIndexData.releaseRetainedBuffers(contextVk->getRenderer());
+    dynamicBuffer->releaseRetainedBuffers(contextVk->getRenderer());
 
-    const GLsizei amount = sizeof(GLushort) * drawCallParams.indexCount();
-    GLubyte *dst         = nullptr;
+    const size_t amount = sizeof(GLushort) * indexCount;
+    GLubyte *dst        = nullptr;
 
-    ANGLE_TRY(mDynamicIndexData.allocate(contextVk, amount, &dst, &mCurrentElementArrayBufferHandle,
-                                         &mCurrentElementArrayBufferOffset, nullptr));
-    if (drawCallParams.type() == GL_UNSIGNED_BYTE)
+    ANGLE_TRY(dynamicBuffer->allocate(contextVk, amount, &dst, &mCurrentElementArrayBufferHandle,
+                                      &mCurrentElementArrayBufferOffset, nullptr));
+    if (indexType == GL_UNSIGNED_BYTE)
     {
         // Unsigned bytes don't have direct support in Vulkan so we have to expand the
         // memory to a GLushort.
-        const GLubyte *in     = static_cast<const GLubyte *>(drawCallParams.indices());
+        const GLubyte *in     = static_cast<const GLubyte *>(sourcePointer);
         GLushort *expandedDst = reinterpret_cast<GLushort *>(dst);
-        for (GLsizei index = 0; index < drawCallParams.indexCount(); index++)
+        for (size_t index = 0; index < indexCount; index++)
         {
             expandedDst[index] = static_cast<GLushort>(in[index]);
         }
     }
     else
     {
-        memcpy(dst, drawCallParams.indices(), amount);
+        memcpy(dst, sourcePointer, amount);
     }
-    ANGLE_TRY(mDynamicIndexData.flush(contextVk));
+    ANGLE_TRY(dynamicBuffer->flush(contextVk));
     return angle::Result::Continue();
 }
 
@@ -670,16 +673,17 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
 
     if (!glBuffer && !isLineLoop)
     {
-        ANGLE_TRY(drawCallParams.ensureIndexRangeResolved(context));
-        ANGLE_TRY(streamIndexData(contextVk, drawCallParams));
+        ANGLE_TRY(streamIndexData(contextVk, drawCallParams.type(), drawCallParams.indexCount(),
+                                  drawCallParams.indices(), &mDynamicIndexData));
         commandBuffer->bindIndexBuffer(mCurrentElementArrayBufferHandle,
                                        mCurrentElementArrayBufferOffset,
                                        gl_vk::GetIndexType(drawCallParams.type()));
     }
     else if (mIndexBufferDirty || newCommandBuffer || offset != mLastIndexBufferOffset)
     {
-        if (drawCallParams.type() == GL_UNSIGNED_BYTE &&
-            drawCallParams.mode() != gl::PrimitiveMode::LineLoop)
+        mLastIndexBufferOffset = offset;
+
+        if (drawCallParams.type() == GL_UNSIGNED_BYTE && !isLineLoop)
         {
             // Unsigned bytes don't have direct support in Vulkan so we have to expand the
             // memory to a GLushort.
@@ -691,42 +695,20 @@ gl::Error VertexArrayVk::onIndexedDraw(const gl::Context *context,
             intptr_t offsetIntoSrcData = reinterpret_cast<intptr_t>(drawCallParams.indices());
             srcData += offsetIntoSrcData;
 
-            // Allocate a new buffer that's double the size of the buffer provided by the user to
-            // go from unsigned byte to unsigned short.
-            uint8_t *allocatedData      = nullptr;
-            bool newBufferAllocated     = false;
-            ANGLE_TRY(mTranslatedByteIndexData.allocate(
-                contextVk, static_cast<size_t>(bufferVk->getSize()) * 2, &allocatedData,
-                &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset,
-                &newBufferAllocated));
+            ANGLE_TRY(streamIndexData(contextVk, drawCallParams.type(),
+                                      static_cast<size_t>(bufferVk->getSize()) - offsetIntoSrcData,
+                                      srcData, &mTranslatedByteIndexData));
 
-            // Expand the source into the destination
-            ASSERT(!context->getGLState().isPrimitiveRestartEnabled());
-            uint16_t *expandedDst = reinterpret_cast<uint16_t *>(allocatedData);
-            for (GLsizei index = 0; index < bufferVk->getSize() - offsetIntoSrcData; index++)
-            {
-                expandedDst[index] = static_cast<GLushort>(srcData[index]);
-            }
-
-            // Make sure our writes are available.
-            ANGLE_TRY(mTranslatedByteIndexData.flush(contextVk));
-            GLboolean result = false;
-            ANGLE_TRY(bufferVk->unmap(context, &result));
+            ANGLE_TRY(bufferVk->unmapImpl(contextVk));
 
             // We do not add the offset from the drawCallParams here because we've already copied
             // the source starting at the offset requested.
-            commandBuffer->bindIndexBuffer(mCurrentElementArrayBufferHandle,
-                                           mCurrentElementArrayBufferOffset,
-                                           gl_vk::GetIndexType(drawCallParams.type()));
-        }
-        else
-        {
-            commandBuffer->bindIndexBuffer(mCurrentElementArrayBufferHandle,
-                                           mCurrentElementArrayBufferOffset + offset,
-                                           gl_vk::GetIndexType(drawCallParams.type()));
+            offset = 0;
         }
 
-        mLastIndexBufferOffset = offset;
+        commandBuffer->bindIndexBuffer(mCurrentElementArrayBufferHandle,
+                                       mCurrentElementArrayBufferOffset + offset,
+                                       gl_vk::GetIndexType(drawCallParams.type()));
 
         const gl::State &glState                  = context->getGLState();
         vk::CommandGraphResource *drawFramebuffer = vk::GetImpl(glState.getDrawFramebuffer());
