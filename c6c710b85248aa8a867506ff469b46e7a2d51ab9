@@ -465,6 +465,30 @@
     },
     {
       "key": {
+        "uuid": "80a02363_661ee666",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T22:23:43Z",
+      "side": 1,
+      "message": "That\u0027s fair. I think our style guide is out of date. :) But you can leave these to avoid churn.",
+      "parentUuid": "3902f63c_002cde1d",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 18
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0aad904b_db0b384b",
         "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
         "patchSetId": 9

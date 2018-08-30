@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4002d97_f437b2f3",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T22:23:43Z",
+      "side": 1,
+      "message": "can you try to remove these if possible? Sorry, couldn\u0027t find where they were used.",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 5
+      },
+      "revId": "9f01ba1e678bc4d0d85513bd19d42419d5c100cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40b652bb_3364da13",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T22:23:43Z",
+      "side": 1,
+      "message": "ah, hm. I think we should try to use a better solution here. I think this reinforces my belief we shouldn\u0027t be storing a blob cache in ANGLE.",
+      "range": {
+        "startLine": 732,
+        "startChar": 19,
+        "endLine": 732,
+        "endChar": 26
+      },
+      "revId": "9f01ba1e678bc4d0d85513bd19d42419d5c100cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6effe823_68d12c10",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T22:23:43Z",
+      "side": 1,
+      "message": "tiny re-nit: you can prefix constants with kVertexShaderSrc. might have missed it in the first nit.",
+      "range": {
+        "startLine": 125,
+        "startChar": 19,
+        "endLine": 125,
+        "endChar": 34
+      },
+      "revId": "9f01ba1e678bc4d0d85513bd19d42419d5c100cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
