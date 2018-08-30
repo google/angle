@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "91886ba7_cfdd2403",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-08-30T18:48:08Z",
+      "side": 1,
+      "message": "OES_texture_storage_multisample_2d_array is a ES 3.1 extension that assumes that the functionality of this extension is supported. On ES 3.0 it wouldn\u0027t make sense to just expose OES_texture_storage_multisample_2d_array without exposing this extension as well. I don\u0027t think this extension needs to refer to OES_texture_storage_multisample_2d_array though, unless you think this spec should cover the robustness requirements for both.",
+      "parentUuid": "d950bcbc_76f8c677",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 18
+      },
+      "revId": "8e3c83a139a0014b4c1295872874791c8684d81b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e41734a5_60b82f1d",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 8
@@ -82,6 +106,30 @@
       "writtenOn": "2018-08-30T18:26:28Z",
       "side": 1,
       "message": "are these all pre-existing enums? Let\u0027s make sure we reserve any new enums needed and mark it as such in the internal angle doc.",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 96,
+        "endChar": 36
+      },
+      "revId": "8e3c83a139a0014b4c1295872874791c8684d81b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "575d3c87_513a43ff",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-08-30T18:48:08Z",
+      "side": 1,
+      "message": "I think these are all just aliases of pre-existing enums from ES 3.1.",
+      "parentUuid": "2eeb5038_9c1606e1",
       "range": {
         "startLine": 96,
         "startChar": 8,
