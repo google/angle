@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "b86389f0_4acf9526",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-30T21:56:13Z",
+      "side": 1,
+      "message": "Yes the helper would work as well. `context` could be nullptr though, at least for now. That happens in `putBinary` to avoid calling back into the application. That function would be removed once chrome is updated.",
+      "parentUuid": "9d19385f_0da08f0a",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 50
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "765ebd74_05429880",
         "filename": "src/libANGLE/BlobCache.cpp",
         "patchSetId": 9
@@ -151,6 +175,30 @@
       "writtenOn": "2018-08-30T21:00:09Z",
       "side": 1,
       "message": "I\u0027d probably ERR or WARN here too.",
+      "range": {
+        "startLine": 101,
+        "startChar": 12,
+        "endLine": 101,
+        "endChar": 19
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "745e98a6_d8121904",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-30T21:56:13Z",
+      "side": 1,
+      "message": "This is not actually an error if the cache is accessed by multiple threads. I\u0027ll add a WARN though as we don\u0027t actually have such users yet, and it should help catch issues instead.",
+      "parentUuid": "6819c276_af42e482",
       "range": {
         "startLine": 101,
         "startChar": 12,
@@ -329,6 +377,24 @@
     },
     {
       "key": {
+        "uuid": "d071aecb_d10a9dba",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-30T21:56:13Z",
+      "side": 1,
+      "message": "Only way would be to return the associated tag on `get`. I wouldn\u0027t worry about that right now honestly, as that needs a change with Chrome as well. That is, there is no Disk tag anymore, and the histograms can only track hit and miss (which yes, can be moved to this file).\n\nEssentially there is some cleanup to be done here after the Chrome change.",
+      "parentUuid": "07243261_29f1cb7c",
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dd7cef77_7b9628fa",
         "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
         "patchSetId": 9
@@ -363,6 +429,30 @@
       "writtenOn": "2018-08-30T21:00:09Z",
       "side": 1,
       "message": "tiny nit: for strongly typed enums you can use CameCaseStyle instead of UPPER_CASE_UNDERSCORE_STYLE",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 18
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3902f63c_002cde1d",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-30T21:56:13Z",
+      "side": 1,
+      "message": "From the style guide you sent me:\n\nEnum Names - use class enums, and the values should be uppercase with underscores.",
+      "parentUuid": "23987763_872a7acd",
       "range": {
         "startLine": 23,
         "startChar": 0,
@@ -432,6 +522,30 @@
       "writtenOn": "2018-08-30T21:00:09Z",
       "side": 1,
       "message": "I think there\u0027s a bug in ANGLE where do don\u0027t reset the program cache on terminate... I found this many moons ago. Forgot to fix it. Might affect this.",
+      "range": {
+        "startLine": 94,
+        "startChar": 12,
+        "endLine": 94,
+        "endChar": 38
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf69b08e_84dc54f6",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-30T21:56:13Z",
+      "side": 1,
+      "message": "There\u0027s a `mMemoryProgramCache.clear();` in `Display::terminate()`, so maybe that\u0027s already fixed?",
+      "parentUuid": "ffafc31c_179f4da7",
       "range": {
         "startLine": 94,
         "startChar": 12,
@@ -559,6 +673,24 @@
       "side": 1,
       "message": "Do you plan on implementing this?",
       "parentUuid": "13f7a99e_27cf2d31",
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aaf1824a_9072fc52",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-30T21:56:13Z",
+      "side": 1,
+      "message": "It\u0027s implemented. Just my laptop doesn\u0027t have program binary support, so it doesn\u0027t go through the if. The test machines seem to all have passed this, so the test should be good.",
+      "parentUuid": "b6b291da_cae55d91",
       "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
