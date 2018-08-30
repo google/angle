@@ -1602,13 +1602,62 @@ angle::Result TextureStorage11_External::getSwizzleRenderTarget(
     return angle::Result::Stop();
 }
 
+TextureStorage11ImmutableBase::TextureStorage11ImmutableBase(Renderer11 *renderer,
+                                                             UINT bindFlags,
+                                                             UINT miscFlags,
+                                                             GLenum internalFormat)
+    : TextureStorage11(renderer, bindFlags, miscFlags, internalFormat)
+{
+}
+
+void TextureStorage11ImmutableBase::associateImage(Image11 *, const gl::ImageIndex &)
+{
+}
+
+void TextureStorage11ImmutableBase::disassociateImage(const gl::ImageIndex &, Image11 *)
+{
+}
+
+void TextureStorage11ImmutableBase::verifyAssociatedImageValid(const gl::ImageIndex &, Image11 *)
+{
+}
+
+angle::Result TextureStorage11ImmutableBase::releaseAssociatedImage(const gl::Context *context,
+                                                                    const gl::ImageIndex &,
+                                                                    Image11 *)
+{
+    return angle::Result::Continue();
+}
+
+angle::Result TextureStorage11ImmutableBase::createSRVForImage(const gl::Context *context,
+                                                               int level,
+                                                               DXGI_FORMAT format,
+                                                               const TextureHelper11 &texture,
+                                                               d3d11::SharedSRV *outSRV)
+{
+    UNREACHABLE();
+    context->handleError(gl::InternalError() << "createSRVForImage is unimplemented.");
+    return angle::Result::Stop();
+}
+
+angle::Result TextureStorage11ImmutableBase::createUAVForImage(const gl::Context *context,
+                                                               int level,
+                                                               DXGI_FORMAT format,
+                                                               const TextureHelper11 &texture,
+                                                               d3d11::SharedUAV *outUAV)
+{
+    UNREACHABLE();
+    context->handleError(gl::InternalError() << "createUAVForImage is unimplemented.");
+    return angle::Result::Stop();
+}
+
 TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer,
                                                      EGLImageD3D *eglImage,
                                                      RenderTarget11 *renderTarget11)
-    : TextureStorage11(renderer,
-                       D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
-                       0,
-                       renderTarget11->getInternalFormat()),
+    : TextureStorage11ImmutableBase(renderer,
+                                    D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,
+                                    0,
+                                    renderTarget11->getInternalFormat()),
       mImage(eglImage),
       mCurrentRenderTarget(0),
       mSwizzleTexture(),
@@ -1684,25 +1733,6 @@ angle::Result TextureStorage11_EGLImage::copyToStorage(const gl::Context *contex
 
     dest11->markDirty();
 
-    return angle::Result::Continue();
-}
-
-void TextureStorage11_EGLImage::associateImage(Image11 *, const gl::ImageIndex &)
-{
-}
-
-void TextureStorage11_EGLImage::disassociateImage(const gl::ImageIndex &, Image11 *)
-{
-}
-
-void TextureStorage11_EGLImage::verifyAssociatedImageValid(const gl::ImageIndex &, Image11 *)
-{
-}
-
-angle::Result TextureStorage11_EGLImage::releaseAssociatedImage(const gl::Context *context,
-                                                                const gl::ImageIndex &,
-                                                                Image11 *)
-{
     return angle::Result::Continue();
 }
 
@@ -1822,28 +1852,6 @@ angle::Result TextureStorage11_EGLImage::createSRVForSampler(const gl::Context *
     }
 
     return angle::Result::Continue();
-}
-
-angle::Result TextureStorage11_EGLImage::createSRVForImage(const gl::Context *context,
-                                                           int level,
-                                                           DXGI_FORMAT format,
-                                                           const TextureHelper11 &texture,
-                                                           d3d11::SharedSRV *outSRV)
-{
-    UNREACHABLE();
-    context->handleError(gl::InternalError());
-    return angle::Result::Stop();
-}
-
-angle::Result TextureStorage11_EGLImage::createUAVForImage(const gl::Context *context,
-                                                           int level,
-                                                           DXGI_FORMAT format,
-                                                           const TextureHelper11 &texture,
-                                                           d3d11::SharedUAV *outUAV)
-{
-    UNREACHABLE();
-    context->handleError(gl::InternalError());
-    return angle::Result::Stop();
 }
 
 angle::Result TextureStorage11_EGLImage::getImageRenderTarget(const gl::Context *context,
@@ -3263,7 +3271,7 @@ TextureStorage11_2DMultisample::TextureStorage11_2DMultisample(Renderer11 *rende
                                                                int levels,
                                                                int samples,
                                                                bool fixedSampleLocations)
-    : TextureStorage11(
+    : TextureStorage11ImmutableBase(
           renderer,
           GetTextureBindFlags(internalformat, renderer->getRenderer11DeviceCaps(), true),
           GetTextureMiscFlags(internalformat, renderer->getRenderer11DeviceCaps(), true, levels),
@@ -3271,8 +3279,10 @@ TextureStorage11_2DMultisample::TextureStorage11_2DMultisample(Renderer11 *rende
       mTexture(),
       mRenderTarget(nullptr)
 {
-    // adjust size if needed for compressed textures
-    d3d11::MakeValidSize(false, mFormatInfo.texFormat, &width, &height, &mTopLevel);
+    // There are no multisampled compressed formats, so there's no need to adjust texture size
+    // according to block size.
+    ASSERT(d3d11::GetDXGIFormatSizeInfo(mFormatInfo.texFormat).blockWidth <= 1);
+    ASSERT(d3d11::GetDXGIFormatSizeInfo(mFormatInfo.texFormat).blockHeight <= 1);
 
     mMipLevels            = 1;
     mTextureWidth         = width;
@@ -3297,27 +3307,6 @@ angle::Result TextureStorage11_2DMultisample::copyToStorage(const gl::Context *c
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
     return angle::Result::Stop();
-}
-
-void TextureStorage11_2DMultisample::associateImage(Image11 *image, const gl::ImageIndex &index)
-{
-}
-
-void TextureStorage11_2DMultisample::verifyAssociatedImageValid(const gl::ImageIndex &index,
-                                                                Image11 *expectedImage)
-{
-}
-
-void TextureStorage11_2DMultisample::disassociateImage(const gl::ImageIndex &index,
-                                                       Image11 *expectedImage)
-{
-}
-
-angle::Result TextureStorage11_2DMultisample::releaseAssociatedImage(const gl::Context *context,
-                                                                     const gl::ImageIndex &index,
-                                                                     Image11 *incomingImage)
-{
-    return angle::Result::Continue();
 }
 
 angle::Result TextureStorage11_2DMultisample::getResource(const gl::Context *context,
@@ -3444,28 +3433,6 @@ angle::Result TextureStorage11_2DMultisample::createSRVForSampler(const gl::Cont
         mRenderer->allocateResource(GetImplAs<Context11>(context), srvDesc, texture.get(), outSRV));
     outSRV->setDebugName("TexStorage2DMS.SRV");
     return angle::Result::Continue();
-}
-
-angle::Result TextureStorage11_2DMultisample::createSRVForImage(const gl::Context *context,
-                                                                int level,
-                                                                DXGI_FORMAT format,
-                                                                const TextureHelper11 &texture,
-                                                                d3d11::SharedSRV *outSRV)
-{
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "createSRVForImage is unimplemented.");
-    return angle::Result::Stop();
-}
-
-angle::Result TextureStorage11_2DMultisample::createUAVForImage(const gl::Context *context,
-                                                                int level,
-                                                                DXGI_FORMAT format,
-                                                                const TextureHelper11 &texture,
-                                                                d3d11::SharedUAV *outUAV)
-{
-    UNREACHABLE();
-    context->handleError(gl::InternalError() << "createUAVForImage is unimplemented.");
-    return angle::Result::Stop();
 }
 
 angle::Result TextureStorage11_2DMultisample::getSwizzleTexture(const gl::Context *context,
