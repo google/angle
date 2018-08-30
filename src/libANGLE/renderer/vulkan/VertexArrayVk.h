@@ -82,10 +82,6 @@ class VertexArrayVk : public VertexArrayImpl
     void updateElementArrayBufferReadDependency(vk::CommandGraphResource *drawFramebuffer,
                                                 Serial serial);
 
-    angle::Result streamVertexData(ContextVk *contextVk,
-                                   const gl::AttributesMask &attribsToStream,
-                                   const gl::DrawCallParams &drawCallParams);
-
     angle::Result streamIndexData(ContextVk *contextVk, const gl::DrawCallParams &drawCallParams);
     angle::Result convertVertexBuffer(ContextVk *contextVk,
                                       BufferVk *srcBuffer,
