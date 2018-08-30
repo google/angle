@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f89d7d30_05d38f8e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T23:58:35Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d010e470_6238ca9a",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 11
+      },
+      "revId": "6a48e3479994cc045dbf5a1f45f7302afbb17369",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1bab3a0d_cae3cbfd",
         "filename": "cr-buildbucket.cfg",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "6a48e3479994cc045dbf5a1f45f7302afbb17369",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c835ce7_f39aab95",
+        "filename": "cr-buildbucket.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T23:58:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bab3a0d_cae3cbfd",
+      "range": {
+        "startLine": 99,
+        "startChar": 8,
+        "endLine": 99,
+        "endChar": 23
+      },
+      "revId": "6a48e3479994cc045dbf5a1f45f7302afbb17369",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
