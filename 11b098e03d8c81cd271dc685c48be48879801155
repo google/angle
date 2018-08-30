@@ -93,6 +93,30 @@
       "revId": "11b098e03d8c81cd271dc685c48be48879801155",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "362224d7_64e31acb",
+        "filename": "extensions/ANGLE_texture_multisample_array.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-30T16:49:38Z",
+      "side": 1,
+      "message": "That\u0027s perfect, thanks.  It\u0027s usually my preference to use the standard extensions so we can have more users than just people who know that the specific ANGLE extension exists.",
+      "parentUuid": "03e7b3b7_570b677b",
+      "range": {
+        "startLine": 12,
+        "startChar": 38,
+        "endLine": 12,
+        "endChar": 78
+      },
+      "revId": "11b098e03d8c81cd271dc685c48be48879801155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
