@@ -3,7 +3,7 @@
 # found in the LICENSE file.
 
 # leading underscore makes this a local variable
-_deqp_path = "third_party/deqp/src"
+_deqp_path = "../../third_party/deqp/src"
 
 deqp_include_dirs = [
   "$_deqp_path/executor",
@@ -992,8 +992,8 @@ deqp_libtester_sources = [
 
   # TODO(jmadill): Remove override when upstreamed. http://anglebug.com/2564
   #"$_deqp_path/framework/egl/egluNativeDisplay.cpp",
-  "src/tests/deqp_support/egluNativeDisplay_override.cpp",
-  "src/tests/deqp_support/egluNativeDisplay_override.hpp",
+  "deqp_support/egluNativeDisplay_override.cpp",
+  "deqp_support/egluNativeDisplay_override.hpp",
   "$_deqp_path/framework/egl/egluNativePixmap.cpp",
   "$_deqp_path/framework/egl/egluNativeWindow.cpp",
   "$_deqp_path/framework/egl/egluPlatform.cpp",
@@ -1003,7 +1003,7 @@ deqp_libtester_sources = [
 
   # TODO(jmadill): Remove override when upstreamed. http://anglebug.com/2564
   #"$_deqp_path/framework/egl/egluUtil.cpp",
-  "src/tests/deqp_support/egluUtil_override.cpp",
+  "deqp_support/egluUtil_override.cpp",
   "$_deqp_path/framework/egl/wrapper/eglwDefs.cpp",
   "$_deqp_path/framework/egl/wrapper/eglwFunctions.cpp",
   "$_deqp_path/framework/egl/wrapper/eglwLibrary.cpp",
@@ -1119,12 +1119,12 @@ deqp_libtester_sources = [
   "$_deqp_path/modules/glshared/glsTextureTestUtil.cpp",
   "$_deqp_path/modules/glshared/glsUniformBlockCase.cpp",
   "$_deqp_path/modules/glshared/glsVertexArrayTests.cpp",
-  "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
-  "src/tests/deqp_support/tcuANGLENativeDisplayFactory.h",
+  "deqp_support/tcuANGLENativeDisplayFactory.cpp",
+  "deqp_support/tcuANGLENativeDisplayFactory.h",
 
   # TODO(jmadill): integrate with dEQP
-  "src/tests/deqp_support/tcuRandomOrderExecutor.cpp",
-  "src/tests/deqp_support/tcuRandomOrderExecutor.h",
+  "deqp_support/tcuRandomOrderExecutor.cpp",
+  "deqp_support/tcuRandomOrderExecutor.h",
 ]
 deqp_libtester_sources_win = [
   "$_deqp_path/framework/delibs/dethread/win32/deMutexWin32.c",
