@@ -119,6 +119,9 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
       mVertexBuffersDirty(false),
       mIndexBufferDirty(false),
       mDescriptorSetsDirty(false),
+      mVertexArray(nullptr),
+      mDrawFramebuffer(nullptr),
+      mProgram(nullptr),
       mLastIndexBufferOffset(0),
       mCurrentDrawElementsType(GL_NONE),
       mClearColorMask(kAllColorChannelsMask),
@@ -215,28 +218,24 @@ angle::Result ContextVk::initPipeline(const gl::DrawCallParams &drawCallParams)
 {
     ASSERT(!mCurrentPipeline);
 
-    const gl::State &state       = mState.getState();
-    VertexArrayVk *vertexArrayVk = vk::GetImpl(state.getVertexArray());
-    FramebufferVk *framebufferVk = vk::GetImpl(state.getDrawFramebuffer());
-    ProgramVk *programVk         = vk::GetImpl(state.getProgram());
     const gl::AttributesMask activeAttribLocationsMask =
-        state.getProgram()->getActiveAttribLocationsMask();
+        mProgram->getState().getActiveAttribLocationsMask();
 
     // Ensure the topology of the pipeline description is updated.
     mPipelineDesc->updateTopology(mCurrentDrawMode);
 
     // Copy over the latest attrib and binding descriptions.
-    vertexArrayVk->getPackedInputDescriptions(mPipelineDesc.get());
+    mVertexArray->getPackedInputDescriptions(mPipelineDesc.get());
 
     // Ensure that the RenderPass description is updated.
-    mPipelineDesc->updateRenderPassDesc(framebufferVk->getRenderPassDesc());
+    mPipelineDesc->updateRenderPassDesc(mDrawFramebuffer->getRenderPassDesc());
 
     // Trigger draw call shader patching and fill out the pipeline desc.
     const vk::ShaderAndSerial *vertexShaderAndSerial   = nullptr;
     const vk::ShaderAndSerial *fragmentShaderAndSerial = nullptr;
     const vk::PipelineLayout *pipelineLayout           = nullptr;
-    ANGLE_TRY(programVk->initShaders(this, drawCallParams, &vertexShaderAndSerial,
-                                     &fragmentShaderAndSerial, &pipelineLayout));
+    ANGLE_TRY(mProgram->initShaders(this, drawCallParams, &vertexShaderAndSerial,
+                                    &fragmentShaderAndSerial, &pipelineLayout));
 
     mPipelineDesc->updateShaders(vertexShaderAndSerial->getSerial(),
                                  fragmentShaderAndSerial->getSerial());
@@ -261,12 +260,9 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
 
     const gl::State &state       = mState.getState();
     const gl::Program *programGL = state.getProgram();
-    ProgramVk *programVk         = vk::GetImpl(programGL);
-    FramebufferVk *framebufferVk = vk::GetImpl(state.getDrawFramebuffer());
-    VertexArrayVk *vertexArrayVk = vk::GetImpl(state.getVertexArray());
 
     vk::RecordingMode mode;
-    ANGLE_TRY(framebufferVk->getCommandBufferForDraw(this, commandBufferOut, &mode));
+    ANGLE_TRY(mDrawFramebuffer->getCommandBufferForDraw(this, commandBufferOut, &mode));
 
     // Set any dirty bits that depend on draw call parameters or other objects.
     if (mode == vk::RecordingMode::Start)
@@ -280,13 +276,13 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
 
     if (context->getStateCache().hasAnyActiveClientAttrib())
     {
-        ANGLE_TRY(vertexArrayVk->updateClientAttribs(context, drawCallParams));
+        ANGLE_TRY(mVertexArray->updateClientAttribs(context, drawCallParams));
         mVertexBuffersDirty = true;
     }
 
-    if (programVk->dirtyUniforms())
+    if (mProgram->dirtyUniforms())
     {
-        ANGLE_TRY(programVk->updateUniforms(this));
+        ANGLE_TRY(mProgram->updateUniforms(this));
         mDescriptorSetsDirty = true;
     }
 
@@ -324,12 +320,12 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         {
             TextureVk *textureVk = mActiveTextures[textureIndex];
             ANGLE_TRY(textureVk->ensureImageInitialized(this));
-            textureVk->addReadDependency(framebufferVk);
+            textureVk->addReadDependency(mDrawFramebuffer);
         }
 
-        if (programVk->hasTextures())
+        if (mProgram->hasTextures())
         {
-            ANGLE_TRY(programVk->updateTexturesDescriptorSet(this));
+            ANGLE_TRY(mProgram->updateTexturesDescriptorSet(this));
         }
 
         mDescriptorSetsDirty = true;
@@ -338,11 +334,11 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
 
     if (mDescriptorSetsDirty)
     {
-        ANGLE_TRY(programVk->updateDescriptorSets(this, drawCallParams, *commandBufferOut));
+        ANGLE_TRY(mProgram->updateDescriptorSets(this, drawCallParams, *commandBufferOut));
 
         // Bind the graphics descriptor sets.
         (*commandBufferOut)
-            ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, programVk->getPipelineLayout(),
+            ->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, mProgram->getPipelineLayout(),
                                  kDriverUniformsDescriptorSetIndex, 1,
                                  &mDriverUniformsDescriptorSet, 0, nullptr);
         mDescriptorSetsDirty = false;
@@ -353,15 +349,15 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     {
         const gl::AttributesMask &programAttribsMask = programGL->getActiveAttribLocationsMask();
         BindNonNullVertexBufferRanges(*commandBufferOut, programAttribsMask, maxAttrib,
-                                      vertexArrayVk->getCurrentArrayBufferHandles(),
-                                      vertexArrayVk->getCurrentArrayBufferOffsets());
+                                      mVertexArray->getCurrentArrayBufferHandles(),
+                                      mVertexArray->getCurrentArrayBufferOffsets());
 
-        const auto &arrayBufferResources = vertexArrayVk->getCurrentArrayBufferResources();
+        const auto &arrayBufferResources = mVertexArray->getCurrentArrayBufferResources();
 
         for (size_t attribIndex : context->getStateCache().getActiveBufferedAttribsMask())
         {
             if (arrayBufferResources[attribIndex])
-                arrayBufferResources[attribIndex]->addReadDependency(framebufferVk);
+                arrayBufferResources[attribIndex]->addReadDependency(mDrawFramebuffer);
         }
 
         mVertexBuffersDirty = false;
@@ -370,15 +366,15 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     if (useIndexBuffer && mIndexBufferDirty)
     {
         (*commandBufferOut)
-            ->bindIndexBuffer(vertexArrayVk->getCurrentElementArrayBufferHandle(),
-                              vertexArrayVk->getCurrentElementArrayBufferOffset(),
+            ->bindIndexBuffer(mVertexArray->getCurrentElementArrayBufferHandle(),
+                              mVertexArray->getCurrentElementArrayBufferOffset(),
                               gl_vk::GetIndexType(mCurrentDrawElementsType));
 
         vk::CommandGraphResource *elementArrayBufferResource =
-            vertexArrayVk->getCurrentElementArrayBufferResource();
+            mVertexArray->getCurrentElementArrayBufferResource();
         if (elementArrayBufferResource)
         {
-            elementArrayBufferResource->addReadDependency(framebufferVk);
+            elementArrayBufferResource->addReadDependency(mDrawFramebuffer);
         }
 
         mIndexBufferDirty = false;
@@ -391,19 +387,17 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
                                           const gl::DrawCallParams &drawCallParams,
                                           vk::CommandBuffer **commandBufferOut)
 {
-    VertexArrayVk *vertexArrayVk = vk::GetImpl(mState.getState().getVertexArray());
-
     if (drawCallParams.type() != mCurrentDrawElementsType)
     {
         mIndexBufferDirty        = true;
         mCurrentDrawElementsType = drawCallParams.type();
     }
 
-    const gl::Buffer *elementArrayBuffer = vertexArrayVk->getState().getElementArrayBuffer().get();
+    const gl::Buffer *elementArrayBuffer = mVertexArray->getState().getElementArrayBuffer().get();
     if (!elementArrayBuffer)
     {
         mIndexBufferDirty = true;
-        ANGLE_TRY(vertexArrayVk->updateIndexTranslation(this, drawCallParams));
+        ANGLE_TRY(mVertexArray->updateIndexTranslation(this, drawCallParams));
     }
     else
     {
@@ -411,12 +405,12 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
         {
             mIndexBufferDirty      = true;
             mLastIndexBufferOffset = drawCallParams.indices();
-            vertexArrayVk->updateCurrentElementArrayBufferOffset(mLastIndexBufferOffset);
+            mVertexArray->updateCurrentElementArrayBufferOffset(mLastIndexBufferOffset);
         }
 
         if (drawCallParams.type() == GL_UNSIGNED_BYTE && mIndexBufferDirty)
         {
-            ANGLE_TRY(vertexArrayVk->updateIndexTranslation(this, drawCallParams));
+            ANGLE_TRY(mVertexArray->updateIndexTranslation(this, drawCallParams));
         }
     }
 
@@ -427,8 +421,7 @@ angle::Result ContextVk::setupLineLoopDraw(const gl::Context *context,
                                            const gl::DrawCallParams &drawCallParams,
                                            vk::CommandBuffer **commandBufferOut)
 {
-    VertexArrayVk *vertexArrayVk = vk::GetImpl(mState.getState().getVertexArray());
-    ANGLE_TRY(vertexArrayVk->handleLineLoop(this, drawCallParams));
+    ANGLE_TRY(mVertexArray->handleLineLoop(this, drawCallParams));
     mIndexBufferDirty = true;
     mCurrentDrawElementsType =
         drawCallParams.isDrawElements() ? drawCallParams.type() : GL_UNSIGNED_INT;
@@ -770,10 +763,10 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
+                mDrawFramebuffer = vk::GetImpl(glState.getDrawFramebuffer());
                 ANGLE_TRY(updateDriverUniforms(glState));
                 updateFlipViewportDrawFramebuffer(glState);
-                FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
-                mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
+                mPipelineDesc->updateViewport(mDrawFramebuffer, glState.getViewport(),
                                               glState.getNearPlane(), glState.getFarPlane(),
                                               isViewportFlipEnabledForDrawFBO());
                 updateColorMask(glState.getBlendState());
@@ -795,6 +788,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
+                mVertexArray = vk::GetImpl(glState.getVertexArray());
                 invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
                 break;
             }
@@ -803,6 +797,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING:
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
+                mProgram = vk::GetImpl(glState.getProgram());
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
@@ -1207,9 +1202,8 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
 
     ANGLE_TRY(defaultBuffer.flush(this));
 
-    VertexArrayVk *vertexArrayVk = vk::GetImpl(glState.getVertexArray());
-    vertexArrayVk->updateDefaultAttrib(mRenderer, attribIndex, bufferHandle,
-                                       static_cast<uint32_t>(offset));
+    mVertexArray->updateDefaultAttrib(mRenderer, attribIndex, bufferHandle,
+                                      static_cast<uint32_t>(offset));
     return angle::Result::Continue();
 }
 }  // namespace rx

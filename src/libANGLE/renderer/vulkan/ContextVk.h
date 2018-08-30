@@ -218,6 +218,11 @@ class ContextVk : public ContextImpl, public vk::Context
     bool mIndexBufferDirty;
     bool mDescriptorSetsDirty;
 
+    // Cached back-end objects.
+    VertexArrayVk *mVertexArray;
+    FramebufferVk *mDrawFramebuffer;
+    ProgramVk *mProgram;
+
     // The offset we had the last time we bound the index buffer.
     const GLvoid *mLastIndexBufferOffset;
     GLenum mCurrentDrawElementsType;
