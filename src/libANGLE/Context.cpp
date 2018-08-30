@@ -3159,7 +3159,7 @@ Extensions Context::generateSupportedExtensions() const
 
         // TODO(http://anglebug.com/2775): Multisample arrays could be supported on ES 3.0 as well
         // once 2D multisample texture extension is exposed there.
-        supportedExtensions.textureMultisampleArray = false;
+        supportedExtensions.textureStorageMultisample2DArray = false;
     }
 
     if (getClientVersion() > ES_2_0)

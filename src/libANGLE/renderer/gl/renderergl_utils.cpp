@@ -983,9 +983,9 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->copyTexture = true;
     extensions->syncQuery   = SyncQueryGL::IsSupported(functions);
 
-    // Note that ANGLE_texture_multisample_array support could be extended down to GL 3.2 if we
-    // emulated texStorage* API on top of texImage*.
-    extensions->textureMultisampleArray =
+    // Note that OES_texture_storage_multisample_2d_array support could be extended down to GL 3.2
+    // if we emulated texStorage* API on top of texImage*.
+    extensions->textureStorageMultisample2DArray =
         functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 2));
 
     // NV_path_rendering

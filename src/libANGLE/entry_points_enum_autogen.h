@@ -542,7 +542,7 @@ enum class EntryPoint
     TexStorage2DMultisample,
     TexStorage3D,
     TexStorage3DEXT,
-    TexStorage3DMultisampleANGLE,
+    TexStorage3DMultisampleOES,
     TexSubImage2D,
     TexSubImage2DRobustANGLE,
     TexSubImage3D,

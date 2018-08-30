@@ -3027,7 +3027,7 @@ bool ValidateBindTexture(Context *context, TextureType target, GLuint texture)
             }
             break;
         case TextureType::_2DMultisampleArray:
-            if (!context->getExtensions().textureMultisampleArray)
+            if (!context->getExtensions().textureStorageMultisample2DArray)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), MultisampleArrayExtensionRequired);
                 return false;

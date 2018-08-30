@@ -499,183 +499,183 @@ EXPORTS
     glGetQueryObjecti64vRobustANGLE                   @471
     glGetQueryObjectui64vRobustANGLE                  @472
 
-    ; GL_ANGLE_texture_multisample_array
-    glTexStorage3DMultisampleANGLE                    @473
-
     ; GL_ANGLE_translated_shader_source
-    glGetTranslatedShaderSourceANGLE                  @474
+    glGetTranslatedShaderSourceANGLE                  @473
 
     ; GL_CHROMIUM_bind_uniform_location
-    glBindUniformLocationCHROMIUM                     @475
+    glBindUniformLocationCHROMIUM                     @474
 
     ; GL_CHROMIUM_copy_compressed_texture
-    glCompressedCopyTextureCHROMIUM                   @476
+    glCompressedCopyTextureCHROMIUM                   @475
 
     ; GL_CHROMIUM_copy_texture
-    glCopyTextureCHROMIUM                             @477
-    glCopySubTextureCHROMIUM                          @478
+    glCopyTextureCHROMIUM                             @476
+    glCopySubTextureCHROMIUM                          @477
 
     ; GL_CHROMIUM_framebuffer_mixed_samples
-    glCoverageModulationCHROMIUM                      @479
-    glMatrixLoadfCHROMIUM                             @480
-    glMatrixLoadIdentityCHROMIUM                      @481
+    glCoverageModulationCHROMIUM                      @478
+    glMatrixLoadfCHROMIUM                             @479
+    glMatrixLoadIdentityCHROMIUM                      @480
 
     ; GL_CHROMIUM_path_rendering
-    glGenPathsCHROMIUM                                @482
-    glDeletePathsCHROMIUM                             @483
-    glIsPathCHROMIUM                                  @484
-    glPathCommandsCHROMIUM                            @485
-    glPathParameterfCHROMIUM                          @486
-    glPathParameteriCHROMIUM                          @487
-    glGetPathParameterfvCHROMIUM                      @488
-    glGetPathParameterivCHROMIUM                      @489
-    glPathStencilFuncCHROMIUM                         @490
-    glStencilFillPathCHROMIUM                         @491
-    glStencilStrokePathCHROMIUM                       @492
-    glCoverFillPathCHROMIUM                           @493
-    glCoverStrokePathCHROMIUM                         @494
-    glStencilThenCoverFillPathCHROMIUM                @495
-    glStencilThenCoverStrokePathCHROMIUM              @496
-    glCoverFillPathInstancedCHROMIUM                  @497
-    glCoverStrokePathInstancedCHROMIUM                @498
-    glStencilStrokePathInstancedCHROMIUM              @499
-    glStencilFillPathInstancedCHROMIUM                @500
-    glStencilThenCoverFillPathInstancedCHROMIUM       @501
-    glStencilThenCoverStrokePathInstancedCHROMIUM     @502
-    glBindFragmentInputLocationCHROMIUM               @503
-    glProgramPathFragmentInputGenCHROMIUM             @504
+    glGenPathsCHROMIUM                                @481
+    glDeletePathsCHROMIUM                             @482
+    glIsPathCHROMIUM                                  @483
+    glPathCommandsCHROMIUM                            @484
+    glPathParameterfCHROMIUM                          @485
+    glPathParameteriCHROMIUM                          @486
+    glGetPathParameterfvCHROMIUM                      @487
+    glGetPathParameterivCHROMIUM                      @488
+    glPathStencilFuncCHROMIUM                         @489
+    glStencilFillPathCHROMIUM                         @490
+    glStencilStrokePathCHROMIUM                       @491
+    glCoverFillPathCHROMIUM                           @492
+    glCoverStrokePathCHROMIUM                         @493
+    glStencilThenCoverFillPathCHROMIUM                @494
+    glStencilThenCoverStrokePathCHROMIUM              @495
+    glCoverFillPathInstancedCHROMIUM                  @496
+    glCoverStrokePathInstancedCHROMIUM                @497
+    glStencilStrokePathInstancedCHROMIUM              @498
+    glStencilFillPathInstancedCHROMIUM                @499
+    glStencilThenCoverFillPathInstancedCHROMIUM       @500
+    glStencilThenCoverStrokePathInstancedCHROMIUM     @501
+    glBindFragmentInputLocationCHROMIUM               @502
+    glProgramPathFragmentInputGenCHROMIUM             @503
 
     ; GL_EXT_debug_marker
-    glInsertEventMarkerEXT                            @505
-    glPopGroupMarkerEXT                               @506
-    glPushGroupMarkerEXT                              @507
+    glInsertEventMarkerEXT                            @504
+    glPopGroupMarkerEXT                               @505
+    glPushGroupMarkerEXT                              @506
 
     ; GL_EXT_discard_framebuffer
-    glDiscardFramebufferEXT                           @508
+    glDiscardFramebufferEXT                           @507
 
     ; GL_EXT_disjoint_timer_query
-    glBeginQueryEXT                                   @509
-    glDeleteQueriesEXT                                @510
-    glEndQueryEXT                                     @511
-    glGenQueriesEXT                                   @512
-    glGetQueryObjecti64vEXT                           @513
-    glGetQueryObjectivEXT                             @514
-    glGetQueryObjectui64vEXT                          @515
-    glGetQueryObjectuivEXT                            @516
-    glGetQueryivEXT                                   @517
-    glIsQueryEXT                                      @518
-    glQueryCounterEXT                                 @519
+    glBeginQueryEXT                                   @508
+    glDeleteQueriesEXT                                @509
+    glEndQueryEXT                                     @510
+    glGenQueriesEXT                                   @511
+    glGetQueryObjecti64vEXT                           @512
+    glGetQueryObjectivEXT                             @513
+    glGetQueryObjectui64vEXT                          @514
+    glGetQueryObjectuivEXT                            @515
+    glGetQueryivEXT                                   @516
+    glIsQueryEXT                                      @517
+    glQueryCounterEXT                                 @518
 
     ; GL_EXT_draw_buffers
-    glDrawBuffersEXT                                  @520
+    glDrawBuffersEXT                                  @519
 
     ; GL_EXT_geometry_shader
-    glFramebufferTextureEXT                           @521
+    glFramebufferTextureEXT                           @520
 
     ; GL_EXT_map_buffer_range
-    glFlushMappedBufferRangeEXT                       @522
-    glMapBufferRangeEXT                               @523
+    glFlushMappedBufferRangeEXT                       @521
+    glMapBufferRangeEXT                               @522
 
     ; GL_EXT_occlusion_query_boolean
 
     ; GL_EXT_robustness
-    glGetGraphicsResetStatusEXT                       @524
-    glGetnUniformfvEXT                                @525
-    glGetnUniformivEXT                                @526
-    glReadnPixelsEXT                                  @527
+    glGetGraphicsResetStatusEXT                       @523
+    glGetnUniformfvEXT                                @524
+    glGetnUniformivEXT                                @525
+    glReadnPixelsEXT                                  @526
 
     ; GL_EXT_texture_storage
-    glTexStorage1DEXT                                 @528
-    glTexStorage2DEXT                                 @529
-    glTexStorage3DEXT                                 @530
+    glTexStorage1DEXT                                 @527
+    glTexStorage2DEXT                                 @528
+    glTexStorage3DEXT                                 @529
 
     ; GL_KHR_debug
-    glDebugMessageCallbackKHR                         @531
-    glDebugMessageControlKHR                          @532
-    glDebugMessageInsertKHR                           @533
-    glGetDebugMessageLogKHR                           @534
-    glGetObjectLabelKHR                               @535
-    glGetObjectPtrLabelKHR                            @536
-    glGetPointervKHR                                  @537
-    glObjectLabelKHR                                  @538
-    glObjectPtrLabelKHR                               @539
-    glPopDebugGroupKHR                                @540
-    glPushDebugGroupKHR                               @541
+    glDebugMessageCallbackKHR                         @530
+    glDebugMessageControlKHR                          @531
+    glDebugMessageInsertKHR                           @532
+    glGetDebugMessageLogKHR                           @533
+    glGetObjectLabelKHR                               @534
+    glGetObjectPtrLabelKHR                            @535
+    glGetPointervKHR                                  @536
+    glObjectLabelKHR                                  @537
+    glObjectPtrLabelKHR                               @538
+    glPopDebugGroupKHR                                @539
+    glPushDebugGroupKHR                               @540
 
     ; GL_KHR_parallel_shader_compile
-    glMaxShaderCompilerThreadsKHR                     @542
+    glMaxShaderCompilerThreadsKHR                     @541
 
     ; GL_NV_fence
-    glDeleteFencesNV                                  @543
-    glFinishFenceNV                                   @544
-    glGenFencesNV                                     @545
-    glGetFenceivNV                                    @546
-    glIsFenceNV                                       @547
-    glSetFenceNV                                      @548
-    glTestFenceNV                                     @549
+    glDeleteFencesNV                                  @542
+    glFinishFenceNV                                   @543
+    glGenFencesNV                                     @544
+    glGetFenceivNV                                    @545
+    glIsFenceNV                                       @546
+    glSetFenceNV                                      @547
+    glTestFenceNV                                     @548
 
     ; GL_OES_EGL_image
-    glEGLImageTargetRenderbufferStorageOES            @550
-    glEGLImageTargetTexture2DOES                      @551
+    glEGLImageTargetRenderbufferStorageOES            @549
+    glEGLImageTargetTexture2DOES                      @550
 
     ; GL_OES_draw_texture
-    glDrawTexfOES                                     @552
-    glDrawTexfvOES                                    @553
-    glDrawTexiOES                                     @554
-    glDrawTexivOES                                    @555
-    glDrawTexsOES                                     @556
-    glDrawTexsvOES                                    @557
-    glDrawTexxOES                                     @558
-    glDrawTexxvOES                                    @559
+    glDrawTexfOES                                     @551
+    glDrawTexfvOES                                    @552
+    glDrawTexiOES                                     @553
+    glDrawTexivOES                                    @554
+    glDrawTexsOES                                     @555
+    glDrawTexsvOES                                    @556
+    glDrawTexxOES                                     @557
+    glDrawTexxvOES                                    @558
 
     ; GL_OES_framebuffer_object
-    glBindFramebufferOES                              @560
-    glBindRenderbufferOES                             @561
-    glCheckFramebufferStatusOES                       @562
-    glDeleteFramebuffersOES                           @563
-    glDeleteRenderbuffersOES                          @564
-    glFramebufferRenderbufferOES                      @565
-    glFramebufferTexture2DOES                         @566
-    glGenFramebuffersOES                              @567
-    glGenRenderbuffersOES                             @568
-    glGenerateMipmapOES                               @569
-    glGetFramebufferAttachmentParameterivOES          @570
-    glGetRenderbufferParameterivOES                   @571
-    glIsFramebufferOES                                @572
-    glIsRenderbufferOES                               @573
-    glRenderbufferStorageOES                          @574
+    glBindFramebufferOES                              @559
+    glBindRenderbufferOES                             @560
+    glCheckFramebufferStatusOES                       @561
+    glDeleteFramebuffersOES                           @562
+    glDeleteRenderbuffersOES                          @563
+    glFramebufferRenderbufferOES                      @564
+    glFramebufferTexture2DOES                         @565
+    glGenFramebuffersOES                              @566
+    glGenRenderbuffersOES                             @567
+    glGenerateMipmapOES                               @568
+    glGetFramebufferAttachmentParameterivOES          @569
+    glGetRenderbufferParameterivOES                   @570
+    glIsFramebufferOES                                @571
+    glIsRenderbufferOES                               @572
+    glRenderbufferStorageOES                          @573
 
     ; GL_OES_get_program_binary
-    glGetProgramBinaryOES                             @575
-    glProgramBinaryOES                                @576
+    glGetProgramBinaryOES                             @574
+    glProgramBinaryOES                                @575
 
     ; GL_OES_mapbuffer
-    glGetBufferPointervOES                            @577
-    glMapBufferOES                                    @578
-    glUnmapBufferOES                                  @579
+    glGetBufferPointervOES                            @576
+    glMapBufferOES                                    @577
+    glUnmapBufferOES                                  @578
 
     ; GL_OES_matrix_palette
-    glCurrentPaletteMatrixOES                         @580
-    glLoadPaletteFromModelViewMatrixOES               @581
-    glMatrixIndexPointerOES                           @582
-    glWeightPointerOES                                @583
+    glCurrentPaletteMatrixOES                         @579
+    glLoadPaletteFromModelViewMatrixOES               @580
+    glMatrixIndexPointerOES                           @581
+    glWeightPointerOES                                @582
 
     ; GL_OES_point_size_array
-    glPointSizePointerOES                             @584
+    glPointSizePointerOES                             @583
 
     ; GL_OES_query_matrix
-    glQueryMatrixxOES                                 @585
+    glQueryMatrixxOES                                 @584
 
     ; GL_OES_texture_cube_map
-    glGetTexGenfvOES                                  @586
-    glGetTexGenivOES                                  @587
-    glGetTexGenxvOES                                  @588
-    glTexGenfOES                                      @589
-    glTexGenfvOES                                     @590
-    glTexGeniOES                                      @591
-    glTexGenivOES                                     @592
-    glTexGenxOES                                      @593
-    glTexGenxvOES                                     @594
+    glGetTexGenfvOES                                  @585
+    glGetTexGenivOES                                  @586
+    glGetTexGenxvOES                                  @587
+    glTexGenfOES                                      @588
+    glTexGenfvOES                                     @589
+    glTexGeniOES                                      @590
+    glTexGenivOES                                     @591
+    glTexGenxOES                                      @592
+    glTexGenxvOES                                     @593
+
+    ; GL_OES_texture_storage_multisample_2d_array
+    glTexStorage3DMultisampleOES                      @594
 
     ; GL_OES_vertex_array_object
     glBindVertexArrayOES                              @595
@@ -1115,170 +1115,170 @@ EXPORTS
     glTexStorage2DMultisampleContextANGLE                         @1027
     glTexStorage3DContextANGLE                                    @1028
     glTexStorage3DEXTContextANGLE                                 @1029
-    glTexSubImage2DContextANGLE                                   @1030
-    glTexSubImage3DContextANGLE                                   @1031
-    glTransformFeedbackVaryingsContextANGLE                       @1032
-    glTranslatefContextANGLE                                      @1033
-    glTranslatexContextANGLE                                      @1034
-    glUniform1fContextANGLE                                       @1035
-    glUniform1fvContextANGLE                                      @1036
-    glUniform1iContextANGLE                                       @1037
-    glUniform1ivContextANGLE                                      @1038
-    glUniform1uiContextANGLE                                      @1039
-    glUniform1uivContextANGLE                                     @1040
-    glUniform2fContextANGLE                                       @1041
-    glUniform2fvContextANGLE                                      @1042
-    glUniform2iContextANGLE                                       @1043
-    glUniform2ivContextANGLE                                      @1044
-    glUniform2uiContextANGLE                                      @1045
-    glUniform2uivContextANGLE                                     @1046
-    glUniform3fContextANGLE                                       @1047
-    glUniform3fvContextANGLE                                      @1048
-    glUniform3iContextANGLE                                       @1049
-    glUniform3ivContextANGLE                                      @1050
-    glUniform3uiContextANGLE                                      @1051
-    glUniform3uivContextANGLE                                     @1052
-    glUniform4fContextANGLE                                       @1053
-    glUniform4fvContextANGLE                                      @1054
-    glUniform4iContextANGLE                                       @1055
-    glUniform4ivContextANGLE                                      @1056
-    glUniform4uiContextANGLE                                      @1057
-    glUniform4uivContextANGLE                                     @1058
-    glUniformBlockBindingContextANGLE                             @1059
-    glUniformMatrix2fvContextANGLE                                @1060
-    glUniformMatrix2x3fvContextANGLE                              @1061
-    glUniformMatrix2x4fvContextANGLE                              @1062
-    glUniformMatrix3fvContextANGLE                                @1063
-    glUniformMatrix3x2fvContextANGLE                              @1064
-    glUniformMatrix3x4fvContextANGLE                              @1065
-    glUniformMatrix4fvContextANGLE                                @1066
-    glUniformMatrix4x2fvContextANGLE                              @1067
-    glUniformMatrix4x3fvContextANGLE                              @1068
-    glUnmapBufferContextANGLE                                     @1069
-    glUnmapBufferOESContextANGLE                                  @1070
-    glUseProgramContextANGLE                                      @1071
-    glUseProgramStagesContextANGLE                                @1072
-    glValidateProgramContextANGLE                                 @1073
-    glValidateProgramPipelineContextANGLE                         @1074
-    glVertexAttrib1fContextANGLE                                  @1075
-    glVertexAttrib1fvContextANGLE                                 @1076
-    glVertexAttrib2fContextANGLE                                  @1077
-    glVertexAttrib2fvContextANGLE                                 @1078
-    glVertexAttrib3fContextANGLE                                  @1079
-    glVertexAttrib3fvContextANGLE                                 @1080
-    glVertexAttrib4fContextANGLE                                  @1081
-    glVertexAttrib4fvContextANGLE                                 @1082
-    glVertexAttribBindingContextANGLE                             @1083
-    glVertexAttribDivisorContextANGLE                             @1084
-    glVertexAttribDivisorANGLEContextANGLE                        @1085
-    glVertexAttribFormatContextANGLE                              @1086
-    glVertexAttribI4iContextANGLE                                 @1087
-    glVertexAttribI4ivContextANGLE                                @1088
-    glVertexAttribI4uiContextANGLE                                @1089
-    glVertexAttribI4uivContextANGLE                               @1090
-    glVertexAttribIFormatContextANGLE                             @1091
-    glVertexAttribIPointerContextANGLE                            @1092
-    glVertexAttribPointerContextANGLE                             @1093
-    glVertexBindingDivisorContextANGLE                            @1094
-    glVertexPointerContextANGLE                                   @1095
-    glViewportContextANGLE                                        @1096
-    glWaitSyncContextANGLE                                        @1097
-    glWeightPointerOESContextANGLE                                @1098
-    glBindUniformLocationCHROMIUMContextANGLE                     @1099
-    glCoverageModulationCHROMIUMContextANGLE                      @1100
-    glMatrixLoadfCHROMIUMContextANGLE                             @1101
-    glMatrixLoadIdentityCHROMIUMContextANGLE                      @1102
-    glGenPathsCHROMIUMContextANGLE                                @1103
-    glDeletePathsCHROMIUMContextANGLE                             @1104
-    glIsPathCHROMIUMContextANGLE                                  @1105
-    glPathCommandsCHROMIUMContextANGLE                            @1106
-    glPathParameterfCHROMIUMContextANGLE                          @1107
-    glPathParameteriCHROMIUMContextANGLE                          @1108
-    glGetPathParameterfvCHROMIUMContextANGLE                      @1109
-    glGetPathParameterivCHROMIUMContextANGLE                      @1110
-    glPathStencilFuncCHROMIUMContextANGLE                         @1111
-    glStencilFillPathCHROMIUMContextANGLE                         @1112
-    glStencilStrokePathCHROMIUMContextANGLE                       @1113
-    glCoverFillPathCHROMIUMContextANGLE                           @1114
-    glCoverStrokePathCHROMIUMContextANGLE                         @1115
-    glStencilThenCoverFillPathCHROMIUMContextANGLE                @1116
-    glStencilThenCoverStrokePathCHROMIUMContextANGLE              @1117
-    glCoverFillPathInstancedCHROMIUMContextANGLE                  @1118
-    glCoverStrokePathInstancedCHROMIUMContextANGLE                @1119
-    glStencilStrokePathInstancedCHROMIUMContextANGLE              @1120
-    glStencilFillPathInstancedCHROMIUMContextANGLE                @1121
-    glStencilThenCoverFillPathInstancedCHROMIUMContextANGLE       @1122
-    glStencilThenCoverStrokePathInstancedCHROMIUMContextANGLE     @1123
-    glBindFragmentInputLocationCHROMIUMContextANGLE               @1124
-    glProgramPathFragmentInputGenCHROMIUMContextANGLE             @1125
-    glCopyTextureCHROMIUMContextANGLE                             @1126
-    glCopySubTextureCHROMIUMContextANGLE                          @1127
-    glCompressedCopyTextureCHROMIUMContextANGLE                   @1128
-    glRequestExtensionANGLEContextANGLE                           @1129
-    glGetBooleanvRobustANGLEContextANGLE                          @1130
-    glGetBufferParameterivRobustANGLEContextANGLE                 @1131
-    glGetFloatvRobustANGLEContextANGLE                            @1132
-    glGetFramebufferAttachmentParameterivRobustANGLEContextANGLE  @1133
-    glGetIntegervRobustANGLEContextANGLE                          @1134
-    glGetProgramivRobustANGLEContextANGLE                         @1135
-    glGetRenderbufferParameterivRobustANGLEContextANGLE           @1136
-    glGetShaderivRobustANGLEContextANGLE                          @1137
-    glGetTexParameterfvRobustANGLEContextANGLE                    @1138
-    glGetTexParameterivRobustANGLEContextANGLE                    @1139
-    glGetUniformfvRobustANGLEContextANGLE                         @1140
-    glGetUniformivRobustANGLEContextANGLE                         @1141
-    glGetVertexAttribfvRobustANGLEContextANGLE                    @1142
-    glGetVertexAttribivRobustANGLEContextANGLE                    @1143
-    glGetVertexAttribPointervRobustANGLEContextANGLE              @1144
-    glReadPixelsRobustANGLEContextANGLE                           @1145
-    glTexImage2DRobustANGLEContextANGLE                           @1146
-    glTexParameterfvRobustANGLEContextANGLE                       @1147
-    glTexParameterivRobustANGLEContextANGLE                       @1148
-    glTexSubImage2DRobustANGLEContextANGLE                        @1149
-    glTexImage3DRobustANGLEContextANGLE                           @1150
-    glTexSubImage3DRobustANGLEContextANGLE                        @1151
-    glCompressedTexImage2DRobustANGLEContextANGLE                 @1152
-    glCompressedTexSubImage2DRobustANGLEContextANGLE              @1153
-    glCompressedTexImage3DRobustANGLEContextANGLE                 @1154
-    glCompressedTexSubImage3DRobustANGLEContextANGLE              @1155
-    glGetQueryivRobustANGLEContextANGLE                           @1156
-    glGetQueryObjectuivRobustANGLEContextANGLE                    @1157
-    glGetBufferPointervRobustANGLEContextANGLE                    @1158
-    glGetIntegeri_vRobustANGLEContextANGLE                        @1159
-    glGetInternalformativRobustANGLEContextANGLE                  @1160
-    glGetVertexAttribIivRobustANGLEContextANGLE                   @1161
-    glGetVertexAttribIuivRobustANGLEContextANGLE                  @1162
-    glGetUniformuivRobustANGLEContextANGLE                        @1163
-    glGetActiveUniformBlockivRobustANGLEContextANGLE              @1164
-    glGetInteger64vRobustANGLEContextANGLE                        @1165
-    glGetInteger64i_vRobustANGLEContextANGLE                      @1166
-    glGetBufferParameteri64vRobustANGLEContextANGLE               @1167
-    glSamplerParameterivRobustANGLEContextANGLE                   @1168
-    glSamplerParameterfvRobustANGLEContextANGLE                   @1169
-    glGetSamplerParameterivRobustANGLEContextANGLE                @1170
-    glGetSamplerParameterfvRobustANGLEContextANGLE                @1171
-    glGetFramebufferParameterivRobustANGLEContextANGLE            @1172
-    glGetProgramInterfaceivRobustANGLEContextANGLE                @1173
-    glGetBooleani_vRobustANGLEContextANGLE                        @1174
-    glGetMultisamplefvRobustANGLEContextANGLE                     @1175
-    glGetTexLevelParameterivRobustANGLEContextANGLE               @1176
-    glGetTexLevelParameterfvRobustANGLEContextANGLE               @1177
-    glGetPointervRobustANGLERobustANGLEContextANGLE               @1178
-    glReadnPixelsRobustANGLEContextANGLE                          @1179
-    glGetnUniformfvRobustANGLEContextANGLE                        @1180
-    glGetnUniformivRobustANGLEContextANGLE                        @1181
-    glGetnUniformuivRobustANGLEContextANGLE                       @1182
-    glTexParameterIivRobustANGLEContextANGLE                      @1183
-    glTexParameterIuivRobustANGLEContextANGLE                     @1184
-    glGetTexParameterIivRobustANGLEContextANGLE                   @1185
-    glGetTexParameterIuivRobustANGLEContextANGLE                  @1186
-    glSamplerParameterIivRobustANGLEContextANGLE                  @1187
-    glSamplerParameterIuivRobustANGLEContextANGLE                 @1188
-    glGetSamplerParameterIivRobustANGLEContextANGLE               @1189
-    glGetSamplerParameterIuivRobustANGLEContextANGLE              @1190
-    glGetQueryObjectivRobustANGLEContextANGLE                     @1191
-    glGetQueryObjecti64vRobustANGLEContextANGLE                   @1192
-    glGetQueryObjectui64vRobustANGLEContextANGLE                  @1193
-    glFramebufferTextureMultiviewLayeredANGLEContextANGLE         @1194
-    glFramebufferTextureMultiviewSideBySideANGLEContextANGLE      @1195
-    glTexStorage3DMultisampleANGLEContextANGLE                    @1196
+    glTexStorage3DMultisampleOESContextANGLE                      @1030
+    glTexSubImage2DContextANGLE                                   @1031
+    glTexSubImage3DContextANGLE                                   @1032
+    glTransformFeedbackVaryingsContextANGLE                       @1033
+    glTranslatefContextANGLE                                      @1034
+    glTranslatexContextANGLE                                      @1035
+    glUniform1fContextANGLE                                       @1036
+    glUniform1fvContextANGLE                                      @1037
+    glUniform1iContextANGLE                                       @1038
+    glUniform1ivContextANGLE                                      @1039
+    glUniform1uiContextANGLE                                      @1040
+    glUniform1uivContextANGLE                                     @1041
+    glUniform2fContextANGLE                                       @1042
+    glUniform2fvContextANGLE                                      @1043
+    glUniform2iContextANGLE                                       @1044
+    glUniform2ivContextANGLE                                      @1045
+    glUniform2uiContextANGLE                                      @1046
+    glUniform2uivContextANGLE                                     @1047
+    glUniform3fContextANGLE                                       @1048
+    glUniform3fvContextANGLE                                      @1049
+    glUniform3iContextANGLE                                       @1050
+    glUniform3ivContextANGLE                                      @1051
+    glUniform3uiContextANGLE                                      @1052
+    glUniform3uivContextANGLE                                     @1053
+    glUniform4fContextANGLE                                       @1054
+    glUniform4fvContextANGLE                                      @1055
+    glUniform4iContextANGLE                                       @1056
+    glUniform4ivContextANGLE                                      @1057
+    glUniform4uiContextANGLE                                      @1058
+    glUniform4uivContextANGLE                                     @1059
+    glUniformBlockBindingContextANGLE                             @1060
+    glUniformMatrix2fvContextANGLE                                @1061
+    glUniformMatrix2x3fvContextANGLE                              @1062
+    glUniformMatrix2x4fvContextANGLE                              @1063
+    glUniformMatrix3fvContextANGLE                                @1064
+    glUniformMatrix3x2fvContextANGLE                              @1065
+    glUniformMatrix3x4fvContextANGLE                              @1066
+    glUniformMatrix4fvContextANGLE                                @1067
+    glUniformMatrix4x2fvContextANGLE                              @1068
+    glUniformMatrix4x3fvContextANGLE                              @1069
+    glUnmapBufferContextANGLE                                     @1070
+    glUnmapBufferOESContextANGLE                                  @1071
+    glUseProgramContextANGLE                                      @1072
+    glUseProgramStagesContextANGLE                                @1073
+    glValidateProgramContextANGLE                                 @1074
+    glValidateProgramPipelineContextANGLE                         @1075
+    glVertexAttrib1fContextANGLE                                  @1076
+    glVertexAttrib1fvContextANGLE                                 @1077
+    glVertexAttrib2fContextANGLE                                  @1078
+    glVertexAttrib2fvContextANGLE                                 @1079
+    glVertexAttrib3fContextANGLE                                  @1080
+    glVertexAttrib3fvContextANGLE                                 @1081
+    glVertexAttrib4fContextANGLE                                  @1082
+    glVertexAttrib4fvContextANGLE                                 @1083
+    glVertexAttribBindingContextANGLE                             @1084
+    glVertexAttribDivisorContextANGLE                             @1085
+    glVertexAttribDivisorANGLEContextANGLE                        @1086
+    glVertexAttribFormatContextANGLE                              @1087
+    glVertexAttribI4iContextANGLE                                 @1088
+    glVertexAttribI4ivContextANGLE                                @1089
+    glVertexAttribI4uiContextANGLE                                @1090
+    glVertexAttribI4uivContextANGLE                               @1091
+    glVertexAttribIFormatContextANGLE                             @1092
+    glVertexAttribIPointerContextANGLE                            @1093
+    glVertexAttribPointerContextANGLE                             @1094
+    glVertexBindingDivisorContextANGLE                            @1095
+    glVertexPointerContextANGLE                                   @1096
+    glViewportContextANGLE                                        @1097
+    glWaitSyncContextANGLE                                        @1098
+    glWeightPointerOESContextANGLE                                @1099
+    glBindUniformLocationCHROMIUMContextANGLE                     @1100
+    glCoverageModulationCHROMIUMContextANGLE                      @1101
+    glMatrixLoadfCHROMIUMContextANGLE                             @1102
+    glMatrixLoadIdentityCHROMIUMContextANGLE                      @1103
+    glGenPathsCHROMIUMContextANGLE                                @1104
+    glDeletePathsCHROMIUMContextANGLE                             @1105
+    glIsPathCHROMIUMContextANGLE                                  @1106
+    glPathCommandsCHROMIUMContextANGLE                            @1107
+    glPathParameterfCHROMIUMContextANGLE                          @1108
+    glPathParameteriCHROMIUMContextANGLE                          @1109
+    glGetPathParameterfvCHROMIUMContextANGLE                      @1110
+    glGetPathParameterivCHROMIUMContextANGLE                      @1111
+    glPathStencilFuncCHROMIUMContextANGLE                         @1112
+    glStencilFillPathCHROMIUMContextANGLE                         @1113
+    glStencilStrokePathCHROMIUMContextANGLE                       @1114
+    glCoverFillPathCHROMIUMContextANGLE                           @1115
+    glCoverStrokePathCHROMIUMContextANGLE                         @1116
+    glStencilThenCoverFillPathCHROMIUMContextANGLE                @1117
+    glStencilThenCoverStrokePathCHROMIUMContextANGLE              @1118
+    glCoverFillPathInstancedCHROMIUMContextANGLE                  @1119
+    glCoverStrokePathInstancedCHROMIUMContextANGLE                @1120
+    glStencilStrokePathInstancedCHROMIUMContextANGLE              @1121
+    glStencilFillPathInstancedCHROMIUMContextANGLE                @1122
+    glStencilThenCoverFillPathInstancedCHROMIUMContextANGLE       @1123
+    glStencilThenCoverStrokePathInstancedCHROMIUMContextANGLE     @1124
+    glBindFragmentInputLocationCHROMIUMContextANGLE               @1125
+    glProgramPathFragmentInputGenCHROMIUMContextANGLE             @1126
+    glCopyTextureCHROMIUMContextANGLE                             @1127
+    glCopySubTextureCHROMIUMContextANGLE                          @1128
+    glCompressedCopyTextureCHROMIUMContextANGLE                   @1129
+    glRequestExtensionANGLEContextANGLE                           @1130
+    glGetBooleanvRobustANGLEContextANGLE                          @1131
+    glGetBufferParameterivRobustANGLEContextANGLE                 @1132
+    glGetFloatvRobustANGLEContextANGLE                            @1133
+    glGetFramebufferAttachmentParameterivRobustANGLEContextANGLE  @1134
+    glGetIntegervRobustANGLEContextANGLE                          @1135
+    glGetProgramivRobustANGLEContextANGLE                         @1136
+    glGetRenderbufferParameterivRobustANGLEContextANGLE           @1137
+    glGetShaderivRobustANGLEContextANGLE                          @1138
+    glGetTexParameterfvRobustANGLEContextANGLE                    @1139
+    glGetTexParameterivRobustANGLEContextANGLE                    @1140
+    glGetUniformfvRobustANGLEContextANGLE                         @1141
+    glGetUniformivRobustANGLEContextANGLE                         @1142
+    glGetVertexAttribfvRobustANGLEContextANGLE                    @1143
+    glGetVertexAttribivRobustANGLEContextANGLE                    @1144
+    glGetVertexAttribPointervRobustANGLEContextANGLE              @1145
+    glReadPixelsRobustANGLEContextANGLE                           @1146
+    glTexImage2DRobustANGLEContextANGLE                           @1147
+    glTexParameterfvRobustANGLEContextANGLE                       @1148
+    glTexParameterivRobustANGLEContextANGLE                       @1149
+    glTexSubImage2DRobustANGLEContextANGLE                        @1150
+    glTexImage3DRobustANGLEContextANGLE                           @1151
+    glTexSubImage3DRobustANGLEContextANGLE                        @1152
+    glCompressedTexImage2DRobustANGLEContextANGLE                 @1153
+    glCompressedTexSubImage2DRobustANGLEContextANGLE              @1154
+    glCompressedTexImage3DRobustANGLEContextANGLE                 @1155
+    glCompressedTexSubImage3DRobustANGLEContextANGLE              @1156
+    glGetQueryivRobustANGLEContextANGLE                           @1157
+    glGetQueryObjectuivRobustANGLEContextANGLE                    @1158
+    glGetBufferPointervRobustANGLEContextANGLE                    @1159
+    glGetIntegeri_vRobustANGLEContextANGLE                        @1160
+    glGetInternalformativRobustANGLEContextANGLE                  @1161
+    glGetVertexAttribIivRobustANGLEContextANGLE                   @1162
+    glGetVertexAttribIuivRobustANGLEContextANGLE                  @1163
+    glGetUniformuivRobustANGLEContextANGLE                        @1164
+    glGetActiveUniformBlockivRobustANGLEContextANGLE              @1165
+    glGetInteger64vRobustANGLEContextANGLE                        @1166
+    glGetInteger64i_vRobustANGLEContextANGLE                      @1167
+    glGetBufferParameteri64vRobustANGLEContextANGLE               @1168
+    glSamplerParameterivRobustANGLEContextANGLE                   @1169
+    glSamplerParameterfvRobustANGLEContextANGLE                   @1170
+    glGetSamplerParameterivRobustANGLEContextANGLE                @1171
+    glGetSamplerParameterfvRobustANGLEContextANGLE                @1172
+    glGetFramebufferParameterivRobustANGLEContextANGLE            @1173
+    glGetProgramInterfaceivRobustANGLEContextANGLE                @1174
+    glGetBooleani_vRobustANGLEContextANGLE                        @1175
+    glGetMultisamplefvRobustANGLEContextANGLE                     @1176
+    glGetTexLevelParameterivRobustANGLEContextANGLE               @1177
+    glGetTexLevelParameterfvRobustANGLEContextANGLE               @1178
+    glGetPointervRobustANGLERobustANGLEContextANGLE               @1179
+    glReadnPixelsRobustANGLEContextANGLE                          @1180
+    glGetnUniformfvRobustANGLEContextANGLE                        @1181
+    glGetnUniformivRobustANGLEContextANGLE                        @1182
+    glGetnUniformuivRobustANGLEContextANGLE                       @1183
+    glTexParameterIivRobustANGLEContextANGLE                      @1184
+    glTexParameterIuivRobustANGLEContextANGLE                     @1185
+    glGetTexParameterIivRobustANGLEContextANGLE                   @1186
+    glGetTexParameterIuivRobustANGLEContextANGLE                  @1187
+    glSamplerParameterIivRobustANGLEContextANGLE                  @1188
+    glSamplerParameterIuivRobustANGLEContextANGLE                 @1189
+    glGetSamplerParameterIivRobustANGLEContextANGLE               @1190
+    glGetSamplerParameterIuivRobustANGLEContextANGLE              @1191
+    glGetQueryObjectivRobustANGLEContextANGLE                     @1192
+    glGetQueryObjecti64vRobustANGLEContextANGLE                   @1193
+    glGetQueryObjectui64vRobustANGLEContextANGLE                  @1194
+    glFramebufferTextureMultiviewLayeredANGLEContextANGLE         @1195
+    glFramebufferTextureMultiviewSideBySideANGLEContextANGLE      @1196

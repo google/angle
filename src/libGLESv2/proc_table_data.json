@@ -530,6 +530,10 @@
         "glMaxShaderCompilerThreadsKHR"
     ],
 
+    "GL_OES_texture_storage_multisample_2d_array": [
+        "glTexStorage3DMultisampleOES"
+    ],
+
     "GLES3 core": [
         "glReadBuffer",
         "glDrawRangeElements",

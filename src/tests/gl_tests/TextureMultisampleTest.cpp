@@ -98,12 +98,12 @@ class TextureMultisampleArrayWebGLTest : public TextureMultisampleTest
     // succeeds.
     bool requestArrayExtension()
     {
-        if (extensionRequestable("GL_ANGLE_texture_multisample_array"))
+        if (extensionRequestable("GL_OES_texture_storage_multisample_2d_array"))
         {
-            glRequestExtensionANGLE("GL_ANGLE_texture_multisample_array");
+            glRequestExtensionANGLE("GL_OES_texture_storage_multisample_2d_array");
         }
 
-        if (!extensionEnabled("GL_ANGLE_texture_multisample_array"))
+        if (!extensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
         {
             return false;
         }
@@ -274,7 +274,7 @@ TEST_P(TextureMultisampleTestES31, CheckSamplePositions)
 TEST_P(TextureMultisampleArrayWebGLTest, MultisampleArrayTargetGetInternalFormativWithoutExtension)
 {
     GLint maxSamples = 0;
-    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_RGBA8, GL_SAMPLES, 1,
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_RGBA8, GL_SAMPLES, 1,
                           &maxSamples);
     ASSERT_GL_ERROR(GL_INVALID_ENUM);
 }
@@ -282,7 +282,7 @@ TEST_P(TextureMultisampleArrayWebGLTest, MultisampleArrayTargetGetInternalFormat
 // Attempt to bind a texture to multisample array binding point when extension is not supported.
 TEST_P(TextureMultisampleArrayWebGLTest, BindMultisampleArrayTextureWithoutExtension)
 {
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
     ASSERT_GL_ERROR(GL_INVALID_ENUM);
 }
 
@@ -294,11 +294,11 @@ TEST_P(TextureMultisampleArrayWebGLTest, MultisampleArrayTargetGetInternalFormat
     // This query returns supported sample counts in descending order. If only one sample count is
     // queried, it should be the maximum one.
     GLint maxSamplesRGBA8 = 0;
-    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_RGBA8, GL_SAMPLES, 1,
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_RGBA8, GL_SAMPLES, 1,
                           &maxSamplesRGBA8);
     GLint maxSamplesDepth = 0;
-    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_DEPTH_COMPONENT24, GL_SAMPLES,
-                          1, &maxSamplesDepth);
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_DEPTH_COMPONENT24, GL_SAMPLES, 1,
+                          &maxSamplesDepth);
     ASSERT_GL_NO_ERROR();
 
     // GLES 3.1 section 19.3.1 specifies the required minimum of how many samples are supported.
@@ -321,10 +321,10 @@ TEST_P(TextureMultisampleArrayWebGLTest, MultiSampleArrayTexImage)
 {
     ANGLE_SKIP_TEST_IF(!requestArrayExtension());
 
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
     ASSERT_GL_NO_ERROR();
 
-    glTexImage3D(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_RGBA8, 1, 1, 1, 0, GL_RGBA,
+    glTexImage3D(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, GL_RGBA8, 1, 1, 1, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, nullptr);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
@@ -334,36 +334,35 @@ TEST_P(TextureMultisampleArrayWebGLTest, InvalidTexStorage3DMultisample)
 {
     ANGLE_SKIP_TEST_IF(!requestArrayExtension());
 
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
     ASSERT_GL_NO_ERROR();
 
     // Invalid target
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE, 2, GL_RGBA8, 1, 1, 1, GL_TRUE);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE, 2, GL_RGBA8, 1, 1, 1, GL_TRUE);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     // Samples 0
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_RGBA8, 1, 1, 1,
-                                   GL_TRUE);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, GL_RGBA8, 1, 1, 1,
+                                 GL_TRUE);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
     // Unsized internalformat
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 2, GL_RGBA, 1, 1, 1,
-                                   GL_TRUE);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 2, GL_RGBA, 1, 1, 1, GL_TRUE);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     // Width 0
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 2, GL_RGBA8, 0, 1, 1,
-                                   GL_TRUE);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 2, GL_RGBA8, 0, 1, 1,
+                                 GL_TRUE);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
     // Height 0
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 2, GL_RGBA8, 1, 0, 1,
-                                   GL_TRUE);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 2, GL_RGBA8, 1, 0, 1,
+                                 GL_TRUE);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
     // Depth 0
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 2, GL_RGBA8, 1, 1, 0,
-                                   GL_TRUE);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 2, GL_RGBA8, 1, 1, 0,
+                                 GL_TRUE);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
@@ -372,34 +371,34 @@ TEST_P(TextureMultisampleArrayWebGLTest, InvalidTexParameteri)
 {
     ANGLE_SKIP_TEST_IF(!requestArrayExtension());
 
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
     ASSERT_GL_NO_ERROR();
 
-    // None of the sampler parameters can be set on GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE.
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // None of the sampler parameters can be set on GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES.
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    EXPECT_GL_ERROR(GL_INVALID_ENUM);
-
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    EXPECT_GL_ERROR(GL_INVALID_ENUM);
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    EXPECT_GL_ERROR(GL_INVALID_ENUM);
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_MIN_LOD, 0);
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_MAX_LOD, 0);
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
-
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_COMPARE_MODE, GL_NONE);
-    EXPECT_GL_ERROR(GL_INVALID_ENUM);
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_COMPARE_FUNC, GL_ALWAYS);
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-    // Only valid base level on GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE is 0.
-    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_MIN_LOD, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_MAX_LOD, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_COMPARE_FUNC, GL_ALWAYS);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // Only valid base level on GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES is 0.
+    glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_TEXTURE_BASE_LEVEL, 1);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
@@ -410,22 +409,21 @@ TEST_P(TextureMultisampleArrayWebGLTest, TexStorage3DMultisample)
     ANGLE_SKIP_TEST_IF(!requestArrayExtension());
 
     GLint maxSamplesRGBA8 = 0;
-    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_RGBA8, GL_SAMPLES, 1,
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_RGBA8, GL_SAMPLES, 1,
                           &maxSamplesRGBA8);
 
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
     ASSERT_GL_NO_ERROR();
 
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, maxSamplesRGBA8, GL_RGBA8,
-                                   8, 4, 2, GL_TRUE);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, maxSamplesRGBA8, GL_RGBA8, 8,
+                                 4, 2, GL_TRUE);
     ASSERT_GL_NO_ERROR();
 
     GLint width = 0, height = 0, depth = 0, samples = 0;
-    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_TEXTURE_WIDTH, &width);
-    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_TEXTURE_HEIGHT, &height);
-    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_TEXTURE_DEPTH, &depth);
-    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, 0, GL_TEXTURE_SAMPLES,
-                             &samples);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, GL_TEXTURE_WIDTH, &width);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, GL_TEXTURE_HEIGHT, &height);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, GL_TEXTURE_DEPTH, &depth);
+    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, GL_TEXTURE_SAMPLES, &samples);
     ASSERT_GL_NO_ERROR();
 
     EXPECT_EQ(8, width);
@@ -434,23 +432,23 @@ TEST_P(TextureMultisampleArrayWebGLTest, TexStorage3DMultisample)
     EXPECT_EQ(maxSamplesRGBA8, samples);
 }
 
-// Test for invalid FramebufferTextureLayer calls with GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE
+// Test for invalid FramebufferTextureLayer calls with GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES
 // textures.
 TEST_P(TextureMultisampleArrayWebGLTest, InvalidFramebufferTextureLayer)
 {
     ANGLE_SKIP_TEST_IF(!requestArrayExtension());
 
     GLint maxSamplesRGBA8 = 0;
-    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, GL_RGBA8, GL_SAMPLES, 1,
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, GL_RGBA8, GL_SAMPLES, 1,
                           &maxSamplesRGBA8);
 
     GLint maxArrayTextureLayers;
     glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxArrayTextureLayers);
 
     // Test framebuffer status with just a color texture attached.
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, maxSamplesRGBA8, GL_RGBA8,
-                                   4, 4, 2, GL_TRUE);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, maxSamplesRGBA8, GL_RGBA8, 4,
+                                 4, 2, GL_TRUE);
     ASSERT_GL_NO_ERROR();
 
     // Test with mip level 1 and -1 (only level 0 is valid for multisample textures).
@@ -476,12 +474,12 @@ TEST_P(TextureMultisampleArrayWebGLTest, FramebufferCompleteness)
     ANGLE_SKIP_TEST_IF(!requestArrayExtension());
 
     std::vector<GLenum> testFormats = {{GL_RGBA8, GL_DEPTH_COMPONENT24, GL_DEPTH24_STENCIL8}};
-    GLint samplesToUse = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, testFormats);
+    GLint samplesToUse = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, testFormats);
 
     // Test framebuffer status with just a color texture attached.
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, samplesToUse, GL_RGBA8, 4,
-                                   4, 2, GL_TRUE);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, samplesToUse, GL_RGBA8, 4, 4,
+                                 2, GL_TRUE);
     ASSERT_GL_NO_ERROR();
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
@@ -493,9 +491,9 @@ TEST_P(TextureMultisampleArrayWebGLTest, FramebufferCompleteness)
 
     // Test framebuffer status with both color and depth textures attached.
     GLTexture depthTexture;
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, depthTexture);
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, samplesToUse,
-                                   GL_DEPTH_COMPONENT24, 4, 4, 2, GL_TRUE);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, depthTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, samplesToUse,
+                                 GL_DEPTH_COMPONENT24, 4, 4, 2, GL_TRUE);
     ASSERT_GL_NO_ERROR();
 
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0, 0);
@@ -506,9 +504,9 @@ TEST_P(TextureMultisampleArrayWebGLTest, FramebufferCompleteness)
 
     // Test with color and depth/stencil textures attached.
     GLTexture depthStencilTexture;
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, depthStencilTexture);
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, samplesToUse,
-                                   GL_DEPTH24_STENCIL8, 4, 4, 2, GL_TRUE);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, depthStencilTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, samplesToUse,
+                                 GL_DEPTH24_STENCIL8, 4, 4, 2, GL_TRUE);
     ASSERT_GL_NO_ERROR();
 
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, depthStencilTexture, 0,
@@ -529,11 +527,11 @@ TEST_P(TextureMultisampleArrayWebGLTest, FramebufferColorClearAndBlit)
     const GLsizei kHeight = 4;
 
     std::vector<GLenum> testFormats = {GL_RGBA8};
-    GLint samplesToUse = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, testFormats);
+    GLint samplesToUse = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, testFormats);
 
-    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, mTexture);
-    glTexStorage3DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE, samplesToUse, GL_RGBA8,
-                                   kWidth, kHeight, 2, GL_TRUE);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, mTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, samplesToUse, GL_RGBA8,
+                                 kWidth, kHeight, 2, GL_TRUE);
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture, 0, 0);

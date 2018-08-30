@@ -437,15 +437,6 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
                                                              GLsizei *length,
                                                              GLuint64 *params);
 
-// GL_ANGLE_texture_multisample_array
-ANGLE_EXPORT void GL_APIENTRY TexStorage3DMultisampleANGLE(GLenum target,
-                                                           GLsizei samples,
-                                                           GLint sizedinternalformat,
-                                                           GLsizei width,
-                                                           GLsizei height,
-                                                           GLsizei depth,
-                                                           GLboolean fixedsamplelocations);
-
 // GL_ANGLE_translated_shader_source
 ANGLE_EXPORT void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
                                                              GLsizei bufsize,
@@ -805,6 +796,15 @@ ANGLE_EXPORT void GL_APIENTRY TexGeniOES(GLenum coord, GLenum pname, GLint param
 ANGLE_EXPORT void GL_APIENTRY TexGenivOES(GLenum coord, GLenum pname, const GLint *params);
 ANGLE_EXPORT void GL_APIENTRY TexGenxOES(GLenum coord, GLenum pname, GLfixed param);
 ANGLE_EXPORT void GL_APIENTRY TexGenxvOES(GLenum coord, GLenum pname, const GLfixed *params);
+
+// GL_OES_texture_storage_multisample_2d_array
+ANGLE_EXPORT void GL_APIENTRY TexStorage3DMultisampleOES(GLenum target,
+                                                         GLsizei samples,
+                                                         GLenum internalformat,
+                                                         GLsizei width,
+                                                         GLsizei height,
+                                                         GLsizei depth,
+                                                         GLboolean fixedsamplelocations);
 
 // GL_OES_vertex_array_object
 ANGLE_EXPORT void GL_APIENTRY BindVertexArrayOES(GLuint array);
@@ -2393,6 +2393,15 @@ ANGLE_EXPORT void GL_APIENTRY TexStorage3DEXTContextANGLE(GLeglContext ctx,
                                                           GLsizei width,
                                                           GLsizei height,
                                                           GLsizei depth);
+ANGLE_EXPORT void GL_APIENTRY
+TexStorage3DMultisampleOESContextANGLE(GLeglContext ctx,
+                                       GLenum target,
+                                       GLsizei samples,
+                                       GLenum internalformat,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLsizei depth,
+                                       GLboolean fixedsamplelocations);
 ANGLE_EXPORT void GL_APIENTRY TexSubImage2DContextANGLE(GLeglContext ctx,
                                                         GLenum target,
                                                         GLint level,
@@ -3281,15 +3290,6 @@ FramebufferTextureMultiviewSideBySideANGLEContextANGLE(GLeglContext ctx,
                                                        GLint level,
                                                        GLsizei numViews,
                                                        const GLint *viewportOffsets);
-ANGLE_EXPORT void GL_APIENTRY
-TexStorage3DMultisampleANGLEContextANGLE(GLeglContext ctx,
-                                         GLenum target,
-                                         GLsizei samples,
-                                         GLint sizedinternalformat,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLsizei depth,
-                                         GLboolean fixedsamplelocations);
 }  // namespace gl
 
 #endif  // LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_

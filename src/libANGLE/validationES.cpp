@@ -501,7 +501,7 @@ bool ValidTextureTarget(const Context *context, TextureType type)
         case TextureType::_2DMultisample:
             return (context->getClientVersion() >= Version(3, 1));
         case TextureType::_2DMultisampleArray:
-            return context->getExtensions().textureMultisampleArray;
+            return context->getExtensions().textureStorageMultisample2DArray;
 
         default:
             return false;
@@ -691,7 +691,7 @@ bool ValidTexLevelDestinationTarget(const Context *context, TextureType type)
         case TextureType::Rectangle:
             return context->getExtensions().textureRectangle;
         case TextureType::_2DMultisampleArray:
-            return context->getExtensions().textureMultisampleArray;
+            return context->getExtensions().textureStorageMultisample2DArray;
         default:
             return false;
     }
@@ -2194,7 +2194,7 @@ bool ValidateStateQuery(Context *context, GLenum pname, GLenum *nativeType, unsi
         case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
             break;
         case GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY:
-            if (!context->getExtensions().textureMultisampleArray)
+            if (!context->getExtensions().textureStorageMultisample2DArray)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), MultisampleArrayExtensionRequired);
                 return false;
@@ -6335,8 +6335,8 @@ bool ValidateGetInternalFormativBase(Context *context,
                 return false;
             }
             break;
-        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE:
-            if (!context->getExtensions().textureMultisampleArray)
+        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES:
+            if (!context->getExtensions().textureStorageMultisample2DArray)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), MultisampleArrayExtensionRequired);
                 return false;

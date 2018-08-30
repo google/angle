@@ -427,8 +427,8 @@ struct Extensions
     // GL_KHR_parallel_shader_compile
     bool parallelShaderCompile;
 
-    // GL_ANGLE_texture_multisample_array
-    bool textureMultisampleArray;
+    // GL_OES_texture_storage_multisample_2d_array
+    bool textureStorageMultisample2DArray;
 };
 
 struct ExtensionInfo

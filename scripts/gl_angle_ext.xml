@@ -815,16 +815,6 @@
                 <param><ptype>GLsizei</ptype> <name>numViews</name></param>
                 <param><ptype>const GLint *</ptype> <name>viewportOffsets</name></param>
             </command>
-            <command>
-            <proto>void <name>glTexStorage3DMultisampleANGLE</name></proto>
-                <param><ptype>GLenum</ptype> <name>target</name></param>
-                <param><ptype>GLsizei</ptype> <name>samples</name></param>
-                <param><ptype>GLint</ptype> <name>sizedinternalformat</name></param>
-                <param><ptype>GLsizei</ptype> <name>width</name></param>
-                <param><ptype>GLsizei</ptype> <name>height</name></param>
-                <param><ptype>GLsizei</ptype> <name>depth</name></param>
-                <param><ptype>GLboolean</ptype> <name>fixedsamplelocations</name></param>
-            </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
@@ -955,11 +945,6 @@
             <require>
                 <command name="glFramebufferTextureMultiviewSideBySideANGLE"/>
                 <command name="glFramebufferTextureMultiviewLayeredANGLE"/>
-            </require>
-        </extension>
-        <extension name="GL_ANGLE_texture_multisample_array" supported='gl'>
-            <require>
-                <command name="glTexStorage3DMultisampleANGLE"/>
             </require>
         </extension>
     </extensions>

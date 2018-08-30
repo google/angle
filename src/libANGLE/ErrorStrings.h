@@ -306,8 +306,8 @@ ERRMSG(StencilReferenceMaskOrMismatch,
        "Stencil reference and mask values must be the same for front facing and back facing "
        "triangles.");
 ERRMSG(StrideMustBeMultipleOfType, "Stride must be a multiple of the passed in datatype.");
-ERRMSG(TargetMustBeTexture2DMultisampleArrayANGLE,
-       "Target must be TEXTURE_2D_MULTISAMPLE_ARRAY_ANGLE.");
+ERRMSG(TargetMustBeTexture2DMultisampleArrayOES,
+       "Target must be TEXTURE_2D_MULTISAMPLE_ARRAY_OES.");
 ERRMSG(TextureNotBound, "A texture must be bound.");
 ERRMSG(TextureNotPow2, "The texture is a non-power-of-two texture.");
 ERRMSG(TextureTargetRequiresES31, "Texture target requires at least OpenGL ES 3.1.");

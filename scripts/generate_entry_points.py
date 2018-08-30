@@ -24,7 +24,6 @@ angle_extensions = [
     "GL_ANGLE_request_extension",
     "GL_ANGLE_robust_client_memory",
     "GL_ANGLE_multiview",
-    "GL_ANGLE_texture_multisample_array",
 ]
 
 gles1_extensions = [
@@ -68,6 +67,7 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + [
     "GL_OES_EGL_image",
     "GL_OES_get_program_binary",
     "GL_OES_mapbuffer",
+    "GL_OES_texture_storage_multisample_2d_array",
     "GL_OES_vertex_array_object",
     "GL_KHR_parallel_shader_compile",
 ])

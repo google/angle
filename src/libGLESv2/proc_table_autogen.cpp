@@ -1096,6 +1096,8 @@ ProcEntry g_procTable[] = {
     {"glTexStorage3DContextANGLE", P(gl::TexStorage3DContextANGLE)},
     {"glTexStorage3DEXT", P(gl::TexStorage3DEXT)},
     {"glTexStorage3DEXTContextANGLE", P(gl::TexStorage3DEXTContextANGLE)},
+    {"glTexStorage3DMultisampleOES", P(gl::TexStorage3DMultisampleOES)},
+    {"glTexStorage3DMultisampleOESContextANGLE", P(gl::TexStorage3DMultisampleOESContextANGLE)},
     {"glTexSubImage2D", P(gl::TexSubImage2D)},
     {"glTexSubImage2DContextANGLE", P(gl::TexSubImage2DContextANGLE)},
     {"glTexSubImage2DRobustANGLE", P(gl::TexSubImage2DRobustANGLE)},
@@ -1239,5 +1241,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1171;
+size_t g_numProcs = 1173;
 }  // namespace egl

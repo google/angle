@@ -1932,37 +1932,6 @@ void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
     }
 }
 
-// GL_ANGLE_texture_multisample_array
-void GL_APIENTRY TexStorage3DMultisampleANGLE(GLenum target,
-                                              GLsizei samples,
-                                              GLint sizedinternalformat,
-                                              GLsizei width,
-                                              GLsizei height,
-                                              GLsizei depth,
-                                              GLboolean fixedsamplelocations)
-{
-    EVENT(
-        "(GLenum target = 0x%X, GLsizei samples = %d, GLint sizedinternalformat = %d, GLsizei "
-        "width = %d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedsamplelocations = %u)",
-        target, samples, sizedinternalformat, width, height, depth, fixedsamplelocations);
-
-    Context *context = GetValidGlobalContext();
-    if (context)
-    {
-        TextureType targetPacked = FromGLenum<TextureType>(target);
-        context->gatherParams<EntryPoint::TexStorage3DMultisampleANGLE>(
-            targetPacked, samples, sizedinternalformat, width, height, depth, fixedsamplelocations);
-
-        if (context->skipValidation() || ValidateTexStorage3DMultisampleANGLE(
-                                             context, targetPacked, samples, sizedinternalformat,
-                                             width, height, depth, fixedsamplelocations))
-        {
-            context->texStorage3DMultisample(targetPacked, samples, sizedinternalformat, width,
-                                             height, depth, fixedsamplelocations);
-        }
-    }
-}
-
 // GL_ANGLE_translated_shader_source
 void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
                                                 GLsizei bufsize,
@@ -4396,6 +4365,37 @@ void GL_APIENTRY TexGenxvOES(GLenum coord, GLenum pname, const GLfixed *params)
         if (context->skipValidation() || ValidateTexGenxvOES(context, coord, pname, params))
         {
             context->texGenxv(coord, pname, params);
+        }
+    }
+}
+
+// GL_OES_texture_storage_multisample_2d_array
+void GL_APIENTRY TexStorage3DMultisampleOES(GLenum target,
+                                            GLsizei samples,
+                                            GLenum internalformat,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLsizei depth,
+                                            GLboolean fixedsamplelocations)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalformat = 0x%X, GLsizei width "
+        "= %d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedsamplelocations = %u)",
+        target, samples, internalformat, width, height, depth, fixedsamplelocations);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexStorage3DMultisampleOES>(
+            targetPacked, samples, internalformat, width, height, depth, fixedsamplelocations);
+
+        if (context->skipValidation() ||
+            ValidateTexStorage3DMultisampleOES(context, targetPacked, samples, internalformat,
+                                               width, height, depth, fixedsamplelocations))
+        {
+            context->texStorage3DMultisample(targetPacked, samples, internalformat, width, height,
+                                             depth, fixedsamplelocations);
         }
     }
 }
@@ -13692,6 +13692,38 @@ void GL_APIENTRY TexStorage3DEXTContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY TexStorage3DMultisampleOESContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLsizei samples,
+                                                        GLenum internalformat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLsizei depth,
+                                                        GLboolean fixedsamplelocations)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalformat = 0x%X, GLsizei width "
+        "= %d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedsamplelocations = %u)",
+        target, samples, internalformat, width, height, depth, fixedsamplelocations);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexStorage3DMultisampleOES>(
+            targetPacked, samples, internalformat, width, height, depth, fixedsamplelocations);
+
+        if (context->skipValidation() ||
+            ValidateTexStorage3DMultisampleOES(context, targetPacked, samples, internalformat,
+                                               width, height, depth, fixedsamplelocations))
+        {
+            context->texStorage3DMultisample(targetPacked, samples, internalformat, width, height,
+                                             depth, fixedsamplelocations);
+        }
+    }
+}
+
 void GL_APIENTRY TexSubImage2DContextANGLE(GLeglContext ctx,
                                            GLenum target,
                                            GLint level,
@@ -17825,38 +17857,6 @@ FramebufferTextureMultiviewSideBySideANGLEContextANGLE(GLeglContext ctx,
         {
             context->framebufferTextureMultiviewSideBySide(target, attachment, texture, level,
                                                            numViews, viewportOffsets);
-        }
-    }
-}
-
-void GL_APIENTRY TexStorage3DMultisampleANGLEContextANGLE(GLeglContext ctx,
-                                                          GLenum target,
-                                                          GLsizei samples,
-                                                          GLint sizedinternalformat,
-                                                          GLsizei width,
-                                                          GLsizei height,
-                                                          GLsizei depth,
-                                                          GLboolean fixedsamplelocations)
-{
-    EVENT(
-        "(GLenum target = 0x%X, GLsizei samples = %d, GLint sizedinternalformat = %d, GLsizei "
-        "width = %d, GLsizei height = %d, GLsizei depth = %d, GLboolean fixedsamplelocations = %u)",
-        target, samples, sizedinternalformat, width, height, depth, fixedsamplelocations);
-
-    Context *context = static_cast<gl::Context *>(ctx);
-    if (context)
-    {
-        ASSERT(context == GetValidGlobalContext());
-        TextureType targetPacked = FromGLenum<TextureType>(target);
-        context->gatherParams<EntryPoint::TexStorage3DMultisampleANGLE>(
-            targetPacked, samples, sizedinternalformat, width, height, depth, fixedsamplelocations);
-
-        if (context->skipValidation() || ValidateTexStorage3DMultisampleANGLE(
-                                             context, targetPacked, samples, sizedinternalformat,
-                                             width, height, depth, fixedsamplelocations))
-        {
-            context->texStorage3DMultisample(targetPacked, samples, sizedinternalformat, width,
-                                             height, depth, fixedsamplelocations);
         }
     }
 }

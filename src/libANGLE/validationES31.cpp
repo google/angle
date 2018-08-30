@@ -1954,17 +1954,17 @@ bool ValidateFramebufferTextureEXT(Context *context,
     return true;
 }
 
-// GL_ANGLE_texture_multisample_array
-bool ValidateTexStorage3DMultisampleANGLE(Context *context,
-                                          TextureType target,
-                                          GLsizei samples,
-                                          GLint sizedinternalformat,
-                                          GLsizei width,
-                                          GLsizei height,
-                                          GLsizei depth,
-                                          GLboolean fixedsamplelocations)
+// GL_OES_texture_storage_multisample_2d_array
+bool ValidateTexStorage3DMultisampleOES(Context *context,
+                                        TextureType target,
+                                        GLsizei samples,
+                                        GLint sizedinternalformat,
+                                        GLsizei width,
+                                        GLsizei height,
+                                        GLsizei depth,
+                                        GLboolean fixedsamplelocations)
 {
-    if (!context->getExtensions().textureMultisampleArray)
+    if (!context->getExtensions().textureStorageMultisample2DArray)
     {
         ANGLE_VALIDATION_ERR(context, InvalidEnum(), MultisampleArrayExtensionRequired);
         return false;
@@ -1972,7 +1972,7 @@ bool ValidateTexStorage3DMultisampleANGLE(Context *context,
 
     if (target != TextureType::_2DMultisampleArray)
     {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), TargetMustBeTexture2DMultisampleArrayANGLE);
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), TargetMustBeTexture2DMultisampleArrayOES);
         return false;
     }
 
