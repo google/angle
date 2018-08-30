@@ -174,13 +174,27 @@ class ContextVk : public ContextImpl, public vk::Context
     void handleError(VkResult errorCode, const char *file, unsigned int line) override;
     const gl::ActiveTextureArray<TextureVk *> &getActiveTextures() const;
 
-    void setIndexBufferDirty() { mIndexBufferDirty = true; }
+    void setIndexBufferDirty() { mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER); }
 
   private:
+    // Dirty bits.
+    enum DirtyBitType : size_t
+    {
+        DIRTY_BIT_DEFAULT_ATTRIBS,
+        DIRTY_BIT_PIPELINE,
+        DIRTY_BIT_TEXTURES,
+        DIRTY_BIT_VERTEX_BUFFERS,
+        DIRTY_BIT_INDEX_BUFFER,
+        DIRTY_BIT_DESCRIPTOR_SETS,
+        DIRTY_BIT_MAX,
+    };
+
+    using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
+
     angle::Result initPipeline(const gl::DrawCallParams &drawCallParams);
     angle::Result setupDraw(const gl::Context *context,
                             const gl::DrawCallParams &drawCallParams,
-                            bool useIndexBuffer,
+                            const DirtyBits &dirtyBitsMask,
                             vk::CommandBuffer **commandBufferOut);
     angle::Result setupIndexedDraw(const gl::Context *context,
                                    const gl::DrawCallParams &drawCallParams,
@@ -198,6 +212,8 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result updateDefaultAttributes();
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
+    void invalidateCurrentTextures();
+
     vk::PipelineAndSerial *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
 
@@ -210,13 +226,10 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::DescriptorSetLayoutArray<vk::DynamicDescriptorPool> mDynamicDescriptorPools;
 
     // Dirty bits.
-    // TODO(jmadill): Make this into a dirty bit set. http://anglebug.com/2786
-    bool mDirtyDefaultAttribs;
-    bool mPipelineDirty;
-    bool mTexturesDirty;
-    bool mVertexBuffersDirty;
-    bool mIndexBufferDirty;
-    bool mDescriptorSetsDirty;
+    DirtyBits mDirtyBits;
+    DirtyBits mNonIndexedDirtyBitsMask;
+    DirtyBits mIndexedDirtyBitsMask;
+    DirtyBits mNewCommandBufferDirtyBits;
 
     // Cached back-end objects.
     VertexArrayVk *mVertexArray;
