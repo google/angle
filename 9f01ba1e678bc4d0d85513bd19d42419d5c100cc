@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "002cfbc1_9f3b7a8f",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T22:28:09Z",
+      "side": 1,
+      "message": "Actually, why don\u0027t you just make a new method called \"populate\" that doesn\u0027t call back into the application and simply stores the value. Then you don\u0027t have to bother with the null context hack.\n\nAlso FWIW you are probably just as good to pass a Display to these methods instead of a Context.",
+      "parentUuid": "40b652bb_3364da13",
+      "range": {
+        "startLine": 732,
+        "startChar": 19,
+        "endLine": 732,
+        "endChar": 26
+      },
+      "revId": "9f01ba1e678bc4d0d85513bd19d42419d5c100cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6effe823_68d12c10",
         "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
         "patchSetId": 10
