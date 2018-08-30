@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46990651_5f19b9a2",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-30T08:20:40Z",
+      "side": 1,
+      "message": "nit: can this be \"writeShaderStorageBlocksHeader\" and take the info sink as a parameter? A bit like writeDotOperator that we use in this file.",
+      "revId": "80fac33d6df18958c584c5eca6995a19d7ddfd90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17c2909d_1e27ba18",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 21
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-08-30T08:20:40Z",
+      "side": 1,
+      "message": "Ah these are additional skips because before we weren\u0027t doing anything and now we are? sgtm",
+      "revId": "80fac33d6df18958c584c5eca6995a19d7ddfd90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
