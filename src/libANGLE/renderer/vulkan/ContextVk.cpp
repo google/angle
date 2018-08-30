@@ -627,10 +627,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
                 mVertexArrayBindingHasChanged = true;
-
-                // Note that we should implement faster dirty bits for VAO changes in ES 3.0.
-                // This might require keeping separate dirty info for the data and state.
-                mDirtyDefaultAttribs.set();
+                mDirtyDefaultAttribs = context->getStateCache().getActiveDefaultAttribsMask();
                 break;
             }
             case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
@@ -642,7 +639,9 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
                 dirtyTextures = true;
+
                 // No additional work is needed here. We will update the pipeline desc later.
+                mDirtyDefaultAttribs = context->getStateCache().getActiveDefaultAttribsMask();
                 break;
             }
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
@@ -1011,18 +1010,12 @@ angle::Result ContextVk::updateDefaultAttributes()
 {
     ASSERT(mDirtyDefaultAttribs.any());
 
-    const gl::Program *program = mState.getState().getProgram();
-    ASSERT(program);
-
-    const gl::AttributesMask &programAttribs  = program->getActiveAttribLocationsMask();
-    const gl::AttributesMask &attribsToUpdate = (programAttribs & mDirtyDefaultAttribs);
-
-    for (size_t attribIndex : attribsToUpdate)
+    for (size_t attribIndex : mDirtyDefaultAttribs)
     {
         ANGLE_TRY(updateDefaultAttribute(attribIndex))
     }
 
-    mDirtyDefaultAttribs &= ~attribsToUpdate;
+    mDirtyDefaultAttribs.reset();
     return angle::Result::Continue();
 }
 
