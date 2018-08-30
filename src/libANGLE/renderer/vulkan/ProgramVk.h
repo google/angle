@@ -103,16 +103,24 @@ class ProgramVk : public ProgramImpl
                               const vk::PipelineLayout **pipelineLayoutOut);
 
     angle::Result updateUniforms(ContextVk *contextVk);
-
-    void invalidateTextures();
+    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
 
     angle::Result updateDescriptorSets(ContextVk *contextVk,
                                        const gl::DrawCallParams &drawCallParams,
-                                       VkDescriptorSet driverUniformsDescriptorSet,
                                        vk::CommandBuffer *commandBuffer);
 
     // For testing only.
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
+
+    const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
+
+    bool hasTextures() const { return !mState.getSamplerBindings().empty(); }
+
+    bool dirtyUniforms() const
+    {
+        return (mDefaultUniformBlocks[vk::ShaderType::VertexShader].uniformsDirty ||
+                mDefaultUniformBlocks[vk::ShaderType::FragmentShader].uniformsDirty);
+    }
 
   private:
     template <int cols, int rows>
@@ -126,7 +134,6 @@ class ProgramVk : public ProgramImpl
     angle::Result initDefaultUniformBlocks(const gl::Context *glContext);
 
     angle::Result updateDefaultUniformsDescriptorSet(ContextVk *contextVk);
-    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
 
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;
@@ -165,7 +172,6 @@ class ProgramVk : public ProgramImpl
     // Descriptor sets for uniform blocks and textures for this program.
     std::vector<VkDescriptorSet> mDescriptorSets;
     gl::RangeUI mUsedDescriptorSetRange;
-    bool mDirtyTextures;
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
     // deleted while this program is in use.

@@ -158,6 +158,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     void invalidateCurrentPipeline();
     void invalidateDefaultAttribute(size_t attribIndex);
+    void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
 
     vk::DynamicDescriptorPool *getDynamicDescriptorPool(uint32_t descriptorSetIndex);
 
@@ -173,19 +174,27 @@ class ContextVk : public ContextImpl, public vk::Context
     void handleError(VkResult errorCode, const char *file, unsigned int line) override;
     const gl::ActiveTextureArray<TextureVk *> &getActiveTextures() const;
 
+    void setIndexBufferDirty() { mIndexBufferDirty = true; }
+
   private:
-    gl::Error initPipeline(const gl::DrawCallParams &drawCallParams);
-    gl::Error setupDraw(const gl::Context *context,
-                        const gl::DrawCallParams &drawCallParams,
-                        vk::CommandBuffer **commandBufferOut,
-                        bool *shouldApplyVertexArrayOut);
+    angle::Result initPipeline(const gl::DrawCallParams &drawCallParams);
+    angle::Result setupDraw(const gl::Context *context,
+                            const gl::DrawCallParams &drawCallParams,
+                            bool useIndexBuffer,
+                            vk::CommandBuffer **commandBufferOut);
+    angle::Result setupIndexedDraw(const gl::Context *context,
+                                   const gl::DrawCallParams &drawCallParams,
+                                   vk::CommandBuffer **commandBufferOut);
+    angle::Result setupLineLoopDraw(const gl::Context *context,
+                                    const gl::DrawCallParams &drawCallParams,
+                                    vk::CommandBuffer **commandBufferOut);
 
     void updateScissor(const gl::State &glState) const;
     void updateFlipViewportDrawFramebuffer(const gl::State &glState);
     void updateFlipViewportReadFramebuffer(const gl::State &glState);
 
     angle::Result updateDriverUniforms(const gl::State &glState);
-    gl::Error updateActiveTextures(const gl::Context *context);
+    angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateDefaultAttributes();
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
@@ -200,9 +209,18 @@ class ContextVk : public ContextImpl, public vk::Context
     // threads simultaneously. Hence, we keep them in the ContextVk instead of the RendererVk.
     vk::DescriptorSetLayoutArray<vk::DynamicDescriptorPool> mDynamicDescriptorPools;
 
-    // Triggers adding dependencies to the command graph.
+    // Dirty bits.
+    // TODO(jmadill): Make this into a dirty bit set. http://anglebug.com/2786
+    bool mDirtyDefaultAttribs;
+    bool mPipelineDirty;
     bool mTexturesDirty;
-    bool mVertexArrayBindingHasChanged;
+    bool mVertexBuffersDirty;
+    bool mIndexBufferDirty;
+    bool mDescriptorSetsDirty;
+
+    // The offset we had the last time we bound the index buffer.
+    const GLvoid *mLastIndexBufferOffset;
+    GLenum mCurrentDrawElementsType;
 
     // Cached clear value/mask for color and depth/stencil.
     VkClearValue mClearColorValue;
@@ -235,7 +253,7 @@ class ContextVk : public ContextImpl, public vk::Context
     gl::ActiveTextureArray<TextureVk *> mActiveTextures;
 
     // "Current Value" aka default vertex attribute state.
-    gl::AttributesMask mDirtyDefaultAttribs;
+    gl::AttributesMask mDirtyDefaultAttribsMask;
     gl::AttribArray<vk::DynamicBuffer> mDefaultAttribBuffers;
 };
 }  // namespace rx

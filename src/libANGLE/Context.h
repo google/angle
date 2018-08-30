@@ -98,6 +98,7 @@ class StateCache final : angle::NonCopyable
     AttributesMask getActiveClientAttribsMask() const { return mCachedActiveClientAttribsMask; }
     AttributesMask getActiveDefaultAttribsMask() const { return mCachedActiveDefaultAttribsMask; }
     bool hasAnyEnabledClientAttrib() const { return mCachedHasAnyEnabledClientAttrib; }
+    bool hasAnyActiveClientAttrib() const { return mCachedActiveClientAttribsMask.any(); }
 
     // Places that can trigger updateVertexElementLimits:
     // 1. onVertexArrayBindingChange.

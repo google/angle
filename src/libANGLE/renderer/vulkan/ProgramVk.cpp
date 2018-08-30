@@ -183,8 +183,7 @@ ProgramVk::DefaultUniformBlock::DefaultUniformBlock()
 
 ProgramVk::DefaultUniformBlock::~DefaultUniformBlock() = default;
 
-ProgramVk::ProgramVk(const gl::ProgramState &state)
-    : ProgramImpl(state), mUniformBlocksOffsets{}, mDirtyTextures(false)
+ProgramVk::ProgramVk(const gl::ProgramState &state) : ProgramImpl(state), mUniformBlocksOffsets{}
 {
     mUsedDescriptorSetRange.invalidate();
 }
@@ -222,7 +221,6 @@ angle::Result ProgramVk::reset(ContextVk *contextVk)
 
     mDescriptorSets.clear();
     mUsedDescriptorSetRange.invalidate();
-    mDirtyTextures = false;
 
     return angle::Result::Continue();
 }
@@ -276,7 +274,6 @@ gl::LinkResult ProgramVk::linkImpl(const gl::Context *glContext,
     {
         // Ensure the descriptor set range includes the textures at position 1.
         mUsedDescriptorSetRange.extend(kTextureDescriptorSetIndex);
-        mDirtyTextures = true;
     }
 
     // Store a reference to the pipeline and descriptor set layouts. This will create them if they
@@ -334,7 +331,6 @@ gl::LinkResult ProgramVk::linkImpl(const gl::Context *glContext,
         {
             // Ensure the descriptor set range includes the textures at position 1.
             mUsedDescriptorSetRange.extend(kTextureDescriptorSetIndex);
-            mDirtyTextures = true;
         }
     }
 
@@ -783,11 +779,7 @@ void ProgramVk::getUniformuiv(const gl::Context *context, GLint location, GLuint
 
 angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
 {
-    if (!mDefaultUniformBlocks[vk::ShaderType::VertexShader].uniformsDirty &&
-        !mDefaultUniformBlocks[vk::ShaderType::FragmentShader].uniformsDirty)
-    {
-        return angle::Result::Continue();
-    }
+    ASSERT(dirtyUniforms());
 
     // Update buffer memory by immediate mapping. This immediate update only works once.
     bool anyNewBufferAllocated = false;
@@ -865,11 +857,7 @@ angle::Result ProgramVk::updateDefaultUniformsDescriptorSet(ContextVk *contextVk
 
 angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
 {
-    if (mState.getSamplerBindings().empty() || !mDirtyTextures)
-    {
-        return angle::Result::Continue();
-    }
-
+    ASSERT(hasTextures());
     ANGLE_TRY(allocateDescriptorSet(contextVk, kTextureDescriptorSetIndex));
 
     ASSERT(mUsedDescriptorSetRange.contains(1));
@@ -923,13 +911,7 @@ angle::Result ProgramVk::updateTexturesDescriptorSet(ContextVk *contextVk)
     ASSERT(writeCount > 0);
     vkUpdateDescriptorSets(device, writeCount, writeDescriptorInfo.data(), 0, nullptr);
 
-    mDirtyTextures = false;
     return angle::Result::Continue();
-}
-
-void ProgramVk::invalidateTextures()
-{
-    mDirtyTextures = true;
 }
 
 void ProgramVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
@@ -942,17 +924,10 @@ void ProgramVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
 
 angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
                                               const gl::DrawCallParams &drawCallParams,
-                                              VkDescriptorSet driverUniformsDescriptorSet,
                                               vk::CommandBuffer *commandBuffer)
 {
     // TODO(jmadill): Line rasterization emulation shaders. http://anglebug.com/2598
     // Can probably use better dirty bits here.
-    ANGLE_TRY(updateUniforms(contextVk));
-    ANGLE_TRY(updateTexturesDescriptorSet(contextVk));
-
-    commandBuffer->bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS, mPipelineLayout.get(),
-                                      kDriverUniformsDescriptorSetIndex, 1,
-                                      &driverUniformsDescriptorSet, 0, nullptr);
 
     if (mUsedDescriptorSetRange.empty())
         return angle::Result::Continue();
