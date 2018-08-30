@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d950bcbc_76f8c677",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T18:26:28Z",
+      "side": 1,
+      "message": "does this interact with Olli\u0027s contributions to enable OES_texture_storage_multisample_2d_array ?",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 18
+      },
+      "revId": "8e3c83a139a0014b4c1295872874791c8684d81b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e41734a5_60b82f1d",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T18:26:28Z",
+      "side": 1,
+      "message": "grammar nit: textures",
+      "range": {
+        "startLine": 44,
+        "startChar": 32,
+        "endLine": 44,
+        "endChar": 39
+      },
+      "revId": "8e3c83a139a0014b4c1295872874791c8684d81b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f04e782e_239f6c24",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T18:26:28Z",
+      "side": 1,
+      "message": "grammar nit: full stop (rendering. It also adds support using such textures in shaders, ... etc)",
+      "range": {
+        "startLine": 45,
+        "startChar": 58,
+        "endLine": 45,
+        "endChar": 67
+      },
+      "revId": "8e3c83a139a0014b4c1295872874791c8684d81b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2eeb5038_9c1606e1",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T18:26:28Z",
+      "side": 1,
+      "message": "are these all pre-existing enums? Let\u0027s make sure we reserve any new enums needed and mark it as such in the internal angle doc.",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 96,
+        "endChar": 36
+      },
+      "revId": "8e3c83a139a0014b4c1295872874791c8684d81b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
