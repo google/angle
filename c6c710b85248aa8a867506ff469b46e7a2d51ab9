@@ -2,6 +2,213 @@
   "comments": [
     {
       "key": {
+        "uuid": "a8353877_300429d9",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "you can assume both context and display are non-null. no need to have the if display or if context.",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 54,
+        "endChar": 72
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d19385f_0da08f0a",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "can you use your helper function here? areBlobFunctionsSet or something of the kind?",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 50
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "765ebd74_05429880",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "you can assume display is non null.",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 77,
+        "endChar": 72
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3969a764_8df7153c",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "same comment - the are function could be used here.",
+      "range": {
+        "startLine": 78,
+        "startChar": 19,
+        "endLine": 78,
+        "endChar": 50
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a09f004_e2b696ce",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "you should call ERR() here with a message to communicate there was a flagrant internal error.",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 19
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a0a6e9a_bb0b2ba6",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 97,
+        "startChar": 56,
+        "endLine": 97,
+        "endChar": 66
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6819c276_af42e482",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "I\u0027d probably ERR or WARN here too.",
+      "range": {
+        "startLine": 101,
+        "startChar": 12,
+        "endLine": 101,
+        "endChar": 19
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea2b9acb_1dc68ab2",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "this isn\u0027t quite correct any more. but should probably leave it.",
+      "range": {
+        "startLine": 116,
+        "startChar": 51,
+        "endLine": 116,
+        "endChar": 63
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "636014f6_5a23af57",
+        "filename": "src/libANGLE/BlobCache.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "nit: it\u0027s a bit unconventional to use a new namespace here. Maybe just kBlobKeyLength and BlobKey as the length and type? I would actually disagree with Geoff\u0027s suggestion and put the types outside of the class. I\u0027ve had all sorts of problems trying to forward declare classes and types defined nested in other classes.",
+      "range": {
+        "startLine": 28,
+        "startChar": 10,
+        "endLine": 28,
+        "endChar": 25
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "df50eb3a_f1b66d4f",
         "filename": "src/libANGLE/BlobCache.h",
         "patchSetId": 9
@@ -36,6 +243,293 @@
     },
     {
       "key": {
+        "uuid": "986a4dd9_3231773c",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "nit: can remove this probably.",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 14
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b62829e_9472747d",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "nit: default to nullptr",
+      "range": {
+        "startLine": 1228,
+        "startChar": 31,
+        "endLine": 1228,
+        "endChar": 42
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b40cea1_5b67cd84",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "re-nit: are",
+      "range": {
+        "startLine": 142,
+        "startChar": 9,
+        "endLine": 142,
+        "endChar": 28
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07243261_29f1cb7c",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "is it possible to put all the histograms in this file somehow?",
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd7cef77_7b9628fa",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "aside: if you want to close 2516 before finishing this, you can open a new bug. otherwise remember to update the TODO before you close 2516.",
+      "range": {
+        "startLine": 52,
+        "startChar": 27,
+        "endLine": 52,
+        "endChar": 31
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23987763_872a7acd",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "tiny nit: for strongly typed enums you can use CameCaseStyle instead of UPPER_CASE_UNDERSCORE_STYLE",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 18
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0aad904b_db0b384b",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "tiny nit: I prefer using anonymous namespace {} blocks rather than static.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 7
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79cac03c_5b86e889",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "tiny nit: better to call ANGLETest::SetUp() in case we ever do anything there.",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 40
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffafc31c_179f4da7",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "I think there\u0027s a bug in ANGLE where do don\u0027t reset the program cache on terminate... I found this many moons ago. Forgot to fix it. Might affect this.",
+      "range": {
+        "startLine": 94,
+        "startChar": 12,
+        "endLine": 94,
+        "endChar": 38
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e840f73_0156791f",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "same as below",
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7ab6213_c7820c13",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "same as below",
+      "range": {
+        "startLine": 135,
+        "startChar": 16,
+        "endLine": 135,
+        "endChar": 34
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc0dd107_a48dd127",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "tiny nit: you can use constexpr char kVertexShaderSrc2[]",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 33
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22ec9730_1b34e310",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "nit: you can use constexpr char kFragmentShaderSrc2[]",
+      "range": {
+        "startLine": 152,
+        "startChar": 4,
+        "endLine": 152,
+        "endChar": 34
+      },
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "13f7a99e_27cf2d31",
         "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
         "patchSetId": 9
@@ -47,6 +541,24 @@
       "writtenOn": "2018-08-30T20:30:44Z",
       "side": 1,
       "message": "The inside of this `if` is not tested yet (we\u0027ll soon see if it fails right here)",
+      "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6b291da_cae55d91",
+        "filename": "src/tests/egl_tests/EGLBlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-30T21:00:09Z",
+      "side": 1,
+      "message": "Do you plan on implementing this?",
+      "parentUuid": "13f7a99e_27cf2d31",
       "revId": "c6c710b85248aa8a867506ff469b46e7a2d51ab9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
