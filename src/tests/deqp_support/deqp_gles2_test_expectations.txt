@@ -221,6 +221,7 @@
 
 // Fails on Nexus 5x only. TODO(jmadill): Remove suppression when possible. http://anglebug.com/2791
 2791 VULKAN ANDROID : dEQP-GLES2.functional.clipping.* = SKIP
+2599 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.limits.points = FAIL
 
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.red_unsigned_byte = FAIL
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.rg_unsigned_byte = FAIL
@@ -234,7 +235,6 @@
 
 // Vulkan failures
 2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
-2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
 
 // Vulkan AMD Windows specific failures
 2602 VULKAN WIN AMD : dEQP-GLES2.functional.buffer.write.* = SKIP
