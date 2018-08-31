@@ -151,6 +151,10 @@ class RobustBufferAccessBehaviorTest : public ANGLETest
 TEST_P(RobustBufferAccessBehaviorTest, DrawElementsIndexOutOfRangeWithStaticDraw)
 {
     ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsWindows() && IsOpenGL());
+
+    // Failing after changing the shard count of angle_end2end_tests. http://anglebug.com/2799
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsD3D11_FL93());
+
     ANGLE_SKIP_TEST_IF(!initExtension());
 
     runIndexOutOfRangeTests(GL_STATIC_DRAW);
