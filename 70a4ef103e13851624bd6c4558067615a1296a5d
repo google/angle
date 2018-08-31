@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "777b15c8_033a3ae1",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-31T19:39:19Z",
+      "side": 1,
+      "message": "Welcome to the shader translator. Where we never call destructors. We use pool allocation for every \"T*\" object. They are freed en-massse when we exit the compilation scope. See PoolAlloc.h/cpp.",
+      "parentUuid": "43e45bef_584b6b1f",
+      "revId": "70a4ef103e13851624bd6c4558067615a1296a5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d91ad608_068ebf42",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 4
@@ -33,6 +51,24 @@
       "revId": "70a4ef103e13851624bd6c4558067615a1296a5d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "851eecf2_22df9fb4",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-08-31T19:39:19Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d91ad608_068ebf42",
+      "revId": "70a4ef103e13851624bd6c4558067615a1296a5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
