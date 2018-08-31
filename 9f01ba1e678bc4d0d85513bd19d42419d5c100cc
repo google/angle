@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fae4cf90_8fe10ee3",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-31T13:59:47Z",
+      "side": 1,
+      "message": "I use the first in `BlobCache_unittest.cpp`",
+      "parentUuid": "a4002d97_f437b2f3",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 5
+      },
+      "revId": "9f01ba1e678bc4d0d85513bd19d42419d5c100cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "40b652bb_3364da13",
         "filename": "src/libANGLE/MemoryProgramCache.cpp",
         "patchSetId": 10
@@ -60,6 +84,30 @@
       "side": 1,
       "message": "Actually, why don\u0027t you just make a new method called \"populate\" that doesn\u0027t call back into the application and simply stores the value. Then you don\u0027t have to bother with the null context hack.\n\nAlso FWIW you are probably just as good to pass a Display to these methods instead of a Context.",
       "parentUuid": "40b652bb_3364da13",
+      "range": {
+        "startLine": 732,
+        "startChar": 19,
+        "endLine": 732,
+        "endChar": 26
+      },
+      "revId": "9f01ba1e678bc4d0d85513bd19d42419d5c100cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e634aba7_e41a23c4",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-31T13:59:47Z",
+      "side": 1,
+      "message": "Sounds good.\n\nI need to pass `Context` though, as I need access to the scratch buffer in `get`. I moved the callbacks to BlobCache per Geoff\u0027s suggestion though, so `put` no longer needs it.",
+      "parentUuid": "002cfbc1_9f3b7a8f",
       "range": {
         "startLine": 732,
         "startChar": 19,
