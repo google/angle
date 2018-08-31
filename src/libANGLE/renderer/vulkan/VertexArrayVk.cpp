@@ -93,6 +93,9 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state, RendererVk *rend
     mDynamicVertexData.init(1, renderer);
     mDynamicIndexData.init(1, renderer);
     mTranslatedByteIndexData.init(1, renderer);
+
+    // Initially consider all inputs dirty.
+    mDirtyPackedInputs.set();
 }
 
 VertexArrayVk::~VertexArrayVk()

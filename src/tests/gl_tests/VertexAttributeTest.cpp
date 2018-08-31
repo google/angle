@@ -961,10 +961,6 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
     // TODO: Support this test on Vulkan.  http://anglebug.com/2797
     ANGLE_SKIP_TEST_IF(IsLinux() && IsVulkan() && IsIntel());
 
-    // TODO: Fix syncing of default attributes when there is no call to enable/disable.
-    // http://anglebug.com/2800
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char vsSource[] =
         "attribute vec4 a_position;\n"
         "attribute vec4 a_color;\n"

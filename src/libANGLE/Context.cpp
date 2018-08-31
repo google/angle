@@ -7758,11 +7758,10 @@ void StateCache::updateActiveAttribsMask(Context *context)
 
     const AttributesMask &clientAttribs  = vao->getClientAttribsMask();
     const AttributesMask &enabledAttribs = vao->getEnabledAttributesMask();
+    const AttributesMask &activeEnabled  = activeAttribs & enabledAttribs;
 
-    activeAttribs &= enabledAttribs;
-
-    mCachedActiveClientAttribsMask   = activeAttribs & clientAttribs;
-    mCachedActiveBufferedAttribsMask = activeAttribs & ~clientAttribs;
+    mCachedActiveClientAttribsMask   = activeEnabled & clientAttribs;
+    mCachedActiveBufferedAttribsMask = activeEnabled & ~clientAttribs;
     mCachedActiveDefaultAttribsMask  = activeAttribs & ~enabledAttribs;
     mCachedHasAnyEnabledClientAttrib = (clientAttribs & enabledAttribs).any();
 }
