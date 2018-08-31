@@ -304,10 +304,6 @@ void main()
 // Tests that using a buffered attribute, then disabling it and using current value, works.
 TEST_P(StateChangeTest, DisablingBufferedVertexAttribute)
 {
-    // TODO(lucferron): Diagnose and fix
-    // http://anglebug.com/2650
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     ANGLE_GL_PROGRAM(program, kSimpleAttributeVS, kSimpleAttributeFS);
     glUseProgram(program);
     GLint attribLoc   = glGetAttribLocation(program, "testAttrib");
