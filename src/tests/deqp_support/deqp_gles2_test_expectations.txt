@@ -235,12 +235,6 @@
 // Vulkan failures
 2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
 2599 VULKAN : dEQP-GLES2.functional.rasterization.limits.points = SKIP
-2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_z_clip = SKIP
-2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_z_clip_viewport_center = SKIP
-2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_z_clip_viewport_corner = SKIP
-2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_clip = SKIP
-2598 VULKAN : dEQP-GLES2.functional.clipping.line.long_wide_line_clip = SKIP
-2598 VULKAN : dEQP-GLES2.functional.clipping.line.wide_line_attrib_clip = SKIP
 
 // Vulkan AMD Windows specific failures
 2602 VULKAN WIN AMD : dEQP-GLES2.functional.buffer.write.* = SKIP

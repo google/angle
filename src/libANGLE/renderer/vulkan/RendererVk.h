@@ -165,6 +165,7 @@ class RendererVk : angle::NonCopyable
     VkDebugReportCallbackEXT mDebugReportCallback;
     VkPhysicalDevice mPhysicalDevice;
     VkPhysicalDeviceProperties mPhysicalDeviceProperties;
+    VkPhysicalDeviceFeatures mPhysicalDeviceFeatures;
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
     VkQueue mQueue;
     uint32_t mCurrentQueueFamilyIndex;

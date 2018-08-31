@@ -33,6 +33,7 @@ class DisplayVk;
 namespace vk
 {
 void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
+                  const VkPhysicalDeviceFeatures &physicalDeviceFeatures,
                   const gl::TextureCapsMap &textureCaps,
                   gl::Caps *outCaps,
                   gl::Extensions *outExtensions,
