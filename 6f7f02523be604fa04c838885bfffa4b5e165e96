@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "74e0a8c8_bccc772e",
+        "filename": "src/libANGLE/BlobCache.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-31T16:16:33Z",
+      "side": 1,
+      "message": "`get` and `getAt` take `Value *valueOut` where `valueOut` needs to be filled, so the members can\u0027t be const (not that `mPtr` itself is not const).",
+      "parentUuid": "9659f291_c61431c3",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 15
+      },
+      "revId": "6f7f02523be604fa04c838885bfffa4b5e165e96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a0cb4e90_875fde58",
         "filename": "src/libANGLE/BlobCache.h",
         "patchSetId": 13
