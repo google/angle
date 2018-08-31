@@ -435,6 +435,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
 
     state->updateTransformFeedbackStrides();
     state->updateActiveSamplers();
+    state->updateActiveImages();
 
     return program->getImplementation()->load(context, infoLog, &stream);
 }

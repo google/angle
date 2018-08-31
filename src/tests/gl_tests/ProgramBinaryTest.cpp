@@ -413,6 +413,66 @@ TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that image texture works correctly when loading a program from binary.
+TEST_P(ProgramBinaryES31Test, ImageTextureBinding)
+{
+    // We can't run the test if no program binary formats are supported.
+    GLint binaryFormatCount = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(!binaryFormatCount);
+
+    const char kComputeShader[] =
+        R"(#version 310 es
+        layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+        layout(r32ui, binding = 1) writeonly uniform highp uimage2D writeImage;
+        void main()
+        {
+            imageStore(writeImage, ivec2(gl_LocalInvocationID.xy), uvec4(200u));
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+
+    // Read back the binary.
+    GLint programLength = 0;
+    glGetProgramiv(program.get(), GL_PROGRAM_BINARY_LENGTH, &programLength);
+    ASSERT_GL_NO_ERROR();
+
+    GLsizei readLength  = 0;
+    GLenum binaryFormat = GL_NONE;
+    std::vector<uint8_t> binary(programLength);
+    glGetProgramBinary(program.get(), programLength, &readLength, &binaryFormat, binary.data());
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(static_cast<GLsizei>(programLength), readLength);
+
+    // Load a new program with the binary.
+    ANGLE_GL_BINARY_ES3_PROGRAM(binaryProgram, binary, binaryFormat);
+    ASSERT_GL_NO_ERROR();
+
+    // Dispatch compute with the loaded binary program
+    glUseProgram(binaryProgram.get());
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+    constexpr GLuint kInputValue = 100u;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, &kInputValue);
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(1, texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    GLuint outputValue;
+    glReadPixels(0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, &outputValue);
+    EXPECT_EQ(200u, outputValue);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(ProgramBinaryES31Test, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 
 class ProgramBinaryTransformFeedbackTest : public ANGLETest
