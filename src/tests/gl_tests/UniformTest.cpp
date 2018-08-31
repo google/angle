@@ -809,9 +809,6 @@ TEST_P(UniformTestES3, OverflowArray)
 // Check setting a sampler uniform
 TEST_P(UniformTest, Sampler)
 {
-    // TODO(jmadill): Implement sampler arrays. http://anglebug.com/2462
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     const std::string &vertShader =
         "uniform sampler2D tex2D;\n"
         "void main() {\n"
