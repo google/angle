@@ -2928,10 +2928,6 @@ TEST_P(TextureLimitsTest, MaxFragmentTextures)
 // Test rendering with maximum combined texture units.
 TEST_P(TextureLimitsTest, MaxCombinedTextures)
 {
-    // TODO(lucferron): Diagnose and fix
-    // http://anglebug.com/2654
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLint vertexTextures = mMaxVertexTextures;
 
     if (vertexTextures + mMaxFragmentTextures > mMaxCombinedTextures)
@@ -2966,10 +2962,6 @@ TEST_P(TextureLimitsTest, ExcessiveFragmentTextures)
 // Test active vertex textures under the limit, but excessive textures specified.
 TEST_P(TextureLimitsTest, MaxActiveVertexTextures)
 {
-    // TODO(lucferron): Diagnose and fix
-    // http://anglebug.com/2654
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     compileProgramWithTextureCounts("tex", mMaxVertexTextures + 4, mMaxVertexTextures, "tex", 0, 0);
     ASSERT_NE(0u, mProgram);
     ASSERT_GL_NO_ERROR();
@@ -2980,10 +2972,6 @@ TEST_P(TextureLimitsTest, MaxActiveVertexTextures)
 // Test active fragment textures under the limit, but excessive textures specified.
 TEST_P(TextureLimitsTest, MaxActiveFragmentTextures)
 {
-    // TODO(lucferron): Diagnose and fix
-    // http://anglebug.com/2654
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     compileProgramWithTextureCounts("tex", 0, 0, "tex", mMaxFragmentTextures + 4,
                                     mMaxFragmentTextures);
     ASSERT_NE(0u, mProgram);
