@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "74c19cdf_356db722",
+        "filename": "extensions/ANGLE_texture_multisample.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-08-31T01:06:49Z",
+      "side": 1,
+      "message": "Olli, I noticed that you will remove ANGLE_texture_multisample_array extension at https://chromium-review.googlesource.com/c/angle/angle/+/1196722. So the changes for ANGLE_texture_multisample_array extension might be nonsense. I just want to make these two extensions aligned here, before it is finally removed.",
+      "parentUuid": "7a1920a8_bbb2bdd0",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 18
+      },
+      "revId": "8e3c83a139a0014b4c1295872874791c8684d81b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e41734a5_60b82f1d",
         "filename": "extensions/ANGLE_texture_multisample.txt",
         "patchSetId": 8
