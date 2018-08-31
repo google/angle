@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43e45bef_584b6b1f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-31T18:18:14Z",
+      "side": 1,
+      "message": "I think you are leaking memory here. Neither of positionZ and positionW should be deep copied. PositionZ is deep copied into positionZLHS later (only other use), and positionW is never used other than here.",
+      "revId": "70a4ef103e13851624bd6c4558067615a1296a5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d91ad608_068ebf42",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-08-31T18:18:14Z",
+      "side": 1,
+      "message": "Same with oneHalf here. It\u0027s not used either before or after this.",
+      "revId": "70a4ef103e13851624bd6c4558067615a1296a5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
