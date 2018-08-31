@@ -665,6 +665,12 @@ void StateManager11::setUnorderedAccessViewInternal(gl::ShaderType shaderType,
     {
         auto deviceContext                = mRenderer->getDeviceContext();
         ID3D11UnorderedAccessView *uavPtr = uav ? uav->get() : nullptr;
+        // We need to make sure that resource being set to UnorderedAccessView slot |resourceSlot|
+        // is not bound on SRV.
+        if (uavPtr && unsetConflictingView(uavPtr))
+        {
+            mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+        }
         deviceContext->CSSetUnorderedAccessViews(resourceSlot, 1, &uavPtr, nullptr);
 
         mCurComputeUAVs.update(resourceSlot, uavPtr);
@@ -1661,7 +1667,8 @@ bool StateManager11::unsetConflictingView(ID3D11View *view)
 {
     uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(view));
     return unsetConflictingSRVs(gl::ShaderType::Vertex, resource, nullptr) ||
-           unsetConflictingSRVs(gl::ShaderType::Fragment, resource, nullptr);
+           unsetConflictingSRVs(gl::ShaderType::Fragment, resource, nullptr) ||
+           unsetConflictingSRVs(gl::ShaderType::Compute, resource, nullptr);
 }
 
 bool StateManager11::unsetConflictingSRVs(gl::ShaderType shaderType,
@@ -2362,79 +2369,14 @@ void StateManager11::setScissorRectD3D(const D3D11_RECT &d3dRect)
     mInternalDirtyBits.set(DIRTY_BIT_SCISSOR_STATE);
 }
 
-// For each Direct3D sampler of either the pixel or vertex stage,
-// looks up the corresponding OpenGL texture image unit and texture type,
-// and sets the texture and its addressing/filtering state (or NULL when inactive).
-// Sampler mapping needs to be up-to-date on the program object before this is called.
-angle::Result StateManager11::applyTexturesForSamplers(const gl::Context *context,
-                                                       gl::ShaderType shaderType)
-{
-    const auto &glState = context->getGLState();
-    const auto &caps    = context->getCaps();
-
-    ASSERT(!mProgramD3D->isSamplerMappingDirty());
-
-    // TODO(jmadill): Use the Program's sampler bindings.
-    const gl::ActiveTexturePointerArray &completeTextures = glState.getActiveTexturesCache();
-
-    const gl::RangeUI samplerRange = mProgramD3D->getUsedSamplerRange(shaderType);
-    for (unsigned int samplerIndex = samplerRange.low(); samplerIndex < samplerRange.high();
-         samplerIndex++)
-    {
-        GLint textureUnit = mProgramD3D->getSamplerMapping(shaderType, samplerIndex, caps);
-        ASSERT(textureUnit != -1);
-        gl::Texture *texture = completeTextures[textureUnit];
-
-        // A nullptr texture indicates incomplete.
-        if (texture)
-        {
-            gl::Sampler *samplerObject = glState.getSampler(textureUnit);
-
-            const gl::SamplerState &samplerState =
-                samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
-
-            ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, texture, samplerState));
-            ANGLE_TRY(
-                setTextureForSampler(context, shaderType, samplerIndex, texture, samplerState));
-        }
-        else
-        {
-            gl::TextureType textureType =
-                mProgramD3D->getSamplerTextureType(shaderType, samplerIndex);
-
-            // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
-            // incomplete texture.
-            gl::Texture *incompleteTexture = nullptr;
-            ANGLE_TRY(mRenderer->getIncompleteTexture(context, textureType, &incompleteTexture));
-            ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, incompleteTexture,
-                                      incompleteTexture->getSamplerState()));
-            ANGLE_TRY(setTextureForSampler(context, shaderType, samplerIndex, incompleteTexture,
-                                           incompleteTexture->getSamplerState()));
-        }
-    }
-
-    return angle::Result::Continue();
-}
-
 angle::Result StateManager11::syncTextures(const gl::Context *context)
 {
-    ANGLE_TRY(applyTexturesForSamplers(context, gl::ShaderType::Vertex));
-    ANGLE_TRY(applyTexturesForSamplers(context, gl::ShaderType::Fragment));
+    ANGLE_TRY(applyTexturesForSRVs(context, gl::ShaderType::Vertex));
+    ANGLE_TRY(applyTexturesForSRVs(context, gl::ShaderType::Fragment));
     if (mProgramD3D->hasShaderStage(gl::ShaderType::Geometry))
     {
-        ANGLE_TRY(applyTexturesForSamplers(context, gl::ShaderType::Geometry));
+        ANGLE_TRY(applyTexturesForSRVs(context, gl::ShaderType::Geometry));
     }
-
-    // Set all the remaining textures to NULL
-    const auto &caps                     = context->getCaps();
-    const gl::RangeUI vertexSamplerRange = mProgramD3D->getUsedSamplerRange(gl::ShaderType::Vertex);
-    const gl::RangeUI fragmentSamplerRange =
-        mProgramD3D->getUsedSamplerRange(gl::ShaderType::Fragment);
-    size_t vertexSamplerCount   = caps.maxShaderTextureImageUnits[gl::ShaderType::Vertex];
-    size_t fragmentSamplerCount = caps.maxShaderTextureImageUnits[gl::ShaderType::Fragment];
-    ANGLE_TRY(clearSRVs(gl::ShaderType::Vertex, vertexSamplerRange.high(), vertexSamplerCount));
-    ANGLE_TRY(
-        clearSRVs(gl::ShaderType::Fragment, fragmentSamplerRange.high(), fragmentSamplerCount));
 
     return angle::Result::Continue();
 }
@@ -2543,12 +2485,56 @@ angle::Result StateManager11::setTextureForSampler(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result StateManager11::applyTexturesForImages(const gl::Context *context,
-                                                     gl::ShaderType shaderType)
+// For each Direct3D sampler of either the pixel or vertex stage,
+// looks up the corresponding OpenGL texture image unit and texture type,
+// and sets the texture and its addressing/filtering state (or NULL when inactive).
+// Sampler mapping needs to be up-to-date on the program object before this is called.
+angle::Result StateManager11::applyTexturesForSRVs(const gl::Context *context,
+                                                   gl::ShaderType shaderType)
 {
-    ASSERT(shaderType == gl::ShaderType::Compute);
     const auto &glState = context->getGLState();
     const auto &caps    = context->getCaps();
+
+    ASSERT(!mProgramD3D->isSamplerMappingDirty());
+
+    // TODO(jmadill): Use the Program's sampler bindings.
+    const gl::ActiveTexturePointerArray &completeTextures = glState.getActiveTexturesCache();
+
+    const gl::RangeUI samplerRange = mProgramD3D->getUsedSamplerRange(shaderType);
+    for (unsigned int samplerIndex = samplerRange.low(); samplerIndex < samplerRange.high();
+         samplerIndex++)
+    {
+        GLint textureUnit = mProgramD3D->getSamplerMapping(shaderType, samplerIndex, caps);
+        ASSERT(textureUnit != -1);
+        gl::Texture *texture = completeTextures[textureUnit];
+
+        // A nullptr texture indicates incomplete.
+        if (texture)
+        {
+            gl::Sampler *samplerObject = glState.getSampler(textureUnit);
+
+            const gl::SamplerState &samplerState =
+                samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
+
+            ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, texture, samplerState));
+            ANGLE_TRY(
+                setTextureForSampler(context, shaderType, samplerIndex, texture, samplerState));
+        }
+        else
+        {
+            gl::TextureType textureType =
+                mProgramD3D->getSamplerTextureType(shaderType, samplerIndex);
+
+            // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
+            // incomplete texture.
+            gl::Texture *incompleteTexture = nullptr;
+            ANGLE_TRY(mRenderer->getIncompleteTexture(context, textureType, &incompleteTexture));
+            ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, incompleteTexture,
+                                      incompleteTexture->getSamplerState()));
+            ANGLE_TRY(setTextureForSampler(context, shaderType, samplerIndex, incompleteTexture,
+                                           incompleteTexture->getSamplerState()));
+        }
+    }
 
     const gl::RangeUI readonlyImageRange = mProgramD3D->getUsedImageRange(shaderType, true);
     for (unsigned int readonlyImageIndex = readonlyImageRange.low();
@@ -2561,6 +2547,25 @@ angle::Result StateManager11::applyTexturesForImages(const gl::Context *context,
         ANGLE_TRY(setTextureForImage(context, shaderType, readonlyImageIndex, true, imageUnit));
     }
 
+    size_t samplerCount = caps.maxShaderTextureImageUnits[shaderType];
+    size_t readonlyImageCount =
+        context->getClientVersion() >= gl::Version(3, 1) ? caps.maxImageUnits : 0;
+
+    // Samplers and readonly images share the SRVs here, their range is
+    // [0, max(samplerRange.high(), readonlyImageRange.high()).
+    ANGLE_TRY(clearSRVs(shaderType, std::max(samplerRange.high(), readonlyImageRange.high()),
+                        samplerCount + readonlyImageCount));
+
+    return angle::Result::Continue();
+}
+
+angle::Result StateManager11::applyTexturesForUAVs(const gl::Context *context,
+                                                   gl::ShaderType shaderType)
+{
+    ASSERT(shaderType == gl::ShaderType::Compute);
+    const auto &glState = context->getGLState();
+    const auto &caps    = context->getCaps();
+
     const gl::RangeUI imageRange = mProgramD3D->getUsedImageRange(shaderType, false);
     for (unsigned int imageIndex = imageRange.low(); imageIndex < imageRange.high(); imageIndex++)
     {
@@ -2570,30 +2575,20 @@ angle::Result StateManager11::applyTexturesForImages(const gl::Context *context,
         ANGLE_TRY(setTextureForImage(context, shaderType, imageIndex, false, imageUnit));
     }
 
+    size_t imageCount = caps.maxImageUnits;
+    ANGLE_TRY(clearUAVs(shaderType, imageRange.high(), imageCount));
+
     return angle::Result::Continue();
 }
 
 angle::Result StateManager11::syncTexturesForCompute(const gl::Context *context)
 {
-    ANGLE_TRY(applyTexturesForSamplers(context, gl::ShaderType::Compute));
-    ANGLE_TRY(applyTexturesForImages(context, gl::ShaderType::Compute));
-
-    // Set all the remaining textures to NULL.
-    const auto &caps               = context->getCaps();
-    const gl::RangeUI samplerRange = mProgramD3D->getUsedSamplerRange(gl::ShaderType::Compute);
-    const gl::RangeUI readonlyImageRange =
-        mProgramD3D->getUsedImageRange(gl::ShaderType::Compute, true);
-    const gl::RangeUI imageRange = mProgramD3D->getUsedImageRange(gl::ShaderType::Compute, false);
-    size_t samplerCount          = caps.maxShaderTextureImageUnits[gl::ShaderType::Compute];
-    size_t readonlyImageCount = caps.maxImageUnits;
-    size_t imageCount         = caps.maxImageUnits;
-    // Samplers and readonly images share the SRVs here, their range is
-    // [0, max(samplerRange.high(), readonlyImageRange.high()).
-    ANGLE_TRY(clearSRVs(gl::ShaderType::Compute,
-                        std::max(samplerRange.high(), readonlyImageRange.high()),
-                        samplerCount + readonlyImageCount));
-    ANGLE_TRY(clearUAVs(gl::ShaderType::Compute, imageRange.high(), imageCount));
-
+    // applyTexturesForUAVs must be earlier than applyTexturesForSRVs since we need to do clearUVAs
+    // before set resources to SRVs. Otherwise, it will report the following error:
+    // ID3D11DeviceContext::CSSetShaderResources: Resource being set to CS shader resource slot 0 is
+    // still bound on output! Forcing to NULL.
+    ANGLE_TRY(applyTexturesForUAVs(context, gl::ShaderType::Compute));
+    ANGLE_TRY(applyTexturesForSRVs(context, gl::ShaderType::Compute));
     return angle::Result::Continue();
 }
 
