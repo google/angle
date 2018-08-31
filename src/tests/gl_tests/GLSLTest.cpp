@@ -534,11 +534,6 @@ TEST_P(GLSLTest, ScopedStructsOrderBug)
     // (http://anglebug.com/1291)
     ANGLE_SKIP_TEST_IF(IsDesktopOpenGL() && (IsOSX() || !IsNVIDIA()));
 
-    // TODO(lucferron): Support for inner scoped structs being redeclared in inner scopes
-    // This bug in glslang is preventing us from supporting this use case for now.
-    // https://github.com/KhronosGroup/glslang/issues/1358
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     const std::string fragmentShaderSource =
         R"(precision mediump float;
 
