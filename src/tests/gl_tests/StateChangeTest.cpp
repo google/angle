@@ -160,10 +160,6 @@ TEST_P(StateChangeTest, FramebufferIncompleteWithTexStorage)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage"));
 
-    // TODO(lucferron): Diagnose and fix
-    // http://anglebug.com/2651
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);

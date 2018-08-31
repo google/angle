@@ -699,6 +699,12 @@ gl::Error TextureVk::setStorage(const gl::Context *context,
     const vk::Format &format         = renderer->getFormat(internalFormat);
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
+
+    if (mImage.valid())
+    {
+        releaseImage(context, renderer);
+    }
+
     ANGLE_TRY(initImage(contextVk, format, size, static_cast<uint32_t>(levels), commandBuffer));
     return gl::NoError();
 }
