@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9659f291_c61431c3",
+        "filename": "src/libANGLE/BlobCache.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-31T15:46:13Z",
+      "side": 1,
+      "message": "nit: could be const too.",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 15
+      },
+      "revId": "6f7f02523be604fa04c838885bfffa4b5e165e96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0cb4e90_875fde58",
+        "filename": "src/libANGLE/BlobCache.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-31T15:46:13Z",
+      "side": 1,
+      "message": "mark this function as explicit, we require it for single-argument constructors.",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 13
+      },
+      "revId": "6f7f02523be604fa04c838885bfffa4b5e165e96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d96f88d2_e567cdd8",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1199,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-31T15:46:13Z",
+      "side": 1,
+      "message": "Same prefix comment (multiple places in this file).",
+      "range": {
+        "startLine": 1199,
+        "startChar": 39,
+        "endLine": 1199,
+        "endChar": 44
+      },
+      "revId": "6f7f02523be604fa04c838885bfffa4b5e165e96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1d287f7_1876888c",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-31T15:46:13Z",
+      "side": 1,
+      "message": "nit: prefix not needed.",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 140,
+        "endChar": 9
+      },
+      "revId": "6f7f02523be604fa04c838885bfffa4b5e165e96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8ce75b8_10b47ba0",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-08-31T15:46:13Z",
+      "side": 1,
+      "message": "nit: prefix not needed.",
+      "range": {
+        "startLine": 216,
+        "startChar": 4,
+        "endLine": 216,
+        "endChar": 9
+      },
+      "revId": "6f7f02523be604fa04c838885bfffa4b5e165e96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
