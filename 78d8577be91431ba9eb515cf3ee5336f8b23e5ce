@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a313b026_03b020b6",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-03T13:56:01Z",
+      "side": 1,
+      "message": "The commit message says that accesses of SSBOs inside more complex expressions will be stripped from the AST before getting to the OutputHLSL stage. Are there still some places where we could add ASSERT(!IsInShaderStorageBlock()); to make sure that will be working correctly?",
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "245e70db_06b8a984",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-03T13:56:01Z",
+      "side": 1,
+      "message": "I\u0027d think that a better name for this would be something like \"outputStoreFunctionCallPrefix\". There should also be a comment like \"This writes part of the function call to store a value to an SSBO to the output stream. After calling this, \", \u003cstored value\u003e)\" should be written to the output stream to complete the function call.",
+      "range": {
+        "startLine": 32,
+        "startChar": 9,
+        "endLine": 32,
+        "endChar": 40
+      },
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6443a2ac_0507913d",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-03T13:56:01Z",
+      "side": 1,
+      "message": "This could also be \"outputLoadFunctionCall\"",
+      "range": {
+        "startLine": 33,
+        "startChar": 9,
+        "endLine": 33,
+        "endChar": 41
+      },
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82a4268b_c397f89f",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-03T13:56:01Z",
+      "side": 1,
+      "message": "Typo: Should be \"Assignment\".",
+      "range": {
+        "startLine": 43,
+        "startChar": 17,
+        "endLine": 43,
+        "endChar": 28
+      },
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b14c37bb_e429f74e",
+        "filename": "src/compiler/translator/tree_util/IntermNodePatternMatcher.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-03T13:56:01Z",
+      "side": 1,
+      "message": "Instead of just changing this, I\u0027d prefer adding a new rule \"IsDynamicIndexingOfNonSSBOVectorOrMatrix\". The interface  for this class should be such that there\u0027s no hidden functionality inside, like the exception for SSBOs.",
+      "range": {
+        "startLine": 52,
+        "startChar": 31,
+        "endLine": 52,
+        "endChar": 64
+      },
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
