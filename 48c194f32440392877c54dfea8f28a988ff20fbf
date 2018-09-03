@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ed49cda_fb19619e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-09-03T12:49:40Z",
+      "side": 1,
+      "message": "If i understand things correctly, the terminology here should be UAV vs. SRV instead of input vs. ouput because UAVs can be inputs too.\n\nAlso the comments in the CL need fixing for this.",
+      "revId": "48c194f32440392877c54dfea8f28a988ff20fbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "016533d9_cf2b4394",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1628,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-09-03T12:49:40Z",
+      "side": 1,
+      "message": "works",
+      "range": {
+        "startLine": 1628,
+        "startChar": 72,
+        "endLine": 1628,
+        "endChar": 80
+      },
+      "revId": "48c194f32440392877c54dfea8f28a988ff20fbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
