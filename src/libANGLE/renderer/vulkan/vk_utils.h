@@ -679,6 +679,8 @@ enum class ShaderType
 template <typename T>
 using ShaderMap = angle::PackedEnumMap<ShaderType, T>;
 
+using ShaderBitSet = angle::PackedEnumBitSet<ShaderType>;
+
 using AllShaderTypes = angle::AllEnums<vk::ShaderType>;
 
 angle::Result InitShaderAndSerial(Context *context,

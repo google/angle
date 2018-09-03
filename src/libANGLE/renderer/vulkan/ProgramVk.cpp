@@ -176,8 +176,7 @@ bool ProgramVk::ShaderInfo::valid() const
 // ProgramVk implementation.
 ProgramVk::DefaultUniformBlock::DefaultUniformBlock()
     : storage(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-              kUniformBlockDynamicBufferMinSize),
-      uniformsDirty(false)
+              kUniformBlockDynamicBufferMinSize)
 {
 }
 
@@ -397,9 +396,6 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
         }
     }
 
-    bool anyDirty = false;
-    bool allDirty = true;
-
     for (vk::ShaderType shaderType : vk::AllShaderTypes())
     {
         if (requiredBufferSize[shaderType] > 0)
@@ -416,20 +412,14 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
 
             // Initialize uniform buffer memory to zero by default.
             mDefaultUniformBlocks[shaderType].uniformData.fill(0);
-            mDefaultUniformBlocks[shaderType].uniformsDirty = true;
-
-            anyDirty = true;
-        }
-        else
-        {
-            allDirty = false;
+            mDefaultUniformBlocksDirty.set(shaderType);
         }
     }
 
-    if (anyDirty)
+    if (mDefaultUniformBlocksDirty.any())
     {
         // Initialize the "empty" uniform block if necessary.
-        if (!allDirty)
+        if (!mDefaultUniformBlocksDirty.all())
         {
             VkBufferCreateInfo uniformBufferInfo;
             uniformBufferInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -475,8 +465,9 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
 
     if (linkedUniform.typeInfo->type == entryPointType)
     {
-        for (auto &uniformBlock : mDefaultUniformBlocks)
+        for (vk::ShaderType shaderType : vk::AllShaderTypes())
         {
+            DefaultUniformBlock &uniformBlock     = mDefaultUniformBlocks[shaderType];
             const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
 
             // Assume an offset of -1 means the block is unused.
@@ -488,13 +479,14 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
             const GLint componentCount = linkedUniform.typeInfo->componentCount;
             UpdateDefaultUniformBlock(count, locationInfo.arrayIndex, componentCount, v, layoutInfo,
                                       &uniformBlock.uniformData);
-            uniformBlock.uniformsDirty = true;
+            mDefaultUniformBlocksDirty.set(shaderType);
         }
     }
     else
     {
-        for (auto &uniformBlock : mDefaultUniformBlocks)
+        for (vk::ShaderType shaderType : vk::AllShaderTypes())
         {
+            DefaultUniformBlock &uniformBlock     = mDefaultUniformBlocks[shaderType];
             const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
 
             // Assume an offset of -1 means the block is unused.
@@ -521,7 +513,8 @@ void ProgramVk::setUniformImpl(GLint location, GLsizei count, const T *v, GLenum
                     dest[c] = (source[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE;
                 }
             }
-            uniformBlock.uniformsDirty = true;
+
+            mDefaultUniformBlocksDirty.set(shaderType);
         }
     }
 }
@@ -626,8 +619,9 @@ void ProgramVk::setUniformMatrixfv(GLint location,
     const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
     const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
 
-    for (auto &uniformBlock : mDefaultUniformBlocks)
+    for (vk::ShaderType shaderType : vk::AllShaderTypes())
     {
+        DefaultUniformBlock &uniformBlock     = mDefaultUniformBlocks[shaderType];
         const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
 
         // Assume an offset of -1 means the block is unused.
@@ -643,7 +637,10 @@ void ProgramVk::setUniformMatrixfv(GLint location,
         // If the uniformsDirty flag was true, we don't want to flip it to false here if the
         // setter did not update any data. We still want the uniform to be included when we'll
         // update the descriptor sets.
-        uniformBlock.uniformsDirty = uniformBlock.uniformsDirty || updated;
+        if (updated)
+        {
+            mDefaultUniformBlocksDirty.set(shaderType);
+        }
     }
 }
 
@@ -787,13 +784,13 @@ angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
     {
         DefaultUniformBlock &uniformBlock = mDefaultUniformBlocks[shaderType];
 
-        if (uniformBlock.uniformsDirty)
+        if (mDefaultUniformBlocksDirty[shaderType])
         {
             bool bufferModified = false;
             ANGLE_TRY(SyncDefaultUniformBlock(contextVk, &uniformBlock.storage,
                                               uniformBlock.uniformData,
                                               &mUniformBlocksOffsets[shaderType], &bufferModified));
-            uniformBlock.uniformsDirty = false;
+            mDefaultUniformBlocksDirty.reset(shaderType);
 
             if (bufferModified)
             {

@@ -116,11 +116,7 @@ class ProgramVk : public ProgramImpl
 
     bool hasTextures() const { return !mState.getSamplerBindings().empty(); }
 
-    bool dirtyUniforms() const
-    {
-        return (mDefaultUniformBlocks[vk::ShaderType::VertexShader].uniformsDirty ||
-                mDefaultUniformBlocks[vk::ShaderType::FragmentShader].uniformsDirty);
-    }
+    bool dirtyUniforms() const { return mDefaultUniformBlocksDirty.any(); }
 
   private:
     template <int cols, int rows>
@@ -154,7 +150,6 @@ class ProgramVk : public ProgramImpl
 
         // Shadow copies of the shader uniform data.
         angle::MemoryBuffer uniformData;
-        bool uniformsDirty;
 
         // Since the default blocks are laid out in std140, this tells us where to write on a call
         // to a setUniform method. They are arranged in uniform location order.
@@ -162,6 +157,7 @@ class ProgramVk : public ProgramImpl
     };
 
     vk::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
+    vk::ShaderBitSet mDefaultUniformBlocksDirty;
     vk::ShaderMap<uint32_t> mUniformBlocksOffsets;
 
     // This is a special "empty" placeholder buffer for when a shader has no uniforms.

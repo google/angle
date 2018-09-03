@@ -191,10 +191,16 @@ class ContextVk : public ContextImpl, public vk::Context
 
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 
+    using DirtyBitHandler = angle::Result (ContextVk::*)(const gl::Context *,
+                                                         const gl::DrawCallParams &,
+                                                         vk::CommandBuffer *commandBuffer);
+
+    std::array<DirtyBitHandler, DIRTY_BIT_MAX> mDirtyBitHandlers;
+
     angle::Result initPipeline(const gl::DrawCallParams &drawCallParams);
     angle::Result setupDraw(const gl::Context *context,
                             const gl::DrawCallParams &drawCallParams,
-                            const DirtyBits &dirtyBitsMask,
+                            DirtyBits dirtyBitMask,
                             vk::CommandBuffer **commandBufferOut);
     angle::Result setupIndexedDraw(const gl::Context *context,
                                    const gl::DrawCallParams &drawCallParams,
@@ -209,10 +215,28 @@ class ContextVk : public ContextImpl, public vk::Context
 
     angle::Result updateDriverUniforms(const gl::State &glState);
     angle::Result updateActiveTextures(const gl::Context *context);
-    angle::Result updateDefaultAttributes();
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
     void invalidateCurrentTextures();
+
+    angle::Result handleDirtyDefaultAttribs(const gl::Context *context,
+                                            const gl::DrawCallParams &drawCallParams,
+                                            vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyPipeline(const gl::Context *context,
+                                      const gl::DrawCallParams &drawCallParams,
+                                      vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyTextures(const gl::Context *context,
+                                      const gl::DrawCallParams &drawCallParams,
+                                      vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyVertexBuffers(const gl::Context *context,
+                                           const gl::DrawCallParams &drawCallParams,
+                                           vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyIndexBuffer(const gl::Context *context,
+                                         const gl::DrawCallParams &drawCallParams,
+                                         vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyDescriptorSets(const gl::Context *context,
+                                            const gl::DrawCallParams &drawCallParams,
+                                            vk::CommandBuffer *commandBuffer);
 
     vk::PipelineAndSerial *mCurrentPipeline;
     gl::PrimitiveMode mCurrentDrawMode;
