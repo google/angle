@@ -2,9 +2,9 @@ Name: JsonCpp
 Short Name: JsonCpp
 Version: N/A
 URL: https://github.com/open-source-parsers/jsoncpp
-SOURCE CODE: git clone https://android.googlesource.com/platform/external/jsoncpp
-Date: 08/28/2018
-Revision: 93ba642c636309a3195d6da6c11ba82f69ef45ed
+SOURCE CODE: git clone https://chromium.googlesource.com/external/github.com/open-source-parsers/jsoncpp
+Date: 09/04/2018
+Revision: 2baad4923e6d9a7e09982cfa4b1c5fd0b67ebd87
 Security Critical: no
 License: MIT
 License File: LICENSE

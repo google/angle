@@ -15,7 +15,7 @@ vars = {
   'glslang_revision': '312dcfb070a7274066d3e85e10970f57b1e3af6e',
 
   # Current revision of jsoncpp, an open-source json parser.
-  'jsoncpp_revision': '93ba642c636309a3195d6da6c11ba82f69ef45ed',
+  'jsoncpp_revision': '2baad4923e6d9a7e09982cfa4b1c5fd0b67ebd87',
 
   # Current revision fo the SPIRV-Headers Vulkan support library.
   'spirv_headers_revision': 'ff684ffc6a35d2a58f0f63108877d0064ea33feb',
@@ -78,7 +78,7 @@ deps = {
   },
 
   '{angle_root}/third_party/jsoncpp/src': {
-    'url': '{android_git}/platform/external/jsoncpp@{jsoncpp_revision}',
+    'url': '{chromium_git}/external/github.com/open-source-parsers/jsoncpp.git@{jsoncpp_revision}',
   },
 
   '{angle_root}/third_party/spirv-headers/src': {
