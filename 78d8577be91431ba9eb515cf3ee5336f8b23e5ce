@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6473aad8_369b4c62",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-04T06:29:29Z",
+      "side": 1,
+      "message": "Add UNREACHABLE()for default buffer variable (See visitSymbol) and ASSERT(!IsInShaderStorageBlock()) for EOpIndexInterfaceBlock. I think these two places can make sure that all ssbo_access_chain will be processed in ShaderStorageBlockOutputHLSL.",
+      "parentUuid": "a313b026_03b020b6",
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "245e70db_06b8a984",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
         "patchSetId": 23
@@ -39,6 +57,30 @@
       "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07e26a1a_ec0069eb",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-04T06:29:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "245e70db_06b8a984",
+      "range": {
+        "startLine": 32,
+        "startChar": 9,
+        "endLine": 32,
+        "endChar": 40
+      },
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "e21a562d_680d748b",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-04T06:29:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6443a2ac_0507913d",
+      "range": {
+        "startLine": 33,
+        "startChar": 9,
+        "endLine": 33,
+        "endChar": 41
+      },
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82a4268b_c397f89f",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
         "patchSetId": 23
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "089f1d24_5ccc2032",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-04T06:29:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82a4268b_c397f89f",
+      "range": {
+        "startLine": 43,
+        "startChar": 17,
+        "endLine": 43,
+        "endChar": 28
+      },
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b14c37bb_e429f74e",
         "filename": "src/compiler/translator/tree_util/IntermNodePatternMatcher.cpp",
         "patchSetId": 23
@@ -108,6 +198,30 @@
       "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a720e29_9aba133e",
+        "filename": "src/compiler/translator/tree_util/IntermNodePatternMatcher.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-04T06:29:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b14c37bb_e429f74e",
+      "range": {
+        "startLine": 52,
+        "startChar": 31,
+        "endLine": 52,
+        "endChar": 64
+      },
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
