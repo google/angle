@@ -33,6 +33,21 @@ void GetFormatProperties(VkPhysicalDevice physicalDevice,
                          VkFormat vkFormat,
                          VkFormatProperties *propertiesOut);
 
+struct TextureFormatInitInfo final
+{
+    angle::FormatID format;
+    VkFormat vkFormat;
+    InitializeTextureDataFunction initializer;
+};
+
+struct BufferFormatInitInfo final
+{
+    angle::FormatID format;
+    VkFormat vkFormat;
+    VertexCopyFunction vertexLoadFunction;
+    bool vertexLoadRequiresConversion;
+};
+
 struct Format final : private angle::NonCopyable
 {
     Format();
@@ -43,21 +58,11 @@ struct Format final : private angle::NonCopyable
     void initialize(VkPhysicalDevice physicalDevice, const angle::Format &angleFormat);
 
     void initTextureFallback(VkPhysicalDevice physicalDevice,
-                             angle::FormatID format,
-                             VkFormat vkFormat,
-                             InitializeTextureDataFunction initializer,
-                             angle::FormatID fallbackFormat,
-                             VkFormat fallbackVkFormat,
-                             InitializeTextureDataFunction fallbackInitializer);
-
+                             const TextureFormatInitInfo *info,
+                             int numInfo);
     void initBufferFallback(VkPhysicalDevice physicalDevice,
-                            angle::FormatID format,
-                            VkFormat vkFormat,
-                            VertexCopyFunction function,
-                            bool functionConverts,
-                            angle::FormatID fallbackFormat,
-                            VkFormat fallbackVkFormat,
-                            VertexCopyFunction fallbackFunction);
+                            const BufferFormatInitInfo *info,
+                            int numInfo);
 
     const angle::Format &textureFormat() const;
     const angle::Format &bufferFormat() const;

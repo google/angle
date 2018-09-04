@@ -69,79 +69,82 @@ internalFormat = {internal_format};
 break;
 """
 
-texture_basic_template = """textureFormatID = angle::FormatID::{texture};
+texture_basic_template = """textureFormatID = {texture};
 vkTextureFormat = {vk_texture_format};
 textureInitializerFunction = {texture_initializer};"""
+texture_struct_template="{{{texture}, {vk_texture_format}, {texture_initializer}}}"
+texture_fallback_template = """{{
+static constexpr TextureFormatInitInfo kInfo[] = {{{texture_list}}};
+initTextureFallback(physicalDevice, kInfo, ArraySize(kInfo));
+}}"""
 
-texture_fallback_template = """initTextureFallback(physicalDevice,
-angle::FormatID::{texture},
-{vk_texture_format},
-{texture_initializer},
-angle::FormatID::{texture_fallback},
-{vk_texture_format_fallback},
-{texture_initializer_fallback});"""
-
-buffer_basic_template = """bufferFormatID = angle::FormatID::{buffer};
+buffer_basic_template = """bufferFormatID = {buffer};
 vkBufferFormat = {vk_buffer_format};
 vertexLoadFunction = {vertex_load_function};
 vertexLoadRequiresConversion = {vertex_load_converts};"""
-
-buffer_fallback_template = """initBufferFallback(physicalDevice,
-angle::FormatID::{buffer},
-{vk_buffer_format},
-{vertex_load_function},
-{vertex_load_converts},
-angle::FormatID::{buffer_fallback},
-{vk_buffer_format_fallback},
-{vertex_load_function_fallback});"""
+buffer_struct_template="""{{{buffer}, {vk_buffer_format}, {vertex_load_function},
+{vertex_load_converts}}}"""
+buffer_fallback_template = """{{
+static constexpr BufferFormatInitInfo kInfo[] = {{{buffer_list}}};
+initBufferFallback(physicalDevice, kInfo, ArraySize(kInfo));
+}}"""
 
 def gen_format_case(angle, internal_format, vk_json_data):
     vk_map = vk_json_data["map"]
     vk_overrides = vk_json_data["overrides"]
     vk_fallbacks = vk_json_data["fallbacks"]
-    args = { "format_id" : angle }
+    args = dict(format_id=angle, internal_format=internal_format,
+                texture_template="", buffer_template="")
 
     if ((angle not in vk_map) and (angle not in vk_overrides) and
         (angle not in vk_fallbacks)) or angle == 'NONE':
         return empty_format_entry_template.format(**args)
 
-    def get_formats_and_template(format, type, basic_template, fallback_template):
+    def get_formats(format, type):
         format = vk_overrides.get(format, {}).get(type, format)
-        fallback = vk_fallbacks.get(format, {}).get(type, "NONE")
         if format not in vk_map:
-            format = "NONE"
-            template = ""
-        elif fallback == "NONE":
-            template = basic_template
-        else:
-            template = fallback_template
-        return format, fallback, template
+            return []
+        fallbacks = vk_fallbacks.get(format, {}).get(type, [])
+        if not isinstance(fallbacks, list):
+            fallbacks = [fallbacks]
+        return [format] + fallbacks
 
-    texture_format, texture_fallback, texture_template = get_formats_and_template(
-                angle, "texture", texture_basic_template, texture_fallback_template)
-    buffer_format, buffer_fallback, buffer_template = get_formats_and_template(
-                angle, "buffer", buffer_basic_template, buffer_fallback_template)
+    def texture_args(format):
+        return dict(
+            texture="angle::FormatID::" + format,
+            vk_texture_format=vk_map[format],
+            texture_initializer=angle_format.get_internal_format_initializer(internal_format,
+                                                                             format)
+        )
 
-    args.update(
-        internal_format=internal_format,
-        texture_template=texture_template,
-        texture=texture_format,
-        vk_texture_format=vk_map[texture_format],
-        texture_initializer=angle_format.get_internal_format_initializer(internal_format,
-                                                                         texture_format),
-        texture_fallback=texture_fallback,
-        vk_texture_format_fallback=vk_map[texture_fallback],
-        texture_initializer_fallback=angle_format.get_internal_format_initializer(internal_format,
-                                                                                  texture_fallback),
-        buffer_template=buffer_template,
-        buffer=buffer_format,
-        vk_buffer_format=vk_map[buffer_format],
-        vertex_load_function=angle_format.get_vertex_copy_function(angle, buffer_format),
-        vertex_load_converts='false' if angle == buffer_format else 'true',
-        buffer_fallback=buffer_fallback,
-        vk_buffer_format_fallback=vk_map[buffer_fallback],
-        vertex_load_function_fallback=angle_format.get_vertex_copy_function(angle, buffer_fallback),
-    )
+    def buffer_args(format):
+        return dict(
+            buffer="angle::FormatID::" + format,
+            vk_buffer_format=vk_map[format],
+            vertex_load_function=angle_format.get_vertex_copy_function(angle, format),
+            vertex_load_converts='false' if angle == format else 'true',
+        )
+
+    textures = get_formats(angle, "texture")
+    if len(textures) == 1:
+        args.update(texture_template=texture_basic_template)
+        args.update(texture_args(textures[0]))
+    elif len(textures) > 1:
+        args.update(
+            texture_template=texture_fallback_template,
+            texture_list=", ".join(texture_struct_template.format(**texture_args(i))
+                                   for i in textures)
+        )
+
+    buffers = get_formats(angle, "buffer")
+    if len(buffers) == 1:
+        args.update(buffer_template=buffer_basic_template)
+        args.update(buffer_args(buffers[0]))
+    elif len(buffers) > 1:
+        args.update(
+            buffer_template=buffer_fallback_template,
+            buffer_list=", ".join(buffer_struct_template.format(**buffer_args(i)) for i in buffers)
+        )
 
     return format_entry_template.format(**args).format(**args)
 
