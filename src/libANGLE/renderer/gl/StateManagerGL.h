@@ -64,7 +64,7 @@ class StateManagerGL final : angle::NonCopyable
     void activeTexture(size_t unit);
     void bindTexture(gl::TextureType type, GLuint texture);
     void bindSampler(size_t unit, GLuint sampler);
-    void bindImageTexture(GLuint unit,
+    void bindImageTexture(size_t unit,
                           GLuint texture,
                           GLint level,
                           GLboolean layered,

@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <limits>
 
+#include "anglebase/numerics/safe_conversions.h"
 #include "common/bitset_utils.h"
 #include "common/mathutil.h"
 #include "common/matrix_utils.h"
@@ -249,8 +250,7 @@ void StateManagerGL::deleteTexture(GLuint texture)
         {
             if (mImages[imageUnitIndex].texture == texture)
             {
-                bindImageTexture(static_cast<GLuint>(imageUnitIndex), 0, 0, false, 0, GL_READ_ONLY,
-                                 GL_R32UI);
+                bindImageTexture(imageUnitIndex, 0, 0, false, 0, GL_READ_ONLY, GL_R32UI);
             }
         }
 
@@ -450,7 +450,7 @@ void StateManagerGL::bindSampler(size_t unit, GLuint sampler)
     }
 }
 
-void StateManagerGL::bindImageTexture(GLuint unit,
+void StateManagerGL::bindImageTexture(size_t unit,
                                       GLuint texture,
                                       GLint level,
                                       GLboolean layered,
@@ -468,7 +468,8 @@ void StateManagerGL::bindImageTexture(GLuint unit,
         binding.layer   = layer;
         binding.access  = access;
         binding.format  = format;
-        mFunctions->bindImageTexture(unit, texture, level, layered, layer, access, format);
+        mFunctions->bindImageTexture(angle::base::checked_cast<GLuint>(unit), texture, level,
+                                     layered, layer, access, format);
     }
 }
 

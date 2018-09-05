@@ -2864,7 +2864,7 @@ void State::onProgramExecutableChange(Program *program)
 }
 
 void State::setImageUnit(const Context *context,
-                         GLuint unit,
+                         size_t unit,
                          Texture *texture,
                          GLint level,
                          GLboolean layered,
@@ -2880,7 +2880,7 @@ void State::setImageUnit(const Context *context,
     mImageUnits[unit].format  = format;
 }
 
-const ImageUnit &State::getImageUnit(GLuint unit) const
+const ImageUnit &State::getImageUnit(size_t unit) const
 {
     return mImageUnits[unit];
 }

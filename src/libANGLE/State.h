@@ -464,7 +464,7 @@ class State : angle::NonCopyable
     AttributesMask getAndResetDirtyCurrentValues() const;
 
     void setImageUnit(const Context *context,
-                      GLuint unit,
+                      size_t unit,
                       Texture *texture,
                       GLint level,
                       GLboolean layered,
@@ -472,7 +472,7 @@ class State : angle::NonCopyable
                       GLenum access,
                       GLenum format);
 
-    const ImageUnit &getImageUnit(GLuint unit) const;
+    const ImageUnit &getImageUnit(size_t unit) const;
     const ActiveTexturePointerArray &getActiveTexturesCache() const { return mActiveTexturesCache; }
     ComponentTypeMask getCurrentValuesTypeMask() const { return mCurrentValuesTypeMask; }
 
