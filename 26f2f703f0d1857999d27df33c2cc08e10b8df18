@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a822359d_7df92cb3",
+        "filename": "src/compiler/translator/util.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-05T15:08:27Z",
+      "side": 1,
+      "message": "nit: I thought this would be better in one of the HLSL headers but it\u0027s a minor point.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 74
+      },
+      "revId": "26f2f703f0d1857999d27df33c2cc08e10b8df18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
