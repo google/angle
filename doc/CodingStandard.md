@@ -2,8 +2,7 @@
 
 ## Google Style Guide
 
-We generally use the [Google C++ Style Guide]
-(https://google.github.io/styleguide/cppguide.html) as a basis for
+We generally use the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) as a basis for
 our Coding Standard, however we will deviate from it in a few areas, as noted
 below.
 

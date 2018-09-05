@@ -26,7 +26,7 @@ On Windows:
  * [Cygwin's Bison, flex, and patch](https://cygwin.com/setup-x86_64.exe) (optional)
    * This is only required if you need to modify GLSL ES grammar files (`glslang.l` and `glslang.y` under `src/compiler/translator`, or `ExpressionParser.y` and `Tokenizer.l` in `src/compiler/preprocessor`).
      Use the latest versions of bison, flex and patch from the 64-bit cygwin distribution.
- * Non-googlers need to set DEPOT_TOOLS_WIN_TOOLCHAIN environment variable to 0.
+ * **IMPORTANT**: Non-googlers need to set `DEPOT_TOOLS_WIN_TOOLCHAIN` environment variable to 0.
 
 On Linux:
 
