@@ -58,21 +58,21 @@ This will catch most of the trivial formatting errors and save you time.
 
 #### Variable Names
 
-Use the following guidelines, they do deviate somewhat from the Google
-guidelines.
+Use the following guidelines, they do deviate somewhat from the [Google
+guidelines](https://google.github.io/styleguide/cppguide.html#Naming).
 
-* class and type names: start with capital letter and use CamelCase.
-* {DEV} class member variables: use an **`m`** prefix instead of trailing
+* Class and type names: start with capital letter and use CamelCase.
+* {DEV} Class member variables: use an **`m`** prefix instead of trailing
 underscore and use CamelCase.
-* global variables (if they must be used): use a **`g`** prefix.
-* {DEV} variable names: start with lower case and use CamelCase (chosen for consistency)
-* {DEV} function names: Member functions start with lower case and use CamelCase. Non-member functions start with capital letter and
+* Global variables (if they must be used): use a **`g`** prefix.
+* {DEV} Variable names: start with lower case and use CamelCase (chosen for consistency)
+* {DEV} Function names: Member functions start with lower case and use CamelCase. Non-member and static member functions start with capital letter and
 use CamelCase (chosen for consistency)
-* Constants: start with a **`k`** and use CamelCase
-* namespaces: use all lower case
-* Enum Names - use class enums, and the values should be uppercase with underscores.
-* macros: all uppercase with underscores
-* exceptions to naming: use common sense!
+* {DO} Constants: start with a **`k`** and use CamelCase
+* Namespaces: short names. use all lower case
+* Enum Names: use class enums when possible. The values should be uppercase with underscores or CamelCase.
+* Macros: all uppercase with underscores
+* Exceptions to naming: use common sense!
 
 ### [Comments](https://google.github.io/styleguide/cppguide.html#Comments)
 
