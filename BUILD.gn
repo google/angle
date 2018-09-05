@@ -948,7 +948,16 @@ executable("angle_shader_translator") {
 
 if (is_android) {
   # Package ANGLE libraries for pre-installed system image
+  android_assets("angle_apk_assets") {
+    disable_compression = true
+    sources = [
+      "src/feature_support_util/a4a_rules.json",
+    ]
+  }
   android_apk("angle_apk") {
+    deps = [
+      ":angle_apk_assets"
+    ]
     if (build_apk_secondary_abi && android_64bit_target_cpu) {
       secondary_abi_shared_libraries = [
         "//third_party/angle:libEGL${angle_libs_suffix}($android_secondary_abi_toolchain)",
