@@ -656,6 +656,17 @@ bool ValidateTexStorage2DMultisampleANGLE(Context *context,
                                           GLsizei width,
                                           GLsizei height,
                                           GLboolean fixedSampleLocations);
+bool ValidateGetTexLevelParameterivANGLE(Context *context,
+                                         TextureTarget target,
+                                         GLint level,
+                                         GLenum pname,
+                                         GLint *params);
+bool ValidateGetTexLevelParameterfvANGLE(Context *context,
+                                         TextureTarget target,
+                                         GLint level,
+                                         GLenum pname,
+                                         GLfloat *params);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES3_H_

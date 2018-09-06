@@ -631,6 +631,10 @@ typedef void(GL_APIENTRYP PFNGLTEXSTORAGE2DMULTISAMPLEANGLE)(GLenum target,
                                                              GLsizei width,
                                                              GLsizei height,
                                                              GLboolean fixedsamplelocations);
+typedef void(GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERFVANGLE)(GLenum target, GLint level,
+                                        GLenum pname, GLfloat *params);
+typedef void(GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERIVANGLE)(GLenum target, GLint level,
+                                        GLenum pname, GLint *params);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glTexStorage2DMultisampleANGLE(GLenum target,
                                                            GLsizei samples,
@@ -638,6 +642,10 @@ GL_APICALL void GL_APIENTRY glTexStorage2DMultisampleANGLE(GLenum target,
                                                            GLsizei width,
                                                            GLsizei height,
                                                            GLboolean fixedsamplelocations);
+GL_APICALL void GL_APIENTRY glGetTexLevelParameterfvANGLE(GLenum target, GLint level,
+                                        GLenum pname, GLfloat *params);
+GL_APICALL void GL_APIENTRY glGetTexLevelParameterivANGLE(GLenum target, GLint level,
+                                        GLenum pname, GLint *params);
 #endif
 #endif  // !GL_ANGLE_texture_multisample
 

@@ -857,6 +857,20 @@
                 <param><ptype>GLsizei</ptype> <name>height</name></param>
                 <param><ptype>GLboolean</ptype> <name>fixedsamplelocations</name></param>
             </command>
+           <command>
+           <proto>void <name>glGetTexLevelParameterivANGLE</name></proto>
+                <param><ptype>GLenum</ptype> <name>target</name></param>
+                <param><ptype>GLint</ptype> <name>level</name></param>
+                <param><ptype>GLenum</ptype> <name>pname</name></param>
+                <param><ptype>GLint *</ptype> <name>params</name></param>
+            </command>
+            <command>
+            <proto>void <name>glGetTexLevelParameterfvANGLE</name></proto>
+                <param><ptype>GLenum</ptype> <name>target</name></param>
+                <param><ptype>GLint</ptype> <name>level</name></param>
+                <param><ptype>GLenum</ptype> <name>pname</name></param>
+                <param><ptype>GLfloat *</ptype> <name>params</name></param>
+            </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
@@ -998,6 +1012,8 @@
         <extension name="GL_ANGLE_texture_multisample" supported='gl'>
             <require>
                 <command name="glTexStorage2DMultisampleANGLE"/>
+                <command name="glGetTexLevelParameterivANGLE"/>
+                <command name="glGetTexLevelParameterfvANGLE"/>
             </require>
         </extension>
     </extensions>

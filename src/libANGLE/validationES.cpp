@@ -6656,4 +6656,74 @@ bool ValidateTexStorage2DMultisampleBase(Context *context,
 
     return ValidateTexStorageMultisample(context, target, samples, internalFormat, width, height);
 }
+
+bool ValidateGetTexLevelParameterBase(Context *context,
+                                      TextureTarget target,
+                                      GLint level,
+                                      GLenum pname,
+                                      GLsizei *length)
+{
+
+    if (length)
+    {
+        *length = 0;
+    }
+
+    TextureType type = TextureTargetToType(target);
+
+    if (!ValidTexLevelDestinationTarget(context, type))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
+        return false;
+    }
+
+    if (context->getTargetTexture(type) == nullptr)
+    {
+        context->handleError(InvalidEnum() << "No texture bound.");
+        return false;
+    }
+
+    if (!ValidMipLevel(context, type, level))
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_TEXTURE_RED_TYPE:
+        case GL_TEXTURE_GREEN_TYPE:
+        case GL_TEXTURE_BLUE_TYPE:
+        case GL_TEXTURE_ALPHA_TYPE:
+        case GL_TEXTURE_DEPTH_TYPE:
+            break;
+        case GL_TEXTURE_RED_SIZE:
+        case GL_TEXTURE_GREEN_SIZE:
+        case GL_TEXTURE_BLUE_SIZE:
+        case GL_TEXTURE_ALPHA_SIZE:
+        case GL_TEXTURE_DEPTH_SIZE:
+        case GL_TEXTURE_STENCIL_SIZE:
+        case GL_TEXTURE_SHARED_SIZE:
+            break;
+        case GL_TEXTURE_INTERNAL_FORMAT:
+        case GL_TEXTURE_WIDTH:
+        case GL_TEXTURE_HEIGHT:
+        case GL_TEXTURE_DEPTH:
+            break;
+        case GL_TEXTURE_SAMPLES:
+        case GL_TEXTURE_FIXED_SAMPLE_LOCATIONS:
+            break;
+        case GL_TEXTURE_COMPRESSED:
+            break;
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
+            return false;
+    }
+
+    if (length)
+    {
+        *length = 1;
+    }
+    return true;
+}
 }  // namespace gl

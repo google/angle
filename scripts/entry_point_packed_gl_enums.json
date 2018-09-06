@@ -211,10 +211,16 @@
     "glGetTexLevelParameterfvRobustANGLE": {
         "target": "TextureTarget"
     },
+    "glGetTexLevelParameterfvANGLE": {
+        "target": "TextureTarget"
+    },
     "glGetTexLevelParameteriv": {
         "target": "TextureTarget"
     },
     "glGetTexLevelParameterivRobustANGLE": {
+        "target": "TextureTarget"
+    },
+    "glGetTexLevelParameterivANGLE": {
         "target": "TextureTarget"
     },
     "glGetTexParameterfv": {

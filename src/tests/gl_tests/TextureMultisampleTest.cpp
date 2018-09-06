@@ -69,6 +69,9 @@ class TextureMultisampleTest : public ANGLETest
                                GLsizei height,
                                GLboolean fixedsamplelocations);
 
+    void getTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params);
+    void getTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params);
+
     GLuint mFramebuffer = 0;
     GLuint mTexture     = 0;
 
@@ -211,6 +214,37 @@ void TextureMultisampleTest::texStorageMultisample(GLenum target,
     }
 }
 
+void TextureMultisampleTest::getTexLevelParameterfv(GLenum target,
+                                                    GLint level,
+                                                    GLenum pname,
+                                                    GLfloat *params)
+{
+    if (getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
+        ensureExtensionEnabled("GL_ANGLE_texture_multisample"))
+    {
+        glGetTexLevelParameterfvANGLE(target, level, pname, params);
+    }
+    else
+    {
+        glGetTexLevelParameterfv(target, level, pname, params);
+    }
+}
+void TextureMultisampleTest::getTexLevelParameteriv(GLenum target,
+                                                    GLint level,
+                                                    GLenum pname,
+                                                    GLint *params)
+{
+    if (getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
+        ensureExtensionEnabled("GL_ANGLE_texture_multisample"))
+    {
+        glGetTexLevelParameterivANGLE(target, level, pname, params);
+    }
+    else
+    {
+        glGetTexLevelParameteriv(target, level, pname, params);
+    }
+}
+
 // Tests that if es version < 3.1, GL_TEXTURE_2D_MULTISAMPLE is not supported in
 // GetInternalformativ. Checks that the number of samples returned is valid in case of ES >= 3.1.
 TEST_P(TextureMultisampleTest, MultisampleTargetGetInternalFormativBase)
@@ -245,6 +279,7 @@ TEST_P(TextureMultisampleTest, MultisampleTargetFramebufferTexture2D)
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
                            mTexture, 0);
+
     ASSERT_GL_NO_ERROR();
 }
 
@@ -321,6 +356,27 @@ TEST_P(TextureMultisampleTest, MaxDepthTextureSamples)
     EXPECT_NE(std::numeric_limits<GLint>::max(), maxDepthTextureSamples);
 }
 
+// Tests that getTexLevelParameter is supported by ES 3.1 or ES 3.0 and ANGLE_texture_multisample
+TEST_P(TextureMultisampleTest, GetTexLevelParameter)
+{
+    ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexture);
+    texStorageMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, 1, 1, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    GLfloat levelSamples = 0;
+    getTexLevelParameterfv(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_SAMPLES, &levelSamples);
+    EXPECT_EQ(levelSamples, 4);
+
+    GLint fixedSampleLocation = false;
+    getTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_FIXED_SAMPLE_LOCATIONS,
+                           &fixedSampleLocation);
+    EXPECT_EQ(fixedSampleLocation, 1);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // The value of sample position should be equal to standard pattern on D3D.
 TEST_P(TextureMultisampleTest, CheckSamplePositions)
 {
@@ -376,16 +432,16 @@ TEST_P(TextureMultisampleTest, SimpleTexelFetch)
     GLint samplesToUse              = getSamplesToUse(GL_TEXTURE_2D_MULTISAMPLE_ANGLE, testFormats);
 
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ANGLE, mTexture);
-    texStorageMultisample(GL_TEXTURE_2D_MULTISAMPLE_ANGLE, samplesToUse, GL_RGBA8, kWidth,
-                              kHeight, GL_TRUE);
+    texStorageMultisample(GL_TEXTURE_2D_MULTISAMPLE_ANGLE, samplesToUse, GL_RGBA8, kWidth, kHeight,
+                          GL_TRUE);
     ASSERT_GL_NO_ERROR();
 
     // Clear texture zero to green.
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     GLColor clearColor = GLColor::green;
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                           GL_TEXTURE_2D_MULTISAMPLE_ANGLE, mTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE_ANGLE,
+                           mTexture, 0);
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, status);
     glClearColor(clearColor.R / 255.0f, clearColor.G / 255.0f, clearColor.B / 255.0f,
@@ -437,6 +493,15 @@ TEST_P(NegativeTextureMultisampleTest, Negtive)
     GLint params = 0;
     glGetTexParameteriv(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_IMMUTABLE_FORMAT, &params);
     ASSERT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLfloat levelSamples = 0;
+    getTexLevelParameterfv(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_SAMPLES, &levelSamples);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    GLint fixedSampleLocation = false;
+    getTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_FIXED_SAMPLE_LOCATIONS,
+                           &fixedSampleLocation);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Tests that GL_TEXTURE_2D_MULTISAMPLE_ARRAY is not supported in GetInternalformativ when the

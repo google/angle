@@ -3188,6 +3188,22 @@ void GL_APIENTRY glTexStorage2DMultisampleANGLE(GLenum target,
                                             fixedsamplelocations);
 }
 
+void GL_APIENTRY glGetTexLevelParameterivANGLE(GLenum target,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLint *params)
+{
+    return gl::GetTexLevelParameterivANGLE(target, level, pname, params);
+}
+
+void GL_APIENTRY glGetTexLevelParameterfvANGLE(GLenum target,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLfloat *params)
+{
+    return gl::GetTexLevelParameterfvANGLE(target, level, pname, params);
+}
+
 // GL_ANGLE_translated_shader_source
 void GL_APIENTRY glGetTranslatedShaderSourceANGLE(GLuint shader,
                                                   GLsizei bufsize,
@@ -9019,6 +9035,24 @@ void GL_APIENTRY glTexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx,
 {
     return gl::TexStorage2DMultisampleANGLEContextANGLE(ctx, target, samples, internalformat, width,
                                                         height, fixedsamplelocations);
+}
+
+void GL_APIENTRY glGetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLint level,
+                                                           GLenum pname,
+                                                           GLint *params)
+{
+    return gl::GetTexLevelParameterivANGLEContextANGLE(ctx, target, level, pname, params);
+}
+
+void GL_APIENTRY glGetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLint level,
+                                                           GLenum pname,
+                                                           GLfloat *params)
+{
+    return gl::GetTexLevelParameterfvANGLEContextANGLE(ctx, target, level, pname, params);
 }
 
 }  // extern "C"

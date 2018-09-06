@@ -325,6 +325,8 @@ typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREMULTIVIEWSIDEBYSIDEANGLECONTEX
 typedef void (GL_APIENTRYP PFNGLCOPYTEXTURE3DANGLECONTEXTANGLE)(GLeglContext ctx, GLuint sourceId, GLint sourceLevel, GLenum destTarget, GLuint destId, GLint destLevel, GLint internalFormat, GLenum destType, GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);
 typedef void (GL_APIENTRYP PFNGLCOPYSUBTEXTURE3DANGLECONTEXTANGLE)(GLeglContext ctx, GLuint sourceId, GLint sourceLevel, GLenum destTarget, GLuint destId, GLint destLevel, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLint z, GLint width, GLint height, GLint depth, GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);
 typedef void (GL_APIENTRYP PFNGLTEXSTORAGE2DMULTISAMPLEANGLECONTEXTANGLE)(GLeglContext ctx, GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations);
+typedef void (GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERIVANGLECONTEXTANGLE)(GLeglContext ctx, GLenum target, GLint level, GLenum pname, GLint * params);
+typedef void (GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERFVANGLECONTEXTANGLE)(GLeglContext ctx, GLenum target, GLint level, GLenum pname, GLfloat * params);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glActiveTextureContextANGLE(GLeglContext ctx, GLenum texture);
 GL_APICALL void GL_APIENTRY glAttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader);
@@ -643,4 +645,6 @@ GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewSideBySideANGLEContextA
 GL_APICALL void GL_APIENTRY glCopyTexture3DANGLEContextANGLE(GLeglContext ctx, GLuint sourceId, GLint sourceLevel, GLenum destTarget, GLuint destId, GLint destLevel, GLint internalFormat, GLenum destType, GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);
 GL_APICALL void GL_APIENTRY glCopySubTexture3DANGLEContextANGLE(GLeglContext ctx, GLuint sourceId, GLint sourceLevel, GLenum destTarget, GLuint destId, GLint destLevel, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLint z, GLint width, GLint height, GLint depth, GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);
 GL_APICALL void GL_APIENTRY glTexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx, GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations);
+GL_APICALL void GL_APIENTRY glGetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx, GLenum target, GLint level, GLenum pname, GLint * params);
+GL_APICALL void GL_APIENTRY glGetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx, GLenum target, GLint level, GLenum pname, GLfloat * params);
 #endif

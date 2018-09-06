@@ -891,11 +891,11 @@ bool ValidateProgramUniformMatrix4x3fv(Context *context,
                                         transpose);
 }
 
-bool ValidateGetTexLevelParameterBase(Context *context,
-                                      TextureTarget target,
-                                      GLint level,
-                                      GLenum pname,
-                                      GLsizei *length)
+bool ValidateGetTexLevelParameterfv(Context *context,
+                                    TextureTarget target,
+                                    GLint level,
+                                    GLenum pname,
+                                    GLfloat *params)
 {
     if (context->getClientVersion() < ES_3_1)
     {
@@ -903,83 +903,6 @@ bool ValidateGetTexLevelParameterBase(Context *context,
         return false;
     }
 
-    if (length)
-    {
-        *length = 0;
-    }
-
-    TextureType type = TextureTargetToType(target);
-
-    if (!ValidTexLevelDestinationTarget(context, type))
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
-        return false;
-    }
-
-    if (context->getTargetTexture(type) == nullptr)
-    {
-        context->handleError(InvalidEnum() << "No texture bound.");
-        return false;
-    }
-
-    if (!ValidMipLevel(context, type, level))
-    {
-        context->handleError(InvalidValue());
-        return false;
-    }
-
-    switch (pname)
-    {
-        case GL_TEXTURE_RED_TYPE:
-        case GL_TEXTURE_GREEN_TYPE:
-        case GL_TEXTURE_BLUE_TYPE:
-        case GL_TEXTURE_ALPHA_TYPE:
-        case GL_TEXTURE_DEPTH_TYPE:
-            break;
-        case GL_TEXTURE_RED_SIZE:
-        case GL_TEXTURE_GREEN_SIZE:
-        case GL_TEXTURE_BLUE_SIZE:
-        case GL_TEXTURE_ALPHA_SIZE:
-        case GL_TEXTURE_DEPTH_SIZE:
-        case GL_TEXTURE_STENCIL_SIZE:
-        case GL_TEXTURE_SHARED_SIZE:
-            break;
-        case GL_TEXTURE_INTERNAL_FORMAT:
-        case GL_TEXTURE_WIDTH:
-        case GL_TEXTURE_HEIGHT:
-        case GL_TEXTURE_DEPTH:
-            break;
-        case GL_TEXTURE_SAMPLES:
-        case GL_TEXTURE_FIXED_SAMPLE_LOCATIONS:
-            break;
-        case GL_TEXTURE_COMPRESSED:
-            break;
-        case GL_MEMORY_SIZE_ANGLE:
-            if (!context->getExtensions().memorySize)
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ExtensionNotEnabled);
-                return false;
-            }
-            break;
-
-        default:
-            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
-            return false;
-    }
-
-    if (length)
-    {
-        *length = 1;
-    }
-    return true;
-}
-
-bool ValidateGetTexLevelParameterfv(Context *context,
-                                    TextureTarget target,
-                                    GLint level,
-                                    GLenum pname,
-                                    GLfloat *params)
-{
     return ValidateGetTexLevelParameterBase(context, target, level, pname, nullptr);
 }
 
@@ -1001,6 +924,12 @@ bool ValidateGetTexLevelParameteriv(Context *context,
                                     GLenum pname,
                                     GLint *params)
 {
+    if (context->getClientVersion() < ES_3_1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
+        return false;
+    }
+
     return ValidateGetTexLevelParameterBase(context, target, level, pname, nullptr);
 }
 

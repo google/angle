@@ -473,6 +473,14 @@ ANGLE_EXPORT void GL_APIENTRY TexStorage2DMultisampleANGLE(GLenum target,
                                                            GLsizei width,
                                                            GLsizei height,
                                                            GLboolean fixedsamplelocations);
+ANGLE_EXPORT void GL_APIENTRY GetTexLevelParameterivANGLE(GLenum target,
+                                                          GLint level,
+                                                          GLenum pname,
+                                                          GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GetTexLevelParameterfvANGLE(GLenum target,
+                                                          GLint level,
+                                                          GLenum pname,
+                                                          GLfloat *params);
 
 // GL_ANGLE_translated_shader_source
 ANGLE_EXPORT void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
@@ -3446,6 +3454,16 @@ TexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx,
                                          GLsizei width,
                                          GLsizei height,
                                          GLboolean fixedsamplelocations);
+ANGLE_EXPORT void GL_APIENTRY GetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx,
+                                                                      GLenum target,
+                                                                      GLint level,
+                                                                      GLenum pname,
+                                                                      GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx,
+                                                                      GLenum target,
+                                                                      GLint level,
+                                                                      GLenum pname,
+                                                                      GLfloat *params);
 }  // namespace gl
 
 #endif  // LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_

@@ -733,7 +733,9 @@
     ],
 
     "GL_ANGLE_texture_multisample": [
-        "glTexStorage2DMultisampleANGLE"
+      "glTexStorage2DMultisampleANGLE",
+      "glGetTexLevelParameterfvANGLE",
+      "glGetTexLevelParameterivANGLE"
     ],
 
     "EGL 1.0": [
