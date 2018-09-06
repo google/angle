@@ -4774,6 +4774,116 @@ TEST_P(GLSLTest, IfElseIfAndReturn)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests that PointCoord behaves the same betweeen a user FBO and the back buffer.
+TEST_P(GLSLTest, PointCoordConsistency)
+{
+    // On Intel Windows OpenGL drivers PointCoord appears to be flipped when drawing to the
+    // default framebuffer. http://anglebug.com/2805
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsOpenGL());
+
+    // AMD's OpenGL drivers may have the same issue. http://anglebug.com/1643
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsOpenGL());
+
+    constexpr char kPointCoordVS[] = R"(attribute vec2 position;
+uniform vec2 viewportSize;
+void main()
+{
+   gl_Position = vec4(position, 0, 1);
+   gl_PointSize = viewportSize.x;
+})";
+
+    constexpr char kPointCoordFS[] = R"(void main()
+{
+    gl_FragColor = vec4(gl_PointCoord.xy, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kPointCoordVS, kPointCoordFS);
+    glUseProgram(program);
+
+    GLint uniLoc = glGetUniformLocation(program, "viewportSize");
+    ASSERT_NE(-1, uniLoc);
+    glUniform2f(uniLoc, getWindowWidth(), getWindowHeight());
+
+    // Draw to backbuffer.
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLColor> backbufferData(getWindowWidth() * getWindowHeight());
+    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                 backbufferData.data());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Draw to user FBO.
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLColor> userFBOData(getWindowWidth() * getWindowHeight());
+    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                 userFBOData.data());
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(userFBOData.size(), backbufferData.size());
+    EXPECT_EQ(userFBOData, backbufferData);
+}
+
+// Tests that FragCoord behaves the same betweeen a user FBO and the back buffer.
+TEST_P(GLSLTest, FragCoordConsistency)
+{
+    constexpr char kFragCoordShader[] = R"(uniform mediump vec2 viewportSize;
+void main()
+{
+    gl_FragColor = vec4(gl_FragCoord.xy / viewportSize, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragCoordShader);
+    glUseProgram(program);
+
+    GLint uniLoc = glGetUniformLocation(program, "viewportSize");
+    ASSERT_NE(-1, uniLoc);
+    glUniform2f(uniLoc, getWindowWidth(), getWindowHeight());
+
+    // Draw to backbuffer.
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5);
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLColor> backbufferData(getWindowWidth() * getWindowHeight());
+    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                 backbufferData.data());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Draw to user FBO.
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5);
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLColor> userFBOData(getWindowWidth() * getWindowHeight());
+    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                 userFBOData.data());
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_EQ(userFBOData.size(), backbufferData.size());
+    EXPECT_EQ(userFBOData, backbufferData);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,

@@ -789,7 +789,6 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
                 mDrawFramebuffer = vk::GetImpl(glState.getDrawFramebuffer());
-                ANGLE_TRY(updateDriverUniforms(glState));
                 updateFlipViewportDrawFramebuffer(glState);
                 mPipelineDesc->updateViewport(mDrawFramebuffer, glState.getViewport(),
                                               glState.getNearPlane(), glState.getFarPlane(),
@@ -807,6 +806,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                                                            glState.getDrawFramebuffer());
                 mPipelineDesc->updateStencilBackWriteMask(glState.getDepthStencilState(),
                                                           glState.getDrawFramebuffer());
+                ANGLE_TRY(updateDriverUniforms(glState));
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -1096,7 +1096,7 @@ angle::Result ContextVk::updateDriverUniforms(const gl::State &glState)
     bool newBufferAllocated = false;
     ANGLE_TRY(mDriverUniformsBuffer.allocate(this, sizeof(DriverUniforms), &ptr, &buffer, &offset,
                                              &newBufferAllocated));
-    float scaleY = isViewportFlipEnabledForDrawFBO() ? 1.0f : -1.0f;
+    float scaleY = isViewportFlipEnabledForDrawFBO() ? -1.0f : 1.0f;
 
     float depthRangeNear = glState.getNearPlane();
     float depthRangeFar  = glState.getFarPlane();
@@ -1107,7 +1107,7 @@ angle::Result ContextVk::updateDriverUniforms(const gl::State &glState)
     *driverUniforms                = {
         {static_cast<float>(glViewport.x), static_cast<float>(glViewport.y),
          static_cast<float>(glViewport.width), static_cast<float>(glViewport.height)},
-        {1.0f, scaleY, 1.0f, 1.0f},
+        {1.0f, -scaleY, 1.0f, scaleY},
         {depthRangeNear, depthRangeFar, depthRangeDiff, 0.0f}};
 
     ANGLE_TRY(mDriverUniformsBuffer.flush(this));
