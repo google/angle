@@ -1,0 +1,20 @@
+R"=====({"Rules":
+ [
+  {"Rule" : "Default Rule (i.e. use native driver)",
+   "AppChoice" : true, "NonChoice" : false
+  },
+  {"Rule" : "Supported application(s) (e.g. Maps on Google devices)",
+   "AppChoice" : true, "NonChoice" : true,
+   "Applications" :
+   [
+    {"AppName" : "com.google.android.apps.maps"}
+   ],
+   "Devices" : 
+   [
+    {"Manufacturer" : "Google"
+    }
+   ]
+  }
+ ]
+}
+)====="

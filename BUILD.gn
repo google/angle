@@ -232,21 +232,27 @@ config("angle_feature_support_util_config") {
 }
 
 static_library("angle_feature_support_util") {
-  sources = [
-    "src/feature_support_util/feature_support_util.cpp",
-    "src/feature_support_util/feature_support_util.h",
-  ]
-
   configs -= angle_undefine_configs
   configs += [
     ":internal_config",
     ":extra_warnings",
   ]
 
-  public_configs = [ ":angle_feature_support_util_config" ]
+  public_configs = [
+    ":angle_feature_support_util_config",
+    "third_party/jsoncpp:jsoncpp_config",
+  ]
 
   public_deps = [
     ":angle_common",
+  ]
+
+  sources = [
+    "src/feature_support_util/feature_support_util.cpp",
+    "src/feature_support_util/feature_support_util.h",
+  ]
+  deps = [
+    "third_party/jsoncpp:jsoncpp",
   ]
 }
 
@@ -493,13 +499,15 @@ static_library("libANGLE") {
     ":angle_common",
   ]
   deps = [
-    ":angle_feature_support_util",
     ":angle_gpu_info_util",
     ":angle_image_util",
     ":commit_id",
     ":includes",
     ":translator",
   ]
+  if (is_android) {
+    deps += [ ":angle_feature_support_util" ]
+  }
 
   # Shared D3D sources.
   if (angle_enable_d3d9 || angle_enable_d3d11) {

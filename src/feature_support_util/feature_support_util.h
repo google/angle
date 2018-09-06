@@ -24,6 +24,16 @@ typedef enum ANGLEPreference {
     ANGLE_PREFER_ANGLE  = 2,
 } ANGLEPreference;
 
+// The Android EGL loader will call this function in order to determine whether
+// to use ANGLE instead of a native OpenGL-ES (GLES) driver.
+//
+// Parameters:
+// - appName - Java name of the application (e.g. "com.google.android.apps.maps")
+// - deviceMfr - Device manufacturer, from the "ro.product.manufacturer"com.google.android" property
+// - deviceModel - Device model, from the "ro.product.model"com.google.android" property
+// - developerOption - Whether the "Developer Options" setting was set, and if so, how
+// - appPreference - Whether the application expressed a preference, and if so, how
+//
 // TODO(ianelliott@google.com angleproject:2801): Revisit this function
 // name/interface.  Look at generalizing it and making it more "feature"
 // oriented.
