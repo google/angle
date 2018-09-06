@@ -395,6 +395,62 @@ TEST_P(ComputeShaderTest, DispatchCompute)
     EXPECT_GL_NO_ERROR();
 }
 
+// Basic test for DispatchComputeIndirect.
+TEST_P(ComputeShaderTest, DispatchComputeIndirect)
+{
+    GLTexture texture;
+    GLFramebuffer framebuffer;
+    const char kCSSource[] =
+        R"(#version 310 es
+        layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+        layout(r32ui, binding = 0) uniform highp uimage2D uImage;
+        void main()
+        {
+            imageStore(uImage, ivec2(gl_WorkGroupID.x, gl_WorkGroupID.y), uvec4(100, 0, 0, 0));
+        })";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    glUseProgram(program.get());
+    const int kWidth = 4, kHeight = 6;
+    GLuint inputValues[] = {0};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_DISPATCH_INDIRECT_BUFFER, buffer);
+    GLuint params[] = {kWidth, kHeight, 1};
+    glBufferData(GL_DISPATCH_INDIRECT_BUFFER, sizeof(params), params, GL_STATIC_DRAW);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth, kHeight);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    inputValues);
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchComputeIndirect(0);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);
+    glUseProgram(0);
+    GLuint outputValues[kWidth][kHeight];
+    GLuint expectedValue = 100u;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < kWidth; i++)
+    {
+        for (int j = 0; j < kHeight; j++)
+        {
+            EXPECT_EQ(expectedValue, outputValues[i][j]);
+        }
+    }
+}
+
 // Use image uniform to write texture in compute shader, and verify the content is expected.
 TEST_P(ComputeShaderTest, BindImageTexture)
 {

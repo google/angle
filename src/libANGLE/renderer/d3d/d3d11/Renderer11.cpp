@@ -3692,6 +3692,30 @@ angle::Result Renderer11::dispatchCompute(const gl::Context *context,
 
     return angle::Result::Continue();
 }
+angle::Result Renderer11::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
+{
+    const auto &glState          = context->getGLState();
+    auto *dispatchIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DispatchIndirect);
+    ASSERT(dispatchIndirectBuffer);
+
+    Buffer11 *storage         = GetImplAs<Buffer11>(dispatchIndirectBuffer);
+    const uint8_t *bufferData = nullptr;
+    // TODO(jie.a.chen@intel.com): num_groups_x,y,z have to be written into the driver constant
+    // buffer for the built-in variable gl_NumWorkGroups. There is an opportunity for optimization
+    // to use GPU->GPU copy instead.
+    // https://bugs.chromium.org/p/angleproject/issues/detail?id=2807
+    ANGLE_TRY(storage->getData(context, &bufferData));
+    const GLuint *groups = reinterpret_cast<const GLuint *>(bufferData + indirect);
+    ANGLE_TRY(mStateManager.updateStateForCompute(context, groups[0], groups[1], groups[2]));
+
+    ANGLE_TRY(applyComputeShader(context));
+
+    ID3D11Buffer *buffer = nullptr;
+    ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDIRECT, &buffer));
+
+    mDeviceContext->DispatchIndirect(buffer, static_cast<UINT>(indirect));
+    return angle::Result::Continue();
+}
 
 angle::Result Renderer11::createStagingTexture(const gl::Context *context,
                                                ResourceType textureType,
