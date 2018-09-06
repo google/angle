@@ -612,6 +612,35 @@ GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewSideBySideANGLE(GLenum 
 #define GL_SAMPLER_2D_RECT_ANGLE 0x8B63
 #endif /* GL_ANGLE_texture_rectangle */
 
+#ifndef GL_ANGLE_texture_multisample
+#define GL_ANGLE_texture_multisample 1
+#define GL_SAMPLE_POSITION_ANGLE 0x8E50
+#define GL_SAMPLE_MASK_ANGLE 0x8E51
+#define GL_SAMPLE_MASK_VALUE_ANGLE 0x8E52
+#define GL_TEXTURE_2D_MULTISAMPLE_ANGLE 0x9100
+#define GL_MAX_SAMPLE_MASK_WORDS_ANGLE 0x8E59
+#define GL_MAX_COLOR_TEXTURE_SAMPLES_ANGLE 0x910E
+#define GL_MAX_DEPTH_TEXTURE_SAMPLES_ANGLE 0x910F
+#define GL_MAX_INTEGER_SAMPLES_ANGLE 0x9110
+#define GL_TEXTURE_BINDING_2D_MULTISAMPLE_ANGLE 0x9104
+#define GL_TEXTURE_SAMPLES_ANGLE 0x9106
+#define GL_TEXTURE_FIXED_SAMPLE_LOCATIONS_ANGLE 0x9107
+typedef void(GL_APIENTRYP PFNGLTEXSTORAGE2DMULTISAMPLEANGLE)(GLenum target,
+                                                             GLsizei samples,
+                                                             GLenum internalformat,
+                                                             GLsizei width,
+                                                             GLsizei height,
+                                                             GLboolean fixedsamplelocations);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glTexStorage2DMultisampleANGLE(GLenum target,
+                                                           GLsizei samples,
+                                                           GLenum internalformat,
+                                                           GLsizei width,
+                                                           GLsizei height,
+                                                           GLboolean fixedsamplelocations);
+#endif
+#endif  // !GL_ANGLE_texture_multisample
+
 #ifndef GL_ANGLE_explicit_context
 #define GL_ANGLE_explicit_context
 typedef void *GLeglContext;

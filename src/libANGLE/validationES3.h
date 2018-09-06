@@ -633,6 +633,13 @@ bool ValidateBindFragDataLocationEXT(Context *context,
                                      const char *name);
 bool ValidateGetFragDataIndexEXT(Context *context, GLuint program, const char *name);
 
+bool ValidateTexStorage2DMultisampleANGLE(Context *context,
+                                          TextureType target,
+                                          GLsizei samples,
+                                          GLint internalFormat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLboolean fixedSampleLocations);
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES3_H_

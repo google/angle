@@ -721,6 +721,10 @@
         "glFramebufferTextureEXT"
     ],
 
+    "GL_ANGLE_texture_multisample": [
+        "glTexStorage2DMultisampleANGLE"
+    ],
+
     "EGL 1.0": [
         "eglChooseConfig",
         "eglCopyBuffers",

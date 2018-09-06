@@ -4149,4 +4149,23 @@ bool ValidateGetFragDataIndexEXT(Context *context, GLuint program, const char *n
     return true;
 }
 
+bool ValidateTexStorage2DMultisampleANGLE(Context *context,
+                                          TextureType target,
+                                          GLsizei samples,
+                                          GLint internalFormat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLboolean fixedSampleLocations)
+{
+    if (!context->getExtensions().textureMultisample)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(),
+                             MultisampleTextureExtensionOrES31Required);
+        return false;
+    }
+
+    return ValidateTexStorage2DMultisampleBase(context, target, samples, internalFormat, width,
+                                               height);
+}
+
 }  // namespace gl

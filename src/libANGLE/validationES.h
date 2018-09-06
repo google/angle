@@ -705,6 +705,13 @@ bool ValidateTexStorageMultisample(Context *context,
                                    GLsizei width,
                                    GLsizei height);
 
+bool ValidateTexStorage2DMultisampleBase(Context *context,
+                                         TextureType target,
+                                         GLsizei samples,
+                                         GLint internalFormat,
+                                         GLsizei width,
+                                         GLsizei height);
+
 // Utility macro for handling implementation methods inside Validation.
 #define ANGLE_HANDLE_VALIDATION_ERR(X) \
     context->handleError(X);           \

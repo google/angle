@@ -848,6 +848,15 @@
                 <param><ptype>GLboolean</ptype> <name>unpackPremultiplyAlpha</name></param>
                 <param><ptype>GLboolean</ptype> <name>unpackUnmultiplyAlpha</name></param>
             </command>
+            <command>
+            <proto>void <name>glTexStorage2DMultisampleANGLE</name></proto>
+                <param><ptype>GLenum</ptype> <name>target</name></param>
+                <param><ptype>GLsizei</ptype> <name>samples</name></param>
+                <param><ptype>GLenum</ptype> <name>internalformat</name></param>
+                <param><ptype>GLsizei</ptype> <name>width</name></param>
+                <param><ptype>GLsizei</ptype> <name>height</name></param>
+                <param><ptype>GLboolean</ptype> <name>fixedsamplelocations</name></param>
+            </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
@@ -984,6 +993,11 @@
             <require>
                 <command name="glCopyTexture3DANGLE"/>
                 <command name="glCopySubTexture3DANGLE"/>
+            </require>
+        </extension>
+        <extension name="GL_ANGLE_texture_multisample" supported='gl'>
+            <require>
+                <command name="glTexStorage2DMultisampleANGLE"/>
             </require>
         </extension>
     </extensions>

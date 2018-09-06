@@ -446,6 +446,9 @@ struct Extensions
 
     // GL_ANGLE_memory_size
     bool memorySize;
+
+    // GL_ANGLE_texture_multisample
+    bool textureMultisample;
 };
 
 struct ExtensionInfo

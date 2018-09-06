@@ -1030,19 +1030,8 @@ bool ValidateTexStorage2DMultisample(Context *context,
         return false;
     }
 
-    if (target != TextureType::_2DMultisample)
-    {
-        context->handleError(InvalidEnum() << "Target must be TEXTURE_2D_MULTISAMPLE.");
-        return false;
-    }
-
-    if (width < 1 || height < 1)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeSize);
-        return false;
-    }
-
-    return ValidateTexStorageMultisample(context, target, samples, internalFormat, width, height);
+    return ValidateTexStorage2DMultisampleBase(context, target, samples, internalFormat, width,
+                                               height);
 }
 
 bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfloat *val)

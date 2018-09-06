@@ -6,9 +6,9 @@
 
 #include "shader_utils.h"
 
-#include <vector>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <vector>
 
 static std::string ReadFileToString(const std::string &source)
 {
@@ -34,7 +34,7 @@ GLuint CompileShader(GLenum type, const std::string &source)
 {
     GLuint shader = glCreateShader(type);
 
-    const char *sourceArray[1] = { source.c_str() };
+    const char *sourceArray[1] = {source.c_str()};
     glShaderSource(shader, 1, sourceArray, nullptr);
     glCompileShader(shader);
 
@@ -414,6 +414,20 @@ in vec4 a_position;
 void main()
 {
     gl_Position = a_position;
+})";
+}
+
+// A shader that simply passes through attribute a_position, setting it to gl_Position and varying
+// v_position.
+const char *Passthrough()
+{
+    return R"(#version 300 es
+in vec4 a_position;
+out vec4 v_position;
+void main()
+{
+    gl_Position = a_position;
+    v_position = a_position;
 })";
 }
 

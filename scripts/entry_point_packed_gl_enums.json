@@ -373,6 +373,9 @@
     "glTexStorage2DMultisample": {
         "target": "TextureType"
     },
+    "glTexStorage2DMultisampleANGLE": {
+        "target":  "TextureType"
+    },
     "glTexStorage3DMultisampleOES": {
         "target": "TextureType"
     },

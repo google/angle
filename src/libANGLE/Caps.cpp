@@ -256,7 +256,8 @@ Extensions::Extensions()
       multiviewMultisample(false),
       blendFuncExtended(false),
       maxDualSourceDrawBuffers(0),
-      memorySize(false)
+      memorySize(false),
+      textureMultisample(false)
 {
 }
 
@@ -890,6 +891,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_texture_storage_multisample_2d_array"] = enableableExtension(&Extensions::textureStorageMultisample2DArray);
         map["GL_ANGLE_multiview_multisample"] = enableableExtension(&Extensions::multiviewMultisample);
         map["GL_EXT_blend_func_extended"] = enableableExtension(&Extensions::blendFuncExtended);
+        map["GL_ANGLE_texture_multisample"] = enableableExtension(&Extensions::textureMultisample);
         // GLES1 extensinos
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArray);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMap);

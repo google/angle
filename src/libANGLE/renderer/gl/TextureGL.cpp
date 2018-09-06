@@ -1037,9 +1037,21 @@ gl::Error TextureGL::setStorageMultisample(const gl::Context *context,
     if (nativegl::UseTexImage2D(getType()))
     {
         ASSERT(size.depth == 1);
-        functions->texStorage2DMultisample(ToGLenum(type), samples, texStorageFormat.internalFormat,
-                                           size.width, size.height,
-                                           gl::ConvertToGLBoolean(fixedSampleLocations));
+        if (functions->texStorage2DMultisample)
+        {
+            functions->texStorage2DMultisample(
+                ToGLenum(type), samples, texStorageFormat.internalFormat, size.width, size.height,
+                gl::ConvertToGLBoolean(fixedSampleLocations));
+        }
+        else
+        {
+            // texImage2DMultisample is similar to texStorage2DMultisample of es 3.1 core feature,
+            // On macos and some old drivers which doesn't support OpenGL ES 3.1, the function can
+            // be supported by ARB_texture_multisample or OpenGL 3.2 core feature.
+            functions->texImage2DMultisample(
+                ToGLenum(type), samples, texStorageFormat.internalFormat, size.width, size.height,
+                gl::ConvertToGLBoolean(fixedSampleLocations));
+        }
     }
     else if (nativegl::UseTexImage3D(getType()))
     {

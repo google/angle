@@ -3176,6 +3176,18 @@ void GL_APIENTRY glGetQueryObjectui64vRobustANGLE(GLuint id,
     return gl::GetQueryObjectui64vRobustANGLE(id, pname, bufSize, length, params);
 }
 
+// GL_ANGLE_texture_multisample
+void GL_APIENTRY glTexStorage2DMultisampleANGLE(GLenum target,
+                                                GLsizei samples,
+                                                GLenum internalformat,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLboolean fixedsamplelocations)
+{
+    return gl::TexStorage2DMultisampleANGLE(target, samples, internalformat, width, height,
+                                            fixedsamplelocations);
+}
+
 // GL_ANGLE_translated_shader_source
 void GL_APIENTRY glGetTranslatedShaderSourceANGLE(GLuint shader,
                                                   GLsizei bufsize,
@@ -8890,6 +8902,18 @@ void GL_APIENTRY glCopySubTexture3DANGLEContextANGLE(GLeglContext ctx,
     return gl::CopySubTexture3DANGLEContextANGLE(
         ctx, sourceId, sourceLevel, destTarget, destId, destLevel, xoffset, yoffset, zoffset, x, y,
         z, width, height, depth, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+}
+
+void GL_APIENTRY glTexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx,
+                                                            GLenum target,
+                                                            GLsizei samples,
+                                                            GLenum internalformat,
+                                                            GLsizei width,
+                                                            GLsizei height,
+                                                            GLboolean fixedsamplelocations)
+{
+    return gl::TexStorage2DMultisampleANGLEContextANGLE(ctx, target, samples, internalformat, width,
+                                                        height, fixedsamplelocations);
 }
 
 }  // extern "C"
