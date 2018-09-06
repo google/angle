@@ -144,6 +144,7 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     mDirtyBitHandlers[DIRTY_BIT_TEXTURES]        = &ContextVk::handleDirtyTextures;
     mDirtyBitHandlers[DIRTY_BIT_VERTEX_BUFFERS]  = &ContextVk::handleDirtyVertexBuffers;
     mDirtyBitHandlers[DIRTY_BIT_INDEX_BUFFER]    = &ContextVk::handleDirtyIndexBuffer;
+    mDirtyBitHandlers[DIRTY_BIT_DRIVER_UNIFORMS] = &ContextVk::handleDirtyDriverUniforms;
     mDirtyBitHandlers[DIRTY_BIT_DESCRIPTOR_SETS] = &ContextVk::handleDirtyDescriptorSets;
 }
 
@@ -662,12 +663,12 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
                                               glState.getNearPlane(), glState.getFarPlane(),
                                               isViewportFlipEnabledForDrawFBO());
-                ANGLE_TRY(updateDriverUniforms(glState));
+                mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
                 mPipelineDesc->updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
-                ANGLE_TRY(updateDriverUniforms(glState));
+                mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                 break;
             case gl::State::DIRTY_BIT_BLEND_ENABLED:
                 mPipelineDesc->updateBlendEnabled(glState.isBlendEnabled());
@@ -806,7 +807,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                                                            glState.getDrawFramebuffer());
                 mPipelineDesc->updateStencilBackWriteMask(glState.getDepthStencilState(),
                                                           glState.getDrawFramebuffer());
-                ANGLE_TRY(updateDriverUniforms(glState));
+                mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -899,7 +900,7 @@ gl::Error ContextVk::onMakeCurrent(const gl::Context *context)
     const gl::State &glState = context->getGLState();
     updateFlipViewportDrawFramebuffer(glState);
     updateFlipViewportReadFramebuffer(glState);
-    ANGLE_TRY(updateDriverUniforms(glState));
+    mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
     return gl::NoError();
 }
 
@@ -1082,12 +1083,14 @@ const FeaturesVk &ContextVk::getFeatures() const
     return mRenderer->getFeatures();
 }
 
-angle::Result ContextVk::updateDriverUniforms(const gl::State &glState)
+angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
+                                                   const gl::DrawCallParams &drawCallParams,
+                                                   vk::CommandBuffer *commandBuffer)
 {
     // Release any previously retained buffers.
     mDriverUniformsBuffer.releaseRetainedBuffers(mRenderer);
 
-    const gl::Rectangle &glViewport = glState.getViewport();
+    const gl::Rectangle &glViewport = mState.getState().getViewport();
 
     // Allocate a new region in the dynamic buffer.
     uint8_t *ptr            = nullptr;
@@ -1098,8 +1101,8 @@ angle::Result ContextVk::updateDriverUniforms(const gl::State &glState)
                                              &newBufferAllocated));
     float scaleY = isViewportFlipEnabledForDrawFBO() ? -1.0f : 1.0f;
 
-    float depthRangeNear = glState.getNearPlane();
-    float depthRangeFar  = glState.getFarPlane();
+    float depthRangeNear = mState.getState().getNearPlane();
+    float depthRangeFar  = mState.getState().getFarPlane();
     float depthRangeDiff = depthRangeFar - depthRangeNear;
 
     // Copy and flush to the device.

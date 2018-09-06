@@ -185,6 +185,7 @@ class ContextVk : public ContextImpl, public vk::Context
         DIRTY_BIT_TEXTURES,
         DIRTY_BIT_VERTEX_BUFFERS,
         DIRTY_BIT_INDEX_BUFFER,
+        DIRTY_BIT_DRIVER_UNIFORMS,
         DIRTY_BIT_DESCRIPTOR_SETS,
         DIRTY_BIT_MAX,
     };
@@ -213,7 +214,6 @@ class ContextVk : public ContextImpl, public vk::Context
     void updateFlipViewportDrawFramebuffer(const gl::State &glState);
     void updateFlipViewportReadFramebuffer(const gl::State &glState);
 
-    angle::Result updateDriverUniforms(const gl::State &glState);
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
@@ -234,6 +234,9 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result handleDirtyIndexBuffer(const gl::Context *context,
                                          const gl::DrawCallParams &drawCallParams,
                                          vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyDriverUniforms(const gl::Context *context,
+                                            const gl::DrawCallParams &drawCallParams,
+                                            vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyDescriptorSets(const gl::Context *context,
                                             const gl::DrawCallParams &drawCallParams,
                                             vk::CommandBuffer *commandBuffer);
