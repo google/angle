@@ -713,11 +713,7 @@ ANGLE_INLINE bool ValidateFramebufferComplete(Context *context, Framebuffer *fra
     return true;
 }
 
-struct ErrorAndMessage
-{
-    GLenum errorType;
-    const char *message;
-};
+const char *ValidateDrawStates(Context *context);
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES_H_

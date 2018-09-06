@@ -992,6 +992,7 @@ void Framebuffer::invalidateCompletenessCache(const Context *context)
     if (mState.mId != 0)
     {
         mCachedStatus.reset();
+        onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
     }
 }
 
@@ -1833,7 +1834,7 @@ void Framebuffer::onSubjectStateChange(const Context *context,
     {
         ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(index));
         mDirtyBits.set(index);
-        onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+        onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
         return;
     }
 

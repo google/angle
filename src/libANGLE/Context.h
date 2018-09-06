@@ -103,25 +103,67 @@ class StateCache final : angle::NonCopyable
     // Places that can trigger updateVertexElementLimits:
     // 1. onVertexArrayBindingChange.
     // 2. onProgramExecutableChange.
-    // 3. onVertexArraySizeChange.
-    // 4. onVertexArrayStateChange.
+    // 3. onVertexArrayFormatChange.
+    // 4. onVertexArrayBufferChange.
+    // 5. onVertexArrayStateChange.
     GLint64 getNonInstancedVertexElementLimit() const
     {
         return mCachedNonInstancedVertexElementLimit;
     }
     GLint64 getInstancedVertexElementLimit() const { return mCachedInstancedVertexElementLimit; }
 
+    // Places that can trigger updateBasicDrawStatesError:
+    // 1. onVertexArrayBindingChange.
+    // 2. onProgramExecutableChange.
+    // 3. onVertexArrayBufferContentsChange.
+    // 4. onVertexArrayStateChange.
+    // 5. onVertexArrayBufferStateChange.
+    // 6. onDrawFramebufferChange.
+    // 7. onContextCapChange.
+    // 8. onStencilStateChange.
+    // 9. onDefaultVertexAttributeChange.
+    // 10. onActiveTextureChange.
+    // 11. onQueryChange.
+    // 12. onTransformFeedbackChange.
+    // 13. onUniformBufferStateChange.
+    // 14. onBufferBindingChange.
+    intptr_t getBasicDrawStatesError(Context *context) const
+    {
+        if (mCachedBasicDrawStatesError != kInvalidPointer)
+        {
+            return mCachedBasicDrawStatesError;
+        }
+
+        return getBasicDrawStatesErrorImpl(context);
+    }
+
     // State change notifications.
     void onVertexArrayBindingChange(Context *context);
     void onProgramExecutableChange(Context *context);
-    void onVertexArraySizeChange(Context *context);
+    void onVertexArrayFormatChange(Context *context);
+    void onVertexArrayBufferContentsChange(Context *context);
     void onVertexArrayStateChange(Context *context);
+    void onVertexArrayBufferStateChange(Context *context);
     void onGLES1ClientStateChange(Context *context);
+    void onDrawFramebufferChange(Context *context);
+    void onContextCapChange(Context *context);
+    void onStencilStateChange(Context *context);
+    void onDefaultVertexAttributeChange(Context *context);
+    void onActiveTextureChange(Context *context);
+    void onQueryChange(Context *context);
+    void onTransformFeedbackChange(Context *context);
+    void onUniformBufferStateChange(Context *context);
+    void onBufferBindingChange(Context *context);
 
   private:
     // Cache update functions.
     void updateActiveAttribsMask(Context *context);
     void updateVertexElementLimits(Context *context);
+    void updateBasicDrawStatesError();
+
+    intptr_t getBasicDrawStatesErrorImpl(Context *context) const;
+
+    static constexpr intptr_t kInvalidPointer = 1;
 
     AttributesMask mCachedActiveBufferedAttribsMask;
     AttributesMask mCachedActiveClientAttribsMask;
@@ -129,6 +171,7 @@ class StateCache final : angle::NonCopyable
     bool mCachedHasAnyEnabledClientAttrib;
     GLint64 mCachedNonInstancedVertexElementLimit;
     GLint64 mCachedInstancedVertexElementLimit;
+    mutable intptr_t mCachedBasicDrawStatesError;
 };
 
 class Context final : public egl::LabeledObject, angle::NonCopyable, public angle::ObserverInterface

@@ -307,6 +307,8 @@ TEST_P(FramebufferFormatsTest, IncompleteCubeMap)
     ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
                      glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
+    ASSERT_GL_NO_ERROR();
+
     // Verify drawing with the incomplete framebuffer produces a GL error
     mProgram = CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     ASSERT_NE(0u, mProgram);

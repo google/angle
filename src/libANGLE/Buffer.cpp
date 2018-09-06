@@ -272,5 +272,4 @@ void Buffer::onTFBindingChanged(const Context *context, bool bound, bool indexed
         mState.mTransformFeedbackGenericBindingCount += bound ? 1 : -1;
     }
 }
-
 }  // namespace gl

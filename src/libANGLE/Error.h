@@ -146,7 +146,6 @@ inline Error NoError()
 }
 
 using LinkResult = ErrorOrResult<bool>;
-
 }  // namespace gl
 
 namespace egl

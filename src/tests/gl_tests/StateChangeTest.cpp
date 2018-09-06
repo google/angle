@@ -2688,6 +2688,104 @@ void main()
     glEndTransformFeedback();
     EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Simultaneous pack buffer binding should fail";
 }
+
+// Tests a valid rendering setup with two textures. Followed by a draw with conflicting samplers.
+TEST_P(ValidationStateChangeTest, TextureConflict)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage"));
+
+    GLint maxTextures = 0;
+    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxTextures);
+    ANGLE_SKIP_TEST_IF(maxTextures < 2);
+
+    // Set up state.
+    constexpr GLint kSize = 2;
+
+    std::vector<GLColor> greenData(4, GLColor::green);
+
+    GLTexture textureA;
+    glBindTexture(GL_TEXTURE_2D, textureA);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 greenData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glActiveTexture(GL_TEXTURE1);
+
+    GLTexture textureB;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureB);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, greenData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, greenData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, greenData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, greenData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, greenData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, greenData.data());
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    constexpr char kVS[] = R"(attribute vec2 position;
+varying mediump vec2 texCoord;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    texCoord = position * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFS[] = R"(varying mediump vec2 texCoord;
+uniform sampler2D texA;
+uniform samplerCube texB;
+void main()
+{
+    gl_FragColor = texture2D(texA, texCoord) + textureCube(texB, vec3(1, 0, 0));
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    const auto &quadVertices = GetQuadVertices();
+
+    GLBuffer arrayBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVertices.size() * sizeof(Vector3), quadVertices.data(),
+                 GL_STATIC_DRAW);
+
+    GLint positionLoc = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLoc);
+
+    GLint texALoc = glGetUniformLocation(program, "texA");
+    ASSERT_NE(-1, texALoc);
+
+    GLint texBLoc = glGetUniformLocation(program, "texB");
+    ASSERT_NE(-1, texBLoc);
+
+    glUniform1i(texALoc, 0);
+    glUniform1i(texBLoc, 1);
+
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLoc);
+
+    ASSERT_GL_NO_ERROR();
+
+    // First draw. Should succeed.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Second draw to ensure all state changes are flushed.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Make the uniform use an invalid texture binding.
+    glUniform1i(texBLoc, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
