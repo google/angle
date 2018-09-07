@@ -446,8 +446,8 @@ gl::Error IncompleteTextureSet::getIncompleteTexture(
     {
         for (gl::TextureTarget face : gl::AllCubeFaceTextureTargets())
         {
-            ANGLE_TRY(
-                t->setSubImage(context, unpack, face, 0, area, GL_RGBA, GL_UNSIGNED_BYTE, color));
+            ANGLE_TRY(t->setSubImage(context, unpack, nullptr, face, 0, area, GL_RGBA,
+                                     GL_UNSIGNED_BYTE, color));
         }
     }
     else if (type == gl::TextureType::_2DMultisample)
@@ -457,8 +457,9 @@ gl::Error IncompleteTextureSet::getIncompleteTexture(
     }
     else
     {
-        ANGLE_TRY(t->setSubImage(context, unpack, gl::NonCubeTextureTypeToTarget(createType), 0,
-                                 area, GL_RGBA, GL_UNSIGNED_BYTE, color));
+        ANGLE_TRY(t->setSubImage(context, unpack, nullptr,
+                                 gl::NonCubeTextureTypeToTarget(createType), 0, area, GL_RGBA,
+                                 GL_UNSIGNED_BYTE, color));
     }
 
     ANGLE_TRY(t->syncState(context));

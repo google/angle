@@ -970,6 +970,7 @@ Error Texture::setImage(const Context *context,
 
 Error Texture::setSubImage(const Context *context,
                            const PixelUnpackState &unpackState,
+                           Buffer *unpackBuffer,
                            TextureTarget target,
                            GLint level,
                            const Box &area,
@@ -983,7 +984,8 @@ Error Texture::setSubImage(const Context *context,
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level);
 
-    ANGLE_TRY(mTexture->setSubImage(context, index, area, format, type, unpackState, pixels));
+    ANGLE_TRY(mTexture->setSubImage(context, index, area, format, type, unpackState, unpackBuffer,
+                                    pixels));
 
     ANGLE_TRY(handleMipmapGenerationHint(context, level));
 

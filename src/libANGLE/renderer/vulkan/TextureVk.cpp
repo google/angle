@@ -491,6 +491,7 @@ gl::Error TextureVk::setSubImage(const gl::Context *context,
                                  GLenum format,
                                  GLenum type,
                                  const gl::PixelUnpackState &unpack,
+                                 gl::Buffer *unpackBuffer,
                                  const uint8_t *pixels)
 {
     ContextVk *contextVk                 = vk::GetImpl(context);
