@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7e4e29b5_71723982",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-07T07:08:48Z",
+      "side": 1,
+      "message": "OK, I think this is fine.",
+      "parentUuid": "6473aad8_369b4c62",
+      "revId": "78d8577be91431ba9eb515cf3ee5336f8b23e5ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "245e70db_06b8a984",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
         "patchSetId": 23
