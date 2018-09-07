@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bf0546a4_056bd4c8",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T09:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a707672b_957d597f",
+      "range": {
+        "startLine": 1220,
+        "startChar": 33,
+        "endLine": 1220,
+        "endChar": 69
+      },
+      "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59b3f151_ae2021cd",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 25
@@ -39,6 +63,24 @@
       "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e80a3cc3_3060d7c2",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1434,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T09:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59b3f151_ae2021cd",
+      "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "05560b73_579898d1",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T09:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "580e6915_cdb71ff7",
+      "range": {
+        "startLine": 58,
+        "startChar": 9,
+        "endLine": 58,
+        "endChar": 35
+      },
+      "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2942c09d_b94aeb6f",
         "filename": "src/compiler/translator/tree_ops/RemoveDynamicIndexing.cpp",
         "patchSetId": 25
@@ -79,6 +145,24 @@
       "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "402afaca_92248540",
+        "filename": "src/compiler/translator/tree_ops/RemoveDynamicIndexing.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T09:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2942c09d_b94aeb6f",
+      "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "e68afacc_2ce778aa",
+        "filename": "src/compiler/translator/tree_util/IntermNodePatternMatcher.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T09:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faec3bd1_6697f470",
+      "range": {
+        "startLine": 54,
+        "startChar": 11,
+        "endLine": 55,
+        "endChar": 55
+      },
+      "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6c22cf47_596bb45b",
         "filename": "src/compiler/translator/tree_util/IntermNodePatternMatcher.cpp",
         "patchSetId": 25
@@ -116,6 +224,30 @@
       "writtenOn": "2018-09-07T07:08:48Z",
       "side": 1,
       "message": "Which function does this matching rule need to call to work correctly? If the function needs to be changed then the enum should also be renamed.",
+      "range": {
+        "startLine": 116,
+        "startChar": 17,
+        "endLine": 116,
+        "endChar": 57
+      },
+      "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35d031c7_297302c0",
+        "filename": "src/compiler/translator/tree_util/IntermNodePatternMatcher.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T09:25:05Z",
+      "side": 1,
+      "message": "Currently, it\u0027s used in SimplifyLoopConditions.cpp and SplitSequenceOperator.cpp. In this patch, I think we can keep it unchanged since we don\u0027t touch this part in this patch. In future, when we modify the AST tree, we can revisit this if we need change it. How do you think?",
+      "parentUuid": "6c22cf47_596bb45b",
       "range": {
         "startLine": 116,
         "startChar": 17,
