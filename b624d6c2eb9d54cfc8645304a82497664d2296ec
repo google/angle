@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "e5060b0e_387c898f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-09-07T20:47:01Z",
+      "side": 1,
+      "message": "What about the shader part? It seems to me that you are going to submit another patch for the shader part. If this is correct, the titles might be as follows:\nImplement GL_ANGLE_texture_multisample on OpenGL - API part\nImplement GL_ANGLE_texture_multisample on OpenGL - shader part",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 48
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "04ea540a_4e4ec36b",
         "filename": "/COMMIT_MSG",
         "patchSetId": 14
@@ -18,6 +41,75 @@
         "startChar": 0,
         "endLine": 10,
         "endChar": 12
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25ca7794_6cab327d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-09-07T20:47:01Z",
+      "side": 1,
+      "message": "Add getTexLevelParameter API?",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 49
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "542a2537_ed3cb1b9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-09-07T20:47:01Z",
+      "side": 1,
+      "message": "This is the implementation details, I suggest you move this statement to where you implement this particular API: texStorage2DMultisample.",
+      "range": {
+        "startLine": 12,
+        "startChar": 49,
+        "endLine": 20,
+        "endChar": 51
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30353949_08499514",
+        "filename": "include/GLES3/gl3ext_angle.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-09-07T20:47:01Z",
+      "side": 1,
+      "message": "What about glGetTexLevelParameter{if}ANGLE?\n\nAnd enums in glGetTexLevelParameter{if}ANGLE?\n\nYou can refer to the ANGLE_texture_multisample specification.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 83
       },
       "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -117,6 +209,29 @@
     },
     {
       "key": {
+        "uuid": "5dd61387_ebb79b1c",
+        "filename": "src/libANGLE/entry_points_enum_autogen.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-09-07T20:47:01Z",
+      "side": 1,
+      "message": "Add GetTexLevelParameter, and throughout other places in order to expose it via this extension.",
+      "range": {
+        "startLine": 545,
+        "startChar": 4,
+        "endLine": 545,
+        "endChar": 32
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4f3645db_ad6858b0",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 14
@@ -163,6 +278,30 @@
     },
     {
       "key": {
+        "uuid": "363baf18_877e2e06",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1047,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-09-07T20:47:01Z",
+      "side": 1,
+      "message": "Ack. \n\nAnd I suggest you moving the description in the commit log to here.",
+      "parentUuid": "bc4a54a6_3b08f803",
+      "range": {
+        "startLine": 1046,
+        "startChar": 12,
+        "endLine": 1047,
+        "endChar": 45
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "80386584_28dd47f7",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 14
@@ -174,6 +313,30 @@
       "writtenOn": "2018-09-07T05:07:28Z",
       "side": 1,
       "message": "As far as I know, opengl version 3.2 already support TexImage2DMultisample. I think you can use TexImage2DMultisample to simulate TexStorage2DMultisample, right?  So, here should be gl::Version(3, 2)?",
+      "range": {
+        "startLine": 1033,
+        "startChar": 72,
+        "endLine": 1033,
+        "endChar": 76
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3eb16b03_c6239307",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2018-09-07T20:47:01Z",
+      "side": 1,
+      "message": "Agreed. It seems to me that other APIs like getMultisample and sampleMask can be supported in OGL 3.2 too. Setting the requirement to support 2D multisample to OGL 4.3 is too high, see Olli\u0027s code above, it can even support 2D \u0027array\u0027 multisample in OGL 4.2.",
+      "parentUuid": "80386584_28dd47f7",
       "range": {
         "startLine": 1033,
         "startChar": 72,
