@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04ea540a_4e4ec36b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "adds gl3ext_h",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 12
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c1e85e5_b013a7e3",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 858,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "Why there is no gl3.h before?",
+      "range": {
+        "startLine": 858,
+        "startChar": 0,
+        "endLine": 858,
+        "endChar": 22
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0f3ea9b_0a2c2355",
+        "filename": "src/compiler.gni",
+        "patchSetId": 14
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "Sort the order.",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 14,
+        "endChar": 25
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "807143b7_5fbfb4d1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "Remove the TODO?",
+      "range": {
+        "startLine": 414,
+        "startChar": 8,
+        "endLine": 414,
+        "endChar": 84
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13f7bfbd_31c3bf43",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "Remove the TODO?",
+      "range": {
+        "startLine": 227,
+        "startChar": 8,
+        "endLine": 227,
+        "endChar": 84
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f3645db_ad6858b0",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "Can you use it like below?\nif (functions-\u003etexStorage2DMultisample)\n{\n    functions-\u003etexStorage2DMultisample(...\n}\nelse",
+      "range": {
+        "startLine": 1036,
+        "startChar": 0,
+        "endLine": 1038,
+        "endChar": 76
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc4a54a6_3b08f803",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1047,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "Maybe you should say like we use texImage2DMultisample to simulate teStorage2DMultisample or something similar.",
+      "range": {
+        "startLine": 1046,
+        "startChar": 12,
+        "endLine": 1047,
+        "endChar": 45
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80386584_28dd47f7",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "As far as I know, opengl version 3.2 already support TexImage2DMultisample. I think you can use TexImage2DMultisample to simulate TexStorage2DMultisample, right?  So, here should be gl::Version(3, 2)?",
+      "range": {
+        "startLine": 1033,
+        "startChar": 72,
+        "endLine": 1033,
+        "endChar": 76
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcdc763d_e04d20a2",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 6332,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "It should be something like \u0027MultisampleTextureExtensionOrES31Required\u0027?",
+      "range": {
+        "startLine": 6332,
+        "startChar": 61,
+        "endLine": 6332,
+        "endChar": 96
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b1daeae_088bb8ca",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 6461,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "Can you use ANGLE_VALIDATION_ERROR? Same with below.",
+      "range": {
+        "startLine": 6461,
+        "startChar": 8,
+        "endLine": 6461,
+        "endChar": 80
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "327f0d67_b38da44d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3026,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 3026,
+        "startChar": 61,
+        "endLine": 3026,
+        "endChar": 96
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb8b1ffe_929929ad",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 6061,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 6061,
+        "startChar": 41,
+        "endLine": 6061,
+        "endChar": 76
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "963fc29d_82480b80",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3809,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "Use ANGLE_VALIDATION_ERR",
+      "range": {
+        "startLine": 3809,
+        "startChar": 8,
+        "endLine": 3809,
+        "endChar": 88
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6236f137_dc9e4ba9",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 14
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "Repeat with line 103",
+      "range": {
+        "startLine": 106,
+        "startChar": 2,
+        "endLine": 106,
+        "endChar": 33
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d723f110_47ee7246",
+        "filename": "src/libGLESv2/entry_points_gles_ext_autogen.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 18794,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-07T05:07:28Z",
+      "side": 1,
+      "message": "What\u0027s these?",
+      "range": {
+        "startLine": 18725,
+        "startChar": 0,
+        "endLine": 18794,
+        "endChar": 1
+      },
+      "revId": "b624d6c2eb9d54cfc8645304a82497664d2296ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
