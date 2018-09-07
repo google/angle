@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56ed8d7c_94266323",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 3845,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-07T15:48:54Z",
+      "side": 1,
+      "message": "Do we know how often we might possibly be setting the frame buffer to the same value? If that\u0027s significant, it might be worth it to only set the buffer, set dirty and call the callback if there\u0027s a real change.",
+      "revId": "d84b6737fa10f9222c70b44655c382e942c5ffe6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e54f5cec_a9a7a583",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 2707,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-07T15:48:54Z",
+      "side": 1,
+      "message": "Are you missing a call to glGenTextures()? `textureA` is uninitialized.",
+      "revId": "d84b6737fa10f9222c70b44655c382e942c5ffe6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
