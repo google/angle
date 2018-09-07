@@ -257,6 +257,30 @@
       "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "997afbb3_48d3f0b4",
+        "filename": "src/compiler/translator/tree_util/IntermNodePatternMatcher.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-07T09:32:01Z",
+      "side": 1,
+      "message": "Right, we probably don\u0027t have any reason to skip those AST operations for SSBO accesses, so I think this is correct. Looks good.",
+      "parentUuid": "35d031c7_297302c0",
+      "range": {
+        "startLine": 116,
+        "startChar": 17,
+        "endLine": 116,
+        "endChar": 57
+      },
+      "revId": "69654c28e6c209465f42c0edc1132bad07e2fb79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
