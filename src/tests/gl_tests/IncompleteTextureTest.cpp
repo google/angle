@@ -69,6 +69,20 @@ class IncompleteTextureTest : public ANGLETest
     GLint mTextureUniformLocation;
 };
 
+class IncompleteTextureTestES3 : public ANGLETest
+{
+  protected:
+    IncompleteTextureTestES3()
+    {
+        setWindowWidth(128);
+        setWindowHeight(128);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
+};
+
 class IncompleteTextureTestES31 : public ANGLETest
 {
   protected:
@@ -163,6 +177,21 @@ TEST_P(IncompleteTextureTest, UpdateTexture)
                           GLColor::green);
 }
 
+// Tests that incomplete textures don't get initialized with the unpack buffer contents.
+TEST_P(IncompleteTextureTestES3, UnpackBufferBound)
+{
+    std::vector<GLColor> red(16, GLColor::red);
+
+    GLBuffer unpackBuffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, red.size() * sizeof(GLColor), red.data(), GL_STATIC_DRAW);
+
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+}
+
 // Tests that the incomplete multisample texture has the correct alpha value.
 TEST_P(IncompleteTextureTestES31, MultisampleTexture)
 {
@@ -208,5 +237,5 @@ ANGLE_INSTANTIATE_TEST(IncompleteTextureTest,
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES2_VULKAN());
-
+ANGLE_INSTANTIATE_TEST(IncompleteTextureTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(IncompleteTextureTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());

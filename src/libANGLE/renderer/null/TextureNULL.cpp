@@ -42,6 +42,7 @@ gl::Error TextureNULL::setSubImage(const gl::Context *context,
                                    GLenum format,
                                    GLenum type,
                                    const gl::PixelUnpackState &unpack,
+                                   gl::Buffer *unpackBuffer,
                                    const uint8_t *pixels)
 {
     return gl::NoError();
