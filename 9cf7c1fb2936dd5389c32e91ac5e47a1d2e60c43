@@ -45,6 +45,30 @@
       "revId": "9cf7c1fb2936dd5389c32e91ac5e47a1d2e60c43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99157331_2d34255b",
+        "filename": "src/libGLESv2/renderer/d3d9/Renderer9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3097,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-07T00:04:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b910773f_80b41ad8",
+      "range": {
+        "startLine": 3096,
+        "startChar": 0,
+        "endLine": 3097,
+        "endChar": 105
+      },
+      "revId": "9cf7c1fb2936dd5389c32e91ac5e47a1d2e60c43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
