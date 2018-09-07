@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e07dcc6d_fd3b7219",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 3845,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-07T15:54:21Z",
+      "side": 1,
+      "message": "You mean if the draw buffer arguments don\u0027t change? Yeah you could early out here for sure. Will leave that as a future optimization. It\u0027s a bit tricky also because you\u0027re comparing arrays.",
+      "parentUuid": "56ed8d7c_94266323",
+      "revId": "d84b6737fa10f9222c70b44655c382e942c5ffe6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e54f5cec_a9a7a583",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 27
@@ -33,6 +51,24 @@
       "revId": "d84b6737fa10f9222c70b44655c382e942c5ffe6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9dc124a_33b30e7e",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 2707,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-07T15:54:21Z",
+      "side": 1,
+      "message": "glGenTextures/glDeleteTextures are called implicitly by GLTexture. See gl_raii.h.",
+      "parentUuid": "e54f5cec_a9a7a583",
+      "revId": "d84b6737fa10f9222c70b44655c382e942c5ffe6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
