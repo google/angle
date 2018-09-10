@@ -251,6 +251,9 @@
         "D24_UNORM_X8_UINT": {
             "texture": "D32_FLOAT_S8X24_UINT"
         },
+        "S8_UINT": {
+            "texture": ["D24_UNORM_S8_UINT", "D32_FLOAT_S8X24_UINT"]
+        },
 
         "R8_UNORM": {
             "buffer": "R32_FLOAT"

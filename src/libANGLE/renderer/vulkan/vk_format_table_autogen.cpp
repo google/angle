@@ -1703,10 +1703,14 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             break;
 
         case angle::FormatID::S8_UINT:
-            internalFormat               = GL_STENCIL_INDEX8;
-            textureFormatID              = angle::FormatID::S8_UINT;
-            vkTextureFormat              = VK_FORMAT_S8_UINT;
-            textureInitializerFunction   = nullptr;
+            internalFormat = GL_STENCIL_INDEX8;
+            {
+                static constexpr TextureFormatInitInfo kInfo[] = {
+                    {angle::FormatID::S8_UINT, VK_FORMAT_S8_UINT, nullptr},
+                    {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT, nullptr},
+                    {angle::FormatID::D32_FLOAT_S8X24_UINT, VK_FORMAT_D32_SFLOAT_S8_UINT, nullptr}};
+                initTextureFallback(physicalDevice, kInfo, ArraySize(kInfo));
+            }
             bufferFormatID               = angle::FormatID::S8_UINT;
             vkBufferFormat               = VK_FORMAT_S8_UINT;
             vertexLoadFunction           = nullptr;
