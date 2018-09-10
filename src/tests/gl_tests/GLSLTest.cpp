@@ -4836,6 +4836,26 @@ void main()
     EXPECT_EQ(userFBOData, backbufferData);
 }
 
+bool SubrectEquals(const std::vector<GLColor> &bigArray,
+                   const std::vector<GLColor> &smallArray,
+                   int bigSize,
+                   int offset,
+                   int smallSize)
+{
+    int badPixels = 0;
+    for (int y = 0; y < smallSize; y++)
+    {
+        for (int x = 0; x < smallSize; x++)
+        {
+            int bigOffset   = (y + offset) * bigSize + x + offset;
+            int smallOffset = y * smallSize + x;
+            if (bigArray[bigOffset] != smallArray[smallOffset])
+                badPixels++;
+        }
+    }
+    return badPixels == 0;
+}
+
 // Tests that FragCoord behaves the same betweeen a user FBO and the back buffer.
 TEST_P(GLSLTest, FragCoordConsistency)
 {
@@ -4881,7 +4901,38 @@ void main()
 
     ASSERT_GL_NO_ERROR();
     ASSERT_EQ(userFBOData.size(), backbufferData.size());
-    EXPECT_EQ(userFBOData, backbufferData);
+    EXPECT_EQ(userFBOData, backbufferData)
+        << "FragCoord should be the same to default and user FBO";
+
+    // Repeat the same test but with a smaller viewport.
+    ASSERT_EQ(getWindowHeight(), getWindowWidth());
+    const int kQuarterSize = getWindowWidth() >> 2;
+    glViewport(kQuarterSize, kQuarterSize, kQuarterSize * 2, kQuarterSize * 2);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5);
+
+    std::vector<GLColor> userFBOViewportData(kQuarterSize * kQuarterSize * 4);
+    glReadPixels(kQuarterSize, kQuarterSize, kQuarterSize * 2, kQuarterSize * 2, GL_RGBA,
+                 GL_UNSIGNED_BYTE, userFBOViewportData.data());
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5);
+
+    std::vector<GLColor> defaultFBOViewportData(kQuarterSize * kQuarterSize * 4);
+    glReadPixels(kQuarterSize, kQuarterSize, kQuarterSize * 2, kQuarterSize * 2, GL_RGBA,
+                 GL_UNSIGNED_BYTE, defaultFBOViewportData.data());
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(userFBOViewportData, defaultFBOViewportData)
+        << "FragCoord should be the same to default and user FBO even with a custom viewport";
+
+    // Check that the subrectangles are the same between the viewport and non-viewport modes.
+    EXPECT_TRUE(SubrectEquals(userFBOData, userFBOViewportData, getWindowWidth(), kQuarterSize,
+                              kQuarterSize * 2));
+    EXPECT_TRUE(SubrectEquals(backbufferData, defaultFBOViewportData, getWindowWidth(),
+                              kQuarterSize, kQuarterSize * 2));
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

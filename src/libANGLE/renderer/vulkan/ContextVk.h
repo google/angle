@@ -284,11 +284,16 @@ class ContextVk : public ContextImpl, public vk::Context
     struct DriverUniforms
     {
         std::array<float, 4> viewport;
-        std::array<float, 4> viewportScaleFactor;
+
+        float halfRenderAreaHeight;
+        float viewportYScale;
+        float invViewportYScale;
+        float padding;
 
         // We'll use x, y, z for near / far / diff respectively.
         std::array<float, 4> depthRange;
     };
+
     vk::DynamicBuffer mDriverUniformsBuffer;
     VkDescriptorSet mDriverUniformsDescriptorSet;
     vk::BindingPointer<vk::DescriptorSetLayout> mDriverUniformsSetLayout;

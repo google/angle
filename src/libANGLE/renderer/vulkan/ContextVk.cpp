@@ -1091,6 +1091,8 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
     mDriverUniformsBuffer.releaseRetainedBuffers(mRenderer);
 
     const gl::Rectangle &glViewport = mState.getState().getViewport();
+    float halfRenderAreaHeight =
+        static_cast<float>(mDrawFramebuffer->getState().getDimensions().height) * 0.5f;
 
     // Allocate a new region in the dynamic buffer.
     uint8_t *ptr            = nullptr;
@@ -1110,7 +1112,10 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
     *driverUniforms                = {
         {static_cast<float>(glViewport.x), static_cast<float>(glViewport.y),
          static_cast<float>(glViewport.width), static_cast<float>(glViewport.height)},
-        {1.0f, -scaleY, 1.0f, scaleY},
+        halfRenderAreaHeight,
+        scaleY,
+        -scaleY,
+        0.0f,
         {depthRangeNear, depthRangeFar, depthRangeDiff, 0.0f}};
 
     ANGLE_TRY(mDriverUniformsBuffer.flush(this));
