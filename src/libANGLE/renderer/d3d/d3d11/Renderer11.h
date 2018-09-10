@@ -418,7 +418,6 @@ class Renderer11 : public RendererD3D
                                   GLuint numGroupsY,
                                   GLuint numGroupsZ);
     angle::Result dispatchComputeIndirect(const gl::Context *context, GLintptr indirect);
-    angle::Result applyComputeShader(const gl::Context *context);
 
     angle::Result createStagingTexture(const gl::Context *context,
                                        ResourceType textureType,

@@ -197,6 +197,9 @@ class StateManagerGL final : angle::NonCopyable
 
     void updateProgramTextureAndSamplerBindings(const gl::Context *context);
     void updateProgramStorageBufferBindings(const gl::Context *context);
+    void updateProgramUniformBufferBindings(const gl::Context *context);
+    void updateProgramAtomicCounterBufferBindings(const gl::Context *context);
+    void updateProgramImageBindings(const gl::Context *context);
 
     void updateDispatchIndirectBufferBinding(const gl::Context *context);
     void updateDrawIndirectBufferBinding(const gl::Context *context);
@@ -363,6 +366,9 @@ class StateManagerGL final : angle::NonCopyable
 
     bool mProgramTexturesAndSamplersDirty;
     bool mProgramStorageBuffersDirty;
+    bool mProgramUniformBuffersDirty;
+    bool mProgramAtomicCounterBuffersDirty;
+    bool mProgramImagesDirty;
 };
 }
 

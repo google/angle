@@ -3663,31 +3663,12 @@ gl::DebugAnnotator *Renderer11::getAnnotator()
     return mAnnotator;
 }
 
-angle::Result Renderer11::applyComputeShader(const gl::Context *context)
-{
-    ANGLE_TRY(ensureHLSLCompilerInitialized(context));
-
-    const auto &glState    = context->getGLState();
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
-
-    ShaderExecutableD3D *computeExe = nullptr;
-    ANGLE_TRY(programD3D->getComputeExecutable(&computeExe));
-    ASSERT(computeExe != nullptr);
-
-    mStateManager.setComputeShader(&GetAs<ShaderExecutable11>(computeExe)->getComputeShader());
-    ANGLE_TRY(mStateManager.applyComputeUniforms(context, programD3D));
-
-    return angle::Result::Continue();
-}
-
 angle::Result Renderer11::dispatchCompute(const gl::Context *context,
                                           GLuint numGroupsX,
                                           GLuint numGroupsY,
                                           GLuint numGroupsZ)
 {
     ANGLE_TRY(mStateManager.updateStateForCompute(context, numGroupsX, numGroupsY, numGroupsZ));
-    ANGLE_TRY(applyComputeShader(context));
-
     mDeviceContext->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
 
     return angle::Result::Continue();
@@ -3703,12 +3684,10 @@ angle::Result Renderer11::dispatchComputeIndirect(const gl::Context *context, GL
     // TODO(jie.a.chen@intel.com): num_groups_x,y,z have to be written into the driver constant
     // buffer for the built-in variable gl_NumWorkGroups. There is an opportunity for optimization
     // to use GPU->GPU copy instead.
-    // https://bugs.chromium.org/p/angleproject/issues/detail?id=2807
+    // http://anglebug.com/2807
     ANGLE_TRY(storage->getData(context, &bufferData));
     const GLuint *groups = reinterpret_cast<const GLuint *>(bufferData + indirect);
     ANGLE_TRY(mStateManager.updateStateForCompute(context, groups[0], groups[1], groups[2]));
-
-    ANGLE_TRY(applyComputeShader(context));
 
     ID3D11Buffer *buffer = nullptr;
     ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDIRECT, &buffer));

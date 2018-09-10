@@ -847,6 +847,10 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
                 break;
+            case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
+                break;
+            case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
+                break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
