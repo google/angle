@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7d0ca5f_01e5da4e",
+        "filename": "src/feature_support_util/feature_support_util.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 921,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-10T02:21:24Z",
+      "side": 1,
+      "message": "This seems a bug here, please fix it.\n../../src/feature_support_util/feature_support_util.cpp:921:1: error: control reaches end of non-void function [-Werror\u003dreturn-type]\n }",
+      "revId": "4d42ef39658b9808f4e18c077b10202a7b50b33b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
