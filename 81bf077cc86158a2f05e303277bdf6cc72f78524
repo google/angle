@@ -81,6 +81,23 @@
       "revId": "81bf077cc86158a2f05e303277bdf6cc72f78524",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bab66734_487a2eb4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1117,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-11T15:04:50Z",
+      "side": 1,
+      "message": "The name says `invViewportYScale`, but it\u0027s actually just the negative (I would think 1/x when I hear inverse of x). I would use a better name.",
+      "revId": "81bf077cc86158a2f05e303277bdf6cc72f78524",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

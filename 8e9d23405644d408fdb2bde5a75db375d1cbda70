@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f6a972e_b90966a1",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-11T15:04:50Z",
+      "side": 1,
+      "message": "Missing a V?",
+      "revId": "8e9d23405644d408fdb2bde5a75db375d1cbda70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
