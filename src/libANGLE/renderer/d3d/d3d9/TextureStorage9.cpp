@@ -371,7 +371,7 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer, GLenum internalf
     : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
 {
     mTexture = nullptr;
-    for (size_t i = 0; i < gl::CUBE_FACE_COUNT; ++i)
+    for (size_t i = 0; i < gl::kCubeFaceCount; ++i)
     {
         mRenderTarget[i] = nullptr;
     }
@@ -392,7 +392,7 @@ TextureStorage9_Cube::~TextureStorage9_Cube()
 {
     SafeRelease(mTexture);
 
-    for (size_t i = 0; i < gl::CUBE_FACE_COUNT; ++i)
+    for (size_t i = 0; i < gl::kCubeFaceCount; ++i)
     {
         SafeDelete(mRenderTarget[i]);
     }

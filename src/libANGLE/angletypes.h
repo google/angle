@@ -315,7 +315,7 @@ struct ComponentTypeMask final
 
 using ContextID = uintptr_t;
 
-constexpr size_t CUBE_FACE_COUNT = 6;
+constexpr size_t kCubeFaceCount = 6;
 
 using TextureMap = angle::PackedEnumMap<TextureType, BindingPointer<Texture>>;
 

@@ -118,7 +118,7 @@ TextureTarget ImageIndex::getTarget() const
 GLint ImageIndex::cubeMapFaceIndex() const
 {
     ASSERT(mType == TextureType::CubeMap);
-    ASSERT(mLayerIndex == kEntireLevel || mLayerIndex < static_cast<GLint>(CUBE_FACE_COUNT));
+    ASSERT(mLayerIndex == kEntireLevel || mLayerIndex < static_cast<GLint>(kCubeFaceCount));
     return mLayerIndex;
 }
 
@@ -174,7 +174,7 @@ ImageIndex ImageIndex::MakeFromType(TextureType type,
                                     GLint layerCount)
 {
     GLint overrideLayerCount =
-        (type == TextureType::CubeMap && layerIndex == kEntireLevel ? CUBE_FACE_COUNT : layerCount);
+        (type == TextureType::CubeMap && layerIndex == kEntireLevel ? kCubeFaceCount : layerCount);
     return ImageIndex(type, levelIndex, layerIndex, overrideLayerCount);
 }
 

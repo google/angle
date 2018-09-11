@@ -135,7 +135,7 @@ uint32_t GetImageLayerCount(gl::TextureType textureType)
 {
     if (textureType == gl::TextureType::CubeMap)
     {
-        return gl::CUBE_FACE_COUNT;
+        return gl::kCubeFaceCount;
     }
     else
     {

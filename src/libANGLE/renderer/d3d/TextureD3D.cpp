@@ -1580,7 +1580,7 @@ TextureD3D_Cube::~TextureD3D_Cube()
 ImageD3D *TextureD3D_Cube::getImage(int level, int layer) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(layer >= 0 && layer < 6);
+    ASSERT(layer >= 0 && static_cast<size_t>(layer) < gl::kCubeFaceCount);
     return mImageArray[layer][level].get();
 }
 
@@ -1594,7 +1594,7 @@ ImageD3D *TextureD3D_Cube::getImage(const gl::ImageIndex &index) const
 GLsizei TextureD3D_Cube::getLayerCount(int level) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    return 6;
+    return gl::kCubeFaceCount;
 }
 
 GLenum TextureD3D_Cube::getInternalFormat(GLint level, GLint layer) const
@@ -1912,7 +1912,7 @@ gl::Error TextureD3D_Cube::setStorage(const gl::Context *context,
     for (size_t level = 0; level < levels; level++)
     {
         GLsizei mipSize = std::max(1, size.width >> level);
-        for (int faceIndex = 0; faceIndex < 6; faceIndex++)
+        for (size_t faceIndex = 0; faceIndex < gl::kCubeFaceCount; faceIndex++)
         {
             mImageArray[faceIndex][level]->redefine(gl::TextureType::CubeMap, internalFormat,
                                                     gl::Extents(mipSize, mipSize, 1), true);
@@ -1921,7 +1921,7 @@ gl::Error TextureD3D_Cube::setStorage(const gl::Context *context,
 
     for (size_t level = levels; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        for (int faceIndex = 0; faceIndex < 6; faceIndex++)
+        for (size_t faceIndex = 0; faceIndex < gl::kCubeFaceCount; faceIndex++)
         {
             mImageArray[faceIndex][level]->redefine(gl::TextureType::CubeMap, GL_NONE,
                                                     gl::Extents(0, 0, 0), true);
@@ -1957,7 +1957,7 @@ bool TextureD3D_Cube::isCubeComplete() const
         return false;
     }
 
-    for (int faceIndex = 1; faceIndex < 6; faceIndex++)
+    for (size_t faceIndex = 1; faceIndex < gl::kCubeFaceCount; faceIndex++)
     {
         const ImageD3D &faceBaseImage = *mImageArray[faceIndex][getBaseLevel()];
 
@@ -1990,7 +1990,7 @@ angle::Result TextureD3D_Cube::initMipmapImages(const gl::Context *context)
     const GLuint maxLevel  = mState.getMipmapMaxLevel();
     // Purge array levels baseLevel + 1 through q and reset them to represent the generated mipmap
     // levels.
-    for (int faceIndex = 0; faceIndex < 6; faceIndex++)
+    for (size_t faceIndex = 0; faceIndex < gl::kCubeFaceCount; faceIndex++)
     {
         for (GLuint level = baseLevel + 1; level <= maxLevel; level++)
         {
@@ -2063,7 +2063,7 @@ angle::Result TextureD3D_Cube::createCompleteStorage(bool renderTarget,
         // If any of the CPU images (levels >= 1) are dirty, then the textureStorage should use the mipped texture to begin with.
         // Otherwise, it should use the level-zero-only texture.
         hintLevelZeroOnly = true;
-        for (int faceIndex = 0; faceIndex < 6 && hintLevelZeroOnly; faceIndex++)
+        for (size_t faceIndex = 0; faceIndex < gl::kCubeFaceCount && hintLevelZeroOnly; faceIndex++)
         {
             for (int level = 1; level < levels && hintLevelZeroOnly; level++)
             {
@@ -2084,7 +2084,7 @@ angle::Result TextureD3D_Cube::setCompleteTexStorage(const gl::Context *context,
 {
     if (newCompleteTexStorage && newCompleteTexStorage->isManaged())
     {
-        for (int faceIndex = 0; faceIndex < 6; faceIndex++)
+        for (size_t faceIndex = 0; faceIndex < gl::kCubeFaceCount; faceIndex++)
         {
             for (int level = 0; level < newCompleteTexStorage->getLevelCount(); level++)
             {
@@ -2110,7 +2110,7 @@ angle::Result TextureD3D_Cube::updateStorage(const gl::Context *context)
 
     ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
-    for (int face = 0; face < 6; face++)
+    for (size_t face = 0; face < gl::kCubeFaceCount; face++)
     {
         for (int level = 0; level < storageLevels; level++)
         {
@@ -2136,7 +2136,8 @@ bool TextureD3D_Cube::isFaceLevelComplete(int faceIndex, int level) const
     {
         return false;
     }
-    ASSERT(level >= 0 && faceIndex < 6 && level < static_cast<int>(mImageArray[faceIndex].size()) &&
+    ASSERT(level >= 0 && static_cast<size_t>(faceIndex) < gl::kCubeFaceCount &&
+           level < static_cast<int>(mImageArray[faceIndex].size()) &&
            mImageArray[faceIndex][level] != nullptr);
 
     if (isImmutable())
@@ -2184,7 +2185,8 @@ angle::Result TextureD3D_Cube::updateStorageFaceLevel(const gl::Context *context
                                                       int faceIndex,
                                                       int level)
 {
-    ASSERT(level >= 0 && faceIndex < 6 && level < static_cast<int>(mImageArray[faceIndex].size()) &&
+    ASSERT(level >= 0 && static_cast<size_t>(faceIndex) < gl::kCubeFaceCount &&
+           level < static_cast<int>(mImageArray[faceIndex].size()) &&
            mImageArray[faceIndex][level] != nullptr);
     ImageD3D *image = mImageArray[faceIndex][level].get();
 
@@ -2253,7 +2255,7 @@ void TextureD3D_Cube::markAllImagesDirty()
 {
     for (int dirtyLevel = 0; dirtyLevel < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; dirtyLevel++)
     {
-        for (int dirtyFace = 0; dirtyFace < 6; dirtyFace++)
+        for (size_t dirtyFace = 0; dirtyFace < gl::kCubeFaceCount; dirtyFace++)
         {
             mImageArray[dirtyFace][dirtyLevel]->markDirty();
         }

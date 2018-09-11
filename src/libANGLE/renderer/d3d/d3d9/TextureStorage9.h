@@ -146,7 +146,7 @@ class TextureStorage9_Cube : public TextureStorage9
 
   private:
     IDirect3DCubeTexture9 *mTexture;
-    RenderTarget9 *mRenderTarget[gl::CUBE_FACE_COUNT];
+    RenderTarget9 *mRenderTarget[gl::kCubeFaceCount];
 };
 
 }

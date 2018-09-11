@@ -36,7 +36,7 @@ class Image11;
 struct Renderer11DeviceCaps;
 
 template <typename T>
-using CubeFaceArray = std::array<T, gl::CUBE_FACE_COUNT>;
+using CubeFaceArray = std::array<T, gl::kCubeFaceCount>;
 
 class TextureStorage11 : public TextureStorage
 {

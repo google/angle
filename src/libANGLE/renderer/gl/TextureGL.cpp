@@ -37,7 +37,7 @@ namespace
 size_t GetLevelInfoIndex(gl::TextureTarget target, size_t level)
 {
     return gl::IsCubeMapFaceTarget(target)
-               ? ((level * 6) + gl::CubeMapTextureTargetToFaceIndex(target))
+               ? ((level * gl::kCubeFaceCount) + gl::CubeMapTextureTargetToFaceIndex(target))
                : level;
 }
 
@@ -117,7 +117,7 @@ TextureGL::TextureGL(const gl::TextureState &state, GLuint id)
       mTextureID(id)
 {
     mLevelInfo.resize((gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) *
-                      (getType() == gl::TextureType::CubeMap ? 6 : 1));
+                      (getType() == gl::TextureType::CubeMap ? gl::kCubeFaceCount : 1));
 }
 
 TextureGL::~TextureGL()
