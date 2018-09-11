@@ -544,6 +544,15 @@ FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Context *co
     return FramebufferVk::CreateDefaultFBO(renderer, state, this);
 }
 
+egl::Error WindowSurfaceVk::swapWithDamage(const gl::Context *context,
+                                           EGLint * /*rects*/,
+                                           EGLint /*n_rects*/)
+{
+    DisplayVk *displayVk = vk::GetImpl(context->getCurrentDisplay());
+    angle::Result result = swapImpl(displayVk);
+    return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
+}
+
 egl::Error WindowSurfaceVk::swap(const gl::Context *context)
 {
     DisplayVk *displayVk = vk::GetImpl(context->getCurrentDisplay());

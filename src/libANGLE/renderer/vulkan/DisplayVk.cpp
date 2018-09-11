@@ -171,6 +171,9 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     // TODO(geofflang): Extension is exposed but not implemented so that other aspects of the Vulkan
     // backend can be tested in Chrome. http://anglebug.com/2722
     outExtensions->robustResourceInitialization = true;
+
+    // Vulkan implementation will use regular swap for swapBuffersWithDamage.
+    outExtensions->swapBuffersWithDamage = true;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const
