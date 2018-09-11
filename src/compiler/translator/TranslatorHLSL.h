@@ -18,6 +18,9 @@ class TranslatorHLSL : public TCompiler
     TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
     TranslatorHLSL *getAsTranslatorHLSL() override { return this; }
 
+    bool hasShaderStorageBlock(const std::string &interfaceBlockName) const;
+    unsigned int getShaderStorageBlockRegister(const std::string &interfaceBlockName) const;
+
     bool hasUniformBlock(const std::string &interfaceBlockName) const;
     unsigned int getUniformBlockRegister(const std::string &interfaceBlockName) const;
 
@@ -32,6 +35,7 @@ class TranslatorHLSL : public TCompiler
     // collectVariables needs to be run always so registers can be assigned.
     bool shouldCollectVariables(ShCompileOptions compileOptions) override { return true; }
 
+    std::map<std::string, unsigned int> mShaderStorageBlockRegisterMap;
     std::map<std::string, unsigned int> mUniformBlockRegisterMap;
     std::map<std::string, unsigned int> mUniformRegisterMap;
 };

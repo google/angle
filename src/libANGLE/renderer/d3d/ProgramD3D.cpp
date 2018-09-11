@@ -815,6 +815,24 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
     mUsedComputeReadonlyImageRange =
         gl::RangeUI(computeReadonlyImageRangeLow, computeReadonlyImageRangeHigh);
 
+    const unsigned int shaderStorageBlockCount = stream->readInt<unsigned int>();
+    if (stream->error())
+    {
+        infoLog << "Invalid program binary.";
+        return false;
+    }
+
+    ASSERT(mD3DShaderStorageBlocks.empty());
+    for (unsigned int blockIndex = 0; blockIndex < shaderStorageBlockCount; ++blockIndex)
+    {
+        D3DInterfaceBlock shaderStorageBlock;
+        for (gl::ShaderType shaderType : gl::AllShaderTypes())
+        {
+            stream->readInt(&shaderStorageBlock.mShaderRegisterIndexes[shaderType]);
+        }
+        mD3DShaderStorageBlocks.push_back(shaderStorageBlock);
+    }
+
     const unsigned int uniformCount = stream->readInt<unsigned int>();
     if (stream->error())
     {
@@ -852,7 +870,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
     ASSERT(mD3DUniformBlocks.empty());
     for (unsigned int blockIndex = 0; blockIndex < blockCount; ++blockIndex)
     {
-        D3DUniformBlock uniformBlock;
+        D3DInterfaceBlock uniformBlock;
         for (gl::ShaderType shaderType : gl::AllShaderTypes())
         {
             stream->readInt(&uniformBlock.mShaderRegisterIndexes[shaderType]);
@@ -1072,6 +1090,15 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
     stream->writeInt(mUsedComputeReadonlyImageRange.low());
     stream->writeInt(mUsedComputeReadonlyImageRange.high());
 
+    stream->writeInt(mD3DShaderStorageBlocks.size());
+    for (const D3DInterfaceBlock &shaderStorageBlock : mD3DShaderStorageBlocks)
+    {
+        for (gl::ShaderType shaderType : gl::AllShaderTypes())
+        {
+            stream->writeIntOrNegOne(shaderStorageBlock.mShaderRegisterIndexes[shaderType]);
+        }
+    }
+
     stream->writeInt(mD3DUniforms.size());
     for (const D3DUniform *uniform : mD3DUniforms)
     {
@@ -1086,7 +1113,7 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
     }
 
     stream->writeInt(mD3DUniformBlocks.size());
-    for (const D3DUniformBlock &uniformBlock : mD3DUniformBlocks)
+    for (const D3DInterfaceBlock &uniformBlock : mD3DUniformBlocks)
     {
         for (gl::ShaderType shaderType : gl::AllShaderTypes())
         {
@@ -1719,6 +1746,45 @@ GLboolean ProgramD3D::validate(const gl::Caps & /*caps*/, gl::InfoLog * /*infoLo
     return GL_TRUE;
 }
 
+void ProgramD3D::initializeShaderStorageBlocks()
+{
+    if (mState.getShaderStorageBlocks().empty())
+    {
+        return;
+    }
+
+    ASSERT(mD3DShaderStorageBlocks.empty());
+
+    // Assign registers and update sizes.
+    gl::ShaderMap<const ShaderD3D *> shadersD3D = {};
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        shadersD3D[shaderType] = SafeGetImplAs<ShaderD3D>(mState.getAttachedShader(shaderType));
+    }
+
+    for (const gl::InterfaceBlock &shaderStorageBlock : mState.getShaderStorageBlocks())
+    {
+        unsigned int shaderStorageBlockElement =
+            shaderStorageBlock.isArray ? shaderStorageBlock.arrayElement : 0;
+
+        D3DInterfaceBlock d3dShaderStorageBlock;
+
+        for (gl::ShaderType shaderType : gl::AllShaderTypes())
+        {
+            if (shaderStorageBlock.isActive(shaderType))
+            {
+                ASSERT(shadersD3D[shaderType]);
+                unsigned int baseRegister =
+                    shadersD3D[shaderType]->getShaderStorageBlockRegister(shaderStorageBlock.name);
+                d3dShaderStorageBlock.mShaderRegisterIndexes[shaderType] =
+                    baseRegister + shaderStorageBlockElement;
+            }
+        }
+
+        mD3DShaderStorageBlocks.push_back(d3dShaderStorageBlock);
+    }
+}
+
 void ProgramD3D::initializeUniformBlocks()
 {
     if (mState.getUniformBlocks().empty())
@@ -1739,7 +1805,7 @@ void ProgramD3D::initializeUniformBlocks()
     {
         unsigned int uniformBlockElement = uniformBlock.isArray ? uniformBlock.arrayElement : 0;
 
-        D3DUniformBlock d3dUniformBlock;
+        D3DInterfaceBlock d3dUniformBlock;
 
         for (gl::ShaderType shaderType : gl::AllShaderTypes())
         {
@@ -1826,7 +1892,7 @@ void ProgramD3D::updateUniformBufferCache(
     for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < mD3DUniformBlocks.size();
          uniformBlockIndex++)
     {
-        const D3DUniformBlock &uniformBlock = mD3DUniformBlocks[uniformBlockIndex];
+        const D3DInterfaceBlock &uniformBlock = mD3DUniformBlocks[uniformBlockIndex];
         GLuint blockBinding                 = mState.getUniformBlockBinding(uniformBlockIndex);
 
         // Unnecessary to apply an unreferenced standard or shared UBO
@@ -1851,6 +1917,12 @@ void ProgramD3D::updateUniformBufferCache(
             shaderUBOcache[registerIndex] = blockBinding;
         }
     }
+}
+
+unsigned int ProgramD3D::getShaderStorageBufferRegisterIndex(GLuint blockIndex,
+                                                             gl::ShaderType shaderType) const
+{
+    return mD3DShaderStorageBlocks[blockIndex].mShaderRegisterIndexes[shaderType];
 }
 
 const std::vector<GLint> &ProgramD3D::getShaderUniformBufferCache(gl::ShaderType shaderType) const
@@ -2561,6 +2633,7 @@ void ProgramD3D::reset()
 
     SafeDeleteContainer(mD3DUniforms);
     mD3DUniformBlocks.clear();
+    mD3DShaderStorageBlocks.clear();
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
@@ -2880,6 +2953,7 @@ void ProgramD3D::linkResources(const gl::ProgramLinkedResources &resources)
 
     resources.shaderStorageBlockLinker.linkBlocks(getShaderStorageBlockSize,
                                                   getShaderStorageBlockMemberInfo);
+    initializeShaderStorageBlocks();
 }
 
 }  // namespace rx

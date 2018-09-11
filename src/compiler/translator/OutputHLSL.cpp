@@ -314,6 +314,11 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
     builtInFunctionEmulator.cleanup();
 }
 
+const std::map<std::string, unsigned int> &OutputHLSL::getShaderStorageBlockRegisterMap() const
+{
+    return mResourcesHLSL->getShaderStorageBlockRegisterMap();
+}
+
 const std::map<std::string, unsigned int> &OutputHLSL::getUniformBlockRegisterMap() const
 {
     return mResourcesHLSL->getUniformBlockRegisterMap();

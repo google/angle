@@ -35,12 +35,12 @@ enum BufferUsage
     BUFFER_USAGE_STAGING,
     BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK,
     BUFFER_USAGE_INDEX,
-    // TODO: possibly share this buffer type with shader storage buffers.
     BUFFER_USAGE_INDIRECT,
     BUFFER_USAGE_PIXEL_UNPACK,
     BUFFER_USAGE_PIXEL_PACK,
     BUFFER_USAGE_UNIFORM,
     BUFFER_USAGE_EMULATED_INDEXED_VERTEX,
+    BUFFER_USAGE_RAW_UAV,
 
     BUFFER_USAGE_COUNT,
 };
@@ -70,6 +70,7 @@ class Buffer11 : public BufferD3D
     angle::Result getSRV(const gl::Context *context,
                          DXGI_FORMAT srvFormat,
                          const d3d11::ShaderResourceView **srvOut);
+    angle::Result getRawUAV(const gl::Context *context, d3d11::UnorderedAccessView **uavOut);
     bool isMapped() const { return mMappedStorage != nullptr; }
     angle::Result packPixels(const gl::Context *context,
                              const gl::FramebufferAttachment &readAttachment,

@@ -132,6 +132,12 @@ unsigned int ShaderD3D::getUniformBlockRegister(const std::string &blockName) co
     return mUniformBlockRegisterMap.find(blockName)->second;
 }
 
+unsigned int ShaderD3D::getShaderStorageBlockRegister(const std::string &blockName) const
+{
+    ASSERT(mShaderStorageBlockRegisterMap.count(blockName) > 0);
+    return mShaderStorageBlockRegisterMap.find(blockName)->second;
+}
+
 ShShaderOutput ShaderD3D::getCompilerOutputType() const
 {
     return mCompilerOutputType;
@@ -213,6 +219,19 @@ bool ShaderD3D::postTranslateCompile(gl::ShCompilerInstance *compiler, std::stri
             ASSERT(blockRegisterResult);
 
             mUniformBlockRegisterMap[interfaceBlock.name] = index;
+        }
+    }
+
+    for (const sh::InterfaceBlock &interfaceBlock : mData.getShaderStorageBlocks())
+    {
+        if (interfaceBlock.active)
+        {
+            unsigned int index = static_cast<unsigned int>(-1);
+            bool blockRegisterResult =
+                sh::GetShaderStorageBlockRegister(compilerHandle, interfaceBlock.name, &index);
+            ASSERT(blockRegisterResult);
+
+            mShaderStorageBlockRegisterMap[interfaceBlock.name] = index;
         }
     }
 

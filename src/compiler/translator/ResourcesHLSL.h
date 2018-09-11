@@ -44,6 +44,11 @@ class ResourcesHLSL : angle::NonCopyable
     static TString InterfaceBlockInstanceString(const ImmutableString &instanceName,
                                                 unsigned int arrayIndex);
 
+    const std::map<std::string, unsigned int> &getShaderStorageBlockRegisterMap() const
+    {
+        return mShaderStorageBlockRegisterMap;
+    }
+
     const std::map<std::string, unsigned int> &getUniformBlockRegisterMap() const
     {
         return mUniformBlockRegisterMap;

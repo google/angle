@@ -496,6 +496,28 @@ bool CheckVariablesWithinPackingLimits(int maxVectors, const std::vector<ShaderV
     return CheckVariablesInPackingLimits(maxVectors, variables);
 }
 
+bool GetShaderStorageBlockRegister(const ShHandle handle,
+                                   const std::string &shaderStorageBlockName,
+                                   unsigned int *indexOut)
+{
+#ifdef ANGLE_ENABLE_HLSL
+    ASSERT(indexOut);
+
+    TranslatorHLSL *translator = GetTranslatorHLSLFromHandle(handle);
+    ASSERT(translator);
+
+    if (!translator->hasShaderStorageBlock(shaderStorageBlockName))
+    {
+        return false;
+    }
+
+    *indexOut = translator->getShaderStorageBlockRegister(shaderStorageBlockName);
+    return true;
+#else
+    return false;
+#endif  // ANGLE_ENABLE_HLSL
+}
+
 bool GetUniformBlockRegister(const ShHandle handle,
                              const std::string &uniformBlockName,
                              unsigned int *indexOut)

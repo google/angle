@@ -55,6 +55,7 @@ class ShaderD3D : public ShaderImpl
     unsigned int getUniformRegister(const std::string &uniformName) const;
 
     unsigned int getUniformBlockRegister(const std::string &blockName) const;
+    unsigned int getShaderStorageBlockRegister(const std::string &blockName) const;
     void appendDebugInfo(const std::string &info) const { mDebugInfo += info; }
 
     void generateWorkarounds(angle::CompilerWorkaroundsD3D *workarounds) const;
@@ -93,6 +94,7 @@ class ShaderD3D : public ShaderImpl
     mutable std::string mDebugInfo;
     std::map<std::string, unsigned int> mUniformRegisterMap;
     std::map<std::string, unsigned int> mUniformBlockRegisterMap;
+    std::map<std::string, unsigned int> mShaderStorageBlockRegisterMap;
     ShCompileOptions mAdditionalOptions;
 };
 }  // namespace rx

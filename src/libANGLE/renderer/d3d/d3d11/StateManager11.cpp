@@ -3093,7 +3093,7 @@ angle::Result StateManager11::generateSwizzle(const gl::Context *context, gl::Te
 angle::Result StateManager11::generateSwizzlesForShader(const gl::Context *context,
                                                         gl::ShaderType type)
 {
-    const gl::State &glState  = context->getGLState();
+    const gl::State &glState       = context->getGLState();
     const gl::RangeUI samplerRange = mProgramD3D->getUsedSamplerRange(type);
 
     for (unsigned int i = samplerRange.low(); i < samplerRange.high(); i++)
@@ -3449,6 +3449,59 @@ angle::Result StateManager11::syncUniformBuffersForShader(const gl::Context *con
     return angle::Result::Continue();
 }
 
+angle::Result StateManager11::syncShaderStorageBuffersForShader(const gl::Context *context,
+                                                                gl::ShaderType shaderType)
+{
+    const gl::State &glState   = context->getGLState();
+    const gl::Program *program = glState.getProgram();
+    for (size_t blockIndex = 0; blockIndex < program->getActiveShaderStorageBlockCount();
+         blockIndex++)
+    {
+        GLuint binding = program->getShaderStorageBlockBinding(static_cast<GLuint>(blockIndex));
+        const auto &shaderStorageBuffer = glState.getIndexedShaderStorageBuffer(binding);
+        if (shaderStorageBuffer.get() == nullptr)
+        {
+            continue;
+        }
+
+        Buffer11 *bufferStorage            = GetImplAs<Buffer11>(shaderStorageBuffer.get());
+        d3d11::UnorderedAccessView *uavPtr = nullptr;
+        // TODO(jiajia.qin@intel.com): add buffer offset support. http://anglebug.com/1951
+        ANGLE_TRY(bufferStorage->getRawUAV(context, &uavPtr));
+
+        // We need to make sure that resource being set to UnorderedAccessView slot |registerIndex|
+        // is not bound on SRV.
+        if (uavPtr && unsetConflictingView(uavPtr->get()))
+        {
+            mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+        }
+
+        const unsigned int registerIndex = mProgramD3D->getShaderStorageBufferRegisterIndex(
+            static_cast<GLuint>(blockIndex), shaderType);
+        switch (shaderType)
+        {
+            case gl::ShaderType::Compute:
+            {
+                ID3D11UnorderedAccessView *uav = uavPtr->get();
+                auto deviceContext             = mRenderer->getDeviceContext();
+                deviceContext->CSSetUnorderedAccessViews(registerIndex, 1, &uav, nullptr);
+                break;
+            }
+
+            case gl::ShaderType::Vertex:
+            case gl::ShaderType::Fragment:
+            case gl::ShaderType::Geometry:
+                UNIMPLEMENTED();
+                break;
+
+            default:
+                UNREACHABLE();
+        }
+    }
+
+    return angle::Result::Continue();
+}
+
 angle::Result StateManager11::syncUniformBuffers(const gl::Context *context)
 {
     gl::ShaderMap<unsigned int> shaderReservedUBOs = mRenderer->getReservedShaderUniformBuffers();
@@ -3479,7 +3532,11 @@ angle::Result StateManager11::syncAtomicCounterBuffers(const gl::Context *contex
 
 angle::Result StateManager11::syncShaderStorageBuffers(const gl::Context *context)
 {
-    // TODO(jie.a.chen@intel.com): http://anglebug.com/1951
+    if (mProgramD3D->hasShaderStage(gl::ShaderType::Compute))
+    {
+        ANGLE_TRY(syncShaderStorageBuffersForShader(context, gl::ShaderType::Compute));
+    }
+
     return angle::Result::Continue();
 }
 
@@ -3556,13 +3613,13 @@ void StateManager11::syncPrimitiveTopology(const gl::State &glState,
             break;
         }
         case gl::PrimitiveMode::Lines:
-            primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
             break;
         case gl::PrimitiveMode::LineLoop:
-            primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
             break;
         case gl::PrimitiveMode::LineStrip:
-            primitiveTopology        = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+            primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
             break;
         case gl::PrimitiveMode::Triangles:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

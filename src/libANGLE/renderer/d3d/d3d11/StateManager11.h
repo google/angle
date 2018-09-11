@@ -329,6 +329,9 @@ class StateManager11 final : angle::NonCopyable
     angle::Result applyUniforms(const gl::Context *context);
     angle::Result applyUniformsForShader(const gl::Context *context, gl::ShaderType shaderType);
 
+    angle::Result syncShaderStorageBuffersForShader(const gl::Context *context,
+                                                    gl::ShaderType shaderType);
+
     angle::Result syncUniformBuffers(const gl::Context *context);
     angle::Result syncUniformBuffersForShader(const gl::Context *context,
                                               gl::ShaderType shaderType);

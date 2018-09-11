@@ -139,6 +139,7 @@ void TranslatorHLSL::translate(TIntermBlock *root,
 
     outputHLSL.output(root, getInfoSink().obj);
 
+    mShaderStorageBlockRegisterMap = outputHLSL.getShaderStorageBlockRegisterMap();
     mUniformBlockRegisterMap   = outputHLSL.getUniformBlockRegisterMap();
     mUniformRegisterMap        = outputHLSL.getUniformRegisterMap();
 }
@@ -147,6 +148,18 @@ bool TranslatorHLSL::shouldFlattenPragmaStdglInvariantAll()
 {
     // Not necessary when translating to HLSL.
     return false;
+}
+
+bool TranslatorHLSL::hasShaderStorageBlock(const std::string &uniformBlockName) const
+{
+    return (mShaderStorageBlockRegisterMap.count(uniformBlockName) > 0);
+}
+
+unsigned int TranslatorHLSL::getShaderStorageBlockRegister(
+    const std::string &shaderStorageBlockName) const
+{
+    ASSERT(hasShaderStorageBlock(shaderStorageBlockName));
+    return mShaderStorageBlockRegisterMap.find(shaderStorageBlockName)->second;
 }
 
 bool TranslatorHLSL::hasUniformBlock(const std::string &uniformBlockName) const

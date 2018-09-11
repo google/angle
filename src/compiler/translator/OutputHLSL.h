@@ -52,6 +52,7 @@ class OutputHLSL : public TIntermTraverser
 
     void output(TIntermNode *treeRoot, TInfoSinkBase &objSink);
 
+    const std::map<std::string, unsigned int> &getShaderStorageBlockRegisterMap() const;
     const std::map<std::string, unsigned int> &getUniformBlockRegisterMap() const;
     const std::map<std::string, unsigned int> &getUniformRegisterMap() const;
 
