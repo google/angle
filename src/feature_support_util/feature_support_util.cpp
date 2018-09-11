@@ -902,22 +902,24 @@ ANGLE_EXPORT bool ANGLEUseForApplication(const char *appName,
 {
     Scenario scenario(appName, deviceMfr, deviceModel);
     RuleList *rules = RuleList::ReadRulesFromJsonFile();
+    bool rtn        = false;
     scenario.logScenario();
     rules->logRules();
 
     if (developerOption != ANGLE_NO_PREFERENCE)
     {
-        return (developerOption == ANGLE_PREFER_ANGLE);
+        rtn = (developerOption == ANGLE_PREFER_ANGLE);
     }
     else if ((appPreference != ANGLE_NO_PREFERENCE) && rules->getAppChoice(scenario))
     {
-        return (appPreference == ANGLE_PREFER_ANGLE);
+        rtn = (appPreference == ANGLE_PREFER_ANGLE);
     }
     else
     {
-        return rules->getAnswer(scenario);
+        rtn = rules->getAnswer(scenario);
     }
     delete rules;
+    return rtn;
 }
 
 }  // extern "C"
