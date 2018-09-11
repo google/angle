@@ -16,6 +16,24 @@
       "revId": "8e9d23405644d408fdb2bde5a75db375d1cbda70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "608f88db_e49bf67e",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-11T17:58:36Z",
+      "side": 1,
+      "message": "Yeah, noticed this too. Will fix in a follow up. Thanks.",
+      "parentUuid": "1f6a972e_b90966a1",
+      "revId": "8e9d23405644d408fdb2bde5a75db375d1cbda70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

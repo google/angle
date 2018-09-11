@@ -98,6 +98,24 @@
       "revId": "81bf077cc86158a2f05e303277bdf6cc72f78524",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6081cc4d_1e518ca0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-11T17:58:36Z",
+      "side": 1,
+      "message": "Understood that inverse is overloaded but it\u0027s not technically incorrect. Prior examples for this in D3D:\n\nhttps://docs.microsoft.com/en-us/windows/desktop/api/d3d12/ne-d3d12-d3d12_blend\n\nI didn\u0027t want to use \"oneMinus\" because it\u0027s so verbose.",
+      "parentUuid": "bab66734_487a2eb4",
+      "revId": "81bf077cc86158a2f05e303277bdf6cc72f78524",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
