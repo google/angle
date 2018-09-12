@@ -1,9 +1,9 @@
-use_relative_paths = True
-use_relative_hooks = True
-
 vars = {
   'android_git': 'https://android.googlesource.com',
   'chromium_git': 'https://chromium.googlesource.com',
+
+  # This variable is set on the Chrome infra for compatiblity with gclient.
+  'angle_root': '.',
 
   # This variable is overrided in Chromium's DEPS file.
   'build_with_chromium': False,
@@ -35,83 +35,83 @@ vars = {
 
 deps = {
 
-  'build': {
+  '{angle_root}/build': {
     'url': '{chromium_git}/chromium/src/build.git@ee922ea8f8ed211d485add7906a64ccd2ffc358b',
     'condition': 'not build_with_chromium',
   },
 
-  'buildtools': {
+  '{angle_root}/buildtools': {
     'url': '{chromium_git}/chromium/buildtools.git@2dff9c9c74e9d732e6fe57c84ef7fd044cc45d96',
     'condition': 'not build_with_chromium',
   },
 
-  'testing': {
+  '{angle_root}/testing': {
     'url': '{chromium_git}/chromium/src/testing@f6b3243e8ba941f4dfa6b579137738803f43aa18',
     'condition': 'not build_with_chromium',
   },
 
   # Cherry is a dEQP management GUI written in Go. We use it for viewing test results.
-  'third_party/cherry': {
+  '{angle_root}/third_party/cherry': {
     'url': '{android_git}/platform/external/cherry@4f8fb08d33ca5ff05a1c638f04c85bbb8d8b52cc',
     'condition': 'not build_with_chromium',
   },
 
-  'third_party/deqp/src': {
+  '{angle_root}/third_party/deqp/src': {
     'url': '{android_git}/platform/external/deqp@{deqp_revision}',
   },
 
-  'third_party/glslang/src': {
+  '{angle_root}/third_party/glslang/src': {
     'url': '{android_git}/platform/external/shaderc/glslang@{glslang_revision}',
   },
 
-  'third_party/googletest/src': {
+  '{angle_root}/third_party/googletest/src': {
     'url': '{chromium_git}/external/github.com/google/googletest.git@145d05750b15324899473340c8dd5af50d125d33',
     'condition': 'not build_with_chromium',
   },
 
-  'third_party/libpng/src': {
+  '{angle_root}/third_party/libpng/src': {
     'url': '{android_git}/platform/external/libpng@094e181e79a3d6c23fd005679025058b7df1ad6c',
     'condition': 'not build_with_chromium',
   },
 
-  'third_party/jsoncpp': {
+  '{angle_root}/third_party/jsoncpp': {
     'url': '{chromium_git}/chromium/src/third_party/jsoncpp@fd0ac8ce63a47e99b71a58f1489136fbb19c9137',
   },
 
-  'third_party/jsoncpp/source': {
+  '{angle_root}/third_party/jsoncpp/source': {
     'url' : '{chromium_git}/external/github.com/open-source-parsers/jsoncpp@f572e8e42e22cfcf5ab0aea26574f408943edfa4'
   },
 
-  'third_party/spirv-headers/src': {
+  '{angle_root}/third_party/spirv-headers/src': {
     'url': '{android_git}/platform/external/shaderc/spirv-headers@{spirv_headers_revision}',
   },
 
-  'third_party/spirv-tools/src': {
+  '{angle_root}/third_party/spirv-tools/src': {
     'url': '{android_git}/platform/external/shaderc/spirv-tools@{spirv_tools_revision}',
   },
 
-  'third_party/vulkan-headers/src': {
+  '{angle_root}/third_party/vulkan-headers/src': {
     'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Headers@{vulkan_headers_revision}',
   },
 
-  'third_party/vulkan-loader/src': {
+  '{angle_root}/third_party/vulkan-loader/src': {
     'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@{vulkan_loader_revision}',
   },
 
-  'third_party/vulkan-tools/src': {
+  '{angle_root}/third_party/vulkan-tools/src': {
     'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@{vulkan_tools_revision}',
   },
 
-  'third_party/vulkan-validation-layers/src': {
+  '{angle_root}/third_party/vulkan-validation-layers/src': {
     'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@{vulkan_validation_revision}',
   },
 
-  'third_party/zlib': {
+  '{angle_root}/third_party/zlib': {
     'url': '{chromium_git}/chromium/src/third_party/zlib@de0fe056df0577ea69cbf5f46dfe66debe046e5c',
     'condition': 'not build_with_chromium',
   },
 
-  'tools/clang': {
+  '{angle_root}/tools/clang': {
     'url': '{chromium_git}/chromium/src/tools/clang.git@99ac9bf4ad0d629e1168a0bda9a82f87062ce106',
     'condition': 'not build_with_chromium',
   },
@@ -128,7 +128,7 @@ hooks = [
                 '--platform=win32',
                 '--no_auth',
                 '--bucket', 'chromium-clang-format',
-                '-s', 'buildtools/win/clang-format.exe.sha1',
+                '-s', '{angle_root}/buildtools/win/clang-format.exe.sha1',
     ],
   },
   {
@@ -140,7 +140,7 @@ hooks = [
                 '--platform=darwin',
                 '--no_auth',
                 '--bucket', 'chromium-clang-format',
-                '-s', 'buildtools/mac/clang-format.sha1',
+                '-s', '{angle_root}/buildtools/mac/clang-format.sha1',
     ],
   },
   {
@@ -152,7 +152,7 @@ hooks = [
                 '--platform=linux*',
                 '--no_auth',
                 '--bucket', 'chromium-clang-format',
-                '-s', 'buildtools/linux64/clang-format.sha1',
+                '-s', '{angle_root}/buildtools/linux64/clang-format.sha1',
     ],
   },
   # Pull GN binaries using checked-in hashes.
@@ -165,7 +165,7 @@ hooks = [
                 '--platform=win32',
                 '--no_auth',
                 '--bucket', 'chromium-gn',
-                '-s', 'buildtools/win/gn.exe.sha1',
+                '-s', '{angle_root}/buildtools/win/gn.exe.sha1',
     ],
   },
   {
@@ -177,7 +177,7 @@ hooks = [
                 '--platform=darwin',
                 '--no_auth',
                 '--bucket', 'chromium-gn',
-                '-s', 'buildtools/mac/gn.sha1',
+                '-s', '{angle_root}/buildtools/mac/gn.sha1',
     ],
   },
   {
@@ -189,21 +189,21 @@ hooks = [
                 '--platform=linux*',
                 '--no_auth',
                 '--bucket', 'chromium-gn',
-                '-s', 'buildtools/linux64/gn.sha1',
+                '-s', '{angle_root}/buildtools/linux64/gn.sha1',
     ],
   },
   {
     'name': 'sysroot_x86',
     'pattern': '.',
     'condition': 'checkout_linux and ((checkout_x86 or checkout_x64) and not build_with_chromium)',
-    'action': ['python', 'build/linux/sysroot_scripts/install-sysroot.py',
+    'action': ['python', '{angle_root}/build/linux/sysroot_scripts/install-sysroot.py',
                '--arch=x86'],
   },
   {
     'name': 'sysroot_x64',
     'pattern': '.',
     'condition': 'checkout_linux and (checkout_x64 and not build_with_chromium)',
-    'action': ['python', 'build/linux/sysroot_scripts/install-sysroot.py',
+    'action': ['python', '{angle_root}/build/linux/sysroot_scripts/install-sysroot.py',
                '--arch=x64'],
   },
   {
@@ -211,14 +211,14 @@ hooks = [
     'name': 'win_toolchain',
     'pattern': '.',
     'condition': 'checkout_win and not build_with_chromium',
-    'action': ['python', 'build/vs_toolchain.py', 'update', '--force'],
+    'action': ['python', '{angle_root}/build/vs_toolchain.py', 'update', '--force'],
   },
 
   {
     # Note: On Win, this should run after win_toolchain, as it may use it.
     'name': 'clang',
     'pattern': '.',
-    'action': ['python', 'tools/clang/scripts/update.py'],
+    'action': ['python', '{angle_root}/tools/clang/scripts/update.py'],
     'condition': 'not build_with_chromium',
   },
 
@@ -231,12 +231,12 @@ hooks = [
                 '--no_resume',
                 '--no_auth',
                 '--bucket', 'chromium-browser-clang/rc',
-                '-s', 'build/toolchain/win/rc/win/rc.exe.sha1',
+                '-s', '{angle_root}/build/toolchain/win/rc/win/rc.exe.sha1',
     ],
   },
 ]
 
 recursedeps = [
   # buildtools provides clang_format.
-  'buildtools',
+  '{angle_root}/buildtools',
 ]
