@@ -159,7 +159,7 @@ angle::Result VertexArrayVk::convertVertexBuffer(ContextVk *contextVk,
                                                  size_t attribIndex)
 {
 
-    // Preparation for mapping source buffer.
+    // Needed before reading buffer or we could get stale data.
     ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
 
     unsigned srcFormatSize = mCurrentArrayBufferFormats[attribIndex]->angleFormat().pixelBytes;
@@ -541,6 +541,9 @@ angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
     }
     else
     {
+        // Needed before reading buffer or we could get stale data.
+        ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
+
         ASSERT(drawCallParams.type() == GL_UNSIGNED_BYTE);
         // Unsigned bytes don't have direct support in Vulkan so we have to expand the
         // memory to a GLushort.

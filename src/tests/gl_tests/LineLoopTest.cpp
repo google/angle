@@ -152,6 +152,10 @@ TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
 
 TEST_P(LineLoopTest, LineLoopUShortIndexBuffer)
 {
+    // TODO(fjhenigman): Probabe driver bug. Work around it and/or notify vendor.
+    // http://anglebug.com/2838
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && IsIntel());
+
     // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
     ignoreD3D11SDKLayersWarnings();
 

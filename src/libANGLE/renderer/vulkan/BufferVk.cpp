@@ -173,6 +173,9 @@ gl::Error BufferVk::getIndexRange(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    // Needed before reading buffer or we could get stale data.
+    ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
+
     // TODO(jmadill): Consider keeping a shadow system memory copy in some cases.
     ASSERT(mBuffer.valid());
 
