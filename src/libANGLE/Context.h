@@ -137,6 +137,13 @@ class StateCache final : angle::NonCopyable
         return getBasicDrawStatesErrorImpl(context);
     }
 
+    // Places that can trigger updateValidDrawModes:
+    // 1. onProgramExecutableChange.
+    bool isValidDrawMode(PrimitiveMode primitiveMode) const
+    {
+        return mCachedValidDrawModes[primitiveMode];
+    }
+
     // State change notifications.
     void onVertexArrayBindingChange(Context *context);
     void onProgramExecutableChange(Context *context);
@@ -160,6 +167,7 @@ class StateCache final : angle::NonCopyable
     void updateActiveAttribsMask(Context *context);
     void updateVertexElementLimits(Context *context);
     void updateBasicDrawStatesError();
+    void updateValidDrawModes(Context *context);
 
     intptr_t getBasicDrawStatesErrorImpl(Context *context) const;
 
@@ -172,6 +180,10 @@ class StateCache final : angle::NonCopyable
     GLint64 mCachedNonInstancedVertexElementLimit;
     GLint64 mCachedInstancedVertexElementLimit;
     mutable intptr_t mCachedBasicDrawStatesError;
+
+    // Reserve an extra slot at the end of the map for invalid enum.
+    angle::PackedEnumMap<PrimitiveMode, bool, angle::EnumSize<PrimitiveMode>() + 1>
+        mCachedValidDrawModes;
 };
 
 class Context final : public egl::LabeledObject, angle::NonCopyable, public angle::ObserverInterface

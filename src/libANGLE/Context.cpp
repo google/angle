@@ -260,17 +260,17 @@ void LimitCap(CapT *cap, MaxT maximum)
 }
 
 constexpr angle::PackedEnumMap<gl::PrimitiveMode, GLsizei> kMinimumPrimitiveCounts = {{
-    /* Points */ 1,
-    /* Lines */ 2,
-    /* LineLoop */ 2,
-    /* LineStrip */ 2,
-    /* Triangles */ 3,
-    /* TriangleStrip */ 3,
-    /* TriangleFan */ 3,
-    /* LinesAdjacency */ 2,
-    /* LineStripAdjacency */ 2,
-    /* TrianglesAdjacency */ 3,
-    /* TriangleStripAdjacency */ 3,
+    1, /* Points */
+    2, /* Lines */
+    2, /* LineLoop */
+    2, /* LineStrip */
+    3, /* Triangles */
+    3, /* TriangleStrip */
+    3, /* TriangleFan */
+    2, /* LinesAdjacency */
+    2, /* LineStripAdjacency */
+    3, /* TrianglesAdjacency */
+    3, /* TriangleStripAdjacency */
 }};
 // Indices above are code-gen'd so make sure they don't change
 //  if any of these static asserts are hit, must update kMinimumPrimitiveCounts abouve
@@ -7893,6 +7893,7 @@ void StateCache::onProgramExecutableChange(Context *context)
     updateActiveAttribsMask(context);
     updateVertexElementLimits(context);
     updateBasicDrawStatesError();
+    updateValidDrawModes(context);
 }
 
 void StateCache::onVertexArrayFormatChange(Context *context)
@@ -7966,5 +7967,48 @@ void StateCache::onUniformBufferStateChange(Context *context)
 void StateCache::onBufferBindingChange(Context *context)
 {
     updateBasicDrawStatesError();
+}
+
+void StateCache::updateValidDrawModes(Context *context)
+{
+    Program *program = context->getGLState().getProgram();
+    if (!program || !program->hasLinkedShaderStage(ShaderType::Geometry))
+    {
+        mCachedValidDrawModes = {{
+            true,  /* Points */
+            true,  /* Lines */
+            true,  /* LineLoop */
+            true,  /* LineStrip */
+            true,  /* Triangles */
+            true,  /* TriangleStrip */
+            true,  /* TriangleFan */
+            false, /* LinesAdjacency */
+            false, /* LineStripAdjacency */
+            false, /* TrianglesAdjacency */
+            false, /* TriangleStripAdjacency */
+            false, /* InvalidEnum */
+        }};
+    }
+    else
+    {
+        ASSERT(program && program->hasLinkedShaderStage(ShaderType::Geometry));
+
+        PrimitiveMode gsMode = program->getGeometryShaderInputPrimitiveType();
+
+        mCachedValidDrawModes = {{
+            gsMode == PrimitiveMode::Points,             /* Points */
+            gsMode == PrimitiveMode::Lines,              /* Lines */
+            gsMode == PrimitiveMode::Lines,              /* LineLoop */
+            gsMode == PrimitiveMode::Lines,              /* LineStrip */
+            gsMode == PrimitiveMode::Triangles,          /* Triangles */
+            gsMode == PrimitiveMode::Triangles,          /* TriangleStrip */
+            gsMode == PrimitiveMode::Triangles,          /* TriangleFan */
+            gsMode == PrimitiveMode::LinesAdjacency,     /* LinesAdjacency */
+            gsMode == PrimitiveMode::LinesAdjacency,     /* LineStripAdjacency */
+            gsMode == PrimitiveMode::TrianglesAdjacency, /* TrianglesAdjacency */
+            gsMode == PrimitiveMode::TrianglesAdjacency, /* TriangleStripAdjacency */
+            false,                                       /* InvalidEnum */
+        }};
+    }
 }
 }  // namespace gl
