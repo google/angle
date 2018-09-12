@@ -16,6 +16,24 @@
       "revId": "3b1fe64f21ac13f7b602e55456d2e579cffd12c8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c1a5dbd_f7d0b1db",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2018-09-12T21:33:19Z",
+      "side": 1,
+      "message": "That makes sense to me too, but Jamie wanted to separate these cases:\n1) need to test support at startup time - we come here with \u003e 1 choices\n2) one choice, known at compile time - handled inside in Format::initialize()\nI think the goal is to hard code part 2 entirely instead of doing all those assignments at startup time like it does now, to shave a millisecond off startup time.",
+      "parentUuid": "e657c41f_69dd3b55",
+      "revId": "3b1fe64f21ac13f7b602e55456d2e579cffd12c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
