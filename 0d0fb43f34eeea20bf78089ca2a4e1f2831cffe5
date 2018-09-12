@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e4b7f58_235ea1a4",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-12T14:12:20Z",
+      "side": 1,
+      "message": "bug fixes are here.",
+      "range": {
+        "startLine": 460,
+        "startChar": 50,
+        "endLine": 460,
+        "endChar": 57
+      },
+      "revId": "0d0fb43f34eeea20bf78089ca2a4e1f2831cffe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
