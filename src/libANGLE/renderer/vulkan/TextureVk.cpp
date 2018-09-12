@@ -126,10 +126,10 @@ angle::Result PixelBuffer::stageSubresourceUpdate(ContextVk *contextVk,
 
     VkBuffer bufferHandle = VK_NULL_HANDLE;
 
-    uint8_t *stagingPointer = nullptr;
-    bool newBufferAllocated = false;
+    uint8_t *stagingPointer    = nullptr;
+    bool newBufferAllocated    = false;
     VkDeviceSize stagingOffset = 0;
-    size_t allocationSize   = outputDepthPitch * extents.depth;
+    size_t allocationSize      = outputDepthPitch * extents.depth;
     ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, &stagingPointer, &bufferHandle,
                                       &stagingOffset, &newBufferAllocated));
 
@@ -197,8 +197,8 @@ angle::Result PixelBuffer::stageSubresourceUpdateFromFramebuffer(
 
     VkBuffer bufferHandle = VK_NULL_HANDLE;
 
-    uint8_t *stagingPointer = nullptr;
-    bool newBufferAllocated = false;
+    uint8_t *stagingPointer    = nullptr;
+    bool newBufferAllocated    = false;
     VkDeviceSize stagingOffset = 0;
 
     // The destination is only one layer deep.
@@ -346,7 +346,7 @@ angle::Result PixelBuffer::stageSubresourceUpdateAndGetData(ContextVk *contextVk
 {
     VkBuffer bufferHandle;
     VkDeviceSize stagingOffset = 0;
-    bool newBufferAllocated = false;
+    bool newBufferAllocated    = false;
     ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, destData, &bufferHandle,
                                       &stagingOffset, &newBufferAllocated));
 
