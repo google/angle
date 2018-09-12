@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52b2932c_636d74cd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-12T13:33:28Z",
+      "side": 1,
+      "message": "Jiajia, is there already a bug for this? Need I to file a new one?",
+      "revId": "1f95de3de57f9ba005650218d6ba865422e2ebdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e0f0a6c_41de8f22",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-12T13:33:28Z",
+      "side": 1,
+      "message": "Jamie\u0027s advise needed here.",
+      "revId": "1f95de3de57f9ba005650218d6ba865422e2ebdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d170b467_b11f1d68",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2152,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-12T13:33:28Z",
+      "side": 1,
+      "message": "Jiajia, need I to fill the owner and bug link for these TODOs?",
+      "revId": "1f95de3de57f9ba005650218d6ba865422e2ebdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
