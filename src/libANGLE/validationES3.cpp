@@ -2837,7 +2837,6 @@ bool ValidateFramebufferTextureMultiviewLayeredANGLE(Context *context,
                                                      GLint baseViewIndex,
                                                      GLsizei numViews)
 {
-
     if (!ValidateFramebufferTextureMultiviewBaseANGLE(context, target, attachment, texture, level,
                                                       numViews))
     {
@@ -2858,7 +2857,18 @@ bool ValidateFramebufferTextureMultiviewLayeredANGLE(Context *context,
         switch (tex->getType())
         {
             case TextureType::_2DArray:
+            case TextureType::_2DMultisampleArray:
             {
+                if (tex->getType() == TextureType::_2DMultisampleArray)
+                {
+                    if (!context->getExtensions().multiviewMultisample)
+                    {
+                        context->handleError(InvalidOperation()
+                                             << "Texture's target must be GL_TEXTURE_2D_ARRAY.");
+                        return false;
+                    }
+                }
+
                 const Caps &caps = context->getCaps();
                 if (static_cast<GLuint>(baseViewIndex + numViews) > caps.maxArrayTextureLayers)
                 {
@@ -2867,8 +2877,9 @@ bool ValidateFramebufferTextureMultiviewLayeredANGLE(Context *context,
                                                            "GL_MAX_ARRAY_TEXTURE_LAYERS.");
                     return false;
                 }
+
+                break;
             }
-            break;
             default:
                 context->handleError(InvalidOperation()
                                      << "Texture's target must be GL_TEXTURE_2D_ARRAY.");

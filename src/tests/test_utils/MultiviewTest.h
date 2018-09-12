@@ -23,7 +23,10 @@ GLuint CreateSimplePassthroughProgram(int numViews);
 // GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, then 2D textures are created. If multiviewLayout is
 // GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, then 2D texture arrays are created. Texture ids should be
 // created beforehand. If depthTexture or stencilTexture is 0, it will not be initialized.
+// If samples is 0, then non-multisampled textures are created. Otherwise multisampled textures are
+// created with the requested sample count.
 void CreateMultiviewBackingTextures(GLenum multiviewLayout,
+                                    int samples,
                                     int viewWidth,
                                     int height,
                                     int numLayers,
@@ -31,6 +34,7 @@ void CreateMultiviewBackingTextures(GLenum multiviewLayout,
                                     GLuint depthTexture,
                                     GLuint depthStencilTexture);
 void CreateMultiviewBackingTextures(GLenum multiviewLayout,
+                                    int samples,
                                     int viewWidth,
                                     int height,
                                     int numLayers,
@@ -99,7 +103,7 @@ class MultiviewTestBase : public ANGLETestBase
     void MultiviewTestBaseTearDown() { ANGLETestBase::ANGLETestTearDown(); }
 
     // Requests the ANGLE_multiview extension and returns true if the operation succeeds.
-    bool requestMultiviewExtension()
+    bool requestMultiviewExtension(bool requireMultiviewMultisample)
     {
         if (extensionRequestable("GL_ANGLE_multiview"))
         {
@@ -111,8 +115,29 @@ class MultiviewTestBase : public ANGLETestBase
             std::cout << "Test skipped due to missing GL_ANGLE_multiview." << std::endl;
             return false;
         }
+
+        if (requireMultiviewMultisample)
+        {
+            if (extensionRequestable("GL_OES_texture_storage_multisample_2d_array"))
+            {
+                glRequestExtensionANGLE("GL_OES_texture_storage_multisample_2d_array");
+            }
+            if (extensionRequestable("GL_ANGLE_multiview_multisample"))
+            {
+                glRequestExtensionANGLE("GL_ANGLE_multiview_multisample");
+            }
+
+            if (!extensionEnabled("GL_ANGLE_multiview_multisample"))
+            {
+                std::cout << "Test skipped due to missing GL_ANGLE_multiview_multisample."
+                          << std::endl;
+                return false;
+            }
+        }
         return true;
     }
+
+    bool requestMultiviewExtension() { return requestMultiviewExtension(false); }
 
     PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
 };

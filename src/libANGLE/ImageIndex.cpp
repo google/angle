@@ -190,6 +190,11 @@ ImageIndex ImageIndex::Make2DMultisampleArray(GLint layerIndex)
     return ImageIndex(TextureType::_2DMultisampleArray, 0, layerIndex, 1);
 }
 
+ImageIndex ImageIndex::Make2DMultisampleArrayRange(GLint layerIndex, GLint numLayers)
+{
+    return ImageIndex(TextureType::_2DMultisampleArray, 0, layerIndex, numLayers);
+}
+
 bool ImageIndex::operator<(const ImageIndex &b) const
 {
     return std::tie(mType, mLevelIndex, mLayerIndex, mLayerCount) <

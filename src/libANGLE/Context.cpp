@@ -3775,7 +3775,17 @@ void Context::framebufferTextureMultiviewLayered(GLenum target,
     {
         Texture *textureObj = getTexture(texture);
 
-        ImageIndex index = ImageIndex::Make2DArrayRange(level, baseViewIndex, numViews);
+        ImageIndex index;
+        if (textureObj->getType() == TextureType::_2DArray)
+        {
+            index = ImageIndex::Make2DArrayRange(level, baseViewIndex, numViews);
+        }
+        else
+        {
+            ASSERT(textureObj->getType() == TextureType::_2DMultisampleArray);
+            ASSERT(level == 0);
+            index = ImageIndex::Make2DMultisampleArrayRange(baseViewIndex, numViews);
+        }
         framebuffer->setAttachmentMultiviewLayered(this, GL_TEXTURE, attachment, index, textureObj,
                                                    numViews, baseViewIndex);
     }

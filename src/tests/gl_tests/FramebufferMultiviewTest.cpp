@@ -90,7 +90,7 @@ class FramebufferMultiviewSideBySideClearTest : public FramebufferMultiviewTest
             glGenTextures(1, &mDepthTex);
         }
 
-        CreateMultiviewBackingTextures(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, 2, 2, 2,
+        CreateMultiviewBackingTextures(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, 0, 2, 2, 2,
                                        mColorTex, mDepthTex, mDepthStencilTex);
 
         glGenFramebuffers(1, &mMultiviewFBO);
@@ -232,7 +232,7 @@ class FramebufferMultiviewLayeredClearTest : public FramebufferMultiviewTest
             glGenTextures(1, &mDepthTex);
         }
 
-        CreateMultiviewBackingTextures(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, width, height,
+        CreateMultiviewBackingTextures(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, 0, width, height,
                                        numLayers, mColorTex, mDepthTex, mDepthStencilTex);
 
         glGenFramebuffers(1, &mMultiviewFBO);
@@ -1418,6 +1418,28 @@ TEST_P(FramebufferMultiviewLayeredClearTest, ColorBufferClearAllLayersAttached)
 
     EXPECT_EQ(GLColor::green, getLayerColor(0, GL_COLOR_ATTACHMENT0));
     EXPECT_EQ(GLColor::green, getLayerColor(1, GL_COLOR_ATTACHMENT0));
+}
+
+// Test that attaching a multisampled texture array is not possible if all the required extensions
+// are not enabled.
+TEST_P(FramebufferMultiviewTest, NegativeMultisampledFramebufferTest)
+{
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
+
+    ANGLE_SKIP_TEST_IF(!ensureExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"));
+
+    // We don't enable ANGLE_multiview_multisample
+
+    GLTexture multisampleTexture;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, multisampleTexture);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureMultiviewLayeredANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                              multisampleTexture, 0, 0, 2);
+    // From the extension spec: "An INVALID_OPERATION error is generated if texture is not zero, and
+    // does not name an existing texture object of type TEXTURE_2D_ARRAY."
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, VertexShaderOpenGL(3, 0), GeomShaderD3D11(3, 0));

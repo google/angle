@@ -988,6 +988,9 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->textureStorageMultisample2DArray =
         functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 2));
 
+    extensions->multiviewMultisample =
+        extensions->textureStorageMultisample2DArray && extensions->multiview;
+
     // NV_path_rendering
     // We also need interface query which is available in
     // >= 4.3 core or ARB_interface_query or >= GLES 3.1

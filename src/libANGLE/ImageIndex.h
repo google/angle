@@ -56,6 +56,7 @@ class ImageIndex
                                    GLint layerCount = 1);
     static ImageIndex Make2DMultisample();
     static ImageIndex Make2DMultisampleArray(GLint layerIndex = kEntireLevel);
+    static ImageIndex Make2DMultisampleArrayRange(GLint layerIndex, GLint layerCount);
 
     static constexpr GLint kEntireLevel = static_cast<GLint>(-1);
 
