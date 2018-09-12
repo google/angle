@@ -241,28 +241,28 @@ angle::Result RenderStateCache::getSamplerState(const gl::Context *context,
 
     D3D11_SAMPLER_DESC samplerDesc;
     samplerDesc.Filter =
-        gl_d3d11::ConvertFilter(samplerState.minFilter, samplerState.magFilter,
-                                samplerState.maxAnisotropy, samplerState.compareMode);
-    samplerDesc.AddressU   = gl_d3d11::ConvertTextureWrap(samplerState.wrapS);
-    samplerDesc.AddressV   = gl_d3d11::ConvertTextureWrap(samplerState.wrapT);
-    samplerDesc.AddressW   = gl_d3d11::ConvertTextureWrap(samplerState.wrapR);
+        gl_d3d11::ConvertFilter(samplerState.getMinFilter(), samplerState.getMagFilter(),
+                                samplerState.getMaxAnisotropy(), samplerState.getCompareMode());
+    samplerDesc.AddressU   = gl_d3d11::ConvertTextureWrap(samplerState.getWrapS());
+    samplerDesc.AddressV   = gl_d3d11::ConvertTextureWrap(samplerState.getWrapT());
+    samplerDesc.AddressW   = gl_d3d11::ConvertTextureWrap(samplerState.getWrapR());
     samplerDesc.MipLODBias = 0;
     samplerDesc.MaxAnisotropy =
-        gl_d3d11::ConvertMaxAnisotropy(samplerState.maxAnisotropy, featureLevel);
-    samplerDesc.ComparisonFunc = gl_d3d11::ConvertComparison(samplerState.compareFunc);
+        gl_d3d11::ConvertMaxAnisotropy(samplerState.getMaxAnisotropy(), featureLevel);
+    samplerDesc.ComparisonFunc = gl_d3d11::ConvertComparison(samplerState.getCompareFunc());
     samplerDesc.BorderColor[0] = 0.0f;
     samplerDesc.BorderColor[1] = 0.0f;
     samplerDesc.BorderColor[2] = 0.0f;
     samplerDesc.BorderColor[3] = 0.0f;
-    samplerDesc.MinLOD         = samplerState.minLod;
-    samplerDesc.MaxLOD         = samplerState.maxLod;
+    samplerDesc.MinLOD         = samplerState.getMinLod();
+    samplerDesc.MaxLOD         = samplerState.getMaxLod();
 
     if (featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
         // Check that maxLOD is nearly FLT_MAX (1000.0f is the default), since 9_3 doesn't support
         // anything other than FLT_MAX. Note that Feature Level 9_* only supports GL ES 2.0, so the
         // consumer of ANGLE can't modify the Max LOD themselves.
-        ASSERT(samplerState.maxLod >= 999.9f);
+        ASSERT(samplerState.getMaxLod() >= 999.9f);
 
         // Now just set MaxLOD to FLT_MAX. Other parts of the renderer (e.g. the non-zero max LOD
         // workaround) should take account of this.

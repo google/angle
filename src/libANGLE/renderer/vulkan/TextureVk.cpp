@@ -1112,19 +1112,19 @@ gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::Di
     samplerInfo.sType                   = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
     samplerInfo.pNext                   = nullptr;
     samplerInfo.flags                   = 0;
-    samplerInfo.magFilter               = gl_vk::GetFilter(samplerState.magFilter);
-    samplerInfo.minFilter               = gl_vk::GetFilter(samplerState.minFilter);
-    samplerInfo.mipmapMode              = gl_vk::GetSamplerMipmapMode(samplerState.minFilter);
-    samplerInfo.addressModeU            = gl_vk::GetSamplerAddressMode(samplerState.wrapS);
-    samplerInfo.addressModeV            = gl_vk::GetSamplerAddressMode(samplerState.wrapT);
-    samplerInfo.addressModeW            = gl_vk::GetSamplerAddressMode(samplerState.wrapR);
+    samplerInfo.magFilter               = gl_vk::GetFilter(samplerState.getMagFilter());
+    samplerInfo.minFilter               = gl_vk::GetFilter(samplerState.getMinFilter());
+    samplerInfo.mipmapMode              = gl_vk::GetSamplerMipmapMode(samplerState.getMinFilter());
+    samplerInfo.addressModeU            = gl_vk::GetSamplerAddressMode(samplerState.getWrapS());
+    samplerInfo.addressModeV            = gl_vk::GetSamplerAddressMode(samplerState.getWrapT());
+    samplerInfo.addressModeW            = gl_vk::GetSamplerAddressMode(samplerState.getWrapR());
     samplerInfo.mipLodBias              = 0.0f;
     samplerInfo.anisotropyEnable        = VK_FALSE;
     samplerInfo.maxAnisotropy           = 1.0f;
     samplerInfo.compareEnable           = VK_FALSE;
     samplerInfo.compareOp               = VK_COMPARE_OP_ALWAYS;
-    samplerInfo.minLod                  = samplerState.minLod;
-    samplerInfo.maxLod                  = samplerState.maxLod;
+    samplerInfo.minLod                  = samplerState.getMinLod();
+    samplerInfo.maxLod                  = samplerState.getMaxLod();
     samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
@@ -1159,7 +1159,7 @@ const vk::ImageView &TextureVk::getImageView() const
 {
     ASSERT(mImage.valid());
 
-    const GLenum minFilter = mState.getSamplerState().minFilter;
+    const GLenum minFilter = mState.getSamplerState().getMinFilter();
     if (minFilter == GL_LINEAR || minFilter == GL_NEAREST)
     {
         return mBaseLevelImageView;

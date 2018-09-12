@@ -1150,59 +1150,59 @@ gl::Error TextureGL::syncState(const gl::Context *context, const gl::Texture::Di
         switch (dirtyBit)
         {
             case gl::Texture::DIRTY_BIT_MIN_FILTER:
-                mAppliedSampler.minFilter = mState.getSamplerState().minFilter;
+                mAppliedSampler.setMinFilter(mState.getSamplerState().getMinFilter());
                 functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_MIN_FILTER,
-                                         mAppliedSampler.minFilter);
+                                         mAppliedSampler.getMinFilter());
                 break;
             case gl::Texture::DIRTY_BIT_MAG_FILTER:
-                mAppliedSampler.magFilter = mState.getSamplerState().magFilter;
+                mAppliedSampler.setMagFilter(mState.getSamplerState().getMagFilter());
                 functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_MAG_FILTER,
-                                         mAppliedSampler.magFilter);
+                                         mAppliedSampler.getMagFilter());
                 break;
             case gl::Texture::DIRTY_BIT_WRAP_S:
-                mAppliedSampler.wrapS = mState.getSamplerState().wrapS;
+                mAppliedSampler.setWrapS(mState.getSamplerState().getWrapS());
                 functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_WRAP_S,
-                                         mAppliedSampler.wrapS);
+                                         mAppliedSampler.getWrapS());
                 break;
             case gl::Texture::DIRTY_BIT_WRAP_T:
-                mAppliedSampler.wrapT = mState.getSamplerState().wrapT;
+                mAppliedSampler.setWrapT(mState.getSamplerState().getWrapT());
                 functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_WRAP_T,
-                                         mAppliedSampler.wrapT);
+                                         mAppliedSampler.getWrapT());
                 break;
             case gl::Texture::DIRTY_BIT_WRAP_R:
-                mAppliedSampler.wrapR = mState.getSamplerState().wrapR;
+                mAppliedSampler.setWrapR(mState.getSamplerState().getWrapR());
                 functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_WRAP_R,
-                                         mAppliedSampler.wrapR);
+                                         mAppliedSampler.getWrapR());
                 break;
             case gl::Texture::DIRTY_BIT_MAX_ANISOTROPY:
-                mAppliedSampler.maxAnisotropy = mState.getSamplerState().maxAnisotropy;
+                mAppliedSampler.setMaxAnisotropy(mState.getSamplerState().getMaxAnisotropy());
                 functions->texParameterf(ToGLenum(getType()), GL_TEXTURE_MAX_ANISOTROPY_EXT,
-                                         mAppliedSampler.maxAnisotropy);
+                                         mAppliedSampler.getMaxAnisotropy());
                 break;
             case gl::Texture::DIRTY_BIT_MIN_LOD:
-                mAppliedSampler.minLod = mState.getSamplerState().minLod;
+                mAppliedSampler.setMinLod(mState.getSamplerState().getMinLod());
                 functions->texParameterf(ToGLenum(getType()), GL_TEXTURE_MIN_LOD,
-                                         mAppliedSampler.minLod);
+                                         mAppliedSampler.getMinLod());
                 break;
             case gl::Texture::DIRTY_BIT_MAX_LOD:
-                mAppliedSampler.maxLod = mState.getSamplerState().maxLod;
+                mAppliedSampler.setMaxLod(mState.getSamplerState().getMaxLod());
                 functions->texParameterf(ToGLenum(getType()), GL_TEXTURE_MAX_LOD,
-                                         mAppliedSampler.maxLod);
+                                         mAppliedSampler.getMaxLod());
                 break;
             case gl::Texture::DIRTY_BIT_COMPARE_MODE:
-                mAppliedSampler.compareMode = mState.getSamplerState().compareMode;
+                mAppliedSampler.setCompareMode(mState.getSamplerState().getCompareMode());
                 functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_COMPARE_MODE,
-                                         mAppliedSampler.compareMode);
+                                         mAppliedSampler.getCompareMode());
                 break;
             case gl::Texture::DIRTY_BIT_COMPARE_FUNC:
-                mAppliedSampler.compareFunc = mState.getSamplerState().compareFunc;
+                mAppliedSampler.setCompareFunc(mState.getSamplerState().getCompareFunc());
                 functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_COMPARE_FUNC,
-                                         mAppliedSampler.compareFunc);
+                                         mAppliedSampler.getCompareFunc());
                 break;
             case gl::Texture::DIRTY_BIT_SRGB_DECODE:
-                mAppliedSampler.sRGBDecode = mState.getSamplerState().sRGBDecode;
+                mAppliedSampler.setSRGBDecode(mState.getSamplerState().getSRGBDecode());
                 functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_SRGB_DECODE_EXT,
-                                         mAppliedSampler.sRGBDecode);
+                                         mAppliedSampler.getSRGBDecode());
                 break;
 
             // Texture state
@@ -1280,12 +1280,12 @@ gl::Error TextureGL::setBaseLevel(const gl::Context *context, GLuint baseLevel)
 
 void TextureGL::setMinFilter(const gl::Context *context, GLenum filter)
 {
-    if (filter != mAppliedSampler.minFilter)
+    if (filter != mAppliedSampler.getMinFilter())
     {
         const FunctionsGL *functions = GetFunctionsGL(context);
         StateManagerGL *stateManager = GetStateManagerGL(context);
 
-        mAppliedSampler.minFilter = filter;
+        mAppliedSampler.setMinFilter(filter);
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MIN_FILTER);
 
         stateManager->bindTexture(getType(), mTextureID);
@@ -1294,12 +1294,12 @@ void TextureGL::setMinFilter(const gl::Context *context, GLenum filter)
 }
 void TextureGL::setMagFilter(const gl::Context *context, GLenum filter)
 {
-    if (filter != mAppliedSampler.magFilter)
+    if (filter != mAppliedSampler.getMagFilter())
     {
         const FunctionsGL *functions = GetFunctionsGL(context);
         StateManagerGL *stateManager = GetStateManagerGL(context);
 
-        mAppliedSampler.magFilter = filter;
+        mAppliedSampler.setMagFilter(filter);
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MAG_FILTER);
 
         stateManager->bindTexture(getType(), mTextureID);

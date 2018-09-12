@@ -26,9 +26,9 @@ namespace
 {
 bool IsPointSampled(const SamplerState &samplerState)
 {
-    return (samplerState.magFilter == GL_NEAREST &&
-            (samplerState.minFilter == GL_NEAREST ||
-             samplerState.minFilter == GL_NEAREST_MIPMAP_NEAREST));
+    return (samplerState.getMagFilter() == GL_NEAREST &&
+            (samplerState.getMinFilter() == GL_NEAREST ||
+             samplerState.getMinFilter() == GL_NEAREST_MIPMAP_NEAREST));
 }
 
 size_t GetImageDescIndex(TextureTarget target, size_t level)
@@ -53,7 +53,7 @@ InitState DetermineInitState(const Context *context, const uint8_t *pixels)
 
 bool IsMipmapFiltered(const SamplerState &samplerState)
 {
-    switch (samplerState.minFilter)
+    switch (samplerState.getMinFilter())
     {
         case GL_NEAREST:
         case GL_LINEAR:
@@ -280,8 +280,8 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     bool npotSupport = data.getExtensions().textureNPOT || data.getClientMajorVersion() >= 3;
     if (!npotSupport)
     {
-        if ((samplerState.wrapS != GL_CLAMP_TO_EDGE && !isPow2(baseImageDesc.size.width)) ||
-            (samplerState.wrapT != GL_CLAMP_TO_EDGE && !isPow2(baseImageDesc.size.height)))
+        if ((samplerState.getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(baseImageDesc.size.width)) ||
+            (samplerState.getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(baseImageDesc.size.height)))
         {
             return false;
         }
@@ -320,12 +320,13 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // texture unit, such as TEXTURE_WRAP_R for an external texture, does not affect completeness.
     if (mType == TextureType::External)
     {
-        if (samplerState.wrapS != GL_CLAMP_TO_EDGE || samplerState.wrapT != GL_CLAMP_TO_EDGE)
+        if (samplerState.getWrapS() != GL_CLAMP_TO_EDGE ||
+            samplerState.getWrapT() != GL_CLAMP_TO_EDGE)
         {
             return false;
         }
 
-        if (samplerState.minFilter != GL_LINEAR && samplerState.minFilter != GL_NEAREST)
+        if (samplerState.getMinFilter() != GL_LINEAR && samplerState.getMinFilter() != GL_NEAREST)
         {
             return false;
         }
@@ -343,11 +344,11 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
         // extension, due to some underspecification problems, we must allow linear filtering
         // for legacy compatibility with WebGL 1.
         // See http://crbug.com/649200
-        if (samplerState.compareMode == GL_NONE && baseImageDesc.format.info->sized)
+        if (samplerState.getCompareMode() == GL_NONE && baseImageDesc.format.info->sized)
         {
-            if ((samplerState.minFilter != GL_NEAREST &&
-                 samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST) ||
-                samplerState.magFilter != GL_NEAREST)
+            if ((samplerState.getMinFilter() != GL_NEAREST &&
+                 samplerState.getMinFilter() != GL_NEAREST_MIPMAP_NEAREST) ||
+                samplerState.getMagFilter() != GL_NEAREST)
             {
                 return false;
             }
@@ -366,9 +367,9 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     if (!IsMultisampled(mType) && baseImageDesc.format.info->depthBits > 0 &&
         mDepthStencilTextureMode == GL_STENCIL_INDEX)
     {
-        if ((samplerState.minFilter != GL_NEAREST &&
-             samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST) ||
-            samplerState.magFilter != GL_NEAREST)
+        if ((samplerState.getMinFilter() != GL_NEAREST &&
+             samplerState.getMinFilter() != GL_NEAREST_MIPMAP_NEAREST) ||
+            samplerState.getMagFilter() != GL_NEAREST)
         {
             return false;
         }
@@ -678,123 +679,123 @@ GLenum Texture::getSwizzleAlpha() const
 
 void Texture::setMinFilter(GLenum minFilter)
 {
-    mState.mSamplerState.minFilter = minFilter;
+    mState.mSamplerState.setMinFilter(minFilter);
     mDirtyBits.set(DIRTY_BIT_MIN_FILTER);
 }
 
 GLenum Texture::getMinFilter() const
 {
-    return mState.mSamplerState.minFilter;
+    return mState.mSamplerState.getMinFilter();
 }
 
 void Texture::setMagFilter(GLenum magFilter)
 {
-    mState.mSamplerState.magFilter = magFilter;
+    mState.mSamplerState.setMagFilter(magFilter);
     mDirtyBits.set(DIRTY_BIT_MAG_FILTER);
 }
 
 GLenum Texture::getMagFilter() const
 {
-    return mState.mSamplerState.magFilter;
+    return mState.mSamplerState.getMagFilter();
 }
 
 void Texture::setWrapS(GLenum wrapS)
 {
-    mState.mSamplerState.wrapS = wrapS;
+    mState.mSamplerState.setWrapS(wrapS);
     mDirtyBits.set(DIRTY_BIT_WRAP_S);
 }
 
 GLenum Texture::getWrapS() const
 {
-    return mState.mSamplerState.wrapS;
+    return mState.mSamplerState.getWrapS();
 }
 
 void Texture::setWrapT(GLenum wrapT)
 {
-    mState.mSamplerState.wrapT = wrapT;
+    mState.mSamplerState.setWrapT(wrapT);
     mDirtyBits.set(DIRTY_BIT_WRAP_T);
 }
 
 GLenum Texture::getWrapT() const
 {
-    return mState.mSamplerState.wrapT;
+    return mState.mSamplerState.getWrapT();
 }
 
 void Texture::setWrapR(GLenum wrapR)
 {
-    mState.mSamplerState.wrapR = wrapR;
+    mState.mSamplerState.setWrapR(wrapR);
     mDirtyBits.set(DIRTY_BIT_WRAP_R);
 }
 
 GLenum Texture::getWrapR() const
 {
-    return mState.mSamplerState.wrapR;
+    return mState.mSamplerState.getWrapR();
 }
 
 void Texture::setMaxAnisotropy(float maxAnisotropy)
 {
-    mState.mSamplerState.maxAnisotropy = maxAnisotropy;
+    mState.mSamplerState.setMaxAnisotropy(maxAnisotropy);
     mDirtyBits.set(DIRTY_BIT_MAX_ANISOTROPY);
 }
 
 float Texture::getMaxAnisotropy() const
 {
-    return mState.mSamplerState.maxAnisotropy;
+    return mState.mSamplerState.getMaxAnisotropy();
 }
 
 void Texture::setMinLod(GLfloat minLod)
 {
-    mState.mSamplerState.minLod = minLod;
+    mState.mSamplerState.setMinLod(minLod);
     mDirtyBits.set(DIRTY_BIT_MIN_LOD);
 }
 
 GLfloat Texture::getMinLod() const
 {
-    return mState.mSamplerState.minLod;
+    return mState.mSamplerState.getMinLod();
 }
 
 void Texture::setMaxLod(GLfloat maxLod)
 {
-    mState.mSamplerState.maxLod = maxLod;
+    mState.mSamplerState.setMaxLod(maxLod);
     mDirtyBits.set(DIRTY_BIT_MAX_LOD);
 }
 
 GLfloat Texture::getMaxLod() const
 {
-    return mState.mSamplerState.maxLod;
+    return mState.mSamplerState.getMaxLod();
 }
 
 void Texture::setCompareMode(GLenum compareMode)
 {
-    mState.mSamplerState.compareMode = compareMode;
+    mState.mSamplerState.setCompareMode(compareMode);
     mDirtyBits.set(DIRTY_BIT_COMPARE_MODE);
 }
 
 GLenum Texture::getCompareMode() const
 {
-    return mState.mSamplerState.compareMode;
+    return mState.mSamplerState.getCompareMode();
 }
 
 void Texture::setCompareFunc(GLenum compareFunc)
 {
-    mState.mSamplerState.compareFunc = compareFunc;
+    mState.mSamplerState.setCompareFunc(compareFunc);
     mDirtyBits.set(DIRTY_BIT_COMPARE_FUNC);
 }
 
 GLenum Texture::getCompareFunc() const
 {
-    return mState.mSamplerState.compareFunc;
+    return mState.mSamplerState.getCompareFunc();
 }
 
 void Texture::setSRGBDecode(GLenum sRGBDecode)
 {
-    mState.mSamplerState.sRGBDecode = sRGBDecode;
+    mState.mSamplerState.setSRGBDecode(sRGBDecode);
     mDirtyBits.set(DIRTY_BIT_SRGB_DECODE);
 }
 
 GLenum Texture::getSRGBDecode() const
 {
-    return mState.mSamplerState.sRGBDecode;
+    return mState.mSamplerState.getSRGBDecode();
 }
 
 const SamplerState &Texture::getSamplerState() const

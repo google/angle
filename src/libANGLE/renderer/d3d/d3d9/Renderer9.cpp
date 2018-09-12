@@ -942,26 +942,26 @@ angle::Result Renderer9::setSamplerState(const gl::Context *context,
         int d3dSampler       = index + d3dSamplerOffset;
 
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU,
-                                 gl_d3d9::ConvertTextureWrap(samplerState.wrapS));
+                                 gl_d3d9::ConvertTextureWrap(samplerState.getWrapS()));
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV,
-                                 gl_d3d9::ConvertTextureWrap(samplerState.wrapT));
+                                 gl_d3d9::ConvertTextureWrap(samplerState.getWrapT()));
 
-        mDevice->SetSamplerState(
-            d3dSampler, D3DSAMP_MAGFILTER,
-            gl_d3d9::ConvertMagFilter(samplerState.magFilter, samplerState.maxAnisotropy));
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER,
+                                 gl_d3d9::ConvertMagFilter(samplerState.getMagFilter(),
+                                                           samplerState.getMaxAnisotropy()));
 
         D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
         float lodBias;
-        gl_d3d9::ConvertMinFilter(samplerState.minFilter, &d3dMinFilter, &d3dMipFilter, &lodBias,
-                                  samplerState.maxAnisotropy, baseLevel);
+        gl_d3d9::ConvertMinFilter(samplerState.getMinFilter(), &d3dMinFilter, &d3dMipFilter,
+                                  &lodBias, samplerState.getMaxAnisotropy(), baseLevel);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, baseLevel);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPMAPLODBIAS, static_cast<DWORD>(lodBias));
         if (getNativeExtensions().textureFilterAnisotropic)
         {
-            DWORD maxAnisotropy =
-                std::min(mDeviceCaps.MaxAnisotropy, static_cast<DWORD>(samplerState.maxAnisotropy));
+            DWORD maxAnisotropy = std::min(mDeviceCaps.MaxAnisotropy,
+                                           static_cast<DWORD>(samplerState.getMaxAnisotropy()));
             mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, maxAnisotropy);
         }
     }

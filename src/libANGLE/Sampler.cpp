@@ -42,112 +42,112 @@ const std::string &Sampler::getLabel() const
 
 void Sampler::setMinFilter(GLenum minFilter)
 {
-    mState.minFilter = minFilter;
+    mState.setMinFilter(minFilter);
 }
 
 GLenum Sampler::getMinFilter() const
 {
-    return mState.minFilter;
+    return mState.getMinFilter();
 }
 
 void Sampler::setMagFilter(GLenum magFilter)
 {
-    mState.magFilter = magFilter;
+    mState.setMagFilter(magFilter);
 }
 
 GLenum Sampler::getMagFilter() const
 {
-    return mState.magFilter;
+    return mState.getMagFilter();
 }
 
 void Sampler::setWrapS(GLenum wrapS)
 {
-    mState.wrapS = wrapS;
+    mState.setWrapS(wrapS);
 }
 
 GLenum Sampler::getWrapS() const
 {
-    return mState.wrapS;
+    return mState.getWrapS();
 }
 
 void Sampler::setWrapT(GLenum wrapT)
 {
-    mState.wrapT = wrapT;
+    mState.setWrapT(wrapT);
 }
 
 GLenum Sampler::getWrapT() const
 {
-    return mState.wrapT;
+    return mState.getWrapT();
 }
 
 void Sampler::setWrapR(GLenum wrapR)
 {
-    mState.wrapR = wrapR;
+    mState.setWrapR(wrapR);
 }
 
 GLenum Sampler::getWrapR() const
 {
-    return mState.wrapR;
+    return mState.getWrapR();
 }
 
 void Sampler::setMaxAnisotropy(float maxAnisotropy)
 {
-    mState.maxAnisotropy = maxAnisotropy;
+    mState.setMaxAnisotropy(maxAnisotropy);
 }
 
 float Sampler::getMaxAnisotropy() const
 {
-    return mState.maxAnisotropy;
+    return mState.getMaxAnisotropy();
 }
 
 void Sampler::setMinLod(GLfloat minLod)
 {
-    mState.minLod = minLod;
+    mState.setMinLod(minLod);
 }
 
 GLfloat Sampler::getMinLod() const
 {
-    return mState.minLod;
+    return mState.getMinLod();
 }
 
 void Sampler::setMaxLod(GLfloat maxLod)
 {
-    mState.maxLod = maxLod;
+    mState.setMaxLod(maxLod);
 }
 
 GLfloat Sampler::getMaxLod() const
 {
-    return mState.maxLod;
+    return mState.getMaxLod();
 }
 
 void Sampler::setCompareMode(GLenum compareMode)
 {
-    mState.compareMode = compareMode;
+    mState.setCompareMode(compareMode);
 }
 
 GLenum Sampler::getCompareMode() const
 {
-    return mState.compareMode;
+    return mState.getCompareMode();
 }
 
 void Sampler::setCompareFunc(GLenum compareFunc)
 {
-    mState.compareFunc = compareFunc;
+    mState.setCompareFunc(compareFunc);
 }
 
 GLenum Sampler::getCompareFunc() const
 {
-    return mState.compareFunc;
+    return mState.getCompareFunc();
 }
 
 void Sampler::setSRGBDecode(GLenum sRGBDecode)
 {
-    mState.sRGBDecode = sRGBDecode;
+    mState.setSRGBDecode(sRGBDecode);
 }
 
 GLenum Sampler::getSRGBDecode() const
 {
-    return mState.sRGBDecode;
+    return mState.getSRGBDecode();
 }
 
 const SamplerState &Sampler::getSamplerState() const
