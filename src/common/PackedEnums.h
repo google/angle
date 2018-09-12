@@ -67,11 +67,11 @@ struct AllEnums
 
 // PackedEnumMap<E, T> is like an std::array<T, E::EnumCount> but is indexed with enum values. It
 // implements all of the std::array interface except with enum values instead of indices.
-template <typename E, typename T>
+template <typename E, typename T, size_t MaxSize = EnumSize<E>()>
 class PackedEnumMap
 {
     using UnderlyingType = typename std::underlying_type<E>::type;
-    using Storage        = std::array<T, EnumSize<E>()>;
+    using Storage        = std::array<T, MaxSize>;
 
   public:
     // types:
