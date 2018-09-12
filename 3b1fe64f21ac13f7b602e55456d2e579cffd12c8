@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e657c41f_69dd3b55",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-12T15:16:01Z",
+      "side": 1,
+      "message": "Why can\u0027t `numInfo` be 1? One could only provide the safe format and this would work as expected.",
+      "revId": "3b1fe64f21ac13f7b602e55456d2e579cffd12c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
