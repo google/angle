@@ -198,7 +198,7 @@ class Texture final : public RefCountObject, public egl::ImageSibling, public La
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
 
-    TextureType getType() const;
+    TextureType getType() const { return mState.mType; }
 
     void setSwizzleRed(GLenum swizzleRed);
     GLenum getSwizzleRed() const;

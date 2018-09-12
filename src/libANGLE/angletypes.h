@@ -195,6 +195,29 @@ struct DepthStencilState final
 bool operator==(const DepthStencilState &a, const DepthStencilState &b);
 bool operator!=(const DepthStencilState &a, const DepthStencilState &b);
 
+// Packs a sampler state for completeness checks:
+// * minFilter: 5 values (3 bits)
+// * magFilter: 2 values (1 bit)
+// * wrapS:     3 values (2 bits)
+// * wrapT:     3 values (2 bits)
+// * compareMode: 1 bit (for == GL_NONE).
+// This makes a total of 9 bits. We can pack this easily into 32 bits:
+// * minFilter: 8 bits
+// * magFilter: 8 bits
+// * wrapS:     8 bits
+// * wrapT:     4 bits
+// * compareMode: 4 bits
+
+struct PackedSamplerCompleteness
+{
+    uint8_t minFilter;
+    uint8_t magFilter;
+    uint8_t wrapS;
+    uint8_t wrapTCompareMode;
+};
+
+static_assert(sizeof(PackedSamplerCompleteness) == sizeof(uint32_t), "Unexpected size");
+
 // State from Table 6.10 (state per sampler object)
 class SamplerState final
 {
@@ -249,7 +272,14 @@ class SamplerState final
 
     void setSRGBDecode(GLenum sRGBDecode);
 
+    bool sameCompleteness(const SamplerState &samplerState) const
+    {
+        return mCompleteness.packed == samplerState.mCompleteness.packed;
+    }
+
   private:
+    void updateWrapTCompareMode();
+
     GLenum mMinFilter;
     GLenum mMagFilter;
 
@@ -267,6 +297,13 @@ class SamplerState final
     GLenum mCompareFunc;
 
     GLenum mSRGBDecode;
+
+    union Completeness {
+        uint32_t packed;
+        PackedSamplerCompleteness typed;
+    };
+
+    Completeness mCompleteness;
 };
 
 bool operator==(const SamplerState &a, const SamplerState &b);

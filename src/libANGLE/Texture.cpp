@@ -628,11 +628,6 @@ const std::string &Texture::getLabel() const
     return mLabel;
 }
 
-TextureType Texture::getType() const
-{
-    return mState.mType;
-}
-
 void Texture::setSwizzleRed(GLenum swizzleRed)
 {
     mState.mSwizzleState.swizzleRed = swizzleRed;
@@ -1537,7 +1532,7 @@ bool Texture::isSamplerComplete(const Context *context, const Sampler *optionalS
     const auto &contextState = context->getContextState();
 
     if (contextState.getContextID() != mCompletenessCache.context ||
-        mCompletenessCache.samplerState != samplerState)
+        !mCompletenessCache.samplerState.sameCompleteness(samplerState))
     {
         mCompletenessCache.context      = context->getContextState().getContextID();
         mCompletenessCache.samplerState = samplerState;

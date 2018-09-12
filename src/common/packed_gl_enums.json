@@ -249,5 +249,19 @@
         "PointSizeMax" : "GL_POINT_SIZE_MAX",
         "PointFadeThresholdSize" : "GL_POINT_FADE_THRESHOLD_SIZE",
         "PointDistanceAttenuation" : "GL_POINT_DISTANCE_ATTENUATION"
+    },
+    "FilterMode":
+    {
+        "Nearest": "GL_NEAREST",
+        "Linear": "GL_LINEAR",
+        "NearestMipmapNearest": "GL_NEAREST_MIPMAP_NEAREST",
+        "NearestMipmapLinear": "GL_NEAREST_MIPMAP_LINEAR",
+        "LinearMipmapLinear": "GL_LINEAR_MIPMAP_LINEAR"
+    },
+    "WrapMode":
+    {
+        "ClampToEdge": "GL_CLAMP_TO_EDGE",
+        "MirroredRepeat": "GL_MIRRORED_REPEAT",
+        "Repeat": "GL_REPEAT"
     }
 }

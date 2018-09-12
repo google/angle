@@ -116,6 +116,22 @@ template <>
 CullFaceMode FromGLenum<CullFaceMode>(GLenum from);
 GLenum ToGLenum(CullFaceMode from);
 
+enum class FilterMode : uint8_t
+{
+    Nearest              = 0,
+    Linear               = 1,
+    NearestMipmapNearest = 2,
+    NearestMipmapLinear  = 3,
+    LinearMipmapLinear   = 4,
+
+    InvalidEnum = 5,
+    EnumCount   = 5,
+};
+
+template <>
+FilterMode FromGLenum<FilterMode>(GLenum from);
+GLenum ToGLenum(FilterMode from);
+
 enum class FogMode : uint8_t
 {
     Exp    = 0,
@@ -474,6 +490,20 @@ enum class VertexArrayType : uint8_t
 template <>
 VertexArrayType FromGLenum<VertexArrayType>(GLenum from);
 GLenum ToGLenum(VertexArrayType from);
+
+enum class WrapMode : uint8_t
+{
+    ClampToEdge    = 0,
+    MirroredRepeat = 1,
+    Repeat         = 2,
+
+    InvalidEnum = 3,
+    EnumCount   = 3,
+};
+
+template <>
+WrapMode FromGLenum<WrapMode>(GLenum from);
+GLenum ToGLenum(WrapMode from);
 
 }  // namespace gl
 

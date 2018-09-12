@@ -110,17 +110,17 @@ SamplerState::SamplerState()
 {
     memset(this, 0, sizeof(SamplerState));
 
-    mMinFilter     = GL_NEAREST_MIPMAP_LINEAR;
-    mMagFilter     = GL_LINEAR;
-    mWrapS         = GL_REPEAT;
-    mWrapT         = GL_REPEAT;
-    mWrapR         = GL_REPEAT;
-    mMaxAnisotropy = 1.0f;
-    mMinLod        = -1000.0f;
-    mMaxLod        = 1000.0f;
-    mCompareMode   = GL_NONE;
-    mCompareFunc   = GL_LEQUAL;
-    mSRGBDecode    = GL_DECODE_EXT;
+    setMinFilter(GL_NEAREST_MIPMAP_LINEAR);
+    setMagFilter(GL_LINEAR);
+    setWrapS(GL_REPEAT);
+    setWrapT(GL_REPEAT);
+    setWrapR(GL_REPEAT);
+    setMaxAnisotropy(1.0f);
+    setMinLod(-1000.0f);
+    setMaxLod(1000.0f);
+    setCompareMode(GL_NONE);
+    setCompareFunc(GL_LEQUAL);
+    setSRGBDecode(GL_DECODE_EXT);
 }
 
 SamplerState::SamplerState(const SamplerState &other) = default;
@@ -144,22 +144,26 @@ SamplerState SamplerState::CreateDefaultForTarget(TextureType type)
 
 void SamplerState::setMinFilter(GLenum minFilter)
 {
-    mMinFilter = minFilter;
+    mMinFilter                    = minFilter;
+    mCompleteness.typed.minFilter = static_cast<uint8_t>(FromGLenum<FilterMode>(minFilter));
 }
 
 void SamplerState::setMagFilter(GLenum magFilter)
 {
-    mMagFilter = magFilter;
+    mMagFilter                    = magFilter;
+    mCompleteness.typed.magFilter = static_cast<uint8_t>(FromGLenum<FilterMode>(magFilter));
 }
 
 void SamplerState::setWrapS(GLenum wrapS)
 {
-    mWrapS = wrapS;
+    mWrapS                    = wrapS;
+    mCompleteness.typed.wrapS = static_cast<uint8_t>(FromGLenum<WrapMode>(wrapS));
 }
 
 void SamplerState::setWrapT(GLenum wrapT)
 {
     mWrapT = wrapT;
+    updateWrapTCompareMode();
 }
 
 void SamplerState::setWrapR(GLenum wrapR)
@@ -185,6 +189,7 @@ void SamplerState::setMaxLod(GLfloat maxLod)
 void SamplerState::setCompareMode(GLenum compareMode)
 {
     mCompareMode = compareMode;
+    updateWrapTCompareMode();
 }
 
 void SamplerState::setCompareFunc(GLenum compareFunc)
@@ -195,6 +200,13 @@ void SamplerState::setCompareFunc(GLenum compareFunc)
 void SamplerState::setSRGBDecode(GLenum sRGBDecode)
 {
     mSRGBDecode = sRGBDecode;
+}
+
+void SamplerState::updateWrapTCompareMode()
+{
+    uint8_t wrap    = static_cast<uint8_t>(FromGLenum<WrapMode>(mWrapT));
+    uint8_t compare = static_cast<uint8_t>(mCompareMode == GL_NONE ? 0x10 : 0x00);
+    mCompleteness.typed.wrapTCompareMode = wrap | compare;
 }
 
 ImageUnit::ImageUnit()
