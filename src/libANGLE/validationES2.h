@@ -10,6 +10,7 @@
 #define LIBANGLE_VALIDATION_ES2_H_
 
 #include "common/PackedEnums.h"
+#include "libANGLE/validationES.h"
 
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
@@ -582,7 +583,10 @@ bool ValidateDrawElements(Context *context,
                           GLenum type,
                           const void *indices);
 
-bool ValidateDrawArrays(Context *context, PrimitiveMode mode, GLint first, GLsizei count);
+inline bool ValidateDrawArrays(Context *context, PrimitiveMode mode, GLint first, GLsizei count)
+{
+    return ValidateDrawArraysCommon(context, mode, first, count, 1);
+}
 
 bool ValidateGetFramebufferAttachmentParameteriv(Context *context,
                                                  GLenum target,

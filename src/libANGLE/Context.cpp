@@ -359,6 +359,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mWebGLContext(GetWebGLContext(attribs)),
       mExtensionsEnabled(GetExtensionsEnabled(attribs, mWebGLContext)),
       mMemoryProgramCache(memoryProgramCache),
+      mStateCache(this),
       mVertexArrayObserverBinding(this, kVertexArraySubjectIndex),
       mDrawFramebufferObserverBinding(this, kDrawFramebufferSubjectIndex),
       mReadFramebufferObserverBinding(this, kReadFramebufferSubjectIndex),
@@ -7790,12 +7791,13 @@ GLenum ErrorSet::popError()
 }
 
 // StateCache implementation.
-StateCache::StateCache()
+StateCache::StateCache(Context *context)
     : mCachedHasAnyEnabledClientAttrib(false),
       mCachedNonInstancedVertexElementLimit(0),
       mCachedInstancedVertexElementLimit(0),
       mCachedBasicDrawStatesError(kInvalidPointer)
 {
+    updateValidDrawModes(context);
 }
 
 StateCache::~StateCache() = default;

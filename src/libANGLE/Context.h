@@ -86,7 +86,7 @@ class ErrorSet : angle::NonCopyable
 class StateCache final : angle::NonCopyable
 {
   public:
-    StateCache();
+    StateCache(Context *context);
     ~StateCache();
 
     // Places that can trigger updateActiveAttribsMask:
