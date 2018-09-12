@@ -272,9 +272,6 @@ TEST_P(FramebufferFormatsTest, RenderbufferMultisample_STENCIL_INDEX8)
 // Test that binding an incomplete cube map is rejected by ANGLE.
 TEST_P(FramebufferFormatsTest, IncompleteCubeMap)
 {
-    // TODO(jmadill): Handle cube textures. http://anglebug.com/2470
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // First make a complete CubeMap.
     glGenTextures(1, &mTexture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTexture);

@@ -1374,9 +1374,6 @@ TEST_P(Texture2DTestWithDrawScale, MipmapsTwice)
 // https://code.google.com/p/angleproject/issues/detail?id=849
 TEST_P(TextureCubeTest, CubeMapFBO)
 {
-    // TODO(jmadill): Cube map render targets. http://anglebug.com/2470
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLuint fbo;
     glGenFramebuffers(1, &fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);

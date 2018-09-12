@@ -180,6 +180,14 @@ class ImageHelper final : angle::NonCopyable
     angle::Result initMemory(Context *context,
                              const MemoryProperties &memoryProperties,
                              VkMemoryPropertyFlags flags);
+    angle::Result initLayerImageView(Context *context,
+                                     gl::TextureType textureType,
+                                     VkImageAspectFlags aspectMask,
+                                     const gl::SwizzleState &swizzleMap,
+                                     ImageView *imageViewOut,
+                                     uint32_t levelCount,
+                                     uint32_t baseArrayLayer,
+                                     uint32_t layerCount);
     angle::Result initImageView(Context *context,
                                 gl::TextureType textureType,
                                 VkImageAspectFlags aspectMask,

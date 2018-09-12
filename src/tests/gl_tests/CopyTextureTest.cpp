@@ -684,9 +684,6 @@ TEST_P(CopyTextureTest, Alpha)
 // Test that copying to cube maps works
 TEST_P(CopyTextureTest, CubeMapTarget)
 {
-    // TODO(jmadill): Support cube map framebuffer attachments. http://anglebug.com/2470
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     if (!checkExtensions())
     {
         return;

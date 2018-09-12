@@ -1025,16 +1025,25 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                                const gl::ImageIndex &imageIndex,
                                                FramebufferAttachmentRenderTarget **rtOut)
 {
-    // TODO(jmadill): Handle cube textures. http://anglebug.com/2470
-    ASSERT(imageIndex.getType() == gl::TextureType::_2D);
-
     // Non-zero mip level attachments are an ES 3.0 feature.
-    ASSERT(imageIndex.getLevelIndex() == 0 && !imageIndex.hasLayer());
+    ASSERT(imageIndex.getLevelIndex() == 0);
 
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(ensureImageInitialized(contextVk));
 
-    *rtOut = &mRenderTarget;
+    switch (imageIndex.getType())
+    {
+        case gl::TextureType::_2D:
+            *rtOut = &mRenderTarget;
+            break;
+        case gl::TextureType::CubeMap:
+            ANGLE_TRY(initCubeMapRenderTargets(contextVk));
+            *rtOut = &mCubeMapRenderTargets[imageIndex.cubeMapFaceIndex()];
+            break;
+        default:
+            UNREACHABLE();
+    }
+
     return gl::NoError();
 }
 
@@ -1060,7 +1069,25 @@ angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk)
         ANGLE_TRY(initImage(contextVk, format, baseLevelExtents, levelCount, commandBuffer));
     }
 
-    ANGLE_TRY(mPixelBuffer.flushUpdatesToImage(contextVk, levelCount, &mImage, commandBuffer));
+    return mPixelBuffer.flushUpdatesToImage(contextVk, levelCount, &mImage, commandBuffer);
+}
+
+angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
+{
+    // Lazy init. Check if already initialized.
+    if (!mCubeMapFaceImageViews.empty())
+        return angle::Result::Continue();
+
+    mCubeMapFaceImageViews.resize(gl::kCubeFaceCount);
+
+    for (size_t cubeMapFaceIndex = 0; cubeMapFaceIndex < gl::kCubeFaceCount; ++cubeMapFaceIndex)
+    {
+        vk::ImageView &imageView = mCubeMapFaceImageViews[cubeMapFaceIndex];
+        ANGLE_TRY(mImage.initLayerImageView(contextVk, gl::TextureType::CubeMap,
+                                            VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
+                                            &imageView, 1, cubeMapFaceIndex, 1));
+        mCubeMapRenderTargets.emplace_back(&mImage, &imageView, this);
+    }
     return angle::Result::Continue();
 }
 
@@ -1101,8 +1128,7 @@ gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::Di
     samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
-    ANGLE_TRY(mSampler.init(contextVk, samplerInfo));
-    return gl::NoError();
+    return mSampler.init(contextVk, samplerInfo);
 }
 
 gl::Error TextureVk::setStorageMultisample(const gl::Context *context,
@@ -1190,6 +1216,14 @@ void TextureVk::releaseImage(const gl::Context *context, RendererVk *renderer)
     mImage.release(renderer->getCurrentQueueSerial(), renderer);
     renderer->releaseObject(getStoredQueueSerial(), &mBaseLevelImageView);
     renderer->releaseObject(getStoredQueueSerial(), &mMipmapImageView);
+
+    for (vk::ImageView &imageView : mCubeMapFaceImageViews)
+    {
+        renderer->releaseObject(getStoredQueueSerial(), &imageView);
+    }
+    mCubeMapFaceImageViews.clear();
+    mCubeMapRenderTargets.clear();
+
     onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 }
 

@@ -26,6 +26,11 @@ RenderTargetVk::~RenderTargetVk()
 {
 }
 
+RenderTargetVk::RenderTargetVk(RenderTargetVk &&other)
+    : mImage(other.mImage), mImageView(other.mImageView), mResource(other.mResource)
+{
+}
+
 void RenderTargetVk::onColorDraw(vk::CommandGraphResource *framebufferVk,
                                  vk::CommandBuffer *commandBuffer,
                                  vk::RenderPassDesc *renderPassDesc)

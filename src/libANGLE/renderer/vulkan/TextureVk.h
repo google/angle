@@ -250,6 +250,7 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     angle::Result getCommandBufferForWrite(ContextVk *contextVk,
                                            vk::CommandBuffer **commandBufferOut);
     uint32_t getLevelCount() const;
+    angle::Result initCubeMapRenderTargets(ContextVk *contextVk);
 
     vk::ImageHelper mImage;
     vk::ImageView mBaseLevelImageView;
@@ -257,6 +258,8 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     vk::Sampler mSampler;
 
     RenderTargetVk mRenderTarget;
+    std::vector<vk::ImageView> mCubeMapFaceImageViews;
+    std::vector<RenderTargetVk> mCubeMapRenderTargets;
 
     PixelBuffer mPixelBuffer;
 };

@@ -584,6 +584,19 @@ angle::Result ImageHelper::initImageView(Context *context,
                                          ImageView *imageViewOut,
                                          uint32_t levelCount)
 {
+    return initLayerImageView(context, textureType, aspectMask, swizzleMap, imageViewOut,
+                              levelCount, 0, mLayerCount);
+}
+
+angle::Result ImageHelper::initLayerImageView(Context *context,
+                                              gl::TextureType textureType,
+                                              VkImageAspectFlags aspectMask,
+                                              const gl::SwizzleState &swizzleMap,
+                                              ImageView *imageViewOut,
+                                              uint32_t levelCount,
+                                              uint32_t baseArrayLayer,
+                                              uint32_t layerCount)
+{
     VkImageViewCreateInfo viewInfo;
     viewInfo.sType    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.pNext    = nullptr;
@@ -608,8 +621,8 @@ angle::Result ImageHelper::initImageView(Context *context,
     viewInfo.subresourceRange.aspectMask     = aspectMask;
     viewInfo.subresourceRange.baseMipLevel   = 0;
     viewInfo.subresourceRange.levelCount     = levelCount;
-    viewInfo.subresourceRange.baseArrayLayer = 0;
-    viewInfo.subresourceRange.layerCount     = mLayerCount;
+    viewInfo.subresourceRange.baseArrayLayer = baseArrayLayer;
+    viewInfo.subresourceRange.layerCount     = layerCount;
 
     ANGLE_TRY(imageViewOut->init(context, viewInfo));
     return angle::Result::Continue();

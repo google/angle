@@ -38,6 +38,9 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
                    vk::CommandGraphResource *resource);
     ~RenderTargetVk();
 
+    // Used in std::vector initialization.
+    RenderTargetVk(RenderTargetVk &&other);
+
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
     void onColorDraw(vk::CommandGraphResource *framebufferVk,
                      vk::CommandBuffer *commandBuffer,
