@@ -53,7 +53,7 @@ New Tokens
     Accepted as an attribute name in the <*attrib_list> argument to
     eglCreateContext:
 
-        EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE 0x3AAC
+        EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE 0x33AC
 
 Additions to the EGL 1.4 Specification
 
