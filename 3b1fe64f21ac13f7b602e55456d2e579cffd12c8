@@ -52,6 +52,24 @@
       "revId": "3b1fe64f21ac13f7b602e55456d2e579cffd12c8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efb28896_97e23d71",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-13T00:58:49Z",
+      "side": 1,
+      "message": "You could implement that with option 1) in Frank\u0027s design, right? There shouldn\u0027t be anything design wise preventing optionally better formats. Although in any case if you have the exact format I think choice 2) is preferable. So they\u0027d always be in some kind of fallback path.",
+      "parentUuid": "290b2cc9_99c29b7f",
+      "revId": "3b1fe64f21ac13f7b602e55456d2e579cffd12c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
