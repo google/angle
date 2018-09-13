@@ -574,8 +574,12 @@ angle::Result TextureD3D::ensureRenderTarget(const gl::Context *context)
 
 bool TextureD3D::canCreateRenderTargetForImage(const gl::ImageIndex &index) const
 {
-    if (index.getType() == gl::TextureType::_2DMultisample)
+    if (index.getType() == gl::TextureType::_2DMultisample ||
+        index.getType() == gl::TextureType::_2DMultisampleArray)
+    {
+        ASSERT(index.getType() != gl::TextureType::_2DMultisampleArray || index.hasLayer());
         return true;
+    }
 
     ImageD3D *image = getImage(index);
     ASSERT(image);
@@ -680,6 +684,21 @@ gl::Error TextureD3D::initializeContents(const gl::Context *context,
         tempLayerCounts[levelIndex] = getLayerCount(levelIndex);
         gl::ImageIndexIterator iterator =
             gl::ImageIndexIterator::Make2DArray(levelIndex, levelIndex + 1, tempLayerCounts.data());
+        while (iterator.hasNext())
+        {
+            ANGLE_TRY(initializeContents(context, iterator.next()));
+        }
+        return gl::NoError();
+    }
+    else if (imageIndexIn.getType() == gl::TextureType::_2DMultisampleArray &&
+             !imageIndexIn.hasLayer())
+    {
+        std::array<GLint, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS> tempLayerCounts;
+
+        ASSERT(imageIndexIn.getLevelIndex() == 0);
+        tempLayerCounts[0] = getLayerCount(0);
+        gl::ImageIndexIterator iterator =
+            gl::ImageIndexIterator::Make2DMultisampleArray(tempLayerCounts.data());
         while (iterator.hasNext())
         {
             ANGLE_TRY(initializeContents(context, iterator.next()));

@@ -379,6 +379,11 @@ Error FramebufferAttachmentObject::initializeContents(const Context *context,
             ImageIndex::Make2DArray(imageIndex.getLevelIndex(), ImageIndex::kEntireLevel);
         return getAttachmentImpl()->initializeContents(context, fullMipIndex);
     }
+    else if (imageIndex.getType() == TextureType::_2DMultisampleArray && imageIndex.hasLayer())
+    {
+        ImageIndex fullMipIndex = ImageIndex::Make2DMultisampleArray(ImageIndex::kEntireLevel);
+        return getAttachmentImpl()->initializeContents(context, fullMipIndex);
+    }
     else
     {
         return getAttachmentImpl()->initializeContents(context, imageIndex);

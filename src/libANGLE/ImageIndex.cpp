@@ -256,14 +256,14 @@ ImageIndexIterator ImageIndexIterator::Make2DArray(GLint minMip, GLint maxMip,
 
 ImageIndexIterator ImageIndexIterator::Make2DMultisample()
 {
-    return ImageIndexIterator(TextureType::_2DMultisample, Range<GLint>(0, 0),
+    return ImageIndexIterator(TextureType::_2DMultisample, Range<GLint>(0, 1),
                               Range<GLint>(ImageIndex::kEntireLevel, ImageIndex::kEntireLevel),
                               nullptr);
 }
 
 ImageIndexIterator ImageIndexIterator::Make2DMultisampleArray(const GLsizei *layerCounts)
 {
-    return ImageIndexIterator(TextureType::_2DMultisampleArray, Range<GLint>(0, 0),
+    return ImageIndexIterator(TextureType::_2DMultisampleArray, Range<GLint>(0, 1),
                               Range<GLint>(0, IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS),
                               layerCounts);
 }
