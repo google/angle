@@ -98,9 +98,6 @@ class LineLoopTest : public ANGLETest
 
 TEST_P(LineLoopTest, LineLoopUByteIndices)
 {
-    // TODO(fjhenigman): UByte not yet supported in VertexArrayVk
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
     // On Win7, the D3D SDK Layers emits a false warning for these tests.
     // This doesn't occur on Windows 10 (Version 1511) though.
@@ -135,7 +132,7 @@ TEST_P(LineLoopTest, LineLoopUIntIndices)
 
 TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
 {
-    // TODO(fjhenigman): UByte not yet supported in VertexArrayVk
+    // TODO(jmadill): Diagnose and fix. http://anglebug.com/2802
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
     // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
