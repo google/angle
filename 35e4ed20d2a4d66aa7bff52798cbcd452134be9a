@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "aec40448_dcd96d67",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-14T11:42:06Z",
+      "side": 1,
+      "message": "Jamie, is it ok to remove this requirement?",
+      "revId": "35e4ed20d2a4d66aa7bff52798cbcd452134be9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "19d6c4a4_084c13ac",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 8
