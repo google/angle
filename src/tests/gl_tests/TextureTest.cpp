@@ -1374,8 +1374,7 @@ TEST_P(Texture2DTestWithDrawScale, MipmapsTwice)
 // https://code.google.com/p/angleproject/issues/detail?id=849
 TEST_P(TextureCubeTest, CubeMapFBO)
 {
-    GLuint fbo;
-    glGenFramebuffers(1, &fbo);
+    GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
@@ -1383,10 +1382,74 @@ TEST_P(TextureCubeTest, CubeMapFBO)
                            mTextureCube, 0);
 
     EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
-
-    glDeleteFramebuffers(1, &fbo);
-
     EXPECT_GL_NO_ERROR();
+
+    // Test clearing the six mip faces individually.
+    std::array<GLColor, 6> faceColors = {{GLColor::red, GLColor::green, GLColor::blue,
+                                          GLColor::yellow, GLColor::cyan, GLColor::magenta}};
+
+    for (size_t faceIndex = 0; faceIndex < 6; ++faceIndex)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, mTextureCube, 0);
+
+        Vector4 clearColorF = faceColors[faceIndex].toNormalizedVector();
+        glClearColor(clearColorF.x(), clearColorF.y(), clearColorF.z(), clearColorF.w());
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, faceColors[faceIndex]);
+    }
+
+    // Iterate the faces again to make sure the colors haven't changed.
+    for (size_t faceIndex = 0; faceIndex < 6; ++faceIndex)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + faceIndex, mTextureCube, 0);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, faceColors[faceIndex])
+            << "face color " << faceIndex << " shouldn't change";
+    }
+}
+
+// Tests clearing a cube map with a scissor enabled.
+TEST_P(TextureCubeTest, CubeMapFBOScissoredClear)
+{
+    // TODO(jie.a.chen): Diagnose and fix. http://anglebug.com/2822
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsWindows());
+
+    constexpr size_t kSize = 16;
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glViewport(0, 0, kSize, kSize);
+
+    GLTexture texcube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texcube);
+    for (GLenum face = 0; face < 6; face++)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+    }
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+                           texcube, 0);
+
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(kSize / 2, 0, kSize / 2, kSize);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2 + 1, 0, GLColor::green);
+
+    ASSERT_GL_NO_ERROR();
 }
 
 // Test that glTexSubImage2D works properly when glTexStorage2DEXT has initialized the image with a

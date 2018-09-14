@@ -211,8 +211,10 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     }
 
     // If we clear the depth OR the stencil but not both, and we have a packed depth stencil
-    // attachment, we need to use clearAttachment instead of clearDepthStencil since Vulkan won't
+    // attachment, we need to use clearAttachments instead of clearDepthStencil since Vulkan won't
     // allow us to clear one or the other separately.
+    // Note: this might be bugged if we emulate single depth or stencil with a packed format.
+    // TODO(jmadill): Investigate emulated packed formats. http://anglebug.com/2815
     bool isSingleClearOnPackedDepthStencilAttachment =
         depthStencilAttachment && (clearDepth != clearStencil);
     if (glState.isScissorTestEnabled() || isSingleClearOnPackedDepthStencilAttachment)
@@ -275,7 +277,10 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         ASSERT(colorRenderTarget);
         vk::ImageHelper *image = colorRenderTarget->getImageForWrite(this);
         GLint mipLevelToClear  = (attachment->type() == GL_TEXTURE) ? attachment->mipLevel() : 0;
-        image->clearColor(modifiedClearColorValue, mipLevelToClear, 1, commandBuffer);
+
+        // If we're clearing a cube map face ensure we only clear the selected layer.
+        image->clearColorLayer(modifiedClearColorValue, mipLevelToClear, 1,
+                               colorRenderTarget->getLayerIndex(), 1, commandBuffer);
     }
 
     return gl::NoError();
@@ -885,10 +890,7 @@ angle::Result FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
     vk::RecordingMode mode           = vk::RecordingMode::Start;
     ANGLE_TRY(getCommandBufferForDraw(contextVk, &commandBuffer, &mode));
 
-    // TODO(jmadill): Cube map attachments. http://anglebug.com/2470
-    // We assume for now that we always need to clear only 1 layer starting at the
-    // baseArrayLayer 0, this might need to change depending how we'll implement
-    // cube maps, 3d textures and array textures.
+    // The array layer is offset by the ImageView. So we shouldn't need to set a base array layer.
     VkClearRect clearRect;
     clearRect.baseArrayLayer = 0;
     clearRect.layerCount     = 1;
@@ -1187,7 +1189,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     region.imageOffset.y                   = area.y;
     region.imageOffset.z                   = 0;
     region.imageSubresource.aspectMask     = copyAspectFlags;
-    region.imageSubresource.baseArrayLayer = 0;
+    region.imageSubresource.baseArrayLayer = renderTarget->getLayerIndex();
     region.imageSubresource.layerCount     = 1;
     region.imageSubresource.mipLevel       = 0;
 

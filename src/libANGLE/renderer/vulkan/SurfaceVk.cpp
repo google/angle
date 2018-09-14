@@ -59,7 +59,7 @@ constexpr VkImageUsageFlags kSurfaceVKDepthStencilImageUsageFlags =
 }  // namespace
 
 OffscreenSurfaceVk::AttachmentImage::AttachmentImage(vk::CommandGraphResource *commandGraphResource)
-    : renderTarget(&image, &imageView, commandGraphResource)
+    : renderTarget(&image, &imageView, commandGraphResource, 0)
 {
 }
 
@@ -268,8 +268,8 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mSurface(VK_NULL_HANDLE),
       mInstance(VK_NULL_HANDLE),
       mSwapchain(VK_NULL_HANDLE),
-      mColorRenderTarget(nullptr, nullptr, this),
-      mDepthStencilRenderTarget(&mDepthStencilImage, &mDepthStencilImageView, this),
+      mColorRenderTarget(nullptr, nullptr, this, 0),
+      mDepthStencilRenderTarget(&mDepthStencilImage, &mDepthStencilImageView, this, 0),
       mCurrentSwapchainImageIndex(0)
 {
 }

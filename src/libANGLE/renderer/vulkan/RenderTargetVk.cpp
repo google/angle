@@ -17,8 +17,9 @@ namespace rx
 {
 RenderTargetVk::RenderTargetVk(vk::ImageHelper *image,
                                vk::ImageView *imageView,
-                               vk::CommandGraphResource *resource)
-    : mImage(image), mImageView(imageView), mResource(resource)
+                               vk::CommandGraphResource *resource,
+                               size_t layerIndex)
+    : mImage(image), mImageView(imageView), mResource(resource), mLayerIndex(layerIndex)
 {
 }
 
@@ -27,7 +28,10 @@ RenderTargetVk::~RenderTargetVk()
 }
 
 RenderTargetVk::RenderTargetVk(RenderTargetVk &&other)
-    : mImage(other.mImage), mImageView(other.mImageView), mResource(other.mResource)
+    : mImage(other.mImage),
+      mImageView(other.mImageView),
+      mResource(other.mResource),
+      mLayerIndex(other.mLayerIndex)
 {
 }
 

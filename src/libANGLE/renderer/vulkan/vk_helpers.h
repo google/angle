@@ -228,9 +228,16 @@ class ImageHelper final : angle::NonCopyable
                                 CommandBuffer *commandBuffer);
 
     void clearColor(const VkClearColorValue &color,
-                    uint32_t mipLevel,
+                    uint32_t baseMipLevel,
                     uint32_t levelCount,
                     CommandBuffer *commandBuffer);
+
+    void clearColorLayer(const VkClearColorValue &color,
+                         uint32_t baseMipLevel,
+                         uint32_t levelCount,
+                         uint32_t baseArrayLayer,
+                         uint32_t layerCount,
+                         CommandBuffer *commandBuffer);
 
     void clearDepthStencil(VkImageAspectFlags aspectFlags,
                            const VkClearDepthStencilValue &depthStencil,

@@ -35,7 +35,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
   public:
     RenderTargetVk(vk::ImageHelper *image,
                    vk::ImageView *imageView,
-                   vk::CommandGraphResource *resource);
+                   vk::CommandGraphResource *resource,
+                   size_t layerIndex);
     ~RenderTargetVk();
 
     // Used in std::vector initialization.
@@ -61,6 +62,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     const vk::Format &getImageFormat() const;
     const gl::Extents &getImageExtents() const;
+    size_t getLayerIndex() const { return mLayerIndex; }
 
     // Special mutator for Surface RenderTargets. Allows the Framebuffer to keep a single
     // RenderTargetVk pointer.
@@ -70,6 +72,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageHelper *mImage;
     vk::ImageView *mImageView;
     vk::CommandGraphResource *mResource;
+    size_t mLayerIndex;
 };
 
 }  // namespace rx

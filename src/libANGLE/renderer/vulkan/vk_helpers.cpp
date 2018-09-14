@@ -790,9 +790,20 @@ void ImageHelper::changeLayoutWithStages(VkImageAspectFlags aspectMask,
 }
 
 void ImageHelper::clearColor(const VkClearColorValue &color,
-                             uint32_t mipLevel,
+                             uint32_t baseMipLevel,
                              uint32_t levelCount,
                              CommandBuffer *commandBuffer)
+
+{
+    clearColorLayer(color, baseMipLevel, levelCount, 0, mLayerCount, commandBuffer);
+}
+
+void ImageHelper::clearColorLayer(const VkClearColorValue &color,
+                                  uint32_t baseMipLevel,
+                                  uint32_t levelCount,
+                                  uint32_t baseArrayLayer,
+                                  uint32_t layerCount,
+                                  CommandBuffer *commandBuffer)
 {
     ASSERT(valid());
 
@@ -802,10 +813,10 @@ void ImageHelper::clearColor(const VkClearColorValue &color,
 
     VkImageSubresourceRange range;
     range.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    range.baseMipLevel   = mipLevel;
+    range.baseMipLevel   = baseMipLevel;
     range.levelCount     = levelCount;
-    range.baseArrayLayer = 0;
-    range.layerCount     = mLayerCount;
+    range.baseArrayLayer = baseArrayLayer;
+    range.layerCount     = layerCount;
 
     commandBuffer->clearColorImage(mImage, mCurrentLayout, color, 1, &range);
 }

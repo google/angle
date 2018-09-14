@@ -429,7 +429,9 @@ PixelBuffer::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other
 
 // TextureVk implementation.
 TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
-    : TextureImpl(state), mRenderTarget(&mImage, &mBaseLevelImageView, this), mPixelBuffer(renderer)
+    : TextureImpl(state),
+      mRenderTarget(&mImage, &mBaseLevelImageView, this, 0),
+      mPixelBuffer(renderer)
 {
 }
 
@@ -1086,7 +1088,7 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
         ANGLE_TRY(mImage.initLayerImageView(contextVk, gl::TextureType::CubeMap,
                                             VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
                                             &imageView, 1, cubeMapFaceIndex, 1));
-        mCubeMapRenderTargets.emplace_back(&mImage, &imageView, this);
+        mCubeMapRenderTargets.emplace_back(&mImage, &imageView, this, cubeMapFaceIndex);
     }
     return angle::Result::Continue();
 }
