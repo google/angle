@@ -50,6 +50,23 @@
       "revId": "1f95de3de57f9ba005650218d6ba865422e2ebdf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cc35846_b2970b80",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-14T01:29:00Z",
+      "side": 1,
+      "message": "Maybe you can add DIRTY_BIT_IMAGE_TEXTURES to sync image textures. It\u0027s a little weird for me to use DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE to sync image textures.",
+      "revId": "1f95de3de57f9ba005650218d6ba865422e2ebdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19d6c4a4_084c13ac",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 754,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-14T01:29:00Z",
+      "side": 1,
+      "message": "Can you add a TODO here to sync TEXTURE_AND_SAMPLER and IMAGE_TEXTURE separately? For example, for TEXTURE_AND_SAMPLER, we only need to sync the sampler part in syncTexturesForSRVs. And for DIRTY_BIT_IMAGE_TEXTURE, we need to sync the image part in syncTexturesForSRVs and syncTexturesForUAVs.",
+      "range": {
+        "startLine": 754,
+        "startChar": 17,
+        "endLine": 754,
+        "endChar": 52
+      },
+      "revId": "35e4ed20d2a4d66aa7bff52798cbcd452134be9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
