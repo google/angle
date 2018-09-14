@@ -763,10 +763,8 @@ Error Display::createContext(const Config *configuration,
     }
 
     // This display texture sharing will allow the first context to create the texture share group.
-    // TODO(jmadill): Remove this. http://anglebug.com/2806
     bool usingDisplayTextureShareGroup =
-        attribs.get(EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE ||
-        attribs.get(EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE_OLD, EGL_FALSE) == EGL_TRUE;
+        attribs.get(EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE;
     gl::TextureManager *shareTextures = nullptr;
 
     if (usingDisplayTextureShareGroup)

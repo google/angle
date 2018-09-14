@@ -198,9 +198,7 @@ bool GetNoError(const egl::AttributeMap &attribs)
 
 bool GetWebGLContext(const egl::AttributeMap &attribs)
 {
-    // TODO(jmadill): Remove this. http://anglebug.com/2806
-    return (attribs.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) == EGL_TRUE) ||
-           (attribs.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE_OLD, EGL_FALSE) == EGL_TRUE);
+    return (attribs.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) == EGL_TRUE);
 }
 
 bool GetExtensionsEnabled(const egl::AttributeMap &attribs, bool webGLContext)
@@ -212,16 +210,7 @@ bool GetExtensionsEnabled(const egl::AttributeMap &attribs, bool webGLContext)
 
 bool GetBindGeneratesResource(const egl::AttributeMap &attribs)
 {
-    // TODO(jmadill): Remove this. http://anglebug.com/2806
-    if (attribs.contains(EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM))
-    {
-        return (attribs.get(EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM, EGL_TRUE) == EGL_TRUE);
-    }
-    else
-    {
-        return (attribs.get(EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM_OLD, EGL_TRUE) ==
-                EGL_TRUE);
-    }
+    return (attribs.get(EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM, EGL_TRUE) == EGL_TRUE);
 }
 
 bool GetClientArraysEnabled(const egl::AttributeMap &attribs)

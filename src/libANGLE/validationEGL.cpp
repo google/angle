@@ -879,8 +879,6 @@ Error ValidateCreateContext(Display *display,
                 }
                 break;
 
-            // TODO(jmadill): Remove this. http://anglebug.com/2806
-            case EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE_OLD:
             case EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE:
                 if (!display->getExtensions().createContextWebGLCompatibility)
                 {
@@ -895,8 +893,6 @@ Error ValidateCreateContext(Display *display,
                 }
                 break;
 
-            // TODO(jmadill): Remove this. http://anglebug.com/2806
-            case EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM_OLD:
             case EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM:
                 if (!display->getExtensions().createContextBindGeneratesResource)
                 {
@@ -911,8 +907,6 @@ Error ValidateCreateContext(Display *display,
                 }
                 break;
 
-            // TODO(jmadill): Remove this. http://anglebug.com/2806
-            case EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE_OLD:
             case EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE:
                 if (!display->getExtensions().displayTextureShareGroup)
                 {
