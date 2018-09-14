@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "934819f5_0587b849",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-14T14:04:28Z",
+      "side": 1,
+      "message": "No, sorry. This will affect performance. We\u0027ll need to merge other dirty bits. Path rendering could all be one dirty bit for instance.",
+      "parentUuid": "aec40448_dcd96d67",
+      "revId": "35e4ed20d2a4d66aa7bff52798cbcd452134be9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "19d6c4a4_084c13ac",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 8
