@@ -22,6 +22,52 @@
       "revId": "35e4ed20d2a4d66aa7bff52798cbcd452134be9a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e760dfa_8f197c6e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-09-14T04:35:28Z",
+      "side": 1,
+      "message": "Do you think there will be a conflict? The same for bits(DIRTY_BIT_PROGRAM_UNIFORMS and DIRTY_BIT_DRIVER_UNIFORMS), but the difference of handle functions(applyUniforms and applyComputeUniforms).",
+      "range": {
+        "startLine": 757,
+        "startChar": 12,
+        "endLine": 760,
+        "endChar": 22
+      },
+      "revId": "35e4ed20d2a4d66aa7bff52798cbcd452134be9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c995be3e_5f891aab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2018-09-14T04:35:28Z",
+      "side": 1,
+      "message": "same here?",
+      "range": {
+        "startLine": 770,
+        "startChar": 12,
+        "endLine": 771,
+        "endChar": 58
+      },
+      "revId": "35e4ed20d2a4d66aa7bff52798cbcd452134be9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
