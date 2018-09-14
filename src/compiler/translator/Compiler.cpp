@@ -671,7 +671,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-        if (compileOptions & SH_INIT_OUTPUT_VARIABLES)
+        if ((compileOptions & SH_INIT_OUTPUT_VARIABLES) && (shaderType != GL_COMPUTE_SHADER))
         {
             initializeOutputVariables(root);
         }

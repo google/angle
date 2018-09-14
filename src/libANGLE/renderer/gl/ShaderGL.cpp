@@ -51,7 +51,7 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(const gl::Context *cont
     ShCompileOptions options = SH_INIT_GL_POSITION;
 
     bool isWebGL = context->getExtensions().webglCompatibility;
-    if (isWebGL)
+    if (isWebGL && (mData.getShaderType() != gl::ShaderType::Compute))
     {
         options |= SH_INIT_OUTPUT_VARIABLES;
     }

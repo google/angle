@@ -38,18 +38,47 @@ class ShCompileTest : public testing::Test
 
     void testCompile(const char **shaderStrings, int stringCount, bool expectation)
     {
-        ShCompileOptions options      = SH_OBJECT_CODE;
+        ShCompileOptions options      = SH_OBJECT_CODE | SH_VARIABLES | SH_INIT_OUTPUT_VARIABLES;
         bool success                  = sh::Compile(mCompiler, shaderStrings, stringCount, options);
         const std::string &compileLog = sh::GetInfoLog(mCompiler);
         EXPECT_EQ(expectation, success) << compileLog;
     }
 
-  private:
     ShBuiltInResources mResources;
 
   public:
     ShHandle mCompiler;
 };
+
+class ShCompileComputeTest : public ShCompileTest
+{
+  public:
+    ShCompileComputeTest() {}
+
+  protected:
+    void SetUp() override
+    {
+        sh::InitBuiltInResources(&mResources);
+        mCompiler = sh::ConstructCompiler(GL_COMPUTE_SHADER, SH_WEBGL3_SPEC,
+                                          SH_GLSL_COMPATIBILITY_OUTPUT, &mResources);
+        ASSERT_TRUE(mCompiler != nullptr) << "Compiler could not be constructed.";
+    }
+};
+
+// Test calling sh::Compile with compute shader source string.
+TEST_F(ShCompileComputeTest, ComputeShaderString)
+{
+    constexpr char kComputeShaderString[] =
+        R"(#version 310 es
+        layout(local_size_x=1) in;
+        void main()
+        {
+        })";
+
+    const char *shaderStrings[] = {kComputeShaderString};
+
+    testCompile(shaderStrings, 1, true);
+}
 
 // Test calling sh::Compile with more than one shader source string.
 TEST_F(ShCompileTest, MultipleShaderStrings)
