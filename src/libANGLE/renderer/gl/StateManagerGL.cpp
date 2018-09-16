@@ -1997,15 +1997,11 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
                 setCoverageModulation(state.getCoverageModulation());
                 break;
-            case gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_MV:
+            case gl::State::DIRTY_BIT_PATH_RENDERING:
                 setPathRenderingModelViewMatrix(
                     state.getPathRenderingMatrix(GL_PATH_MODELVIEW_MATRIX_CHROMIUM));
-                break;
-            case gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ:
                 setPathRenderingProjectionMatrix(
                     state.getPathRenderingMatrix(GL_PATH_PROJECTION_MATRIX_CHROMIUM));
-                break;
-            case gl::State::DIRTY_BIT_PATH_RENDERING_STENCIL_STATE:
                 setPathRenderingStencilState(state.getPathStencilFunc(), state.getPathStencilRef(),
                                              state.getPathStencilMask());
                 break;
@@ -2157,7 +2153,7 @@ void StateManagerGL::setPathRenderingModelViewMatrix(const GLfloat *m)
         memcpy(mPathMatrixMV, m, sizeof(mPathMatrixMV));
         mFunctions->matrixLoadfEXT(GL_PATH_MODELVIEW_CHROMIUM, m);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_MV);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING);
     }
 }
 
@@ -2168,7 +2164,7 @@ void StateManagerGL::setPathRenderingProjectionMatrix(const GLfloat *m)
         memcpy(mPathMatrixProj, m, sizeof(mPathMatrixProj));
         mFunctions->matrixLoadfEXT(GL_PATH_PROJECTION_CHROMIUM, m);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING);
     }
 }
 
@@ -2181,7 +2177,7 @@ void StateManagerGL::setPathRenderingStencilState(GLenum func, GLint ref, GLuint
         mPathStencilMask = mask;
         mFunctions->pathStencilFuncNV(func, ref, mask);
 
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING_STENCIL_STATE);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_PATH_RENDERING);
     }
 }
 

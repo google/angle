@@ -1827,12 +1827,12 @@ void State::loadPathRenderingMatrix(GLenum matrixMode, const GLfloat *matrix)
     if (matrixMode == GL_PATH_MODELVIEW_CHROMIUM)
     {
         memcpy(mPathMatrixMV, matrix, 16 * sizeof(GLfloat));
-        mDirtyBits.set(DIRTY_BIT_PATH_RENDERING_MATRIX_MV);
+        mDirtyBits.set(DIRTY_BIT_PATH_RENDERING);
     }
     else if (matrixMode == GL_PATH_PROJECTION_CHROMIUM)
     {
         memcpy(mPathMatrixProj, matrix, 16 * sizeof(GLfloat));
-        mDirtyBits.set(DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ);
+        mDirtyBits.set(DIRTY_BIT_PATH_RENDERING);
     }
     else
     {
@@ -1860,7 +1860,7 @@ void State::setPathStencilFunc(GLenum func, GLint ref, GLuint mask)
     mPathStencilFunc = func;
     mPathStencilRef  = ref;
     mPathStencilMask = mask;
-    mDirtyBits.set(DIRTY_BIT_PATH_RENDERING_STENCIL_STATE);
+    mDirtyBits.set(DIRTY_BIT_PATH_RENDERING);
 }
 
 GLenum State::getPathStencilFunc() const

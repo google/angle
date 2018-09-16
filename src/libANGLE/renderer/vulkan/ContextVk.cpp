@@ -853,11 +853,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
                 break;
-            case gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_MV:
-                break;
-            case gl::State::DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ:
-                break;
-            case gl::State::DIRTY_BIT_PATH_RENDERING_STENCIL_STATE:
+            case gl::State::DIRTY_BIT_PATH_RENDERING:
                 break;
             case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB:
                 break;
