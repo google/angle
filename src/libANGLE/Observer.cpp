@@ -45,7 +45,7 @@ bool Subject::hasObservers() const
     return !mFastObservers.empty();
 }
 
-void Subject::addObserver(ObserverBinding *observer)
+ANGLE_INLINE void Subject::addObserver(ObserverBinding *observer)
 {
     ASSERT(!IsInContainer(mFastObservers, observer) && !IsInContainer(mSlowObservers, observer));
 
@@ -59,26 +59,39 @@ void Subject::addObserver(ObserverBinding *observer)
     }
 }
 
-void Subject::removeObserver(ObserverBinding *observer)
+ANGLE_INLINE void Subject::removeObserver(ObserverBinding *observer)
 {
-    auto iter = std::find(mFastObservers.begin(), mFastObservers.end(), observer);
-    if (iter != mFastObservers.end())
+    // TODO(jmadill): De-duplicate remove code. http://anglebug.com/2763
+    if (mSlowObservers.empty())
     {
-        size_t index = iter - mFastObservers.begin();
-        std::swap(mFastObservers[index], mFastObservers[mFastObservers.size() - 1]);
-        mFastObservers.resize(mFastObservers.size() - 1);
-        if (!mSlowObservers.empty())
+        size_t fastLen = mFastObservers.size();
+        for (size_t index = 0; index < fastLen; ++index)
         {
-            mFastObservers.push_back(mSlowObservers.back());
-            mSlowObservers.pop_back();
-            ASSERT(mFastObservers.full());
+            if (mFastObservers[index] == observer)
+            {
+                mFastObservers[index] = mFastObservers[fastLen - 1];
+                mFastObservers.pop_back();
+            }
         }
     }
     else
     {
-        auto slowIter = std::find(mSlowObservers.begin(), mSlowObservers.end(), observer);
-        ASSERT(slowIter != mSlowObservers.end());
-        mSlowObservers.erase(slowIter);
+        auto iter = std::find(mFastObservers.begin(), mFastObservers.end(), observer);
+        if (iter != mFastObservers.end())
+        {
+            size_t index = iter - mFastObservers.begin();
+            std::swap(mFastObservers[index], mFastObservers[mFastObservers.size() - 1]);
+            mFastObservers.resize(mFastObservers.size() - 1);
+            mFastObservers.push_back(mSlowObservers.back());
+            mSlowObservers.pop_back();
+            ASSERT(mFastObservers.full());
+        }
+        else
+        {
+            auto slowIter = std::find(mSlowObservers.begin(), mSlowObservers.end(), observer);
+            ASSERT(slowIter != mSlowObservers.end());
+            mSlowObservers.erase(slowIter);
+        }
     }
 }
 
