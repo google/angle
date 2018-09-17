@@ -1,0 +1,251 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cafd4fc7_a9befd2c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "maybe just make this non-static and initialize it in the constructor. that avoids having to use the lambda initializer.",
+      "range": {
+        "startLine": 531,
+        "startChar": 48,
+        "endLine": 531,
+        "endChar": 77
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bba8b77f_6ca157f3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "this will lead to a bug where the swizzles are marked clean but the graphics shaders don\u0027t have their swizzles generated. you could make a regression test for this if you have time. it would be something like\n\n- set up state both graphics and compute shaders need separate swizzles\n- dispatch compute so that mDirtySwizzles is cleared to false\n- draw with graphics so swizzles are not generated and rendering is incorrect",
+      "range": {
+        "startLine": 742,
+        "startChar": 8,
+        "endLine": 742,
+        "endChar": 22
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ee77e36_0e1001ad",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "this will have the same problem as the swizzles dirty bit. it will clear the textures dirty bit but it will not sync the textures for graphics. you could also make a regression test for this if you have time. it could go in StateChangeTest.cpp",
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d24693b1_4153f3c9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "this will have the same problem as the swizzles dirty bit. it will clear the uniforms dirty bit but it will not sync the uniforms for graphics. you could also make a regression test for this if you have time. it could go in StateChangeTest.cpp",
+      "range": {
+        "startLine": 758,
+        "startChar": 17,
+        "endLine": 758,
+        "endChar": 42
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5c39e66_aabe359c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "this will have the same problem as the swizzles dirty bit. it will clear the shaders dirty bit but it will not sync the shaders for graphics. you could also make a regression test for this if you have time. it could go in StateChangeTest.cpp",
+      "range": {
+        "startLine": 770,
+        "startChar": 17,
+        "endLine": 770,
+        "endChar": 34
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c25fe45a_b941b689",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "nit: use http://anglebug.com/1729 to shorten the links",
+      "range": {
+        "startLine": 2156,
+        "startChar": 25,
+        "endLine": 2156,
+        "endChar": 87
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "beb38cc1_7e495081",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "same. also can you tag with your username",
+      "range": {
+        "startLine": 2159,
+        "startChar": 19,
+        "endLine": 2159,
+        "endChar": 87
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dba2271_fe2e5adb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3481,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 3481,
+        "startChar": 4,
+        "endLine": 3481,
+        "endChar": 75
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f505e33_dd6bb7c3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3487,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 3487,
+        "startChar": 4,
+        "endLine": 3487,
+        "endChar": 75
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff8dc925_c87a524c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "nit: mComputeDirtyBitsMask",
+      "range": {
+        "startLine": 400,
+        "startChar": 27,
+        "endLine": 400,
+        "endChar": 55
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81e227cb_6d4eb9cd",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2196,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-17T07:09:00Z",
+      "side": 1,
+      "message": "nit: can you split this into a separate CL?",
+      "range": {
+        "startLine": 2196,
+        "startChar": 39,
+        "endLine": 2196,
+        "endChar": 63
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
