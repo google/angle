@@ -246,6 +246,30 @@
       "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5b5e67d_14872e26",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2196,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-17T07:34:55Z",
+      "side": 1,
+      "message": "Thanks. I had ever split it at https://chromium-review.googlesource.com/c/angle/angle/+/1227069.",
+      "parentUuid": "81e227cb_6d4eb9cd",
+      "range": {
+        "startLine": 2196,
+        "startChar": 39,
+        "endLine": 2196,
+        "endChar": 63
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
