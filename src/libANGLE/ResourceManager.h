@@ -166,7 +166,11 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
 {
   public:
     GLuint createTexture();
-    Texture *getTexture(GLuint handle) const;
+    Texture *getTexture(GLuint handle) const
+    {
+        ASSERT(mObjectMap.query(0) == nullptr);
+        return mObjectMap.query(handle);
+    }
 
     void signalAllTexturesDirty(const Context *context) const;
 

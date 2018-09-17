@@ -972,11 +972,6 @@ Buffer *Context::getBuffer(GLuint handle) const
     return mState.mBuffers->getBuffer(handle);
 }
 
-Texture *Context::getTexture(GLuint handle) const
-{
-    return mState.mTextures->getTexture(handle);
-}
-
 Renderbuffer *Context::getRenderbuffer(GLuint handle) const
 {
     return mState.mRenderbuffers->getRenderbuffer(handle);
