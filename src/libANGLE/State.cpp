@@ -1033,6 +1033,12 @@ Texture *State::getTargetTexture(TextureType type) const
     return getSamplerTexture(static_cast<unsigned int>(mActiveSampler), type);
 }
 
+Texture *State::getSamplerTexture(unsigned int sampler, TextureType type) const
+{
+    ASSERT(sampler < mSamplerTextures[type].size());
+    return mSamplerTextures[type][sampler].get();
+}
+
 GLuint State::getSamplerTextureId(unsigned int sampler, TextureType type) const
 {
     ASSERT(sampler < mSamplerTextures[type].size());

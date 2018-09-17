@@ -162,7 +162,10 @@ class State : angle::NonCopyable
     void setFragmentShaderDerivativeHint(GLenum hint);
 
     // GL_CHROMIUM_bind_generates_resource
-    bool isBindGeneratesResourceEnabled() const { return mBindGeneratesResource; }
+    bool isBindGeneratesResourceEnabled() const
+    {
+        return mBindGeneratesResource;
+    }
 
     // GL_ANGLE_client_arrays
     bool areClientArraysEnabled() const;
@@ -176,13 +179,7 @@ class State : angle::NonCopyable
     unsigned int getActiveSampler() const;
     void setSamplerTexture(const Context *context, TextureType type, Texture *texture);
     Texture *getTargetTexture(TextureType type) const;
-
-    Texture *getSamplerTexture(unsigned int sampler, TextureType type) const
-    {
-        ASSERT(sampler < mSamplerTextures[type].size());
-        return mSamplerTextures[type][sampler].get();
-    }
-
+    Texture *getSamplerTexture(unsigned int sampler, TextureType type) const;
     GLuint getSamplerTextureId(unsigned int sampler, TextureType type) const;
     void detachTexture(const Context *context, const TextureMap &zeroTextures, GLuint texture);
     void initializeZeroTextures(const Context *context, const TextureMap &zeroTextures);

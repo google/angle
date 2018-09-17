@@ -2981,6 +2981,20 @@ bool ValidateFlushMappedBufferRangeEXT(Context *context,
 
 bool ValidateBindTexture(Context *context, TextureType target, GLuint texture)
 {
+    Texture *textureObject = context->getTexture(texture);
+    if (textureObject && textureObject->getType() != target && texture != 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), TypeMismatch);
+        return false;
+    }
+
+    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+        !context->isTextureGenerated(texture))
+    {
+        context->handleError(InvalidOperation() << "Texture was not generated");
+        return false;
+    }
+
     switch (target)
     {
         case TextureType::_2D:
@@ -3030,25 +3044,6 @@ bool ValidateBindTexture(Context *context, TextureType target, GLuint texture)
         default:
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
             return false;
-    }
-
-    if (texture == 0)
-    {
-        return true;
-    }
-
-    Texture *textureObject = context->getTexture(texture);
-    if (textureObject && textureObject->getType() != target)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), TypeMismatch);
-        return false;
-    }
-
-    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
-        !context->isTextureGenerated(texture))
-    {
-        context->handleError(InvalidOperation() << "Texture was not generated");
-        return false;
     }
 
     return true;

@@ -2774,18 +2774,7 @@ class TextureLimitsTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-
-        glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mMaxVertexTextures);
-        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &mMaxFragmentTextures);
-        glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &mMaxCombinedTextures);
-
-        ASSERT_GL_NO_ERROR();
-    }
-
-    void TearDown() override
+    ~TextureLimitsTest()
     {
         if (mProgram != 0)
         {
@@ -2797,8 +2786,17 @@ class TextureLimitsTest : public ANGLETest
                 glDeleteTextures(static_cast<GLsizei>(mTextures.size()), &mTextures[0]);
             }
         }
+    }
 
-        ANGLETest::TearDown();
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mMaxVertexTextures);
+        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &mMaxFragmentTextures);
+        glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &mMaxCombinedTextures);
+
+        ASSERT_GL_NO_ERROR();
     }
 
     void compileProgramWithTextureCounts(const std::string &vertexPrefix,

@@ -474,8 +474,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Buffer *getBuffer(GLuint handle) const;
     FenceNV *getFenceNV(GLuint handle);
     Sync *getSync(GLsync handle) const;
-    Texture *getTexture(GLuint handle) const { return mState.mTextures->getTexture(handle); }
-
+    Texture *getTexture(GLuint handle) const;
     Framebuffer *getFramebuffer(GLuint handle) const;
     Renderbuffer *getRenderbuffer(GLuint handle) const;
     VertexArray *getVertexArray(GLuint handle) const;

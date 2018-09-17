@@ -242,6 +242,12 @@ GLuint TextureManager::createTexture()
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
+Texture *TextureManager::getTexture(GLuint handle) const
+{
+    ASSERT(mObjectMap.query(0) == nullptr);
+    return mObjectMap.query(handle);
+}
+
 void TextureManager::signalAllTexturesDirty(const Context *context) const
 {
     for (const auto &texture : mObjectMap)

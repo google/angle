@@ -3232,12 +3232,12 @@ TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDepthStencil)
     // Create textures and allocate storage
     GLTexture tex0;
     GLTexture tex1;
-    GLTexture tex2;
+    GLRenderbuffer rb;
     FillTexture2D(tex0.get(), width, height, GLColor::black, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
     FillTexture2D(tex1.get(), width, height, 0x80, 0, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT,
                   GL_UNSIGNED_INT);
-    FillTexture2D(tex2.get(), width, height, 0x40, 0, GL_DEPTH_STENCIL, GL_DEPTH_STENCIL,
-                  GL_UNSIGNED_INT_24_8);
+    glBindRenderbuffer(GL_RENDERBUFFER, rb.get());
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, width, height);
     ASSERT_GL_NO_ERROR();
 
     GLFramebuffer fbo;
@@ -3252,7 +3252,7 @@ TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDepthStencil)
     // The same image is used as depth buffer during rendering.
     glEnable(GL_DEPTH_TEST);
     drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Same image as depth buffer should fail";
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // The same image is used as depth buffer. But depth mask is false.
     glDepthMask(GL_FALSE);
@@ -3266,9 +3266,9 @@ TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDepthStencil)
     EXPECT_GL_NO_ERROR();
 
     // Test rendering and sampling feedback loop for stencil buffer
-    glBindTexture(GL_TEXTURE_2D, tex2.get());
+    glBindTexture(GL_RENDERBUFFER, rb.get());
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, tex2.get(), 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rb.get());
     ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
     constexpr GLint stencilClearValue = 0x40;
     glClearBufferiv(GL_STENCIL, 0, &stencilClearValue);
@@ -3276,7 +3276,7 @@ TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDepthStencil)
     // The same image is used as stencil buffer during rendering.
     glEnable(GL_STENCIL_TEST);
     drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Same image as stencil buffer should fail";
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // The same image is used as stencil buffer. But stencil mask is zero.
     glStencilMask(0x0);
