@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "be947f3a_9f59f0d0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cafd4fc7_a9befd2c",
+      "range": {
+        "startLine": 531,
+        "startChar": 48,
+        "endLine": 531,
+        "endChar": 77
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bba8b77f_6ca157f3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2018-09-17T07:09:00Z",
       "side": 1,
       "message": "this will lead to a bug where the swizzles are marked clean but the graphics shaders don\u0027t have their swizzles generated. you could make a regression test for this if you have time. it would be something like\n\n- set up state both graphics and compute shaders need separate swizzles\n- dispatch compute so that mDirtySwizzles is cleared to false\n- draw with graphics so swizzles are not generated and rendering is incorrect",
+      "range": {
+        "startLine": 742,
+        "startChar": 8,
+        "endLine": 742,
+        "endChar": 22
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc87b5ed_c6eb432e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "When we switch between compute and rendering pipelines, the active program must change as well. This leads to the invalidation of gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE. Currently when synchronizing this bit, we force to invalidate all the textures, and samplers, uniforms and shaders states. Hence we can ensure the correctness for switching pipelines in such cases.",
+      "parentUuid": "bba8b77f_6ca157f3",
       "range": {
         "startLine": 742,
         "startChar": 8,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "da52d117_0b56710a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Same as swizzles.",
+      "parentUuid": "7ee77e36_0e1001ad",
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d24693b1_4153f3c9",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 10
@@ -76,6 +142,30 @@
       "writtenOn": "2018-09-17T07:09:00Z",
       "side": 1,
       "message": "this will have the same problem as the swizzles dirty bit. it will clear the uniforms dirty bit but it will not sync the uniforms for graphics. you could also make a regression test for this if you have time. it could go in StateChangeTest.cpp",
+      "range": {
+        "startLine": 758,
+        "startChar": 17,
+        "endLine": 758,
+        "endChar": 42
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12aec650_a4785703",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Same too.",
+      "parentUuid": "d24693b1_4153f3c9",
       "range": {
         "startLine": 758,
         "startChar": 17,
@@ -111,6 +201,53 @@
     },
     {
       "key": {
+        "uuid": "e63866bb_046389a0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Same too.",
+      "parentUuid": "e5c39e66_aabe359c",
+      "range": {
+        "startLine": 770,
+        "startChar": 17,
+        "endLine": 770,
+        "endChar": 34
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e91772a5_e7cea0e1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Force to invalidate all states here.",
+      "range": {
+        "startLine": 1061,
+        "startChar": 1,
+        "endLine": 1070,
+        "endChar": 43
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c25fe45a_b941b689",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 10
@@ -131,6 +268,30 @@
       "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd13d371_34817c63",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2156,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c25fe45a_b941b689",
+      "range": {
+        "startLine": 2156,
+        "startChar": 25,
+        "endLine": 2156,
+        "endChar": 87
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +318,30 @@
     },
     {
       "key": {
+        "uuid": "5fc0cbdf_560589db",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2159,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "beb38cc1_7e495081",
+      "range": {
+        "startLine": 2159,
+        "startChar": 19,
+        "endLine": 2159,
+        "endChar": 87
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dba2271_fe2e5adb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 10
@@ -177,6 +362,30 @@
       "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7242b9ac_f195a9d5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3481,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dba2271_fe2e5adb",
+      "range": {
+        "startLine": 3481,
+        "startChar": 4,
+        "endLine": 3481,
+        "endChar": 75
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -203,6 +412,30 @@
     },
     {
       "key": {
+        "uuid": "3f2c2b08_3fc1b034",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3487,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f505e33_dd6bb7c3",
+      "range": {
+        "startLine": 3487,
+        "startChar": 4,
+        "endLine": 3487,
+        "endChar": 75
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff8dc925_c87a524c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 10
@@ -223,6 +456,30 @@
       "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b573656f_1c730c68",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2018-09-18T12:22:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff8dc925_c87a524c",
+      "range": {
+        "startLine": 400,
+        "startChar": 27,
+        "endLine": 400,
+        "endChar": 55
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
