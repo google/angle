@@ -19,6 +19,8 @@ class DisplayVkAndroid : public DisplayVk
   public:
     DisplayVkAndroid(const egl::DisplayState &state);
 
+    egl::Error initialize(egl::Display *display) override;
+
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
 
     SurfaceImpl *createWindowSurfaceVk(const egl::SurfaceState &state,

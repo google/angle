@@ -6,6 +6,9 @@
 
 // DisplayAndroid.cpp: Android implementation of egl::Display
 
+#include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
+
+#include <android/log.h>
 #include <android/native_window.h>
 
 #include "common/debug.h"
@@ -19,7 +22,6 @@
 #include "libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h"
 #include "libANGLE/renderer/gl/egl/RendererEGL.h"
 #include "libANGLE/renderer/gl/egl/WindowSurfaceEGL.h"
-#include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace
@@ -161,7 +163,11 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
         return egl::EglNotInitialized() << "OpenGL ES 2.0 is not supportable.";
     }
 
-    return DisplayGL::initialize(display);
+    ANGLE_TRY(DisplayGL::initialize(display));
+
+    std::string rendererDescription = mRenderer->getRendererDescription();
+    __android_log_print(ANDROID_LOG_INFO, "ANGLE", "%s", rendererDescription.c_str());
+    return egl::NoError();
 }
 
 void DisplayAndroid::terminate()
