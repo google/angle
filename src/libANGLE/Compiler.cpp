@@ -99,6 +99,10 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.MinProgramTexelOffset   = caps.minProgramTexelOffset;
     mResources.MaxProgramTexelOffset   = caps.maxProgramTexelOffset;
 
+    // EXT_blend_func_extended
+    mResources.EXT_blend_func_extended  = extensions.blendFuncExtended;
+    mResources.MaxDualSourceDrawBuffers = extensions.maxDualSourceDrawBuffers;
+
     // GLSL ES 3.1 constants
     mResources.MaxProgramTextureGatherOffset    = caps.maxProgramTextureGatherOffset;
     mResources.MinProgramTextureGatherOffset    = caps.minProgramTextureGatherOffset;

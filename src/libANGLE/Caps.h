@@ -432,6 +432,10 @@ struct Extensions
 
     // GL_ANGLE_multiview_multisample
     bool multiviewMultisample;
+
+    // GL_EXT_blend_func_extended
+    bool blendFuncExtended;
+    GLuint maxDualSourceDrawBuffers;
 };
 
 struct ExtensionInfo

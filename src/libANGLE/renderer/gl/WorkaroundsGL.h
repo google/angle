@@ -152,6 +152,12 @@ struct WorkaroundsGL
     // GLSL user-defined function have incorrect results. Rewrite this type of statements to fix
     // this.
     bool rewriteRepeatedAssignToSwizzled = false;
+
+    // On some AMD and Intel GL drivers ARB_blend_func_extended does not pass the tests.
+    // It might be possible to work around the Intel bug by rewriting *FragData to *FragColor
+    // instead of disabling the functionality entirely. The AMD bug looked like incorrect blending,
+    // not sure if a workaround is feasible. http://anglebug.com/1085
+    bool disableBlendFuncExtended = false;
 };
 
 inline WorkaroundsGL::WorkaroundsGL() = default;

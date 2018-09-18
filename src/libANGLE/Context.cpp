@@ -1854,6 +1854,11 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             *params = mGLState.getMaxShaderCompilerThreads();
             break;
 
+        // GL_EXT_blend_func_extended
+        case GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT:
+            *params = mExtensions.maxDualSourceDrawBuffers;
+            break;
+
         default:
             handleError(mGLState.getIntegerv(this, pname, params));
             break;
@@ -3176,6 +3181,11 @@ Extensions Context::generateSupportedExtensions() const
     {
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
         // supportedExtensions.sRGB = false;
+
+        // EXT_blend_func_extended is only implemented against GLES2 now
+        // TODO(http://anglebug.com/1085): remove this limitation once GLES3 binding API for the
+        // outputs is in place.
+        supportedExtensions.blendFuncExtended = false;
     }
 
     // Some extensions are always available because they are implemented in the GL layer.
@@ -7197,6 +7207,13 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
     }
 
     if (getExtensions().parallelShaderCompile && pname == GL_MAX_SHADER_COMPILER_THREADS_KHR)
+    {
+        *type      = GL_INT;
+        *numParams = 1;
+        return true;
+    }
+
+    if (getExtensions().blendFuncExtended && pname == GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT)
     {
         *type      = GL_INT;
         *numParams = 1;

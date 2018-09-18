@@ -7,6 +7,7 @@ angle_end2end_tests_sources = [
   "gl_tests/AttributeLayoutTest.cpp",
   "gl_tests/BindGeneratesResourceTest.cpp",
   "gl_tests/BindUniformLocationTest.cpp",
+  "gl_tests/BlendFuncExtendedTest.cpp",
   "gl_tests/BlendMinMaxTest.cpp",
   "gl_tests/BlitFramebufferANGLETest.cpp",
   "gl_tests/BufferDataTest.cpp",
