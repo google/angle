@@ -12,6 +12,7 @@
 #define LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_
 
 #include "common/Color.h"
+#include "common/FixedVector.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx

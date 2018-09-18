@@ -42,70 +42,36 @@ Subject::~Subject()
 
 bool Subject::hasObservers() const
 {
-    return !mFastObservers.empty();
+    return !mObservers.empty();
 }
 
 ANGLE_INLINE void Subject::addObserver(ObserverBinding *observer)
 {
-    ASSERT(!IsInContainer(mFastObservers, observer) && !IsInContainer(mSlowObservers, observer));
-
-    if (!mFastObservers.full())
-    {
-        mFastObservers.push_back(observer);
-    }
-    else
-    {
-        mSlowObservers.push_back(observer);
-    }
+    ASSERT(!IsInContainer(mObservers, observer));
+    mObservers.push_back(observer);
 }
 
 ANGLE_INLINE void Subject::removeObserver(ObserverBinding *observer)
 {
-    // TODO(jmadill): De-duplicate remove code. http://anglebug.com/2763
-    if (mSlowObservers.empty())
+    ASSERT(IsInContainer(mObservers, observer));
+    size_t len = mObservers.size() - 1;
+    for (size_t index = 0; index < len; ++index)
     {
-        size_t fastLen = mFastObservers.size();
-        for (size_t index = 0; index < fastLen; ++index)
+        if (mObservers[index] == observer)
         {
-            if (mFastObservers[index] == observer)
-            {
-                mFastObservers[index] = mFastObservers[fastLen - 1];
-                mFastObservers.pop_back();
-            }
+            mObservers[index] = mObservers[len];
+            break;
         }
     }
-    else
-    {
-        auto iter = std::find(mFastObservers.begin(), mFastObservers.end(), observer);
-        if (iter != mFastObservers.end())
-        {
-            size_t index = iter - mFastObservers.begin();
-            std::swap(mFastObservers[index], mFastObservers[mFastObservers.size() - 1]);
-            mFastObservers.resize(mFastObservers.size() - 1);
-            mFastObservers.push_back(mSlowObservers.back());
-            mSlowObservers.pop_back();
-            ASSERT(mFastObservers.full());
-        }
-        else
-        {
-            auto slowIter = std::find(mSlowObservers.begin(), mSlowObservers.end(), observer);
-            ASSERT(slowIter != mSlowObservers.end());
-            mSlowObservers.erase(slowIter);
-        }
-    }
+    mObservers.pop_back();
 }
 
 void Subject::onStateChange(const gl::Context *context, SubjectMessage message) const
 {
-    if (mFastObservers.empty())
+    if (mObservers.empty())
         return;
 
-    for (const angle::ObserverBinding *receiver : mFastObservers)
-    {
-        receiver->onStateChange(context, message);
-    }
-
-    for (const angle::ObserverBinding *receiver : mSlowObservers)
+    for (const angle::ObserverBinding *receiver : mObservers)
     {
         receiver->onStateChange(context, message);
     }
@@ -113,17 +79,11 @@ void Subject::onStateChange(const gl::Context *context, SubjectMessage message) 
 
 void Subject::resetObservers()
 {
-    for (angle::ObserverBinding *observer : mFastObservers)
+    for (angle::ObserverBinding *observer : mObservers)
     {
         observer->onSubjectReset();
     }
-    mFastObservers.clear();
-
-    for (angle::ObserverBinding *observer : mSlowObservers)
-    {
-        observer->onSubjectReset();
-    }
-    mSlowObservers.clear();
+    mObservers.clear();
 }
 
 // ObserverBinding implementation.
