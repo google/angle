@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "59e92a74_4ff3786f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-18T12:27:18Z",
+      "side": 1,
+      "message": "OK, good point.",
+      "parentUuid": "dc87b5ed_c6eb432e",
+      "range": {
+        "startLine": 742,
+        "startChar": 8,
+        "endLine": 742,
+        "endChar": 22
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ee77e36_0e1001ad",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 10
@@ -128,6 +152,24 @@
       "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3359351f_deef66fa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-18T12:27:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "da52d117_0b56710a",
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -178,6 +220,30 @@
     },
     {
       "key": {
+        "uuid": "016ab70c_9cd558ca",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-18T12:27:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "12aec650_a4785703",
+      "range": {
+        "startLine": 758,
+        "startChar": 17,
+        "endLine": 758,
+        "endChar": 42
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5c39e66_aabe359c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 10
@@ -225,6 +291,30 @@
     },
     {
       "key": {
+        "uuid": "0ee2a9ca_428cf554",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-18T12:27:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e63866bb_046389a0",
+      "range": {
+        "startLine": 770,
+        "startChar": 17,
+        "endLine": 770,
+        "endChar": 34
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e91772a5_e7cea0e1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 10
@@ -245,6 +335,30 @@
       "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa899ea5_b0c7f38e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-18T12:27:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e91772a5_e7cea0e1",
+      "range": {
+        "startLine": 1061,
+        "startChar": 1,
+        "endLine": 1070,
+        "endChar": 43
+      },
+      "revId": "16abf2fba74e121f0dac1f50b7111a2439c62821",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
