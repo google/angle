@@ -5,6 +5,7 @@
 libangle_common_sources = [
   "src/common/Color.h",
   "src/common/Color.inl",
+  "src/common/FastVector.h",
   "src/common/FixedVector.h",
   "src/common/Float16ToFloat32.cpp",
   "src/common/MemoryBuffer.cpp",
