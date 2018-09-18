@@ -50,8 +50,6 @@ class RenderbufferD3D : public RenderbufferImpl
                                  const gl::ImageIndex &imageIndex) override;
 
   private:
-    void deleteRenderTarget(const gl::Context *context);
-
     RendererD3D *mRenderer;
     RenderTargetD3D *mRenderTarget;
     EGLImageD3D *mImage;

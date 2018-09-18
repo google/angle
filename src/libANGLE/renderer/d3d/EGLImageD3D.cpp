@@ -79,10 +79,10 @@ gl::Error EGLImageD3D::copyToLocalRendertarget(const gl::Context *context)
     RenderTargetD3D *curRenderTarget = nullptr;
     ANGLE_TRY(getRenderTarget(context, &curRenderTarget));
 
-    // This only currently applies do D3D11, where it invalidates FBOs with this Image attached.
+    // Invalidate FBOs with this Image attached. Only currently applies to D3D11.
     for (egl::ImageSibling *target : mState.targets)
     {
-        target->getSubject()->onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+        target->getSubject()->onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
     }
 
     return mRenderer->createRenderTargetCopy(context, curRenderTarget, &mRenderTarget);

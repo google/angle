@@ -1225,8 +1225,6 @@ void TextureVk::releaseImage(const gl::Context *context, RendererVk *renderer)
     }
     mCubeMapFaceImageViews.clear();
     mCubeMapRenderTargets.clear();
-
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 }
 
 uint32_t TextureVk::getLevelCount() const

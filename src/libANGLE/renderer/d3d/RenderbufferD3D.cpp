@@ -29,7 +29,7 @@ RenderbufferD3D::~RenderbufferD3D()
 
 gl::Error RenderbufferD3D::onDestroy(const gl::Context *context)
 {
-    deleteRenderTarget(context);
+    SafeDelete(mRenderTarget);
     return gl::NoError();
 }
 
@@ -74,7 +74,7 @@ gl::Error RenderbufferD3D::setStorageMultisample(const gl::Context *context,
                                             static_cast<int>(height), creationFormat,
                                             static_cast<GLsizei>(samples), &newRT));
 
-    deleteRenderTarget(context);
+    SafeDelete(mRenderTarget);
     mImage        = nullptr;
     mRenderTarget = newRT;
 
@@ -84,7 +84,7 @@ gl::Error RenderbufferD3D::setStorageMultisample(const gl::Context *context,
 gl::Error RenderbufferD3D::setStorageEGLImageTarget(const gl::Context *context, egl::Image *image)
 {
     mImage = GetImplAs<EGLImageD3D>(image);
-    deleteRenderTarget(context);
+    SafeDelete(mRenderTarget);
 
     return gl::NoError();
 }
@@ -109,15 +109,6 @@ gl::Error RenderbufferD3D::getAttachmentRenderTarget(const gl::Context *context,
                                                      FramebufferAttachmentRenderTarget **rtOut)
 {
     return getRenderTarget(context, reinterpret_cast<RenderTargetD3D **>(rtOut));
-}
-
-void RenderbufferD3D::deleteRenderTarget(const gl::Context *context)
-{
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
-    if (mRenderTarget)
-    {
-        SafeDelete(mRenderTarget);
-    }
 }
 
 gl::Error RenderbufferD3D::initializeContents(const gl::Context *context,

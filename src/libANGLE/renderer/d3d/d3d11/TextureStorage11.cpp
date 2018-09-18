@@ -981,8 +981,6 @@ angle::Result TextureStorage11_2D::copyToStorage(const gl::Context *context,
 angle::Result TextureStorage11_2D::useLevelZeroWorkaroundTexture(const gl::Context *context,
                                                                  bool useLevelZeroTexture)
 {
-    bool lastSetting = mUseLevelZeroTexture;
-
     if (useLevelZeroTexture && mMipLevels > 1)
     {
         if (!mUseLevelZeroTexture && mTexture.valid())
@@ -1012,12 +1010,6 @@ angle::Result TextureStorage11_2D::useLevelZeroWorkaroundTexture(const gl::Conte
         }
 
         mUseLevelZeroTexture = false;
-    }
-
-    if (lastSetting != mUseLevelZeroTexture)
-    {
-        ASSERT(mSubject);
-        mSubject->onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
     }
 
     return angle::Result::Continue();

@@ -37,7 +37,7 @@ class ImageD3D;
 class TextureStorage : angle::NonCopyable
 {
   public:
-    TextureStorage() : mSubject(nullptr) {}
+    TextureStorage() {}
     virtual ~TextureStorage() {}
 
     virtual angle::Result onDestroy(const gl::Context *context);
@@ -69,9 +69,6 @@ class TextureStorage : angle::NonCopyable
     virtual angle::Result useLevelZeroWorkaroundTexture(const gl::Context *context,
                                                         bool useLevelZeroTexture);
 
-    // Only used for D3D11.
-    void setSubject(const angle::Subject *subject);
-
   protected:
     const angle::Subject *mSubject;
 };
@@ -85,11 +82,6 @@ inline angle::Result TextureStorage::useLevelZeroWorkaroundTexture(const gl::Con
                                                                    bool useLevelZeroTexture)
 {
     return angle::Result::Continue();
-}
-
-inline void TextureStorage::setSubject(const angle::Subject *subject)
-{
-    mSubject = subject;
 }
 
 using TexStoragePointer = angle::UniqueObjectPointer<TextureStorage, gl::Context>;

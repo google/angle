@@ -40,8 +40,6 @@ gl::Error RenderbufferVk::onDestroy(const gl::Context *context)
     mImage.release(renderer->getCurrentQueueSerial(), renderer);
     renderer->releaseObject(getStoredQueueSerial(), &mImageView);
 
-    onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
-
     return gl::NoError();
 }
 
@@ -63,7 +61,6 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
         {
             mImage.release(renderer->getCurrentQueueSerial(), renderer);
             renderer->releaseObject(getStoredQueueSerial(), &mImageView);
-            onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
         }
     }
 

@@ -1828,13 +1828,11 @@ void Framebuffer::onSubjectStateChange(const Context *context,
                                        angle::SubjectIndex index,
                                        angle::SubjectMessage message)
 {
-    if (message == angle::SubjectMessage::DEPENDENT_DIRTY_BITS)
-    {
-        ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(index));
-        mDirtyBits.set(index);
-        onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
-        return;
-    }
+    ASSERT(message == angle::SubjectMessage::STORAGE_CHANGED);
+
+    ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(index));
+    mDirtyBits.set(index);
+    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
 
     invalidateCompletenessCache(context);
 
