@@ -180,6 +180,8 @@ class StateManagerGL final : angle::NonCopyable
         const gl::Program *program,
         const gl::FramebufferState &drawFramebufferState) const;
 
+    GLuint getVertexArrayID() const { return mVAO; }
+
   private:
     // Set state that's common among draw commands and compute invocations.
     void setGenericShaderState(const gl::Context *context);

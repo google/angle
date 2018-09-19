@@ -730,6 +730,11 @@ void VertexArrayGL::applyNumViewsToDivisor(int numViews)
 void VertexArrayGL::applyActiveAttribLocationsMask(const gl::AttributesMask &activeMask)
 {
     gl::AttributesMask updateMask     = mProgramActiveAttribLocationsMask ^ activeMask;
+    if (!updateMask.any())
+    {
+        return;
+    }
+    ASSERT(mVertexArrayID == mStateManager->getVertexArrayID());
     mProgramActiveAttribLocationsMask = activeMask;
 
     for (size_t attribIndex : updateMask)
