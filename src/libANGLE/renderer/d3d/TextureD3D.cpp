@@ -1080,7 +1080,7 @@ gl::Error TextureD3D_2D::copyTexture(const gl::Context *context,
     ANGLE_TRY(redefineImage(context, index.getLevelIndex(), internalFormatInfo.sizedInternalFormat,
                             size, false));
 
-    gl::Rectangle sourceRect(0, 0, size.width, size.height);
+    gl::Box sourceBox(0, 0, 0, size.width, size.height, 1);
     gl::Offset destOffset(0, 0, 0);
 
     if (!isSRGB(index.getLevelIndex()) && canCreateRenderTargetForImage(index))
@@ -1090,9 +1090,10 @@ gl::Error TextureD3D_2D::copyTexture(const gl::Context *context,
         ANGLE_TRY(updateStorageLevel(context, index.getLevelIndex()));
 
         ANGLE_TRY(mRenderer->copyTexture(
-            context, source, static_cast<GLint>(sourceLevel), sourceRect, internalFormatInfo.format,
-            internalFormatInfo.type, destOffset, mTexStorage, index.getTarget(),
-            index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+            context, source, static_cast<GLint>(sourceLevel), gl::TextureTarget::_2D, sourceBox,
+            internalFormatInfo.format, internalFormatInfo.type, destOffset, mTexStorage,
+            index.getTarget(), index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha));
     }
     else
     {
@@ -1104,7 +1105,7 @@ gl::Error TextureD3D_2D::copyTexture(const gl::Context *context,
         ImageD3D *destImage           = nullptr;
         ANGLE_TRY(getImageAndSyncFromStorage(context, index, &destImage));
 
-        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceRect, destOffset,
+        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
 
         mDirtyImages = true;
@@ -1120,7 +1121,7 @@ gl::Error TextureD3D_2D::copySubTexture(const gl::Context *context,
                                         const gl::ImageIndex &index,
                                         const gl::Offset &destOffset,
                                         size_t sourceLevel,
-                                        const gl::Rectangle &sourceArea,
+                                        const gl::Box &sourceBox,
                                         bool unpackFlipY,
                                         bool unpackPremultiplyAlpha,
                                         bool unpackUnmultiplyAlpha,
@@ -1137,9 +1138,10 @@ gl::Error TextureD3D_2D::copySubTexture(const gl::Context *context,
         const gl::InternalFormat &internalFormatInfo =
             gl::GetSizedInternalFormatInfo(getInternalFormat(index.getLevelIndex()));
         ANGLE_TRY(mRenderer->copyTexture(
-            context, source, static_cast<GLint>(sourceLevel), sourceArea, internalFormatInfo.format,
-            internalFormatInfo.type, destOffset, mTexStorage, index.getTarget(),
-            index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+            context, source, static_cast<GLint>(sourceLevel), gl::TextureTarget::_2D, sourceBox,
+            internalFormatInfo.format, internalFormatInfo.type, destOffset, mTexStorage,
+            index.getTarget(), index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha));
     }
     else
     {
@@ -1151,12 +1153,12 @@ gl::Error TextureD3D_2D::copySubTexture(const gl::Context *context,
         ImageD3D *destImage           = nullptr;
         ANGLE_TRY(getImageAndSyncFromStorage(context, index, &destImage));
 
-        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceArea, destOffset,
+        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
 
         mDirtyImages = true;
 
-        gl::Box destRegion(destOffset.x, destOffset.y, 0, sourceArea.width, sourceArea.height, 1);
+        gl::Box destRegion(destOffset.x, destOffset.y, 0, sourceBox.width, sourceBox.height, 1);
         ANGLE_TRY(commitRegion(context, index, destRegion));
     }
 
@@ -1827,19 +1829,21 @@ gl::Error TextureD3D_Cube::copyTexture(const gl::Context *context,
     ANGLE_TRY(redefineImage(context, faceIndex, index.getLevelIndex(),
                             internalFormatInfo.sizedInternalFormat, size, false));
 
-    gl::Rectangle sourceRect(0, 0, size.width, size.height);
+    gl::Box sourceBox(0, 0, 0, size.width, size.height, 1);
     gl::Offset destOffset(0, 0, 0);
 
     if (!isSRGB(index.getLevelIndex(), faceIndex) && canCreateRenderTargetForImage(index))
     {
+
         ANGLE_TRY(ensureRenderTarget(context));
         ASSERT(isValidFaceLevel(faceIndex, index.getLevelIndex()));
         ANGLE_TRY(updateStorageFaceLevel(context, faceIndex, index.getLevelIndex()));
 
         ANGLE_TRY(mRenderer->copyTexture(
-            context, source, static_cast<GLint>(sourceLevel), sourceRect, internalFormatInfo.format,
-            internalFormatInfo.type, destOffset, mTexStorage, index.getTarget(),
-            index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+            context, source, static_cast<GLint>(sourceLevel), gl::TextureTarget::_2D, sourceBox,
+            internalFormatInfo.format, internalFormatInfo.type, destOffset, mTexStorage,
+            index.getTarget(), index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha));
     }
     else
     {
@@ -1851,7 +1855,7 @@ gl::Error TextureD3D_Cube::copyTexture(const gl::Context *context,
         ImageD3D *destImage = nullptr;
         ANGLE_TRY(getImageAndSyncFromStorage(context, index, &destImage));
 
-        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceRect, destOffset,
+        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
 
         mDirtyImages = true;
@@ -1867,7 +1871,7 @@ gl::Error TextureD3D_Cube::copySubTexture(const gl::Context *context,
                                           const gl::ImageIndex &index,
                                           const gl::Offset &destOffset,
                                           size_t sourceLevel,
-                                          const gl::Rectangle &sourceArea,
+                                          const gl::Box &sourceBox,
                                           bool unpackFlipY,
                                           bool unpackPremultiplyAlpha,
                                           bool unpackUnmultiplyAlpha,
@@ -1886,9 +1890,10 @@ gl::Error TextureD3D_Cube::copySubTexture(const gl::Context *context,
         const gl::InternalFormat &internalFormatInfo =
             gl::GetSizedInternalFormatInfo(getInternalFormat(index.getLevelIndex(), faceIndex));
         ANGLE_TRY(mRenderer->copyTexture(
-            context, source, static_cast<GLint>(sourceLevel), sourceArea, internalFormatInfo.format,
-            internalFormatInfo.type, destOffset, mTexStorage, index.getTarget(),
-            index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+            context, source, static_cast<GLint>(sourceLevel), gl::TextureTarget::_2D, sourceBox,
+            internalFormatInfo.format, internalFormatInfo.type, destOffset, mTexStorage,
+            index.getTarget(), index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha));
     }
     else
     {
@@ -1900,12 +1905,12 @@ gl::Error TextureD3D_Cube::copySubTexture(const gl::Context *context,
         ImageD3D *destImage = nullptr;
         ANGLE_TRY(getImageAndSyncFromStorage(context, index, &destImage));
 
-        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceArea, destOffset,
+        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
 
         mDirtyImages = true;
 
-        gl::Box destRegion(destOffset.x, destOffset.y, 0, sourceArea.width, sourceArea.height, 1);
+        gl::Box destRegion(destOffset.x, destOffset.y, 0, sourceBox.width, sourceBox.height, 1);
         ANGLE_TRY(commitRegion(context, index, destRegion));
     }
 
@@ -2358,6 +2363,11 @@ bool TextureD3D_3D::isDepth(GLint level) const
     return gl::GetSizedInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
+bool TextureD3D_3D::isSRGB(GLint level) const
+{
+    return gl::GetSizedInternalFormatInfo(getInternalFormat(level)).colorEncoding == GL_SRGB;
+}
+
 gl::Error TextureD3D_3D::setEGLImageTarget(const gl::Context *context,
                                            gl::TextureType type,
                                            egl::Image *image)
@@ -2518,6 +2528,117 @@ gl::Error TextureD3D_3D::copySubImage(const gl::Context *context,
     if (syncTexStorage)
     {
         ANGLE_TRY(updateStorageLevel(context, index.getLevelIndex()));
+    }
+
+    return gl::NoError();
+}
+
+gl::Error TextureD3D_3D::copyTexture(const gl::Context *context,
+                                     const gl::ImageIndex &index,
+                                     GLenum internalFormat,
+                                     GLenum type,
+                                     size_t sourceLevel,
+                                     bool unpackFlipY,
+                                     bool unpackPremultiplyAlpha,
+                                     bool unpackUnmultiplyAlpha,
+                                     const gl::Texture *source)
+{
+    ASSERT(index.getTarget() == gl::TextureTarget::_3D);
+
+    gl::TextureType sourceType = source->getType();
+
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
+    gl::Extents size(
+        static_cast<int>(source->getWidth(NonCubeTextureTypeToTarget(sourceType), sourceLevel)),
+        static_cast<int>(source->getHeight(NonCubeTextureTypeToTarget(sourceType), sourceLevel)),
+        static_cast<int>(source->getDepth(NonCubeTextureTypeToTarget(sourceType), sourceLevel)));
+
+    ANGLE_TRY(redefineImage(context, index.getLevelIndex(), internalFormatInfo.sizedInternalFormat,
+                            size, false));
+
+    gl::Box sourceBox(0, 0, 0, size.width, size.height, size.depth);
+    gl::Offset destOffset(0, 0, 0);
+    gl::ImageIndex destIndex = gl::ImageIndex::Make3D(static_cast<GLint>(index.getLevelIndex()));
+
+    if (!isSRGB(index.getLevelIndex()) && canCreateRenderTargetForImage(destIndex))
+    {
+        ANGLE_TRY(ensureRenderTarget(context));
+        ASSERT(isValidLevel(index.getLevelIndex()));
+        ANGLE_TRY(updateStorageLevel(context, index.getLevelIndex()));
+
+        ANGLE_TRY(mRenderer->copyTexture(
+            context, source, static_cast<GLint>(sourceLevel), gl::TextureTarget::_3D, sourceBox,
+            internalFormatInfo.format, internalFormatInfo.type, destOffset, mTexStorage,
+            index.getTarget(), index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha));
+    }
+    else
+    {
+        gl::ImageIndex sourceIndex = gl::ImageIndex::Make3D(static_cast<GLint>(sourceLevel));
+        ImageD3D *sourceImage      = nullptr;
+        ImageD3D *destImage        = nullptr;
+        TextureD3D *sourceD3D      = GetImplAs<TextureD3D>(source);
+
+        ANGLE_TRY(getImageAndSyncFromStorage(context, destIndex, &destImage));
+        ANGLE_TRY(sourceD3D->getImageAndSyncFromStorage(context, sourceIndex, &sourceImage));
+
+        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
+                                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+        mDirtyImages = true;
+
+        gl::Box destRegion(0, 0, 0, sourceBox.width, sourceBox.height, sourceBox.depth);
+        ANGLE_TRY(commitRegion(context, destIndex, destRegion));
+    }
+
+    return gl::NoError();
+}
+gl::Error TextureD3D_3D::copySubTexture(const gl::Context *context,
+                                        const gl::ImageIndex &index,
+                                        const gl::Offset &destOffset,
+                                        size_t sourceLevel,
+                                        const gl::Box &sourceBox,
+                                        bool unpackFlipY,
+                                        bool unpackPremultiplyAlpha,
+                                        bool unpackUnmultiplyAlpha,
+                                        const gl::Texture *source)
+{
+    ASSERT(index.getTarget() == gl::TextureTarget::_3D);
+
+    gl::ImageIndex destIndex = gl::ImageIndex::Make3D(static_cast<GLint>(index.getLevelIndex()));
+
+    if (!isSRGB(index.getLevelIndex()) && canCreateRenderTargetForImage(destIndex))
+    {
+        ANGLE_TRY(ensureRenderTarget(context));
+        ASSERT(isValidLevel(index.getLevelIndex()));
+        ANGLE_TRY(updateStorageLevel(context, index.getLevelIndex()));
+
+        const gl::InternalFormat &internalFormatInfo =
+            gl::GetSizedInternalFormatInfo(getInternalFormat(index.getLevelIndex()));
+        ANGLE_TRY(mRenderer->copyTexture(
+            context, source, static_cast<GLint>(sourceLevel), gl::TextureTarget::_3D, sourceBox,
+            internalFormatInfo.format, internalFormatInfo.type, destOffset, mTexStorage,
+            index.getTarget(), index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha));
+    }
+    else
+    {
+        gl::ImageIndex sourceImageIndex = gl::ImageIndex::Make3D(static_cast<GLint>(sourceLevel));
+        TextureD3D *sourceD3D           = GetImplAs<TextureD3D>(source);
+        ImageD3D *sourceImage           = nullptr;
+        ANGLE_TRY(sourceD3D->getImageAndSyncFromStorage(context, sourceImageIndex, &sourceImage));
+
+        ImageD3D *destImage = nullptr;
+        ANGLE_TRY(getImageAndSyncFromStorage(context, destIndex, &destImage));
+
+        ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
+                                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+        mDirtyImages = true;
+
+        gl::Box destRegion(destOffset.x, destOffset.y, destOffset.z, sourceBox.width,
+                           sourceBox.height, sourceBox.depth);
+        ANGLE_TRY(commitRegion(context, destIndex, destRegion));
     }
 
     return gl::NoError();
@@ -2902,6 +3023,11 @@ bool TextureD3D_2DArray::isDepth(GLint level) const
     return gl::GetSizedInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
+bool TextureD3D_2DArray::isSRGB(GLint level) const
+{
+    return gl::GetSizedInternalFormatInfo(getInternalFormat(level)).colorEncoding == GL_SRGB;
+}
+
 gl::Error TextureD3D_2DArray::setEGLImageTarget(const gl::Context *context,
                                                 gl::TextureType type,
                                                 egl::Image *image)
@@ -3082,6 +3208,143 @@ gl::Error TextureD3D_2DArray::copySubImage(const gl::Context *context,
                                             clippedDestOffset, mTexStorage, index.getLevelIndex()));
         }
     }
+    return gl::NoError();
+}
+
+gl::Error TextureD3D_2DArray::copyTexture(const gl::Context *context,
+                                          const gl::ImageIndex &index,
+                                          GLenum internalFormat,
+                                          GLenum type,
+                                          size_t sourceLevel,
+                                          bool unpackFlipY,
+                                          bool unpackPremultiplyAlpha,
+                                          bool unpackUnmultiplyAlpha,
+                                          const gl::Texture *source)
+{
+    ASSERT(index.getTarget() == gl::TextureTarget::_2DArray);
+
+    gl::TextureType sourceType = source->getType();
+
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
+    gl::Extents size(
+        static_cast<int>(source->getWidth(NonCubeTextureTypeToTarget(sourceType), sourceLevel)),
+        static_cast<int>(source->getHeight(NonCubeTextureTypeToTarget(sourceType), sourceLevel)),
+        static_cast<int>(source->getDepth(NonCubeTextureTypeToTarget(sourceType), sourceLevel)));
+
+    ANGLE_TRY(redefineImage(context, index.getLevelIndex(), internalFormatInfo.sizedInternalFormat,
+                            size, false));
+
+    gl::Box sourceBox(0, 0, 0, size.width, size.height, size.depth);
+    gl::Offset destOffset(0, 0, 0);
+
+    gl::ImageIndex destIndex =
+        gl::ImageIndex::Make2DArrayRange(index.getLevelIndex(), 0, size.depth);
+
+    if (!isSRGB(index.getLevelIndex()) &&
+        canCreateRenderTargetForImage(
+            gl::ImageIndex::Make2DArrayRange(index.getLevelIndex(), 0, size.depth)))
+    {
+        ANGLE_TRY(ensureRenderTarget(context));
+        ASSERT(isValidLevel(index.getLevelIndex()));
+        ANGLE_TRY(updateStorageLevel(context, index.getLevelIndex()));
+        ANGLE_TRY(mRenderer->copyTexture(
+            context, source, static_cast<GLint>(sourceLevel), gl::TextureTarget::_2DArray,
+            sourceBox, internalFormatInfo.format, internalFormatInfo.type, destOffset, mTexStorage,
+            index.getTarget(), index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha));
+    }
+    else
+    {
+        for (int i = 0; i < size.depth; i++)
+        {
+            gl::ImageIndex currentSourceDepthIndex =
+                gl::ImageIndex::Make2DArray(static_cast<GLint>(sourceLevel), i);
+            gl::ImageIndex currentDestDepthIndex =
+                gl::ImageIndex::Make2DArray(static_cast<GLint>(index.getLevelIndex()), i);
+            ImageD3D *sourceImage = nullptr;
+            ImageD3D *destImage   = nullptr;
+            TextureD3D *sourceD3D = GetImplAs<TextureD3D>(source);
+
+            ANGLE_TRY(getImageAndSyncFromStorage(context, currentDestDepthIndex, &destImage));
+            ANGLE_TRY(sourceD3D->getImageAndSyncFromStorage(context, currentSourceDepthIndex,
+                                                            &sourceImage));
+
+            ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, sourceBox, destOffset,
+                                           unpackFlipY, unpackPremultiplyAlpha,
+                                           unpackUnmultiplyAlpha));
+        }
+
+        mDirtyImages = true;
+
+        gl::Box destRegion(destOffset.x, destOffset.y, destOffset.z, sourceBox.width,
+                           sourceBox.height, sourceBox.depth);
+        ANGLE_TRY(commitRegion(context, destIndex, destRegion));
+    }
+
+    return gl::NoError();
+}
+
+gl::Error TextureD3D_2DArray::copySubTexture(const gl::Context *context,
+                                             const gl::ImageIndex &index,
+                                             const gl::Offset &destOffset,
+                                             size_t sourceLevel,
+                                             const gl::Box &sourceBox,
+                                             bool unpackFlipY,
+                                             bool unpackPremultiplyAlpha,
+                                             bool unpackUnmultiplyAlpha,
+                                             const gl::Texture *source)
+{
+    ASSERT(index.getTarget() == gl::TextureTarget::_2DArray);
+
+    gl::ImageIndex destIndex = gl::ImageIndex::Make2DArrayRange(
+        static_cast<GLint>(index.getLevelIndex()), destOffset.z, sourceBox.depth - destOffset.z);
+
+    if (!isSRGB(destIndex.getLevelIndex()) && canCreateRenderTargetForImage(destIndex))
+    {
+        ANGLE_TRY(ensureRenderTarget(context));
+        ASSERT(isValidLevel(destIndex.getLevelIndex()));
+        ANGLE_TRY(updateStorageLevel(context, destIndex.getLevelIndex()));
+
+        const gl::InternalFormat &internalFormatInfo =
+            gl::GetSizedInternalFormatInfo(getInternalFormat(destIndex.getLevelIndex()));
+        ANGLE_TRY(mRenderer->copyTexture(
+            context, source, static_cast<GLint>(sourceLevel), gl::TextureTarget::_2DArray,
+            sourceBox, internalFormatInfo.format, internalFormatInfo.type, destOffset, mTexStorage,
+            index.getTarget(), index.getLevelIndex(), unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha));
+    }
+    else
+    {
+        for (int i = 0; i < sourceBox.depth; i++)
+        {
+            gl::ImageIndex currentSourceIndex =
+                gl::ImageIndex::Make2DArray(static_cast<GLint>(sourceLevel), i + sourceBox.z);
+            gl::ImageIndex currentDestIndex = gl::ImageIndex::Make2DArray(
+                static_cast<GLint>(index.getLevelIndex()), i + destOffset.z);
+
+            gl::Box currentLayerBox(sourceBox.x, sourceBox.y, 0, sourceBox.width, sourceBox.height,
+                                    1);
+
+            TextureD3D *sourceD3D = GetImplAs<TextureD3D>(source);
+            ImageD3D *sourceImage = nullptr;
+            ANGLE_TRY(
+                sourceD3D->getImageAndSyncFromStorage(context, currentSourceIndex, &sourceImage));
+
+            ImageD3D *destImage = nullptr;
+            ANGLE_TRY(getImageAndSyncFromStorage(context, currentDestIndex, &destImage));
+
+            ANGLE_TRY(mRenderer->copyImage(context, destImage, sourceImage, currentLayerBox,
+                                           destOffset, unpackFlipY, unpackPremultiplyAlpha,
+                                           unpackUnmultiplyAlpha));
+        }
+
+        mDirtyImages = true;
+
+        gl::Box destRegion(destOffset.x, destOffset.y, destOffset.z, sourceBox.width,
+                           sourceBox.height, sourceBox.depth);
+        ANGLE_TRY(commitRegion(context, destIndex, destRegion));
+    }
+
     return gl::NoError();
 }
 

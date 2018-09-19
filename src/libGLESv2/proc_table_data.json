@@ -450,6 +450,11 @@
         "glCompressedCopyTextureCHROMIUM"
     ],
 
+    "GL_ANGLE_copy_texture_3D":[
+        "glCopyTexture3DANGLE",
+        "glCopySubTexture3DANGLE"
+    ],
+
     "GL_ANGLE_request_extension": [
         "glRequestExtensionANGLE"
     ],

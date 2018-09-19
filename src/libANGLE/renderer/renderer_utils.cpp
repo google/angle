@@ -305,15 +305,18 @@ bool ShouldUseVirtualizedContexts(const egl::AttributeMap &attribs, bool default
 void CopyImageCHROMIUM(const uint8_t *sourceData,
                        size_t sourceRowPitch,
                        size_t sourcePixelBytes,
+                       size_t sourceDepthPitch,
                        PixelReadFunction pixelReadFunction,
                        uint8_t *destData,
                        size_t destRowPitch,
                        size_t destPixelBytes,
+                       size_t destDepthPitch,
                        PixelWriteFunction pixelWriteFunction,
                        GLenum destUnsizedFormat,
                        GLenum destComponentType,
                        size_t width,
                        size_t height,
+                       size_t depth,
                        bool unpackFlipY,
                        bool unpackPremultiplyAlpha,
                        bool unpackUnmultiplyAlpha)
@@ -354,31 +357,36 @@ void CopyImageCHROMIUM(const uint8_t *sourceData,
 
     auto writeFunction = (destComponentType == GL_UNSIGNED_INT) ? WriteUintColor : WriteFloatColor;
 
-    for (size_t y = 0; y < height; y++)
+    for (size_t z = 0; z < depth; z++)
     {
-        for (size_t x = 0; x < width; x++)
+        for (size_t y = 0; y < height; y++)
         {
-            const uint8_t *sourcePixelData = sourceData + y * sourceRowPitch + x * sourcePixelBytes;
-
-            gl::ColorF sourceColor;
-            pixelReadFunction(sourcePixelData, reinterpret_cast<uint8_t *>(&sourceColor));
-
-            conversionFunction(&sourceColor);
-            clipChannelsFunction(&sourceColor);
-
-            size_t destY = 0;
-            if (unpackFlipY)
+            for (size_t x = 0; x < width; x++)
             {
-                destY += (height - 1);
-                destY -= y;
-            }
-            else
-            {
-                destY += y;
-            }
+                const uint8_t *sourcePixelData =
+                    sourceData + y * sourceRowPitch + x * sourcePixelBytes + z * sourceDepthPitch;
 
-            uint8_t *destPixelData = destData + destY * destRowPitch + x * destPixelBytes;
-            writeFunction(sourceColor, pixelWriteFunction, destPixelData);
+                gl::ColorF sourceColor;
+                pixelReadFunction(sourcePixelData, reinterpret_cast<uint8_t *>(&sourceColor));
+
+                conversionFunction(&sourceColor);
+                clipChannelsFunction(&sourceColor);
+
+                size_t destY = 0;
+                if (unpackFlipY)
+                {
+                    destY += (height - 1);
+                    destY -= y;
+                }
+                else
+                {
+                    destY += y;
+                }
+
+                uint8_t *destPixelData =
+                    destData + destY * destRowPitch + x * destPixelBytes + z * destDepthPitch;
+                writeFunction(sourceColor, pixelWriteFunction, destPixelData);
+            }
         }
     }
 }

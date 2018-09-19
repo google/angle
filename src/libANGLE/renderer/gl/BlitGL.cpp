@@ -634,11 +634,11 @@ gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
         angle::Format::InternalFormatToID(destInternalFormatInfo.sizedInternalFormat);
     const auto &destFormatInfo = angle::Format::Get(destFormatID);
     CopyImageCHROMIUM(
-        sourceMemory, sourceArea.width * sourcePixelSize, sourcePixelSize, readFunction, destMemory,
-        sourceArea.width * destInternalFormatInfo.pixelBytes, destInternalFormatInfo.pixelBytes,
-        destFormatInfo.pixelWriteFunction, destInternalFormatInfo.format,
-        destInternalFormatInfo.componentType, sourceArea.width, sourceArea.height, unpackFlipY,
-        unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+        sourceMemory, sourceArea.width * sourcePixelSize, sourcePixelSize, 0, readFunction,
+        destMemory, sourceArea.width * destInternalFormatInfo.pixelBytes,
+        destInternalFormatInfo.pixelBytes, 0, destFormatInfo.pixelWriteFunction,
+        destInternalFormatInfo.format, destInternalFormatInfo.componentType, sourceArea.width,
+        sourceArea.height, 1, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 
     gl::PixelPackState pack;
     pack.alignment = 1;

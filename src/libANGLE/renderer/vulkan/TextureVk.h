@@ -130,7 +130,7 @@ class TextureVk : public TextureImpl
     gl::Error copySubImage(const gl::Context *context,
                            const gl::ImageIndex &index,
                            const gl::Offset &destOffset,
-                           const gl::Rectangle &sourceArea,
+                           const gl::Rectangle &sourceRect,
                            gl::Framebuffer *source) override;
 
     gl::Error copyTexture(const gl::Context *context,
@@ -146,7 +146,7 @@ class TextureVk : public TextureImpl
                              const gl::ImageIndex &index,
                              const gl::Offset &destOffset,
                              size_t sourceLevel,
-                             const gl::Rectangle &sourceArea,
+                             const gl::Box &sourceBox,
                              bool unpackFlipY,
                              bool unpackPremultiplyAlpha,
                              bool unpackUnmultiplyAlpha,

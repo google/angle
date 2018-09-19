@@ -79,7 +79,7 @@ angle::Result Image11::GenerateMipmap(const gl::Context *context,
 angle::Result Image11::CopyImage(const gl::Context *context,
                                  Image11 *dest,
                                  Image11 *source,
-                                 const gl::Rectangle &sourceRect,
+                                 const gl::Box &sourceBox,
                                  const gl::Offset &destOffset,
                                  bool unpackFlipY,
                                  bool unpackPremultiplyAlpha,
@@ -106,15 +106,16 @@ angle::Result Image11::CopyImage(const gl::Context *context,
     GLuint destPixelBytes = destFormatInfo.pixelBytes;
 
     const uint8_t *sourceData = static_cast<const uint8_t *>(srcMapped.pData) +
-                                sourceRect.x * sourcePixelBytes + sourceRect.y * srcMapped.RowPitch;
+                                sourceBox.x * sourcePixelBytes + sourceBox.y * srcMapped.RowPitch +
+                                sourceBox.z * srcMapped.DepthPitch;
     uint8_t *destData = static_cast<uint8_t *>(destMapped.pData) + destOffset.x * destPixelBytes +
-                        destOffset.y * destMapped.RowPitch;
+                        destOffset.y * destMapped.RowPitch + destOffset.z * destMapped.DepthPitch;
 
-    CopyImageCHROMIUM(sourceData, srcMapped.RowPitch, sourcePixelBytes,
+    CopyImageCHROMIUM(sourceData, srcMapped.RowPitch, sourcePixelBytes, srcMapped.DepthPitch,
                       sourceFormat.pixelReadFunction, destData, destMapped.RowPitch, destPixelBytes,
-                      destFormat.pixelWriteFunction, destUnsizedFormat,
-                      destFormatInfo.componentType, sourceRect.width, sourceRect.height,
-                      unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+                      destMapped.DepthPitch, destFormat.pixelWriteFunction, destUnsizedFormat,
+                      destFormatInfo.componentType, sourceBox.width, sourceBox.height,
+                      sourceBox.depth, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 
     dest->markDirty();
 

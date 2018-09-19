@@ -20,6 +20,35 @@
 namespace gl
 {
 
+// GL_ANGLE_copy_texture_3d
+ANGLE_EXPORT void GL_APIENTRY CopyTexture3DANGLE(GLuint sourceId,
+                                                 GLint sourceLevel,
+                                                 GLenum destTarget,
+                                                 GLuint destId,
+                                                 GLint destLevel,
+                                                 GLint internalFormat,
+                                                 GLenum destType,
+                                                 GLboolean unpackFlipY,
+                                                 GLboolean unpackPremultiplyAlpha,
+                                                 GLboolean unpackUnmultiplyAlpha);
+ANGLE_EXPORT void GL_APIENTRY CopySubTexture3DANGLE(GLuint sourceId,
+                                                    GLint sourceLevel,
+                                                    GLenum destTarget,
+                                                    GLuint destId,
+                                                    GLint destLevel,
+                                                    GLint xoffset,
+                                                    GLint yoffset,
+                                                    GLint zoffset,
+                                                    GLint x,
+                                                    GLint y,
+                                                    GLint z,
+                                                    GLint width,
+                                                    GLint height,
+                                                    GLint depth,
+                                                    GLboolean unpackFlipY,
+                                                    GLboolean unpackPremultiplyAlpha,
+                                                    GLboolean unpackUnmultiplyAlpha);
+
 // GL_ANGLE_framebuffer_blit
 ANGLE_EXPORT void GL_APIENTRY BlitFramebufferANGLE(GLint srcX0,
                                                    GLint srcY0,
@@ -3290,6 +3319,35 @@ FramebufferTextureMultiviewSideBySideANGLEContextANGLE(GLeglContext ctx,
                                                        GLint level,
                                                        GLsizei numViews,
                                                        const GLint *viewportOffsets);
+ANGLE_EXPORT void GL_APIENTRY CopyTexture3DANGLEContextANGLE(GLeglContext ctx,
+                                                             GLuint sourceId,
+                                                             GLint sourceLevel,
+                                                             GLenum destTarget,
+                                                             GLuint destId,
+                                                             GLint destLevel,
+                                                             GLint internalFormat,
+                                                             GLenum destType,
+                                                             GLboolean unpackFlipY,
+                                                             GLboolean unpackPremultiplyAlpha,
+                                                             GLboolean unpackUnmultiplyAlpha);
+ANGLE_EXPORT void GL_APIENTRY CopySubTexture3DANGLEContextANGLE(GLeglContext ctx,
+                                                                GLuint sourceId,
+                                                                GLint sourceLevel,
+                                                                GLenum destTarget,
+                                                                GLuint destId,
+                                                                GLint destLevel,
+                                                                GLint xoffset,
+                                                                GLint yoffset,
+                                                                GLint zoffset,
+                                                                GLint x,
+                                                                GLint y,
+                                                                GLint z,
+                                                                GLint width,
+                                                                GLint height,
+                                                                GLint depth,
+                                                                GLboolean unpackFlipY,
+                                                                GLboolean unpackPremultiplyAlpha,
+                                                                GLboolean unpackUnmultiplyAlpha);
 }  // namespace gl
 
 #endif  // LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_

@@ -19,6 +19,7 @@ angle_end2end_tests_sources = [
   "gl_tests/CopyCompressedTextureTest.cpp",
   "gl_tests/CopyTexImageTest.cpp",
   "gl_tests/CopyTextureTest.cpp",
+  "gl_tests/CopyTexture3DTest.cpp",
   "gl_tests/CubeMapTextureTest.cpp",
   "gl_tests/DebugMarkerTest.cpp",
   "gl_tests/DebugTest.cpp",

@@ -134,6 +134,127 @@ bool ValidateGenOrDeleteCountES3(Context *context, GLint count)
     return true;
 }
 
+bool ValidateCopyTexture3DCommon(Context *context,
+                                 const Texture *source,
+                                 GLint sourceLevel,
+                                 GLint srcInternalFormat,
+                                 const Texture *dest,
+                                 GLint destLevel,
+                                 GLint internalFormat,
+                                 TextureTarget destTarget)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (!context->getExtensions().copyTexture3d)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ANGLECopyTexture3DUnavailable);
+        return false;
+    }
+
+    if (!ValidTexture3DTarget(context, source->getType()))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
+        return false;
+    }
+
+    // Table 1.1 from the ANGLE_copy_texture_3d spec
+    switch (GetUnsizedFormat(srcInternalFormat))
+    {
+        case GL_ALPHA:
+        case GL_LUMINANCE:
+        case GL_LUMINANCE_ALPHA:
+        case GL_RED:
+        case GL_RED_INTEGER:
+        case GL_RG:
+        case GL_RG_INTEGER:
+        case GL_RGB:
+        case GL_RGB_INTEGER:
+        case GL_RGBA:
+        case GL_RGBA_INTEGER:
+        case GL_DEPTH_COMPONENT:
+        case GL_DEPTH_STENCIL:
+            break;
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidInternalFormat);
+            return false;
+    }
+
+    if (!ValidTexture3DTarget(context, TextureTargetToType(destTarget)))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
+        return false;
+    }
+
+    // Table 1.0 from the ANGLE_copy_texture_3d spec
+    switch (internalFormat)
+    {
+        case GL_RGB:
+        case GL_RGBA:
+        case GL_LUMINANCE:
+        case GL_LUMINANCE_ALPHA:
+        case GL_ALPHA:
+        case GL_R8:
+        case GL_R8_SNORM:
+        case GL_R16F:
+        case GL_R32F:
+        case GL_R8UI:
+        case GL_R8I:
+        case GL_R16UI:
+        case GL_R16I:
+        case GL_R32UI:
+        case GL_R32I:
+        case GL_RG:
+        case GL_RG8:
+        case GL_RG8_SNORM:
+        case GL_RG16F:
+        case GL_RG32F:
+        case GL_RG8UI:
+        case GL_RG8I:
+        case GL_RG16UI:
+        case GL_RG16I:
+        case GL_RG32UI:
+        case GL_RG32I:
+        case GL_RGB8:
+        case GL_SRGB8:
+        case GL_RGB565:
+        case GL_RGB8_SNORM:
+        case GL_R11F_G11F_B10F:
+        case GL_RGB9_E5:
+        case GL_RGB16F:
+        case GL_RGB32F:
+        case GL_RGB8UI:
+        case GL_RGB8I:
+        case GL_RGB16UI:
+        case GL_RGB16I:
+        case GL_RGB32UI:
+        case GL_RGB32I:
+        case GL_RGBA8:
+        case GL_SRGB8_ALPHA8:
+        case GL_RGBA8_SNORM:
+        case GL_RGB5_A1:
+        case GL_RGBA4:
+        case GL_RGB10_A2:
+        case GL_RGBA16F:
+        case GL_RGBA32F:
+        case GL_RGBA8UI:
+        case GL_RGBA8I:
+        case GL_RGB10_A2UI:
+        case GL_RGBA16UI:
+        case GL_RGBA16I:
+        case GL_RGBA32I:
+        case GL_RGBA32UI:
+            break;
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidInternalFormat);
+            return false;
+    }
+
+    return true;
+}
 }  // anonymous namespace
 
 static bool ValidateTexImageFormatCombination(gl::Context *context,
@@ -1913,6 +2034,157 @@ bool ValidateCopyTexSubImage3D(Context *context,
 
     return ValidateES3CopyTexImage3DParameters(context, target, level, GL_NONE, true, xoffset,
                                                yoffset, zoffset, x, y, width, height, 0);
+}
+
+bool ValidateCopyTexture3DANGLE(Context *context,
+                                GLuint sourceId,
+                                GLint sourceLevel,
+                                TextureTarget destTarget,
+                                GLuint destId,
+                                GLint destLevel,
+                                GLint internalFormat,
+                                GLenum destType,
+                                GLboolean unpackFlipY,
+                                GLboolean unpackPremultiplyAlpha,
+                                GLboolean unpackUnmultiplyAlpha)
+{
+    const Texture *source = context->getTexture(sourceId);
+    if (source == nullptr)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidSourceTexture);
+        return false;
+    }
+
+    TextureType sourceType = source->getType();
+    ASSERT(sourceType != TextureType::CubeMap);
+    TextureTarget sourceTarget = NonCubeTextureTypeToTarget(sourceType);
+    const Format &sourceFormat = source->getFormat(sourceTarget, sourceLevel);
+
+    const Texture *dest = context->getTexture(destId);
+    if (dest == nullptr)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidDestinationTexture);
+        return false;
+    }
+
+    if (!ValidateCopyTexture3DCommon(context, source, sourceLevel,
+                                     sourceFormat.info->internalFormat, dest, destLevel,
+                                     internalFormat, destTarget))
+    {
+        return false;
+    }
+
+    if (!ValidMipLevel(context, source->getType(), sourceLevel))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidSourceTextureLevel);
+        return false;
+    }
+
+    GLsizei sourceWidth  = static_cast<GLsizei>(source->getWidth(sourceTarget, sourceLevel));
+    GLsizei sourceHeight = static_cast<GLsizei>(source->getHeight(sourceTarget, sourceLevel));
+    if (sourceWidth == 0 || sourceHeight == 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidSourceTextureSize);
+        return false;
+    }
+
+    if (dest->getImmutableFormat())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), DestinationImmutable);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateCopySubTexture3DANGLE(Context *context,
+                                   GLuint sourceId,
+                                   GLint sourceLevel,
+                                   TextureTarget destTarget,
+                                   GLuint destId,
+                                   GLint destLevel,
+                                   GLint xoffset,
+                                   GLint yoffset,
+                                   GLint zoffset,
+                                   GLint x,
+                                   GLint y,
+                                   GLint z,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLsizei depth,
+                                   GLboolean unpackFlipY,
+                                   GLboolean unpackPremultiplyAlpha,
+                                   GLboolean unpackUnmultiplyAlpha)
+{
+    const Texture *source = context->getTexture(sourceId);
+    if (source == nullptr)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidSourceTexture);
+        return false;
+    }
+
+    TextureType sourceType = source->getType();
+    ASSERT(sourceType != TextureType::CubeMap);
+    TextureTarget sourceTarget = NonCubeTextureTypeToTarget(sourceType);
+    const Format &sourceFormat = source->getFormat(sourceTarget, sourceLevel);
+
+    const Texture *dest = context->getTexture(destId);
+    if (dest == nullptr)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidDestinationTexture);
+        return false;
+    }
+
+    const InternalFormat &destFormat = *dest->getFormat(destTarget, destLevel).info;
+
+    if (!ValidateCopyTexture3DCommon(context, source, sourceLevel,
+                                     sourceFormat.info->internalFormat, dest, destLevel,
+                                     destFormat.internalFormat, destTarget))
+    {
+        return false;
+    }
+
+    if (x < 0 || y < 0 || z < 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeXYZ);
+        return false;
+    }
+
+    if (width < 0 || height < 0 || depth < 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeHeightWidthDepth);
+        return false;
+    }
+
+    if (static_cast<size_t>(x + width) > source->getWidth(sourceTarget, sourceLevel) ||
+        static_cast<size_t>(y + height) > source->getHeight(sourceTarget, sourceLevel) ||
+        static_cast<size_t>(z + depth) > source->getDepth(sourceTarget, sourceLevel))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), SourceTextureTooSmall);
+        return false;
+    }
+
+    if (TextureTargetToType(destTarget) != dest->getType())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidDestinationTextureType);
+        return false;
+    }
+
+    if (xoffset < 0 || yoffset < 0 || zoffset < 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeOffset);
+        return false;
+    }
+
+    if (static_cast<size_t>(xoffset + width) > dest->getWidth(destTarget, destLevel) ||
+        static_cast<size_t>(yoffset + height) > dest->getHeight(destTarget, destLevel) ||
+        static_cast<size_t>(zoffset + depth) > dest->getDepth(destTarget, destLevel))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), DestinationTextureTooSmall);
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateTexImage3D(Context *context,

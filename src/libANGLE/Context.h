@@ -960,6 +960,16 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                      GLboolean unpackFlipY,
                      GLboolean unpackPremultiplyAlpha,
                      GLboolean unpackUnmultiplyAlpha);
+    void copyTexture3D(GLuint sourceId,
+                       GLint sourceLevel,
+                       TextureTarget destTarget,
+                       GLuint destId,
+                       GLint destLevel,
+                       GLint internalFormat,
+                       GLenum destType,
+                       GLboolean unpackFlipY,
+                       GLboolean unpackPremultiplyAlpha,
+                       GLboolean unpackUnmultiplyAlpha);
     void copySubTexture(GLuint sourceId,
                         GLint sourceLevel,
                         TextureTarget destTarget,
@@ -974,6 +984,23 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                         GLboolean unpackFlipY,
                         GLboolean unpackPremultiplyAlpha,
                         GLboolean unpackUnmultiplyAlpha);
+    void copySubTexture3D(GLuint sourceId,
+                          GLint sourceLevel,
+                          TextureTarget destTarget,
+                          GLuint destId,
+                          GLint destLevel,
+                          GLint xoffset,
+                          GLint yoffset,
+                          GLint zoffset,
+                          GLint x,
+                          GLint y,
+                          GLint z,
+                          GLsizei width,
+                          GLsizei height,
+                          GLsizei depth,
+                          GLboolean unpackFlipY,
+                          GLboolean unpackPremultiplyAlpha,
+                          GLboolean unpackUnmultiplyAlpha);
     void compressedCopyTexture(GLuint sourceId, GLuint destId);
 
     void generateMipmap(TextureType target);

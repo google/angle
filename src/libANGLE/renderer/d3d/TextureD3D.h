@@ -259,7 +259,7 @@ class TextureD3D_2D : public TextureD3D
                              const gl::ImageIndex &index,
                              const gl::Offset &destOffset,
                              size_t sourceLevel,
-                             const gl::Rectangle &sourceArea,
+                             const gl::Box &sourceBox,
                              bool unpackFlipY,
                              bool unpackPremultiplyAlpha,
                              bool unpackUnmultiplyAlpha,
@@ -388,7 +388,7 @@ class TextureD3D_Cube : public TextureD3D
                              const gl::ImageIndex &index,
                              const gl::Offset &destOffset,
                              size_t sourceLevel,
-                             const gl::Rectangle &sourceArea,
+                             const gl::Box &sourceBox,
                              bool unpackFlipY,
                              bool unpackPremultiplyAlpha,
                              bool unpackUnmultiplyAlpha,
@@ -461,6 +461,7 @@ class TextureD3D_3D : public TextureD3D
     GLsizei getDepth(GLint level) const;
     GLenum getInternalFormat(GLint level) const;
     bool isDepth(GLint level) const;
+    bool isSRGB(GLint level) const;
 
     gl::Error setImage(const gl::Context *context,
                        const gl::ImageIndex &index,
@@ -504,6 +505,25 @@ class TextureD3D_3D : public TextureD3D
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
                            gl::Framebuffer *source) override;
+
+    gl::Error copyTexture(const gl::Context *context,
+                          const gl::ImageIndex &index,
+                          GLenum internalFormat,
+                          GLenum type,
+                          size_t sourceLevel,
+                          bool unpackFlipY,
+                          bool unpackPremultiplyAlpha,
+                          bool unpackUnmultiplyAlpha,
+                          const gl::Texture *source) override;
+    gl::Error copySubTexture(const gl::Context *context,
+                             const gl::ImageIndex &index,
+                             const gl::Offset &destOffset,
+                             size_t sourceLevel,
+                             const gl::Box &sourceBox,
+                             bool unpackFlipY,
+                             bool unpackPremultiplyAlpha,
+                             bool unpackUnmultiplyAlpha,
+                             const gl::Texture *source) override;
 
     gl::Error setStorage(const gl::Context *context,
                          gl::TextureType type,
@@ -614,6 +634,25 @@ class TextureD3D_2DArray : public TextureD3D
                            const gl::Rectangle &sourceArea,
                            gl::Framebuffer *source) override;
 
+    gl::Error copyTexture(const gl::Context *context,
+                          const gl::ImageIndex &index,
+                          GLenum internalFormat,
+                          GLenum type,
+                          size_t sourceLevel,
+                          bool unpackFlipY,
+                          bool unpackPremultiplyAlpha,
+                          bool unpackUnmultiplyAlpha,
+                          const gl::Texture *source) override;
+    gl::Error copySubTexture(const gl::Context *context,
+                             const gl::ImageIndex &index,
+                             const gl::Offset &destOffset,
+                             size_t sourceLevel,
+                             const gl::Box &sourceBox,
+                             bool unpackFlipY,
+                             bool unpackPremultiplyAlpha,
+                             bool unpackUnmultiplyAlpha,
+                             const gl::Texture *source) override;
+
     gl::Error setStorage(const gl::Context *context,
                          gl::TextureType type,
                          size_t levels,
@@ -651,6 +690,7 @@ class TextureD3D_2DArray : public TextureD3D
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
     bool isImageComplete(const gl::ImageIndex &index) const override;
+    bool isSRGB(GLint level) const;
     angle::Result updateStorageLevel(const gl::Context *context, int level);
 
     void deleteImages();

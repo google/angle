@@ -22,6 +22,97 @@
 namespace gl
 {
 
+// GL_ANGLE_copy_texture_3d
+void GL_APIENTRY CopyTexture3DANGLE(GLuint sourceId,
+                                    GLint sourceLevel,
+                                    GLenum destTarget,
+                                    GLuint destId,
+                                    GLint destLevel,
+                                    GLint internalFormat,
+                                    GLenum destType,
+                                    GLboolean unpackFlipY,
+                                    GLboolean unpackPremultiplyAlpha,
+                                    GLboolean unpackUnmultiplyAlpha)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint sourceId = %u, GLint sourceLevel = %d, GLenum destTarget = 0x%X, GLuint destId = "
+        "%u, GLint destLevel = %d, GLint internalFormat = %d, GLenum destType = 0x%X, GLboolean "
+        "unpackFlipY = %u, GLboolean unpackPremultiplyAlpha = %u, GLboolean unpackUnmultiplyAlpha "
+        "= %u)",
+        sourceId, sourceLevel, destTarget, destId, destLevel, internalFormat, destType, unpackFlipY,
+        unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureTarget destTargetPacked = FromGLenum<TextureTarget>(destTarget);
+        context->gatherParams<EntryPoint::CopyTexture3DANGLE>(
+            sourceId, sourceLevel, destTargetPacked, destId, destLevel, internalFormat, destType,
+            unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+
+        if (context->skipValidation() ||
+            ValidateCopyTexture3DANGLE(context, sourceId, sourceLevel, destTargetPacked, destId,
+                                       destLevel, internalFormat, destType, unpackFlipY,
+                                       unpackPremultiplyAlpha, unpackUnmultiplyAlpha))
+        {
+            context->copyTexture3D(sourceId, sourceLevel, destTargetPacked, destId, destLevel,
+                                   internalFormat, destType, unpackFlipY, unpackPremultiplyAlpha,
+                                   unpackUnmultiplyAlpha);
+        }
+    }
+}
+
+void GL_APIENTRY CopySubTexture3DANGLE(GLuint sourceId,
+                                       GLint sourceLevel,
+                                       GLenum destTarget,
+                                       GLuint destId,
+                                       GLint destLevel,
+                                       GLint xoffset,
+                                       GLint yoffset,
+                                       GLint zoffset,
+                                       GLint x,
+                                       GLint y,
+                                       GLint z,
+                                       GLint width,
+                                       GLint height,
+                                       GLint depth,
+                                       GLboolean unpackFlipY,
+                                       GLboolean unpackPremultiplyAlpha,
+                                       GLboolean unpackUnmultiplyAlpha)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint sourceId = %u, GLint sourceLevel = %d, GLenum destTarget = 0x%X, GLuint destId = "
+        "%u, GLint destLevel = %d, GLint xoffset = %d, GLint yoffset = %d, GLint zoffset = %d, "
+        "GLint x = %d, GLint y = %d, GLint z = %d, GLint width = %d, GLint height = %d, GLint "
+        "depth = %d, GLboolean unpackFlipY = %u, GLboolean unpackPremultiplyAlpha = %u, GLboolean "
+        "unpackUnmultiplyAlpha = %u)",
+        sourceId, sourceLevel, destTarget, destId, destLevel, xoffset, yoffset, zoffset, x, y, z,
+        width, height, depth, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureTarget destTargetPacked = FromGLenum<TextureTarget>(destTarget);
+        context->gatherParams<EntryPoint::CopySubTexture3DANGLE>(
+            sourceId, sourceLevel, destTargetPacked, destId, destLevel, xoffset, yoffset, zoffset,
+            x, y, z, width, height, depth, unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha);
+
+        if (context->skipValidation() ||
+            ValidateCopySubTexture3DANGLE(context, sourceId, sourceLevel, destTargetPacked, destId,
+                                          destLevel, xoffset, yoffset, zoffset, x, y, z, width,
+                                          height, depth, unpackFlipY, unpackPremultiplyAlpha,
+                                          unpackUnmultiplyAlpha))
+        {
+            context->copySubTexture3D(sourceId, sourceLevel, destTargetPacked, destId, destLevel,
+                                      xoffset, yoffset, zoffset, x, y, z, width, height, depth,
+                                      unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+        }
+    }
+}
+
 // GL_ANGLE_framebuffer_blit
 void GL_APIENTRY BlitFramebufferANGLE(GLint srcX0,
                                       GLint srcY0,
@@ -18653,6 +18744,100 @@ FramebufferTextureMultiviewSideBySideANGLEContextANGLE(GLeglContext ctx,
         {
             context->framebufferTextureMultiviewSideBySide(target, attachment, texture, level,
                                                            numViews, viewportOffsets);
+        }
+    }
+}
+
+void GL_APIENTRY CopyTexture3DANGLEContextANGLE(GLeglContext ctx,
+                                                GLuint sourceId,
+                                                GLint sourceLevel,
+                                                GLenum destTarget,
+                                                GLuint destId,
+                                                GLint destLevel,
+                                                GLint internalFormat,
+                                                GLenum destType,
+                                                GLboolean unpackFlipY,
+                                                GLboolean unpackPremultiplyAlpha,
+                                                GLboolean unpackUnmultiplyAlpha)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint sourceId = %u, GLint sourceLevel = %d, GLenum destTarget = 0x%X, GLuint destId = "
+        "%u, GLint destLevel = %d, GLint internalFormat = %d, GLenum destType = 0x%X, GLboolean "
+        "unpackFlipY = %u, GLboolean unpackPremultiplyAlpha = %u, GLboolean unpackUnmultiplyAlpha "
+        "= %u)",
+        sourceId, sourceLevel, destTarget, destId, destLevel, internalFormat, destType, unpackFlipY,
+        unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureTarget destTargetPacked = FromGLenum<TextureTarget>(destTarget);
+        context->gatherParams<EntryPoint::CopyTexture3DANGLE>(
+            sourceId, sourceLevel, destTargetPacked, destId, destLevel, internalFormat, destType,
+            unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+
+        if (context->skipValidation() ||
+            ValidateCopyTexture3DANGLE(context, sourceId, sourceLevel, destTargetPacked, destId,
+                                       destLevel, internalFormat, destType, unpackFlipY,
+                                       unpackPremultiplyAlpha, unpackUnmultiplyAlpha))
+        {
+            context->copyTexture3D(sourceId, sourceLevel, destTargetPacked, destId, destLevel,
+                                   internalFormat, destType, unpackFlipY, unpackPremultiplyAlpha,
+                                   unpackUnmultiplyAlpha);
+        }
+    }
+}
+
+void GL_APIENTRY CopySubTexture3DANGLEContextANGLE(GLeglContext ctx,
+                                                   GLuint sourceId,
+                                                   GLint sourceLevel,
+                                                   GLenum destTarget,
+                                                   GLuint destId,
+                                                   GLint destLevel,
+                                                   GLint xoffset,
+                                                   GLint yoffset,
+                                                   GLint zoffset,
+                                                   GLint x,
+                                                   GLint y,
+                                                   GLint z,
+                                                   GLint width,
+                                                   GLint height,
+                                                   GLint depth,
+                                                   GLboolean unpackFlipY,
+                                                   GLboolean unpackPremultiplyAlpha,
+                                                   GLboolean unpackUnmultiplyAlpha)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint sourceId = %u, GLint sourceLevel = %d, GLenum destTarget = 0x%X, GLuint destId = "
+        "%u, GLint destLevel = %d, GLint xoffset = %d, GLint yoffset = %d, GLint zoffset = %d, "
+        "GLint x = %d, GLint y = %d, GLint z = %d, GLint width = %d, GLint height = %d, GLint "
+        "depth = %d, GLboolean unpackFlipY = %u, GLboolean unpackPremultiplyAlpha = %u, GLboolean "
+        "unpackUnmultiplyAlpha = %u)",
+        sourceId, sourceLevel, destTarget, destId, destLevel, xoffset, yoffset, zoffset, x, y, z,
+        width, height, depth, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureTarget destTargetPacked = FromGLenum<TextureTarget>(destTarget);
+        context->gatherParams<EntryPoint::CopySubTexture3DANGLE>(
+            sourceId, sourceLevel, destTargetPacked, destId, destLevel, xoffset, yoffset, zoffset,
+            x, y, z, width, height, depth, unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha);
+
+        if (context->skipValidation() ||
+            ValidateCopySubTexture3DANGLE(context, sourceId, sourceLevel, destTargetPacked, destId,
+                                          destLevel, xoffset, yoffset, zoffset, x, y, z, width,
+                                          height, depth, unpackFlipY, unpackPremultiplyAlpha,
+                                          unpackUnmultiplyAlpha))
+        {
+            context->copySubTexture3D(sourceId, sourceLevel, destTargetPacked, destId, destLevel,
+                                      xoffset, yoffset, zoffset, x, y, z, width, height, depth,
+                                      unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
         }
     }
 }

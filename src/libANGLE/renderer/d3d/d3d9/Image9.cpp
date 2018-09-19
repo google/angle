@@ -203,12 +203,12 @@ angle::Result Image9::CopyImage(const gl::Context *context,
                         destOffset.y * destLocked.Pitch;
     ASSERT(sourceData && destData);
 
-    CopyImageCHROMIUM(sourceData, sourceLocked.Pitch, sourceD3DFormatInfo.pixelBytes,
+    CopyImageCHROMIUM(sourceData, sourceLocked.Pitch, sourceD3DFormatInfo.pixelBytes, 0,
                       sourceD3DFormatInfo.info().pixelReadFunction, destData, destLocked.Pitch,
-                      destD3DFormatInfo.pixelBytes, destD3DFormatInfo.info().pixelWriteFunction,
+                      destD3DFormatInfo.pixelBytes, 0, destD3DFormatInfo.info().pixelWriteFunction,
                       gl::GetUnsizedFormat(dest->getInternalFormat()),
                       destD3DFormatInfo.info().componentType, sourceRect.width, sourceRect.height,
-                      unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+                      1, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 
     destSurface->UnlockRect();
     sourceSurface->UnlockRect();

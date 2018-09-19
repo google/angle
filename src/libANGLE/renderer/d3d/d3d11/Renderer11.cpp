@@ -2332,7 +2332,8 @@ angle::Result Renderer11::copyImage2DArray(const gl::Context *context,
 angle::Result Renderer11::copyTexture(const gl::Context *context,
                                       const gl::Texture *source,
                                       GLint sourceLevel,
-                                      const gl::Rectangle &sourceRect,
+                                      gl::TextureTarget srcTarget,
+                                      const gl::Box &sourceBox,
                                       GLenum destFormat,
                                       GLenum destType,
                                       const gl::Offset &destOffset,
@@ -2348,7 +2349,7 @@ angle::Result Renderer11::copyTexture(const gl::Context *context,
     TextureStorage *sourceStorage = nullptr;
     ANGLE_TRY(sourceD3D->getNativeTexture(context, &sourceStorage));
 
-    TextureStorage11_2D *sourceStorage11 = GetAs<TextureStorage11_2D>(sourceStorage);
+    TextureStorage11 *sourceStorage11 = GetAs<TextureStorage11>(sourceStorage);
     ASSERT(sourceStorage11);
 
     TextureStorage11 *destStorage11 = GetAs<TextureStorage11>(storage);
@@ -2356,41 +2357,88 @@ angle::Result Renderer11::copyTexture(const gl::Context *context,
 
     // Check for fast path where a CopySubresourceRegion can be used.
     if (unpackPremultiplyAlpha == unpackUnmultiplyAlpha && !unpackFlipY &&
-        source->getFormat(gl::TextureTarget::_2D, sourceLevel).info->format == destFormat &&
+        source->getFormat(srcTarget, sourceLevel).info->format == destFormat &&
         sourceStorage11->getFormatSet().internalFormat ==
             destStorage11->getFormatSet().internalFormat)
     {
         const TextureHelper11 *sourceResource = nullptr;
         ANGLE_TRY(sourceStorage11->getResource(context, &sourceResource));
 
-        gl::ImageIndex sourceIndex = gl::ImageIndex::Make2D(sourceLevel);
-        UINT sourceSubresource     = sourceStorage11->getSubresourceIndex(sourceIndex);
-
         const TextureHelper11 *destResource = nullptr;
         ANGLE_TRY(destStorage11->getResource(context, &destResource));
 
-        gl::ImageIndex destIndex = gl::ImageIndex::MakeFromTarget(destTarget, destLevel);
-        UINT destSubresource     = destStorage11->getSubresourceIndex(destIndex);
+        if (srcTarget == gl::TextureTarget::_2D || srcTarget == gl::TextureTarget::_3D)
+        {
+            gl::ImageIndex sourceIndex = gl::ImageIndex::MakeFromTarget(srcTarget, sourceLevel);
+            UINT sourceSubresource     = sourceStorage11->getSubresourceIndex(sourceIndex);
 
-        D3D11_BOX sourceBox{
-            static_cast<UINT>(sourceRect.x),
-            static_cast<UINT>(sourceRect.y),
-            0u,
-            static_cast<UINT>(sourceRect.x + sourceRect.width),
-            static_cast<UINT>(sourceRect.y + sourceRect.height),
-            1u,
-        };
+            gl::ImageIndex destIndex = gl::ImageIndex::MakeFromTarget(destTarget, destLevel);
+            UINT destSubresource     = destStorage11->getSubresourceIndex(destIndex);
 
-        mDeviceContext->CopySubresourceRegion(destResource->get(), destSubresource, destOffset.x,
-                                              destOffset.y, destOffset.z, sourceResource->get(),
-                                              sourceSubresource, &sourceBox);
+            D3D11_BOX d3dBox{static_cast<UINT>(sourceBox.x),
+                             static_cast<UINT>(sourceBox.y),
+                             static_cast<UINT>(sourceBox.z),
+                             static_cast<UINT>(sourceBox.x + sourceBox.width),
+                             static_cast<UINT>(sourceBox.y + sourceBox.height),
+                             static_cast<UINT>(sourceBox.z + sourceBox.depth)};
+
+            mDeviceContext->CopySubresourceRegion(
+                destResource->get(), destSubresource, destOffset.x, destOffset.y, destOffset.z,
+                sourceResource->get(), sourceSubresource, &d3dBox);
+        }
+        else if (srcTarget == gl::TextureTarget::_2DArray)
+        {
+
+            D3D11_BOX d3dBox{static_cast<UINT>(sourceBox.x),
+                             static_cast<UINT>(sourceBox.y),
+                             0,
+                             static_cast<UINT>(sourceBox.x + sourceBox.width),
+                             static_cast<UINT>(sourceBox.y + sourceBox.height),
+                             1u};
+
+            for (int i = 0; i < sourceBox.depth; i++)
+            {
+                gl::ImageIndex srcIndex = gl::ImageIndex::Make2DArray(sourceLevel, i + sourceBox.z);
+                UINT sourceSubresource  = sourceStorage11->getSubresourceIndex(srcIndex);
+                gl::ImageIndex dIndex   = gl::ImageIndex::Make2DArray(destLevel, i + destOffset.z);
+                UINT destSubresource    = destStorage11->getSubresourceIndex(dIndex);
+                mDeviceContext->CopySubresourceRegion(
+                    destResource->get(), destSubresource, destOffset.x, destOffset.y, 0,
+                    sourceResource->get(), sourceSubresource, &d3dBox);
+            }
+        }
+        else
+        {
+            UNREACHABLE();
+        }
     }
     else
     {
         const d3d11::SharedSRV *sourceSRV = nullptr;
         ANGLE_TRY(sourceStorage11->getSRVLevels(context, sourceLevel, sourceLevel, &sourceSRV));
 
-        gl::ImageIndex destIndex = gl::ImageIndex::MakeFromTarget(destTarget, destLevel);
+        gl::Extents sourceSize(static_cast<int>(source->getWidth(
+                                   NonCubeTextureTypeToTarget(source->getType()), sourceLevel)),
+                               static_cast<int>(source->getHeight(
+                                   NonCubeTextureTypeToTarget(source->getType()), sourceLevel)),
+                               static_cast<int>(source->getDepth(
+                                   NonCubeTextureTypeToTarget(source->getType()), sourceLevel)));
+
+        gl::ImageIndex destIndex;
+        if (destTarget == gl::TextureTarget::_2D || destTarget == gl::TextureTarget::_3D ||
+            gl::IsCubeMapFaceTarget(destTarget))
+        {
+            destIndex = gl::ImageIndex::MakeFromTarget(destTarget, destLevel);
+        }
+        else if (destTarget == gl::TextureTarget::_2DArray)
+        {
+            destIndex = gl::ImageIndex::Make2DArrayRange(destLevel, 0, sourceSize.depth);
+        }
+        else
+        {
+            UNREACHABLE();
+        }
+
         RenderTargetD3D *destRenderTargetD3D = nullptr;
         ANGLE_TRY(destStorage11->getRenderTarget(context, destIndex, &destRenderTargetD3D));
 
@@ -2399,24 +2447,24 @@ angle::Result Renderer11::copyTexture(const gl::Context *context,
         const d3d11::RenderTargetView &destRTV = destRenderTarget11->getRenderTargetView();
         ASSERT(destRTV.valid());
 
-        gl::Box sourceArea(sourceRect.x, sourceRect.y, 0, sourceRect.width, sourceRect.height, 1);
-        gl::Extents sourceSize(static_cast<int>(source->getWidth(
-                                   NonCubeTextureTypeToTarget(source->getType()), sourceLevel)),
-                               static_cast<int>(source->getHeight(
-                                   NonCubeTextureTypeToTarget(source->getType()), sourceLevel)),
-                               1);
+        gl::Box sourceArea(sourceBox.x, sourceBox.y, sourceBox.z, sourceBox.width, sourceBox.height,
+                           sourceBox.depth);
+
         if (unpackFlipY)
         {
             sourceArea.y += sourceArea.height;
             sourceArea.height = -sourceArea.height;
         }
 
-        gl::Box destArea(destOffset.x, destOffset.y, 0, sourceRect.width, sourceRect.height, 1);
-        gl::Extents destSize(destRenderTarget11->getWidth(), destRenderTarget11->getHeight(), 1);
+        gl::Box destArea(destOffset.x, destOffset.y, destOffset.z, sourceBox.width,
+                         sourceBox.height, sourceBox.depth);
+
+        gl::Extents destSize(destRenderTarget11->getWidth(), destRenderTarget11->getHeight(),
+                             sourceBox.depth);
 
         // Use nearest filtering because source and destination are the same size for the direct
         // copy
-        GLenum sourceFormat = source->getFormat(gl::TextureTarget::_2D, sourceLevel).info->format;
+        GLenum sourceFormat = source->getFormat(srcTarget, sourceLevel).info->format;
         ANGLE_TRY(mBlit->copyTexture(context, *sourceSRV, sourceArea, sourceSize, sourceFormat,
                                      destRTV, destArea, destSize, nullptr, destFormat, destType,
                                      GL_NEAREST, false, unpackPremultiplyAlpha,
@@ -2918,7 +2966,7 @@ angle::Result Renderer11::generateMipmapUsingD3D(const gl::Context *context,
 angle::Result Renderer11::copyImage(const gl::Context *context,
                                     ImageD3D *dest,
                                     ImageD3D *source,
-                                    const gl::Rectangle &sourceRect,
+                                    const gl::Box &sourceBox,
                                     const gl::Offset &destOffset,
                                     bool unpackFlipY,
                                     bool unpackPremultiplyAlpha,
@@ -2926,7 +2974,7 @@ angle::Result Renderer11::copyImage(const gl::Context *context,
 {
     Image11 *dest11 = GetAs<Image11>(dest);
     Image11 *src11  = GetAs<Image11>(source);
-    return Image11::CopyImage(context, dest11, src11, sourceRect, destOffset, unpackFlipY,
+    return Image11::CopyImage(context, dest11, src11, sourceBox, destOffset, unpackFlipY,
                               unpackPremultiplyAlpha, unpackUnmultiplyAlpha, mRenderer11DeviceCaps);
 }
 

@@ -351,6 +351,67 @@ GL_APICALL void GL_APIENTRY glCompressedCopyTextureCHROMIUM(GLuint sourceId, GLu
 #endif
 #endif /* GL_CHROMIUM_compressed_copy_texture */
 
+
+#ifndef GL_ANGLE_copy_texture_3d
+#define GL_ANGLE_copy_texture_3d 1
+typedef void(GL_APIENTRYP PFNGLCOPYTEXTURE3DANGLEPROC)(GLuint sourceId,
+                                                        GLint sourceLevel,
+                                                        GLenum destTarget,
+                                                        GLuint destId,
+                                                        GLint destLevel,
+                                                        GLint internalFormat,
+                                                        GLenum destType,
+                                                        GLboolean unpackFlipY,
+                                                        GLboolean unpackPremultiplyAlpha,
+                                                        GLboolean unpackUnmultiplyAlpha);
+typedef void(GL_APIENTRYP PFNGLCOPYSUBTEXTURE3DANGLEPROC)(GLuint sourceId,
+                                                           GLint sourceLevel,
+                                                           GLenum destTarget,
+                                                           GLuint destId,
+                                                           GLint destLevel,
+                                                           GLint xoffset,
+                                                           GLint yoffset,
+                                                           GLint zoffset,
+                                                           GLint x,
+                                                           GLint y,
+                                                           GLint z,
+                                                           GLsizei width,
+                                                           GLsizei height,
+                                                           GLsizei depth,
+                                                           GLboolean unpackFlipY,
+                                                           GLboolean unpackPremultiplyAlpha,
+                                                           GLboolean unpackUnmultiplyAlpha);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glCopyTexture3DANGLE(GLuint sourceId,
+                                                  GLint sourceLevel,
+                                                  GLenum destTarget,
+                                                  GLuint destId,
+                                                  GLint destLevel,
+                                                  GLint internalFormat,
+                                                  GLenum destType,
+                                                  GLboolean unpackFlipY,
+                                                  GLboolean unpackPremultiplyAlpha,
+                                                  GLboolean unpackUnmultiplyAlpha);
+GL_APICALL void GL_APIENTRY glCopySubTexture3DANGLE(GLuint sourceId,
+                                                     GLint sourceLevel,
+                                                     GLenum destTarget,
+                                                     GLuint destId,
+                                                     GLint destLevel,
+                                                     GLint xoffset,
+                                                     GLint yoffset,
+                                                     GLint zoffset,
+                                                     GLint x,
+                                                     GLint y,
+                                                     GLint z,
+                                                     GLsizei width,
+                                                     GLsizei height,
+                                                     GLsizei depth,
+                                                     GLboolean unpackFlipY,
+                                                     GLboolean unpackPremultiplyAlpha,
+                                                     GLboolean unpackUnmultiplyAlpha);
+#endif
+#endif /* GL_ANGLE_copy_texture_3d */
+
 #ifndef GL_CHROMIUM_sync_query
 #define GL_CHROMIUM_sync_query 1
 #define GL_COMMANDS_COMPLETED_CHROMIUM    0x84F7

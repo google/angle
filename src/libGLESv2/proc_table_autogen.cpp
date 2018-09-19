@@ -237,6 +237,8 @@ ProcEntry g_procTable[] = {
      P(gl::CompressedTexSubImage3DRobustANGLEContextANGLE)},
     {"glCopyBufferSubData", P(gl::CopyBufferSubData)},
     {"glCopyBufferSubDataContextANGLE", P(gl::CopyBufferSubDataContextANGLE)},
+    {"glCopySubTexture3DANGLE", P(gl::CopySubTexture3DANGLE)},
+    {"glCopySubTexture3DANGLEContextANGLE", P(gl::CopySubTexture3DANGLEContextANGLE)},
     {"glCopySubTextureCHROMIUM", P(gl::CopySubTextureCHROMIUM)},
     {"glCopySubTextureCHROMIUMContextANGLE", P(gl::CopySubTextureCHROMIUMContextANGLE)},
     {"glCopyTexImage2D", P(gl::CopyTexImage2D)},
@@ -245,6 +247,8 @@ ProcEntry g_procTable[] = {
     {"glCopyTexSubImage2DContextANGLE", P(gl::CopyTexSubImage2DContextANGLE)},
     {"glCopyTexSubImage3D", P(gl::CopyTexSubImage3D)},
     {"glCopyTexSubImage3DContextANGLE", P(gl::CopyTexSubImage3DContextANGLE)},
+    {"glCopyTexture3DANGLE", P(gl::CopyTexture3DANGLE)},
+    {"glCopyTexture3DANGLEContextANGLE", P(gl::CopyTexture3DANGLEContextANGLE)},
     {"glCopyTextureCHROMIUM", P(gl::CopyTextureCHROMIUM)},
     {"glCopyTextureCHROMIUMContextANGLE", P(gl::CopyTextureCHROMIUMContextANGLE)},
     {"glCreateProgram", P(gl::CreateProgram)},
@@ -1242,5 +1246,5 @@ ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-size_t g_numProcs = 1174;
+size_t g_numProcs = 1178;
 }  // namespace egl

@@ -3166,6 +3166,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.textureNorm16         = false;
         supportedExtensions.multiview             = false;
         supportedExtensions.maxViews              = 1u;
+        supportedExtensions.copyTexture3d         = false;
     }
 
     if (getClientVersion() < ES_3_1)
@@ -4308,8 +4309,65 @@ void Context::copySubTexture(GLuint sourceId,
     gl::Texture *sourceTexture = getTexture(sourceId);
     gl::Texture *destTexture   = getTexture(destId);
     Offset offset(xoffset, yoffset, 0);
-    Rectangle area(x, y, width, height);
-    handleError(destTexture->copySubTexture(this, destTarget, destLevel, offset, sourceLevel, area,
+    Box box(x, y, 0, width, height, 1);
+    handleError(destTexture->copySubTexture(this, destTarget, destLevel, offset, sourceLevel, box,
+                                            ConvertToBool(unpackFlipY),
+                                            ConvertToBool(unpackPremultiplyAlpha),
+                                            ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
+}
+
+void Context::copyTexture3D(GLuint sourceId,
+                            GLint sourceLevel,
+                            TextureTarget destTarget,
+                            GLuint destId,
+                            GLint destLevel,
+                            GLint internalFormat,
+                            GLenum destType,
+                            GLboolean unpackFlipY,
+                            GLboolean unpackPremultiplyAlpha,
+                            GLboolean unpackUnmultiplyAlpha)
+{
+    ANGLE_CONTEXT_TRY(syncStateForTexImage());
+
+    Texture *sourceTexture = getTexture(sourceId);
+    Texture *destTexture   = getTexture(destId);
+    handleError(destTexture->copyTexture(this, destTarget, destLevel, internalFormat, destType,
+                                         sourceLevel, ConvertToBool(unpackFlipY),
+                                         ConvertToBool(unpackPremultiplyAlpha),
+                                         ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));
+}
+
+void Context::copySubTexture3D(GLuint sourceId,
+                               GLint sourceLevel,
+                               TextureTarget destTarget,
+                               GLuint destId,
+                               GLint destLevel,
+                               GLint xoffset,
+                               GLint yoffset,
+                               GLint zoffset,
+                               GLint x,
+                               GLint y,
+                               GLint z,
+                               GLsizei width,
+                               GLsizei height,
+                               GLsizei depth,
+                               GLboolean unpackFlipY,
+                               GLboolean unpackPremultiplyAlpha,
+                               GLboolean unpackUnmultiplyAlpha)
+{
+    // Zero sized copies are valid but no-ops
+    if (width == 0 || height == 0 || depth == 0)
+    {
+        return;
+    }
+
+    ANGLE_CONTEXT_TRY(syncStateForTexImage());
+
+    Texture *sourceTexture = getTexture(sourceId);
+    Texture *destTexture   = getTexture(destId);
+    Offset offset(xoffset, yoffset, zoffset);
+    Box box(x, y, z, width, height, depth);
+    handleError(destTexture->copySubTexture(this, destTarget, destLevel, offset, sourceLevel, box,
                                             ConvertToBool(unpackFlipY),
                                             ConvertToBool(unpackPremultiplyAlpha),
                                             ConvertToBool(unpackUnmultiplyAlpha), sourceTexture));

@@ -109,6 +109,7 @@ struct Box
     }
     bool operator==(const Box &other) const;
     bool operator!=(const Box &other) const;
+    Rectangle toRect() const;
 
     int x;
     int y;

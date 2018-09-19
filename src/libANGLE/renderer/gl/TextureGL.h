@@ -117,7 +117,7 @@ class TextureGL : public TextureImpl
                              const gl::ImageIndex &index,
                              const gl::Offset &destOffset,
                              size_t sourceLevel,
-                             const gl::Rectangle &sourceArea,
+                             const gl::Box &sourceBox,
                              bool unpackFlipY,
                              bool unpackPremultiplyAlpha,
                              bool unpackUnmultiplyAlpha,

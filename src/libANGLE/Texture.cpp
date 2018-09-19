@@ -1145,7 +1145,7 @@ Error Texture::copySubTexture(const Context *context,
                               GLint level,
                               const Offset &destOffset,
                               GLint sourceLevel,
-                              const Rectangle &sourceArea,
+                              const Box &sourceBox,
                               bool unpackFlipY,
                               bool unpackPremultiplyAlpha,
                               bool unpackUnmultiplyAlpha,
@@ -1156,14 +1156,14 @@ Error Texture::copySubTexture(const Context *context,
     // Ensure source is initialized.
     ANGLE_TRY(source->ensureInitialized(context));
 
-    Box destBox(destOffset.x, destOffset.y, destOffset.y, sourceArea.width, sourceArea.height, 1);
+    Box destBox(destOffset.x, destOffset.y, destOffset.z, sourceBox.width, sourceBox.height,
+                sourceBox.depth);
     ANGLE_TRY(ensureSubImageInitialized(context, target, level, destBox));
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level);
 
-    return mTexture->copySubTexture(context, index, destOffset, sourceLevel, sourceArea,
-                                    unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha,
-                                    source);
+    return mTexture->copySubTexture(context, index, destOffset, sourceLevel, sourceBox, unpackFlipY,
+                                    unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source);
 }
 
 Error Texture::copyCompressedTexture(const Context *context, const Texture *source)

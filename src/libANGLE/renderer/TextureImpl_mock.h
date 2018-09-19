@@ -82,7 +82,7 @@ class MockTextureImpl : public TextureImpl
                            const gl::ImageIndex &,
                            const gl::Offset &,
                            size_t,
-                           const gl::Rectangle &,
+                           const gl::Box &,
                            bool,
                            bool,
                            bool,

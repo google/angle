@@ -288,19 +288,20 @@ bool IsValidCopyTextureDestinationFormatType(Context *context, GLint internalFor
 {
     if (!IsValidCopyTextureDestinationInternalFormatEnum(internalFormat))
     {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidInternalFormat);
         return false;
     }
 
     if (!ValidES3FormatCombination(GetUnsizedFormat(internalFormat), type, internalFormat))
     {
-        context->handleError(InvalidOperation()
-                             << "Invalid combination of type and internalFormat.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), MismatchedTypeAndFormat);
         return false;
     }
 
     const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat, type);
     if (!internalFormatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidInternalFormat);
         return false;
     }
 
@@ -3994,7 +3995,7 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
 
     if (!IsValidCopyTextureSourceTarget(context, source->getType()))
     {
-        context->handleError(InvalidValue() << "Source texture a valid texture type.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidInternalFormat);
         return false;
     }
 
@@ -4052,7 +4053,6 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
 
     if (!IsValidCopyTextureDestinationFormatType(context, internalFormat, destType))
     {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), MismatchedTypeAndFormat);
         return false;
     }
 

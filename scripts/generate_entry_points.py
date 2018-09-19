@@ -24,6 +24,7 @@ angle_extensions = [
     "GL_ANGLE_request_extension",
     "GL_ANGLE_robust_client_memory",
     "GL_ANGLE_multiview",
+    "GL_ANGLE_copy_texture_3d",
 ]
 
 gles1_extensions = [

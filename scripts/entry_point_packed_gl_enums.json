@@ -60,6 +60,9 @@
     "glCopyTexImage2D": {
         "target": "TextureTarget"
     },
+    "glCopyTexture3DANGLE": {
+        "destTarget": "TextureTarget"
+    },
     "glCopyTextureCHROMIUM": {
         "destTarget": "TextureTarget"
     },
@@ -68,6 +71,9 @@
     },
     "glCopyTexSubImage3D": {
         "target": "TextureType"
+    },
+    "glCopySubTexture3DANGLE": {
+        "destTarget": "TextureTarget"
     },
     "glCopySubTextureCHROMIUM": {
         "destTarget": "TextureTarget"

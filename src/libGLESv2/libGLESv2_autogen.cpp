@@ -2418,6 +2418,46 @@ void GL_APIENTRY glVertexPointer(GLint size, GLenum type, GLsizei stride, const 
     return gl::VertexPointer(size, type, stride, pointer);
 }
 
+// GL_ANGLE_copy_texture_3d
+void GL_APIENTRY glCopyTexture3DANGLE(GLuint sourceId,
+                                      GLint sourceLevel,
+                                      GLenum destTarget,
+                                      GLuint destId,
+                                      GLint destLevel,
+                                      GLint internalFormat,
+                                      GLenum destType,
+                                      GLboolean unpackFlipY,
+                                      GLboolean unpackPremultiplyAlpha,
+                                      GLboolean unpackUnmultiplyAlpha)
+{
+    return gl::CopyTexture3DANGLE(sourceId, sourceLevel, destTarget, destId, destLevel,
+                                  internalFormat, destType, unpackFlipY, unpackPremultiplyAlpha,
+                                  unpackUnmultiplyAlpha);
+}
+
+void GL_APIENTRY glCopySubTexture3DANGLE(GLuint sourceId,
+                                         GLint sourceLevel,
+                                         GLenum destTarget,
+                                         GLuint destId,
+                                         GLint destLevel,
+                                         GLint xoffset,
+                                         GLint yoffset,
+                                         GLint zoffset,
+                                         GLint x,
+                                         GLint y,
+                                         GLint z,
+                                         GLint width,
+                                         GLint height,
+                                         GLint depth,
+                                         GLboolean unpackFlipY,
+                                         GLboolean unpackPremultiplyAlpha,
+                                         GLboolean unpackUnmultiplyAlpha)
+{
+    return gl::CopySubTexture3DANGLE(sourceId, sourceLevel, destTarget, destId, destLevel, xoffset,
+                                     yoffset, zoffset, x, y, z, width, height, depth, unpackFlipY,
+                                     unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+}
+
 // GL_ANGLE_framebuffer_blit
 void GL_APIENTRY glBlitFramebufferANGLE(GLint srcX0,
                                         GLint srcY0,
@@ -8751,6 +8791,47 @@ glFramebufferTextureMultiviewSideBySideANGLEContextANGLE(GLeglContext ctx,
 {
     return gl::FramebufferTextureMultiviewSideBySideANGLEContextANGLE(
         ctx, target, attachment, texture, level, numViews, viewportOffsets);
+}
+
+void GL_APIENTRY glCopyTexture3DANGLEContextANGLE(GLeglContext ctx,
+                                                  GLuint sourceId,
+                                                  GLint sourceLevel,
+                                                  GLenum destTarget,
+                                                  GLuint destId,
+                                                  GLint destLevel,
+                                                  GLint internalFormat,
+                                                  GLenum destType,
+                                                  GLboolean unpackFlipY,
+                                                  GLboolean unpackPremultiplyAlpha,
+                                                  GLboolean unpackUnmultiplyAlpha)
+{
+    return gl::CopyTexture3DANGLEContextANGLE(ctx, sourceId, sourceLevel, destTarget, destId,
+                                              destLevel, internalFormat, destType, unpackFlipY,
+                                              unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+}
+
+void GL_APIENTRY glCopySubTexture3DANGLEContextANGLE(GLeglContext ctx,
+                                                     GLuint sourceId,
+                                                     GLint sourceLevel,
+                                                     GLenum destTarget,
+                                                     GLuint destId,
+                                                     GLint destLevel,
+                                                     GLint xoffset,
+                                                     GLint yoffset,
+                                                     GLint zoffset,
+                                                     GLint x,
+                                                     GLint y,
+                                                     GLint z,
+                                                     GLint width,
+                                                     GLint height,
+                                                     GLint depth,
+                                                     GLboolean unpackFlipY,
+                                                     GLboolean unpackPremultiplyAlpha,
+                                                     GLboolean unpackUnmultiplyAlpha)
+{
+    return gl::CopySubTexture3DANGLEContextANGLE(
+        ctx, sourceId, sourceLevel, destTarget, destId, destLevel, xoffset, yoffset, zoffset, x, y,
+        z, width, height, depth, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 }
 
 }  // extern "C"

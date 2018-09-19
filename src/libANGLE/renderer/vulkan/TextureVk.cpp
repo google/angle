@@ -571,7 +571,7 @@ gl::Error TextureVk::copySubTexture(const gl::Context *context,
                                     const gl::ImageIndex &index,
                                     const gl::Offset &destOffset,
                                     size_t sourceLevel,
-                                    const gl::Rectangle &sourceArea,
+                                    const gl::Box &sourceBox,
                                     bool unpackFlipY,
                                     bool unpackPremultiplyAlpha,
                                     bool unpackUnmultiplyAlpha,
@@ -581,7 +581,7 @@ gl::Error TextureVk::copySubTexture(const gl::Context *context,
     size_t level                             = static_cast<size_t>(index.getLevelIndex());
     const gl::InternalFormat &destFormatInfo = *mState.getImageDesc(target, level).format.info;
     return copySubTextureImpl(vk::GetImpl(context), index, destOffset, destFormatInfo, sourceLevel,
-                              sourceArea, unpackFlipY, unpackPremultiplyAlpha,
+                              sourceBox.toRect(), unpackFlipY, unpackPremultiplyAlpha,
                               unpackUnmultiplyAlpha, vk::GetImpl(source));
 }
 
@@ -662,11 +662,11 @@ gl::Error TextureVk::copySubTextureImpl(ContextVk *contextVk,
     GLuint sourceDataRowPitch = sourceArea.width * sourceAngleFormat.pixelBytes;
     GLuint destDataRowPitch   = sourceArea.width * destAngleFormat.pixelBytes;
 
-    CopyImageCHROMIUM(sourceData, sourceDataRowPitch, sourceAngleFormat.pixelBytes,
+    CopyImageCHROMIUM(sourceData, sourceDataRowPitch, sourceAngleFormat.pixelBytes, 0,
                       sourceAngleFormat.pixelReadFunction, destData, destDataRowPitch,
-                      destAngleFormat.pixelBytes, destAngleFormat.pixelWriteFunction,
+                      destAngleFormat.pixelBytes, 0, destAngleFormat.pixelWriteFunction,
                       destFormat.format, destFormat.componentType, sourceArea.width,
-                      sourceArea.height, unpackFlipY, unpackPremultiplyAlpha,
+                      sourceArea.height, 1, unpackFlipY, unpackPremultiplyAlpha,
                       unpackUnmultiplyAlpha);
 
     // Create a new graph node to store image initialization commands.

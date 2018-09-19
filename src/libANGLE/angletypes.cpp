@@ -284,6 +284,12 @@ bool Box::operator!=(const Box &other) const
     return !(*this == other);
 }
 
+Rectangle Box::toRect() const
+{
+    ASSERT(z == 0 && depth == 1);
+    return Rectangle(x, y, width, height);
+}
+
 bool operator==(const Offset &a, const Offset &b)
 {
     return a.x == b.x && a.y == b.y && a.z == b.z;

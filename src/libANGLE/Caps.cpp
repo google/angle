@@ -224,6 +224,7 @@ Extensions::Extensions()
       syncQuery(false),
       copyTexture(false),
       copyCompressedTexture(false),
+      copyTexture3d(false),
       webglCompatibility(false),
       requestExtension(false),
       bindGeneratesResource(false),
@@ -850,6 +851,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_CHROMIUM_sync_query"] = enableableExtension(&Extensions::syncQuery);
         map["GL_CHROMIUM_copy_texture"] = esOnlyExtension(&Extensions::copyTexture);
         map["GL_CHROMIUM_copy_compressed_texture"] = esOnlyExtension(&Extensions::copyCompressedTexture);
+        map["GL_ANGLE_copy_texture_3d"] = enableableExtension(&Extensions::copyTexture3d);
         map["GL_ANGLE_webgl_compatibility"] = esOnlyExtension(&Extensions::webglCompatibility);
         map["GL_ANGLE_request_extension"] = esOnlyExtension(&Extensions::requestExtension);
         map["GL_CHROMIUM_bind_generates_resource"] = esOnlyExtension(&Extensions::bindGeneratesResource);
