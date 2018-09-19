@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "d5ad53a1_fac5ec3e",
+        "filename": "extensions/ANGLE_multiview_multisample.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-19T14:43:08Z",
+      "side": 1,
+      "message": "I\u0027m fine with it as is.  We will likely implement the full OVR_multiview extensions at some point because GL and vulkan will be able to support everything and this looks like it makes everything a bit easier.",
+      "parentUuid": "6226bd2d_254e5369",
+      "revId": "55fad9ca3ff3d3d8c1e8278908c5705adeef4330",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7b50721_034c6698",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 3
