@@ -348,8 +348,6 @@ class Framebuffer final : public angle::ObserverInterface,
     Error ensureReadAttachmentInitialized(const Context *context, GLbitfield blitMask);
     Box getDimensions() const;
 
-    bool hasTextureAttachment(const Texture *texture) const;
-
   private:
     bool detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);
     bool detachMatchingAttachment(const Context *context,
@@ -421,12 +419,6 @@ class Framebuffer final : public angle::ObserverInterface,
     // The dirty bits guard is checked when we get a dependent state change message. We verify that
     // we don't set a dirty bit that isn't already set, when inside the dirty bits syncState.
     Optional<DirtyBits> mDirtyBitsGuard;
-
-    // A cache of attached textures for quick validation of feedback loops.
-    using FramebufferTextureAttachmentVector =
-        angle::FixedVector<const FramebufferAttachmentObject *,
-                           IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS>;
-    mutable Optional<FramebufferTextureAttachmentVector> mAttachedTextures;
 };
 
 }  // namespace gl

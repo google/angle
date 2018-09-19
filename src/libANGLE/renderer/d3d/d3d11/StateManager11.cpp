@@ -1902,8 +1902,7 @@ angle::Result StateManager11::syncFramebuffer(const gl::Context *context)
                                             depthStencilRenderTarget->getTexture().get());
     }
 
-    // TODO(jmadill): Use context caps?
-    ASSERT(maxExistingRT <= static_cast<UINT>(mRenderer->getNativeCaps().maxDrawBuffers));
+    ASSERT(maxExistingRT <= static_cast<UINT>(context->getCaps().maxDrawBuffers));
 
     // Apply the render target and depth stencil
     mRenderer->getDeviceContext()->OMSetRenderTargets(maxExistingRT, framebufferRTVs.data(),

@@ -3255,15 +3255,17 @@ TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDepthStencil)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Same image as depth buffer should fail";
 
     // The same image is used as depth buffer. But depth mask is false.
+    // This is now considered a feedback loop and should generate an error. http://crbug.com/763695
     glDepthMask(GL_FALSE);
     drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
-    EXPECT_GL_NO_ERROR();
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Depth writes disabled should still fail";
 
     // The same image is used as depth buffer. But depth test is not enabled during rendering.
+    // This is now considered a feedback loop and should generate an error. http://crbug.com/763695
     glDepthMask(GL_TRUE);
     glDisable(GL_DEPTH_TEST);
     drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
-    EXPECT_GL_NO_ERROR();
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Depth read disabled should still fail";
 
     // Test rendering and sampling feedback loop for stencil buffer
     glBindTexture(GL_TEXTURE_2D, tex2.get());
@@ -3279,15 +3281,17 @@ TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDepthStencil)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Same image as stencil buffer should fail";
 
     // The same image is used as stencil buffer. But stencil mask is zero.
+    // This is now considered a feedback loop and should generate an error. http://crbug.com/763695
     glStencilMask(0x0);
     drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
-    EXPECT_GL_NO_ERROR();
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Stencil mask zero should still fail";
 
     // The same image is used as stencil buffer. But stencil test is not enabled during rendering.
+    // This is now considered a feedback loop and should generate an error. http://crbug.com/763695
     glStencilMask(0xffff);
     glDisable(GL_STENCIL_TEST);
     drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
-    EXPECT_GL_NO_ERROR();
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Stencil test disabled should still fail";
 }
 
 // The source and the target for CopyTexSubImage3D are the same 3D texture.

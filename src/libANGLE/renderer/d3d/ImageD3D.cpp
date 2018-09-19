@@ -10,11 +10,6 @@
 
 #include "libANGLE/renderer/d3d/ImageD3D.h"
 
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/d3d/RenderTargetD3D.h"
-
 namespace rx
 {
 
