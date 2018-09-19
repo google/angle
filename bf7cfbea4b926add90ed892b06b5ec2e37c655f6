@@ -16,6 +16,24 @@
       "revId": "bf7cfbea4b926add90ed892b06b5ec2e37c655f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "caccc62d_19bc98fe",
+        "filename": "src/common/FastVector.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-19T19:33:11Z",
+      "side": 1,
+      "message": "hm, actually now I\u0027m not sure it\u0027s correct if count \u003c size. drat. I\u0027ll make a small patch.",
+      "parentUuid": "6b1d4c1c_56fa411e",
+      "revId": "bf7cfbea4b926add90ed892b06b5ec2e37c655f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
