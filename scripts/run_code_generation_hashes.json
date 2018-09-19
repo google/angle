@@ -34,7 +34,7 @@
   "DXGI format:src/libANGLE/renderer/gen_angle_format_table.py":
     "9de29b6ca59a05747623c0dc32344b14",
   "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
-    "336c2a275fe35bce1adc7e9b5918bdb0",
+    "b98d4add454ee68dc17d9bd550abf61d",
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
     "2c0e86ff9f92f79ada03f04206e63fba",
   "ESSL static builtins:src/compiler/translator/gen_builtin_symbols.py":

@@ -42,7 +42,7 @@ class SamplerMultisampleArrayTest : public ShaderCompileTreeTest
 // Checks whether compiler has parsed the gsampler2DMS, texelfetch correctly.
 TEST_F(SamplerMultisampleTest, TexelFetchSampler2DMS)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         precision highp float;
         uniform highp sampler2DMS s;
@@ -55,7 +55,7 @@ TEST_F(SamplerMultisampleTest, TexelFetchSampler2DMS)
             uvec4 tex3 = texelFetch(us, ivec2(0, 0), 0);
         })";
 
-    if (!compile(shaderString))
+    if (!compile(kShaderString))
     {
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
@@ -64,7 +64,7 @@ TEST_F(SamplerMultisampleTest, TexelFetchSampler2DMS)
 // Checks whether compiler has parsed the gsampler2DMS, textureSize correctly.
 TEST_F(SamplerMultisampleTest, TextureSizeSampler2DMS)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         precision highp float;
         uniform highp sampler2DMS s;
@@ -77,7 +77,7 @@ TEST_F(SamplerMultisampleTest, TextureSizeSampler2DMS)
             size = textureSize(us);
         })";
 
-    if (!compile(shaderString))
+    if (!compile(kShaderString))
     {
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
@@ -86,14 +86,14 @@ TEST_F(SamplerMultisampleTest, TextureSizeSampler2DMS)
 // Check that sampler2DMS has no default precision.
 TEST_F(SamplerMultisampleTest, NoPrecisionSampler2DMS)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         precision highp float;
         uniform sampler2DMS s;
 
         void main() {})";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -102,14 +102,14 @@ TEST_F(SamplerMultisampleTest, NoPrecisionSampler2DMS)
 // Check that isampler2DMS has no default precision.
 TEST_F(SamplerMultisampleTest, NoPrecisionISampler2DMS)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         precision highp float;
         uniform isampler2DMS s;
 
         void main() {})";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -118,14 +118,14 @@ TEST_F(SamplerMultisampleTest, NoPrecisionISampler2DMS)
 // Check that usampler2DMS has no default precision.
 TEST_F(SamplerMultisampleTest, NoPrecisionUSampler2DMS)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         precision highp float;
         uniform usampler2DMS s;
 
         void main() {})";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -134,7 +134,7 @@ TEST_F(SamplerMultisampleTest, NoPrecisionUSampler2DMS)
 // Negative test: checks that sampler2DMS is not usable in ESSL 3.00.
 TEST_F(SamplerMultisampleTest, Sampler2DMSESSL300)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 300 es
         precision highp float;
         uniform highp sampler2DMS s;
@@ -142,7 +142,7 @@ TEST_F(SamplerMultisampleTest, Sampler2DMSESSL300)
         void main() {
         })";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -151,7 +151,7 @@ TEST_F(SamplerMultisampleTest, Sampler2DMSESSL300)
 // Negative test: checks that isampler2DMS is not usable in ESSL 3.00.
 TEST_F(SamplerMultisampleTest, ISampler2DMSESSL300)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 300 es
         precision highp float;
         uniform highp isampler2DMS s;
@@ -159,7 +159,7 @@ TEST_F(SamplerMultisampleTest, ISampler2DMSESSL300)
         void main() {
         })";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -168,7 +168,7 @@ TEST_F(SamplerMultisampleTest, ISampler2DMSESSL300)
 // Negative test: checks that usampler2DMS is not usable in ESSL 3.00.
 TEST_F(SamplerMultisampleTest, USampler2DMSESSL300)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 300 es
         precision highp float;
         uniform highp usampler2DMS s;
@@ -176,7 +176,7 @@ TEST_F(SamplerMultisampleTest, USampler2DMSESSL300)
         void main() {
         })";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -185,7 +185,7 @@ TEST_F(SamplerMultisampleTest, USampler2DMSESSL300)
 // Negative test: checks that sampler2DMSArray is not usable in ESSL 3.10 without extensions.
 TEST_F(SamplerMultisampleTest, Sampler2DMSArrayNotSupported)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         precision highp float;
         uniform highp sampler2DMSArray s;
@@ -193,7 +193,7 @@ TEST_F(SamplerMultisampleTest, Sampler2DMSArrayNotSupported)
         void main() {
         })";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -202,7 +202,7 @@ TEST_F(SamplerMultisampleTest, Sampler2DMSArrayNotSupported)
 // Negative test: checks that isampler2DMSArray is not usable in ESSL 3.10 without extensions.
 TEST_F(SamplerMultisampleTest, ISampler2DMSArrayNotSupported)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         precision highp float;
         uniform highp isampler2DMSArray s;
@@ -210,7 +210,7 @@ TEST_F(SamplerMultisampleTest, ISampler2DMSArrayNotSupported)
         void main() {
         })";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -219,7 +219,7 @@ TEST_F(SamplerMultisampleTest, ISampler2DMSArrayNotSupported)
 // Negative test: checks that usampler2DMSArray is not usable in ESSL 3.10 without extensions.
 TEST_F(SamplerMultisampleTest, USampler2DMSArrayNotSupported)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         precision highp float;
         uniform highp usampler2DMSArray s;
@@ -227,7 +227,7 @@ TEST_F(SamplerMultisampleTest, USampler2DMSArrayNotSupported)
         void main() {
         })";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -236,7 +236,7 @@ TEST_F(SamplerMultisampleTest, USampler2DMSArrayNotSupported)
 // Checks whether compiler has parsed the gsampler2DMSArray, texelfetch correctly.
 TEST_F(SamplerMultisampleArrayTest, TexelFetchSampler2DMSArray)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
@@ -250,7 +250,7 @@ TEST_F(SamplerMultisampleArrayTest, TexelFetchSampler2DMSArray)
             uvec4 tex3 = texelFetch(us, ivec3(0, 0, 0), 0);
         })";
 
-    if (!compile(shaderString))
+    if (!compile(kShaderString))
     {
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
@@ -259,7 +259,7 @@ TEST_F(SamplerMultisampleArrayTest, TexelFetchSampler2DMSArray)
 // Checks whether compiler has parsed the gsampler2DMSArray, textureSize correctly.
 TEST_F(SamplerMultisampleArrayTest, TextureSizeSampler2DMSArray)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
@@ -273,7 +273,7 @@ TEST_F(SamplerMultisampleArrayTest, TextureSizeSampler2DMSArray)
             size = textureSize(us);
         })";
 
-    if (!compile(shaderString))
+    if (!compile(kShaderString))
     {
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
@@ -282,7 +282,7 @@ TEST_F(SamplerMultisampleArrayTest, TextureSizeSampler2DMSArray)
 // Check that sampler2DMSArray has no default precision.
 TEST_F(SamplerMultisampleArrayTest, NoPrecisionSampler2DMSArray)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
@@ -290,7 +290,7 @@ TEST_F(SamplerMultisampleArrayTest, NoPrecisionSampler2DMSArray)
 
         void main() {})";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -299,7 +299,7 @@ TEST_F(SamplerMultisampleArrayTest, NoPrecisionSampler2DMSArray)
 // Check that isampler2DMSArray has no default precision.
 TEST_F(SamplerMultisampleArrayTest, NoPrecisionISampler2DMSArray)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
@@ -307,7 +307,7 @@ TEST_F(SamplerMultisampleArrayTest, NoPrecisionISampler2DMSArray)
 
         void main() {})";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
@@ -316,7 +316,7 @@ TEST_F(SamplerMultisampleArrayTest, NoPrecisionISampler2DMSArray)
 // Check that usampler2DMSArray has no default precision.
 TEST_F(SamplerMultisampleArrayTest, NoPrecisionUSampler2DMSArray)
 {
-    const std::string &shaderString =
+    constexpr char kShaderString[] =
         R"(#version 310 es
         #extension GL_OES_texture_storage_multisample_2d_array : require
         precision highp float;
@@ -324,8 +324,74 @@ TEST_F(SamplerMultisampleArrayTest, NoPrecisionUSampler2DMSArray)
 
         void main() {})";
 
-    if (compile(shaderString))
+    if (compile(kShaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+class SamplerMultisampleEXTTest : public SamplerMultisampleTest
+{
+  public:
+    SamplerMultisampleEXTTest() {}
+
+  protected:
+    void initResources(ShBuiltInResources *resources) override
+    {
+        resources->ANGLE_texture_multisample = 1;
+    }
+
+    ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_SPEC; }
+};
+
+// checks ANGLE_texture_multisample is supported in es 3.0
+TEST_F(SamplerMultisampleEXTTest, TextureMultisampleEXTEnabled)
+{
+    constexpr char kShaderString[] =
+        R"(#version 300 es
+        #extension GL_ANGLE_texture_multisample : require
+        precision highp float;
+        uniform highp sampler2DMS s;
+        uniform highp isampler2DMS is;
+        uniform highp usampler2DMS us;
+
+        void main() {
+            ivec2 size = textureSize(s);
+            size = textureSize(is);
+            size = textureSize(us);
+            vec4 tex1 = texelFetch(s, ivec2(0, 0), 0);
+            ivec4 tex2 = texelFetch(is, ivec2(0, 0), 0);
+            uvec4 tex3 = texelFetch(us, ivec2(0, 0), 0);
+        })";
+
+    if (!compile(kShaderString))
+    {
+        FAIL() << "Shader compilation failure, expecting success:\n" << mInfoLog;
+    }
+}
+
+// checks that multisample texture is not supported without ANGLE_texture_multisample in es 3.0
+TEST_F(SamplerMultisampleEXTTest, TextureMultisampleEXTDisabled)
+{
+    constexpr char kShaderString[] =
+        R"(#version 300 es
+        precision highp float;
+        uniform highp sampler2DMS s;
+        uniform highp isampler2DMS is;
+        uniform highp usampler2DMS us;
+
+        void main() {
+            ivec2 size = textureSize(s);
+            size = textureSize(is);
+            size = textureSize(us);
+            vec4 tex1 = texelFetch(s, ivec2(0, 0), 0);
+            ivec4 tex2 = texelFetch(is, ivec2(0, 0), 0);
+            uvec4 tex3 = texelFetch(us, ivec2(0, 0), 0);
+        })";
+
+    if (compile(kShaderString))
+    {
+        FAIL() << "Shader compilation success, expecting failure:\n" << mInfoLog;
     }
 }

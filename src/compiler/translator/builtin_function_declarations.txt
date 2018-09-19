@@ -381,6 +381,11 @@ GROUP BEGIN TextureSizeMS
     ivec2 textureSize(gsampler2DMS);
 GROUP END TextureSizeMS
 
+GROUP BEGIN TextureSizeMSExt
+  DEFAULT METADATA {"level": "ESSL3_BUILTINS", "op": "CallBuiltInFunction", "extension": "ANGLE_texture_multisample", "suffix": "Ext"}
+    ivec2 textureSize(gsampler2DMS);
+GROUP END TextureSizeMSExt
+
 GROUP BEGIN TextureSizeMSArray
   DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "extension": "OES_texture_storage_multisample_2d_array"}
     ivec3 textureSize(gsampler2DMSArray);
@@ -476,6 +481,11 @@ GROUP BEGIN TexelFetchMS
   DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction"}
     gvec4 texelFetch(gsampler2DMS, ivec2, int);
 GROUP END TexelFetchMS
+
+GROUP BEGIN TexelFetchMSExt
+  DEFAULT METADATA {"level": "ESSL3_BUILTINS", "op": "CallBuiltInFunction", "extension": "ANGLE_texture_multisample", "suffix": "Ext"}
+    gvec4 texelFetch(gsampler2DMS, ivec2, int);
+GROUP END TexelFetchMSExt
 
 GROUP BEGIN TexelFetchMSArray
   DEFAULT METADATA {"level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "extension": "OES_texture_storage_multisample_2d_array"}

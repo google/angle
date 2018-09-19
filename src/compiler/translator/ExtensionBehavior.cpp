@@ -14,6 +14,7 @@
 
 #define LIST_EXTENSIONS(OP)                      \
     OP(ARB_texture_rectangle)                    \
+    OP(ANGLE_texture_multisample)                \
     OP(ARM_shader_framebuffer_fetch)             \
     OP(EXT_blend_func_extended)                  \
     OP(EXT_draw_buffers)                         \
