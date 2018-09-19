@@ -436,7 +436,9 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
             // Assume host visible/coherent memory available.
             VkMemoryPropertyFlags flags =
                 (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-            ANGLE_TRY(AllocateBufferMemory(contextVk, flags, &mEmptyUniformBlockStorage.buffer,
+            VkMemoryPropertyFlags flagsOut = 0;
+            ANGLE_TRY(AllocateBufferMemory(contextVk, flags, &flagsOut,
+                                           &mEmptyUniformBlockStorage.buffer,
                                            &mEmptyUniformBlockStorage.memory));
         }
     }

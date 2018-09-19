@@ -48,7 +48,7 @@ struct VertexAttribute;
 class VertexBinding;
 
 ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_OBJECT);
-}
+}  // namespace gl
 
 #define ANGLE_PRE_DECLARE_VK_OBJECT(OBJ) class OBJ##Vk;
 
@@ -274,7 +274,8 @@ class MemoryProperties final : angle::NonCopyable
     void init(VkPhysicalDevice physicalDevice);
     angle::Result findCompatibleMemoryIndex(Context *context,
                                             const VkMemoryRequirements &memoryRequirements,
-                                            VkMemoryPropertyFlags memoryPropertyFlags,
+                                            VkMemoryPropertyFlags requestedMemoryPropertyFlags,
+                                            VkMemoryPropertyFlags *memoryPropertyFlagsOut,
                                             uint32_t *indexOut) const;
     void destroy();
 
@@ -654,7 +655,8 @@ class ObjectAndSerial final : angle::NonCopyable
 };
 
 angle::Result AllocateBufferMemory(vk::Context *context,
-                                   VkMemoryPropertyFlags memoryPropertyFlags,
+                                   VkMemoryPropertyFlags requestedMemoryPropertyFlags,
+                                   VkMemoryPropertyFlags *memoryPropertyFlagsOut,
                                    Buffer *buffer,
                                    DeviceMemory *deviceMemoryOut);
 

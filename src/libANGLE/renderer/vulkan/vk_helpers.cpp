@@ -82,6 +82,7 @@ VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType)
 DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize)
     : mUsage(usage),
       mMinSize(minSize),
+      mHostCoherent(false),
       mNextAllocationOffset(0),
       mLastFlushOrInvalidateOffset(0),
       mSize(0),
@@ -137,8 +138,11 @@ angle::Result DynamicBuffer::allocate(Context *context,
         createInfo.pQueueFamilyIndices   = nullptr;
         ANGLE_TRY(mBuffer.init(context, createInfo));
 
-        ANGLE_TRY(
-            AllocateBufferMemory(context, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &mBuffer, &mMemory));
+        VkMemoryPropertyFlags actualMemoryPropertyFlags = 0;
+        ANGLE_TRY(AllocateBufferMemory(context, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+                                       &actualMemoryPropertyFlags, &mBuffer, &mMemory));
+        mHostCoherent = (VK_MEMORY_PROPERTY_HOST_COHERENT_BIT ==
+                         (VK_MEMORY_PROPERTY_HOST_COHERENT_BIT & actualMemoryPropertyFlags));
 
         ANGLE_TRY(mMemory.map(context, 0, mSize, 0, &mMappedMemory));
         mNextAllocationOffset        = 0;
@@ -170,7 +174,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
 
 angle::Result DynamicBuffer::flush(Context *context)
 {
-    if (mNextAllocationOffset > mLastFlushOrInvalidateOffset)
+    if (!mHostCoherent && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
     {
         VkMappedMemoryRange range;
         range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -187,7 +191,7 @@ angle::Result DynamicBuffer::flush(Context *context)
 
 angle::Result DynamicBuffer::invalidate(Context *context)
 {
-    if (mNextAllocationOffset > mLastFlushOrInvalidateOffset)
+    if (!mHostCoherent && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
     {
         VkMappedMemoryRange range;
         range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;

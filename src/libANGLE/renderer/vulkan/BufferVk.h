@@ -70,6 +70,7 @@ class BufferVk : public BufferImpl, public vk::CommandGraphResource
 
     vk::Buffer mBuffer;
     vk::DeviceMemory mBufferMemory;
+    VkMemoryPropertyFlags mAllocatedMemoryPropertyFlags;
 };
 
 }  // namespace rx

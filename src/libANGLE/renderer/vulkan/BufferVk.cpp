@@ -18,7 +18,8 @@
 namespace rx
 {
 
-BufferVk::BufferVk(const gl::BufferState &state) : BufferImpl(state)
+BufferVk::BufferVk(const gl::BufferState &state)
+    : BufferImpl(state), mAllocatedMemoryPropertyFlags(0)
 {
 }
 
@@ -74,8 +75,9 @@ gl::Error BufferVk::setData(const gl::Context *context,
         // Assume host vislble/coherent memory available.
         const VkMemoryPropertyFlags memoryPropertyFlags =
             (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-        ANGLE_TRY(
-            vk::AllocateBufferMemory(contextVk, memoryPropertyFlags, &mBuffer, &mBufferMemory));
+        ANGLE_TRY(vk::AllocateBufferMemory(contextVk, memoryPropertyFlags,
+                                           &mAllocatedMemoryPropertyFlags, &mBuffer,
+                                           &mBufferMemory));
     }
 
     if (data && size > 0)
