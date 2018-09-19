@@ -3534,6 +3534,11 @@ void Context::clear(GLbitfield mask)
 
 void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values)
 {
+    if (buffer == GL_DEPTH && !getGLState().getDrawFramebuffer()->getDepthbuffer())
+    {
+        // It's not an error to try to clear a non-existent depth buffer, but it's a no-op.
+        return;
+    }
     ANGLE_CONTEXT_TRY(prepareForClearBuffer(buffer, drawbuffer));
     ANGLE_CONTEXT_TRY(
         mGLState.getDrawFramebuffer()->clearBufferfv(this, buffer, drawbuffer, values));
@@ -3548,6 +3553,11 @@ void Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *valu
 
 void Context::clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values)
 {
+    if (buffer == GL_STENCIL && !getGLState().getDrawFramebuffer()->getStencilbuffer())
+    {
+        // It's not an error to try to clear a non-existent stencil buffer, but it's a no-op.
+        return;
+    }
     ANGLE_CONTEXT_TRY(prepareForClearBuffer(buffer, drawbuffer));
     ANGLE_CONTEXT_TRY(
         mGLState.getDrawFramebuffer()->clearBufferiv(this, buffer, drawbuffer, values));

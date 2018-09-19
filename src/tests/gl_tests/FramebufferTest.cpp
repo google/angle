@@ -532,6 +532,80 @@ TEST_P(FramebufferTest_ES3, AttachmentWith3DLayers)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that clearing the stencil buffer when the framebuffer only has a color attachment does not
+// crash.
+TEST_P(FramebufferTest_ES3, ClearNonexistentStencil)
+{
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+
+    GLint clearValue = 0;
+    glClearBufferiv(GL_STENCIL, 0, &clearValue);
+
+    // There's no error specified for clearing nonexistent buffers, it's simply a no-op.
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that clearing the depth buffer when the framebuffer only has a color attachment does not
+// crash.
+TEST_P(FramebufferTest_ES3, ClearNonexistentDepth)
+{
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+
+    GLfloat clearValue = 0.0f;
+    glClearBufferfv(GL_DEPTH, 0, &clearValue);
+
+    // There's no error specified for clearing nonexistent buffers, it's simply a no-op.
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that clearing a nonexistent color attachment does not crash.
+TEST_P(FramebufferTest_ES3, ClearNonexistentColor)
+{
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+
+    std::vector<GLfloat> clearValue = {{0.0f, 1.0f, 0.0f, 1.0f}};
+    glClearBufferfv(GL_COLOR, 1, clearValue.data());
+
+    // There's no error specified for clearing nonexistent buffers, it's simply a no-op.
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that clearing the depth and stencil buffers when the framebuffer only has a color attachment
+// does not crash.
+TEST_P(FramebufferTest_ES3, ClearNonexistentDepthStencil)
+{
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+
+    glClearBufferfi(GL_DEPTH_STENCIL, 0, 0.0f, 0);
+
+    // There's no error specified for clearing nonexistent buffers, it's simply a no-op.
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(FramebufferTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 class FramebufferTest_ES31 : public ANGLETest
