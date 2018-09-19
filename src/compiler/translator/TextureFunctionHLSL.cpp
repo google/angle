@@ -387,6 +387,12 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
             UNREACHABLE();
     }
 
+    if (textureFunction.method == TextureFunctionHLSL::TextureFunction::GATHER &&
+        IsShadowSampler(textureFunction.sampler))
+    {
+        out << ", float refZ";
+    }
+
     if (textureFunction.offset)
     {
         switch (textureFunction.sampler)
@@ -418,7 +424,8 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
     {
         out << ", float bias";
     }
-    else if (textureFunction.method == TextureFunctionHLSL::TextureFunction::GATHER)
+    else if (textureFunction.method == TextureFunctionHLSL::TextureFunction::GATHER &&
+             !IsShadowSampler(textureFunction.sampler))
     {
         out << ", int comp = 0";
     }
@@ -850,6 +857,18 @@ void OutputTextureGatherFunctionBody(TInfoSinkBase &out,
 
     ImmutableString samplerCoordString(samplerCoordBuilder);
 
+    if (IsShadowSampler(textureFunction.sampler))
+    {
+        out << "return " << textureReference << ".GatherCmp(" << samplerReference << ", "
+            << samplerCoordString << ", refZ";
+        if (textureFunction.offset)
+        {
+            out << ", offset";
+        }
+        out << ");\n";
+        return;
+    }
+
     constexpr std::array<const char *, 4> kHLSLGatherFunctions = {
         {"GatherRed", "GatherGreen", "GatherBlue", "GatherAlpha"}};
 
@@ -1211,7 +1230,14 @@ const char *TextureFunctionHLSL::TextureFunction::getReturnType() const
             case EbtSampler2DShadow:
             case EbtSamplerCubeShadow:
             case EbtSampler2DArrayShadow:
-                return "float";
+                if (method == TextureFunctionHLSL::TextureFunction::GATHER)
+                {
+                    return "float4";
+                }
+                else
+                {
+                    return "float";
+                }
             default:
                 UNREACHABLE();
         }
