@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b1d4c1c_56fa411e",
+        "filename": "src/common/FastVector.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-19T18:34:14Z",
+      "side": 1,
+      "message": "Ah, can\u0027t believe this had slipped unnoticed!",
+      "revId": "bf7cfbea4b926add90ed892b06b5ec2e37c655f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
