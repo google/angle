@@ -216,7 +216,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         // 'beginWriteResource' will stop any subsequent rendering from using the old buffer data,
         // by marking any current read operations / command buffers as 'finished'.
         vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
+        ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
 
         // Insert a barrier to ensure reads from the buffer are complete.
         // TODO(jmadill): Insert minimal barriers.

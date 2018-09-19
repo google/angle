@@ -425,7 +425,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(Context *conte
     std::array<VkBufferCopy, 2> copies = {{copy1, copy2}};
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(beginWriteResource(context, &commandBuffer));
+    ANGLE_TRY(recordCommands(context, &commandBuffer));
 
     elementArrayBufferVk->addReadDependency(this);
     commandBuffer->copyBuffer(elementArrayBufferVk->getVkBuffer().getHandle(), *bufferHandleOut, 2,

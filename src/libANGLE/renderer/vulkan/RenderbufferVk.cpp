@@ -87,7 +87,7 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
 
         // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
         vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
+        ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
 
         if (isDepthOrStencilFormat)
         {

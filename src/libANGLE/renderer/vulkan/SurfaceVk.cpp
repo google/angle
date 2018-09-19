@@ -480,7 +480,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 
     // Allocate a command buffer for clearing our images to black.
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(beginWriteResource(displayVk, &commandBuffer));
+    ANGLE_TRY(recordCommands(displayVk, &commandBuffer));
 
     VkClearColorValue transparentBlack;
     transparentBlack.float32[0] = 0.0f;
@@ -565,7 +565,7 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
     RendererVk *renderer = displayVk->getRenderer();
 
     vk::CommandBuffer *swapCommands = nullptr;
-    ANGLE_TRY(beginWriteResource(displayVk, &swapCommands));
+    ANGLE_TRY(recordCommands(displayVk, &swapCommands));
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 

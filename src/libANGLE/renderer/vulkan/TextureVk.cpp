@@ -475,7 +475,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     }
 
     // Create a new graph node to store image initialization commands.
-    onResourceChanged(renderer);
+    finishCurrentCommands(renderer);
 
     // Handle initial data.
     if (pixels)
@@ -503,7 +503,7 @@ gl::Error TextureVk::setSubImage(const gl::Context *context,
         gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels));
 
     // Create a new graph node to store image initialization commands.
-    onResourceChanged(contextVk->getRenderer());
+    finishCurrentCommands(contextVk->getRenderer());
 
     return gl::NoError();
 }
@@ -629,7 +629,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
         framebufferVk));
 
-    onResourceChanged(renderer);
+    finishCurrentCommands(renderer);
     framebufferVk->addReadDependency(this);
     return angle::Result::Continue();
 }
@@ -679,7 +679,7 @@ gl::Error TextureVk::copySubTextureImpl(ContextVk *contextVk,
                       unpackUnmultiplyAlpha);
 
     // Create a new graph node to store image initialization commands.
-    onResourceChanged(contextVk->getRenderer());
+    finishCurrentCommands(contextVk->getRenderer());
 
     return angle::Result::Continue();
 }
@@ -687,7 +687,7 @@ gl::Error TextureVk::copySubTextureImpl(ContextVk *contextVk,
 angle::Result TextureVk::getCommandBufferForWrite(ContextVk *contextVk,
                                                   vk::CommandBuffer **commandBufferOut)
 {
-    ANGLE_TRY(appendWriteResource(contextVk, commandBufferOut));
+    ANGLE_TRY(recordCommands(contextVk, commandBufferOut));
     return angle::Result::Continue();
 }
 
@@ -999,7 +999,7 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
     }
 
     // We're changing this textureVk content, make sure we let the graph know.
-    onResourceChanged(renderer);
+    finishCurrentCommands(renderer);
 
     return gl::NoError();
 }

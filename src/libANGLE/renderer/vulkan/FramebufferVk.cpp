@@ -232,7 +232,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     // Standard Depth/stencil clear without scissor.
     if (clearDepth || clearStencil)
     {
-        ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
+        ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
 
         const VkClearDepthStencilValue &clearDepthStencilValue =
             contextVk->getClearDepthStencilValue().depthStencil;
@@ -255,7 +255,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
     if (!commandBuffer)
     {
-        ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
+        ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
     }
 
     // TODO(jmadill): Support gaps in RenderTargets. http://anglebug.com/2394
@@ -482,7 +482,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
 
     // Reinitialize the commandBuffer after a read pixels because it calls
     // renderer->finish which makes command buffers obsolete.
-    ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
+    ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
 
     // We read the bytes of the image in a buffer, now we have to copy them into the
     // destination target.
@@ -516,7 +516,7 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
     bool blitStencilBuffer                   = (mask & GL_STENCIL_BUFFER_BIT) != 0;
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
+    ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
     FramebufferVk *sourceFramebufferVk = vk::GetImpl(sourceFramebuffer);
     bool flipSource                    = contextVk->isViewportFlipEnabledForReadFBO();
     bool flipDest                      = contextVk->isViewportFlipEnabledForDrawFBO();
@@ -772,7 +772,7 @@ gl::Error FramebufferVk::syncState(const gl::Context *context,
 
     // Will freeze the current set of dependencies on this FBO. The next time we render we will
     // create a new entry in the command graph.
-    onResourceChanged(renderer);
+    finishCurrentCommands(renderer);
 
     contextVk->invalidateCurrentPipeline();
 
@@ -879,7 +879,7 @@ angle::Result FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
                                                        bool clearStencil)
 {
     // Trigger a new command node to ensure overlapping writes happen sequentially.
-    onResourceChanged(contextVk->getRenderer());
+    finishCurrentCommands(contextVk->getRenderer());
 
     // This command can only happen inside a render pass, so obtain one if its already happening
     // or create a new one if not.
@@ -980,7 +980,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
     vk::ShaderLibrary *shaderLibrary = renderer->getShaderLibrary();
 
     // Trigger a new command node to ensure overlapping writes happen sequentially.
-    onResourceChanged(renderer);
+    finishCurrentCommands(renderer);
 
     const vk::ShaderAndSerial *fullScreenQuad = nullptr;
     ANGLE_TRY(shaderLibrary->getShader(contextVk, vk::InternalShaderID::FullScreenQuad_vert,
@@ -1040,7 +1040,7 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
     pipeline->updateSerial(renderer->getCurrentQueueSerial());
 
     vk::CommandBuffer *writeCommands = nullptr;
-    ANGLE_TRY(appendWriteResource(contextVk, &writeCommands));
+    ANGLE_TRY(recordCommands(contextVk, &writeCommands));
 
     // If the format of the framebuffer does not have an alpha channel, we need to make sure we does
     // not affect the alpha channel of the type we're using to emulate the format.
@@ -1099,7 +1099,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     std::vector<VkClearValue> attachmentClearValues;
 
     vk::CommandBuffer *writeCommands = nullptr;
-    ANGLE_TRY(appendWriteResource(contextVk, &writeCommands));
+    ANGLE_TRY(recordCommands(contextVk, &writeCommands));
 
     vk::RenderPassDesc renderPassDesc;
 
@@ -1152,7 +1152,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
+    ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
 
     // Note that although we're reading from the image, we need to update the layout below.
 

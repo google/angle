@@ -125,15 +125,8 @@ class CommandGraphResource
   protected:
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
-    angle::Result beginWriteResource(Context *context, CommandBuffer **commandBufferOut);
-
-    // Check if we have started writing outside a RenderPass.
-    bool hasStartedWriteResource() const;
-
-    // Starts rendering to an existing command buffer for the resource.
-    // The started command buffer will render outside of a RenderPass.
-    // Calls beginWriteResource if we have not yet started writing.
-    angle::Result appendWriteResource(Context *context, CommandBuffer **commandBufferOut);
+    // Will append to an existing command buffer/graph node if possible.
+    angle::Result recordCommands(Context *context, CommandBuffer **commandBufferOut);
 
     // Begins a command buffer on the current graph node for in-RenderPass rendering.
     // Currently only called from FramebufferVk::getCommandBufferForDraw.
@@ -152,7 +145,7 @@ class CommandGraphResource
     const gl::Rectangle &getRenderPassRenderArea() const;
 
     // Called when 'this' object changes, but we'd like to start a new command buffer later.
-    void onResourceChanged(RendererVk *renderer);
+    void finishCurrentCommands(RendererVk *renderer);
 
     // Get the current queue serial for this resource. Only used to release resources.
     Serial getStoredQueueSerial() const;

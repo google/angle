@@ -81,28 +81,16 @@ Serial CommandGraphResource::getStoredQueueSerial() const
     return mStoredQueueSerial;
 }
 
-bool CommandGraphResource::hasStartedWriteResource() const
-{
-    return hasChildlessWritingNode() &&
-           mCurrentWritingNode->getOutsideRenderPassCommands()->valid();
-}
-
-angle::Result CommandGraphResource::beginWriteResource(Context *context,
-                                                       CommandBuffer **commandBufferOut)
-{
-    onResourceChanged(context->getRenderer());
-    return mCurrentWritingNode->beginOutsideRenderPassRecording(
-        context, context->getRenderer()->getCommandPool(), commandBufferOut);
-}
-
-angle::Result CommandGraphResource::appendWriteResource(Context *context,
-                                                        CommandBuffer **commandBufferOut)
+angle::Result CommandGraphResource::recordCommands(Context *context,
+                                                   CommandBuffer **commandBufferOut)
 {
     updateQueueSerial(context->getRenderer()->getCurrentQueueSerial());
 
-    if (!hasChildlessWritingNode())
+    if (!hasChildlessWritingNode() || hasStartedRenderPass())
     {
-        return beginWriteResource(context, commandBufferOut);
+        finishCurrentCommands(context->getRenderer());
+        return mCurrentWritingNode->beginOutsideRenderPassRecording(
+            context, context->getRenderer()->getCommandPool(), commandBufferOut);
     }
 
     CommandBuffer *outsideRenderPassCommands = mCurrentWritingNode->getOutsideRenderPassCommands();
@@ -154,7 +142,7 @@ angle::Result CommandGraphResource::beginRenderPass(Context *context,
     return mCurrentWritingNode->beginInsideRenderPassRecording(context, commandBufferOut);
 }
 
-void CommandGraphResource::onResourceChanged(RendererVk *renderer)
+void CommandGraphResource::finishCurrentCommands(RendererVk *renderer)
 {
     CommandGraphNode *newCommands = renderer->getCommandGraph()->allocateNode();
     onWriteImpl(newCommands, renderer->getCurrentQueueSerial());
