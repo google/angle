@@ -359,9 +359,6 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
 
     const gl::State &glState = context->getGLState();
 
-    vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(beginWriteResource(contextVk, &commandBuffer));
-
     gl::PixelPackState packState(glState.getPackState());
     if (contextVk->isViewportFlipEnabledForReadFBO())
     {
