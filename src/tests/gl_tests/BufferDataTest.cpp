@@ -124,9 +124,6 @@ TEST_P(BufferDataTest, ZeroNonNULLData)
 
 TEST_P(BufferDataTest, NULLResolvedData)
 {
-    // TODO(jmadill) http://anglebug.com/2644
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     glBufferData(GL_ARRAY_BUFFER, 128, nullptr, GL_DYNAMIC_DRAW);
 
@@ -142,9 +139,6 @@ TEST_P(BufferDataTest, NULLResolvedData)
 // path.
 TEST_P(BufferDataTest, RepeatedDrawWithDynamic)
 {
-    // TODO(jmadill) http://anglebug.com/2644
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     std::vector<GLfloat> data;
     for (int i = 0; i < 16; ++i)
     {
@@ -480,9 +474,6 @@ TEST_P(BufferDataTestES3, NoBufferInitDataCopyBug)
     glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_ARRAY_BUFFER, 0, 0, size);
     ASSERT_GL_NO_ERROR();
 }
-
-// TODO(lucferron): Diagnose and fix the Vulkan backend to enable the BufferDataTest tests.
-// http://anglebug.com/2644
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(BufferDataTest,
