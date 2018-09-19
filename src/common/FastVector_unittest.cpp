@@ -181,7 +181,7 @@ TEST(FastVector, Resize)
     }
 
     // Resize back to smaller
-    vec.resize(2u);
+    vec.resize(2u, 2);
     EXPECT_EQ(2u, vec.size());
 }
 

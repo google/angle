@@ -366,8 +366,8 @@ void FastVector<T, N, Storage>::resize(size_type count, const value_type &value)
     if (count > mSize)
     {
         ensure_capacity(count);
+        std::fill(mData + mSize, mData + count, value);
     }
-    std::fill(mData + mSize, mData + count, value);
     mSize = count;
 }
 
