@@ -37,7 +37,8 @@ class TextureFunctionHLSL final : angle::NonCopyable
             LOD0BIAS,
             SIZE,  // textureSize()
             FETCH,
-            GRAD
+            GRAD,
+            GATHER
         };
 
         ImmutableString name() const;

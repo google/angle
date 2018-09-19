@@ -42,7 +42,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.name_length.vertex_fragment.default_block_struct_member = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.type.vertex_fragment.struct.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
-1442 D3D11 : dEQP-GLES31.functional.texture.gather.* = SKIP
 // TODO(xinghua.cao@intel.com): FAIL expectation instead of SKIP should be sufficient for OpenGL, but the
 // test expectations parser doesn't support having FAIL for GL and SKIP for D3D with the same test filter.
 1442 OPENGL D3D11 : dEQP-GLES31.functional.image_load_store.* = SKIP
@@ -1568,6 +1567,18 @@
 1941 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.shader_directive.geometry_shader = FAIL
 1941 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.shader_directive.geometry_shader = FAIL
 1941 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.geometry_shader = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d.depth32f.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d.rgba8i.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d.rgba8ui.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d_array.depth32f.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d_array.rgba8.texture_swizzle.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d_array.rgba8i.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d_array.rgba8ui.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.depth32f.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8.texture_swizzle.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8i.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8ui.* = FAIL
+2826 D3D11 : dEQP-GLES31.functional.texture.gather.offset.* = FAIL
 
 // Recetly added tests failing on D3D11 Windows.
 2619 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.uniform.findLSBMinusOne.highp_compute = FAIL
