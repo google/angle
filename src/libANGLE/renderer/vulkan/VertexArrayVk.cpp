@@ -479,13 +479,13 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
         if (mDirtyLineLoopTranslation)
         {
             gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer().get();
-            VkIndexType indexType          = gl_vk::GetIndexType(drawCallParams.type());
 
             if (!elementArrayBuffer)
             {
-                ANGLE_TRY(mLineLoopHelper.getIndexBufferForClientElementArray(
-                    contextVk, drawCallParams, &mCurrentElementArrayBufferHandle,
-                    &mCurrentElementArrayBufferOffset));
+                ANGLE_TRY(mLineLoopHelper.streamIndices(
+                    contextVk, drawCallParams.type(), drawCallParams.indexCount(),
+                    reinterpret_cast<const uint8_t *>(drawCallParams.indices()),
+                    &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
             }
             else
             {
@@ -493,8 +493,9 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
                 intptr_t offset = reinterpret_cast<intptr_t>(drawCallParams.indices());
                 BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
                 ANGLE_TRY(mLineLoopHelper.getIndexBufferForElementArrayBuffer(
-                    contextVk, elementArrayBufferVk, indexType, drawCallParams.indexCount(), offset,
-                    &mCurrentElementArrayBufferHandle, &mCurrentElementArrayBufferOffset));
+                    contextVk, elementArrayBufferVk, drawCallParams.type(),
+                    drawCallParams.indexCount(), offset, &mCurrentElementArrayBufferHandle,
+                    &mCurrentElementArrayBufferOffset));
             }
         }
 

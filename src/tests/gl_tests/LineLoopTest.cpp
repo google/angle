@@ -132,9 +132,6 @@ TEST_P(LineLoopTest, LineLoopUIntIndices)
 
 TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
 {
-    // TODO(jmadill): Diagnose and fix. http://anglebug.com/2802
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Disable D3D11 SDK Layers warnings checks, see ANGLE issue 667 for details
     ignoreD3D11SDKLayersWarnings();
 
