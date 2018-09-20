@@ -13,6 +13,7 @@ angle_white_box_tests_sources = [
   "test_utils/gl_raii.h",
 ]
 angle_white_box_tests_win_sources = [
+  "egl_tests/EGLDirectCompositionTest.cpp",
   "gl_tests/D3D11EmulatedIndexedBufferTest.cpp",
   "gl_tests/D3D11FormatTablesTest.cpp",
   "gl_tests/D3D11InputLayoutCacheTest.cpp",
