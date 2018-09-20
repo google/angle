@@ -606,6 +606,45 @@ TEST_P(FramebufferTest_ES3, ClearNonexistentDepthStencil)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that clearing a color attachment that has been deleted doesn't crash.
+TEST_P(FramebufferTest_ES3, ClearDeletedAttachment)
+{
+    // An INVALID_FRAMEBUFFER_OPERATION error was seen in this test on Mac, not sure where it might
+    // be originating from. http://anglebug.com/2834
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // There used to be a bug where some draw buffer state used to remain set even after the
+    // attachment was detached via deletion. That's why we create, attach and delete this RBO here.
+    GLuint rbo = 0u;
+    glGenRenderbuffers(1, &rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+    glDeleteRenderbuffers(1, &rbo);
+
+    // There needs to be at least one color attachment to prevent early out from the clear calls.
+    GLRenderbuffer rbo2;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo2);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, rbo2);
+
+    ASSERT_GL_NO_ERROR();
+
+    // There's no error specified for clearing nonexistent buffers, it's simply a no-op, so we
+    // expect no GL errors below.
+    std::array<GLfloat, 4> floatClearValue = {0.0f, 0.0f, 0.0f, 0.0f};
+    glClearBufferfv(GL_COLOR, 0, floatClearValue.data());
+    EXPECT_GL_NO_ERROR();
+    std::array<GLuint, 4> uintClearValue = {0u, 0u, 0u, 0u};
+    glClearBufferuiv(GL_COLOR, 0, uintClearValue.data());
+    EXPECT_GL_NO_ERROR();
+    std::array<GLint, 4> intClearValue = {0, 0, 0, 0};
+    glClearBufferiv(GL_COLOR, 0, intClearValue.data());
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(FramebufferTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 class FramebufferTest_ES31 : public ANGLETest

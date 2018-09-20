@@ -3545,9 +3545,14 @@ void Context::clear(GLbitfield mask)
 
 void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values)
 {
+    // It's not an error to try to clear a non-existent buffer, but it's a no-op. We early out so
+    // that the backend doesn't need to take this case into account.
     if (buffer == GL_DEPTH && !getGLState().getDrawFramebuffer()->getDepthbuffer())
     {
-        // It's not an error to try to clear a non-existent depth buffer, but it's a no-op.
+        return;
+    }
+    if (buffer == GL_COLOR && !getGLState().getDrawFramebuffer()->getColorbuffer(drawbuffer))
+    {
         return;
     }
     ANGLE_CONTEXT_TRY(prepareForClearBuffer(buffer, drawbuffer));
@@ -3557,6 +3562,12 @@ void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *valu
 
 void Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *values)
 {
+    // It's not an error to try to clear a non-existent buffer, but it's a no-op. We early out so
+    // that the backend doesn't need to take this case into account.
+    if (buffer == GL_COLOR && !getGLState().getDrawFramebuffer()->getColorbuffer(drawbuffer))
+    {
+        return;
+    }
     ANGLE_CONTEXT_TRY(prepareForClearBuffer(buffer, drawbuffer));
     ANGLE_CONTEXT_TRY(
         mGLState.getDrawFramebuffer()->clearBufferuiv(this, buffer, drawbuffer, values));
@@ -3564,9 +3575,14 @@ void Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *valu
 
 void Context::clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values)
 {
+    // It's not an error to try to clear a non-existent buffer, but it's a no-op. We early out so
+    // that the backend doesn't need to take this case into account.
     if (buffer == GL_STENCIL && !getGLState().getDrawFramebuffer()->getStencilbuffer())
     {
-        // It's not an error to try to clear a non-existent stencil buffer, but it's a no-op.
+        return;
+    }
+    if (buffer == GL_COLOR && !getGLState().getDrawFramebuffer()->getColorbuffer(drawbuffer))
+    {
         return;
     }
     ANGLE_CONTEXT_TRY(prepareForClearBuffer(buffer, drawbuffer));

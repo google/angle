@@ -353,8 +353,7 @@ class Framebuffer final : public angle::ObserverInterface,
     bool detachMatchingAttachment(const Context *context,
                                   FramebufferAttachment *attachment,
                                   GLenum matchType,
-                                  GLuint matchId,
-                                  size_t dirtyBit);
+                                  GLuint matchId);
     GLenum checkStatusWithGLFrontEnd(const Context *context);
     GLenum checkStatusImpl(const Context *context);
     void setAttachment(const Context *context,
