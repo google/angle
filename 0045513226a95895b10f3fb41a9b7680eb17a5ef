@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f3314b7_f9a20d0a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-20T20:58:44Z",
+      "side": 1,
+      "message": "Check mSupportedExtensions instead.  If this extension is enabled later, this function will not be called to re-initialize the zero textures.",
+      "range": {
+        "startLine": 413,
+        "startChar": 47,
+        "endLine": 413,
+        "endChar": 62
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9748ea2_27bbd62c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-20T20:58:44Z",
+      "side": 1,
+      "message": "I think these stay in the ES 3.1-only block or require a different extension check.",
+      "range": {
+        "startLine": 418,
+        "startChar": 8,
+        "endLine": 420,
+        "endChar": 97
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b774c68c_75a6b0d8",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-20T20:58:44Z",
+      "side": 1,
+      "message": "Check nativeExtensions.",
+      "range": {
+        "startLine": 225,
+        "startChar": 42,
+        "endLine": 225,
+        "endChar": 66
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d76d196_063d23bf",
+        "filename": "src/libGLESv2/proc_table_data.json",
+        "patchSetId": 18
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-20T20:58:44Z",
+      "side": 1,
+      "message": "nit: space instead of tab",
+      "range": {
+        "startLine": 720,
+        "startChar": 0,
+        "endLine": 720,
+        "endChar": 2
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "996aa921_5c91a4b6",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-20T20:58:44Z",
+      "side": 1,
+      "message": "nit: we have ensureExtensionEnabled for this.",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 5
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "979793c5_9216edf9",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-20T20:58:44Z",
+      "side": 1,
+      "message": "This check works now but if there is ever an ES 4.0 it will fail.",
+      "range": {
+        "startLine": 208,
+        "startChar": 8,
+        "endLine": 208,
+        "endChar": 68
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79135fae_00daa516",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-20T20:58:44Z",
+      "side": 1,
+      "message": "This pattern is used a bunch, can you refactor it into a meetsRequirements (or similar) function?",
+      "range": {
+        "startLine": 304,
+        "startChar": 0,
+        "endLine": 305,
+        "endChar": 55
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
