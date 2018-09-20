@@ -420,7 +420,7 @@ EGLBoolean EGLAPIENTRY eglStreamConsumerReleaseKHR(EGLDisplay dpy, EGLStreamKHR 
 
 EGLBoolean EGLAPIENTRY eglStreamConsumerGLTextureExternalAttribsNV(EGLDisplay dpy,
                                                                    EGLStreamKHR stream,
-                                                                   EGLAttrib *attrib_list)
+                                                                   const EGLAttrib *attrib_list)
 {
     return egl::StreamConsumerGLTextureExternalAttribsNV(dpy, stream, attrib_list);
 }
