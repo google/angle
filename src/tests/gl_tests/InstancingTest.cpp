@@ -419,6 +419,12 @@ TEST_P(InstancingTestPoints, DrawElements)
     checkQuads();
 }
 
+class InstancingTestES3 : public InstancingTest
+{
+  public:
+    InstancingTestES3() {}
+};
+
 class InstancingTestES31 : public InstancingTest
 {
   public:
@@ -517,6 +523,104 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
     glDeleteVertexArrays(1, &vao);
 }
 
+// Verify that a large divisor that also changes doesn't cause issues and renders correctly.
+TEST_P(InstancingTestES3, LargeDivisor)
+{
+    const std::string &vs = R"(#version 300 es
+layout(location = 0) in vec4 a_position;
+layout(location = 1) in vec4 a_color;
+out vec4 v_color;
+void main()
+{
+    gl_Position = a_position;
+    gl_PointSize = 4.0f;
+    v_color = a_color;
+})";
+
+    const std::string &fs = R"(#version 300 es
+precision highp float;
+in vec4 v_color;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = v_color;
+})";
+
+    ANGLE_GL_PROGRAM(program, vs, fs);
+    glUseProgram(program);
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+
+    GLBuffer buf;
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
+    std::vector<GLfloat> vertices;
+    for (size_t i = 0u; i < 4u; ++i)
+    {
+        vertices.push_back(0.0f + i * 0.25f);
+        vertices.push_back(0.0f);
+        vertices.push_back(0.0f);
+        vertices.push_back(1.0f);
+    }
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * 4u, vertices.data(), GL_DYNAMIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    GLBuffer colorBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuf);
+
+    std::array<GLColor, 4> ubyteColors = {GLColor::red, GLColor::green};
+    std::vector<float> floatColors;
+    for (const GLColor &color : ubyteColors)
+    {
+        floatColors.push_back(color.R / 255.0f);
+        floatColors.push_back(color.G / 255.0f);
+        floatColors.push_back(color.B / 255.0f);
+        floatColors.push_back(color.A / 255.0f);
+    }
+    glBufferData(GL_ARRAY_BUFFER, floatColors.size() * 4u, floatColors.data(), GL_DYNAMIC_DRAW);
+
+    const GLuint kColorDivisor = 65536u * 2u;
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, nullptr);
+    glVertexAttribDivisor(1, kColorDivisor);
+
+    std::array<GLuint, 1u> indices       = {0u};
+    std::array<GLuint, 3u> divisorsToTry = {256u, 65536u, 65536u * 2u};
+
+    for (GLuint divisorToTry : divisorsToTry)
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glVertexAttribDivisor(0, divisorToTry);
+
+        GLuint instanceCount        = divisorToTry + 1u;
+        unsigned int pointsRendered = (instanceCount - 1u) / divisorToTry + 1u;
+
+        glDrawElementsInstanced(GL_POINTS, indices.size(), GL_UNSIGNED_INT, indices.data(),
+                                instanceCount);
+        ASSERT_GL_NO_ERROR();
+
+        // Check that the intended number of points has been rendered.
+        for (unsigned int pointIndex = 0u; pointIndex < pointsRendered + 1u; ++pointIndex)
+        {
+            GLint pointx = static_cast<GLint>((pointIndex * 0.125f + 0.5f) * getWindowWidth());
+            GLint pointy = static_cast<GLint>(0.5f * getWindowHeight());
+
+            if (pointIndex < pointsRendered)
+            {
+                GLuint pointColorIndex = (pointIndex * divisorToTry) / kColorDivisor;
+                EXPECT_PIXEL_COLOR_EQ(pointx, pointy, ubyteColors[pointColorIndex]);
+            }
+            else
+            {
+                // Clear color.
+                EXPECT_PIXEL_COLOR_EQ(pointx, pointy, GLColor::blue);
+            }
+        }
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against. We test on D3D9 and D3D11 9_3 because they use special codepaths
 // when attribute zero is instanced, unlike D3D11.
@@ -532,5 +636,7 @@ ANGLE_INSTANTIATE_TEST(InstancingTestAllConfigs,
 ANGLE_INSTANTIATE_TEST(InstancingTestNo9_3, ES2_D3D9(), ES2_D3D11());
 
 ANGLE_INSTANTIATE_TEST(InstancingTestPoints, ES2_D3D11(), ES2_D3D11_FL9_3());
+
+ANGLE_INSTANTIATE_TEST(InstancingTestES3, ES3_OPENGL(), ES3_OPENGLES(), ES3_D3D11());
 
 ANGLE_INSTANTIATE_TEST(InstancingTestES31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
