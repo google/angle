@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14f39dc0_df8a8b60",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-20T21:09:41Z",
+      "side": 1,
+      "message": "Could this be a constant and/or have an explaination?",
+      "range": {
+        "startLine": 569,
+        "startChar": 56,
+        "endLine": 569,
+        "endChar": 64
+      },
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
