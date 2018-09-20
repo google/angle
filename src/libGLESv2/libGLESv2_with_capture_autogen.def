@@ -1489,6 +1489,9 @@ EXPORTS
     EGL_GetFrameTimestampsANDROID
     EGL_GetNextFrameIdANDROID
 
+    ; EGL_ANDROID_get_native_client_buffer
+    EGL_GetNativeClientBufferANDROID
+
     ; EGL_ANDROID_presentation_time
     EGL_PresentationTimeANDROID
 

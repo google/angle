@@ -100,7 +100,7 @@
   "GL/EGL entry points:scripts/gl_angle_ext.xml":
     "bed6b56a38621721e689ebc19601a556",
   "GL/EGL entry points:scripts/registry_xml.py":
-    "683a498150204f16c44264714e2bed07",
+    "24fa69f5641ed09c8e8a2f9c64fd0260",
   "GL/EGL entry points:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "GL/EGL entry points:src/libANGLE/Context_gl_1_0_autogen.h":
@@ -212,9 +212,9 @@
   "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.cpp":
     "229577015686414a6d094533c2210cea",
   "GL/EGL entry points:src/libGLESv2/libGLESv2_autogen.def":
-    "5973958936850835cc48a57bba9bd33a",
+    "fca8c7d5ec90a68a6ad062fc4edf67e4",
   "GL/EGL entry points:src/libGLESv2/libGLESv2_with_capture_autogen.def":
-    "a2973e5317d62329e5aa761058afd2ad",
+    "45eecb859db4e21d7591e5819ebd81dd",
   "GL/EGL entry points:src/openGL32/entry_points_gl_1_0_autogen.cpp":
     "f388cf1698bfd71f25939123f7a3952c",
   "GL/EGL entry points:src/openGL32/entry_points_gl_1_0_autogen.h":
@@ -266,17 +266,17 @@
   "GL/EGL/WGL loader:scripts/generate_loader.py":
     "5a7cd014230fe04664d9613e65399d42",
   "GL/EGL/WGL loader:scripts/registry_xml.py":
-    "683a498150204f16c44264714e2bed07",
+    "24fa69f5641ed09c8e8a2f9c64fd0260",
   "GL/EGL/WGL loader:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.cpp":
-    "0ebe5668fba36b5b4ad5abb64c21ca32",
+    "84c8b518af7051faa89702a5d553e87e",
   "GL/EGL/WGL loader:src/libEGL/egl_loader_autogen.h":
-    "adfee42620344b47b5f2c934e4c58e37",
+    "a8f0278a7dec5c9d6e1ca0854e9542e9",
   "GL/EGL/WGL loader:util/egl_loader_autogen.cpp":
-    "5e2ea1c54813036aa363eac2c1388f4a",
+    "4b23b703a6598a75ea753e9b4aa6ea0f",
   "GL/EGL/WGL loader:util/egl_loader_autogen.h":
-    "a4f0d640554d9c2b4f90f1f2271a1104",
+    "7ae6f818846fff1a734bc975c82319b2",
   "GL/EGL/WGL loader:util/gles_loader_autogen.cpp":
     "335463406e64c6dc9bf00502cb25d53c",
   "GL/EGL/WGL loader:util/gles_loader_autogen.h":
@@ -574,11 +574,11 @@
   "proc table:scripts/gl_angle_ext.xml":
     "bed6b56a38621721e689ebc19601a556",
   "proc table:scripts/registry_xml.py":
-    "683a498150204f16c44264714e2bed07",
+    "24fa69f5641ed09c8e8a2f9c64fd0260",
   "proc table:scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "proc table:src/libGLESv2/proc_table_egl_autogen.cpp":
-    "6ab624dce9ebcdeaea091b27d98ed1ce",
+    "35653e6a70519374b768c7240081fbd1",
   "proc table:src/openGL32/proc_table_wgl_autogen.cpp":
     "cadecfe9956fc200c643b635b425c15a",
   "uniform type:src/common/gen_uniform_type_table.py":

@@ -1440,4 +1440,18 @@ ANGLE_EXPORT const char *EGLAPIENTRY EGL_QueryStringiANGLE(EGLDisplay dpy,
     return display->queryStringi(name, index);
 }
 
+EGLClientBuffer EGLAPIENTRY EGL_GetNativeClientBufferANDROID(const struct AHardwareBuffer *buffer)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(const struct AHardwareBuffer *buffer = 0x%016" PRIxPTR ")", (uintptr_t)buffer);
+
+    Thread *thread = egl::GetCurrentThread();
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateGetNativeClientBufferANDROID(buffer),
+                         "eglGetNativeClientBufferANDROID", nullptr, nullptr);
+
+    thread->setSuccess();
+    return egl::Display::GetNativeClientBuffer(buffer);
+}
+
 }  // extern "C"

@@ -693,4 +693,11 @@ const char *EGLAPIENTRY eglQueryStringiANGLE(EGLDisplay dpy, EGLint name, EGLint
     EnsureEGLLoaded();
     return EGL_QueryStringiANGLE(dpy, name, index);
 }
+
+EGLClientBuffer EGLAPIENTRY eglGetNativeClientBufferANDROID(const struct AHardwareBuffer *buffer)
+{
+    EnsureEGLLoaded();
+    return EGL_GetNativeClientBufferANDROID(buffer);
+}
+
 }  // extern "C"

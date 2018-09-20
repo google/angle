@@ -21,6 +21,8 @@ libangle_common_sources = [
   "src/common/PoolAlloc.h",
   "src/common/aligned_memory.cpp",
   "src/common/aligned_memory.h",
+  "src/common/android_util.cpp",
+  "src/common/android_util.h",
   "src/common/angleutils.cpp",
   "src/common/angleutils.h",
   "src/common/bitset_utils.h",
@@ -86,13 +88,6 @@ if (is_mac) {
 
 if (is_win) {
   angle_system_utils_sources += [ "src/common/system_utils_win.cpp" ]
-}
-
-if (is_android) {
-  angle_system_utils_sources += [
-    "src/common/android_util.cpp",
-    "src/common/android_util.h",
-  ]
 }
 
 libangle_image_util_sources = [

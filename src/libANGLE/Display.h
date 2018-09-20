@@ -165,6 +165,8 @@ class Display final : public LabeledObject, angle::NonCopyable
     bool areBlobCacheFuncsSet() const { return mBlobCache.areBlobCacheFuncsSet(); }
     BlobCache &getBlobCache() { return mBlobCache; }
 
+    static EGLClientBuffer GetNativeClientBuffer(const struct AHardwareBuffer *buffer);
+
     Error waitClient(const gl::Context *context);
     Error waitNative(const gl::Context *context, EGLint engine);
 

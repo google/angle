@@ -72,6 +72,7 @@ EXPORTS
     eglSetBlobCacheFuncsANDROID                 @78
     eglQueryDisplayAttribANGLE                  @79
     eglQueryStringiANGLE                        @80
+    eglGetNativeClientBufferANDROID             @81
 
     ; 1.5 entry points
     eglCreateSync                               @38

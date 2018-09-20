@@ -89,6 +89,7 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + gles_extensi
 supported_egl_extensions = [
     "EGL_ANDROID_blob_cache",
     "EGL_ANDROID_get_frame_timestamps",
+    "EGL_ANDROID_get_native_client_buffer",
     "EGL_ANDROID_presentation_time",
     "EGL_ANGLE_d3d_share_handle_client_buffer",
     "EGL_ANGLE_device_creation",
