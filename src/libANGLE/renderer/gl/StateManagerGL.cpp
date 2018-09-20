@@ -163,7 +163,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mIsMultiviewEnabled(extensions.multiview),
       mLocalDirtyBits(),
       mMultiviewDirtyBits(),
-      mProgramTexturesAndSamplersDirty(true),
+      mProgramTexturesDirty(true),
       mProgramStorageBuffersDirty(true),
       mProgramUniformBuffersDirty(true),
       mProgramAtomicCounterBuffersDirty(true),
@@ -874,10 +874,10 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
         mProgramUniformBuffersDirty = false;
     }
 
-    if (mProgramTexturesAndSamplersDirty)
+    if (mProgramTexturesDirty)
     {
-        updateProgramTextureAndSamplerBindings(context);
-        mProgramTexturesAndSamplersDirty = false;
+        updateProgramTextureBindings(context);
+        mProgramTexturesDirty = false;
     }
 
     if (mProgramStorageBuffersDirty)
@@ -899,7 +899,7 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
     }
 }
 
-void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *context)
+void StateManagerGL::updateProgramTextureBindings(const gl::Context *context)
 {
     const gl::State &glState   = context->getGLState();
     const gl::Program *program = glState.getProgram();
@@ -920,30 +920,13 @@ void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *c
             ASSERT(!texture->hasAnyDirtyBit());
             ASSERT(!textureGL->hasAnyDirtyBit());
 
-            if (mTextures[textureType][textureUnitIndex] != textureGL->getTextureID())
-            {
-                activeTexture(textureUnitIndex);
-                bindTexture(textureType, textureGL->getTextureID());
-            }
+            activeTexture(textureUnitIndex);
+            bindTexture(textureType, textureGL->getTextureID());
         }
         else
         {
-            if (mTextures[textureType][textureUnitIndex] != 0)
-            {
-                activeTexture(textureUnitIndex);
-                bindTexture(textureType, 0);
-            }
-        }
-
-        const gl::Sampler *sampler = glState.getSampler(static_cast<GLuint>(textureUnitIndex));
-        if (sampler != nullptr)
-        {
-            SamplerGL *samplerGL = GetImplAs<SamplerGL>(sampler);
-            bindSampler(textureUnitIndex, samplerGL->getSamplerID());
-        }
-        else
-        {
-            bindSampler(textureUnitIndex, 0);
+            activeTexture(textureUnitIndex);
+            bindTexture(textureType, 0);
         }
     }
 }
@@ -1996,10 +1979,10 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             }
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
-                mProgramTexturesAndSamplersDirty = true;
+                mProgramTexturesDirty = true;
                 break;
             case gl::State::DIRTY_BIT_SAMPLER_BINDINGS:
-                mProgramTexturesAndSamplersDirty = true;
+                syncSamplersState(context);
                 break;
             case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
                 mProgramImagesDirty = true;
@@ -2008,7 +1991,7 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
                 syncTransformFeedbackState(context);
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
-                mProgramTexturesAndSamplersDirty = true;
+                mProgramTexturesDirty             = true;
                 mProgramImagesDirty               = true;
                 mProgramStorageBuffersDirty      = true;
                 mProgramUniformBuffersDirty       = true;
@@ -2314,6 +2297,26 @@ void StateManagerGL::updateMultiviewBaseViewLayerIndexUniform(
                 break;
             default:
                 break;
+        }
+    }
+}
+
+void StateManagerGL::syncSamplersState(const gl::Context *context)
+{
+    const gl::State::SamplerBindingVector &samplers = context->getGLState().getSamplers();
+
+    // This could be optimized by using a separate binding dirty bit per sampler.
+    for (size_t samplerIndex = 0; samplerIndex < samplers.size(); ++samplerIndex)
+    {
+        const gl::Sampler *sampler = samplers[samplerIndex].get();
+        if (sampler != nullptr)
+        {
+            SamplerGL *samplerGL = GetImplAs<SamplerGL>(sampler);
+            bindSampler(samplerIndex, samplerGL->getSamplerID());
+        }
+        else
+        {
+            bindSampler(samplerIndex, 0);
         }
     }
 }

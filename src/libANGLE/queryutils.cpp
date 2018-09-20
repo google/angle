@@ -333,7 +333,10 @@ void QuerySamplerParameterBase(const Sampler *sampler, GLenum pname, ParamType *
 }
 
 template <typename ParamType>
-void SetSamplerParameterBase(Sampler *sampler, GLenum pname, const ParamType *params)
+void SetSamplerParameterBase(Context *context,
+                             Sampler *sampler,
+                             GLenum pname,
+                             const ParamType *params)
 {
     switch (pname)
     {
@@ -374,6 +377,8 @@ void SetSamplerParameterBase(Sampler *sampler, GLenum pname, const ParamType *pa
             UNREACHABLE();
             break;
     }
+
+    sampler->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 }
 
 // Warning: you should ensure binding really matches attrib.bindingIndex before using this function.
@@ -1404,24 +1409,24 @@ void SetTexParameteriv(Context *context, Texture *texture, GLenum pname, const G
     SetTexParameterBase(context, texture, pname, params);
 }
 
-void SetSamplerParameterf(Sampler *sampler, GLenum pname, GLfloat param)
+void SetSamplerParameterf(Context *context, Sampler *sampler, GLenum pname, GLfloat param)
 {
-    SetSamplerParameterBase(sampler, pname, &param);
+    SetSamplerParameterBase(context, sampler, pname, &param);
 }
 
-void SetSamplerParameterfv(Sampler *sampler, GLenum pname, const GLfloat *params)
+void SetSamplerParameterfv(Context *context, Sampler *sampler, GLenum pname, const GLfloat *params)
 {
-    SetSamplerParameterBase(sampler, pname, params);
+    SetSamplerParameterBase(context, sampler, pname, params);
 }
 
-void SetSamplerParameteri(Sampler *sampler, GLenum pname, GLint param)
+void SetSamplerParameteri(Context *context, Sampler *sampler, GLenum pname, GLint param)
 {
-    SetSamplerParameterBase(sampler, pname, &param);
+    SetSamplerParameterBase(context, sampler, pname, &param);
 }
 
-void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params)
+void SetSamplerParameteriv(Context *context, Sampler *sampler, GLenum pname, const GLint *params)
 {
-    SetSamplerParameterBase(sampler, pname, params);
+    SetSamplerParameterBase(context, sampler, pname, params);
 }
 
 void SetFramebufferParameteri(const Context *context,

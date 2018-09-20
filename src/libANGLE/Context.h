@@ -1766,6 +1766,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::ObserverBinding mDrawFramebufferObserverBinding;
     angle::ObserverBinding mReadFramebufferObserverBinding;
     std::vector<angle::ObserverBinding> mUniformBufferObserverBindings;
+    std::vector<angle::ObserverBinding> mSamplerObserverBindings;
 
     // Not really a property of context state. The size and contexts change per-api-call.
     mutable angle::ScratchBuffer mScratchBuffer;

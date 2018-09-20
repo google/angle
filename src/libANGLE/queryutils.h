@@ -112,10 +112,10 @@ void SetTexParameterfv(Context *context, Texture *texture, GLenum pname, const G
 void SetTexParameteri(Context *context, Texture *texture, GLenum pname, GLint param);
 void SetTexParameteriv(Context *context, Texture *texture, GLenum pname, const GLint *params);
 
-void SetSamplerParameterf(Sampler *sampler, GLenum pname, GLfloat param);
-void SetSamplerParameterfv(Sampler *sampler, GLenum pname, const GLfloat *params);
-void SetSamplerParameteri(Sampler *sampler, GLenum pname, GLint param);
-void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params);
+void SetSamplerParameterf(Context *context, Sampler *sampler, GLenum pname, GLfloat param);
+void SetSamplerParameterfv(Context *context, Sampler *sampler, GLenum pname, const GLfloat *params);
+void SetSamplerParameteri(Context *context, Sampler *sampler, GLenum pname, GLint param);
+void SetSamplerParameteriv(Context *context, Sampler *sampler, GLenum pname, const GLint *params);
 
 void SetFramebufferParameteri(const Context *context,
                               Framebuffer *framebuffer,

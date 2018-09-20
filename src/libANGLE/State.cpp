@@ -1112,6 +1112,8 @@ void State::setSamplerBinding(const Context *context, GLuint textureUnit, Sample
     mSamplers[textureUnit].set(context, sampler);
     mDirtyBits.set(DIRTY_BIT_SAMPLER_BINDINGS);
     mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
+    // This is overly conservative as it assumes the sampler has never been bound.
+    setSamplerDirty(textureUnit);
 }
 
 GLuint State::getSamplerId(GLuint textureUnit) const
@@ -2679,6 +2681,9 @@ Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset
                 ASSERT(mVertexArray);
                 ANGLE_TRY(mVertexArray->syncState(context));
                 break;
+            case DIRTY_OBJECT_SAMPLERS:
+                syncSamplers(context);
+                break;
             case DIRTY_OBJECT_PROGRAM_TEXTURES:
                 ANGLE_TRY(syncProgramTextures(context));
                 break;
@@ -2694,6 +2699,24 @@ Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset
 
     mDirtyObjects &= ~dirtyObjects;
     return NoError();
+}
+
+void State::syncSamplers(const Context *context)
+{
+    if (mDirtySamplers.none())
+        return;
+
+    // This could be optimized by tracking which samplers are dirty.
+    for (size_t samplerIndex : mDirtySamplers)
+    {
+        BindingPointer<Sampler> &sampler = mSamplers[samplerIndex];
+        if (sampler.get())
+        {
+            sampler->syncState(context);
+        }
+    }
+
+    mDirtySamplers.reset();
 }
 
 Error State::syncProgramTextures(const Context *context)
@@ -2732,7 +2755,8 @@ Error State::syncProgramTextures(const Context *context)
         // Mark the texture binding bit as dirty if the texture completeness changes.
         // TODO(jmadill): Use specific dirty bit for completeness change.
         if (texture->isSamplerComplete(context, sampler) &&
-            !mDrawFramebuffer->hasTextureAttachment(texture))
+            (mProgram->hasLinkedShaderStage(ShaderType::Compute) ||
+             !mDrawFramebuffer->hasTextureAttachment(texture)))
         {
             ANGLE_TRY(texture->syncState(context));
             mActiveTexturesCache[textureUnitIndex] = texture;
@@ -2745,11 +2769,6 @@ Error State::syncProgramTextures(const Context *context)
         // Bind the texture unconditionally, to recieve completeness change notifications.
         mCompleteTextureBindings[textureUnitIndex].bind(texture->getSubject());
         newActiveTextures.set(textureUnitIndex);
-
-        if (sampler != nullptr)
-        {
-            sampler->syncState(context);
-        }
 
         if (texture->initState() == InitState::MayNeedInit)
         {
@@ -2808,8 +2827,11 @@ Error State::syncDirtyObject(const Context *context, GLenum target)
             localSet.set(DIRTY_OBJECT_VERTEX_ARRAY);
             break;
         case GL_TEXTURE:
+            localSet.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
+            break;
         case GL_SAMPLER:
             localSet.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
+            localSet.set(DIRTY_OBJECT_SAMPLERS);
             break;
         case GL_PROGRAM:
             localSet.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
@@ -2838,7 +2860,6 @@ void State::setObjectDirty(GLenum target)
             mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
             break;
         case GL_TEXTURE:
-        case GL_SAMPLER:
             mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
             mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
             break;
@@ -2862,6 +2883,12 @@ void State::onProgramExecutableChange(Program *program)
         mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
         mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
     }
+}
+
+void State::setSamplerDirty(size_t samplerIndex)
+{
+    mDirtyObjects.set(DIRTY_OBJECT_SAMPLERS);
+    mDirtySamplers.set(samplerIndex);
 }
 
 void State::setImageUnit(const Context *context,

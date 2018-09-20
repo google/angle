@@ -1077,10 +1077,12 @@ TEST_P(LineLoopStateChangeTest, DrawArraysThenDrawElements)
 class SimpleStateChangeTest : public ANGLETest
 {
   protected:
+    static constexpr int kWindowSize = 64;
+
     SimpleStateChangeTest()
     {
-        setWindowWidth(64);
-        setWindowHeight(64);
+        setWindowWidth(kWindowSize);
+        setWindowHeight(kWindowSize);
         setConfigRedBits(8);
         setConfigGreenBits(8);
         setConfigBlueBits(8);
@@ -1089,6 +1091,10 @@ class SimpleStateChangeTest : public ANGLETest
 
     void simpleDrawWithBuffer(GLBuffer *buffer);
     void simpleDrawWithColor(const GLColor &color);
+};
+
+class SimpleStateChangeTestES3 : public SimpleStateChangeTest
+{
 };
 
 constexpr char kSimpleVertexShader[] = R"(attribute vec2 position;
@@ -2050,6 +2056,70 @@ TEST_P(SimpleStateChangeTest, ReleaseShaderInUseThatReadsFromUniforms)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, 0, GLColor::red);
 }
 
+// Tests that sampler sync isn't masked by program textures.
+TEST_P(SimpleStateChangeTestES3, SamplerSyncNotTiedToProgram)
+{
+    // Create a sampler with NEAREST filtering.
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw with a program that uses no textures.
+    ANGLE_GL_PROGRAM(program1, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(program1, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Create a simple texture with four colors and linear filtering.
+    constexpr GLsizei kSize       = 2;
+    std::array<GLColor, 4> pixels = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+    GLTexture redTex;
+    glBindTexture(GL_TEXTURE_2D, redTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixels.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Create a program that uses the texture.
+    constexpr char kVS[] = R"(attribute vec4 position;
+varying vec2 texCoord;
+void main()
+{
+    gl_Position = position;
+    texCoord = position.xy * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec2 texCoord;
+uniform sampler2D tex;
+void main()
+{
+    gl_FragColor = texture2D(tex, texCoord);
+})";
+
+    // Draw. The sampler should override the clamp wrap mode with nearest.
+    ANGLE_GL_PROGRAM(program2, kVS, kFS);
+    ASSERT_EQ(0, glGetUniformLocation(program2, "tex"));
+    drawQuad(program2, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    constexpr int kHalfSize = kWindowSize / 2;
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kHalfSize, kHalfSize, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kHalfSize, 0, kHalfSize, kHalfSize, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, kHalfSize, kHalfSize, kHalfSize, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(kHalfSize, kHalfSize, kHalfSize, kHalfSize, GLColor::yellow);
+}
+
 static constexpr char kColorVS[] = R"(attribute vec2 position;
 attribute vec4 color;
 varying vec4 vColor;
@@ -2798,6 +2868,7 @@ ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
                        ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(SimpleStateChangeTest, ES2_VULKAN(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(SimpleStateChangeTestES3, ES3_OPENGL(), ES3_D3D11());
 ANGLE_INSTANTIATE_TEST(ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(WebGL2ValidationStateChangeTest, ES3_D3D11(), ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(ValidationStateChangeTestES31, ES31_OPENGL());

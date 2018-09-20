@@ -193,6 +193,9 @@ class State : angle::NonCopyable
 
     Sampler *getSampler(GLuint textureUnit) const { return mSamplers[textureUnit].get(); }
 
+    using SamplerBindingVector = std::vector<BindingPointer<Sampler>>;
+    const SamplerBindingVector &getSamplers() const { return mSamplers; }
+
     void detachSampler(const Context *context, GLuint sampler);
 
     // Renderbuffer binding manipulation
@@ -441,6 +444,7 @@ class State : angle::NonCopyable
         DIRTY_OBJECT_READ_FRAMEBUFFER,
         DIRTY_OBJECT_DRAW_FRAMEBUFFER,
         DIRTY_OBJECT_VERTEX_ARRAY,
+        DIRTY_OBJECT_SAMPLERS,
         // Use a very coarse bit for any program or texture change.
         // TODO(jmadill): Fine-grained dirty bits for each texture/sampler.
         DIRTY_OBJECT_PROGRAM_TEXTURES,
@@ -461,6 +465,7 @@ class State : angle::NonCopyable
     Error syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
     Error syncDirtyObject(const Context *context, GLenum target);
     void setObjectDirty(GLenum target);
+    void setSamplerDirty(size_t samplerIndex);
 
     // This actually clears the current value dirty bits.
     // TODO(jmadill): Pass mutable dirty bits into Impl.
@@ -492,6 +497,7 @@ class State : angle::NonCopyable
     const GLES1State &gles1() const { return mGLES1State; }
 
   private:
+    void syncSamplers(const Context *context);
     Error syncProgramTextures(const Context *context);
 
     // Cached values from Context's caps
@@ -569,7 +575,6 @@ class State : angle::NonCopyable
 
     InitState mCachedImageTexturesInitState;
 
-    using SamplerBindingVector = std::vector<BindingPointer<Sampler>>;
     SamplerBindingVector mSamplers;
 
     using ImageUnitVector = std::vector<ImageUnit>;
@@ -628,6 +633,7 @@ class State : angle::NonCopyable
     DirtyBits mDirtyBits;
     DirtyObjects mDirtyObjects;
     mutable AttributesMask mDirtyCurrentValues;
+    ActiveTextureMask mDirtySamplers;
 };
 
 }  // namespace gl
