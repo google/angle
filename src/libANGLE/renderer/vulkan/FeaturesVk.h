@@ -33,6 +33,10 @@ struct FeaturesVk
     // -Point sprites tests
     // -texStorage
     bool flipViewportY = false;
+
+    // Add an extra copy region when using vkCmdCopyBuffer as the Windows Intel driver seems
+    // to have a bug where the last region is ignored.
+    bool extraCopyBufferRegion = false;
 };
 }  // namespace rx
 

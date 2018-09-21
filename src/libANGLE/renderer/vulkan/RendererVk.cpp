@@ -689,6 +689,11 @@ void RendererVk::initFeatures()
     // TODO(lucferron): Currently disabled on Intel only since many tests are failing and need
     // investigation. http://anglebug.com/2728
     mFeatures.flipViewportY = !IsIntel(mPhysicalDeviceProperties.vendorID);
+
+#ifdef ANGLE_PLATFORM_WINDOWS
+    // http://anglebug.com/2838
+    mFeatures.extraCopyBufferRegion = IsIntel(mPhysicalDeviceProperties.vendorID);
+#endif
 }
 
 void RendererVk::ensureCapsInitialized() const

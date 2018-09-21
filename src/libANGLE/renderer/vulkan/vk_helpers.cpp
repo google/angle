@@ -429,7 +429,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
     uint32_t *indices          = nullptr;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
-    size_t allocateBytes = unitSize * (indexCount + 1);
+    size_t allocateBytes = unitSize * (indexCount + 1) + 1;
 
     mDynamicIndexBuffer.releaseRetainedBuffers(context->getRenderer());
     ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
@@ -438,16 +438,19 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
 
     VkDeviceSize sourceOffset = static_cast<VkDeviceSize>(elementArrayOffset);
     uint64_t unitCount        = static_cast<VkDeviceSize>(indexCount);
-    VkBufferCopy copy1        = {sourceOffset, *bufferOffsetOut, unitCount * unitSize};
-    VkBufferCopy copy2        = {sourceOffset, *bufferOffsetOut + unitCount * unitSize, unitSize};
-    std::array<VkBufferCopy, 2> copies = {{copy1, copy2}};
+    angle::FixedVector<VkBufferCopy, 3> copies = {
+        {sourceOffset, *bufferOffsetOut, unitCount * unitSize},
+        {sourceOffset, *bufferOffsetOut + unitCount * unitSize, unitSize},
+    };
+    if (context->getRenderer()->getFeatures().extraCopyBufferRegion)
+        copies.push_back({sourceOffset, *bufferOffsetOut + (unitCount + 1) * unitSize, 1});
 
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(recordCommands(context, &commandBuffer));
 
     elementArrayBufferVk->addReadDependency(this);
-    commandBuffer->copyBuffer(elementArrayBufferVk->getVkBuffer().getHandle(), *bufferHandleOut, 2,
-                              copies.data());
+    commandBuffer->copyBuffer(elementArrayBufferVk->getVkBuffer().getHandle(), *bufferHandleOut,
+                              copies.size(), copies.data());
 
     ANGLE_TRY(mDynamicIndexBuffer.flush(context));
     return angle::Result::Continue();
