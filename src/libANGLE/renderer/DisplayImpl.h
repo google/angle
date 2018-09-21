@@ -66,6 +66,10 @@ class DisplayImpl : public EGLImplFactory
                                             EGLenum buftype,
                                             EGLClientBuffer clientBuffer,
                                             const egl::AttributeMap &attribs) const;
+    virtual egl::Error validateImageClientBuffer(const gl::Context *context,
+                                                 EGLenum target,
+                                                 EGLClientBuffer clientBuffer,
+                                                 const egl::AttributeMap &attribs) const;
 
     virtual std::string getVendorString() const = 0;
 

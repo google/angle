@@ -22,6 +22,7 @@
 #include "libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h"
 #include "libANGLE/renderer/gl/egl/RendererEGL.h"
 #include "libANGLE/renderer/gl/egl/WindowSurfaceEGL.h"
+#include "libANGLE/renderer/gl/egl/android/NativeBufferImageSiblingAndroid.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 
 namespace
@@ -451,6 +452,37 @@ egl::Error DisplayAndroid::restoreLostDevice(const egl::Display *display)
 bool DisplayAndroid::isValidNativeWindow(EGLNativeWindowType window) const
 {
     return ANativeWindow_getFormat(window) >= 0;
+}
+
+egl::Error DisplayAndroid::validateImageClientBuffer(const gl::Context *context,
+                                                     EGLenum target,
+                                                     EGLClientBuffer clientBuffer,
+                                                     const egl::AttributeMap &attribs) const
+{
+    switch (target)
+    {
+        case EGL_NATIVE_BUFFER_ANDROID:
+            return egl::NoError();
+
+        default:
+            return DisplayEGL::validateImageClientBuffer(context, target, clientBuffer, attribs);
+    }
+}
+
+ExternalImageSiblingImpl *DisplayAndroid::createExternalImageSibling(
+    const gl::Context *context,
+    EGLenum target,
+    EGLClientBuffer buffer,
+    const egl::AttributeMap &attribs)
+{
+    switch (target)
+    {
+        case EGL_NATIVE_BUFFER_ANDROID:
+            return new NativeBufferImageSiblingAndroid(buffer);
+
+        default:
+            return DisplayEGL::createExternalImageSibling(context, target, buffer, attribs);
+    }
 }
 
 DeviceImpl *DisplayAndroid::createDevice()

@@ -44,6 +44,15 @@ egl::Error DisplayImpl::validateClientBuffer(const egl::Config *configuration,
     return egl::EglBadDisplay() << "DisplayImpl::validateClientBuffer unimplemented.";
 }
 
+egl::Error DisplayImpl::validateImageClientBuffer(const gl::Context *context,
+                                                  EGLenum target,
+                                                  EGLClientBuffer clientBuffer,
+                                                  const egl::AttributeMap &attribs) const
+{
+    UNREACHABLE();
+    return egl::EglBadDisplay() << "DisplayImpl::validateImageClientBuffer unimplemented.";
+}
+
 const egl::Caps &DisplayImpl::getCaps() const
 {
     if (!mCapsInitialized)

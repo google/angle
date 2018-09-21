@@ -23,6 +23,7 @@ namespace rx
 {
 class EGLImplFactory;
 class ImageImpl;
+class ExternalImageSiblingImpl;
 }
 
 namespace egl
@@ -65,6 +66,41 @@ class ImageSibling : public gl::FramebufferAttachmentObject
 
     std::set<Image *> mSourcesOf;
     BindingPointer<Image> mTargetOf;
+};
+
+// Wrapper for EGLImage sources that are not owned by ANGLE, these often have to do
+// platform-specific queries for format and size information.
+class ExternalImageSibling : public ImageSibling
+{
+  public:
+    ExternalImageSibling(rx::EGLImplFactory *factory,
+                         const gl::Context *context,
+                         EGLenum target,
+                         EGLClientBuffer buffer,
+                         const AttributeMap &attribs);
+
+    gl::Extents getAttachmentSize(const gl::ImageIndex &imageIndex) const override;
+    gl::Format getAttachmentFormat(GLenum binding, const gl::ImageIndex &imageIndex) const override;
+    GLsizei getAttachmentSamples(const gl::ImageIndex &imageIndex) const override;
+    bool isRenderable(const gl::Context *context,
+                      GLenum binding,
+                      const gl::ImageIndex &imageIndex) const override;
+    bool isTextureable(const gl::Context *context) const;
+
+    void onAttach(const gl::Context *context) override;
+    void onDetach(const gl::Context *context) override;
+    GLuint getId() const override;
+
+    gl::InitState initState(const gl::ImageIndex &imageIndex) const override;
+    void setInitState(const gl::ImageIndex &imageIndex, gl::InitState initState) override;
+
+    rx::ExternalImageSiblingImpl *getImplementation() const;
+
+  protected:
+    rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override;
+
+  private:
+    std::unique_ptr<rx::ExternalImageSiblingImpl> mImplementation;
 };
 
 struct ImageState : private angle::NonCopyable

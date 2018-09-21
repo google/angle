@@ -31,6 +31,7 @@ namespace rx
 {
 class ContextImpl;
 class ImageImpl;
+class ExternalImageSiblingImpl;
 class SurfaceImpl;
 
 class EGLImplFactory : angle::NonCopyable
@@ -41,16 +42,16 @@ class EGLImplFactory : angle::NonCopyable
 
     virtual SurfaceImpl *createWindowSurface(const egl::SurfaceState &state,
                                              EGLNativeWindowType window,
-                                             const egl::AttributeMap &attribs) = 0;
+                                             const egl::AttributeMap &attribs)           = 0;
     virtual SurfaceImpl *createPbufferSurface(const egl::SurfaceState &state,
-                                              const egl::AttributeMap &attribs) = 0;
+                                              const egl::AttributeMap &attribs)          = 0;
     virtual SurfaceImpl *createPbufferFromClientBuffer(const egl::SurfaceState &state,
                                                        EGLenum buftype,
                                                        EGLClientBuffer clientBuffer,
                                                        const egl::AttributeMap &attribs) = 0;
     virtual SurfaceImpl *createPixmapSurface(const egl::SurfaceState &state,
                                              NativePixmapType nativePixmap,
-                                             const egl::AttributeMap &attribs) = 0;
+                                             const egl::AttributeMap &attribs)           = 0;
 
     virtual ImageImpl *createImage(const egl::ImageState &state,
                                    const gl::Context *context,
@@ -65,6 +66,15 @@ class EGLImplFactory : angle::NonCopyable
     virtual StreamProducerImpl *createStreamProducerD3DTexture(
         egl::Stream::ConsumerType consumerType,
         const egl::AttributeMap &attribs) = 0;
+
+    virtual ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
+                                                                 EGLenum target,
+                                                                 EGLClientBuffer buffer,
+                                                                 const egl::AttributeMap &attribs)
+    {
+        UNREACHABLE();
+        return nullptr;
+    }
 };
 
 }  // namespace rx

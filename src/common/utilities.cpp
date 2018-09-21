@@ -929,6 +929,18 @@ bool IsRenderbufferTarget(EGLenum target)
     return target == EGL_GL_RENDERBUFFER_KHR;
 }
 
+bool IsExternalImageTarget(EGLenum target)
+{
+    switch (target)
+    {
+        case EGL_NATIVE_BUFFER_ANDROID:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
 const char *GetGenericErrorMessage(EGLint error)
 {
     switch (error)

@@ -1649,7 +1649,8 @@ Error ValidateCreateImageKHR(const Display *display,
                              EGLClientBuffer buffer,
                              const AttributeMap &attributes)
 {
-    ANGLE_TRY(ValidateContext(display, context));
+
+    ANGLE_TRY(ValidateDisplay(display));
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
 
@@ -1728,6 +1729,7 @@ Error ValidateCreateImageKHR(const Display *display,
                 return EglBadParameter() << "buffer cannot reference a 2D texture with the name 0.";
             }
 
+            ANGLE_TRY(ValidateContext(display, context));
             const gl::Texture *texture =
                 context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
             if (texture == nullptr || texture->getType() != gl::TextureType::_2D)
@@ -1770,6 +1772,7 @@ Error ValidateCreateImageKHR(const Display *display,
                        << "buffer cannot reference a cubemap texture with the name 0.";
             }
 
+            ANGLE_TRY(ValidateContext(display, context));
             const gl::Texture *texture =
                 context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
             if (texture == nullptr || texture->getType() != gl::TextureType::CubeMap)
@@ -1815,6 +1818,7 @@ Error ValidateCreateImageKHR(const Display *display,
                 return EglBadParameter() << "buffer cannot reference a 3D texture with the name 0.";
             }
 
+            ANGLE_TRY(ValidateContext(display, context));
             const gl::Texture *texture =
                 context->getTexture(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
             if (texture == nullptr || texture->getType() != gl::TextureType::_3D)
@@ -1868,6 +1872,7 @@ Error ValidateCreateImageKHR(const Display *display,
                        << "buffer cannot reference a renderbuffer with the name 0.";
             }
 
+            ANGLE_TRY(ValidateContext(display, context));
             const gl::Renderbuffer *renderbuffer =
                 context->getRenderbuffer(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
             if (renderbuffer == nullptr)
@@ -1879,6 +1884,22 @@ Error ValidateCreateImageKHR(const Display *display,
             {
                 return EglBadParameter() << "target renderbuffer cannot be multisampled.";
             }
+        }
+        break;
+
+        case EGL_NATIVE_BUFFER_ANDROID:
+        {
+            if (!displayExtensions.imageNativeBuffer)
+            {
+                return EglBadParameter() << "EGL_ANDROID_image_native_buffer not supported.";
+            }
+
+            if (context != nullptr)
+            {
+                return EglBadContext() << "ctx must be EGL_NO_CONTEXT.";
+            }
+
+            ANGLE_TRY(display->validateImageClientBuffer(context, target, buffer, attributes));
         }
         break;
 

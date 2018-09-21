@@ -719,6 +719,10 @@ Error Display::createImage(const gl::Context *context,
     {
         sibling = context->getRenderbuffer(egl_gl::EGLClientBufferToGLObjectHandle(buffer));
     }
+    else if (IsExternalImageTarget(target))
+    {
+        sibling = new ExternalImageSibling(mImplementation, context, target, buffer, attribs);
+    }
     else
     {
         UNREACHABLE();
@@ -1120,9 +1124,17 @@ bool Display::isValidNativeWindow(EGLNativeWindowType window) const
 Error Display::validateClientBuffer(const Config *configuration,
                                     EGLenum buftype,
                                     EGLClientBuffer clientBuffer,
-                                    const AttributeMap &attribs)
+                                    const AttributeMap &attribs) const
 {
     return mImplementation->validateClientBuffer(configuration, buftype, clientBuffer, attribs);
+}
+
+Error Display::validateImageClientBuffer(const gl::Context *context,
+                                         EGLenum target,
+                                         EGLClientBuffer clientBuffer,
+                                         const egl::AttributeMap &attribs) const
+{
+    return mImplementation->validateImageClientBuffer(context, target, clientBuffer, attribs);
 }
 
 bool Display::isValidDisplay(const egl::Display *display)

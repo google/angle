@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/egl/ContextEGL.h"
+#include "libANGLE/renderer/gl/egl/ExternalImageSiblingEGL.h"
 #include "libANGLE/renderer/gl/egl/FunctionsEGL.h"
 
 namespace rx
@@ -70,6 +71,13 @@ egl::Error ImageEGL::initialize(const egl::Display *display)
             GetImplAs<RenderbufferGL>(GetAs<gl::Renderbuffer>(mState.source));
         buffer = gl_egl::GLObjectHandleToEGLClientBuffer(renderbufferGL->getRenderbufferID());
         mNativeInternalFormat = renderbufferGL->getNativeInternalFormat();
+    }
+    else if (egl::IsExternalImageTarget(mTarget))
+    {
+        const ExternalImageSiblingEGL *externalImageSibling =
+            GetImplAs<ExternalImageSiblingEGL>(GetAs<egl::ExternalImageSibling>(mState.source));
+        buffer                = externalImageSibling->getBuffer();
+        mNativeInternalFormat = externalImageSibling->getFormat().info->sizedInternalFormat;
     }
     else
     {

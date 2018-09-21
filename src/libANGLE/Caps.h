@@ -801,6 +801,9 @@ struct DisplayExtensions
 
     // EGL_ANDROID_blob_cache
     bool blobCache;
+
+    // EGL_ANDROID_image_native_buffer
+    bool imageNativeBuffer;
 };
 
 struct DeviceExtensions

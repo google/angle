@@ -690,6 +690,7 @@ libangle_gl_egl_sources = [
   "src/libANGLE/renderer/gl/egl/ContextEGL.h",
   "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
   "src/libANGLE/renderer/gl/egl/DisplayEGL.h",
+  "src/libANGLE/renderer/gl/egl/ExternalImageSiblingEGL.h",
   "src/libANGLE/renderer/gl/egl/egl_utils.cpp",
   "src/libANGLE/renderer/gl/egl/egl_utils.h",
   "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
@@ -717,8 +718,12 @@ libangle_gl_ozone_sources = [
   "src/libANGLE/renderer/gl/egl/ozone/SurfaceOzone.h",
 ]
 libangle_gl_egl_android_sources = [
+  "src/libANGLE/renderer/gl/egl/android/android_util.cpp",
+  "src/libANGLE/renderer/gl/egl/android/android_util.h",
   "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
   "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.h",
+  "src/libANGLE/renderer/gl/egl/android/NativeBufferImageSiblingAndroid.cpp",
+  "src/libANGLE/renderer/gl/egl/android/NativeBufferImageSiblingAndroid.h",
 ]
 libangle_gl_cgl_sources = [
   "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",

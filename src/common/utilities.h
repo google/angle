@@ -150,6 +150,7 @@ size_t CubeMapTextureTargetToLayerIndex(EGLenum target);
 EGLenum LayerIndexToCubeMapTextureTarget(size_t index);
 bool IsTextureTarget(EGLenum target);
 bool IsRenderbufferTarget(EGLenum target);
+bool IsExternalImageTarget(EGLenum target);
 
 const char *GetGenericErrorMessage(EGLint error);
 }  // namespace egl
