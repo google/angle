@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c264ad6b_f59c0398",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-21T02:43:07Z",
+      "side": 1,
+      "message": "Future generations (and to a lesser extent the reviewers) would appreciate it if there was a bit more information here. Something like:\n\nOpenGL lines are rasterized with this formula: ...\nVulkan lines are rasterized with that formula: ...\n\nand therefore this other formula is derived to convert OpenGL lines to Vulkans: ...",
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "14f39dc0_df8a8b60",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 37
@@ -19,6 +36,57 @@
         "endLine": 569,
         "endChar": 64
       },
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29b5b817_d4c85345",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-21T02:43:07Z",
+      "side": 1,
+      "message": "I have a strong urge to simplify this process...",
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4590cf67_57f3d196",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-21T02:43:07Z",
+      "side": 1,
+      "message": "Line rasterization is a rare operation generally, I\u0027m wondering if we could do away with this copy. An idea could be:\n\n    std::string patchedVertexSource;\n    std::string *vsSource \u003d \u0026vertexSource;\n\n    if (enableLineRasterEmulation)\n    {\n        patchedVertexSource \u003d vertexSource;\n        // change it\n        vsSource \u003d \u0026patchedVertexSource;\n    }\n\n    // use vsSource\n\nBut see if there is a less ugly way to do that!",
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c3d956b_b4b2b151",
+        "filename": "src/tests/gl_tests/ViewportTest.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-21T02:43:07Z",
+      "side": 1,
+      "message": "Is this check enough? This looks like the minimum that would be drawn with any line algorithm, especially given that the window and viewport are square. Since there is a difference between the opengl line and the vulkan line algorithms, is this going to pick that difference up?\n\nAlso, do we want to check for correctness in the presence of multisampling?",
       "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
