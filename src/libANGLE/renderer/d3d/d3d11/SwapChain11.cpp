@@ -23,7 +23,6 @@
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthrough2d11vs.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughrgba2d11ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughrgba2dms11ps.h"
-#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/resolvecolor2dps.h"
 
 #ifdef ANGLE_ENABLE_KEYEDMUTEX
 #define ANGLE_RESOURCE_SHARE_TYPE D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX
@@ -88,7 +87,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mPassThroughSampler(),
       mPassThroughIL(),
       mPassThroughVS(),
-      mPassThroughOrResolvePS(),
+      mPassThroughPS(),
       mPassThroughRS(),
       mColorRenderTarget(this, renderer, false),
       mDepthStencilRenderTarget(this, renderer, true),
@@ -130,7 +129,7 @@ void SwapChain11::release()
     mPassThroughSampler.reset();
     mPassThroughIL.reset();
     mPassThroughVS.reset();
-    mPassThroughOrResolvePS.reset();
+    mPassThroughPS.reset();
     mPassThroughRS.reset();
 
     if (!mAppCreatedShareHandle)
@@ -605,9 +604,9 @@ EGLint SwapChain11::reset(DisplayD3D *displayD3D,
 
     if (mNativeWindow->getNativeWindow())
     {
-        HRESULT hr = mNativeWindow->createSwapChain(
-            device, mRenderer->getDxgiFactory(), getSwapChainNativeFormat(), backbufferWidth,
-            backbufferHeight, mNeedsOffscreenTexture ? 1 : getD3DSamples(), &mSwapChain);
+        HRESULT hr = mNativeWindow->createSwapChain(device, mRenderer->getDxgiFactory(),
+                                                    getSwapChainNativeFormat(), backbufferWidth,
+                                                    backbufferHeight, getD3DSamples(), &mSwapChain);
 
         if (FAILED(hr))
         {
@@ -669,7 +668,7 @@ angle::Result SwapChain11::initPassThroughResources(DisplayD3D *displayD3D)
 
     // Make sure our resources are all not allocated, when we create
     ASSERT(!mQuadVB.valid() && !mPassThroughSampler.valid());
-    ASSERT(!mPassThroughIL.valid() && !mPassThroughVS.valid() && !mPassThroughOrResolvePS.valid());
+    ASSERT(!mPassThroughIL.valid() && !mPassThroughVS.valid() && !mPassThroughPS.valid());
 
     D3D11_BUFFER_DESC vbDesc;
     vbDesc.ByteWidth = sizeof(d3d11::PositionTexCoordVertex) * 4;
@@ -719,26 +718,15 @@ angle::Result SwapChain11::initPassThroughResources(DisplayD3D *displayD3D)
     if (mEGLSamples <= 1)
     {
         ShaderData pixelShaderData(g_PS_PassthroughRGBA2D);
-        ANGLE_TRY(
-            mRenderer->allocateResource(displayD3D, pixelShaderData, &mPassThroughOrResolvePS));
+        ANGLE_TRY(mRenderer->allocateResource(displayD3D, pixelShaderData, &mPassThroughPS));
     }
     else
     {
-        if (mNativeWindow->getNativeWindow() && mNeedsOffscreenTexture)
-        {
-            ShaderData pixelShaderData(g_PS_ResolveColor2D);
-            ANGLE_TRY(
-                mRenderer->allocateResource(displayD3D, pixelShaderData, &mPassThroughOrResolvePS));
-        }
-        else
-        {
-            ShaderData pixelShaderData(g_PS_PassthroughRGBA2DMS);
-            ANGLE_TRY(
-                mRenderer->allocateResource(displayD3D, pixelShaderData, &mPassThroughOrResolvePS));
-        }
+        ShaderData pixelShaderData(g_PS_PassthroughRGBA2DMS);
+        ANGLE_TRY(mRenderer->allocateResource(displayD3D, pixelShaderData, &mPassThroughPS));
     }
 
-    mPassThroughOrResolvePS.setDebugName("Swap chain pass through pixel shader");
+    mPassThroughPS.setDebugName("Swap chain pass through pixel shader");
 
     // Use the default rasterizer state but without culling
     D3D11_RASTERIZER_DESC rasterizerDesc;
@@ -857,7 +845,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(DisplayD3D *displayD3D,
     // Apply shaders
     stateManager->setInputLayout(&mPassThroughIL);
     stateManager->setPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    stateManager->setDrawShaders(&mPassThroughVS, nullptr, &mPassThroughOrResolvePS);
+    stateManager->setDrawShaders(&mPassThroughVS, nullptr, &mPassThroughPS);
 
     // Apply render targets. Use the proxy context in display.
     stateManager->setRenderTarget(mBackBufferRTView.get(), nullptr);
