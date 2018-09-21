@@ -850,25 +850,24 @@ void OutputTextureGatherFunctionBody(TInfoSinkBase &out,
 
     ImmutableString samplerCoordString(samplerCoordBuilder);
 
+    constexpr std::array<const char *, 4> kHLSLGatherFunctions = {
+        {"GatherRed", "GatherGreen", "GatherBlue", "GatherAlpha"}};
+
     out << "    switch(comp)\n"
-           "    {\n"
-           "        case 0:\n"
-           "            return "
-        << textureReference << ".GatherRed(" << samplerReference << ", " << samplerCoordString
-        << ");\n"
-           "        case 1:\n"
-           "            return "
-        << textureReference << ".GatherGreen(" << samplerReference << ", " << samplerCoordString
-        << ");\n"
-           "        case 2:\n"
-           "            return "
-        << textureReference << ".GatherBlue(" << samplerReference << ", " << samplerCoordString
-        << ");\n"
-           "        case 3:\n"
-           "            return "
-        << textureReference << ".GatherAlpha(" << samplerReference << ", " << samplerCoordString
-        << ");\n"
-           "        default:\n"
+           "    {\n";
+    for (size_t component = 0; component < kHLSLGatherFunctions.size(); ++component)
+    {
+        out << "        case " << component << ":\n"
+            << "            return " << textureReference << "." << kHLSLGatherFunctions[component]
+            << "(" << samplerReference << ", " << samplerCoordString;
+        if (textureFunction.offset)
+        {
+            out << ", offset";
+        }
+        out << ");\n";
+    }
+
+    out << "        default:\n"
            "            return float4(0.0, 0.0, 0.0, 1.0);\n"
            "    }\n";
 }
@@ -1319,6 +1318,11 @@ ImmutableString TextureFunctionHLSL::useTextureFunction(const ImmutableString &n
     else if (name == "textureGather")
     {
         textureFunction.method = TextureFunction::GATHER;
+    }
+    else if (name == "textureGatherOffset")
+    {
+        textureFunction.method = TextureFunction::GATHER;
+        textureFunction.offset = true;
     }
     else
         UNREACHABLE();

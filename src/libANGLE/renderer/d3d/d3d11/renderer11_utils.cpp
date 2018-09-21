@@ -1049,6 +1049,50 @@ int GetMaximumTexelOffset(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+int GetMinimumTextureGatherOffset(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        // https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/gather4-po--sm5---asm-
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return -32;
+
+        case D3D_FEATURE_LEVEL_10_1:
+        case D3D_FEATURE_LEVEL_10_0:
+        case D3D_FEATURE_LEVEL_9_3:
+        case D3D_FEATURE_LEVEL_9_2:
+        case D3D_FEATURE_LEVEL_9_1:
+            return 0;
+
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+int GetMaximumTextureGatherOffset(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        // https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/gather4-po--sm5---asm-
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return 31;
+
+        case D3D_FEATURE_LEVEL_10_1:
+        case D3D_FEATURE_LEVEL_10_0:
+        case D3D_FEATURE_LEVEL_9_3:
+        case D3D_FEATURE_LEVEL_9_2:
+        case D3D_FEATURE_LEVEL_9_1:
+            return 0;
+
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 size_t GetMaximumConstantBufferSize(D3D_FEATURE_LEVEL featureLevel)
 {
     // Returns a size_t despite the limit being a GLuint64 because size_t is the maximum
@@ -1505,6 +1549,10 @@ void GenerateCaps(ID3D11Device *device,
     caps->maxFramebufferWidth =
         static_cast<GLuint>(GetMaximumRenderToBufferWindowSize(featureLevel));
     caps->maxFramebufferHeight = caps->maxFramebufferWidth;
+
+    // Texture gather offset limits
+    caps->minProgramTextureGatherOffset = GetMinimumTextureGatherOffset(featureLevel);
+    caps->maxProgramTextureGatherOffset = GetMaximumTextureGatherOffset(featureLevel);
 
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
