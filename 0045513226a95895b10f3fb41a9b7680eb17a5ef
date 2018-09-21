@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "f5c41e60_c2087d48",
+        "filename": "include/GLES3/gl3ext_angle.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-21T07:27:51Z",
+      "side": 1,
+      "message": "I don\u0027t think that a new header file should be added. Right now extension enums are defined in gl2ext.h / gl2ext_angle.h even if the extension requires GLES 3.0 or newer.",
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70f11b83_6cd4a999",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-21T07:27:51Z",
+      "side": 1,
+      "message": "Again I don\u0027t think that there needs to be a distinct category for gles3 extensions. It\u0027s useful to separate gles1 extensions and gles2 extensions since the APIs are incompatible. Gles2 and gles3 are compatible so there isn\u0027t a similar need.",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 20
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3f3314b7_f9a20d0a",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 18
@@ -48,6 +88,29 @@
     },
     {
       "key": {
+        "uuid": "114ad6e3_669fb97a",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-21T07:27:51Z",
+      "side": 1,
+      "message": "nit: I think \"GL_ANGLE_texture_multisample or GLES 3.1 required.\" would be clearer.",
+      "range": {
+        "startLine": 250,
+        "startChar": 8,
+        "endLine": 250,
+        "endChar": 69
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b774c68c_75a6b0d8",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 18
@@ -64,6 +127,52 @@
         "startChar": 42,
         "endLine": 225,
         "endChar": 66
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fff8289e_d7a9c7d4",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1043,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-21T07:27:51Z",
+      "side": 1,
+      "message": "What platform do we need this on?",
+      "range": {
+        "startLine": 1042,
+        "startChar": 12,
+        "endLine": 1043,
+        "endChar": 96
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f19b62e_641e3d68",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3818,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-21T07:27:51Z",
+      "side": 1,
+      "message": "Could this validation be shared with the ES 3.1 version of this function?",
+      "range": {
+        "startLine": 3808,
+        "startChar": 0,
+        "endLine": 3818,
+        "endChar": 5
       },
       "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -117,6 +226,29 @@
     },
     {
       "key": {
+        "uuid": "d56a3b64_c7496d81",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-21T07:27:51Z",
+      "side": 1,
+      "message": "nit: Shouldn\u0027t this still be indented?",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 49
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "979793c5_9216edf9",
         "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
         "patchSetId": 18
@@ -133,6 +265,29 @@
         "startChar": 8,
         "endLine": 208,
         "endChar": 68
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bc7ff59_c1358f43",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-21T07:27:51Z",
+      "side": 1,
+      "message": "Maybe this test should rather be run so that the extension is _not_ requested, so we get the intended negative test coverage. We could inherit this test from TextureMultisampleArrayWebGLTest so the extension is not enabled by default.",
+      "range": {
+        "startLine": 235,
+        "startChar": 9,
+        "endLine": 235,
+        "endChar": 38
       },
       "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
