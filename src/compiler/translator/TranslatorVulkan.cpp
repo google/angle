@@ -686,7 +686,7 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         bool usesFragCoord  = false;
 
         // Search for the gl_PointCoord usage, if its used, we need to flip the y coordinate.
-        for (const Varying &inputVarying : inputVaryings)
+        for (const Varying &inputVarying : mInputVaryings)
         {
             if (!inputVarying.isBuiltIn())
             {
@@ -712,7 +712,7 @@ void TranslatorVulkan::translate(TIntermBlock *root,
         bool hasGLFragColor = false;
         bool hasGLFragData  = false;
 
-        for (const OutputVariable &outputVar : outputVariables)
+        for (const OutputVariable &outputVar : mOutputVariables)
         {
             if (outputVar.name == "gl_FragColor")
             {

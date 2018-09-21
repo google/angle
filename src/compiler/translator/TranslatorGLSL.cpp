@@ -141,7 +141,7 @@ void TranslatorGLSL::translate(TIntermBlock *root,
         bool hasGLSecondaryFragColor = false;
         bool hasGLSecondaryFragData  = false;
 
-        for (const auto &outputVar : outputVariables)
+        for (const auto &outputVar : mOutputVariables)
         {
             if (declareGLFragmentOutputs)
             {
