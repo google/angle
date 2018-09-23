@@ -107,7 +107,7 @@ EGLBoolean EGLAPIENTRY Terminate(EGLDisplay dpy)
 
     if (display->isValidContext(thread->getContext()))
     {
-        thread->setCurrent(nullptr);
+        SetContextCurrent(thread, nullptr);
     }
 
     ANGLE_EGL_TRY_RETURN(thread, display->terminate(thread), "eglTerminate",
@@ -405,7 +405,7 @@ EGLBoolean EGLAPIENTRY DestroyContext(EGLDisplay dpy, EGLContext ctx)
 
     if (contextWasCurrent)
     {
-        thread->setCurrent(nullptr);
+        SetContextCurrent(thread, nullptr);
     }
 
     thread->setSuccess();
@@ -447,7 +447,7 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
         ANGLE_EGL_TRY_RETURN(thread, display->makeCurrent(drawSurface, readSurface, context),
                              "eglMakeCurrent", GetContextIfValid(display, context), EGL_FALSE);
 
-        thread->setCurrent(context);
+        SetContextCurrent(thread, context);
     }
 
     thread->setSuccess();

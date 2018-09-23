@@ -1517,7 +1517,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     GLenum getError();
     void markContextLost();
-    bool isContextLost() const;
+
+    bool isContextLost() const { return mContextLost; }
+
     GLenum getGraphicsResetStatus();
     bool isResetNotificationEnabled();
 
