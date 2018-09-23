@@ -584,10 +584,15 @@ Texture::Texture(rx::GLImplFactory *factory, GLuint id, TextureType type)
     : RefCountObject(id),
       mState(type),
       mTexture(factory->createTexture(mState)),
+      mImplObserver(this, 0),
       mLabel(),
       mBoundSurface(nullptr),
       mBoundStream(nullptr)
 {
+    mImplObserver.bind(mTexture);
+
+    // Initially assume the implementation is dirty.
+    mDirtyBits.set(DIRTY_BIT_IMPLEMENTATION);
 }
 
 Error Texture::onDestroy(const Context *context)
@@ -1255,7 +1260,11 @@ Error Texture::generateMipmap(const Context *context)
     {
         return NoError();
     }
-    ANGLE_TRY(syncState(context));
+
+    if (hasAnyDirtyBit())
+    {
+        ANGLE_TRY(syncState(context));
+    }
 
     // Clear the base image(s) immediately if needed
     if (context->isRobustResourceInitEnabled())
@@ -1515,6 +1524,7 @@ GLuint Texture::getId() const
 
 Error Texture::syncState(const Context *context)
 {
+    ASSERT(hasAnyDirtyBit());
     ANGLE_TRY(mTexture->syncState(context, mDirtyBits));
     mDirtyBits.reset();
     return NoError();
@@ -1607,11 +1617,6 @@ InitState Texture::initState(const ImageIndex &imageIndex) const
     return mState.getImageDesc(imageIndex).initState;
 }
 
-InitState Texture::initState() const
-{
-    return mState.mInitState;
-}
-
 void Texture::setInitState(const ImageIndex &imageIndex, InitState initState)
 {
     // As an ImageIndex that represents an entire level of a cube map corresponds to 6 ImageDescs,
@@ -1673,4 +1678,13 @@ Error Texture::handleMipmapGenerationHint(const Context *context, int level)
     return NoError();
 }
 
+void Texture::onSubjectStateChange(const gl::Context *context,
+                                   angle::SubjectIndex index,
+                                   angle::SubjectMessage message)
+{
+    if (message == angle::SubjectMessage::DEPENDENT_DIRTY_BITS)
+    {
+        mDirtyBits.set(DIRTY_BIT_IMPLEMENTATION);
+    }
+}
 }  // namespace gl

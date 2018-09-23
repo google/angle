@@ -15,6 +15,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/ImageIndex.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/FramebufferAttachmentObjectImpl.h"
 
 namespace egl
 {
@@ -220,7 +221,7 @@ class FramebufferAttachmentObject
     Error initializeContents(const Context *context, const ImageIndex &imageIndex);
 
     void onStorageChange(const gl::Context *context) const;
-    angle::Subject *getSubject() const;
+    angle::Subject *getSubject() const { return getAttachmentImpl(); }
 
   protected:
     virtual rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const = 0;

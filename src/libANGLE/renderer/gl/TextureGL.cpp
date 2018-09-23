@@ -235,7 +235,8 @@ void TextureGL::setImageHelper(const gl::Context *context,
         UNREACHABLE();
     }
 
-    setLevelInfo(target, level, 1, GetLevelInfo(internalFormat, texImageFormat.internalFormat));
+    setLevelInfo(context, target, level, 1,
+                 GetLevelInfo(internalFormat, texImageFormat.internalFormat));
 }
 
 void TextureGL::reserveTexImageToBeFilled(const gl::Context *context,
@@ -508,7 +509,7 @@ gl::Error TextureGL::setCompressedImage(const gl::Context *context,
 
     LevelInfoGL levelInfo = GetLevelInfo(internalFormat, compressedTexImageFormat.internalFormat);
     ASSERT(!levelInfo.lumaWorkaround.enabled);
-    setLevelInfo(target, level, 1, levelInfo);
+    setLevelInfo(context, target, level, 1, levelInfo);
 
     return gl::NoError();
 }
@@ -660,7 +661,7 @@ gl::Error TextureGL::copyImage(const gl::Context *context,
             UNREACHABLE();
         }
 
-        setLevelInfo(target, level, 1, levelInfo);
+        setLevelInfo(context, target, level, 1, levelInfo);
     }
 
     return gl::NoError();
@@ -1007,7 +1008,8 @@ gl::Error TextureGL::setStorage(const gl::Context *context,
         UNREACHABLE();
     }
 
-    setLevelInfo(type, 0, levels, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
+    setLevelInfo(context, type, 0, levels,
+                 GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
 
     return gl::NoError();
 }
@@ -1046,7 +1048,8 @@ gl::Error TextureGL::setStorageMultisample(const gl::Context *context,
         UNREACHABLE();
     }
 
-    setLevelInfo(type, 0, 1, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
+    setLevelInfo(context, type, 0, 1,
+                 GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
 
     return gl::NoError();
 }
@@ -1071,7 +1074,8 @@ gl::Error TextureGL::generateMipmap(const gl::Context *context)
     const GLuint effectiveBaseLevel = mState.getEffectiveBaseLevel();
     const GLuint maxLevel           = mState.getMipmapMaxLevel();
 
-    setLevelInfo(getType(), effectiveBaseLevel, maxLevel - effectiveBaseLevel, getBaseLevelInfo());
+    setLevelInfo(context, getType(), effectiveBaseLevel, maxLevel - effectiveBaseLevel,
+                 getBaseLevelInfo());
 
     return gl::NoError();
 }
@@ -1085,7 +1089,7 @@ gl::Error TextureGL::bindTexImage(const gl::Context *context, egl::Surface *surf
     // Make sure this texture is bound
     stateManager->bindTexture(getType(), mTextureID);
 
-    setLevelInfo(getType(), 0, 1, LevelInfoGL());
+    setLevelInfo(context, getType(), 0, 1, LevelInfoGL());
     return gl::NoError();
 }
 
@@ -1119,7 +1123,7 @@ gl::Error TextureGL::setEGLImageTarget(const gl::Context *context,
     GLenum imageNativeInternalFormat = GL_NONE;
     ANGLE_TRY(imageGL->setTexture2D(context, type, this, &imageNativeInternalFormat));
 
-    setLevelInfo(type, 0, 1,
+    setLevelInfo(context, type, 0, 1,
                  GetLevelInfo(image->getFormat().info->internalFormat, imageNativeInternalFormat));
 
     return gl::NoError();
@@ -1247,6 +1251,11 @@ gl::Error TextureGL::syncState(const gl::Context *context, const gl::Texture::Di
             case gl::Texture::DIRTY_BIT_LABEL:
                 break;
 
+            case gl::Texture::DIRTY_BIT_IMPLEMENTATION:
+                // This special dirty bit is used to signal the front-end that the implementation
+                // has local dirty bits. The real dirty bits are in mLocalDirty bits.
+                break;
+
             default:
                 UNREACHABLE();
         }
@@ -1271,6 +1280,9 @@ gl::Error TextureGL::setBaseLevel(const gl::Context *context, GLuint baseLevel)
         mAppliedBaseLevel = baseLevel;
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_BASE_LEVEL);
 
+        // Signal to the GL layer that the Impl has dirty bits.
+        onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+
         stateManager->bindTexture(getType(), mTextureID);
         functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_BASE_LEVEL, baseLevel);
     }
@@ -1287,6 +1299,9 @@ void TextureGL::setMinFilter(const gl::Context *context, GLenum filter)
         mAppliedSampler.setMinFilter(filter);
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MIN_FILTER);
 
+        // Signal to the GL layer that the Impl has dirty bits.
+        onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+
         stateManager->bindTexture(getType(), mTextureID);
         functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_MIN_FILTER, filter);
     }
@@ -1300,6 +1315,9 @@ void TextureGL::setMagFilter(const gl::Context *context, GLenum filter)
 
         mAppliedSampler.setMagFilter(filter);
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MAG_FILTER);
+
+        // Signal to the GL layer that the Impl has dirty bits.
+        onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 
         stateManager->bindTexture(getType(), mTextureID);
         functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_MAG_FILTER, filter);
@@ -1321,6 +1339,9 @@ void TextureGL::setSwizzle(const gl::Context *context, GLint swizzle[4])
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_SWIZZLE_GREEN);
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_SWIZZLE_BLUE);
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA);
+
+        // Signal to the GL layer that the Impl has dirty bits.
+        onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
 
         stateManager->bindTexture(getType(), mTextureID);
         functions->texParameteriv(ToGLenum(getType()), GL_TEXTURE_SWIZZLE_RGBA, swizzle);
@@ -1446,7 +1467,8 @@ void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions,
     functions->texParameteri(ToGLenum(getType()), name, resultSwizzle);
 }
 
-void TextureGL::setLevelInfo(gl::TextureTarget target,
+void TextureGL::setLevelInfo(const gl::Context *context,
+                             gl::TextureTarget target,
                              size_t level,
                              size_t levelCount,
                              const LevelInfoGL &levelInfo)
@@ -1470,10 +1492,12 @@ void TextureGL::setLevelInfo(gl::TextureTarget target,
     if (updateWorkarounds)
     {
         mLocalDirtyBits |= GetLevelWorkaroundDirtyBits();
+        onStateChange(context, angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
     }
 }
 
-void TextureGL::setLevelInfo(gl::TextureType type,
+void TextureGL::setLevelInfo(const gl::Context *context,
+                             gl::TextureType type,
                              size_t level,
                              size_t levelCount,
                              const LevelInfoGL &levelInfo)
@@ -1482,12 +1506,12 @@ void TextureGL::setLevelInfo(gl::TextureType type,
     {
         for (gl::TextureTarget target : gl::AllCubeFaceTextureTargets())
         {
-            setLevelInfo(target, level, levelCount, levelInfo);
+            setLevelInfo(context, target, level, levelCount, levelInfo);
         }
     }
     else
     {
-        setLevelInfo(NonCubeTextureTypeToTarget(type), level, levelCount, levelInfo);
+        setLevelInfo(context, NonCubeTextureTypeToTarget(type), level, levelCount, levelInfo);
     }
 }
 

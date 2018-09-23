@@ -12,8 +12,6 @@
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
-#include "libANGLE/validationEGL.h"
-
 using namespace angle;
 
 constexpr char kEGLExtName[] = "EGL_ANDROID_blob_cache";

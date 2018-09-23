@@ -1828,7 +1828,12 @@ void Framebuffer::onSubjectStateChange(const Context *context,
                                        angle::SubjectIndex index,
                                        angle::SubjectMessage message)
 {
-    ASSERT(message == angle::SubjectMessage::STORAGE_CHANGED);
+    if (message != angle::SubjectMessage::STORAGE_CHANGED)
+    {
+        // This can be triggered by the GL back-end TextureGL class.
+        ASSERT(message == angle::SubjectMessage::DEPENDENT_DIRTY_BITS);
+        return;
+    }
 
     ASSERT(!mDirtyBitsGuard.valid() || mDirtyBitsGuard.value().test(index));
     mDirtyBits.set(index);

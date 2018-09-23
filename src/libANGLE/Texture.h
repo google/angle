@@ -21,6 +21,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Image.h"
+#include "libANGLE/Observer.h"
 #include "libANGLE/Stream.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
@@ -187,7 +188,10 @@ struct TextureState final : private angle::NonCopyable
 bool operator==(const TextureState &a, const TextureState &b);
 bool operator!=(const TextureState &a, const TextureState &b);
 
-class Texture final : public RefCountObject, public egl::ImageSibling, public LabeledObject
+class Texture final : public RefCountObject,
+                      public egl::ImageSibling,
+                      public LabeledObject,
+                      public angle::ObserverInterface
 {
   public:
     Texture(rx::GLImplFactory *factory, GLuint id, TextureType type);
@@ -397,7 +401,7 @@ class Texture final : public RefCountObject, public egl::ImageSibling, public La
     // Needed for robust resource init.
     Error ensureInitialized(const Context *context);
     InitState initState(const ImageIndex &imageIndex) const override;
-    InitState initState() const;
+    InitState initState() const { return mState.mInitState; }
     void setInitState(const ImageIndex &imageIndex, InitState initState) override;
 
     enum DirtyBitType
@@ -427,6 +431,7 @@ class Texture final : public RefCountObject, public egl::ImageSibling, public La
         // Misc
         DIRTY_BIT_LABEL,
         DIRTY_BIT_USAGE,
+        DIRTY_BIT_IMPLEMENTATION,
 
         DIRTY_BIT_COUNT,
     };
@@ -434,6 +439,11 @@ class Texture final : public RefCountObject, public egl::ImageSibling, public La
 
     Error syncState(const Context *context);
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
+
+    // ObserverInterface implementation.
+    void onSubjectStateChange(const gl::Context *context,
+                              angle::SubjectIndex index,
+                              angle::SubjectMessage message) override;
 
   private:
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override;
@@ -464,6 +474,7 @@ class Texture final : public RefCountObject, public egl::ImageSibling, public La
     TextureState mState;
     DirtyBits mDirtyBits;
     rx::TextureImpl *mTexture;
+    angle::ObserverBinding mImplObserver;
 
     std::string mLabel;
 

@@ -223,11 +223,13 @@ class TextureGL : public TextureImpl
                                  GLenum value,
                                  GLenum *outValue);
 
-    void setLevelInfo(gl::TextureTarget target,
+    void setLevelInfo(const gl::Context *context,
+                      gl::TextureTarget target,
                       size_t level,
                       size_t levelCount,
                       const LevelInfoGL &levelInfo);
-    void setLevelInfo(gl::TextureType type,
+    void setLevelInfo(const gl::Context *context,
+                      gl::TextureType type,
                       size_t level,
                       size_t levelCount,
                       const LevelInfoGL &levelInfo);
