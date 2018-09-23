@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b6dc7cd9_bb8d3337",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-23T23:54:06Z",
+      "side": 1,
+      "message": "I took a pretty high-level approach and only discuss this in general. For a complete derivation I have an internal document in the ANGLE team drive. You should have access to it in your Google drive, under the design docs folder.\n\nThere\u0027s nothing secret in there but unfortunately it\u0027s a bit difficult to share things publicly from the team drive.\n\nPTAL",
+      "parentUuid": "c264ad6b_f59c0398",
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14f39dc0_df8a8b60",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 37
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "59431131_0e0a77ea",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-23T23:54:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14f39dc0_df8a8b60",
+      "range": {
+        "startLine": 569,
+        "startChar": 56,
+        "endLine": 569,
+        "endChar": 64
+      },
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29b5b817_d4c85345",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 37
@@ -56,6 +98,24 @@
       "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae55c15d_102494d4",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-23T23:54:06Z",
+      "side": 1,
+      "message": "You mean the templating for tree transformations? I agree. The code it for transformations is complicated and hard to read. For now I think we\u0027re kinda stuck with this process.\n\nHowever.. in the long long term we could consider using something like SwiftShader\u0027s Reactor to implement code generation:\n\nhttps://github.com/google/swiftshader/blob/master/docs/Reactor.md",
+      "parentUuid": "29b5b817_d4c85345",
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "b6819a84_0b0ff91b",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-23T23:54:06Z",
+      "side": 1,
+      "message": "I like the suggestion. I did this using a nested GetShaderCodeImpl call.",
+      "parentUuid": "4590cf67_57f3d196",
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c3d956b_b4b2b151",
         "filename": "src/tests/gl_tests/ViewportTest.cpp",
         "patchSetId": 37
@@ -90,6 +168,24 @@
       "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca334a4b_ad250c17",
+        "filename": "src/tests/gl_tests/ViewportTest.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-23T23:54:06Z",
+      "side": 1,
+      "message": "I think it\u0027s enough. This test isn\u0027t trying to verify the line rasterization algorithm. It\u0027s just trying to verify that something reasonable happened. There are specific tests in the dEQP testing suite that verify the algorithm generates the right pixels.\n\nWe don\u0027t support multisampling with Vulkan just yet. So I think that\u0027s a bit out of scope for this CL.\n\nDoes that sound reasonable?",
+      "parentUuid": "3c3d956b_b4b2b151",
+      "revId": "517d9cb48fbc2ea0a7aec8ee06b84762dcffb725",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
