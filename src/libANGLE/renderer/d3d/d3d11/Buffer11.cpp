@@ -348,6 +348,14 @@ gl::Error Buffer11::setData(const gl::Context *context,
 
 angle::Result Buffer11::getData(const gl::Context *context, const uint8_t **outData)
 {
+    if (mSize == 0)
+    {
+        // TODO(http://anglebug.com/2840): This ensures that we don't crash or assert in robust
+        // buffer access behavior mode if there are buffers without any data. However, technically
+        // it should still be possible to draw, with fetches from this buffer returning zero.
+        return angle::Result::Stop();
+    }
+
     SystemMemoryStorage *systemMemoryStorage = nullptr;
     ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_SYSTEM_MEMORY, &systemMemoryStorage));
 
