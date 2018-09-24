@@ -1,0 +1,533 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ee6c3ce_0e29f4b5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "might be worth mentioning how you add the alternative set of extensions to handle conditional support.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 69
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b5ebdcb_62e7ec08",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "I\u0027m struggling to see a scenario where colorBufferHalfFloat is supported but textureRG is not. same with textureHalfFloat. I wonder if we could somehow make that an ASSERT instead of an explicit check. But a very minor point.",
+      "range": {
+        "startLine": 169,
+        "startChar": 79,
+        "endLine": 169,
+        "endChar": 99
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0adced4f_973f8977",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "technically we could add ASSERTs in here for OES_texture_half_float and OES_texture_float. and textureFloatLinear since they\u0027re the same extension.",
+      "range": {
+        "startLine": 247,
+        "startChar": 26,
+        "endLine": 247,
+        "endChar": 48
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "112bf0e5_3a3fbb1b",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "I think I agree with this. I think it\u0027s how our validation works.",
+      "range": {
+        "startLine": 722,
+        "startChar": 6,
+        "endLine": 722,
+        "endChar": 92
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50cb68ea_abe72c8f",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "what does \"means -\" mean?",
+      "range": {
+        "startLine": 723,
+        "startChar": 6,
+        "endLine": 723,
+        "endChar": 97
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c308e57_66427371",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "please for all TODOs from now on use bug tags. Or change them to comments/notes. This ensures all open work is tracked in the issue tracker.",
+      "range": {
+        "startLine": 727,
+        "startChar": 0,
+        "endLine": 727,
+        "endChar": 87
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecfb1520_0618f832",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "this looks correct.",
+      "range": {
+        "startLine": 738,
+        "startChar": 154,
+        "endLine": 738,
+        "endChar": 168
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5e8a9e8_08c705f3",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "kinda blows my mind that we didn\u0027t have this right. but I guess we support TexStorage almost everywhere. this looks correct as well.",
+      "range": {
+        "startLine": 744,
+        "startChar": 154,
+        "endLine": 744,
+        "endChar": 203
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60051a4f_f63a7ee9",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 754,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "not sure if there\u0027s a real need to shuffle this line. makes the diff a bit harder to read.",
+      "range": {
+        "startLine": 754,
+        "startChar": 24,
+        "endLine": 754,
+        "endChar": 41
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfdb1ec3_5933e300",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "What does it mean that only one type is allowed? Also this block has 8 entries. Maybe this comment needs re-wording.",
+      "range": {
+        "startLine": 796,
+        "startChar": 122,
+        "endLine": 796,
+        "endChar": 180
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1db51a45_d361f867",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "I guess we can emulate some of these formats with the non-OES versions. Not really in scope for this CL but something that might come up some time in the future.",
+      "range": {
+        "startLine": 821,
+        "startChar": 85,
+        "endLine": 821,
+        "endChar": 102
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "655f547d_fd603238",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "native? or driver\u0027s?",
+      "range": {
+        "startLine": 140,
+        "startChar": 19,
+        "endLine": 140,
+        "endChar": 25
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f40795ec_facc0312",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "could be clarified slightly. Does DtermineRGTexturesSupport need to check both or either of the sized and unsized formats? Else where is the unsized format checked? How is support combined in GL_R8?",
+      "range": {
+        "startLine": 142,
+        "startChar": 3,
+        "endLine": 143,
+        "endChar": 90
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7926f8cb_2ec95c20",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "tiny nit: maybe we could put a blank space between notes?",
+      "range": {
+        "startLine": 144,
+        "startChar": 3,
+        "endLine": 144,
+        "endChar": 8
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "190dde59_ed938910",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "a couple quick grammar edits: in the",
+      "range": {
+        "startLine": 145,
+        "startChar": 61,
+        "endLine": 145,
+        "endChar": 65
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f1b8c9a_149afdbc",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "-BTW,",
+      "range": {
+        "startLine": 146,
+        "startChar": 34,
+        "endLine": 146,
+        "endChar": 39
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5756df0_594bde27",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "in the",
+      "range": {
+        "startLine": 147,
+        "startChar": 6,
+        "endLine": 147,
+        "endChar": 10
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25b7daad_410df0bc",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "\"the data upload fallback\" ... what is this?",
+      "range": {
+        "startLine": 148,
+        "startChar": 33,
+        "endLine": 148,
+        "endChar": 53
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec1b5766_09a3cb8e",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "same note about todos",
+      "range": {
+        "startLine": 149,
+        "startChar": 4,
+        "endLine": 149,
+        "endChar": 17
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0f64708_2b8f7baa",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "could this be clarified as:\n\n \"Filter\" requires \"Texture\" support even if set to \"Always Supported\"",
+      "range": {
+        "startLine": 152,
+        "startChar": 11,
+        "endLine": 152,
+        "endChar": 97
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69699ccc_3572ca99",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "grammar is a bit off .. how about\n\nTexture attachments, however, also require texture creation to be supported.",
+      "range": {
+        "startLine": 154,
+        "startChar": 3,
+        "endLine": 154,
+        "endChar": 98
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2b2fe78_31fd17b9",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "same note about TODOs",
+      "range": {
+        "startLine": 156,
+        "startChar": 3,
+        "endLine": 156,
+        "endChar": 7
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65bfd6c8_24441426",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-24T13:59:31Z",
+      "side": 1,
+      "message": "a little bit more detail here might help. We could even potentially make requiredExtensions a vector of vectors instead of having a primary/secondary set.",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 68
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
