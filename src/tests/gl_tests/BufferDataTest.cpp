@@ -164,6 +164,9 @@ TEST_P(BufferDataTest, RepeatedDrawWithDynamic)
 // DYNAMIC
 TEST_P(BufferDataTest, RepeatedDrawDynamicBug)
 {
+    // http://anglebug.com/2843: Seems to be an Intel driver bug.
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsWindows());
+
     glUseProgram(mProgram);
 
     GLint positionLocation = glGetAttribLocation(mProgram, "position");
