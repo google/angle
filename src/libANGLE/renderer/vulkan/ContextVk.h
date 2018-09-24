@@ -218,6 +218,7 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result updateDefaultAttribute(size_t attribIndex);
 
     void invalidateCurrentTextures();
+    void invalidateDriverUniforms();
 
     angle::Result handleDirtyDefaultAttribs(const gl::Context *context,
                                             const gl::DrawCallParams &drawCallParams,

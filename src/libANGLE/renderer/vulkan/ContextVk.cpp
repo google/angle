@@ -663,12 +663,12 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                 mPipelineDesc->updateViewport(framebufferVk, glState.getViewport(),
                                               glState.getNearPlane(), glState.getFarPlane(),
                                               isViewportFlipEnabledForDrawFBO());
-                mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                invalidateDriverUniforms();
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
                 mPipelineDesc->updateDepthRange(glState.getNearPlane(), glState.getFarPlane());
-                mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                invalidateDriverUniforms();
                 break;
             case gl::State::DIRTY_BIT_BLEND_ENABLED:
                 mPipelineDesc->updateBlendEnabled(glState.isBlendEnabled());
@@ -807,7 +807,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
                                                            glState.getDrawFramebuffer());
                 mPipelineDesc->updateStencilBackWriteMask(glState.getDepthStencilState(),
                                                           glState.getDrawFramebuffer());
-                mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                invalidateDriverUniforms();
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -900,7 +900,7 @@ gl::Error ContextVk::onMakeCurrent(const gl::Context *context)
     const gl::State &glState = context->getGLState();
     updateFlipViewportDrawFramebuffer(glState);
     updateFlipViewportReadFramebuffer(glState);
-    mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+    invalidateDriverUniforms();
     return gl::NoError();
 }
 
@@ -1029,6 +1029,12 @@ void ContextVk::invalidateCurrentTextures()
         mDirtyBits.set(DIRTY_BIT_TEXTURES);
         mDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
+}
+
+void ContextVk::invalidateDriverUniforms()
+{
+    mDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+    mDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
 }
 
 gl::Error ContextVk::dispatchCompute(const gl::Context *context,

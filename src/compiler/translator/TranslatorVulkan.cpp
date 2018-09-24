@@ -153,6 +153,16 @@ constexpr ImmutableString kFlippedPointCoordName = ImmutableString("flippedPoint
 constexpr ImmutableString kFlippedFragCoordName     = ImmutableString("flippedFragCoord");
 constexpr ImmutableString kEmulatedDepthRangeParams = ImmutableString("ANGLEDepthRangeParams");
 
+constexpr const char *kHalfRenderAreaHeight = "halfRenderAreaHeight";
+constexpr const char *kViewportYScale       = "viewportYScale";
+constexpr const char *kInviewportYScale     = "invViewportYScale";
+constexpr const char *kDepthRange           = "depthRange";
+
+constexpr size_t kNumDriverUniforms                                        = 6;
+constexpr std::array<const char *, kNumDriverUniforms> kDriverUniformNames = {
+    {"viewport", kHalfRenderAreaHeight, kViewportYScale, kInviewportYScale, "padding",
+     kDepthRange}};
+
 TIntermConstantUnion *CreateConstantFloat(float value)
 {
     const TType *constantType     = StaticType::GetBasic<TBasicType::EbtFloat>();
@@ -246,8 +256,7 @@ void ReplaceGLDepthRangeWithDriverUniform(TIntermBlock *root,
         symbolTable->findBuiltIn(ImmutableString("gl_DepthRange"), 0));
 
     // ANGLEUniforms.depthRange
-    TIntermBinary *angleEmulatedDepthRangeRef =
-        CreateDriverUniformRef(driverUniforms, "depthRange");
+    TIntermBinary *angleEmulatedDepthRangeRef = CreateDriverUniformRef(driverUniforms, kDepthRange);
 
     // Use this variable instead of gl_DepthRange everywhere.
     ReplaceVariableWithTyped(root, depthRangeVar, angleEmulatedDepthRangeRef);
@@ -292,15 +301,6 @@ void AppendVertexShaderDepthCorrectionToMain(TIntermBlock *root, TSymbolTable *s
     // Append the assignment as a statement at the end of the shader.
     RunAtTheEndOfShader(root, assignment, symbolTable);
 }
-
-constexpr const char *kHalfRenderAreaHeight = "halfRenderAreaHeight";
-constexpr const char *kViewportYScale       = "viewportYScale";
-constexpr const char *kInviewportYScale     = "invViewportYScale";
-
-constexpr size_t kNumDriverUniforms                                        = 6;
-constexpr std::array<const char *, kNumDriverUniforms> kDriverUniformNames = {
-    {"viewport", kHalfRenderAreaHeight, kViewportYScale, kInviewportYScale, "padding",
-     "depthRange"}};
 
 // The AddDriverUniformsToShader operation adds an internal uniform block to a shader. The driver
 // block is used to implement Vulkan-specific features and workarounds. Returns the driver uniforms
