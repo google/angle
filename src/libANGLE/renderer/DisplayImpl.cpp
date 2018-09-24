@@ -15,7 +15,7 @@ namespace rx
 {
 
 DisplayImpl::DisplayImpl(const egl::DisplayState &state)
-    : mState(state), mExtensionsInitialized(false), mCapsInitialized(false)
+    : mState(state), mExtensionsInitialized(false), mCapsInitialized(false), mBlobCache(nullptr)
 {
 }
 

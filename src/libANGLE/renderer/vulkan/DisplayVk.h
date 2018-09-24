@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_DISPLAYVK_H_
 #define LIBANGLE_RENDERER_VULKAN_DISPLAYVK_H_
 
+#include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
@@ -74,6 +75,10 @@ class DisplayVk : public DisplayImpl, public vk::Context
     // returning a bool to indicate if the config should be supported.
     virtual bool checkConfigSupport(egl::Config *config) = 0;
 
+    ANGLE_NO_DISCARD bool getScratchBuffer(size_t requestedSizeBytes,
+                                           angle::MemoryBuffer **scratchBufferOut) const;
+    angle::ScratchBuffer *getScratchBuffer() const { return &mScratchBuffer; }
+
     void handleError(VkResult result, const char *file, unsigned int line) override;
 
     // TODO(jmadill): Remove this once refactor is done. http://anglebug.com/2491
@@ -86,6 +91,8 @@ class DisplayVk : public DisplayImpl, public vk::Context
                                                EGLint height) = 0;
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
+
+    mutable angle::ScratchBuffer mScratchBuffer;
 
     std::string mStoredErrorString;
 };

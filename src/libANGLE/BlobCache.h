@@ -61,7 +61,7 @@ class BlobCache final : angle::NonCopyable
         Value(const uint8_t *ptr, size_t sz) : mPtr(ptr), mSize(sz) {}
 
         // A very basic struct to hold the pointer and size together.  The objects of this class
-        // doesn't own the memory.
+        // don't own the memory.
         const uint8_t *data() { return mPtr; }
         size_t size() { return mSize; }
 
@@ -88,6 +88,9 @@ class BlobCache final : angle::NonCopyable
     // will be used.  Otherwise the value is cached in this object.
     void put(const BlobCache::Key &key, angle::MemoryBuffer &&value);
 
+    // Store a key-blob pair in the application cache, only if application callbacks are set.
+    void putApplication(const BlobCache::Key &key, const angle::MemoryBuffer &value);
+
     // Store a key-blob pair in the cache without making callbacks to the application.  This is used
     // to repopulate this object's cache on startup without generating callback calls.
     void populate(const BlobCache::Key &key,
@@ -96,10 +99,14 @@ class BlobCache final : angle::NonCopyable
 
     // Check if the cache contains the blob corresponding to this key.  If application callbacks are
     // set, those will be used.  Otherwise they key is looked up in this object's cache.
-    bool get(const gl::Context *context, const BlobCache::Key &key, BlobCache::Value *valueOut);
+    ANGLE_NO_DISCARD bool get(angle::ScratchBuffer *scratchBuffer,
+                              const BlobCache::Key &key,
+                              BlobCache::Value *valueOut);
 
     // For querying the contents of the cache.
-    bool getAt(size_t index, const BlobCache::Key **keyOut, BlobCache::Value *valueOut);
+    ANGLE_NO_DISCARD bool getAt(size_t index,
+                                const BlobCache::Key **keyOut,
+                                BlobCache::Value *valueOut);
 
     // Evict a blob from the binary cache.
     void remove(const BlobCache::Key &key);

@@ -113,13 +113,13 @@ namespace angle
 {
 Result::operator gl::Error() const
 {
-    if (mStop)
+    if (mResult == ResultValue::kContinue)
     {
-        return gl::Error(GL_INTERNAL_ERROR_ANGLEX);
+        return gl::NoError();
     }
     else
     {
-        return gl::NoError();
+        return gl::Error(GL_INTERNAL_ERROR_ANGLEX);
     }
 }
 }  // namespace angle

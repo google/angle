@@ -20,7 +20,7 @@ namespace rx
 {
 
 DisplayVk::DisplayVk(const egl::DisplayState &state)
-    : DisplayImpl(state), vk::Context(new RendererVk())
+    : DisplayImpl(state), vk::Context(new RendererVk()), mScratchBuffer(1000u)
 {
 }
 
@@ -179,6 +179,12 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 void DisplayVk::generateCaps(egl::Caps *outCaps) const
 {
     outCaps->textureNPOT = true;
+}
+
+bool DisplayVk::getScratchBuffer(size_t requstedSizeBytes,
+                                 angle::MemoryBuffer **scratchBufferOut) const
+{
+    return mScratchBuffer.get(requstedSizeBytes, scratchBufferOut);
 }
 
 void DisplayVk::handleError(VkResult result, const char *file, unsigned int line)

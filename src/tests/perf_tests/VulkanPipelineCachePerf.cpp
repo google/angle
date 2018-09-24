@@ -80,6 +80,7 @@ void VulkanPipelineCachePerfTest::step()
 {
     vk::RenderPass rp;
     vk::PipelineLayout pl;
+    vk::PipelineCache pc;
     vk::ShaderModule sm;
     vk::PipelineAndSerial *result = nullptr;
     gl::AttributesMask am;
@@ -88,7 +89,7 @@ void VulkanPipelineCachePerfTest::step()
     {
         for (const auto &hit : mCacheHits)
         {
-            (void)mCache.getPipeline(VK_NULL_HANDLE, rp, pl, am, sm, sm, hit, &result);
+            (void)mCache.getPipeline(VK_NULL_HANDLE, pc, rp, pl, am, sm, sm, hit, &result);
         }
     }
 
@@ -96,7 +97,7 @@ void VulkanPipelineCachePerfTest::step()
          ++missCount, ++mMissIndex)
     {
         const auto &miss = mCacheMisses[mMissIndex];
-        (void)mCache.getPipeline(VK_NULL_HANDLE, rp, pl, am, sm, sm, miss, &result);
+        (void)mCache.getPipeline(VK_NULL_HANDLE, pc, rp, pl, am, sm, sm, miss, &result);
     }
 }
 

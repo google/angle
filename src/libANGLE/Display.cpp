@@ -447,6 +447,8 @@ void Display::setAttributes(rx::DisplayImpl *impl, const AttributeMap &attribMap
 
 Error Display::initialize()
 {
+    mImplementation->setBlobCache(&mBlobCache);
+
     // TODO(jmadill): Store Platform in Display and init here.
     const angle::PlatformMethods *platformMethods =
         reinterpret_cast<const angle::PlatformMethods *>(

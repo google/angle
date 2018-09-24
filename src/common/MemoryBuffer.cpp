@@ -15,10 +15,6 @@ namespace angle
 {
 
 // MemoryBuffer implementation.
-MemoryBuffer::MemoryBuffer() : mSize(0), mData(nullptr)
-{
-}
-
 MemoryBuffer::~MemoryBuffer()
 {
     free(mData);

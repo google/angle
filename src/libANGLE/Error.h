@@ -241,16 +241,15 @@ inline Error NoError()
 
 // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2491
 #define ANGLE_TRY_HANDLE(CONTEXT, EXPR)                \
-    \
-{                                               \
+    {                                                  \
         auto ANGLE_LOCAL_VAR = (EXPR);                 \
         if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR.isError())) \
         {                                              \
             CONTEXT->handleError(ANGLE_LOCAL_VAR);     \
             return angle::Result::Stop();              \
         }                                              \
-    \
-}
+    }                                                  \
+    ANGLE_EMPTY_STATEMENT
 
 #define ANGLE_TRY_RESULT(EXPR, RESULT)                 \
     {                                                  \
@@ -281,15 +280,20 @@ inline Error NoError()
 namespace angle
 {
 // Result signals if calling code should continue running or early exit. A value of Stop() can
-// either indicate and Error or a non-Error early exit condition such as a detected no-op.
+// either indicate an Error or a non-Error early exit condition such as a detected no-op.  A few
+// other values exist to signal special cases that are neither success nor failure but require
+// special attention.
 class ANGLE_NO_DISCARD Result
 {
   public:
     // TODO(jmadill): Rename when refactor is complete. http://anglebug.com/2491
-    bool isError() const { return mStop; }
+    bool isError() const { return mResult == ResultValue::kStop; }
+    Result getError() { return *this; }
+    Result getResult() { return *this; }
 
-    static Result Stop() { return Result(true); }
-    static Result Continue() { return Result(false); }
+    static Result Continue() { return Result(ResultValue::kContinue); }
+    static Result Stop() { return Result(ResultValue::kStop); }
+    static Result Incomplete() { return Result(ResultValue::kIncomplete); }
 
     // TODO(jmadill): Remove when refactor is complete. http://anglebug.com/2491
     operator gl::Error() const;
@@ -301,13 +305,20 @@ class ANGLE_NO_DISCARD Result
         return operator gl::Error();
     }
 
-    bool operator==(Result other) const { return mStop == other.mStop; }
+    bool operator==(Result other) const { return mResult == other.mResult; }
 
-    bool operator!=(Result other) const { return mStop != other.mStop; }
+    bool operator!=(Result other) const { return mResult != other.mResult; }
 
   private:
-    Result(bool stop) : mStop(stop) {}
-    bool mStop;
+    enum class ResultValue
+    {
+        kContinue = 0,
+        kStop,
+        kIncomplete,
+    };
+
+    Result(ResultValue stop) : mResult(stop) {}
+    ResultValue mResult;
 };
 }  // namespace angle
 

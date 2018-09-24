@@ -23,6 +23,7 @@
 namespace egl
 {
 class AttributeMap;
+class BlobCache;
 class Display;
 struct DisplayState;
 struct Config;
@@ -79,6 +80,9 @@ class DisplayImpl : public EGLImplFactory
 
     const egl::DisplayExtensions &getExtensions() const;
 
+    void setBlobCache(egl::BlobCache *blobCache) { mBlobCache = blobCache; }
+    egl::BlobCache *getBlobCache() const { return mBlobCache; }
+
   protected:
     const egl::DisplayState &mState;
 
@@ -91,6 +95,8 @@ class DisplayImpl : public EGLImplFactory
 
     mutable bool mCapsInitialized;
     mutable egl::Caps mCaps;
+
+    egl::BlobCache *mBlobCache;
 };
 
 }

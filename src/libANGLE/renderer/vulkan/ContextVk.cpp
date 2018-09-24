@@ -150,6 +150,8 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
     mDirtyBits = mNewCommandBufferDirtyBits;
 }
 
+#undef INIT
+
 ContextVk::~ContextVk() = default;
 
 void ContextVk::onDestroy(const gl::Context *context)

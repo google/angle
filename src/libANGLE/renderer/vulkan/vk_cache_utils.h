@@ -344,6 +344,7 @@ class PipelineDesc final
     void initDefaults();
 
     angle::Result initializePipeline(vk::Context *context,
+                                     const vk::PipelineCache &pipelineCacheVk,
                                      const RenderPass &compatibleRenderPass,
                                      const PipelineLayout &pipelineLayout,
                                      const gl::AttributesMask &activeAttribLocationsMask,
@@ -612,6 +613,7 @@ class PipelineCache final : angle::NonCopyable
 
     void populate(const vk::PipelineDesc &desc, vk::Pipeline &&pipeline);
     angle::Result getPipeline(vk::Context *context,
+                              const vk::PipelineCache &pipelineCacheVk,
                               const vk::RenderPass &compatibleRenderPass,
                               const vk::PipelineLayout &pipelineLayout,
                               const gl::AttributesMask &activeAttribLocationsMask,
