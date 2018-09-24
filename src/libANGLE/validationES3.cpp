@@ -4067,4 +4067,86 @@ bool ValidateGetInternalformativ(Context *context,
                                            nullptr);
 }
 
+bool ValidateBindFragDataLocationIndexedEXT(Context *context,
+                                            GLuint program,
+                                            GLuint colorNumber,
+                                            GLuint index,
+                                            const char *name)
+{
+    if (!context->getExtensions().blendFuncExtended)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    if (index < 0 || index > 1)
+    {
+        // This error is not explicitly specified but the spec does say that "<index> may be zero or
+        // one to specify that the color be used as either the first or second color input to the
+        // blend equation, respectively"
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), FragDataBindingIndexOutOfRange);
+        return false;
+    }
+    if (index == 1)
+    {
+        if (colorNumber >= context->getExtensions().maxDualSourceDrawBuffers)
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidValue(),
+                                 ColorNumberGreaterThanMaxDualSourceDrawBuffers);
+            return false;
+        }
+    }
+    else
+    {
+        if (colorNumber >= context->getCaps().maxDrawBuffers)
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidValue(), ColorNumberGreaterThanMaxDrawBuffers);
+            return false;
+        }
+    }
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool ValidateBindFragDataLocationEXT(Context *context,
+                                     GLuint program,
+                                     GLuint colorNumber,
+                                     const char *name)
+{
+    return ValidateBindFragDataLocationIndexedEXT(context, program, colorNumber, 0u, name);
+}
+
+bool ValidateGetFragDataIndexEXT(Context *context, GLuint program, const char *name)
+{
+    if (!context->getExtensions().blendFuncExtended)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+    if (!programObject->isLinked())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotLinked);
+        return false;
+    }
+    return true;
+}
+
 }  // namespace gl

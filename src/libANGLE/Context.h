@@ -1538,6 +1538,15 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     void framebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level);
 
+    // EXT_blend_func_extended
+    void bindFragDataLocationIndexed(GLuint program,
+                                     GLuint colorNumber,
+                                     GLuint index,
+                                     const char *name);
+    void bindFragDataLocation(GLuint program, GLuint colorNumber, const char *name);
+    int getFragDataIndex(GLuint program, const char *name);
+    int getProgramResourceLocationIndex(GLuint program, GLenum programInterface, const char *name);
+
     // Consumes the error.
     // TODO(jmadill): Remove const. http://anglebug.com/2378
     void handleError(const Error &error) const;

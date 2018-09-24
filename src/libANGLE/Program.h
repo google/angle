@@ -42,6 +42,7 @@ namespace gl
 {
 struct UnusedUniform;
 struct Caps;
+struct Extensions;
 class Context;
 class ContextState;
 class Shader;
@@ -312,6 +313,10 @@ class ProgramState final : angle::NonCopyable
     DrawBufferMask getActiveOutputVariables() const { return mActiveOutputVariables; }
     const std::vector<sh::OutputVariable> &getOutputVariables() const { return mOutputVariables; }
     const std::vector<VariableLocation> &getOutputLocations() const { return mOutputLocations; }
+    const std::vector<VariableLocation> &getSecondaryOutputLocations() const
+    {
+        return mSecondaryOutputLocations;
+    }
     const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
     const std::vector<VariableLocation> &getUniformLocations() const { return mUniformLocations; }
     const std::vector<InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
@@ -419,6 +424,10 @@ class ProgramState final : angle::NonCopyable
     // to uniforms.
     std::vector<sh::OutputVariable> mOutputVariables;
     std::vector<VariableLocation> mOutputLocations;
+
+    // EXT_blend_func_extended secondary outputs (ones with index 1) in ESSL 3.00 shaders.
+    std::vector<VariableLocation> mSecondaryOutputLocations;
+
     DrawBufferMask mActiveOutputVariables;
 
     // Fragment output variable base types: FLOAT, INT, or UINT.  Ordered by location.
@@ -504,6 +513,10 @@ class Program final : angle::NonCopyable, public LabeledObject
     void bindFragmentInputLocation(GLint index, const char *name);
     void pathFragmentInputGen(GLint index, GLenum genMode, GLint components, const GLfloat *coeffs);
 
+    // EXT_blend_func_extended
+    void bindFragmentOutputLocation(GLuint index, const char *name);
+    void bindFragmentOutputIndex(GLuint index, const char *name);
+
     // KHR_parallel_shader_compile
     // Try to link the program asynchrously. As a result, background threads may be launched to
     // execute the linking tasks concurrently.
@@ -561,6 +574,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     size_t getOutputResourceCount() const;
     const std::vector<GLenum> &getOutputVariableTypes() const;
     DrawBufferMask getActiveOutputVariables() const;
+
+    // EXT_blend_func_extended
+    GLint getFragDataIndex(const std::string &name) const;
 
     void getActiveUniform(GLuint index,
                           GLsizei bufsize,
@@ -854,7 +870,10 @@ class Program final : angle::NonCopyable, public LabeledObject
     void gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings);
 
     ProgramMergedVaryings getMergedVaryings() const;
+    int getOutputLocationForLink(const sh::OutputVariable &outputVariable) const;
+    bool isOutputSecondaryForLink(const sh::OutputVariable &outputVariable) const;
     bool linkOutputVariables(const Caps &caps,
+                             const Extensions &extensions,
                              const Version &version,
                              GLuint combinedImageUniformsCount,
                              GLuint combinedShaderStorageBlocksCount);
@@ -914,6 +933,10 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     // CHROMIUM_path_rendering
     ProgramBindings mFragmentInputBindings;
+
+    // EXT_blend_func_extended
+    ProgramBindings mFragmentOutputLocations;
+    ProgramBindings mFragmentOutputIndexes;
 
     bool mLinked;
     bool mLinkResolved;

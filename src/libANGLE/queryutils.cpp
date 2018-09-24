@@ -529,6 +529,10 @@ GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLen
         case GL_LOCATION:
             return program->getFragDataLocation(outputVariable.name);
 
+        case GL_LOCATION_INDEX_EXT:
+            // EXT_blend_func_extended
+            return program->getFragDataIndex(outputVariable.name);
+
         case GL_REFERENCED_BY_FRAGMENT_SHADER:
             return 1;
 

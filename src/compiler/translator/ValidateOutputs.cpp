@@ -105,29 +105,29 @@ void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
 
         ASSERT(type.getLayoutQualifier().location != -1);
 
-        OutputVector &validOutputsToUse = validOutputs;
+        OutputVector *validOutputsToUse = &validOutputs;
         // The default index is 0, so we only assign the output to secondary outputs in case the
         // index is explicitly set to 1.
         if (type.getLayoutQualifier().index == 1)
         {
-            validOutputsToUse = validSecondaryOutputs;
+            validOutputsToUse = &validSecondaryOutputs;
         }
 
-        if (location + elementCount <= validOutputsToUse.size())
+        if (location + elementCount <= validOutputsToUse->size())
         {
             for (size_t elementIndex = 0; elementIndex < elementCount; elementIndex++)
             {
                 const size_t offsetLocation = location + elementIndex;
-                if (validOutputsToUse[offsetLocation])
+                if ((*validOutputsToUse)[offsetLocation])
                 {
                     std::stringstream strstr;
                     strstr << "conflicting output locations with previously defined output '"
-                           << validOutputsToUse[offsetLocation]->getName() << "'";
+                           << (*validOutputsToUse)[offsetLocation]->getName() << "'";
                     error(*symbol, strstr.str().c_str(), diagnostics);
                 }
                 else
                 {
-                    validOutputsToUse[offsetLocation] = symbol;
+                    (*validOutputsToUse)[offsetLocation] = symbol;
                 }
             }
         }

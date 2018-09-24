@@ -372,6 +372,11 @@ bool ValidateTexStorage3DMultisampleOES(Context *context,
                                         GLsizei depth,
                                         GLboolean fixedsamplelocations);
 
+bool ValidateGetProgramResourceLocationIndexEXT(Context *context,
+                                                GLuint program,
+                                                GLenum programInterface,
+                                                const char *name);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES31_H_

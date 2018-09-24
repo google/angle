@@ -189,6 +189,10 @@ void TOutputGLSLBase::writeLayoutQualifier(TIntermTyped *variable)
         {
             out << listItemPrefix << "location = " << layoutQualifier.location;
         }
+        if (type.getQualifier() == EvqFragmentOut && layoutQualifier.index >= 0)
+        {
+            out << listItemPrefix << "index = " << layoutQualifier.index;
+        }
     }
 
     if (type.getQualifier() == EvqFragmentOut)

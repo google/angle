@@ -101,6 +101,9 @@ bool ValidateProgramResourceProperty(const Context *context, GLenum prop)
         case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
             return context->getExtensions().geometryShader;
 
+        case GL_LOCATION_INDEX_EXT:
+            return context->getExtensions().blendFuncExtended;
+
         default:
             return false;
     }
@@ -181,6 +184,12 @@ bool ValidateProgramResourcePropertyByInterface(GLenum prop, GLenum programInter
         case GL_LOCATION:
         {
             return ValidateLocationProgramInterface(programInterface);
+        }
+
+        case GL_LOCATION_INDEX_EXT:
+        {
+            // EXT_blend_func_extended
+            return (programInterface == GL_PROGRAM_OUTPUT);
         }
 
         case GL_NAME_LENGTH:
@@ -1984,6 +1993,39 @@ bool ValidateTexStorage3DMultisampleOES(Context *context,
 
     return ValidateTexStorageMultisample(context, target, samples, sizedinternalformat, width,
                                          height);
+}
+
+bool ValidateGetProgramResourceLocationIndexEXT(Context *context,
+                                                GLuint program,
+                                                GLenum programInterface,
+                                                const char *name)
+{
+    if (!context->getExtensions().blendFuncExtended)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+    if (context->getClientVersion() < ES_3_1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
+        return false;
+    }
+    if (programInterface != GL_PROGRAM_OUTPUT)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), ProgramInterfaceMustBeProgramOutput);
+        return false;
+    }
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+    if (!programObject->isLinked())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotLinked);
+        return false;
+    }
+    return true;
 }
 
 }  // namespace gl

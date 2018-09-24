@@ -88,6 +88,10 @@ class EXTBlendFuncExtendedTest : public ANGLETest
 {
 };
 
+class EXTBlendFuncExtendedTestES3 : public ANGLETest
+{
+};
+
 class EXTBlendFuncExtendedDrawTest : public ANGLETest
 {
   protected:
@@ -140,7 +144,7 @@ class EXTBlendFuncExtendedDrawTest : public ANGLETest
     {
         glUseProgram(mProgram);
 
-        GLint position = glGetAttribLocation(mProgram, "position");
+        GLint position = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
         GLint src0     = glGetUniformLocation(mProgram, "src0");
         GLint src1     = glGetUniformLocation(mProgram, "src1");
         ASSERT_GL_NO_ERROR();
@@ -204,6 +208,39 @@ class EXTBlendFuncExtendedDrawTest : public ANGLETest
     GLuint mProgram;
 };
 
+class EXTBlendFuncExtendedDrawTestES3 : public EXTBlendFuncExtendedDrawTest
+{
+  protected:
+    EXTBlendFuncExtendedDrawTestES3() : EXTBlendFuncExtendedDrawTest(), mIsES31OrNewer(false) {}
+
+    void SetUp() override
+    {
+        EXTBlendFuncExtendedDrawTest::SetUp();
+        if (getClientMajorVersion() > 3 || getClientMinorVersion() >= 1)
+        {
+            mIsES31OrNewer = true;
+        }
+    }
+    void checkOutputIndexQuery(const char *name, GLint expectedIndex)
+    {
+        GLint index = glGetFragDataIndexEXT(mProgram, name);
+        EXPECT_EQ(expectedIndex, index);
+        if (mIsES31OrNewer)
+        {
+            index = glGetProgramResourceLocationIndexEXT(mProgram, GL_PROGRAM_OUTPUT, name);
+            EXPECT_EQ(expectedIndex, index);
+        }
+        else
+        {
+            glGetProgramResourceLocationIndexEXT(mProgram, GL_PROGRAM_OUTPUT, name);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        }
+    }
+
+  private:
+    bool mIsES31OrNewer;
+};
+
 }  // namespace
 
 // Test EXT_blend_func_extended related gets.
@@ -224,12 +261,6 @@ TEST_P(EXTBlendFuncExtendedDrawTest, FragColor)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
 
-    const char *kVertexShader =
-        "attribute vec4 position;\n"
-        "void main() {\n"
-        "  gl_Position = position;\n"
-        "}\n";
-
     const char *kFragColorShader =
         "#extension GL_EXT_blend_func_extended : require\n"
         "precision mediump float;\n"
@@ -240,7 +271,7 @@ TEST_P(EXTBlendFuncExtendedDrawTest, FragColor)
         "  gl_SecondaryFragColorEXT = src1;\n"
         "}\n";
 
-    makeProgram(kVertexShader, kFragColorShader);
+    makeProgram(essl1_shaders::vs::Simple(), kFragColorShader);
 
     drawTest();
 }
@@ -250,12 +281,6 @@ TEST_P(EXTBlendFuncExtendedDrawTest, FragColor)
 TEST_P(EXTBlendFuncExtendedDrawTest, FragData)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
-
-    const char *kVertexShader =
-        "attribute vec4 position;\n"
-        "void main() {\n"
-        "  gl_Position = position;\n"
-        "}\n";
 
     const char *kFragColorShader =
         "#extension GL_EXT_blend_func_extended : require\n"
@@ -267,9 +292,297 @@ TEST_P(EXTBlendFuncExtendedDrawTest, FragData)
         "  gl_SecondaryFragDataEXT[0] = src1;\n"
         "}\n";
 
-    makeProgram(kVertexShader, kFragColorShader);
+    makeProgram(essl1_shaders::vs::Simple(), kFragColorShader);
 
     drawTest();
+}
+
+// Test an ESSL 3.00 shader that uses two fragment outputs with locations specified in the shader.
+TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationsInShader)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char *kFragColorShader = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+uniform vec4 src0;
+uniform vec4 src1;
+layout(location = 0, index = 1) out vec4 outSrc1;
+layout(location = 0, index = 0) out vec4 outSrc0;
+void main() {
+    outSrc0 = src0;
+    outSrc1 = src1;
+})";
+
+    makeProgram(essl3_shaders::vs::Simple(), kFragColorShader);
+
+    checkOutputIndexQuery("outSrc0", 0);
+    checkOutputIndexQuery("outSrc1", 1);
+
+    drawTest();
+}
+
+// Test an ESSL 3.00 shader that uses two fragment outputs with locations specified through the API.
+TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationAPI)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+
+    const std::string &kFragColorShader = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+uniform vec4 src0;
+uniform vec4 src1;
+out vec4 outSrc1;
+out vec4 outSrc0;
+void main() {
+    outSrc0 = src0;
+    outSrc1 = src1;
+})";
+
+    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFragColorShader, [](GLuint program) {
+        glBindFragDataLocationIndexedEXT(program, 0, 0, "outSrc0");
+        glBindFragDataLocationIndexedEXT(program, 0, 1, "outSrc1");
+    });
+
+    ASSERT_NE(0u, mProgram);
+
+    checkOutputIndexQuery("outSrc0", 0);
+    checkOutputIndexQuery("outSrc1", 1);
+
+    drawTest();
+}
+
+// Test an ESSL 3.00 shader that uses two fragment outputs, with location for one specified through
+// the API and location for another being set automatically.
+TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentOutputLocationsAPIAndAutomatic)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+
+    const std::string &kFragColorShader = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+uniform vec4 src0;
+uniform vec4 src1;
+out vec4 outSrc1;
+out vec4 outSrc0;
+void main() {
+    outSrc0 = src0;
+    outSrc1 = src1;
+})";
+
+    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFragColorShader, [](GLuint program) {
+        glBindFragDataLocationIndexedEXT(program, 0, 1, "outSrc1");
+    });
+
+    ASSERT_NE(0u, mProgram);
+
+    checkOutputIndexQuery("outSrc0", 0);
+    checkOutputIndexQuery("outSrc1", 1);
+
+    drawTest();
+}
+
+// Test an ESSL 3.00 shader that uses two array fragment outputs with locations specified through
+// the API.
+TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentArrayOutputLocationsAPI)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+
+    const std::string &kFragColorShader = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+uniform vec4 src0;
+uniform vec4 src1;
+out vec4 outSrc1[1];
+out vec4 outSrc0[1];
+void main() {
+    outSrc0[0] = src0;
+    outSrc1[0] = src1;
+})";
+
+    mProgram = CompileProgram(essl3_shaders::vs::Simple(), kFragColorShader, [](GLuint program) {
+        // Specs aren't very clear on what kind of name should be used when binding location for
+        // array variables. We only allow names that do include the "[0]" suffix.
+        glBindFragDataLocationIndexedEXT(program, 0, 0, "outSrc0[0]");
+        glBindFragDataLocationIndexedEXT(program, 0, 1, "outSrc1[0]");
+    });
+
+    ASSERT_NE(0u, mProgram);
+
+    // The extension spec is not very clear on what name can be used for the queries for array
+    // variables. We're checking that the queries work in the same way as specified in OpenGL 4.4
+    // page 107.
+    checkOutputIndexQuery("outSrc0[0]", 0);
+    checkOutputIndexQuery("outSrc1[0]", 1);
+    checkOutputIndexQuery("outSrc0", 0);
+    checkOutputIndexQuery("outSrc1", 1);
+
+    // These queries use an out of range array index so they should return -1.
+    checkOutputIndexQuery("outSrc0[1]", -1);
+    checkOutputIndexQuery("outSrc1[1]", -1);
+
+    drawTest();
+}
+
+// Test an ESSL 3.00 program with a link-time fragment output location conflict.
+TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputLocationConflict)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+
+    const std::string &kFragShader = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+uniform vec4 src0;
+uniform vec4 src1;
+out vec4 out0;
+out vec4 out1;
+void main() {
+    out0 = src0;
+    out1 = src1;
+})";
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFragShader);
+    ASSERT_NE(0u, vs);
+    ASSERT_NE(0u, fs);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vs);
+    glDeleteShader(vs);
+    glAttachShader(program, fs);
+    glDeleteShader(fs);
+
+    glBindFragDataLocationIndexedEXT(program, 0, 0, "out0");
+    glBindFragDataLocationIndexedEXT(program, 0, 0, "out1");
+
+    // The program should fail to link.
+    glLinkProgram(program);
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_EQ(0, linkStatus);
+
+    glDeleteProgram(program);
+}
+
+// Test an ESSL 3.00 program with some bindings set for nonexistent variables. These should not
+// create link-time conflicts.
+TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputLocationForNonexistentOutput)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+
+    const std::string &kFragShader = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+uniform vec4 src0;
+out vec4 out0;
+void main() {
+    out0 = src0;
+})";
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFragShader);
+    ASSERT_NE(0u, vs);
+    ASSERT_NE(0u, fs);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vs);
+    glDeleteShader(vs);
+    glAttachShader(program, fs);
+    glDeleteShader(fs);
+
+    glBindFragDataLocationIndexedEXT(program, 0, 0, "out0");
+    glBindFragDataLocationIndexedEXT(program, 0, 0, "out1");
+    glBindFragDataLocationIndexedEXT(program, 0, 0, "out2[0]");
+
+    // The program should link successfully - conflicting location for nonexistent variables out1 or
+    // out2 should not be an issue.
+    glLinkProgram(program);
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_NE(0, linkStatus);
+
+    glDeleteProgram(program);
+}
+
+// Test mixing shader-assigned and automatic output locations.
+TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputLocationsPartiallyAutomatic)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+
+    GLint maxDrawBuffers;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ANGLE_SKIP_TEST_IF(maxDrawBuffers < 4);
+
+    const std::string &kFragShader = R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+uniform vec4 src0;
+uniform vec4 src1;
+uniform vec4 src2;
+uniform vec4 src3;
+layout(location=0) out vec4 out0;
+layout(location=3) out vec4 out3;
+out vec4 out12[2];
+void main() {
+    out0 = src0;
+    out12[0] = src1;
+    out12[1] = src2;
+    out3 = src3;
+})";
+
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFragShader);
+    ASSERT_NE(0u, program);
+
+    GLint location = glGetFragDataLocation(program, "out0");
+    EXPECT_EQ(0, location);
+    location = glGetFragDataLocation(program, "out12");
+    EXPECT_EQ(1, location);
+    location = glGetFragDataLocation(program, "out3");
+    EXPECT_EQ(3, location);
+
+    glDeleteProgram(program);
+}
+
+// Test a fragment output array that doesn't fit because contiguous locations are not available.
+TEST_P(EXTBlendFuncExtendedTestES3, FragmentOutputArrayDoesntFit)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
+
+    GLint maxDrawBuffers;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ANGLE_SKIP_TEST_IF(maxDrawBuffers < 4);
+
+    std::stringstream fragShader;
+    fragShader << R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(location=2) out vec4 out0;
+out vec4 outArray[)"
+               << (maxDrawBuffers - 1) << R"(];
+void main() {
+    out0 = vec4(1.0);
+    outArray[0] = vec4(1.0);
+})";
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl3_shaders::vs::Simple());
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fragShader.str());
+    ASSERT_NE(0u, vs);
+    ASSERT_NE(0u, fs);
+
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vs);
+    glDeleteShader(vs);
+    glAttachShader(program, fs);
+    glDeleteShader(fs);
+
+    // The program should not link - there's no way to fit "outArray" into available output
+    // locations.
+    glLinkProgram(program);
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    EXPECT_EQ(0, linkStatus);
+
+    glDeleteProgram(program);
 }
 
 ANGLE_INSTANTIATE_TEST(EXTBlendFuncExtendedTest,
@@ -277,4 +590,18 @@ ANGLE_INSTANTIATE_TEST(EXTBlendFuncExtendedTest,
                        ES2_OPENGLES(),
                        ES3_OPENGL(),
                        ES3_OPENGLES());
-ANGLE_INSTANTIATE_TEST(EXTBlendFuncExtendedDrawTest, ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(EXTBlendFuncExtendedTestES3,
+                       ES3_OPENGL(),
+                       ES3_OPENGLES(),
+                       ES31_OPENGL(),
+                       ES31_OPENGLES());
+ANGLE_INSTANTIATE_TEST(EXTBlendFuncExtendedDrawTest,
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES3_OPENGL(),
+                       ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(EXTBlendFuncExtendedDrawTestES3,
+                       ES3_OPENGL(),
+                       ES3_OPENGLES(),
+                       ES31_OPENGL(),
+                       ES31_OPENGLES());

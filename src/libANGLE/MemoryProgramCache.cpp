@@ -188,6 +188,15 @@ HashStream &operator<<(HashStream &stream, const std::vector<std::string> &strin
     return stream;
 }
 
+HashStream &operator<<(HashStream &stream, const std::vector<gl::VariableLocation> &locations)
+{
+    for (const auto &loc : locations)
+    {
+        stream << loc.index << loc.arrayIndex << loc.ignored;
+    }
+    return stream;
+}
+
 }  // anonymous namespace
 
 MemoryProgramCache::MemoryProgramCache(egl::BlobCache &blobCache)
@@ -376,6 +385,17 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         stream.readInt(&locationData.index);
         stream.readBool(&locationData.ignored);
         state->mOutputLocations.push_back(locationData);
+    }
+
+    unsigned int secondaryOutputVarCount = stream.readInt<unsigned int>();
+    ASSERT(state->mSecondaryOutputLocations.empty());
+    for (unsigned int outputIndex = 0; outputIndex < secondaryOutputVarCount; ++outputIndex)
+    {
+        VariableLocation locationData;
+        stream.readInt(&locationData.arrayIndex);
+        stream.readInt(&locationData.index);
+        stream.readBool(&locationData.ignored);
+        state->mSecondaryOutputLocations.push_back(locationData);
     }
 
     unsigned int outputTypeCount = stream.readInt<unsigned int>();
@@ -567,6 +587,14 @@ void MemoryProgramCache::Serialize(const Context *context,
         stream.writeInt(outputVar.ignored);
     }
 
+    stream.writeInt(state.getSecondaryOutputLocations().size());
+    for (const auto &outputVar : state.getSecondaryOutputLocations())
+    {
+        stream.writeInt(outputVar.arrayIndex);
+        stream.writeIntOrNegOne(outputVar.index);
+        stream.writeInt(outputVar.ignored);
+    }
+
     stream.writeInt(state.mOutputVariableTypes.size());
     for (const auto &outputVariableType : state.mOutputVariableTypes)
     {
@@ -635,7 +663,9 @@ void MemoryProgramCache::ComputeHash(const Context *context,
     hashStream << program->getAttributeBindings() << program->getUniformLocationBindings()
                << program->getFragmentInputBindings()
                << program->getState().getTransformFeedbackVaryingNames()
-               << program->getState().getTransformFeedbackBufferMode();
+               << program->getState().getTransformFeedbackBufferMode()
+               << program->getState().getOutputLocations()
+               << program->getState().getSecondaryOutputLocations();
 
     // Call the secure SHA hashing function.
     const std::string &programKey = hashStream.str();

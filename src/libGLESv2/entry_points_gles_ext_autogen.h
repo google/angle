@@ -597,6 +597,19 @@ ANGLE_EXPORT void GL_APIENTRY ProgramPathFragmentInputGenCHROMIUM(GLuint program
                                                                   GLint components,
                                                                   const GLfloat *coeffs);
 
+// GL_EXT_blend_func_extended
+ANGLE_EXPORT void GL_APIENTRY BindFragDataLocationEXT(GLuint program,
+                                                      GLuint color,
+                                                      const GLchar *name);
+ANGLE_EXPORT void GL_APIENTRY BindFragDataLocationIndexedEXT(GLuint program,
+                                                             GLuint colorNumber,
+                                                             GLuint index,
+                                                             const GLchar *name);
+ANGLE_EXPORT GLint GL_APIENTRY GetFragDataIndexEXT(GLuint program, const GLchar *name);
+ANGLE_EXPORT GLint GL_APIENTRY GetProgramResourceLocationIndexEXT(GLuint program,
+                                                                  GLenum programInterface,
+                                                                  const GLchar *name);
+
 // GL_EXT_debug_marker
 ANGLE_EXPORT void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker);
 ANGLE_EXPORT void GL_APIENTRY PopGroupMarkerEXT();
@@ -872,6 +885,15 @@ ANGLE_EXPORT void GL_APIENTRY BindBufferRangeContextANGLE(GLeglContext ctx,
                                                           GLuint buffer,
                                                           GLintptr offset,
                                                           GLsizeiptr size);
+ANGLE_EXPORT void GL_APIENTRY BindFragDataLocationEXTContextANGLE(GLeglContext ctx,
+                                                                  GLuint program,
+                                                                  GLuint color,
+                                                                  const GLchar *name);
+ANGLE_EXPORT void GL_APIENTRY BindFragDataLocationIndexedEXTContextANGLE(GLeglContext ctx,
+                                                                         GLuint program,
+                                                                         GLuint colorNumber,
+                                                                         GLuint index,
+                                                                         const GLchar *name);
 ANGLE_EXPORT void GL_APIENTRY BindFramebufferContextANGLE(GLeglContext ctx,
                                                           GLenum target,
                                                           GLuint framebuffer);
@@ -1462,6 +1484,9 @@ ANGLE_EXPORT void GL_APIENTRY GetFixedvContextANGLE(GLeglContext ctx,
                                                     GLenum pname,
                                                     GLfixed *params);
 ANGLE_EXPORT void GL_APIENTRY GetFloatvContextANGLE(GLeglContext ctx, GLenum pname, GLfloat *data);
+ANGLE_EXPORT GLint GL_APIENTRY GetFragDataIndexEXTContextANGLE(GLeglContext ctx,
+                                                               GLuint program,
+                                                               const GLchar *name);
 ANGLE_EXPORT GLint GL_APIENTRY GetFragDataLocationContextANGLE(GLeglContext ctx,
                                                                GLuint program,
                                                                const GLchar *name);
@@ -1574,6 +1599,11 @@ ANGLE_EXPORT GLint GL_APIENTRY GetProgramResourceLocationContextANGLE(GLeglConte
                                                                       GLuint program,
                                                                       GLenum programInterface,
                                                                       const GLchar *name);
+ANGLE_EXPORT GLint GL_APIENTRY
+GetProgramResourceLocationIndexEXTContextANGLE(GLeglContext ctx,
+                                               GLuint program,
+                                               GLenum programInterface,
+                                               const GLchar *name);
 ANGLE_EXPORT void GL_APIENTRY GetProgramResourceNameContextANGLE(GLeglContext ctx,
                                                                  GLuint program,
                                                                  GLenum programInterface,

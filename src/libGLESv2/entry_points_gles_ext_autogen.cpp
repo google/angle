@@ -2838,6 +2838,94 @@ void GL_APIENTRY ProgramPathFragmentInputGenCHROMIUM(GLuint program,
     }
 }
 
+// GL_EXT_blend_func_extended
+void GL_APIENTRY BindFragDataLocationEXT(GLuint program, GLuint color, const GLchar *name)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint program = %u, GLuint color = %u, const GLchar *name = 0x%0.8p)", program, color,
+          name);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::BindFragDataLocationEXT>(program, color, name);
+
+        if (context->skipValidation() ||
+            ValidateBindFragDataLocationEXT(context, program, color, name))
+        {
+            context->bindFragDataLocation(program, color, name);
+        }
+    }
+}
+
+void GL_APIENTRY BindFragDataLocationIndexedEXT(GLuint program,
+                                                GLuint colorNumber,
+                                                GLuint index,
+                                                const GLchar *name)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint program = %u, GLuint colorNumber = %u, GLuint index = %u, const GLchar *name = "
+        "0x%0.8p)",
+        program, colorNumber, index, name);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::BindFragDataLocationIndexedEXT>(program, colorNumber,
+                                                                          index, name);
+
+        if (context->skipValidation() ||
+            ValidateBindFragDataLocationIndexedEXT(context, program, colorNumber, index, name))
+        {
+            context->bindFragDataLocationIndexed(program, colorNumber, index, name);
+        }
+    }
+}
+
+GLint GL_APIENTRY GetFragDataIndexEXT(GLuint program, const GLchar *name)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint program = %u, const GLchar *name = 0x%0.8p)", program, name);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::GetFragDataIndexEXT>(program, name);
+
+        if (context->skipValidation() || ValidateGetFragDataIndexEXT(context, program, name))
+        {
+            return context->getFragDataIndex(program, name);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::GetFragDataIndexEXT, GLint>();
+}
+
+GLint GL_APIENTRY GetProgramResourceLocationIndexEXT(GLuint program,
+                                                     GLenum programInterface,
+                                                     const GLchar *name)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint program = %u, GLenum programInterface = 0x%X, const GLchar *name = 0x%0.8p)",
+          program, programInterface, name);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::GetProgramResourceLocationIndexEXT>(
+            program, programInterface, name);
+
+        if (context->skipValidation() ||
+            ValidateGetProgramResourceLocationIndexEXT(context, program, programInterface, name))
+        {
+            return context->getProgramResourceLocationIndex(program, programInterface, name);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::GetProgramResourceLocationIndexEXT, GLint>();
+}
+
 // GL_EXT_debug_marker
 void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker)
 {
@@ -4996,6 +5084,56 @@ void GL_APIENTRY BindBufferRangeContextANGLE(GLeglContext ctx,
             ValidateBindBufferRange(context, targetPacked, index, buffer, offset, size))
         {
             context->bindBufferRange(targetPacked, index, buffer, offset, size);
+        }
+    }
+}
+
+void GL_APIENTRY BindFragDataLocationEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLuint color,
+                                                     const GLchar *name)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint program = %u, GLuint color = %u, const GLchar *name = 0x%0.8p)", program, color,
+          name);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::BindFragDataLocationEXT>(program, color, name);
+
+        if (context->skipValidation() ||
+            ValidateBindFragDataLocationEXT(context, program, color, name))
+        {
+            context->bindFragDataLocation(program, color, name);
+        }
+    }
+}
+
+void GL_APIENTRY BindFragDataLocationIndexedEXTContextANGLE(GLeglContext ctx,
+                                                            GLuint program,
+                                                            GLuint colorNumber,
+                                                            GLuint index,
+                                                            const GLchar *name)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT(
+        "(GLuint program = %u, GLuint colorNumber = %u, GLuint index = %u, const GLchar *name = "
+        "0x%0.8p)",
+        program, colorNumber, index, name);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::BindFragDataLocationIndexedEXT>(program, colorNumber,
+                                                                          index, name);
+
+        if (context->skipValidation() ||
+            ValidateBindFragDataLocationIndexedEXT(context, program, colorNumber, index, name))
+        {
+            context->bindFragDataLocationIndexed(program, colorNumber, index, name);
         }
     }
 }
@@ -8723,6 +8861,28 @@ void GL_APIENTRY GetFloatvContextANGLE(GLeglContext ctx, GLenum pname, GLfloat *
     }
 }
 
+GLint GL_APIENTRY GetFragDataIndexEXTContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  const GLchar *name)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint program = %u, const GLchar *name = 0x%0.8p)", program, name);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::GetFragDataIndexEXT>(program, name);
+
+        if (context->skipValidation() || ValidateGetFragDataIndexEXT(context, program, name))
+        {
+            return context->getFragDataIndex(program, name);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::GetFragDataIndexEXT, GLint>();
+}
+
 GLint GL_APIENTRY GetFragDataLocationContextANGLE(GLeglContext ctx,
                                                   GLuint program,
                                                   const GLchar *name)
@@ -9360,6 +9520,32 @@ GLint GL_APIENTRY GetProgramResourceLocationContextANGLE(GLeglContext ctx,
     }
 
     return GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
+}
+
+GLint GL_APIENTRY GetProgramResourceLocationIndexEXTContextANGLE(GLeglContext ctx,
+                                                                 GLuint program,
+                                                                 GLenum programInterface,
+                                                                 const GLchar *name)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint program = %u, GLenum programInterface = 0x%X, const GLchar *name = 0x%0.8p)",
+          program, programInterface, name);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::GetProgramResourceLocationIndexEXT>(
+            program, programInterface, name);
+
+        if (context->skipValidation() ||
+            ValidateGetProgramResourceLocationIndexEXT(context, program, programInterface, name))
+        {
+            return context->getProgramResourceLocationIndex(program, programInterface, name);
+        }
+    }
+
+    return GetDefaultReturnValue<EntryPoint::GetProgramResourceLocationIndexEXT, GLint>();
 }
 
 void GL_APIENTRY GetProgramResourceNameContextANGLE(GLeglContext ctx,

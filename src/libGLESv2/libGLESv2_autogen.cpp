@@ -3433,6 +3433,32 @@ void GL_APIENTRY glProgramPathFragmentInputGenCHROMIUM(GLuint program,
     return gl::ProgramPathFragmentInputGenCHROMIUM(program, location, genMode, components, coeffs);
 }
 
+// GL_EXT_blend_func_extended
+void GL_APIENTRY glBindFragDataLocationEXT(GLuint program, GLuint color, const GLchar *name)
+{
+    return gl::BindFragDataLocationEXT(program, color, name);
+}
+
+void GL_APIENTRY glBindFragDataLocationIndexedEXT(GLuint program,
+                                                  GLuint colorNumber,
+                                                  GLuint index,
+                                                  const GLchar *name)
+{
+    return gl::BindFragDataLocationIndexedEXT(program, colorNumber, index, name);
+}
+
+GLint GL_APIENTRY glGetFragDataIndexEXT(GLuint program, const GLchar *name)
+{
+    return gl::GetFragDataIndexEXT(program, name);
+}
+
+GLint GL_APIENTRY glGetProgramResourceLocationIndexEXT(GLuint program,
+                                                       GLenum programInterface,
+                                                       const GLchar *name)
+{
+    return gl::GetProgramResourceLocationIndexEXT(program, programInterface, name);
+}
+
 // GL_EXT_debug_marker
 void GL_APIENTRY glInsertEventMarkerEXT(GLsizei length, const GLchar *marker)
 {
@@ -4092,6 +4118,23 @@ void GL_APIENTRY glBindBufferRangeContextANGLE(GLeglContext ctx,
                                                GLsizeiptr size)
 {
     return gl::BindBufferRangeContextANGLE(ctx, target, index, buffer, offset, size);
+}
+
+void GL_APIENTRY glBindFragDataLocationEXTContextANGLE(GLeglContext ctx,
+                                                       GLuint program,
+                                                       GLuint color,
+                                                       const GLchar *name)
+{
+    return gl::BindFragDataLocationEXTContextANGLE(ctx, program, color, name);
+}
+
+void GL_APIENTRY glBindFragDataLocationIndexedEXTContextANGLE(GLeglContext ctx,
+                                                              GLuint program,
+                                                              GLuint colorNumber,
+                                                              GLuint index,
+                                                              const GLchar *name)
+{
+    return gl::BindFragDataLocationIndexedEXTContextANGLE(ctx, program, colorNumber, index, name);
 }
 
 void GL_APIENTRY glBindFramebufferContextANGLE(GLeglContext ctx, GLenum target, GLuint framebuffer)
@@ -5312,6 +5355,13 @@ void GL_APIENTRY glGetFloatvContextANGLE(GLeglContext ctx, GLenum pname, GLfloat
     return gl::GetFloatvContextANGLE(ctx, pname, data);
 }
 
+GLint GL_APIENTRY glGetFragDataIndexEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    const GLchar *name)
+{
+    return gl::GetFragDataIndexEXTContextANGLE(ctx, program, name);
+}
+
 GLint GL_APIENTRY glGetFragDataLocationContextANGLE(GLeglContext ctx,
                                                     GLuint program,
                                                     const GLchar *name)
@@ -5526,6 +5576,14 @@ GLint GL_APIENTRY glGetProgramResourceLocationContextANGLE(GLeglContext ctx,
                                                            const GLchar *name)
 {
     return gl::GetProgramResourceLocationContextANGLE(ctx, program, programInterface, name);
+}
+
+GLint GL_APIENTRY glGetProgramResourceLocationIndexEXTContextANGLE(GLeglContext ctx,
+                                                                   GLuint program,
+                                                                   GLenum programInterface,
+                                                                   const GLchar *name)
+{
+    return gl::GetProgramResourceLocationIndexEXTContextANGLE(ctx, program, programInterface, name);
 }
 
 void GL_APIENTRY glGetProgramResourceNameContextANGLE(GLeglContext ctx,

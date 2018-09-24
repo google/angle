@@ -3183,11 +3183,6 @@ Extensions Context::generateSupportedExtensions() const
     {
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
         // supportedExtensions.sRGB = false;
-
-        // EXT_blend_func_extended is only implemented against GLES2 now
-        // TODO(http://anglebug.com/1085): remove this limitation once GLES3 binding API for the
-        // outputs is in place.
-        supportedExtensions.blendFuncExtended = false;
     }
 
     // Some extensions are always available because they are implemented in the GL layer.
@@ -5798,6 +5793,36 @@ void Context::shaderBinary(GLsizei n,
 {
     // No binary shader formats are supported.
     UNIMPLEMENTED();
+}
+
+void Context::bindFragDataLocationIndexed(GLuint program,
+                                          GLuint colorNumber,
+                                          GLuint index,
+                                          const char *name)
+{
+    Program *programObject = getProgramNoResolveLink(program);
+    programObject->bindFragmentOutputLocation(colorNumber, name);
+    programObject->bindFragmentOutputIndex(index, name);
+}
+
+void Context::bindFragDataLocation(GLuint program, GLuint colorNumber, const char *name)
+{
+    bindFragDataLocationIndexed(program, colorNumber, 0u, name);
+}
+
+int Context::getFragDataIndex(GLuint program, const char *name)
+{
+    Program *programObject = getProgramResolveLink(program);
+    return programObject->getFragDataIndex(name);
+}
+
+int Context::getProgramResourceLocationIndex(GLuint program,
+                                             GLenum programInterface,
+                                             const char *name)
+{
+    Program *programObject = getProgramResolveLink(program);
+    ASSERT(programInterface == GL_PROGRAM_OUTPUT);
+    return programObject->getFragDataIndex(name);
 }
 
 void Context::shaderSource(GLuint shader,

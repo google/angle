@@ -73,6 +73,10 @@ ERRMSG(BlitSameImageDepthOrStencil,
 ERRMSG(BufferBoundForTransformFeedback, "Buffer is bound for transform feedback.");
 ERRMSG(BufferNotBound, "A buffer must be bound.");
 ERRMSG(BufferMapped, "An active buffer is mapped");
+ERRMSG(ColorNumberGreaterThanMaxDualSourceDrawBuffers,
+       "Color number for secondary color greater than or equal to MAX_DUAL_SOURCE_DRAW_BUFFERS");
+ERRMSG(ColorNumberGreaterThanMaxDrawBuffers,
+       "Color number for primary color greater than or equal to MAX_DRAW_BUFFERS");
 ERRMSG(CompressedTextureDimensionsMustMatchData,
        "Compressed texture dimensions must exactly match the dimensions of the data passed in.");
 ERRMSG(CompressedTexturesNotAttachable, "Compressed textures cannot be attached to a framebuffer.");
@@ -102,6 +106,7 @@ ERRMSG(ExpectedProgramName, "Expected a program name, but found a shader name.")
 ERRMSG(ExpectedShaderName, "Expected a shader name, but found a program name.");
 ERRMSG(ExtensionNotEnabled, "Extension is not enabled.");
 ERRMSG(FeedbackLoop, "Feedback loop formed between Framebuffer and active Texture.");
+ERRMSG(FragDataBindingIndexOutOfRange, "Fragment output color index must be zero or one.");
 ERRMSG(FramebufferIncompleteAttachment,
        "Attachment type must be compatible with attachment object.");
 ERRMSG(FramebufferTextureInvalidLayer, "Layer invalid for framebuffer texture attachment.");
@@ -297,6 +302,7 @@ ERRMSG(
     "It is undefined behavior to use a pixel unpack buffer that is bound for transform feedback.");
 ERRMSG(PointSizeArrayExtensionNotEnabled, "GL_OES_point_size_array not enabled.");
 ERRMSG(ProgramDoesNotExist, "Program doesn't exist.");
+ERRMSG(ProgramInterfaceMustBeProgramOutput, "programInterface must be set to GL_PROGRAM_OUTPUT.");
 ERRMSG(ProgramNotBound, "A program must be bound.");
 ERRMSG(ProgramNotLinked, "Program not linked.");
 ERRMSG(QueryActive, "Query is active.");

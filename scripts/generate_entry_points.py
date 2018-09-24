@@ -54,6 +54,7 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + [
     "GL_ANGLE_framebuffer_multisample",
     "GL_ANGLE_instanced_arrays",
     "GL_ANGLE_translated_shader_source",
+    "GL_EXT_blend_func_extended",
     "GL_EXT_debug_marker",
     "GL_EXT_discard_framebuffer",
     "GL_EXT_disjoint_timer_query",
