@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4e7c2496_3c3ec437",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T20:13:55Z",
+      "side": 1,
+      "message": "rather the \"altRequiredExtensions\". just what purpose they serve and how they work. one sentence would do.",
+      "parentUuid": "2436c3f0_7d385b81",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 69
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7b5ebdcb_62e7ec08",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -425,6 +449,30 @@
     },
     {
       "key": {
+        "uuid": "7bacd3b7_2a597328",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 754,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T20:13:55Z",
+      "side": 1,
+      "message": "no, it\u0027s fine.",
+      "parentUuid": "fb5da3c4_54bde473",
+      "range": {
+        "startLine": 754,
+        "startChar": 24,
+        "endLine": 754,
+        "endChar": 41
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfdb1ec3_5933e300",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -460,6 +508,30 @@
       "side": 1,
       "message": "Could you please suggest a better wording?\nThe comment applies to the first 4 entries in the 8 entry block.\nOnly one type is allowed means I can\u0027t have two entries with, say, GL_R16F format, one with GL_HALF_FLOAT type and the other with GL_HALF_FLOAT_OES type.",
       "parentUuid": "dfdb1ec3_5933e300",
+      "range": {
+        "startLine": 796,
+        "startChar": 122,
+        "endLine": 796,
+        "endChar": 180
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "517afc50_9f7a339b",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T20:13:55Z",
+      "side": 1,
+      "message": "how about you say just that -\n\nIt\u0027s not possible to have two entries per format. e.g. for GL_RG16F, one with GL_HALF_FLOAT type and the other with GL_HALF_FLOAT_OES type.",
+      "parentUuid": "c58b7103_74e42ba7",
       "range": {
         "startLine": 796,
         "startChar": 122,
@@ -519,6 +591,30 @@
     },
     {
       "key": {
+        "uuid": "75a2b990_d56c257c",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T20:13:55Z",
+      "side": 1,
+      "message": "No action is needed here. If we decide at some point we need to emulate some extensions, we can. That\u0027s all I meant.",
+      "parentUuid": "c106f69f_a697149a",
+      "range": {
+        "startLine": 821,
+        "startChar": 85,
+        "endLine": 821,
+        "endChar": 102
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "655f547d_fd603238",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 9
@@ -566,6 +662,30 @@
     },
     {
       "key": {
+        "uuid": "9e0f26d5_8a35d1a3",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T20:13:55Z",
+      "side": 1,
+      "message": "sorry it was a wording suggestion not a real question. \u0027actual\u0027 is a word I think is a bit unclear is all i meant.",
+      "parentUuid": "13ca4f9b_2ab8f61f",
+      "range": {
+        "startLine": 140,
+        "startChar": 19,
+        "endLine": 140,
+        "endChar": 25
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f40795ec_facc0312",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 9
@@ -601,6 +721,30 @@
       "side": 1,
       "message": "DetermineRGTextureSupport can only check GL_R8 format, because D3D doesn\u0027t support unsized formats. This is contradictory to EXT_texture_rg extension, which provides unsized RED_EXT+UNSIGNED_BYTE. I guess it is simpler to have DetermineRGTextureSupport do the wrong check than to introduce unsized types support into D3D backend.\nSo, what happens in GLES is:\n1. We check if native(driver) supports EXT_texture_rg extension.\n2. If it does, we say that GL_R8 format is supported (though in fact only RED_EXT format is supported with UNSIGNED_BYTE type).\n3. DetermineRGTextureSupport determines that ANGLE can support EXT_texture_rg extension.\n4. In the frontend format map in formatutils.cpp we say that ANGLE can support GL_RED with UNSIGNED_BYTE type if it supports EXT_texture_rg extension. But ANGLE would not support GL_R8.",
       "parentUuid": "f40795ec_facc0312",
+      "range": {
+        "startLine": 142,
+        "startChar": 3,
+        "endLine": 143,
+        "endChar": 90
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f99831d8_c818e05d",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T20:13:55Z",
+      "side": 1,
+      "message": "I see. that seems more like a limitation in ANGLE than D3D though. We could defer the conversion from unsized to \u0027equivalent\u0027 sized format until we enter the d3d back-end. But that\u0027s more a thought than a suggestion. It might be worth mentioning that this is kind of a limitation in angle rather than a strict driver limitation.",
+      "parentUuid": "ee7ef68d_6c0758f3",
       "range": {
         "startLine": 142,
         "startChar": 3,
