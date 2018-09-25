@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2436c3f0_7d385b81",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Not sure what you mean. How I split \u003cES3 and \u003e\u003dES3 in WebGLCompatibilityTest.cpp?",
+      "parentUuid": "2ee6c3ce_0e29f4b5",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 69
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7b5ebdcb_62e7ec08",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e3bcf7f_7354c568",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "You\u0027d be surprised - Nexus 7 supports colorBufferHalfFloat but not textureRG.\nCheck GL extensions on https://opengles.gpuinfo.org/displayreport.php?id\u003d120.\nThis also matches about:gpu on the Nexus 7 I have.",
+      "parentUuid": "7b5ebdcb_62e7ec08",
+      "range": {
+        "startLine": 169,
+        "startChar": 79,
+        "endLine": 169,
+        "endChar": 99
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "c8ed6346_dc2a4902",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "We could, but I don\u0027t think we need to. There is an assumption that Filterable capability is conditional on Texturable capability. I don\u0027t want to make HALF_FLOAT and FLOAT a special case.",
+      "parentUuid": "0adced4f_973f8977",
+      "range": {
+        "startLine": 247,
+        "startChar": 26,
+        "endLine": 247,
+        "endChar": 48
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "112bf0e5_3a3fbb1b",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2018-09-24T13:59:31Z",
       "side": 1,
       "message": "I think I agree with this. I think it\u0027s how our validation works.",
+      "range": {
+        "startLine": 722,
+        "startChar": 6,
+        "endLine": 722,
+        "endChar": 92
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ea5fb3d_1bf885df",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "112bf0e5_3a3fbb1b",
       "range": {
         "startLine": 722,
         "startChar": 6,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "afe0f6d2_1552a35a",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Looks like I was confused by GenerateTextureFormatCaps() in renderergl_utils.cpp.\nSo, we\u0027ll need to correct all Filterable values to also verify that the format is texturable.\nMaybe I\u0027ll fix that by wrapping InternalFormat::filterSupport() so it also checks textureSupport().\nAt that time, I\u0027ll also do this for textureAttachmentSupport(), this will simplify things.\nLeaving a TODO.",
+      "parentUuid": "50cb68ea_abe72c8f",
+      "range": {
+        "startLine": 723,
+        "startChar": 6,
+        "endLine": 723,
+        "endChar": 97
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c308e57_66427371",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "87c8db2f_64326098",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c308e57_66427371",
+      "range": {
+        "startLine": 727,
+        "startChar": 0,
+        "endLine": 727,
+        "endChar": 87
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ecfb1520_0618f832",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -151,6 +295,30 @@
       "writtenOn": "2018-09-24T13:59:31Z",
       "side": 1,
       "message": "this looks correct.",
+      "range": {
+        "startLine": 738,
+        "startChar": 154,
+        "endLine": 738,
+        "endChar": 168
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b16eccd_f544bf3f",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ecfb1520_0618f832",
       "range": {
         "startLine": 738,
         "startChar": 154,
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "a0c51755_22245488",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e5e8a9e8_08c705f3",
+      "range": {
+        "startLine": 744,
+        "startChar": 154,
+        "endLine": 744,
+        "endChar": 203
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60051a4f_f63a7ee9",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -197,6 +389,30 @@
       "writtenOn": "2018-09-24T13:59:31Z",
       "side": 1,
       "message": "not sure if there\u0027s a real need to shuffle this line. makes the diff a bit harder to read.",
+      "range": {
+        "startLine": 754,
+        "startChar": 24,
+        "endLine": 754,
+        "endChar": 41
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb5da3c4_54bde473",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 754,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "If you want me to move it back, please be explicit.\nIt didn\u0027t look good between GL_RG32I and GL_RG32UI.\nNow it\u0027s adjacent to the other special GL_FLOAT format GL_RGB9_E5.\nThis order is also close to the one in ES3 spec (moving it one line above to make this even truer).",
+      "parentUuid": "60051a4f_f63a7ee9",
       "range": {
         "startLine": 754,
         "startChar": 24,
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "c58b7103_74e42ba7",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Could you please suggest a better wording?\nThe comment applies to the first 4 entries in the 8 entry block.\nOnly one type is allowed means I can\u0027t have two entries with, say, GL_R16F format, one with GL_HALF_FLOAT type and the other with GL_HALF_FLOAT_OES type.",
+      "parentUuid": "dfdb1ec3_5933e300",
+      "range": {
+        "startLine": 796,
+        "startChar": 122,
+        "endLine": 796,
+        "endChar": 180
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1db51a45_d361f867",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -243,6 +483,30 @@
       "writtenOn": "2018-09-24T13:59:31Z",
       "side": 1,
       "message": "I guess we can emulate some of these formats with the non-OES versions. Not really in scope for this CL but something that might come up some time in the future.",
+      "range": {
+        "startLine": 821,
+        "startChar": 85,
+        "endLine": 821,
+        "endChar": 102
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c106f69f_a697149a",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "I\u0027m not sure what you mean by \"emulate some of these formats with the non-OES versions\".\nIf you mean ANGLE should support GL_ALPHA16F_EXT format with GL_HALF_FLOAT type, why would we want to do this, this is not a part of core spec and there is no matching extension?\nIf you mean that we could just change the type to GL_HALF_FLOAT here, to really indicate GL_HALF_FLOAT_OES type support, why would we want to make this more complicated?",
+      "parentUuid": "1db51a45_d361f867",
       "range": {
         "startLine": 821,
         "startChar": 85,
@@ -278,6 +542,30 @@
     },
     {
       "key": {
+        "uuid": "13ca4f9b_2ab8f61f",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "What\u0027s the difference between native and driver?\nWhat I\u0027ve meant here is that I need to merge GL_R8 support and RED_EXT+UNSIGNED_BYTE support into one GL_R8 entry.",
+      "parentUuid": "655f547d_fd603238",
+      "range": {
+        "startLine": 140,
+        "startChar": 19,
+        "endLine": 140,
+        "endChar": 25
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f40795ec_facc0312",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 9
@@ -289,6 +577,30 @@
       "writtenOn": "2018-09-24T13:59:31Z",
       "side": 1,
       "message": "could be clarified slightly. Does DtermineRGTexturesSupport need to check both or either of the sized and unsized formats? Else where is the unsized format checked? How is support combined in GL_R8?",
+      "range": {
+        "startLine": 142,
+        "startChar": 3,
+        "endLine": 143,
+        "endChar": 90
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee7ef68d_6c0758f3",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "DetermineRGTextureSupport can only check GL_R8 format, because D3D doesn\u0027t support unsized formats. This is contradictory to EXT_texture_rg extension, which provides unsized RED_EXT+UNSIGNED_BYTE. I guess it is simpler to have DetermineRGTextureSupport do the wrong check than to introduce unsized types support into D3D backend.\nSo, what happens in GLES is:\n1. We check if native(driver) supports EXT_texture_rg extension.\n2. If it does, we say that GL_R8 format is supported (though in fact only RED_EXT format is supported with UNSIGNED_BYTE type).\n3. DetermineRGTextureSupport determines that ANGLE can support EXT_texture_rg extension.\n4. In the frontend format map in formatutils.cpp we say that ANGLE can support GL_RED with UNSIGNED_BYTE type if it supports EXT_texture_rg extension. But ANGLE would not support GL_R8.",
+      "parentUuid": "f40795ec_facc0312",
       "range": {
         "startLine": 142,
         "startChar": 3,
@@ -324,6 +636,30 @@
     },
     {
       "key": {
+        "uuid": "cf1d1ab6_2717299f",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7926f8cb_2ec95c20",
+      "range": {
+        "startLine": 144,
+        "startChar": 3,
+        "endLine": 144,
+        "endChar": 8
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "190dde59_ed938910",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 9
@@ -344,6 +680,30 @@
       "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c78cb223_f320408b",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Wow, this English rule is quite complicated.\nhttps://english.stackexchange.com/questions/211744/use-of-the-in-front-of-acronyms",
+      "parentUuid": "190dde59_ed938910",
+      "range": {
+        "startLine": 145,
+        "startChar": 61,
+        "endLine": 145,
+        "endChar": 65
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -370,6 +730,30 @@
     },
     {
       "key": {
+        "uuid": "46e430f5_5f683029",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Rephrased the whole note in another way.",
+      "parentUuid": "1f1b8c9a_149afdbc",
+      "range": {
+        "startLine": 146,
+        "startChar": 34,
+        "endLine": 146,
+        "endChar": 39
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5756df0_594bde27",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 9
@@ -390,6 +774,30 @@
       "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bfe5358_a089c6e5",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5756df0_594bde27",
+      "range": {
+        "startLine": 147,
+        "startChar": 6,
+        "endLine": 147,
+        "endChar": 10
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -416,6 +824,30 @@
     },
     {
       "key": {
+        "uuid": "3e5a02f2_01456865",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Not sure where did I get this wording.\nIn code it says \"Fall back to CPU-readback\".\nUpdating.",
+      "parentUuid": "25b7daad_410df0bc",
+      "range": {
+        "startLine": 148,
+        "startChar": 33,
+        "endLine": 148,
+        "endChar": 53
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ec1b5766_09a3cb8e",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 9
@@ -436,6 +868,30 @@
       "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bc26900_c4fc6977",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec1b5766_09a3cb8e",
+      "range": {
+        "startLine": 149,
+        "startChar": 4,
+        "endLine": 149,
+        "endChar": 17
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -462,6 +918,30 @@
     },
     {
       "key": {
+        "uuid": "64423b6c_8142bc3a",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Rephrased the whole note in another way.",
+      "parentUuid": "c0f64708_2b8f7baa",
+      "range": {
+        "startLine": 152,
+        "startChar": 11,
+        "endLine": 152,
+        "endChar": 97
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69699ccc_3572ca99",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 9
@@ -482,6 +962,30 @@
       "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50a730d6_93646df0",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Rephrased the whole note in another way.",
+      "parentUuid": "69699ccc_3572ca99",
+      "range": {
+        "startLine": 154,
+        "startChar": 3,
+        "endLine": 154,
+        "endChar": 98
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -508,6 +1012,30 @@
     },
     {
       "key": {
+        "uuid": "7af3bb1a_272eff5c",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2b2fe78_31fd17b9",
+      "range": {
+        "startLine": 156,
+        "startChar": 3,
+        "endLine": 156,
+        "endChar": 7
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65bfd6c8_24441426",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.h",
         "patchSetId": 9
@@ -528,6 +1056,30 @@
       "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82577570_3ec56422",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:55:15Z",
+      "side": 1,
+      "message": "A vector of vectors seems overcomplicated for this.\nThere are just 3 formats that use this: GL_R16F, GL_RG16F, GL_RGBA16F.\nTrying a more detailed comment.",
+      "parentUuid": "65bfd6c8_24441426",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 68
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
