@@ -169,18 +169,16 @@ PackPixelsParams::PackPixelsParams()
 PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
                                    const angle::Format &destFormat,
                                    GLuint outputPitchIn,
-                                   const gl::PixelPackState &packIn,
+                                   bool reverseRowOrderIn,
                                    gl::Buffer *packBufferIn,
                                    ptrdiff_t offsetIn)
     : area(areaIn),
       destFormat(&destFormat),
       outputPitch(outputPitchIn),
       packBuffer(packBufferIn),
-      pack(),
+      reverseRowOrder(reverseRowOrderIn),
       offset(offsetIn)
 {
-    pack.alignment       = packIn.alignment;
-    pack.reverseRowOrder = packIn.reverseRowOrder;
 }
 
 void PackPixels(const PackPixelsParams &params,
@@ -194,7 +192,7 @@ void PackPixels(const PackPixelsParams &params,
     const uint8_t *source = sourceIn;
     int inputPitch        = inputPitchIn;
 
-    if (params.pack.reverseRowOrder)
+    if (params.reverseRowOrder)
     {
         source += inputPitch * (params.area.height - 1);
         inputPitch = -inputPitch;

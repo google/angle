@@ -203,7 +203,7 @@ angle::Result Framebuffer9::readPixelsImpl(const gl::Context *context,
     packParams.area.height = rect.bottom - rect.top;
     packParams.destFormat  = &GetFormatFromFormatType(format, type);
     packParams.outputPitch = static_cast<GLuint>(outputPitch);
-    packParams.pack        = pack;
+    packParams.reverseRowOrder = pack.reverseRowOrder;
 
     PackPixels(packParams, d3dFormatInfo.info(), inputPitch, source, pixels);
 

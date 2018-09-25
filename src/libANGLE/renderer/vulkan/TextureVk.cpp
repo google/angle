@@ -206,19 +206,10 @@ angle::Result PixelBuffer::stageSubresourceUpdateFromFramebuffer(
     ANGLE_TRY(mStagingBuffer.allocate(contextVk, allocationSize, &stagingPointer, &bufferHandle,
                                       &stagingOffset, &newBufferAllocated));
 
-    gl::PixelPackState pixelPackState = gl::PixelPackState();
-    // TODO(lucferron): The pixel pack state alignment should probably be 1 instead of 4.
-    // http://anglebug.com/2718
-
-    if (isViewportFlipEnabled)
-    {
-        pixelPackState.reverseRowOrder = !pixelPackState.reverseRowOrder;
-    }
-
     const angle::Format &copyFormat =
         GetFormatFromFormatType(formatInfo.internalFormat, formatInfo.type);
     PackPixelsParams params(clippedRectangle, copyFormat, static_cast<GLuint>(outputRowPitch),
-                            pixelPackState, nullptr, 0);
+                            isViewportFlipEnabled, nullptr, 0);
 
     // 2- copy the source image region to the pixel buffer using a cpu readback
     if (loadFunction.requiresConversion)

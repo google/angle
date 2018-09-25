@@ -263,8 +263,9 @@ angle::Result Framebuffer11::readPixelsImpl(const gl::Context *context,
     {
         Buffer11 *packBufferStorage      = GetImplAs<Buffer11>(packBuffer);
         const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
-        PackPixelsParams packParams(area, angleFormat, static_cast<GLuint>(outputPitch), pack,
-                                    packBuffer, reinterpret_cast<ptrdiff_t>(pixels));
+        PackPixelsParams packParams(area, angleFormat, static_cast<GLuint>(outputPitch),
+                                    pack.reverseRowOrder, packBuffer,
+                                    reinterpret_cast<ptrdiff_t>(pixels));
 
         return packBufferStorage->packPixels(context, *readAttachment, packParams);
     }

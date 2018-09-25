@@ -153,7 +153,7 @@ struct PackPixelsParams
     PackPixelsParams(const gl::Rectangle &area,
                      const angle::Format &destFormat,
                      GLuint outputPitch,
-                     const gl::PixelPackState &pack,
+                     bool reverseRowOrderIn,
                      gl::Buffer *packBufferIn,
                      ptrdiff_t offset);
 
@@ -161,7 +161,7 @@ struct PackPixelsParams
     const angle::Format *destFormat;
     GLuint outputPitch;
     gl::Buffer *packBuffer;
-    gl::PixelPackState pack;
+    bool reverseRowOrder;
     ptrdiff_t offset;
 };
 

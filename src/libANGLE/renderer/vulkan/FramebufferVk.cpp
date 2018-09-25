@@ -358,12 +358,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     }
 
     const gl::State &glState = context->getGLState();
-
-    gl::PixelPackState packState(glState.getPackState());
-    if (contextVk->isViewportFlipEnabledForReadFBO())
-    {
-        packState.reverseRowOrder = !packState.reverseRowOrder;
-    }
+    const gl::PixelPackState &packState = glState.getPackState();
 
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
 
@@ -379,8 +374,12 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
 
     const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
 
-    PackPixelsParams params(flippedArea, angleFormat, outputPitch, packState,
+    PackPixelsParams params(flippedArea, angleFormat, outputPitch, packState.reverseRowOrder,
                             glState.getTargetBuffer(gl::BufferBinding::PixelPack), 0);
+    if (contextVk->isViewportFlipEnabledForReadFBO())
+    {
+        params.reverseRowOrder = !params.reverseRowOrder;
+    }
 
     ANGLE_TRY(readPixelsImpl(contextVk, flippedArea, params, VK_IMAGE_ASPECT_COLOR_BIT,
                              getColorReadRenderTarget(),
@@ -437,8 +436,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
 
     // This path is only currently used for y-flipping depth/stencil blits.
     PackPixelsParams packPixelsParams;
-    packPixelsParams.pack.alignment       = 1;
-    packPixelsParams.pack.reverseRowOrder = true;
+    packPixelsParams.reverseRowOrder      = true;
     packPixelsParams.area.width           = copyArea.width;
     packPixelsParams.area.height          = copyArea.height;
     packPixelsParams.area.x               = copyArea.x;
