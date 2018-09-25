@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "15b46f00_c4369cc6",
+        "filename": "include/GLES3/gl3ext_angle.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5c41e60_c2087d48",
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70f11b83_6cd4a999",
         "filename": "scripts/generate_entry_points.py",
         "patchSetId": 18
@@ -39,6 +57,30 @@
       "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "163d0c4c_3c30c478",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70f11b83_6cd4a999",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 20
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "8d296a08_cd34956a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3314b7_f9a20d0a",
+      "range": {
+        "startLine": 413,
+        "startChar": 47,
+        "endLine": 413,
+        "endChar": 62
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9748ea2_27bbd62c",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 18
@@ -85,6 +151,30 @@
       "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c35e9cf3_0d36e3ff",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9748ea2_27bbd62c",
+      "range": {
+        "startLine": 418,
+        "startChar": 8,
+        "endLine": 420,
+        "endChar": 97
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "828c5d6b_40635c58",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "114ad6e3_669fb97a",
+      "range": {
+        "startLine": 250,
+        "startChar": 8,
+        "endLine": 250,
+        "endChar": 69
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b774c68c_75a6b0d8",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 18
@@ -131,6 +245,30 @@
       "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a91a55dd_cbfb8e20",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b774c68c_75a6b0d8",
+      "range": {
+        "startLine": 225,
+        "startChar": 42,
+        "endLine": 225,
+        "endChar": 66
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "832c89e7_fa2fb2ea",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1043,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "On macos and some old driver which doesn\u0027t support OpenGL ES 3.1, the function can be supported by ARB_texture_multisample or OpenGL 3.2 core feature.",
+      "parentUuid": "fff8289e_d7a9c7d4",
+      "range": {
+        "startLine": 1042,
+        "startChar": 12,
+        "endLine": 1043,
+        "endChar": 96
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f19b62e_641e3d68",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 18
@@ -177,6 +339,30 @@
       "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f44be755_20d4da2a",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3818,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f19b62e_641e3d68",
+      "range": {
+        "startLine": 3808,
+        "startChar": 0,
+        "endLine": 3818,
+        "endChar": 5
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -203,6 +389,30 @@
     },
     {
       "key": {
+        "uuid": "b3566f9f_f7e5c4c5",
+        "filename": "src/libGLESv2/proc_table_data.json",
+        "patchSetId": 18
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d76d196_063d23bf",
+      "range": {
+        "startLine": 720,
+        "startChar": 0,
+        "endLine": 720,
+        "endChar": 2
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "996aa921_5c91a4b6",
         "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
         "patchSetId": 18
@@ -223,6 +433,30 @@
       "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93b06624_34d5247d",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "996aa921_5c91a4b6",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 5
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -249,6 +483,30 @@
     },
     {
       "key": {
+        "uuid": "8573f50f_71ee3387",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d56a3b64_c7496d81",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 49
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "979793c5_9216edf9",
         "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
         "patchSetId": 18
@@ -272,6 +530,30 @@
     },
     {
       "key": {
+        "uuid": "11c13c48_47a35d2f",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "979793c5_9216edf9",
+      "range": {
+        "startLine": 208,
+        "startChar": 8,
+        "endLine": 208,
+        "endChar": 68
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6bc7ff59_c1358f43",
         "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
         "patchSetId": 18
@@ -283,6 +565,30 @@
       "writtenOn": "2018-09-21T07:27:51Z",
       "side": 1,
       "message": "Maybe this test should rather be run so that the extension is _not_ requested, so we get the intended negative test coverage. We could inherit this test from TextureMultisampleArrayWebGLTest so the extension is not enabled by default.",
+      "range": {
+        "startLine": 235,
+        "startChar": 9,
+        "endLine": 235,
+        "endChar": 38
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8045436_88447f22",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "The test has to be run on ES 3.0 because the extension ANGLE_texture_multisample is based on ES 3.0.",
+      "parentUuid": "6bc7ff59_c1358f43",
       "range": {
         "startLine": 235,
         "startChar": 9,
@@ -315,6 +621,30 @@
       "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "112fb668_2172baec",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-09-25T08:39:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79135fae_00daa516",
+      "range": {
+        "startLine": 304,
+        "startChar": 0,
+        "endLine": 305,
+        "endChar": 55
+      },
+      "revId": "0045513226a95895b10f3fb41a9b7680eb17a5ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
