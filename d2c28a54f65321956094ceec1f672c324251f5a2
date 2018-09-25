@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c41f7186_28ab2f61",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:02:54Z",
+      "side": 1,
+      "message": "Usually git cl format doesn\u0027t touch files which you didn\u0027t change in your CL.\nI wonder what happened here?",
+      "range": {
+        "startLine": 959,
+        "startChar": 25,
+        "endLine": 959,
+        "endChar": 26
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6aeabb43_620324a3",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:02:54Z",
+      "side": 1,
+      "message": "I don\u0027t recall initializing members not in constructor like this in ANGLE code.\nJamie, does this match ANGLE style?\nMaybe we should add default constructors in other classes, too, to make things consistent?",
+      "range": {
+        "startLine": 55,
+        "startChar": 16,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66d3d385_562afe1b",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:02:54Z",
+      "side": 1,
+      "message": "Out variables should come after in variables.\nAlso, this should probably be const pointer or even const reference.",
+      "range": {
+        "startLine": 71,
+        "startChar": 20,
+        "endLine": 71,
+        "endChar": 55
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f1ee06b_30f73b55",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:02:54Z",
+      "side": 1,
+      "message": "const?",
+      "range": {
+        "startLine": 84,
+        "startChar": 34,
+        "endLine": 84,
+        "endChar": 35
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62a29a27_cfee189b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:02:54Z",
+      "side": 1,
+      "message": "Spec says:\nIf initialDataSize is not 0, pInitialData must have been retrieved from a previous call to vkGetPipelineCacheData.\nI wonder if \"have been retrieved\" is a property preserved across program restarts and driver upgrades. Better check mPipelineCacheVk.init result here.",
+      "range": {
+        "startLine": 727,
+        "startChar": 28,
+        "endLine": 727,
+        "endChar": 40
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c02d93a0_333cf17f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:02:54Z",
+      "side": 1,
+      "message": "Not sure, are there cases when we don\u0027t have pipeline cache after this CL?\nMaybe this can be changed to an ASSERT?",
+      "range": {
+        "startLine": 1014,
+        "startChar": 8,
+        "endLine": 1014,
+        "endChar": 22
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8ae7892_84212a1e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:02:54Z",
+      "side": 1,
+      "message": "Here too, I don\u0027t think we initialize members in this way.",
+      "range": {
+        "startLine": 211,
+        "startChar": 43,
+        "endLine": 211,
+        "endChar": 73
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9c6e736_9a33cd80",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-25T19:02:54Z",
+      "side": 1,
+      "message": "You should probably return angle::Result here, similar to PipelineLayout::init().",
+      "range": {
+        "startLine": 881,
+        "startChar": 0,
+        "endLine": 881,
+        "endChar": 4
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
