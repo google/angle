@@ -415,7 +415,6 @@ void VertexArrayVk::updatePackedInputInfo(uint32_t attribIndex,
     ASSERT(vkFormat <= std::numeric_limits<uint16_t>::max());
     if (vkFormat == VK_FORMAT_UNDEFINED)
     {
-        // TODO(fjhenigman): Add support for vertex data format.  anglebug.com/2405
         UNIMPLEMENTED();
     }
 
