@@ -75,6 +75,7 @@ generators = {
             'src/libANGLE/renderer/angle_format.py',
             'src/libANGLE/renderer/angle_format_map.json',
             'src/libANGLE/renderer/d3d/d3d11/dxgi_format_data.json',
+            'src/libANGLE/renderer/gen_angle_format_table.py',
         ],
         'script': 'src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py',
     },

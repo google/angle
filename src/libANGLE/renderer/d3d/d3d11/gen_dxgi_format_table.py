@@ -58,7 +58,7 @@ const Format &GetFormat(DXGI_FORMAT dxgiFormat)
     }}
 
     UNREACHABLE();
-    return Format::Get(Format::ID::NONE);
+    return Format::Get(FormatID::NONE);
 }}
 
 }}  // namespace d3d11_angle
@@ -117,7 +117,7 @@ for dxgi_format, angle_format in sorted(dxgi_map.iteritems()):
         angle_format = dxgi_format
 
     if angle_format in all_angle:
-        angle_format = "Format::Get(Format::ID::" + angle_format + ")"
+        angle_format = "Format::Get(FormatID::" + angle_format + ")"
         format_cases += format_case(dxgi_format, angle_format)
     else:
         format_cases += undefined_case(dxgi_format)

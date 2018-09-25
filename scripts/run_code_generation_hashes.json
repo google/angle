@@ -30,7 +30,9 @@
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/dxgi_format_data.json":
     "24f525b05dc665fbbc8c6d68fb863719",
   "DXGI format:src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py":
-    "2932a5e1c3c846be0169e29a4f9c72e8",
+    "8ea01df6cb7f160772d3c85dd5164890",
+  "DXGI format:src/libANGLE/renderer/gen_angle_format_table.py":
+    "9de29b6ca59a05747623c0dc32344b14",
   "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
     "336c2a275fe35bce1adc7e9b5918bdb0",
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
