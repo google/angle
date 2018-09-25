@@ -968,10 +968,6 @@ if (is_android) {
 
     android_manifest = "AndroidManifest.xml"
 
-    # requires_sdk_api_level_23 tells the apk tool that this apk is only
-    # supported on M or later releases (which is true for Vulkan).
-    # Allows tool to optimize for that.
-    requires_sdk_api_level_23 = true
     apk_name = "ANGLEPrebuilt"
     uncompress_shared_libraries = true
     shared_libraries = [
