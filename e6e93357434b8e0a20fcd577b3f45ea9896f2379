@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f38379dd_be4f6f02",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-25T12:21:14Z",
+      "side": 1,
+      "message": "I think usually a name like \"ValidateTexStorage2DMultisampleBase\" would be used for this kind of a common validation function.",
+      "range": {
+        "startLine": 694,
+        "startChar": 5,
+        "endLine": 694,
+        "endChar": 36
+      },
+      "revId": "e6e93357434b8e0a20fcd577b3f45ea9896f2379",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f582e8b_3c346099",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-25T12:21:14Z",
+      "side": 1,
+      "message": "nit: normal member functions start with a lowercase letter.",
+      "range": {
+        "startLine": 90,
+        "startChar": 9,
+        "endLine": 90,
+        "endChar": 47
+      },
+      "revId": "e6e93357434b8e0a20fcd577b3f45ea9896f2379",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad82d1e3_14dc7719",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-25T12:21:14Z",
+      "side": 1,
+      "message": "This change is still regressing negative test coverage. Instead there should be a test that doesn\u0027t ever enable the extension and makes sure that the appropriate error is generated. It would run the same way regardless of the platform it is running on.",
+      "revId": "e6e93357434b8e0a20fcd577b3f45ea9896f2379",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "679f9ced_63a92d7a",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 841,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-09-25T12:21:14Z",
+      "side": 1,
+      "message": "I don\u0027t think we actually need a \"ES31\" test class if all the tests also get run on ES 3.0. It could be merged with TextureMultisampleTest.",
+      "revId": "e6e93357434b8e0a20fcd577b3f45ea9896f2379",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
