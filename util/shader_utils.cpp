@@ -364,6 +364,17 @@ void main()
 })";
 }
 
+// A shader that fills with 100% opaque green.
+const char *Green()
+{
+    return R"(precision mediump float;
+
+void main()
+{
+    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+}
+
 // A shader that fills with 100% opaque blue.
 const char *Blue()
 {

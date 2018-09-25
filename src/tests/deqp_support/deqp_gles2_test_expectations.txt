@@ -183,18 +183,6 @@
 2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = FAIL
 2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = FAIL
 
-// Android Vulkan backend only failures
-2549 VULKAN ANDROID : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil* = SKIP
-2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.random = SKIP
-2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.supported = SKIP
-2609 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.* = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.draw.random.42 = SKIP
-2405 VULKAN ANDROID : dEQP-GLES2.functional.draw.random.59 = SKIP
-
-// Fails on Nexus 5x only. TODO(jmadill): Remove suppression when possible. http://anglebug.com/2791
-2791 VULKAN ANDROID : dEQP-GLES2.functional.clipping.* = SKIP
-2599 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.limits.points = FAIL
-
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.red_unsigned_byte = FAIL
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.rg_unsigned_byte = FAIL
 2567 GLES ANDROID : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.red_unsigned_byte = FAIL
@@ -205,8 +193,25 @@
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.srgb8 = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
 
-// Vulkan failures
-2598 VULKAN : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
+// General Vulkan failures
+// Nothing here!
+
+// Android Vulkan backend only failures
+2549 VULKAN ANDROID : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil* = SKIP
+2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.random = SKIP
+2606 VULKAN ANDROID : dEQP-GLES2.functional.debug_marker.supported = SKIP
+2609 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.* = SKIP
+2405 VULKAN ANDROID : dEQP-GLES2.functional.draw.random.42 = SKIP
+2405 VULKAN ANDROID : dEQP-GLES2.functional.draw.random.59 = SKIP
+2830 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.primitives.line* = SKIP
+
+// Fails on Nexus 5x only. TODO(jmadill): Remove suppression when possible. http://anglebug.com/2791
+2791 VULKAN ANDROID : dEQP-GLES2.functional.clipping.* = SKIP
+2599 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.limits.points = FAIL
+
+// Failing on the Pixel 2.
+2727 VULKAN ANDROID : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = FAIL
+2808 VULKAN ANDROID : dEQP-GLES2.functional.shaders.builtin_variable.fragcoord_w = FAIL
 
 // Vulkan AMD Windows specific failures
 2602 VULKAN WIN AMD : dEQP-GLES2.functional.buffer.write.* = SKIP
@@ -243,6 +248,5 @@
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_float* = SKIP
 2405 VULKAN WIN AMD : dEQP-GLES2.functional.vertex_arrays.single_attribute.usages.buffer_0_32_short* = SKIP
 
-// Failing on the Pixel 2.
-2727 VULKAN ANDROID : dEQP-GLES2.functional.shaders.builtin_variable.pointcoord = FAIL
-2808 VULKAN ANDROID : dEQP-GLES2.functional.shaders.builtin_variable.fragcoord_w = FAIL
+// Fails after OpenGL line rasterization rules implementation. Possibly a bug in FragCoord.
+2809 VULKAN WIN AMD : dEQP-GLES2.functional.clipping.line.long_line_clip = FAIL

@@ -128,6 +128,12 @@ angle::Result SyncDefaultUniformBlock(ContextVk *contextVk,
     ANGLE_TRY(dynamicBuffer->flush(contextVk));
     return angle::Result::Continue();
 }
+
+bool UseLineRaster(const ContextVk *contextVk, const gl::DrawCallParams &drawCallParams)
+{
+    return contextVk->getFeatures().basicGLLineRasterization &&
+           gl::IsLineMode(drawCallParams.mode());
+}
 }  // anonymous namespace
 
 // ProgramVk::ShaderInfo implementation.
@@ -141,6 +147,7 @@ angle::Result ProgramVk::ShaderInfo::getShaders(
     ContextVk *contextVk,
     const std::string &vertexSource,
     const std::string &fragmentSource,
+    bool enableLineRasterEmulation,
     const vk::ShaderAndSerial **vertexShaderAndSerialOut,
     const vk::ShaderAndSerial **fragmentShaderAndSerialOut)
 {
@@ -148,7 +155,8 @@ angle::Result ProgramVk::ShaderInfo::getShaders(
     {
         std::vector<uint32_t> vertexCode;
         std::vector<uint32_t> fragmentCode;
-        ANGLE_TRY(GlslangWrapper::GetShaderCode(contextVk, contextVk->getCaps(), vertexSource,
+        ANGLE_TRY(GlslangWrapper::GetShaderCode(contextVk, contextVk->getCaps(),
+                                                enableLineRasterEmulation, vertexSource,
                                                 fragmentSource, &vertexCode, &fragmentCode));
 
         ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mVertexShaderAndSerial, vertexCode.data(),
@@ -211,8 +219,8 @@ angle::Result ProgramVk::reset(ContextVk *contextVk)
         uniformBlock.storage.release(renderer);
     }
 
-    // TODO(jmadill): Line rasterization emulation shaders. http://anglebug.com/2598
     mDefaultShaderInfo.destroy(device);
+    mLineRasterShaderInfo.destroy(device);
 
     Serial currentSerial = renderer->getCurrentQueueSerial();
     renderer->releaseObject(currentSerial, &mEmptyUniformBlockStorage.memory);
@@ -732,10 +740,20 @@ angle::Result ProgramVk::initShaders(ContextVk *contextVk,
                                      const vk::ShaderAndSerial **fragmentShaderAndSerialOut,
                                      const vk::PipelineLayout **pipelineLayoutOut)
 {
-    // TODO(jmadill): Line rasterization emulation shaders. http://anglebug.com/2598
-    ANGLE_TRY(mDefaultShaderInfo.getShaders(contextVk, mVertexSource, mFragmentSource,
-                                            vertexShaderAndSerialOut, fragmentShaderAndSerialOut));
-    ASSERT(mDefaultShaderInfo.valid());
+    if (UseLineRaster(contextVk, drawCallParams))
+    {
+        ANGLE_TRY(mLineRasterShaderInfo.getShaders(contextVk, mVertexSource, mFragmentSource, true,
+                                                   vertexShaderAndSerialOut,
+                                                   fragmentShaderAndSerialOut));
+        ASSERT(mLineRasterShaderInfo.valid());
+    }
+    else
+    {
+        ANGLE_TRY(mDefaultShaderInfo.getShaders(contextVk, mVertexSource, mFragmentSource, false,
+                                                vertexShaderAndSerialOut,
+                                                fragmentShaderAndSerialOut));
+        ASSERT(mDefaultShaderInfo.valid());
+    }
 
     *pipelineLayoutOut = &mPipelineLayout.get();
 
@@ -925,7 +943,6 @@ angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
                                               const gl::DrawCallParams &drawCallParams,
                                               vk::CommandBuffer *commandBuffer)
 {
-    // TODO(jmadill): Line rasterization emulation shaders. http://anglebug.com/2598
     // Can probably use better dirty bits here.
 
     if (mUsedDescriptorSetRange.empty())

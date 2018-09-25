@@ -591,6 +591,21 @@ bool IsTriangleMode(PrimitiveMode drawMode)
     return false;
 }
 
+bool IsLineMode(PrimitiveMode primitiveMode)
+{
+    switch (primitiveMode)
+    {
+        case PrimitiveMode::LineLoop:
+        case PrimitiveMode::LineStrip:
+        case PrimitiveMode::LineStripAdjacency:
+        case PrimitiveMode::Lines:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
 bool IsIntegerFormat(GLenum unsizedFormat)
 {
     switch (unsizedFormat)

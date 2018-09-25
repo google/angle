@@ -83,6 +83,9 @@ ANGLE_EXPORT const char *UniformColor();
 // A shader that fills with 100% opaque red.
 ANGLE_EXPORT const char *Red();
 
+// A shader that fills with 100% opaque green.
+ANGLE_EXPORT const char *Green();
+
 // A shader that fills with 100% opaque blue.
 ANGLE_EXPORT const char *Blue();
 

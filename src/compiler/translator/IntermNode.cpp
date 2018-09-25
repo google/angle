@@ -863,6 +863,12 @@ void TIntermBlock::appendStatement(TIntermNode *statement)
     }
 }
 
+void TIntermBlock::insertStatement(size_t insertPosition, TIntermNode *statement)
+{
+    ASSERT(statement != nullptr);
+    mStatements.insert(mStatements.begin() + insertPosition, statement);
+}
+
 void TIntermDeclaration::appendDeclarator(TIntermTyped *declarator)
 {
     ASSERT(declarator != nullptr);

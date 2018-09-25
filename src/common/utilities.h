@@ -72,6 +72,7 @@ IndexRange ComputeIndexRange(GLenum indexType,
 GLuint GetPrimitiveRestartIndex(GLenum indexType);
 
 bool IsTriangleMode(PrimitiveMode drawMode);
+bool IsLineMode(PrimitiveMode primitiveMode);
 bool IsIntegerFormat(GLenum unsizedFormat);
 
 // Returns the product of the sizes in the vector, or 1 if the vector is empty. Doesn't currently

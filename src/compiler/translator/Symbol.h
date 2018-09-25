@@ -44,6 +44,7 @@ class TSymbol : angle::NonCopyable
     bool isFunction() const { return mSymbolClass == SymbolClass::Function; }
     bool isVariable() const { return mSymbolClass == SymbolClass::Variable; }
     bool isStruct() const { return mSymbolClass == SymbolClass::Struct; }
+    bool isInterfaceBlock() const { return mSymbolClass == SymbolClass::InterfaceBlock; }
 
     const TSymbolUniqueId &uniqueId() const { return mUniqueId; }
     SymbolType symbolType() const { return mSymbolType; }
