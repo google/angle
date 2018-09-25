@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "33d2e9d4_f55374e4",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: should probably go in the cpp file",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 23,
+        "endChar": 29
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fa8dbe8_c8ccf985",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "should probably go in the cpp as well.",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 47
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6aeabb43_620324a3",
         "filename": "src/common/MemoryBuffer.h",
         "patchSetId": 3
@@ -36,6 +82,30 @@
       "writtenOn": "2018-09-25T19:02:54Z",
       "side": 1,
       "message": "I don\u0027t recall initializing members not in constructor like this in ANGLE code.\nJamie, does this match ANGLE style?\nMaybe we should add default constructors in other classes, too, to make things consistent?",
+      "range": {
+        "startLine": 55,
+        "startChar": 16,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdf5676f_3108b367",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "should go in the cpp. counts as including code in headers. we had a discussion about this a while back. it\u0027s fine if your class is already 100% header-only or source-only.",
+      "parentUuid": "6aeabb43_620324a3",
       "range": {
         "startLine": 55,
         "startChar": 16,
@@ -71,6 +141,53 @@
     },
     {
       "key": {
+        "uuid": "2d027005_2b52d0ee",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "get is a non-const member of scratchBuffer so passing a mutable pointer seems reasonable. but agree on the ordering.",
+      "parentUuid": "66d3d385_562afe1b",
+      "range": {
+        "startLine": 71,
+        "startChar": 20,
+        "endLine": 71,
+        "endChar": 55
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad5bc699_6160e8ab",
+        "filename": "src/libANGLE/BlobCache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: should avoid default arguments. and generally prefer avoiding overloading and use distinct variations where possible to increase clarity.",
+      "range": {
+        "startLine": 89,
+        "startChar": 69,
+        "endLine": 89,
+        "endChar": 96
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2f1ee06b_30f73b55",
         "filename": "src/libANGLE/renderer/DisplayImpl.h",
         "patchSetId": 3
@@ -87,6 +204,167 @@
         "startChar": 34,
         "endLine": 84,
         "endChar": 35
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4cc0db41_328b4a18",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: displayVk",
+      "range": {
+        "startLine": 355,
+        "startChar": 48,
+        "endLine": 355,
+        "endChar": 55
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5eab122_514273f5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: displayVk",
+      "range": {
+        "startLine": 516,
+        "startChar": 54,
+        "endLine": 516,
+        "endChar": 61
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f56e9018_445f9cfb",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: displayVk",
+      "range": {
+        "startLine": 607,
+        "startChar": 66,
+        "endLine": 607,
+        "endChar": 73
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b03e5a8_20660b7c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "will need to return angle::Result",
+      "range": {
+        "startLine": 699,
+        "startChar": 0,
+        "endLine": 699,
+        "endChar": 4
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38ab4256_c0b38df5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "I think it wouldn\u0027t hurt to include the Vendor and Device IDs into the hash stream. It\u0027s not clear they are included in the UUID.",
+      "range": {
+        "startLine": 701,
+        "startChar": 23,
+        "endLine": 701,
+        "endChar": 33
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43aba875_743ef123",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "aren\u0027t there stream operators like std::hex that can do something like that?",
+      "range": {
+        "startLine": 705,
+        "startChar": 0,
+        "endLine": 711,
+        "endChar": 5
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc45a3c0_b44a9093",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "maybe you could make the key generation step a helper method just to increase clarity?",
+      "range": {
+        "startLine": 713,
+        "startChar": 36,
+        "endLine": 713,
+        "endChar": 46
       },
       "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -117,6 +395,53 @@
     },
     {
       "key": {
+        "uuid": "a08de16e_518329ab",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "definitely needs to check the init result. the consistency should be guaranteed by the UUID i think.",
+      "parentUuid": "62a29a27_cfee189b",
+      "range": {
+        "startLine": 727,
+        "startChar": 28,
+        "endLine": 727,
+        "endChar": 40
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c9ba1da_0c8b0038",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "you will need to pass DisplayVk to this function. you won\u0027t need to pass the blobCache explicitly in that case.",
+      "range": {
+        "startLine": 1011,
+        "startChar": 17,
+        "endLine": 1011,
+        "endChar": 36
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c02d93a0_333cf17f",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -133,6 +458,208 @@
         "startChar": 8,
         "endLine": 1014,
         "endChar": 22
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83fa1faa_f338b1c3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "also use mPipelineCache.valid()",
+      "parentUuid": "c02d93a0_333cf17f",
+      "range": {
+        "startLine": 1014,
+        "startChar": 8,
+        "endLine": 1014,
+        "endChar": 22
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aaf7f192_4325dbbe",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1029,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: you should make getCacheData a method in vk::PipelineCache. taking a vk::Context, the other parameters, and returning angle::Result. use ANGLE_TRY.",
+      "range": {
+        "startLine": 1029,
+        "startChar": 8,
+        "endLine": 1029,
+        "endChar": 30
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4e8ac95_9e9e4f3b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "it would be nice to re-use a scratch buffer. otherwise this will trigger a potentially large allocation. we might want to add one to the Display similarly to how we have one in the Context.",
+      "range": {
+        "startLine": 1035,
+        "startChar": 24,
+        "endLine": 1035,
+        "endChar": 41
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d069b9e9_a98ec006",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "I suspect we don\u0027t need to handle VK_INCOMPLETE here. returning an error for INCOMPLETE should be sufficient I think.",
+      "range": {
+        "startLine": 1038,
+        "startChar": 42,
+        "endLine": 1038,
+        "endChar": 55
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "889a75a3_97a38d15",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1041,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "i think this warrants a new API. the use case is quite different. can you add one?",
+      "range": {
+        "startLine": 1040,
+        "startChar": 8,
+        "endLine": 1041,
+        "endChar": 39
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f225839f_4ad516e5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 33,
+        "startChar": 6,
+        "endLine": 33,
+        "endChar": 15
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43a74ad5_fb77e996",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: displayVk",
+      "range": {
+        "startLine": 46,
+        "startChar": 40,
+        "endLine": 46,
+        "endChar": 47
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da188d5f_5a205a68",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: displayVk",
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dca70dba_2d8ee265",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: displayVk",
+      "range": {
+        "startLine": 151,
+        "startChar": 46,
+        "endLine": 151,
+        "endChar": 53
       },
       "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -163,6 +690,99 @@
     },
     {
       "key": {
+        "uuid": "bfc3e1ad_206dc565",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "You can put the constexpr value in RendererVk.cpp. And the timeout you should initialize in the cpp. to reduce codegen in the header for non-performance related functions.",
+      "parentUuid": "d8ae7892_84212a1e",
+      "range": {
+        "startLine": 211,
+        "startChar": 43,
+        "endLine": 211,
+        "endChar": 73
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58034b69_4d6ebb5e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "can you pass vk::PipelineCache by const \u0026 to all of these?",
+      "range": {
+        "startLine": 347,
+        "startChar": 37,
+        "endLine": 347,
+        "endChar": 53
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34a4cdc4_aea41708",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "can you make a separate change that renames this to something like AppPipelineCache? Surprised the naming didn\u0027t conflict.",
+      "range": {
+        "startLine": 606,
+        "startChar": 6,
+        "endLine": 606,
+        "endChar": 20
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d037b093_e8c40204",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "can you pass vk::PipelineCache by const \u0026 to all of these?",
+      "range": {
+        "startLine": 616,
+        "startChar": 29,
+        "endLine": 616,
+        "endChar": 62
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c9c6e736_9a33cd80",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
         "patchSetId": 3
@@ -179,6 +799,99 @@
         "startChar": 0,
         "endLine": 881,
         "endChar": 4
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2727053_a1fcb2e8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "yes, good catch yuly.",
+      "parentUuid": "c9c6e736_9a33cd80",
+      "range": {
+        "startLine": 881,
+        "startChar": 0,
+        "endLine": 881,
+        "endChar": 4
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a910194_948443b8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 886,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "you can use ANGLE_VK_TRY here as in the other methods.",
+      "range": {
+        "startLine": 886,
+        "startChar": 4,
+        "endLine": 886,
+        "endChar": 25
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df2159fc_026f8e9b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: you can pass the vk::PipelineCache here by const \u0026",
+      "range": {
+        "startLine": 541,
+        "startChar": 31,
+        "endLine": 541,
+        "endChar": 47
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45a93bcc_7d9638f7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-25T19:46:25Z",
+      "side": 1,
+      "message": "nit: should go in the cpp.",
+      "range": {
+        "startLine": 556,
+        "startChar": 4,
+        "endLine": 556,
+        "endChar": 30
       },
       "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
