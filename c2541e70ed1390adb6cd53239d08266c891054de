@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "468bc1b4_cd55c335",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-26T15:49:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e7c2496_3c3ec437",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 69
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b5ebdcb_62e7ec08",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -473,6 +497,30 @@
     },
     {
       "key": {
+        "uuid": "b2e53fe5_1f3e8d09",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 754,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-26T15:49:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7bacd3b7_2a597328",
+      "range": {
+        "startLine": 754,
+        "startChar": 24,
+        "endLine": 754,
+        "endChar": 41
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfdb1ec3_5933e300",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -544,6 +592,30 @@
     },
     {
       "key": {
+        "uuid": "e2c97d5a_a32530a4",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-26T15:49:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "517afc50_9f7a339b",
+      "range": {
+        "startLine": 796,
+        "startChar": 122,
+        "endLine": 796,
+        "endChar": 180
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1db51a45_d361f867",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 9
@@ -603,6 +675,30 @@
       "side": 1,
       "message": "No action is needed here. If we decide at some point we need to emulate some extensions, we can. That\u0027s all I meant.",
       "parentUuid": "c106f69f_a697149a",
+      "range": {
+        "startLine": 821,
+        "startChar": 85,
+        "endLine": 821,
+        "endChar": 102
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf6b86d7_8a6e5d7a",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-26T15:49:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "75a2b990_d56c257c",
       "range": {
         "startLine": 821,
         "startChar": 85,
@@ -686,6 +782,30 @@
     },
     {
       "key": {
+        "uuid": "36d1cfdd_67085c02",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-26T15:49:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e0f26d5_8a35d1a3",
+      "range": {
+        "startLine": 140,
+        "startChar": 19,
+        "endLine": 140,
+        "endChar": 25
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f40795ec_facc0312",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 9
@@ -754,6 +874,30 @@
       "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89ded35e_40ca891e",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-26T15:49:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f99831d8_c818e05d",
+      "range": {
+        "startLine": 142,
+        "startChar": 3,
+        "endLine": 143,
+        "endChar": 90
+      },
+      "revId": "c2541e70ed1390adb6cd53239d08266c891054de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
