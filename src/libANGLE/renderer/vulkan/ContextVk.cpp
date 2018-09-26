@@ -577,27 +577,27 @@ std::string ContextVk::getRendererDescription() const
 
 void ContextVk::insertEventMarker(GLsizei length, const char *marker)
 {
-    UNIMPLEMENTED();
+    // TODO: Forward this to a Vulkan debug marker.  http://anglebug.com/2853
 }
 
 void ContextVk::pushGroupMarker(GLsizei length, const char *marker)
 {
-    UNIMPLEMENTED();
+    // TODO: Forward this to a Vulkan debug marker.  http://anglebug.com/2853
 }
 
 void ContextVk::popGroupMarker()
 {
-    UNIMPLEMENTED();
+    // TODO: Forward this to a Vulkan debug marker.  http://anglebug.com/2853
 }
 
 void ContextVk::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const char *message)
 {
-    UNIMPLEMENTED();
+    // TODO: Forward this to a Vulkan debug marker.  http://anglebug.com/2853
 }
 
 void ContextVk::popDebugGroup()
 {
-    UNIMPLEMENTED();
+    // TODO: Forward this to a Vulkan debug marker.  http://anglebug.com/2853
 }
 
 bool ContextVk::isViewportFlipEnabledForDrawFBO() const
