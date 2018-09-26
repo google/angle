@@ -1254,6 +1254,30 @@
     },
     {
       "key": {
+        "uuid": "1c6f6d88_1625cede",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:06:27Z",
+      "side": 1,
+      "message": "Yeah it\u0027s definitely worth discussing. Thanks!\n\nLet me know when the CL is ready for re-review.",
+      "parentUuid": "6fe31540_d0b28d3c",
+      "range": {
+        "startLine": 1038,
+        "startChar": 42,
+        "endLine": 1038,
+        "endChar": 55
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "889a75a3_97a38d15",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
