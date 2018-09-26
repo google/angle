@@ -72,7 +72,9 @@ break;
 texture_basic_template = """textureFormatID = {texture};
 vkTextureFormat = {vk_texture_format};
 textureInitializerFunction = {texture_initializer};"""
+
 texture_struct_template="{{{texture}, {vk_texture_format}, {texture_initializer}}}"
+
 texture_fallback_template = """{{
 static constexpr TextureFormatInitInfo kInfo[] = {{{texture_list}}};
 initTextureFallback(physicalDevice, kInfo, ArraySize(kInfo));
@@ -80,14 +82,20 @@ initTextureFallback(physicalDevice, kInfo, ArraySize(kInfo));
 
 buffer_basic_template = """bufferFormatID = {buffer};
 vkBufferFormat = {vk_buffer_format};
+vkBufferFormatIsPacked = {vk_buffer_format_is_packed};
 vertexLoadFunction = {vertex_load_function};
 vertexLoadRequiresConversion = {vertex_load_converts};"""
-buffer_struct_template="""{{{buffer}, {vk_buffer_format}, {vertex_load_function},
-{vertex_load_converts}}}"""
+
+buffer_struct_template="""{{{buffer}, {vk_buffer_format}, {vk_buffer_format_is_packed}, 
+{vertex_load_function}, {vertex_load_converts}}}"""
+
 buffer_fallback_template = """{{
 static constexpr BufferFormatInitInfo kInfo[] = {{{buffer_list}}};
 initBufferFallback(physicalDevice, kInfo, ArraySize(kInfo));
 }}"""
+
+def is_packed(format_id):
+    return "true" if "_PACK" in format_id else "false"
 
 def gen_format_case(angle, internal_format, vk_json_data):
     vk_map = vk_json_data["map"]
@@ -121,6 +129,7 @@ def gen_format_case(angle, internal_format, vk_json_data):
         return dict(
             buffer="angle::FormatID::" + format,
             vk_buffer_format=vk_map[format],
+            vk_buffer_format_is_packed=is_packed(vk_map[format]),
             vertex_load_function=angle_format.get_vertex_copy_function(angle, format),
             vertex_load_converts='false' if angle == format else 'true',
         )

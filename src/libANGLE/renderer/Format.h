@@ -41,6 +41,7 @@ struct Format final : private angle::NonCopyable
     static FormatID InternalFormatToID(GLenum internalFormat);
 
     constexpr bool hasDepthOrStencilBits() const;
+    constexpr GLuint channelCount() const;
 
     bool operator==(const Format &other) const { return this->id == other.id; }
 
@@ -114,6 +115,12 @@ constexpr Format::Format(FormatID id,
 constexpr bool Format::hasDepthOrStencilBits() const
 {
     return depthBits > 0 || stencilBits > 0;
+}
+
+constexpr GLuint Format::channelCount() const
+{
+    return (redBits > 0) + (greenBits > 0) + (blueBits > 0) + (alphaBits > 0) + (depthBits > 0) +
+           (stencilBits > 0);
 }
 }  // namespace angle
 
