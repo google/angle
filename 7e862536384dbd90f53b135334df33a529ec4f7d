@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1a97ac14_13e9a7ee",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-26T04:21:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c13d68d_8065c9ce",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 28
+      },
+      "revId": "7e862536384dbd90f53b135334df33a529ec4f7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a75acc3a_27de4154",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2018-09-25T21:13:44Z",
       "side": 1,
       "message": "maybe this should be BUFFER_USAGE_UAV?",
+      "range": {
+        "startLine": 699,
+        "startChar": 40,
+        "endLine": 699,
+        "endChar": 65
+      },
+      "revId": "7e862536384dbd90f53b135334df33a529ec4f7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecbcd667_f423eee9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-26T04:21:05Z",
+      "side": 1,
+      "message": "Ok. Rename it to BUFFER_USAGE_RAW_UAV to indicate that it will create a raw buffer not a structure buffer, counter buffer or anything else.",
+      "parentUuid": "a75acc3a_27de4154",
       "range": {
         "startLine": 699,
         "startChar": 40,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7f933f97_b804894f",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-26T04:21:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53623cab_cb7012bb",
+      "range": {
+        "startLine": 196,
+        "startChar": 7,
+        "endLine": 196,
+        "endChar": 11
+      },
+      "revId": "7e862536384dbd90f53b135334df33a529ec4f7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed76d3b7_96424bf3",
         "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "7e862536384dbd90f53b135334df33a529ec4f7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "715159a5_e1248783",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-09-26T04:21:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed76d3b7_96424bf3",
+      "range": {
+        "startLine": 258,
+        "startChar": 4,
+        "endLine": 258,
+        "endChar": 34
+      },
+      "revId": "7e862536384dbd90f53b135334df33a529ec4f7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
