@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f58560f_dd230990",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-26T18:44:01Z",
+      "side": 1,
+      "message": "No, merging of unsized formats with sized in the map is one solution.\nAnother possible solution is for D3D backend to advertise support for unsized formats.",
+      "parentUuid": "1b31a7f9_3c9ed90d",
+      "range": {
+        "startLine": 139,
+        "startChar": 60,
+        "endLine": 139,
+        "endChar": 64
+      },
+      "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6a656b9_21064cfb",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2018-09-26T17:54:33Z",
       "side": 1,
       "message": "How about:\n\nIdeally the map could support distinct unsized formats. Currently if the map claims a sized format is supported, either the sized or the corresponding unsized format is supported by the driver.",
+      "range": {
+        "startLine": 140,
+        "startChar": 3,
+        "endLine": 143,
+        "endChar": 44
+      },
+      "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dff062c_5f646432",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-26T18:44:01Z",
+      "side": 1,
+      "message": "This is not entirely correct.\nThe map does have entries for unsized formats, they are used by SupportsNativeRendering().\nIf the map claims a sized format is supported this could mean either:\na) sized format is supported\nb) unsized format is supported\nc) both sized and unsized formats are supported.",
+      "parentUuid": "f6a656b9_21064cfb",
       "range": {
         "startLine": 140,
         "startChar": 3,
