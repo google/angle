@@ -186,6 +186,30 @@
     },
     {
       "key": {
+        "uuid": "18969a40_4a9222af",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-26T20:12:00Z",
+      "side": 1,
+      "message": "Extending angle::Result is a good idea. The case I\u0027m allowing incomplete here by the way is when it\u0027s not an implementation error, but expected. Getting the size of the cache (i.e. providing cacheDataSize \u003d\u003d 0) results in VK_INCOMPLETE (hence the condition I added to the macro to tell when incomplete is acceptable).\n\n(the rest of this conversation is happening in private)",
+      "parentUuid": "f4506d4d_db151a9f",
+      "range": {
+        "startLine": 871,
+        "startChar": 0,
+        "endLine": 896,
+        "endChar": 1
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f07fdedd_b2967537",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 6
@@ -197,6 +221,30 @@
       "writtenOn": "2018-09-26T18:45:02Z",
       "side": 1,
       "message": "I think you can remove accept_incomplete here. If you\u0027re calling ALLOW_INCOMPLETE then presumably you are accepting incomplete.",
+      "range": {
+        "startLine": 770,
+        "startChar": 8,
+        "endLine": 770,
+        "endChar": 37
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "950d18a0_4d94af77",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-26T20:12:00Z",
+      "side": 1,
+      "message": "See the comment in vk_utils.cpp where this is used.",
+      "parentUuid": "f07fdedd_b2967537",
       "range": {
         "startLine": 770,
         "startChar": 8,
