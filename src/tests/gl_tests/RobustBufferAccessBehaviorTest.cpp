@@ -305,6 +305,9 @@ TEST_P(RobustBufferAccessBehaviorTest, VeryLargeVertexCountWithDynamicVertexData
 // Test that robust access works even if there's no data uploaded to the vertex buffer at all.
 TEST_P(RobustBufferAccessBehaviorTest, NoBufferData)
 {
+    // http://crbug.com/889303: Possible driver bug on NVIDIA Shield TV.
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL() && IsNVIDIA());
+
     ANGLE_SKIP_TEST_IF(!initExtension());
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program);
