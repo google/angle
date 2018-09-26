@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "fd2410d8_d1b1fda0",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T11:26:28Z",
+      "side": 1,
+      "message": "Well, it\u0027s my preference to keep code out of headers except for performance reasons. I find it just as easy to remember to initialize members in constructors as with inline init. And there are technical reasons to prefer to not inline constructors and destructors. But the full style guide is here:\n\nhttps://www.chromium.org/developers/coding-style/cpp-dos-and-donts\n\nsee \"Stop inlining constructors and destructors\" and \"When you CAN inline constructors and destructors\". If the class has any non-POD member you definitely don\u0027t want to do inlining. In this case it\u0027s probably okay as the only members are POD.",
+      "parentUuid": "50264b7b_f2e279bf",
+      "range": {
+        "startLine": 55,
+        "startChar": 16,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "66d3d385_562afe1b",
         "filename": "src/libANGLE/BlobCache.cpp",
         "patchSetId": 3
@@ -296,6 +320,30 @@
       "side": 1,
       "message": "I wanted to do that to be honest. I just couldn\u0027t settle on a function name I didn\u0027t hate. Like `putNoLocalCache()`? `putInApplicationOnly()`? Any suggestions?",
       "parentUuid": "ad5bc699_6160e8ab",
+      "range": {
+        "startLine": 89,
+        "startChar": 69,
+        "endLine": 89,
+        "endChar": 96
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33ca97d6_82fb28f7",
+        "filename": "src/libANGLE/BlobCache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T11:26:28Z",
+      "side": 1,
+      "message": "Maybe rename this one to putLocal and call the new one putApplication? I don\u0027t think we ever want to store in both simultaneously.",
+      "parentUuid": "8117fad1_bfcf542a",
       "range": {
         "startLine": 89,
         "startChar": 69,
@@ -471,6 +519,30 @@
     },
     {
       "key": {
+        "uuid": "083fba56_208ddf33",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T11:26:28Z",
+      "side": 1,
+      "message": "Yeah. I don\u0027t think we need to continue pipeline creation fails. If failure was an expected case maybe. But failure indicates something catastrophic happened and we should probably let the application know as soon as possible. The system could be is out of memory, the driver is in an unusable state, etc. vkCreatePipelineCache returns VkResult and this could be something like out of memory. We will want to abort executation and report the error to the application.",
+      "parentUuid": "05626886_cc8d9e2a",
+      "range": {
+        "startLine": 699,
+        "startChar": 0,
+        "endLine": 699,
+        "endChar": 4
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "38ab4256_c0b38df5",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -506,6 +578,30 @@
       "side": 1,
       "message": "The spec doesn\u0027t specifically say it, I agree, but don\u0027t you think \"UUID\" would be unique to cache format?",
       "parentUuid": "38ab4256_c0b38df5",
+      "range": {
+        "startLine": 701,
+        "startChar": 23,
+        "endLine": 701,
+        "endChar": 33
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ebbed7e_2e594a89",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T11:26:28Z",
+      "side": 1,
+      "message": "The spec isn\u0027t super clear but the vendor and device ids are in the pipeline cache header. This makes me think they aren\u0027t in the UUID. So yes I think it would be a good idea to add them explicitly.",
+      "parentUuid": "549499f0_ee622538",
       "range": {
         "startLine": 701,
         "startChar": 23,
@@ -671,6 +767,30 @@
       "side": 1,
       "message": "@yuly, it _does_ sound ambiguous, but it would be rather silly if it didn\u0027t. The whole point of this (and the vkGetPipelineCacheData() function) is persistent storage. The spec specifically talks about the cache header and how compatibility can be checked.\n\n`vkCreatePipelineCache()` is required to reject incompatible initial data, so we don\u0027t need to care about that:\n\n\u003e If the pipeline cache data is incompatible (as defined below) with the device, the pipeline cache will be initially empty.\n\n---\n\n@Jamie, there is no difference whatsoever what init returns. If cache creation fails, we proceed without a cache. As I mentioned above, there is no hazard with providing incompatible init data.",
       "parentUuid": "a08de16e_518329ab",
+      "range": {
+        "startLine": 727,
+        "startChar": 28,
+        "endLine": 727,
+        "endChar": 40
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9392c944_a1fd0624",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T11:26:28Z",
+      "side": 1,
+      "message": "See earlier comments.",
+      "parentUuid": "95237e0a_1e303502",
       "range": {
         "startLine": 727,
         "startChar": 28,
@@ -871,6 +991,30 @@
     },
     {
       "key": {
+        "uuid": "7459c3a1_7a67d77f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T11:26:28Z",
+      "side": 1,
+      "message": "Hm. I thought syncPipelineCacheVk is the one that gets called on swap rather than init? It\u0027s not a huge deal. Just might come up in some random performance trace somewhere down the line. It\u0027s fine to defer this. Maybe leave a comment?",
+      "parentUuid": "a3101c23_7ce49bd1",
+      "range": {
+        "startLine": 1035,
+        "startChar": 24,
+        "endLine": 1035,
+        "endChar": 41
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d069b9e9_a98ec006",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -906,6 +1050,30 @@
       "side": 1,
       "message": "VK_INCOMPLETE is not an error. It just says not all of the cache could be got, which is fine (and the results consistent according to spec), we\u0027ll save as much as we can get.\n\nIn practice I don\u0027t expect it to happen, since the size was just retrieved and there is no concurrent access.",
       "parentUuid": "d069b9e9_a98ec006",
+      "range": {
+        "startLine": 1038,
+        "startChar": 42,
+        "endLine": 1038,
+        "endChar": 55
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46334c83_4437b9dc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T11:26:28Z",
+      "side": 1,
+      "message": "VK_INCOMPLETE seems like an implementation error. It certainly shouldn\u0027t happen in practice. Which is why I would think generating an error here would be a good idea. And if we didn\u0027t get all of the bytes in the cache, is the result even guaranteed to be consistent?",
+      "parentUuid": "591b3285_5acc030f",
       "range": {
         "startLine": 1038,
         "startChar": 42,
@@ -1023,6 +1191,30 @@
       "side": 1,
       "message": "I was originally hoping to avoid noise from the variable name change in the functions.\n\nDone",
       "parentUuid": "43a74ad5_fb77e996",
+      "range": {
+        "startLine": 46,
+        "startChar": 40,
+        "endLine": 46,
+        "endChar": 47
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73d4afc2_cf2751a8",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T11:26:28Z",
+      "side": 1,
+      "message": "You could make a split CL that just refactors these parameters if you want to avoid the noise.",
+      "parentUuid": "b3365526_d178dbf9",
       "range": {
         "startLine": 46,
         "startChar": 40,
@@ -1448,6 +1640,30 @@
       "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46113ba4_a80218ef",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T11:26:28Z",
+      "side": 1,
+      "message": "Somewhat agree. We will definitely want to inline any methods that are used in hot paths.",
+      "parentUuid": "ef1b4aeb_39fc1f8f",
+      "range": {
+        "startLine": 556,
+        "startChar": 4,
+        "endLine": 556,
+        "endChar": 30
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
