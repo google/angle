@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24d32283_67c63cec",
+        "filename": "src/libANGLE/BlobCache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:45:02Z",
+      "side": 1,
+      "message": "nit: can you put ANGLE_NO_DISCARD on this guy",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 102,
+        "endChar": 8
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98aa1d46_e1567e37",
+        "filename": "src/libANGLE/BlobCache.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:45:02Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 8
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa745232_c4a45e87",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:45:02Z",
+      "side": 1,
+      "message": "can we remove these? see later comments.",
+      "range": {
+        "startLine": 242,
+        "startChar": 8,
+        "endLine": 242,
+        "endChar": 25
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5c711ba_2a0686e3",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:45:02Z",
+      "side": 1,
+      "message": "nit: it\u0027s probably better to return a pointer from getScratchBuffer. mutable references aren\u0027t allowed as function args per the style guide. return values are but we try to avoid it often.",
+      "range": {
+        "startLine": 682,
+        "startChar": 36,
+        "endLine": 682,
+        "endChar": 52
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0cf24881_ea6a56ce",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1021,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:45:02Z",
+      "side": 1,
+      "message": "can you please return angle::Result here as well?",
+      "range": {
+        "startLine": 1021,
+        "startChar": 0,
+        "endLine": 1021,
+        "endChar": 4
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca523ea9_d15e1ecc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:45:02Z",
+      "side": 1,
+      "message": "thanks for adding.. can you use ANGLE_VK_CHECK_ALLOC here?",
+      "range": {
+        "startLine": 1040,
+        "startChar": 20,
+        "endLine": 1040,
+        "endChar": 36
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9da27555_b58a43e9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:45:02Z",
+      "side": 1,
+      "message": "would prefer if you could use ANGLE_TRY here.",
+      "range": {
+        "startLine": 1045,
+        "startChar": 4,
+        "endLine": 1045,
+        "endChar": 25
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4506d4d_db151a9f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:45:02Z",
+      "side": 1,
+      "message": "Since incomplete seems like an implementation error I think we can detect incomplete here and then ASSERT that it\u0027s never incomplete in the init.\n\nIf you want to handle INCOMPLETE robustly you can make ANGLE_VK_TRY_ALLOW_INCOMPLETE take a last parameter which is an out bool parameter. If the result is incomplete it continues execution and return sets the out parameter to true.\n\nAlso add the last out bool parameter to getCacheData to pass this to the caller. Leave the zeroing out of the memory for the caller. This function should be as minimal as possible (something that could potentially be autogenerated).\n\nI\u0027m also potentially open to adding a third value to angle::Result.",
+      "range": {
+        "startLine": 871,
+        "startChar": 0,
+        "endLine": 896,
+        "endChar": 1
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f07fdedd_b2967537",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:45:02Z",
+      "side": 1,
+      "message": "I think you can remove accept_incomplete here. If you\u0027re calling ALLOW_INCOMPLETE then presumably you are accepting incomplete.",
+      "range": {
+        "startLine": 770,
+        "startChar": 8,
+        "endLine": 770,
+        "endChar": 37
+      },
+      "revId": "668af9018e12e5cd0b5e6ff130ebfa897fb2c954",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
