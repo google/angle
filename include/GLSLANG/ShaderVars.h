@@ -203,6 +203,9 @@ struct OutputVariable : public VariableWithLocation
     OutputVariable &operator=(const OutputVariable &other);
     bool operator==(const OutputVariable &other) const;
     bool operator!=(const OutputVariable &other) const { return !operator==(other); }
+
+    // From EXT_blend_func_extended.
+    int index;
 };
 
 struct InterfaceBlockField : public ShaderVariable

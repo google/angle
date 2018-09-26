@@ -67,9 +67,8 @@ const char ESSL300_MaxDualSourceAccessShader[] =
     "    fragColor = vec4(gl_MaxDualSourceDrawBuffersEXT / 10);\n"
     "}\n";
 
-// In GLSL version 300 es, the only way to write a correct shader is to require the extension and
-// then leave the locations unspecified. The caller will then bind the variables with the extension
-// binding functions.
+// In ES 3.0, the locations can be assigned through the API with glBindFragDataLocationIndexedEXT.
+// It's fine to have a mix of specified and unspecified locations.
 const char ESSL300_LocationAndUnspecifiedOutputShader[] =
     "precision mediump float;\n"
     "layout(location = 0) out mediump vec4 fragColor;"
@@ -79,6 +78,7 @@ const char ESSL300_LocationAndUnspecifiedOutputShader[] =
     "    secondaryFragColor = vec4(1.0);\n"
     "}\n";
 
+// It's also fine to leave locations completely unspecified.
 const char ESSL300_TwoUnspecifiedLocationOutputsShader[] =
     "precision mediump float;\n"
     "out mediump vec4 fragColor;"
@@ -88,26 +88,71 @@ const char ESSL300_TwoUnspecifiedLocationOutputsShader[] =
     "    secondaryFragColor = vec4(1.0);\n"
     "}\n";
 
-// Shader that is correct in GLSL ES 3.10 fails when used in version 300 es.
-const char ESSL310_LocationIndexShader[] =
-    "precision mediump float;\n"
-    "layout(location = 0) out mediump vec4 fragColor;"
-    "layout(location = 0, index = 1) out mediump vec4 secondaryFragColor;"
-    "void main() {\n"
-    "   fragColor = vec4(1);\n"
-    "   secondaryFragColor = vec4(1);\n"
-    "}\n";
+// Shader that is specifies two outputs with the same location but different indexes is valid.
+const char ESSL300_LocationIndexShader[] =
+    R"(precision mediump float;
+layout(location = 0) out mediump vec4 fragColor;
+layout(location = 0, index = 1) out mediump vec4 secondaryFragColor;
+void main() {
+    fragColor = vec4(1);
+    secondaryFragColor = vec4(1);
+})";
 
-// Shader that specifies index layout qualifier but not location fails to compile. Currently fails
-// to compile due to version 310 es not being supported.
-const char ESSL310_LocationIndexFailureShader[] =
-    "precision mediump float;\n"
-    "layout(location = 0) out mediump vec4 fragColor;"
-    "layout(index = 1) out mediump vec4 secondaryFragColor;"
-    "void main() {\n"
-    "   fragColor = vec4(1.0);\n"
-    "   secondaryFragColor = vec4(1.0);\n"
-    "}\n";
+// Shader that specifies index layout qualifier but not location fails to compile.
+const char ESSL300_LocationIndexFailureShader[] =
+    R"(precision mediump float;
+layout(index = 0) out vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+
+// Shader that specifies index layout qualifier multiple times fails to compile.
+const char ESSL300_DoubleIndexFailureShader[] =
+    R"(precision mediump float;
+layout(index = 0, location = 0, index = 1) out vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+
+// Global index layout qualifier fails.
+const char ESSL300_GlobalIndexFailureShader[] =
+    R"(precision mediump float;
+layout(index = 0);
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+
+// Index layout qualifier on a non-output variable fails.
+const char ESSL300_IndexOnUniformVariableFailureShader[] =
+    R"(precision mediump float;
+layout(index = 0) uniform vec4 u;
+out vec4 fragColor;
+void main() {
+    fragColor = u;
+})";
+
+// Index layout qualifier on a struct fails.
+const char ESSL300_IndexOnStructFailureShader[] =
+    R"(precision mediump float;
+layout(index = 0) struct S {
+    vec4 field;
+};
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+
+// Index layout qualifier on a struct member fails.
+const char ESSL300_IndexOnStructFieldFailureShader[] =
+    R"(precision mediump float;
+struct S {
+    layout(index = 0) vec4 field;
+};
+out mediump vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
 
 class EXTBlendFuncExtendedTest : public sh::ShaderExtensionTest
 {
@@ -169,7 +214,8 @@ INSTANTIATE_TEST_CASE_P(CorrectESSL300Shaders,
                                 Values(sh::ESSLVersion300),
                                 Values(ESSL300_MaxDualSourceAccessShader,
                                        ESSL300_LocationAndUnspecifiedOutputShader,
-                                       ESSL300_TwoUnspecifiedLocationOutputsShader)));
+                                       ESSL300_TwoUnspecifiedLocationOutputsShader,
+                                       ESSL300_LocationIndexShader)));
 
 class EXTBlendFuncExtendedCompileFailureTest : public EXTBlendFuncExtendedTest
 {
@@ -208,23 +254,16 @@ INSTANTIATE_TEST_CASE_P(CorrectESSL100Shaders,
                                 Values(sh::ESSLVersion300),
                                 Values(ESSL100_SimpleShader1, ESSL100_FragDataShader)));
 
-// Incorrect #version 310 es always fails.
-INSTANTIATE_TEST_CASE_P(IncorrectESSL310Shaders,
+// Incorrect #version 300 es shaders always fail.
+INSTANTIATE_TEST_CASE_P(IncorrectESSL300Shaders,
                         EXTBlendFuncExtendedCompileFailureTest,
-                        Combine(Values(SH_GLES3_SPEC),
+                        Combine(Values(SH_GLES3_1_SPEC),
                                 Values(sh::ESSLVersion300, sh::ESSLVersion310),
-                                Values(ESSL310_LocationIndexFailureShader)));
-
-// Correct #version 310 es fails in #version 300 es.
-INSTANTIATE_TEST_CASE_P(
-    CorrectESSL310ShadersInESSL300,
-    EXTBlendFuncExtendedCompileFailureTest,
-    Values(make_tuple(SH_GLES3_SPEC, &sh::ESSLVersion300[0], &ESSL310_LocationIndexShader[0])));
-
-// Correct #version 310 es fails in #version 310 es, due to 3.1 not being supported.
-INSTANTIATE_TEST_CASE_P(
-    CorrectESSL310Shaders,
-    EXTBlendFuncExtendedCompileFailureTest,
-    Values(make_tuple(SH_GLES3_SPEC, &sh::ESSLVersion310[0], &ESSL310_LocationIndexShader[0])));
+                                Values(ESSL300_LocationIndexFailureShader,
+                                       ESSL300_DoubleIndexFailureShader,
+                                       ESSL300_GlobalIndexFailureShader,
+                                       ESSL300_IndexOnUniformVariableFailureShader,
+                                       ESSL300_IndexOnStructFailureShader,
+                                       ESSL300_IndexOnStructFieldFailureShader)));
 
 }  // namespace

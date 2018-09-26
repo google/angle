@@ -729,7 +729,8 @@ struct TLayoutQualifier
         return location == -1 && binding == -1 && offset == -1 && numViews == -1 && yuv == false &&
                matrixPacking == EmpUnspecified && blockStorage == EbsUnspecified &&
                !localSize.isAnyValueSet() && imageInternalFormat == EiifUnspecified &&
-               primitiveType == EptUndefined && invocations == 0 && maxVertices == -1;
+               primitiveType == EptUndefined && invocations == 0 && maxVertices == -1 &&
+               index == -1;
     }
 
     bool isCombinationValid() const
@@ -739,7 +740,7 @@ struct TLayoutQualifier
         bool geometryShaderSpecified =
             (primitiveType != EptUndefined) || (invocations != 0) || (maxVertices != -1);
         bool otherLayoutQualifiersSpecified =
-            (location != -1 || binding != -1 || matrixPacking != EmpUnspecified ||
+            (location != -1 || binding != -1 || index != -1 || matrixPacking != EmpUnspecified ||
              blockStorage != EbsUnspecified || imageInternalFormat != EiifUnspecified);
 
         // we can have either the work group size specified, or number of views,
@@ -779,6 +780,9 @@ struct TLayoutQualifier
     int invocations;
     int maxVertices;
 
+    // EXT_blend_func_extended fragment output layout qualifier
+    int index;
+
   private:
     explicit constexpr TLayoutQualifier(int /*placeholder*/)
         : location(-1),
@@ -793,7 +797,8 @@ struct TLayoutQualifier
           yuv(false),
           primitiveType(EptUndefined),
           invocations(0),
-          maxVertices(-1)
+          maxVertices(-1),
+          index(-1)
     {
     }
 };

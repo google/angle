@@ -92,7 +92,8 @@ void ValidateOutputsTraverser::visitSymbol(TIntermSymbol *symbol)
 void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
 {
     ASSERT(diagnostics);
-    OutputVector validOutputs(mMaxDrawBuffers);
+    OutputVector validOutputs(mMaxDrawBuffers, nullptr);
+    OutputVector validSecondaryOutputs(mMaxDrawBuffers, nullptr);
 
     for (const auto &symbol : mOutputs)
     {
@@ -104,21 +105,29 @@ void ValidateOutputsTraverser::validate(TDiagnostics *diagnostics) const
 
         ASSERT(type.getLayoutQualifier().location != -1);
 
-        if (location + elementCount <= validOutputs.size())
+        OutputVector &validOutputsToUse = validOutputs;
+        // The default index is 0, so we only assign the output to secondary outputs in case the
+        // index is explicitly set to 1.
+        if (type.getLayoutQualifier().index == 1)
+        {
+            validOutputsToUse = validSecondaryOutputs;
+        }
+
+        if (location + elementCount <= validOutputsToUse.size())
         {
             for (size_t elementIndex = 0; elementIndex < elementCount; elementIndex++)
             {
                 const size_t offsetLocation = location + elementIndex;
-                if (validOutputs[offsetLocation])
+                if (validOutputsToUse[offsetLocation])
                 {
                     std::stringstream strstr;
                     strstr << "conflicting output locations with previously defined output '"
-                           << validOutputs[offsetLocation]->getName() << "'";
+                           << validOutputsToUse[offsetLocation]->getName() << "'";
                     error(*symbol, strstr.str().c_str(), diagnostics);
                 }
                 else
                 {
-                    validOutputs[offsetLocation] = symbol;
+                    validOutputsToUse[offsetLocation] = symbol;
                 }
             }
         }

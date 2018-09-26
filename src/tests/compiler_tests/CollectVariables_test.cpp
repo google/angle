@@ -40,6 +40,8 @@ class CollectVariablesTest : public testing::Test
         ShBuiltInResources resources;
         InitBuiltInResources(&resources);
         resources.MaxDrawBuffers = 8;
+        resources.EXT_blend_func_extended  = true;
+        resources.MaxDualSourceDrawBuffers = 1;
 
         initTranslator(resources);
     }
@@ -2057,4 +2059,30 @@ TEST_F(CollectVertexVariablesTest, VaryingOnlyDeclaredInvariant)
     EXPECT_EQ("vf", varying.name);
     EXPECT_FALSE(varying.staticUse);
     EXPECT_FALSE(varying.active);
+}
+
+// Test an output variable that is declared with the index layout qualifier from
+// EXT_blend_func_extended.
+TEST_F(CollectFragmentVariablesTest, OutputVarESSL3EXTBlendFuncExtendedIndex)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(location = 0, index = 1) out float outVar;
+void main()
+{
+    outVar = 0.0;
+})";
+
+    compile(shaderString);
+
+    const auto &outputs = mTranslator->getOutputVariables();
+    ASSERT_EQ(1u, outputs.size());
+
+    const OutputVariable &output = outputs[0];
+    EXPECT_EQ("outVar", output.name);
+    EXPECT_TRUE(output.staticUse);
+    EXPECT_TRUE(output.active);
+    EXPECT_EQ(1, output.index);
 }

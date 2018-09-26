@@ -648,6 +648,7 @@ OutputVariable CollectVariablesTraverser::recordOutputVariable(const TIntermSymb
     setCommonVariableProperties(type, variable.variable(), &outputVariable);
 
     outputVariable.location = type.getLayoutQualifier().location;
+    outputVariable.index    = type.getLayoutQualifier().index;
     return outputVariable;
 }
 

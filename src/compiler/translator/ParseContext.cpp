@@ -1130,6 +1130,25 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
 
     (*variable) = new TVariable(&symbolTable, identifier, type, SymbolType::UserDefined);
 
+    ASSERT(type->getLayoutQualifier().index == -1 ||
+           (isExtensionEnabled(TExtension::EXT_blend_func_extended) &&
+            mShaderType == GL_FRAGMENT_SHADER && mShaderVersion >= 300));
+    if (type->getQualifier() == EvqFragmentOut)
+    {
+        if (type->getLayoutQualifier().index != -1 && type->getLayoutQualifier().location == -1)
+        {
+            error(line,
+                  "If index layout qualifier is specified for a fragment output, location must "
+                  "also be specified.",
+                  "index");
+            return false;
+        }
+    }
+    else
+    {
+        checkIndexIsNotSpecified(line, type->getLayoutQualifier().index);
+    }
+
     checkBindingIsValid(line, *type);
 
     bool needsReservedCheck = true;
@@ -1376,6 +1395,11 @@ void TParseContext::emptyDeclarationErrorCheck(const TType &type, const TSourceL
         // error. It is assumed that this applies to empty declarations as well.
         error(location, "empty array declaration needs to specify a size", "");
     }
+
+    if (type.getQualifier() != EvqFragmentOut)
+    {
+        checkIndexIsNotSpecified(location, type.getLayoutQualifier().index);
+    }
 }
 
 // These checks are done for all declarations that are non-empty. They're done for non-empty
@@ -1593,6 +1617,17 @@ void TParseContext::checkInternalFormatIsNotSpecified(const TSourceLoc &location
     {
         error(location, "invalid layout qualifier: only valid when used with images",
               getImageInternalFormatString(internalFormat));
+    }
+}
+
+void TParseContext::checkIndexIsNotSpecified(const TSourceLoc &location, int index)
+{
+    if (index != -1)
+    {
+        error(location,
+              "invalid layout qualifier: only valid when used with a fragment shader output in "
+              "ESSL version >= 3.00 and EXT_blend_func_extended is enabled",
+              "index");
     }
 }
 
@@ -2981,6 +3016,8 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
         return;
     }
 
+    checkIndexIsNotSpecified(typeQualifier.line, layoutQualifier.index);
+
     checkBindingIsNotSpecified(typeQualifier.line, layoutQualifier.binding);
 
     checkMemoryQualifierIsNotSpecified(typeQualifier.memoryQualifier, typeQualifier.line);
@@ -3615,6 +3652,8 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         arraySize = checkIsValidArraySize(arrayIndexLine, arrayIndex);
     }
 
+    checkIndexIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier.index);
+
     if (mShaderVersion < 310)
     {
         checkBindingIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier.binding);
@@ -3706,6 +3745,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         // check layout qualifiers
         TLayoutQualifier fieldLayoutQualifier = fieldType->getLayoutQualifier();
         checkLocationIsNotSpecified(field->line(), fieldLayoutQualifier);
+        checkIndexIsNotSpecified(field->line(), fieldLayoutQualifier.index);
         checkBindingIsNotSpecified(field->line(), fieldLayoutQualifier.binding);
 
         if (fieldLayoutQualifier.blockStorage != EbsUnspecified)
@@ -4411,6 +4451,26 @@ void TParseContext::parseMaxVertices(int intValue,
     }
 }
 
+void TParseContext::parseIndexLayoutQualifier(int intValue,
+                                              const TSourceLoc &intValueLine,
+                                              const std::string &intValueString,
+                                              int *index)
+{
+    // EXT_blend_func_extended specifies that most validation should happen at link time, but since
+    // we're validating output variable locations at compile time, it makes sense to validate that
+    // index is 0 or 1 also at compile time. Also since we use "-1" as a placeholder for unspecified
+    // index, we can't accept it here.
+    if (intValue < 0 || intValue > 1)
+    {
+        error(intValueLine, "out of range: index layout qualifier can only be 0 or 1",
+              intValueString.c_str());
+    }
+    else
+    {
+        *index = intValue;
+    }
+}
+
 TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qualifierType,
                                                      const TSourceLoc &qualifierTypeLine,
                                                      int intValue,
@@ -4492,7 +4552,11 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
     {
         parseMaxVertices(intValue, intValueLine, intValueString, &qualifier.maxVertices);
     }
-
+    else if (qualifierType == "index" && mShaderType == GL_FRAGMENT_SHADER &&
+             checkCanUseExtension(qualifierTypeLine, TExtension::EXT_blend_func_extended))
+    {
+        parseIndexLayoutQualifier(intValue, intValueLine, intValueString, &qualifier.index);
+    }
     else
     {
         error(qualifierTypeLine, "invalid layout qualifier", qualifierType);
@@ -4780,6 +4844,8 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
                                field.name(), field.type());
 
         checkMemoryQualifierIsNotSpecified(field.type()->getMemoryQualifier(), field.line());
+
+        checkIndexIsNotSpecified(field.line(), field.type()->getLayoutQualifier().index);
 
         checkBindingIsNotSpecified(field.line(), field.type()->getLayoutQualifier().binding);
 

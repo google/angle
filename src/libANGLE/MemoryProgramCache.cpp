@@ -363,6 +363,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         sh::OutputVariable output;
         LoadShaderVar(&stream, &output);
         output.location = stream.readInt<int>();
+        output.index    = stream.readInt<int>();
         state->mOutputVariables.push_back(output);
     }
 
@@ -555,6 +556,7 @@ void MemoryProgramCache::Serialize(const Context *context,
     {
         WriteShaderVar(&stream, output);
         stream.writeInt(output.location);
+        stream.writeInt(output.index);
     }
 
     stream.writeInt(state.getOutputLocations().size());
