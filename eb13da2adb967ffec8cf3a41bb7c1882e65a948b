@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "131d284b_234e9a6b",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:51:12Z",
+      "side": 1,
+      "message": "D3D, Vulkan, Metal, everything.",
+      "parentUuid": "3668e304_6a5b7f23",
+      "range": {
+        "startLine": 139,
+        "startChar": 60,
+        "endLine": 139,
+        "endChar": 64
+      },
+      "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6a656b9_21064cfb",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 10
@@ -117,6 +141,30 @@
       "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "593d6f25_9ecf2eef",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-26T18:51:12Z",
+      "side": 1,
+      "message": "Ah, I see. I guess it\u0027s more complex than I thought. Anyway I\u0027m fine with any wording you like.",
+      "parentUuid": "1dff062c_5f646432",
+      "range": {
+        "startLine": 140,
+        "startChar": 3,
+        "endLine": 143,
+        "endChar": 44
+      },
+      "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
