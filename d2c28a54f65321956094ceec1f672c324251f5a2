@@ -1230,6 +1230,30 @@
     },
     {
       "key": {
+        "uuid": "6fe31540_d0b28d3c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-26T15:18:25Z",
+      "side": 1,
+      "message": "Sure.\n\nI\u0027ve been thinking about the capping a bit, and maybe we should talk about it more. The blob cache has a limited size, and if the pipeline cache grows larger, it would always be rejected by the blob cache. I\u0027m afraid not capping the size would lead to the pipeline cache never reaching the disk (at least after a bit of time). Particularly also that some pipelines may change and the old versions would end up living in the cache for no reason.\n\nIt\u0027s not straightforward to get the size of the blob cache out of the application though, so I\u0027m not sure at the moment what cap would be best.",
+      "parentUuid": "0ff304ad_bc75886d",
+      "range": {
+        "startLine": 1038,
+        "startChar": 42,
+        "endLine": 1038,
+        "endChar": 55
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "889a75a3_97a38d15",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
