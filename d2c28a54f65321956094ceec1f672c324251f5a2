@@ -214,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "a7b5adb4_66e00094",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-26T14:06:42Z",
+      "side": 1,
+      "message": "From the same guide, see \"Prefer to use \u003ddefault\".\n\nMemoryBuffer is not heavily used, so in the end I don\u0027t really mind. But with so many wrappers and abstractions (especially in angle due to its nature), I do believe keeping \"everything\" out of the headers just for the sake of that incurs a nontrivial cost.",
+      "parentUuid": "fd2410d8_d1b1fda0",
+      "range": {
+        "startLine": 55,
+        "startChar": 16,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "66d3d385_562afe1b",
         "filename": "src/libANGLE/BlobCache.cpp",
         "patchSetId": 3
@@ -1039,6 +1063,30 @@
     },
     {
       "key": {
+        "uuid": "796b554f_6d7dcc9f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-26T14:06:42Z",
+      "side": 1,
+      "message": "Oh, yes sorry I was thinking of init that creates a local scratch buffer.\n\nDone.",
+      "parentUuid": "7459c3a1_7a67d77f",
+      "range": {
+        "startLine": 1035,
+        "startChar": 24,
+        "endLine": 1035,
+        "endChar": 41
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d069b9e9_a98ec006",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -1098,6 +1146,30 @@
       "side": 1,
       "message": "VK_INCOMPLETE seems like an implementation error. It certainly shouldn\u0027t happen in practice. Which is why I would think generating an error here would be a good idea. And if we didn\u0027t get all of the bytes in the cache, is the result even guaranteed to be consistent?",
       "parentUuid": "591b3285_5acc030f",
+      "range": {
+        "startLine": 1038,
+        "startChar": 42,
+        "endLine": 1038,
+        "endChar": 55
+      },
+      "revId": "d2c28a54f65321956094ceec1f672c324251f5a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc12677f_8c583249",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-26T14:06:42Z",
+      "side": 1,
+      "message": "First, yes the result is guaranteed to be consistent:\n\n\u003e If pDataSize is less than the maximum size that can be retrieved by the pipeline cache, at most pDataSize bytes will be written to pData, and vkGetPipelineCacheData will return VK_INCOMPLETE. Any data written to pData is valid and can be provided as the pInitialData member of the VkPipelineCacheCreateInfo structure passed to vkCreatePipelineCache.\n\nIt might be an implementation error, but I\u0027m against reporting it to the application:\n\n1. The application can\u0027t do anything meaningful with this information,\n2. The application can continue unaffected\n\nGiven the memory constraints, we could also think about capping the amount of data we get out of the cache, to avoid it growing indefinitely, in which case VK_INCOMPLETE would be an expected value too.",
+      "parentUuid": "46334c83_4437b9dc",
       "range": {
         "startLine": 1038,
         "startChar": 42,
