@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "7ee4de3d_db496333",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-27T20:53:17Z",
+      "side": 1,
+      "message": "This would create code style inconsistency.\nCould you make a CL changing all default constructors in ANGLE to this style?",
+      "range": {
+        "startLine": 55,
+        "startChar": 16,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ef0a11c_b464350d",
+        "filename": "src/libANGLE/BlobCache.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-09-27T20:53:17Z",
+      "side": 1,
+      "message": "I thought that it will store if the callbacks are set",
+      "range": {
+        "startLine": 91,
+        "startChar": 89,
+        "endLine": 91,
+        "endChar": 92
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d6c48c01_16e67e16",
         "filename": "src/libANGLE/Error.h",
         "patchSetId": 7
