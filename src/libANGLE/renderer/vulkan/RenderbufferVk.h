@@ -17,7 +17,7 @@
 namespace rx
 {
 
-class RenderbufferVk : public RenderbufferImpl, public vk::CommandGraphResource
+class RenderbufferVk : public RenderbufferImpl
 {
   public:
     RenderbufferVk(const gl::RenderbufferState &state);

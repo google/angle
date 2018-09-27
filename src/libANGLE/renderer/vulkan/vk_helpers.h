@@ -166,14 +166,36 @@ class LineLoopHelper final : angle::NonCopyable
     DynamicBuffer mDynamicIndexBuffer;
 };
 
-class ImageHelper final : angle::NonCopyable
+class BufferHelper final : public CommandGraphResource
+{
+  public:
+    BufferHelper();
+    ~BufferHelper();
+
+    angle::Result init(ContextVk *contextVk,
+                       const VkBufferCreateInfo &createInfo,
+                       VkMemoryPropertyFlags memoryPropertyFlags);
+    void release(RendererVk *renderer);
+
+    bool valid() const { return mBuffer.valid(); }
+    const Buffer &getBuffer() const { return mBuffer; }
+    const DeviceMemory &getDeviceMemory() const { return mDeviceMemory; }
+
+  private:
+    // Vulkan objects.
+    Buffer mBuffer;
+    DeviceMemory mDeviceMemory;
+
+    // Cached properties.
+    VkMemoryPropertyFlags mMemoryPropertyFlags;
+};
+
+class ImageHelper final : public CommandGraphResource
 {
   public:
     ImageHelper();
     ImageHelper(ImageHelper &&other);
     ~ImageHelper();
-
-    bool valid() const;
 
     angle::Result init(Context *context,
                        gl::TextureType textureType,
@@ -205,8 +227,11 @@ class ImageHelper final : angle::NonCopyable
                                 const gl::Extents &extent,
                                 StagingUsage usage);
 
+    void release(RendererVk *renderer);
+
+    bool valid() const { return mImage.valid(); }
+
     VkImageAspectFlags getAspectFlags() const;
-    void release(Serial serial, RendererVk *renderer);
     void destroy(VkDevice device);
     void dumpResources(Serial serial, std::vector<GarbageObject> *garbageQueue);
 

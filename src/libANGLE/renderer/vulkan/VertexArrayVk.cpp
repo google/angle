@@ -251,8 +251,9 @@ gl::Error VertexArrayVk::syncState(const gl::Context *context,
                 if (bufferGL)
                 {
                     BufferVk *bufferVk                 = vk::GetImpl(bufferGL);
-                    mCurrentElementArrayBufferResource = bufferVk;
-                    mCurrentElementArrayBufferHandle   = bufferVk->getVkBuffer().getHandle();
+                    mCurrentElementArrayBufferResource = &bufferVk->getBuffer();
+                    mCurrentElementArrayBufferHandle =
+                        bufferVk->getBuffer().getBuffer().getHandle();
                 }
                 else
                 {
@@ -327,8 +328,9 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
             }
             else
             {
-                mCurrentArrayBufferResources[attribIndex] = bufferVk;
-                mCurrentArrayBufferHandles[attribIndex]   = bufferVk->getVkBuffer().getHandle();
+                mCurrentArrayBufferResources[attribIndex] = &bufferVk->getBuffer();
+                mCurrentArrayBufferHandles[attribIndex] =
+                    bufferVk->getBuffer().getBuffer().getHandle();
                 mCurrentArrayBufferOffsets[attribIndex]   = binding.getOffset();
                 mCurrentArrayBufferStrides[attribIndex]   = binding.getStride();
             }

@@ -24,7 +24,7 @@ constexpr VkClearColorValue kBlackClearColorValue                 = {{0}};
 }  // anonymous namespace
 
 RenderbufferVk::RenderbufferVk(const gl::RenderbufferState &state)
-    : RenderbufferImpl(state), mRenderTarget(&mImage, &mImageView, this, 0)
+    : RenderbufferImpl(state), mRenderTarget(&mImage, &mImageView, 0)
 {
 }
 
@@ -37,8 +37,8 @@ gl::Error RenderbufferVk::onDestroy(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
-    mImage.release(renderer->getCurrentQueueSerial(), renderer);
-    renderer->releaseObject(getStoredQueueSerial(), &mImageView);
+    mImage.release(renderer);
+    renderer->releaseObject(renderer->getCurrentQueueSerial(), &mImageView);
 
     return gl::NoError();
 }
@@ -59,8 +59,8 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
             static_cast<GLsizei>(width) != mState.getWidth() ||
             static_cast<GLsizei>(height) != mState.getHeight())
         {
-            mImage.release(renderer->getCurrentQueueSerial(), renderer);
-            renderer->releaseObject(getStoredQueueSerial(), &mImageView);
+            mImage.release(renderer);
+            renderer->releaseObject(renderer->getCurrentQueueSerial(), &mImageView);
         }
     }
 
@@ -87,7 +87,7 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
 
         // TODO(jmadill): Fold this into the RenderPass load/store ops. http://anglebug.com/2361
         vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
+        ANGLE_TRY(mImage.recordCommands(contextVk, &commandBuffer));
 
         if (isDepthOrStencilFormat)
         {

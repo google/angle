@@ -83,7 +83,7 @@ class PixelBuffer final : angle::NonCopyable
     std::vector<SubresourceUpdate> mSubresourceUpdates;
 };
 
-class TextureVk : public TextureImpl, public vk::CommandGraphResource
+class TextureVk : public TextureImpl
 {
   public:
     TextureVk(const gl::TextureState &state, RendererVk *renderer);
@@ -192,7 +192,18 @@ class TextureVk : public TextureImpl, public vk::CommandGraphResource
     gl::Error initializeContents(const gl::Context *context,
                                  const gl::ImageIndex &imageIndex) override;
 
-    const vk::ImageHelper &getImage() const;
+    const vk::ImageHelper &getImage() const
+    {
+        ASSERT(mImage.valid());
+        return mImage;
+    }
+
+    vk::ImageHelper &getImage()
+    {
+        ASSERT(mImage.valid());
+        return mImage;
+    }
+
     const vk::ImageView &getImageView() const;
     const vk::Sampler &getSampler() const;
 

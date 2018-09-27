@@ -122,7 +122,6 @@ class CommandGraphResource
     // Sets up dependency relations. 'this' resource is the resource being read.
     void addReadDependency(CommandGraphResource *readingResource);
 
-  protected:
     // Allocates a write node via getNewWriteNode and returns a started command buffer.
     // The started command buffer will render outside of a RenderPass.
     // Will append to an existing command buffer/graph node if possible.
@@ -147,6 +146,7 @@ class CommandGraphResource
     // Called when 'this' object changes, but we'd like to start a new command buffer later.
     void finishCurrentCommands(RendererVk *renderer);
 
+  protected:
     // Get the current queue serial for this resource. Only used to release resources.
     Serial getStoredQueueSerial() const;
 

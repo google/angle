@@ -429,15 +429,11 @@ PixelBuffer::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other
 
 // TextureVk implementation.
 TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
-    : TextureImpl(state),
-      mRenderTarget(&mImage, &mBaseLevelImageView, this, 0),
-      mPixelBuffer(renderer)
+    : TextureImpl(state), mRenderTarget(&mImage, &mBaseLevelImageView, 0), mPixelBuffer(renderer)
 {
 }
 
-TextureVk::~TextureVk()
-{
-}
+TextureVk::~TextureVk() = default;
 
 gl::Error TextureVk::onDestroy(const gl::Context *context)
 {
@@ -445,7 +441,7 @@ gl::Error TextureVk::onDestroy(const gl::Context *context)
     RendererVk *renderer = contextVk->getRenderer();
 
     releaseImage(context, renderer);
-    renderer->releaseObject(getStoredQueueSerial(), &mSampler);
+    renderer->releaseObject(renderer->getCurrentQueueSerial(), &mSampler);
 
     mPixelBuffer.release(renderer);
     return gl::NoError();
@@ -475,7 +471,7 @@ gl::Error TextureVk::setImage(const gl::Context *context,
     }
 
     // Create a new graph node to store image initialization commands.
-    finishCurrentCommands(renderer);
+    mImage.finishCurrentCommands(renderer);
 
     // Handle initial data.
     if (pixels)
@@ -503,7 +499,7 @@ gl::Error TextureVk::setSubImage(const gl::Context *context,
         gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels));
 
     // Create a new graph node to store image initialization commands.
-    finishCurrentCommands(contextVk->getRenderer());
+    mImage.finishCurrentCommands(contextVk->getRenderer());
 
     return gl::NoError();
 }
@@ -629,8 +625,8 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
         framebufferVk));
 
-    finishCurrentCommands(renderer);
-    framebufferVk->addReadDependency(this);
+    mImage.finishCurrentCommands(renderer);
+    framebufferVk->addReadDependency(&mImage);
     return angle::Result::Continue();
 }
 
@@ -679,7 +675,7 @@ gl::Error TextureVk::copySubTextureImpl(ContextVk *contextVk,
                       unpackUnmultiplyAlpha);
 
     // Create a new graph node to store image initialization commands.
-    finishCurrentCommands(contextVk->getRenderer());
+    mImage.finishCurrentCommands(contextVk->getRenderer());
 
     return angle::Result::Continue();
 }
@@ -687,7 +683,7 @@ gl::Error TextureVk::copySubTextureImpl(ContextVk *contextVk,
 angle::Result TextureVk::getCommandBufferForWrite(ContextVk *contextVk,
                                                   vk::CommandBuffer **commandBufferOut)
 {
-    ANGLE_TRY(recordCommands(contextVk, commandBufferOut));
+    ANGLE_TRY(mImage.recordCommands(contextVk, commandBufferOut));
     return angle::Result::Continue();
 }
 
@@ -997,7 +993,7 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
     }
 
     // We're changing this textureVk content, make sure we let the graph know.
-    finishCurrentCommands(renderer);
+    mImage.finishCurrentCommands(renderer);
 
     return gl::NoError();
 }
@@ -1086,7 +1082,7 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
         ANGLE_TRY(mImage.initLayerImageView(contextVk, gl::TextureType::CubeMap,
                                             VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
                                             &imageView, 1, cubeMapFaceIndex, 1));
-        mCubeMapRenderTargets.emplace_back(&mImage, &imageView, this, cubeMapFaceIndex);
+        mCubeMapRenderTargets.emplace_back(&mImage, &imageView, cubeMapFaceIndex);
     }
     return angle::Result::Continue();
 }
@@ -1102,7 +1098,7 @@ gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::Di
     if (mSampler.valid())
     {
         RendererVk *renderer = contextVk->getRenderer();
-        renderer->releaseObject(getStoredQueueSerial(), &mSampler);
+        renderer->releaseObject(renderer->getCurrentQueueSerial(), &mSampler);
     }
 
     const gl::SamplerState &samplerState = mState.getSamplerState();
@@ -1147,12 +1143,6 @@ gl::Error TextureVk::initializeContents(const gl::Context *context,
 {
     UNIMPLEMENTED();
     return gl::NoError();
-}
-
-const vk::ImageHelper &TextureVk::getImage() const
-{
-    ASSERT(mImage.valid());
-    return mImage;
 }
 
 const vk::ImageView &TextureVk::getImageView() const
@@ -1213,13 +1203,16 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
 void TextureVk::releaseImage(const gl::Context *context, RendererVk *renderer)
 {
-    mImage.release(renderer->getCurrentQueueSerial(), renderer);
-    renderer->releaseObject(getStoredQueueSerial(), &mBaseLevelImageView);
-    renderer->releaseObject(getStoredQueueSerial(), &mMipmapImageView);
+    mImage.release(renderer);
+
+    Serial currentSerial = renderer->getCurrentQueueSerial();
+
+    renderer->releaseObject(currentSerial, &mBaseLevelImageView);
+    renderer->releaseObject(currentSerial, &mMipmapImageView);
 
     for (vk::ImageView &imageView : mCubeMapFaceImageViews)
     {
-        renderer->releaseObject(getStoredQueueSerial(), &imageView);
+        renderer->releaseObject(currentSerial, &imageView);
     }
     mCubeMapFaceImageViews.clear();
     mCubeMapRenderTargets.clear();

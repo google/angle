@@ -18,7 +18,7 @@ namespace rx
 {
 class RendererVk;
 
-class BufferVk : public BufferImpl, public vk::CommandGraphResource
+class BufferVk : public BufferImpl
 {
   public:
     BufferVk(const gl::BufferState &state);
@@ -56,7 +56,17 @@ class BufferVk : public BufferImpl, public vk::CommandGraphResource
                             gl::IndexRange *outRange) override;
     GLint64 getSize();
 
-    const vk::Buffer &getVkBuffer() const;
+    const vk::BufferHelper &getBuffer() const
+    {
+        ASSERT(mBuffer.valid());
+        return mBuffer;
+    }
+
+    vk::BufferHelper &getBuffer()
+    {
+        ASSERT(mBuffer.valid());
+        return mBuffer;
+    }
 
     angle::Result mapImpl(ContextVk *contextVk, void **mapPtr);
     angle::Result unmapImpl(ContextVk *contextVk);
@@ -74,9 +84,7 @@ class BufferVk : public BufferImpl, public vk::CommandGraphResource
                               size_t offset);
     void release(RendererVk *renderer);
 
-    vk::Buffer mBuffer;
-    vk::DeviceMemory mBufferMemory;
-    VkMemoryPropertyFlags mAllocatedMemoryPropertyFlags;
+    vk::BufferHelper mBuffer;
 };
 
 }  // namespace rx

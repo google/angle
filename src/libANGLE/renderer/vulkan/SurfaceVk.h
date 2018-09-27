@@ -20,7 +20,7 @@ namespace rx
 {
 class RendererVk;
 
-class OffscreenSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
+class OffscreenSurfaceVk : public SurfaceImpl
 {
   public:
     OffscreenSurfaceVk(const egl::SurfaceState &surfaceState, EGLint width, EGLint height);
@@ -63,14 +63,14 @@ class OffscreenSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
   private:
     struct AttachmentImage final : angle::NonCopyable
     {
-        AttachmentImage(vk::CommandGraphResource *commandGraphResource);
+        AttachmentImage();
         ~AttachmentImage();
 
         angle::Result initialize(DisplayVk *displayVk,
                                  EGLint width,
                                  EGLint height,
                                  const vk::Format &vkFormat);
-        void destroy(const egl::Display *display, Serial storedQueueSerial);
+        void destroy(const egl::Display *display);
 
         vk::ImageHelper image;
         vk::ImageView imageView;
@@ -86,7 +86,7 @@ class OffscreenSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
     AttachmentImage mDepthStencilAttachment;
 };
 
-class WindowSurfaceVk : public SurfaceImpl, public vk::CommandGraphResource
+class WindowSurfaceVk : public SurfaceImpl
 {
   public:
     WindowSurfaceVk(const egl::SurfaceState &surfaceState,

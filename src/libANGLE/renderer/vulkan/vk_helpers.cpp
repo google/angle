@@ -503,6 +503,28 @@ void LineLoopHelper::Draw(uint32_t count, CommandBuffer *commandBuffer)
     commandBuffer->drawIndexed(count + 1, 1, 0, 0, 0);
 }
 
+// BufferHelper implementation.
+BufferHelper::BufferHelper() : mMemoryPropertyFlags{}
+{
+}
+
+BufferHelper::~BufferHelper() = default;
+
+angle::Result BufferHelper::init(ContextVk *contextVk,
+                                 const VkBufferCreateInfo &createInfo,
+                                 VkMemoryPropertyFlags memoryPropertyFlags)
+{
+    ANGLE_TRY(mBuffer.init(contextVk, createInfo));
+    return vk::AllocateBufferMemory(contextVk, memoryPropertyFlags, &mMemoryPropertyFlags, &mBuffer,
+                                    &mDeviceMemory);
+}
+
+void BufferHelper::release(RendererVk *renderer)
+{
+    renderer->releaseObject(getStoredQueueSerial(), &mBuffer);
+    renderer->releaseObject(getStoredQueueSerial(), &mDeviceMemory);
+}
+
 // ImageHelper implementation.
 ImageHelper::ImageHelper()
     : mFormat(nullptr), mSamples(0), mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED), mLayerCount(0)
@@ -525,11 +547,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
 ImageHelper::~ImageHelper()
 {
     ASSERT(!valid());
-}
-
-bool ImageHelper::valid() const
-{
-    return mImage.valid();
 }
 
 angle::Result ImageHelper::init(Context *context,
@@ -572,10 +589,10 @@ angle::Result ImageHelper::init(Context *context,
     return angle::Result::Continue();
 }
 
-void ImageHelper::release(Serial serial, RendererVk *renderer)
+void ImageHelper::release(RendererVk *renderer)
 {
-    renderer->releaseObject(serial, &mImage);
-    renderer->releaseObject(serial, &mDeviceMemory);
+    renderer->releaseObject(getStoredQueueSerial(), &mImage);
+    renderer->releaseObject(getStoredQueueSerial(), &mDeviceMemory);
 }
 
 void ImageHelper::resetImageWeakReference()

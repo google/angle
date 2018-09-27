@@ -397,7 +397,7 @@ angle::Result ContextVk::handleDirtyTextures(const gl::Context *context,
         // Ensure any writes to the textures are flushed before we read from them.
         TextureVk *textureVk = mActiveTextures[textureIndex];
         ANGLE_TRY(textureVk->ensureImageInitialized(this));
-        textureVk->addReadDependency(mDrawFramebuffer);
+        textureVk->getImage().addReadDependency(mDrawFramebuffer);
     }
 
     if (mProgram->hasTextures())
