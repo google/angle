@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "01ca104d_77f35a7d",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-27T18:06:49Z",
+      "side": 1,
+      "message": "I had the same comment.",
+      "parentUuid": "f31559d2_99d55fe4",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 51
+      },
+      "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "841dffa0_f68d127a",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 10
