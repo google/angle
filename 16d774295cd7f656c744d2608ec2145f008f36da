@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5b3d45cb_2733af86",
+        "filename": "src/common/MemoryBuffer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-27T21:01:32Z",
+      "side": 1,
+      "message": "I don\u0027t think that\u0027s a good idea to change all constructors to this style. Not without verifying they contain no non-trivial members. I agree it\u0027s inconsistent style.",
+      "parentUuid": "7ee4de3d_db496333",
+      "range": {
+        "startLine": 55,
+        "startChar": 16,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0ef0a11c_b464350d",
         "filename": "src/libANGLE/BlobCache.h",
         "patchSetId": 7
