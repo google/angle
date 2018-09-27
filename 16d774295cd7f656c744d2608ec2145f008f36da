@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6c48c01_16e67e16",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-27T20:37:54Z",
+      "side": 1,
+      "message": "how come these are necessary?",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 292,
+        "endChar": 40
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7db3dae_22890bae",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-27T20:37:54Z",
+      "side": 1,
+      "message": "How about we combine these two? I think timeout and incomplete are semantically equivalent. They both represent an operation that was interrupted but is neither error nor complete success.",
+      "range": {
+        "startLine": 318,
+        "startChar": 0,
+        "endLine": 319,
+        "endChar": 17
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa22871a_2839984b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-27T20:37:54Z",
+      "side": 1,
+      "message": "how do we distinguish a missed cached entry vs an error? It would be nice if we could log an error here on an allocation failure.",
+      "range": {
+        "startLine": 727,
+        "startChar": 9,
+        "endLine": 727,
+        "endChar": 16
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6aba46d8_993c5d41",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-27T20:37:54Z",
+      "side": 1,
+      "message": "I think this should be ASSERT(mPipelineCacheVk.valid()); We don\u0027t try to robustly handle implementation errors usually. We just ASSERT. This lets the testing infrastructure validate it. And as far as I can see it\u0027s not allowed for a Vulkan implementation to not support creating VkPipelineCache.",
+      "range": {
+        "startLine": 1023,
+        "startChar": 0,
+        "endLine": 1026,
+        "endChar": 5
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1816e18_e904e48c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-27T20:37:54Z",
+      "side": 1,
+      "message": "nit: I\u0027m trying to remove this macro in http://anglebug.com/2491 . Could you instead do:\n\nangle::Result result \u003d \u003c...\u003e;\nANGLE_TRY(result);\nASSERT(result !\u003d angle::Result::Incomplete());\n\nI think this will allow you to remove the getError and getResult methods.",
+      "range": {
+        "startLine": 1045,
+        "startChar": 4,
+        "endLine": 1045,
+        "endChar": 20
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
