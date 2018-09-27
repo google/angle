@@ -165,6 +165,52 @@
       "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f31559d2_99d55fe4",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-27T17:52:14Z",
+      "side": 1,
+      "message": "Could this be a std::vector\u003cstd::vector\u003cstd::string\u003e\u003e instead? Let\u0027s us support arbitrary sets of extensions and simplifies the MeetsRequirement stuff later.",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 51
+      },
+      "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "841dffa0_f68d127a",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-09-27T17:52:14Z",
+      "side": 1,
+      "message": "nit: Let\u0027s fix this to be \u003e\u003d 3",
+      "range": {
+        "startLine": 361,
+        "startChar": 73,
+        "endLine": 361,
+        "endChar": 75
+      },
+      "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
