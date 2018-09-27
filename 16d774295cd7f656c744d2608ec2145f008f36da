@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "7996beab_9a78ea1c",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-27T21:28:43Z",
+      "side": 1,
+      "message": "I just removed timeout since it\u0027s unused. If it ever gets used, it would be a discussion for another time!",
+      "parentUuid": "b9016b29_8208f06b",
+      "range": {
+        "startLine": 318,
+        "startChar": 0,
+        "endLine": 319,
+        "endChar": 17
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aa22871a_2839984b",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 7
