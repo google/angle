@@ -256,9 +256,6 @@ TEST_P(StateChangeTest, FramebufferIncompleteDepthStencilAttachment)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !extensionEnabled("GL_OES_packed_depth_stencil"));
 
-    // TODO(jmadill): Investigate the failure (https://anglebug.com/1388)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsOpenGL());
-
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);

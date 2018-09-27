@@ -1052,7 +1052,6 @@ TEST_P(UniformTestES3, ReturnsOnlyOneArrayElement)
 // triggered. It seems that the shader doesn't get a right 'false' value from the uniform.
 TEST_P(UniformTestES3, BooleanUniformAsIfAndForCondition)
 {
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows());
     const char kFragShader[] =
         R"(#version 300 es
         precision mediump float;

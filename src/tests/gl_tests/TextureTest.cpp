@@ -3222,8 +3222,6 @@ TEST_P(Texture2DNorm16TestES3, TextureNorm16Test)
 // GLES 3.0.4 section 3.8.3.
 TEST_P(Texture2DTestES3, UnpackSkipImages2D)
 {
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsDesktopOpenGL());
-
     // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1429 is fixed
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 
@@ -3351,8 +3349,8 @@ TEST_P(Texture2DTestES3, DepthTexturesWithMipmaps)
 {
     // TODO(cwallez) this is failing on Intel Win7 OpenGL.
     // TODO(zmo) this is faling on Win Intel HD 530 Debug.
-    // http://anglebugs.com/1706
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows());
+    // http://anglebug.com/1706
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsOpenGL());
 
     const int size = getWindowWidth();
 
