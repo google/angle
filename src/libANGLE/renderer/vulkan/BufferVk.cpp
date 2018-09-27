@@ -283,4 +283,15 @@ const vk::Buffer &BufferVk::getVkBuffer() const
     return mBuffer;
 }
 
+angle::Result BufferVk::copyToBuffer(ContextVk *contextVk,
+                                     VkBuffer destbuffer,
+                                     uint32_t copyCount,
+                                     const VkBufferCopy *copies)
+{
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(recordCommands(contextVk, &commandBuffer));
+    commandBuffer->copyBuffer(mBuffer.getHandle(), destbuffer, copyCount, copies);
+    return angle::Result::Continue();
+}
+
 }  // namespace rx

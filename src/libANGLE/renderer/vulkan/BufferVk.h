@@ -61,6 +61,12 @@ class BufferVk : public BufferImpl, public vk::CommandGraphResource
     angle::Result mapImpl(ContextVk *contextVk, void **mapPtr);
     angle::Result unmapImpl(ContextVk *contextVk);
 
+    // Calls copyBuffer internally.
+    angle::Result copyToBuffer(ContextVk *contextVk,
+                               VkBuffer destbuffer,
+                               uint32_t copyCount,
+                               const VkBufferCopy *copies);
+
   private:
     angle::Result setDataImpl(ContextVk *contextVk,
                               const uint8_t *data,

@@ -132,18 +132,18 @@ class DynamicDescriptorPool final : angle::NonCopyable
 //
 // If the user wants to draw a loop between [v1, v2, v3], we will create an indexed buffer with
 // these indexes: [0, 1, 2, 3, 0] to emulate the loop.
-class LineLoopHelper final : public vk::CommandGraphResource
+class LineLoopHelper final : angle::NonCopyable
 {
   public:
     LineLoopHelper(RendererVk *renderer);
     ~LineLoopHelper();
 
-    angle::Result getIndexBufferForDrawArrays(ContextVk *context,
+    angle::Result getIndexBufferForDrawArrays(ContextVk *contextVk,
                                               const gl::DrawCallParams &drawCallParams,
                                               VkBuffer *bufferHandleOut,
                                               VkDeviceSize *offsetOut);
 
-    angle::Result getIndexBufferForElementArrayBuffer(ContextVk *context,
+    angle::Result getIndexBufferForElementArrayBuffer(ContextVk *contextVk,
                                                       BufferVk *elementArrayBufferVk,
                                                       GLenum glIndexType,
                                                       int indexCount,
@@ -151,7 +151,7 @@ class LineLoopHelper final : public vk::CommandGraphResource
                                                       VkBuffer *bufferHandleOut,
                                                       VkDeviceSize *bufferOffsetOut);
 
-    angle::Result streamIndices(ContextVk *context,
+    angle::Result streamIndices(ContextVk *contextVk,
                                 GLenum glIndexType,
                                 GLsizei indexCount,
                                 const uint8_t *srcPtr,

@@ -370,7 +370,7 @@ LineLoopHelper::LineLoopHelper(RendererVk *renderer)
 
 LineLoopHelper::~LineLoopHelper() = default;
 
-angle::Result LineLoopHelper::getIndexBufferForDrawArrays(ContextVk *context,
+angle::Result LineLoopHelper::getIndexBufferForDrawArrays(ContextVk *contextVk,
                                                           const gl::DrawCallParams &drawCallParams,
                                                           VkBuffer *bufferHandleOut,
                                                           VkDeviceSize *offsetOut)
@@ -378,8 +378,8 @@ angle::Result LineLoopHelper::getIndexBufferForDrawArrays(ContextVk *context,
     uint32_t *indices    = nullptr;
     size_t allocateBytes = sizeof(uint32_t) * (drawCallParams.vertexCount() + 1);
 
-    mDynamicIndexBuffer.releaseRetainedBuffers(context->getRenderer());
-    ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
+    mDynamicIndexBuffer.releaseRetainedBuffers(contextVk->getRenderer());
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(contextVk, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            offsetOut, nullptr));
 
@@ -397,12 +397,12 @@ angle::Result LineLoopHelper::getIndexBufferForDrawArrays(ContextVk *context,
     // Since we are not using the VK_MEMORY_PROPERTY_HOST_COHERENT_BIT flag when creating the
     // device memory in the StreamingBuffer, we always need to make sure we flush it after
     // writing.
-    ANGLE_TRY(mDynamicIndexBuffer.flush(context));
+    ANGLE_TRY(mDynamicIndexBuffer.flush(contextVk));
 
     return angle::Result::Continue();
 }
 
-angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *context,
+angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *contextVk,
                                                                   BufferVk *elementArrayBufferVk,
                                                                   GLenum glIndexType,
                                                                   int indexCount,
@@ -413,14 +413,14 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
     if (glIndexType == GL_UNSIGNED_BYTE)
     {
         // Needed before reading buffer or we could get stale data.
-        ANGLE_TRY(context->getRenderer()->finish(context));
+        ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
 
         void *srcDataMapping = nullptr;
-        ANGLE_TRY(elementArrayBufferVk->mapImpl(context, &srcDataMapping));
-        ANGLE_TRY(streamIndices(context, glIndexType, indexCount,
+        ANGLE_TRY(elementArrayBufferVk->mapImpl(contextVk, &srcDataMapping));
+        ANGLE_TRY(streamIndices(contextVk, glIndexType, indexCount,
                                 static_cast<const uint8_t *>(srcDataMapping) + elementArrayOffset,
                                 bufferHandleOut, bufferOffsetOut));
-        ANGLE_TRY(elementArrayBufferVk->unmapImpl(context));
+        ANGLE_TRY(elementArrayBufferVk->unmapImpl(contextVk));
         return angle::Result::Continue();
     }
 
@@ -431,8 +431,8 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (indexCount + 1) + 1;
 
-    mDynamicIndexBuffer.releaseRetainedBuffers(context->getRenderer());
-    ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
+    mDynamicIndexBuffer.releaseRetainedBuffers(contextVk->getRenderer());
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(contextVk, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            bufferOffsetOut, nullptr));
 
@@ -442,21 +442,16 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
         {sourceOffset, *bufferOffsetOut, unitCount * unitSize},
         {sourceOffset, *bufferOffsetOut + unitCount * unitSize, unitSize},
     };
-    if (context->getRenderer()->getFeatures().extraCopyBufferRegion)
+    if (contextVk->getRenderer()->getFeatures().extraCopyBufferRegion)
         copies.push_back({sourceOffset, *bufferOffsetOut + (unitCount + 1) * unitSize, 1});
 
-    vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(recordCommands(context, &commandBuffer));
-
-    elementArrayBufferVk->addReadDependency(this);
-    commandBuffer->copyBuffer(elementArrayBufferVk->getVkBuffer().getHandle(), *bufferHandleOut,
-                              copies.size(), copies.data());
-
-    ANGLE_TRY(mDynamicIndexBuffer.flush(context));
+    ANGLE_TRY(elementArrayBufferVk->copyToBuffer(contextVk, *bufferHandleOut, copies.size(),
+                                                 copies.data()));
+    ANGLE_TRY(mDynamicIndexBuffer.flush(contextVk));
     return angle::Result::Continue();
 }
 
-angle::Result LineLoopHelper::streamIndices(ContextVk *context,
+angle::Result LineLoopHelper::streamIndices(ContextVk *contextVk,
                                             GLenum glIndexType,
                                             GLsizei indexCount,
                                             const uint8_t *srcPtr,
@@ -469,7 +464,7 @@ angle::Result LineLoopHelper::streamIndices(ContextVk *context,
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (indexCount + 1);
-    ANGLE_TRY(mDynamicIndexBuffer.allocate(context, allocateBytes,
+    ANGLE_TRY(mDynamicIndexBuffer.allocate(contextVk, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            bufferOffsetOut, nullptr));
 
@@ -491,7 +486,7 @@ angle::Result LineLoopHelper::streamIndices(ContextVk *context,
         memcpy(indices + unitSize * indexCount, srcPtr, unitSize);
     }
 
-    ANGLE_TRY(mDynamicIndexBuffer.flush(context));
+    ANGLE_TRY(mDynamicIndexBuffer.flush(contextVk));
     return angle::Result::Continue();
 }
 

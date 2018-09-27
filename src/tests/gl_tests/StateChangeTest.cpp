@@ -1096,6 +1096,10 @@ TEST_P(LineLoopStateChangeTest, DrawElementsThenDrawArrays)
 // Draw line loop using a drawArrays followed by an hourglass with drawElements.
 TEST_P(LineLoopStateChangeTest, DrawArraysThenDrawElements)
 {
+    // http://anglebug.com/2856: Seems to fail on older drivers and pass on newer.
+    // Tested failing on 18.3.3 and passing on 18.9.2.
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan() && IsWindows());
+
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     glUseProgram(program);
 
