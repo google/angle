@@ -7,6 +7,7 @@
 // BindUniformLocationTest.cpp : Tests of the GL_CHROMIUM_bind_uniform_location extension.
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 #include <cmath>
 
@@ -109,6 +110,73 @@ TEST_P(BindUniformLocationTest, Basic)
 
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_NEAR(0, 0, 64, 128, 192, 255, 1.0);
+}
+
+// Force a sampler location and make sure it samples the correct texture
+TEST_P(BindUniformLocationTest, SamplerLocation)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
+
+    ASSERT_NE(mBindUniformLocation, nullptr);
+
+    const std::string fsSource =
+        R"(precision mediump float;
+        uniform vec4 u_colorA;
+        uniform vec4 u_colorB[2];
+        uniform sampler2D u_sampler;
+        void main()
+        {
+            gl_FragColor = u_colorA + u_colorB[0] + u_colorB[1] + texture2D(u_sampler, vec2(0, 0));
+        })";
+
+    GLint colorALocation  = 3;
+    GLint colorBLocation  = 10;
+    GLint samplerLocation = 1;
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+
+    mProgram = glCreateProgram();
+
+    mBindUniformLocation(mProgram, colorALocation, "u_colorA");
+    mBindUniformLocation(mProgram, colorBLocation, "u_colorB[0]");
+    mBindUniformLocation(mProgram, samplerLocation, "u_sampler");
+
+    glAttachShader(mProgram, vs);
+    glDeleteShader(vs);
+
+    glAttachShader(mProgram, fs);
+    glDeleteShader(fs);
+
+    // Link the mProgram
+    glLinkProgram(mProgram);
+    // Check the link status
+    GLint linked = 0;
+    glGetProgramiv(mProgram, GL_LINK_STATUS, &linked);
+    ASSERT_EQ(1, linked);
+
+    glUseProgram(mProgram);
+
+    static const float colorB[] = {
+        0.0f, 0.50f, 0.0f, 0.0f, 0.0f, 0.0f, 0.75f, 0.0f,
+    };
+
+    glUniform4f(colorALocation, 0.25f, 0.0f, 0.0f, 0.0f);
+    glUniform4fv(colorBLocation, 2, colorB);
+
+    // Point the texture at texture unit 2
+    glUniform1i(samplerLocation, 2);
+
+    GLTexture texture;
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    constexpr GLubyte kTextureData[] = {32, 32, 32, 255};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kTextureData);
+
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_NEAR(0, 0, 96, 160, 224, 255, 1.0);
 }
 
 // Test that conflicts are detected when two uniforms are bound to the same location

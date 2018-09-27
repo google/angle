@@ -68,6 +68,7 @@ void UpdateDefaultUniformBlock(GLsizei count,
     {
         uint32_t arrayOffset = arrayIndex * layoutInfo.arrayStride;
         uint8_t *writePtr    = dst + arrayOffset;
+        ASSERT(writePtr + (elementSize * count) <= uniformData->data() + uniformData->size());
         memcpy(writePtr, v, elementSize * count);
     }
     else
@@ -80,6 +81,7 @@ void UpdateDefaultUniformBlock(GLsizei count,
             const int arrayOffset = writeIndex * layoutInfo.arrayStride;
             uint8_t *writePtr     = dst + arrayOffset;
             const T *readPtr      = v + (readIndex * componentCount);
+            ASSERT(writePtr + elementSize <= uniformData->data() + uniformData->size());
             memcpy(writePtr, readPtr, elementSize);
         }
     }
@@ -372,30 +374,29 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
         if (location.used() && !location.ignored)
         {
             const auto &uniform = uniforms[location.index];
-
-            if (uniform.isSampler())
-                continue;
-
-            std::string uniformName = uniform.name;
-            if (uniform.isArray())
+            if (!uniform.isSampler())
             {
-                // Gets the uniform name without the [0] at the end.
-                uniformName = gl::ParseResourceName(uniformName, nullptr);
-            }
-
-            bool found = false;
-
-            for (vk::ShaderType shaderType : vk::AllShaderTypes())
-            {
-                auto it = layoutMap[shaderType].find(uniformName);
-                if (it != layoutMap[shaderType].end())
+                std::string uniformName = uniform.name;
+                if (uniform.isArray())
                 {
-                    found                  = true;
-                    layoutInfo[shaderType] = it->second;
+                    // Gets the uniform name without the [0] at the end.
+                    uniformName = gl::ParseResourceName(uniformName, nullptr);
                 }
-            }
 
-            ASSERT(found);
+                bool found = false;
+
+                for (vk::ShaderType shaderType : vk::AllShaderTypes())
+                {
+                    auto it = layoutMap[shaderType].find(uniformName);
+                    if (it != layoutMap[shaderType].end())
+                    {
+                        found                  = true;
+                        layoutInfo[shaderType] = it->second;
+                    }
+                }
+
+                ASSERT(found);
+            }
         }
 
         for (vk::ShaderType shaderType : vk::AllShaderTypes())
