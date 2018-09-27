@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "b9016b29_8208f06b",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-27T21:17:27Z",
+      "side": 1,
+      "message": "I think we should combine them. There just isn\u0027t any difference in how they\u0027re handled.",
+      "parentUuid": "8e03afb3_51c4d33e",
+      "range": {
+        "startLine": 318,
+        "startChar": 0,
+        "endLine": 319,
+        "endChar": 17
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aa22871a_2839984b",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 7
@@ -201,6 +225,30 @@
       "side": 1,
       "message": "We don\u0027t distinguish as the end results don\u0027t matter (the pipeline needs to be recreated no matter what happened in the cache).\n\nRegarding allocation failures, they are all over the place, and `new` throws `bad_alloc` in that case which is going to be fatal (here, among many places). I don\u0027t see why this place in particular would benefit from a log. Or do you have something else in mind that I didn\u0027t understand?",
       "parentUuid": "aa22871a_2839984b",
+      "range": {
+        "startLine": 727,
+        "startChar": 9,
+        "endLine": 727,
+        "endChar": 16
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c31b08f0_52a9a271",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-27T21:17:27Z",
+      "side": 1,
+      "message": "The difference matters a lot. One is potentially an our of memory error that the application needs to be notified of. That\u0027s how we handle OOM everywhere else.",
+      "parentUuid": "5e826d46_796f7004",
       "range": {
         "startLine": 727,
         "startChar": 9,
