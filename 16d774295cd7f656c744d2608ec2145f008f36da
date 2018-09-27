@@ -118,6 +118,30 @@
     },
     {
       "key": {
+        "uuid": "8e03afb3_51c4d33e",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-27T21:10:20Z",
+      "side": 1,
+      "message": "There is a subtle difference. Timeout is when an operation didn\u0027t happen at all, but incomplete says it was partly done. Timeout is close to failure (nothing happened, failed to do it in time), while incomplete is close to success (did the best it could, the results are still usable). Timeout hints that an operation needs to be retried, but incomplete means that\u0027s the best you can get (under same conditions).\n\nThere is also the trivial reason that giving the reasons specific names makes the code more readable (e.g. checking the result of `vkAcquireNextImageKHR()` for Timeout() would make more sense than `Incomplete()`).\n\nEither way, as soon as the `bool` turns to `enum`, being more specific doesn\u0027t cost anything.",
+      "parentUuid": "e7db3dae_22890bae",
+      "range": {
+        "startLine": 318,
+        "startChar": 0,
+        "endLine": 319,
+        "endChar": 17
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aa22871a_2839984b",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 7
@@ -129,6 +153,30 @@
       "writtenOn": "2018-09-27T20:37:54Z",
       "side": 1,
       "message": "how do we distinguish a missed cached entry vs an error? It would be nice if we could log an error here on an allocation failure.",
+      "range": {
+        "startLine": 727,
+        "startChar": 9,
+        "endLine": 727,
+        "endChar": 16
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e826d46_796f7004",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-27T21:10:20Z",
+      "side": 1,
+      "message": "We don\u0027t distinguish as the end results don\u0027t matter (the pipeline needs to be recreated no matter what happened in the cache).\n\nRegarding allocation failures, they are all over the place, and `new` throws `bad_alloc` in that case which is going to be fatal (here, among many places). I don\u0027t see why this place in particular would benefit from a log. Or do you have something else in mind that I didn\u0027t understand?",
+      "parentUuid": "aa22871a_2839984b",
       "range": {
         "startLine": 727,
         "startChar": 9,
@@ -164,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "d4bc1a4d_9b8597c6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-27T21:10:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6aba46d8_993c5d41",
+      "range": {
+        "startLine": 1023,
+        "startChar": 0,
+        "endLine": 1026,
+        "endChar": 5
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1816e18_e904e48c",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 7
@@ -184,6 +256,30 @@
       "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd647d27_33869f9e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-09-27T21:10:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d1816e18_e904e48c",
+      "range": {
+        "startLine": 1045,
+        "startChar": 4,
+        "endLine": 1045,
+        "endChar": 20
+      },
+      "revId": "16d774295cd7f656c744d2608ec2145f008f36da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
