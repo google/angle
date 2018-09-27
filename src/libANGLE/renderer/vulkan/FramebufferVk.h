@@ -22,7 +22,7 @@ class RendererVk;
 class RenderTargetVk;
 class WindowSurfaceVk;
 
-class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
+class FramebufferVk : public FramebufferImpl
 {
   public:
     // Factory methods so we don't have to use constructors with overloads.
@@ -105,7 +105,12 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     RenderTargetVk *getColorReadRenderTarget() const;
 
     // This will clear the current write operation if it is complete.
-    using CommandGraphResource::appendToStartedRenderPass;
+    bool appendToStartedRenderPass(RendererVk *renderer, vk::CommandBuffer **commandBufferOut)
+    {
+        return mFramebuffer.appendToStartedRenderPass(renderer, commandBufferOut);
+    }
+
+    vk::FramebufferHelper *getFramebuffer() { return &mFramebuffer; }
 
     angle::Result startNewRenderPass(ContextVk *context, vk::CommandBuffer **commandBufferOut);
 
@@ -159,7 +164,7 @@ class FramebufferVk : public FramebufferImpl, public vk::CommandGraphResource
     WindowSurfaceVk *mBackbuffer;
 
     Optional<vk::RenderPassDesc> mRenderPassDesc;
-    vk::Framebuffer mFramebuffer;
+    vk::FramebufferHelper mFramebuffer;
     RenderTargetCache<RenderTargetVk> mRenderTargetCache;
 
     // These two variables are used to quickly compute if we need to do a masked clear. If a color

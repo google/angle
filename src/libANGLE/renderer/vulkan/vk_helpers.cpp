@@ -933,5 +933,21 @@ void ImageHelper::Copy(ImageHelper *srcImage,
     commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
                              dstImage->getImage(), dstImage->getCurrentLayout(), 1, &region);
 }
+
+// FramebufferHelper implementation.
+FramebufferHelper::FramebufferHelper() = default;
+
+FramebufferHelper::~FramebufferHelper() = default;
+
+angle::Result FramebufferHelper::init(ContextVk *contextVk,
+                                      const VkFramebufferCreateInfo &createInfo)
+{
+    return mFramebuffer.init(contextVk, createInfo);
+}
+
+void FramebufferHelper::release(RendererVk *renderer)
+{
+    renderer->releaseObject(getStoredQueueSerial(), &mFramebuffer);
+}
 }  // namespace vk
 }  // namespace rx

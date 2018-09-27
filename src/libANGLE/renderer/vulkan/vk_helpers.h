@@ -166,7 +166,7 @@ class LineLoopHelper final : angle::NonCopyable
     DynamicBuffer mDynamicIndexBuffer;
 };
 
-class BufferHelper final : public CommandGraphResource
+class BufferHelper final : public CommandGraphResource, angle::NonCopyable
 {
   public:
     BufferHelper();
@@ -190,7 +190,7 @@ class BufferHelper final : public CommandGraphResource
     VkMemoryPropertyFlags mMemoryPropertyFlags;
 };
 
-class ImageHelper final : public CommandGraphResource
+class ImageHelper final : public CommandGraphResource, angle::NonCopyable
 {
   public:
     ImageHelper();
@@ -298,6 +298,35 @@ class ImageHelper final : public CommandGraphResource
     // Cached properties.
     uint32_t mLayerCount;
 };
+
+class FramebufferHelper : public CommandGraphResource, angle::NonCopyable
+{
+  public:
+    FramebufferHelper();
+    ~FramebufferHelper();
+
+    angle::Result init(ContextVk *contextVk, const VkFramebufferCreateInfo &createInfo);
+    void release(RendererVk *renderer);
+
+    bool valid() { return mFramebuffer.valid(); }
+
+    const Framebuffer &getFramebuffer() const
+    {
+        ASSERT(mFramebuffer.valid());
+        return mFramebuffer;
+    }
+
+    Framebuffer &getFramebuffer()
+    {
+        ASSERT(mFramebuffer.valid());
+        return mFramebuffer;
+    }
+
+  private:
+    // Vulkan object.
+    Framebuffer mFramebuffer;
+};
+
 }  // namespace vk
 }  // namespace rx
 

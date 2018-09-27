@@ -397,7 +397,7 @@ angle::Result ContextVk::handleDirtyTextures(const gl::Context *context,
         // Ensure any writes to the textures are flushed before we read from them.
         TextureVk *textureVk = mActiveTextures[textureIndex];
         ANGLE_TRY(textureVk->ensureImageInitialized(this));
-        textureVk->getImage().addReadDependency(mDrawFramebuffer);
+        textureVk->getImage().addReadDependency(mDrawFramebuffer->getFramebuffer());
     }
 
     if (mProgram->hasTextures())
@@ -421,7 +421,8 @@ angle::Result ContextVk::handleDirtyVertexBuffers(const gl::Context *context,
     for (size_t attribIndex : context->getStateCache().getActiveBufferedAttribsMask())
     {
         if (arrayBufferResources[attribIndex])
-            arrayBufferResources[attribIndex]->addReadDependency(mDrawFramebuffer);
+            arrayBufferResources[attribIndex]->addReadDependency(
+                mDrawFramebuffer->getFramebuffer());
     }
     return angle::Result::Continue();
 }
@@ -438,7 +439,7 @@ angle::Result ContextVk::handleDirtyIndexBuffer(const gl::Context *context,
         mVertexArray->getCurrentElementArrayBufferResource();
     if (elementArrayBufferResource)
     {
-        elementArrayBufferResource->addReadDependency(mDrawFramebuffer);
+        elementArrayBufferResource->addReadDependency(mDrawFramebuffer->getFramebuffer());
     }
     return angle::Result::Continue();
 }

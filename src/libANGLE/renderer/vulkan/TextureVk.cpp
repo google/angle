@@ -626,7 +626,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         framebufferVk));
 
     mImage.finishCurrentCommands(renderer);
-    framebufferVk->addReadDependency(&mImage);
+    framebufferVk->getFramebuffer()->addReadDependency(&mImage);
     return angle::Result::Continue();
 }
 
