@@ -119,7 +119,7 @@ class SwapChain11 final : public SwapChainD3D
     d3d11::SamplerState mPassThroughSampler;
     d3d11::InputLayout mPassThroughIL;
     d3d11::VertexShader mPassThroughVS;
-    d3d11::PixelShader mPassThroughPS;
+    d3d11::PixelShader mPassThroughOrResolvePS;
     d3d11::RasterizerState mPassThroughRS;
 
     SurfaceRenderTarget11 mColorRenderTarget;
