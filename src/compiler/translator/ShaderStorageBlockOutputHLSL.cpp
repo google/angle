@@ -227,9 +227,14 @@ void ShaderStorageBlockOutputHLSL::visitConstantUnion(TIntermConstantUnion *node
 
 bool ShaderStorageBlockOutputHLSL::visitSwizzle(Visit visit, TIntermSwizzle *node)
 {
-    TInfoSinkBase &out = mOutputHLSL->getInfoSink();
     if (visit == PostVisit)
     {
+        if (!IsInShaderStorageBlock(node))
+        {
+            return mOutputHLSL->visitSwizzle(visit, node);
+        }
+
+        TInfoSinkBase &out = mOutputHLSL->getInfoSink();
         // TODO(jiajia.qin@intel.com): add swizzle process.
         if (mIsLoadFunctionCall)
         {
@@ -247,6 +252,11 @@ bool ShaderStorageBlockOutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
     {
         case EOpIndexDirect:
         {
+            if (!IsInShaderStorageBlock(node->getLeft()))
+            {
+                return mOutputHLSL->visitBinary(visit, node);
+            }
+
             const TType &leftType = node->getLeft()->getType();
             if (leftType.isInterfaceBlock())
             {
@@ -276,21 +286,36 @@ bool ShaderStorageBlockOutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             break;
         }
         case EOpIndexIndirect:
+        {
+            if (!IsInShaderStorageBlock(node->getLeft()))
+            {
+                return mOutputHLSL->visitBinary(visit, node);
+            }
+
             // We do not currently support indirect references to interface blocks
             ASSERT(node->getLeft()->getBasicType() != EbtInterfaceBlock);
             writeEOpIndexDirectOrIndirectOutput(out, visit, node);
             break;
+        }
         case EOpIndexDirectStruct:
+        {
+            if (!IsInShaderStorageBlock(node->getLeft()))
+            {
+                return mOutputHLSL->visitBinary(visit, node);
+            }
+
             if (visit == InVisit)
             {
                 ASSERT(IsInShaderStorageBlock(node->getLeft()));
                 const TStructure *structure       = node->getLeft()->getType().getStruct();
                 const TIntermConstantUnion *index = node->getRight()->getAsConstantUnion();
                 const TField *field               = structure->fields()[index->getIConst(0)];
+                out << " + ";
                 writeDotOperatorOutput(out, field);
                 return false;
             }
             break;
+        }
         case EOpIndexDirectInterfaceBlock:
             if (visit == InVisit)
             {

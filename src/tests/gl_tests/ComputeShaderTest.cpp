@@ -2190,6 +2190,82 @@ TEST_P(ComputeShaderTest, ShaderStorageBlocksWithUnsizedArray)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that EOpIndexDirect/EOpIndexIndirect/EOpIndexDirectStruct nodes in ssbo EOpIndexInDirect
+// don't need to calculate the offset and should be translated by OutputHLSL directly.
+TEST_P(ComputeShaderTest, IndexAndDotOperatorsInSSBOIndexIndirectOperator)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+        layout(local_size_x=1) in;
+        layout(std140, binding = 0) buffer blockA {
+            float v[4];
+        };
+        layout(std140, binding = 1) buffer blockB {
+            float v[4];
+        } instanceB[1];
+        struct S
+        {
+           uvec4 index[2];
+        } s;
+        void main()
+        {
+             s.index[0] = uvec4(0u, 1u, 2u, 3u);
+            float data = v[s.index[0].y];
+            instanceB[0].v[s.index[0].x] = data;
+        }
+        )";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that swizzle node in non-SSBO symbol works well.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksWithNonSSBOSwizzle)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+        layout(local_size_x=8) in;
+        layout(std140, binding = 0) buffer blockA {
+            float v[8];
+        };
+        layout(std140, binding = 1) buffer blockB {
+            float v[8];
+        } instanceB[1];
+
+        void main()
+        {
+            float data = v[gl_GlobalInvocationID.x];
+            instanceB[0].v[gl_GlobalInvocationID.x] = data;
+        }
+        )";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that swizzle node in SSBO symbol works well.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksWithSSBOSwizzle)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+        layout(local_size_x=1) in;
+        layout(std140, binding = 0) buffer blockA {
+            vec2 v;
+        };
+        layout(std140, binding = 1) buffer blockB {
+            float v;
+        } instanceB[1];
+
+        void main()
+        {
+            instanceB[0].v = v.x;
+        }
+        )";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)

@@ -762,6 +762,11 @@ bool IsInShaderStorageBlock(TIntermTyped *node)
         {
             return IsInShaderStorageBlock(binaryNode->getLeft());
         }
+        TIntermSymbol *symbolNode = swizzleNode->getOperand()->getAsSymbolNode();
+        if (symbolNode)
+        {
+            return symbolNode->getQualifier() == EvqBuffer;
+        }
     }
     binaryNode = node->getAsBinaryNode();
 
