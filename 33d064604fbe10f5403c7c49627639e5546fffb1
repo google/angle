@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b53c45a_8befc2c6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-09-28T14:48:40Z",
+      "side": 1,
+      "message": "oh yes, one last request. For Vulkan back-end CLs, can you use a commit message title that begins with \"Vulkan: ...\"? Been using this convention everywhere.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 31
+      },
+      "revId": "33d064604fbe10f5403c7c49627639e5546fffb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
