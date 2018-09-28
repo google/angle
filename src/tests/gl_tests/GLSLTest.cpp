@@ -2899,6 +2899,9 @@ TEST_P(GLSLTest_ES3, UninitializedNamelessStructInForInitStatement)
 // Test that uninitialized global variables are initialized to 0.
 TEST_P(WebGLGLSLTest, InitUninitializedGlobals)
 {
+    // http://anglebug.com/2862
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+
     const std::string &fragmentShader =
         "precision mediump float;\n"
         "int result;\n"

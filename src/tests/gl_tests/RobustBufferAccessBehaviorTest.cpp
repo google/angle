@@ -306,7 +306,8 @@ TEST_P(RobustBufferAccessBehaviorTest, VeryLargeVertexCountWithDynamicVertexData
 TEST_P(RobustBufferAccessBehaviorTest, NoBufferData)
 {
     // http://crbug.com/889303: Possible driver bug on NVIDIA Shield TV.
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL() && IsNVIDIA());
+    // http://anglebug.com/2861: Fails abnormally on Pixel XL
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
     ANGLE_SKIP_TEST_IF(!initExtension());
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
