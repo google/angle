@@ -169,11 +169,10 @@ gl::Error TextureGL::setImage(const gl::Context *context,
 
     if (workarounds.unpackLastRowSeparatelyForPaddingInclusion)
     {
-        bool apply;
-        ANGLE_TRY_RESULT(
-            ShouldApplyLastRowPaddingWorkaround(size, unpack, unpackBuffer, format, type,
-                                                nativegl::UseTexImage3D(getType()), pixels),
-            apply);
+        bool apply = false;
+        ANGLE_TRY(ShouldApplyLastRowPaddingWorkaround(size, unpack, unpackBuffer, format, type,
+                                                      nativegl::UseTexImage3D(getType()), pixels,
+                                                      &apply));
 
         // The driver will think the pixel buffer doesn't have enough data, work around this bug
         // by uploading the last row (and last level if 3D) separately.
@@ -288,11 +287,10 @@ gl::Error TextureGL::setSubImage(const gl::Context *context,
     {
         gl::Extents size(area.width, area.height, area.depth);
 
-        bool apply;
-        ANGLE_TRY_RESULT(
-            ShouldApplyLastRowPaddingWorkaround(size, unpack, unpackBuffer, format, type,
-                                                nativegl::UseTexImage3D(getType()), pixels),
-            apply);
+        bool apply = false;
+        ANGLE_TRY(ShouldApplyLastRowPaddingWorkaround(size, unpack, unpackBuffer, format, type,
+                                                      nativegl::UseTexImage3D(getType()), pixels,
+                                                      &apply));
 
         // The driver will think the pixel buffer doesn't have enough data, work around this bug
         // by uploading the last row (and last level if 3D) separately.
@@ -812,11 +810,10 @@ gl::Error TextureGL::copySubTextureHelper(const gl::Context *context,
         sourceFormatContainSupersetOfDestFormat && sourceComponentType == destComponentType &&
         !destSRGB)
     {
-        bool copySucceded = false;
-        ANGLE_TRY_RESULT(blitter->copyTexSubImage(sourceGL, sourceLevel, this, target, level,
-                                                  sourceArea, destOffset),
-                         copySucceded);
-        if (copySucceded)
+        bool copySucceeded = false;
+        ANGLE_TRY(blitter->copyTexSubImage(sourceGL, sourceLevel, this, target, level, sourceArea,
+                                           destOffset, &copySucceeded));
+        if (copySucceeded)
         {
             return gl::NoError();
         }
@@ -827,14 +824,13 @@ gl::Error TextureGL::copySubTextureHelper(const gl::Context *context,
     if (!destSRGB &&
         nativegl::SupportsNativeRendering(functions, getType(), destLevelInfo.nativeInternalFormat))
     {
-        bool copySucceded = false;
-        ANGLE_TRY_RESULT(blitter->copySubTexture(
-                             context, sourceGL, sourceLevel, sourceComponentType, this, target,
-                             level, destComponentType, sourceImageDesc.size, sourceArea, destOffset,
-                             needsLumaWorkaround, sourceLevelInfo.sourceFormat, unpackFlipY,
-                             unpackPremultiplyAlpha, unpackUnmultiplyAlpha),
-                         copySucceded);
-        if (copySucceded)
+        bool copySucceeded = false;
+        ANGLE_TRY(blitter->copySubTexture(
+            context, sourceGL, sourceLevel, sourceComponentType, this, target, level,
+            destComponentType, sourceImageDesc.size, sourceArea, destOffset, needsLumaWorkaround,
+            sourceLevelInfo.sourceFormat, unpackFlipY, unpackPremultiplyAlpha,
+            unpackUnmultiplyAlpha, &copySucceeded));
+        if (copySucceeded)
         {
             return gl::NoError();
         }
@@ -1550,9 +1546,8 @@ gl::Error TextureGL::initializeContents(const gl::Context *context,
         int levelDepth = mState.getImageDesc(imageIndex).size.depth;
 
         bool clearSucceeded = false;
-        ANGLE_TRY_RESULT(
-            blitter->clearRenderableTexture(this, nativeInternalFormat, levelDepth, imageIndex),
-            clearSucceeded);
+        ANGLE_TRY(blitter->clearRenderableTexture(this, nativeInternalFormat, levelDepth,
+                                                  imageIndex, &clearSucceeded));
         if (clearSucceeded)
         {
             return gl::NoError();

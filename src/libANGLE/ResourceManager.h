@@ -243,7 +243,7 @@ class PathManager : public ResourceManagerBase<HandleRangeAllocator>
   public:
     PathManager();
 
-    ErrorOrResult<GLuint> createPaths(rx::GLImplFactory *factory, GLsizei range);
+    Error createPaths(rx::GLImplFactory *factory, GLsizei range, GLuint *numCreated);
     void deletePaths(GLuint first, GLsizei range);
     Path *getPath(GLuint handle) const;
     bool hasPath(GLuint handle) const;

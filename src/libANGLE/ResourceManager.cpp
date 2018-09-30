@@ -345,8 +345,10 @@ PathManager::PathManager()
 {
 }
 
-ErrorOrResult<GLuint> PathManager::createPaths(rx::GLImplFactory *factory, GLsizei range)
+Error PathManager::createPaths(rx::GLImplFactory *factory, GLsizei range, GLuint *createdOut)
 {
+    *createdOut = 0;
+
     // Allocate client side handles.
     const GLuint client = mHandleAllocator.allocateRange(static_cast<GLuint>(range));
     if (client == HandleRangeAllocator::kInvalidHandle)
@@ -365,7 +367,8 @@ ErrorOrResult<GLuint> PathManager::createPaths(rx::GLImplFactory *factory, GLsiz
         const auto id   = client + i;
         mPaths.assign(id, new Path(impl));
     }
-    return client;
+    *createdOut = client;
+    return NoError();
 }
 
 void PathManager::deletePaths(GLuint first, GLsizei range)

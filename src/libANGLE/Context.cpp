@@ -753,15 +753,16 @@ GLuint Context::createRenderbuffer()
     return mState.mRenderbuffers->createRenderbuffer();
 }
 
+void Context::tryGenPaths(GLsizei range, GLuint *createdOut)
+{
+    ANGLE_CONTEXT_TRY(mState.mPaths->createPaths(mImplementation.get(), range, createdOut));
+}
+
 GLuint Context::genPaths(GLsizei range)
 {
-    auto resultOrError = mState.mPaths->createPaths(mImplementation.get(), range);
-    if (resultOrError.isError())
-    {
-        handleError(resultOrError.getError());
-        return 0;
-    }
-    return resultOrError.getResult();
+    GLuint created = 0;
+    tryGenPaths(range, &created);
+    return created;
 }
 
 // Returns an unused framebuffer name

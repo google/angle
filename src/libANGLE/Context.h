@@ -1656,6 +1656,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void detachSampler(GLuint sampler);
     void detachProgramPipeline(GLuint pipeline);
 
+    // A small helper method to facilitate using the ANGLE_CONTEXT_TRY macro.
+    void tryGenPaths(GLsizei range, GLuint *createdOut);
+
     void initRendererString();
     void initVersionStrings();
     void initExtensionStrings();

@@ -482,33 +482,21 @@ Error FramebufferGL::readPixels(const gl::Context *context,
     bool cannotSetDesiredRowLength =
         packState.rowLength && !GetImplAs<ContextGL>(context)->getNativeExtensions().packSubimage;
 
-    gl::Error retVal = gl::NoError();
     if (cannotSetDesiredRowLength || useOverlappingRowsWorkaround)
     {
-        retVal = readPixelsRowByRow(context, area, readFormat, readType, packState, pixels);
+        return readPixelsRowByRow(context, area, readFormat, readType, packState, pixels);
     }
-    else
+
+    bool useLastRowPaddingWorkaround = false;
+    if (workarounds.packLastRowSeparatelyForPaddingInclusion)
     {
-        gl::ErrorOrResult<bool> useLastRowPaddingWorkaround = false;
-        if (workarounds.packLastRowSeparatelyForPaddingInclusion)
-        {
-            useLastRowPaddingWorkaround = ShouldApplyLastRowPaddingWorkaround(
-                gl::Extents(area.width, area.height, 1), packState, packBuffer, readFormat,
-                readType, false, pixels);
-        }
-
-        if (useLastRowPaddingWorkaround.isError())
-        {
-            retVal = useLastRowPaddingWorkaround.getError();
-        }
-        else
-        {
-            retVal = readPixelsAllAtOnce(context, area, readFormat, readType, packState, pixels,
-                                         useLastRowPaddingWorkaround.getResult());
-        }
+        ANGLE_TRY(ShouldApplyLastRowPaddingWorkaround(gl::Extents(area.width, area.height, 1),
+                                                      packState, packBuffer, readFormat, readType,
+                                                      false, pixels, &useLastRowPaddingWorkaround));
     }
 
-    return retVal;
+    return readPixelsAllAtOnce(context, area, readFormat, readType, packState, pixels,
+                               useLastRowPaddingWorkaround);
 }
 
 Error FramebufferGL::blit(const gl::Context *context,
