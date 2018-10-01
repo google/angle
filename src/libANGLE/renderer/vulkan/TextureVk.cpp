@@ -809,10 +809,16 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
 
 angle::Result TextureVk::generateMipmapWithBlit(ContextVk *contextVk)
 {
+    ANGLE_TRY(ensureImageInitialized(contextVk));
+
     uint32_t imageLayerCount           = GetImageLayerCount(mState.getType());
     const gl::Extents baseLevelExtents = mImage.getExtents();
     vk::CommandBuffer *commandBuffer   = nullptr;
     ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
+
+    mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
 
     // We are able to use blitImage since the image format we are using supports it. This
     // is a faster way we can generate the mips.

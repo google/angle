@@ -1328,10 +1328,6 @@ TEST_P(SamplerArrayAsFunctionParameterTest, SamplerArrayAsFunctionParameter)
 // Copy of a test in conformance/textures/texture-mips, to test generate mipmaps
 TEST_P(Texture2DTestWithDrawScale, MipmapsTwice)
 {
-    // TODO(lucferron): Diagnose and fix
-    // http://anglebug.com/2653
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
 

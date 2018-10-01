@@ -601,10 +601,6 @@ TEST_P(StateChangeRenderTest, RecreateRenderbuffer)
 // Test that recreating a texture with GenerateMipmaps signals the FBO is dirty.
 TEST_P(StateChangeRenderTest, GenerateMipmap)
 {
-    // TODO(lucferron): Diagnose and fix
-    // http://anglebug.com/2652
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
