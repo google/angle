@@ -5715,8 +5715,11 @@ void Context::linkProgram(GLuint program)
     //      ProgramD3D.
     if (programObject->isInUse())
     {
-        // isLinked() which forces to resolve linking, will be called.
-        mGLState.onProgramExecutableChange(programObject);
+        if (programObject->isLinked())
+        {
+            mGLState.onProgramExecutableChange(programObject);
+        }
+
         mStateCache.onProgramExecutableChange(this);
     }
 }
@@ -5927,10 +5930,10 @@ void Context::programBinary(GLuint program, GLenum binaryFormat, const void *bin
     ASSERT(programObject != nullptr);
 
     handleError(programObject->loadBinary(this, binaryFormat, binary, length));
-    mStateCache.onProgramExecutableChange(this);
     if (programObject->isInUse())
     {
-        mGLState.setObjectDirty(GL_PROGRAM);
+        mGLState.onProgramExecutableChange(programObject);
+        mStateCache.onProgramExecutableChange(this);
     }
 }
 

@@ -1344,11 +1344,13 @@ void State::setProgram(const Context *context, Program *newProgram)
         if (mProgram)
         {
             newProgram->addRef();
-            mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
+            onProgramExecutableChange(newProgram);
         }
-        mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
+
+        // Note that rendering is undefined if glUseProgram(0) is called. But ANGLE will generate
+        // an error if the app tries to draw in this case.
+
         mDirtyBits.set(DIRTY_BIT_PROGRAM_BINDING);
-        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
     }
 }
 
@@ -2879,12 +2881,11 @@ void State::onProgramExecutableChange(Program *program)
     // "If LinkProgram or ProgramBinary successfully re-links a program object
     //  that was already in use as a result of a previous call to UseProgram, then the
     //  generated executable code will be installed as part of the current rendering state."
-    if (program->isLinked() && mProgram == program)
-    {
-        mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
-        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
-        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
-    }
+    ASSERT(program->isLinked());
+
+    mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
+    mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
+    mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
 }
 
 void State::setSamplerDirty(size_t samplerIndex)
