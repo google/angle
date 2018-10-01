@@ -125,30 +125,29 @@ class FramebufferVk : public FramebufferImpl
                                           vk::RecordingMode *modeOut);
 
     // The 'in' rectangles must be clipped to the scissor and FBO. The clipping is done in 'blit'.
-    void blitWithCommand(vk::CommandBuffer *commandBuffer,
-                         const gl::Rectangle &readRectIn,
-                         const gl::Rectangle &drawRectIn,
-                         RenderTargetVk *readRenderTarget,
-                         RenderTargetVk *drawRenderTarget,
-                         GLenum filter,
-                         bool colorBlit,
-                         bool depthBlit,
-                         bool stencilBlit,
-                         bool flipSource,
-                         bool flipDest);
+    angle::Result blitWithCommand(ContextVk *contextVk,
+                                  const gl::Rectangle &readRectIn,
+                                  const gl::Rectangle &drawRectIn,
+                                  RenderTargetVk *readRenderTarget,
+                                  RenderTargetVk *drawRenderTarget,
+                                  GLenum filter,
+                                  bool colorBlit,
+                                  bool depthBlit,
+                                  bool stencilBlit,
+                                  bool flipSource,
+                                  bool flipDest);
 
     // Note that 'copyArea' must be clipped to the scissor and FBO. The clipping is done in 'blit'.
-    void blitWithCopy(vk::CommandBuffer *commandBuffer,
-                      const gl::Rectangle &copyArea,
-                      RenderTargetVk *readRenderTarget,
-                      RenderTargetVk *drawRenderTarget,
-                      bool blitDepthBuffer,
-                      bool blitStencilBuffer);
+    angle::Result blitWithCopy(ContextVk *contextVk,
+                               const gl::Rectangle &copyArea,
+                               RenderTargetVk *readRenderTarget,
+                               RenderTargetVk *drawRenderTarget,
+                               bool blitDepthBuffer,
+                               bool blitStencilBuffer);
 
     angle::Result blitWithReadback(ContextVk *contextVk,
                                    const gl::Rectangle &copyArea,
                                    VkImageAspectFlagBits aspect,
-                                   vk::CommandBuffer *commandBuffer,
                                    RenderTargetVk *readRenderTarget,
                                    RenderTargetVk *drawRenderTarget);
 

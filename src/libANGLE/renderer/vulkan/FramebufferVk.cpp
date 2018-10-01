@@ -394,29 +394,27 @@ RenderTargetVk *FramebufferVk::getDepthStencilRenderTarget() const
     return mRenderTargetCache.getDepthStencil();
 }
 
-void FramebufferVk::blitWithCopy(vk::CommandBuffer *commandBuffer,
-                                 const gl::Rectangle &copyArea,
-                                 RenderTargetVk *readRenderTarget,
-                                 RenderTargetVk *drawRenderTarget,
-                                 bool blitDepthBuffer,
-                                 bool blitStencilBuffer)
+angle::Result FramebufferVk::blitWithCopy(ContextVk *contextVk,
+                                          const gl::Rectangle &copyArea,
+                                          RenderTargetVk *readRenderTarget,
+                                          RenderTargetVk *drawRenderTarget,
+                                          bool blitDepthBuffer,
+                                          bool blitStencilBuffer)
 {
-    VkFlags aspectFlags =
-        vk::GetDepthStencilAspectFlags(readRenderTarget->getImageFormat().textureFormat());
+    vk::ImageHelper *writeImage = drawRenderTarget->getImageForWrite(&mFramebuffer);
+
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
+
     vk::ImageHelper *readImage = readRenderTarget->getImageForRead(
         &mFramebuffer, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, commandBuffer);
-    vk::ImageHelper *writeImage = drawRenderTarget->getImageForWrite(&mFramebuffer);
-    // Requirement of the copyImageToBuffer, the dst image must be in
-    // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL layout.
-    writeImage->changeLayoutWithStages(aspectFlags, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
 
     VkImageAspectFlags aspectMask =
         vk::GetDepthStencilAspectFlagsForCopy(blitDepthBuffer, blitStencilBuffer);
     vk::ImageHelper::Copy(readImage, writeImage, gl::Offset(), gl::Offset(),
                           gl::Extents(copyArea.width, copyArea.height, 1), aspectMask,
                           commandBuffer);
+    return angle::Result::Continue();
 }
 
 RenderTargetVk *FramebufferVk::getColorReadRenderTarget() const
@@ -429,7 +427,6 @@ RenderTargetVk *FramebufferVk::getColorReadRenderTarget() const
 angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
                                               const gl::Rectangle &copyArea,
                                               VkImageAspectFlagBits aspect,
-                                              vk::CommandBuffer *commandBuffer,
                                               RenderTargetVk *readRenderTarget,
                                               RenderTargetVk *drawRenderTarget)
 {
@@ -482,6 +479,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
 
     // Reinitialize the commandBuffer after a read pixels because it calls
     // renderer->finish which makes command buffers obsolete.
+    vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
     // We read the bytes of the image in a buffer, now we have to copy them into the
@@ -515,8 +513,6 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
     bool blitDepthBuffer                     = (mask & GL_DEPTH_BUFFER_BIT) != 0;
     bool blitStencilBuffer                   = (mask & GL_STENCIL_BUFFER_BIT) != 0;
 
-    vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
     FramebufferVk *sourceFramebufferVk = vk::GetImpl(sourceFramebuffer);
     bool flipSource                    = contextVk->isViewportFlipEnabledForReadFBO();
     bool flipDest                      = contextVk->isViewportFlipEnabledForDrawFBO();
@@ -563,9 +559,9 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
                 return gl::NoError();
             }
 
-            blitWithCommand(commandBuffer, readRenderTargetRect, drawRenderTargetRect,
-                            readRenderTarget, drawRenderTarget, filter, true, false, false,
-                            flipSource, flipDest);
+            ANGLE_TRY(blitWithCommand(contextVk, readRenderTargetRect, drawRenderTargetRect,
+                                      readRenderTarget, drawRenderTarget, filter, true, false,
+                                      false, flipSource, flipDest));
         }
     }
 
@@ -595,9 +591,9 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
         if (HasSrcAndDstBlitProperties(renderer->getPhysicalDevice(), readRenderTarget,
                                        drawRenderTarget))
         {
-            blitWithCommand(commandBuffer, readRenderTargetRect, drawRenderTargetRect,
-                            readRenderTarget, drawRenderTarget, filter, false, blitDepthBuffer,
-                            blitStencilBuffer, flipSource, flipDest);
+            ANGLE_TRY(blitWithCommand(contextVk, readRenderTargetRect, drawRenderTargetRect,
+                                      readRenderTarget, drawRenderTarget, filter, false,
+                                      blitDepthBuffer, blitStencilBuffer, flipSource, flipDest));
         }
         else
         {
@@ -606,20 +602,20 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
                 if (blitDepthBuffer)
                 {
                     ANGLE_TRY(blitWithReadback(contextVk, readRenderTargetRect,
-                                               VK_IMAGE_ASPECT_DEPTH_BIT, commandBuffer,
-                                               readRenderTarget, drawRenderTarget));
+                                               VK_IMAGE_ASPECT_DEPTH_BIT, readRenderTarget,
+                                               drawRenderTarget));
                 }
                 if (blitStencilBuffer)
                 {
                     ANGLE_TRY(blitWithReadback(contextVk, readRenderTargetRect,
-                                               VK_IMAGE_ASPECT_STENCIL_BIT, commandBuffer,
-                                               readRenderTarget, drawRenderTarget));
+                                               VK_IMAGE_ASPECT_STENCIL_BIT, readRenderTarget,
+                                               drawRenderTarget));
                 }
             }
             else
             {
-                blitWithCopy(commandBuffer, readRenderTargetRect, readRenderTarget,
-                             drawRenderTarget, blitDepthBuffer, blitStencilBuffer);
+                ANGLE_TRY(blitWithCopy(contextVk, readRenderTargetRect, readRenderTarget,
+                                       drawRenderTarget, blitDepthBuffer, blitStencilBuffer));
             }
         }
     }
@@ -627,22 +623,27 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
     return gl::NoError();
 }
 
-void FramebufferVk::blitWithCommand(vk::CommandBuffer *commandBuffer,
-                                    const gl::Rectangle &readRectIn,
-                                    const gl::Rectangle &drawRectIn,
-                                    RenderTargetVk *readRenderTarget,
-                                    RenderTargetVk *drawRenderTarget,
-                                    GLenum filter,
-                                    bool colorBlit,
-                                    bool depthBlit,
-                                    bool stencilBlit,
-                                    bool flipSource,
-                                    bool flipDest)
+angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
+                                             const gl::Rectangle &readRectIn,
+                                             const gl::Rectangle &drawRectIn,
+                                             RenderTargetVk *readRenderTarget,
+                                             RenderTargetVk *drawRenderTarget,
+                                             GLenum filter,
+                                             bool colorBlit,
+                                             bool depthBlit,
+                                             bool stencilBlit,
+                                             bool flipSource,
+                                             bool flipDest)
 {
     // Since blitRenderbufferRect is called for each render buffer that needs to be blitted,
     // it should never be the case that both color and depth/stencil need to be blitted at
     // at the same time.
     ASSERT(colorBlit != (depthBlit || stencilBlit));
+
+    vk::ImageHelper *dstImage = drawRenderTarget->getImageForWrite(&mFramebuffer);
+
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
     const vk::Format &readImageFormat = readRenderTarget->getImageFormat();
     VkImageAspectFlags aspectMask =
@@ -682,8 +683,6 @@ void FramebufferVk::blitWithCommand(vk::CommandBuffer *commandBuffer,
     blit.dstOffsets[0] = {drawRect.x0(), flipDest ? drawRect.y1() : drawRect.y0(), 0};
     blit.dstOffsets[1] = {drawRect.x1(), flipDest ? drawRect.y0() : drawRect.y1(), 1};
 
-    vk::ImageHelper *dstImage = drawRenderTarget->getImageForWrite(&mFramebuffer);
-
     // Requirement of the copyImageToBuffer, the dst image must be in
     // VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL layout.
     dstImage->changeLayoutWithStages(aspectMask, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -693,6 +692,8 @@ void FramebufferVk::blitWithCommand(vk::CommandBuffer *commandBuffer,
     commandBuffer->blitImage(srcImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                              dstImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,
                              gl_vk::GetFilter(filter));
+
+    return angle::Result::Continue();
 }
 
 bool FramebufferVk::checkStatus(const gl::Context *context) const
