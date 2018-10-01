@@ -215,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "60875036_b8428b7f",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-10-01T19:03:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01ca104d_77f35a7d",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 51
+      },
+      "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "841dffa0_f68d127a",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 10
@@ -235,6 +259,30 @@
       "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b564b929_28dac819",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-10-01T19:03:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "841dffa0_f68d127a",
+      "range": {
+        "startLine": 361,
+        "startChar": 73,
+        "endLine": 361,
+        "endChar": 75
+      },
+      "revId": "eb13da2adb967ffec8cf3a41bb7c1882e65a948b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
