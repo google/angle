@@ -15,6 +15,7 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -27,13 +28,12 @@ CompileProgramWithTransformFeedback(const std::string &vsSource,
                                     const std::string &fsSource,
                                     const std::vector<std::string> &transformFeedbackVaryings,
                                     GLenum bufferMode);
-ANGLE_EXPORT GLuint
-CompileProgramWithGSAndTransformFeedback(const std::string &vsSource,
-                                         const std::string &gsSource,
-                                         const std::string &fsSource,
-                                         const std::vector<std::string> &transformFeedbackVaryings,
-                                         GLenum bufferMode);
+
 ANGLE_EXPORT GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource);
+
+ANGLE_EXPORT GLuint CompileProgram(const std::string &vsSource,
+                                   const std::string &fsSource,
+                                   const std::function<void(GLuint)> &preLinkCallback);
 
 ANGLE_EXPORT GLuint CompileProgramWithGS(const std::string &vsSource,
                                          const std::string &gsSource,

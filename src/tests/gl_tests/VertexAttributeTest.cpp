@@ -985,21 +985,10 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
 
     for (GLint colorIndex = 0; colorIndex < maxVertexAttribs; ++colorIndex)
     {
-        GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
-        ASSERT_NE(0u, vs);
-        GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
-        ASSERT_NE(0u, fs);
-
-        GLuint program = glCreateProgram();
-        glBindAttribLocation(program, colorIndex, "a_color");
-
-        glAttachShader(program, vs);
-        glDeleteShader(vs);
-
-        glAttachShader(program, fs);
-        glDeleteShader(fs);
-
-        ASSERT_TRUE(LinkAttachedProgram(program));
+        GLuint program = CompileProgram(vsSource, fsSource, [&](GLuint program) {
+            glBindAttribLocation(program, colorIndex, "a_color");
+        });
+        ASSERT_NE(0u, program);
 
         drawQuad(program, "a_position", 0.5f);
         ASSERT_GL_NO_ERROR();
