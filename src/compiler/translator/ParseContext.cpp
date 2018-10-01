@@ -975,9 +975,10 @@ unsigned int TParseContext::checkIsValidArraySize(const TSourceLoc &line, TInter
 {
     TIntermConstantUnion *constant = expr->getAsConstantUnion();
 
-    // TODO(oetuaho@nvidia.com): Get rid of the constant == nullptr check here once all constant
-    // expressions can be folded. Right now we don't allow constant expressions that ANGLE can't
-    // fold as array size.
+    // ANGLE should be able to fold any EvqConst expressions resulting in an integer - but to be
+    // safe against corner cases we still check for constant folding. Some interpretations of the
+    // spec have allowed constant expressions with side effects - like array length() method on a
+    // non-constant array.
     if (expr->getQualifier() != EvqConst || constant == nullptr || !constant->isScalarInt())
     {
         error(line, "array size must be a constant integer expression", "");
@@ -3945,10 +3946,10 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
 
     TIntermConstantUnion *indexConstantUnion = indexExpression->getAsConstantUnion();
 
-    // TODO(oetuaho@nvidia.com): Get rid of indexConstantUnion == nullptr below once ANGLE is able
-    // to constant fold all constant expressions. Right now we don't allow indexing interface blocks
-    // or fragment outputs with expressions that ANGLE is not able to constant fold, even if the
-    // index is a constant expression.
+    // ANGLE should be able to fold any constant expressions resulting in an integer - but to be
+    // safe we don't treat "EvqConst" that's evaluated according to the spec as being sufficient
+    // for constness. Some interpretations of the spec have allowed constant expressions with side
+    // effects - like array length() method on a non-constant array.
     if (indexExpression->getQualifier() != EvqConst || indexConstantUnion == nullptr)
     {
         if (baseExpression->isInterfaceBlock())
@@ -4903,9 +4904,10 @@ TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &l
         error(condition->getLine(), "case label must be a scalar integer", "case");
     }
     TIntermConstantUnion *conditionConst = condition->getAsConstantUnion();
-    // TODO(oetuaho@nvidia.com): Get rid of the conditionConst == nullptr check once all constant
-    // expressions can be folded. Right now we don't allow constant expressions that ANGLE can't
-    // fold in case labels.
+    // ANGLE should be able to fold any EvqConst expressions resulting in an integer - but to be
+    // safe against corner cases we still check for conditionConst. Some interpretations of the
+    // spec have allowed constant expressions with side effects - like array length() method on a
+    // non-constant array.
     if (condition->getQualifier() != EvqConst || conditionConst == nullptr)
     {
         error(condition->getLine(), "case label must be constant", "case");
