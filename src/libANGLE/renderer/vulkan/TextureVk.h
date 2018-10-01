@@ -217,6 +217,7 @@ class TextureVk : public TextureImpl
 
     angle::Result copyImageDataToBuffer(ContextVk *contextVk,
                                         size_t sourceLevel,
+                                        uint32_t layerCount,
                                         const gl::Rectangle &sourceArea,
                                         uint8_t **outDataPtr);
 
