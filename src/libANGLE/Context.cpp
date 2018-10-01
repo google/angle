@@ -1603,6 +1603,11 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             *params = static_cast<GLint>(mExtensionStrings.size());
             break;
 
+        // GL_ANGLE_request_extension
+        case GL_NUM_REQUESTABLE_EXTENSIONS_ANGLE:
+            *params = static_cast<GLint>(mRequestableExtensionStrings.size());
+            break;
+
         // GL_KHR_debug
         case GL_MAX_DEBUG_MESSAGE_LENGTH:
             *params = mExtensions.maxDebugMessageLength;
