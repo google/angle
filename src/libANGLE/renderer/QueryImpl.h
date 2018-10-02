@@ -26,6 +26,8 @@ class QueryImpl : angle::NonCopyable
     explicit QueryImpl(gl::QueryType type) : mType(type) {}
     virtual ~QueryImpl() {}
 
+    virtual gl::Error onDestroy(const gl::Context *context);
+
     virtual gl::Error begin(const gl::Context *context)                              = 0;
     virtual gl::Error end(const gl::Context *context)                                = 0;
     virtual gl::Error queryCounter(const gl::Context *context)                       = 0;

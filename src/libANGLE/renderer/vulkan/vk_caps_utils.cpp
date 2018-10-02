@@ -48,8 +48,10 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     outExtensions->debugMarker     = true;
     outExtensions->robustness      = true;
 
-    // TODO: Not implemented yet but exposed so that Chrome can load the query entry points.  http://anglebug.com/2855
-    outExtensions->occlusionQueryBoolean = true;
+    // We use secondary command buffers almost everywhere and they require a feature to be
+    // able to execute in the presence of queries.  As a result, we won't support queries
+    // unless that feature is available.
+    outExtensions->occlusionQueryBoolean = physicalDeviceFeatures.inheritedQueries;
 
     // TODO(lucferron): Eventually remove everything above this line in this function as the caps
     // get implemented.

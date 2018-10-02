@@ -569,6 +569,24 @@ void CommandBuffer::pushConstants(const PipelineLayout &layout,
     vkCmdPushConstants(mHandle, layout.getHandle(), flag, offset, size, data);
 }
 
+void CommandBuffer::resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount)
+{
+    ASSERT(valid());
+    vkCmdResetQueryPool(mHandle, queryPool, firstQuery, queryCount);
+}
+
+void CommandBuffer::beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags)
+{
+    ASSERT(valid());
+    vkCmdBeginQuery(mHandle, queryPool, query, flags);
+}
+
+void CommandBuffer::endQuery(VkQueryPool queryPool, uint32_t query)
+{
+    ASSERT(valid());
+    vkCmdEndQuery(mHandle, queryPool, query);
+}
+
 // Image implementation.
 Image::Image()
 {
@@ -1109,6 +1127,44 @@ void StagingBuffer::dumpResources(Serial serial, std::vector<vk::GarbageObject> 
     mDeviceMemory.dumpResources(serial, garbageQueue);
 }
 
+// QueryPool implementation.
+QueryPool::QueryPool()
+{
+}
+
+void QueryPool::destroy(VkDevice device)
+{
+    if (valid())
+    {
+        vkDestroyQueryPool(device, mHandle, nullptr);
+        mHandle = VK_NULL_HANDLE;
+    }
+}
+
+angle::Result QueryPool::init(Context *context, const VkQueryPoolCreateInfo &createInfo)
+{
+    ASSERT(!valid());
+    ANGLE_VK_TRY(context, vkCreateQueryPool(context->getDevice(), &createInfo, nullptr, &mHandle));
+    return angle::Result::Continue();
+}
+
+angle::Result QueryPool::getResults(Context *context,
+                                    uint32_t firstQuery,
+                                    uint32_t queryCount,
+                                    size_t dataSize,
+                                    void *data,
+                                    VkDeviceSize stride,
+                                    VkQueryResultFlags flags) const
+{
+    angle::Result result = angle::Result::Stop();
+    ANGLE_VK_TRY_ALLOW_NOT_READY(context,
+                                 vkGetQueryPoolResults(context->getDevice(), mHandle, firstQuery,
+                                                       queryCount, dataSize, data, stride, flags),
+                                 result);
+
+    return result;
+}
+
 angle::Result AllocateBufferMemory(vk::Context *context,
                                    VkMemoryPropertyFlags requestedMemoryPropertyFlags,
                                    VkMemoryPropertyFlags *memoryPropertyFlagsOut,
@@ -1219,6 +1275,9 @@ void GarbageObject::destroy(VkDevice device)
             break;
         case HandleType::CommandPool:
             vkDestroyCommandPool(device, reinterpret_cast<VkCommandPool>(mHandle), nullptr);
+            break;
+        case HandleType::QueryPool:
+            vkDestroyQueryPool(device, reinterpret_cast<VkQueryPool>(mHandle), nullptr);
             break;
         default:
             UNREACHABLE();

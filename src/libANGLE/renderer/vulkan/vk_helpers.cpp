@@ -351,6 +351,133 @@ void DynamicDescriptorPool::setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool)
     mMaxSetsPerPool = maxSetsPerPool;
 }
 
+// DynamicQueryPool implementation
+DynamicQueryPool::DynamicQueryPool() : mPoolSize(0), mCurrentQueryPool(0), mCurrentFreeQuery(0)
+{
+}
+
+DynamicQueryPool::~DynamicQueryPool() = default;
+
+angle::Result DynamicQueryPool::init(Context *context, VkQueryType type, uint32_t poolSize)
+{
+    ASSERT(mQueryPools.empty() && mQueryPoolStats.empty());
+
+    mPoolSize  = poolSize;
+    mQueryType = type;
+    ANGLE_TRY(allocateNewPool(context));
+    return angle::Result::Continue();
+}
+
+void DynamicQueryPool::destroy(VkDevice device)
+{
+    for (QueryPool &queryPool : mQueryPools)
+    {
+        queryPool.destroy(device);
+    }
+
+    mQueryPools.clear();
+    mQueryPoolStats.clear();
+}
+
+angle::Result DynamicQueryPool::allocateQuery(Context *context, QueryHelper *queryOut)
+{
+    ASSERT(!queryOut->getQueryPool());
+
+    if (mCurrentFreeQuery >= mPoolSize)
+    {
+        // No more queries left in this pool, create another one.
+        ANGLE_TRY(allocateNewPool(context));
+    }
+
+    queryOut->init(this, mCurrentQueryPool, mCurrentFreeQuery++);
+
+    return angle::Result::Continue();
+}
+
+void DynamicQueryPool::freeQuery(Context *context, QueryHelper *query)
+{
+    if (query->getQueryPool())
+    {
+        size_t poolIndex = query->getQueryPoolIndex();
+        ASSERT(query->getQueryPool()->valid() && poolIndex < mQueryPoolStats.size() &&
+               mQueryPoolStats[poolIndex].freedCount < mPoolSize);
+
+        ++mQueryPoolStats[poolIndex].freedCount;
+        query->deinit();
+
+        // Take note of the current serial to avoid reallocating a query in the same pool
+        mQueryPoolStats[poolIndex].serial = context->getRenderer()->getCurrentQueueSerial();
+    }
+}
+
+angle::Result DynamicQueryPool::allocateNewPool(Context *context)
+{
+    // Before allocating a new pool, see if a previously allocated pool is completely freed up.
+    // In that case, use that older pool instead.
+    Serial lastCompletedQueueSerial = context->getRenderer()->getLastCompletedQueueSerial();
+    for (size_t i = 0; i < mQueryPools.size(); ++i)
+    {
+        if (mQueryPoolStats[i].freedCount == mPoolSize &&
+            mQueryPoolStats[i].serial <= lastCompletedQueueSerial)
+        {
+            mCurrentQueryPool = i;
+            mCurrentFreeQuery = 0;
+
+            return angle::Result::Continue();
+        }
+    }
+
+    VkQueryPoolCreateInfo queryPoolInfo = {};
+    queryPoolInfo.sType                 = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+    queryPoolInfo.flags                 = 0;
+    queryPoolInfo.queryType             = mQueryType;
+    queryPoolInfo.queryCount            = mPoolSize;
+    queryPoolInfo.pipelineStatistics    = 0;
+
+    vk::QueryPool queryPool;
+
+    ANGLE_TRY(queryPool.init(context, queryPoolInfo));
+
+    mQueryPools.push_back(std::move(queryPool));
+
+    QueryPoolStats poolStats = {0, Serial()};
+    mQueryPoolStats.push_back(poolStats);
+
+    mCurrentQueryPool = mQueryPools.size() - 1;
+    mCurrentFreeQuery = 0;
+
+    return angle::Result::Continue();
+}
+
+// QueryHelper implementation
+QueryHelper::QueryHelper()
+    : CommandGraphResource(CommandGraphResourceType::Query),
+      mDynamicQueryPool(nullptr),
+      mQueryPoolIndex(0),
+      mQuery(0)
+{
+}
+
+QueryHelper::~QueryHelper()
+{
+}
+
+void QueryHelper::init(const DynamicQueryPool *dynamicQueryPool,
+                       const size_t queryPoolIndex,
+                       uint32_t query)
+{
+    mDynamicQueryPool = dynamicQueryPool;
+    mQueryPoolIndex   = queryPoolIndex;
+    mQuery            = query;
+}
+
+void QueryHelper::deinit()
+{
+    mDynamicQueryPool = nullptr;
+    mQueryPoolIndex   = 0;
+    mQuery            = 0;
+}
+
 // LineLoopHelper implementation.
 LineLoopHelper::LineLoopHelper(RendererVk *renderer)
     : mDynamicIndexBuffer(kLineLoopDynamicBufferUsage, kLineLoopDynamicBufferMinSize)

@@ -101,7 +101,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
     DynamicDescriptorPool();
     ~DynamicDescriptorPool();
 
-    // The DynamicDescriptorPool only handles one pool size at at time.
+    // The DynamicDescriptorPool only handles one pool size at this time.
     angle::Result init(Context *context, const VkDescriptorPoolSize &poolSize);
     void destroy(VkDevice device);
 
@@ -123,6 +123,95 @@ class DynamicDescriptorPool final : angle::NonCopyable
     DescriptorPool mCurrentDescriptorPool;
     VkDescriptorPoolSize mPoolSize;
     uint32_t mFreeDescriptorSets;
+};
+
+// DynamicQueryPool allocates indices out of QueryPool as needed.  Once a QueryPool is exhausted,
+// another is created.  The query pools live permanently, but are recycled as indices get freed.
+
+// This is an arbitrary default size for occlusion query pools.
+constexpr uint32_t kDefaultOcclusionQueryPoolSize = 64;
+
+class QueryHelper;
+
+class DynamicQueryPool final : angle::NonCopyable
+{
+  public:
+    DynamicQueryPool();
+    ~DynamicQueryPool();
+
+    angle::Result init(Context *context, VkQueryType type, uint32_t poolSize);
+    void destroy(VkDevice device);
+
+    bool isValid() { return mPoolSize > 0; }
+
+    angle::Result allocateQuery(Context *context, QueryHelper *queryOut);
+    void freeQuery(Context *context, QueryHelper *query);
+
+    const QueryPool *getQueryPool(size_t index) const { return &mQueryPools[index]; }
+
+  private:
+    angle::Result allocateNewPool(Context *context);
+
+    // Information required to create new query pools
+    uint32_t mPoolSize;
+    VkQueryType mQueryType;
+
+    // A list of query pools to allocate from
+    std::vector<QueryPool> mQueryPools;
+
+    struct QueryPoolStats
+    {
+        // A count corresponding to each query pool indicating how many of its allocated indices
+        // have been freed. Once that value reaches mPoolSize for each pool, that pool is considered
+        // free and reusable.  While keeping a bitset would allow allocation of each index, the
+        // slight runtime overhead of finding free indices is not worth the slight memory overhead
+        // of creating new pools when unnecessary.
+        uint32_t freedCount;
+        // When the pool is completely emptied, the serial of the renderer is stored to make sure no
+        // new allocations are made from the pool until it's not in use.
+        Serial serial;
+    };
+    std::vector<QueryPoolStats> mQueryPoolStats;
+
+    // Index into mQueryPools indicating query pool we are currently allocating from
+    size_t mCurrentQueryPool;
+    // Bit index inside mQueryPools[mCurrentQueryPool] indicating which index can be allocated next
+    uint32_t mCurrentFreeQuery;
+};
+
+// Queries in vulkan are identified by the query pool and an index for a query within that pool.
+// Unlike other pools, such as descriptor pools where an allocation returns an independent object
+// from the pool, the query allocations are not done through a Vulkan function and are only an
+// integer index.
+//
+// Furthermore, to support arbitrarily large number of queries, DynamicQueryPool creates query pools
+// of a fixed size as needed and allocates indices within those pools.
+//
+// The QueryHelper class below keeps the pool and index pair together.
+class QueryHelper final : public CommandGraphResource
+{
+  public:
+    QueryHelper();
+    ~QueryHelper();
+
+    void init(const DynamicQueryPool *dynamicQueryPool,
+              const size_t queryPoolIndex,
+              uint32_t query);
+    void deinit();
+
+    const QueryPool *getQueryPool() const
+    {
+        return mDynamicQueryPool ? mDynamicQueryPool->getQueryPool(mQueryPoolIndex) : nullptr;
+    }
+    uint32_t getQuery() const { return mQuery; }
+
+    // Used only by DynamicQueryPool.
+    size_t getQueryPoolIndex() const { return mQueryPoolIndex; }
+
+  private:
+    const DynamicQueryPool *mDynamicQueryPool;
+    size_t mQueryPoolIndex;
+    uint32_t mQuery;
 };
 
 // This class' responsibility is to create index buffers needed to support line loops in Vulkan.

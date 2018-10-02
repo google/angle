@@ -573,6 +573,10 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 
     ANGLE_VK_TRY(displayVk, VerifyExtensionsPresent(deviceExtensionProps, enabledDeviceExtensions));
 
+    // Select additional features to be enabled
+    VkPhysicalDeviceFeatures enabledFeatures = {};
+    enabledFeatures.inheritedQueries         = mPhysicalDeviceFeatures.inheritedQueries;
+
     VkDeviceQueueCreateInfo queueCreateInfo = {};
 
     float zeroPriority = 0.0f;
@@ -595,7 +599,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     createInfo.enabledExtensionCount = static_cast<uint32_t>(enabledDeviceExtensions.size());
     createInfo.ppEnabledExtensionNames =
         enabledDeviceExtensions.empty() ? nullptr : enabledDeviceExtensions.data();
-    createInfo.pEnabledFeatures = nullptr;  // TODO(jmadill): features
+    createInfo.pEnabledFeatures = &enabledFeatures;
 
     ANGLE_VK_TRY(displayVk, vkCreateDevice(mPhysicalDevice, &createInfo, nullptr, &mDevice));
 

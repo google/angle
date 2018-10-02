@@ -215,17 +215,6 @@ inline Error NoError()
     }                                                  \
     ANGLE_EMPTY_STATEMENT
 
-#define ANGLE_TRY_RESULT(EXPR, RESULT)                 \
-    {                                                  \
-        auto ANGLE_LOCAL_VAR = EXPR;                   \
-        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR.isError())) \
-        {                                              \
-            return ANGLE_LOCAL_VAR.getError();         \
-        }                                              \
-        RESULT = ANGLE_LOCAL_VAR.getResult();          \
-    }                                                  \
-    ANGLE_EMPTY_STATEMENT
-
 // TODO(jmadill): Introduce way to store errors to a const Context. http://anglebug.com/2491
 #define ANGLE_SWALLOW_ERR(EXPR)                                       \
     {                                                                 \

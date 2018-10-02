@@ -184,9 +184,9 @@ TEST_P(OcclusionQueriesTest, MultiContext)
                        !extensionEnabled("GL_EXT_occlusion_query_boolean"));
 
     // Test skipped because the D3D backends cannot support simultaneous queries on multiple
-    // contexts yet.
+    // contexts yet.  Same with the Vulkan backend.
     ANGLE_SKIP_TEST_IF(GetParam() == ES2_D3D9() || GetParam() == ES2_D3D11() ||
-                       GetParam() == ES3_D3D11());
+                       GetParam() == ES3_D3D11() || GetParam() == ES2_VULKAN());
 
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -310,4 +310,5 @@ ANGLE_INSTANTIATE_TEST(OcclusionQueriesTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());

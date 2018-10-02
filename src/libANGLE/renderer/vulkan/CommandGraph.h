@@ -29,13 +29,23 @@ enum class CommandGraphResourceType
     Buffer,
     Framebuffer,
     Image,
+    Query,
+};
+
+// Certain functionality cannot be put in secondary command buffers, so they are special-cased in
+// the node.
+enum class CommandGraphNodeFunction
+{
+    Generic,
+    BeginQuery,
+    EndQuery,
 };
 
 // Only used internally in the command graph. Kept in the header for better inlining performance.
 class CommandGraphNode final : angle::NonCopyable
 {
   public:
-    CommandGraphNode();
+    CommandGraphNode(CommandGraphNodeFunction function);
     ~CommandGraphNode();
 
     // Immutable queries for when we're walking the commands tree.
@@ -66,8 +76,12 @@ class CommandGraphNode final : angle::NonCopyable
     // frozen forever.
     static void SetHappensBeforeDependency(CommandGraphNode *beforeNode,
                                            CommandGraphNode *afterNode);
-    static void SetHappensBeforeDependencies(const std::vector<CommandGraphNode *> &beforeNodes,
+    static void SetHappensBeforeDependencies(CommandGraphNode **beforeNodes,
+                                             size_t beforeNodesCount,
                                              CommandGraphNode *afterNode);
+    static void SetHappensBeforeDependencies(CommandGraphNode *beforeNode,
+                                             CommandGraphNode **afterNodes,
+                                             size_t afterNodesCount);
     bool hasParents() const;
     bool hasChildren() const { return mHasChildren; }
 
@@ -88,6 +102,10 @@ class CommandGraphNode final : angle::NonCopyable
 
     const gl::Rectangle &getRenderPassRenderArea() const;
 
+    CommandGraphNodeFunction getFunction() const { return mFunction; }
+
+    void setQueryPool(const QueryPool *queryPool, uint32_t queryIndex);
+
   private:
     void setHasChildren();
 
@@ -100,10 +118,16 @@ class CommandGraphNode final : angle::NonCopyable
     gl::Rectangle mRenderPassRenderArea;
     gl::AttachmentArray<VkClearValue> mRenderPassClearValues;
 
-    // Keep a separate buffers for commands inside and outside a RenderPass.
+    CommandGraphNodeFunction mFunction;
+
+    // Keep separate buffers for commands inside and outside a RenderPass.
     // TODO(jmadill): We might not need inside and outside RenderPass commands separate.
     CommandBuffer mOutsideRenderPassCommands;
     CommandBuffer mInsideRenderPassCommands;
+
+    // Special-function additional data:
+    VkQueryPool mQueryPool;
+    uint32_t mQueryIndex;
 
     // Parents are commands that must be submitted before 'this' CommandNode can be submitted.
     std::vector<CommandGraphNode *> mParents;
@@ -133,6 +157,9 @@ class CommandGraphResource : angle::NonCopyable
     // Returns true if the resource is in use by the renderer.
     bool isResourceInUse(RendererVk *renderer) const;
 
+    // Returns true if the resource has unsubmitted work pending.
+    bool hasPendingWork(RendererVk *renderer) const;
+
     // Sets up dependency relations. 'this' resource is the resource being written to.
     void addWriteDependency(CommandGraphResource *writingResource);
 
@@ -151,7 +178,10 @@ class CommandGraphResource : angle::NonCopyable
                                   const gl::Rectangle &renderArea,
                                   const RenderPassDesc &renderPassDesc,
                                   const std::vector<VkClearValue> &clearValues,
-                                  CommandBuffer **commandBufferOut) const;
+                                  CommandBuffer **commandBufferOut);
+
+    void beginQuery(Context *context, const QueryPool *queryPool, uint32_t queryIndex);
+    void endQuery(Context *context, const QueryPool *queryPool, uint32_t queryIndex);
 
     // Checks if we're in a RenderPass, returning true if so. Updates serial internally.
     // Returns the started command buffer in commandBufferOut.
@@ -170,11 +200,20 @@ class CommandGraphResource : angle::NonCopyable
     Serial getStoredQueueSerial() const;
 
   private:
+    void startNewCommands(RendererVk *renderer, CommandGraphNodeFunction function);
+
     void onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial);
 
     // Returns true if this node has a current writing node with no children.
     bool hasChildlessWritingNode() const
     {
+        // Note: currently, we don't have a resource that can issue both generic and special
+        // commands.  We don't create read/write dependencies between mixed generic/special
+        // resources either.  As such, we expect the function to always be generic here.  If such a
+        // resource is added in the future, this can add a check for function == generic and fail if
+        // false.
+        ASSERT(mCurrentWritingNode == nullptr ||
+               mCurrentWritingNode->getFunction() == CommandGraphNodeFunction::Generic);
         return (mCurrentWritingNode != nullptr && !mCurrentWritingNode->hasChildren());
     }
 
@@ -226,8 +265,9 @@ class CommandGraph final : angle::NonCopyable
 
     // Allocates a new CommandGraphNode and adds it to the list of current open nodes. No ordering
     // relations exist in the node by default. Call CommandGraphNode::SetHappensBeforeDependency
-    // to set up dependency relations.
-    CommandGraphNode *allocateNode();
+    // to set up dependency relations. If the node is a barrier, it will automatically add
+    // dependencies between the previous barrier, the new barrier and all nodes in between.
+    CommandGraphNode *allocateNode(bool isBarrier, CommandGraphNodeFunction function);
 
     angle::Result submitCommands(Context *context,
                                  Serial serial,
@@ -236,11 +276,65 @@ class CommandGraph final : angle::NonCopyable
                                  CommandBuffer *primaryCommandBufferOut);
     bool empty() const;
 
+    CommandGraphNode *getLastBarrierNode(size_t *indexOut);
+
   private:
     void dumpGraphDotFile(std::ostream &out) const;
 
+    void setNewBarrier(CommandGraphNode *newBarrier);
+    void addDependenciesToNextBarrier(size_t begin, size_t end, CommandGraphNode *nextBarrier);
+
     std::vector<CommandGraphNode *> mNodes;
     bool mEnableGraphDiagnostics;
+
+    // A set of nodes (eventually) exist that act as barriers to guarantee submission order.  For
+    // example, a glMemoryBarrier() calls would lead to such a barrier or beginning and ending a
+    // query. This is because the graph can reorder operations if it sees fit.  Let's call a barrier
+    // node Bi, and the other nodes Ni. The edges between Ni don't interest us.  Before a barrier is
+    // inserted, we have:
+    //
+    // N0 N1 ... Na
+    // \___\__/_/     (dependency egdes, which we don't care about so I'll stop drawing them.
+    //      \/
+    //
+    // When the first barrier is inserted, we will have:
+    //
+    //     ______
+    //    /  ____\
+    //   /  /     \
+    //  /  /      /\
+    // N0 N1 ... Na B0
+    //
+    // This makes sure all N0..Na are called before B0.  From then on, B0 will be the current
+    // "barrier point" which extends an edge to every next node:
+    //
+    //     ______
+    //    /  ____\
+    //   /  /     \
+    //  /  /      /\
+    // N0 N1 ... Na B0 Na+1 ... Nb
+    //                \/       /
+    //                 \______/
+    //
+    //
+    // When the next barrier B1 is met, all nodes between B0 and B1 will add a depenency on B1 as
+    // well, and the "barrier point" is updated.
+    //
+    //     ______
+    //    /  ____\         ______         ______
+    //   /  /     \       /      \       /      \
+    //  /  /      /\     /       /\     /       /\
+    // N0 N1 ... Na B0 Na+1 ... Nb B1 Nb+1 ... Nc B2 ...
+    //                \/       /  /  \/       /  /
+    //                 \______/  /    \______/  /
+    //                  \_______/      \_______/
+    //
+    //
+    // When barrier Bi is introduced, all nodes added since Bi-1 need to add a dependency to Bi
+    // (including Bi-1). We therefore keep track of the node index of the last barrier that was
+    // issued.
+    static constexpr size_t kInvalidNodeIndex = std::numeric_limits<std::size_t>::max();
+    size_t mLastBarrierIndex;
 };
 }  // namespace vk
 }  // namespace rx

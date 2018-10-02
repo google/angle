@@ -60,6 +60,10 @@ class RendererVk : angle::NonCopyable
     {
         return mPhysicalDeviceProperties;
     }
+    const VkPhysicalDeviceFeatures &getPhysicalDeviceFeatures() const
+    {
+        return mPhysicalDeviceFeatures;
+    }
     VkQueue getQueue() const { return mQueue; }
     VkDevice getDevice() const { return mDevice; }
 
@@ -81,6 +85,7 @@ class RendererVk : angle::NonCopyable
     uint32_t getMaxActiveTextures();
 
     Serial getCurrentQueueSerial() const { return mCurrentQueueSerial; }
+    Serial getLastCompletedQueueSerial() const { return mLastCompletedQueueSerial; }
 
     bool isSerialInUse(Serial serial) const;
 

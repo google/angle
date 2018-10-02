@@ -169,7 +169,8 @@ GetImplType<T> *GetImpl(const T *glObject)
     FUNC(Sampler)                  \
     FUNC(DescriptorPool)           \
     FUNC(Framebuffer)              \
-    FUNC(CommandPool)
+    FUNC(CommandPool)              \
+    FUNC(QueryPool)
 
 #define ANGLE_COMMA_SEP_FUNC(TYPE) TYPE,
 
@@ -422,6 +423,10 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                        uint32_t offset,
                        uint32_t size,
                        const void *data);
+
+    void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount);
+    void beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);
+    void endQuery(VkQueryPool queryPool, uint32_t query);
 };
 
 class Image final : public WrappedObject<Image, VkImage>
@@ -628,6 +633,22 @@ class StagingBuffer final : angle::NonCopyable
     size_t mSize;
 };
 
+class QueryPool final : public WrappedObject<QueryPool, VkQueryPool>
+{
+  public:
+    QueryPool();
+    void destroy(VkDevice device);
+
+    angle::Result init(Context *context, const VkQueryPoolCreateInfo &createInfo);
+    angle::Result getResults(Context *context,
+                             uint32_t firstQuery,
+                             uint32_t queryCount,
+                             size_t dataSize,
+                             void *data,
+                             VkDeviceSize stride,
+                             VkQueryResultFlags flags) const;
+};
+
 template <typename ObjT>
 class ObjectAndSerial final : angle::NonCopyable
 {
@@ -769,18 +790,24 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
     }                                                                  \
     ANGLE_EMPTY_STATEMENT
 
-#define ANGLE_VK_TRY_ALLOW_INCOMPLETE(context, command, result)                                \
-    {                                                                                          \
-        auto ANGLE_LOCAL_VAR = command;                                                        \
-        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS && ANGLE_LOCAL_VAR != VK_INCOMPLETE)) \
-        {                                                                                      \
-            context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__);                         \
-            return angle::Result::Stop();                                                      \
-        }                                                                                      \
-        result = ANGLE_LOCAL_VAR == VK_INCOMPLETE ? angle::Result::Incomplete()                \
-                                                  : angle::Result::Continue();                 \
-    }                                                                                          \
+#define ANGLE_VK_TRY_ALLOW_OTHER(context, command, acceptable, result)                      \
+    {                                                                                       \
+        auto ANGLE_LOCAL_VAR = command;                                                     \
+        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS && ANGLE_LOCAL_VAR != acceptable)) \
+        {                                                                                   \
+            context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__);                      \
+            return angle::Result::Stop();                                                   \
+        }                                                                                   \
+        result = ANGLE_LOCAL_VAR == VK_SUCCESS ? angle::Result::Continue()                  \
+                                               : angle::Result::Incomplete();               \
+    }                                                                                       \
     ANGLE_EMPTY_STATEMENT
+
+#define ANGLE_VK_TRY_ALLOW_INCOMPLETE(context, command, result) \
+    ANGLE_VK_TRY_ALLOW_OTHER(context, command, VK_INCOMPLETE, result)
+
+#define ANGLE_VK_TRY_ALLOW_NOT_READY(context, command, result) \
+    ANGLE_VK_TRY_ALLOW_OTHER(context, command, VK_NOT_READY, result)
 
 #define ANGLE_VK_CHECK(context, test, error) ANGLE_VK_TRY(context, test ? VK_SUCCESS : error)
 

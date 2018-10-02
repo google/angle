@@ -169,6 +169,11 @@ void ContextVk::onDestroy(const gl::Context *context)
     {
         defaultBuffer.destroy(getDevice());
     }
+
+    for (vk::DynamicQueryPool &queryPool : mQueryPools)
+    {
+        queryPool.destroy(getDevice());
+    }
 }
 
 gl::Error ContextVk::getIncompleteTexture(const gl::Context *context,
@@ -198,6 +203,12 @@ gl::Error ContextVk::initialize()
                                                    vk::kDefaultDescriptorPoolMaxSets};
     ANGLE_TRY(mDynamicDescriptorPools[kDriverUniformsDescriptorSetIndex].init(
         this, driverUniformsPoolSize));
+
+    ANGLE_TRY(mQueryPools[gl::QueryType::AnySamples].init(this, VK_QUERY_TYPE_OCCLUSION,
+                                                          vk::kDefaultOcclusionQueryPoolSize));
+    ANGLE_TRY(mQueryPools[gl::QueryType::AnySamplesConservative].init(
+        this, VK_QUERY_TYPE_OCCLUSION, vk::kDefaultOcclusionQueryPoolSize));
+    // TODO(syoussefi): Initialize other query pools as they get implemented.
 
     size_t minAlignment = static_cast<size_t>(
         mRenderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
@@ -1079,6 +1090,14 @@ gl::Error ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbitfiel
 vk::DynamicDescriptorPool *ContextVk::getDynamicDescriptorPool(uint32_t descriptorSetIndex)
 {
     return &mDynamicDescriptorPools[descriptorSetIndex];
+}
+
+vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
+{
+    ASSERT(queryType == gl::QueryType::AnySamples ||
+           queryType == gl::QueryType::AnySamplesConservative);
+    ASSERT(mQueryPools[queryType].isValid());
+    return &mQueryPools[queryType];
 }
 
 const VkClearValue &ContextVk::getClearColorValue() const

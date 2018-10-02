@@ -257,6 +257,7 @@ libangle_sources = [
   "src/libANGLE/renderer/PathImpl.h",
   "src/libANGLE/renderer/ProgramImpl.h",
   "src/libANGLE/renderer/ProgramPipelineImpl.h",
+  "src/libANGLE/renderer/QueryImpl.cpp",
   "src/libANGLE/renderer/QueryImpl.h",
   "src/libANGLE/renderer/RenderbufferImpl.h",
   "src/libANGLE/renderer/RenderTargetCache.h",

@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_VULKAN_QUERYVK_H_
 
 #include "libANGLE/renderer/QueryImpl.h"
+#include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 namespace rx
 {
@@ -21,6 +22,8 @@ class QueryVk : public QueryImpl
     QueryVk(gl::QueryType type);
     ~QueryVk() override;
 
+    gl::Error onDestroy(const gl::Context *context) override;
+
     gl::Error begin(const gl::Context *context) override;
     gl::Error end(const gl::Context *context) override;
     gl::Error queryCounter(const gl::Context *context) override;
@@ -29,6 +32,13 @@ class QueryVk : public QueryImpl
     gl::Error getResult(const gl::Context *context, GLint64 *params) override;
     gl::Error getResult(const gl::Context *context, GLuint64 *params) override;
     gl::Error isResultAvailable(const gl::Context *context, bool *available) override;
+
+  private:
+    angle::Result getResult(const gl::Context *context, bool wait);
+
+    vk::QueryHelper mQueryHelper;
+    uint64_t mCachedResult;
+    bool mCachedResultValid;
 };
 
 }  // namespace rx
