@@ -24,6 +24,13 @@ enum class VisitedState
     Visited,
 };
 
+enum class CommandGraphResourceType
+{
+    Buffer,
+    Framebuffer,
+    Image,
+};
+
 // Only used internally in the command graph. Kept in the header for better inlining performance.
 class CommandGraphNode final : angle::NonCopyable
 {
@@ -72,6 +79,13 @@ class CommandGraphNode final : angle::NonCopyable
                                   RenderPassCache *renderPassCache,
                                   CommandBuffer *primaryCommandBuffer);
 
+    // Only used in the command graph diagnostics.
+    const std::vector<CommandGraphNode *> &getParentsForDiagnostics() const;
+    void setDiagnosticInfo(CommandGraphResourceType resourceType, uintptr_t resourceID);
+
+    CommandGraphResourceType getResourceTypeForDiagnostics() const { return mResourceType; }
+    uintptr_t getResourceIDForDiagnostics() const { return mResourceID; }
+
     const gl::Rectangle &getRenderPassRenderArea() const;
 
   private:
@@ -99,6 +113,10 @@ class CommandGraphNode final : angle::NonCopyable
 
     // Used when traversing the dependency graph.
     VisitedState mVisitedState;
+
+    // Additional diagnostic information.
+    CommandGraphResourceType mResourceType;
+    uintptr_t mResourceID;
 };
 
 // This is a helper class for back-end objects used in Vk command buffers. It records a serial
@@ -107,10 +125,9 @@ class CommandGraphNode final : angle::NonCopyable
 // queue serial in a special 'garbage' queue. Resources also track current read and write
 // dependencies. Only one command buffer node can be writing to the Resource at a time, but many
 // can be reading from it. Together the dependencies will form a command graph at submission time.
-class CommandGraphResource
+class CommandGraphResource : angle::NonCopyable
 {
   public:
-    CommandGraphResource();
     virtual ~CommandGraphResource();
 
     // Returns true if the resource is in use by the renderer.
@@ -147,6 +164,8 @@ class CommandGraphResource
     void finishCurrentCommands(RendererVk *renderer);
 
   protected:
+    explicit CommandGraphResource(CommandGraphResourceType resourceType);
+
     // Get the current queue serial for this resource. Only used to release resources.
     Serial getStoredQueueSerial() const;
 
@@ -173,6 +192,9 @@ class CommandGraphResource
     Serial mStoredQueueSerial;
     std::vector<CommandGraphNode *> mCurrentReadingNodes;
     CommandGraphNode *mCurrentWritingNode;
+
+    // Additional diagnostic information.
+    CommandGraphResourceType mResourceType;
 };
 
 // Translating OpenGL commands into Vulkan and submitting them immediately loses out on some
@@ -199,7 +221,7 @@ class CommandGraphResource
 class CommandGraph final : angle::NonCopyable
 {
   public:
-    CommandGraph();
+    explicit CommandGraph(bool enableGraphDiagnostics);
     ~CommandGraph();
 
     // Allocates a new CommandGraphNode and adds it to the list of current open nodes. No ordering
@@ -215,9 +237,11 @@ class CommandGraph final : angle::NonCopyable
     bool empty() const;
 
   private:
-    std::vector<CommandGraphNode *> mNodes;
-};
+    void dumpGraphDotFile(std::ostream &out) const;
 
+    std::vector<CommandGraphNode *> mNodes;
+    bool mEnableGraphDiagnostics;
+};
 }  // namespace vk
 }  // namespace rx
 

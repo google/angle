@@ -166,7 +166,7 @@ class LineLoopHelper final : angle::NonCopyable
     DynamicBuffer mDynamicIndexBuffer;
 };
 
-class BufferHelper final : public CommandGraphResource, angle::NonCopyable
+class BufferHelper final : public CommandGraphResource
 {
   public:
     BufferHelper();
@@ -190,7 +190,7 @@ class BufferHelper final : public CommandGraphResource, angle::NonCopyable
     VkMemoryPropertyFlags mMemoryPropertyFlags;
 };
 
-class ImageHelper final : public CommandGraphResource, angle::NonCopyable
+class ImageHelper final : public CommandGraphResource
 {
   public:
     ImageHelper();
@@ -299,7 +299,7 @@ class ImageHelper final : public CommandGraphResource, angle::NonCopyable
     uint32_t mLayerCount;
 };
 
-class FramebufferHelper : public CommandGraphResource, angle::NonCopyable
+class FramebufferHelper : public CommandGraphResource
 {
   public:
     FramebufferHelper();

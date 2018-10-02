@@ -504,7 +504,8 @@ void LineLoopHelper::Draw(uint32_t count, CommandBuffer *commandBuffer)
 }
 
 // BufferHelper implementation.
-BufferHelper::BufferHelper() : mMemoryPropertyFlags{}
+BufferHelper::BufferHelper()
+    : CommandGraphResource(CommandGraphResourceType::Buffer), mMemoryPropertyFlags{}
 {
 }
 
@@ -527,12 +528,17 @@ void BufferHelper::release(RendererVk *renderer)
 
 // ImageHelper implementation.
 ImageHelper::ImageHelper()
-    : mFormat(nullptr), mSamples(0), mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED), mLayerCount(0)
+    : CommandGraphResource(CommandGraphResourceType::Image),
+      mFormat(nullptr),
+      mSamples(0),
+      mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED),
+      mLayerCount(0)
 {
 }
 
 ImageHelper::ImageHelper(ImageHelper &&other)
-    : mImage(std::move(other.mImage)),
+    : CommandGraphResource(CommandGraphResourceType::Image),
+      mImage(std::move(other.mImage)),
       mDeviceMemory(std::move(other.mDeviceMemory)),
       mExtents(other.mExtents),
       mFormat(other.mFormat),
@@ -935,7 +941,9 @@ void ImageHelper::Copy(ImageHelper *srcImage,
 }
 
 // FramebufferHelper implementation.
-FramebufferHelper::FramebufferHelper() = default;
+FramebufferHelper::FramebufferHelper() : CommandGraphResource(CommandGraphResourceType::Framebuffer)
+{
+}
 
 FramebufferHelper::~FramebufferHelper() = default;
 

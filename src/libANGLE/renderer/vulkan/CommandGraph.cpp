@@ -9,6 +9,8 @@
 
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 
+#include <iostream>
+
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
@@ -16,13 +18,10 @@
 
 namespace rx
 {
-
 namespace vk
 {
-
 namespace
 {
-
 angle::Result InitAndBeginCommandBuffer(vk::Context *context,
                                         const CommandPool &commandPool,
                                         const VkCommandBufferInheritanceInfo &inheritanceInfo,
@@ -50,10 +49,26 @@ angle::Result InitAndBeginCommandBuffer(vk::Context *context,
     return angle::Result::Continue();
 }
 
+const char *GetResourceTypeName(CommandGraphResourceType resourceType)
+{
+    switch (resourceType)
+    {
+        case CommandGraphResourceType::Buffer:
+            return "Buffer";
+        case CommandGraphResourceType::Framebuffer:
+            return "Framebuffer";
+        case CommandGraphResourceType::Image:
+            return "Image";
+        default:
+            UNREACHABLE();
+            return "";
+    }
+}
 }  // anonymous namespace
 
 // CommandGraphResource implementation.
-CommandGraphResource::CommandGraphResource() : mCurrentWritingNode(nullptr)
+CommandGraphResource::CommandGraphResource(CommandGraphResourceType resourceType)
+    : mCurrentWritingNode(nullptr), mResourceType(resourceType)
 {
 }
 
@@ -145,6 +160,7 @@ angle::Result CommandGraphResource::beginRenderPass(Context *context,
 void CommandGraphResource::finishCurrentCommands(RendererVk *renderer)
 {
     CommandGraphNode *newCommands = renderer->getCommandGraph()->allocateNode();
+    newCommands->setDiagnosticInfo(mResourceType, reinterpret_cast<uintptr_t>(this));
     onWriteImpl(newCommands, renderer->getCurrentQueueSerial());
 }
 
@@ -390,13 +406,28 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
     return angle::Result::Continue();
 }
 
+const std::vector<CommandGraphNode *> &CommandGraphNode::getParentsForDiagnostics() const
+{
+    return mParents;
+}
+
+void CommandGraphNode::setDiagnosticInfo(CommandGraphResourceType resourceType,
+                                         uintptr_t resourceID)
+{
+    mResourceType = resourceType;
+    mResourceID   = resourceID;
+}
+
 const gl::Rectangle &CommandGraphNode::getRenderPassRenderArea() const
 {
     return mRenderPassRenderArea;
 }
 
 // CommandGraph implementation.
-CommandGraph::CommandGraph() = default;
+CommandGraph::CommandGraph(bool enableGraphDiagnostics)
+    : mEnableGraphDiagnostics(enableGraphDiagnostics)
+{
+}
 
 CommandGraph::~CommandGraph()
 {
@@ -429,6 +460,11 @@ angle::Result CommandGraph::submitCommands(Context *context,
     if (mNodes.empty())
     {
         return angle::Result::Continue();
+    }
+
+    if (mEnableGraphDiagnostics)
+    {
+        dumpGraphDotFile(std::cout);
     }
 
     std::vector<CommandGraphNode *> nodeStack;
@@ -491,5 +527,80 @@ bool CommandGraph::empty() const
     return mNodes.empty();
 }
 
+// Dumps the command graph into a dot file that works with graphviz.
+void CommandGraph::dumpGraphDotFile(std::ostream &out) const
+{
+    // This ID maps a node pointer to a monatonic ID. It allows us to look up parent node IDs.
+    std::map<const CommandGraphNode *, int> nodeIDMap;
+    std::map<uintptr_t, int> objectIDMap;
+
+    // Map nodes to ids.
+    for (size_t nodeIndex = 0; nodeIndex < mNodes.size(); ++nodeIndex)
+    {
+        const CommandGraphNode *node = mNodes[nodeIndex];
+        nodeIDMap[node]              = static_cast<int>(nodeIndex) + 1;
+    }
+
+    int bufferIDCounter      = 1;
+    int framebufferIDCounter = 1;
+    int imageIDCounter       = 1;
+
+    out << "digraph {" << std::endl;
+
+    for (const CommandGraphNode *node : mNodes)
+    {
+        int nodeID = nodeIDMap[node];
+
+        std::stringstream strstr;
+        strstr << GetResourceTypeName(node->getResourceTypeForDiagnostics());
+        strstr << " ";
+
+        auto it = objectIDMap.find(node->getResourceIDForDiagnostics());
+        if (it != objectIDMap.end())
+        {
+            strstr << it->second;
+        }
+        else
+        {
+            int id = 0;
+
+            switch (node->getResourceTypeForDiagnostics())
+            {
+                case CommandGraphResourceType::Buffer:
+                    id = bufferIDCounter++;
+                    break;
+                case CommandGraphResourceType::Framebuffer:
+                    id = framebufferIDCounter++;
+                    break;
+                case CommandGraphResourceType::Image:
+                    id = imageIDCounter++;
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+
+            objectIDMap[node->getResourceIDForDiagnostics()] = id;
+            strstr << id;
+        }
+
+        const std::string &label = strstr.str();
+        out << "  " << nodeID << "[label =<" << label << "<BR/> <FONT POINT-SIZE=\"10\">Node ID "
+            << nodeID << "</FONT>>];" << std::endl;
+    }
+
+    for (const CommandGraphNode *node : mNodes)
+    {
+        int nodeID = nodeIDMap[node];
+
+        for (const CommandGraphNode *parent : node->getParentsForDiagnostics())
+        {
+            int parentID = nodeIDMap[parent];
+            out << "  " << parentID << " -> " << nodeID << ";" << std::endl;
+        }
+    }
+
+    out << "}" << std::endl;
+}
 }  // namespace vk
 }  // namespace rx
