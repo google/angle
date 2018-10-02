@@ -539,6 +539,17 @@
         "glTexStorage3DMultisampleOES"
     ],
 
+    "GL_OES_texture_border_clamp": [
+        "glTexParameterIivOES",
+        "glTexParameterIuivOES",
+        "glGetTexParameterIivOES",
+        "glGetTexParameterIuivOES",
+        "glSamplerParameterIivOES",
+        "glSamplerParameterIuivOES",
+        "glGetSamplerParameterIivOES",
+        "glGetSamplerParameterIuivOES"
+    ],
+
     "GLES3 core": [
         "glReadBuffer",
         "glDrawRangeElements",

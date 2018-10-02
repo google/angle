@@ -60,8 +60,12 @@ void QueryTexLevelParameteriv(const Texture *texture,
                               GLint *params);
 void QueryTexParameterfv(const Texture *texture, GLenum pname, GLfloat *params);
 void QueryTexParameteriv(const Texture *texture, GLenum pname, GLint *params);
+void QueryTexParameterIiv(const Texture *texture, GLenum pname, GLint *params);
+void QueryTexParameterIuiv(const Texture *texture, GLenum pname, GLuint *params);
 void QuerySamplerParameterfv(const Sampler *sampler, GLenum pname, GLfloat *params);
 void QuerySamplerParameteriv(const Sampler *sampler, GLenum pname, GLint *params);
+void QuerySamplerParameterIiv(const Sampler *sampler, GLenum pname, GLint *params);
+void QuerySamplerParameterIuiv(const Sampler *sampler, GLenum pname, GLuint *params);
 
 // Warning: you should ensure binding really matches attrib.bindingIndex before using the following
 // functions.
@@ -111,11 +115,18 @@ void SetTexParameterf(Context *context, Texture *texture, GLenum pname, GLfloat 
 void SetTexParameterfv(Context *context, Texture *texture, GLenum pname, const GLfloat *params);
 void SetTexParameteri(Context *context, Texture *texture, GLenum pname, GLint param);
 void SetTexParameteriv(Context *context, Texture *texture, GLenum pname, const GLint *params);
+void SetTexParameterIiv(Context *context, Texture *texture, GLenum pname, const GLint *params);
+void SetTexParameterIuiv(Context *context, Texture *texture, GLenum pname, const GLuint *params);
 
 void SetSamplerParameterf(Context *context, Sampler *sampler, GLenum pname, GLfloat param);
 void SetSamplerParameterfv(Context *context, Sampler *sampler, GLenum pname, const GLfloat *params);
 void SetSamplerParameteri(Context *context, Sampler *sampler, GLenum pname, GLint param);
 void SetSamplerParameteriv(Context *context, Sampler *sampler, GLenum pname, const GLint *params);
+void SetSamplerParameterIiv(Context *context, Sampler *sampler, GLenum pname, const GLint *params);
+void SetSamplerParameterIuiv(Context *context,
+                             Sampler *sampler,
+                             GLenum pname,
+                             const GLuint *params);
 
 void SetFramebufferParameteri(const Context *context,
                               Framebuffer *framebuffer,

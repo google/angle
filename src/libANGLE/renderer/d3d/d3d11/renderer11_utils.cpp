@@ -1614,6 +1614,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->multiviewMultisample =
         (extensions->multiview && extensions->textureStorageMultisample2DArray);
     extensions->copyTexture3d = true;
+    extensions->textureBorderClamp = true;
 
     // D3D11 Feature Level 10_0+ uses SV_IsFrontFace in HLSL to emulate gl_FrontFacing.
     // D3D11 Feature Level 9_3 doesn't support SV_IsFrontFace, and has no equivalent, so can't support gl_FrontFacing.
@@ -1949,6 +1950,8 @@ D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap)
             return D3D11_TEXTURE_ADDRESS_WRAP;
         case GL_CLAMP_TO_EDGE:
             return D3D11_TEXTURE_ADDRESS_CLAMP;
+        case GL_CLAMP_TO_BORDER:
+            return D3D11_TEXTURE_ADDRESS_BORDER;
         case GL_MIRRORED_REPEAT:
             return D3D11_TEXTURE_ADDRESS_MIRROR;
         default:

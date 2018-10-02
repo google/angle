@@ -648,6 +648,14 @@ bool ValidateGetRenderbufferParameteriv(Context *context,
 bool ValidateGetShaderiv(Context *context, GLuint shader, GLenum pname, GLint *params);
 bool ValidateGetTexParameterfv(Context *context, TextureType target, GLenum pname, GLfloat *params);
 bool ValidateGetTexParameteriv(Context *context, TextureType target, GLenum pname, GLint *params);
+bool ValidateGetTexParameterIivOES(Context *context,
+                                   TextureType target,
+                                   GLenum pname,
+                                   GLint *params);
+bool ValidateGetTexParameterIuivOES(Context *context,
+                                    TextureType target,
+                                    GLenum pname,
+                                    GLuint *params);
 bool ValidateGetUniformfv(Context *context, GLuint program, GLint location, GLfloat *params);
 bool ValidateGetUniformiv(Context *context, GLuint program, GLint location, GLint *params);
 bool ValidateGetVertexAttribfv(Context *context, GLuint index, GLenum pname, GLfloat *params);
@@ -673,6 +681,14 @@ bool ValidateTexParameteriv(Context *context,
                             TextureType target,
                             GLenum pname,
                             const GLint *params);
+bool ValidateTexParameterIivOES(Context *context,
+                                TextureType target,
+                                GLenum pname,
+                                const GLint *params);
+bool ValidateTexParameterIuivOES(Context *context,
+                                 TextureType target,
+                                 GLenum pname,
+                                 const GLuint *params);
 bool ValidateUniform1iv(Context *context, GLint location, GLsizei count, const GLint *value);
 bool ValidateUseProgram(Context *context, GLuint program);
 

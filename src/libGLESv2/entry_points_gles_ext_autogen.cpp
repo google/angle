@@ -4638,6 +4638,163 @@ GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
     return GetDefaultReturnValue<EntryPoint::QueryMatrixxOES, GLbitfield>();
 }
 
+// GL_OES_texture_border_clamp
+void GL_APIENTRY GetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", sampler, pname,
+          params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::GetSamplerParameterIivOES>(sampler, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateGetSamplerParameterIivOES(context, sampler, pname, params))
+        {
+            context->getSamplerParameterIiv(sampler, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY GetSamplerParameterIuivOES(GLuint sampler, GLenum pname, GLuint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", sampler, pname,
+          params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::GetSamplerParameterIuivOES>(sampler, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateGetSamplerParameterIuivOES(context, sampler, pname, params))
+        {
+            context->getSamplerParameterIuiv(sampler, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY GetTexParameterIivOES(GLenum target, GLenum pname, GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname,
+          params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::GetTexParameterIivOES>(targetPacked, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateGetTexParameterIivOES(context, targetPacked, pname, params))
+        {
+            context->getTexParameterIiv(targetPacked, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY GetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", target, pname,
+          params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::GetTexParameterIuivOES>(targetPacked, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateGetTexParameterIuivOES(context, targetPacked, pname, params))
+        {
+            context->getTexParameterIuiv(targetPacked, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY SamplerParameterIivOES(GLuint sampler, GLenum pname, const GLint *param)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint *param = 0x%0.8p)", sampler,
+          pname, param);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::SamplerParameterIivOES>(sampler, pname, param);
+
+        if (context->skipValidation() ||
+            ValidateSamplerParameterIivOES(context, sampler, pname, param))
+        {
+            context->samplerParameterIiv(sampler, pname, param);
+        }
+    }
+}
+
+void GL_APIENTRY SamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLuint *param)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLuint *param = 0x%0.8p)", sampler,
+          pname, param);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        context->gatherParams<EntryPoint::SamplerParameterIuivOES>(sampler, pname, param);
+
+        if (context->skipValidation() ||
+            ValidateSamplerParameterIuivOES(context, sampler, pname, param))
+        {
+            context->samplerParameterIuiv(sampler, pname, param);
+        }
+    }
+}
+
+void GL_APIENTRY TexParameterIivOES(GLenum target, GLenum pname, const GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint *params = 0x%0.8p)", target,
+          pname, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexParameterIivOES>(targetPacked, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateTexParameterIivOES(context, targetPacked, pname, params))
+        {
+            context->texParameterIiv(targetPacked, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY TexParameterIuivOES(GLenum target, GLenum pname, const GLuint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLuint *params = 0x%0.8p)", target,
+          pname, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexParameterIuivOES>(targetPacked, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateTexParameterIuivOES(context, targetPacked, pname, params))
+        {
+            context->texParameterIuiv(targetPacked, pname, params);
+        }
+    }
+}
+
 // GL_OES_texture_cube_map
 void GL_APIENTRY GetTexGenfvOES(GLenum coord, GLenum pname, GLfloat *params)
 {
@@ -9931,6 +10088,52 @@ void GL_APIENTRY GetRenderbufferParameterivOESContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY GetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
+                                                       GLuint sampler,
+                                                       GLenum pname,
+                                                       GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", sampler, pname,
+          params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::GetSamplerParameterIivOES>(sampler, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateGetSamplerParameterIivOES(context, sampler, pname, params))
+        {
+            context->getSamplerParameterIiv(sampler, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY GetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                        GLuint sampler,
+                                                        GLenum pname,
+                                                        GLuint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", sampler, pname,
+          params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::GetSamplerParameterIuivOES>(sampler, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateGetSamplerParameterIuivOES(context, sampler, pname, params))
+        {
+            context->getSamplerParameterIuiv(sampler, pname, params);
+        }
+    }
+}
+
 void GL_APIENTRY GetSamplerParameterfvContextANGLE(GLeglContext ctx,
                                                    GLuint sampler,
                                                    GLenum pname,
@@ -10335,6 +10538,54 @@ void GL_APIENTRY GetTexLevelParameterivContextANGLE(GLeglContext ctx,
             ValidateGetTexLevelParameteriv(context, targetPacked, level, pname, params))
         {
             context->getTexLevelParameteriv(targetPacked, level, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY GetTexParameterIivOESContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLenum pname,
+                                                   GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname,
+          params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::GetTexParameterIivOES>(targetPacked, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateGetTexParameterIivOES(context, targetPacked, pname, params))
+        {
+            context->getTexParameterIiv(targetPacked, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY GetTexParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                    GLenum target,
+                                                    GLenum pname,
+                                                    GLuint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", target, pname,
+          params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::GetTexParameterIuivOES>(targetPacked, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateGetTexParameterIuivOES(context, targetPacked, pname, params))
+        {
+            context->getTexParameterIuiv(targetPacked, pname, params);
         }
     }
 }
@@ -13669,6 +13920,52 @@ void GL_APIENTRY SampleMaskiContextANGLE(GLeglContext ctx, GLuint maskNumber, GL
     }
 }
 
+void GL_APIENTRY SamplerParameterIivOESContextANGLE(GLeglContext ctx,
+                                                    GLuint sampler,
+                                                    GLenum pname,
+                                                    const GLint *param)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint *param = 0x%0.8p)", sampler,
+          pname, param);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::SamplerParameterIivOES>(sampler, pname, param);
+
+        if (context->skipValidation() ||
+            ValidateSamplerParameterIivOES(context, sampler, pname, param))
+        {
+            context->samplerParameterIiv(sampler, pname, param);
+        }
+    }
+}
+
+void GL_APIENTRY SamplerParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                     GLuint sampler,
+                                                     GLenum pname,
+                                                     const GLuint *param)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLuint *param = 0x%0.8p)", sampler,
+          pname, param);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        context->gatherParams<EntryPoint::SamplerParameterIuivOES>(sampler, pname, param);
+
+        if (context->skipValidation() ||
+            ValidateSamplerParameterIuivOES(context, sampler, pname, param))
+        {
+            context->samplerParameterIuiv(sampler, pname, param);
+        }
+    }
+}
+
 void GL_APIENTRY SamplerParameterfContextANGLE(GLeglContext ctx,
                                                GLuint sampler,
                                                GLenum pname,
@@ -14390,6 +14687,54 @@ void GL_APIENTRY TexImage3DContextANGLE(GLeglContext ctx,
         {
             context->texImage3D(targetPacked, level, internalformat, width, height, depth, border,
                                 format, type, pixels);
+        }
+    }
+}
+
+void GL_APIENTRY TexParameterIivOESContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLenum pname,
+                                                const GLint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint *params = 0x%0.8p)", target,
+          pname, params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexParameterIivOES>(targetPacked, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateTexParameterIivOES(context, targetPacked, pname, params))
+        {
+            context->texParameterIiv(targetPacked, pname, params);
+        }
+    }
+}
+
+void GL_APIENTRY TexParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                 GLenum target,
+                                                 GLenum pname,
+                                                 const GLuint *params)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLuint *params = 0x%0.8p)", target,
+          pname, params);
+
+    Context *context = static_cast<gl::Context *>(ctx);
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureType targetPacked = FromGLenum<TextureType>(target);
+        context->gatherParams<EntryPoint::TexParameterIuivOES>(targetPacked, pname, params);
+
+        if (context->skipValidation() ||
+            ValidateTexParameterIuivOES(context, targetPacked, pname, params))
+        {
+            context->texParameterIuiv(targetPacked, pname, params);
         }
     }
 }

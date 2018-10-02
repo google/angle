@@ -3978,6 +3978,47 @@ GLbitfield GL_APIENTRY glQueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
     return gl::QueryMatrixxOES(mantissa, exponent);
 }
 
+// GL_OES_texture_border_clamp
+void GL_APIENTRY glGetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *params)
+{
+    return gl::GetSamplerParameterIivOES(sampler, pname, params);
+}
+
+void GL_APIENTRY glGetSamplerParameterIuivOES(GLuint sampler, GLenum pname, GLuint *params)
+{
+    return gl::GetSamplerParameterIuivOES(sampler, pname, params);
+}
+
+void GL_APIENTRY glGetTexParameterIivOES(GLenum target, GLenum pname, GLint *params)
+{
+    return gl::GetTexParameterIivOES(target, pname, params);
+}
+
+void GL_APIENTRY glGetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *params)
+{
+    return gl::GetTexParameterIuivOES(target, pname, params);
+}
+
+void GL_APIENTRY glSamplerParameterIivOES(GLuint sampler, GLenum pname, const GLint *param)
+{
+    return gl::SamplerParameterIivOES(sampler, pname, param);
+}
+
+void GL_APIENTRY glSamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLuint *param)
+{
+    return gl::SamplerParameterIuivOES(sampler, pname, param);
+}
+
+void GL_APIENTRY glTexParameterIivOES(GLenum target, GLenum pname, const GLint *params)
+{
+    return gl::TexParameterIivOES(target, pname, params);
+}
+
+void GL_APIENTRY glTexParameterIuivOES(GLenum target, GLenum pname, const GLuint *params)
+{
+    return gl::TexParameterIuivOES(target, pname, params);
+}
+
 // GL_OES_texture_cube_map
 void GL_APIENTRY glGetTexGenfvOES(GLenum coord, GLenum pname, GLfloat *params)
 {
@@ -5704,6 +5745,22 @@ void GL_APIENTRY glGetRenderbufferParameterivOESContextANGLE(GLeglContext ctx,
     return gl::GetRenderbufferParameterivOESContextANGLE(ctx, target, pname, params);
 }
 
+void GL_APIENTRY glGetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
+                                                         GLuint sampler,
+                                                         GLenum pname,
+                                                         GLint *params)
+{
+    return gl::GetSamplerParameterIivOESContextANGLE(ctx, sampler, pname, params);
+}
+
+void GL_APIENTRY glGetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                          GLuint sampler,
+                                                          GLenum pname,
+                                                          GLuint *params)
+{
+    return gl::GetSamplerParameterIuivOESContextANGLE(ctx, sampler, pname, params);
+}
+
 void GL_APIENTRY glGetSamplerParameterfvContextANGLE(GLeglContext ctx,
                                                      GLuint sampler,
                                                      GLenum pname,
@@ -5840,6 +5897,22 @@ void GL_APIENTRY glGetTexLevelParameterivContextANGLE(GLeglContext ctx,
                                                       GLint *params)
 {
     return gl::GetTexLevelParameterivContextANGLE(ctx, target, level, pname, params);
+}
+
+void GL_APIENTRY glGetTexParameterIivOESContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLenum pname,
+                                                     GLint *params)
+{
+    return gl::GetTexParameterIivOESContextANGLE(ctx, target, pname, params);
+}
+
+void GL_APIENTRY glGetTexParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLenum pname,
+                                                      GLuint *params)
+{
+    return gl::GetTexParameterIuivOESContextANGLE(ctx, target, pname, params);
 }
 
 void GL_APIENTRY glGetTexParameterfvContextANGLE(GLeglContext ctx,
@@ -6926,6 +6999,22 @@ void GL_APIENTRY glSampleMaskiContextANGLE(GLeglContext ctx, GLuint maskNumber, 
     return gl::SampleMaskiContextANGLE(ctx, maskNumber, mask);
 }
 
+void GL_APIENTRY glSamplerParameterIivOESContextANGLE(GLeglContext ctx,
+                                                      GLuint sampler,
+                                                      GLenum pname,
+                                                      const GLint *param)
+{
+    return gl::SamplerParameterIivOESContextANGLE(ctx, sampler, pname, param);
+}
+
+void GL_APIENTRY glSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                       GLuint sampler,
+                                                       GLenum pname,
+                                                       const GLuint *param)
+{
+    return gl::SamplerParameterIuivOESContextANGLE(ctx, sampler, pname, param);
+}
+
 void GL_APIENTRY glSamplerParameterfContextANGLE(GLeglContext ctx,
                                                  GLuint sampler,
                                                  GLenum pname,
@@ -7168,6 +7257,22 @@ void GL_APIENTRY glTexImage3DContextANGLE(GLeglContext ctx,
 {
     return gl::TexImage3DContextANGLE(ctx, target, level, internalformat, width, height, depth,
                                       border, format, type, pixels);
+}
+
+void GL_APIENTRY glTexParameterIivOESContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLenum pname,
+                                                  const GLint *params)
+{
+    return gl::TexParameterIivOESContextANGLE(ctx, target, pname, params);
+}
+
+void GL_APIENTRY glTexParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLenum pname,
+                                                   const GLuint *params)
+{
+    return gl::TexParameterIuivOESContextANGLE(ctx, target, pname, params);
 }
 
 void GL_APIENTRY glTexParameterfContextANGLE(GLeglContext ctx,

@@ -115,10 +115,12 @@ int GetWrapBits(GLenum wrap)
     switch (wrap)
     {
         case GL_CLAMP_TO_EDGE:
-            return 0x1;
+            return 0x0;
         case GL_REPEAT:
-            return 0x2;
+            return 0x1;
         case GL_MIRRORED_REPEAT:
+            return 0x2;
+        case GL_CLAMP_TO_BORDER:
             return 0x3;
         default:
             UNREACHABLE();
@@ -301,7 +303,9 @@ void ShaderConstants11::markDirty()
     mNumActiveShaderSamplers.fill(0);
 }
 
-bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data, const gl::Texture &texture)
+bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data,
+                                              const gl::Texture &texture,
+                                              const gl::SamplerState &samplerState)
 {
     bool dirty               = false;
     unsigned int baseLevel   = texture.getTextureState().getEffectiveBaseLevel();
@@ -369,16 +373,29 @@ bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data, const gl::T
             data->internalFormatBits = internalFormatBits;
             dirty                    = true;
         }
-        // Pack the wrap values into one integer so we can fit all the metadata in one 4-integer
-        // vector.
-        GLenum wrapS  = texture.getWrapS();
-        GLenum wrapT  = texture.getWrapT();
-        GLenum wrapR  = texture.getWrapR();
+        // Pack the wrap values into one integer so we can fit all the metadata in two 4-integer
+        // vectors.
+        GLenum wrapS  = samplerState.getWrapS();
+        GLenum wrapT  = samplerState.getWrapT();
+        GLenum wrapR  = samplerState.getWrapR();
         int wrapModes = GetWrapBits(wrapS) | (GetWrapBits(wrapT) << 2) | (GetWrapBits(wrapR) << 4);
         if (data->wrapModes != wrapModes)
         {
             data->wrapModes = wrapModes;
             dirty           = true;
+        }
+
+        const angle::ColorGeneric &borderColor(samplerState.getBorderColor());
+        constexpr int kBlack[4]          = {0};
+        const void *const intBorderColor = (borderColor.type == angle::ColorGeneric::Type::Float)
+                                               ? kBlack
+                                               : borderColor.colorI.data();
+        ASSERT(static_cast<const void *>(borderColor.colorI.data()) ==
+               static_cast<const void *>(borderColor.colorUI.data()));
+        if (memcmp(data->intBorderColor, intBorderColor, sizeof(data->intBorderColor)) != 0)
+        {
+            memcpy(data->intBorderColor, intBorderColor, sizeof(data->intBorderColor));
+            dirty = true;
         }
     }
 
@@ -462,10 +479,12 @@ void ShaderConstants11::onViewportChange(const gl::Rectangle &glViewport,
 
 void ShaderConstants11::onSamplerChange(gl::ShaderType shaderType,
                                         unsigned int samplerIndex,
-                                        const gl::Texture &texture)
+                                        const gl::Texture &texture,
+                                        const gl::SamplerState &samplerState)
 {
     ASSERT(shaderType != gl::ShaderType::InvalidEnum);
-    if (updateSamplerMetadata(&mShaderSamplerMetadata[shaderType][samplerIndex], texture))
+    if (updateSamplerMetadata(&mShaderSamplerMetadata[shaderType][samplerIndex], texture,
+                              samplerState))
     {
         mNumActiveShaderSamplers[shaderType] = 0;
     }
@@ -2504,7 +2523,7 @@ angle::Result StateManager11::setSamplerState(const gl::Context *context,
     // sampler state since having it in contiguous memory makes it possible to memcpy to a constant
     // buffer, and it doesn't affect the state set by
     // PSSetSamplers/VSSetSamplers/CSSetSamplers/GSSetSamplers.
-    mShaderConstants.onSamplerChange(type, index, *texture);
+    mShaderConstants.onSamplerChange(type, index, *texture, samplerState);
 
     return angle::Result::Continue();
 }

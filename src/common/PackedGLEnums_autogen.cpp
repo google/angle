@@ -1266,6 +1266,8 @@ WrapMode FromGLenum<WrapMode>(GLenum from)
     {
         case GL_CLAMP_TO_EDGE:
             return WrapMode::ClampToEdge;
+        case GL_CLAMP_TO_BORDER:
+            return WrapMode::ClampToBorder;
         case GL_MIRRORED_REPEAT:
             return WrapMode::MirroredRepeat;
         case GL_REPEAT:
@@ -1281,6 +1283,8 @@ GLenum ToGLenum(WrapMode from)
     {
         case WrapMode::ClampToEdge:
             return GL_CLAMP_TO_EDGE;
+        case WrapMode::ClampToBorder:
+            return GL_CLAMP_TO_BORDER;
         case WrapMode::MirroredRepeat:
             return GL_MIRRORED_REPEAT;
         case WrapMode::Repeat:

@@ -608,13 +608,29 @@ bool ValidateSamplerParameteriv(Context *context,
                                 GLuint sampler,
                                 GLenum pname,
                                 const GLint *params);
+bool ValidateSamplerParameterIivOES(Context *context,
+                                    GLuint sampler,
+                                    GLenum pname,
+                                    const GLint *params);
+bool ValidateSamplerParameterIuivOES(Context *context,
+                                     GLuint sampler,
+                                     GLenum pname,
+                                     const GLuint *params);
 bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param);
 bool ValidateSamplerParameterfv(Context *context,
                                 GLuint sampler,
                                 GLenum pname,
                                 const GLfloat *params);
-bool ValidateGetSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, GLint *params);
 bool ValidateGetSamplerParameterfv(Context *context, GLuint sampler, GLenum pname, GLfloat *params);
+bool ValidateGetSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, GLint *params);
+bool ValidateGetSamplerParameterIivOES(Context *context,
+                                       GLuint sampler,
+                                       GLenum pname,
+                                       const GLint *params);
+bool ValidateGetSamplerParameterIuivOES(Context *context,
+                                        GLuint sampler,
+                                        GLenum pname,
+                                        const GLuint *params);
 bool ValidateGetInternalformativ(Context *context,
                                  GLenum target,
                                  GLenum internalformat,

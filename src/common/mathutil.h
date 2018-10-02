@@ -472,8 +472,17 @@ inline float normalizedToFloat(T input)
 {
     static_assert(std::numeric_limits<T>::is_integer, "T must be an integer.");
 
-    const float inverseMax = 1.0f / std::numeric_limits<T>::max();
-    return input * inverseMax;
+    if (sizeof(T) > 2)
+    {
+        // float has only a 23 bit mantissa, so we need to do the calculation in double precision
+        constexpr double inverseMax = 1.0 / std::numeric_limits<T>::max();
+        return static_cast<float>(input * inverseMax);
+    }
+    else
+    {
+        constexpr float inverseMax = 1.0f / std::numeric_limits<T>::max();
+        return input * inverseMax;
+    }
 }
 
 template <unsigned int inputBitCount, typename T>
@@ -482,21 +491,47 @@ inline float normalizedToFloat(T input)
     static_assert(std::numeric_limits<T>::is_integer, "T must be an integer.");
     static_assert(inputBitCount < (sizeof(T) * 8), "T must have more bits than inputBitCount.");
 
-    const float inverseMax = 1.0f / ((1 << inputBitCount) - 1);
-    return input * inverseMax;
+    if (inputBitCount > 23)
+    {
+        // float has only a 23 bit mantissa, so we need to do the calculation in double precision
+        constexpr double inverseMax = 1.0 / ((1 << inputBitCount) - 1);
+        return static_cast<float>(input * inverseMax);
+    }
+    else
+    {
+        constexpr float inverseMax = 1.0f / ((1 << inputBitCount) - 1);
+        return input * inverseMax;
+    }
 }
 
 template <typename T>
 inline T floatToNormalized(float input)
 {
-    return static_cast<T>(std::numeric_limits<T>::max() * input + 0.5f);
+    if (sizeof(T) > 2)
+    {
+        // float has only a 23 bit mantissa, so we need to do the calculation in double precision
+        return static_cast<T>(std::numeric_limits<T>::max() * static_cast<double>(input) + 0.5);
+    }
+    else
+    {
+        return static_cast<T>(std::numeric_limits<T>::max() * input + 0.5f);
+    }
 }
 
 template <unsigned int outputBitCount, typename T>
 inline T floatToNormalized(float input)
 {
     static_assert(outputBitCount < (sizeof(T) * 8), "T must have more bits than outputBitCount.");
-    return static_cast<T>(((1 << outputBitCount) - 1) * input + 0.5f);
+
+    if (outputBitCount > 23)
+    {
+        // float has only a 23 bit mantissa, so we need to do the calculation in double precision
+        return static_cast<T>(((1 << outputBitCount) - 1) * static_cast<double>(input) + 0.5);
+    }
+    else
+    {
+        return static_cast<T>(((1 << outputBitCount) - 1) * input + 0.5f);
+    }
 }
 
 template <unsigned int inputBitCount, unsigned int inputBitStart, typename T>

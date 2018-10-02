@@ -2074,7 +2074,7 @@ void Context::getRenderbufferParameterivRobust(GLenum target,
 
 void Context::getTexParameterfv(TextureType target, GLenum pname, GLfloat *params)
 {
-    Texture *texture = getTargetTexture(target);
+    const Texture *const texture = getTargetTexture(target);
     QueryTexParameterfv(texture, pname, params);
 }
 
@@ -2089,8 +2089,20 @@ void Context::getTexParameterfvRobust(TextureType target,
 
 void Context::getTexParameteriv(TextureType target, GLenum pname, GLint *params)
 {
-    Texture *texture = getTargetTexture(target);
+    const Texture *const texture = getTargetTexture(target);
     QueryTexParameteriv(texture, pname, params);
+}
+
+void Context::getTexParameterIiv(TextureType target, GLenum pname, GLint *params)
+{
+    const Texture *const texture = getTargetTexture(target);
+    QueryTexParameterIiv(texture, pname, params);
+}
+
+void Context::getTexParameterIuiv(TextureType target, GLenum pname, GLuint *params)
+{
+    const Texture *const texture = getTargetTexture(target);
+    QueryTexParameterIuiv(texture, pname, params);
 }
 
 void Context::getTexParameterivRobust(TextureType target,
@@ -2157,14 +2169,14 @@ void Context::getTexLevelParameterfvRobust(TextureTarget target,
 
 void Context::texParameterf(TextureType target, GLenum pname, GLfloat param)
 {
-    Texture *texture = getTargetTexture(target);
+    Texture *const texture = getTargetTexture(target);
     SetTexParameterf(this, texture, pname, param);
     onTextureChange(texture);
 }
 
 void Context::texParameterfv(TextureType target, GLenum pname, const GLfloat *params)
 {
-    Texture *texture = getTargetTexture(target);
+    Texture *const texture = getTargetTexture(target);
     SetTexParameterfv(this, texture, pname, params);
     onTextureChange(texture);
 }
@@ -2179,15 +2191,29 @@ void Context::texParameterfvRobust(TextureType target,
 
 void Context::texParameteri(TextureType target, GLenum pname, GLint param)
 {
-    Texture *texture = getTargetTexture(target);
+    Texture *const texture = getTargetTexture(target);
     SetTexParameteri(this, texture, pname, param);
     onTextureChange(texture);
 }
 
 void Context::texParameteriv(TextureType target, GLenum pname, const GLint *params)
 {
-    Texture *texture = getTargetTexture(target);
+    Texture *const texture = getTargetTexture(target);
     SetTexParameteriv(this, texture, pname, params);
+    onTextureChange(texture);
+}
+
+void Context::texParameterIiv(TextureType target, GLenum pname, const GLint *params)
+{
+    Texture *const texture = getTargetTexture(target);
+    SetTexParameterIiv(this, texture, pname, params);
+    onTextureChange(texture);
+}
+
+void Context::texParameterIuiv(TextureType target, GLenum pname, const GLuint *params)
+{
+    Texture *const texture = getTargetTexture(target);
+    SetTexParameterIuiv(this, texture, pname, params);
     onTextureChange(texture);
 }
 
@@ -2869,16 +2895,30 @@ void Context::vertexAttribDivisor(GLuint index, GLuint divisor)
 
 void Context::samplerParameteri(GLuint sampler, GLenum pname, GLint param)
 {
-    Sampler *samplerObject =
+    Sampler *const samplerObject =
         mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameteri(this, samplerObject, pname, param);
 }
 
 void Context::samplerParameteriv(GLuint sampler, GLenum pname, const GLint *param)
 {
-    Sampler *samplerObject =
+    Sampler *const samplerObject =
         mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameteriv(this, samplerObject, pname, param);
+}
+
+void Context::samplerParameterIiv(GLuint sampler, GLenum pname, const GLint *param)
+{
+    Sampler *const samplerObject =
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
+    SetSamplerParameterIiv(this, samplerObject, pname, param);
+}
+
+void Context::samplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint *param)
+{
+    Sampler *const samplerObject =
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
+    SetSamplerParameterIuiv(this, samplerObject, pname, param);
 }
 
 void Context::samplerParameterivRobust(GLuint sampler,
@@ -2907,14 +2947,14 @@ void Context::samplerParameterIuivRobust(GLuint sampler,
 
 void Context::samplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 {
-    Sampler *samplerObject =
+    Sampler *const samplerObject =
         mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameterf(this, samplerObject, pname, param);
 }
 
 void Context::samplerParameterfv(GLuint sampler, GLenum pname, const GLfloat *param)
 {
-    Sampler *samplerObject =
+    Sampler *const samplerObject =
         mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameterfv(this, samplerObject, pname, param);
 }
@@ -2929,9 +2969,23 @@ void Context::samplerParameterfvRobust(GLuint sampler,
 
 void Context::getSamplerParameteriv(GLuint sampler, GLenum pname, GLint *params)
 {
-    const Sampler *samplerObject =
+    const Sampler *const samplerObject =
         mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     QuerySamplerParameteriv(samplerObject, pname, params);
+}
+
+void Context::getSamplerParameterIiv(GLuint sampler, GLenum pname, GLint *params)
+{
+    const Sampler *const samplerObject =
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
+    QuerySamplerParameterIiv(samplerObject, pname, params);
+}
+
+void Context::getSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint *params)
+{
+    const Sampler *const samplerObject =
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
+    QuerySamplerParameterIuiv(samplerObject, pname, params);
 }
 
 void Context::getSamplerParameterivRobust(GLuint sampler,
@@ -2963,7 +3017,7 @@ void Context::getSamplerParameterIuivRobust(GLuint sampler,
 
 void Context::getSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat *params)
 {
-    const Sampler *samplerObject =
+    const Sampler *const samplerObject =
         mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     QuerySamplerParameterfv(samplerObject, pname, params);
 }

@@ -366,6 +366,9 @@ struct Extensions
     // GL_ANGLE_robust_client_memory
     bool robustClientMemory;
 
+    // GL_OES_texture_border_clamp
+    bool textureBorderClamp;
+
     // GL_EXT_texture_sRGB_decode
     bool textureSRGBDecode;
 

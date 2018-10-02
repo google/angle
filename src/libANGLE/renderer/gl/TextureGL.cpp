@@ -1224,6 +1224,30 @@ angle::Result TextureGL::syncState(const gl::Context *context,
                 functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_SRGB_DECODE_EXT,
                                          mAppliedSampler.getSRGBDecode());
                 break;
+            case gl::Texture::DIRTY_BIT_BORDER_COLOR:
+            {
+                const angle::ColorGeneric &borderColor(mState.getSamplerState().getBorderColor());
+                mAppliedSampler.setBorderColor(borderColor);
+                switch (borderColor.type)
+                {
+                    case angle::ColorGeneric::Type::Float:
+                        functions->texParameterfv(ToGLenum(getType()), GL_TEXTURE_BORDER_COLOR,
+                                                  &borderColor.colorF.red);
+                        break;
+                    case angle::ColorGeneric::Type::Int:
+                        functions->texParameterIiv(ToGLenum(getType()), GL_TEXTURE_BORDER_COLOR,
+                                                   &borderColor.colorI.red);
+                        break;
+                    case angle::ColorGeneric::Type::UInt:
+                        functions->texParameterIuiv(ToGLenum(getType()), GL_TEXTURE_BORDER_COLOR,
+                                                    &borderColor.colorUI.red);
+                        break;
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
+                break;
+            }
 
             // Texture state
             case gl::Texture::DIRTY_BIT_SWIZZLE_RED:

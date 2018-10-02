@@ -494,11 +494,12 @@ GLenum ToGLenum(VertexArrayType from);
 enum class WrapMode : uint8_t
 {
     ClampToEdge    = 0,
-    MirroredRepeat = 1,
-    Repeat         = 2,
+    ClampToBorder  = 1,
+    MirroredRepeat = 2,
+    Repeat         = 3,
 
-    InvalidEnum = 3,
-    EnumCount   = 3,
+    InvalidEnum = 4,
+    EnumCount   = 4,
 };
 
 template <>

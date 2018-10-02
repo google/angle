@@ -149,6 +149,16 @@ GLenum Sampler::getSRGBDecode() const
     return mState.getSRGBDecode();
 }
 
+void Sampler::setBorderColor(const ColorGeneric &color)
+{
+    mState.setBorderColor(color);
+}
+
+const ColorGeneric &Sampler::getBorderColor() const
+{
+    return mState.getBorderColor();
+}
+
 const SamplerState &Sampler::getSamplerState() const
 {
     return mState;

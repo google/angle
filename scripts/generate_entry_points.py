@@ -70,6 +70,7 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + [
     "GL_OES_EGL_image",
     "GL_OES_get_program_binary",
     "GL_OES_mapbuffer",
+    "GL_OES_texture_border_clamp",
     "GL_OES_texture_storage_multisample_2d_array",
     "GL_OES_vertex_array_object",
     "GL_KHR_parallel_shader_compile",

@@ -32,16 +32,25 @@ void OutputIntTexCoordWrap(TInfoSinkBase &out,
     out << "int " << texCoordOutName << ";\n";
     out << "float " << texCoordOutName << "Offset = " << texCoord << " + float(" << texCoordOffset
         << ") / " << size << ";\n";
+    out << "bool " << texCoordOutName << "UseBorderColor = false;\n";
 
     // CLAMP_TO_EDGE
-    out << "if (" << wrapMode << " == 1)\n";
+    out << "if (" << wrapMode << " == 0)\n";
     out << "{\n";
     out << "    " << texCoordOutName << " = clamp(int(floor(" << size << " * " << texCoordOutName
         << "Offset)), 0, int(" << size << ") - 1);\n";
     out << "}\n";
 
-    // MIRRORED_REPEAT
+    // CLAMP_TO_BORDER
     out << "else if (" << wrapMode << " == 3)\n";
+    out << "{\n";
+    out << "    int texCoordInt = int(floor(" << size << " * " << texCoordOutName << "Offset));\n";
+    out << "    " << texCoordOutName << " = clamp(texCoordInt, 0, int(" << size << ") - 1);\n";
+    out << "    " << texCoordOutName << "UseBorderColor = (texCoordInt != " << texCoordOutName << ");\n";
+    out << "}\n";
+
+    // MIRRORED_REPEAT
+    out << "else if (" << wrapMode << " == 2)\n";
     out << "{\n";
     out << "    float coordWrapped = 1.0 - abs(frac(abs(" << texCoordOutName
         << "Offset) * 0.5) * 2.0 - 1.0);\n";
@@ -84,6 +93,8 @@ void OutputIntTexCoordWraps(TInfoSinkBase &out,
     }
     *texCoordY = ImmutableString("tiy");
 
+    bool tizAvailable = false;
+
     if (IsSamplerArray(textureFunction.sampler))
     {
         *texCoordZ = ImmutableString("int(max(0, min(layers - 1, floor(0.5 + t.z))))");
@@ -99,8 +110,12 @@ void OutputIntTexCoordWraps(TInfoSinkBase &out,
         {
             OutputIntTexCoordWrap(out, "wrapR", "depth", *texCoordZ, "0", "tiz");
         }
-        *texCoordZ = ImmutableString("tiz");
+        *texCoordZ   = ImmutableString("tiz");
+        tizAvailable = true;
     }
+
+    out << "bool useBorderColor = tixUseBorderColor || tiyUseBorderColor"
+        << (tizAvailable ? " || tizUseBorderColor" : "") << ";\n";
 }
 
 void OutputHLSL4SampleFunctionPrefix(TInfoSinkBase &out,
@@ -906,6 +921,17 @@ void OutputTextureSampleFunctionReturnStatement(
     const ImmutableString &texCoordZ)
 {
     out << "    return ";
+
+    if (IsIntegerSampler(textureFunction.sampler) && !IsSamplerCube(textureFunction.sampler) &&
+        textureFunction.method != TextureFunctionHLSL::TextureFunction::FETCH)
+    {
+        out << " useBorderColor ? ";
+        if (IsIntegerSamplerUnsigned(textureFunction.sampler))
+        {
+            out << "asuint";
+        }
+        out << "(samplerMetadata[samplerIndex].intBorderColor) : ";
+    }
 
     // HLSL intrinsic
     if (outputType == SH_HLSL_3_0_OUTPUT)

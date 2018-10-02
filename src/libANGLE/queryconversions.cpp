@@ -89,6 +89,7 @@ template GLfloat CastFromGLintStateValue<GLfloat, GLenum>(GLenum pname, GLenum v
 template GLint CastFromGLintStateValue<GLint, GLenum>(GLenum pname, GLenum value);
 template GLint64 CastFromGLintStateValue<GLint64, GLenum>(GLenum pname, GLenum value);
 template GLuint CastFromGLintStateValue<GLuint, GLenum>(GLenum pname, GLenum value);
+template GLuint CastFromGLintStateValue<GLuint, GLint>(GLenum pname, GLint value);
 template GLfloat CastFromGLintStateValue<GLfloat, GLint>(GLenum pname, GLint value);
 template GLint CastFromGLintStateValue<GLint, GLint>(GLenum pname, GLint value);
 template GLfloat CastFromGLintStateValue<GLfloat, bool>(GLenum pname, bool value);
@@ -124,6 +125,7 @@ template GLfloat CastFromStateValue<GLfloat, GLint>(GLenum pname, GLint value);
 template GLfloat CastFromStateValue<GLfloat, GLuint>(GLenum pname, GLuint value);
 template GLfloat CastFromStateValue<GLfloat, GLfloat>(GLenum pname, GLfloat value);
 template GLint CastFromStateValue<GLint, GLfloat>(GLenum pname, GLfloat value);
+template GLuint CastFromStateValue<GLuint, GLfloat>(GLenum pname, GLfloat value);
 template GLuint CastFromStateValue<GLuint, GLint>(GLenum pname, GLint value);
 template GLuint CastFromStateValue<GLuint, GLuint>(GLenum pname, GLuint value);
 template GLint CastFromStateValue<GLint, GLboolean>(GLenum pname, GLboolean value);
@@ -157,9 +159,12 @@ NativeT CastQueryValueTo(GLenum pname, QueryT value)
 template GLint CastQueryValueTo<GLint, GLfloat>(GLenum pname, GLfloat value);
 template GLboolean CastQueryValueTo<GLboolean, GLint>(GLenum pname, GLint value);
 template GLint CastQueryValueTo<GLint, GLint>(GLenum pname, GLint value);
+template GLint CastQueryValueTo<GLint, GLuint>(GLenum pname, GLuint value);
 template GLfloat CastQueryValueTo<GLfloat, GLint>(GLenum pname, GLint value);
+template GLfloat CastQueryValueTo<GLfloat, GLuint>(GLenum pname, GLuint value);
 template GLfloat CastQueryValueTo<GLfloat, GLfloat>(GLenum pname, GLfloat value);
 template GLuint CastQueryValueTo<GLuint, GLint>(GLenum pname, GLint value);
+template GLuint CastQueryValueTo<GLuint, GLuint>(GLenum pname, GLuint value);
 template GLuint CastQueryValueTo<GLuint, GLfloat>(GLenum pname, GLfloat value);
 
 template <typename QueryT>

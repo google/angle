@@ -4023,9 +4023,35 @@ bool ValidateGetSamplerParameteriv(Context *context, GLuint sampler, GLenum pnam
     return ValidateGetSamplerParameterBase(context, sampler, pname, nullptr);
 }
 
+bool ValidateGetSamplerParameterIivOES(Context *context,
+                                       GLuint sampler,
+                                       GLenum pname,
+                                       const GLint *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    return ValidateGetSamplerParameterBase(context, sampler, pname, nullptr);
+}
+
+bool ValidateGetSamplerParameterIuivOES(Context *context,
+                                        GLuint sampler,
+                                        GLenum pname,
+                                        const GLuint *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    return ValidateGetSamplerParameterBase(context, sampler, pname, nullptr);
+}
+
 bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param)
 {
-    return ValidateSamplerParameterBase(context, sampler, pname, -1, &param);
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, false, &param);
 }
 
 bool ValidateSamplerParameterfv(Context *context,
@@ -4033,17 +4059,43 @@ bool ValidateSamplerParameterfv(Context *context,
                                 GLenum pname,
                                 const GLfloat *params)
 {
-    return ValidateSamplerParameterBase(context, sampler, pname, -1, params);
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, true, params);
 }
 
 bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param)
 {
-    return ValidateSamplerParameterBase(context, sampler, pname, -1, &param);
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, false, &param);
 }
 
 bool ValidateSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, const GLint *params)
 {
-    return ValidateSamplerParameterBase(context, sampler, pname, -1, params);
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, true, params);
+}
+
+bool ValidateSamplerParameterIivOES(Context *context,
+                                    GLuint sampler,
+                                    GLenum pname,
+                                    const GLint *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, true, params);
+}
+
+bool ValidateSamplerParameterIuivOES(Context *context,
+                                     GLuint sampler,
+                                     GLenum pname,
+                                     const GLuint *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, true, params);
 }
 
 bool ValidateGetVertexAttribIiv(Context *context, GLuint index, GLenum pname, GLint *params)

@@ -126,6 +126,7 @@ D3DTEXTUREADDRESS ConvertTextureWrap(GLenum wrap)
     {
       case GL_REPEAT:            d3dWrap = D3DTADDRESS_WRAP;   break;
       case GL_CLAMP_TO_EDGE:     d3dWrap = D3DTADDRESS_CLAMP;  break;
+      case GL_CLAMP_TO_BORDER:   d3dWrap = D3DTADDRESS_BORDER; break;
       case GL_MIRRORED_REPEAT:   d3dWrap = D3DTADDRESS_MIRROR; break;
       default: UNREACHABLE();
     }
@@ -619,6 +620,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->packSubimage           = true;
     extensions->syncQuery              = extensions->fence;
     extensions->copyTexture            = true;
+    extensions->textureBorderClamp     = true;
 
     // D3D9 has no concept of separate masks and refs for front and back faces in the depth stencil
     // state.

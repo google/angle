@@ -235,6 +235,12 @@
     "glGetTexParameterIuivRobustANGLE": {
         "target": "TextureType"
     },
+    "glGetTexParameterIivOES": {
+        "target": "TextureType"
+    },
+    "glGetTexParameterIuivOES": {
+        "target": "TextureType"
+    },
     "glGetTexParameterxv": {
         "target": "TextureType"
     },
@@ -356,6 +362,12 @@
         "target": "TextureType"
     },
     "glTexParameterIuivRobustANGLE": {
+        "target": "TextureType"
+    },
+    "glTexParameterIivOES": {
+        "target": "TextureType"
+    },
+    "glTexParameterIuivOES": {
         "target": "TextureType"
     },
     "glTexParameterx": {

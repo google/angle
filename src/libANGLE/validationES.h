@@ -524,6 +524,7 @@ bool ValidateTexParameterBase(Context *context,
                               TextureType target,
                               GLenum pname,
                               GLsizei bufSize,
+                              bool vectorParams,
                               const ParamType *params);
 bool ValidateTexParameterfvRobustANGLE(Context *context,
                                        TextureType target,
@@ -680,6 +681,7 @@ bool ValidateSamplerParameterBase(Context *context,
                                   GLuint sampler,
                                   GLenum pname,
                                   GLsizei bufSize,
+                                  bool vectorParams,
                                   ParamType *params);
 
 bool ValidateGetInternalFormativBase(Context *context,

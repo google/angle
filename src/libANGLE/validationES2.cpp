@@ -6203,6 +6203,32 @@ bool ValidateGetTexParameteriv(Context *context, TextureType target, GLenum pnam
     return ValidateGetTexParameterBase(context, target, pname, nullptr);
 }
 
+bool ValidateGetTexParameterIivOES(Context *context,
+                                   TextureType target,
+                                   GLenum pname,
+                                   GLint *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    return ValidateGetTexParameterBase(context, target, pname, nullptr);
+}
+
+bool ValidateGetTexParameterIuivOES(Context *context,
+                                    TextureType target,
+                                    GLenum pname,
+                                    GLuint *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    return ValidateGetTexParameterBase(context, target, pname, nullptr);
+}
+
 bool ValidateGetUniformfv(Context *context, GLuint program, GLint location, GLfloat *params)
 {
     return ValidateGetUniformBase(context, program, location);
@@ -6274,7 +6300,7 @@ bool ValidateReadPixels(Context *context,
 
 bool ValidateTexParameterf(Context *context, TextureType target, GLenum pname, GLfloat param)
 {
-    return ValidateTexParameterBase(context, target, pname, 1, &param);
+    return ValidateTexParameterBase(context, target, pname, -1, false, &param);
 }
 
 bool ValidateTexParameterfv(Context *context,
@@ -6282,17 +6308,43 @@ bool ValidateTexParameterfv(Context *context,
                             GLenum pname,
                             const GLfloat *params)
 {
-    return ValidateTexParameterBase(context, target, pname, -1, params);
+    return ValidateTexParameterBase(context, target, pname, -1, true, params);
 }
 
 bool ValidateTexParameteri(Context *context, TextureType target, GLenum pname, GLint param)
 {
-    return ValidateTexParameterBase(context, target, pname, 1, &param);
+    return ValidateTexParameterBase(context, target, pname, -1, false, &param);
 }
 
 bool ValidateTexParameteriv(Context *context, TextureType target, GLenum pname, const GLint *params)
 {
-    return ValidateTexParameterBase(context, target, pname, -1, params);
+    return ValidateTexParameterBase(context, target, pname, -1, true, params);
+}
+
+bool ValidateTexParameterIivOES(Context *context,
+                                TextureType target,
+                                GLenum pname,
+                                const GLint *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    return ValidateTexParameterBase(context, target, pname, -1, true, params);
+}
+
+bool ValidateTexParameterIuivOES(Context *context,
+                                 TextureType target,
+                                 GLenum pname,
+                                 const GLuint *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    return ValidateTexParameterBase(context, target, pname, -1, true, params);
 }
 
 bool ValidateUseProgram(Context *context, GLuint program)

@@ -509,6 +509,7 @@ void ResourcesHLSL::samplerMetadataUniforms(TInfoSinkBase &out, const char *reg)
                "        int internalFormatBits;\n"
                "        int wrapModes;\n"
                "        int padding;\n"
+               "        int4 intBorderColor;\n"
                "    };\n"
                "    SamplerMetadata samplerMetadata["
             << mSamplerCount << "] : packoffset(" << reg << ");\n";

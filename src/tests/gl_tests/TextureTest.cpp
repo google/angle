@@ -2751,6 +2751,439 @@ TEST_P(SamplerInStructAndOtherVariableTest, SamplerInStructAndOtherVariable)
     runSamplerInStructTest();
 }
 
+// GL_OES_texture_border_clamp
+class TextureBorderClampTest : public Texture2DTest
+{
+  protected:
+    TextureBorderClampTest() : Texture2DTest() {}
+
+    std::string getVertexShaderSource() override
+    {
+        return
+            R"(precision highp float;
+            attribute vec4 position;
+            varying vec2 texcoord;
+
+            void main()
+            {
+                gl_Position = vec4(position.xy, 0.0, 1.0);
+                // texcoords in [-0.5, 1.5]
+                texcoord = (position.xy) + 0.5;
+            })";
+    }
+
+    void uploadTexture()
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mTexture2D);
+        std::vector<GLColor> texDataRed(1, GLColor::red);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     texDataRed.data());
+        EXPECT_GL_NO_ERROR();
+    }
+};
+
+// Test if the color set as GL_TEXTURE_BORDER_COLOR is used when sampling outside of the texture in
+// GL_CLAMP_TO_BORDER wrap mode (set with glTexParameter).
+TEST_P(TextureBorderClampTest, TextureBorderClampFunctional)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    setUpProgram();
+
+    uploadTexture();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &kFloatGreen.R);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green);
+}
+
+// Test reading back GL_TEXTURE_BORDER_COLOR by glGetTexParameter.
+TEST_P(TextureBorderClampTest, TextureBorderClampFunctional2)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &kFloatGreen.R);
+
+    GLint colorFixedPoint[4] = {0};
+    glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorFixedPoint);
+    constexpr GLint colorGreenFixedPoint[4] = {0, std::numeric_limits<GLint>::max(), 0,
+                                               std::numeric_limits<GLint>::max()};
+    EXPECT_EQ(colorFixedPoint[0], colorGreenFixedPoint[0]);
+    EXPECT_EQ(colorFixedPoint[1], colorGreenFixedPoint[1]);
+    EXPECT_EQ(colorFixedPoint[2], colorGreenFixedPoint[2]);
+    EXPECT_EQ(colorFixedPoint[3], colorGreenFixedPoint[3]);
+
+    constexpr GLint colorBlueFixedPoint[4] = {0, 0, std::numeric_limits<GLint>::max(),
+                                              std::numeric_limits<GLint>::max()};
+    glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorBlueFixedPoint);
+
+    GLfloat color[4] = {0.0f};
+    glGetTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+    EXPECT_EQ(color[0], kFloatBlue.R);
+    EXPECT_EQ(color[1], kFloatBlue.G);
+    EXPECT_EQ(color[2], kFloatBlue.B);
+    EXPECT_EQ(color[3], kFloatBlue.A);
+}
+
+// Test GL_TEXTURE_BORDER_COLOR parameter validation at glTexParameter.
+TEST_P(TextureBorderClampTest, TextureBorderClampValidation)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, 1.0f);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, std::numeric_limits<GLint>::max());
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glTexParameterfv(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_BORDER_COLOR, &kFloatGreen.R);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLint colorInt[4] = {0};
+    glTexParameteriv(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, GL_TEXTURE_BORDER_COLOR, colorInt);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (getClientMajorVersion() < 3)
+    {
+        glTexParameterIivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorInt);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        glGetTexParameterIivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorInt);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        GLuint colorUInt[4] = {0};
+        glTexParameterIuivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorUInt);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        glGetTexParameterIuivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorUInt);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        GLSampler sampler;
+        glSamplerParameterIivOES(sampler, GL_TEXTURE_BORDER_COLOR, colorInt);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        glGetSamplerParameterIivOES(sampler, GL_TEXTURE_BORDER_COLOR, colorInt);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        glSamplerParameterIuivOES(sampler, GL_TEXTURE_BORDER_COLOR, colorUInt);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        glGetSamplerParameterIuivOES(sampler, GL_TEXTURE_BORDER_COLOR, colorUInt);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+}
+
+class TextureBorderClampTestES3 : public TextureBorderClampTest
+{
+  protected:
+    TextureBorderClampTestES3() : TextureBorderClampTest() {}
+};
+
+// Test if the color set as GL_TEXTURE_BORDER_COLOR is used when sampling outside of the texture in
+// GL_CLAMP_TO_BORDER wrap mode (set with glSamplerParameter).
+TEST_P(TextureBorderClampTestES3, TextureBorderClampES3Functional)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    setUpProgram();
+
+    uploadTexture();
+
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glSamplerParameterfv(sampler, GL_TEXTURE_BORDER_COLOR, &kFloatGreen.R);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green);
+}
+
+// Test reading back GL_TEXTURE_BORDER_COLOR by glGetSamplerParameter.
+TEST_P(TextureBorderClampTestES3, TextureBorderClampES3Functional2)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    glActiveTexture(GL_TEXTURE0);
+
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+
+    glSamplerParameterfv(sampler, GL_TEXTURE_BORDER_COLOR, &kFloatGreen.R);
+
+    GLint colorFixedPoint[4] = {0};
+    glGetSamplerParameteriv(sampler, GL_TEXTURE_BORDER_COLOR, colorFixedPoint);
+    constexpr GLint colorGreenFixedPoint[4] = {0, std::numeric_limits<GLint>::max(), 0,
+                                               std::numeric_limits<GLint>::max()};
+    EXPECT_EQ(colorFixedPoint[0], colorGreenFixedPoint[0]);
+    EXPECT_EQ(colorFixedPoint[1], colorGreenFixedPoint[1]);
+    EXPECT_EQ(colorFixedPoint[2], colorGreenFixedPoint[2]);
+    EXPECT_EQ(colorFixedPoint[3], colorGreenFixedPoint[3]);
+
+    constexpr GLint colorBlueFixedPoint[4] = {0, 0, std::numeric_limits<GLint>::max(),
+                                              std::numeric_limits<GLint>::max()};
+    glSamplerParameteriv(sampler, GL_TEXTURE_BORDER_COLOR, colorBlueFixedPoint);
+
+    GLfloat color[4] = {0.0f};
+    glGetSamplerParameterfv(sampler, GL_TEXTURE_BORDER_COLOR, color);
+    EXPECT_EQ(color[0], kFloatBlue.R);
+    EXPECT_EQ(color[1], kFloatBlue.G);
+    EXPECT_EQ(color[2], kFloatBlue.B);
+    EXPECT_EQ(color[3], kFloatBlue.A);
+
+    constexpr GLint colorSomewhatRedInt[4] = {500000, 0, 0, std::numeric_limits<GLint>::max()};
+    glSamplerParameterIivOES(sampler, GL_TEXTURE_BORDER_COLOR, colorSomewhatRedInt);
+    GLint colorInt[4] = {0};
+    glGetSamplerParameterIivOES(sampler, GL_TEXTURE_BORDER_COLOR, colorInt);
+    EXPECT_EQ(colorInt[0], colorSomewhatRedInt[0]);
+    EXPECT_EQ(colorInt[1], colorSomewhatRedInt[1]);
+    EXPECT_EQ(colorInt[2], colorSomewhatRedInt[2]);
+    EXPECT_EQ(colorInt[3], colorSomewhatRedInt[3]);
+
+    constexpr GLuint colorSomewhatRedUInt[4] = {500000, 0, 0, std::numeric_limits<GLuint>::max()};
+    glSamplerParameterIuivOES(sampler, GL_TEXTURE_BORDER_COLOR, colorSomewhatRedUInt);
+    GLuint colorUInt[4] = {0};
+    glGetSamplerParameterIuivOES(sampler, GL_TEXTURE_BORDER_COLOR, colorUInt);
+    EXPECT_EQ(colorUInt[0], colorSomewhatRedUInt[0]);
+    EXPECT_EQ(colorUInt[1], colorSomewhatRedUInt[1]);
+    EXPECT_EQ(colorUInt[2], colorSomewhatRedUInt[2]);
+    EXPECT_EQ(colorUInt[3], colorSomewhatRedUInt[3]);
+
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    constexpr GLint colorSomewhatGreenInt[4] = {0, 500000, 0, std::numeric_limits<GLint>::max()};
+    glTexParameterIivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorSomewhatGreenInt);
+    glGetTexParameterIivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorInt);
+    EXPECT_EQ(colorInt[0], colorSomewhatGreenInt[0]);
+    EXPECT_EQ(colorInt[1], colorSomewhatGreenInt[1]);
+    EXPECT_EQ(colorInt[2], colorSomewhatGreenInt[2]);
+    EXPECT_EQ(colorInt[3], colorSomewhatGreenInt[3]);
+
+    constexpr GLuint colorSomewhatGreenUInt[4] = {0, 500000, 0, std::numeric_limits<GLuint>::max()};
+    glTexParameterIuivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorSomewhatGreenUInt);
+    glGetTexParameterIuivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, colorUInt);
+    EXPECT_EQ(colorUInt[0], colorSomewhatGreenUInt[0]);
+    EXPECT_EQ(colorUInt[1], colorSomewhatGreenUInt[1]);
+    EXPECT_EQ(colorUInt[2], colorSomewhatGreenUInt[2]);
+    EXPECT_EQ(colorUInt[3], colorSomewhatGreenUInt[3]);
+}
+
+// Test GL_TEXTURE_BORDER_COLOR parameter validation at glSamplerParameter.
+TEST_P(TextureBorderClampTestES3, TextureBorderClampES3Validation)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    glActiveTexture(GL_TEXTURE0);
+
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+
+    glSamplerParameterf(sampler, GL_TEXTURE_BORDER_COLOR, 1.0f);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glSamplerParameteri(sampler, GL_TEXTURE_BORDER_COLOR, std::numeric_limits<GLint>::max());
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
+class TextureBorderClampIntegerTestES3 : public Texture2DTest
+{
+  protected:
+    TextureBorderClampIntegerTestES3() : Texture2DTest(), isUnsignedIntTest(false) {}
+
+    std::string getVertexShaderSource() override
+    {
+        return
+            R"(#version 300 es
+            out vec2 texcoord;
+            in vec4 position;
+
+            void main()
+            {
+                gl_Position = vec4(position.xy, 0.0, 1.0);
+                // texcoords in [-0.5, 1.5]
+                texcoord = (position.xy) + 0.5;
+            })";
+    }
+
+    std::string getFragmentShaderSource()
+    {
+        // clang-format off
+        return std::string(
+               "#version 300 es\n"
+               "precision highp float;\n"
+               "uniform highp ") + (isUnsignedIntTest ? "usampler2D" : "isampler2D") + " tex;\n"
+               "in vec2 texcoord;\n"
+               "out vec4 fragColor;\n"
+
+               "void main()\n"
+               "{\n"
+               "vec4 red   = vec4(1.0, 0.0, 0.0, 1.0);\n"
+               "vec4 green = vec4(0.0, 1.0, 0.0, 1.0);\n"
+               "fragColor = (texture(tex, texcoord).r == " + (isUnsignedIntTest ? "150u" : "-50") + ")"
+               "            ? green : red;\n"
+               "}\n";
+        // clang-format on
+    }
+
+    void uploadTexture()
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mTexture2D);
+        if (isUnsignedIntTest)
+        {
+            std::vector<GLubyte> texData(4, 100);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8UI, 1, 1, 0, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE,
+                         texData.data());
+        }
+        else
+        {
+            std::vector<GLbyte> texData(4, 100);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8I, 1, 1, 0, GL_RGBA_INTEGER, GL_BYTE,
+                         texData.data());
+        }
+        EXPECT_GL_NO_ERROR();
+    }
+
+    bool isUnsignedIntTest;
+};
+
+// Test if the integer values set as GL_TEXTURE_BORDER_COLOR is used when sampling outside of the
+// integer texture in GL_CLAMP_TO_BORDER wrap mode (set with glTexParameterIivOES).
+TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampInteger)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    setUpProgram();
+
+    uploadTexture();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    constexpr GLint borderColor[4] = {-50, -50, -50, -50};
+    glTexParameterIivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green);
+}
+
+// Test if the integer values set as GL_TEXTURE_BORDER_COLOR is used when sampling outside of the
+// integer texture in GL_CLAMP_TO_BORDER wrap mode (set with glTexParameterIivOES).
+TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampInteger2)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    setUpProgram();
+
+    uploadTexture();
+
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    constexpr GLint borderColor[4] = {-50, -50, -50, -50};
+    glSamplerParameterIivOES(sampler, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green);
+}
+
+// Test if the unsigned integer values set as GL_TEXTURE_BORDER_COLOR is used when sampling outside
+// of the unsigned integer texture in GL_CLAMP_TO_BORDER wrap mode (set with glTexParameterIuivOES).
+TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampIntegerUnsigned)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    isUnsignedIntTest = true;
+
+    setUpProgram();
+
+    uploadTexture();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    constexpr GLuint borderColor[4] = {150, 150, 150, 150};
+    glTexParameterIuivOES(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green);
+}
+
+// Test if the unsigned integer values set as GL_TEXTURE_BORDER_COLOR is used when sampling outside
+// of the unsigned integer texture in GL_CLAMP_TO_BORDER wrap mode (set with
+// glSamplerParameterIuivOES).
+TEST_P(TextureBorderClampIntegerTestES3, TextureBorderClampIntegerUnsigned2)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_border_clamp"));
+
+    isUnsignedIntTest = true;
+
+    setUpProgram();
+
+    uploadTexture();
+
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glSamplerParameteri(sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    constexpr GLuint borderColor[4] = {150, 150, 150, 150};
+    glSamplerParameterIuivOES(sampler, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green);
+}
+
+// ~GL_OES_texture_border_clamp
+
 class TextureLimitsTest : public ANGLETest
 {
   protected:
@@ -3932,6 +4365,13 @@ ANGLE_INSTANTIATE_TEST(SamplerInStructAndOtherVariableTest,
                        ES2_D3D9(),
                        ES2_OPENGL(),
                        ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TextureBorderClampTest,
+                       ES2_D3D11(),
+                       ES2_D3D9(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TextureBorderClampTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TextureBorderClampIntegerTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(Texture2DNorm16TestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureCubeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

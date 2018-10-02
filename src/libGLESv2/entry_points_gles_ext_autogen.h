@@ -836,6 +836,26 @@ ANGLE_EXPORT void GL_APIENTRY PointSizePointerOES(GLenum type, GLsizei stride, c
 // GL_OES_query_matrix
 ANGLE_EXPORT GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent);
 
+// GL_OES_texture_border_clamp
+ANGLE_EXPORT void GL_APIENTRY GetSamplerParameterIivOES(GLuint sampler,
+                                                        GLenum pname,
+                                                        GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GetSamplerParameterIuivOES(GLuint sampler,
+                                                         GLenum pname,
+                                                         GLuint *params);
+ANGLE_EXPORT void GL_APIENTRY GetTexParameterIivOES(GLenum target, GLenum pname, GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *params);
+ANGLE_EXPORT void GL_APIENTRY SamplerParameterIivOES(GLuint sampler,
+                                                     GLenum pname,
+                                                     const GLint *param);
+ANGLE_EXPORT void GL_APIENTRY SamplerParameterIuivOES(GLuint sampler,
+                                                      GLenum pname,
+                                                      const GLuint *param);
+ANGLE_EXPORT void GL_APIENTRY TexParameterIivOES(GLenum target, GLenum pname, const GLint *params);
+ANGLE_EXPORT void GL_APIENTRY TexParameterIuivOES(GLenum target,
+                                                  GLenum pname,
+                                                  const GLuint *params);
+
 // GL_OES_texture_cube_map
 ANGLE_EXPORT void GL_APIENTRY GetTexGenfvOES(GLenum coord, GLenum pname, GLfloat *params);
 ANGLE_EXPORT void GL_APIENTRY GetTexGenivOES(GLenum coord, GLenum pname, GLint *params);
@@ -1668,6 +1688,14 @@ ANGLE_EXPORT void GL_APIENTRY GetRenderbufferParameterivOESContextANGLE(GLeglCon
                                                                         GLenum target,
                                                                         GLenum pname,
                                                                         GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
+                                                                    GLuint sampler,
+                                                                    GLenum pname,
+                                                                    GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                                     GLuint sampler,
+                                                                     GLenum pname,
+                                                                     GLuint *params);
 ANGLE_EXPORT void GL_APIENTRY GetSamplerParameterfvContextANGLE(GLeglContext ctx,
                                                                 GLuint sampler,
                                                                 GLenum pname,
@@ -1739,6 +1767,14 @@ ANGLE_EXPORT void GL_APIENTRY GetTexLevelParameterivContextANGLE(GLeglContext ct
                                                                  GLint level,
                                                                  GLenum pname,
                                                                  GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GetTexParameterIivOESContextANGLE(GLeglContext ctx,
+                                                                GLenum target,
+                                                                GLenum pname,
+                                                                GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GetTexParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                                 GLenum target,
+                                                                 GLenum pname,
+                                                                 GLuint *params);
 ANGLE_EXPORT void GL_APIENTRY GetTexParameterfvContextANGLE(GLeglContext ctx,
                                                             GLenum target,
                                                             GLenum pname,
@@ -2269,6 +2305,14 @@ ANGLE_EXPORT void GL_APIENTRY SampleCoveragexContextANGLE(GLeglContext ctx,
 ANGLE_EXPORT void GL_APIENTRY SampleMaskiContextANGLE(GLeglContext ctx,
                                                       GLuint maskNumber,
                                                       GLbitfield mask);
+ANGLE_EXPORT void GL_APIENTRY SamplerParameterIivOESContextANGLE(GLeglContext ctx,
+                                                                 GLuint sampler,
+                                                                 GLenum pname,
+                                                                 const GLint *param);
+ANGLE_EXPORT void GL_APIENTRY SamplerParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                                  GLuint sampler,
+                                                                  GLenum pname,
+                                                                  const GLuint *param);
 ANGLE_EXPORT void GL_APIENTRY SamplerParameterfContextANGLE(GLeglContext ctx,
                                                             GLuint sampler,
                                                             GLenum pname,
@@ -2398,6 +2442,14 @@ ANGLE_EXPORT void GL_APIENTRY TexImage3DContextANGLE(GLeglContext ctx,
                                                      GLenum format,
                                                      GLenum type,
                                                      const void *pixels);
+ANGLE_EXPORT void GL_APIENTRY TexParameterIivOESContextANGLE(GLeglContext ctx,
+                                                             GLenum target,
+                                                             GLenum pname,
+                                                             const GLint *params);
+ANGLE_EXPORT void GL_APIENTRY TexParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                              GLenum target,
+                                                              GLenum pname,
+                                                              const GLuint *params);
 ANGLE_EXPORT void GL_APIENTRY TexParameterfContextANGLE(GLeglContext ctx,
                                                         GLenum target,
                                                         GLenum pname,

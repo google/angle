@@ -14,6 +14,37 @@
 namespace
 {
 
+template <typename T>
+inline void SetSamplerParameter(const rx::FunctionsGL *functions,
+                                GLuint sampler,
+                                GLenum name,
+                                const T &value)
+{
+    functions->samplerParameterf(sampler, name, static_cast<GLfloat>(value));
+}
+
+inline void SetSamplerParameter(const rx::FunctionsGL *functions,
+                                GLuint sampler,
+                                GLenum name,
+                                const angle::ColorGeneric &value)
+{
+    switch (value.type)
+    {
+        case angle::ColorGeneric::Type::Float:
+            functions->samplerParameterfv(sampler, name, &value.colorF.red);
+            break;
+        case angle::ColorGeneric::Type::Int:
+            functions->samplerParameterIiv(sampler, name, &value.colorI.red);
+            break;
+        case angle::ColorGeneric::Type::UInt:
+            functions->samplerParameterIuiv(sampler, name, &value.colorUI.red);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
 template <typename Getter, typename Setter>
 static inline void SyncSamplerStateMember(const rx::FunctionsGL *functions,
                                           GLuint sampler,
@@ -26,7 +57,7 @@ static inline void SyncSamplerStateMember(const rx::FunctionsGL *functions,
     if ((curState.*getter)() != (newState.*getter)())
     {
         (curState.*setter)((newState.*getter)());
-        functions->samplerParameterf(sampler, name, static_cast<GLfloat>((curState.*getter)()));
+        SetSamplerParameter(functions, sampler, name, (newState.*getter)());
     }
 }
 }
@@ -66,6 +97,7 @@ void SamplerGL::syncState(const gl::Context *context)
     SyncSamplerStateMember(mFunctions, mSamplerID, mState, mAppliedSamplerState, GL_TEXTURE_COMPARE_MODE, &gl::SamplerState::getCompareMode, &gl::SamplerState::setCompareMode);
     SyncSamplerStateMember(mFunctions, mSamplerID, mState, mAppliedSamplerState, GL_TEXTURE_COMPARE_FUNC, &gl::SamplerState::getCompareFunc, &gl::SamplerState::setCompareFunc);
     SyncSamplerStateMember(mFunctions, mSamplerID, mState, mAppliedSamplerState, GL_TEXTURE_SRGB_DECODE_EXT, &gl::SamplerState::getSRGBDecode, &gl::SamplerState::setSRGBDecode);
+    SyncSamplerStateMember(mFunctions, mSamplerID, mState, mAppliedSamplerState, GL_TEXTURE_BORDER_COLOR, &gl::SamplerState::getBorderColor, &gl::SamplerState::setBorderColor);
     // clang-format on
 }
 

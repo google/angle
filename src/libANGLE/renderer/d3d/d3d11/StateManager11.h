@@ -47,7 +47,8 @@ class ShaderConstants11 : angle::NonCopyable
                           bool presentPathFast);
     void onSamplerChange(gl::ShaderType shaderType,
                          unsigned int samplerIndex,
-                         const gl::Texture &texture);
+                         const gl::Texture &texture,
+                         const gl::SamplerState &samplerState);
 
     angle::Result updateBuffer(const gl::Context *context,
                                Renderer11 *renderer,
@@ -115,21 +116,27 @@ class ShaderConstants11 : angle::NonCopyable
 
     struct SamplerMetadata
     {
-        SamplerMetadata() : baseLevel(0), internalFormatBits(0), wrapModes(0), padding(0) {}
+        SamplerMetadata()
+            : baseLevel(0), internalFormatBits(0), wrapModes(0), padding(0), intBorderColor{0}
+        {
+        }
 
         int baseLevel;
         int internalFormatBits;
         int wrapModes;
-        int padding;  // This just pads the struct to 16 bytes
+        int padding;  // This just pads the struct to 32 bytes
+        int intBorderColor[4];
     };
 
-    static_assert(sizeof(SamplerMetadata) == 16u,
-                  "Sampler metadata struct must be one 4-vec / 16 bytes.");
+    static_assert(sizeof(SamplerMetadata) == 32u,
+                  "Sampler metadata struct must be two 4-vec --> 32 bytes.");
 
     static size_t GetShaderConstantsStructSize(gl::ShaderType shaderType);
 
     // Return true if dirty.
-    bool updateSamplerMetadata(SamplerMetadata *data, const gl::Texture &texture);
+    bool updateSamplerMetadata(SamplerMetadata *data,
+                               const gl::Texture &texture,
+                               const gl::SamplerState &samplerState);
 
     Vertex mVertex;
     Pixel mPixel;

@@ -280,8 +280,10 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     bool npotSupport = data.getExtensions().textureNPOT || data.getClientMajorVersion() >= 3;
     if (!npotSupport)
     {
-        if ((samplerState.getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(baseImageDesc.size.width)) ||
-            (samplerState.getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(baseImageDesc.size.height)))
+        if ((samplerState.getWrapS() != GL_CLAMP_TO_EDGE &&
+             samplerState.getWrapS() != GL_CLAMP_TO_BORDER && !isPow2(baseImageDesc.size.width)) ||
+            (samplerState.getWrapT() != GL_CLAMP_TO_EDGE &&
+             samplerState.getWrapT() != GL_CLAMP_TO_BORDER && !isPow2(baseImageDesc.size.height)))
         {
             return false;
         }
@@ -1523,6 +1525,17 @@ bool Texture::getAttachmentFixedSampleLocations(const ImageIndex &imageIndex) co
     // ES3.1 (section 9.4) requires that the value of TEXTURE_FIXED_SAMPLE_LOCATIONS should be
     // the same for all attached textures.
     return getFixedSampleLocations(imageIndex.getTarget(), imageIndex.getLevelIndex());
+}
+
+void Texture::setBorderColor(const ColorGeneric &color)
+{
+    mState.mSamplerState.setBorderColor(color);
+    mDirtyBits.set(DIRTY_BIT_BORDER_COLOR);
+}
+
+const ColorGeneric &Texture::getBorderColor() const
+{
+    return mState.mSamplerState.getBorderColor();
 }
 
 void Texture::setCrop(const gl::Rectangle &rect)

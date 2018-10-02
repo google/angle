@@ -230,6 +230,7 @@ Extensions::Extensions()
       requestExtension(false),
       bindGeneratesResource(false),
       robustClientMemory(false),
+      textureBorderClamp(false),
       textureSRGBDecode(false),
       sRGBWriteControl(false),
       colorBufferFloatRGB(false),
@@ -859,6 +860,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_color_buffer_float"] = enableableExtension(&Extensions::colorBufferFloat);
         map["GL_OES_vertex_array_object"] = enableableExtension(&Extensions::vertexArrayObject);
         map["GL_KHR_debug"] = esOnlyExtension(&Extensions::debug);
+        map["GL_OES_texture_border_clamp"] = enableableExtension(&Extensions::textureBorderClamp);
         // TODO(jmadill): Enable this when complete.
         //map["GL_KHR_no_error"] = esOnlyExtension(&Extensions::noError);
         map["GL_ANGLE_lossy_etc_decode"] = enableableExtension(&Extensions::lossyETCDecode);
