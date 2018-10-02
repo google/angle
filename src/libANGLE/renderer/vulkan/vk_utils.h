@@ -322,15 +322,15 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     angle::Result end(Context *context);
     angle::Result reset(Context *context);
 
-    void singleImageBarrier(VkPipelineStageFlags srcStageMask,
-                            VkPipelineStageFlags dstStageMask,
-                            VkDependencyFlags dependencyFlags,
-                            const VkImageMemoryBarrier &imageMemoryBarrier);
-
-    void singleBufferBarrier(VkPipelineStageFlags srcStageMask,
-                             VkPipelineStageFlags dstStageMask,
-                             VkDependencyFlags dependencyFlags,
-                             const VkBufferMemoryBarrier &bufferBarrier);
+    void pipelineBarrier(VkPipelineStageFlags srcStageMask,
+                         VkPipelineStageFlags dstStageMask,
+                         VkDependencyFlags dependencyFlags,
+                         uint32_t memoryBarrierCount,
+                         const VkMemoryBarrier *memoryBarriers,
+                         uint32_t bufferMemoryBarrierCount,
+                         const VkBufferMemoryBarrier *bufferMemoryBarriers,
+                         uint32_t imageMemoryBarrierCount,
+                         const VkImageMemoryBarrier *imageMemoryBarriers);
 
     void clearColorImage(const Image &image,
                          VkImageLayout imageLayout,

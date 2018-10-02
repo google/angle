@@ -843,8 +843,9 @@ angle::Result TextureVk::generateMipmapWithBlit(ContextVk *contextVk)
         barrier.dstAccessMask                 = VK_ACCESS_TRANSFER_READ_BIT;
 
         // We can do it for all layers at once.
-        commandBuffer->singleImageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                          VK_PIPELINE_STAGE_TRANSFER_BIT, 0, barrier);
+        commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                       VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1,
+                                       &barrier);
 
         VkImageBlit blit                   = {};
         blit.srcOffsets[0]                 = {0, 0, 0};
@@ -875,8 +876,8 @@ angle::Result TextureVk::generateMipmapWithBlit(ContextVk *contextVk)
     barrier.newLayout                     = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
 
     // We can do it for all layers at once.
-    commandBuffer->singleImageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                      VK_PIPELINE_STAGE_TRANSFER_BIT, 0, barrier);
+    commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                   0, 0, nullptr, 0, nullptr, 1, &barrier);
 
     // This is just changing the internal state of the image helper so that the next call
     // to changeLayoutWithStages will use this layout as the "oldLayout" argument.

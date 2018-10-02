@@ -822,7 +822,8 @@ void ImageHelper::changeLayoutWithStages(VkImageAspectFlags aspectMask,
         imageMemoryBarrier.dstAccessMask |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     }
 
-    commandBuffer->singleImageBarrier(srcStageMask, dstStageMask, 0, imageMemoryBarrier);
+    commandBuffer->pipelineBarrier(srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1,
+                                   &imageMemoryBarrier);
 
     mCurrentLayout = newLayout;
 }

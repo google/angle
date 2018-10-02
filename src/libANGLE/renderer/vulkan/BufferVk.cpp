@@ -225,8 +225,9 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         bufferBarrier.offset              = offset;
         bufferBarrier.size                = static_cast<VkDeviceSize>(size);
 
-        commandBuffer->singleBufferBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                           VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, bufferBarrier);
+        commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 1,
+                                       &bufferBarrier, 0, nullptr);
 
         VkBufferCopy copyRegion = {0, offset, size};
         commandBuffer->copyBuffer(stagingBuffer.getBuffer(), mBuffer.getBuffer(), 1, &copyRegion);
@@ -249,8 +250,9 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
         bufferBarrier.offset              = offset;
         bufferBarrier.size                = static_cast<VkDeviceSize>(size);
 
-        commandBuffer->singleBufferBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                           VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, bufferBarrier);
+        commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 1,
+                                       &bufferBarrier, 0, nullptr);
 
         // Immediately release staging buffer. We should probably be using a DynamicBuffer here.
         renderer->releaseObject(renderer->getCurrentQueueSerial(), &stagingBuffer);

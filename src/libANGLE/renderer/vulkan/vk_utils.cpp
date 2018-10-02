@@ -375,24 +375,20 @@ angle::Result CommandBuffer::reset(Context *context)
     return angle::Result::Continue();
 }
 
-void CommandBuffer::singleImageBarrier(VkPipelineStageFlags srcStageMask,
-                                       VkPipelineStageFlags dstStageMask,
-                                       VkDependencyFlags dependencyFlags,
-                                       const VkImageMemoryBarrier &imageMemoryBarrier)
+void CommandBuffer::pipelineBarrier(VkPipelineStageFlags srcStageMask,
+                                    VkPipelineStageFlags dstStageMask,
+                                    VkDependencyFlags dependencyFlags,
+                                    uint32_t memoryBarrierCount,
+                                    const VkMemoryBarrier *memoryBarriers,
+                                    uint32_t bufferMemoryBarrierCount,
+                                    const VkBufferMemoryBarrier *bufferMemoryBarriers,
+                                    uint32_t imageMemoryBarrierCount,
+                                    const VkImageMemoryBarrier *imageMemoryBarriers)
 {
     ASSERT(valid());
-    vkCmdPipelineBarrier(mHandle, srcStageMask, dstStageMask, dependencyFlags, 0, nullptr, 0,
-                         nullptr, 1, &imageMemoryBarrier);
-}
-
-void CommandBuffer::singleBufferBarrier(VkPipelineStageFlags srcStageMask,
-                                        VkPipelineStageFlags dstStageMask,
-                                        VkDependencyFlags dependencyFlags,
-                                        const VkBufferMemoryBarrier &bufferBarrier)
-{
-    ASSERT(valid());
-    vkCmdPipelineBarrier(mHandle, srcStageMask, dstStageMask, dependencyFlags, 0, nullptr, 1,
-                         &bufferBarrier, 0, nullptr);
+    vkCmdPipelineBarrier(mHandle, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount,
+                         memoryBarriers, bufferMemoryBarrierCount, bufferMemoryBarriers,
+                         imageMemoryBarrierCount, imageMemoryBarriers);
 }
 
 void CommandBuffer::destroy(VkDevice device)
