@@ -249,7 +249,6 @@ class ImageHelper final : public CommandGraphResource
     GLint getSamples() const;
 
     VkImageLayout getCurrentLayout() const { return mCurrentLayout; }
-    void updateLayout(VkImageLayout layout) { mCurrentLayout = layout; }
 
     void changeLayoutWithStages(VkImageAspectFlags aspectMask,
                                 VkImageLayout newLayout,
@@ -281,6 +280,8 @@ class ImageHelper final : public CommandGraphResource
                      const gl::Extents &copySize,
                      VkImageAspectFlags aspectMask,
                      CommandBuffer *commandBuffer);
+
+    angle::Result generateMipmapsWithBlit(ContextVk *contextVk, GLuint maxLevel);
 
   private:
     // Vulkan objects.

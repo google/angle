@@ -221,9 +221,7 @@ class TextureVk : public TextureImpl
                                         const gl::Rectangle &sourceArea,
                                         uint8_t **outDataPtr);
 
-    angle::Result generateMipmapWithBlit(ContextVk *contextVk);
-
-    angle::Result generateMipmapWithCPU(const gl::Context *context);
+    angle::Result generateMipmapsWithCPU(const gl::Context *context);
 
     angle::Result generateMipmapLevelsWithCPU(ContextVk *contextVk,
                                               const angle::Format &sourceFormat,
@@ -259,8 +257,6 @@ class TextureVk : public TextureImpl
                             const uint32_t levelCount,
                             vk::CommandBuffer *commandBuffer);
     void releaseImage(const gl::Context *context, RendererVk *renderer);
-    angle::Result getCommandBufferForWrite(ContextVk *contextVk,
-                                           vk::CommandBuffer **commandBufferOut);
     uint32_t getLevelCount() const;
     angle::Result initCubeMapRenderTargets(ContextVk *contextVk);
 

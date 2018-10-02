@@ -675,13 +675,6 @@ gl::Error TextureVk::copySubTextureImpl(ContextVk *contextVk,
     return angle::Result::Continue();
 }
 
-angle::Result TextureVk::getCommandBufferForWrite(ContextVk *contextVk,
-                                                  vk::CommandBuffer **commandBufferOut)
-{
-    ANGLE_TRY(mImage.recordCommands(contextVk, commandBufferOut));
-    return angle::Result::Continue();
-}
-
 gl::Error TextureVk::setStorage(const gl::Context *context,
                                 gl::TextureType type,
                                 size_t levels,
@@ -692,7 +685,7 @@ gl::Error TextureVk::setStorage(const gl::Context *context,
     RendererVk *renderer             = contextVk->getRenderer();
     const vk::Format &format         = renderer->getFormat(internalFormat);
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
+    ANGLE_TRY(mImage.recordCommands(contextVk, &commandBuffer));
 
     if (mImage.valid())
     {
@@ -761,7 +754,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     size_t sourceCopyAllocationSize = sourceArea.width * sourceArea.height * imageFormat.pixelBytes;
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
+    ANGLE_TRY(mImage.recordCommands(contextVk, &commandBuffer));
 
     // Requirement of the copyImageToBuffer, the source image must be in SRC_OPTIMAL layout.
     mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
@@ -800,93 +793,7 @@ angle::Result TextureVk::copyImageDataToBuffer(ContextVk *contextVk,
     return angle::Result::Continue();
 }
 
-angle::Result TextureVk::generateMipmapWithBlit(ContextVk *contextVk)
-{
-    ANGLE_TRY(ensureImageInitialized(contextVk));
-
-    uint32_t imageLayerCount           = GetImageLayerCount(mState.getType());
-    const gl::Extents baseLevelExtents = mImage.getExtents();
-    vk::CommandBuffer *commandBuffer   = nullptr;
-    ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
-
-    mImage.changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                  VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, commandBuffer);
-
-    // We are able to use blitImage since the image format we are using supports it. This
-    // is a faster way we can generate the mips.
-    int32_t mipWidth  = baseLevelExtents.width;
-    int32_t mipHeight = baseLevelExtents.height;
-
-    // Manually manage the image memory barrier because it uses a lot more parameters than our
-    // usual one.
-    VkImageMemoryBarrier barrier;
-    barrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    barrier.image                           = mImage.getImage().getHandle();
-    barrier.srcQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-    barrier.dstQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-    barrier.pNext                           = nullptr;
-    barrier.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    barrier.subresourceRange.baseArrayLayer = 0;
-    barrier.subresourceRange.layerCount     = imageLayerCount;
-    barrier.subresourceRange.levelCount     = 1;
-
-    for (uint32_t mipLevel = 1; mipLevel <= mState.getMipmapMaxLevel(); mipLevel++)
-    {
-        int32_t nextMipWidth  = std::max<int32_t>(1, mipWidth >> 1);
-        int32_t nextMipHeight = std::max<int32_t>(1, mipHeight >> 1);
-
-        barrier.subresourceRange.baseMipLevel = mipLevel - 1;
-        barrier.oldLayout                     = mImage.getCurrentLayout();
-        barrier.newLayout                     = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-        barrier.srcAccessMask                 = VK_ACCESS_TRANSFER_WRITE_BIT;
-        barrier.dstAccessMask                 = VK_ACCESS_TRANSFER_READ_BIT;
-
-        // We can do it for all layers at once.
-        commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                       VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1,
-                                       &barrier);
-
-        VkImageBlit blit                   = {};
-        blit.srcOffsets[0]                 = {0, 0, 0};
-        blit.srcOffsets[1]                 = {mipWidth, mipHeight, 1};
-        blit.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-        blit.srcSubresource.mipLevel       = mipLevel - 1;
-        blit.srcSubresource.baseArrayLayer = 0;
-        blit.srcSubresource.layerCount     = imageLayerCount;
-        blit.dstOffsets[0]                 = {0, 0, 0};
-        blit.dstOffsets[1]                 = {nextMipWidth, nextMipHeight, 1};
-        blit.dstSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-        blit.dstSubresource.mipLevel       = mipLevel;
-        blit.dstSubresource.baseArrayLayer = 0;
-        blit.dstSubresource.layerCount     = imageLayerCount;
-
-        mipWidth  = nextMipWidth;
-        mipHeight = nextMipHeight;
-
-        commandBuffer->blitImage(mImage.getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                                 mImage.getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,
-                                 VK_FILTER_LINEAR);
-    }
-
-    // Transition the last mip level to the same layout as all the other ones, so we can declare
-    // our whole image layout to be SRC_OPTIMAL.
-    barrier.subresourceRange.baseMipLevel = mState.getMipmapMaxLevel();
-    barrier.oldLayout                     = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    barrier.newLayout                     = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-
-    // We can do it for all layers at once.
-    commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                   0, 0, nullptr, 0, nullptr, 1, &barrier);
-
-    // This is just changing the internal state of the image helper so that the next call
-    // to changeLayoutWithStages will use this layout as the "oldLayout" argument.
-    mImage.updateLayout(VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-
-    return angle::Result::Continue();
-}
-
-angle::Result TextureVk::generateMipmapWithCPU(const gl::Context *context)
+angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -949,11 +856,12 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
     // only.
     if (IsMaskFlagSet(kBlitFeatureFlags, imageProperties.linearTilingFeatures))
     {
-        ANGLE_TRY(generateMipmapWithBlit(contextVk));
+        ANGLE_TRY(ensureImageInitialized(contextVk));
+        ANGLE_TRY(mImage.generateMipmapsWithBlit(contextVk, mState.getMipmapMaxLevel()));
     }
     else
     {
-        ANGLE_TRY(generateMipmapWithCPU(context));
+        ANGLE_TRY(generateMipmapsWithCPU(context));
     }
 
     // We're changing this textureVk content, make sure we let the graph know.
@@ -1015,7 +923,7 @@ angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk)
     }
     RendererVk *renderer             = contextVk->getRenderer();
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(getCommandBufferForWrite(contextVk, &commandBuffer));
+    ANGLE_TRY(mImage.recordCommands(contextVk, &commandBuffer));
 
     const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
     const gl::Extents &baseLevelExtents = baseLevelDesc.size;
