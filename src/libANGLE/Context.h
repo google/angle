@@ -1585,7 +1585,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
     bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
 
-    Program *getProgram(GLuint handle) const;
+    Program *getProgramResolveLink(GLuint handle) const;
+    Program *getProgramNoResolveLink(GLuint handle) const;
     Shader *getShader(GLuint handle) const;
 
     bool isTextureGenerated(GLuint texture) const;

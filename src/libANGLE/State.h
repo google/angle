@@ -227,7 +227,21 @@ class State : angle::NonCopyable
 
     // Program binding manipulation
     void setProgram(const Context *context, Program *newProgram);
-    Program *getProgram() const { return mProgram; }
+
+    Program *getProgram() const
+    {
+        ASSERT(!mProgram || !mProgram->isLinking());
+        return mProgram;
+    }
+
+    Program *getLinkedProgram() const
+    {
+        if (mProgram)
+        {
+            mProgram->resolveLink();
+        }
+        return mProgram;
+    }
 
     // Transform feedback object (not buffer) binding manipulation
     void setTransformFeedbackBinding(const Context *context, TransformFeedback *transformFeedback);

@@ -512,7 +512,11 @@ class Program final : angle::NonCopyable, public LabeledObject
     // Peek whether there is any running linking tasks.
     bool isLinking() const;
 
-    bool isLinked() const;
+    bool isLinked() const
+    {
+        ASSERT(mLinkResolved);
+        return mLinked;
+    }
 
     bool hasLinkedShaderStage(ShaderType shaderType) const
     {
@@ -570,8 +574,19 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool isValidUniformLocation(GLint location) const;
     const LinkedUniform &getUniformByLocation(GLint location) const;
     const VariableLocation &getUniformLocation(GLint location) const;
-    const std::vector<VariableLocation> &getUniformLocations() const;
-    const LinkedUniform &getUniformByIndex(GLuint index) const;
+
+    const std::vector<VariableLocation> &getUniformLocations() const
+    {
+        ASSERT(mLinkResolved);
+        return mState.mUniformLocations;
+    }
+
+    const LinkedUniform &getUniformByIndex(GLuint index) const
+    {
+        ASSERT(mLinkResolved);
+        ASSERT(index < static_cast<size_t>(mState.mUniforms.size()));
+        return mState.mUniforms[index];
+    }
 
     const BufferVariable &getBufferVariableByIndex(GLuint index) const;
 
@@ -704,14 +719,14 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     const AttributesMask &getActiveAttribLocationsMask() const
     {
-        resolveLink();
+        ASSERT(mLinkResolved);
         return mState.mActiveAttribLocationsMask;
     }
 
     const std::vector<SamplerBinding> &getSamplerBindings() const;
     const std::vector<ImageBinding> &getImageBindings() const
     {
-        resolveLink();
+        ASSERT(mLinkResolved);
         return mState.mImageBindings;
     }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const;
@@ -722,7 +737,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     const ProgramState &getState() const
     {
-        resolveLink();
+        ASSERT(mLinkResolved);
         return mState;
     }
 
@@ -779,6 +794,15 @@ class Program final : angle::NonCopyable, public LabeledObject
     using DirtyBits = angle::BitSet<DIRTY_BIT_COUNT>;
 
     Error syncState(const Context *context);
+
+    // Try to resolve linking. Inlined to make sure its overhead is as low as possible.
+    void resolveLink()
+    {
+        if (!mLinkResolved)
+        {
+            resolveLinkImpl();
+        }
+    }
 
   private:
     struct LinkingState;
@@ -873,16 +897,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLuint getSamplerUniformBinding(const VariableLocation &uniformLocation) const;
 
     bool validateSamplersImpl(InfoLog *infoLog, const Caps &caps);
-    // Try to resolve linking.
-    // Note: this method is frequently called in each draw call. Please make sure its overhead
-    // is as low as possible.
-    void resolveLink() const
-    {
-        if (!mLinkResolved)
-        {
-            return const_cast<Program *>(this)->resolveLinkImpl();
-        }
-    }
+
     // Block until linking is finished and resolve it.
     void resolveLinkImpl();
 

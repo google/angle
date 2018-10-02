@@ -385,7 +385,7 @@ bool ValidateTextureMaxAnisotropyValue(Context *context, GLfloat paramValue)
 
 bool ValidateFragmentShaderColorBufferTypeMatch(Context *context)
 {
-    const Program *program         = context->getGLState().getProgram();
+    const Program *program         = context->getGLState().getLinkedProgram();
     const Framebuffer *framebuffer = context->getGLState().getDrawFramebuffer();
 
     return ComponentTypeMask::Validate(program->getDrawBufferTypeMask().to_ulong(),
@@ -397,7 +397,7 @@ bool ValidateFragmentShaderColorBufferTypeMatch(Context *context)
 bool ValidateVertexShaderAttributeTypeMatch(Context *context)
 {
     const auto &glState    = context->getGLState();
-    const Program *program = context->getGLState().getProgram();
+    const Program *program = context->getGLState().getLinkedProgram();
     const VertexArray *vao = context->getGLState().getVertexArray();
 
     unsigned long stateCurrentValuesTypeBits = glState.getCurrentValuesTypeMask().to_ulong();
@@ -655,7 +655,7 @@ bool ValidateDrawInstancedANGLE(Context *context)
     // Verify there is at least one active attribute with a divisor of zero
     const State &state = context->getGLState();
 
-    Program *program = state.getProgram();
+    Program *program = state.getLinkedProgram();
 
     const auto &attribs  = state.getVertexArray()->getVertexAttributes();
     const auto &bindings = state.getVertexArray()->getVertexBindings();
@@ -1011,14 +1011,14 @@ bool ValidateWebGLVertexAttribPointer(Context *context,
     return true;
 }
 
-Program *GetValidProgram(Context *context, GLuint id)
+Program *GetValidProgramNoResolve(Context *context, GLuint id)
 {
     // ES3 spec (section 2.11.1) -- "Commands that accept shader or program object names will
     // generate the error INVALID_VALUE if the provided name is not the name of either a shader
     // or program object and INVALID_OPERATION if the provided name identifies an object
     // that is not the expected type."
 
-    Program *validProgram = context->getProgram(id);
+    Program *validProgram = context->getProgramNoResolveLink(id);
 
     if (!validProgram)
     {
@@ -1035,6 +1035,16 @@ Program *GetValidProgram(Context *context, GLuint id)
     return validProgram;
 }
 
+Program *GetValidProgram(Context *context, GLuint id)
+{
+    Program *program = GetValidProgramNoResolve(context, id);
+    if (program)
+    {
+        program->resolveLink();
+    }
+    return program;
+}
+
 Shader *GetValidShader(Context *context, GLuint id)
 {
     // See ValidProgram for spec details.
@@ -1043,7 +1053,7 @@ Shader *GetValidShader(Context *context, GLuint id)
 
     if (!validShader)
     {
-        if (context->getProgram(id))
+        if (context->getProgramNoResolveLink(id))
         {
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExpectedShaderName);
         }
@@ -2140,7 +2150,7 @@ bool ValidateUniformMatrixValue(Context *context, GLenum valueType, GLenum unifo
 bool ValidateUniform(Context *context, GLenum valueType, GLint location, GLsizei count)
 {
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = context->getGLState().getProgram();
+    Program *programObject       = context->getGLState().getLinkedProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformValue(context, valueType, uniform->type);
 }
@@ -2148,7 +2158,7 @@ bool ValidateUniform(Context *context, GLenum valueType, GLint location, GLsizei
 bool ValidateUniform1iv(Context *context, GLint location, GLsizei count, const GLint *value)
 {
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = context->getGLState().getProgram();
+    Program *programObject       = context->getGLState().getLinkedProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniform1ivValue(context, uniform->type, count, value);
 }
@@ -2166,7 +2176,7 @@ bool ValidateUniformMatrix(Context *context,
     }
 
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = context->getGLState().getProgram();
+    Program *programObject       = context->getGLState().getLinkedProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformMatrixValue(context, valueType, uniform->type);
 }
@@ -2647,7 +2657,7 @@ const char *ValidateDrawStates(Context *context)
     // If we are running GLES1, there is no current program.
     if (context->getClientVersion() >= Version(2, 0))
     {
-        Program *program = state.getProgram();
+        Program *program = state.getLinkedProgram();
         if (!program)
         {
             return kErrorProgramNotBound;
@@ -2794,7 +2804,7 @@ bool ValidateDrawMode(Context *context, PrimitiveMode mode)
     {
         const State &state = context->getGLState();
 
-        Program *program = state.getProgram();
+        Program *program = state.getLinkedProgram();
         ASSERT(program);
 
         // Do geometry shader specific validations
@@ -3269,7 +3279,7 @@ static bool ValidateSizedGetUniform(Context *context,
         return false;
     }
 
-    Program *programObject = context->getProgram(program);
+    Program *programObject = context->getProgramResolveLink(program);
     ASSERT(programObject);
 
     // sized queries -- ensure the provided buffer is large enough
@@ -4405,7 +4415,10 @@ bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GL
         *numParams = 1;
     }
 
-    Program *programObject = GetValidProgram(context, program);
+    // Special case for GL_COMPLETION_STATUS_KHR: don't resolve the link. Otherwise resolve it now.
+    Program *programObject = (pname == GL_COMPLETION_STATUS_KHR)
+                                 ? GetValidProgramNoResolve(context, program)
+                                 : GetValidProgram(context, program);
     if (!programObject)
     {
         return false;
@@ -4415,7 +4428,6 @@ bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GL
     {
         case GL_DELETE_STATUS:
         case GL_LINK_STATUS:
-        case GL_COMPLETION_STATUS_KHR:
         case GL_VALIDATE_STATUS:
         case GL_INFO_LOG_LENGTH:
         case GL_ATTACHED_SHADERS:
@@ -4503,6 +4515,14 @@ bool ValidateGetProgramivBase(Context *context, GLuint program, GLenum pname, GL
             if (!programObject->hasLinkedShaderStage(ShaderType::Geometry))
             {
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(), NoActiveGeometryShaderStage);
+                return false;
+            }
+            break;
+
+        case GL_COMPLETION_STATUS_KHR:
+            if (!context->getExtensions().parallelShaderCompile)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
                 return false;
             }
             break;
@@ -5357,7 +5377,6 @@ bool ValidateGetShaderivBase(Context *context, GLuint shader, GLenum pname, GLsi
         case GL_SHADER_TYPE:
         case GL_DELETE_STATUS:
         case GL_COMPILE_STATUS:
-        case GL_COMPLETION_STATUS_KHR:
         case GL_INFO_LOG_LENGTH:
         case GL_SHADER_SOURCE_LENGTH:
             break;
@@ -5366,6 +5385,14 @@ bool ValidateGetShaderivBase(Context *context, GLuint shader, GLenum pname, GLsi
             if (!context->getExtensions().translatedShaderSource)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), ExtensionNotEnabled);
+                return false;
+            }
+            break;
+
+        case GL_COMPLETION_STATUS_KHR:
+            if (!context->getExtensions().parallelShaderCompile)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
                 return false;
             }
             break;

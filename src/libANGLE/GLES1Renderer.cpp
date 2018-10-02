@@ -538,6 +538,7 @@ Error GLES1Renderer::linkProgram(Context *context,
     }
 
     ANGLE_TRY(programObject->link(context));
+    programObject->resolveLink();
 
     glState->onProgramExecutableChange(programObject);
 

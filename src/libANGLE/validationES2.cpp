@@ -2250,7 +2250,7 @@ static bool ValidateObjectIdentifierAndName(Context *context, GLenum identifier,
             return true;
 
         case GL_PROGRAM:
-            if (context->getProgram(name) == nullptr)
+            if (context->getProgramNoResolveLink(name) == nullptr)
             {
                 context->handleError(InvalidValue() << "name is not a valid program.");
                 return false;
@@ -3843,7 +3843,7 @@ bool ValidateBindFragmentInputLocationCHROMIUM(Context *context,
         return false;
     }
 
-    const auto *programObject = context->getProgram(program);
+    const auto *programObject = context->getProgramNoResolveLink(program);
     if (!programObject)
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotBound);
@@ -3878,7 +3878,7 @@ bool ValidateProgramPathFragmentInputGenCHROMIUM(Context *context,
         return false;
     }
 
-    const auto *programObject = context->getProgram(program);
+    const auto *programObject = context->getProgramResolveLink(program);
     if (!programObject || programObject->isFlaggedForDeletion())
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramDoesNotExist);
@@ -4933,7 +4933,7 @@ bool ValidateDeleteProgram(Context *context, GLuint program)
         return false;
     }
 
-    if (!context->getProgram(program))
+    if (!context->getProgramResolveLink(program))
     {
         if (context->getShader(program))
         {
@@ -4959,7 +4959,7 @@ bool ValidateDeleteShader(Context *context, GLuint shader)
 
     if (!context->getShader(shader))
     {
-        if (context->getProgram(shader))
+        if (context->getProgramResolveLink(shader))
         {
             ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidShaderName);
             return false;
@@ -6322,7 +6322,7 @@ bool ValidateUseProgram(Context *context, GLuint program)
 {
     if (program != 0)
     {
-        Program *programObject = context->getProgram(program);
+        Program *programObject = context->getProgramResolveLink(program);
         if (!programObject)
         {
             // ES 3.1.0 section 7.3 page 72
