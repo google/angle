@@ -482,6 +482,7 @@ class GLSLTest : public ANGLETest
         glDeleteShader(fs);
 
         const std::string &errorMessage = QueryErrorMessage(program);
+        printf("%s\n", errorMessage.c_str());
 
         EXPECT_NE(std::string::npos, errorMessage.find(expectedErrorType));
         EXPECT_NE(std::string::npos, errorMessage.find(expectedVariableFullName));
@@ -4936,6 +4937,219 @@ void main()
                               kQuarterSize * 2));
     EXPECT_TRUE(SubrectEquals(backbufferData, defaultFBOViewportData, getWindowWidth(),
                               kQuarterSize, kQuarterSize * 2));
+}
+
+// Ensure that using defined in a macro works in this simple case. This mirrors a dEQP test.
+TEST_P(GLSLTest, DefinedInMacroSucceeds)
+{
+    constexpr char kVS[] = R"(precision mediump float;
+attribute highp vec4 position;
+varying vec2 out0;
+
+void main()
+{
+#define AAA defined(BBB)
+
+#if !AAA
+    out0 = vec2(0.0, 1.0);
+#else
+    out0 = vec2(1.0, 0.0);
+#endif
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec2 out0;
+void main()
+{
+    gl_FragColor = vec4(out0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Validate the defined operator is evaluated when the macro is called, not when defined.
+TEST_P(GLSLTest, DefinedInMacroWithUndef)
+{
+    constexpr char kVS[] = R"(precision mediump float;
+attribute highp vec4 position;
+varying vec2 out0;
+
+void main()
+{
+#define BBB 1
+#define AAA defined(BBB)
+#undef BBB
+
+#if AAA
+    out0 = vec2(1.0, 0.0);
+#else
+    out0 = vec2(0.0, 1.0);
+#endif
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec2 out0;
+void main()
+{
+    gl_FragColor = vec4(out0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Validate the defined operator is evaluated when the macro is called, not when defined.
+TEST_P(GLSLTest, DefinedAfterMacroUsage)
+{
+    constexpr char kVS[] = R"(precision mediump float;
+attribute highp vec4 position;
+varying vec2 out0;
+
+void main()
+{
+#define AAA defined(BBB)
+#define BBB 1
+
+#if AAA
+    out0 = vec2(0.0, 1.0);
+#else
+    out0 = vec2(1.0, 0.0);
+#endif
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec2 out0;
+void main()
+{
+    gl_FragColor = vec4(out0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test generating "defined" by concatenation when a macro is called. This is not allowed.
+TEST_P(GLSLTest, DefinedInMacroConcatenationNotAllowed)
+{
+    constexpr char kVS[] = R"(precision mediump float;
+attribute highp vec4 position;
+varying vec2 out0;
+
+void main()
+{
+#define BBB 1
+#define AAA(defi, ned) defi ## ned(BBB)
+
+#if AAA(defi, ned)
+    out0 = vec2(0.0, 1.0);
+#else
+    out0 = vec2(1.0, 0.0);
+#endif
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec2 out0;
+void main()
+{
+    gl_FragColor = vec4(out0, 0, 1);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
+// Test using defined in a macro parameter name. This is not allowed.
+TEST_P(GLSLTest, DefinedAsParameterNameNotAllowed)
+{
+    constexpr char kVS[] = R"(precision mediump float;
+attribute highp vec4 position;
+varying vec2 out0;
+
+void main()
+{
+#define BBB 1
+#define AAA(defined) defined(BBB)
+
+#if AAA(defined)
+    out0 = vec2(0.0, 1.0);
+#else
+    out0 = vec2(1.0, 0.0);
+#endif
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec2 out0;
+void main()
+{
+    gl_FragColor = vec4(out0, 0, 1);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
+// Ensure that defined in a macro is no accepted in WebGL.
+TEST_P(WebGLGLSLTest, DefinedInMacroFails)
+{
+    constexpr char kVS[] = R"(precision mediump float;
+attribute highp vec4 position;
+varying float out0;
+
+void main()
+{
+#define AAA defined(BBB)
+
+#if !AAA
+    out0 = 1.0;
+#else
+    out0 = 0.0;
+#endif
+    gl_Position = dEQP_Position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying float out0;
+void main()
+{
+    gl_FragColor = vec4(out0, 0, 0, 1);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
+// Simple test using a define macro in WebGL.
+TEST_P(WebGLGLSLTest, DefinedGLESSymbol)
+{
+    constexpr char kVS[] = R"(void main()
+{
+    gl_Position = vec4(1, 0, 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#if defined(GL_ES)
+precision mediump float;
+void main()
+{
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+}
+#else
+foo
+#endif
+)";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

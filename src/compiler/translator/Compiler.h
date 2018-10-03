@@ -36,11 +36,6 @@ class TranslatorHLSL;
 #endif  // ANGLE_ENABLE_HLSL
 
 //
-// Helper function to identify specs that are based on the WebGL spec.
-//
-bool IsWebGLBasedSpec(ShShaderSpec spec);
-
-//
 // Helper function to check if the shader type is GLSL.
 //
 bool IsGLSL130OrNewer(ShShaderOutput output);

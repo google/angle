@@ -16,6 +16,8 @@ namespace angle
 class CharTest : public PreprocessorTest,
                  public testing::WithParamInterface<int>
 {
+  public:
+    CharTest() : PreprocessorTest(SH_GLES2_SPEC) {}
 };
 
 static const char kPunctuators[] = {

@@ -1027,7 +1027,7 @@ TEST_F(DefineTest, LongMacroInvocationChain)
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_MACRO_INVOCATION_CHAIN_TOO_DEEP,
                                     pp::SourceLocation(0, 22), _));
 
-    pp::PreprocessorSettings settings;
+    pp::PreprocessorSettings settings(SH_GLES2_SPEC);
     settings.maxMacroExpansionDepth = 19;
 
     preprocess(inputStream.str().c_str(), settings);

@@ -30,9 +30,6 @@
 998 DEBUG RELEASE : dEQP-GLES2.performance.* = SKIP
 998 DEBUG RELEASE : dEQP-GLES2.stress.* = SKIP
 
-// Tests that we fail because they're not in line with the WebGL spec
-1335 DEBUG RELEASE : dEQP-GLES2.functional.shaders.preprocessor.conditional_inclusion.basic_2* = FAIL
-
 // Failures related to not supporting separate depth/stencil masks on D3D11.
 1655 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
 1655 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_ops.* = FAIL

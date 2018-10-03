@@ -13,6 +13,8 @@ namespace angle
 
 class InitTest : public PreprocessorTest
 {
+  public:
+    InitTest() : PreprocessorTest(SH_GLES2_SPEC) {}
 };
 
 TEST_F(InitTest, ZeroCount)

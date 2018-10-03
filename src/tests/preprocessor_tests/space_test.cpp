@@ -15,6 +15,8 @@ namespace angle
 class SpaceTest : public PreprocessorTest
 {
   protected:
+    SpaceTest() : PreprocessorTest(SH_GLES2_SPEC) {}
+
     void expectSpace(const std::string& str)
     {
         const char* cstr = str.c_str();

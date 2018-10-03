@@ -106,6 +106,8 @@ inline bool operator!=(const Token &lhs, const Token &rhs)
 
 std::ostream &operator<<(std::ostream &out, const Token &token);
 
+constexpr char kDefined[] = "defined";
+
 }  // namespace pp
 
 }  // namespace angle

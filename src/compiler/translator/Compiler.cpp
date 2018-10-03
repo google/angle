@@ -92,11 +92,6 @@ void DumpFuzzerCase(char const *const *shaderStrings,
 #endif  // defined(ANGLE_ENABLE_FUZZER_CORPUS_OUTPUT)
 }  // anonymous namespace
 
-bool IsWebGLBasedSpec(ShShaderSpec spec)
-{
-    return (spec == SH_WEBGL_SPEC || spec == SH_WEBGL2_SPEC || spec == SH_WEBGL3_SPEC);
-}
-
 bool IsGLSL130OrNewer(ShShaderOutput output)
 {
     return (output == SH_GLSL_130_OUTPUT || output == SH_GLSL_140_OUTPUT ||

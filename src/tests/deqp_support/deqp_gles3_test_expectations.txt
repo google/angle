@@ -40,13 +40,6 @@
 // We can't support distinct texture sizes in D3D11.
 1097 WIN : dEQP-GLES3.functional.fbo.completeness.size.distinct = FAIL
 
-// Tests that we fail because they're not in line with the WebGL spec
-1335 MAC WIN LINUX : dEQP-GLES3.functional.shaders.preprocessor.conditional_inclusion.basic_2* = FAIL
-1335 MAC WIN LINUX : dEQP-GLES3.functional.shaders.preprocessor.conditional_inclusion.defined_macro_defined_test* = FAIL
-1335 MAC WIN LINUX : dEQP-GLES3.functional.shaders.preprocessor.conditional_inclusion.defined_macro_undef* = FAIL
-1335 MAC WIN LINUX : dEQP-GLES3.functional.shaders.preprocessor.conditional_inclusion.define_defined* = FAIL
-1335 MAC WIN LINUX : dEQP-GLES3.functional.shaders.preprocessor.conditional_inclusion.define_defined_outside_if* = FAIL
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Temporary entries: they should be removed once the bugs are fixed.
