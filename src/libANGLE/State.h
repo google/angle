@@ -226,7 +226,7 @@ class State : angle::NonCopyable
     bool removeVertexArrayBinding(const Context *context, GLuint vertexArray);
 
     // Program binding manipulation
-    void setProgram(const Context *context, Program *newProgram);
+    Error setProgram(const Context *context, Program *newProgram);
 
     Program *getProgram() const
     {
@@ -377,7 +377,7 @@ class State : angle::NonCopyable
     bool isRobustResourceInitEnabled() const { return mRobustResourceInit; }
 
     // Sets the dirty bit for the program executable.
-    void onProgramExecutableChange(Program *program);
+    Error onProgramExecutableChange(const Context *context, Program *program);
 
     enum DirtyBitType
     {
@@ -513,6 +513,8 @@ class State : angle::NonCopyable
   private:
     void syncSamplers(const Context *context);
     Error syncProgramTextures(const Context *context);
+    void unsetActiveTextures(ActiveTextureMask textureMask);
+    Error updateActiveTexture(const Context *context, size_t textureIndex, Texture *texture);
 
     // Cached values from Context's caps
     GLuint mMaxDrawBuffers;

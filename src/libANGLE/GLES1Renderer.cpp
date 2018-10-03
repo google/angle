@@ -36,7 +36,7 @@ void GLES1Renderer::onDestroy(Context *context, State *state)
 {
     if (mRendererProgramInitialized)
     {
-        state->setProgram(context, 0);
+        context->handleError(state->setProgram(context, 0));
 
         mShaderPrograms->deleteProgram(context, mProgramState.program);
         mShaderPrograms->release(context);
@@ -540,7 +540,7 @@ Error GLES1Renderer::linkProgram(Context *context,
     ANGLE_TRY(programObject->link(context));
     programObject->resolveLink();
 
-    glState->onProgramExecutableChange(programObject);
+    ANGLE_TRY(glState->onProgramExecutableChange(context, programObject));
 
     if (!programObject->isLinked())
     {
@@ -711,7 +711,7 @@ Error GLES1Renderer::initializeRendererProgram(Context *context, State *glState)
     mProgramState.drawTextureNormalizedCropRectLoc =
         programObject->getUniformLocation("draw_texture_normalized_crop_rect");
 
-    glState->setProgram(context, programObject);
+    ANGLE_TRY(glState->setProgram(context, programObject));
 
     for (int i = 0; i < kTexUnitCount; i++)
     {

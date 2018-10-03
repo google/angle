@@ -355,8 +355,53 @@ void State::reset(const Context *context)
     mPathStencilRef  = 0;
     mPathStencilMask = std::numeric_limits<GLuint>::max();
 
-    // TODO(jmadill): Is this necessary?
     setAllDirtyBits();
+}
+
+ANGLE_INLINE void State::unsetActiveTextures(ActiveTextureMask textureMask)
+{
+    // Unset any relevant bound textures.
+    for (size_t textureIndex : mProgram->getActiveSamplersMask())
+    {
+        mActiveTexturesCache[textureIndex] = nullptr;
+        mCompleteTextureBindings[textureIndex].reset();
+    }
+}
+
+ANGLE_INLINE Error State::updateActiveTexture(const Context *context,
+                                              size_t textureIndex,
+                                              Texture *texture)
+{
+    const Sampler *sampler = mSamplers[textureIndex].get();
+
+    if (!texture)
+    {
+        mActiveTexturesCache[textureIndex] = nullptr;
+        mCompleteTextureBindings[textureIndex].bind(nullptr);
+        return NoError();
+    }
+
+    mCompleteTextureBindings[textureIndex].bind(texture->getSubject());
+
+    if (!texture->isSamplerComplete(context, sampler))
+    {
+        mActiveTexturesCache[textureIndex] = nullptr;
+        return NoError();
+    }
+
+    mActiveTexturesCache[textureIndex] = texture;
+
+    if (texture->hasAnyDirtyBit())
+    {
+        ANGLE_TRY(texture->syncState(context));
+    }
+
+    if (texture->initState() == InitState::MayNeedInit)
+    {
+        mCachedTexturesInitState = InitState::MayNeedInit;
+    }
+
+    return NoError();
 }
 
 const RasterizerState &State::getRasterizerState() const
@@ -1330,12 +1375,13 @@ void State::setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::setProgram(const Context *context, Program *newProgram)
+Error State::setProgram(const Context *context, Program *newProgram)
 {
     if (mProgram != newProgram)
     {
         if (mProgram)
         {
+            unsetActiveTextures(mProgram->getActiveSamplersMask());
             mProgram->release(context);
         }
 
@@ -1344,7 +1390,7 @@ void State::setProgram(const Context *context, Program *newProgram)
         if (mProgram)
         {
             newProgram->addRef();
-            onProgramExecutableChange(newProgram);
+            ANGLE_TRY(onProgramExecutableChange(context, newProgram));
         }
 
         // Note that rendering is undefined if glUseProgram(0) is called. But ANGLE will generate
@@ -1352,6 +1398,8 @@ void State::setProgram(const Context *context, Program *newProgram)
 
         mDirtyBits.set(DIRTY_BIT_PROGRAM_BINDING);
     }
+
+    return NoError();
 }
 
 void State::setTransformFeedbackBinding(const Context *context,
@@ -2749,46 +2797,19 @@ Error State::syncProgramTextures(const Context *context)
 
         Texture *texture =
             getSamplerTexture(static_cast<unsigned int>(textureUnitIndex), textureType);
-        Sampler *sampler = getSampler(static_cast<GLuint>(textureUnitIndex));
-        ASSERT(static_cast<size_t>(textureUnitIndex) < mActiveTexturesCache.size());
         ASSERT(static_cast<size_t>(textureUnitIndex) < newActiveTextures.size());
 
         ASSERT(texture);
 
-        // Mark the texture binding bit as dirty if the texture completeness changes.
-        // TODO(jmadill): Use specific dirty bit for completeness change.
-        if (texture->isSamplerComplete(context, sampler))
-        {
-            if (texture->hasAnyDirtyBit())
-            {
-                ANGLE_TRY(texture->syncState(context));
-            }
-            mActiveTexturesCache[textureUnitIndex] = texture;
-        }
-        else
-        {
-            mActiveTexturesCache[textureUnitIndex] = nullptr;
-        }
-
-        // Bind the texture unconditionally, to recieve completeness change notifications.
-        mCompleteTextureBindings[textureUnitIndex].bind(texture->getImplementation());
         newActiveTextures.set(textureUnitIndex);
-
-        if (texture->initState() == InitState::MayNeedInit)
-        {
-            mCachedTexturesInitState = InitState::MayNeedInit;
-        }
+        ANGLE_TRY(updateActiveTexture(context, textureUnitIndex, texture));
     }
 
     // Unset now missing textures.
     ActiveTextureMask negativeMask = activeTextures & ~newActiveTextures;
     if (negativeMask.any())
     {
-        for (auto textureIndex : negativeMask)
-        {
-            mCompleteTextureBindings[textureIndex].reset();
-            mActiveTexturesCache[textureIndex] = nullptr;
-        }
+        unsetActiveTextures(negativeMask);
     }
 
     for (size_t imageUnitIndex : mProgram->getActiveImagesMask())
@@ -2875,7 +2896,7 @@ void State::setObjectDirty(GLenum target)
     }
 }
 
-void State::onProgramExecutableChange(Program *program)
+Error State::onProgramExecutableChange(const Context *context, Program *program)
 {
     // OpenGL Spec:
     // "If LinkProgram or ProgramBinary successfully re-links a program object
@@ -2884,8 +2905,40 @@ void State::onProgramExecutableChange(Program *program)
     ASSERT(program->isLinked());
 
     mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
-    mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
     mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
+
+    // Set any bound textures.
+    const ActiveTextureTypeArray &textureTypes = program->getActiveSamplerTypes();
+    for (size_t textureIndex : program->getActiveSamplersMask())
+    {
+        TextureType type = textureTypes[textureIndex];
+
+        // This can happen if there is a conflicting texture type.
+        if (type == TextureType::InvalidEnum)
+            continue;
+
+        Texture *texture = mSamplerTextures[type][textureIndex].get();
+        ANGLE_TRY(updateActiveTexture(context, textureIndex, texture));
+    }
+
+    for (size_t imageUnitIndex : program->getActiveImagesMask())
+    {
+        Texture *image = mImageUnits[imageUnitIndex].texture.get();
+        if (!image)
+            continue;
+
+        if (image->hasAnyDirtyBit())
+        {
+            ANGLE_TRY(image->syncState(context));
+        }
+
+        if (image->initState() == InitState::MayNeedInit)
+        {
+            mCachedImageTexturesInitState = InitState::MayNeedInit;
+        }
+    }
+
+    return NoError();
 }
 
 void State::setSamplerDirty(size_t samplerIndex)
