@@ -165,7 +165,7 @@ class ListOf
     }
     bool match(T &toCheck)
     {
-        ALOGD("\t\t Within ListOf<%s> match: wildcards are %s and %s,\n", mListType.c_str(),
+        ALOGV("\t\t Within ListOf<%s> match: wildcards are %s and %s,\n", mListType.c_str(),
               mWildcard ? "true" : "false", toCheck.mWildcard ? "true" : "false");
         if (mWildcard || toCheck.mWildcard)
         {
@@ -173,7 +173,7 @@ class ListOf
         }
         for (auto &it : mList)
         {
-            ALOGD("\t\t   Within ListOf<%s> match: calling match on sub-item is %s,\n",
+            ALOGV("\t\t   Within ListOf<%s> match: calling match on sub-item is %s,\n",
                   mListType.c_str(), it.match(toCheck) ? "true" : "false");
             if (it.match(toCheck))
             {
@@ -187,12 +187,12 @@ class ListOf
     {
         if (mWildcard)
         {
-            ALOGD("%sListOf%s is wildcarded to always match", prefix.c_str(), name.c_str());
+            ALOGV("%sListOf%s is wildcarded to always match", prefix.c_str(), name.c_str());
         }
         else
         {
             int nItems = mList.size();
-            ALOGD("%sListOf%s is has %d item(s):", prefix.c_str(), name.c_str(), nItems);
+            ALOGV("%sListOf%s is has %d item(s):", prefix.c_str(), name.c_str(), nItems);
             for (auto &it : mList)
             {
                 it.logItem();
@@ -237,13 +237,13 @@ class Version
     ~Version() {}
     bool match(Version &toCheck)
     {
-        ALOGD("\t\t\t Within Version %d,%d,%d,%d match(%d,%d,%d,%d): wildcards are %s and %s,\n",
+        ALOGV("\t\t\t Within Version %d,%d,%d,%d match(%d,%d,%d,%d): wildcards are %s and %s,\n",
               mMajor.mPart, mMinor.mPart, mSubminor.mPart, mPatch.mPart, toCheck.mMajor.mPart,
               toCheck.mMinor.mPart, toCheck.mSubminor.mPart, toCheck.mPatch.mPart,
               mWildcard ? "true" : "false", toCheck.mWildcard ? "true" : "false");
         if (!(mWildcard || toCheck.mWildcard))
         {
-            ALOGD("\t\t\t   mMajor match is %s, mMinor is %s, mSubminor is %s, mPatch is %s\n",
+            ALOGV("\t\t\t   mMajor match is %s, mMinor is %s, mSubminor is %s, mPatch is %s\n",
                   mMajor.match(toCheck.mMajor) ? "true" : "false",
                   mMinor.match(toCheck.mMinor) ? "true" : "false",
                   mSubminor.match(toCheck.mSubminor) ? "true" : "false",
@@ -404,29 +404,29 @@ class Application
     {
         if (mWildcard)
         {
-            ALOGD("      Wildcard (i.e. will match all applications)");
+            ALOGV("      Wildcard (i.e. will match all applications)");
         }
         else if (!mVersion.mWildcard)
         {
             if (!mIntent.mWildcard)
             {
-                ALOGD("      Application \"%s\" (version: %s; intent: \"%s\")", mName.mPart.c_str(),
+                ALOGV("      Application \"%s\" (version: %s; intent: \"%s\")", mName.mPart.c_str(),
                       mVersion.getString().c_str(), mIntent.mPart.c_str());
             }
             else
             {
-                ALOGD("      Application \"%s\" (version: %s)", mName.mPart.c_str(),
+                ALOGV("      Application \"%s\" (version: %s)", mName.mPart.c_str(),
                       mVersion.getString().c_str());
             }
         }
         else if (!mIntent.mWildcard)
         {
-            ALOGD("      Application \"%s\" (intent: \"%s\")", mName.mPart.c_str(),
+            ALOGV("      Application \"%s\" (intent: \"%s\")", mName.mPart.c_str(),
                   mIntent.mPart.c_str());
         }
         else
         {
-            ALOGD("      Application \"%s\"", mName.mPart.c_str());
+            ALOGV("      Application \"%s\"", mName.mPart.c_str());
         }
     }
 
@@ -463,13 +463,13 @@ class GPU
     GPU() : mVendor(), mDeviceId(), mVersion(), mWildcard(true) {}
     bool match(GPU &toCheck)
     {
-        ALOGD("\t\t Within GPU match: wildcards are %s and %s,\n", mWildcard ? "true" : "false",
+        ALOGV("\t\t Within GPU match: wildcards are %s and %s,\n", mWildcard ? "true" : "false",
               toCheck.mWildcard ? "true" : "false");
-        ALOGD("\t\t   mVendor = \"%s\" and toCheck.mVendor = \"%s\"\n", mVendor.mPart.c_str(),
+        ALOGV("\t\t   mVendor = \"%s\" and toCheck.mVendor = \"%s\"\n", mVendor.mPart.c_str(),
               toCheck.mVendor.mPart.c_str());
-        ALOGD("\t\t   mDeviceId = %d and toCheck.mDeviceId = %d\n", mDeviceId.mPart,
+        ALOGV("\t\t   mDeviceId = %d and toCheck.mDeviceId = %d\n", mDeviceId.mPart,
               toCheck.mDeviceId.mPart);
-        ALOGD("\t\t   mVendor match is %s, mDeviceId is %s, mVersion is %s\n",
+        ALOGV("\t\t   mVendor match is %s, mDeviceId is %s, mVersion is %s\n",
               toCheck.mVendor.match(mVendor) ? "true" : "false",
               toCheck.mDeviceId.match(mDeviceId) ? "true" : "false",
               toCheck.mVersion.match(mVersion) ? "true" : "false");
@@ -507,7 +507,7 @@ class GPU
         }
         else
         {
-            ALOGD("Asked to parse a GPU, but no GPU found");
+            ALOGW("Asked to parse a GPU, but no GPU found");
         }
 
         // TODO (ianelliott@) (b/113346561) appropriately destruct lists and
@@ -518,7 +518,7 @@ class GPU
     {
         if (mWildcard)
         {
-            ALOGD("          Wildcard (i.e. will match all GPUs)");
+            ALOGV("          Wildcard (i.e. will match all GPUs)");
         }
         else
         {
@@ -526,18 +526,18 @@ class GPU
             {
                 if (!mVersion.mWildcard)
                 {
-                    ALOGD("\t     GPU vendor: %s, deviceId: 0x%x, version: %s",
+                    ALOGV("\t     GPU vendor: %s, deviceId: 0x%x, version: %s",
                           mVendor.mPart.c_str(), mDeviceId.mPart, mVersion.getString().c_str());
                 }
                 else
                 {
-                    ALOGD("\t     GPU vendor: %s, deviceId: 0x%x", mVendor.mPart.c_str(),
+                    ALOGV("\t     GPU vendor: %s, deviceId: 0x%x", mVendor.mPart.c_str(),
                           mDeviceId.mPart);
                 }
             }
             else
             {
-                ALOGD("\t     GPU vendor: %s", mVendor.mPart.c_str());
+                ALOGV("\t     GPU vendor: %s", mVendor.mPart.c_str());
             }
         }
     }
@@ -569,15 +569,15 @@ class Device
     void addGPU(GPU &gpu) { mGpuList.addItem(gpu); }
     bool match(Device &toCheck)
     {
-        ALOGD("\t Within Device match: wildcards are %s and %s,\n", mWildcard ? "true" : "false",
+        ALOGV("\t Within Device match: wildcards are %s and %s,\n", mWildcard ? "true" : "false",
               toCheck.mWildcard ? "true" : "false");
         if (!(mWildcard || toCheck.mWildcard))
         {
-            ALOGD("\t   Manufacturer match is %s, model is %s\n",
+            ALOGV("\t   Manufacturer match is %s, model is %s\n",
                   toCheck.mManufacturer.match(mManufacturer) ? "true" : "false",
                   toCheck.mModel.match(mModel) ? "true" : "false");
         }
-        ALOGD("\t   Need to check ListOf<GPU>\n");
+        ALOGV("\t   Need to check ListOf<GPU>\n");
         return ((mWildcard || toCheck.mWildcard ||
                  // The wildcards can override the Manufacturer/Model check, but not the GPU check
                  (toCheck.mManufacturer.match(mManufacturer) && toCheck.mModel.match(mModel))) &&
@@ -618,12 +618,12 @@ class Device
         {
             if (mGpuList.mWildcard)
             {
-                ALOGD("      Wildcard (i.e. will match all devices)");
+                ALOGV("      Wildcard (i.e. will match all devices)");
                 return;
             }
             else
             {
-                ALOGD(
+                ALOGV(
                     "      Device with any manufacturer and model"
                     ", and with the following GPUs:");
             }
@@ -632,14 +632,14 @@ class Device
         {
             if (!mModel.mWildcard)
             {
-                ALOGD(
+                ALOGV(
                     "      Device manufacturer: \"%s\" and model \"%s\""
                     ", and with the following GPUs:",
                     mManufacturer.mPart.c_str(), mModel.mPart.c_str());
             }
             else
             {
-                ALOGD(
+                ALOGV(
                     "      Device manufacturer: \"%s\""
                     ", and with the following GPUs:",
                     mManufacturer.mPart.c_str());
@@ -669,10 +669,10 @@ class Scenario
     ~Scenario() {}
     void logScenario()
     {
-        ALOGD("  Scenario to compare against the rules");
-        ALOGD("    Application:");
+        ALOGV("  Scenario to compare against the rules");
+        ALOGV("    Application:");
         mApplication.logItem();
-        ALOGD("    Device:");
+        ALOGV("    Device:");
         mDevice.logItem();
     }
 
@@ -704,7 +704,7 @@ class Rule
     void addDev(Device &dev) { mDevList.addItem(dev); }
     bool match(Scenario &toCheck)
     {
-        ALOGD("    Within \"%s\" Rule: application match is %s and device match is %s\n",
+        ALOGV("    Within \"%s\" Rule: application match is %s and device match is %s\n",
               mDescription.c_str(), mAppList.match(toCheck.mApplication) ? "true" : "false",
               mDevList.match(toCheck.mDevice) ? "true" : "false");
         return (mAppList.match(toCheck.mApplication) && mDevList.match(toCheck.mDevice));
@@ -713,7 +713,7 @@ class Rule
     bool getAnswer() { return mAnswer; }
     void logRule()
     {
-        ALOGD("  Rule: \"%s\" %s ANGLE, and %s the app a choice if matched", mDescription.c_str(),
+        ALOGV("  Rule: \"%s\" %s ANGLE, and %s the app a choice if matched", mDescription.c_str(),
               mAnswer ? "enables" : "disables", mAppChoice ? "does give" : "does NOT give");
         mAppList.logListOf("    ", "Applications");
         mDevList.logListOf("    ", "Devices");
@@ -752,21 +752,21 @@ class RuleList
         // rule, but just in case, set it here too):
         bool appChoice = true;
         int nRules     = mRuleList.size();
-        ALOGD("Checking scenario against %d ANGLE-for-Android rules:", nRules);
+        ALOGV("Checking scenario against %d ANGLE-for-Android rules:", nRules);
 
         for (auto &it : mRuleList)
         {
-            ALOGD("  Checking Rule: \"%s\" (to see whether there's a match)",
+            ALOGV("  Checking Rule: \"%s\" (to see whether there's a match)",
                   it.mDescription.c_str());
             if (it.match(toCheck))
             {
-                ALOGD("  -> Rule matches.  Setting the app choice to %s",
+                ALOGV("  -> Rule matches.  Setting the app choice to %s",
                       it.getAppChoice() ? "true" : "false");
                 appChoice = it.getAppChoice();
             }
             else
             {
-                ALOGD("  -> Rule doesn't match.");
+                ALOGV("  -> Rule doesn't match.");
             }
         }
 
@@ -778,21 +778,21 @@ class RuleList
         // rule, but just in case, set it here too):
         bool answer = false;
         int nRules  = mRuleList.size();
-        ALOGD("Checking scenario against %d ANGLE-for-Android rules:", nRules);
+        ALOGV("Checking scenario against %d ANGLE-for-Android rules:", nRules);
 
         for (auto &it : mRuleList)
         {
-            ALOGD("  Checking Rule: \"%s\" (to see whether there's a match)",
+            ALOGV("  Checking Rule: \"%s\" (to see whether there's a match)",
                   it.mDescription.c_str());
             if (it.match(toCheck))
             {
-                ALOGD("  -> Rule matches.  Setting the answer to %s",
+                ALOGV("  -> Rule matches.  Setting the answer to %s",
                       it.getAnswer() ? "true" : "false");
                 answer = it.getAnswer();
             }
             else
             {
-                ALOGD("  -> Rule doesn't match.");
+                ALOGV("  -> Rule doesn't match.");
             }
         }
 
@@ -877,7 +877,7 @@ class RuleList
     void logRules()
     {
         int nRules = mRuleList.size();
-        ALOGD("Showing %d ANGLE-for-Android rules:", nRules);
+        ALOGV("Showing %d ANGLE-for-Android rules:", nRules);
         for (auto &it : mRuleList)
         {
             it.logRule();
