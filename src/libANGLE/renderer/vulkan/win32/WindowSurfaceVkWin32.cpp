@@ -24,10 +24,9 @@ WindowSurfaceVkWin32::WindowSurfaceVkWin32(const egl::SurfaceState &surfaceState
 
 angle::Result WindowSurfaceVkWin32::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {
-    VkWin32SurfaceCreateInfoKHR createInfo;
+    VkWin32SurfaceCreateInfoKHR createInfo = {};
 
     createInfo.sType     = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-    createInfo.pNext     = nullptr;
     createInfo.flags     = 0;
     createInfo.hinstance = GetModuleHandle(nullptr);
     createInfo.hwnd      = mNativeWindowType;

@@ -1152,14 +1152,13 @@ angle::Result ContextVk::handleDirtyDriverUniforms(const gl::Context *context,
         this, mDriverUniformsSetLayout.get().ptr(), 1, &mDriverUniformsDescriptorSet));
 
     // Update the driver uniform descriptor set.
-    VkDescriptorBufferInfo bufferInfo;
+    VkDescriptorBufferInfo bufferInfo = {};
     bufferInfo.buffer = buffer;
     bufferInfo.offset = offset;
     bufferInfo.range  = sizeof(DriverUniforms);
 
-    VkWriteDescriptorSet writeInfo;
+    VkWriteDescriptorSet writeInfo = {};
     writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeInfo.pNext            = nullptr;
     writeInfo.dstSet           = mDriverUniformsDescriptorSet;
     writeInfo.dstBinding       = 0;
     writeInfo.dstArrayElement  = 0;

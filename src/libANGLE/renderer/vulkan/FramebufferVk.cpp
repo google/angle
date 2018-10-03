@@ -458,7 +458,7 @@ angle::Result FramebufferVk::blitWithReadback(ContextVk *contextVk,
     ANGLE_TRY(
         readPixelsImpl(contextVk, copyArea, packPixelsParams, aspect, readRenderTarget, destPtr));
 
-    VkBufferImageCopy copyRegion;
+    VkBufferImageCopy copyRegion               = {};
     copyRegion.bufferOffset                    = destOffset;
     copyRegion.bufferImageHeight               = copyArea.height;
     copyRegion.bufferRowLength                 = copyArea.width;
@@ -854,10 +854,9 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
 
     ASSERT(!attachments.empty());
 
-    VkFramebufferCreateInfo framebufferInfo;
+    VkFramebufferCreateInfo framebufferInfo = {};
 
     framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-    framebufferInfo.pNext           = nullptr;
     framebufferInfo.flags           = 0;
     framebufferInfo.renderPass      = renderPass->getHandle();
     framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
@@ -887,7 +886,7 @@ angle::Result FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
     ANGLE_TRY(getCommandBufferForDraw(contextVk, &commandBuffer, &mode));
 
     // The array layer is offset by the ImageView. So we shouldn't need to set a base array layer.
-    VkClearRect clearRect;
+    VkClearRect clearRect    = {};
     clearRect.baseArrayLayer = 0;
     clearRect.layerCount     = 1;
 
@@ -1175,7 +1174,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
     ANGLE_TRY(mReadPixelBuffer.allocate(contextVk, allocationSize, &readPixelBuffer, &bufferHandle,
                                         &stagingOffset, &newBufferAllocated));
 
-    VkBufferImageCopy region;
+    VkBufferImageCopy region               = {};
     region.bufferImageHeight               = area.height;
     region.bufferOffset                    = stagingOffset;
     region.bufferRowLength                 = area.width;

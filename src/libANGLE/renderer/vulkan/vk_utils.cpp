@@ -104,9 +104,8 @@ angle::Result FindAndAllocateCompatibleMemory(vk::Context *context,
                                                          requestedMemoryPropertyFlags,
                                                          memoryPropertyFlagsOut, &memoryTypeIndex));
 
-    VkMemoryAllocateInfo allocInfo;
+    VkMemoryAllocateInfo allocInfo = {};
     allocInfo.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    allocInfo.pNext           = nullptr;
     allocInfo.memoryTypeIndex = memoryTypeIndex;
     allocInfo.allocationSize  = memoryRequirements.size;
 
@@ -621,7 +620,7 @@ void Image::getSubresourceLayout(VkDevice device,
                                  uint32_t arrayLayer,
                                  VkSubresourceLayout *outSubresourceLayout) const
 {
-    VkImageSubresource subresource;
+    VkImageSubresource subresource = {};
     subresource.aspectMask = aspectMask;
     subresource.mipLevel   = mipLevel;
     subresource.arrayLayer = arrayLayer;
@@ -667,9 +666,8 @@ angle::Result Semaphore::init(Context *context)
 {
     ASSERT(!valid());
 
-    VkSemaphoreCreateInfo semaphoreInfo;
+    VkSemaphoreCreateInfo semaphoreInfo = {};
     semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-    semaphoreInfo.pNext = nullptr;
     semaphoreInfo.flags = 0;
 
     ANGLE_VK_TRY(context,
@@ -1086,9 +1084,8 @@ void StagingBuffer::destroy(VkDevice device)
 
 angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUsage usage)
 {
-    VkBufferCreateInfo createInfo;
+    VkBufferCreateInfo createInfo    = {};
     createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    createInfo.pNext                 = nullptr;
     createInfo.flags                 = 0;
     createInfo.size                  = size;
     createInfo.usage                 = GetStagingBufferUsageFlags(usage);
@@ -1137,9 +1134,8 @@ angle::Result InitShaderAndSerial(Context *context,
                                   const uint32_t *shaderCode,
                                   size_t shaderCodeSize)
 {
-    VkShaderModuleCreateInfo createInfo;
+    VkShaderModuleCreateInfo createInfo = {};
     createInfo.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    createInfo.pNext    = nullptr;
     createInfo.flags    = 0;
     createInfo.codeSize = shaderCodeSize;
     createInfo.pCode    = shaderCode;

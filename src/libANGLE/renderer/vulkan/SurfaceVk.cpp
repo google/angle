@@ -440,9 +440,8 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     // We need transfer src for reading back from the backbuffer.
     VkImageUsageFlags imageUsageFlags = kSurfaceVKColorImageUsageFlags;
 
-    VkSwapchainCreateInfoKHR swapchainInfo;
+    VkSwapchainCreateInfoKHR swapchainInfo = {};
     swapchainInfo.sType                 = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    swapchainInfo.pNext                 = nullptr;
     swapchainInfo.flags                 = 0;
     swapchainInfo.surface               = mSurface;
     swapchainInfo.minImageCount         = minImageCount;
@@ -472,7 +471,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     ANGLE_VK_TRY(displayVk,
                  vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, swapchainImages.data()));
 
-    VkClearColorValue transparentBlack;
+    VkClearColorValue transparentBlack = {};
     transparentBlack.float32[0] = 0.0f;
     transparentBlack.float32[1] = 0.0f;
     transparentBlack.float32[2] = 0.0f;
@@ -573,9 +572,8 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
     ANGLE_TRY(
         renderer->flush(displayVk, image.imageAcquiredSemaphore, image.commandsCompleteSemaphore));
 
-    VkPresentInfoKHR presentInfo;
+    VkPresentInfoKHR presentInfo   = {};
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    presentInfo.pNext              = nullptr;
     presentInfo.waitSemaphoreCount = 1;
     presentInfo.pWaitSemaphores    = image.commandsCompleteSemaphore.ptr();
     presentInfo.swapchainCount     = 1;
@@ -705,13 +703,12 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(vk::Context *context,
         return angle::Result::Continue();
     }
 
-    VkFramebufferCreateInfo framebufferInfo;
+    VkFramebufferCreateInfo framebufferInfo = {};
 
     const gl::Extents &extents            = mColorRenderTarget.getImageExtents();
     std::array<VkImageView, 2> imageViews = {{VK_NULL_HANDLE, mDepthStencilImageView.getHandle()}};
 
     framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-    framebufferInfo.pNext           = nullptr;
     framebufferInfo.flags           = 0;
     framebufferInfo.renderPass      = compatibleRenderPass.getHandle();
     framebufferInfo.attachmentCount = (mDepthStencilImage.valid() ? 2u : 1u);

@@ -430,9 +430,8 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
         // Initialize the "empty" uniform block if necessary.
         if (!mDefaultUniformBlocksDirty.all())
         {
-            VkBufferCreateInfo uniformBufferInfo;
+            VkBufferCreateInfo uniformBufferInfo    = {};
             uniformBufferInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-            uniformBufferInfo.pNext                 = nullptr;
             uniformBufferInfo.flags                 = 0;
             uniformBufferInfo.size                  = 1;
             uniformBufferInfo.usage                 = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;

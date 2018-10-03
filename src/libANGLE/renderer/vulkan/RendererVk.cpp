@@ -426,18 +426,16 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     ANGLE_VK_TRY(displayVk,
                  VerifyExtensionsPresent(instanceExtensionProps, enabledInstanceExtensions));
 
-    VkApplicationInfo applicationInfo;
+    VkApplicationInfo applicationInfo  = {};
     applicationInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    applicationInfo.pNext              = nullptr;
     applicationInfo.pApplicationName   = "ANGLE";
     applicationInfo.applicationVersion = 1;
     applicationInfo.pEngineName        = "ANGLE";
     applicationInfo.engineVersion      = 1;
     applicationInfo.apiVersion         = VK_API_VERSION_1_0;
 
-    VkInstanceCreateInfo instanceInfo;
+    VkInstanceCreateInfo instanceInfo = {};
     instanceInfo.sType            = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    instanceInfo.pNext            = nullptr;
     instanceInfo.flags            = 0;
     instanceInfo.pApplicationInfo = &applicationInfo;
 
@@ -452,10 +450,9 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     if (mEnableValidationLayers)
     {
-        VkDebugReportCallbackCreateInfoEXT debugReportInfo;
+        VkDebugReportCallbackCreateInfoEXT debugReportInfo = {};
 
         debugReportInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
-        debugReportInfo.pNext = nullptr;
         debugReportInfo.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT |
                                 VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT |
                                 VK_DEBUG_REPORT_INFORMATION_BIT_EXT | VK_DEBUG_REPORT_DEBUG_BIT_EXT;
@@ -576,22 +573,20 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 
     ANGLE_VK_TRY(displayVk, VerifyExtensionsPresent(deviceExtensionProps, enabledDeviceExtensions));
 
-    VkDeviceQueueCreateInfo queueCreateInfo;
+    VkDeviceQueueCreateInfo queueCreateInfo = {};
 
     float zeroPriority = 0.0f;
 
     queueCreateInfo.sType            = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-    queueCreateInfo.pNext            = nullptr;
     queueCreateInfo.flags            = 0;
     queueCreateInfo.queueFamilyIndex = queueFamilyIndex;
     queueCreateInfo.queueCount       = 1;
     queueCreateInfo.pQueuePriorities = &zeroPriority;
 
     // Initialize the device
-    VkDeviceCreateInfo createInfo;
+    VkDeviceCreateInfo createInfo = {};
 
     createInfo.sType                 = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo.pNext                 = nullptr;
     createInfo.flags                 = 0;
     createInfo.queueCreateInfoCount  = 1;
     createInfo.pQueueCreateInfos     = &queueCreateInfo;
@@ -609,9 +604,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     vkGetDeviceQueue(mDevice, mCurrentQueueFamilyIndex, 0, &mQueue);
 
     // Initialize the command pool now that we know the queue family index.
-    VkCommandPoolCreateInfo commandPoolInfo;
+    VkCommandPoolCreateInfo commandPoolInfo = {};
     commandPoolInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    commandPoolInfo.pNext            = nullptr;
     commandPoolInfo.flags            = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     commandPoolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
 
@@ -752,10 +746,9 @@ angle::Result RendererVk::initPipelineCacheVk(DisplayVk *display)
     bool success = display->getBlobCache()->get(display->getScratchBuffer(),
                                                 mPipelineCacheVkBlobKey, &initialData);
 
-    VkPipelineCacheCreateInfo pipelineCacheCreateInfo;
+    VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
 
     pipelineCacheCreateInfo.sType           = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-    pipelineCacheCreateInfo.pNext           = nullptr;
     pipelineCacheCreateInfo.flags           = 0;
     pipelineCacheCreateInfo.initialDataSize = success ? initialData.size() : 0;
     pipelineCacheCreateInfo.pInitialData    = success ? initialData.data() : nullptr;
@@ -817,9 +810,8 @@ angle::Result RendererVk::finish(vk::Context *context)
         vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
         ANGLE_TRY(flushCommandGraph(context, &commandBatch.get()));
 
-        VkSubmitInfo submitInfo;
+        VkSubmitInfo submitInfo         = {};
         submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.pNext                = nullptr;
         submitInfo.waitSemaphoreCount   = 0;
         submitInfo.pWaitSemaphores      = nullptr;
         submitInfo.pWaitDstStageMask    = nullptr;
@@ -894,9 +886,8 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
                                       const VkSubmitInfo &submitInfo,
                                       vk::CommandBuffer &&commandBuffer)
 {
-    VkFenceCreateInfo fenceInfo;
+    VkFenceCreateInfo fenceInfo = {};
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-    fenceInfo.pNext = nullptr;
     fenceInfo.flags = 0;
 
     vk::Scoped<CommandBatch> scopedBatch(mDevice);
@@ -929,9 +920,8 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
     // Reallocate the command pool for next frame.
     // TODO(jmadill): Consider reusing command pools.
-    VkCommandPoolCreateInfo poolInfo;
+    VkCommandPoolCreateInfo poolInfo = {};
     poolInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    poolInfo.pNext            = nullptr;
     poolInfo.flags            = 0;
     poolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
 
@@ -982,9 +972,8 @@ angle::Result RendererVk::flush(vk::Context *context,
 
     VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
 
-    VkSubmitInfo submitInfo;
+    VkSubmitInfo submitInfo         = {};
     submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    submitInfo.pNext                = nullptr;
     submitInfo.waitSemaphoreCount   = 1;
     submitInfo.pWaitSemaphores      = waitSemaphore.ptr();
     submitInfo.pWaitDstStageMask    = &waitStageMask;

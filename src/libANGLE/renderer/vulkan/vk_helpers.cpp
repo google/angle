@@ -127,9 +127,8 @@ angle::Result DynamicBuffer::allocate(Context *context,
 
         mSize = std::max(sizeToAllocate, mMinSize);
 
-        VkBufferCreateInfo createInfo;
+        VkBufferCreateInfo createInfo    = {};
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        createInfo.pNext                 = nullptr;
         createInfo.flags                 = 0;
         createInfo.size                  = mSize;
         createInfo.usage                 = mUsage;
@@ -176,9 +175,8 @@ angle::Result DynamicBuffer::flush(Context *context)
 {
     if (!mHostCoherent && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
     {
-        VkMappedMemoryRange range;
+        VkMappedMemoryRange range = {};
         range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        range.pNext  = nullptr;
         range.memory = mMemory.getHandle();
         range.offset = mLastFlushOrInvalidateOffset;
         range.size   = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
@@ -193,9 +191,8 @@ angle::Result DynamicBuffer::invalidate(Context *context)
 {
     if (!mHostCoherent && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
     {
-        VkMappedMemoryRange range;
+        VkMappedMemoryRange range = {};
         range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        range.pNext  = nullptr;
         range.memory = mMemory.getHandle();
         range.offset = mLastFlushOrInvalidateOffset;
         range.size   = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
@@ -317,9 +314,8 @@ angle::Result DynamicDescriptorPool::allocateSets(Context *context,
         ANGLE_TRY(allocateNewPool(context));
     }
 
-    VkDescriptorSetAllocateInfo allocInfo;
+    VkDescriptorSetAllocateInfo allocInfo = {};
     allocInfo.sType              = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-    allocInfo.pNext              = nullptr;
     allocInfo.descriptorPool     = mCurrentDescriptorPool.getHandle();
     allocInfo.descriptorSetCount = descriptorSetCount;
     allocInfo.pSetLayouts        = descriptorSetLayout;
@@ -334,9 +330,8 @@ angle::Result DynamicDescriptorPool::allocateSets(Context *context,
 
 angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
 {
-    VkDescriptorPoolCreateInfo descriptorPoolInfo;
+    VkDescriptorPoolCreateInfo descriptorPoolInfo = {};
     descriptorPoolInfo.sType   = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-    descriptorPoolInfo.pNext   = nullptr;
     descriptorPoolInfo.flags   = 0;
     descriptorPoolInfo.maxSets = mMaxSetsPerPool;
 
@@ -570,9 +565,8 @@ angle::Result ImageHelper::init(Context *context,
     mSamples    = samples;
     mLayerCount = GetImageLayerCount(textureType);
 
-    VkImageCreateInfo imageInfo;
+    VkImageCreateInfo imageInfo     = {};
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-    imageInfo.pNext                 = nullptr;
     imageInfo.flags                 = GetImageCreateFlags(textureType);
     imageInfo.imageType             = gl_vk::GetImageType(textureType);
     imageInfo.format                = format.vkTextureFormat;
@@ -635,9 +629,8 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
                                               uint32_t baseArrayLayer,
                                               uint32_t layerCount)
 {
-    VkImageViewCreateInfo viewInfo;
+    VkImageViewCreateInfo viewInfo = {};
     viewInfo.sType    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    viewInfo.pNext    = nullptr;
     viewInfo.flags    = 0;
     viewInfo.image    = mImage.getHandle();
     viewInfo.viewType = gl_vk::GetImageViewType(textureType);
@@ -707,9 +700,8 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     mCurrentLayout =
         usage == StagingUsage::Read ? VK_IMAGE_LAYOUT_UNDEFINED : VK_IMAGE_LAYOUT_PREINITIALIZED;
 
-    VkImageCreateInfo imageInfo;
+    VkImageCreateInfo imageInfo     = {};
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-    imageInfo.pNext                 = nullptr;
     imageInfo.flags                 = 0;
     imageInfo.imageType             = VK_IMAGE_TYPE_2D;
     imageInfo.format                = format.vkTextureFormat;
@@ -782,9 +774,8 @@ void ImageHelper::changeLayoutWithStages(VkImageAspectFlags aspectMask,
                                          VkPipelineStageFlags dstStageMask,
                                          CommandBuffer *commandBuffer)
 {
-    VkImageMemoryBarrier imageMemoryBarrier;
+    VkImageMemoryBarrier imageMemoryBarrier = {};
     imageMemoryBarrier.sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    imageMemoryBarrier.pNext               = nullptr;
     imageMemoryBarrier.srcAccessMask       = 0;
     imageMemoryBarrier.dstAccessMask       = 0;
     imageMemoryBarrier.oldLayout           = mCurrentLayout;
@@ -850,7 +841,7 @@ void ImageHelper::clearColorLayer(const VkClearColorValue &color,
                            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
                            commandBuffer);
 
-    VkImageSubresourceRange range;
+    VkImageSubresourceRange range = {};
     range.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     range.baseMipLevel   = baseMipLevel;
     range.levelCount     = levelCount;
@@ -918,7 +909,7 @@ void ImageHelper::Copy(ImageHelper *srcImage,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, commandBuffer);
     }
 
-    VkImageCopy region;
+    VkImageCopy region                   = {};
     region.srcSubresource.aspectMask     = aspectMask;
     region.srcSubresource.mipLevel       = 0;
     region.srcSubresource.baseArrayLayer = 0;
@@ -957,12 +948,11 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint 
 
     // Manually manage the image memory barrier because it uses a lot more parameters than our
     // usual one.
-    VkImageMemoryBarrier barrier;
+    VkImageMemoryBarrier barrier            = {};
     barrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
     barrier.image                           = mImage.getHandle();
     barrier.srcQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
     barrier.dstQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-    barrier.pNext                           = nullptr;
     barrier.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     barrier.subresourceRange.baseArrayLayer = 0;
     barrier.subresourceRange.layerCount     = mLayerCount;

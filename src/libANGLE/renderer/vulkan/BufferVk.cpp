@@ -58,9 +58,8 @@ gl::Error BufferVk::setData(const gl::Context *context,
             (VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
              VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
 
-        VkBufferCreateInfo createInfo;
+        VkBufferCreateInfo createInfo    = {};
         createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        createInfo.pNext                 = nullptr;
         createInfo.flags                 = 0;
         createInfo.size                  = size;
         createInfo.usage                 = usageFlags;
@@ -214,9 +213,8 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
 
         // Insert a barrier to ensure reads from the buffer are complete.
         // TODO(jmadill): Insert minimal barriers.
-        VkBufferMemoryBarrier bufferBarrier;
+        VkBufferMemoryBarrier bufferBarrier = {};
         bufferBarrier.sType               = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
-        bufferBarrier.pNext               = nullptr;
         bufferBarrier.srcAccessMask       = VK_ACCESS_MEMORY_READ_BIT;
         bufferBarrier.dstAccessMask       = VK_ACCESS_TRANSFER_WRITE_BIT;
         bufferBarrier.srcQueueFamilyIndex = 0;
@@ -234,8 +232,6 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
 
         // Insert a barrier to ensure copy has done.
         // TODO(jie.a.chen@intel.com): Insert minimal barriers.
-        bufferBarrier.sType         = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
-        bufferBarrier.pNext         = nullptr;
         bufferBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
         bufferBarrier.dstAccessMask =
             VK_ACCESS_INDIRECT_COMMAND_READ_BIT | VK_ACCESS_INDEX_READ_BIT |
@@ -243,12 +239,6 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
             VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT |
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_TRANSFER_READ_BIT |
             VK_ACCESS_TRANSFER_WRITE_BIT | VK_ACCESS_HOST_READ_BIT | VK_ACCESS_HOST_WRITE_BIT;
-
-        bufferBarrier.srcQueueFamilyIndex = 0;
-        bufferBarrier.dstQueueFamilyIndex = 0;
-        bufferBarrier.buffer              = mBuffer.getBuffer().getHandle();
-        bufferBarrier.offset              = offset;
-        bufferBarrier.size                = static_cast<VkDeviceSize>(size);
 
         commandBuffer->pipelineBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
                                        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 1,

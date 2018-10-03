@@ -26,10 +26,9 @@ WindowSurfaceVkAndroid::WindowSurfaceVkAndroid(const egl::SurfaceState &surfaceS
 
 angle::Result WindowSurfaceVkAndroid::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {
-    VkAndroidSurfaceCreateInfoKHR createInfo;
+    VkAndroidSurfaceCreateInfoKHR createInfo = {};
 
     createInfo.sType  = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
-    createInfo.pNext  = nullptr;
     createInfo.flags  = 0;
     createInfo.window = mNativeWindowType;
     ANGLE_VK_TRY(context, vkCreateAndroidSurfaceKHR(context->getRenderer()->getInstance(),

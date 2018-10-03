@@ -25,10 +25,9 @@ WindowSurfaceVkXcb::WindowSurfaceVkXcb(const egl::SurfaceState &surfaceState,
 
 angle::Result WindowSurfaceVkXcb::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {
-    VkXcbSurfaceCreateInfoKHR createInfo;
+    VkXcbSurfaceCreateInfoKHR createInfo = {};
 
     createInfo.sType      = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
-    createInfo.pNext      = nullptr;
     createInfo.flags      = 0;
     createInfo.connection = mXcbConnection;
     createInfo.window     = mNativeWindowType;

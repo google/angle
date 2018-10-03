@@ -191,7 +191,7 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
         colorRef.layout                 = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     }
 
-    VkAttachmentReference depthStencilAttachmentRef;
+    VkAttachmentReference depthStencilAttachmentRef = {};
     if (desc.depthStencilAttachmentCount() > 0)
     {
         ASSERT(desc.depthStencilAttachmentCount() == 1);
@@ -199,7 +199,7 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
         depthStencilAttachmentRef.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     }
 
-    VkSubpassDescription subpassDesc;
+    VkSubpassDescription subpassDesc = {};
 
     subpassDesc.flags                = 0;
     subpassDesc.pipelineBindPoint    = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -227,9 +227,8 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
                              ops[depthStencilIndex]);
     }
 
-    VkRenderPassCreateInfo createInfo;
+    VkRenderPassCreateInfo createInfo = {};
     createInfo.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    createInfo.pNext           = nullptr;
     createInfo.flags           = 0;
     createInfo.attachmentCount = attachmentCount;
     createInfo.pAttachments    = attachmentDescs.data();
@@ -444,20 +443,19 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
                                                const ShaderModule &fragmentModule,
                                                Pipeline *pipelineOut) const
 {
-    VkPipelineShaderStageCreateInfo shaderStages[2];
-    VkPipelineVertexInputStateCreateInfo vertexInputState;
-    VkPipelineInputAssemblyStateCreateInfo inputAssemblyState;
-    VkPipelineViewportStateCreateInfo viewportState;
-    VkPipelineRasterizationStateCreateInfo rasterState;
-    VkPipelineMultisampleStateCreateInfo multisampleState;
-    VkPipelineDepthStencilStateCreateInfo depthStencilState;
+    VkPipelineShaderStageCreateInfo shaderStages[2]           = {};
+    VkPipelineVertexInputStateCreateInfo vertexInputState     = {};
+    VkPipelineInputAssemblyStateCreateInfo inputAssemblyState = {};
+    VkPipelineViewportStateCreateInfo viewportState           = {};
+    VkPipelineRasterizationStateCreateInfo rasterState        = {};
+    VkPipelineMultisampleStateCreateInfo multisampleState     = {};
+    VkPipelineDepthStencilStateCreateInfo depthStencilState   = {};
     std::array<VkPipelineColorBlendAttachmentState, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>
         blendAttachmentState;
-    VkPipelineColorBlendStateCreateInfo blendState;
-    VkGraphicsPipelineCreateInfo createInfo;
+    VkPipelineColorBlendStateCreateInfo blendState = {};
+    VkGraphicsPipelineCreateInfo createInfo        = {};
 
     shaderStages[0].sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStages[0].pNext               = nullptr;
     shaderStages[0].flags               = 0;
     shaderStages[0].stage               = VK_SHADER_STAGE_VERTEX_BIT;
     shaderStages[0].module              = vertexModule.getHandle();
@@ -465,7 +463,6 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
     shaderStages[0].pSpecializationInfo = nullptr;
 
     shaderStages[1].sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStages[1].pNext               = nullptr;
     shaderStages[1].flags               = 0;
     shaderStages[1].stage               = VK_SHADER_STAGE_FRAGMENT_BIT;
     shaderStages[1].module              = fragmentModule.getHandle();
@@ -501,7 +498,6 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
 
     // The binding descriptions are filled in at draw time.
     vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    vertexInputState.pNext = nullptr;
     vertexInputState.flags = 0;
     vertexInputState.vertexBindingDescriptionCount   = vertexAttribCount;
     vertexInputState.pVertexBindingDescriptions      = bindingDescs.data();
@@ -510,7 +506,6 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
 
     // Primitive topology is filled in at draw time.
     inputAssemblyState.sType    = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssemblyState.pNext    = nullptr;
     inputAssemblyState.flags    = 0;
     inputAssemblyState.topology = static_cast<VkPrimitiveTopology>(mInputAssemblyInfo.topology);
     inputAssemblyState.primitiveRestartEnable =
@@ -519,7 +514,6 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
     // Set initial viewport and scissor state.
 
     viewportState.sType         = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-    viewportState.pNext         = nullptr;
     viewportState.flags         = 0;
     viewportState.viewportCount = 1;
     viewportState.pViewports    = &mViewport;
@@ -528,7 +522,6 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
 
     // Rasterizer state.
     rasterState.sType            = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-    rasterState.pNext            = nullptr;
     rasterState.flags            = 0;
     rasterState.depthClampEnable = static_cast<VkBool32>(mRasterizationStateInfo.depthClampEnable);
     rasterState.rasterizerDiscardEnable =
@@ -544,7 +537,6 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
 
     // Multisample state.
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    multisampleState.pNext = nullptr;
     multisampleState.flags = 0;
     multisampleState.rasterizationSamples =
         gl_vk::GetSamples(mMultisampleStateInfo.rasterizationSamples);
@@ -560,7 +552,6 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
 
     // Depth/stencil state.
     depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-    depthStencilState.pNext = nullptr;
     depthStencilState.flags = 0;
     depthStencilState.depthTestEnable =
         static_cast<VkBool32>(mDepthStencilStateInfo.depthTestEnable);
@@ -578,7 +569,6 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
     depthStencilState.maxDepthBounds = mDepthStencilStateInfo.maxDepthBounds;
 
     blendState.sType           = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-    blendState.pNext           = 0;
     blendState.flags           = 0;
     blendState.logicOpEnable   = static_cast<VkBool32>(mColorBlendStateInfo.logicOpEnable);
     blendState.logicOp         = static_cast<VkLogicOp>(mColorBlendStateInfo.logicOp);
@@ -599,7 +589,6 @@ angle::Result PipelineDesc::initializePipeline(vk::Context *context,
     // TODO(jmadill): Dynamic state.
 
     createInfo.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    createInfo.pNext               = nullptr;
     createInfo.flags               = 0;
     createInfo.stageCount          = 2;
     createInfo.pStages             = shaderStages;
@@ -950,7 +939,7 @@ void DescriptorSetLayoutDesc::unpackBindings(DescriptorSetLayoutBindingVector *b
         if (packedBinding.count == 0)
             continue;
 
-        VkDescriptorSetLayoutBinding binding;
+        VkDescriptorSetLayoutBinding binding = {};
         binding.binding            = bindingIndex;
         binding.descriptorCount    = packedBinding.count;
         binding.descriptorType     = static_cast<VkDescriptorType>(packedBinding.type);
@@ -1208,9 +1197,8 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     vk::DescriptorSetLayoutBindingVector bindings;
     desc.unpackBindings(&bindings);
 
-    VkDescriptorSetLayoutCreateInfo createInfo;
+    VkDescriptorSetLayoutCreateInfo createInfo = {};
     createInfo.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    createInfo.pNext        = nullptr;
     createInfo.flags        = 0;
     createInfo.bindingCount = static_cast<uint32_t>(bindings.size());
     createInfo.pBindings    = bindings.data();
@@ -1280,7 +1268,7 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
         const vk::PackedPushConstantRange &pushConstantDesc = descPushConstantRanges[shaderIndex];
         if (pushConstantDesc.size > 0)
         {
-            VkPushConstantRange pushConstantRange;
+            VkPushConstantRange pushConstantRange = {};
             pushConstantRange.stageFlags =
                 shaderIndex == 0 ? VK_SHADER_STAGE_VERTEX_BIT : VK_SHADER_STAGE_FRAGMENT_BIT;
             pushConstantRange.offset = pushConstantDesc.offset;
@@ -1291,9 +1279,8 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     }
 
     // No pipeline layout found. We must create a new one.
-    VkPipelineLayoutCreateInfo createInfo;
+    VkPipelineLayoutCreateInfo createInfo = {};
     createInfo.sType                  = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    createInfo.pNext                  = nullptr;
     createInfo.flags                  = 0;
     createInfo.setLayoutCount         = static_cast<uint32_t>(setLayoutHandles.size());
     createInfo.pSetLayouts            = setLayoutHandles.data();

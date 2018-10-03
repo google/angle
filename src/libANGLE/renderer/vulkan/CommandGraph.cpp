@@ -30,18 +30,16 @@ angle::Result InitAndBeginCommandBuffer(vk::Context *context,
 {
     ASSERT(!commandBuffer->valid());
 
-    VkCommandBufferAllocateInfo createInfo;
+    VkCommandBufferAllocateInfo createInfo = {};
     createInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    createInfo.pNext              = nullptr;
     createInfo.commandPool        = commandPool.getHandle();
     createInfo.level              = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
     createInfo.commandBufferCount = 1;
 
     ANGLE_TRY(commandBuffer->init(context, createInfo));
 
-    VkCommandBufferBeginInfo beginInfo;
+    VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.pNext            = nullptr;
     beginInfo.flags            = flags | VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     beginInfo.pInheritanceInfo = &inheritanceInfo;
 
@@ -235,9 +233,8 @@ angle::Result CommandGraphNode::beginOutsideRenderPassRecording(Context *context
 {
     ASSERT(!mHasChildren);
 
-    VkCommandBufferInheritanceInfo inheritanceInfo;
+    VkCommandBufferInheritanceInfo inheritanceInfo = {};
     inheritanceInfo.sType                = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-    inheritanceInfo.pNext                = nullptr;
     inheritanceInfo.renderPass           = VK_NULL_HANDLE;
     inheritanceInfo.subpass              = 0;
     inheritanceInfo.framebuffer          = VK_NULL_HANDLE;
@@ -263,9 +260,8 @@ angle::Result CommandGraphNode::beginInsideRenderPassRecording(Context *context,
     ANGLE_TRY(context->getRenderer()->getCompatibleRenderPass(context, mRenderPassDesc,
                                                               &compatibleRenderPass));
 
-    VkCommandBufferInheritanceInfo inheritanceInfo;
+    VkCommandBufferInheritanceInfo inheritanceInfo = {};
     inheritanceInfo.sType                = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-    inheritanceInfo.pNext                = nullptr;
     inheritanceInfo.renderPass           = compatibleRenderPass->getHandle();
     inheritanceInfo.subpass              = 0;
     inheritanceInfo.framebuffer          = mRenderPassFramebuffer.getHandle();
@@ -384,9 +380,8 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
 
         ANGLE_TRY(mInsideRenderPassCommands.end(context));
 
-        VkRenderPassBeginInfo beginInfo;
+        VkRenderPassBeginInfo beginInfo    = {};
         beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        beginInfo.pNext                    = nullptr;
         beginInfo.renderPass               = renderPass->getHandle();
         beginInfo.framebuffer              = mRenderPassFramebuffer.getHandle();
         beginInfo.renderArea.offset.x      = static_cast<uint32_t>(mRenderPassRenderArea.x);
@@ -448,9 +443,8 @@ angle::Result CommandGraph::submitCommands(Context *context,
                                            CommandPool *commandPool,
                                            CommandBuffer *primaryCommandBufferOut)
 {
-    VkCommandBufferAllocateInfo primaryInfo;
+    VkCommandBufferAllocateInfo primaryInfo = {};
     primaryInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    primaryInfo.pNext              = nullptr;
     primaryInfo.commandPool        = commandPool->getHandle();
     primaryInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     primaryInfo.commandBufferCount = 1;
@@ -469,9 +463,8 @@ angle::Result CommandGraph::submitCommands(Context *context,
 
     std::vector<CommandGraphNode *> nodeStack;
 
-    VkCommandBufferBeginInfo beginInfo;
+    VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.pNext            = nullptr;
     beginInfo.flags            = 0;
     beginInfo.pInheritanceInfo = nullptr;
 
