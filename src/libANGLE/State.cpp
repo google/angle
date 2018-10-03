@@ -1067,11 +1067,19 @@ unsigned int State::getActiveSampler() const
     return static_cast<unsigned int>(mActiveSampler);
 }
 
-void State::setSamplerTexture(const Context *context, TextureType type, Texture *texture)
+Error State::setSamplerTexture(const Context *context, TextureType type, Texture *texture)
 {
     mSamplerTextures[type][mActiveSampler].set(context, texture);
+
+    if (mProgram && mProgram->getActiveSamplersMask()[mActiveSampler] &&
+        mProgram->getActiveSamplerTypes()[mActiveSampler] == type)
+    {
+        ANGLE_TRY(updateActiveTexture(context, mActiveSampler, texture));
+    }
+
     mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
-    mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
+
+    return NoError();
 }
 
 Texture *State::getTargetTexture(TextureType type) const

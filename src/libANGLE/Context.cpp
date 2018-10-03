@@ -1117,7 +1117,7 @@ void Context::bindTexture(TextureType target, GLuint handle)
     }
 
     ASSERT(texture);
-    mGLState.setSamplerTexture(this, target, texture);
+    ANGLE_CONTEXT_TRY(mGLState.setSamplerTexture(this, target, texture));
     mStateCache.onActiveTextureChange(this);
 }
 
