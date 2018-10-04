@@ -860,6 +860,7 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
 }  // namespace rx
 
 #define ANGLE_VK_TRY(context, command)                                 \
+    do                                                                 \
     {                                                                  \
         auto ANGLE_LOCAL_VAR = command;                                \
         if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS))             \
@@ -867,27 +868,7 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
             context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__); \
             return angle::Result::Stop();                              \
         }                                                              \
-    }                                                                  \
-    ANGLE_EMPTY_STATEMENT
-
-#define ANGLE_VK_TRY_ALLOW_OTHER(context, command, acceptable, result)                      \
-    {                                                                                       \
-        auto ANGLE_LOCAL_VAR = command;                                                     \
-        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS && ANGLE_LOCAL_VAR != acceptable)) \
-        {                                                                                   \
-            context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__);                      \
-            return angle::Result::Stop();                                                   \
-        }                                                                                   \
-        result = ANGLE_LOCAL_VAR == VK_SUCCESS ? angle::Result::Continue()                  \
-                                               : angle::Result::Incomplete();               \
-    }                                                                                       \
-    ANGLE_EMPTY_STATEMENT
-
-#define ANGLE_VK_TRY_ALLOW_INCOMPLETE(context, command, result) \
-    ANGLE_VK_TRY_ALLOW_OTHER(context, command, VK_INCOMPLETE, result)
-
-#define ANGLE_VK_TRY_ALLOW_NOT_READY(context, command, result) \
-    ANGLE_VK_TRY_ALLOW_OTHER(context, command, VK_NOT_READY, result)
+    } while (0)
 
 #define ANGLE_VK_CHECK(context, test, error) ANGLE_VK_TRY(context, test ? VK_SUCCESS : error)
 
@@ -896,5 +877,33 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
 
 #define ANGLE_VK_CHECK_ALLOC(context, result) \
     ANGLE_VK_CHECK(context, result, VK_ERROR_OUT_OF_HOST_MEMORY)
+
+// Macros specifically made for vulkan wrappers (in vk_utils.h) that execute the call and return
+// appropriately.
+#define ANGLE_VK_TRY_RETURN(context, command) \
+    do                                        \
+    {                                         \
+        ANGLE_VK_TRY(context, command);       \
+        return angle::Result::Continue();     \
+    } while (0)
+
+#define ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, acceptable)                       \
+    do                                                                                      \
+    {                                                                                       \
+        auto ANGLE_LOCAL_VAR = command;                                                     \
+        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS && ANGLE_LOCAL_VAR != acceptable)) \
+        {                                                                                   \
+            context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__);                      \
+            return angle::Result::Stop();                                                   \
+        }                                                                                   \
+        return ANGLE_LOCAL_VAR == VK_SUCCESS ? angle::Result::Continue()                    \
+                                             : angle::Result::Incomplete();                 \
+    } while (0)
+
+#define ANGLE_VK_TRY_RETURN_ALLOW_INCOMPLETE(context, command) \
+    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_INCOMPLETE)
+
+#define ANGLE_VK_TRY_RETURN_ALLOW_NOT_READY(context, command) \
+    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_NOT_READY)
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_UTILS_H_

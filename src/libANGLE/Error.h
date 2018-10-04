@@ -191,20 +191,21 @@ inline Error NoError()
 #define ANGLE_LOCAL_VAR ANGLE_CONCAT2(_localVar, __LINE__)
 
 #define ANGLE_TRY_TEMPLATE(EXPR, FUNC)                 \
+    do                                                 \
     {                                                  \
         auto ANGLE_LOCAL_VAR = EXPR;                   \
         if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR.isError())) \
         {                                              \
             FUNC(ANGLE_LOCAL_VAR);                     \
         }                                              \
-    }                                                  \
-    ANGLE_EMPTY_STATEMENT
+    } while (0)
 
 #define ANGLE_RETURN(X) return X;
 #define ANGLE_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_RETURN);
 
 // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2491
 #define ANGLE_TRY_HANDLE(CONTEXT, EXPR)                \
+    do                                                 \
     {                                                  \
         auto ANGLE_LOCAL_VAR = (EXPR);                 \
         if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR.isError())) \
@@ -212,19 +213,18 @@ inline Error NoError()
             CONTEXT->handleError(ANGLE_LOCAL_VAR);     \
             return angle::Result::Stop();              \
         }                                              \
-    }                                                  \
-    ANGLE_EMPTY_STATEMENT
+    } while (0)
 
 // TODO(jmadill): Introduce way to store errors to a const Context. http://anglebug.com/2491
 #define ANGLE_SWALLOW_ERR(EXPR)                                       \
+    do                                                                \
     {                                                                 \
         auto ANGLE_LOCAL_VAR = EXPR;                                  \
         if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR.isError()))                \
         {                                                             \
             ERR() << "Unhandled internal error: " << ANGLE_LOCAL_VAR; \
         }                                                             \
-    }                                                                 \
-    ANGLE_EMPTY_STATEMENT
+    } while (0)
 
 #undef ANGLE_LOCAL_VAR
 #undef ANGLE_CONCAT2

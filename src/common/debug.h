@@ -214,7 +214,6 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #define ANGLE_TRACE_ENABLED
 #endif
 
-#define ANGLE_EMPTY_STATEMENT for (;;) break
 #if !defined(NDEBUG) || defined(ANGLE_ENABLE_RELEASE_ASSERTS)
 #define ANGLE_ENABLE_ASSERTS
 #endif
@@ -281,34 +280,34 @@ std::ostream &FmtHex(std::ostream &os, T value)
 
 #if defined(ANGLE_TRACE_ENABLED) || defined(ANGLE_ENABLE_ASSERTS)
 #define UNIMPLEMENTED()                                                                       \
+    do                                                                                        \
     {                                                                                         \
         WARN() << "\t! Unimplemented: " << __FUNCTION__ << "(" << __FILE__ << ":" << __LINE__ \
                << ")";                                                                        \
         ASSERT(NOASSERT_UNIMPLEMENTED);                                                       \
-    }                                                                                         \
-    ANGLE_EMPTY_STATEMENT
+    } while (0)
 
 // A macro for code which is not expected to be reached under valid assumptions
 #define UNREACHABLE()                                                                              \
+    do                                                                                             \
     {                                                                                              \
         ERR() << "\t! Unreachable reached: " << __FUNCTION__ << "(" << __FILE__ << ":" << __LINE__ \
               << ")";                                                                              \
         ASSERT(false);                                                                             \
-    }                                                                                              \
-    ANGLE_EMPTY_STATEMENT
+    } while (0)
 #else
 #define UNIMPLEMENTED()                 \
+    do                                  \
     {                                   \
         ASSERT(NOASSERT_UNIMPLEMENTED); \
-    }                                   \
-    ANGLE_EMPTY_STATEMENT
+    } while (0)
 
 // A macro for code which is not expected to be reached under valid assumptions
 #define UNREACHABLE()  \
+    do                 \
     {                  \
         ASSERT(false); \
-    }                  \
-    ANGLE_EMPTY_STATEMENT
+    } while (0)
 #endif  // defined(ANGLE_TRACE_ENABLED) || defined(ANGLE_ENABLE_ASSERTS)
 
 #if defined(ANGLE_PLATFORM_WINDOWS)

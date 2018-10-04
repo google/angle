@@ -470,14 +470,15 @@ bool IsDebug();
 bool IsRelease();
 
 // Note: git cl format messes up this formatting.
-#define ANGLE_SKIP_TEST_IF(COND)                              \
-                                                              \
-    if (COND)                                                 \
-                                                              \
-    {                                                         \
-        std::cout << "Test skipped: " #COND "." << std::endl; \
-        return;                                               \
-    }                                                         \
-    ANGLE_EMPTY_STATEMENT
+#define ANGLE_SKIP_TEST_IF(COND)                                  \
+    do                                                            \
+    {                                                             \
+        if (COND)                                                 \
+                                                                  \
+        {                                                         \
+            std::cout << "Test skipped: " #COND "." << std::endl; \
+            return;                                               \
+        }                                                         \
+    } while (0)
 
 #endif  // ANGLE_TESTS_ANGLE_TEST_H_
