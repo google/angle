@@ -110,7 +110,7 @@ HLSLCompiler::~HLSLCompiler()
     release();
 }
 
-angle::Result HLSLCompiler::ensureInitialized(const gl::Context *context)
+angle::Result HLSLCompiler::ensureInitialized(d3d::Context *context)
 {
     if (mInitialized)
     {
@@ -138,12 +138,10 @@ angle::Result HLSLCompiler::ensureInitialized(const gl::Context *context)
         mD3DCompilerModule = LoadLibrary(D3DCOMPILER_DLL);
     }
 
-    ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
-
     if (!mD3DCompilerModule)
     {
         ERR() << "D3D compiler module not found.";
-        ANGLE_TRY_HR(contextD3D, E_OUTOFMEMORY, "D3D compiler module not found.");
+        ANGLE_TRY_HR(context, E_OUTOFMEMORY, "D3D compiler module not found.");
     }
 
     mD3DCompileFunc = reinterpret_cast<pD3DCompile>(GetProcAddress(mD3DCompilerModule, "D3DCompile"));
@@ -160,7 +158,7 @@ angle::Result HLSLCompiler::ensureInitialized(const gl::Context *context)
     mD3DDisassembleFunc = reinterpret_cast<pD3DDisassemble>(D3DDisassemble);
 #endif
 
-    ANGLE_CHECK_HR(contextD3D, mD3DCompileFunc, "Error finding D3DCompile entry point.",
+    ANGLE_CHECK_HR(context, mD3DCompileFunc, "Error finding D3DCompile entry point.",
                    E_OUTOFMEMORY);
 
     mInitialized = true;
@@ -179,7 +177,7 @@ void HLSLCompiler::release()
     }
 }
 
-angle::Result HLSLCompiler::compileToBinary(const gl::Context *context,
+angle::Result HLSLCompiler::compileToBinary(d3d::Context *context,
                                             gl::InfoLog &infoLog,
                                             const std::string &hlsl,
                                             const std::string &profile,
@@ -289,8 +287,7 @@ angle::Result HLSLCompiler::compileToBinary(const gl::Context *context,
         if (result == E_OUTOFMEMORY)
         {
             *outCompiledBlob = nullptr;
-            ANGLE_TRY_HR(GetImplAs<ContextD3D>(context), result,
-                         "HLSL compiler had an unexpected failure");
+            ANGLE_TRY_HR(context, result, "HLSL compiler had an unexpected failure");
         }
 
         infoLog << "Warning: D3D shader compilation failed with " << configs[i].name << " flags. ("
@@ -307,7 +304,7 @@ angle::Result HLSLCompiler::compileToBinary(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result HLSLCompiler::disassembleBinary(const gl::Context *context,
+angle::Result HLSLCompiler::disassembleBinary(d3d::Context *context,
                                               ID3DBlob *shaderBinary,
                                               std::string *disassemblyOut)
 {

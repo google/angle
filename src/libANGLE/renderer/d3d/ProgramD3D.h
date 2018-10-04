@@ -178,21 +178,22 @@ class ProgramD3D : public ProgramImpl
     bool usesGeometryShaderForPointSpriteEmulation() const;
     bool usesInstancedPointSpriteEmulation() const;
 
-    gl::LinkResult load(const gl::Context *context,
-                        gl::InfoLog &infoLog,
-                        gl::BinaryInputStream *stream) override;
+    angle::Result load(const gl::Context *context,
+                       gl::InfoLog &infoLog,
+                       gl::BinaryInputStream *stream) override;
     void save(const gl::Context *context, gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
-    angle::Result getVertexExecutableForCachedInputLayout(const gl::Context *context,
+    angle::Result getVertexExecutableForCachedInputLayout(d3d::Context *context,
                                                           ShaderExecutableD3D **outExectuable,
                                                           gl::InfoLog *infoLog);
-    angle::Result getGeometryExecutableForPrimitiveType(const gl::Context *context,
+    angle::Result getGeometryExecutableForPrimitiveType(d3d::Context *context,
+                                                        const gl::Caps &caps,
                                                         gl::PrimitiveMode drawMode,
                                                         ShaderExecutableD3D **outExecutable,
                                                         gl::InfoLog *infoLog);
-    angle::Result getPixelExecutableForCachedOutputLayout(const gl::Context *context,
+    angle::Result getPixelExecutableForCachedOutputLayout(d3d::Context *context,
                                                           ShaderExecutableD3D **outExectuable,
                                                           gl::InfoLog *infoLog);
     angle::Result getComputeExecutable(ShaderExecutableD3D **outExecutable);
@@ -455,7 +456,7 @@ class ProgramD3D : public ProgramImpl
 
     std::unique_ptr<LinkEvent> compileProgramExecutables(const gl::Context *context,
                                                          gl::InfoLog &infoLog);
-    gl::LinkResult compileComputeExecutable(const gl::Context *context, gl::InfoLog &infoLog);
+    angle::Result compileComputeExecutable(d3d::Context *context, gl::InfoLog &infoLog);
 
     void gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyings,
                                          const BuiltinInfo &builtins);

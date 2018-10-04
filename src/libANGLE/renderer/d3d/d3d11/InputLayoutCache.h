@@ -71,6 +71,7 @@ class Program;
 
 namespace rx
 {
+class Context11;
 struct TranslatedAttribute;
 struct TranslatedIndexData;
 struct SourceIndexData;
@@ -88,8 +89,7 @@ class InputLayoutCache : angle::NonCopyable
     // Useful for testing
     void setCacheSize(size_t newCacheSize);
 
-    angle::Result getInputLayout(const gl::Context *context,
-                                 Renderer11 *renderer,
+    angle::Result getInputLayout(Context11 *context,
                                  const gl::State &state,
                                  const std::vector<const TranslatedAttribute *> &currentAttributes,
                                  const AttribIndexArray &sortedSemanticIndices,
@@ -98,8 +98,7 @@ class InputLayoutCache : angle::NonCopyable
 
   private:
     angle::Result createInputLayout(
-        const gl::Context *context,
-        Renderer11 *renderer,
+        Context11 *context11,
         const AttribIndexArray &sortedSemanticIndices,
         const std::vector<const TranslatedAttribute *> &currentAttributes,
         gl::Program *program,

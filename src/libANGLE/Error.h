@@ -144,8 +144,6 @@ inline Error NoError()
 {
     return Error::NoError();
 }
-
-using LinkResult = ErrorOrResult<bool>;
 }  // namespace gl
 
 namespace egl
@@ -287,13 +285,11 @@ class ANGLE_NO_DISCARD Result
 {
   public:
     // TODO(jmadill): Rename when refactor is complete. http://anglebug.com/2491
-    bool isError() const { return mResult == ResultValue::kStop; }
-    Result getError() { return *this; }
-    Result getResult() { return *this; }
+    bool isError() const { return mValue == Value::Stop; }
 
-    static Result Continue() { return Result(ResultValue::kContinue); }
-    static Result Stop() { return Result(ResultValue::kStop); }
-    static Result Incomplete() { return Result(ResultValue::kIncomplete); }
+    static Result Stop() { return Result(Value::Stop); }
+    static Result Continue() { return Result(Value::Continue); }
+    static Result Incomplete() { return Result(Value::Incomplete); }
 
     // TODO(jmadill): Remove when refactor is complete. http://anglebug.com/2491
     operator gl::Error() const;
@@ -305,20 +301,20 @@ class ANGLE_NO_DISCARD Result
         return operator gl::Error();
     }
 
-    bool operator==(Result other) const { return mResult == other.mResult; }
+    bool operator==(Result other) const { return mValue == other.mValue; }
 
-    bool operator!=(Result other) const { return mResult != other.mResult; }
+    bool operator!=(Result other) const { return mValue != other.mValue; }
 
   private:
-    enum class ResultValue
+    enum class Value
     {
-        kContinue = 0,
-        kStop,
-        kIncomplete,
+        Continue,
+        Stop,
+        Incomplete,
     };
 
-    Result(ResultValue stop) : mResult(stop) {}
-    ResultValue mResult;
+    Result(Value value) : mValue(value) {}
+    Value mValue;
 };
 }  // namespace angle
 

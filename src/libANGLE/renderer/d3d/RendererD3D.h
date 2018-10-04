@@ -31,6 +31,7 @@ class ConfigSet;
 
 namespace gl
 {
+class ErrorSet;
 class FramebufferState;
 class InfoLog;
 class Texture;
@@ -261,22 +262,22 @@ class RendererD3D : public BufferFactoryD3D
                                                  RenderTargetD3D **outRT) = 0;
 
     // Shader operations
-    virtual angle::Result loadExecutable(const gl::Context *context,
+    virtual angle::Result loadExecutable(d3d::Context *context,
                                          const uint8_t *function,
                                          size_t length,
                                          gl::ShaderType type,
                                          const std::vector<D3DVarying> &streamOutVaryings,
                                          bool separatedOutputBuffers,
-                                         ShaderExecutableD3D **outExecutable)       = 0;
-    virtual angle::Result compileToExecutable(const gl::Context *context,
+                                         ShaderExecutableD3D **outExecutable)      = 0;
+    virtual angle::Result compileToExecutable(d3d::Context *context,
                                               gl::InfoLog &infoLog,
                                               const std::string &shaderHLSL,
                                               gl::ShaderType type,
                                               const std::vector<D3DVarying> &streamOutVaryings,
                                               bool separatedOutputBuffers,
                                               const angle::CompilerWorkaroundsD3D &workarounds,
-                                              ShaderExecutableD3D **outExectuable)  = 0;
-    virtual angle::Result ensureHLSLCompilerInitialized(const gl::Context *context) = 0;
+                                              ShaderExecutableD3D **outExectuable) = 0;
+    virtual angle::Result ensureHLSLCompilerInitialized(d3d::Context *context)     = 0;
 
     virtual UniformStorageD3D *createUniformStorage(size_t storageSize) = 0;
 

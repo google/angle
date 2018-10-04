@@ -253,14 +253,14 @@ class Renderer9 : public RendererD3D
                                          RenderTargetD3D **outRT) override;
 
     // Shader operations
-    angle::Result loadExecutable(const gl::Context *context,
+    angle::Result loadExecutable(d3d::Context *context,
                                  const uint8_t *function,
                                  size_t length,
                                  gl::ShaderType type,
                                  const std::vector<D3DVarying> &streamOutVaryings,
                                  bool separatedOutputBuffers,
                                  ShaderExecutableD3D **outExecutable) override;
-    angle::Result compileToExecutable(const gl::Context *context,
+    angle::Result compileToExecutable(d3d::Context *context,
                                       gl::InfoLog &infoLog,
                                       const std::string &shaderHLSL,
                                       gl::ShaderType type,
@@ -268,7 +268,7 @@ class Renderer9 : public RendererD3D
                                       bool separatedOutputBuffers,
                                       const angle::CompilerWorkaroundsD3D &workarounds,
                                       ShaderExecutableD3D **outExectuable) override;
-    angle::Result ensureHLSLCompilerInitialized(const gl::Context *context) override;
+    angle::Result ensureHLSLCompilerInitialized(d3d::Context *context) override;
 
     UniformStorageD3D *createUniformStorage(size_t storageSize) override;
 

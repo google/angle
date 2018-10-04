@@ -52,9 +52,9 @@ ProgramGL::~ProgramGL()
     mProgramID = 0;
 }
 
-gl::LinkResult ProgramGL::load(const gl::Context *context,
-                               gl::InfoLog &infoLog,
-                               gl::BinaryInputStream *stream)
+angle::Result ProgramGL::load(const gl::Context *context,
+                              gl::InfoLog &infoLog,
+                              gl::BinaryInputStream *stream)
 {
     preLink();
 
@@ -70,13 +70,13 @@ gl::LinkResult ProgramGL::load(const gl::Context *context,
     // Verify that the program linked
     if (!checkLinkStatus(infoLog))
     {
-        return false;
+        return angle::Result::Incomplete();
     }
 
     postLink();
     reapplyUBOBindingsIfNeeded(context);
 
-    return true;
+    return angle::Result::Continue();
 }
 
 void ProgramGL::save(const gl::Context *context, gl::BinaryOutputStream *stream)
@@ -133,9 +133,9 @@ std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
     return std::make_unique<LinkEventDone>(linkImpl(context, resources, infoLog));
 }
 
-gl::LinkResult ProgramGL::linkImpl(const gl::Context *context,
-                                   const gl::ProgramLinkedResources &resources,
-                                   gl::InfoLog &infoLog)
+angle::Result ProgramGL::linkImpl(const gl::Context *context,
+                                  const gl::ProgramLinkedResources &resources,
+                                  gl::InfoLog &infoLog)
 {
     preLink();
 
@@ -337,7 +337,7 @@ gl::LinkResult ProgramGL::linkImpl(const gl::Context *context,
     // Verify the link
     if (!checkLinkStatus(infoLog))
     {
-        return false;
+        return angle::Result::Incomplete();
     }
 
     if (mWorkarounds.alwaysCallUseProgramAfterLink)
@@ -348,7 +348,7 @@ gl::LinkResult ProgramGL::linkImpl(const gl::Context *context,
     linkResources(resources);
     postLink();
 
-    return true;
+    return angle::Result::Continue();
 }
 
 GLboolean ProgramGL::validate(const gl::Caps & /*caps*/, gl::InfoLog * /*infoLog*/)

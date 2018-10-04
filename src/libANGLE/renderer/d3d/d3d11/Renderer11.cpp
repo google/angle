@@ -1394,12 +1394,12 @@ void *Renderer11::getD3DDevice()
     return mDevice;
 }
 
-angle::Result Renderer11::drawWithGeometryShaderAndTransformFeedback(const gl::Context *context,
+angle::Result Renderer11::drawWithGeometryShaderAndTransformFeedback(Context11 *context11,
                                                                      gl::PrimitiveMode mode,
                                                                      UINT instanceCount,
                                                                      UINT vertexCount)
 {
-    const gl::State &glState = context->getGLState();
+    const gl::State &glState = context11->getGLState();
     ProgramD3D *programD3D   = mStateManager.getProgramD3D();
 
     // Since we use a geometry if-and-only-if we rewrite vertex streams, transform feedback
@@ -1418,7 +1418,7 @@ angle::Result Renderer11::drawWithGeometryShaderAndTransformFeedback(const gl::C
     }
 
     rx::ShaderExecutableD3D *pixelExe = nullptr;
-    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(context, &pixelExe, nullptr));
+    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(context11, &pixelExe, nullptr));
 
     // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
     if (!pixelExe || glState.getRasterizerState().rasterizerDiscard)
@@ -1430,8 +1430,8 @@ angle::Result Renderer11::drawWithGeometryShaderAndTransformFeedback(const gl::C
 
     // Retrieve the geometry shader.
     rx::ShaderExecutableD3D *geometryExe = nullptr;
-    ANGLE_TRY(
-        programD3D->getGeometryExecutableForPrimitiveType(context, mode, &geometryExe, nullptr));
+    ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(context11, context11->getCaps(),
+                                                                mode, &geometryExe, nullptr));
 
     mStateManager.setGeometryShader(&GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader());
 
@@ -1467,8 +1467,9 @@ angle::Result Renderer11::drawArrays(const gl::Context *context, const gl::DrawC
 
         if (programD3D->usesGeometryShader(params.mode()))
         {
-            return drawWithGeometryShaderAndTransformFeedback(
-                context, params.mode(), adjustedInstanceCount, clampedVertexCount);
+            return drawWithGeometryShaderAndTransformFeedback(GetImplAs<Context11>(context),
+                                                              params.mode(), adjustedInstanceCount,
+                                                              clampedVertexCount);
         }
     }
 
@@ -2673,7 +2674,7 @@ angle::Result Renderer11::createRenderTargetCopy(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Renderer11::loadExecutable(const gl::Context *context,
+angle::Result Renderer11::loadExecutable(d3d::Context *context,
                                          const uint8_t *function,
                                          size_t length,
                                          gl::ShaderType type,
@@ -2683,7 +2684,7 @@ angle::Result Renderer11::loadExecutable(const gl::Context *context,
 {
     ShaderData shaderData(function, length);
 
-    Context11 *context11 = GetImplAs<Context11>(context);
+    Context11 *context11 = static_cast<Context11 *>(context);
 
     switch (type)
     {
@@ -2747,7 +2748,7 @@ angle::Result Renderer11::loadExecutable(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Renderer11::compileToExecutable(const gl::Context *context,
+angle::Result Renderer11::compileToExecutable(d3d::Context *context,
                                               gl::InfoLog &infoLog,
                                               const std::string &shaderHLSL,
                                               gl::ShaderType type,
@@ -2773,7 +2774,7 @@ angle::Result Renderer11::compileToExecutable(const gl::Context *context,
             profileStream << "cs";
             break;
         default:
-            ANGLE_HR_UNREACHABLE(GetImplAs<Context11>(context));
+            ANGLE_HR_UNREACHABLE(context);
     }
 
     profileStream << "_" << getMajorShaderModel() << "_" << getMinorShaderModel()
@@ -2846,7 +2847,7 @@ angle::Result Renderer11::compileToExecutable(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Renderer11::ensureHLSLCompilerInitialized(const gl::Context *context)
+angle::Result Renderer11::ensureHLSLCompilerInitialized(d3d::Context *context)
 {
     return mCompiler.ensureInitialized(context);
 }

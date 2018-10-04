@@ -1129,8 +1129,9 @@ Error Program::link(const gl::Context *context)
 
     if (cache)
     {
-        ANGLE_TRY_RESULT(cache->getProgram(context, this, &mState, &programHash), mLinked);
-        ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.ProgramCache.LoadBinarySuccess", mLinked);
+        angle::Result result = cache->getProgram(context, this, &mState, &programHash);
+        mLinked              = (result == angle::Result::Continue());
+        ANGLE_TRY(result);
     }
 
     if (mLinked)
@@ -1288,11 +1289,13 @@ bool Program::isLinking() const
     return (mLinkingState.get() && mLinkingState->linkEvent->isLinking());
 }
 
-void Program::resolveLinkImpl()
+void Program::resolveLinkImpl(const Context *context)
 {
     ASSERT(mLinkingState.get());
 
-    mLinked           = mLinkingState->linkEvent->wait();
+    angle::Result result = mLinkingState->linkEvent->wait(context);
+
+    mLinked           = result == angle::Result::Continue();
     mLinkResolved     = true;
     auto linkingState = std::move(mLinkingState);
     if (!mLinked)
@@ -1448,11 +1451,13 @@ Error Program::loadBinary(const Context *context,
     }
 
     const uint8_t *bytes = reinterpret_cast<const uint8_t *>(binary);
-    ANGLE_TRY_RESULT(
-        MemoryProgramCache::Deserialize(context, this, &mState, bytes, length, mInfoLog), mLinked);
+    angle::Result result =
+        MemoryProgramCache::Deserialize(context, this, &mState, bytes, length, mInfoLog);
+    mLinked = result == angle::Result::Continue();
+    ANGLE_TRY(result);
 
     // Currently we require the full shader text to compute the program hash.
-    // TODO(jmadill): Store the binary in the internal program cache.
+    // We could also store the binary in the internal program cache.
 
     for (size_t uniformBlockIndex = 0; uniformBlockIndex < mState.mUniformBlocks.size();
          ++uniformBlockIndex)

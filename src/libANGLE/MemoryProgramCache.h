@@ -35,12 +35,12 @@ class MemoryProgramCache final : angle::NonCopyable
                           angle::MemoryBuffer *binaryOut);
 
     // Loads program state according to the specified binary blob.
-    static LinkResult Deserialize(const Context *context,
-                                  const Program *program,
-                                  ProgramState *state,
-                                  const uint8_t *binary,
-                                  size_t length,
-                                  InfoLog &infoLog);
+    static angle::Result Deserialize(const Context *context,
+                                     const Program *program,
+                                     ProgramState *state,
+                                     const uint8_t *binary,
+                                     size_t length,
+                                     InfoLog &infoLog);
 
     static void ComputeHash(const Context *context,
                             const Program *program,
@@ -73,10 +73,10 @@ class MemoryProgramCache final : angle::NonCopyable
 
     // Check the cache, and deserialize and load the program if found. Evict existing hash if load
     // fails.
-    LinkResult getProgram(const Context *context,
-                          const Program *program,
-                          ProgramState *state,
-                          egl::BlobCache::Key *hashOut);
+    angle::Result getProgram(const Context *context,
+                             const Program *program,
+                             ProgramState *state,
+                             egl::BlobCache::Key *hashOut);
 
     // Empty the cache.
     void clear();

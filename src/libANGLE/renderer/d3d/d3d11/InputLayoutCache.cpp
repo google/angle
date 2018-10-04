@@ -116,8 +116,7 @@ void InputLayoutCache::clear()
 }
 
 angle::Result InputLayoutCache::getInputLayout(
-    const gl::Context *context,
-    Renderer11 *renderer,
+    Context11 *context11,
     const gl::State &state,
     const std::vector<const TranslatedAttribute *> &currentAttributes,
     const AttribIndexArray &sortedSemanticIndices,
@@ -184,7 +183,7 @@ angle::Result InputLayoutCache::getInputLayout(
             angle::TrimCache(mLayoutCache.max_size() / 2, kGCLimit, "input layout", &mLayoutCache);
 
             d3d11::InputLayout newInputLayout;
-            ANGLE_TRY(createInputLayout(context, renderer, sortedSemanticIndices, currentAttributes,
+            ANGLE_TRY(createInputLayout(context11, sortedSemanticIndices, currentAttributes,
                                         program, drawCallParams, &newInputLayout));
 
             auto insertIt   = mLayoutCache.Put(layout, std::move(newInputLayout));
@@ -196,8 +195,7 @@ angle::Result InputLayoutCache::getInputLayout(
 }
 
 angle::Result InputLayoutCache::createInputLayout(
-    const gl::Context *context,
-    Renderer11 *renderer,
+    Context11 *context11,
     const AttribIndexArray &sortedSemanticIndices,
     const std::vector<const TranslatedAttribute *> &currentAttributes,
     gl::Program *program,
@@ -205,6 +203,7 @@ angle::Result InputLayoutCache::createInputLayout(
     d3d11::InputLayout *inputLayoutOut)
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    Renderer11 *renderer   = context11->getRenderer();
     auto featureLevel      = renderer->getRenderer11DeviceCaps().featureLevel;
 
     bool programUsesInstancedPointSprites =
@@ -295,15 +294,15 @@ angle::Result InputLayoutCache::createInputLayout(
     }
 
     ShaderExecutableD3D *shader = nullptr;
-    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(context, &shader, nullptr));
+    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(context11, &shader, nullptr));
 
     ShaderExecutableD3D *shader11 = GetAs<ShaderExecutable11>(shader);
 
     InputElementArray inputElementArray(inputElements.data(), inputElementCount);
     ShaderData vertexShaderData(shader11->getFunction(), shader11->getLength());
 
-    ANGLE_TRY(renderer->allocateResource(GetImplAs<Context11>(context), inputElementArray,
-                                         &vertexShaderData, inputLayoutOut));
+    ANGLE_TRY(renderer->allocateResource(context11, inputElementArray, &vertexShaderData,
+                                         inputLayoutOut));
     return angle::Result::Continue();
 }
 

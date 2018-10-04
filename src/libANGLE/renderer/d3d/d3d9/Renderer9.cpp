@@ -1674,21 +1674,23 @@ angle::Result Renderer9::getCountingIB(const gl::Context *context,
 angle::Result Renderer9::applyShaders(const gl::Context *context, gl::PrimitiveMode drawMode)
 {
     const gl::State &state = context->getContextState().getState();
+    d3d::Context *contextD3D = GetImplAs<ContextD3D>(context);
+
     // This method is called single-threaded.
-    ANGLE_TRY(ensureHLSLCompilerInitialized(context));
+    ANGLE_TRY(ensureHLSLCompilerInitialized(contextD3D));
 
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(state.getProgram());
     VertexArray9 *vao      = GetImplAs<VertexArray9>(state.getVertexArray());
     programD3D->updateCachedInputLayout(vao->getCurrentStateSerial(), state);
 
     ShaderExecutableD3D *vertexExe = nullptr;
-    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(context, &vertexExe, nullptr));
+    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(contextD3D, &vertexExe, nullptr));
 
     const gl::Framebuffer *drawFramebuffer = state.getDrawFramebuffer();
     programD3D->updateCachedOutputLayout(context, drawFramebuffer);
 
     ShaderExecutableD3D *pixelExe = nullptr;
-    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(context, &pixelExe, nullptr));
+    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(contextD3D, &pixelExe, nullptr));
 
     IDirect3DVertexShader9 *vertexShader =
         (vertexExe ? GetAs<ShaderExecutable9>(vertexExe)->getVertexShader() : nullptr);
@@ -2549,7 +2551,7 @@ angle::Result Renderer9::createRenderTargetCopy(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Renderer9::loadExecutable(const gl::Context *context,
+angle::Result Renderer9::loadExecutable(d3d::Context *context,
                                         const uint8_t *function,
                                         size_t length,
                                         gl::ShaderType type,
@@ -2560,7 +2562,7 @@ angle::Result Renderer9::loadExecutable(const gl::Context *context,
     // Transform feedback is not supported in ES2 or D3D9
     ASSERT(streamOutVaryings.empty());
 
-    Context9 *context9 = GetImplAs<Context9>(context);
+    Context9 *context9 = static_cast<Context9 *>(context);
 
     switch (type)
     {
@@ -2579,13 +2581,13 @@ angle::Result Renderer9::loadExecutable(const gl::Context *context,
         }
         break;
         default:
-            ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
+            ANGLE_HR_UNREACHABLE(context);
     }
 
     return angle::Result::Continue();
 }
 
-angle::Result Renderer9::compileToExecutable(const gl::Context *context,
+angle::Result Renderer9::compileToExecutable(d3d::Context *context,
                                              gl::InfoLog &infoLog,
                                              const std::string &shaderHLSL,
                                              gl::ShaderType type,
@@ -2608,7 +2610,7 @@ angle::Result Renderer9::compileToExecutable(const gl::Context *context,
             profileStream << "ps";
             break;
         default:
-            ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
+            ANGLE_HR_UNREACHABLE(context);
     }
 
     profileStream << "_" << ((getMajorShaderModel() >= 3) ? 3 : 2);
@@ -2675,7 +2677,7 @@ angle::Result Renderer9::compileToExecutable(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-angle::Result Renderer9::ensureHLSLCompilerInitialized(const gl::Context *context)
+angle::Result Renderer9::ensureHLSLCompilerInitialized(d3d::Context *context)
 {
     return mCompiler.ensureInitialized(context);
 }

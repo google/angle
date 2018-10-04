@@ -209,12 +209,12 @@ MemoryProgramCache::~MemoryProgramCache()
 }
 
 // static
-LinkResult MemoryProgramCache::Deserialize(const Context *context,
-                                           const Program *program,
-                                           ProgramState *state,
-                                           const uint8_t *binary,
-                                           size_t length,
-                                           InfoLog &infoLog)
+angle::Result MemoryProgramCache::Deserialize(const Context *context,
+                                              const Program *program,
+                                              ProgramState *state,
+                                              const uint8_t *binary,
+                                              size_t length,
+                                              InfoLog &infoLog)
 {
     BinaryInputStream stream(binary, length);
 
@@ -224,7 +224,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         0)
     {
         infoLog << "Invalid program binary version.";
-        return false;
+        return angle::Result::Incomplete();
     }
 
     int majorVersion = stream.readInt<int>();
@@ -233,7 +233,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         minorVersion != context->getClientMinorVersion())
     {
         infoLog << "Cannot load program binaries across different ES context versions.";
-        return false;
+        return angle::Result::Incomplete();
     }
 
     state->mComputeShaderLocalSize[0] = stream.readInt<int>();
@@ -345,7 +345,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         context->getWorkarounds().disableProgramCachingForTransformFeedback)
     {
         infoLog << "Current driver does not support transform feedback in binary programs.";
-        return false;
+        return angle::Result::Incomplete();
     }
 
     ASSERT(state->mLinkedTransformFeedbackVaryings.empty());
@@ -673,38 +673,39 @@ void MemoryProgramCache::ComputeHash(const Context *context,
                                programKey.length(), hashOut->data());
 }
 
-LinkResult MemoryProgramCache::getProgram(const Context *context,
-                                          const Program *program,
-                                          ProgramState *state,
-                                          egl::BlobCache::Key *hashOut)
+angle::Result MemoryProgramCache::getProgram(const Context *context,
+                                             const Program *program,
+                                             ProgramState *state,
+                                             egl::BlobCache::Key *hashOut)
 {
     ComputeHash(context, program, hashOut);
     egl::BlobCache::Value binaryProgram;
-    LinkResult result(false);
     if (get(context, *hashOut, &binaryProgram))
     {
         InfoLog infoLog;
-        ANGLE_TRY_RESULT(Deserialize(context, program, state, binaryProgram.data(),
-                                     binaryProgram.size(), infoLog),
-                         result);
-        ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.ProgramCache.LoadBinarySuccess", result.getResult());
-        if (!result.getResult())
-        {
-            // Cache load failed, evict.
-            if (mIssuedWarnings++ < kWarningLimit)
-            {
-                WARN() << "Failed to load binary from cache: " << infoLog.str();
+        angle::Result result = Deserialize(context, program, state, binaryProgram.data(),
+                                           binaryProgram.size(), infoLog);
+        ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.ProgramCache.LoadBinarySuccess",
+                                result == angle::Result::Continue());
+        ANGLE_TRY(result);
 
-                if (mIssuedWarnings == kWarningLimit)
-                {
-                    WARN() << "Reaching warning limit for cache load failures, silencing "
-                              "subsequent warnings.";
-                }
+        if (result == angle::Result::Continue())
+            return angle::Result::Continue();
+
+        // Cache load failed, evict.
+        if (mIssuedWarnings++ < kWarningLimit)
+        {
+            WARN() << "Failed to load binary from cache: " << infoLog.str();
+
+            if (mIssuedWarnings == kWarningLimit)
+            {
+                WARN() << "Reaching warning limit for cache load failures, silencing "
+                          "subsequent warnings.";
             }
-            remove(*hashOut);
         }
+        remove(*hashOut);
     }
-    return result;
+    return angle::Result::Incomplete();
 }
 
 bool MemoryProgramCache::get(const Context *context,

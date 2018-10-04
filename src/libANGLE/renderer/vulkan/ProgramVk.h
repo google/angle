@@ -25,9 +25,9 @@ class ProgramVk : public ProgramImpl
     ~ProgramVk() override;
     gl::Error destroy(const gl::Context *context) override;
 
-    gl::LinkResult load(const gl::Context *context,
-                        gl::InfoLog &infoLog,
-                        gl::BinaryInputStream *stream) override;
+    angle::Result load(const gl::Context *context,
+                       gl::InfoLog &infoLog,
+                       gl::BinaryInputStream *stream) override;
     void save(const gl::Context *context, gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
@@ -136,9 +136,9 @@ class ProgramVk : public ProgramImpl
 
     template <typename T>
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
-    gl::LinkResult linkImpl(const gl::Context *context,
-                            const gl::ProgramLinkedResources &resources,
-                            gl::InfoLog &infoLog);
+    angle::Result linkImpl(const gl::Context *glContext,
+                           const gl::ProgramLinkedResources &resources,
+                           gl::InfoLog &infoLog);
 
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable

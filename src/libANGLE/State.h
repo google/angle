@@ -234,11 +234,11 @@ class State : angle::NonCopyable
         return mProgram;
     }
 
-    Program *getLinkedProgram() const
+    Program *getLinkedProgram(const Context *context) const
     {
         if (mProgram)
         {
-            mProgram->resolveLink();
+            mProgram->resolveLink(context);
         }
         return mProgram;
     }

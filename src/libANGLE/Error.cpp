@@ -113,7 +113,7 @@ namespace angle
 {
 Result::operator gl::Error() const
 {
-    if (mResult == ResultValue::kContinue)
+    if (mValue == Value::Continue)
     {
         return gl::NoError();
     }

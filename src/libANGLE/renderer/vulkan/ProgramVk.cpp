@@ -234,12 +234,12 @@ angle::Result ProgramVk::reset(ContextVk *contextVk)
     return angle::Result::Continue();
 }
 
-gl::LinkResult ProgramVk::load(const gl::Context *context,
-                               gl::InfoLog &infoLog,
-                               gl::BinaryInputStream *stream)
+angle::Result ProgramVk::load(const gl::Context *context,
+                              gl::InfoLog &infoLog,
+                              gl::BinaryInputStream *stream)
 {
     UNIMPLEMENTED();
-    return gl::InternalError();
+    return angle::Result::Stop();
 }
 
 void ProgramVk::save(const gl::Context *context, gl::BinaryOutputStream *stream)
@@ -257,18 +257,18 @@ void ProgramVk::setSeparable(bool separable)
     UNIMPLEMENTED();
 }
 
-std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *glContext,
+std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog)
 {
     // TODO(jie.a.chen@intel.com): Parallelize linking.
     // http://crbug.com/849576
-    return std::make_unique<LinkEventDone>(linkImpl(glContext, resources, infoLog));
+    return std::make_unique<LinkEventDone>(linkImpl(context, resources, infoLog));
 }
 
-gl::LinkResult ProgramVk::linkImpl(const gl::Context *glContext,
-                                   const gl::ProgramLinkedResources &resources,
-                                   gl::InfoLog &infoLog)
+angle::Result ProgramVk::linkImpl(const gl::Context *glContext,
+                                  const gl::ProgramLinkedResources &resources,
+                                  gl::InfoLog &infoLog)
 {
     ContextVk *contextVk = vk::GetImpl(glContext);
     RendererVk *renderer = contextVk->getRenderer();
@@ -343,7 +343,7 @@ gl::LinkResult ProgramVk::linkImpl(const gl::Context *glContext,
         }
     }
 
-    return true;
+    return angle::Result::Continue();
 }
 
 angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)

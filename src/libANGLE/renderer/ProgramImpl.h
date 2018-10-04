@@ -42,7 +42,7 @@ class LinkEvent : angle::NonCopyable
     //
     // Waits until the linking is actually done. Returns true if the linking
     // succeeded, false otherwise.
-    virtual bool wait() = 0;
+    virtual angle::Result wait(const gl::Context *context) = 0;
     // Peeks whether the linking is still ongoing.
     virtual bool isLinking() = 0;
 };
@@ -51,12 +51,12 @@ class LinkEvent : angle::NonCopyable
 class LinkEventDone final : public LinkEvent
 {
   public:
-    LinkEventDone(const gl::LinkResult &result) : mResult(result) {}
-    bool wait() override { return (!mResult.isError() && mResult.getResult()); }
+    LinkEventDone(angle::Result result) : mResult(result) {}
+    angle::Result wait(const gl::Context *context) override { return mResult; }
     bool isLinking() override { return false; }
 
   private:
-    gl::LinkResult mResult;
+    angle::Result mResult;
 };
 
 class ProgramImpl : angle::NonCopyable
@@ -66,9 +66,9 @@ class ProgramImpl : angle::NonCopyable
     virtual ~ProgramImpl() {}
     virtual gl::Error destroy(const gl::Context *context) { return gl::NoError(); }
 
-    virtual gl::LinkResult load(const gl::Context *context,
-                                gl::InfoLog &infoLog,
-                                gl::BinaryInputStream *stream) = 0;
+    virtual angle::Result load(const gl::Context *context,
+                               gl::InfoLog &infoLog,
+                               gl::BinaryInputStream *stream)                     = 0;
     virtual void save(const gl::Context *context, gl::BinaryOutputStream *stream) = 0;
     virtual void setBinaryRetrievableHint(bool retrievable) = 0;
     virtual void setSeparable(bool separable)               = 0;

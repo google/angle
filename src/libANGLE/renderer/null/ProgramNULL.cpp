@@ -22,11 +22,11 @@ ProgramNULL::~ProgramNULL()
 {
 }
 
-gl::LinkResult ProgramNULL::load(const gl::Context *contextImpl,
-                                 gl::InfoLog &infoLog,
-                                 gl::BinaryInputStream *stream)
+angle::Result ProgramNULL::load(const gl::Context *context,
+                                gl::InfoLog &infoLog,
+                                gl::BinaryInputStream *stream)
 {
-    return true;
+    return angle::Result::Continue();
 }
 
 void ProgramNULL::save(const gl::Context *context, gl::BinaryOutputStream *stream)
@@ -45,7 +45,7 @@ std::unique_ptr<LinkEvent> ProgramNULL::link(const gl::Context *contextImpl,
                                              const gl::ProgramLinkedResources &resources,
                                              gl::InfoLog &infoLog)
 {
-    return std::make_unique<LinkEventDone>(true);
+    return std::make_unique<LinkEventDone>(angle::Result::Continue());
 }
 
 GLboolean ProgramNULL::validate(const gl::Caps &caps, gl::InfoLog *infoLog)

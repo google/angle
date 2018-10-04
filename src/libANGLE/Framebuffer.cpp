@@ -1859,7 +1859,7 @@ FramebufferAttachment *Framebuffer::getAttachmentFromSubjectIndex(angle::Subject
 
 bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
 {
-    const Program *program = state.getLinkedProgram();
+    const Program *program = state.getProgram();
 
     // TODO(jmadill): Default framebuffer feedback loops.
     if (mState.mId == 0)

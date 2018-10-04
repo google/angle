@@ -385,7 +385,7 @@ bool ValidateTextureMaxAnisotropyValue(Context *context, GLfloat paramValue)
 
 bool ValidateFragmentShaderColorBufferTypeMatch(Context *context)
 {
-    const Program *program         = context->getGLState().getLinkedProgram();
+    const Program *program         = context->getGLState().getLinkedProgram(context);
     const Framebuffer *framebuffer = context->getGLState().getDrawFramebuffer();
 
     return ComponentTypeMask::Validate(program->getDrawBufferTypeMask().to_ulong(),
@@ -397,7 +397,7 @@ bool ValidateFragmentShaderColorBufferTypeMatch(Context *context)
 bool ValidateVertexShaderAttributeTypeMatch(Context *context)
 {
     const auto &glState    = context->getGLState();
-    const Program *program = context->getGLState().getLinkedProgram();
+    const Program *program = context->getGLState().getLinkedProgram(context);
     const VertexArray *vao = context->getGLState().getVertexArray();
 
     unsigned long stateCurrentValuesTypeBits = glState.getCurrentValuesTypeMask().to_ulong();
@@ -655,7 +655,7 @@ bool ValidateDrawInstancedANGLE(Context *context)
     // Verify there is at least one active attribute with a divisor of zero
     const State &state = context->getGLState();
 
-    Program *program = state.getLinkedProgram();
+    Program *program = state.getLinkedProgram(context);
 
     const auto &attribs  = state.getVertexArray()->getVertexAttributes();
     const auto &bindings = state.getVertexArray()->getVertexBindings();
@@ -1040,7 +1040,7 @@ Program *GetValidProgram(Context *context, GLuint id)
     Program *program = GetValidProgramNoResolve(context, id);
     if (program)
     {
-        program->resolveLink();
+        program->resolveLink(context);
     }
     return program;
 }
@@ -2150,7 +2150,7 @@ bool ValidateUniformMatrixValue(Context *context, GLenum valueType, GLenum unifo
 bool ValidateUniform(Context *context, GLenum valueType, GLint location, GLsizei count)
 {
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = context->getGLState().getLinkedProgram();
+    Program *programObject       = context->getGLState().getLinkedProgram(context);
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformValue(context, valueType, uniform->type);
 }
@@ -2158,7 +2158,7 @@ bool ValidateUniform(Context *context, GLenum valueType, GLint location, GLsizei
 bool ValidateUniform1iv(Context *context, GLint location, GLsizei count, const GLint *value)
 {
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = context->getGLState().getLinkedProgram();
+    Program *programObject       = context->getGLState().getLinkedProgram(context);
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniform1ivValue(context, uniform->type, count, value);
 }
@@ -2176,7 +2176,7 @@ bool ValidateUniformMatrix(Context *context,
     }
 
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = context->getGLState().getLinkedProgram();
+    Program *programObject       = context->getGLState().getLinkedProgram(context);
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&
            ValidateUniformMatrixValue(context, valueType, uniform->type);
 }
@@ -2657,7 +2657,7 @@ const char *ValidateDrawStates(Context *context)
     // If we are running GLES1, there is no current program.
     if (context->getClientVersion() >= Version(2, 0))
     {
-        Program *program = state.getLinkedProgram();
+        Program *program = state.getLinkedProgram(context);
         if (!program)
         {
             return kErrorProgramNotBound;
@@ -2804,7 +2804,7 @@ bool ValidateDrawMode(Context *context, PrimitiveMode mode)
     {
         const State &state = context->getGLState();
 
-        Program *program = state.getLinkedProgram();
+        Program *program = state.getLinkedProgram(context);
         ASSERT(program);
 
         // Do geometry shader specific validations
