@@ -255,7 +255,8 @@ Extensions::Extensions()
       textureStorageMultisample2DArray(false),
       multiviewMultisample(false),
       blendFuncExtended(false),
-      maxDualSourceDrawBuffers(0)
+      maxDualSourceDrawBuffers(0),
+      memorySize(false)
 {
 }
 
@@ -894,6 +895,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMap);
         map["GL_OES_point_sprite"] = enableableExtension(&Extensions::pointSprite);
         map["GL_OES_draw_texture"] = enableableExtension(&Extensions::drawTexture);
+        map["GL_ANGLE_memory_size"] = enableableExtension(&Extensions::memorySize);
         // clang-format on
 
         return map;

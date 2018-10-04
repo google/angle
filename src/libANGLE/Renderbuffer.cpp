@@ -200,6 +200,23 @@ GLuint Renderbuffer::getStencilSize() const
     return mState.mFormat.info->stencilBits;
 }
 
+GLint Renderbuffer::getMemorySize() const
+{
+    GLint implSize = mImplementation->getMemorySize();
+    if (implSize > 0)
+    {
+        return implSize;
+    }
+
+    // Assume allocated size is around width * height * samples * pixelBytes
+    angle::CheckedNumeric<GLint> size = 1;
+    size *= mState.mFormat.info->pixelBytes;
+    size *= mState.mWidth;
+    size *= mState.mHeight;
+    size *= std::max(mState.mSamples, 1);
+    return size.ValueOrDefault(std::numeric_limits<GLint>::max());
+}
+
 void Renderbuffer::onAttach(const Context *context)
 {
     addRef();

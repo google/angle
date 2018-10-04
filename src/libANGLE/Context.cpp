@@ -3243,6 +3243,8 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.explicitContext = true;
     }
 
+    supportedExtensions.memorySize = true;
+
     return supportedExtensions;
 }
 

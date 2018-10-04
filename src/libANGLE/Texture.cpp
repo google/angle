@@ -493,6 +493,18 @@ ImageDesc::ImageDesc(const Extents &size,
 {
 }
 
+GLint ImageDesc::getMemorySize() const
+{
+    // Assume allocated size is around width * height * depth * samples * pixelBytes
+    angle::CheckedNumeric<GLint> levelSize = 1;
+    levelSize *= format.info->pixelBytes;
+    levelSize *= size.width;
+    levelSize *= size.height;
+    levelSize *= size.depth;
+    levelSize *= std::max(samples, 1);
+    return levelSize.ValueOrDefault(std::numeric_limits<GLint>::max());
+}
+
 const ImageDesc &TextureState::getImageDesc(TextureTarget target, size_t level) const
 {
     size_t descIndex = GetImageDescIndex(target, level);
@@ -928,6 +940,33 @@ egl::Surface *Texture::getBoundSurface() const
 egl::Stream *Texture::getBoundStream() const
 {
     return mBoundStream;
+}
+
+GLint Texture::getMemorySize() const
+{
+    GLint implSize = mTexture->getMemorySize();
+    if (implSize > 0)
+    {
+        return implSize;
+    }
+
+    angle::CheckedNumeric<GLint> size = 0;
+    for (const ImageDesc &imageDesc : mState.mImageDescs)
+    {
+        size += imageDesc.getMemorySize();
+    }
+    return size.ValueOrDefault(std::numeric_limits<GLint>::max());
+}
+
+GLint Texture::getLevelMemorySize(TextureTarget target, GLint level) const
+{
+    GLint implSize = mTexture->getLevelMemorySize(target, level);
+    if (implSize > 0)
+    {
+        return implSize;
+    }
+
+    return mState.getImageDesc(target, level).getMemorySize();
 }
 
 void Texture::signalDirty(const Context *context, InitState initState)

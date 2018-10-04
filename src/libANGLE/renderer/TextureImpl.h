@@ -162,6 +162,10 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
     virtual gl::Error bindTexImage(const gl::Context *context, egl::Surface *surface) = 0;
     virtual gl::Error releaseTexImage(const gl::Context *context) = 0;
 
+    // Override if accurate native memory size information is available
+    virtual GLint getMemorySize() const { return 0; }
+    virtual GLint getLevelMemorySize(gl::TextureTarget target, GLint level) const { return 0; }
+
     virtual angle::Result syncState(const gl::Context *context,
                                     const gl::Texture::DirtyBits &dirtyBits) = 0;
 

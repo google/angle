@@ -239,6 +239,12 @@ Error Buffer::getIndexRange(const gl::Context *context,
     return NoError();
 }
 
+GLint Buffer::getMemorySize() const
+{
+    GLint implSize = mImpl->getMemorySize();
+    return implSize > 0 ? implSize : clampCast<GLint>(mState.mSize);
+}
+
 bool Buffer::isBound() const
 {
     return mState.mBindingCount;

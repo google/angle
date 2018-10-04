@@ -93,6 +93,8 @@ class Renderbuffer final : public RefCountObject, public egl::ImageSibling, publ
     GLuint getDepthSize() const;
     GLuint getStencilSize() const;
 
+    GLint getMemorySize() const;
+
     // FramebufferAttachmentObject Impl
     Extents getAttachmentSize(const ImageIndex &imageIndex) const override;
     Format getAttachmentFormat(GLenum binding, const ImageIndex &imageIndex) const override;

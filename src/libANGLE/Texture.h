@@ -61,6 +61,8 @@ struct ImageDesc final
     ImageDesc(const ImageDesc &other) = default;
     ImageDesc &operator=(const ImageDesc &other) = default;
 
+    GLint getMemorySize() const;
+
     Extents size;
     Format format;
     GLsizei samples;
@@ -371,6 +373,9 @@ class Texture final : public RefCountObject,
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;
+
+    GLint getMemorySize() const;
+    GLint getLevelMemorySize(TextureTarget target, GLint level) const;
 
     void signalDirty(const Context *context, InitState initState);
 

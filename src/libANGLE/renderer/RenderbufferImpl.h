@@ -45,6 +45,9 @@ class RenderbufferImpl : public FramebufferAttachmentObjectImpl
                                             size_t height) = 0;
     virtual gl::Error setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) = 0;
 
+    // Override if accurate native memory size information is available
+    virtual GLint getMemorySize() const { return 0; }
+
   protected:
     const gl::RenderbufferState &mState;
 };

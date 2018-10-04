@@ -111,6 +111,10 @@ void QueryTexLevelParameterBase(const Texture *texture,
         case GL_TEXTURE_COMPRESSED:
             *params = CastFromStateValue<ParamType>(pname, static_cast<GLint>(info->compressed));
             break;
+        case GL_MEMORY_SIZE_ANGLE:
+            *params =
+                CastFromStateValue<ParamType>(pname, texture->getLevelMemorySize(target, level));
+            break;
         default:
             UNREACHABLE();
             break;
@@ -199,6 +203,9 @@ void QueryTexParameterBase(const Texture *texture, GLenum pname, ParamType *para
         }
         case GL_GENERATE_MIPMAP:
             *params = CastFromGLintStateValue<ParamType>(pname, texture->getGenerateMipmapHint());
+            break;
+        case GL_MEMORY_SIZE_ANGLE:
+            *params = CastFromStateValue<ParamType>(pname, texture->getMemorySize());
             break;
         default:
             UNREACHABLE();
@@ -460,6 +467,9 @@ void QueryBufferParameterBase(const Buffer *buffer, GLenum pname, ParamType *par
             break;
         case GL_BUFFER_MAP_LENGTH:
             *params = CastFromStateValue<ParamType>(pname, buffer->getMapLength());
+            break;
+        case GL_MEMORY_SIZE_ANGLE:
+            *params = CastFromStateValue<ParamType>(pname, buffer->getMemorySize());
             break;
         default:
             UNREACHABLE();
@@ -1153,6 +1163,9 @@ void QueryRenderbufferiv(const Context *context,
             break;
         case GL_RENDERBUFFER_SAMPLES_ANGLE:
             *params = renderbuffer->getSamples();
+            break;
+        case GL_MEMORY_SIZE_ANGLE:
+            *params = renderbuffer->getMemorySize();
             break;
         default:
             UNREACHABLE();

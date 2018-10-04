@@ -954,6 +954,14 @@ bool ValidateGetTexLevelParameterBase(Context *context,
             break;
         case GL_TEXTURE_COMPRESSED:
             break;
+        case GL_MEMORY_SIZE_ANGLE:
+            if (!context->getExtensions().memorySize)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ExtensionNotEnabled);
+                return false;
+            }
+            break;
+
         default:
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
             return false;

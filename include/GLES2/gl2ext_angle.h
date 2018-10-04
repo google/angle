@@ -46,6 +46,11 @@ GL_APICALL void GL_APIENTRY glCoverageModulationCHROMIUM(GLenum components);
 #define GL_BIND_GENERATES_RESOURCE_CHROMIUM 0x9244
 #endif /* GL_CHROMIUM_bind_generates_resource */
 
+#ifndef GL_ANGLE_memory_size
+#define GL_ANGLE_memory_size
+#define GL_MEMORY_SIZE_ANGLE 0x93AD
+#endif /* GL_ANGLE_memory_size */
+
 // needed by NV_path_rendering (and thus CHROMIUM_path_rendering)
 // but CHROMIUM_path_rendering only needs MatrixLoadfEXT, MatrixLoadIdentityEXT
 #ifndef GL_EXT_direct_state_access

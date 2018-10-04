@@ -5281,6 +5281,14 @@ bool ValidateGetBufferParameterBase(Context *context,
             }
             break;
 
+        case GL_MEMORY_SIZE_ANGLE:
+            if (!context->getExtensions().memorySize)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ExtensionNotEnabled);
+                return false;
+            }
+            break;
+
         default:
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
             return false;
@@ -5333,6 +5341,14 @@ bool ValidateGetRenderbufferParameterivBase(Context *context,
 
         case GL_RENDERBUFFER_SAMPLES_ANGLE:
             if (!context->getExtensions().framebufferMultisample)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ExtensionNotEnabled);
+                return false;
+            }
+            break;
+
+        case GL_MEMORY_SIZE_ANGLE:
+            if (!context->getExtensions().memorySize)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidEnum(), ExtensionNotEnabled);
                 return false;
@@ -5505,6 +5521,15 @@ bool ValidateGetTexParameterBase(Context *context,
                 return false;
             }
             break;
+
+        case GL_MEMORY_SIZE_ANGLE:
+            if (!context->getExtensions().memorySize)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ExtensionNotEnabled);
+                return false;
+            }
+            break;
+
         default:
             ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
             return false;
