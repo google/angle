@@ -61,6 +61,10 @@ enum class FormatID
     BC2_RGBA_UNORM_SRGB_BLOCK,
     BC3_RGBA_UNORM_BLOCK,
     BC3_RGBA_UNORM_SRGB_BLOCK,
+    BPTC_RGBA_UNORM_BLOCK,
+    BPTC_RGB_SIGNED_FLOAT_BLOCK,
+    BPTC_RGB_UNSIGNED_FLOAT_BLOCK,
+    BPTC_SRGB_ALPHA_UNORM_BLOCK,
     D16_UNORM,
     D24_UNORM_S8_UINT,
     D24_UNORM_X8_UINT,
@@ -187,6 +191,6 @@ enum class FormatID
     S8_UINT
 };
 
-constexpr uint32_t kNumANGLEFormats = 173;
+constexpr uint32_t kNumANGLEFormats = 177;
 
 }  // namespace angle

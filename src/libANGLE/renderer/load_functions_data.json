@@ -613,5 +613,25 @@
     "NONE": {
       "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 16>"
     }
+  },
+  "GL_COMPRESSED_RGBA_BPTC_UNORM_EXT": {
+    "NONE": {
+      "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 16>"
+    }
+  },
+  "GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT": {
+    "NONE": {
+      "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 16>"
+    }
+  },
+  "GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT": {
+    "NONE": {
+      "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 16>"
+    }
+  },
+  "GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT": {
+    "NONE": {
+      "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 16>"
+    }
   }
 }

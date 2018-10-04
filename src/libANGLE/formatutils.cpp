@@ -894,6 +894,13 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddCompressedFormat(&map, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR, 12, 10, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, true,  RequireExtOrExt<&Extensions::textureCompressionASTCHDR, &Extensions::textureCompressionASTCLDR>, AlwaysSupported, NeverSupported,      NeverSupported);
     AddCompressedFormat(&map, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR, 12, 12, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, true,  RequireExtOrExt<&Extensions::textureCompressionASTCHDR, &Extensions::textureCompressionASTCLDR>, AlwaysSupported, NeverSupported,      NeverSupported);
 
+    // From EXT_texture_compression_bptc
+    //                       | Internal format                         | W | H | BS |CC| Format | Type            | SRGB | Texture supported                              | Filterable     | Texture attachment | Renderbuffer |
+    AddCompressedFormat(&map, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT,         4,  4, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::textureCompressionBPTC>, AlwaysSupported, NeverSupported,      NeverSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT,   4,  4, 128, 4, GL_RGBA, GL_UNSIGNED_BYTE, true,  RequireExt<&Extensions::textureCompressionBPTC>, AlwaysSupported, NeverSupported,      NeverSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT,   4,  4, 128, 4, GL_RGB,  GL_FLOAT,         false, RequireExt<&Extensions::textureCompressionBPTC>, AlwaysSupported, NeverSupported,      NeverSupported);
+    AddCompressedFormat(&map, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT, 4,  4, 128, 4, GL_RGB,  GL_FLOAT,         false, RequireExt<&Extensions::textureCompressionBPTC>, AlwaysSupported, NeverSupported,      NeverSupported);
+
     // For STENCIL_INDEX8 we chose a normalized component type for the following reasons:
     // - Multisampled buffer are disallowed for non-normalized integer component types and we want to support it for STENCIL_INDEX8
     // - All other stencil formats (all depth-stencil) are either float or normalized

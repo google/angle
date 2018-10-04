@@ -502,6 +502,22 @@ void Format::initialize(VkPhysicalDevice physicalDevice, const angle::Format &an
             // This format is not implemented in Vulkan.
             break;
 
+        case angle::FormatID::BPTC_RGBA_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
+        case angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK:
+            // This format is not implemented in Vulkan.
+            break;
+
         case angle::FormatID::D16_UNORM:
             internalFormat               = GL_DEPTH_COMPONENT16;
             textureFormatID              = angle::FormatID::D16_UNORM;

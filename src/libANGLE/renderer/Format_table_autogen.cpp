@@ -73,6 +73,10 @@ constexpr Format g_formatInfoTable[] = {
     { FormatID::BC2_RGBA_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
     { FormatID::BC3_RGBA_UNORM_BLOCK, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
     { FormatID::BC3_RGBA_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
+    { FormatID::BPTC_RGBA_UNORM_BLOCK, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
+    { FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 0, 0, 0, true },
+    { FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 0, 0, 0, true },
+    { FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, true },
     { FormatID::D16_UNORM, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT16, nullptr, NoCopyFunctions, ReadDepthStencil<D16>, WriteDepthStencil<D16>, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 16, 0, 2, false },
     { FormatID::D24_UNORM_S8_UINT, GL_DEPTH24_STENCIL8, GL_DEPTH24_STENCIL8, nullptr, NoCopyFunctions, ReadDepthStencil<D24S8>, WriteDepthStencil<D24S8>, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 24, 8, 4, false },
     { FormatID::D24_UNORM_X8_UINT, GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT24, nullptr, NoCopyFunctions, ReadDepthStencil<D24>, WriteDepthStencil<D24>, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 24, 0, 4, false },
@@ -267,12 +271,18 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
             return FormatID::ASTC_8x6_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_ASTC_8x8_KHR:
             return FormatID::ASTC_8x8_UNORM_BLOCK;
+        case GL_COMPRESSED_RGBA_BPTC_UNORM_EXT:
+            return FormatID::BPTC_RGBA_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
             return FormatID::BC1_RGBA_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
             return FormatID::BC2_RGBA_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
             return FormatID::BC3_RGBA_UNORM_BLOCK;
+        case GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT:
+            return FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+        case GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT:
+            return FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
         case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
             return FormatID::BC1_RGB_UNORM_BLOCK;
         case GL_COMPRESSED_SIGNED_R11_EAC:
@@ -313,6 +323,8 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
             return FormatID::ETC2_R8G8B8_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2:
             return FormatID::ETC2_R8G8B8A1_SRGB_BLOCK;
+        case GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT:
+            return FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
         case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT:
             return FormatID::BC1_RGBA_UNORM_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT:

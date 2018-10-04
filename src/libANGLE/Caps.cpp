@@ -165,6 +165,7 @@ Extensions::Extensions()
       textureCompressionS3TCsRGB(false),
       textureCompressionASTCHDR(false),
       textureCompressionASTCLDR(false),
+      textureCompressionBPTC(false),
       compressedETC1RGB8Texture(false),
       compressedETC2RGB8Texture(false),
       compressedETC2sRGB8Texture(false),
@@ -715,25 +716,35 @@ static bool DetermineTextureNorm16Support(const TextureCapsMap &textureCaps)
            GetFormatSupport(textureCaps, requiredRenderFormats, true, false, true, true);
 }
 
+// Check for EXT_texture_compression_bptc
+static bool DetermineBPTCTextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT,
+        GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT};
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false);
+}
+
 void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
 {
     // TODO(ynovikov): rgb8rgba8, colorBufferHalfFloat, textureHalfFloat, textureHalfFloatLinear,
     // textureFloat, textureFloatLinear, textureRG, sRGB, colorBufferFloatRGB, colorBufferFloatRGBA
     // and colorBufferFloat were verified. Verify the rest.
-    packedDepthStencil     = DeterminePackedDepthStencilSupport(textureCaps);
-    rgb8rgba8              = DetermineRGB8AndRGBA8TextureSupport(textureCaps);
-    textureFormatBGRA8888  = DetermineBGRA8TextureSupport(textureCaps);
-    textureHalfFloat       = DetermineHalfFloatTextureSupport(textureCaps);
+    packedDepthStencil    = DeterminePackedDepthStencilSupport(textureCaps);
+    rgb8rgba8             = DetermineRGB8AndRGBA8TextureSupport(textureCaps);
+    textureFormatBGRA8888 = DetermineBGRA8TextureSupport(textureCaps);
+    textureHalfFloat      = DetermineHalfFloatTextureSupport(textureCaps);
     textureHalfFloatLinear =
         textureHalfFloat && DetermineHalfFloatTextureFilteringSupport(textureCaps);
-    textureFloat           = DetermineFloatTextureSupport(textureCaps);
-    textureFloatLinear     = textureFloat && DetermineFloatTextureFilteringSupport(textureCaps);
-    textureRG              = DetermineRGTextureSupport(textureCaps, textureHalfFloat, textureFloat);
+    textureFloat       = DetermineFloatTextureSupport(textureCaps);
+    textureFloatLinear = textureFloat && DetermineFloatTextureFilteringSupport(textureCaps);
+    textureRG          = DetermineRGTextureSupport(textureCaps, textureHalfFloat, textureFloat);
     colorBufferHalfFloat =
         textureHalfFloat && DetermineColorBufferHalfFloatSupport(textureCaps, textureRG);
-    textureCompressionDXT1 = DetermineDXT1TextureSupport(textureCaps);
-    textureCompressionDXT3 = DetermineDXT3TextureSupport(textureCaps);
-    textureCompressionDXT5 = DetermineDXT5TextureSupport(textureCaps);
+    textureCompressionDXT1     = DetermineDXT1TextureSupport(textureCaps);
+    textureCompressionDXT3     = DetermineDXT3TextureSupport(textureCaps);
+    textureCompressionDXT5     = DetermineDXT5TextureSupport(textureCaps);
     textureCompressionS3TCsRGB = DetermineS3TCsRGBTextureSupport(textureCaps);
     textureCompressionASTCHDR  = DetermineASTCTextureSupport(textureCaps);
     textureCompressionASTCLDR  = textureCompressionASTCHDR;
@@ -757,6 +768,7 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     colorBufferFloatRGBA             = DetermineColorBufferFloatRGBASupport(textureCaps);
     colorBufferFloat                 = DetermineColorBufferFloatSupport(textureCaps);
     textureNorm16                    = DetermineTextureNorm16Support(textureCaps);
+    textureCompressionBPTC           = DetermineBPTCTextureSupport(textureCaps);
 }
 
 const ExtensionInfoMap &GetExtensionInfoMap()
@@ -809,6 +821,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["OES_compressed_EAC_R11_signed_texture"] = enableableExtension(&Extensions::compressedEACR11SignedTexture);
         map["OES_compressed_EAC_RG11_unsigned_texture"] = enableableExtension(&Extensions::compressedEACRG11UnsignedTexture);
         map["OES_compressed_EAC_RG11_signed_texture"] = enableableExtension(&Extensions::compressedEACRG11SignedTexture);
+        map["GL_EXT_texture_compression_bptc"] = enableableExtension(&Extensions::textureCompressionBPTC);
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextures);
         map["GL_OES_depth32"] = esOnlyExtension(&Extensions::depth32);

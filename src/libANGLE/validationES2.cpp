@@ -576,6 +576,10 @@ bool ValidateES2CopyTexImageParameters(Context *context,
             case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
             case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
             case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
+            case GL_COMPRESSED_RGBA_BPTC_UNORM_EXT:
+            case GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT:
+            case GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT:
+            case GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT:
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidFormat);
                 return false;
             case GL_DEPTH_COMPONENT:

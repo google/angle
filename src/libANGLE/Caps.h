@@ -109,6 +109,7 @@ struct Extensions
     // GL_ANGLE_depth_texture, GL_OES_depth32
     // GL_EXT_color_buffer_float
     // GL_EXT_texture_norm16
+    // GL_EXT_texture_compression_bptc
     void setTextureExtensionSupport(const TextureCapsMap &textureCaps);
 
     // ES2 Extension support
@@ -181,6 +182,9 @@ struct Extensions
 
     // GL_KHR_texture_compression_astc_ldr
     bool textureCompressionASTCLDR;
+
+    // GL_EXT_texture_compression_bptc
+    bool textureCompressionBPTC;
 
     // GL_OES_compressed_ETC1_RGB8_texture
     // Implies that TextureCaps for GL_ETC1_RGB8_OES exist
