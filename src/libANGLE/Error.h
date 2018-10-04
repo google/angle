@@ -21,28 +21,6 @@
 
 namespace angle
 {
-template <typename ErrorT, typename ResultT, typename ErrorBaseT, ErrorBaseT NoErrorVal>
-class ANGLE_NO_DISCARD ErrorOrResultBase
-{
-  public:
-    ErrorOrResultBase(const ErrorT &error) : mError(error) {}
-    ErrorOrResultBase(ErrorT &&error) : mError(std::move(error)) {}
-
-    ErrorOrResultBase(ResultT &&result) : mError(NoErrorVal), mResult(std::forward<ResultT>(result))
-    {
-    }
-
-    ErrorOrResultBase(const ResultT &result) : mError(NoErrorVal), mResult(result) {}
-
-    bool isError() const { return mError.isError(); }
-    const ErrorT &getError() const { return mError; }
-    ResultT &&getResult() { return std::move(mResult); }
-
-  private:
-    ErrorT mError;
-    ResultT mResult;
-};
-
 template <typename ErrorT, typename ErrorBaseT, ErrorBaseT NoErrorVal, typename CodeT, CodeT EnumT>
 class ErrorStreamBase : angle::NonCopyable
 {
@@ -58,12 +36,6 @@ class ErrorStreamBase : angle::NonCopyable
     }
 
     operator ErrorT() { return ErrorT(EnumT, mID, mErrorStream.str()); }
-
-    template <typename ResultT>
-    operator ErrorOrResultBase<ErrorT, ResultT, ErrorBaseT, NoErrorVal>()
-    {
-        return static_cast<ErrorT>(*this);
-    }
 
   private:
     GLuint mID;
@@ -118,9 +90,6 @@ class ANGLE_NO_DISCARD Error final
     GLuint mID;
     mutable std::unique_ptr<std::string> mMessage;
 };
-
-template <typename ResultT>
-using ErrorOrResult = angle::ErrorOrResultBase<Error, ResultT, GLenum, GL_NO_ERROR>;
 
 namespace priv
 {
@@ -184,9 +153,6 @@ class ANGLE_NO_DISCARD Error final
     EGLint mID;
     mutable std::unique_ptr<std::string> mMessage;
 };
-
-template <typename ResultT>
-using ErrorOrResult = angle::ErrorOrResultBase<Error, ResultT, EGLint, EGL_SUCCESS>;
 
 namespace priv
 {
@@ -293,13 +259,6 @@ class ANGLE_NO_DISCARD Result
 
     // TODO(jmadill): Remove when refactor is complete. http://anglebug.com/2491
     operator gl::Error() const;
-
-    // TODO(jmadill): Remove when refactor is complete. http://anglebug.com/2491
-    template <typename T>
-    operator gl::ErrorOrResult<T>() const
-    {
-        return operator gl::Error();
-    }
 
     bool operator==(Result other) const { return mValue == other.mValue; }
 
