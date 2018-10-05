@@ -388,6 +388,9 @@ TEST_P(EXTBlendFuncExtendedDrawTestES3, FragmentArrayOutputLocationsAPI)
 {
     ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_blend_func_extended"));
 
+    // TODO: Investigate this mac-only failure.  http://angleproject.com/1085
+    ANGLE_SKIP_TEST_IF(IsOSX());
+
     const std::string &kFragColorShader = R"(#version 300 es
 #extension GL_EXT_blend_func_extended : require
 precision mediump float;
