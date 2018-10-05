@@ -629,6 +629,19 @@ TEST_P(ClearTest, MaskedColorAndDepthClear)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that just clearing a nonexistent drawbuffer of the default framebuffer doesn't cause an
+// assert.
+TEST_P(ClearTestES3, ClearBuffer1OnDefaultFramebufferNoAssert)
+{
+    std::vector<GLuint> testUint(4);
+    glClearBufferuiv(GL_COLOR, 1, testUint.data());
+    std::vector<GLint> testInt(4);
+    glClearBufferiv(GL_COLOR, 1, testInt.data());
+    std::vector<GLfloat> testFloat(4);
+    glClearBufferfv(GL_COLOR, 1, testFloat.data());
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against. Vulkan support disabled because of incomplete implementation.
 ANGLE_INSTANTIATE_TEST(ClearTest,
