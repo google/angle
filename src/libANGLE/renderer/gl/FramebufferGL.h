@@ -96,20 +96,20 @@ class FramebufferGL : public FramebufferImpl
         const GLenum *attachments,
         std::vector<GLenum> *modifiedAttachments) const;
 
-    gl::Error readPixelsRowByRow(const gl::Context *context,
-                                 const gl::Rectangle &area,
-                                 GLenum format,
-                                 GLenum type,
-                                 const gl::PixelPackState &pack,
-                                 GLubyte *pixels) const;
+    angle::Result readPixelsRowByRow(const gl::Context *context,
+                                     const gl::Rectangle &area,
+                                     GLenum format,
+                                     GLenum type,
+                                     const gl::PixelPackState &pack,
+                                     GLubyte *pixels) const;
 
-    gl::Error readPixelsAllAtOnce(const gl::Context *context,
-                                  const gl::Rectangle &area,
-                                  GLenum format,
-                                  GLenum type,
-                                  const gl::PixelPackState &pack,
-                                  GLubyte *pixels,
-                                  bool readLastRowSeparately) const;
+    angle::Result readPixelsAllAtOnce(const gl::Context *context,
+                                      const gl::Rectangle &area,
+                                      GLenum format,
+                                      GLenum type,
+                                      const gl::PixelPackState &pack,
+                                      GLubyte *pixels,
+                                      bool readLastRowSeparately) const;
 
     GLuint mFramebufferID;
     bool mIsDefault;

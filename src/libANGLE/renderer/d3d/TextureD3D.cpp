@@ -358,8 +358,8 @@ angle::Result TextureD3D::fastUnpackPixels(const gl::Context *context,
 {
     bool check = (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 ||
                   unpack.skipImages != 0);
-    ANGLE_CHECK_HR(GetImplAs<ContextD3D>(context), !check,
-                   "Unimplemented pixel store parameters in fastUnpackPixels", E_FAIL);
+    ANGLE_CHECK(GetImplAs<ContextD3D>(context), !check,
+                "Unimplemented pixel store parameters in fastUnpackPixels", E_FAIL);
 
     // No-op
     if (destArea.width <= 0 && destArea.height <= 0 && destArea.depth <= 0)

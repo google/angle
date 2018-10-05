@@ -95,8 +95,8 @@ angle::Result StreamInIndexBuffer(const gl::Context *context,
     const gl::Type &dstTypeInfo = gl::GetTypeInfo(dstType);
 
     bool check = (count > (std::numeric_limits<unsigned int>::max() >> dstTypeInfo.bytesShift));
-    ANGLE_CHECK_HR(GetImplAs<ContextD3D>(context), !check,
-                   "Reserving indices exceeds the maximum buffer size.", E_OUTOFMEMORY);
+    ANGLE_CHECK(GetImplAs<ContextD3D>(context), !check,
+                "Reserving indices exceeds the maximum buffer size.", E_OUTOFMEMORY);
 
     unsigned int bufferSizeRequired = count << dstTypeInfo.bytesShift;
     ANGLE_TRY(buffer->reserveBufferSpace(context, bufferSizeRequired, dstType));

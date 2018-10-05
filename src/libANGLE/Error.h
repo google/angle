@@ -241,6 +241,15 @@ inline Error NoError()
 #undef ANGLE_CONCAT2
 #undef ANGLE_CONCAT1
 
+#define ANGLE_CHECK(CONTEXT, EXPR, MESSAGE, ERROR)                                    \
+    {                                                                                 \
+        if (ANGLE_UNLIKELY(!(EXPR)))                                                  \
+        {                                                                             \
+            CONTEXT->handleError(ERROR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
+            return angle::Result::Stop();                                             \
+        }                                                                             \
+    }
+
 namespace angle
 {
 // Result signals if calling code should continue running or early exit. A value of Stop() can

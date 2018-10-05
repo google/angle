@@ -1390,19 +1390,20 @@ uint8_t *MapBufferRangeWithFallback(const FunctionsGL *functions,
     }
 }
 
-gl::Error ShouldApplyLastRowPaddingWorkaround(const gl::Extents &size,
-                                              const gl::PixelStoreStateBase &state,
-                                              const gl::Buffer *pixelBuffer,
-                                              GLenum format,
-                                              GLenum type,
-                                              bool is3D,
-                                              const void *pixels,
-                                              bool *shouldApplyOut)
+angle::Result ShouldApplyLastRowPaddingWorkaround(ContextGL *contextGL,
+                                                  const gl::Extents &size,
+                                                  const gl::PixelStoreStateBase &state,
+                                                  const gl::Buffer *pixelBuffer,
+                                                  GLenum format,
+                                                  GLenum type,
+                                                  bool is3D,
+                                                  const void *pixels,
+                                                  bool *shouldApplyOut)
 {
     if (pixelBuffer == nullptr)
     {
         *shouldApplyOut = false;
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     // We are using an pack or unpack buffer, compute what the driver thinks is going to be the
@@ -1411,10 +1412,11 @@ gl::Error ShouldApplyLastRowPaddingWorkaround(const gl::Extents &size,
 
     const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
     GLuint endByte                     = 0;
-    ANGLE_TRY_CHECKED_MATH(glFormat.computePackUnpackEndByte(type, size, state, is3D, &endByte));
+    ANGLE_CHECK_GL_MATH(contextGL,
+                        glFormat.computePackUnpackEndByte(type, size, state, is3D, &endByte));
     GLuint rowPitch = 0;
-    ANGLE_TRY_CHECKED_MATH(
-        glFormat.computeRowPitch(type, size.width, state.alignment, state.rowLength, &rowPitch));
+    ANGLE_CHECK_GL_MATH(contextGL, glFormat.computeRowPitch(type, size.width, state.alignment,
+                                                            state.rowLength, &rowPitch));
 
     CheckedNumeric<size_t> checkedPixelBytes = glFormat.computePixelBytes(type);
     CheckedNumeric<size_t> checkedEndByte =
@@ -1422,16 +1424,16 @@ gl::Error ShouldApplyLastRowPaddingWorkaround(const gl::Extents &size,
 
     // At this point checkedEndByte is the actual last byte read.
     // The driver adds an extra row padding (if any), mimic it.
-    ANGLE_TRY_CHECKED_MATH(checkedPixelBytes.IsValid());
+    ANGLE_CHECK_GL_MATH(contextGL, checkedPixelBytes.IsValid());
     if (checkedPixelBytes.ValueOrDie() * size.width < rowPitch)
     {
         checkedEndByte += rowPitch - checkedPixelBytes * size.width;
     }
 
-    ANGLE_TRY_CHECKED_MATH(checkedEndByte.IsValid());
+    ANGLE_CHECK_GL_MATH(contextGL, checkedEndByte.IsValid());
 
     *shouldApplyOut = checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelBuffer->getSize());
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedType, bool isMesaGLX)

@@ -1230,8 +1230,7 @@ angle::Result Renderer11::finish(Context11 *context11)
         if (checkDeviceLost && testDeviceLost())
         {
             mDisplay->notifyDeviceLost();
-            ANGLE_CHECK_HR(context11, false, "Device was lost while waiting for sync.",
-                           E_OUTOFMEMORY);
+            ANGLE_CHECK(context11, false, "Device was lost while waiting for sync.", E_OUTOFMEMORY);
         }
     } while (result == S_FALSE);
 
@@ -1694,10 +1693,10 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
     // Checked by Renderer11::applyPrimitiveType
     bool indexCheck = static_cast<unsigned int>(count) + 1 >
                       (std::numeric_limits<unsigned int>::max() / sizeof(unsigned int));
-    ANGLE_CHECK_HR(GetImplAs<Context11>(context), !indexCheck,
-                   "Failed to create a 32-bit looping index buffer for "
-                   "GL_LINE_LOOP, too many indices required.",
-                   E_OUTOFMEMORY);
+    ANGLE_CHECK(GetImplAs<Context11>(context), !indexCheck,
+                "Failed to create a 32-bit looping index buffer for "
+                "GL_LINE_LOOP, too many indices required.",
+                E_OUTOFMEMORY);
 
     GetLineLoopIndices(indices, type, static_cast<GLuint>(count),
                        glState.isPrimitiveRestartEnabled(), &mScratchIndexDataBuffer);
@@ -1775,10 +1774,10 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
 
     bool indexCheck =
         (numTris > std::numeric_limits<unsigned int>::max() / (sizeof(unsigned int) * 3));
-    ANGLE_CHECK_HR(GetImplAs<Context11>(context), !indexCheck,
-                   "Failed to create a scratch index buffer for GL_TRIANGLE_FAN, "
-                   "too many indices required.",
-                   E_OUTOFMEMORY);
+    ANGLE_CHECK(GetImplAs<Context11>(context), !indexCheck,
+                "Failed to create a scratch index buffer for GL_TRIANGLE_FAN, "
+                "too many indices required.",
+                E_OUTOFMEMORY);
 
     GetTriFanIndices(indexPointer, type, count, glState.isPrimitiveRestartEnabled(),
                      &mScratchIndexDataBuffer);
@@ -3646,8 +3645,8 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
         d3d11::GetDXGIFormatSizeInfo(vertexFormatInfo.nativeFormat);
     unsigned int elementSize = dxgiFormatInfo.pixelBytes;
     bool check = (elementSize > std::numeric_limits<unsigned int>::max() / elementCount);
-    ANGLE_CHECK_HR(GetImplAs<Context11>(context), !check,
-                   "New vertex buffer size would result in an overflow.", E_OUTOFMEMORY);
+    ANGLE_CHECK(GetImplAs<Context11>(context), !check,
+                "New vertex buffer size would result in an overflow.", E_OUTOFMEMORY);
 
     *bytesRequiredOut = elementSize * elementCount;
     return angle::Result::Continue();

@@ -27,19 +27,19 @@ class VertexArrayGL : public VertexArrayImpl
 
     void destroy(const gl::Context *context) override;
 
-    gl::Error syncDrawArraysState(const gl::Context *context,
-                                  const gl::AttributesMask &activeAttributesMask,
-                                  GLint first,
-                                  GLsizei count,
-                                  GLsizei instanceCount) const;
-    gl::Error syncDrawElementsState(const gl::Context *context,
-                                    const gl::AttributesMask &activeAttributesMask,
-                                    GLsizei count,
-                                    GLenum type,
-                                    const void *indices,
-                                    GLsizei instanceCount,
-                                    bool primitiveRestartEnabled,
-                                    const void **outIndices) const;
+    angle::Result syncDrawArraysState(const gl::Context *context,
+                                      const gl::AttributesMask &activeAttributesMask,
+                                      GLint first,
+                                      GLsizei count,
+                                      GLsizei instanceCount) const;
+    angle::Result syncDrawElementsState(const gl::Context *context,
+                                        const gl::AttributesMask &activeAttributesMask,
+                                        GLsizei count,
+                                        GLenum type,
+                                        const void *indices,
+                                        GLsizei instanceCount,
+                                        bool primitiveRestartEnabled,
+                                        const void **outIndices) const;
 
     GLuint getVertexArrayID() const;
     GLuint getAppliedElementArrayBufferID() const;
@@ -53,25 +53,25 @@ class VertexArrayGL : public VertexArrayImpl
     void applyActiveAttribLocationsMask(const gl::AttributesMask &activeMask);
 
   private:
-    gl::Error syncDrawState(const gl::Context *context,
-                            const gl::AttributesMask &activeAttributesMask,
-                            GLint first,
-                            GLsizei count,
-                            GLenum type,
-                            const void *indices,
-                            GLsizei instanceCount,
-                            bool primitiveRestartEnabled,
-                            const void **outIndices) const;
+    angle::Result syncDrawState(const gl::Context *context,
+                                const gl::AttributesMask &activeAttributesMask,
+                                GLint first,
+                                GLsizei count,
+                                GLenum type,
+                                const void *indices,
+                                GLsizei instanceCount,
+                                bool primitiveRestartEnabled,
+                                const void **outIndices) const;
 
     // Apply index data, only sets outIndexRange if attributesNeedStreaming is true
-    gl::Error syncIndexData(const gl::Context *context,
-                            GLsizei count,
-                            GLenum type,
-                            const void *indices,
-                            bool primitiveRestartEnabled,
-                            bool attributesNeedStreaming,
-                            gl::IndexRange *outIndexRange,
-                            const void **outIndices) const;
+    angle::Result syncIndexData(const gl::Context *context,
+                                GLsizei count,
+                                GLenum type,
+                                const void *indices,
+                                bool primitiveRestartEnabled,
+                                bool attributesNeedStreaming,
+                                gl::IndexRange *outIndexRange,
+                                const void **outIndices) const;
 
     // Returns the amount of space needed to stream all attributes that need streaming
     // and the data size of the largest attribute
@@ -82,9 +82,10 @@ class VertexArrayGL : public VertexArrayImpl
                                         size_t *outMaxAttributeDataSize) const;
 
     // Stream attributes that have client data
-    gl::Error streamAttributes(const gl::AttributesMask &attribsToStream,
-                               GLsizei instanceCount,
-                               const gl::IndexRange &indexRange) const;
+    angle::Result streamAttributes(const gl::Context *context,
+                                   const gl::AttributesMask &attribsToStream,
+                                   GLsizei instanceCount,
+                                   const gl::IndexRange &indexRange) const;
     void syncDirtyAttrib(const gl::Context *context,
                          size_t attribIndex,
                          const gl::VertexArray::DirtyAttribBits &dirtyAttribBits);
@@ -92,7 +93,6 @@ class VertexArrayGL : public VertexArrayImpl
                           size_t bindingIndex,
                           const gl::VertexArray::DirtyBindingBits &dirtyBindingBits);
 
-    void updateNeedsStreaming(size_t attribIndex);
     void updateAttribEnabled(size_t attribIndex);
     void updateAttribPointer(const gl::Context *context, size_t attribIndex);
 

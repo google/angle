@@ -679,10 +679,10 @@ void StateManagerGL::endQuery(gl::QueryType type, QueryGL *queryObject, GLuint q
     mFunctions->endQuery(ToGLenum(type));
 }
 
-gl::Error StateManagerGL::setDrawArraysState(const gl::Context *context,
-                                             GLint first,
-                                             GLsizei count,
-                                             GLsizei instanceCount)
+angle::Result StateManagerGL::setDrawArraysState(const gl::Context *context,
+                                                 GLint first,
+                                                 GLsizei count,
+                                                 GLsizei instanceCount)
 {
     const gl::State &glState = context->getGLState();
 
@@ -697,12 +697,12 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::Context *context,
     return setGenericDrawState(context);
 }
 
-gl::Error StateManagerGL::setDrawElementsState(const gl::Context *context,
-                                               GLsizei count,
-                                               GLenum type,
-                                               const void *indices,
-                                               GLsizei instanceCount,
-                                               const void **outIndices)
+angle::Result StateManagerGL::setDrawElementsState(const gl::Context *context,
+                                                   GLsizei count,
+                                                   GLenum type,
+                                                   const void *indices,
+                                                   GLsizei instanceCount,
+                                                   const void **outIndices)
 {
     const gl::State &glState = context->getGLState();
 
@@ -718,7 +718,7 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Context *context,
     return setGenericDrawState(context);
 }
 
-gl::Error StateManagerGL::setDrawIndirectState(const gl::Context *context)
+angle::Result StateManagerGL::setDrawIndirectState(const gl::Context *context)
 {
     return setGenericDrawState(context);
 }
@@ -745,10 +745,10 @@ void StateManagerGL::updateDispatchIndirectBufferBinding(const gl::Context *cont
     }
 }
 
-gl::Error StateManagerGL::setDispatchComputeState(const gl::Context *context)
+angle::Result StateManagerGL::setDispatchComputeState(const gl::Context *context)
 {
     setGenericShaderState(context);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void StateManagerGL::pauseTransformFeedback()
@@ -760,7 +760,7 @@ void StateManagerGL::pauseTransformFeedback()
     }
 }
 
-gl::Error StateManagerGL::pauseAllQueries()
+angle::Result StateManagerGL::pauseAllQueries(const gl::Context *context)
 {
     for (gl::QueryType type : angle::AllEnums<gl::QueryType>())
     {
@@ -768,30 +768,30 @@ gl::Error StateManagerGL::pauseAllQueries()
 
         if (previousQuery != nullptr)
         {
-            ANGLE_TRY(previousQuery->pause());
+            ANGLE_TRY(previousQuery->pause(context));
             mTemporaryPausedQueries[type] = previousQuery;
             mQueries[type]                = nullptr;
         }
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error StateManagerGL::pauseQuery(gl::QueryType type)
+angle::Result StateManagerGL::pauseQuery(const gl::Context *context, gl::QueryType type)
 {
     QueryGL *previousQuery = mQueries[type];
 
     if (previousQuery)
     {
-        ANGLE_TRY(previousQuery->pause());
+        ANGLE_TRY(previousQuery->pause(context));
         mTemporaryPausedQueries[type] = previousQuery;
         mQueries[type]                = nullptr;
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error StateManagerGL::resumeAllQueries()
+angle::Result StateManagerGL::resumeAllQueries(const gl::Context *context)
 {
     for (gl::QueryType type : angle::AllEnums<gl::QueryType>())
     {
@@ -800,28 +800,28 @@ gl::Error StateManagerGL::resumeAllQueries()
         if (pausedQuery != nullptr)
         {
             ASSERT(mQueries[type] == nullptr);
-            ANGLE_TRY(pausedQuery->resume());
+            ANGLE_TRY(pausedQuery->resume(context));
             mTemporaryPausedQueries[type] = nullptr;
         }
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error StateManagerGL::resumeQuery(gl::QueryType type)
+angle::Result StateManagerGL::resumeQuery(const gl::Context *context, gl::QueryType type)
 {
     QueryGL *pausedQuery = mTemporaryPausedQueries[type];
 
     if (pausedQuery != nullptr)
     {
-        ANGLE_TRY(pausedQuery->resume());
+        ANGLE_TRY(pausedQuery->resume(context));
         mTemporaryPausedQueries[type] = nullptr;
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
+angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
 {
     const gl::State &glState = context->getGLState();
 
@@ -843,7 +843,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
             // Pause any old query object
             if (currentQuery != nullptr)
             {
-                ANGLE_TRY(currentQuery->pause());
+                ANGLE_TRY(currentQuery->pause(context));
                 mQueries[type] = nullptr;
             }
 
@@ -852,7 +852,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
             if (newQuery != nullptr)
             {
                 QueryGL *queryGL = GetImplAs<QueryGL>(newQuery);
-                ANGLE_TRY(queryGL->resume());
+                ANGLE_TRY(queryGL->resume(context));
             }
         }
     }
@@ -863,7 +863,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
     // this state here since MakeCurrent is expected to be called less frequently than draw calls.
     setTextureCubemapSeamlessEnabled(context->getClientMajorVersion() >= 3);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void StateManagerGL::setGenericShaderState(const gl::Context *context)
@@ -1038,7 +1038,7 @@ void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
     }
 }
 
-gl::Error StateManagerGL::setGenericDrawState(const gl::Context *context)
+angle::Result StateManagerGL::setGenericDrawState(const gl::Context *context)
 {
     setGenericShaderState(context);
 
@@ -1057,7 +1057,7 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::Context *context)
     ASSERT(mVAO ==
            GetImplAs<VertexArrayGL>(context->getGLState().getVertexArray())->getVertexArrayID());
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void StateManagerGL::setAttributeCurrentData(size_t index,

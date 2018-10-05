@@ -103,25 +103,15 @@ class Context : angle::NonCopyable
     \
 }
 
-#define ANGLE_CHECK_HR(CONTEXT, EXPR, MESSAGE, ERROR)                                 \
-                                                                                      \
-    {                                                                                 \
-        if (ANGLE_UNLIKELY(!(EXPR)))                                                  \
-        {                                                                             \
-            CONTEXT->handleError(ERROR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
-            return angle::Result::Stop();                                             \
-        }                                                                             \
-    }
-
 #define ANGLE_CHECK_HR_ALLOC(context, result) \
-    ANGLE_CHECK_HR(context, result, "Failed to allocate host memory", E_OUTOFMEMORY)
+    ANGLE_CHECK(context, result, "Failed to allocate host memory", E_OUTOFMEMORY)
 
 #define ANGLE_CHECK_HR_MATH(context, result) \
-    ANGLE_CHECK_HR(context, result, "Integer overflow.", E_FAIL)
+    ANGLE_CHECK(context, result, "Integer overflow.", E_FAIL)
 
 #define ANGLE_HR_UNREACHABLE(context) \
     UNREACHABLE();                    \
-    ANGLE_CHECK_HR(context, false, "Unreachble code reached.", E_FAIL)
+    ANGLE_CHECK(context, false, "Unreachble code reached.", E_FAIL)
 
 // Check if the device is lost every 10 failures to get the query data
 constexpr unsigned int kPollingD3DDeviceLostCheckFrequency = 10;

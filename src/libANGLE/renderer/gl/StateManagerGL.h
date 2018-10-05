@@ -153,26 +153,26 @@ class StateManagerGL final : angle::NonCopyable
     void setPathRenderingProjectionMatrix(const GLfloat *m);
     void setPathRenderingStencilState(GLenum func, GLint ref, GLuint mask);
 
-    gl::Error setDrawArraysState(const gl::Context *context,
-                                 GLint first,
-                                 GLsizei count,
-                                 GLsizei instanceCount);
-    gl::Error setDrawElementsState(const gl::Context *context,
-                                   GLsizei count,
-                                   GLenum type,
-                                   const void *indices,
-                                   GLsizei instanceCount,
-                                   const void **outIndices);
-    gl::Error setDrawIndirectState(const gl::Context *context);
+    angle::Result setDrawArraysState(const gl::Context *context,
+                                     GLint first,
+                                     GLsizei count,
+                                     GLsizei instanceCount);
+    angle::Result setDrawElementsState(const gl::Context *context,
+                                       GLsizei count,
+                                       GLenum type,
+                                       const void *indices,
+                                       GLsizei instanceCount,
+                                       const void **outIndices);
+    angle::Result setDrawIndirectState(const gl::Context *context);
 
-    gl::Error setDispatchComputeState(const gl::Context *context);
+    angle::Result setDispatchComputeState(const gl::Context *context);
 
     void pauseTransformFeedback();
-    gl::Error pauseAllQueries();
-    gl::Error pauseQuery(gl::QueryType type);
-    gl::Error resumeAllQueries();
-    gl::Error resumeQuery(gl::QueryType type);
-    gl::Error onMakeCurrent(const gl::Context *context);
+    angle::Result pauseAllQueries(const gl::Context *context);
+    angle::Result pauseQuery(const gl::Context *context, gl::QueryType type);
+    angle::Result resumeAllQueries(const gl::Context *context);
+    angle::Result resumeQuery(const gl::Context *context, gl::QueryType type);
+    angle::Result onMakeCurrent(const gl::Context *context);
 
     void syncState(const gl::Context *context, const gl::State::DirtyBits &glDirtyBits);
 
@@ -185,7 +185,7 @@ class StateManagerGL final : angle::NonCopyable
     void setGenericShaderState(const gl::Context *context);
 
     // Set state that's common among draw commands.
-    gl::Error setGenericDrawState(const gl::Context *context);
+    angle::Result setGenericDrawState(const gl::Context *context);
 
     void setTextureCubemapSeamlessEnabled(bool enabled);
 

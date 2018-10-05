@@ -9,6 +9,7 @@
 
 #include "libANGLE/renderer/gl/ContextGL.h"
 
+#include "libANGLE/Context.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/CompilerGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
@@ -107,7 +108,7 @@ QueryImpl *ContextGL::createQuery(gl::QueryType type)
     switch (type)
     {
         case gl::QueryType::CommandsCompleted:
-            return new SyncQueryGL(type, getFunctions(), getStateManager());
+            return new SyncQueryGL(type, getFunctions());
 
         default:
             return new StandardQueryGL(type, getFunctions(), getStateManager());
@@ -460,4 +461,16 @@ gl::Error ContextGL::memoryBarrierByRegion(const gl::Context *context, GLbitfiel
     return mRenderer->memoryBarrierByRegion(barriers);
 }
 
+void ContextGL::handleError(GLenum errorCode,
+                            const char *message,
+                            const char *file,
+                            const char *function,
+                            unsigned int line)
+{
+    std::stringstream errorStream;
+    errorStream << "Internal OpenGL error: " << gl::FmtHex(errorCode) << ", in " << file << ", "
+                << function << ":" << line << ". " << message;
+
+    mErrors->handleError(gl::Error(errorCode, errorCode, errorStream.str()));
+}
 }  // namespace rx

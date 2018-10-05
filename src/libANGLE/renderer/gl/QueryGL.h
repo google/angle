@@ -31,8 +31,8 @@ class QueryGL : public QueryImpl
     // When it is "resumed", a new query is generated and started.
     // When a result is required, the queries are "flushed" by iterating over the list of pending
     // queries and merging their results.
-    virtual gl::Error pause()  = 0;
-    virtual gl::Error resume() = 0;
+    virtual angle::Result pause(const gl::Context *context)  = 0;
+    virtual angle::Result resume(const gl::Context *context) = 0;
 };
 
 class StandardQueryGL : public QueryGL
@@ -50,14 +50,14 @@ class StandardQueryGL : public QueryGL
     gl::Error getResult(const gl::Context *context, GLuint64 *params) override;
     gl::Error isResultAvailable(const gl::Context *context, bool *available) override;
 
-    gl::Error pause() override;
-    gl::Error resume() override;
+    angle::Result pause(const gl::Context *context) override;
+    angle::Result resume(const gl::Context *context) override;
 
   private:
-    gl::Error flush(bool force);
+    angle::Result flush(const gl::Context *context, bool force);
 
     template <typename T>
-    gl::Error getResultBase(T *params);
+    angle::Result getResultBase(const gl::Context *context, T *params);
 
     gl::QueryType mType;
 
@@ -73,7 +73,7 @@ class SyncProviderGL;
 class SyncQueryGL : public QueryGL
 {
   public:
-    SyncQueryGL(gl::QueryType type, const FunctionsGL *functions, StateManagerGL *stateManager);
+    SyncQueryGL(gl::QueryType type, const FunctionsGL *functions);
     ~SyncQueryGL() override;
 
     static bool IsSupported(const FunctionsGL *functions);
@@ -87,17 +87,16 @@ class SyncQueryGL : public QueryGL
     gl::Error getResult(const gl::Context *context, GLuint64 *params) override;
     gl::Error isResultAvailable(const gl::Context *context, bool *available) override;
 
-    gl::Error pause() override;
-    gl::Error resume() override;
+    angle::Result pause(const gl::Context *context) override;
+    angle::Result resume(const gl::Context *context) override;
 
   private:
-    gl::Error flush(bool force);
+    angle::Result flush(const gl::Context *context, bool force);
 
     template <typename T>
-    gl::Error getResultBase(T *params);
+    angle::Result getResultBase(const gl::Context *context, T *params);
 
     const FunctionsGL *mFunctions;
-    StateManagerGL *mStateManager;
 
     std::unique_ptr<SyncProviderGL> mSyncProvider;
     bool mFinished;

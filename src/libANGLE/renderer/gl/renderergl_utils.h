@@ -32,6 +32,7 @@ namespace rx
 {
 class BlitGL;
 class ClearMultiviewGL;
+class ContextGL;
 class FunctionsGL;
 class StateManagerGL;
 struct WorkaroundsGL;
@@ -83,14 +84,15 @@ uint8_t *MapBufferRangeWithFallback(const FunctionsGL *functions,
                                     size_t length,
                                     GLbitfield access);
 
-gl::Error ShouldApplyLastRowPaddingWorkaround(const gl::Extents &size,
-                                              const gl::PixelStoreStateBase &state,
-                                              const gl::Buffer *pixelBuffer,
-                                              GLenum format,
-                                              GLenum type,
-                                              bool is3D,
-                                              const void *pixels,
-                                              bool *shouldApplyOut);
+angle::Result ShouldApplyLastRowPaddingWorkaround(ContextGL *contextGL,
+                                                  const gl::Extents &size,
+                                                  const gl::PixelStoreStateBase &state,
+                                                  const gl::Buffer *pixelBuffer,
+                                                  GLenum format,
+                                                  GLenum type,
+                                                  bool is3D,
+                                                  const void *pixels,
+                                                  bool *shouldApplyOut);
 
 struct ContextCreationTry
 {
@@ -112,6 +114,12 @@ struct ContextCreationTry
 };
 
 std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedType, bool isMesaGLX);
-}
+}  // namespace rx
+
+#define ANGLE_CHECK_GL_ALLOC(context, result) \
+    ANGLE_CHECK(context, result, "Failed to allocate host memory", GL_OUT_OF_MEMORY)
+
+#define ANGLE_CHECK_GL_MATH(context, result) \
+    ANGLE_CHECK(context, result, "Integer overflow.", GL_INVALID_OPERATION)
 
 #endif // LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_

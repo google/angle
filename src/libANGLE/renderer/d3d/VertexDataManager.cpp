@@ -490,8 +490,8 @@ angle::Result VertexDataManager::reserveSpaceForAttrib(const gl::Context *contex
         int elementsInBuffer =
             ElementsInBuffer(attrib, binding, static_cast<unsigned int>(bufferD3D->getSize()));
 
-        ANGLE_CHECK_HR(GetImplAs<ContextD3D>(context), maxVertexCount <= elementsInBuffer,
-                       "Vertex buffer is not big enough for the draw call.", E_FAIL);
+        ANGLE_CHECK(GetImplAs<ContextD3D>(context), maxVertexCount <= elementsInBuffer,
+                    "Vertex buffer is not big enough for the draw call.", E_FAIL);
     }
     return mStreamingBuffer.reserveVertexSpace(context, attrib, binding, totalCount, instances);
 }
