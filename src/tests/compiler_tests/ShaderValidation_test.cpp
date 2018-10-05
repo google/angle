@@ -6034,3 +6034,23 @@ TEST_F(FragmentShaderValidationTest, ValueFromConstantArrayAsArraySize)
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Test that an invalid struct with void fields doesn't crash or assert when used in a comma
+// operator. This is a regression test.
+TEST_F(FragmentShaderValidationTest, InvalidStructWithVoidFieldsInComma)
+{
+    // The struct needed the two fields for the bug to repro.
+    const std::string &shaderString =
+        R"(#version 300 es
+precision highp float;
+
+struct T { void a[8], c; };
+
+void main() {
+    0.0, T();
+})";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
