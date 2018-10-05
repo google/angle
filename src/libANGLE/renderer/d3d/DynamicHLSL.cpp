@@ -204,8 +204,8 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
         if (!shaderAttribute.name.empty())
         {
             ASSERT(inputIndex < MAX_VERTEX_ATTRIBS);
-            VertexFormatType vertexFormatType =
-                inputIndex < inputLayout.size() ? inputLayout[inputIndex] : VERTEX_FORMAT_INVALID;
+            angle::FormatID vertexFormatID =
+                inputIndex < inputLayout.size() ? inputLayout[inputIndex] : angle::FormatID::NONE;
 
             // HLSL code for input structure
             if (IsMatrixType(shaderAttribute.type))
@@ -216,7 +216,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
             }
             else
             {
-                GLenum componentType = mRenderer->getVertexComponentType(vertexFormatType);
+                GLenum componentType = mRenderer->getVertexComponentType(vertexFormatID);
 
                 if (shaderAttribute.name == "gl_InstanceID" ||
                     shaderAttribute.name == "gl_VertexID")
@@ -258,9 +258,9 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
             // data reinterpretation (eg for pure integer->float, float->pure integer)
             // TODO: issue warning with gl debug info extension, when supported
             if (IsMatrixType(shaderAttribute.type) ||
-                (mRenderer->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_GPU) != 0)
+                (mRenderer->getVertexConversionType(vertexFormatID) & VERTEX_CONVERT_GPU) != 0)
             {
-                GenerateAttributeConversionHLSL(vertexFormatType, shaderAttribute, initStream);
+                GenerateAttributeConversionHLSL(vertexFormatID, shaderAttribute, initStream);
             }
             else
             {
@@ -1150,7 +1150,7 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Caps &caps,
 }
 
 // static
-void DynamicHLSL::GenerateAttributeConversionHLSL(gl::VertexFormatType vertexFormatType,
+void DynamicHLSL::GenerateAttributeConversionHLSL(angle::FormatID vertexFormatID,
                                                   const sh::ShaderVariable &shaderAttrib,
                                                   std::ostringstream &outStream)
 {
@@ -1163,7 +1163,7 @@ void DynamicHLSL::GenerateAttributeConversionHLSL(gl::VertexFormatType vertexFor
 
     GLenum shaderComponentType = VariableComponentType(shaderAttrib.type);
     int shaderComponentCount   = VariableComponentCount(shaderAttrib.type);
-    const gl::VertexFormat &vertexFormat = gl::GetVertexFormatFromType(vertexFormatType);
+    const gl::VertexFormat &vertexFormat = gl::GetVertexFormatFromID(vertexFormatID);
 
     // Perform integer to float conversion (if necessary)
     if (shaderComponentType == GL_FLOAT && vertexFormat.type != GL_FLOAT)

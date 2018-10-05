@@ -355,9 +355,8 @@ class Renderer11 : public RendererD3D
                              uint8_t *pixelsOut);
 
     bool getLUID(LUID *adapterLuid) const override;
-    VertexConversionType getVertexConversionType(
-        gl::VertexFormatType vertexFormatType) const override;
-    GLenum getVertexComponentType(gl::VertexFormatType vertexFormatType) const override;
+    VertexConversionType getVertexConversionType(angle::FormatID vertexFormatID) const override;
+    GLenum getVertexComponentType(angle::FormatID vertexFormatID) const override;
 
     // Warning: you should ensure binding really matches attrib.bindingIndex before using this
     // function.

@@ -2895,14 +2895,14 @@ bool Renderer9::getLUID(LUID *adapterLuid) const
     return false;
 }
 
-VertexConversionType Renderer9::getVertexConversionType(gl::VertexFormatType vertexFormatType) const
+VertexConversionType Renderer9::getVertexConversionType(angle::FormatID vertexFormatID) const
 {
-    return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatType).conversionType;
+    return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatID).conversionType;
 }
 
-GLenum Renderer9::getVertexComponentType(gl::VertexFormatType vertexFormatType) const
+GLenum Renderer9::getVertexComponentType(angle::FormatID vertexFormatID) const
 {
-    return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatType).componentType;
+    return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatID).componentType;
 }
 
 angle::Result Renderer9::getVertexSpaceRequired(const gl::Context *context,
@@ -2918,9 +2918,9 @@ angle::Result Renderer9::getVertexSpaceRequired(const gl::Context *context,
         return angle::Result::Continue();
     }
 
-    gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, GL_FLOAT);
+    angle::FormatID vertexFormatID = gl::GetVertexFormatID(attrib, GL_FLOAT);
     const d3d9::VertexFormat &d3d9VertexInfo =
-        d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatType);
+        d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatID);
 
     unsigned int elementCount  = 0;
     const unsigned int divisor = binding.getDivisor();

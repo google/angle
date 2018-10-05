@@ -122,10 +122,10 @@ angle::Result VertexBuffer11::storeVertexAttributes(const gl::Context *context,
         input += inputStride * start;
     }
 
-    gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, currentValueType);
+    angle::FormatID vertexFormatID        = gl::GetVertexFormatID(attrib, currentValueType);
     const D3D_FEATURE_LEVEL featureLevel  = mRenderer->getRenderer11DeviceCaps().featureLevel;
     const d3d11::VertexFormat &vertexFormatInfo =
-        d3d11::GetVertexFormatInfo(vertexFormatType, featureLevel);
+        d3d11::GetVertexFormatInfo(vertexFormatID, featureLevel);
     ASSERT(vertexFormatInfo.copyFunction != nullptr);
     vertexFormatInfo.copyFunction(input, inputStride, count, output);
 

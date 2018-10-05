@@ -995,8 +995,8 @@ bool ValidateWebGLVertexAttribPointer(Context *context,
     // The offset arguments to drawElements and vertexAttribPointer, and the stride argument to
     // vertexAttribPointer, must be a multiple of the size of the data type passed to the call,
     // or an INVALID_OPERATION error is generated.
-    VertexFormatType internalType = GetVertexFormatType(type, normalized, 1, pureInteger);
-    size_t typeSize               = GetVertexFormatTypeSize(internalType);
+    angle::FormatID internalType = GetVertexFormatID(type, normalized, 1, pureInteger);
+    size_t typeSize              = GetVertexFormatSize(internalType);
 
     ASSERT(isPow2(typeSize) && typeSize > 0);
     size_t sizeMask = (typeSize - 1);

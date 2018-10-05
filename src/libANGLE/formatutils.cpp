@@ -1647,663 +1647,465 @@ angle::FormatID GetVertexFormatID(const VertexAttribute &attrib)
     return GetVertexFormatID(attrib.type, attrib.normalized, attrib.size, attrib.pureInteger);
 }
 
-// TODO(fjhenigman): Do away with VertexFormatType; use angle::FormatID instead. anglebug.com/2531
-VertexFormatType GetVertexFormatType(GLenum type,
-                                     GLboolean normalized,
-                                     GLuint components,
-                                     bool pureInteger)
-{
-    switch (GetVertexFormatID(type, normalized, components, pureInteger))
-    {
-        case angle::FormatID::R8_SINT:
-            return VERTEX_FORMAT_SBYTE1_INT;
-        case angle::FormatID::R8_SNORM:
-            return VERTEX_FORMAT_SBYTE1_NORM;
-        case angle::FormatID::R8_SSCALED:
-            return VERTEX_FORMAT_SBYTE1;
-        case angle::FormatID::R8G8_SINT:
-            return VERTEX_FORMAT_SBYTE2_INT;
-        case angle::FormatID::R8G8_SNORM:
-            return VERTEX_FORMAT_SBYTE2_NORM;
-        case angle::FormatID::R8G8_SSCALED:
-            return VERTEX_FORMAT_SBYTE2;
-        case angle::FormatID::R8G8B8_SINT:
-            return VERTEX_FORMAT_SBYTE3_INT;
-        case angle::FormatID::R8G8B8_SNORM:
-            return VERTEX_FORMAT_SBYTE3_NORM;
-        case angle::FormatID::R8G8B8_SSCALED:
-            return VERTEX_FORMAT_SBYTE3;
-        case angle::FormatID::R8G8B8A8_SINT:
-            return VERTEX_FORMAT_SBYTE4_INT;
-        case angle::FormatID::R8G8B8A8_SNORM:
-            return VERTEX_FORMAT_SBYTE4_NORM;
-        case angle::FormatID::R8G8B8A8_SSCALED:
-            return VERTEX_FORMAT_SBYTE4;
-        case angle::FormatID::R8_UINT:
-            return VERTEX_FORMAT_UBYTE1_INT;
-        case angle::FormatID::R8_UNORM:
-            return VERTEX_FORMAT_UBYTE1_NORM;
-        case angle::FormatID::R8_USCALED:
-            return VERTEX_FORMAT_UBYTE1;
-        case angle::FormatID::R8G8_UINT:
-            return VERTEX_FORMAT_UBYTE2_INT;
-        case angle::FormatID::R8G8_UNORM:
-            return VERTEX_FORMAT_UBYTE2_NORM;
-        case angle::FormatID::R8G8_USCALED:
-            return VERTEX_FORMAT_UBYTE2;
-        case angle::FormatID::R8G8B8_UINT:
-            return VERTEX_FORMAT_UBYTE3_INT;
-        case angle::FormatID::R8G8B8_UNORM:
-            return VERTEX_FORMAT_UBYTE3_NORM;
-        case angle::FormatID::R8G8B8_USCALED:
-            return VERTEX_FORMAT_UBYTE3;
-        case angle::FormatID::R8G8B8A8_UINT:
-            return VERTEX_FORMAT_UBYTE4_INT;
-        case angle::FormatID::R8G8B8A8_UNORM:
-            return VERTEX_FORMAT_UBYTE4_NORM;
-        case angle::FormatID::R8G8B8A8_USCALED:
-            return VERTEX_FORMAT_UBYTE4;
-        case angle::FormatID::R16_SINT:
-            return VERTEX_FORMAT_SSHORT1_INT;
-        case angle::FormatID::R16_SNORM:
-            return VERTEX_FORMAT_SSHORT1_NORM;
-        case angle::FormatID::R16_SSCALED:
-            return VERTEX_FORMAT_SSHORT1;
-        case angle::FormatID::R16G16_SINT:
-            return VERTEX_FORMAT_SSHORT2_INT;
-        case angle::FormatID::R16G16_SNORM:
-            return VERTEX_FORMAT_SSHORT2_NORM;
-        case angle::FormatID::R16G16_SSCALED:
-            return VERTEX_FORMAT_SSHORT2;
-        case angle::FormatID::R16G16B16_SINT:
-            return VERTEX_FORMAT_SSHORT3_INT;
-        case angle::FormatID::R16G16B16_SNORM:
-            return VERTEX_FORMAT_SSHORT3_NORM;
-        case angle::FormatID::R16G16B16_SSCALED:
-            return VERTEX_FORMAT_SSHORT3;
-        case angle::FormatID::R16G16B16A16_SINT:
-            return VERTEX_FORMAT_SSHORT4_INT;
-        case angle::FormatID::R16G16B16A16_SNORM:
-            return VERTEX_FORMAT_SSHORT4_NORM;
-        case angle::FormatID::R16G16B16A16_SSCALED:
-            return VERTEX_FORMAT_SSHORT4;
-        case angle::FormatID::R16_UINT:
-            return VERTEX_FORMAT_USHORT1_INT;
-        case angle::FormatID::R16_UNORM:
-            return VERTEX_FORMAT_USHORT1_NORM;
-        case angle::FormatID::R16_USCALED:
-            return VERTEX_FORMAT_USHORT1;
-        case angle::FormatID::R16G16_UINT:
-            return VERTEX_FORMAT_USHORT2_INT;
-        case angle::FormatID::R16G16_UNORM:
-            return VERTEX_FORMAT_USHORT2_NORM;
-        case angle::FormatID::R16G16_USCALED:
-            return VERTEX_FORMAT_USHORT2;
-        case angle::FormatID::R16G16B16_UINT:
-            return VERTEX_FORMAT_USHORT3_INT;
-        case angle::FormatID::R16G16B16_UNORM:
-            return VERTEX_FORMAT_USHORT3_NORM;
-        case angle::FormatID::R16G16B16_USCALED:
-            return VERTEX_FORMAT_USHORT3;
-        case angle::FormatID::R16G16B16A16_UINT:
-            return VERTEX_FORMAT_USHORT4_INT;
-        case angle::FormatID::R16G16B16A16_UNORM:
-            return VERTEX_FORMAT_USHORT4_NORM;
-        case angle::FormatID::R16G16B16A16_USCALED:
-            return VERTEX_FORMAT_USHORT4;
-        case angle::FormatID::R32_SINT:
-            return VERTEX_FORMAT_SINT1_INT;
-        case angle::FormatID::R32_SNORM:
-            return VERTEX_FORMAT_SINT1_NORM;
-        case angle::FormatID::R32_SSCALED:
-            return VERTEX_FORMAT_SINT1;
-        case angle::FormatID::R32G32_SINT:
-            return VERTEX_FORMAT_SINT2_INT;
-        case angle::FormatID::R32G32_SNORM:
-            return VERTEX_FORMAT_SINT2_NORM;
-        case angle::FormatID::R32G32_SSCALED:
-            return VERTEX_FORMAT_SINT2;
-        case angle::FormatID::R32G32B32_SINT:
-            return VERTEX_FORMAT_SINT3_INT;
-        case angle::FormatID::R32G32B32_SNORM:
-            return VERTEX_FORMAT_SINT3_NORM;
-        case angle::FormatID::R32G32B32_SSCALED:
-            return VERTEX_FORMAT_SINT3;
-        case angle::FormatID::R32G32B32A32_SINT:
-            return VERTEX_FORMAT_SINT4_INT;
-        case angle::FormatID::R32G32B32A32_SNORM:
-            return VERTEX_FORMAT_SINT4_NORM;
-        case angle::FormatID::R32G32B32A32_SSCALED:
-            return VERTEX_FORMAT_SINT4;
-        case angle::FormatID::R32_UINT:
-            return VERTEX_FORMAT_UINT1_INT;
-        case angle::FormatID::R32_UNORM:
-            return VERTEX_FORMAT_UINT1_NORM;
-        case angle::FormatID::R32_USCALED:
-            return VERTEX_FORMAT_UINT1;
-        case angle::FormatID::R32G32_UINT:
-            return VERTEX_FORMAT_UINT2_INT;
-        case angle::FormatID::R32G32_UNORM:
-            return VERTEX_FORMAT_UINT2_NORM;
-        case angle::FormatID::R32G32_USCALED:
-            return VERTEX_FORMAT_UINT2;
-        case angle::FormatID::R32G32B32_UINT:
-            return VERTEX_FORMAT_UINT3_INT;
-        case angle::FormatID::R32G32B32_UNORM:
-            return VERTEX_FORMAT_UINT3_NORM;
-        case angle::FormatID::R32G32B32_USCALED:
-            return VERTEX_FORMAT_UINT3;
-        case angle::FormatID::R32G32B32A32_UINT:
-            return VERTEX_FORMAT_UINT4_INT;
-        case angle::FormatID::R32G32B32A32_UNORM:
-            return VERTEX_FORMAT_UINT4_NORM;
-        case angle::FormatID::R32G32B32A32_USCALED:
-            return VERTEX_FORMAT_UINT4;
-        case angle::FormatID::R32_FLOAT:
-            return VERTEX_FORMAT_FLOAT1;
-        case angle::FormatID::R32G32_FLOAT:
-            return VERTEX_FORMAT_FLOAT2;
-        case angle::FormatID::R32G32B32_FLOAT:
-            return VERTEX_FORMAT_FLOAT3;
-        case angle::FormatID::R32G32B32A32_FLOAT:
-            return VERTEX_FORMAT_FLOAT4;
-        case angle::FormatID::R16_FLOAT:
-            return VERTEX_FORMAT_HALF1;
-        case angle::FormatID::R16G16_FLOAT:
-            return VERTEX_FORMAT_HALF2;
-        case angle::FormatID::R16G16B16_FLOAT:
-            return VERTEX_FORMAT_HALF3;
-        case angle::FormatID::R16G16B16A16_FLOAT:
-            return VERTEX_FORMAT_HALF4;
-        case angle::FormatID::R32_FIXED:
-            return VERTEX_FORMAT_FIXED1;
-        case angle::FormatID::R32G32_FIXED:
-            return VERTEX_FORMAT_FIXED2;
-        case angle::FormatID::R32G32B32_FIXED:
-            return VERTEX_FORMAT_FIXED3;
-        case angle::FormatID::R32G32B32A32_FIXED:
-            return VERTEX_FORMAT_FIXED4;
-        case angle::FormatID::R10G10B10A2_SINT:
-            return VERTEX_FORMAT_SINT210_INT;
-        case angle::FormatID::R10G10B10A2_SNORM:
-            return VERTEX_FORMAT_SINT210_NORM;
-        case angle::FormatID::R10G10B10A2_SSCALED:
-            return VERTEX_FORMAT_SINT210;
-        case angle::FormatID::R10G10B10A2_UINT:
-            return VERTEX_FORMAT_UINT210_INT;
-        case angle::FormatID::R10G10B10A2_UNORM:
-            return VERTEX_FORMAT_UINT210_NORM;
-        case angle::FormatID::R10G10B10A2_USCALED:
-            return VERTEX_FORMAT_UINT210;
-        default:
-            return VERTEX_FORMAT_INVALID;
-    }
-}
-
-VertexFormatType GetVertexFormatType(const VertexAttribute &attrib)
-{
-    return GetVertexFormatType(attrib.type, attrib.normalized, attrib.size, attrib.pureInteger);
-}
-
-VertexFormatType GetVertexFormatType(const VertexAttribute &attrib, GLenum currentValueType)
+angle::FormatID GetVertexFormatID(const VertexAttribute &attrib, GLenum currentValueType)
 {
     if (!attrib.enabled)
     {
-        return GetVertexFormatType(currentValueType, GL_FALSE, 4, (currentValueType != GL_FLOAT));
+        return GetVertexFormatID(currentValueType, GL_FALSE, 4, (currentValueType != GL_FLOAT));
     }
-    return GetVertexFormatType(attrib);
+    return GetVertexFormatID(attrib);
 }
 
-const VertexFormat &GetVertexFormatFromType(VertexFormatType vertexFormatType)
+const VertexFormat &GetVertexFormatFromID(angle::FormatID vertexFormatID)
 {
-    switch (vertexFormatType)
+    switch (vertexFormatID)
     {
-        case VERTEX_FORMAT_SBYTE1:
+        case angle::FormatID::R8_SSCALED:
         {
             static const VertexFormat format(GL_BYTE, GL_FALSE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE1_NORM:
+        case angle::FormatID::R8_SNORM:
         {
             static const VertexFormat format(GL_BYTE, GL_TRUE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE2:
+        case angle::FormatID::R8G8_SSCALED:
         {
             static const VertexFormat format(GL_BYTE, GL_FALSE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE2_NORM:
+        case angle::FormatID::R8G8_SNORM:
         {
             static const VertexFormat format(GL_BYTE, GL_TRUE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE3:
+        case angle::FormatID::R8G8B8_SSCALED:
         {
             static const VertexFormat format(GL_BYTE, GL_FALSE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE3_NORM:
+        case angle::FormatID::R8G8B8_SNORM:
         {
             static const VertexFormat format(GL_BYTE, GL_TRUE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE4:
+        case angle::FormatID::R8G8B8A8_SSCALED:
         {
             static const VertexFormat format(GL_BYTE, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE4_NORM:
+        case angle::FormatID::R8G8B8A8_SNORM:
         {
             static const VertexFormat format(GL_BYTE, GL_TRUE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE1:
+        case angle::FormatID::R8_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_FALSE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE1_NORM:
+        case angle::FormatID::R8_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_TRUE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE2:
+        case angle::FormatID::R8G8_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_FALSE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE2_NORM:
+        case angle::FormatID::R8G8_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_TRUE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE3:
+        case angle::FormatID::R8G8B8_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_FALSE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE3_NORM:
+        case angle::FormatID::R8G8B8_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_TRUE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE4:
+        case angle::FormatID::R8G8B8A8_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE4_NORM:
+        case angle::FormatID::R8G8B8A8_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_TRUE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT1:
+        case angle::FormatID::R16_SSCALED:
         {
             static const VertexFormat format(GL_SHORT, GL_FALSE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT1_NORM:
+        case angle::FormatID::R16_SNORM:
         {
             static const VertexFormat format(GL_SHORT, GL_TRUE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT2:
+        case angle::FormatID::R16G16_SSCALED:
         {
             static const VertexFormat format(GL_SHORT, GL_FALSE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT2_NORM:
+        case angle::FormatID::R16G16_SNORM:
         {
             static const VertexFormat format(GL_SHORT, GL_TRUE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT3:
+        case angle::FormatID::R16G16B16_SSCALED:
         {
             static const VertexFormat format(GL_SHORT, GL_FALSE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT3_NORM:
+        case angle::FormatID::R16G16B16_SNORM:
         {
             static const VertexFormat format(GL_SHORT, GL_TRUE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT4:
+        case angle::FormatID::R16G16B16A16_SSCALED:
         {
             static const VertexFormat format(GL_SHORT, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT4_NORM:
+        case angle::FormatID::R16G16B16A16_SNORM:
         {
             static const VertexFormat format(GL_SHORT, GL_TRUE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_USHORT1:
+        case angle::FormatID::R16_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_FALSE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_USHORT1_NORM:
+        case angle::FormatID::R16_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_TRUE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_USHORT2:
+        case angle::FormatID::R16G16_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_FALSE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_USHORT2_NORM:
+        case angle::FormatID::R16G16_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_TRUE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_USHORT3:
+        case angle::FormatID::R16G16B16_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_FALSE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_USHORT3_NORM:
+        case angle::FormatID::R16G16B16_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_TRUE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_USHORT4:
+        case angle::FormatID::R16G16B16A16_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_USHORT4_NORM:
+        case angle::FormatID::R16G16B16A16_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_TRUE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT1:
+        case angle::FormatID::R32_SSCALED:
         {
             static const VertexFormat format(GL_INT, GL_FALSE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT1_NORM:
+        case angle::FormatID::R32_SNORM:
         {
             static const VertexFormat format(GL_INT, GL_TRUE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT2:
+        case angle::FormatID::R32G32_SSCALED:
         {
             static const VertexFormat format(GL_INT, GL_FALSE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT2_NORM:
+        case angle::FormatID::R32G32_SNORM:
         {
             static const VertexFormat format(GL_INT, GL_TRUE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT3:
+        case angle::FormatID::R32G32B32_SSCALED:
         {
             static const VertexFormat format(GL_INT, GL_FALSE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT3_NORM:
+        case angle::FormatID::R32G32B32_SNORM:
         {
             static const VertexFormat format(GL_INT, GL_TRUE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT4:
+        case angle::FormatID::R32G32B32A32_SSCALED:
         {
             static const VertexFormat format(GL_INT, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT4_NORM:
+        case angle::FormatID::R32G32B32A32_SNORM:
         {
             static const VertexFormat format(GL_INT, GL_TRUE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT1:
+        case angle::FormatID::R32_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_FALSE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT1_NORM:
+        case angle::FormatID::R32_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_TRUE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT2:
+        case angle::FormatID::R32G32_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_FALSE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT2_NORM:
+        case angle::FormatID::R32G32_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_TRUE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT3:
+        case angle::FormatID::R32G32B32_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_FALSE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT3_NORM:
+        case angle::FormatID::R32G32B32_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_TRUE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT4:
+        case angle::FormatID::R32G32B32A32_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT4_NORM:
+        case angle::FormatID::R32G32B32A32_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_TRUE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE1_INT:
+        case angle::FormatID::R8_SINT:
         {
             static const VertexFormat format(GL_BYTE, GL_FALSE, 1, true);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE2_INT:
+        case angle::FormatID::R8G8_SINT:
         {
             static const VertexFormat format(GL_BYTE, GL_FALSE, 2, true);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE3_INT:
+        case angle::FormatID::R8G8B8_SINT:
         {
             static const VertexFormat format(GL_BYTE, GL_FALSE, 3, true);
             return format;
         }
-        case VERTEX_FORMAT_SBYTE4_INT:
+        case angle::FormatID::R8G8B8A8_SINT:
         {
             static const VertexFormat format(GL_BYTE, GL_FALSE, 4, true);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE1_INT:
+        case angle::FormatID::R8_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_FALSE, 1, true);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE2_INT:
+        case angle::FormatID::R8G8_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_FALSE, 2, true);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE3_INT:
+        case angle::FormatID::R8G8B8_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_FALSE, 3, true);
             return format;
         }
-        case VERTEX_FORMAT_UBYTE4_INT:
+        case angle::FormatID::R8G8B8A8_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_BYTE, GL_FALSE, 4, true);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT1_INT:
+        case angle::FormatID::R16_SINT:
         {
             static const VertexFormat format(GL_SHORT, GL_FALSE, 1, true);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT2_INT:
+        case angle::FormatID::R16G16_SINT:
         {
             static const VertexFormat format(GL_SHORT, GL_FALSE, 2, true);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT3_INT:
+        case angle::FormatID::R16G16B16_SINT:
         {
             static const VertexFormat format(GL_SHORT, GL_FALSE, 3, true);
             return format;
         }
-        case VERTEX_FORMAT_SSHORT4_INT:
+        case angle::FormatID::R16G16B16A16_SINT:
         {
             static const VertexFormat format(GL_SHORT, GL_FALSE, 4, true);
             return format;
         }
-        case VERTEX_FORMAT_USHORT1_INT:
+        case angle::FormatID::R16_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_FALSE, 1, true);
             return format;
         }
-        case VERTEX_FORMAT_USHORT2_INT:
+        case angle::FormatID::R16G16_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_FALSE, 2, true);
             return format;
         }
-        case VERTEX_FORMAT_USHORT3_INT:
+        case angle::FormatID::R16G16B16_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_FALSE, 3, true);
             return format;
         }
-        case VERTEX_FORMAT_USHORT4_INT:
+        case angle::FormatID::R16G16B16A16_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_SHORT, GL_FALSE, 4, true);
             return format;
         }
-        case VERTEX_FORMAT_SINT1_INT:
+        case angle::FormatID::R32_SINT:
         {
             static const VertexFormat format(GL_INT, GL_FALSE, 1, true);
             return format;
         }
-        case VERTEX_FORMAT_SINT2_INT:
+        case angle::FormatID::R32G32_SINT:
         {
             static const VertexFormat format(GL_INT, GL_FALSE, 2, true);
             return format;
         }
-        case VERTEX_FORMAT_SINT3_INT:
+        case angle::FormatID::R32G32B32_SINT:
         {
             static const VertexFormat format(GL_INT, GL_FALSE, 3, true);
             return format;
         }
-        case VERTEX_FORMAT_SINT4_INT:
+        case angle::FormatID::R32G32B32A32_SINT:
         {
             static const VertexFormat format(GL_INT, GL_FALSE, 4, true);
             return format;
         }
-        case VERTEX_FORMAT_UINT1_INT:
+        case angle::FormatID::R32_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_FALSE, 1, true);
             return format;
         }
-        case VERTEX_FORMAT_UINT2_INT:
+        case angle::FormatID::R32G32_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_FALSE, 2, true);
             return format;
         }
-        case VERTEX_FORMAT_UINT3_INT:
+        case angle::FormatID::R32G32B32_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_FALSE, 3, true);
             return format;
         }
-        case VERTEX_FORMAT_UINT4_INT:
+        case angle::FormatID::R32G32B32A32_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_INT, GL_FALSE, 4, true);
             return format;
         }
-        case VERTEX_FORMAT_FIXED1:
+        case angle::FormatID::R32_FIXED:
         {
             static const VertexFormat format(GL_FIXED, GL_FALSE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_FIXED2:
+        case angle::FormatID::R32G32_FIXED:
         {
             static const VertexFormat format(GL_FIXED, GL_FALSE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_FIXED3:
+        case angle::FormatID::R32G32B32_FIXED:
         {
             static const VertexFormat format(GL_FIXED, GL_FALSE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_FIXED4:
+        case angle::FormatID::R32G32B32A32_FIXED:
         {
             static const VertexFormat format(GL_FIXED, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_HALF1:
+        case angle::FormatID::R16_FLOAT:
         {
             static const VertexFormat format(GL_HALF_FLOAT, GL_FALSE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_HALF2:
+        case angle::FormatID::R16G16_FLOAT:
         {
             static const VertexFormat format(GL_HALF_FLOAT, GL_FALSE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_HALF3:
+        case angle::FormatID::R16G16B16_FLOAT:
         {
             static const VertexFormat format(GL_HALF_FLOAT, GL_FALSE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_HALF4:
+        case angle::FormatID::R16G16B16A16_FLOAT:
         {
             static const VertexFormat format(GL_HALF_FLOAT, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_FLOAT1:
+        case angle::FormatID::R32_FLOAT:
         {
             static const VertexFormat format(GL_FLOAT, GL_FALSE, 1, false);
             return format;
         }
-        case VERTEX_FORMAT_FLOAT2:
+        case angle::FormatID::R32G32_FLOAT:
         {
             static const VertexFormat format(GL_FLOAT, GL_FALSE, 2, false);
             return format;
         }
-        case VERTEX_FORMAT_FLOAT3:
+        case angle::FormatID::R32G32B32_FLOAT:
         {
             static const VertexFormat format(GL_FLOAT, GL_FALSE, 3, false);
             return format;
         }
-        case VERTEX_FORMAT_FLOAT4:
+        case angle::FormatID::R32G32B32A32_FLOAT:
         {
             static const VertexFormat format(GL_FLOAT, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT210:
+        case angle::FormatID::R10G10B10A2_SSCALED:
         {
             static const VertexFormat format(GL_INT_2_10_10_10_REV, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT210:
+        case angle::FormatID::R10G10B10A2_USCALED:
         {
             static const VertexFormat format(GL_UNSIGNED_INT_2_10_10_10_REV, GL_FALSE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT210_NORM:
+        case angle::FormatID::R10G10B10A2_SNORM:
         {
             static const VertexFormat format(GL_INT_2_10_10_10_REV, GL_TRUE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_UINT210_NORM:
+        case angle::FormatID::R10G10B10A2_UNORM:
         {
             static const VertexFormat format(GL_UNSIGNED_INT_2_10_10_10_REV, GL_TRUE, 4, false);
             return format;
         }
-        case VERTEX_FORMAT_SINT210_INT:
+        case angle::FormatID::R10G10B10A2_SINT:
         {
             static const VertexFormat format(GL_INT_2_10_10_10_REV, GL_FALSE, 4, true);
             return format;
         }
-        case VERTEX_FORMAT_UINT210_INT:
+        case angle::FormatID::R10G10B10A2_UINT:
         {
             static const VertexFormat format(GL_UNSIGNED_INT_2_10_10_10_REV, GL_FALSE, 4, true);
             return format;
@@ -2316,117 +2118,117 @@ const VertexFormat &GetVertexFormatFromType(VertexFormatType vertexFormatType)
     }
 }
 
-size_t GetVertexFormatTypeSize(VertexFormatType vertexFormatType)
+size_t GetVertexFormatSize(angle::FormatID vertexFormatID)
 {
-    switch (vertexFormatType)
+    switch (vertexFormatID)
     {
-        case VERTEX_FORMAT_SBYTE1:
-        case VERTEX_FORMAT_SBYTE1_NORM:
-        case VERTEX_FORMAT_UBYTE1:
-        case VERTEX_FORMAT_UBYTE1_NORM:
-        case VERTEX_FORMAT_SBYTE1_INT:
-        case VERTEX_FORMAT_UBYTE1_INT:
+        case angle::FormatID::R8_SSCALED:
+        case angle::FormatID::R8_SNORM:
+        case angle::FormatID::R8_USCALED:
+        case angle::FormatID::R8_UNORM:
+        case angle::FormatID::R8_SINT:
+        case angle::FormatID::R8_UINT:
             return 1;
 
-        case VERTEX_FORMAT_SBYTE2:
-        case VERTEX_FORMAT_SBYTE2_NORM:
-        case VERTEX_FORMAT_UBYTE2:
-        case VERTEX_FORMAT_UBYTE2_NORM:
-        case VERTEX_FORMAT_SBYTE2_INT:
-        case VERTEX_FORMAT_UBYTE2_INT:
-        case VERTEX_FORMAT_SSHORT1:
-        case VERTEX_FORMAT_SSHORT1_NORM:
-        case VERTEX_FORMAT_USHORT1:
-        case VERTEX_FORMAT_USHORT1_NORM:
-        case VERTEX_FORMAT_SSHORT1_INT:
-        case VERTEX_FORMAT_USHORT1_INT:
-        case VERTEX_FORMAT_HALF1:
+        case angle::FormatID::R8G8_SSCALED:
+        case angle::FormatID::R8G8_SNORM:
+        case angle::FormatID::R8G8_USCALED:
+        case angle::FormatID::R8G8_UNORM:
+        case angle::FormatID::R8G8_SINT:
+        case angle::FormatID::R8G8_UINT:
+        case angle::FormatID::R16_SSCALED:
+        case angle::FormatID::R16_SNORM:
+        case angle::FormatID::R16_USCALED:
+        case angle::FormatID::R16_UNORM:
+        case angle::FormatID::R16_SINT:
+        case angle::FormatID::R16_UINT:
+        case angle::FormatID::R16_FLOAT:
             return 2;
 
-        case VERTEX_FORMAT_SBYTE3:
-        case VERTEX_FORMAT_SBYTE3_NORM:
-        case VERTEX_FORMAT_UBYTE3:
-        case VERTEX_FORMAT_UBYTE3_NORM:
-        case VERTEX_FORMAT_SBYTE3_INT:
-        case VERTEX_FORMAT_UBYTE3_INT:
+        case angle::FormatID::R8G8B8_SSCALED:
+        case angle::FormatID::R8G8B8_SNORM:
+        case angle::FormatID::R8G8B8_USCALED:
+        case angle::FormatID::R8G8B8_UNORM:
+        case angle::FormatID::R8G8B8_SINT:
+        case angle::FormatID::R8G8B8_UINT:
             return 3;
 
-        case VERTEX_FORMAT_SBYTE4:
-        case VERTEX_FORMAT_SBYTE4_NORM:
-        case VERTEX_FORMAT_UBYTE4:
-        case VERTEX_FORMAT_UBYTE4_NORM:
-        case VERTEX_FORMAT_SBYTE4_INT:
-        case VERTEX_FORMAT_UBYTE4_INT:
-        case VERTEX_FORMAT_SSHORT2:
-        case VERTEX_FORMAT_SSHORT2_NORM:
-        case VERTEX_FORMAT_USHORT2:
-        case VERTEX_FORMAT_USHORT2_NORM:
-        case VERTEX_FORMAT_SSHORT2_INT:
-        case VERTEX_FORMAT_USHORT2_INT:
-        case VERTEX_FORMAT_SINT1:
-        case VERTEX_FORMAT_SINT1_NORM:
-        case VERTEX_FORMAT_UINT1:
-        case VERTEX_FORMAT_UINT1_NORM:
-        case VERTEX_FORMAT_SINT1_INT:
-        case VERTEX_FORMAT_UINT1_INT:
-        case VERTEX_FORMAT_HALF2:
-        case VERTEX_FORMAT_FIXED1:
-        case VERTEX_FORMAT_FLOAT1:
-        case VERTEX_FORMAT_SINT210:
-        case VERTEX_FORMAT_UINT210:
-        case VERTEX_FORMAT_SINT210_NORM:
-        case VERTEX_FORMAT_UINT210_NORM:
-        case VERTEX_FORMAT_SINT210_INT:
-        case VERTEX_FORMAT_UINT210_INT:
+        case angle::FormatID::R8G8B8A8_SSCALED:
+        case angle::FormatID::R8G8B8A8_SNORM:
+        case angle::FormatID::R8G8B8A8_USCALED:
+        case angle::FormatID::R8G8B8A8_UNORM:
+        case angle::FormatID::R8G8B8A8_SINT:
+        case angle::FormatID::R8G8B8A8_UINT:
+        case angle::FormatID::R16G16_SSCALED:
+        case angle::FormatID::R16G16_SNORM:
+        case angle::FormatID::R16G16_USCALED:
+        case angle::FormatID::R16G16_UNORM:
+        case angle::FormatID::R16G16_SINT:
+        case angle::FormatID::R16G16_UINT:
+        case angle::FormatID::R32_SSCALED:
+        case angle::FormatID::R32_SNORM:
+        case angle::FormatID::R32_USCALED:
+        case angle::FormatID::R32_UNORM:
+        case angle::FormatID::R32_SINT:
+        case angle::FormatID::R32_UINT:
+        case angle::FormatID::R16G16_FLOAT:
+        case angle::FormatID::R32_FIXED:
+        case angle::FormatID::R32_FLOAT:
+        case angle::FormatID::R10G10B10A2_SSCALED:
+        case angle::FormatID::R10G10B10A2_USCALED:
+        case angle::FormatID::R10G10B10A2_SNORM:
+        case angle::FormatID::R10G10B10A2_UNORM:
+        case angle::FormatID::R10G10B10A2_SINT:
+        case angle::FormatID::R10G10B10A2_UINT:
             return 4;
 
-        case VERTEX_FORMAT_SSHORT3:
-        case VERTEX_FORMAT_SSHORT3_NORM:
-        case VERTEX_FORMAT_USHORT3:
-        case VERTEX_FORMAT_USHORT3_NORM:
-        case VERTEX_FORMAT_SSHORT3_INT:
-        case VERTEX_FORMAT_USHORT3_INT:
-        case VERTEX_FORMAT_HALF3:
+        case angle::FormatID::R16G16B16_SSCALED:
+        case angle::FormatID::R16G16B16_SNORM:
+        case angle::FormatID::R16G16B16_USCALED:
+        case angle::FormatID::R16G16B16_UNORM:
+        case angle::FormatID::R16G16B16_SINT:
+        case angle::FormatID::R16G16B16_UINT:
+        case angle::FormatID::R16G16B16_FLOAT:
             return 6;
 
-        case VERTEX_FORMAT_SSHORT4:
-        case VERTEX_FORMAT_SSHORT4_NORM:
-        case VERTEX_FORMAT_USHORT4:
-        case VERTEX_FORMAT_USHORT4_NORM:
-        case VERTEX_FORMAT_SSHORT4_INT:
-        case VERTEX_FORMAT_USHORT4_INT:
-        case VERTEX_FORMAT_SINT2:
-        case VERTEX_FORMAT_SINT2_NORM:
-        case VERTEX_FORMAT_UINT2:
-        case VERTEX_FORMAT_UINT2_NORM:
-        case VERTEX_FORMAT_SINT2_INT:
-        case VERTEX_FORMAT_UINT2_INT:
-        case VERTEX_FORMAT_HALF4:
-        case VERTEX_FORMAT_FIXED2:
-        case VERTEX_FORMAT_FLOAT2:
+        case angle::FormatID::R16G16B16A16_SSCALED:
+        case angle::FormatID::R16G16B16A16_SNORM:
+        case angle::FormatID::R16G16B16A16_USCALED:
+        case angle::FormatID::R16G16B16A16_UNORM:
+        case angle::FormatID::R16G16B16A16_SINT:
+        case angle::FormatID::R16G16B16A16_UINT:
+        case angle::FormatID::R32G32_SSCALED:
+        case angle::FormatID::R32G32_SNORM:
+        case angle::FormatID::R32G32_USCALED:
+        case angle::FormatID::R32G32_UNORM:
+        case angle::FormatID::R32G32_SINT:
+        case angle::FormatID::R32G32_UINT:
+        case angle::FormatID::R16G16B16A16_FLOAT:
+        case angle::FormatID::R32G32_FIXED:
+        case angle::FormatID::R32G32_FLOAT:
             return 8;
 
-        case VERTEX_FORMAT_SINT3:
-        case VERTEX_FORMAT_SINT3_NORM:
-        case VERTEX_FORMAT_UINT3:
-        case VERTEX_FORMAT_UINT3_NORM:
-        case VERTEX_FORMAT_SINT3_INT:
-        case VERTEX_FORMAT_UINT3_INT:
-        case VERTEX_FORMAT_FIXED3:
-        case VERTEX_FORMAT_FLOAT3:
+        case angle::FormatID::R32G32B32_SSCALED:
+        case angle::FormatID::R32G32B32_SNORM:
+        case angle::FormatID::R32G32B32_USCALED:
+        case angle::FormatID::R32G32B32_UNORM:
+        case angle::FormatID::R32G32B32_SINT:
+        case angle::FormatID::R32G32B32_UINT:
+        case angle::FormatID::R32G32B32_FIXED:
+        case angle::FormatID::R32G32B32_FLOAT:
             return 12;
 
-        case VERTEX_FORMAT_SINT4:
-        case VERTEX_FORMAT_SINT4_NORM:
-        case VERTEX_FORMAT_UINT4:
-        case VERTEX_FORMAT_UINT4_NORM:
-        case VERTEX_FORMAT_SINT4_INT:
-        case VERTEX_FORMAT_UINT4_INT:
-        case VERTEX_FORMAT_FIXED4:
-        case VERTEX_FORMAT_FLOAT4:
+        case angle::FormatID::R32G32B32A32_SSCALED:
+        case angle::FormatID::R32G32B32A32_SNORM:
+        case angle::FormatID::R32G32B32A32_USCALED:
+        case angle::FormatID::R32G32B32A32_UNORM:
+        case angle::FormatID::R32G32B32A32_SINT:
+        case angle::FormatID::R32G32B32A32_UINT:
+        case angle::FormatID::R32G32B32A32_FIXED:
+        case angle::FormatID::R32G32B32A32_FLOAT:
             return 16;
 
-        case VERTEX_FORMAT_INVALID:
+        case angle::FormatID::NONE:
         default:
             UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN

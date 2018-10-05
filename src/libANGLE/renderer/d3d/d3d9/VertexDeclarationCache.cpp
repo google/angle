@@ -168,9 +168,10 @@ angle::Result VertexDeclarationCache::applyDeclaration(
                 mAppliedVBs[stream].offset = offset;
             }
 
-            gl::VertexFormatType vertexformatType =
-                gl::GetVertexFormatType(*attributes[i].attribute, GL_FLOAT);
-            const d3d9::VertexFormat &d3d9VertexInfo = d3d9::GetVertexFormatInfo(caps.DeclTypes, vertexformatType);
+            angle::FormatID vertexformatID =
+                gl::GetVertexFormatID(*attributes[i].attribute, GL_FLOAT);
+            const d3d9::VertexFormat &d3d9VertexInfo =
+                d3d9::GetVertexFormatInfo(caps.DeclTypes, vertexformatID);
 
             element->Stream = static_cast<WORD>(stream);
             element->Offset = 0;

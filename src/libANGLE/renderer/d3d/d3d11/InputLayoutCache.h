@@ -34,7 +34,7 @@ struct PackedAttributeLayout
 
     void addAttributeData(GLenum glType,
                           UINT semanticIndex,
-                          gl::VertexFormatType vertexFormatType,
+                          angle::FormatID vertexFormatID,
                           unsigned int divisor);
 
     bool operator==(const PackedAttributeLayout &other) const;

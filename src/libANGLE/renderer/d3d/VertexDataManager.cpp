@@ -86,10 +86,10 @@ bool DirectStoragePossible(const gl::Context *context,
     // TODO(jmadill): add VertexFormatCaps
     BufferFactoryD3D *factory = bufferD3D->getFactory();
 
-    gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
+    angle::FormatID vertexFormatID = gl::GetVertexFormatID(attrib);
 
     // CPU-converted vertex data must be converted (naturally).
-    if ((factory->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_CPU) != 0)
+    if ((factory->getVertexConversionType(vertexFormatID) & VERTEX_CONVERT_CPU) != 0)
     {
         return false;
     }

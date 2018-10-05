@@ -73,8 +73,7 @@ struct VertexFormat
     D3DDECLTYPE nativeFormat;
     GLenum componentType;
 };
-const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes,
-                                        gl::VertexFormatType vertexFormatType);
+const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, angle::FormatID vertexFormatID);
 
 struct TextureFormat
 {

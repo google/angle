@@ -3595,17 +3595,16 @@ bool Renderer11::getLUID(LUID *adapterLuid) const
     return true;
 }
 
-VertexConversionType Renderer11::getVertexConversionType(
-    gl::VertexFormatType vertexFormatType) const
+VertexConversionType Renderer11::getVertexConversionType(angle::FormatID vertexFormatID) const
 {
-    return d3d11::GetVertexFormatInfo(vertexFormatType, mRenderer11DeviceCaps.featureLevel)
+    return d3d11::GetVertexFormatInfo(vertexFormatID, mRenderer11DeviceCaps.featureLevel)
         .conversionType;
 }
 
-GLenum Renderer11::getVertexComponentType(gl::VertexFormatType vertexFormatType) const
+GLenum Renderer11::getVertexComponentType(angle::FormatID vertexFormatID) const
 {
     const auto &format =
-        d3d11::GetVertexFormatInfo(vertexFormatType, mRenderer11DeviceCaps.featureLevel);
+        d3d11::GetVertexFormatInfo(vertexFormatID, mRenderer11DeviceCaps.featureLevel);
     return d3d11::GetComponentType(format.nativeFormat);
 }
 
@@ -3637,10 +3636,10 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
 
     ASSERT(elementCount > 0);
 
-    gl::VertexFormatType formatType      = gl::GetVertexFormatType(attrib);
+    angle::FormatID formatID             = gl::GetVertexFormatID(attrib);
     const D3D_FEATURE_LEVEL featureLevel = mRenderer11DeviceCaps.featureLevel;
     const d3d11::VertexFormat &vertexFormatInfo =
-        d3d11::GetVertexFormatInfo(formatType, featureLevel);
+        d3d11::GetVertexFormatInfo(formatID, featureLevel);
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
         d3d11::GetDXGIFormatSizeInfo(vertexFormatInfo.nativeFormat);
     unsigned int elementSize = dxgiFormatInfo.pixelBytes;

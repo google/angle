@@ -73,7 +73,7 @@ PackedAttributeLayout::PackedAttributeLayout(const PackedAttributeLayout &other)
 
 void PackedAttributeLayout::addAttributeData(GLenum glType,
                                              UINT semanticIndex,
-                                             gl::VertexFormatType vertexFormatType,
+                                             angle::FormatID vertexFormatID,
                                              unsigned int divisor)
 {
     gl::AttributeType attribType = gl::GetAttributeType(glType);
@@ -81,13 +81,13 @@ void PackedAttributeLayout::addAttributeData(GLenum glType,
     PackedAttribute packedAttrib;
     packedAttrib.attribType       = static_cast<uint8_t>(attribType);
     packedAttrib.semanticIndex    = static_cast<uint8_t>(semanticIndex);
-    packedAttrib.vertexFormatType = static_cast<uint8_t>(vertexFormatType);
+    packedAttrib.vertexFormatType = static_cast<uint8_t>(vertexFormatID);
     packedAttrib.dummyPadding     = 0u;
     packedAttrib.divisor          = static_cast<uint32_t>(divisor);
 
     ASSERT(static_cast<gl::AttributeType>(packedAttrib.attribType) == attribType);
     ASSERT(static_cast<UINT>(packedAttrib.semanticIndex) == semanticIndex);
-    ASSERT(static_cast<gl::VertexFormatType>(packedAttrib.vertexFormatType) == vertexFormatType);
+    ASSERT(static_cast<angle::FormatID>(packedAttrib.vertexFormatType) == vertexFormatID);
     ASSERT(static_cast<unsigned int>(packedAttrib.divisor) == divisor);
 
     static_assert(sizeof(uint64_t) == sizeof(PackedAttribute),
@@ -165,9 +165,9 @@ angle::Result InputLayoutCache::getInputLayout(
 
         const auto &currentValue =
             state.getVertexAttribCurrentValue(static_cast<unsigned int>(attribIndex));
-        gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, currentValue.Type);
+        angle::FormatID vertexFormatID = gl::GetVertexFormatID(attrib, currentValue.Type);
 
-        layout.addAttributeData(glslElementType, d3dSemantic, vertexFormatType,
+        layout.addAttributeData(glslElementType, d3dSemantic, vertexFormatID,
                                 binding.getDivisor() * divisorMultiplier);
     }
 
@@ -220,9 +220,9 @@ angle::Result InputLayoutCache::createInputLayout(
         D3D11_INPUT_CLASSIFICATION inputClass =
             attrib.divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
 
-        const auto &vertexFormatType =
-            gl::GetVertexFormatType(*attrib.attribute, attrib.currentValueType);
-        const auto &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormatType, featureLevel);
+        angle::FormatID vertexFormatID =
+            gl::GetVertexFormatID(*attrib.attribute, attrib.currentValueType);
+        const auto &vertexFormatInfo = d3d11::GetVertexFormatInfo(vertexFormatID, featureLevel);
 
         auto *inputElement = &inputElements[inputElementCount];
 

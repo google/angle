@@ -162,7 +162,7 @@ class DynamicHLSL : angle::NonCopyable
                                  bool programUsesPointSize,
                                  std::ostringstream &hlslStream) const;
 
-    static void GenerateAttributeConversionHLSL(gl::VertexFormatType vertexFormatType,
+    static void GenerateAttributeConversionHLSL(angle::FormatID vertexFormatID,
                                                 const sh::ShaderVariable &shaderAttrib,
                                                 std::ostringstream &outStream);
 };
