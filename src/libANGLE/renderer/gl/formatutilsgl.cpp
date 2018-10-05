@@ -402,6 +402,11 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             // EXT_color_buffer_float require the sized formats to be renderable.
             result = internalFormat.sizedInternalFormat;
         }
+        else if (internalFormat.format == GL_RED_EXT || internalFormat.format == GL_RG_EXT)
+        {
+            // Workaround Adreno driver not supporting unsized EXT_texture_rg formats
+            result = internalFormat.sizedInternalFormat;
+        }
     }
 
     return result;
