@@ -1569,7 +1569,6 @@
 1941 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.geometry_shader = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d.rgba8i.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d.rgba8ui.* = FAIL
-2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d_array.rgba8.texture_swizzle.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d_array.rgba8i.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.2d_array.rgba8ui.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.basic.cube.rgba8.texture_swizzle.* = FAIL
@@ -1581,7 +1580,6 @@
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.offset.min_required_offset.2d_array.rgba8i.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.offset.implementation_offset.2d.rgba8ui.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.offset.implementation_offset.2d.rgba8i.* = FAIL
-2826 D3D11 : dEQP-GLES31.functional.texture.gather.offset.implementation_offset.2d_array.rgba8.texture_swizzle.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.offset.implementation_offset.2d_array.rgba8ui.* = FAIL
 2826 D3D11 : dEQP-GLES31.functional.texture.gather.offset.implementation_offset.2d_array.rgba8i.* = FAIL
 
