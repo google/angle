@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59f2781e_b15c9900",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-08T09:50:13Z",
+      "side": 1,
+      "message": "Bug: angleproject:2275",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 21
+      },
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac51a7f9_7fa0ffba",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-08T09:50:13Z",
+      "side": 1,
+      "message": "Can you move below code here so that you don\u0027t need new groups TextureSizeMS300/TexelFetchMS300?\n  DEFAULT METADATA {\"level\": \"ESSL3_BUILTINS\", \"op\": \"CallBuiltInFunction\", \"extension\": \"ARB_texture_multisample\"}\n    ivec2 textureSize(gsampler2DMS);\n    gvec4 texelFetch(gsampler2DMS, ivec2, int);",
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e49ca2f_1d8d5fcc",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-08T09:50:13Z",
+      "side": 1,
+      "message": "Is it a \u0027MUST\u0027?",
+      "range": {
+        "startLine": 385,
+        "startChar": 116,
+        "endLine": 385,
+        "endChar": 131
+      },
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "059124ba_a690be86",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-08T09:50:13Z",
+      "side": 1,
+      "message": "constexpr char kShaderString[]",
+      "range": {
+        "startLine": 351,
+        "startChar": 4,
+        "endLine": 351,
+        "endChar": 35
+      },
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c556ac8_89d7374c",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-08T09:50:13Z",
+      "side": 1,
+      "message": "Add a comment above each test.",
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32d8c7fb_da8e1805",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-08T09:50:13Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 376,
+        "startChar": 4,
+        "endLine": 376,
+        "endChar": 35
+      },
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
