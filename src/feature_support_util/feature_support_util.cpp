@@ -19,11 +19,18 @@
 #if defined(ANDROID)
 #include <android/log.h>
 
+// Define ANGLE_FEATURE_UTIL_LOG_VERBOSE if you want ALOGV to output
+// ANGLE_FEATURE_UTIL_LOG_VERBOSE is automatically defined when is_debug = true
+
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, "ANGLE", __VA_ARGS__)
 #define ALOGW(...) __android_log_print(ANDROID_LOG_WARN, "ANGLE", __VA_ARGS__)
 #define ALOGI(...) __android_log_print(ANDROID_LOG_INFO, "ANGLE", __VA_ARGS__)
 #define ALOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "ANGLE", __VA_ARGS__)
+#ifdef ANGLE_FEATURE_UTIL_LOG_VERBOSE
 #define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, "ANGLE", __VA_ARGS__)
+#else
+#define ALOGV(...) ((void)0)
+#endif
 #else  // defined(ANDROID)
 #define ALOGE(...) printf(__VA_ARGS__);
 #define ALOGW(...) printf(__VA_ARGS__);
@@ -191,8 +198,8 @@ class ListOf
         }
         else
         {
-            int nItems = mList.size();
-            ALOGV("%sListOf%s is has %d item(s):", prefix.c_str(), name.c_str(), nItems);
+            ALOGV("%sListOf%s is has %d item(s):", prefix.c_str(), name.c_str(),
+                  static_cast<int>(mList.size()));
             for (auto &it : mList)
             {
                 it.logItem();
@@ -751,8 +758,8 @@ class RuleList
         // Initialize the choice to the system-wide default (that should be set in the default
         // rule, but just in case, set it here too):
         bool appChoice = true;
-        int nRules     = mRuleList.size();
-        ALOGV("Checking scenario against %d ANGLE-for-Android rules:", nRules);
+        ALOGV("Checking scenario against %d ANGLE-for-Android rules:",
+              static_cast<int>(mRuleList.size()));
 
         for (auto &it : mRuleList)
         {
@@ -777,8 +784,8 @@ class RuleList
         // Initialize the answer to the system-wide default (that should be set in the default
         // rule, but just in case, set it here too):
         bool answer = false;
-        int nRules  = mRuleList.size();
-        ALOGV("Checking scenario against %d ANGLE-for-Android rules:", nRules);
+        ALOGV("Checking scenario against %d ANGLE-for-Android rules:",
+              static_cast<int>(mRuleList.size()));
 
         for (auto &it : mRuleList)
         {
@@ -876,8 +883,7 @@ class RuleList
     }
     void logRules()
     {
-        int nRules = mRuleList.size();
-        ALOGV("Showing %d ANGLE-for-Android rules:", nRules);
+        ALOGV("Showing %d ANGLE-for-Android rules:", static_cast<int>(mRuleList.size()));
         for (auto &it : mRuleList)
         {
             it.logRule();

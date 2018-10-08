@@ -229,6 +229,9 @@ config("angle_feature_support_util_config") {
     "src",
   ]
   defines = [ "LIBANGLE_UTIL_IMPLEMENTATION" ]
+  if (is_debug) {
+    defines += [ "ANGLE_FEATURE_UTIL_LOG_VERBOSE" ]
+  }
 }
 
 static_library("angle_feature_support_util") {
