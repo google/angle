@@ -377,7 +377,7 @@ void VertexArray::setElementArrayBuffer(const Context *context, Buffer *buffer)
     mDirtyBits.set(DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
 }
 
-gl::Error VertexArray::syncState(const Context *context)
+angle::Result VertexArray::syncState(const Context *context)
 {
     if (mDirtyBits.any())
     {
@@ -394,7 +394,7 @@ gl::Error VertexArray::syncState(const Context *context)
         memset(&mDirtyAttribBits, 0, sizeof(mDirtyAttribBits));
         memset(&mDirtyBindingBits, 0, sizeof(mDirtyBindingBits));
     }
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void VertexArray::onBindingChanged(const Context *context, int incr)

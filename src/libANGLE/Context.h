@@ -70,7 +70,7 @@ class ErrorSet : angle::NonCopyable
     explicit ErrorSet(Context *context);
     ~ErrorSet();
 
-    // TODO(jmadill): Remove const. http://anglebug.com/2378
+    // TODO(jmadill): Remove const. http://anglebug.com/2491
     void handleError(const Error &error) const;
     bool empty() const;
     GLenum popError();
@@ -84,7 +84,7 @@ class ErrorSet : angle::NonCopyable
   private:
     Context *mContext;
 
-    // TODO(jmadill): Remove mutable. http://anglebug.com/2378
+    // TODO(jmadill): Remove mutable. http://anglebug.com/2491
     mutable std::set<GLenum> mErrors;
 };
 
@@ -1554,7 +1554,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     int getProgramResourceLocationIndex(GLuint program, GLenum programInterface, const char *name);
 
     // Consumes the error.
-    // TODO(jmadill): Remove const. http://anglebug.com/2378
+    // TODO(jmadill): Remove const. http://anglebug.com/2491
     void handleError(const Error &error) const;
     void handleError(GLenum errorCode,
                      const char *message,
@@ -1679,13 +1679,13 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool noopDraw(PrimitiveMode mode, GLsizei count);
     bool noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount);
 
-    Error prepareForDraw(PrimitiveMode mode);
+    angle::Result prepareForDraw(PrimitiveMode mode);
     Error prepareForClear(GLbitfield mask);
     Error prepareForClearBuffer(GLenum buffer, GLint drawbuffer);
     Error syncState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
-    Error syncDirtyBits();
-    Error syncDirtyBits(const State::DirtyBits &bitMask);
-    Error syncDirtyObjects(const State::DirtyObjects &objectMask);
+    angle::Result syncDirtyBits();
+    angle::Result syncDirtyBits(const State::DirtyBits &bitMask);
+    angle::Result syncDirtyObjects(const State::DirtyObjects &objectMask);
     Error syncStateForReadPixels();
     Error syncStateForTexImage();
     Error syncStateForBlit();

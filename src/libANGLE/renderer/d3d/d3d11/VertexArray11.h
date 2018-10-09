@@ -27,10 +27,10 @@ class VertexArray11 : public VertexArrayImpl
 
     // Does not apply any state updates - these are done in syncStateForDraw which as access to
     // the DrawCallParams before a draw.
-    gl::Error syncState(const gl::Context *context,
-                        const gl::VertexArray::DirtyBits &dirtyBits,
-                        const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                        const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
+    angle::Result syncState(const gl::Context *context,
+                            const gl::VertexArray::DirtyBits &dirtyBits,
+                            const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                            const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
 
     // Applied buffer pointers are updated here.
     angle::Result syncStateForDraw(const gl::Context *context,

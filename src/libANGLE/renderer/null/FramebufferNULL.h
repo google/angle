@@ -65,8 +65,8 @@ class FramebufferNULL : public FramebufferImpl
 
     bool checkStatus(const gl::Context *context) const override;
 
-    gl::Error syncState(const gl::Context *context,
-                        const gl::Framebuffer::DirtyBits &dirtyBits) override;
+    angle::Result syncState(const gl::Context *context,
+                            const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     gl::Error getSamplePosition(const gl::Context *context,
                                 size_t index,

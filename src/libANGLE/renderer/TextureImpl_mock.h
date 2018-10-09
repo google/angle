@@ -102,10 +102,10 @@ class MockTextureImpl : public TextureImpl
     MOCK_METHOD1(releaseTexImage, gl::Error(const gl::Context *));
 
     MOCK_METHOD4(getAttachmentRenderTarget,
-                 gl::Error(const gl::Context *,
-                           GLenum,
-                           const gl::ImageIndex &,
-                           FramebufferAttachmentRenderTarget **));
+                 angle::Result(const gl::Context *,
+                               GLenum,
+                               const gl::ImageIndex &,
+                               FramebufferAttachmentRenderTarget **));
 
     MOCK_METHOD6(
         setStorageMultisample,
@@ -113,7 +113,7 @@ class MockTextureImpl : public TextureImpl
 
     MOCK_METHOD2(setBaseLevel, gl::Error(const gl::Context *, GLuint));
 
-    MOCK_METHOD2(syncState, gl::Error(const gl::Context *, const gl::Texture::DirtyBits &));
+    MOCK_METHOD2(syncState, angle::Result(const gl::Context *, const gl::Texture::DirtyBits &));
 
     MOCK_METHOD0(destructor, void());
 

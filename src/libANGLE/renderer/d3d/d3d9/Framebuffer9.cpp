@@ -398,11 +398,11 @@ gl::Error Framebuffer9::getSamplePosition(const gl::Context *context,
     return gl::InternalError() << "getSamplePosition is unsupported to d3d9.";
 }
 
-gl::Error Framebuffer9::syncState(const gl::Context *context,
-                                  const gl::Framebuffer::DirtyBits &dirtyBits)
+angle::Result Framebuffer9::syncState(const gl::Context *context,
+                                      const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     ANGLE_TRY(FramebufferD3D::syncState(context, dirtyBits));
     ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 }  // namespace rx

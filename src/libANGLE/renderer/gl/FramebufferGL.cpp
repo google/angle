@@ -619,13 +619,13 @@ bool FramebufferGL::checkStatus(const gl::Context *context) const
     return (status == GL_FRAMEBUFFER_COMPLETE);
 }
 
-gl::Error FramebufferGL::syncState(const gl::Context *context,
-                                   const Framebuffer::DirtyBits &dirtyBits)
+angle::Result FramebufferGL::syncState(const gl::Context *context,
+                                       const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     // Don't need to sync state for the default FBO.
     if (mIsDefault)
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     const FunctionsGL *functions = GetFunctionsGL(context);
@@ -720,7 +720,7 @@ gl::Error FramebufferGL::syncState(const gl::Context *context,
                                                                getState());
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 GLuint FramebufferGL::getFramebufferID() const

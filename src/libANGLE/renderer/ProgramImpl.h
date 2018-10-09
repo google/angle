@@ -127,17 +127,17 @@ class ProgramImpl : angle::NonCopyable
 
     const gl::ProgramState &getState() const { return mState; }
 
-    virtual gl::Error syncState(const gl::Context *context,
-                                const gl::Program::DirtyBits &dirtyBits);
+    virtual angle::Result syncState(const gl::Context *context,
+                                    const gl::Program::DirtyBits &dirtyBits);
 
   protected:
     const gl::ProgramState &mState;
 };
 
-inline gl::Error ProgramImpl::syncState(const gl::Context *context,
-                                        const gl::Program::DirtyBits &dirtyBits)
+inline angle::Result ProgramImpl::syncState(const gl::Context *context,
+                                            const gl::Program::DirtyBits &dirtyBits)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

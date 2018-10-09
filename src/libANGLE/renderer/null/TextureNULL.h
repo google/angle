@@ -86,8 +86,8 @@ class TextureNULL : public TextureImpl
     gl::Error bindTexImage(const gl::Context *context, egl::Surface *surface) override;
     gl::Error releaseTexImage(const gl::Context *context) override;
 
-    gl::Error syncState(const gl::Context *context,
-                        const gl::Texture::DirtyBits &dirtyBits) override;
+    angle::Result syncState(const gl::Context *context,
+                            const gl::Texture::DirtyBits &dirtyBits) override;
 
     gl::Error setStorageMultisample(const gl::Context *context,
                                     gl::TextureType type,
@@ -96,8 +96,8 @@ class TextureNULL : public TextureImpl
                                     const gl::Extents &size,
                                     bool fixedSampleLocations) override;
 
-    gl::Error initializeContents(const gl::Context *context,
-                                 const gl::ImageIndex &imageIndex) override;
+    angle::Result initializeContents(const gl::Context *context,
+                                     const gl::ImageIndex &imageIndex) override;
 };
 
 }  // namespace rx

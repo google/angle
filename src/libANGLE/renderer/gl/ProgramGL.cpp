@@ -1058,7 +1058,8 @@ void ProgramGL::linkResources(const gl::ProgramLinkedResources &resources)
     resources.atomicCounterBufferLinker.link(sizeMap);
 }
 
-gl::Error ProgramGL::syncState(const gl::Context *context, const gl::Program::DirtyBits &dirtyBits)
+angle::Result ProgramGL::syncState(const gl::Context *context,
+                                   const gl::Program::DirtyBits &dirtyBits)
 {
     for (size_t dirtyBit : dirtyBits)
     {
@@ -1066,6 +1067,6 @@ gl::Error ProgramGL::syncState(const gl::Context *context, const gl::Program::Di
         GLuint binding = static_cast<GLuint>(dirtyBit);
         setUniformBlockBinding(binding, mState.getUniformBlockBinding(binding));
     }
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 }  // namespace rx

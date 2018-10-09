@@ -83,8 +83,8 @@ class ProgramGL : public ProgramImpl
     void enableSideBySideRenderingPath() const;
     void enableLayeredRenderingPath(int baseViewIndex) const;
 
-    gl::Error syncState(const gl::Context *context,
-                        const gl::Program::DirtyBits &dirtyBits) override;
+    angle::Result syncState(const gl::Context *context,
+                            const gl::Program::DirtyBits &dirtyBits) override;
 
   private:
     void preLink();

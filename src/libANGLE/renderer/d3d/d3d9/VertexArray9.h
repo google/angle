@@ -23,10 +23,10 @@ class VertexArray9 : public VertexArrayImpl
   public:
     VertexArray9(const gl::VertexArrayState &data) : VertexArrayImpl(data) {}
 
-    gl::Error syncState(const gl::Context *context,
-                        const gl::VertexArray::DirtyBits &dirtyBits,
-                        const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                        const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
+    angle::Result syncState(const gl::Context *context,
+                            const gl::VertexArray::DirtyBits &dirtyBits,
+                            const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                            const gl::VertexArray::DirtyBindingBitsArray &bindingBits) override;
 
     ~VertexArray9() override {}
 
@@ -36,15 +36,16 @@ class VertexArray9 : public VertexArrayImpl
     Serial mCurrentStateSerial;
 };
 
-inline gl::Error VertexArray9::syncState(const gl::Context *context,
-                                         const gl::VertexArray::DirtyBits &dirtyBits,
-                                         const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                                         const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
+inline angle::Result VertexArray9::syncState(
+    const gl::Context *context,
+    const gl::VertexArray::DirtyBits &dirtyBits,
+    const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+    const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
 {
     ASSERT(dirtyBits.any());
     Renderer9 *renderer = GetImplAs<Context9>(context)->getRenderer();
     mCurrentStateSerial = renderer->generateSerial();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 }  // namespace rx
 

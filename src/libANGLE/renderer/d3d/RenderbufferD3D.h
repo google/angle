@@ -40,14 +40,14 @@ class RenderbufferD3D : public RenderbufferImpl
                                     size_t height) override;
     gl::Error setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) override;
 
-    gl::Error getRenderTarget(const gl::Context *context, RenderTargetD3D **outRenderTarget);
-    gl::Error getAttachmentRenderTarget(const gl::Context *context,
-                                        GLenum binding,
-                                        const gl::ImageIndex &imageIndex,
-                                        FramebufferAttachmentRenderTarget **rtOut) override;
+    angle::Result getRenderTarget(const gl::Context *context, RenderTargetD3D **outRenderTarget);
+    angle::Result getAttachmentRenderTarget(const gl::Context *context,
+                                            GLenum binding,
+                                            const gl::ImageIndex &imageIndex,
+                                            FramebufferAttachmentRenderTarget **rtOut) override;
 
-    gl::Error initializeContents(const gl::Context *context,
-                                 const gl::ImageIndex &imageIndex) override;
+    angle::Result initializeContents(const gl::Context *context,
+                                     const gl::ImageIndex &imageIndex) override;
 
   private:
     RendererD3D *mRenderer;

@@ -368,9 +368,9 @@ ANGLE_INLINE void State::unsetActiveTextures(ActiveTextureMask textureMask)
     }
 }
 
-ANGLE_INLINE Error State::updateActiveTexture(const Context *context,
-                                              size_t textureIndex,
-                                              Texture *texture)
+ANGLE_INLINE angle::Result State::updateActiveTexture(const Context *context,
+                                                      size_t textureIndex,
+                                                      Texture *texture)
 {
     const Sampler *sampler = mSamplers[textureIndex].get();
 
@@ -378,7 +378,7 @@ ANGLE_INLINE Error State::updateActiveTexture(const Context *context,
     {
         mActiveTexturesCache[textureIndex] = nullptr;
         mCompleteTextureBindings[textureIndex].bind(nullptr);
-        return NoError();
+        return angle::Result::Continue();
     }
 
     mCompleteTextureBindings[textureIndex].bind(texture->getSubject());
@@ -386,7 +386,7 @@ ANGLE_INLINE Error State::updateActiveTexture(const Context *context,
     if (!texture->isSamplerComplete(context, sampler))
     {
         mActiveTexturesCache[textureIndex] = nullptr;
-        return NoError();
+        return angle::Result::Continue();
     }
 
     mActiveTexturesCache[textureIndex] = texture;
@@ -401,7 +401,7 @@ ANGLE_INLINE Error State::updateActiveTexture(const Context *context,
         mCachedTexturesInitState = InitState::MayNeedInit;
     }
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 const RasterizerState &State::getRasterizerState() const
@@ -1383,7 +1383,7 @@ void State::setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-Error State::setProgram(const Context *context, Program *newProgram)
+angle::Result State::setProgram(const Context *context, Program *newProgram)
 {
     if (mProgram != newProgram)
     {
@@ -1407,7 +1407,7 @@ Error State::setProgram(const Context *context, Program *newProgram)
         mDirtyBits.set(DIRTY_BIT_PROGRAM_BINDING);
     }
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void State::setTransformFeedbackBinding(const Context *context,
@@ -2721,7 +2721,7 @@ void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
 }
 
-Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
+angle::Result State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
 {
     const DirtyObjects &dirtyObjects = mDirtyObjects & bitset;
     for (auto dirtyObject : dirtyObjects)
@@ -2757,7 +2757,7 @@ Error State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset
     }
 
     mDirtyObjects &= ~dirtyObjects;
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void State::syncSamplers(const Context *context)
@@ -2778,12 +2778,12 @@ void State::syncSamplers(const Context *context)
     mDirtySamplers.reset();
 }
 
-Error State::syncProgramTextures(const Context *context)
+angle::Result State::syncProgramTextures(const Context *context)
 {
     // TODO(jmadill): Fine-grained updates.
     if (!mProgram)
     {
-        return NoError();
+        return angle::Result::Continue();
     }
 
     ASSERT(mDirtyObjects[DIRTY_OBJECT_PROGRAM_TEXTURES]);
@@ -2837,10 +2837,10 @@ Error State::syncProgramTextures(const Context *context)
         }
     }
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error State::syncDirtyObject(const Context *context, GLenum target)
+angle::Result State::syncDirtyObject(const Context *context, GLenum target)
 {
     DirtyObjects localSet;
 
@@ -2904,7 +2904,7 @@ void State::setObjectDirty(GLenum target)
     }
 }
 
-Error State::onProgramExecutableChange(const Context *context, Program *program)
+angle::Result State::onProgramExecutableChange(const Context *context, Program *program)
 {
     // OpenGL Spec:
     // "If LinkProgram or ProgramBinary successfully re-links a program object
@@ -2946,7 +2946,7 @@ Error State::onProgramExecutableChange(const Context *context, Program *program)
         }
     }
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void State::setSamplerDirty(size_t samplerIndex)
@@ -2998,13 +2998,13 @@ void State::onUniformBufferStateChange(size_t uniformBufferIndex)
     mDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
 }
 
-Error State::clearUnclearedActiveTextures(const Context *context)
+angle::Result State::clearUnclearedActiveTextures(const Context *context)
 {
     ASSERT(mRobustResourceInit);
     ASSERT(!mDirtyObjects[DIRTY_OBJECT_PROGRAM_TEXTURES]);
 
     if (!mProgram)
-        return NoError();
+        return angle::Result::Continue();
 
     if (mCachedTexturesInitState != InitState::Initialized)
     {
@@ -3030,7 +3030,7 @@ Error State::clearUnclearedActiveTextures(const Context *context)
         }
         mCachedImageTexturesInitState = InitState::Initialized;
     }
-    return NoError();
+    return angle::Result::Continue();
 }
 
 AttributesMask State::getAndResetDirtyCurrentValues() const

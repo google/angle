@@ -44,10 +44,10 @@ gl::Error RenderbufferNULL::setStorageEGLImageTarget(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error RenderbufferNULL::initializeContents(const gl::Context *context,
-                                               const gl::ImageIndex &imageIndex)
+angle::Result RenderbufferNULL::initializeContents(const gl::Context *context,
+                                                   const gl::ImageIndex &imageIndex)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

@@ -1133,11 +1133,12 @@ gl::Error TextureGL::setEGLImageTarget(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error TextureGL::syncState(const gl::Context *context, const gl::Texture::DirtyBits &dirtyBits)
+angle::Result TextureGL::syncState(const gl::Context *context,
+                                   const gl::Texture::DirtyBits &dirtyBits)
 {
     if (dirtyBits.none() && mLocalDirtyBits.none())
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     const FunctionsGL *functions = GetFunctionsGL(context);
@@ -1266,7 +1267,7 @@ gl::Error TextureGL::syncState(const gl::Context *context, const gl::Texture::Di
     }
 
     mLocalDirtyBits.reset();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 bool TextureGL::hasAnyDirtyBit() const
@@ -1538,8 +1539,8 @@ gl::TextureType TextureGL::getType() const
     return mState.mType;
 }
 
-gl::Error TextureGL::initializeContents(const gl::Context *context,
-                                        const gl::ImageIndex &imageIndex)
+angle::Result TextureGL::initializeContents(const gl::Context *context,
+                                            const gl::ImageIndex &imageIndex)
 {
     ContextGL *contextGL             = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions     = GetFunctionsGL(context);
@@ -1559,7 +1560,7 @@ gl::Error TextureGL::initializeContents(const gl::Context *context,
                                                   imageIndex, &clearSucceeded));
         if (clearSucceeded)
         {
-            return gl::NoError();
+            return angle::Result::Continue();
         }
     }
 
@@ -1632,7 +1633,7 @@ gl::Error TextureGL::initializeContents(const gl::Context *context,
         }
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

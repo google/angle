@@ -89,8 +89,8 @@ gl::Error RenderbufferD3D::setStorageEGLImageTarget(const gl::Context *context, 
     return gl::NoError();
 }
 
-gl::Error RenderbufferD3D::getRenderTarget(const gl::Context *context,
-                                           RenderTargetD3D **outRenderTarget)
+angle::Result RenderbufferD3D::getRenderTarget(const gl::Context *context,
+                                               RenderTargetD3D **outRenderTarget)
 {
     if (mImage)
     {
@@ -99,20 +99,20 @@ gl::Error RenderbufferD3D::getRenderTarget(const gl::Context *context,
     else
     {
         *outRenderTarget = mRenderTarget;
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 }
 
-gl::Error RenderbufferD3D::getAttachmentRenderTarget(const gl::Context *context,
-                                                     GLenum /*binding*/,
-                                                     const gl::ImageIndex & /*imageIndex*/,
-                                                     FramebufferAttachmentRenderTarget **rtOut)
+angle::Result RenderbufferD3D::getAttachmentRenderTarget(const gl::Context *context,
+                                                         GLenum binding,
+                                                         const gl::ImageIndex &imageIndex,
+                                                         FramebufferAttachmentRenderTarget **rtOut)
 {
     return getRenderTarget(context, reinterpret_cast<RenderTargetD3D **>(rtOut));
 }
 
-gl::Error RenderbufferD3D::initializeContents(const gl::Context *context,
-                                              const gl::ImageIndex &imageIndex)
+angle::Result RenderbufferD3D::initializeContents(const gl::Context *context,
+                                                  const gl::ImageIndex &imageIndex)
 {
     RenderTargetD3D *renderTarget = nullptr;
     ANGLE_TRY(getRenderTarget(context, &renderTarget));

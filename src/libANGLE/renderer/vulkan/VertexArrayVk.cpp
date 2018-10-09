@@ -229,10 +229,10 @@ void VertexArrayVk::ensureConversionReleased(RendererVk *renderer, size_t attrib
                                   bindings[attribs[INDEX].bindingIndex], INDEX)); \
         break;
 
-gl::Error VertexArrayVk::syncState(const gl::Context *context,
-                                   const gl::VertexArray::DirtyBits &dirtyBits,
-                                   const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                                   const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
+angle::Result VertexArrayVk::syncState(const gl::Context *context,
+                                       const gl::VertexArray::DirtyBits &dirtyBits,
+                                       const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                                       const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
 {
     ASSERT(dirtyBits.any());
 
@@ -294,7 +294,7 @@ gl::Error VertexArrayVk::syncState(const gl::Context *context,
         contextVk->invalidateCurrentPipeline();
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,

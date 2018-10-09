@@ -1522,12 +1522,12 @@ GLuint Texture::getId() const
     return id();
 }
 
-Error Texture::syncState(const Context *context)
+angle::Result Texture::syncState(const Context *context)
 {
     ASSERT(hasAnyDirtyBit());
     ANGLE_TRY(mTexture->syncState(context, mDirtyBits));
     mDirtyBits.reset();
-    return NoError();
+    return angle::Result::Continue();
 }
 
 rx::FramebufferAttachmentObjectImpl *Texture::getAttachmentImpl() const
@@ -1563,11 +1563,11 @@ void Texture::invalidateCompletenessCache() const
     mCompletenessCache.context = 0;
 }
 
-Error Texture::ensureInitialized(const Context *context)
+angle::Result Texture::ensureInitialized(const Context *context)
 {
     if (!context->isRobustResourceInitEnabled() || mState.mInitState == InitState::Initialized)
     {
-        return NoError();
+        return angle::Result::Continue();
     }
 
     bool anyDirty = false;
@@ -1594,7 +1594,7 @@ Error Texture::ensureInitialized(const Context *context)
     }
     mState.mInitState = InitState::Initialized;
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 InitState Texture::initState(const ImageIndex &imageIndex) const

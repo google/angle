@@ -470,10 +470,10 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-gl::Error ContextVk::drawArrays(const gl::Context *context,
-                                gl::PrimitiveMode mode,
-                                GLint first,
-                                GLsizei count)
+angle::Result ContextVk::drawArrays(const gl::Context *context,
+                                    gl::PrimitiveMode mode,
+                                    GLint first,
+                                    GLsizei count)
 {
     const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
 
@@ -491,7 +491,7 @@ gl::Error ContextVk::drawArrays(const gl::Context *context,
         commandBuffer->draw(clampedVertexCount, 1, drawCallParams.firstVertex(), 0);
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error ContextVk::drawArraysInstanced(const gl::Context *context,
@@ -663,7 +663,8 @@ void ContextVk::updateScissor(const gl::State &glState) const
     }
 }
 
-gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
+angle::Result ContextVk::syncState(const gl::Context *context,
+                                   const gl::State::DirtyBits &dirtyBits)
 {
     if (dirtyBits.any())
     {
@@ -896,7 +897,7 @@ gl::Error ContextVk::syncState(const gl::Context *context, const gl::State::Dirt
         }
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 GLint ContextVk::getGPUDisjoint()

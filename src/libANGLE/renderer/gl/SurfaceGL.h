@@ -24,8 +24,8 @@ class SurfaceGL : public SurfaceImpl
                                               const gl::FramebufferState &data) override;
     egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) override;
 
-    gl::Error initializeContents(const gl::Context *context,
-                                 const gl::ImageIndex &imageIndex) override;
+    angle::Result initializeContents(const gl::Context *context,
+                                     const gl::ImageIndex &imageIndex) override;
 
     virtual egl::Error makeCurrent() = 0;
     virtual egl::Error unMakeCurrent();

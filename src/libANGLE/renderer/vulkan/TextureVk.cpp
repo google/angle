@@ -888,10 +888,10 @@ gl::Error TextureVk::releaseTexImage(const gl::Context *context)
     return gl::InternalError();
 }
 
-gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
-                                               GLenum binding,
-                                               const gl::ImageIndex &imageIndex,
-                                               FramebufferAttachmentRenderTarget **rtOut)
+angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
+                                                   GLenum binding,
+                                                   const gl::ImageIndex &imageIndex,
+                                                   FramebufferAttachmentRenderTarget **rtOut)
 {
     // Non-zero mip level attachments are an ES 3.0 feature.
     ASSERT(imageIndex.getLevelIndex() == 0);
@@ -912,7 +912,7 @@ gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
             UNREACHABLE();
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk)
@@ -959,11 +959,12 @@ angle::Result TextureVk::initCubeMapRenderTargets(ContextVk *contextVk)
     return angle::Result::Continue();
 }
 
-gl::Error TextureVk::syncState(const gl::Context *context, const gl::Texture::DirtyBits &dirtyBits)
+angle::Result TextureVk::syncState(const gl::Context *context,
+                                   const gl::Texture::DirtyBits &dirtyBits)
 {
     if (dirtyBits.none() && mSampler.valid())
     {
-        return gl::NoError();
+        return angle::Result::Continue();
     }
 
     ContextVk *contextVk = vk::GetImpl(context);
@@ -1009,11 +1010,11 @@ gl::Error TextureVk::setStorageMultisample(const gl::Context *context,
     return gl::InternalError() << "setStorageMultisample is unimplemented.";
 }
 
-gl::Error TextureVk::initializeContents(const gl::Context *context,
-                                        const gl::ImageIndex &imageIndex)
+angle::Result TextureVk::initializeContents(const gl::Context *context,
+                                            const gl::ImageIndex &imageIndex)
 {
     UNIMPLEMENTED();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 const vk::ImageView &TextureVk::getImageView() const

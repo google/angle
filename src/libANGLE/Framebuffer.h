@@ -328,7 +328,7 @@ class Framebuffer final : public angle::ObserverInterface,
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
-    Error syncState(const Context *context);
+    angle::Result syncState(const Context *context);
 
     // Observer implementation
     void onSubjectStateChange(const Context *context,
@@ -344,7 +344,7 @@ class Framebuffer final : public angle::ObserverInterface,
     Error ensureClearBufferAttachmentsInitialized(const Context *context,
                                                   GLenum buffer,
                                                   GLint drawbuffer);
-    Error ensureDrawAttachmentsInitialized(const Context *context);
+    angle::Result ensureDrawAttachmentsInitialized(const Context *context);
     Error ensureReadAttachmentInitialized(const Context *context, GLbitfield blitMask);
     Box getDimensions() const;
 

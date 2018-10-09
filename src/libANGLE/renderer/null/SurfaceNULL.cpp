@@ -99,10 +99,10 @@ EGLint SurfaceNULL::getSwapBehavior() const
     return EGL_BUFFER_PRESERVED;
 }
 
-gl::Error SurfaceNULL::initializeContents(const gl::Context *context,
-                                          const gl::ImageIndex &imageIndex)
+angle::Result SurfaceNULL::initializeContents(const gl::Context *context,
+                                              const gl::ImageIndex &imageIndex)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

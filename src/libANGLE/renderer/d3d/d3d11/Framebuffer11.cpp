@@ -379,8 +379,8 @@ GLenum Framebuffer11::getRenderTargetImplementationFormat(RenderTargetD3D *rende
     return renderTarget11->getFormatSet().format().fboImplementationInternalFormat;
 }
 
-gl::Error Framebuffer11::syncState(const gl::Context *context,
-                                   const gl::Framebuffer::DirtyBits &dirtyBits)
+angle::Result Framebuffer11::syncState(const gl::Context *context,
+                                       const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
     ANGLE_TRY(FramebufferD3D::syncState(context, dirtyBits));
@@ -394,7 +394,7 @@ gl::Error Framebuffer11::syncState(const gl::Context *context,
         mRenderer->getStateManager()->invalidateViewport(context);
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error Framebuffer11::getSamplePosition(const gl::Context *context,

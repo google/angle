@@ -240,10 +240,10 @@ gl::Error Context11::finish(const gl::Context *context)
     return mRenderer->finish(this);
 }
 
-gl::Error Context11::drawArrays(const gl::Context *context,
-                                gl::PrimitiveMode mode,
-                                GLint first,
-                                GLsizei count)
+angle::Result Context11::drawArrays(const gl::Context *context,
+                                    gl::PrimitiveMode mode,
+                                    GLint first,
+                                    GLsizei count)
 {
     const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
     ASSERT(!drawCallParams.isDrawElements() && !drawCallParams.isDrawIndirect());
@@ -409,10 +409,11 @@ void Context11::popDebugGroup()
     popGroupMarker();
 }
 
-gl::Error Context11::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
+angle::Result Context11::syncState(const gl::Context *context,
+                                   const gl::State::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->syncState(context, dirtyBits);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 GLint Context11::getGPUDisjoint()

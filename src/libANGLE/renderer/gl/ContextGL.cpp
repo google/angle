@@ -170,10 +170,10 @@ gl::Error ContextGL::finish(const gl::Context *context)
     return mRenderer->finish();
 }
 
-gl::Error ContextGL::drawArrays(const gl::Context *context,
-                                gl::PrimitiveMode mode,
-                                GLint first,
-                                GLsizei count)
+angle::Result ContextGL::drawArrays(const gl::Context *context,
+                                    gl::PrimitiveMode mode,
+                                    GLint first,
+                                    GLsizei count)
 {
     return mRenderer->drawArrays(context, mode, first, count);
 }
@@ -366,10 +366,11 @@ void ContextGL::popDebugGroup()
     mRenderer->popDebugGroup();
 }
 
-gl::Error ContextGL::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
+angle::Result ContextGL::syncState(const gl::Context *context,
+                                   const gl::State::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->syncState(context, dirtyBits);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 GLint ContextGL::getGPUDisjoint()

@@ -216,10 +216,11 @@ EGLint OffscreenSurfaceVk::getSwapBehavior() const
     return EGL_BUFFER_PRESERVED;
 }
 
-gl::Error OffscreenSurfaceVk::getAttachmentRenderTarget(const gl::Context * /*context*/,
-                                                        GLenum binding,
-                                                        const gl::ImageIndex & /*imageIndex*/,
-                                                        FramebufferAttachmentRenderTarget **rtOut)
+angle::Result OffscreenSurfaceVk::getAttachmentRenderTarget(
+    const gl::Context *context,
+    GLenum binding,
+    const gl::ImageIndex &imageIndex,
+    FramebufferAttachmentRenderTarget **rtOut)
 {
     if (binding == GL_BACK)
     {
@@ -231,14 +232,14 @@ gl::Error OffscreenSurfaceVk::getAttachmentRenderTarget(const gl::Context * /*co
         *rtOut = &mDepthStencilAttachment.renderTarget;
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error OffscreenSurfaceVk::initializeContents(const gl::Context *context,
-                                                 const gl::ImageIndex &imageIndex)
+angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
+                                                     const gl::ImageIndex &imageIndex)
 {
     UNIMPLEMENTED();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 WindowSurfaceVk::SwapchainImage::SwapchainImage()  = default;
@@ -672,10 +673,10 @@ EGLint WindowSurfaceVk::getSwapBehavior() const
     return EGL_BUFFER_DESTROYED;
 }
 
-gl::Error WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context * /*context*/,
-                                                     GLenum binding,
-                                                     const gl::ImageIndex & /*target*/,
-                                                     FramebufferAttachmentRenderTarget **rtOut)
+angle::Result WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context *context,
+                                                         GLenum binding,
+                                                         const gl::ImageIndex &imageIndex,
+                                                         FramebufferAttachmentRenderTarget **rtOut)
 {
     if (binding == GL_BACK)
     {
@@ -687,7 +688,7 @@ gl::Error WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context * /*conte
         *rtOut = &mDepthStencilRenderTarget;
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result WindowSurfaceVk::getCurrentFramebuffer(vk::Context *context,
@@ -728,11 +729,11 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(vk::Context *context,
     return angle::Result::Continue();
 }
 
-gl::Error WindowSurfaceVk::initializeContents(const gl::Context *context,
-                                              const gl::ImageIndex &imageIndex)
+angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
+                                                  const gl::ImageIndex &imageIndex)
 {
     UNIMPLEMENTED();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

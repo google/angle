@@ -134,12 +134,12 @@ class FramebufferAttachment final
     const egl::Surface *getSurface() const;
     FramebufferAttachmentObject *getResource() const;
     InitState initState() const;
-    Error initializeContents(const Context *context);
+    angle::Result initializeContents(const Context *context);
     void setInitState(InitState initState) const;
 
     // "T" must be static_castable from FramebufferAttachmentRenderTarget
     template <typename T>
-    gl::Error getRenderTarget(const Context *context, T **rtOut) const
+    angle::Result getRenderTarget(const Context *context, T **rtOut) const
     {
         static_assert(std::is_base_of<rx::FramebufferAttachmentRenderTarget, T>(),
                       "Invalid RenderTarget class.");
@@ -157,8 +157,8 @@ class FramebufferAttachment final
     static const GLint kDefaultViewportOffsets[2];
 
   private:
-    gl::Error getRenderTargetImpl(const Context *context,
-                                  rx::FramebufferAttachmentRenderTarget **rtOut) const;
+    angle::Result getRenderTargetImpl(const Context *context,
+                                      rx::FramebufferAttachmentRenderTarget **rtOut) const;
 
     // A framebuffer attachment points to one of three types of resources: Renderbuffers,
     // Textures and egl::Surface. The "Target" struct indicates which part of the
@@ -213,12 +213,12 @@ class FramebufferAttachmentObject
     virtual InitState initState(const ImageIndex &imageIndex) const              = 0;
     virtual void setInitState(const ImageIndex &imageIndex, InitState initState) = 0;
 
-    Error getAttachmentRenderTarget(const Context *context,
-                                    GLenum binding,
-                                    const ImageIndex &imageIndex,
-                                    rx::FramebufferAttachmentRenderTarget **rtOut) const;
+    angle::Result getAttachmentRenderTarget(const Context *context,
+                                            GLenum binding,
+                                            const ImageIndex &imageIndex,
+                                            rx::FramebufferAttachmentRenderTarget **rtOut) const;
 
-    Error initializeContents(const Context *context, const ImageIndex &imageIndex);
+    angle::Result initializeContents(const Context *context, const ImageIndex &imageIndex);
 
     void onStorageChange(const gl::Context *context) const;
     angle::Subject *getSubject() const { return getAttachmentImpl(); }
@@ -245,7 +245,7 @@ inline GLsizei FramebufferAttachment::getSamples() const
     return mResource->getAttachmentSamples(mTarget.textureIndex());
 }
 
-inline gl::Error FramebufferAttachment::getRenderTargetImpl(
+inline angle::Result FramebufferAttachment::getRenderTargetImpl(
     const Context *context,
     rx::FramebufferAttachmentRenderTarget **rtOut) const
 {

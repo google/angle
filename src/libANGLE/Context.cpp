@@ -3455,7 +3455,7 @@ bool Context::noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei insta
     return (instanceCount == 0) || noopDraw(mode, count);
 }
 
-Error Context::prepareForDraw(PrimitiveMode mode)
+angle::Result Context::prepareForDraw(PrimitiveMode mode)
 {
     if (mGLES1Renderer)
     {
@@ -3471,7 +3471,7 @@ Error Context::prepareForDraw(PrimitiveMode mode)
     }
 
     ANGLE_TRY(syncDirtyBits());
-    return NoError();
+    return angle::Result::Continue();
 }
 
 Error Context::prepareForClear(GLbitfield mask)
@@ -3498,23 +3498,23 @@ Error Context::syncState(const State::DirtyBits &bitMask, const State::DirtyObje
     return NoError();
 }
 
-Error Context::syncDirtyBits()
+angle::Result Context::syncDirtyBits()
 {
     const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
     ANGLE_TRY(mImplementation->syncState(this, dirtyBits));
     mGLState.clearDirtyBits();
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error Context::syncDirtyBits(const State::DirtyBits &bitMask)
+angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
 {
     const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
     ANGLE_TRY(mImplementation->syncState(this, dirtyBits));
     mGLState.clearDirtyBits(dirtyBits);
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error Context::syncDirtyObjects(const State::DirtyObjects &objectMask)
+angle::Result Context::syncDirtyObjects(const State::DirtyObjects &objectMask)
 {
     return mGLState.syncDirtyObjects(this, objectMask);
 }

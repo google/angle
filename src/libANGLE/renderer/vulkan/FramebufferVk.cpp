@@ -707,8 +707,8 @@ bool FramebufferVk::checkStatus(const gl::Context *context) const
     return true;
 }
 
-gl::Error FramebufferVk::syncState(const gl::Context *context,
-                                   const gl::Framebuffer::DirtyBits &dirtyBits)
+angle::Result FramebufferVk::syncState(const gl::Context *context,
+                                       const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
@@ -776,7 +776,7 @@ gl::Error FramebufferVk::syncState(const gl::Context *context,
 
     contextVk->invalidateCurrentPipeline();
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 const vk::RenderPassDesc &FramebufferVk::getRenderPassDesc()

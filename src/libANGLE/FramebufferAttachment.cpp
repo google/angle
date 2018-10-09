@@ -323,12 +323,12 @@ InitState FramebufferAttachment::initState() const
     return mResource ? mResource->initState(mTarget.textureIndex()) : InitState::Initialized;
 }
 
-Error FramebufferAttachment::initializeContents(const Context *context)
+angle::Result FramebufferAttachment::initializeContents(const Context *context)
 {
     ASSERT(mResource);
     ANGLE_TRY(mResource->initializeContents(context, mTarget.textureIndex()));
     setInitState(InitState::Initialized);
-    return NoError();
+    return angle::Result::Continue();
 }
 
 void FramebufferAttachment::setInitState(InitState initState) const
@@ -347,7 +347,7 @@ FramebufferAttachmentObject::~FramebufferAttachmentObject()
 {
 }
 
-Error FramebufferAttachmentObject::getAttachmentRenderTarget(
+angle::Result FramebufferAttachmentObject::getAttachmentRenderTarget(
     const Context *context,
     GLenum binding,
     const ImageIndex &imageIndex,
@@ -361,8 +361,8 @@ void FramebufferAttachmentObject::onStorageChange(const gl::Context *context) co
     return getAttachmentImpl()->onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
 }
 
-Error FramebufferAttachmentObject::initializeContents(const Context *context,
-                                                      const ImageIndex &imageIndex)
+angle::Result FramebufferAttachmentObject::initializeContents(const Context *context,
+                                                              const ImageIndex &imageIndex)
 {
     ASSERT(context->isRobustResourceInitEnabled());
 

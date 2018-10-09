@@ -188,10 +188,10 @@ bool FramebufferNULL::checkStatus(const gl::Context *context) const
     return true;
 }
 
-gl::Error FramebufferNULL::syncState(const gl::Context *context,
-                                     const gl::Framebuffer::DirtyBits &dirtyBits)
+angle::Result FramebufferNULL::syncState(const gl::Context *context,
+                                         const gl::Framebuffer::DirtyBits &dirtyBits)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error FramebufferNULL::getSamplePosition(const gl::Context *context,

@@ -118,21 +118,21 @@ gl::Error RenderbufferVk::setStorageEGLImageTarget(const gl::Context *context, e
     return gl::InternalError();
 }
 
-gl::Error RenderbufferVk::getAttachmentRenderTarget(const gl::Context * /*context*/,
-                                                    GLenum /*binding*/,
-                                                    const gl::ImageIndex & /*imageIndex*/,
-                                                    FramebufferAttachmentRenderTarget **rtOut)
+angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,
+                                                        GLenum binding,
+                                                        const gl::ImageIndex &imageIndex,
+                                                        FramebufferAttachmentRenderTarget **rtOut)
 {
     ASSERT(mImage.valid());
     *rtOut = &mRenderTarget;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error RenderbufferVk::initializeContents(const gl::Context *context,
-                                             const gl::ImageIndex &imageIndex)
+angle::Result RenderbufferVk::initializeContents(const gl::Context *context,
+                                                 const gl::ImageIndex &imageIndex)
 {
     UNIMPLEMENTED();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

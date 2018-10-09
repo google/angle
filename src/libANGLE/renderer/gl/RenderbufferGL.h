@@ -46,8 +46,8 @@ class RenderbufferGL : public RenderbufferImpl
                                     size_t height) override;
     gl::Error setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) override;
 
-    gl::Error initializeContents(const gl::Context *context,
-                                 const gl::ImageIndex &imageIndex) override;
+    angle::Result initializeContents(const gl::Context *context,
+                                     const gl::ImageIndex &imageIndex) override;
 
     GLuint getRenderbufferID() const;
     GLenum getNativeInternalFormat() const;

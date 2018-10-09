@@ -146,10 +146,10 @@ gl::Error Context9::finish(const gl::Context *context)
     return mRenderer->finish(context);
 }
 
-gl::Error Context9::drawArrays(const gl::Context *context,
-                               gl::PrimitiveMode mode,
-                               GLint first,
-                               GLsizei count)
+angle::Result Context9::drawArrays(const gl::Context *context,
+                                   gl::PrimitiveMode mode,
+                                   GLint first,
+                                   GLsizei count)
 {
     return mRenderer->genericDrawArrays(context, mode, first, count, 0);
 }
@@ -260,10 +260,10 @@ void Context9::popDebugGroup()
     popGroupMarker();
 }
 
-gl::Error Context9::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
+angle::Result Context9::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->syncState(mState.getState(), dirtyBits);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 GLint Context9::getGPUDisjoint()

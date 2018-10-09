@@ -43,8 +43,8 @@ egl::Error SurfaceGL::unMakeCurrent()
     return egl::NoError();
 }
 
-gl::Error SurfaceGL::initializeContents(const gl::Context *context,
-                                        const gl::ImageIndex &imageIndex)
+angle::Result SurfaceGL::initializeContents(const gl::Context *context,
+                                            const gl::ImageIndex &imageIndex)
 {
     FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(context->getFramebuffer(0));
     ASSERT(framebufferGL->isDefault());
@@ -52,7 +52,7 @@ gl::Error SurfaceGL::initializeContents(const gl::Context *context,
     BlitGL *blitter = GetBlitGL(context);
     ANGLE_TRY(blitter->clearFramebuffer(framebufferGL));
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

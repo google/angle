@@ -67,10 +67,10 @@ void VertexArray11::destroy(const gl::Context *context)
         }                                                               \
         break;
 
-gl::Error VertexArray11::syncState(const gl::Context *context,
-                                   const gl::VertexArray::DirtyBits &dirtyBits,
-                                   const gl::VertexArray::DirtyAttribBitsArray &attribBits,
-                                   const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
+angle::Result VertexArray11::syncState(const gl::Context *context,
+                                       const gl::VertexArray::DirtyBits &dirtyBits,
+                                       const gl::VertexArray::DirtyAttribBitsArray &attribBits,
+                                       const gl::VertexArray::DirtyBindingBitsArray &bindingBits)
 {
     ASSERT(dirtyBits.any());
 
@@ -121,7 +121,7 @@ gl::Error VertexArray11::syncState(const gl::Context *context,
         stateManager->invalidateVertexBuffer();
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result VertexArray11::syncStateForDraw(const gl::Context *context,

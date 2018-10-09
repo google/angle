@@ -109,8 +109,8 @@ GLuint RenderbufferGL::getRenderbufferID() const
     return mRenderbufferID;
 }
 
-gl::Error RenderbufferGL::initializeContents(const gl::Context *context,
-                                             const gl::ImageIndex &imageIndex)
+angle::Result RenderbufferGL::initializeContents(const gl::Context *context,
+                                                 const gl::ImageIndex &imageIndex)
 {
     return mBlitter->clearRenderbuffer(this, mNativeInternalFormat);
 }

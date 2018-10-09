@@ -29,10 +29,10 @@ class MockRenderbufferImpl : public RenderbufferImpl
     MOCK_METHOD2(setStorageEGLImageTarget, gl::Error(const gl::Context *, egl::Image *));
 
     MOCK_METHOD4(getAttachmentRenderTarget,
-                 gl::Error(const gl::Context *,
-                           GLenum,
-                           const gl::ImageIndex &,
-                           FramebufferAttachmentRenderTarget **));
+                 angle::Result(const gl::Context *,
+                               GLenum,
+                               const gl::ImageIndex &,
+                               FramebufferAttachmentRenderTarget **));
 
     MOCK_METHOD0(destructor, void());
 

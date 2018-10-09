@@ -226,7 +226,7 @@ class State : angle::NonCopyable
     bool removeVertexArrayBinding(const Context *context, GLuint vertexArray);
 
     // Program binding manipulation
-    Error setProgram(const Context *context, Program *newProgram);
+    angle::Result setProgram(const Context *context, Program *newProgram);
 
     Program *getProgram() const
     {
@@ -377,7 +377,7 @@ class State : angle::NonCopyable
     bool isRobustResourceInitEnabled() const { return mRobustResourceInit; }
 
     // Sets the dirty bit for the program executable.
-    Error onProgramExecutableChange(const Context *context, Program *program);
+    angle::Result onProgramExecutableChange(const Context *context, Program *program);
 
     enum DirtyBitType
     {
@@ -476,8 +476,8 @@ class State : angle::NonCopyable
     using DirtyObjects = angle::BitSet<DIRTY_OBJECT_MAX>;
     void clearDirtyObjects() { mDirtyObjects.reset(); }
     void setAllDirtyObjects() { mDirtyObjects.set(); }
-    Error syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
-    Error syncDirtyObject(const Context *context, GLenum target);
+    angle::Result syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
+    angle::Result syncDirtyObject(const Context *context, GLenum target);
     void setObjectDirty(GLenum target);
     void setSamplerDirty(size_t samplerIndex);
 
@@ -501,7 +501,7 @@ class State : angle::NonCopyable
     void onActiveTextureStateChange(size_t textureIndex);
     void onUniformBufferStateChange(size_t uniformBufferIndex);
 
-    Error clearUnclearedActiveTextures(const Context *context);
+    angle::Result clearUnclearedActiveTextures(const Context *context);
 
     bool isCurrentTransformFeedback(const TransformFeedback *tf) const;
 
@@ -512,9 +512,11 @@ class State : angle::NonCopyable
 
   private:
     void syncSamplers(const Context *context);
-    Error syncProgramTextures(const Context *context);
+    angle::Result syncProgramTextures(const Context *context);
     void unsetActiveTextures(ActiveTextureMask textureMask);
-    Error updateActiveTexture(const Context *context, size_t textureIndex, Texture *texture);
+    angle::Result updateActiveTexture(const Context *context,
+                                      size_t textureIndex,
+                                      Texture *texture);
 
     // Cached values from Context's caps
     GLuint mMaxDrawBuffers;

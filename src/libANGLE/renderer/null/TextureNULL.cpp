@@ -132,10 +132,10 @@ gl::Error TextureNULL::releaseTexImage(const gl::Context *context)
     return gl::NoError();
 }
 
-gl::Error TextureNULL::syncState(const gl::Context *context,
-                                 const gl::Texture::DirtyBits &dirtyBits)
+angle::Result TextureNULL::syncState(const gl::Context *context,
+                                     const gl::Texture::DirtyBits &dirtyBits)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Error TextureNULL::setStorageMultisample(const gl::Context *context,
@@ -148,10 +148,10 @@ gl::Error TextureNULL::setStorageMultisample(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error TextureNULL::initializeContents(const gl::Context *context,
-                                          const gl::ImageIndex &imageIndex)
+angle::Result TextureNULL::initializeContents(const gl::Context *context,
+                                              const gl::ImageIndex &imageIndex)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

@@ -70,10 +70,10 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
     gl::Error finish(const gl::Context *context) override;
 
     // Drawing methods.
-    gl::Error drawArrays(const gl::Context *context,
-                         gl::PrimitiveMode mode,
-                         GLint first,
-                         GLsizei count) override;
+    angle::Result drawArrays(const gl::Context *context,
+                             gl::PrimitiveMode mode,
+                             GLint first,
+                             GLsizei count) override;
     gl::Error drawArraysInstanced(const gl::Context *context,
                                   gl::PrimitiveMode mode,
                                   GLint first,
@@ -123,7 +123,8 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
     void popDebugGroup() override;
 
     // State sync with dirty bits.
-    gl::Error syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits) override;
+    angle::Result syncState(const gl::Context *context,
+                            const gl::State::DirtyBits &dirtyBits) override;
 
     // Disjoint timer queries
     GLint getGPUDisjoint() override;

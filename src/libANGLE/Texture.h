@@ -399,7 +399,7 @@ class Texture final : public RefCountObject,
     GLuint getId() const override;
 
     // Needed for robust resource init.
-    Error ensureInitialized(const Context *context);
+    angle::Result ensureInitialized(const Context *context);
     InitState initState(const ImageIndex &imageIndex) const override;
     InitState initState() const { return mState.mInitState; }
     void setInitState(const ImageIndex &imageIndex, InitState initState) override;
@@ -437,7 +437,7 @@ class Texture final : public RefCountObject,
     };
     using DirtyBits = angle::BitSet<DIRTY_BIT_COUNT>;
 
-    Error syncState(const Context *context);
+    angle::Result syncState(const Context *context);
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
     // ObserverInterface implementation.
