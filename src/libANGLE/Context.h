@@ -75,6 +75,12 @@ class ErrorSet : angle::NonCopyable
     bool empty() const;
     GLenum popError();
 
+    void handleError(GLenum errorCode,
+                     const char *message,
+                     const char *file,
+                     const char *function,
+                     unsigned int line);
+
   private:
     Context *mContext;
 
@@ -1550,6 +1556,11 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // Consumes the error.
     // TODO(jmadill): Remove const. http://anglebug.com/2378
     void handleError(const Error &error) const;
+    void handleError(GLenum errorCode,
+                     const char *message,
+                     const char *file,
+                     const char *function,
+                     unsigned int line);
 
     GLenum getError();
     void markContextLost();

@@ -255,17 +255,11 @@ std::string ToString(const T &value)
 // TODO(jmadill): Remove this when refactor is done. http://anglebug.com/2491
 #define GL_INTERNAL_ERROR_ANGLEX 0x6AEE
 
-#define ANGLE_TRY_CHECKED_MATH(result)                     \
-    if (!result)                                           \
-    {                                                      \
-        return gl::InternalError() << "Integer overflow."; \
-    }
+#define ANGLE_CHECK_GL_ALLOC(context, result) \
+    ANGLE_CHECK(context, result, "Failed to allocate host memory", GL_OUT_OF_MEMORY)
 
-#define ANGLE_TRY_ALLOCATION(result)                                       \
-    if (!result)                                                           \
-    {                                                                      \
-        return gl::OutOfMemory() << "Failed to allocate internal buffer."; \
-    }
+#define ANGLE_CHECK_GL_MATH(context, result) \
+    ANGLE_CHECK(context, result, "Integer overflow.", GL_INVALID_OPERATION)
 
 // The below inlining code lifted from V8.
 #if defined(__clang__) || (defined(__GNUC__) && defined(__has_attribute))

@@ -116,10 +116,4 @@ struct ContextCreationTry
 std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedType, bool isMesaGLX);
 }  // namespace rx
 
-#define ANGLE_CHECK_GL_ALLOC(context, result) \
-    ANGLE_CHECK(context, result, "Failed to allocate host memory", GL_OUT_OF_MEMORY)
-
-#define ANGLE_CHECK_GL_MATH(context, result) \
-    ANGLE_CHECK(context, result, "Integer overflow.", GL_INVALID_OPERATION)
-
 #endif // LIBANGLE_RENDERER_GL_RENDERERGLUTILS_H_

@@ -2618,6 +2618,15 @@ void Context::handleError(const Error &error) const
     mErrors.handleError(error);
 }
 
+void Context::handleError(GLenum errorCode,
+                          const char *message,
+                          const char *file,
+                          const char *function,
+                          unsigned int line)
+{
+    mErrors.handleError(errorCode, message, file, function, line);
+}
+
 // Get one of the recorded errors and clear its flag, if any.
 // [OpenGL ES 2.0.24] section 2.5 page 13.
 GLenum Context::getError()
@@ -7953,6 +7962,20 @@ void ErrorSet::handleError(const Error &error) const
                                                         error.getID(), GL_DEBUG_SEVERITY_HIGH,
                                                         error.getMessage());
     }
+}
+
+void ErrorSet::handleError(GLenum errorCode,
+                           const char *message,
+                           const char *file,
+                           const char *function,
+                           unsigned int line)
+{
+    // TODO(jmadill): Handle error directly instead of creating object. http://anglebug.com/2491
+    std::stringstream errorStream;
+    errorStream << "Front-end Error: " << gl::FmtHex(errorCode) << ", in " << file << ", "
+                << function << ":" << line << ". " << message;
+
+    handleError(gl::Error(errorCode, errorCode, errorStream.str()));
 }
 
 bool ErrorSet::empty() const

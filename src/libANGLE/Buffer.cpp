@@ -65,7 +65,7 @@ const std::string &Buffer::getLabel() const
     return mState.mLabel;
 }
 
-Error Buffer::bufferData(const Context *context,
+Error Buffer::bufferData(Context *context,
                          BufferBinding target,
                          const void *data,
                          GLsizeiptr size,
@@ -79,8 +79,8 @@ Error Buffer::bufferData(const Context *context,
     if (context && context->getGLState().isRobustResourceInitEnabled() && !data && size > 0)
     {
         angle::MemoryBuffer *scratchBuffer = nullptr;
-        ANGLE_TRY_ALLOCATION(
-            context->getZeroFilledBuffer(static_cast<size_t>(size), &scratchBuffer));
+        ANGLE_CHECK_GL_ALLOC(
+            context, context->getZeroFilledBuffer(static_cast<size_t>(size), &scratchBuffer));
         dataForImpl = scratchBuffer->data();
     }
 

@@ -9,11 +9,11 @@
 
 #include "libANGLE/renderer/null/FramebufferNULL.h"
 
+#include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/null/BufferNULL.h"
-
-#include "common/debug.h"
+#include "libANGLE/renderer/null/ContextNULL.h"
 
 namespace rx
 {
@@ -147,13 +147,16 @@ gl::Error FramebufferNULL::readPixels(const gl::Context *context,
     // Compute size of unclipped rows and initial skip
     const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
 
+    ContextNULL *contextNull = GetImplAs<ContextNULL>(context);
+
     GLuint rowBytes = 0;
-    ANGLE_TRY_CHECKED_MATH(glFormat.computeRowPitch(type, origArea.width, packState.alignment,
-                                                    packState.rowLength, &rowBytes));
+    ANGLE_CHECK_GL_MATH(contextNull,
+                        glFormat.computeRowPitch(type, origArea.width, packState.alignment,
+                                                 packState.rowLength, &rowBytes));
 
     GLuint skipBytes = 0;
-    ANGLE_TRY_CHECKED_MATH(
-        glFormat.computeSkipBytes(type, rowBytes, 0, packState, false, &skipBytes));
+    ANGLE_CHECK_GL_MATH(contextNull,
+                        glFormat.computeSkipBytes(type, rowBytes, 0, packState, false, &skipBytes));
     pixels += skipBytes;
 
     // Skip OOB region up to first in bounds pixel

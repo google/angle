@@ -523,7 +523,8 @@ gl::Error Buffer11::mapRange(const gl::Context *context,
         ANGLE_TRY(getStagingStorage(context, &mMappedStorage));
     }
 
-    ANGLE_TRY_ALLOCATION(mMappedStorage);
+    Context11 *context11 = GetImplAs<Context11>(context);
+    ANGLE_CHECK_HR_ALLOC(context11, mMappedStorage);
 
     if ((access & GL_MAP_WRITE_BIT) > 0)
     {

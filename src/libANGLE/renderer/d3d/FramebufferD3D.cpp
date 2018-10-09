@@ -15,6 +15,7 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/d3d/ContextD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
@@ -259,13 +260,16 @@ gl::Error FramebufferD3D::readPixels(const gl::Context *context,
 
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
 
+    ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
+
     GLuint outputPitch = 0;
-    ANGLE_TRY_CHECKED_MATH(sizedFormatInfo.computeRowPitch(
-        type, origArea.width, packState.alignment, packState.rowLength, &outputPitch));
+    ANGLE_CHECK_HR_MATH(contextD3D,
+                        sizedFormatInfo.computeRowPitch(type, origArea.width, packState.alignment,
+                                                        packState.rowLength, &outputPitch));
 
     GLuint outputSkipBytes = 0;
-    ANGLE_TRY_CHECKED_MATH(
-        sizedFormatInfo.computeSkipBytes(type, outputPitch, 0, packState, false, &outputSkipBytes));
+    ANGLE_CHECK_HR_MATH(contextD3D, sizedFormatInfo.computeSkipBytes(
+                                        type, outputPitch, 0, packState, false, &outputSkipBytes));
     outputSkipBytes +=
         (area.x - origArea.x) * sizedFormatInfo.pixelBytes + (area.y - origArea.y) * outputPitch;
 

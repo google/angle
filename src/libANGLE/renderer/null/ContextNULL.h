@@ -203,6 +203,12 @@ class ContextNULL : public ContextImpl
     gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
     gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
+    void handleError(GLenum errorCode,
+                     const char *message,
+                     const char *file,
+                     const char *function,
+                     unsigned int line);
+
   private:
     gl::Caps mCaps;
     gl::TextureCapsMap mTextureCaps;

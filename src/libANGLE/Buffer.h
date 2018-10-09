@@ -74,7 +74,7 @@ class Buffer final : public RefCountObject, public LabeledObject
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
 
-    Error bufferData(const Context *context,
+    Error bufferData(Context *context,
                      BufferBinding target,
                      const void *data,
                      GLsizeiptr size,

@@ -11,6 +11,7 @@
 
 #include "common/debug.h"
 
+#include "libANGLE/Context.h"
 #include "libANGLE/renderer/null/BufferNULL.h"
 #include "libANGLE/renderer/null/CompilerNULL.h"
 #include "libANGLE/renderer/null/DisplayNULL.h"
@@ -438,4 +439,16 @@ gl::Error ContextNULL::memoryBarrierByRegion(const gl::Context *context, GLbitfi
     return gl::NoError();
 }
 
+void ContextNULL::handleError(GLenum errorCode,
+                              const char *message,
+                              const char *file,
+                              const char *function,
+                              unsigned int line)
+{
+    std::stringstream errorStream;
+    errorStream << "Internal OpenGL error: " << gl::FmtHex(errorCode) << ", in " << file << ", "
+                << function << ":" << line << ". " << message;
+
+    mErrors->handleError(gl::Error(errorCode, errorCode, errorStream.str()));
+}
 }  // namespace rx
