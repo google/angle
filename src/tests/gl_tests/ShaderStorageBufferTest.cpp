@@ -256,10 +256,6 @@ TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
 // bindings again.
 TEST_P(ShaderStorageBufferTest31, MultiStorageBuffersForMultiPrograms)
 {
-    // TODO(jiajia.qin@intel.com): Don't skip this test once glGetProgramResourceiv is supported on
-    // d3d backend. http://anglebug.com/1920
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     const std::string &csSource1 =
         R"(#version 310 es
         layout(local_size_x=3, local_size_y=1, local_size_z=1) in;

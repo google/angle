@@ -339,6 +339,10 @@ TEST_P(ProgramInterfaceTestES31, GetProgramInterface)
 // Tests the resource property query for uniform can be done correctly.
 TEST_P(ProgramInterfaceTestES31, GetUniformProperties)
 {
+    // TODO(jiajia.qin@intel.com): Don't skip this test once atomic counter is supported on d3d
+    // backend. http://anglebug.com/1729
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
     const std::string &vertexShaderSource =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -528,6 +532,10 @@ TEST_P(ProgramInterfaceTestES31, GetUniformBlockProperties)
 // Tests atomic counter buffer qeury works correctly.
 TEST_P(ProgramInterfaceTestES31, QueryAtomicCounteBuffer)
 {
+    // TODO(jiajia.qin@intel.com): Don't skip this test once atomic counter is supported on d3d
+    // backend. http://anglebug.com/1729
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
     const std::string &vertShader =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -579,6 +587,10 @@ TEST_P(ProgramInterfaceTestES31, QueryAtomicCounteBuffer)
 // Tests the resource property query for buffer variable can be done correctly.
 TEST_P(ProgramInterfaceTestES31, GetBufferVariableProperties)
 {
+    // TODO(jiajia.qin@intel.com): Don't skip this test once non-simple SSBO sentences are supported
+    // on d3d backend. http://anglebug.com/1951
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
     const std::string &vertexShaderSource =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -699,6 +711,10 @@ TEST_P(ProgramInterfaceTestES31, GetBufferVariableProperties)
 // Tests the resource property query for shader storage block can be done correctly.
 TEST_P(ProgramInterfaceTestES31, GetShaderStorageBlockProperties)
 {
+    // TODO(jiajia.qin@intel.com): Don't skip this test once non-simple SSBO sentences are supported
+    // on d3d backend. http://anglebug.com/1951
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
     const std::string &vertexShaderSource =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -892,6 +908,6 @@ TEST_P(ProgramInterfaceTestES31, QueryTransformFeedbackVarying)
     glDeleteProgram(program);
 }
 
-ANGLE_INSTANTIATE_TEST(ProgramInterfaceTestES31, ES31_OPENGL(), ES31_OPENGLES());
+ANGLE_INSTANTIATE_TEST(ProgramInterfaceTestES31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 
 }  // anonymous namespace

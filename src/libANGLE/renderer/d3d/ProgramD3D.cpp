@@ -155,12 +155,12 @@ bool FindFlatInterpolationVarying(const gl::ShaderMap<gl::Shader *> &shaders)
     return false;
 }
 
-class UniformBlockInfo final : angle::NonCopyable
+class InterfaceBlockInfo final : angle::NonCopyable
 {
   public:
-    UniformBlockInfo() {}
+    InterfaceBlockInfo() {}
 
-    void getShaderBlockInfo(gl::Shader *shader);
+    void getShaderBlockInfo(const std::vector<sh::InterfaceBlock> &interfaceBlocks);
 
     bool getBlockSize(const std::string &name, const std::string &mappedName, size_t *sizeOut);
     bool getBlockMemberInfo(const std::string &name,
@@ -174,9 +174,9 @@ class UniformBlockInfo final : angle::NonCopyable
     sh::BlockLayoutMap mBlockLayout;
 };
 
-void UniformBlockInfo::getShaderBlockInfo(gl::Shader *shader)
+void InterfaceBlockInfo::getShaderBlockInfo(const std::vector<sh::InterfaceBlock> &interfaceBlocks)
 {
-    for (const sh::InterfaceBlock &interfaceBlock : shader->getUniformBlocks())
+    for (const sh::InterfaceBlock &interfaceBlock : interfaceBlocks)
     {
         if (!interfaceBlock.active && interfaceBlock.layout == sh::BLOCKLAYOUT_PACKED)
             continue;
@@ -189,7 +189,7 @@ void UniformBlockInfo::getShaderBlockInfo(gl::Shader *shader)
     }
 }
 
-size_t UniformBlockInfo::getBlockInfo(const sh::InterfaceBlock &interfaceBlock)
+size_t InterfaceBlockInfo::getBlockInfo(const sh::InterfaceBlock &interfaceBlock)
 {
     ASSERT(interfaceBlock.active || interfaceBlock.layout != sh::BLOCKLAYOUT_PACKED);
 
@@ -207,15 +207,15 @@ size_t UniformBlockInfo::getBlockInfo(const sh::InterfaceBlock &interfaceBlock)
         encoder = &hlslEncoder;
     }
 
-    sh::GetUniformBlockInfo(interfaceBlock.fields, interfaceBlock.fieldPrefix(), encoder,
-                            &mBlockLayout);
+    sh::GetInterfaceBlockInfo(interfaceBlock.fields, interfaceBlock.fieldPrefix(), encoder,
+                              &mBlockLayout);
 
     return encoder->getBlockSize();
 }
 
-bool UniformBlockInfo::getBlockSize(const std::string &name,
-                                    const std::string &mappedName,
-                                    size_t *sizeOut)
+bool InterfaceBlockInfo::getBlockSize(const std::string &name,
+                                      const std::string &mappedName,
+                                      size_t *sizeOut)
 {
     size_t nameLengthWithoutArrayIndex;
     gl::ParseArrayIndex(name, &nameLengthWithoutArrayIndex);
@@ -231,9 +231,9 @@ bool UniformBlockInfo::getBlockSize(const std::string &name,
     return true;
 };
 
-bool UniformBlockInfo::getBlockMemberInfo(const std::string &name,
-                                          const std::string &mappedName,
-                                          sh::BlockMemberInfo *infoOut)
+bool InterfaceBlockInfo::getBlockMemberInfo(const std::string &name,
+                                            const std::string &mappedName,
+                                            sh::BlockMemberInfo *infoOut)
 {
     auto infoIter = mBlockLayout.find(name);
     if (infoIter == mBlockLayout.end())
@@ -2931,13 +2931,13 @@ void ProgramD3D::updateCachedPixelExecutableIndex()
 
 void ProgramD3D::linkResources(const gl::ProgramLinkedResources &resources)
 {
-    UniformBlockInfo uniformBlockInfo;
+    InterfaceBlockInfo uniformBlockInfo;
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         gl::Shader *shader = mState.getAttachedShader(shaderType);
         if (shader)
         {
-            uniformBlockInfo.getShaderBlockInfo(shader);
+            uniformBlockInfo.getShaderBlockInfo(shader->getUniformBlocks());
         }
     }
 
@@ -2956,18 +2956,26 @@ void ProgramD3D::linkResources(const gl::ProgramLinkedResources &resources)
     resources.uniformBlockLinker.linkBlocks(getUniformBlockSize, getUniformBlockMemberInfo);
     initializeUniformBlocks();
 
-    // TODO(jiajia.qin@intel.com): Determine correct shader storage block info.
-    auto getShaderStorageBlockSize = [](const std::string &name, const std::string &mappedName,
-                                        size_t *sizeOut) {
-        *sizeOut = 0;
-        return true;
+    InterfaceBlockInfo shaderStorageBlockInfo;
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        gl::Shader *shader = mState.getAttachedShader(shaderType);
+        if (shader)
+        {
+            shaderStorageBlockInfo.getShaderBlockInfo(shader->getShaderStorageBlocks());
+        }
+    }
+    auto getShaderStorageBlockSize = [&shaderStorageBlockInfo](const std::string &name,
+                                                               const std::string &mappedName,
+                                                               size_t *sizeOut) {
+        return shaderStorageBlockInfo.getBlockSize(name, mappedName, sizeOut);
     };
 
-    auto getShaderStorageBlockMemberInfo =
-        [](const std::string &name, const std::string &mappedName, sh::BlockMemberInfo *infoOut) {
-            *infoOut = sh::BlockMemberInfo::getDefaultBlockInfo();
-            return true;
-        };
+    auto getShaderStorageBlockMemberInfo = [&shaderStorageBlockInfo](const std::string &name,
+                                                                     const std::string &mappedName,
+                                                                     sh::BlockMemberInfo *infoOut) {
+        return shaderStorageBlockInfo.getBlockMemberInfo(name, mappedName, infoOut);
+    };
 
     resources.shaderStorageBlockLinker.linkBlocks(getShaderStorageBlockSize,
                                                   getShaderStorageBlockMemberInfo);
