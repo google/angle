@@ -110,8 +110,18 @@ class PackedEnumMap
     constexpr bool empty() const noexcept { return mPrivateData.empty(); }
 
     // element access:
-    reference operator[](E n) { return mPrivateData[static_cast<UnderlyingType>(n)]; }
-    const_reference operator[](E n) const { return mPrivateData[static_cast<UnderlyingType>(n)]; }
+    reference operator[](E n)
+    {
+        ASSERT(static_cast<size_t>(n) < mPrivateData.size());
+        return mPrivateData[static_cast<UnderlyingType>(n)];
+    }
+
+    const_reference operator[](E n) const
+    {
+        ASSERT(static_cast<size_t>(n) < mPrivateData.size());
+        return mPrivateData[static_cast<UnderlyingType>(n)];
+    }
+
     const_reference at(E n) const { return mPrivateData.at(static_cast<UnderlyingType>(n)); }
     reference at(E n) { return mPrivateData.at(static_cast<UnderlyingType>(n)); }
 

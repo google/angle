@@ -1110,6 +1110,44 @@ bool ValidDstBlendFunc(const Context *context, GLenum val)
     return false;
 }
 
+void RecordBindTextureTypeError(Context *context, TextureType target)
+{
+    ASSERT(!context->getStateCache().isValidBindTextureType(target));
+
+    switch (target)
+    {
+        case TextureType::Rectangle:
+            ASSERT(!context->getExtensions().textureRectangle);
+            context->handleError(InvalidEnum()
+                                 << "Context does not support GL_ANGLE_texture_rectangle");
+            break;
+
+        case TextureType::_3D:
+        case TextureType::_2DArray:
+            ASSERT(context->getClientMajorVersion() < 3);
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), ES3Required);
+            break;
+
+        case TextureType::_2DMultisample:
+            ASSERT(context->getClientVersion() < Version(3, 1));
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), ES31Required);
+            break;
+
+        case TextureType::_2DMultisampleArray:
+            ASSERT(!context->getExtensions().textureStorageMultisample2DArray);
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), MultisampleArrayExtensionRequired);
+            break;
+
+        case TextureType::External:
+            ASSERT(!context->getExtensions().eglImageExternal &&
+                   !context->getExtensions().eglStreamConsumerExternal);
+            context->handleError(InvalidEnum() << "External texture extension not enabled");
+            break;
+
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
+    }
+}
 }  // anonymous namespace
 
 bool ValidateES2TexImageParameters(Context *context,
@@ -3044,55 +3082,10 @@ bool ValidateFlushMappedBufferRangeEXT(Context *context,
 
 bool ValidateBindTexture(Context *context, TextureType target, GLuint texture)
 {
-    switch (target)
+    if (!context->getStateCache().isValidBindTextureType(target))
     {
-        case TextureType::_2D:
-        case TextureType::CubeMap:
-            break;
-
-        case TextureType::Rectangle:
-            if (!context->getExtensions().textureRectangle)
-            {
-                context->handleError(InvalidEnum()
-                                     << "Context does not support GL_ANGLE_texture_rectangle");
-                return false;
-            }
-            break;
-
-        case TextureType::_3D:
-        case TextureType::_2DArray:
-            if (context->getClientMajorVersion() < 3)
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ES3Required);
-                return false;
-            }
-            break;
-
-        case TextureType::_2DMultisample:
-            if (context->getClientVersion() < Version(3, 1))
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ES31Required);
-                return false;
-            }
-            break;
-        case TextureType::_2DMultisampleArray:
-            if (!context->getExtensions().textureStorageMultisample2DArray)
-            {
-                ANGLE_VALIDATION_ERR(context, InvalidEnum(), MultisampleArrayExtensionRequired);
-                return false;
-            }
-            break;
-        case TextureType::External:
-            if (!context->getExtensions().eglImageExternal &&
-                !context->getExtensions().eglStreamConsumerExternal)
-            {
-                context->handleError(InvalidEnum() << "External texture extension not enabled");
-                return false;
-            }
-            break;
-        default:
-            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
-            return false;
+        RecordBindTextureTypeError(context, target);
+        return false;
     }
 
     if (texture == 0)

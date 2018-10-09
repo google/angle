@@ -92,8 +92,10 @@ class ErrorSet : angle::NonCopyable
 class StateCache final : angle::NonCopyable
 {
   public:
-    StateCache(Context *context);
+    StateCache();
     ~StateCache();
+
+    void initialize(Context *context);
 
     // Places that can trigger updateActiveAttribsMask:
     // 1. onVertexArrayBindingChange.
@@ -150,6 +152,12 @@ class StateCache final : angle::NonCopyable
         return mCachedValidDrawModes[primitiveMode];
     }
 
+    // Cannot change except on Context/Extension init.
+    bool isValidBindTextureType(TextureType type) const
+    {
+        return mCachedValidBindTextureTypes[type];
+    }
+
     // State change notifications.
     void onVertexArrayBindingChange(Context *context);
     void onProgramExecutableChange(Context *context);
@@ -174,6 +182,7 @@ class StateCache final : angle::NonCopyable
     void updateVertexElementLimits(Context *context);
     void updateBasicDrawStatesError();
     void updateValidDrawModes(Context *context);
+    void updateValidBindTextureTypes(Context *context);
 
     intptr_t getBasicDrawStatesErrorImpl(Context *context) const;
 
@@ -187,9 +196,11 @@ class StateCache final : angle::NonCopyable
     GLint64 mCachedInstancedVertexElementLimit;
     mutable intptr_t mCachedBasicDrawStatesError;
 
-    // Reserve an extra slot at the end of the map for invalid enum.
+    // Reserve an extra slot at the end of these maps for invalid enum.
     angle::PackedEnumMap<PrimitiveMode, bool, angle::EnumSize<PrimitiveMode>() + 1>
         mCachedValidDrawModes;
+    angle::PackedEnumMap<TextureType, bool, angle::EnumSize<TextureType>() + 1>
+        mCachedValidBindTextureTypes;
 };
 
 class Context final : public egl::LabeledObject, angle::NonCopyable, public angle::ObserverInterface

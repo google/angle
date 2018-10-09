@@ -361,7 +361,6 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mWebGLContext(GetWebGLContext(attribs)),
       mExtensionsEnabled(GetExtensionsEnabled(attribs, mWebGLContext)),
       mMemoryProgramCache(memoryProgramCache),
-      mStateCache(this),
       mVertexArrayObserverBinding(this, kVertexArraySubjectIndex),
       mDrawFramebufferObserverBinding(this, kDrawFramebufferSubjectIndex),
       mReadFramebufferObserverBinding(this, kReadFramebufferSubjectIndex),
@@ -3430,6 +3429,9 @@ void Context::updateCaps()
     }
 
     mThreadPool = angle::WorkerThreadPool::Create(mExtensions.parallelShaderCompile);
+
+    // Reinitialize state cache after extension changes.
+    mStateCache.initialize(this);
 }
 
 void Context::initWorkarounds()
@@ -7987,16 +7989,21 @@ GLenum ErrorSet::popError()
 }
 
 // StateCache implementation.
-StateCache::StateCache(Context *context)
+StateCache::StateCache()
     : mCachedHasAnyEnabledClientAttrib(false),
       mCachedNonInstancedVertexElementLimit(0),
       mCachedInstancedVertexElementLimit(0),
       mCachedBasicDrawStatesError(kInvalidPointer)
 {
-    updateValidDrawModes(context);
 }
 
 StateCache::~StateCache() = default;
+
+void StateCache::initialize(Context *context)
+{
+    updateValidDrawModes(context);
+    updateValidBindTextureTypes(context);
+}
 
 void StateCache::updateActiveAttribsMask(Context *context)
 {
@@ -8208,5 +8215,25 @@ void StateCache::updateValidDrawModes(Context *context)
             false,                                       /* InvalidEnum */
         }};
     }
+}
+
+void StateCache::updateValidBindTextureTypes(Context *context)
+{
+    const Extensions &exts = context->getExtensions();
+    bool isGLES3           = context->getClientMajorVersion() >= 3;
+    bool isGLES31          = context->getClientVersion() >= Version(3, 1);
+
+    mCachedValidBindTextureTypes = {{
+        true,                                                    /* _2D */
+        isGLES3,                                                 /* _2DArray */
+        isGLES31,                                                /* _2DMultisample */
+        exts.textureStorageMultisample2DArray,                   /* _2DMultisampleArray */
+        isGLES3,                                                 /* _3D */
+        exts.eglImageExternal || exts.eglStreamConsumerExternal, /* External */
+        exts.textureRectangle,                                   /* Rectangle */
+        true,                                                    /* CubeMap */
+        false,                                                   /* InvalidEnum */
+
+    }};
 }
 }  // namespace gl
