@@ -253,6 +253,10 @@ TEST_P(ProgramInterfaceTestES31, GetResource)
 // Tests glGetProgramInterfaceiv.
 TEST_P(ProgramInterfaceTestES31, GetProgramInterface)
 {
+    // TODO(jiajia.qin@intel.com): Don't skip this test once SSBO are supported on render pipeline.
+    // http://anglebug.com/1951
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
     const std::string &fragmentShaderSource =
         "#version 310 es\n"
         "precision highp float;\n"
