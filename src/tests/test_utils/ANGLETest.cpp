@@ -91,6 +91,55 @@ std::array<angle::Vector3, 4> GetIndexedQuadVertices()
 
 static constexpr std::array<GLushort, 6> IndexedQuadIndices = {{0, 1, 2, 0, 2, 3}};
 
+const char *GetColorName(GLColor color)
+{
+    if (color == GLColor::red)
+    {
+        return "Red";
+    }
+
+    if (color == GLColor::green)
+    {
+        return "Green";
+    }
+
+    if (color == GLColor::blue)
+    {
+        return "Blue";
+    }
+
+    if (color == GLColor::white)
+    {
+        return "White";
+    }
+
+    if (color == GLColor::black)
+    {
+        return "Black";
+    }
+
+    if (color == GLColor::transparentBlack)
+    {
+        return "Transparent Black";
+    }
+
+    if (color == GLColor::yellow)
+    {
+        return "Yellow";
+    }
+
+    if (color == GLColor::magenta)
+    {
+        return "Magenta";
+    }
+
+    if (color == GLColor::cyan)
+    {
+        return "Cyan";
+    }
+
+    return nullptr;
+}
 }  // anonymous namespace
 
 GLColorRGB::GLColorRGB() : R(0), G(0), B(0)
@@ -177,6 +226,12 @@ bool operator!=(const GLColor &a, const GLColor &b)
 
 std::ostream &operator<<(std::ostream &ostream, const GLColor &color)
 {
+    const char *colorName = GetColorName(color);
+    if (colorName)
+    {
+        return ostream << colorName;
+    }
+
     ostream << "(" << static_cast<unsigned int>(color.R) << ", "
             << static_cast<unsigned int>(color.G) << ", " << static_cast<unsigned int>(color.B)
             << ", " << static_cast<unsigned int>(color.A) << ")";

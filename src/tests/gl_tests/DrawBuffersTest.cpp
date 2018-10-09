@@ -21,39 +21,12 @@ class DrawBuffersTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
-        mMaxDrawBuffers = 0;
-    }
-
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-
-        // This test seems to fail on an nVidia machine when the window is hidden
-        SetWindowVisible(true);
-
-        glGenFramebuffers(1, &mFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
-
-        glGenTextures(4, mTextures);
-
-        for (size_t texIndex = 0; texIndex < ArraySize(mTextures); texIndex++)
-        {
-            glBindTexture(GL_TEXTURE_2D, mTextures[texIndex]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
-                         GL_UNSIGNED_BYTE, nullptr);
-        }
-
-        if (checkSupport())
-        {
-            glGetIntegerv(GL_MAX_DRAW_BUFFERS, &mMaxDrawBuffers);
-        }
-
-        ASSERT_GL_NO_ERROR();
     }
 
     void TearDown() override
     {
         glDeleteFramebuffers(1, &mFBO);
+        glDeleteFramebuffers(1, &mReadFramebuffer);
         glDeleteTextures(4, mTextures);
 
         ANGLETest::TearDown();
@@ -75,9 +48,35 @@ class DrawBuffersTest : public ANGLETest
     }
 
     // Use this method to filter if we can support these tests.
-    bool checkSupport()
+    bool setupTest()
     {
-        return (getClientMajorVersion() >= 3 || extensionEnabled("GL_EXT_draw_buffers"));
+        if (getClientMajorVersion() < 3 && (!ensureExtensionEnabled("GL_EXT_draw_buffers") ||
+                                            !ensureExtensionEnabled("GL_ANGLE_framebuffer_blit")))
+        {
+            return false;
+        }
+
+        // This test seems to fail on an nVidia machine when the window is hidden
+        SetWindowVisible(true);
+
+        glGenFramebuffers(1, &mFBO);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFBO);
+
+        glGenTextures(4, mTextures);
+
+        for (size_t texIndex = 0; texIndex < ArraySize(mTextures); texIndex++)
+        {
+            glBindTexture(GL_TEXTURE_2D, mTextures[texIndex]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, nullptr);
+        }
+
+        glGetIntegerv(GL_MAX_DRAW_BUFFERS, &mMaxDrawBuffers);
+
+        glGenFramebuffers(1, &mReadFramebuffer);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer);
+
+        return true;
     }
 
     void setupMRTProgramESSL3(bool bufferEnabled[8], GLuint *programOut)
@@ -187,34 +186,48 @@ class DrawBuffersTest : public ANGLETest
         return GLColor(r, g, b, 255u);
     }
 
-    void verifyAttachment2D(unsigned int index, GLuint textureName, GLenum target, GLint level)
+    void verifyAttachment2DColor(unsigned int index,
+                                 GLuint textureName,
+                                 GLenum target,
+                                 GLint level,
+                                 GLColor color)
     {
-        for (GLint colorAttachment = 0; colorAttachment < mMaxDrawBuffers; colorAttachment++)
-        {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment, GL_TEXTURE_2D, 0, 0);
-        }
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, textureName,
+                               level);
+        EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, color)
+            << "index " << index;
+    }
 
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, textureName, level);
+    void verifyAttachment2DUnwritten(unsigned int index, GLuint texture, GLenum target, GLint level)
+    {
+        verifyAttachment2DColor(index, texture, target, level, GLColor::transparentBlack);
+    }
 
-        EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, getColorForIndex(index));
+    void verifyAttachment2D(unsigned int index, GLuint texture, GLenum target, GLint level)
+    {
+        verifyAttachment2DColor(index, texture, target, level, getColorForIndex(index));
     }
 
     void verifyAttachmentLayer(unsigned int index, GLuint texture, GLint level, GLint layer)
     {
-        for (GLint colorAttachment = 0; colorAttachment < mMaxDrawBuffers; colorAttachment++)
-        {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment,
-                                   GL_TEXTURE_2D, 0, 0);
-        }
-
-        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level, layer);
-
+        glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level, layer);
         EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, getColorForIndex(index));
     }
 
-    GLuint mFBO;
-    GLuint mTextures[4];
-    GLint mMaxDrawBuffers;
+    GLuint mFBO             = 0;
+    GLuint mReadFramebuffer = 0;
+    GLuint mTextures[4]     = {};
+    GLint mMaxDrawBuffers   = 0;
+};
+
+class DrawBuffersWebGL2Test : public DrawBuffersTest
+{
+  public:
+    DrawBuffersWebGL2Test()
+    {
+        setWebGLCompatibilityEnabled(true);
+        setRobustResourceInit(true);
+    }
 };
 
 // Verify that GL_MAX_DRAW_BUFFERS returns the expected values for D3D11
@@ -223,6 +236,9 @@ TEST_P(DrawBuffersTest, VerifyD3DLimits)
     EGLPlatformParameters platform = GetParam().eglParameters;
 
     ANGLE_SKIP_TEST_IF(platform.renderer != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
+
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &mMaxDrawBuffers);
+
     if (platform.majorVersion == 9 && platform.minorVersion == 3)
     {
         // D3D11 Feature Level 9_3 supports 4 draw buffers
@@ -237,7 +253,7 @@ TEST_P(DrawBuffersTest, VerifyD3DLimits)
 
 TEST_P(DrawBuffersTest, Gaps)
 {
-    ANGLE_SKIP_TEST_IF(!checkSupport());
+    ANGLE_SKIP_TEST_IF(!setupTest());
 
     // TODO(ynovikov): Investigate the failure (http://anglebug.com/1535)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
@@ -265,7 +281,7 @@ TEST_P(DrawBuffersTest, Gaps)
 
 TEST_P(DrawBuffersTest, FirstAndLast)
 {
-    ANGLE_SKIP_TEST_IF(!checkSupport());
+    ANGLE_SKIP_TEST_IF(!setupTest());
 
     // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
@@ -302,7 +318,7 @@ TEST_P(DrawBuffersTest, FirstAndLast)
 
 TEST_P(DrawBuffersTest, FirstHalfNULL)
 {
-    ANGLE_SKIP_TEST_IF(!checkSupport());
+    ANGLE_SKIP_TEST_IF(!setupTest());
 
     // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
@@ -336,9 +352,135 @@ TEST_P(DrawBuffersTest, FirstHalfNULL)
     glDeleteProgram(program);
 }
 
+// Tests masking out some of the draw buffers by not writing to them in the program.
+TEST_P(DrawBuffersWebGL2Test, SomeProgramOutputsDisabled)
+{
+    ANGLE_SKIP_TEST_IF(!setupTest());
+
+    // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
+
+    bool flags[8]  = {false};
+    GLenum bufs[4] = {GL_NONE};
+
+    constexpr GLuint kMaxBuffers     = 4;
+    constexpr GLuint kHalfMaxBuffers = 2;
+
+    // Enable all draw buffers.
+    for (GLuint texIndex = 0; texIndex < kMaxBuffers; texIndex++)
+    {
+        glBindTexture(GL_TEXTURE_2D, mTextures[texIndex]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texIndex, GL_TEXTURE_2D,
+                               mTextures[texIndex], 0);
+        bufs[texIndex] = GL_COLOR_ATTACHMENT0 + texIndex;
+
+        // Mask out the first two buffers.
+        flags[texIndex] = texIndex >= kHalfMaxBuffers;
+    }
+
+    GLuint program;
+    setupMRTProgram(flags, &program);
+
+    setDrawBuffers(kMaxBuffers, bufs);
+    drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
+
+    for (GLuint texIndex = 0; texIndex < kHalfMaxBuffers; texIndex++)
+    {
+        verifyAttachment2DUnwritten(texIndex, mTextures[texIndex], GL_TEXTURE_2D, 0);
+    }
+
+    for (GLuint texIndex = kHalfMaxBuffers; texIndex < kMaxBuffers; texIndex++)
+    {
+        verifyAttachment2D(texIndex, mTextures[texIndex], GL_TEXTURE_2D, 0);
+    }
+
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
+}
+
+// Same as above but adds a state change from a program with different masks after a clear.
+TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
+{
+    // TODO(http://anglebug.com/2872): Broken on the GL back-end.
+    ANGLE_SKIP_TEST_IF(IsOpenGL());
+
+    // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsDesktopOpenGL());
+
+    ANGLE_SKIP_TEST_IF(!setupTest());
+
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &mMaxDrawBuffers);
+    ASSERT_GE(mMaxDrawBuffers, 4);
+
+    bool flags[8]      = {false};
+    GLenum someBufs[4] = {GL_NONE};
+    GLenum allBufs[4]  = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+                         GL_COLOR_ATTACHMENT3};
+
+    constexpr GLuint kMaxBuffers     = 4;
+    constexpr GLuint kHalfMaxBuffers = 2;
+
+    // Enable all draw buffers.
+    for (GLuint texIndex = 0; texIndex < kMaxBuffers; texIndex++)
+    {
+        glBindTexture(GL_TEXTURE_2D, mTextures[texIndex]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texIndex, GL_TEXTURE_2D,
+                               mTextures[texIndex], 0);
+        someBufs[texIndex] =
+            texIndex >= kHalfMaxBuffers ? GL_COLOR_ATTACHMENT0 + texIndex : GL_NONE;
+
+        // Mask out the first two buffers.
+        flags[texIndex] = texIndex >= kHalfMaxBuffers;
+    }
+
+    GLuint program;
+    setupMRTProgram(flags, &program);
+
+    // Now set up a second simple program that draws to FragColor. Should be broadcast.
+    ANGLE_GL_PROGRAM(simpleProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    // Draw with simple program.
+    drawQuad(simpleProgram, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear draw buffers.
+    setDrawBuffers(kMaxBuffers, someBufs);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify first is drawn red, second is untouched, and last two are cleared green.
+    verifyAttachment2DColor(0, mTextures[0], GL_TEXTURE_2D, 0, GLColor::red);
+    verifyAttachment2DColor(1, mTextures[1], GL_TEXTURE_2D, 0, GLColor::transparentBlack);
+    verifyAttachment2DColor(2, mTextures[2], GL_TEXTURE_2D, 0, GLColor::green);
+    verifyAttachment2DColor(3, mTextures[3], GL_TEXTURE_2D, 0, GLColor::green);
+
+    // Draw with MRT program.
+    setDrawBuffers(kMaxBuffers, allBufs);
+    drawQuad(program, positionAttrib(), 0.5, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Only the last two attachments should be updated.
+    verifyAttachment2DColor(0, mTextures[0], GL_TEXTURE_2D, 0, GLColor::red);
+    verifyAttachment2DColor(1, mTextures[1], GL_TEXTURE_2D, 0, GLColor::transparentBlack);
+    verifyAttachment2D(2, mTextures[2], GL_TEXTURE_2D, 0);
+    verifyAttachment2D(3, mTextures[3], GL_TEXTURE_2D, 0);
+
+    // Clear again. All attachments should be cleared.
+    glClear(GL_COLOR_BUFFER_BIT);
+    verifyAttachment2DColor(0, mTextures[0], GL_TEXTURE_2D, 0, GLColor::green);
+    verifyAttachment2DColor(1, mTextures[1], GL_TEXTURE_2D, 0, GLColor::green);
+    verifyAttachment2DColor(2, mTextures[2], GL_TEXTURE_2D, 0, GLColor::green);
+    verifyAttachment2DColor(3, mTextures[3], GL_TEXTURE_2D, 0, GLColor::green);
+
+    glDeleteProgram(program);
+}
+
 TEST_P(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
 {
-    ANGLE_SKIP_TEST_IF(!checkSupport());
+    ANGLE_SKIP_TEST_IF(!setupTest());
 
     // Bind two render targets but use a shader which writes only to the first one.
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
@@ -374,7 +516,9 @@ TEST_P(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
 
 TEST_P(DrawBuffersTest, BroadcastGLFragColor)
 {
-    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_draw_buffers"));
+    // Broadcast is not supported on GLES 3.0.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
+    ANGLE_SKIP_TEST_IF(!setupTest());
 
     // Bind two render targets. gl_FragColor should be broadcast to both.
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
@@ -422,6 +566,8 @@ class DrawBuffersTestES3 : public DrawBuffersTest
 // Test that binding multiple layers of a 3D texture works correctly
 TEST_P(DrawBuffersTestES3, 3DTextures)
 {
+    ANGLE_SKIP_TEST_IF(!setupTest());
+
     GLTexture texture;
     glBindTexture(GL_TEXTURE_3D, texture.get());
     glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), getWindowWidth(),
@@ -457,6 +603,8 @@ TEST_P(DrawBuffersTestES3, 3DTextures)
 // Test that binding multiple layers of a 2D array texture works correctly
 TEST_P(DrawBuffersTestES3, 2DArrayTextures)
 {
+    ANGLE_SKIP_TEST_IF(!setupTest());
+
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D_ARRAY, texture.get());
     glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, getWindowWidth(), getWindowHeight(),
@@ -493,10 +641,11 @@ TEST_P(DrawBuffersTestES3, 2DArrayTextures)
 ANGLE_INSTANTIATE_TEST(DrawBuffersTest,
                        ES2_D3D11(),
                        ES3_D3D11(),
-                       ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
                        ES3_OPENGLES());
+
+ANGLE_INSTANTIATE_TEST(DrawBuffersWebGL2Test, ES3_D3D11(), ES3_OPENGL());
 
 ANGLE_INSTANTIATE_TEST(DrawBuffersTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
