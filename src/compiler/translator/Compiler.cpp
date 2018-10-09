@@ -26,6 +26,7 @@
 #include "compiler/translator/tree_ops/ClampPointSize.h"
 #include "compiler/translator/tree_ops/DeclareAndInitBuiltinsForInstancedMultiview.h"
 #include "compiler/translator/tree_ops/DeferGlobalInitializers.h"
+#include "compiler/translator/tree_ops/EmulateGLDrawID.h"
 #include "compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/tree_ops/EmulatePrecision.h"
 #include "compiler/translator/tree_ops/FoldExpressions.h"
@@ -346,6 +347,18 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     // Reset the extension behavior for each compilation unit.
     ResetExtensionBehavior(mExtensionBehavior);
 
+    // If gl_DrawID is not supported, remove it from the available extensions
+    // Currently we only allow emulation of gl_DrawID
+    const bool glDrawIDSupported = (compileOptions & SH_EMULATE_GL_DRAW_ID) != 0u;
+    if (!glDrawIDSupported)
+    {
+        auto it = mExtensionBehavior.find(TExtension::ANGLE_multi_draw);
+        if (it != mExtensionBehavior.end())
+        {
+            mExtensionBehavior.erase(it);
+        }
+    }
+
     // First string is path of source file if flag is set. The actual source follows.
     size_t firstSource = 0;
     if (compileOptions & SH_SOURCE_PATH)
@@ -573,6 +586,16 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         root->traverse(&gen);
     }
 
+    if (mShaderType == GL_VERTEX_SHADER &&
+        IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw))
+    {
+        if ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0)
+        {
+            EmulateGLDrawID(root, &mSymbolTable, &mUniforms,
+                            shouldCollectVariables(compileOptions));
+        }
+    }
+
     if (mShaderType == GL_FRAGMENT_SHADER && mShaderVersion == 100 && mResources.EXT_draw_buffers &&
         mResources.MaxDrawBuffers > 1 &&
         IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_draw_buffers))
@@ -762,6 +785,22 @@ bool TCompiler::compile(const char *const shaderStrings[],
             translate(root, compileOptions, &perfDiagnostics);
         }
 
+        if (mShaderType == GL_VERTEX_SHADER &&
+            IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw))
+        {
+            if ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0)
+            {
+                for (auto& uniform : mUniforms)
+                {
+                    if (uniform.name == "angle_DrawID" && uniform.mappedName == "angle_DrawID")
+                    {
+                        uniform.name = "gl_DrawID";
+                        break;
+                    }
+                }
+            }
+        }
+
         // The IntermNode tree doesn't need to be deleted here, since the
         // memory will be freed in a big chunk by the PoolAllocator.
         return true;
@@ -825,6 +864,7 @@ void TCompiler::setResourceString()
         << ":MaxViewsOVR:" << mResources.MaxViewsOVR
         << ":NV_draw_buffers:" << mResources.NV_draw_buffers
         << ":WEBGL_debug_shader_precision:" << mResources.WEBGL_debug_shader_precision
+        << ":ANGLE_multi_draw:" << mResources.ANGLE_multi_draw
         << ":MinProgramTextureGatherOffset:" << mResources.MinProgramTextureGatherOffset
         << ":MaxProgramTextureGatherOffset:" << mResources.MaxProgramTextureGatherOffset
         << ":MaxImageUnits:" << mResources.MaxImageUnits

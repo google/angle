@@ -452,6 +452,9 @@ struct Extensions
 
     // GL_ANGLE_texture_multisample
     bool textureMultisample;
+
+    // GL_ANGLE_multi_draw
+    bool multiDraw;
 };
 
 struct ExtensionInfo

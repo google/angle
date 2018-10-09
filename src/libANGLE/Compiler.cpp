@@ -86,6 +86,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.OES_texture_storage_multisample_2d_array =
         extensions.textureStorageMultisample2DArray;
     mResources.ANGLE_texture_multisample = extensions.textureMultisample;
+    mResources.ANGLE_multi_draw          = extensions.multiDraw;
+
     // TODO: use shader precision caps to determine if high precision is supported?
     mResources.FragmentPrecisionHigh = 1;
     mResources.EXT_frag_depth        = extensions.fragDepth;

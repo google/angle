@@ -1072,6 +1072,7 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x7e7970c2u, ImmutableString("gl_LastFragData").mangledNameHash());
     ASSERT_EQ(0x7e802016u, ImmutableString("gl_LastFragColor").mangledNameHash());
     ASSERT_EQ(0x7e9f0a88u, ImmutableString("gl_LastFragColorARM").mangledNameHash());
+    ASSERT_EQ(0x7e4c3c42u, ImmutableString("gl_DrawID").mangledNameHash());
     ASSERT_EQ(0x7ebeff64u, ImmutableString("gl_DepthRangeParameters").mangledNameHash());
     ASSERT_EQ(0x7e6af03cu, ImmutableString("gl_DepthRange").mangledNameHash());
     ASSERT_EQ(0x7e9ad799u, ImmutableString("gl_MaxVertexAttribs").mangledNameHash());

@@ -970,6 +970,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_InstanceID;
 constexpr const TSymbolUniqueId BuiltInId::gl_VertexID;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewportIndex;
 constexpr const TSymbolUniqueId BuiltInId::gl_LayerVS;
+constexpr const TSymbolUniqueId BuiltInId::gl_DrawID;
 constexpr const TSymbolUniqueId BuiltInId::gl_NumWorkGroups;
 constexpr const TSymbolUniqueId BuiltInId::gl_WorkGroupSize;
 constexpr const TSymbolUniqueId BuiltInId::gl_WorkGroupID;
@@ -987,7 +988,7 @@ constexpr const TSymbolUniqueId BuiltInId::gl_PositionGS;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVR;
 constexpr const TSymbolUniqueId BuiltInId::gl_ViewID_OVRESSL1;
 
-const int TSymbolTable::kLastBuiltInId = 1023;
+const int TSymbolTable::kLastBuiltInId = 1024;
 
 namespace BuiltInName
 {
@@ -1076,6 +1077,7 @@ constexpr const ImmutableString fwidth("fwidth");
 constexpr const ImmutableString fwidthExt("fwidth");
 constexpr const ImmutableString gl_DepthRange("gl_DepthRange");
 constexpr const ImmutableString gl_DepthRangeParameters("gl_DepthRangeParameters");
+constexpr const ImmutableString gl_DrawID("gl_DrawID");
 constexpr const ImmutableString gl_FragColor("gl_FragColor");
 constexpr const ImmutableString gl_FragCoord("gl_FragCoord");
 constexpr const ImmutableString gl_FragData("gl_FragData");
@@ -1453,6 +1455,11 @@ constexpr const ImmutableString yuv_2_rgb("yuv_2_rgb");
 namespace BuiltInVariable
 {
 
+constexpr const TVariable kVar_gl_DrawID(BuiltInId::gl_DrawID,
+                                         BuiltInName::gl_DrawID,
+                                         SymbolType::BuiltIn,
+                                         TExtension::ANGLE_multi_draw,
+                                         StaticType::Get<EbtInt, EbpHigh, EvqDrawID, 1, 1>());
 constexpr const TVariable kVar_gl_FragColor(
     BuiltInId::gl_FragColor,
     BuiltInName::gl_FragColor,
@@ -2030,6 +2037,11 @@ constexpr const TVariable kVar_pt_o_3D(BuiltInId::pt_o_3D,
                                        SymbolType::BuiltIn,
                                        TExtension::UNDEFINED,
                                        StaticType::Get<EbtUInt, EbpUndefined, EvqOut, 4, 1>());
+
+const TVariable *gl_DrawID()
+{
+    return &kVar_gl_DrawID;
+}
 
 const TVariable *gl_FragColor()
 {
@@ -7324,7 +7336,7 @@ constexpr const TFunction kFunction_texture_0Y2B(
     BuiltInId::texture_USamplerCube1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
-    BuiltInParameters::p0Y2B0B,
+    BuiltInParameters::p0Y2B2B2B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9601,7 +9613,7 @@ constexpr const TFunction kFunction_textureGather_0Y2B(
     BuiltInId::textureGather_USamplerCube1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p0Y2B0B,
+    BuiltInParameters::p0Y2B2B2B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -17240,6 +17252,20 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
                     if (name == BuiltInName::gl_LastFragColorARM)
                     {
                         return &BuiltInVariable::kVar_gl_LastFragColorARM;
+                    }
+                    break;
+                }
+            }
+        }
+        if ((mShaderType == GL_VERTEX_SHADER) && (mResources.ANGLE_multi_draw))
+        {
+            switch (nameHash)
+            {
+                case 0x7e4c3c42u:
+                {
+                    if (name == BuiltInName::gl_DrawID)
+                    {
+                        return &BuiltInVariable::kVar_gl_DrawID;
                     }
                     break;
                 }

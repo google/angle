@@ -52,6 +52,7 @@ angle_unittests_sources = [
   "../tests/compiler_tests/ConstantFoldingOverflow_test.cpp",
   "../tests/compiler_tests/ConstructCompiler_test.cpp",
   "../tests/compiler_tests/DebugShaderPrecision_test.cpp",
+  "../tests/compiler_tests/EmulateGLDrawID_test.cpp",
   "../tests/compiler_tests/EmulateGLFragColorBroadcast_test.cpp",
   "../tests/compiler_tests/ExpressionLimit_test.cpp",
   "../tests/compiler_tests/EXT_YUV_target_test.cpp",

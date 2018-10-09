@@ -174,6 +174,7 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mInstanceIDAdded;
     bool mVertexIDAdded;
     bool mPointSizeAdded;
+    bool mDrawIDAdded;
 
     // Vertex Shader and Geometry Shader builtins
     bool mPositionAdded;
@@ -231,6 +232,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mInstanceIDAdded(false),
       mVertexIDAdded(false),
       mPointSizeAdded(false),
+      mDrawIDAdded(false),
       mPositionAdded(false),
       mPointCoordAdded(false),
       mFrontFacingAdded(false),
@@ -484,6 +486,9 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 return;
             case EvqPointSize:
                 recordBuiltInVaryingUsed(symbol->variable(), &mPointSizeAdded, mOutputVaryings);
+                return;
+            case EvqDrawID:
+                recordBuiltInAttributeUsed(symbol->variable(), &mDrawIDAdded);
                 return;
             case EvqLastFragData:
                 recordBuiltInVaryingUsed(symbol->variable(), &mLastFragDataAdded, mInputVaryings);
