@@ -7823,11 +7823,6 @@ Shader *Context::getShader(GLuint handle) const
     return mState.mShaderPrograms->getShader(handle);
 }
 
-bool Context::isTextureGenerated(GLuint texture) const
-{
-    return mState.mTextures->isHandleGenerated(texture);
-}
-
 bool Context::isRenderbufferGenerated(GLuint renderbuffer) const
 {
     return mState.mRenderbuffers->isHandleGenerated(renderbuffer);

@@ -723,6 +723,10 @@ bool ValidateTexStorage3DEXT(Context *context,
                              GLsizei depth);
 bool ValidateMaxShaderCompilerThreadsKHR(Context *context, GLuint count);
 
+ANGLE_INLINE bool ValidateUniform2f(Context *context, GLint location, GLfloat x, GLfloat y)
+{
+    return ValidateUniform(context, GL_FLOAT_VEC2, location, 1);
+}
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES2_H_

@@ -256,11 +256,6 @@ bool FramebufferAttachment::isLayered() const
     return mTarget.textureIndex().isLayered();
 }
 
-GLsizei FramebufferAttachment::getNumViews() const
-{
-    return mNumViews;
-}
-
 GLenum FramebufferAttachment::getMultiviewLayout() const
 {
     return mMultiviewLayout;

@@ -97,7 +97,17 @@ class FramebufferState final : angle::NonCopyable
     bool hasStencil() const;
 
     GLenum getMultiviewLayout() const;
-    GLsizei getNumViews() const;
+
+    ANGLE_INLINE GLsizei getNumViews() const
+    {
+        const FramebufferAttachment *attachment = getFirstNonNullAttachment();
+        if (attachment == nullptr)
+        {
+            return FramebufferAttachment::kDefaultNumViews;
+        }
+        return attachment->getNumViews();
+    }
+
     const std::vector<Offset> *getViewportOffsets() const;
     GLint getBaseViewIndex() const;
 
@@ -240,7 +250,7 @@ class Framebuffer final : public angle::ObserverInterface,
 
     void invalidateCompletenessCache(const Context *context);
 
-    GLenum checkStatus(const Context *context)
+    ANGLE_INLINE GLenum checkStatus(const Context *context)
     {
         // The default framebuffer is always complete except when it is surfaceless in which
         // case it is always unsupported.
@@ -257,7 +267,7 @@ class Framebuffer final : public angle::ObserverInterface,
     int getCachedSamples(const Context *context);
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
-    bool isComplete(const Context *context)
+    ANGLE_INLINE bool isComplete(const Context *context)
     {
         return (checkStatus(context) == GL_FRAMEBUFFER_COMPLETE);
     }

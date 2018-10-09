@@ -381,7 +381,7 @@ ANGLE_INLINE angle::Result State::updateActiveTexture(const Context *context,
         return angle::Result::Continue();
     }
 
-    mCompleteTextureBindings[textureIndex].bind(texture->getSubject());
+    mCompleteTextureBindings[textureIndex].bind(texture->getImplementation());
 
     if (!texture->isSamplerComplete(context, sampler))
     {

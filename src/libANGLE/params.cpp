@@ -20,43 +20,6 @@ namespace gl
 constexpr ParamTypeInfo ParamsBase::TypeInfo;
 constexpr ParamTypeInfo DrawCallParams::TypeInfo;
 
-// DrawCallParams implementation.
-// Called by DrawArrays.
-DrawCallParams::DrawCallParams(PrimitiveMode mode,
-                               GLint firstVertex,
-                               GLsizei vertexCount,
-                               GLsizei instances)
-    : mMode(mode),
-      mFirstVertex(firstVertex),
-      mVertexCount(vertexCount),
-      mIndexCount(0),
-      mBaseVertex(0),
-      mType(GL_NONE),
-      mIndices(nullptr),
-      mInstances(instances),
-      mIndirect(nullptr)
-{
-}
-
-// Called by DrawElements.
-DrawCallParams::DrawCallParams(PrimitiveMode mode,
-                               GLint indexCount,
-                               GLenum type,
-                               const void *indices,
-                               GLint baseVertex,
-                               GLsizei instances)
-    : mMode(mode),
-      mFirstVertex(0),
-      mVertexCount(0),
-      mIndexCount(indexCount),
-      mBaseVertex(baseVertex),
-      mType(type),
-      mIndices(indices),
-      mInstances(instances),
-      mIndirect(nullptr)
-{
-}
-
 // Called by DrawArraysIndirect.
 DrawCallParams::DrawCallParams(PrimitiveMode mode, const void *indirect)
     : mMode(mode),

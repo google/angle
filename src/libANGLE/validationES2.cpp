@@ -5681,11 +5681,6 @@ bool ValidateUniform1i(Context *context, GLint location, GLint x)
     return ValidateUniform1iv(context, location, 1, &x);
 }
 
-bool ValidateUniform2f(Context *context, GLint location, GLfloat x, GLfloat y)
-{
-    return ValidateUniform(context, GL_FLOAT_VEC2, location, 1);
-}
-
 bool ValidateUniform2fv(Context *context, GLint location, GLsizei count, const GLfloat *v)
 {
     return ValidateUniform(context, GL_FLOAT_VEC2, location, count);

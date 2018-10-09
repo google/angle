@@ -480,7 +480,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Buffer *getBuffer(GLuint handle) const;
     FenceNV *getFenceNV(GLuint handle);
     Sync *getSync(GLsync handle) const;
-    Texture *getTexture(GLuint handle) const { return mState.mTextures->getTexture(handle); }
+    ANGLE_INLINE Texture *getTexture(GLuint handle) const
+    {
+        return mState.mTextures->getTexture(handle);
+    }
 
     Framebuffer *getFramebuffer(GLuint handle) const;
     Renderbuffer *getRenderbuffer(GLuint handle) const;
@@ -1636,7 +1639,11 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Program *getProgramNoResolveLink(GLuint handle) const;
     Shader *getShader(GLuint handle) const;
 
-    bool isTextureGenerated(GLuint texture) const;
+    ANGLE_INLINE bool isTextureGenerated(GLuint texture) const
+    {
+        return mState.mTextures->isHandleGenerated(texture);
+    }
+
     bool isBufferGenerated(GLuint buffer) const
     {
         return mState.mBuffers->isHandleGenerated(buffer);

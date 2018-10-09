@@ -587,16 +587,6 @@ bool FramebufferState::hasStencil() const
     return (mStencilAttachment.isAttached() && mStencilAttachment.getStencilSize() > 0);
 }
 
-GLsizei FramebufferState::getNumViews() const
-{
-    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
-    if (attachment == nullptr)
-    {
-        return FramebufferAttachment::kDefaultNumViews;
-    }
-    return attachment->getNumViews();
-}
-
 const std::vector<Offset> *FramebufferState::getViewportOffsets() const
 {
     const FramebufferAttachment *attachment = getFirstNonNullAttachment();

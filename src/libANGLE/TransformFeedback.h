@@ -68,7 +68,8 @@ class TransformFeedback final : public RefCountObject, public LabeledObject
     void pause();
     void resume();
 
-    bool isActive() const;
+    bool isActive() const { return mState.mActive; }
+
     bool isPaused() const;
     PrimitiveMode getPrimitiveMode() const;
     // Validates that the vertices produced by a draw call will fit in the bound transform feedback

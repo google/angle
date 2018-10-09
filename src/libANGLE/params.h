@@ -78,7 +78,18 @@ class DrawCallParams final : angle::NonCopyable
 {
   public:
     // Called by DrawArrays.
-    DrawCallParams(PrimitiveMode mode, GLint firstVertex, GLsizei vertexCount, GLsizei instances);
+    DrawCallParams(PrimitiveMode mode, GLint firstVertex, GLsizei vertexCount, GLsizei instances)
+        : mMode(mode),
+          mFirstVertex(firstVertex),
+          mVertexCount(vertexCount),
+          mIndexCount(0),
+          mBaseVertex(0),
+          mType(GL_NONE),
+          mIndices(nullptr),
+          mInstances(instances),
+          mIndirect(nullptr)
+    {
+    }
 
     // Called by DrawElements.
     DrawCallParams(PrimitiveMode mode,
@@ -86,7 +97,18 @@ class DrawCallParams final : angle::NonCopyable
                    GLenum type,
                    const void *indices,
                    GLint baseVertex,
-                   GLsizei instances);
+                   GLsizei instances)
+        : mMode(mode),
+          mFirstVertex(0),
+          mVertexCount(0),
+          mIndexCount(indexCount),
+          mBaseVertex(baseVertex),
+          mType(type),
+          mIndices(indices),
+          mInstances(instances),
+          mIndirect(nullptr)
+    {
+    }
 
     // Called by DrawArraysIndirect.
     DrawCallParams(PrimitiveMode mode, const void *indirect);

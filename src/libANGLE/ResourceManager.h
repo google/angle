@@ -64,7 +64,7 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
     TypedResourceManager() {}
 
     void deleteObject(const Context *context, GLuint handle);
-    bool isHandleGenerated(GLuint handle) const
+    ANGLE_INLINE bool isHandleGenerated(GLuint handle) const
     {
         // Zero is always assumed to have been generated implicitly.
         return handle == 0 || mObjectMap.contains(handle);
@@ -166,7 +166,7 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
 {
   public:
     GLuint createTexture();
-    Texture *getTexture(GLuint handle) const
+    ANGLE_INLINE Texture *getTexture(GLuint handle) const
     {
         ASSERT(mObjectMap.query(0) == nullptr);
         return mObjectMap.query(handle);
@@ -174,7 +174,9 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
 
     void signalAllTexturesDirty(const Context *context) const;
 
-    Texture *checkTextureAllocation(rx::GLImplFactory *factory, GLuint handle, TextureType type)
+    ANGLE_INLINE Texture *checkTextureAllocation(rx::GLImplFactory *factory,
+                                                 GLuint handle,
+                                                 TextureType type)
     {
         return checkObjectAllocation(factory, handle, type);
     }

@@ -120,7 +120,7 @@ ResourceMap<ResourceType>::~ResourceMap()
 }
 
 template <typename ResourceType>
-bool ResourceMap<ResourceType>::contains(GLuint handle) const
+ANGLE_INLINE bool ResourceMap<ResourceType>::contains(GLuint handle) const
 {
     if (handle < mFlatResourcesSize)
     {

@@ -114,7 +114,9 @@ class FramebufferAttachment final
     GLint mipLevel() const;
     GLint layer() const;
     bool isLayered() const;
-    GLsizei getNumViews() const;
+
+    GLsizei getNumViews() const { return mNumViews; }
+
     GLenum getMultiviewLayout() const;
     GLint getBaseViewIndex() const;
     const std::vector<Offset> &getMultiviewViewportOffsets() const;

@@ -169,11 +169,6 @@ void TransformFeedback::resume()
     mImplementation->resume();
 }
 
-bool TransformFeedback::isActive() const
-{
-    return mState.mActive;
-}
-
 bool TransformFeedback::isPaused() const
 {
     return mState.mPaused;
