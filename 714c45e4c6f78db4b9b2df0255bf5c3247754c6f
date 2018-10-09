@@ -1,0 +1,233 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a855519_f7e95697",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "Should be ANGLE_texture_multisample",
+      "range": {
+        "startLine": 317,
+        "startChar": 8,
+        "endLine": 317,
+        "endChar": 11
+      },
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f0fdd40_271544c5",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "I don\u0027t think that this patch should enable this extension by default - extensions commonly aren\u0027t enabled by default by shader_translator.\n\nThis is something that could be good to change with a separate patch though. Filed a bug: https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d2873",
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "803a53ab_76ba6e20",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "ANGLE",
+      "range": {
+        "startLine": 22,
+        "startChar": 4,
+        "endLine": 22,
+        "endChar": 7
+      },
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0a2ba72_403958d9",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "ANGLE",
+      "range": {
+        "startLine": 385,
+        "startChar": 90,
+        "endLine": 385,
+        "endChar": 93
+      },
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29256688_68b7c1be",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "ANGLE",
+      "range": {
+        "startLine": 486,
+        "startChar": 90,
+        "endLine": 486,
+        "endChar": 93
+      },
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cb133db_fc83fc68",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 7
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "It would be more accurate to say: \"A keyword in GLSL ES 3.00 with enabled extension or in GLSL ES 3.10\". I don\u0027t think the comment needs to mention more than that.",
+      "range": {
+        "startLine": 608,
+        "startChar": 8,
+        "endLine": 608,
+        "endChar": 113
+      },
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cd8ebbf_8cd61df0",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "Also these changes can be left out of this patch.",
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d749a088_0d3c7ec3",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "This patch doesn\u0027t need to include the libANGLE level changes.",
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f863cd9b_c93dad4a",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "Also these changes can be left out of this patch.",
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f30c8686_68c0a5fa",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "ANGLE",
+      "range": {
+        "startLine": 348,
+        "startChar": 10,
+        "endLine": 348,
+        "endChar": 13
+      },
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f9fe9b9_9970d980",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2018-10-09T07:39:20Z",
+      "side": 1,
+      "message": "ANGLE",
+      "range": {
+        "startLine": 374,
+        "startChar": 60,
+        "endLine": 374,
+        "endChar": 63
+      },
+      "revId": "714c45e4c6f78db4b9b2df0255bf5c3247754c6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
