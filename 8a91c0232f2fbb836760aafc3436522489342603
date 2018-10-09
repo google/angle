@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7208baeb_8573b739",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-09T05:28:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59f2781e_b15c9900",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 21
+      },
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ac51a7f9_7fa0ffba",
         "filename": "src/compiler/translator/builtin_function_declarations.txt",
         "patchSetId": 5
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "a2627210_fac1cb3a",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-09T05:28:21Z",
+      "side": 1,
+      "message": "I think this group is es 300 core feature, so I prefer to change the below group name to \u0027TextureSizeMSExt\u0027",
+      "parentUuid": "ac51a7f9_7fa0ffba",
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5e49ca2f_1d8d5fcc",
         "filename": "src/compiler/translator/builtin_function_declarations.txt",
         "patchSetId": 5
@@ -53,6 +95,30 @@
       "writtenOn": "2018-10-08T09:50:13Z",
       "side": 1,
       "message": "Is it a \u0027MUST\u0027?",
+      "range": {
+        "startLine": 385,
+        "startChar": 116,
+        "endLine": 385,
+        "endChar": 131
+      },
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16c80940_9ee8a6fb",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-09T05:28:21Z",
+      "side": 1,
+      "message": "Yes， it\u0027s used to identify the one of ES 3.1, or the function won\u0027t be effective.",
+      "parentUuid": "5e49ca2f_1d8d5fcc",
       "range": {
         "startLine": 385,
         "startChar": 116,
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "882737ed_dc2a77fb",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-09T05:28:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "059124ba_a690be86",
+      "range": {
+        "startLine": 351,
+        "startChar": 4,
+        "endLine": 351,
+        "endChar": 35
+      },
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c556ac8_89d7374c",
         "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
         "patchSetId": 5
@@ -102,6 +192,24 @@
       "revId": "8a91c0232f2fbb836760aafc3436522489342603",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd4b1dad_3069bbc0",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-09T05:28:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c556ac8_89d7374c",
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -125,6 +233,30 @@
       "revId": "8a91c0232f2fbb836760aafc3436522489342603",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae041457_3186a822",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-09T05:28:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32d8c7fb_da8e1805",
+      "range": {
+        "startLine": 376,
+        "startChar": 4,
+        "endLine": 376,
+        "endChar": 35
+      },
+      "revId": "8a91c0232f2fbb836760aafc3436522489342603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
