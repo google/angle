@@ -509,6 +509,8 @@ static_library("libANGLE") {
     sources += libangle_d3d11_sources
     sources += libangle_d3d11_win32_sources
     libs += [ "dxguid.lib" ]
+    import("src/libANGLE/renderer/d3d/d3d11/d3d11_blit_shaders_autogen.gni")
+    sources += libangle_d3d11_blit_shaders
   }
 
   if (angle_enable_gl) {

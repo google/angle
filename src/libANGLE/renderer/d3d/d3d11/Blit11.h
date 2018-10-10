@@ -105,180 +105,8 @@ class Blit11 : angle::NonCopyable
                                      uint8_t *destData);
 
   private:
-    enum BlitShaderType
-    {
-        BLITSHADER_INVALID,
-
-        // Passthrough shaders
-        BLITSHADER_2D_RGBAF,
-        BLITSHADER_2D_BGRAF,
-        BLITSHADER_2D_RGBF,
-        BLITSHADER_2D_RGF,
-        BLITSHADER_2D_RF,
-        BLITSHADER_2D_ALPHA,
-        BLITSHADER_2D_LUMA,
-        BLITSHADER_2D_LUMAALPHA,
-        BLITSHADER_2D_RGBAUI,
-        BLITSHADER_2D_RGBAI,
-        BLITSHADER_2D_RGBUI,
-        BLITSHADER_2D_RGBI,
-        BLITSHADER_2D_RGUI,
-        BLITSHADER_2D_RGI,
-        BLITSHADER_2D_RUI,
-        BLITSHADER_2D_RI,
-        BLITSHADER_3D_RGBAF,
-        BLITSHADER_3D_RGBAUI,
-        BLITSHADER_3D_RGBAI,
-        BLITSHADER_3D_BGRAF,
-        BLITSHADER_3D_RGBF,
-        BLITSHADER_3D_RGBUI,
-        BLITSHADER_3D_RGBI,
-        BLITSHADER_3D_RGF,
-        BLITSHADER_3D_RGUI,
-        BLITSHADER_3D_RGI,
-        BLITSHADER_3D_RF,
-        BLITSHADER_3D_RUI,
-        BLITSHADER_3D_RI,
-        BLITSHADER_3D_ALPHA,
-        BLITSHADER_3D_LUMA,
-        BLITSHADER_3D_LUMAALPHA,
-        BLITSHADER_2DARRAY_RGBAF,
-        BLITSHADER_2DARRAY_RGBAUI,
-        BLITSHADER_2DARRAY_RGBAI,
-        BLITSHADER_2DARRAY_BGRAF,
-        BLITSHADER_2DARRAY_RGBF,
-        BLITSHADER_2DARRAY_RGBUI,
-        BLITSHADER_2DARRAY_RGBI,
-        BLITSHADER_2DARRAY_RGF,
-        BLITSHADER_2DARRAY_RGUI,
-        BLITSHADER_2DARRAY_RGI,
-        BLITSHADER_2DARRAY_RF,
-        BLITSHADER_2DARRAY_RUI,
-        BLITSHADER_2DARRAY_RI,
-        BLITSHADER_2DARRAY_ALPHA,
-        BLITSHADER_2DARRAY_LUMA,
-        BLITSHADER_2DARRAY_LUMAALPHA,
-
-        // 2D Multiply alpha shaders
-        BLITSHADER_2D_RGBAF_PREMULTIPLY,
-        BLITSHADER_2D_RGBAF_UNMULTIPLY,
-
-        BLITSHADER_2D_RGBF_PREMULTIPLY,
-        BLITSHADER_2D_RGBF_UNMULTIPLY,
-
-        BLITSHADER_2D_RGBAF_TOUI,
-        BLITSHADER_2D_RGBAF_TOUI_PREMULTIPLY,
-        BLITSHADER_2D_RGBAF_TOUI_UNMULTIPLY,
-
-        BLITSHADER_2D_RGBF_TOUI,
-        BLITSHADER_2D_RGBF_TOUI_PREMULTIPLY,
-        BLITSHADER_2D_RGBF_TOUI_UNMULTIPLY,
-
-        BLITSHADER_2D_LUMAF_PREMULTIPLY,
-        BLITSHADER_2D_LUMAF_UNMULTIPLY,
-
-        BLITSHADER_2D_LUMAALPHAF_PREMULTIPLY,
-        BLITSHADER_2D_LUMAALPHAF_UNMULTIPLY,
-
-        // 3D Multiply alpha shaders
-        BLITSHADER_3D_RGBAF_PREMULTIPLY,
-        BLITSHADER_3D_RGBAF_UNMULTIPLY,
-
-        BLITSHADER_3D_RGBF_PREMULTIPLY,
-        BLITSHADER_3D_RGBF_UNMULTIPLY,
-
-        BLITSHADER_3D_RGBAF_TOUI,
-        BLITSHADER_3D_RGBAF_TOUI_PREMULTIPLY,
-        BLITSHADER_3D_RGBAF_TOUI_UNMULTIPLY,
-
-        BLITSHADER_3D_RGBF_TOUI,
-        BLITSHADER_3D_RGBF_TOUI_PREMULTIPLY,
-        BLITSHADER_3D_RGBF_TOUI_UNMULTIPLY,
-
-        BLITSHADER_3D_RGBAF_TOI,
-        BLITSHADER_3D_RGBAF_TOI_PREMULTIPLY,
-        BLITSHADER_3D_RGBAF_TOI_UNMULTIPLY,
-
-        BLITSHADER_3D_RGBF_TOI,
-        BLITSHADER_3D_RGBF_TOI_PREMULTIPLY,
-        BLITSHADER_3D_RGBF_TOI_UNMULTIPLY,
-
-        BLITSHADER_3D_LUMAF_PREMULTIPLY,
-        BLITSHADER_3D_LUMAF_UNMULTIPLY,
-
-        BLITSHADER_3D_LUMAALPHAF_PREMULTIPLY,
-        BLITSHADER_3D_LUMAALPHAF_UNMULTIPLY,
-
-        // 2DArray Multiply alpha shaders
-        BLITSHADER_2DARRAY_RGBAF_PREMULTIPLY,
-        BLITSHADER_2DARRAY_RGBAF_UNMULTIPLY,
-
-        BLITSHADER_2DARRAY_RGBF_PREMULTIPLY,
-        BLITSHADER_2DARRAY_RGBF_UNMULTIPLY,
-
-        BLITSHADER_2DARRAY_RGBAF_TOUI,
-        BLITSHADER_2DARRAY_RGBAF_TOUI_PREMULTIPLY,
-        BLITSHADER_2DARRAY_RGBAF_TOUI_UNMULTIPLY,
-
-        BLITSHADER_2DARRAY_RGBF_TOUI,
-        BLITSHADER_2DARRAY_RGBF_TOUI_PREMULTIPLY,
-        BLITSHADER_2DARRAY_RGBF_TOUI_UNMULTIPLY,
-
-        BLITSHADER_2DARRAY_RGBAF_TOI,
-        BLITSHADER_2DARRAY_RGBAF_TOI_PREMULTIPLY,
-        BLITSHADER_2DARRAY_RGBAF_TOI_UNMULTIPLY,
-
-        BLITSHADER_2DARRAY_RGBF_TOI,
-        BLITSHADER_2DARRAY_RGBF_TOI_PREMULTIPLY,
-        BLITSHADER_2DARRAY_RGBF_TOI_UNMULTIPLY,
-
-        BLITSHADER_2DARRAY_LUMAF_PREMULTIPLY,
-        BLITSHADER_2DARRAY_LUMAF_UNMULTIPLY,
-
-        BLITSHADER_2DARRAY_LUMAALPHAF_PREMULTIPLY,
-        BLITSHADER_2DARRAY_LUMAALPHAF_UNMULTIPLY,
-
-        // 2D Downsample 16-bit shaders
-        BLITSHADER_2D_RGBAF_4444,
-        BLITSHADER_2D_RGBAF_4444_PREMULTIPLY,
-        BLITSHADER_2D_RGBAF_4444_UNMULTIPLY,
-
-        BLITSHADER_2D_RGBF_565,
-        BLITSHADER_2D_RGBF_565_PREMULTIPLY,
-        BLITSHADER_2D_RGBF_565_UNMULTIPLY,
-
-        BLITSHADER_2D_RGBAF_5551,
-        BLITSHADER_2D_RGBAF_5551_PREMULTIPLY,
-        BLITSHADER_2D_RGBAF_5551_UNMULTIPLY,
-
-        // 3D Downsample 16-bit shaders
-        BLITSHADER_3D_RGBAF_4444,
-        BLITSHADER_3D_RGBAF_4444_PREMULTIPLY,
-        BLITSHADER_3D_RGBAF_4444_UNMULTIPLY,
-
-        BLITSHADER_3D_RGBF_565,
-        BLITSHADER_3D_RGBF_565_PREMULTIPLY,
-        BLITSHADER_3D_RGBF_565_UNMULTIPLY,
-
-        BLITSHADER_3D_RGBAF_5551,
-        BLITSHADER_3D_RGBAF_5551_PREMULTIPLY,
-        BLITSHADER_3D_RGBAF_5551_UNMULTIPLY,
-
-        // 2DArray Downsample 16-bit shaders
-        BLITSHADER_2DARRAY_RGBAF_4444,
-        BLITSHADER_2DARRAY_RGBAF_4444_PREMULTIPLY,
-        BLITSHADER_2DARRAY_RGBAF_4444_UNMULTIPLY,
-
-        BLITSHADER_2DARRAY_RGBF_565,
-        BLITSHADER_2DARRAY_RGBF_565_PREMULTIPLY,
-        BLITSHADER_2DARRAY_RGBF_565_UNMULTIPLY,
-
-        BLITSHADER_2DARRAY_RGBAF_5551,
-        BLITSHADER_2DARRAY_RGBAF_5551_PREMULTIPLY,
-        BLITSHADER_2DARRAY_RGBAF_5551_UNMULTIPLY,
-
-    };
-
+    enum BlitShaderOperation : unsigned int;
+    enum BlitShaderType : unsigned int;
     enum SwizzleShaderType
     {
         SWIZZLESHADER_INVALID,
@@ -338,26 +166,17 @@ class Blit11 : angle::NonCopyable
                                    const Shader &shader,
                                    ShaderSupport *supportOut);
 
-    static BlitShaderType Get2DBlitShaderType(GLenum destinationFormat,
-                                              GLenum sourceFormat,
-                                              bool isSrcSigned,
-                                              bool unpackPremultiplyAlpha,
-                                              bool unpackUnmultiplyAlpha,
-                                              GLenum destTypeForDownsampling);
-    static Blit11::BlitShaderType Get3DBlitShaderType(GLenum destinationFormat,
+    static BlitShaderOperation getBlitShaderOperation(GLenum destinationFormat,
                                                       GLenum sourceFormat,
                                                       bool isSrcSigned,
                                                       bool isDestSigned,
                                                       bool unpackPremultiplyAlpha,
                                                       bool unpackUnmultiplyAlpha,
                                                       GLenum destTypeForDownsampling);
-    static Blit11::BlitShaderType Get2DArrayBlitShaderType(GLenum destinationFormat,
-                                                           GLenum sourceFormat,
-                                                           bool isSrcSigned,
-                                                           bool isDestSigned,
-                                                           bool unpackPremultiplyAlpha,
-                                                           bool unpackUnmultiplyAlpha,
-                                                           GLenum destTypeForDownsampling);
+
+    static BlitShaderType getBlitShaderType(BlitShaderOperation operation,
+                                            ShaderDimension dimension);
+
     static SwizzleShaderType GetSwizzleShaderType(GLenum type, D3D11_SRV_DIMENSION dimensionality);
 
     angle::Result copyDepthStencilImpl(const gl::Context *context,
@@ -405,6 +224,7 @@ class Blit11 : angle::NonCopyable
                                  size_t destPixelStride,
                                  BlitConvertFunction *convertFunction);
 
+    angle::Result mapBlitShader(const gl::Context *context, BlitShaderType blitShaderType);
     angle::Result addBlitShaderToMap(const gl::Context *context,
                                      BlitShaderType blitShaderType,
                                      ShaderDimension dimension,

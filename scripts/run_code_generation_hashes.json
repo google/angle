@@ -11,6 +11,8 @@
     "8afc7eecce2a3ba9f0b4beacb1aa7fe2",
   "ANGLE load functions table:src/libANGLE/renderer/load_functions_data.json":
     "4253e14cd3217f42b6fec75ee400655a",
+  "D3D11 blit shader selection:src/libANGLE/renderer/d3d/d3d11/gen_blit11helper.py":
+    "ba81f15eccbd49cc9558fc08938dc41d",
   "D3D11 format:src/libANGLE/renderer/angle_format.py":
     "b18ca0fe4835114a4a2f54977b19e798",
   "D3D11 format:src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py":

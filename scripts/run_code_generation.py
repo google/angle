@@ -62,6 +62,10 @@ generators = {
         ],
         'script': 'src/libANGLE/renderer/gen_load_functions_table.py',
     },
+    'D3D11 blit shader selection': {
+        'inputs': [],
+        'script': 'src/libANGLE/renderer/d3d/d3d11/gen_blit11helper.py',
+    },
     'D3D11 format': {
         'inputs': [
             'src/libANGLE/renderer/angle_format.py',

@@ -16,14 +16,14 @@ SamplerState Sampler        : register(s0);
 // F: float, U: uint
 
 // Float to float LUMA
-float4 PS_FtoF_PM_LUMA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_PM_LUMA_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     color.rgb = color.r * color.a;
     color.a = 1.0f;
     return color;
 }
-float4 PS_FtoF_UM_LUMA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_UM_LUMA_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     if (color.a > 0.0f)
@@ -35,14 +35,14 @@ float4 PS_FtoF_UM_LUMA(in float4 inPosition : SV_POSITION, in float2 inTexCoord 
 }
 
 // Float to float LUMAALPHA
-float4 PS_FtoF_PM_LUMAALPHA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_PM_LUMAALPHA_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     color.rgb = color.r * color.a;
     return color;
 }
 
-float4 PS_FtoF_UM_LUMAALPHA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_UM_LUMAALPHA_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     if (color.a > 0.0f)
@@ -53,14 +53,14 @@ float4 PS_FtoF_UM_LUMAALPHA(in float4 inPosition : SV_POSITION, in float2 inTexC
 }
 
 // Float to float RGBA
-float4 PS_FtoF_PM_RGBA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_PM_RGBA_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     color.rgb *= color.a;
     return color;
 }
 
-float4 PS_FtoF_UM_RGBA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_UM_RGBA_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     if (color.a > 0.0f)
@@ -71,7 +71,7 @@ float4 PS_FtoF_UM_RGBA(in float4 inPosition : SV_POSITION, in float2 inTexCoord 
 }
 
 // Float to float RGB
-float4 PS_FtoF_PM_RGB(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_PM_RGB_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     color.rgb *= color.a;
@@ -79,7 +79,7 @@ float4 PS_FtoF_PM_RGB(in float4 inPosition : SV_POSITION, in float2 inTexCoord :
     return color;
 }
 
-float4 PS_FtoF_UM_RGB(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_UM_RGB_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     if (color.a > 0.0f)
@@ -90,7 +90,7 @@ float4 PS_FtoF_UM_RGB(in float4 inPosition : SV_POSITION, in float2 inTexCoord :
     return color;
 }
 
-float4 PS_FtoF_PM_RGBA_4444(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_PM_RGBA_4444_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     color.rgb *= color.a;
@@ -98,7 +98,7 @@ float4 PS_FtoF_PM_RGBA_4444(in float4 inPosition : SV_POSITION, in float2 inTexC
     return color;
 }
 
-float4 PS_FtoF_UM_RGBA_4444(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_UM_RGBA_4444_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     if (color.a > 0.0f)
@@ -109,7 +109,7 @@ float4 PS_FtoF_UM_RGBA_4444(in float4 inPosition : SV_POSITION, in float2 inTexC
     return color;
 }
 
-float4 PS_FtoF_PM_RGB_565(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_PM_RGB_565_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     color.rgb *= color.a;
@@ -118,7 +118,7 @@ float4 PS_FtoF_PM_RGB_565(in float4 inPosition : SV_POSITION, in float2 inTexCoo
     return color;
 }
 
-float4 PS_FtoF_UM_RGB_565(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_UM_RGB_565_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     if (color.a > 0.0f)
@@ -130,7 +130,7 @@ float4 PS_FtoF_UM_RGB_565(in float4 inPosition : SV_POSITION, in float2 inTexCoo
     return color;
 }
 
-float4 PS_FtoF_PM_RGBA_5551(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_PM_RGBA_5551_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     color.rgb *= color.a;
@@ -138,7 +138,7 @@ float4 PS_FtoF_PM_RGBA_5551(in float4 inPosition : SV_POSITION, in float2 inTexC
     return color;
 }
 
-float4 PS_FtoF_UM_RGBA_5551(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+float4 PS_FtoF_UM_RGBA_5551_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     if (color.a > 0.0f)
@@ -150,20 +150,20 @@ float4 PS_FtoF_UM_RGBA_5551(in float4 inPosition : SV_POSITION, in float2 inTexC
 }
 
 // Float to uint RGBA
-uint4 PS_FtoU_PT_RGBA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+uint4 PS_FtoU_PT_RGBA_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     return uint4(color * 255);
 }
 
-uint4 PS_FtoU_PM_RGBA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+uint4 PS_FtoU_PM_RGBA_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     color.rgb *= color.a;
     return uint4(color * 255);
 }
 
-uint4 PS_FtoU_UM_RGBA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+uint4 PS_FtoU_UM_RGBA_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     if (color.a > 0.0f)
@@ -174,20 +174,20 @@ uint4 PS_FtoU_UM_RGBA(in float4 inPosition : SV_POSITION, in float2 inTexCoord :
 }
 
 // Float to uint RGB
-uint4 PS_FtoU_PT_RGB(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+uint4 PS_FtoU_PT_RGB_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     return uint4(color.rgb * 255, 1);
 }
 
-uint4 PS_FtoU_PM_RGB(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+uint4 PS_FtoU_PM_RGB_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     color.rgb *= color.a;
     return uint4(color.rgb * 255, 1);
 }
 
-uint4 PS_FtoU_UM_RGB(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+uint4 PS_FtoU_UM_RGB_2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
     if (color.a > 0.0f)
