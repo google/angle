@@ -297,7 +297,8 @@ void ContextNULL::popDebugGroup()
 }
 
 angle::Result ContextNULL::syncState(const gl::Context *context,
-                                     const gl::State::DirtyBits &dirtyBits)
+                                     const gl::State::DirtyBits &dirtyBits,
+                                     const gl::State::DirtyBits &bitMask)
 {
     return angle::Result::Continue();
 }

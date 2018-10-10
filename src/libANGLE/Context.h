@@ -1820,6 +1820,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     StateCache mStateCache;
 
+    State::DirtyBits mAllDirtyBits;
     State::DirtyBits mTexImageDirtyBits;
     State::DirtyObjects mTexImageDirtyObjects;
     State::DirtyBits mReadPixelsDirtyBits;

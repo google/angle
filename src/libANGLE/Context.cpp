@@ -483,6 +483,8 @@ void Context::initialize()
     }
 
     // Initialize dirty bit masks
+    mAllDirtyBits.set();
+
     mDrawDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
     mDrawDirtyObjects.set(State::DIRTY_OBJECT_VERTEX_ARRAY);
     mDrawDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM_TEXTURES);
@@ -3503,7 +3505,7 @@ Error Context::syncState(const State::DirtyBits &bitMask, const State::DirtyObje
 angle::Result Context::syncDirtyBits()
 {
     const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
-    ANGLE_TRY(mImplementation->syncState(this, dirtyBits));
+    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, mAllDirtyBits));
     mGLState.clearDirtyBits();
     return angle::Result::Continue();
 }
@@ -3511,7 +3513,7 @@ angle::Result Context::syncDirtyBits()
 angle::Result Context::syncDirtyBits(const State::DirtyBits &bitMask)
 {
     const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
-    ANGLE_TRY(mImplementation->syncState(this, dirtyBits));
+    ANGLE_TRY(mImplementation->syncState(this, dirtyBits, bitMask));
     mGLState.clearDirtyBits(dirtyBits);
     return angle::Result::Continue();
 }

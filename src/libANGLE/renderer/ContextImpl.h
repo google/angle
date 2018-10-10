@@ -142,7 +142,8 @@ class ContextImpl : public GLImplFactory
 
     // State sync with dirty bits.
     virtual angle::Result syncState(const gl::Context *context,
-                                    const gl::State::DirtyBits &dirtyBits) = 0;
+                                    const gl::State::DirtyBits &dirtyBits,
+                                    const gl::State::DirtyBits &bitMask) = 0;
 
     // Disjoint timer queries
     virtual GLint getGPUDisjoint() = 0;

@@ -1685,7 +1685,9 @@ void StateManagerGL::setClearStencil(GLint clearStencil)
     }
 }
 
-void StateManagerGL::syncState(const gl::Context *context, const gl::State::DirtyBits &glDirtyBits)
+void StateManagerGL::syncState(const gl::Context *context,
+                               const gl::State::DirtyBits &glDirtyBits,
+                               const gl::State::DirtyBits &bitMask)
 {
     const gl::State &state = context->getGLState();
 

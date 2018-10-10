@@ -664,7 +664,8 @@ void ContextVk::updateScissor(const gl::State &glState) const
 }
 
 angle::Result ContextVk::syncState(const gl::Context *context,
-                                   const gl::State::DirtyBits &dirtyBits)
+                                   const gl::State::DirtyBits &dirtyBits,
+                                   const gl::State::DirtyBits &bitMask)
 {
     if (dirtyBits.any())
     {
