@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4647820f_bb37f97c",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-10T01:04:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ecc53d5_868eebe2",
+      "revId": "c237e7f18d8b2fae0c0e52d54877292440c7956d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8628f514_49c17df4",
         "filename": "src/libANGLE/params.h",
         "patchSetId": 12
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "b7faf156_bbd695d2",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-10T01:04:44Z",
+      "side": 1,
+      "message": "I haven\u0027t tried. I\u0027m not clear on the specifics of what the default values do compared to the initializer. Haven\u0027t changed anything here.",
+      "parentUuid": "8628f514_49c17df4",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 0
+      },
+      "revId": "c237e7f18d8b2fae0c0e52d54877292440c7956d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4447122d_7c121e07",
         "filename": "src/libANGLE/validationES2.h",
         "patchSetId": 12
@@ -62,6 +104,30 @@
       "revId": "c237e7f18d8b2fae0c0e52d54877292440c7956d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d278a4e_2c122423",
+        "filename": "src/libANGLE/validationES2.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-10T01:04:44Z",
+      "side": 1,
+      "message": "Yep. I\u0027ll do that in a follow-up.",
+      "parentUuid": "4447122d_7c121e07",
+      "range": {
+        "startLine": 726,
+        "startChar": 0,
+        "endLine": 729,
+        "endChar": 1
+      },
+      "revId": "c237e7f18d8b2fae0c0e52d54877292440c7956d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
