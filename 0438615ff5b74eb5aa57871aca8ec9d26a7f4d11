@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e268fbb1_4ac2b4d1",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-10-10T08:39:43Z",
+      "side": 1,
+      "message": "Can we reformat this in a different patch? It is a bit hard to see what changed right now.",
+      "revId": "0438615ff5b74eb5aa57871aca8ec9d26a7f4d11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23b68cc6_0a803fc8",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-10-10T08:39:43Z",
+      "side": 1,
+      "message": "nit: this should ideally test each builtin individually, but I think testing only one here is ok given we have tests for ESSL300 above.",
+      "revId": "0438615ff5b74eb5aa57871aca8ec9d26a7f4d11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
