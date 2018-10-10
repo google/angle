@@ -313,6 +313,215 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that access/write to structure data in shader storage buffer.
+TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferStructureArray)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+struct S
+{
+    uvec2 uvData;
+    uint uiData[2];
+};
+layout(std140, binding = 0) buffer blockIn {
+    S s[2];
+    uint lastData;
+} instanceIn;
+layout(std140, binding = 1) buffer blockOut {
+    S s[2];
+    uint lastData;
+} instanceOut;
+void main()
+{
+    instanceOut.s[0].uvData = instanceIn.s[0].uvData;
+    instanceOut.s[0].uiData[0] = instanceIn.s[0].uiData[0];
+    instanceOut.s[0].uiData[1] = instanceIn.s[0].uiData[1];
+    instanceOut.s[1].uvData = instanceIn.s[1].uvData;
+    instanceOut.s[1].uiData[0] = instanceIn.s[1].uiData[0];
+    instanceOut.s[1].uiData[1] = instanceIn.s[1].uiData[1];
+    instanceOut.lastData = instanceIn.lastData;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+
+    glUseProgram(program);
+
+    std::array<GLuint, 4> kUVData = {{
+        1u, 2u, 0u, 0u,
+    }};
+    std::array<GLuint, 8> kUIData = {{
+        3u, 0u, 0u, 0u, 4u, 0u, 0u, 0u,
+    }};
+    GLuint kLastData              = 5u;
+
+    constexpr unsigned int kBytesPerComponent = sizeof(GLuint);
+    constexpr unsigned int kStructureStride   = 48;
+    constexpr unsigned int totalSize          = kStructureStride * 2 + sizeof(kLastData);
+
+    // Create shader storage buffer
+    GLBuffer shaderStorageBuffer[2];
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, totalSize, nullptr, GL_STATIC_DRAW);
+    GLint offset = 0;
+    // upload data to instanceIn.s[0]
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kUVData.size() * kBytesPerComponent,
+                    kUVData.data());
+    offset += (kUVData.size() * kBytesPerComponent);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kUIData.size() * kBytesPerComponent,
+                    kUIData.data());
+    offset += (kUIData.size() * kBytesPerComponent);
+    // upload data to instanceIn.s[1]
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kUVData.size() * kBytesPerComponent,
+                    kUVData.data());
+    offset += (kUVData.size() * kBytesPerComponent);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kUIData.size() * kBytesPerComponent,
+                    kUIData.data());
+    offset += (kUIData.size() * kBytesPerComponent);
+    // upload data to instanceIn.lastData
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, sizeof(kLastData), &kLastData);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, totalSize, nullptr, GL_STATIC_DRAW);
+
+    // Bind shader storage buffer
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+
+    glDispatchCompute(1, 1, 1);
+    glFinish();
+
+    // Read back shader storage buffer
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    constexpr float kExpectedValues[5] = {1u, 2u, 3u, 4u, 5u};
+    const GLuint *ptr                  = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, totalSize, GL_MAP_READ_BIT));
+    // instanceOut.s[0]
+    EXPECT_EQ(kExpectedValues[0], *ptr);
+    EXPECT_EQ(kExpectedValues[1], *(ptr + 1));
+    EXPECT_EQ(kExpectedValues[2], *(ptr + 4));
+    EXPECT_EQ(kExpectedValues[3], *(ptr + 8));
+    // instanceOut.s[1]
+    ptr += kStructureStride / kBytesPerComponent;
+    EXPECT_EQ(kExpectedValues[0], *ptr);
+    EXPECT_EQ(kExpectedValues[1], *(ptr + 1));
+    EXPECT_EQ(kExpectedValues[2], *(ptr + 4));
+    EXPECT_EQ(kExpectedValues[3], *(ptr + 8));
+    // instanceOut.lastData
+    ptr += kStructureStride / kBytesPerComponent;
+    EXPECT_EQ(kExpectedValues[4], *(ptr));
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that access/write to array of array structure data in shader storage buffer.
+TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferStructureArrayOfArray)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+struct S
+{
+    uvec2 uvData;
+    uint uiData[2];
+};
+layout(std140, binding = 0) buffer blockIn {
+    S s[3][2];
+    uint lastData;
+} instanceIn;
+layout(std140, binding = 1) buffer blockOut {
+    S s[3][2];
+    uint lastData;
+} instanceOut;
+void main()
+{
+    instanceOut.s[1][0].uvData = instanceIn.s[1][0].uvData;
+    instanceOut.s[1][0].uiData[0] = instanceIn.s[1][0].uiData[0];
+    instanceOut.s[1][0].uiData[1] = instanceIn.s[1][0].uiData[1];
+    instanceOut.s[1][1].uvData = instanceIn.s[1][1].uvData;
+    instanceOut.s[1][1].uiData[0] = instanceIn.s[1][1].uiData[0];
+    instanceOut.s[1][1].uiData[1] = instanceIn.s[1][1].uiData[1];
+
+    instanceOut.lastData = instanceIn.lastData;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+
+    glUseProgram(program);
+
+    std::array<GLuint, 4> kUVData = {{
+        1u, 2u, 0u, 0u,
+    }};
+    std::array<GLuint, 8> kUIData = {{
+        3u, 0u, 0u, 0u, 4u, 0u, 0u, 0u,
+    }};
+    GLuint kLastData              = 5u;
+
+    constexpr unsigned int kBytesPerComponent        = sizeof(GLuint);
+    constexpr unsigned int kStructureStride          = 48;
+    constexpr unsigned int kStructureArrayDimension0 = 3;
+    constexpr unsigned int kStructureArrayDimension1 = 2;
+    constexpr unsigned int kLastDataOffset =
+        kStructureStride * kStructureArrayDimension0 * kStructureArrayDimension1;
+    constexpr unsigned int totalSize = kLastDataOffset + sizeof(kLastData);
+
+    GLBuffer shaderStorageBuffer[2];
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, totalSize, nullptr, GL_STATIC_DRAW);
+    // offset of instanceIn.s[1][0]
+    GLint offset      = kStructureStride * (kStructureArrayDimension1 * 1 + 0);
+    GLuint uintOffset = offset / kBytesPerComponent;
+    // upload data to instanceIn.s[1][0]
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kUVData.size() * kBytesPerComponent,
+                    kUVData.data());
+    offset += (kUVData.size() * kBytesPerComponent);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kUIData.size() * kBytesPerComponent,
+                    kUIData.data());
+    offset += (kUIData.size() * kBytesPerComponent);
+    // upload data to instanceIn.s[1][1]
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kUVData.size() * kBytesPerComponent,
+                    kUVData.data());
+    offset += (kUVData.size() * kBytesPerComponent);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kUIData.size() * kBytesPerComponent,
+                    kUIData.data());
+    // upload data to instanceIn.lastData
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, kLastDataOffset, sizeof(kLastData), &kLastData);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, totalSize, nullptr, GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+
+    glDispatchCompute(1, 1, 1);
+    glFinish();
+
+    // Read back shader storage buffer
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    constexpr float kExpectedValues[5] = {1u, 2u, 3u, 4u, 5u};
+    const GLuint *ptr                  = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, totalSize, GL_MAP_READ_BIT));
+
+    // instanceOut.s[0][0]
+    EXPECT_EQ(kExpectedValues[0], *(ptr + uintOffset));
+    EXPECT_EQ(kExpectedValues[1], *(ptr + uintOffset + 1));
+    EXPECT_EQ(kExpectedValues[2], *(ptr + uintOffset + 4));
+    EXPECT_EQ(kExpectedValues[3], *(ptr + uintOffset + 8));
+
+    // instanceOut.s[0][1]
+    EXPECT_EQ(kExpectedValues[0], *(ptr + uintOffset + 12));
+    EXPECT_EQ(kExpectedValues[1], *(ptr + uintOffset + 13));
+    EXPECT_EQ(kExpectedValues[2], *(ptr + uintOffset + 16));
+    EXPECT_EQ(kExpectedValues[3], *(ptr + uintOffset + 20));
+
+    // instanceOut.lastData
+    EXPECT_EQ(kExpectedValues[4], *(ptr + (kLastDataOffset / kBytesPerComponent)));
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test atomic memory functions.
 TEST_P(ShaderStorageBufferTest31, AtomicMemoryFunctions)
 {

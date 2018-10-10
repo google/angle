@@ -49,14 +49,64 @@ const TField *GetFieldMemberInShaderStorageBlock(const TInterfaceBlock *interfac
     return nullptr;
 }
 
-void SetShaderStorageBlockFieldMemberInfo(const TFieldList &fields, sh::BlockLayoutEncoder *encoder)
+void SetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
+                                          sh::BlockLayoutEncoder *encoder,
+                                          TLayoutBlockStorage storage);
+
+size_t SetBlockFieldMemberInfoAndReturnBlockSize(const TFieldList &fields,
+                                                 TLayoutBlockStorage storage)
+{
+    sh::Std140BlockEncoder std140Encoder;
+    sh::HLSLBlockEncoder hlslEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
+    sh::BlockLayoutEncoder *structureEncoder = nullptr;
+
+    if (storage == EbsStd140)
+    {
+        structureEncoder = &std140Encoder;
+    }
+    else
+    {
+        // TODO(jiajia.qin@intel.com): add std430 support.
+        structureEncoder = &hlslEncoder;
+    }
+
+    SetShaderStorageBlockFieldMemberInfo(fields, structureEncoder, storage);
+    structureEncoder->exitAggregateType();
+    return structureEncoder->getBlockSize();
+}
+
+// TODO(jiajia.qin@intel.com): Save the offset/arrystride into a std::map<const TField *,
+// BlockMemberInfo> BlockLayoutMap instead of adding offset/arrayStride to the TField.
+// http://anglebug.com/1951
+void SetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
+                                          sh::BlockLayoutEncoder *encoder,
+                                          TLayoutBlockStorage storage)
 {
     for (TField *field : fields)
     {
         const TType &fieldType = *field->type();
         if (fieldType.getStruct())
         {
-            // TODO(jiajia.qin@intel.com): Add structure field member support.
+            encoder->enterAggregateType();
+            field->setOffset(encoder->getBlockSize());
+
+            // This is to set structure member offset and array stride using a new encoder to ensure
+            // that the first field member offset in structure is always zero.
+            size_t structureStride =
+                SetBlockFieldMemberInfoAndReturnBlockSize(fieldType.getStruct()->fields(), storage);
+            field->setArrayStride(structureStride);
+
+            // Below if-else is in order to get correct offset for the field members after structure
+            // field.
+            if (fieldType.isArray())
+            {
+                size_t size = fieldType.getArraySizeProduct() * structureStride;
+                encoder->increaseCurrentOffset(size);
+            }
+            else
+            {
+                encoder->increaseCurrentOffset(structureStride);
+            }
         }
         else if (fieldType.isArrayOfArrays())
         {
@@ -96,7 +146,22 @@ void SetShaderStorageBlockMembersOffset(const TInterfaceBlock *interfaceBlock)
         encoder = &hlslEncoder;
     }
 
-    SetShaderStorageBlockFieldMemberInfo(interfaceBlock->fields(), encoder);
+    SetShaderStorageBlockFieldMemberInfo(interfaceBlock->fields(), encoder,
+                                         interfaceBlock->blockStorage());
+}
+
+bool IsInArrayOfArraysChain(TIntermTyped *node)
+{
+    if (node->getType().isArrayOfArrays())
+        return true;
+    TIntermBinary *binaryNode = node->getAsBinaryNode();
+    if (binaryNode)
+    {
+        if (binaryNode->getLeft()->getType().isArrayOfArrays())
+            return true;
+    }
+
+    return false;
 }
 
 }  // anonymous namespace
@@ -360,23 +425,58 @@ void ShaderStorageBlockOutputHLSL::writeEOpIndexDirectOrIndirectOutput(TInfoSink
     if (visit == InVisit)
     {
         const TType &type = node->getLeft()->getType();
-        if (node->getType().isVector() && type.isMatrix())
+        // For array of arrays, we calculate the offset using the formula below:
+        // elementStride * (a3 * a2 * a1 * i0 + a3 * a2 * i1 + a3 * i2 + i3)
+        // Note: assume that there are 4 dimensions.
+        //       a0, a1, a2, a3 is the size of the array in each dimension. (S s[a0][a1][a2][a3])
+        //       i0, i1, i2, i3 is the index of the array in each dimension. (s[i0][i1][i2][i3])
+        if (IsInArrayOfArraysChain(node->getLeft()))
         {
-            int matrixStride =
-                BlockLayoutEncoder::ComponentsPerRegister * BlockLayoutEncoder::BytesPerComponent;
-            out << " + " << str(matrixStride);
+            if (type.isArrayOfArrays())
+            {
+                const TVector<unsigned int> &arraySizes = *type.getArraySizes();
+                // Don't need to concern the tail comma which will be used to multiply the index.
+                for (unsigned int i = 0; i < (arraySizes.size() - 1); i++)
+                {
+                    out << arraySizes[i];
+                    out << " * ";
+                }
+            }
         }
-        else if (node->getType().isScalar() && !type.isArray())
+        else
         {
-            int scalarStride = BlockLayoutEncoder::BytesPerComponent;
-            out << " + " << str(scalarStride);
-        }
+            if (node->getType().isVector() && type.isMatrix())
+            {
+                int matrixStride = BlockLayoutEncoder::ComponentsPerRegister *
+                                   BlockLayoutEncoder::BytesPerComponent;
+                out << " + " << str(matrixStride);
+            }
+            else if (node->getType().isScalar() && !type.isArray())
+            {
+                int scalarStride = BlockLayoutEncoder::BytesPerComponent;
+                out << " + " << str(scalarStride);
+            }
 
-        out << " * ";
+            out << " * ";
+        }
     }
-    else if (visit == PostVisit && mIsLoadFunctionCall && isEndOfSSBOAccessChain())
+    else if (visit == PostVisit)
     {
-        out << ")";
+        // This is used to output the '+' in the array of arrays formula in above.
+        if (node->getType().isArray() && !isEndOfSSBOAccessChain())
+        {
+            out << " + ";
+        }
+        // This corresponds to '(' in writeDotOperatorOutput when fieldType.isArrayOfArrays() is
+        // true.
+        if (IsInArrayOfArraysChain(node->getLeft()) && !node->getType().isArray())
+        {
+            out << ")";
+        }
+        if (mIsLoadFunctionCall && isEndOfSSBOAccessChain())
+        {
+            out << ")";
+        }
     }
 }
 
@@ -389,6 +489,10 @@ void ShaderStorageBlockOutputHLSL::writeDotOperatorOutput(TInfoSinkBase &out, co
     {
         out << " + ";
         out << field->getArrayStride();
+        if (fieldType.isArrayOfArrays())
+        {
+            out << " * (";
+        }
     }
     if (mIsLoadFunctionCall && isEndOfSSBOAccessChain())
     {

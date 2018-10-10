@@ -78,6 +78,7 @@ class BlockLayoutEncoder
                                bool isRowMajorMatrix);
 
     size_t getBlockSize() const { return mCurrentOffset * BytesPerComponent; }
+    void increaseCurrentOffset(size_t offsetInBytes);
 
     virtual void enterAggregateType() = 0;
     virtual void exitAggregateType()  = 0;

@@ -172,6 +172,11 @@ BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
     return memberInfo;
 }
 
+void BlockLayoutEncoder::increaseCurrentOffset(size_t offsetInBytes)
+{
+    mCurrentOffset += (offsetInBytes / BytesPerComponent);
+}
+
 // static
 size_t BlockLayoutEncoder::getBlockRegister(const BlockMemberInfo &info)
 {
