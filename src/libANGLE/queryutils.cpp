@@ -423,7 +423,7 @@ void QueryVertexAttribBase(const VertexAttribute &attrib,
             *params = CastFromGLintStateValue<ParamType>(pname, binding.getBuffer().id());
             break;
         case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
-            *params = CastFromGLintStateValue<ParamType>(pname, binding.getDivisor());
+            *params = CastFromStateValue<ParamType>(pname, binding.getDivisor());
             break;
         case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
             *params = CastFromGLintStateValue<ParamType>(pname, attrib.pureInteger);

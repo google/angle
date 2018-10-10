@@ -121,6 +121,7 @@ template GLint CastFromStateValue<GLint, GLint64>(GLenum pname, GLint64 value);
 template GLint64 CastFromStateValue<GLint64, GLint>(GLenum pname, GLint value);
 template GLint64 CastFromStateValue<GLint64, GLint64>(GLenum pname, GLint64 value);
 template GLfloat CastFromStateValue<GLfloat, GLint>(GLenum pname, GLint value);
+template GLfloat CastFromStateValue<GLfloat, GLuint>(GLenum pname, GLuint value);
 template GLfloat CastFromStateValue<GLfloat, GLfloat>(GLenum pname, GLfloat value);
 template GLint CastFromStateValue<GLint, GLfloat>(GLenum pname, GLfloat value);
 template GLuint CastFromStateValue<GLuint, GLint>(GLenum pname, GLint value);

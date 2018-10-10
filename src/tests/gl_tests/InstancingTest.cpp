@@ -621,6 +621,19 @@ void main()
     }
 }
 
+// This is a regression test. If VertexAttribDivisor was returned as a signed integer, it would be
+// incorrectly clamped down to the maximum signed integer.
+TEST_P(InstancingTestES3, LargestDivisor)
+{
+    constexpr GLuint kLargeDivisor = std::numeric_limits<GLuint>::max();
+    glVertexAttribDivisor(0, kLargeDivisor);
+
+    GLuint divisor = 0;
+    glGetVertexAttribIuiv(0, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &divisor);
+    EXPECT_EQ(kLargeDivisor, divisor)
+        << "Vertex attrib divisor read was not the same that was passed in.";
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against. We test on D3D9 and D3D11 9_3 because they use special codepaths
 // when attribute zero is instanced, unlike D3D11.
