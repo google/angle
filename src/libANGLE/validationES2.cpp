@@ -4512,36 +4512,18 @@ bool ValidateBindAttribLocation(Context *context, GLuint program, GLuint index, 
     return GetValidProgram(context, program) != nullptr;
 }
 
-bool ValidateBindBuffer(Context *context, BufferBinding target, GLuint buffer)
-{
-    if (!context->isValidBufferBinding(target))
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidBufferTypes);
-        return false;
-    }
-
-    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
-        !context->isBufferGenerated(buffer))
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ObjectNotGenerated);
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateBindFramebuffer(Context *context, GLenum target, GLuint framebuffer)
 {
     if (!ValidFramebufferTarget(context, target))
     {
-        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidFramebufferTarget);
+        context->validationError(GL_INVALID_ENUM, kErrorInvalidFramebufferTarget);
         return false;
     }
 
     if (!context->getGLState().isBindGeneratesResourceEnabled() &&
         !context->isFramebufferGenerated(framebuffer))
     {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ObjectNotGenerated);
+        context->validationError(GL_INVALID_OPERATION, kErrorObjectNotGenerated);
         return false;
     }
 

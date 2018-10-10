@@ -81,6 +81,8 @@ class ErrorSet : angle::NonCopyable
                      const char *function,
                      unsigned int line);
 
+    void validationError(GLenum errorCode, const char *message);
+
   private:
     Context *mContext;
 
@@ -1576,6 +1578,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                      const char *function,
                      unsigned int line);
 
+    void validationError(GLenum errorCode, const char *message);
+
     GLenum getError();
     void markContextLost();
 
@@ -1655,7 +1659,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         return mState.mTextures->isHandleGenerated(texture);
     }
 
-    bool isBufferGenerated(GLuint buffer) const
+    ANGLE_INLINE bool isBufferGenerated(GLuint buffer) const
     {
         return mState.mBuffers->isHandleGenerated(buffer);
     }

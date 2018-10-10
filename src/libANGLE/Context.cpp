@@ -2628,6 +2628,11 @@ void Context::handleError(GLenum errorCode,
     mErrors.handleError(errorCode, message, file, function, line);
 }
 
+void Context::validationError(GLenum errorCode, const char *message)
+{
+    mErrors.validationError(errorCode, message);
+}
+
 // Get one of the recorded errors and clear its flag, if any.
 // [OpenGL ES 2.0.24] section 2.5 page 13.
 GLenum Context::getError()
@@ -7975,6 +7980,11 @@ void ErrorSet::handleError(GLenum errorCode,
                 << function << ":" << line << ". " << message;
 
     handleError(gl::Error(errorCode, errorCode, errorStream.str()));
+}
+
+void ErrorSet::validationError(GLenum errorCode, const char *message)
+{
+    handleError(gl::Error(errorCode, message));
 }
 
 bool ErrorSet::empty() const

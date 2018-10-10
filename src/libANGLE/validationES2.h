@@ -722,10 +722,33 @@ bool ValidateTexStorage3DEXT(Context *context,
                              GLsizei height,
                              GLsizei depth);
 bool ValidateMaxShaderCompilerThreadsKHR(Context *context, GLuint count);
+}  // namespace gl
 
+#include "libANGLE/ErrorStrings.h"
+
+namespace gl
+{
 ANGLE_INLINE bool ValidateUniform2f(Context *context, GLint location, GLfloat x, GLfloat y)
 {
     return ValidateUniform(context, GL_FLOAT_VEC2, location, 1);
+}
+
+ANGLE_INLINE bool ValidateBindBuffer(Context *context, BufferBinding target, GLuint buffer)
+{
+    if (!context->isValidBufferBinding(target))
+    {
+        context->validationError(GL_INVALID_ENUM, kErrorInvalidBufferTypes);
+        return false;
+    }
+
+    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+        !context->isBufferGenerated(buffer))
+    {
+        context->validationError(GL_INVALID_OPERATION, kErrorObjectNotGenerated);
+        return false;
+    }
+
+    return true;
 }
 }  // namespace gl
 
