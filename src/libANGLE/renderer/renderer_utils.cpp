@@ -407,7 +407,7 @@ void IncompleteTextureSet::onDestroy(const gl::Context *context)
     {
         if (incompleteTexture.get() != nullptr)
         {
-            ANGLE_SWALLOW_ERR(incompleteTexture->onDestroy(context));
+            incompleteTexture->onDestroy(context);
             incompleteTexture.set(context, nullptr);
         }
     }

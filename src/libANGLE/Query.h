@@ -31,7 +31,7 @@ class Query final : public RefCountObject, public LabeledObject
   public:
     Query(rx::QueryImpl *impl, GLuint id);
     ~Query() override;
-    Error onDestroy(const Context *context) override;
+    void onDestroy(const Context *context) override;
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;

@@ -30,16 +30,16 @@ class RefCountObject : angle::NonCopyable
 
     RefCountObject() : mRefCount(0) {}
 
-    virtual ErrorType onDestroy(const ContextType *context) { return ErrorType::NoError(); }
+    virtual void onDestroy(const ContextType *context) {}
 
     void addRef() const { ++mRefCount; }
 
-    void release(const ContextType *context)
+    ANGLE_INLINE void release(const ContextType *context)
     {
         ASSERT(mRefCount > 0);
         if (--mRefCount == 0)
         {
-            ANGLE_SWALLOW_ERR(onDestroy(context));
+            onDestroy(context);
             delete this;
         }
     }

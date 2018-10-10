@@ -162,7 +162,7 @@ Image::Image(rx::EGLImplFactory *factory,
     mState.source->addImageSource(this);
 }
 
-Error Image::onDestroy(const Display *display)
+void Image::onDestroy(const Display *display)
 {
     // All targets should hold a ref to the egl image and it should not be deleted until there are
     // no siblings left.
@@ -174,8 +174,6 @@ Error Image::onDestroy(const Display *display)
         mState.source->removeImageSource(this);
         mState.source = nullptr;
     }
-
-    return NoError();
 }
 
 Image::~Image()

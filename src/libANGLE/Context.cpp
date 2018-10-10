@@ -593,7 +593,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     {
         if (zeroTexture.get() != nullptr)
         {
-            ANGLE_TRY(zeroTexture->onDestroy(this));
+            zeroTexture->onDestroy(this);
             zeroTexture.set(this, nullptr);
         }
     }

@@ -92,7 +92,7 @@ class Image final : public RefCountObject, public LabeledObject
           ImageSibling *buffer,
           const AttributeMap &attribs);
 
-    Error onDestroy(const Display *display) override;
+    void onDestroy(const Display *display) override;
     ~Image() override;
 
     void setLabel(EGLLabelKHR label) override;

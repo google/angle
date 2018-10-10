@@ -80,7 +80,7 @@ TransformFeedback::TransformFeedback(rx::GLImplFactory *implFactory, GLuint id, 
     ASSERT(mImplementation != nullptr);
 }
 
-Error TransformFeedback::onDestroy(const Context *context)
+void TransformFeedback::onDestroy(const Context *context)
 {
     ASSERT(!context || !context->isCurrentTransformFeedback(this));
     if (mState.mProgram)
@@ -94,8 +94,6 @@ Error TransformFeedback::onDestroy(const Context *context)
     {
         mState.mIndexedBuffers[i].set(context, nullptr);
     }
-
-    return NoError();
 }
 
 TransformFeedback::~TransformFeedback()

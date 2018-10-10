@@ -67,7 +67,7 @@ class Renderbuffer final : public RefCountObject, public egl::ImageSibling, publ
     Renderbuffer(rx::GLImplFactory *implFactory, GLuint id);
     ~Renderbuffer() override;
 
-    Error onDestroy(const Context *context) override;
+    void onDestroy(const Context *context) override;
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;

@@ -71,9 +71,8 @@ Sync::Sync(rx::SyncImpl *impl, GLuint id)
 {
 }
 
-Error Sync::onDestroy(const Context *context)
+void Sync::onDestroy(const Context *context)
 {
-    return NoError();
 }
 
 Sync::~Sync()

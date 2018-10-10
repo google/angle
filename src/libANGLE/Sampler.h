@@ -30,7 +30,7 @@ class Sampler final : public RefCountObject, public LabeledObject, public angle:
     Sampler(rx::GLImplFactory *factory, GLuint id);
     ~Sampler() override;
 
-    Error onDestroy(const Context *context) override;
+    void onDestroy(const Context *context) override;
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;

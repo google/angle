@@ -595,11 +595,11 @@ Texture::Texture(rx::GLImplFactory *factory, GLuint id, TextureType type)
     mDirtyBits.set(DIRTY_BIT_IMPLEMENTATION);
 }
 
-Error Texture::onDestroy(const Context *context)
+void Texture::onDestroy(const Context *context)
 {
     if (mBoundSurface)
     {
-        ANGLE_TRY(mBoundSurface->releaseTexImage(context, EGL_BACK_BUFFER));
+        ANGLE_SWALLOW_ERR(mBoundSurface->releaseTexImage(context, EGL_BACK_BUFFER));
         mBoundSurface = nullptr;
     }
     if (mBoundStream)
@@ -608,13 +608,12 @@ Error Texture::onDestroy(const Context *context)
         mBoundStream = nullptr;
     }
 
-    ANGLE_TRY(orphanImages(context));
+    ANGLE_SWALLOW_ERR(orphanImages(context));
 
     if (mTexture)
     {
-        ANGLE_TRY(mTexture->onDestroy(context));
+        ANGLE_SWALLOW_ERR(mTexture->onDestroy(context));
     }
-    return NoError();
 }
 
 Texture::~Texture()

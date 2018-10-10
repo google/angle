@@ -74,16 +74,14 @@ Renderbuffer::Renderbuffer(rx::GLImplFactory *implFactory, GLuint id)
 {
 }
 
-Error Renderbuffer::onDestroy(const Context *context)
+void Renderbuffer::onDestroy(const Context *context)
 {
-    ANGLE_TRY(orphanImages(context));
+    ANGLE_SWALLOW_ERR(orphanImages(context));
 
     if (mImplementation)
     {
-        ANGLE_TRY(mImplementation->onDestroy(context));
+        ANGLE_SWALLOW_ERR(mImplementation->onDestroy(context));
     }
-
-    return NoError();
 }
 
 Renderbuffer::~Renderbuffer()

@@ -54,7 +54,7 @@ class Sync final : public RefCountObject, public LabeledObject
     Sync(rx::SyncImpl *impl, GLuint id);
     ~Sync() override;
 
-    Error onDestroy(const Context *context) override;
+    void onDestroy(const Context *context) override;
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
