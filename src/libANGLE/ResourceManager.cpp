@@ -191,11 +191,6 @@ void ShaderProgramManager::deleteProgram(const gl::Context *context, GLuint prog
     deleteObject(context, &mPrograms, program);
 }
 
-Program *ShaderProgramManager::getProgram(GLuint handle) const
-{
-    return mPrograms.query(handle);
-}
-
 template <typename ObjectType>
 void ShaderProgramManager::deleteObject(const Context *context,
                                         ResourceMap<ObjectType> *objectMap,

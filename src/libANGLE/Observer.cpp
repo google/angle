@@ -118,11 +118,6 @@ void ObserverBinding::bind(Subject *subject)
     }
 }
 
-void ObserverBinding::reset()
-{
-    bind(nullptr);
-}
-
 void ObserverBinding::onStateChange(const gl::Context *context, SubjectMessage message) const
 {
     mObserver->onSubjectStateChange(context, mIndex, message);

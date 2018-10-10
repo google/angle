@@ -658,11 +658,6 @@ void ProgramGL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformB
     }
 }
 
-GLuint ProgramGL::getProgramID() const
-{
-    return mProgramID;
-}
-
 bool ProgramGL::getUniformBlockSize(const std::string & /* blockName */,
                                     const std::string &blockMappedName,
                                     size_t *sizeOut) const

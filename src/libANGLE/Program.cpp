@@ -955,11 +955,6 @@ const std::string &Program::getLabel() const
     ASSERT(mLinkResolved);
     return mState.mLabel;
 }
-rx::ProgramImpl *Program::getImplementation() const
-{
-    ASSERT(mLinkResolved);
-    return mProgram;
-}
 
 void Program::attachShader(Shader *shader)
 {
@@ -1567,21 +1562,10 @@ bool Program::isSeparable() const
     return mState.mSeparable;
 }
 
-void Program::release(const Context *context)
+void Program::deleteSelf(const Context *context)
 {
-    ASSERT(mLinkResolved);
-    mRefCount--;
-
-    if (mRefCount == 0 && mDeleteStatus)
-    {
-        mResourceManager->deleteProgram(context, mHandle);
-    }
-}
-
-void Program::addRef()
-{
-    ASSERT(mLinkResolved);
-    mRefCount++;
+    ASSERT(mRefCount == 0 && mDeleteStatus);
+    mResourceManager->deleteProgram(context, mHandle);
 }
 
 unsigned int Program::getRefCount() const
@@ -2373,18 +2357,6 @@ bool Program::isValidated() const
 {
     ASSERT(mLinkResolved);
     return mValidated;
-}
-
-GLuint Program::getActiveAtomicCounterBufferCount() const
-{
-    ASSERT(mLinkResolved);
-    return static_cast<GLuint>(mState.mAtomicCounterBuffers.size());
-}
-
-GLuint Program::getActiveShaderStorageBlockCount() const
-{
-    ASSERT(mLinkResolved);
-    return static_cast<GLuint>(mState.mShaderStorageBlocks.size());
 }
 
 void Program::getActiveUniformBlockName(const GLuint blockIndex,

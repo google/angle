@@ -1650,7 +1650,16 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
     bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
 
-    Program *getProgramResolveLink(GLuint handle) const;
+    ANGLE_INLINE Program *getProgramResolveLink(GLuint handle) const
+    {
+        Program *program = mState.mShaderPrograms->getProgram(handle);
+        if (program)
+        {
+            program->resolveLink(this);
+        }
+        return program;
+    }
+
     Program *getProgramNoResolveLink(GLuint handle) const;
     Shader *getShader(GLuint handle) const;
 

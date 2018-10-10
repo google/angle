@@ -147,7 +147,8 @@ class ShaderProgramManager : public ResourceManagerBase<HandleAllocator>
 
     GLuint createProgram(rx::GLImplFactory *factory);
     void deleteProgram(const Context *context, GLuint program);
-    Program *getProgram(GLuint handle) const;
+
+    ANGLE_INLINE Program *getProgram(GLuint handle) const { return mPrograms.query(handle); }
 
   protected:
     ~ShaderProgramManager() override;

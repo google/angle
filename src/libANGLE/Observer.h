@@ -81,7 +81,9 @@ class ObserverBinding final
     ObserverBinding &operator=(const ObserverBinding &other);
 
     void bind(Subject *subject);
-    void reset();
+
+    ANGLE_INLINE void reset() { bind(nullptr); }
+
     void onStateChange(const gl::Context *context, SubjectMessage message) const;
     void onSubjectReset();
 

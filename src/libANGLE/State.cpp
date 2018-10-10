@@ -1423,13 +1423,6 @@ void State::setTransformFeedbackBinding(const Context *context,
     mDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING);
 }
 
-bool State::isTransformFeedbackActiveUnpaused() const
-{
-    TransformFeedback *curTransformFeedback = mTransformFeedback.get();
-    return curTransformFeedback && curTransformFeedback->isActive() &&
-           !curTransformFeedback->isPaused();
-}
-
 bool State::removeTransformFeedbackBinding(const Context *context, GLuint transformFeedback)
 {
     if (mTransformFeedback.id() == transformFeedback)
@@ -2913,7 +2906,11 @@ angle::Result State::onProgramExecutableChange(const Context *context, Program *
     ASSERT(program->isLinked());
 
     mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
-    mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
+
+    if (program->hasAnyDirtyBit())
+    {
+        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
+    }
 
     // Set any bound textures.
     const ActiveTextureTypeArray &textureTypes = program->getActiveSamplerTypes();

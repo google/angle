@@ -135,10 +135,10 @@ gl::Error GetQueryObjectParameter(const gl::Context *context,
     }
 }
 
-void MarkTransformFeedbackBufferUsage(const gl::Context *context,
-                                      gl::TransformFeedback *transformFeedback,
-                                      GLsizei count,
-                                      GLsizei instanceCount)
+ANGLE_INLINE void MarkTransformFeedbackBufferUsage(const gl::Context *context,
+                                                   gl::TransformFeedback *transformFeedback,
+                                                   GLsizei count,
+                                                   GLsizei instanceCount)
 {
     if (transformFeedback && transformFeedback->isActive() && !transformFeedback->isPaused())
     {
@@ -6428,6 +6428,7 @@ void Context::uniformBlockBinding(GLuint program,
     Program *programObject = getProgramResolveLink(program);
     programObject->bindUniformBlock(uniformBlockIndex, uniformBlockBinding);
 
+    // Note: If the Program is shared between Contexts we would be better using Observer/Subject.
     if (programObject->isInUse())
     {
         mGLState.setObjectDirty(GL_PROGRAM);
@@ -7810,16 +7811,6 @@ bool Context::getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned
     }
 
     return false;
-}
-
-Program *Context::getProgramResolveLink(GLuint handle) const
-{
-    Program *program = mState.mShaderPrograms->getProgram(handle);
-    if (program)
-    {
-        program->resolveLink(this);
-    }
-    return program;
 }
 
 Program *Context::getProgramNoResolveLink(GLuint handle) const

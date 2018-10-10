@@ -497,7 +497,11 @@ class Program final : angle::NonCopyable, public LabeledObject
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
 
-    rx::ProgramImpl *getImplementation() const;
+    ANGLE_INLINE rx::ProgramImpl *getImplementation() const
+    {
+        ASSERT(mLinkResolved);
+        return mProgram;
+    }
 
     void attachShader(Shader *shader);
     void detachShader(const Context *context, Shader *shader);
@@ -675,13 +679,25 @@ class Program final : angle::NonCopyable, public LabeledObject
                                          GLsizei bufSize,
                                          GLsizei *length,
                                          GLchar *blockName) const;
-    GLuint getActiveUniformBlockCount() const
+
+    ANGLE_INLINE GLuint getActiveUniformBlockCount() const
     {
+        ASSERT(mLinkResolved);
         return static_cast<GLuint>(mState.mUniformBlocks.size());
     }
 
-    GLuint getActiveAtomicCounterBufferCount() const;
-    GLuint getActiveShaderStorageBlockCount() const;
+    ANGLE_INLINE GLuint getActiveAtomicCounterBufferCount() const
+    {
+        ASSERT(mLinkResolved);
+        return static_cast<GLuint>(mState.mAtomicCounterBuffers.size());
+    }
+
+    ANGLE_INLINE GLuint getActiveShaderStorageBlockCount() const
+    {
+        ASSERT(mLinkResolved);
+        return static_cast<GLuint>(mState.mShaderStorageBlocks.size());
+    }
+
     GLint getActiveUniformBlockMaxNameLength() const;
     GLint getActiveShaderStorageBlockMaxNameLength() const;
 
@@ -710,8 +726,23 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLuint getTransformFeedbackVaryingResourceIndex(const GLchar *name) const;
     const TransformFeedbackVarying &getTransformFeedbackVaryingResource(GLuint index) const;
 
-    void addRef();
-    void release(const Context *context);
+    ANGLE_INLINE void addRef()
+    {
+        ASSERT(mLinkResolved);
+        mRefCount++;
+    }
+
+    ANGLE_INLINE void release(const Context *context)
+    {
+        ASSERT(mLinkResolved);
+        mRefCount--;
+
+        if (mRefCount == 0 && mDeleteStatus)
+        {
+            deleteSelf(context);
+        }
+    }
+
     unsigned int getRefCount() const;
     bool isInUse() const { return getRefCount() != 0; }
     void flagForDeletion();
@@ -820,12 +851,15 @@ class Program final : angle::NonCopyable, public LabeledObject
         }
     }
 
+    ANGLE_INLINE bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
+
   private:
     struct LinkingState;
 
     ~Program() override;
 
     void unlink();
+    void deleteSelf(const Context *context);
 
     bool linkValidateShaders(InfoLog &infoLog);
     bool linkAttributes(const Caps &caps, InfoLog &infoLog);

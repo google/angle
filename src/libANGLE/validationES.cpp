@@ -2122,19 +2122,6 @@ bool ValidateUniform1ivValue(Context *context,
     return false;
 }
 
-bool ValidateUniformValue(Context *context, GLenum valueType, GLenum uniformType)
-{
-    // Check that the value type is compatible with uniform type.
-    // Do the cheaper test first, for a little extra speed.
-    if (valueType == uniformType || VariableBoolVectorType(valueType) == uniformType)
-    {
-        return true;
-    }
-
-    ANGLE_VALIDATION_ERR(context, InvalidOperation(), UniformSizeMismatch);
-    return false;
-}
-
 bool ValidateUniformMatrixValue(Context *context, GLenum valueType, GLenum uniformType)
 {
     // Check that the value type is compatible with uniform type.

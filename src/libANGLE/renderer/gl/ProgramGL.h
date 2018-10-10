@@ -78,7 +78,7 @@ class ProgramGL : public ProgramImpl
                                     std::vector<gl::SamplerBinding> *samplerBindings,
                                     std::vector<gl::ImageBinding> *imageBindings) override;
 
-    GLuint getProgramID() const;
+    ANGLE_INLINE GLuint getProgramID() const { return mProgramID; }
 
     void enableSideBySideRenderingPath() const;
     void enableLayeredRenderingPath(int baseViewIndex) const;

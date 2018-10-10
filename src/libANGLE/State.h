@@ -247,7 +247,13 @@ class State : angle::NonCopyable
     void setTransformFeedbackBinding(const Context *context, TransformFeedback *transformFeedback);
     TransformFeedback *getCurrentTransformFeedback() const { return mTransformFeedback.get(); }
 
-    bool isTransformFeedbackActiveUnpaused() const;
+    ANGLE_INLINE bool isTransformFeedbackActiveUnpaused() const
+    {
+        TransformFeedback *curTransformFeedback = mTransformFeedback.get();
+        return curTransformFeedback && curTransformFeedback->isActive() &&
+               !curTransformFeedback->isPaused();
+    }
+
     bool removeTransformFeedbackBinding(const Context *context, GLuint transformFeedback);
 
     // Query binding manipulation
