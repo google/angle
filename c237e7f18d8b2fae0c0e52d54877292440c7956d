@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "7755d0f4_eecda90f",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-10-10T16:17:30Z",
+      "side": 1,
+      "message": "It would be interesting to check if it will have the same performance, thus allowing us to save a few lines of code.",
+      "parentUuid": "b7faf156_bbd695d2",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 0
+      },
+      "revId": "c237e7f18d8b2fae0c0e52d54877292440c7956d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4447122d_7c121e07",
         "filename": "src/libANGLE/validationES2.h",
         "patchSetId": 12
