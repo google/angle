@@ -248,9 +248,7 @@ WindowSurfaceVk::SwapchainImage::~SwapchainImage() = default;
 WindowSurfaceVk::SwapchainImage::SwapchainImage(SwapchainImage &&other)
     : image(std::move(other.image)),
       imageView(std::move(other.imageView)),
-      framebuffer(std::move(other.framebuffer)),
-      imageAcquiredSemaphore(std::move(other.imageAcquiredSemaphore)),
-      commandsCompleteSemaphore(std::move(other.commandsCompleteSemaphore))
+      framebuffer(std::move(other.framebuffer))
 {
 }
 
@@ -285,8 +283,6 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     // We might not need to flush the pipe here.
     (void)renderer->finish(displayVk);
 
-    mAcquireNextImageSemaphore.destroy(device);
-
     mDepthStencilImage.release(renderer);
     mDepthStencilImageView.destroy(device);
 
@@ -297,8 +293,6 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
         swapchainImage.image.destroy(device);
         swapchainImage.imageView.destroy(device);
         swapchainImage.framebuffer.destroy(device);
-        swapchainImage.imageAcquiredSemaphore.destroy(device);
-        swapchainImage.commandsCompleteSemaphore.destroy(device);
     }
 
     if (mSwapchain)
@@ -480,8 +474,6 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 
     mSwapchainImages.resize(imageCount);
 
-    ANGLE_TRY(mAcquireNextImageSemaphore.init(displayVk));
-
     for (uint32_t imageIndex = 0; imageIndex < imageCount; ++imageIndex)
     {
         SwapchainImage &member = mSwapchainImages[imageIndex];
@@ -496,9 +488,6 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 
         // Set transfer dest layout, and clear the image to black.
         member.image.clearColor(transparentBlack, 0, 1, commandBuffer);
-
-        ANGLE_TRY(member.imageAcquiredSemaphore.init(displayVk));
-        ANGLE_TRY(member.commandsCompleteSemaphore.init(displayVk));
     }
 
     // Get the first available swapchain iamge.
@@ -570,13 +559,17 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
                                        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
                                        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, swapCommands);
 
-    ANGLE_TRY(
-        renderer->flush(displayVk, image.imageAcquiredSemaphore, image.commandsCompleteSemaphore));
+    ANGLE_TRY(renderer->flush(displayVk));
+
+    // Ask the renderer what semaphore it signalled in the last flush.
+    const vk::Semaphore *commandsCompleteSemaphore =
+        renderer->getSubmitLastSignaledSemaphore(displayVk);
 
     VkPresentInfoKHR presentInfo   = {};
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    presentInfo.waitSemaphoreCount = 1;
-    presentInfo.pWaitSemaphores    = image.commandsCompleteSemaphore.ptr();
+    presentInfo.waitSemaphoreCount = commandsCompleteSemaphore ? 1 : 0;
+    presentInfo.pWaitSemaphores =
+        commandsCompleteSemaphore ? commandsCompleteSemaphore->ptr() : nullptr;
     presentInfo.swapchainCount     = 1;
     presentInfo.pSwapchains        = &mSwapchain;
     presentInfo.pImageIndices      = &mCurrentSwapchainImageIndex;
@@ -595,15 +588,16 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
 angle::Result WindowSurfaceVk::nextSwapchainImage(DisplayVk *displayVk)
 {
     VkDevice device = displayVk->getDevice();
+    RendererVk *renderer = displayVk->getRenderer();
+
+    const vk::Semaphore *acquireNextImageSemaphore = nullptr;
+    ANGLE_TRY(renderer->allocateSubmitWaitSemaphore(displayVk, &acquireNextImageSemaphore));
 
     ANGLE_VK_TRY(displayVk, vkAcquireNextImageKHR(device, mSwapchain, UINT64_MAX,
-                                                  mAcquireNextImageSemaphore.getHandle(),
+                                                  acquireNextImageSemaphore->getHandle(),
                                                   VK_NULL_HANDLE, &mCurrentSwapchainImageIndex));
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
-
-    // Swap the unused swapchain semaphore and the now active spare semaphore.
-    std::swap(image.imageAcquiredSemaphore, mAcquireNextImageSemaphore);
 
     // Update RenderTarget pointers.
     mColorRenderTarget.updateSwapchainImage(&image.image, &image.imageView);

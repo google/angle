@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/FeaturesVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
+#include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_internal_shaders.h"
 
 namespace egl
@@ -72,9 +73,7 @@ class RendererVk : angle::NonCopyable
                                                uint32_t *presentQueueOut);
 
     angle::Result finish(vk::Context *context);
-    angle::Result flush(vk::Context *context,
-                        const vk::Semaphore &waitSemaphore,
-                        const vk::Semaphore &signalSemaphore);
+    angle::Result flush(vk::Context *context);
 
     const vk::CommandPool &getCommandPool() const;
 
@@ -145,6 +144,16 @@ class RendererVk : angle::NonCopyable
 
     angle::Result syncPipelineCacheVk(DisplayVk *displayVk);
 
+    vk::DynamicSemaphorePool *getDynamicSemaphorePool() { return &mSubmitSemaphorePool; }
+
+    // Request a semaphore, that is expected to be signaled externally.  The next submission will
+    // wait on it.
+    angle::Result allocateSubmitWaitSemaphore(vk::Context *context,
+                                              const vk::Semaphore **outSemaphore);
+    // Get the last signaled semaphore to wait on externally.  The semaphore will not be waited on
+    // by next submission.
+    const vk::Semaphore *getSubmitLastSignaledSemaphore(vk::Context *context);
+
     // This should only be called from ResourceVk.
     // TODO(jmadill): Keep in ContextVk to enable threaded rendering.
     vk::CommandGraph *getCommandGraph();
@@ -156,8 +165,18 @@ class RendererVk : angle::NonCopyable
     const FeaturesVk &getFeatures() const { return mFeatures; }
 
   private:
+    // Number of semaphores for external entities to renderer to issue a wait, such as surface's
+    // image acquire.
+    static constexpr size_t kMaxExternalSemaphores = 8;
+    // Total possible number of semaphores a submission can wait on.  +1 is for the semaphore
+    // signaled in the last submission.
+    static constexpr size_t kMaxWaitSemaphores = kMaxExternalSemaphores + 1;
+
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
+    void getSubmitWaitSemaphores(
+        vk::Context *context,
+        angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> *waitSemaphores);
     angle::Result submitFrame(vk::Context *context,
                               const VkSubmitInfo &submitInfo,
                               vk::CommandBuffer &&commandBuffer);
@@ -218,6 +237,26 @@ class RendererVk : angle::NonCopyable
     vk::PipelineCache mPipelineCacheVk;
     egl::BlobCache::Key mPipelineCacheVkBlobKey;
     uint32_t mPipelineCacheVkUpdateTimeout;
+
+    // mSubmitWaitSemaphores is a list of specifically requested semaphores to be waited on before a
+    // command buffer submission, for example, semaphores signaled by vkAcquireNextImageKHR.
+    // After first use, the list is automatically cleared.  This is a vector to support concurrent
+    // rendering to multiple surfaces.
+    //
+    // Note that with multiple contexts present, this may result in a context waiting on image
+    // acquisition even if it doesn't render to that surface.  If CommandGraphs are separated by
+    // context or share group for example, this could be moved to the one that actually uses the
+    // image.
+    angle::FixedVector<vk::SemaphoreHelper, kMaxExternalSemaphores> mSubmitWaitSemaphores;
+    // mSubmitLastSignaledSemaphore shows which semaphore was last signaled by submission.  This can
+    // be set to nullptr if retrieved to be waited on outside RendererVk, such
+    // as by the surface before presentation.  Each submission waits on the
+    // previously signaled semaphore (as well as any in mSubmitWaitSemaphores)
+    // and allocates a new semaphore to signal.
+    vk::SemaphoreHelper mSubmitLastSignaledSemaphore;
+
+    // A pool of semaphores used to support the aforementioned mid-frame submissions.
+    vk::DynamicSemaphorePool mSubmitSemaphorePool;
 
     // See CommandGraph.h for a desription of the Command Graph.
     vk::CommandGraph mCommandGraph;

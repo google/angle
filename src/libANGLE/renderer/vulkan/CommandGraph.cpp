@@ -571,6 +571,10 @@ angle::Result CommandGraph::submitCommands(Context *context,
                                            CommandPool *commandPool,
                                            CommandBuffer *primaryCommandBufferOut)
 {
+    // There is no point in submitting an empty command buffer, so make sure not to call this
+    // function if there's nothing to do.
+    ASSERT(!mNodes.empty());
+
     size_t previousBarrierIndex       = 0;
     CommandGraphNode *previousBarrier = getLastBarrierNode(&previousBarrierIndex);
 
@@ -582,6 +586,8 @@ angle::Result CommandGraph::submitCommands(Context *context,
             previousBarrier, &mNodes[previousBarrierIndex + 1], afterNodesCount);
     }
 
+    mLastBarrierIndex = kInvalidNodeIndex;
+
     VkCommandBufferAllocateInfo primaryInfo = {};
     primaryInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     primaryInfo.commandPool        = commandPool->getHandle();
@@ -589,11 +595,6 @@ angle::Result CommandGraph::submitCommands(Context *context,
     primaryInfo.commandBufferCount = 1;
 
     ANGLE_TRY(primaryCommandBufferOut->init(context, primaryInfo));
-
-    if (mNodes.empty())
-    {
-        return angle::Result::Continue();
-    }
 
     if (mEnableGraphDiagnostics)
     {
@@ -650,7 +651,6 @@ angle::Result CommandGraph::submitCommands(Context *context,
         delete node;
     }
     mNodes.clear();
-    mLastBarrierIndex = kInvalidNodeIndex;
 
     return angle::Result::Continue();
 }

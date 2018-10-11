@@ -152,13 +152,6 @@ class WindowSurfaceVk : public SurfaceImpl
 
     uint32_t mCurrentSwapchainImageIndex;
 
-    // When acquiring a new image for rendering, we keep a 'spare' semaphore. We pass this extra
-    // semaphore to VkAcquireNextImage, then hand it to the next available SwapchainImage when
-    // the command completes. We then make the old semaphore in the new SwapchainImage the spare
-    // semaphore, since we know the image is no longer using it. This avoids the chicken and egg
-    // problem with needing to know the next available image index before we acquire it.
-    vk::Semaphore mAcquireNextImageSemaphore;
-
     struct SwapchainImage : angle::NonCopyable
     {
         SwapchainImage();
@@ -168,8 +161,6 @@ class WindowSurfaceVk : public SurfaceImpl
         vk::ImageHelper image;
         vk::ImageView imageView;
         vk::Framebuffer framebuffer;
-        vk::Semaphore imageAcquiredSemaphore;
-        vk::Semaphore commandsCompleteSemaphore;
     };
 
     std::vector<SwapchainImage> mSwapchainImages;

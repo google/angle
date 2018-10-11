@@ -160,6 +160,54 @@ class DynamicDescriptorPool final : angle::NonCopyable
     VkDescriptorPoolSize mPoolSize;
 };
 
+template <typename Pool>
+class DynamicallyGrowingPool : angle::NonCopyable
+{
+  public:
+    DynamicallyGrowingPool();
+    virtual ~DynamicallyGrowingPool();
+
+    bool isValid() { return mPoolSize > 0; }
+
+  protected:
+    angle::Result initEntryPool(Context *context, uint32_t poolSize);
+    void destroyEntryPool();
+
+    // Checks to see if any pool is already free, in which case it sets it as current pool and
+    // returns true.
+    bool findFreeEntryPool(Context *context);
+
+    // Allocates a new entry and initializes it with the given pool.
+    angle::Result allocateNewEntryPool(Context *context, Pool &&pool);
+
+    // Called by the implementation whenever an entry is freed.
+    void onEntryFreed(Context *context, size_t poolIndex);
+
+    // The pool size, to know when a pool is completely freed.
+    uint32_t mPoolSize;
+
+    std::vector<Pool> mPools;
+
+    struct PoolStats
+    {
+        // A count corresponding to each pool indicating how many of its allocated entries
+        // have been freed. Once that value reaches mPoolSize for each pool, that pool is considered
+        // free and reusable.  While keeping a bitset would allow allocation of each index, the
+        // slight runtime overhead of finding free indices is not worth the slight memory overhead
+        // of creating new pools when unnecessary.
+        uint32_t freedCount;
+        // The serial of the renderer is stored on each object free to make sure no
+        // new allocations are made from the pool until it's not in use.
+        Serial serial;
+    };
+    std::vector<PoolStats> mPoolStats;
+
+    // Index into mPools indicating pool we are currently allocating from.
+    size_t mCurrentPool;
+    // Index inside mPools[mCurrentPool] indicating which index can be allocated next.
+    uint32_t mCurrentFreeEntry;
+};
+
 // DynamicQueryPool allocates indices out of QueryPool as needed.  Once a QueryPool is exhausted,
 // another is created.  The query pools live permanently, but are recycled as indices get freed.
 
@@ -168,7 +216,7 @@ constexpr uint32_t kDefaultOcclusionQueryPoolSize = 64;
 
 class QueryHelper;
 
-class DynamicQueryPool final : angle::NonCopyable
+class DynamicQueryPool final : public DynamicallyGrowingPool<QueryPool>
 {
   public:
     DynamicQueryPool();
@@ -177,41 +225,16 @@ class DynamicQueryPool final : angle::NonCopyable
     angle::Result init(Context *context, VkQueryType type, uint32_t poolSize);
     void destroy(VkDevice device);
 
-    bool isValid() { return mPoolSize > 0; }
-
     angle::Result allocateQuery(Context *context, QueryHelper *queryOut);
     void freeQuery(Context *context, QueryHelper *query);
 
-    const QueryPool *getQueryPool(size_t index) const { return &mQueryPools[index]; }
+    const QueryPool *getQueryPool(size_t index) const { return &mPools[index]; }
 
   private:
     angle::Result allocateNewPool(Context *context);
 
     // Information required to create new query pools
-    uint32_t mPoolSize;
     VkQueryType mQueryType;
-
-    // A list of query pools to allocate from
-    std::vector<QueryPool> mQueryPools;
-
-    struct QueryPoolStats
-    {
-        // A count corresponding to each query pool indicating how many of its allocated indices
-        // have been freed. Once that value reaches mPoolSize for each pool, that pool is considered
-        // free and reusable.  While keeping a bitset would allow allocation of each index, the
-        // slight runtime overhead of finding free indices is not worth the slight memory overhead
-        // of creating new pools when unnecessary.
-        uint32_t freedCount;
-        // When the pool is completely emptied, the serial of the renderer is stored to make sure no
-        // new allocations are made from the pool until it's not in use.
-        Serial serial;
-    };
-    std::vector<QueryPoolStats> mQueryPoolStats;
-
-    // Index into mQueryPools indicating query pool we are currently allocating from
-    size_t mCurrentQueryPool;
-    // Bit index inside mQueryPools[mCurrentQueryPool] indicating which index can be allocated next
-    uint32_t mCurrentFreeQuery;
 };
 
 // Queries in vulkan are identified by the query pool and an index for a query within that pool.
@@ -247,6 +270,59 @@ class QueryHelper final : public CommandGraphResource
     const DynamicQueryPool *mDynamicQueryPool;
     size_t mQueryPoolIndex;
     uint32_t mQuery;
+};
+
+// DynamicSemaphorePool allocates semaphores as needed.  It uses a std::vector
+// as a pool to allocate many semaphores at once.  The pools live permanently,
+// but are recycled as semaphores get freed.
+
+// These are arbitrary default sizes for semaphore pools.
+constexpr uint32_t kDefaultSemaphorePoolSize = 64;
+
+class SemaphoreHelper;
+
+class DynamicSemaphorePool final : public DynamicallyGrowingPool<std::vector<Semaphore>>
+{
+  public:
+    DynamicSemaphorePool();
+    ~DynamicSemaphorePool();
+
+    angle::Result init(Context *context, uint32_t poolSize);
+    void destroy(VkDevice device);
+
+    bool isValid() { return mPoolSize > 0; }
+
+    // autoFree can be used to allocate a semaphore that's expected to be freed at the end of the
+    // frame.  This renders freeSemaphore unnecessary and saves an eventual search.
+    angle::Result allocateSemaphore(Context *context, SemaphoreHelper *semaphoreOut);
+    void freeSemaphore(Context *context, SemaphoreHelper *semaphore);
+
+  private:
+    angle::Result allocateNewPool(Context *context);
+};
+
+// Semaphores that are allocated from the semaphore pool are encapsulated in a helper object,
+// keeping track of where in the pool they are allocated from.
+class SemaphoreHelper final : angle::NonCopyable
+{
+  public:
+    SemaphoreHelper();
+    ~SemaphoreHelper();
+
+    SemaphoreHelper(SemaphoreHelper &&other);
+    SemaphoreHelper &operator=(SemaphoreHelper &&other);
+
+    void init(const size_t semaphorePoolIndex, const Semaphore *semaphore);
+    void deinit();
+
+    const Semaphore *getSemaphore() const { return mSemaphore; }
+
+    // Used only by DynamicSemaphorePool.
+    size_t getSemaphorePoolIndex() const { return mSemaphorePoolIndex; }
+
+  private:
+    size_t mSemaphorePoolIndex;
+    const Semaphore *mSemaphore;
 };
 
 // This class' responsibility is to create index buffers needed to support line loops in Vulkan.
