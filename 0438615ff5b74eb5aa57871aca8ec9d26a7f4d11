@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0efece2d_7e993e9f",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-11T05:31:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e268fbb1_4ac2b4d1",
+      "revId": "0438615ff5b74eb5aa57871aca8ec9d26a7f4d11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23b68cc6_0a803fc8",
         "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
         "patchSetId": 8
@@ -33,6 +51,24 @@
       "revId": "0438615ff5b74eb5aa57871aca8ec9d26a7f4d11",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "384858b2_883af98b",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-11T05:31:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "23b68cc6_0a803fc8",
+      "revId": "0438615ff5b74eb5aa57871aca8ec9d26a7f4d11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
