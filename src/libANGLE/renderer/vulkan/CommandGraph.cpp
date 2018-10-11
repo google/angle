@@ -47,7 +47,8 @@ angle::Result InitAndBeginCommandBuffer(vk::Context *context,
     return angle::Result::Continue();
 }
 
-const char *GetResourceTypeName(CommandGraphResourceType resourceType)
+const char *GetResourceTypeName(CommandGraphResourceType resourceType,
+                                CommandGraphNodeFunction function)
 {
     switch (resourceType)
     {
@@ -58,7 +59,16 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType)
         case CommandGraphResourceType::Image:
             return "Image";
         case CommandGraphResourceType::Query:
-            return "Query";
+            switch (function)
+            {
+                case CommandGraphNodeFunction::BeginQuery:
+                    return "BeginQuery";
+                case CommandGraphNodeFunction::EndQuery:
+                    return "EndQuery";
+                default:
+                    UNREACHABLE();
+                    return "Query";
+            }
         default:
             UNREACHABLE();
             return "";
@@ -676,7 +686,7 @@ void CommandGraph::dumpGraphDotFile(std::ostream &out) const
         int nodeID = nodeIDMap[node];
 
         std::stringstream strstr;
-        strstr << GetResourceTypeName(node->getResourceTypeForDiagnostics());
+        strstr << GetResourceTypeName(node->getResourceTypeForDiagnostics(), node->getFunction());
         strstr << " ";
 
         auto it = objectIDMap.find(node->getResourceIDForDiagnostics());
