@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02f90f59_0cfddad6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 3169,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-11T21:41:47Z",
+      "side": 1,
+      "message": "If you want to disable this extension on contexts less than ES3, here is where to do it.",
+      "range": {
+        "startLine": 3165,
+        "startChar": 0,
+        "endLine": 3169,
+        "endChar": 55
+      },
+      "revId": "e0768b539806a55c8fec3486ce4aa72435b2a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "567e178d_57a80cd0",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 3811,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-11T21:41:47Z",
+      "side": 1,
+      "message": "This should not be needed.  The extension will not be exposed.",
+      "range": {
+        "startLine": 3805,
+        "startChar": 1,
+        "endLine": 3811,
+        "endChar": 0
+      },
+      "revId": "e0768b539806a55c8fec3486ce4aa72435b2a760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
