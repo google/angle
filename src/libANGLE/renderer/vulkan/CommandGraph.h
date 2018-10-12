@@ -39,6 +39,7 @@ enum class CommandGraphNodeFunction
     Generic,
     BeginQuery,
     EndQuery,
+    WriteTimestamp,
 };
 
 // Only used internally in the command graph. Kept in the header for better inlining performance.
@@ -182,6 +183,7 @@ class CommandGraphResource : angle::NonCopyable
 
     void beginQuery(Context *context, const QueryPool *queryPool, uint32_t queryIndex);
     void endQuery(Context *context, const QueryPool *queryPool, uint32_t queryIndex);
+    void writeTimestamp(Context *context, const QueryPool *queryPool, uint32_t queryIndex);
 
     // Checks if we're in a RenderPass, returning true if so. Updates serial internally.
     // Returns the started command buffer in commandBufferOut.

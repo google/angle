@@ -200,6 +200,10 @@ gl::Error ContextVk::initialize()
                                                           vk::kDefaultOcclusionQueryPoolSize));
     ANGLE_TRY(mQueryPools[gl::QueryType::AnySamplesConservative].init(
         this, VK_QUERY_TYPE_OCCLUSION, vk::kDefaultOcclusionQueryPoolSize));
+    ANGLE_TRY(mQueryPools[gl::QueryType::Timestamp].init(this, VK_QUERY_TYPE_TIMESTAMP,
+                                                         vk::kDefaultTimestampQueryPoolSize));
+    ANGLE_TRY(mQueryPools[gl::QueryType::TimeElapsed].init(this, VK_QUERY_TYPE_TIMESTAMP,
+                                                           vk::kDefaultTimestampQueryPoolSize));
     // TODO(syoussefi): Initialize other query pools as they get implemented.
 
     size_t minAlignment = static_cast<size_t>(
@@ -1083,7 +1087,8 @@ vk::DynamicDescriptorPool *ContextVk::getDynamicDescriptorPool(uint32_t descript
 vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
 {
     ASSERT(queryType == gl::QueryType::AnySamples ||
-           queryType == gl::QueryType::AnySamplesConservative);
+           queryType == gl::QueryType::AnySamplesConservative ||
+           queryType == gl::QueryType::Timestamp || queryType == gl::QueryType::TimeElapsed);
     ASSERT(mQueryPools[queryType].isValid());
     return &mQueryPools[queryType];
 }

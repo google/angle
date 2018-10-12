@@ -583,6 +583,14 @@ void CommandBuffer::endQuery(VkQueryPool queryPool, uint32_t query)
     vkCmdEndQuery(mHandle, queryPool, query);
 }
 
+void CommandBuffer::writeTimestamp(VkPipelineStageFlagBits pipelineStage,
+                                   VkQueryPool queryPool,
+                                   uint32_t query)
+{
+    ASSERT(valid());
+    vkCmdWriteTimestamp(mHandle, pipelineStage, queryPool, query);
+}
+
 // Image implementation.
 Image::Image()
 {

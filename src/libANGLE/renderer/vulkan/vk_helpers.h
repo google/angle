@@ -211,8 +211,9 @@ class DynamicallyGrowingPool : angle::NonCopyable
 // DynamicQueryPool allocates indices out of QueryPool as needed.  Once a QueryPool is exhausted,
 // another is created.  The query pools live permanently, but are recycled as indices get freed.
 
-// This is an arbitrary default size for occlusion query pools.
+// These are arbitrary default sizes for query pools.
 constexpr uint32_t kDefaultOcclusionQueryPoolSize = 64;
+constexpr uint32_t kDefaultTimestampQueryPoolSize = 64;
 
 class QueryHelper;
 

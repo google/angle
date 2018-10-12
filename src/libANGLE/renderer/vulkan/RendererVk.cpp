@@ -769,7 +769,9 @@ void RendererVk::ensureCapsInitialized() const
 {
     if (!mCapsInitialized)
     {
-        vk::GenerateCaps(mPhysicalDeviceProperties, mPhysicalDeviceFeatures, mNativeTextureCaps,
+        ASSERT(mCurrentQueueFamilyIndex < mQueueFamilyProperties.size());
+        vk::GenerateCaps(mPhysicalDeviceProperties, mPhysicalDeviceFeatures,
+                         mQueueFamilyProperties[mCurrentQueueFamilyIndex], mNativeTextureCaps,
                          &mNativeCaps, &mNativeExtensions, &mNativeLimitations);
         mCapsInitialized = true;
     }

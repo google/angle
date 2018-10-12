@@ -65,6 +65,8 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType,
                     return "BeginQuery";
                 case CommandGraphNodeFunction::EndQuery:
                     return "EndQuery";
+                case CommandGraphNodeFunction::WriteTimestamp:
+                    return "WriteTimestamp";
                 default:
                     UNREACHABLE();
                     return "Query";
@@ -193,6 +195,14 @@ void CommandGraphResource::endQuery(Context *context,
                                     uint32_t queryIndex)
 {
     startNewCommands(context->getRenderer(), CommandGraphNodeFunction::EndQuery);
+    mCurrentWritingNode->setQueryPool(queryPool, queryIndex);
+}
+
+void CommandGraphResource::writeTimestamp(Context *context,
+                                          const QueryPool *queryPool,
+                                          uint32_t queryIndex)
+{
+    startNewCommands(context->getRenderer(), CommandGraphNodeFunction::WriteTimestamp);
     mCurrentWritingNode->setQueryPool(queryPool, queryIndex);
 }
 
@@ -387,7 +397,8 @@ bool CommandGraphNode::hasParents() const
 void CommandGraphNode::setQueryPool(const QueryPool *queryPool, uint32_t queryIndex)
 {
     ASSERT(mFunction == CommandGraphNodeFunction::BeginQuery ||
-           mFunction == CommandGraphNodeFunction::EndQuery);
+           mFunction == CommandGraphNodeFunction::EndQuery ||
+           mFunction == CommandGraphNodeFunction::WriteTimestamp);
     mQueryPool  = queryPool->getHandle();
     mQueryIndex = queryIndex;
 }
@@ -493,6 +504,16 @@ angle::Result CommandGraphNode::visitAndExecute(vk::Context *context,
             ASSERT(mQueryPool != VK_NULL_HANDLE);
 
             primaryCommandBuffer->endQuery(mQueryPool, mQueryIndex);
+
+            break;
+
+        case CommandGraphNodeFunction::WriteTimestamp:
+            ASSERT(!mOutsideRenderPassCommands.valid() && !mInsideRenderPassCommands.valid());
+            ASSERT(mQueryPool != VK_NULL_HANDLE);
+
+            primaryCommandBuffer->resetQueryPool(mQueryPool, mQueryIndex, 1);
+            primaryCommandBuffer->writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, mQueryPool,
+                                                 mQueryIndex);
 
             break;
 

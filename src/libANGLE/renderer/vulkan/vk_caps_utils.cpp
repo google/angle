@@ -31,6 +31,7 @@ namespace vk
 
 void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
                   const VkPhysicalDeviceFeatures &physicalDeviceFeatures,
+                  const VkQueueFamilyProperties &queueFamilyProperties,
                   const gl::TextureCapsMap &textureCaps,
                   gl::Caps *outCaps,
                   gl::Extensions *outExtensions,
@@ -52,6 +53,15 @@ void GenerateCaps(const VkPhysicalDeviceProperties &physicalDeviceProperties,
     // able to execute in the presence of queries.  As a result, we won't support queries
     // unless that feature is available.
     outExtensions->occlusionQueryBoolean = physicalDeviceFeatures.inheritedQueries;
+
+    // From the Vulkan specs:
+    // > The number of valid bits in a timestamp value is determined by the
+    // > VkQueueFamilyProperties::timestampValidBits property of the queue on which the timestamp is
+    // > written. Timestamps are supported on any queue which reports a non-zero value for
+    // > timestampValidBits via vkGetPhysicalDeviceQueueFamilyProperties.
+    outExtensions->disjointTimerQuery          = queueFamilyProperties.timestampValidBits > 0;
+    outExtensions->queryCounterBitsTimeElapsed = queueFamilyProperties.timestampValidBits;
+    outExtensions->queryCounterBitsTimestamp   = queueFamilyProperties.timestampValidBits;
 
     // TODO(lucferron): Eventually remove everything above this line in this function as the caps
     // get implemented.
