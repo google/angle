@@ -607,7 +607,8 @@ class Fence final : public WrappedObject<Fence, VkFence>
     using WrappedObject::operator=;
 
     angle::Result init(Context *context, const VkFenceCreateInfo &createInfo);
-    VkResult getStatus(VkDevice device) const;
+    angle::Result getStatus(Context *context) const;
+    angle::Result wait(Context *context, uint64_t timeout) const;
 };
 
 // Similar to StagingImage, for Buffers.
@@ -905,5 +906,8 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
 
 #define ANGLE_VK_TRY_RETURN_ALLOW_NOT_READY(context, command) \
     ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_NOT_READY)
+
+#define ANGLE_VK_TRY_RETURN_ALLOW_TIMEOUT(context, command) \
+    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_TIMEOUT)
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_UTILS_H_

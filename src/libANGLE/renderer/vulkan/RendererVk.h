@@ -101,6 +101,13 @@ class RendererVk : angle::NonCopyable
         }
     }
 
+    // Check to see which batches have finished completion (forward progress for
+    // mLastCompletedQueueSerial, for example for when the application busy waits on a query
+    // result).
+    angle::Result checkCompletedCommands(vk::Context *context);
+    // Wait for completion of batches until (at least) batch with given serial is finished.
+    angle::Result finishToSerial(vk::Context *context, Serial serial);
+
     uint32_t getQueueFamilyIndex() const { return mCurrentQueueFamilyIndex; }
 
     const vk::MemoryProperties &getMemoryProperties() const { return mMemoryProperties; }
@@ -180,7 +187,6 @@ class RendererVk : angle::NonCopyable
     angle::Result submitFrame(vk::Context *context,
                               const VkSubmitInfo &submitInfo,
                               vk::CommandBuffer &&commandBuffer);
-    angle::Result checkInFlightCommands(vk::Context *context);
     void freeAllInFlightResources();
     angle::Result flushCommandGraph(vk::Context *context, vk::CommandBuffer *commandBatch);
     void initFeatures();

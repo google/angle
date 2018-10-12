@@ -1013,9 +1013,15 @@ angle::Result Fence::init(Context *context, const VkFenceCreateInfo &createInfo)
                         vkCreateFence(context->getDevice(), &createInfo, nullptr, &mHandle));
 }
 
-VkResult Fence::getStatus(VkDevice device) const
+angle::Result Fence::getStatus(Context *context) const
 {
-    return vkGetFenceStatus(device, mHandle);
+    ANGLE_VK_TRY_RETURN_ALLOW_NOT_READY(context, vkGetFenceStatus(context->getDevice(), mHandle));
+}
+
+angle::Result Fence::wait(Context *context, uint64_t timeout) const
+{
+    ANGLE_VK_TRY_RETURN_ALLOW_TIMEOUT(
+        context, vkWaitForFences(context->getDevice(), 1, &mHandle, true, timeout));
 }
 
 // MemoryProperties implementation.

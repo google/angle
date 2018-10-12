@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/vulkan/QueryVk.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/RendererVk.h"
 
 #include "common/debug.h"
 
@@ -66,6 +67,28 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     }
 
     ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+
+    // glGetQueryObject* requires an implicit flush of the command buffers to guarantee execution in
+    // finite time.
+    if (mQueryHelper.hasPendingWork(renderer))
+    {
+        ANGLE_TRY_HANDLE(context, renderer->flush(contextVk));
+        ASSERT(!mQueryHelper.hasPendingWork(renderer));
+    }
+
+    // If the command buffer this query is being written to is still in flight, its reset command
+    // may not have been performed by the GPU yet.  To avoid a race condition in this case, wait
+    // for the batch to finish first before querying (or return not-ready if not waiting).
+    ANGLE_TRY(renderer->checkCompletedCommands(contextVk));
+    if (mQueryHelper.isResourceInUse(renderer))
+    {
+        if (!wait)
+        {
+            return angle::Result::Continue();
+        }
+        ANGLE_TRY(renderer->finishToSerial(contextVk, mQueryHelper.getStoredQueueSerial()));
+    }
 
     VkQueryResultFlags flags = (wait ? VK_QUERY_RESULT_WAIT_BIT : 0) | VK_QUERY_RESULT_64_BIT;
 
@@ -74,23 +97,28 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
         sizeof(mCachedResult), flags);
     ANGLE_TRY(result);
 
-    if (result == angle::Result::Continue())
+    // If the results are not ready, do nothing.  mCachedResultValid remains false.
+    if (result == angle::Result::Incomplete())
     {
-        mCachedResultValid = true;
-
-        switch (getType())
-        {
-            case gl::QueryType::AnySamples:
-            case gl::QueryType::AnySamplesConservative:
-                // OpenGL query result in these cases is binary
-                mCachedResult = !!mCachedResult;
-                break;
-            default:
-                UNREACHABLE();
-                break;
-        }
+        // If VK_QUERY_RESULT_WAIT_BIT was given, Incomplete() cannot have been returned.
+        ASSERT(!wait);
+        return angle::Result::Continue();
     }
 
+    // Fix up the results to what OpenGL expects.
+    switch (getType())
+    {
+        case gl::QueryType::AnySamples:
+        case gl::QueryType::AnySamplesConservative:
+            // OpenGL query result in these cases is binary
+            mCachedResult = !!mCachedResult;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    mCachedResultValid = true;
     return angle::Result::Continue();
 }
 
@@ -124,18 +152,6 @@ gl::Error QueryVk::getResult(const gl::Context *context, GLuint64 *params)
 
 gl::Error QueryVk::isResultAvailable(const gl::Context *context, bool *available)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
-
-    // Make sure the command buffer for this query is submitted.  If not, *available should always
-    // be false. This is because the reset command is not yet executed (it's only put in the command
-    // graph), so actually checking the results may return "true" because of a previous submission.
-
-    if (mQueryHelper.hasPendingWork(contextVk->getRenderer()))
-    {
-        *available = false;
-        return gl::NoError();
-    }
-
     ANGLE_TRY(getResult(context, false));
     *available = mCachedResultValid;
 

@@ -881,17 +881,17 @@ void RendererVk::freeAllInFlightResources()
     mGarbage.clear();
 }
 
-angle::Result RendererVk::checkInFlightCommands(vk::Context *context)
+angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 {
     int finishedCount = 0;
 
     for (CommandBatch &batch : mInFlightCommands)
     {
-        VkResult result = batch.fence.getStatus(mDevice);
-        if (result == VK_NOT_READY)
+        angle::Result result = batch.fence.getStatus(context);
+        ANGLE_TRY(result);
+        if (result == angle::Result::Incomplete())
             break;
 
-        ANGLE_VK_TRY(context, result);
         ASSERT(batch.serial > mLastCompletedQueueSerial);
         mLastCompletedQueueSerial = batch.serial;
 
@@ -949,7 +949,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     // TODO(jmadill): Overflow check.
     mCurrentQueueSerial = mQueueSerialFactory.generate();
 
-    ANGLE_TRY(checkInFlightCommands(context));
+    ANGLE_TRY(checkCompletedCommands(context));
 
     // Simply null out the command buffer here - it was allocated using the command pool.
     commandBuffer.releaseHandle();
@@ -969,6 +969,40 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 bool RendererVk::isSerialInUse(Serial serial) const
 {
     return serial > mLastCompletedQueueSerial;
+}
+
+angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
+{
+    if (!isSerialInUse(serial) || mInFlightCommands.empty())
+    {
+        return angle::Result::Continue();
+    }
+
+    // Find the first batch with serial equal to or bigger than given serial (note that
+    // the batch serials are unique, otherwise upper-bound would have been necessary).
+    size_t batchIndex = mInFlightCommands.size() - 1;
+    for (size_t i = 0; i < mInFlightCommands.size(); ++i)
+    {
+        if (mInFlightCommands[i].serial >= serial)
+        {
+            batchIndex = i;
+            break;
+        }
+    }
+    const CommandBatch &batch = mInFlightCommands[batchIndex];
+
+    // Wait for it finish
+    constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
+    angle::Result result                   = batch.fence.wait(context, kMaxFenceWaitTimeNs);
+    if (result == angle::Result::Incomplete())
+    {
+        // Wait a maximum of 10s.  If that times out, we declare it a failure.
+        result = angle::Result::Stop();
+    }
+    ANGLE_TRY(result);
+
+    // Clean up finished batches.
+    return checkCompletedCommands(context);
 }
 
 angle::Result RendererVk::getCompatibleRenderPass(vk::Context *context,

@@ -193,11 +193,12 @@ class CommandGraphResource : angle::NonCopyable
     // Called when 'this' object changes, but we'd like to start a new command buffer later.
     void finishCurrentCommands(RendererVk *renderer);
 
+    // Get the current queue serial for this resource. Used to release resources, and for
+    // queries, to know if the queue they are submitted on has finished execution.
+    Serial getStoredQueueSerial() const;
+
   protected:
     explicit CommandGraphResource(CommandGraphResourceType resourceType);
-
-    // Get the current queue serial for this resource. Only used to release resources.
-    Serial getStoredQueueSerial() const;
 
   private:
     void startNewCommands(RendererVk *renderer, CommandGraphNodeFunction function);
