@@ -104,11 +104,11 @@ void VertexArrayGL::destroy(const gl::Context *context)
     }
 }
 
-angle::Result VertexArrayGL::syncDrawArraysState(const gl::Context *context,
-                                                 const gl::AttributesMask &activeAttributesMask,
-                                                 GLint first,
-                                                 GLsizei count,
-                                                 GLsizei instanceCount) const
+angle::Result VertexArrayGL::syncClientSideData(const gl::Context *context,
+                                                const gl::AttributesMask &activeAttributesMask,
+                                                GLint first,
+                                                GLsizei count,
+                                                GLsizei instanceCount) const
 {
     return syncDrawState(context, activeAttributesMask, first, count, GL_NONE, nullptr,
                          instanceCount, false, nullptr);

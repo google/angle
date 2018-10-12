@@ -5296,14 +5296,14 @@ bool Context::getZeroFilledBuffer(size_t requstedSizeBytes,
 
 Error Context::prepareForDispatch()
 {
-    ANGLE_TRY(syncState(mComputeDirtyBits, mComputeDirtyObjects));
+    ANGLE_TRY(syncDirtyObjects(mComputeDirtyObjects));
 
     if (isRobustResourceInitEnabled())
     {
         ANGLE_TRY(mGLState.clearUnclearedActiveTextures(this));
     }
 
-    return NoError();
+    return syncDirtyBits(mComputeDirtyBits);
 }
 
 void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)

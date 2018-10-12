@@ -56,6 +56,20 @@ class BitSetT final
         bool operator!=(const Iterator &other) const;
         ParamT operator*() const;
 
+        // These helper functions allow mutating an iterator in-flight.
+        // They only operate on later bits to ensure we don't iterate the same bit twice.
+        void resetLaterBit(std::size_t index)
+        {
+            ASSERT(index > mCurrentBit);
+            mBitsCopy.reset(index);
+        }
+
+        void setLaterBit(std::size_t index)
+        {
+            ASSERT(index > mCurrentBit);
+            mBitsCopy.set(index);
+        }
+
       private:
         std::size_t getNextBit();
 
@@ -143,6 +157,20 @@ class IterableBitSet : public std::bitset<N>
         bool operator==(const Iterator &other) const;
         bool operator!=(const Iterator &other) const;
         unsigned long operator*() const { return mCurrentBit; }
+
+        // These helper functions allow mutating an iterator in-flight.
+        // They only operate on later bits to ensure we don't iterate the same bit twice.
+        void resetLaterBit(std::size_t index)
+        {
+            ASSERT(index > mCurrentBit);
+            mBits.reset(index - mOffset);
+        }
+
+        void setLaterBit(std::size_t index)
+        {
+            ASSERT(index > mCurrentBit);
+            mBits.set(index - mOffset);
+        }
 
       private:
         unsigned long getNextBit();

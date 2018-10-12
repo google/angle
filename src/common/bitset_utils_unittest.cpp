@@ -109,4 +109,53 @@ TEST_F(BitSetIteratorTest, BitAssignment)
     }
 }
 
+// Tests adding bits to the iterator during iteration.
+TEST_F(BitSetIteratorTest, SetLaterBit)
+{
+    std::set<size_t> expectedValues = {1, 3, 5, 7, 9};
+    mStateBits.set(1);
+
+    std::set<size_t> actualValues;
+
+    for (auto iter = mStateBits.begin(), end = mStateBits.end(); iter != end; ++iter)
+    {
+        if (*iter == 1)
+        {
+            iter.setLaterBit(3);
+            iter.setLaterBit(5);
+            iter.setLaterBit(7);
+            iter.setLaterBit(9);
+        }
+
+        actualValues.insert(*iter);
+    }
+
+    EXPECT_EQ(expectedValues, actualValues);
+}
+
+// Tests removing bits from the iterator during iteration.
+TEST_F(BitSetIteratorTest, ResetLaterBit)
+{
+    std::set<size_t> expectedValues = {1, 3, 5, 7, 9};
+
+    for (size_t index = 1; index <= 9; ++index)
+        mStateBits.set(index);
+
+    std::set<size_t> actualValues;
+
+    for (auto iter = mStateBits.begin(), end = mStateBits.end(); iter != end; ++iter)
+    {
+        if (*iter == 1)
+        {
+            iter.resetLaterBit(2);
+            iter.resetLaterBit(4);
+            iter.resetLaterBit(6);
+            iter.resetLaterBit(8);
+        }
+
+        actualValues.insert(*iter);
+    }
+
+    EXPECT_EQ(expectedValues, actualValues);
+}
 }  // anonymous namespace

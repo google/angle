@@ -683,14 +683,12 @@ angle::Result RendererGL::dispatchCompute(const gl::Context *context,
                                           GLuint numGroupsY,
                                           GLuint numGroupsZ)
 {
-    ANGLE_TRY(mStateManager->setDispatchComputeState(context));
     mFunctions->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
     return angle::Result::Continue();
 }
 
 angle::Result RendererGL::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
-    ANGLE_TRY(mStateManager->setDispatchComputeState(context));
     mFunctions->dispatchComputeIndirect(indirect);
     return angle::Result::Continue();
 }

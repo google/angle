@@ -23,7 +23,7 @@ struct Caps;
 class ContextState;
 class State;
 class FramebufferState;
-}
+}  // namespace gl
 
 namespace rx
 {
@@ -165,8 +165,6 @@ class StateManagerGL final : angle::NonCopyable
                                        const void **outIndices);
     angle::Result setDrawIndirectState(const gl::Context *context);
 
-    angle::Result setDispatchComputeState(const gl::Context *context);
-
     void pauseTransformFeedback();
     angle::Result pauseAllQueries(const gl::Context *context);
     angle::Result pauseQuery(const gl::Context *context, gl::QueryType type);
@@ -178,16 +176,19 @@ class StateManagerGL final : angle::NonCopyable
                    const gl::State::DirtyBits &glDirtyBits,
                    const gl::State::DirtyBits &bitMask);
 
-    void updateMultiviewBaseViewLayerIndexUniform(
+    ANGLE_INLINE void updateMultiviewBaseViewLayerIndexUniform(
         const gl::Program *program,
-        const gl::FramebufferState &drawFramebufferState) const;
+        const gl::FramebufferState &drawFramebufferState) const
+    {
+        if (mIsMultiviewEnabled && program && program->usesMultiview())
+        {
+            updateMultiviewBaseViewLayerIndexUniformImpl(program, drawFramebufferState);
+        }
+    }
 
     GLuint getVertexArrayID() const { return mVAO; }
 
   private:
-    // Set state that's common among draw commands and compute invocations.
-    void setGenericShaderState(const gl::Context *context);
-
     // Set state that's common among draw commands.
     angle::Result setGenericDrawState(const gl::Context *context);
 
@@ -210,6 +211,10 @@ class StateManagerGL final : angle::NonCopyable
 
     void syncSamplersState(const gl::Context *context);
     void syncTransformFeedbackState(const gl::Context *context);
+
+    void updateMultiviewBaseViewLayerIndexUniformImpl(
+        const gl::Program *program,
+        const gl::FramebufferState &drawFramebufferState) const;
 
     enum MultiviewDirtyBitType
     {
@@ -368,13 +373,7 @@ class StateManagerGL final : angle::NonCopyable
 
     // ANGLE_multiview dirty bits.
     angle::BitSet<MULTIVIEW_DIRTY_BIT_MAX> mMultiviewDirtyBits;
-
-    bool mProgramTexturesDirty;
-    bool mProgramStorageBuffersDirty;
-    bool mProgramUniformBuffersDirty;
-    bool mProgramAtomicCounterBuffersDirty;
-    bool mProgramImagesDirty;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_STATEMANAGERGL_H_

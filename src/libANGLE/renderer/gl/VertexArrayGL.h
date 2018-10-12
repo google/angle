@@ -27,11 +27,11 @@ class VertexArrayGL : public VertexArrayImpl
 
     void destroy(const gl::Context *context) override;
 
-    angle::Result syncDrawArraysState(const gl::Context *context,
-                                      const gl::AttributesMask &activeAttributesMask,
-                                      GLint first,
-                                      GLsizei count,
-                                      GLsizei instanceCount) const;
+    angle::Result syncClientSideData(const gl::Context *context,
+                                     const gl::AttributesMask &activeAttributesMask,
+                                     GLint first,
+                                     GLsizei count,
+                                     GLsizei instanceCount) const;
     angle::Result syncDrawElementsState(const gl::Context *context,
                                         const gl::AttributesMask &activeAttributesMask,
                                         GLsizei count,
