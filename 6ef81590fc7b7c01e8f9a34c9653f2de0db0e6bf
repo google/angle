@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5de457f6_7a412a0b",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-15T08:43:13Z",
+      "side": 1,
+      "message": "As the trybots log shows, the feature isn\u0027t supported on opengl es.\nhttps://logs.chromium.org/logs/chromium/buildbucket/cr-buildbucket.appspot.com/8932627190640998928/+/steps/angle_end2end_tests_on_Android_device_Nexus_5X__with_patch_/0/stdout\n\n run_tests_on_device(01e6882cbcb52576)  Note: Google Test filter \u003d TextureMultisampleTest.SimpleTexelFetch/ES3_OPENGLES\n  I  118.149s run_tests_on_device(01e6882cbcb52576)  [\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test case.\n  I  118.149s run_tests_on_device(01e6882cbcb52576)  [----------] Global test environment set-up.\n  I  118.149s run_tests_on_device(01e6882cbcb52576)  [----------] 1 test from TextureMultisampleTest\n  I  118.149s run_tests_on_device(01e6882cbcb52576)  [ RUN      ] TextureMultisampleTest.SimpleTexelFetch/ES3_OPENGLES\n  I  118.149s run_tests_on_device(01e6882cbcb52576)  ERROR: 0:2: \u0027\u0027 :     GLSL error: extension \u0027GL_ARB_texture_multisample\u0027 is not supported\n  I  118.149s run_tests_on_device(01e6882cbcb52576)  ERROR: 1 compilation errors.  No code generated.",
+      "range": {
+        "startLine": 1051,
+        "startChar": 4,
+        "endLine": 1052,
+        "endChar": 83
+      },
+      "revId": "6ef81590fc7b7c01e8f9a34c9653f2de0db0e6bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

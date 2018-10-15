@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6688d2ef_f7ff8555",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-15T08:43:13Z",
+      "side": 1,
+      "message": "This might not be reached if ARB_texture_multisample isn\u0027t supported on all of the opengl es backend.",
+      "range": {
+        "startLine": 175,
+        "startChar": 12,
+        "endLine": 179,
+        "endChar": 13
+      },
+      "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6934d84a_ba268e39",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-15T08:43:13Z",
+      "side": 1,
+      "message": "Replace the extension by ARB_texture_multisample.",
+      "range": {
+        "startLine": 291,
+        "startChar": 8,
+        "endLine": 297,
+        "endChar": 9
+      },
+      "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eea7e574_34a4e57e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-15T08:43:13Z",
+      "side": 1,
+      "message": "Enable the extension only if it\u0027s supported by driver. The feature seems not supported on OpenGL es.",
+      "range": {
+        "startLine": 1051,
+        "startChar": 3,
+        "endLine": 1051,
+        "endChar": 93
+      },
+      "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "128b7626_82f31b6f",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-15T08:43:13Z",
+      "side": 1,
+      "message": "Replace the extension ANGLE_texture_multisample by ARB_texture_multisample and add a test case to do sampling in TextureMultisampleTest.cpp",
+      "range": {
+        "startLine": 291,
+        "startChar": 8,
+        "endLine": 297,
+        "endChar": 9
+      },
+      "revId": "35317ecffe35cc11bd10e744267622a3d5994a24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
