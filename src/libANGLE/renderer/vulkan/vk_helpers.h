@@ -92,8 +92,37 @@ class DynamicBuffer : angle::NonCopyable
 // using the maximum number of descriptor sets and buffers with each allocation. Currently: 2
 // (Vertex/Fragment) uniform buffers and 64 (MAX_ACTIVE_TEXTURES) image/samplers.
 
-// This is an arbitrary max. We can change this later if necessary.
-constexpr uint32_t kDefaultDescriptorPoolMaxSets = 2048;
+// Shared handle to a descriptor pool. Each helper is allocated from the dynamic descriptor pool.
+// Can be used to share descriptor pools between multiple ProgramVks and the ContextVk.
+class DescriptorPoolHelper
+{
+  public:
+    DescriptorPoolHelper();
+    ~DescriptorPoolHelper();
+
+    bool valid() { return mDescriptorPool.valid(); }
+
+    bool hasCapacity(uint32_t descriptorSetCount) const;
+    angle::Result init(Context *context, const VkDescriptorPoolSize &poolSize, uint32_t maxSets);
+    void destroy(VkDevice device);
+
+    angle::Result allocateSets(Context *context,
+                               const VkDescriptorSetLayout *descriptorSetLayout,
+                               uint32_t descriptorSetCount,
+                               VkDescriptorSet *descriptorSetsOut);
+
+    void updateSerial(Serial serial) { mMostRecentSerial = serial; }
+
+    Serial getSerial() const { return mMostRecentSerial; }
+
+  private:
+    uint32_t mFreeDescriptorSets;
+    DescriptorPool mDescriptorPool;
+    Serial mMostRecentSerial;
+};
+
+using SharedDescriptorPoolHelper  = RefCounted<DescriptorPoolHelper>;
+using SharedDescriptorPoolBinding = BindingPointer<DescriptorPoolHelper>;
 
 class DynamicDescriptorPool final : angle::NonCopyable
 {
@@ -102,27 +131,33 @@ class DynamicDescriptorPool final : angle::NonCopyable
     ~DynamicDescriptorPool();
 
     // The DynamicDescriptorPool only handles one pool size at this time.
-    angle::Result init(Context *context, const VkDescriptorPoolSize &poolSize);
+    angle::Result init(ContextVk *contextVk,
+                       VkDescriptorType descriptorType,
+                       uint32_t descriptorsPerSet);
     void destroy(VkDevice device);
 
     // We use the descriptor type to help count the number of free sets.
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.
-    angle::Result allocateSets(Context *context,
+    angle::Result allocateSets(ContextVk *contextVk,
                                const VkDescriptorSetLayout *descriptorSetLayout,
                                uint32_t descriptorSetCount,
+                               SharedDescriptorPoolBinding *bindingOut,
                                VkDescriptorSet *descriptorSetsOut);
 
     // For testing only!
     void setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool);
 
   private:
-    angle::Result allocateNewPool(Context *context);
+    angle::Result allocateNewPool(ContextVk *contextVk);
+
+    // This is somewhat fragile. It limits the total number of in-flight descriptors to
+    // kMaxInFlightPools * kDefaultDescriptorPoolMaxSets. Currently this is ~500k.
+    static constexpr size_t kMaxInFlightPools = 256;
 
     uint32_t mMaxSetsPerPool;
-    uint32_t mCurrentSetsCount;
-    DescriptorPool mCurrentDescriptorPool;
+    size_t mCurrentPoolIndex;
+    std::array<SharedDescriptorPoolHelper, kMaxInFlightPools> mDescriptorPools;
     VkDescriptorPoolSize mPoolSize;
-    uint32_t mFreeDescriptorSets;
 };
 
 // DynamicQueryPool allocates indices out of QueryPool as needed.  Once a QueryPool is exhausted,

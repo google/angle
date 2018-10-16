@@ -231,6 +231,11 @@ angle::Result ProgramVk::reset(ContextVk *contextVk)
     mDescriptorSets.clear();
     mUsedDescriptorSetRange.invalidate();
 
+    for (vk::SharedDescriptorPoolBinding &binding : mDescriptorPoolBindings)
+    {
+        binding.reset();
+    }
+
     return angle::Result::Continue();
 }
 
@@ -775,6 +780,7 @@ angle::Result ProgramVk::allocateDescriptorSet(ContextVk *contextVk, uint32_t de
     const vk::DescriptorSetLayout &descriptorSetLayout =
         mDescriptorSetLayouts[descriptorSetIndex].get();
     ANGLE_TRY(dynamicDescriptorPool->allocateSets(contextVk, descriptorSetLayout.ptr(), 1,
+                                                  &mDescriptorPoolBindings[descriptorSetIndex],
                                                   &mDescriptorSets[descriptorSetIndex]));
     return angle::Result::Continue();
 }

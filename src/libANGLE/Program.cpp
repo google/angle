@@ -920,7 +920,7 @@ Program::~Program()
 
 void Program::onDestroy(const Context *context)
 {
-    ASSERT(mLinkResolved);
+    resolveLink(context);
     for (ShaderType shaderType : AllShaderTypes())
     {
         if (mState.mAttachedShaders[shaderType])

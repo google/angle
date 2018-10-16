@@ -255,6 +255,8 @@ class ContextVk : public ContextImpl, public vk::Context
 
     // The descriptor pools are externally sychronized, so cannot be accessed from different
     // threads simultaneously. Hence, we keep them in the ContextVk instead of the RendererVk.
+    // Note that this implementation would need to change in shared resource scenarios. Likely
+    // we'd instead share a single set of dynamic descriptor pools between the share groups.
     // Same with query pools.
     vk::DescriptorSetLayoutArray<vk::DynamicDescriptorPool> mDynamicDescriptorPools;
     angle::PackedEnumMap<gl::QueryType, vk::DynamicQueryPool> mQueryPools;
@@ -304,6 +306,7 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::DynamicBuffer mDriverUniformsBuffer;
     VkDescriptorSet mDriverUniformsDescriptorSet;
     vk::BindingPointer<vk::DescriptorSetLayout> mDriverUniformsSetLayout;
+    vk::SharedDescriptorPoolBinding mDriverUniformsDescriptorPoolBinding;
 
     // This cache should also probably include the texture index (shader location) and array
     // index (also in the shader). This info is used in the descriptor update step.

@@ -174,6 +174,10 @@ class ProgramVk : public ProgramImpl
     vk::BindingPointer<vk::PipelineLayout> mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
 
+    // Keep bindings to the descriptor pools. This ensures the pools stay valid while the Program
+    // is in use.
+    vk::DescriptorSetLayoutArray<vk::SharedDescriptorPoolBinding> mDescriptorPoolBindings;
+
     class ShaderInfo final : angle::NonCopyable
     {
       public:

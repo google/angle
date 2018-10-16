@@ -756,6 +756,86 @@ class Scoped final : angle::NonCopyable
     VkDevice mDevice;
     T mVar;
 };
+
+// This is a very simple RefCount class that has no autoreleasing. Used in the descriptor set and
+// pipeline layout caches.
+template <typename T>
+class RefCounted : angle::NonCopyable
+{
+  public:
+    RefCounted() : mRefCount(0) {}
+    explicit RefCounted(T &&newObject) : mRefCount(0), mObject(std::move(newObject)) {}
+    ~RefCounted() { ASSERT(mRefCount == 0 && !mObject.valid()); }
+
+    RefCounted(RefCounted &&copy) : mRefCount(copy.mRefCount), mObject(std::move(copy.mObject))
+    {
+        copy.mRefCount = 0;
+    }
+
+    RefCounted &operator=(RefCounted &&rhs)
+    {
+        std::swap(mRefCount, rhs.mRefCount);
+        mObject = std::move(rhs.mObject);
+        return *this;
+    }
+
+    void addRef()
+    {
+        ASSERT(mRefCount != std::numeric_limits<uint32_t>::max());
+        mRefCount++;
+    }
+
+    void releaseRef()
+    {
+        ASSERT(isReferenced());
+        mRefCount--;
+    }
+
+    bool isReferenced() const { return mRefCount != 0; }
+
+    T &get() { return mObject; }
+    const T &get() const { return mObject; }
+
+  private:
+    uint32_t mRefCount;
+    T mObject;
+};
+
+template <typename T>
+class BindingPointer final : angle::NonCopyable
+{
+  public:
+    BindingPointer() : mRefCounted(nullptr) {}
+
+    ~BindingPointer() { reset(); }
+
+    void set(RefCounted<T> *refCounted)
+    {
+        if (mRefCounted)
+        {
+            mRefCounted->releaseRef();
+        }
+
+        mRefCounted = refCounted;
+
+        if (mRefCounted)
+        {
+            mRefCounted->addRef();
+        }
+    }
+
+    void reset() { set(nullptr); }
+
+    T &get() { return mRefCounted->get(); }
+    const T &get() const { return mRefCounted->get(); }
+
+    bool valid() const { return mRefCounted != nullptr; }
+
+  private:
+    RefCounted<T> *mRefCounted;
+};
+
+using SharedDescriptorPool = RefCounted<DescriptorPool>;
 }  // namespace vk
 
 namespace gl_vk
