@@ -197,10 +197,6 @@
 // Passes on Pixel XL. Fails on 5x and Pixel 2. Might be fixd in latest driver.
 2609 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.* = SKIP
 
-// These two tests crash on 32-bit configs. Possibly due to an alignment bug.
-2895 VULKAN ANDROID : dEQP-GLES2.functional.draw.random.42 = SKIP
-2895 VULKAN ANDROID : dEQP-GLES2.functional.draw.random.59 = SKIP
-
 // Fails on Nexus 5x only. TODO(jmadill): Remove suppression when possible. http://anglebug.com/2791
 2791 VULKAN ANDROID : dEQP-GLES2.functional.clipping.* = SKIP
 2599 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.limits.points = FAIL
