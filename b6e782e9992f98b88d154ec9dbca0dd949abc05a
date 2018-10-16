@@ -68,6 +68,30 @@
       "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa2c8ed7_aaebfe74",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-16T16:59:49Z",
+      "side": 1,
+      "message": "I think you can broaden this.  This extension becomes core in ES 3.1 and desktop GL 3.2.",
+      "parentUuid": "eea7e574_34a4e57e",
+      "range": {
+        "startLine": 1051,
+        "startChar": 3,
+        "endLine": 1051,
+        "endChar": 93
+      },
+      "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
