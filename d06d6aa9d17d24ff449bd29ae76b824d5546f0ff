@@ -25,6 +25,53 @@
     },
     {
       "key": {
+        "uuid": "6a1a5a30_ad487296",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-10-17T18:31:47Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f93adc57_ebee5f29",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 63
+      },
+      "revId": "d06d6aa9d17d24ff449bd29ae76b824d5546f0ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0975e1b_8c75fa92",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-10-17T18:31:47Z",
+      "side": 1,
+      "message": "That function is still used here.",
+      "range": {
+        "startLine": 90,
+        "startChar": 67,
+        "endLine": 90,
+        "endChar": 83
+      },
+      "revId": "d06d6aa9d17d24ff449bd29ae76b824d5546f0ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1ecbca70_3330fff5",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 10
