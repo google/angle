@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "3970daa9_3f61e4e4",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 988,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-17T18:08:35Z",
+      "side": 1,
+      "message": "Yeah probably :)",
+      "parentUuid": "32459b2d_4dce49ab",
+      "range": {
+        "startLine": 983,
+        "startChar": 0,
+        "endLine": 988,
+        "endChar": 78
+      },
+      "revId": "029c41bc0de01c57125c975b081f54a0515e87ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0fd97714_5140898b",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 8
