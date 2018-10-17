@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "2c34aee4_de8d2849",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-17T14:47:38Z",
+      "side": 1,
+      "message": "Ah, I see the issue.  There is no ES extension to enable in this case and we don\u0027t generate different ESSL shaders based on the driver version that we are running on like we do for GLSL shaders.\n\nI would say that we shouldn\u0027t support this extension on top of GLES at all then.  In the future we could generate different shaders based on the version of the driver we are running on if we wanted.",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 17
+      },
+      "revId": "f276d54201e2d972783c574b381bc8c2b14107b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "132b95a8_bd6c591e",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 28

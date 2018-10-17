@@ -140,6 +140,30 @@
       "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4c4ca76_6e3acfa3",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-17T14:47:38Z",
+      "side": 1,
+      "message": "I think you\u0027re right, we can only support this on desktop GL 3.2+ or with GL_ARB_texture_multisample, not on GLES.",
+      "parentUuid": "4eb532c4_7276521a",
+      "range": {
+        "startLine": 1051,
+        "startChar": 3,
+        "endLine": 1051,
+        "endChar": 93
+      },
+      "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
