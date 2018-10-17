@@ -116,6 +116,30 @@
       "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4eb532c4_7276521a",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-17T09:15:24Z",
+      "side": 1,
+      "message": "@Geoff, please neglect the comment above. I\u0027ve uploaded a new patch to broaden the extension to ES3.1 and GL 3.2.",
+      "parentUuid": "25744cb1_68a43eb9",
+      "range": {
+        "startLine": 1051,
+        "startChar": 3,
+        "endLine": 1051,
+        "endChar": 93
+      },
+      "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

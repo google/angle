@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b43b70b8_6e85c6e5",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-17T09:15:24Z",
+      "side": 1,
+      "message": "Remove this extension declaration of es 310 shader.",
+      "range": {
+        "startLine": 177,
+        "startChar": 16,
+        "endLine": 180,
+        "endChar": 17
+      },
+      "revId": "f276d54201e2d972783c574b381bc8c2b14107b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83ceb8e7_e93fb368",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-17T09:15:24Z",
+      "side": 1,
+      "message": "Replace the extension to ARB_texture_multisample if it\u0027s supported by driver.",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 17
+      },
+      "revId": "f276d54201e2d972783c574b381bc8c2b14107b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "132b95a8_bd6c591e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-17T09:15:24Z",
+      "side": 1,
+      "message": "Check if the feature is supported by driver.",
+      "range": {
+        "startLine": 739,
+        "startChar": 4,
+        "endLine": 742,
+        "endChar": 5
+      },
+      "revId": "f276d54201e2d972783c574b381bc8c2b14107b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
