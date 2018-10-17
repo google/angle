@@ -92,6 +92,30 @@
       "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25744cb1_68a43eb9",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-17T01:56:05Z",
+      "side": 1,
+      "message": "@Geoff The test case TextureMultisampleTest.SimpleTexelFetch/ES3_OPENGLES will fail on android if we broaden this(see trybots of 26). https://logs.chromium.org/logs/chromium/buildbucket/cr-buildbucket.appspot.com/8932627190640998928/+/steps/angle_end2end_tests_on_Android_device_Nexus_5X__with_patch_/0/stdout\n\nI   57.542s run_tests_on_device(01e6882cbcb52576)  [ RUN      ] TextureMultisampleTest.SimpleTexelFetch/ES3_OPENGLES\nI   57.542s run_tests_on_device(01e6882cbcb52576)  ERROR: 0:2: \u0027\u0027 :     GLSL error: extension \u0027GL_ARB_texture_multisample\u0027 is not supported\nI   57.542s run_tests_on_device(01e6882cbcb52576)  ERROR: 1 compilation errors.  No code generated.\n\nOr should we skip the test on android?",
+      "parentUuid": "aa2c8ed7_aaebfe74",
+      "range": {
+        "startLine": 1051,
+        "startChar": 3,
+        "endLine": 1051,
+        "endChar": 93
+      },
+      "revId": "b6e782e9992f98b88d154ec9dbca0dd949abc05a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
