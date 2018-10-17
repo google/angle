@@ -254,6 +254,29 @@ TEST_P(ClearTest, ClearIssue)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Regression test for a bug where "glClearDepthf"'s argument was not clamped
+// In GLES 2 they where declared as GLclampf and the behaviour is the same in GLES 3.2
+TEST_P(ClearTest, ClearIsClamped)
+{
+    glClearDepthf(5.0f);
+
+    GLfloat clear_depth;
+    glGetFloatv(GL_DEPTH_CLEAR_VALUE, &clear_depth);
+    EXPECT_EQ(1.0f, clear_depth);
+}
+
+// Regression test for a bug where "glDepthRangef"'s arguments were not clamped
+// In GLES 2 they where declared as GLclampf and the behaviour is the same in GLES 3.2
+TEST_P(ClearTest, DepthRangefIsClamped)
+{
+    glDepthRangef(1.1f, -4.0f);
+
+    GLfloat depth_range[2];
+    glGetFloatv(GL_DEPTH_RANGE, depth_range);
+    EXPECT_EQ(1.0f, depth_range[0]);
+    EXPECT_EQ(0.0f, depth_range[1]);
+}
+
 // Requires ES3
 // This tests a bug where in a masked clear when calling "ClearBuffer", we would
 // mistakenly clear every channel (including the masked-out ones)
