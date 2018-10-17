@@ -238,6 +238,7 @@ if (is_win || is_linux || is_android || is_mac) {
              angle_root + ":libANGLE",
              angle_root + ":libEGL_static",
              angle_root + ":libGLESv2_static",
+             angle_root + "/third_party/jsoncpp:jsoncpp",
            ]
 
     if (is_android) {

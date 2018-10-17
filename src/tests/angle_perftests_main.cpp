@@ -10,6 +10,8 @@
 #include <gtest/gtest.h>
 
 extern bool g_OnlyOneRunFrame;
+extern bool gEnableTrace;
+extern const char *gTraceFile;
 
 int main(int argc, char **argv)
 {
@@ -18,6 +20,15 @@ int main(int argc, char **argv)
         if (strcmp("--one-frame-only", argv[i]) == 0)
         {
             g_OnlyOneRunFrame = true;
+        }
+        if (strcmp("--enable-trace", argv[i]) == 0)
+        {
+            gEnableTrace = true;
+        }
+        if (strcmp("--trace-file", argv[i]) == 0 && i < argc - 1)
+        {
+            gTraceFile = argv[i + 1];
+            argc++;
         }
     }
 

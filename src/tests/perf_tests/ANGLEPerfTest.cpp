@@ -12,10 +12,15 @@
 
 #include <cassert>
 #include <cmath>
+#include <fstream>
 #include <iostream>
+
+#include <json/json.h>
 
 namespace
 {
+constexpr size_t kInitialTraceEventBufferSize = 50000;
+
 void EmptyPlatformMethod(angle::PlatformMethods *, const char *)
 {
 }
@@ -25,9 +30,87 @@ void OverrideWorkaroundsD3D(angle::PlatformMethods *platform, angle::Workarounds
     auto *angleRenderTest = static_cast<ANGLERenderTest *>(platform->context);
     angleRenderTest->overrideWorkaroundsD3D(workaroundsD3D);
 }
-}  // namespace
+
+angle::TraceEventHandle AddTraceEvent(angle::PlatformMethods *platform,
+                                      char phase,
+                                      const unsigned char *categoryEnabledFlag,
+                                      const char *name,
+                                      unsigned long long id,
+                                      double timestamp,
+                                      int numArgs,
+                                      const char **argNames,
+                                      const unsigned char *argTypes,
+                                      const unsigned long long *argValues,
+                                      unsigned char flags)
+{
+    ANGLERenderTest *renderTest     = static_cast<ANGLERenderTest *>(platform->context);
+    std::vector<TraceEvent> &buffer = renderTest->getTraceEventBuffer();
+    buffer.emplace_back(phase, name, timestamp);
+    return buffer.size();
+}
+
+const unsigned char *GetTraceCategoryEnabledFlag(angle::PlatformMethods *platform,
+                                                 const char *categoryName)
+{
+    constexpr static unsigned char kNonZero = 1;
+    return &kNonZero;
+}
+
+void UpdateTraceEventDuration(angle::PlatformMethods *platform,
+                              const unsigned char *categoryEnabledFlag,
+                              const char *name,
+                              angle::TraceEventHandle eventHandle)
+{
+    // Not implemented.
+}
+
+double MonotonicallyIncreasingTime(angle::PlatformMethods *platform)
+{
+    ANGLERenderTest *renderTest = static_cast<ANGLERenderTest *>(platform->context);
+    return renderTest->getTimer()->getElapsedTime();
+}
+
+void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
+                               const char *outputFileName)
+{
+    Json::Value eventsValue(Json::arrayValue);
+
+    for (const TraceEvent &traceEvent : traceEvents)
+    {
+        Json::Value value(Json::objectValue);
+
+        std::stringstream phaseName;
+        phaseName << traceEvent.phase;
+
+        unsigned long long microseconds =
+            static_cast<unsigned long long>(traceEvent.timestamp * 1000.0 * 1000.0);
+
+        value["name"] = traceEvent.name;
+        value["cat"]  = "gpu.angle";
+        value["ph"]   = phaseName.str();
+        value["ts"]   = microseconds;
+        value["pid"]  = "ANGLE";
+        value["tid"]  = "CPU";
+
+        eventsValue.append(value);
+    }
+
+    Json::Value root(Json::objectValue);
+    root["traceEvents"] = eventsValue;
+
+    std::ofstream outFile;
+    outFile.open(outputFileName);
+
+    Json::StyledWriter styledWrite;
+    outFile << styledWrite.write(root);
+
+    outFile.close();
+}
+}  // anonymous namespace
 
 bool g_OnlyOneRunFrame = false;
+bool gEnableTrace      = false;
+const char *gTraceFile = "ANGLETrace.json";
 
 ANGLEPerfTest::ANGLEPerfTest(const std::string &name, const std::string &suffix)
     : mName(name),
@@ -126,6 +209,8 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
       mEGLWindow(createEGLWindow(testParams)),
       mOSWindow(nullptr)
 {
+    // Try to ensure we don't trigger allocation during execution.
+    mTraceEventBuffer.reserve(kInitialTraceEventBufferSize);
 }
 
 ANGLERenderTest::ANGLERenderTest(const std::string &name,
@@ -157,6 +242,10 @@ void ANGLERenderTest::SetUp()
     mPlatformMethods.logError               = EmptyPlatformMethod;
     mPlatformMethods.logWarning             = EmptyPlatformMethod;
     mPlatformMethods.logInfo                = EmptyPlatformMethod;
+    mPlatformMethods.addTraceEvent               = AddTraceEvent;
+    mPlatformMethods.getTraceCategoryEnabledFlag = GetTraceCategoryEnabledFlag;
+    mPlatformMethods.updateTraceEventDuration    = UpdateTraceEventDuration;
+    mPlatformMethods.monotonicallyIncreasingTime = MonotonicallyIncreasingTime;
     mPlatformMethods.context                = this;
     mEGLWindow->setPlatformMethods(&mPlatformMethods);
 
@@ -192,6 +281,12 @@ void ANGLERenderTest::TearDown()
 
     mEGLWindow->destroyGL();
     mOSWindow->destroy();
+
+    // Dump trace events to json file.
+    if (gEnableTrace)
+    {
+        DumpTraceEventsToJSONFile(mTraceEventBuffer, gTraceFile);
+    }
 
     ANGLEPerfTest::TearDown();
 }
@@ -267,6 +362,11 @@ void ANGLERenderTest::setWebGLCompatibilityEnabled(bool webglCompatibility)
 void ANGLERenderTest::setRobustResourceInit(bool enabled)
 {
     mEGLWindow->setRobustResourceInit(enabled);
+}
+
+std::vector<TraceEvent> &ANGLERenderTest::getTraceEventBuffer()
+{
+    return mTraceEventBuffer;
 }
 
 // static
