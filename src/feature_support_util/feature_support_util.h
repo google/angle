@@ -4,17 +4,24 @@
 // found in the LICENSE file.
 //
 
-// feature_support_util.cpp: Helps Android EGL loader to determine whether to use ANGLE or a native
-// GLES driver.  Can be extended in the future for more-general feature selection.
+// feature_support_util.h: Internal-to-ANGLE header file for feature-support utilities.
 
 #ifndef FEATURE_SUPPORT_UTIL_H_
 #define FEATURE_SUPPORT_UTIL_H_
 
-#include "export.h"
+#include "angle_feature_support_util.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// The following are internal versions supported by the current  feature-support-utility API.
+
+constexpr unsigned int kFeatureVersion_LowestSupported  = 0;
+constexpr unsigned int kFeatureVersion_HighestSupported = 1;
+
+// The following is the "version 0" external interface that the Android EGL loader used.  It is
+// deprecated and will soon be obsoleted.  It was never declared in the shared header file.
 
 // TODO(ianelliott@google.com angleproject:2801): Revisit this enum.  Make it
 // strongly typed, and look at renaming it and its values.

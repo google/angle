@@ -933,6 +933,7 @@ if (is_android) {
     libs = [ "log" ]
 
     sources = [
+      "src/feature_support_util/angle_feature_support_util.h",
       "src/feature_support_util/feature_support_util.cpp",
       "src/feature_support_util/feature_support_util.h",
     ]
