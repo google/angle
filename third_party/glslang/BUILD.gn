@@ -41,7 +41,6 @@ static_library("glslang") {
     "src/SPIRV/SpvBuilder.cpp",
     "src/SPIRV/SpvBuilder.h",
     "src/SPIRV/SpvPostProcess.cpp",
-    "src/SPIRV/SpvPostProcess.h",
     "src/SPIRV/bitutils.h",
     "src/SPIRV/disassemble.cpp",
     "src/SPIRV/disassemble.h",
