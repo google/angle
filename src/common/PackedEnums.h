@@ -116,7 +116,7 @@ class PackedEnumMap
         return mPrivateData[static_cast<UnderlyingType>(n)];
     }
 
-    const_reference operator[](E n) const
+    constexpr const_reference operator[](E n) const
     {
         ASSERT(static_cast<size_t>(n) < mPrivateData.size());
         return mPrivateData[static_cast<UnderlyingType>(n)];

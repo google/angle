@@ -80,6 +80,9 @@ class VertexArrayState final : angle::NonCopyable
     AttributesMask mEnabledAttributesMask;
     ComponentTypeMask mVertexAttributesTypeMask;
 
+    // This is a performance optimization for buffer binding. Allows element array buffer updates.
+    friend class State;
+
     // From the GLES 3.1 spec:
     // When a generic attribute array is sourced from client memory, the vertex attribute binding
     // state is ignored. Thus we don't have to worry about binding state when using client memory
@@ -149,8 +152,6 @@ class VertexArray final : public angle::ObserverInterface,
                               Buffer *boundBuffer,
                               GLintptr offset,
                               GLsizei stride);
-
-    void setElementArrayBuffer(const Context *context, Buffer *buffer);
 
     const BindingPointer<Buffer> &getElementArrayBuffer() const
     {
@@ -259,6 +260,9 @@ class VertexArray final : public angle::ObserverInterface,
 
   private:
     ~VertexArray() override;
+
+    // This is a performance optimization for buffer binding. Allows element array buffer updates.
+    friend class State;
 
     void setDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit);
     void setDirtyBindingBit(size_t bindingIndex, DirtyBindingBitType dirtyBindingBit);

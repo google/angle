@@ -110,6 +110,8 @@ class BindingPointer
         }
     }
 
+    void assign(ObjectType *object) { mObject = object; }
+
     ObjectType *get() const { return mObject; }
     ObjectType *operator->() const { return mObject; }
 
@@ -199,6 +201,13 @@ class OffsetBindingPointer : public gl::BindingPointer<ObjectType>
     bool operator!=(const OffsetBindingPointer<ObjectType> &other) const
     {
         return !(*this == other);
+    }
+
+    void assign(ObjectType *object, GLintptr offset, GLsizeiptr size)
+    {
+        BindingPointer<ObjectType>::assign(object);
+        mOffset = offset;
+        mSize   = size;
     }
 
   private:
