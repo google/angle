@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72edcb3c_cbe5aba9",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-18T15:44:22Z",
+      "side": 1,
+      "message": "why does the field\u0027s offset have to be zero if the structure is not the first element in the ssbo?\n\nie..\n\nivec4 i\nvec4 f\nstruct s\n\nwhy would s have offset zero?",
+      "range": {
+        "startLine": 94,
+        "startChar": 20,
+        "endLine": 94,
+        "endChar": 62
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "880482e3_289d6524",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-18T15:44:22Z",
+      "side": 1,
+      "message": "is it possible you need to recurse more than one level? if you have:\n\na[1][2][3] .. then you would have node \u003d\u003d float, node-\u003eleft \u003d\u003d array of float, and node-\u003eleft-\u003eleft \u003d\u003d array of arrays of float, right? Maybe you should use if type.isArrayOfArrays || IsArrayOfArrays(node-\u003eleft)",
+      "range": {
+        "startLine": 153,
+        "startChar": 5,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
