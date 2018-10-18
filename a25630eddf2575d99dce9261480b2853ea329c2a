@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e3e0b1c_95d73c11",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-18T08:52:20Z",
+      "side": 1,
+      "message": "Skip this test because the extension is not supported on OpenGL ES currently.",
+      "range": {
+        "startLine": 362,
+        "startChar": 3,
+        "endLine": 362,
+        "endChar": 37
+      },
+      "revId": "a25630eddf2575d99dce9261480b2853ea329c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

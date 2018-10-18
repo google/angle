@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "1af8f892_97309d3b",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-18T08:52:20Z",
+      "side": 1,
+      "message": "@Geoff, after discussing with my coworkers, we\u0027d like to expose ARB_texture_multisample, the feature of OpenGL 3.2 and ES 3.1 by the extension. Maybe we can commit another patch to generate ESSL shaders based on the driver version to expose this feature on GLES. Are there any potential problems or known problems why ESSL shaders isn\u0027t generated based on the driver version?",
+      "parentUuid": "2c34aee4_de8d2849",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 17
+      },
+      "revId": "f276d54201e2d972783c574b381bc8c2b14107b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8060caac_b37a9d8f",
         "filename": "src/libANGLE/renderer/gl/RendererGL.h",
         "patchSetId": 28
