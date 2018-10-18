@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c41fa956_bdde9866",
+        "filename": "src/tests/gl_tests/CopyTexture3DTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1327,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-10-18T19:01:35Z",
+      "side": 1,
+      "message": "Boy, that escalated quickly",
+      "range": {
+        "startLine": 1327,
+        "startChar": 7,
+        "endLine": 1327,
+        "endChar": 11
+      },
+      "revId": "4163c0146ccfaa31c5fb331c149950ffb9e36af9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
