@@ -462,6 +462,75 @@ TEST_P(ShaderStorageBufferTest31, MultiStorageBuffersForMultiPrograms)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that function calling is supported in SSBO access chain.
+TEST_P(ShaderStorageBufferTest31, FunctionCallInSSBOAccessChain)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout (local_size_x=4) in;
+highp uint getIndex (in highp uvec2 localID, uint element)
+{
+    return localID.x + element;
+}
+layout(binding=0, std430) buffer Storage
+{
+    highp uint values[];
+} sb_store;
+
+void main()
+{
+    sb_store.values[getIndex(gl_LocalInvocationID.xy, 0u)] = gl_LocalInvocationIndex;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that unary operator is supported in SSBO access chain.
+TEST_P(ShaderStorageBufferTest31, UnaryOperatorInSSBOAccessChain)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout (local_size_x=4) in;
+layout(binding=0, std430) buffer Storage
+{
+    highp uint values[];
+} sb_store;
+
+void main()
+{
+    uint invocationNdx = gl_LocalInvocationIndex;
+    sb_store.values[++invocationNdx] = invocationNdx;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that ternary operator is supported in SSBO access chain.
+TEST_P(ShaderStorageBufferTest31, TernaryOperatorInSSBOAccessChain)
+{
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout (local_size_x=4) in;
+layout(binding=0, std430) buffer Storage
+{
+    highp uint values[];
+} sb_store;
+
+void main()
+{
+    sb_store.values[gl_LocalInvocationIndex > 2u ? gl_NumWorkGroups.x : gl_NumWorkGroups.y]
+            = gl_LocalInvocationIndex;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(ShaderStorageBufferTest31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 
 }  // namespace

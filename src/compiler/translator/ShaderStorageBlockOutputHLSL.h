@@ -53,6 +53,9 @@ class ShaderStorageBlockOutputHLSL : public TIntermTraverser
     void visitConstantUnion(TIntermConstantUnion *) override;
     bool visitSwizzle(Visit visit, TIntermSwizzle *node) override;
     bool visitBinary(Visit visit, TIntermBinary *) override;
+    bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    bool visitTernary(Visit visit, TIntermTernary *) override;
+    bool visitUnary(Visit visit, TIntermUnary *) override;
 
   private:
     void traverseSSBOAccess(TIntermTyped *node, SSBOMethod method);

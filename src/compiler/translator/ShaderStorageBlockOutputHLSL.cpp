@@ -221,8 +221,22 @@ void ShaderStorageBlockOutputHLSL::visitSymbol(TIntermSymbol *node)
 
 void ShaderStorageBlockOutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
 {
-    TInfoSinkBase &out = mOutputHLSL->getInfoSink();
-    mOutputHLSL->writeConstantUnion(out, node->getType(), node->getConstantValue());
+    mOutputHLSL->visitConstantUnion(node);
+}
+
+bool ShaderStorageBlockOutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
+{
+    return mOutputHLSL->visitAggregate(visit, node);
+}
+
+bool ShaderStorageBlockOutputHLSL::visitTernary(Visit visit, TIntermTernary *node)
+{
+    return mOutputHLSL->visitTernary(visit, node);
+}
+
+bool ShaderStorageBlockOutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
+{
+    return mOutputHLSL->visitUnary(visit, node);
 }
 
 bool ShaderStorageBlockOutputHLSL::visitSwizzle(Visit visit, TIntermSwizzle *node)
