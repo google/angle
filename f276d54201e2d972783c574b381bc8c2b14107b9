@@ -95,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "5cf7dbbe_9755063e",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-18T14:43:14Z",
+      "side": 1,
+      "message": "A few functions were changed such as texture2D(..)/textureCube(..) became just texture(..).\n\ndraw_buffers behaviour between the extension and ES3 shaders changed for how results are broadcast to all output buffers, I\u0027m not familiar with what the behaviour should be but we have tests in both angle and webgl for this.\n\nOutputs changed too, you will have to map glFragColor and glFragData[] into out variables with locations.\n\nI think all of these are feasible and I would appreciate having the ability to do this to work around issues.",
+      "parentUuid": "1af8f892_97309d3b",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 17
+      },
+      "revId": "f276d54201e2d972783c574b381bc8c2b14107b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8060caac_b37a9d8f",
         "filename": "src/libANGLE/renderer/gl/RendererGL.h",
         "patchSetId": 28

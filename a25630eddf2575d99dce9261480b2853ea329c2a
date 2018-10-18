@@ -22,6 +22,30 @@
       "revId": "a25630eddf2575d99dce9261480b2853ea329c2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd1b078a_d0b46c28",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-18T14:43:14Z",
+      "side": 1,
+      "message": "With the current patch, the extension should not be exposed on top of GLES, why do we need to skip it?",
+      "parentUuid": "1e3e0b1c_95d73c11",
+      "range": {
+        "startLine": 362,
+        "startChar": 3,
+        "endLine": 362,
+        "endChar": 37
+      },
+      "revId": "a25630eddf2575d99dce9261480b2853ea329c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
