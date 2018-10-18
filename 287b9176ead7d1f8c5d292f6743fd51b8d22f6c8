@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a4a367a_a68f6035",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-10-18T05:43:59Z",
+      "side": 1,
+      "message": "nit: using the formula below",
+      "range": {
+        "startLine": 417,
+        "startChar": 56,
+        "endLine": 417,
+        "endChar": 75
+      },
+      "revId": "287b9176ead7d1f8c5d292f6743fd51b8d22f6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25c72629_24aa3a15",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-10-18T05:43:59Z",
+      "side": 1,
+      "message": "Mmmmh for an index that\u0027s like (i0, i1, i2, i3) (for a[i0][i1][i2][i3]) and (a0, a1, a2, a3) the size of the array (declared as S a[a0][a1][a2][a3])\n\n elementStride * (i0 * a1 * a2 * a3 + i1 * a2 * a3 + i2 * a3 + i3)\n\nwhich is\n\n elementStride * (i3 + a3 * (i2 + a2 * (i1 + a1 * (i0))))\n\nI am not able to prove that this is the same as what you wrote.",
+      "revId": "287b9176ead7d1f8c5d292f6743fd51b8d22f6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02e720ae_7ca17215",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-10-18T05:43:59Z",
+      "side": 1,
+      "message": "nit: offsetInBytes",
+      "range": {
+        "startLine": 81,
+        "startChar": 38,
+        "endLine": 81,
+        "endChar": 44
+      },
+      "revId": "287b9176ead7d1f8c5d292f6743fd51b8d22f6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
