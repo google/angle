@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "46b51a09_27e4aac3",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-18T07:03:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a4a367a_a68f6035",
+      "range": {
+        "startLine": 417,
+        "startChar": 56,
+        "endLine": 417,
+        "endChar": 75
+      },
+      "revId": "287b9176ead7d1f8c5d292f6743fd51b8d22f6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25c72629_24aa3a15",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 4
@@ -60,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "4bdd8ab2_787288a7",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-18T07:03:23Z",
+      "side": 1,
+      "message": "Modified the comments to make it clear. Thanks.",
+      "parentUuid": "b02b6c41_d164a807",
+      "revId": "287b9176ead7d1f8c5d292f6743fd51b8d22f6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "02e720ae_7ca17215",
         "filename": "src/compiler/translator/blocklayout.h",
         "patchSetId": 4
@@ -80,6 +122,30 @@
       "revId": "287b9176ead7d1f8c5d292f6743fd51b8d22f6c8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c811fe3b_8b502801",
+        "filename": "src/compiler/translator/blocklayout.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-18T07:03:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02e720ae_7ca17215",
+      "range": {
+        "startLine": 81,
+        "startChar": 38,
+        "endLine": 81,
+        "endChar": 44
+      },
+      "revId": "287b9176ead7d1f8c5d292f6743fd51b8d22f6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
