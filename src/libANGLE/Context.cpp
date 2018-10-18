@@ -5138,7 +5138,7 @@ void Context::bindBufferRange(BufferBinding target,
     mGLState.setIndexedBufferBinding(this, target, index, object, offset, size);
     if (target == BufferBinding::Uniform)
     {
-        mUniformBufferObserverBindings[index].bind(object ? object->getImplementation() : nullptr);
+        mUniformBufferObserverBindings[index].bind(object);
         mStateCache.onUniformBufferStateChange(this);
     }
     else

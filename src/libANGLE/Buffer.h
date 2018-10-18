@@ -16,6 +16,7 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/IndexRangeCache.h"
+#include "libANGLE/Observer.h"
 #include "libANGLE/RefCountObject.h"
 
 namespace rx
@@ -64,7 +65,10 @@ class BufferState final : angle::NonCopyable
     int mTransformFeedbackGenericBindingCount;
 };
 
-class Buffer final : public RefCountObject, public LabeledObject
+class Buffer final : public RefCountObject,
+                     public LabeledObject,
+                     public angle::ObserverInterface,
+                     public angle::Subject
 {
   public:
     Buffer(rx::GLImplFactory *factory, GLuint id);
@@ -121,9 +125,15 @@ class Buffer final : public RefCountObject, public LabeledObject
     void onTFBindingChanged(const Context *context, bool bound, bool indexed);
     void onNonTFBindingChanged(int incr) { mState.mBindingCount += incr; }
 
+    // angle::ObserverInterface implementation.
+    void onSubjectStateChange(const gl::Context *context,
+                              angle::SubjectIndex index,
+                              angle::SubjectMessage message) override;
+
   private:
     BufferState mState;
     rx::BufferImpl *mImpl;
+    angle::ObserverBinding mImplObserver;
 
     mutable IndexRangeCache mIndexRangeCache;
 };

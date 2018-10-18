@@ -24,7 +24,6 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
-#include "libANGLE/renderer/BufferImpl.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/TextureImpl.h"
 
@@ -167,15 +166,11 @@ void State::setGenericBufferBinding<BufferBinding::ElementArray>(const Context *
         oldBuffer->release(context);
     }
     mVertexArray->mState.mElementArrayBuffer.assign(buffer);
+    mVertexArray->mElementArrayBufferObserverBinding.bind(buffer);
     if (buffer)
     {
-        mVertexArray->mElementArrayBufferObserverBinding.bind(buffer->getImplementation());
         buffer->onNonTFBindingChanged(1);
         buffer->addRef();
-    }
-    else
-    {
-        mVertexArray->mElementArrayBufferObserverBinding.bind(nullptr);
     }
     mVertexArray->mDirtyBits.set(VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);

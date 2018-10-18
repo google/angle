@@ -16,6 +16,10 @@
 
 namespace gl
 {
+namespace
+{
+constexpr angle::SubjectIndex kImplementationSubjectIndex = 0;
+}  // anonymous namespace
 
 BufferState::BufferState()
     : mLabel(),
@@ -38,8 +42,11 @@ BufferState::~BufferState()
 }
 
 Buffer::Buffer(rx::GLImplFactory *factory, GLuint id)
-    : RefCountObject(id), mImpl(factory->createBuffer(mState))
+    : RefCountObject(id),
+      mImpl(factory->createBuffer(mState)),
+      mImplObserver(this, kImplementationSubjectIndex)
 {
+    mImplObserver.bind(mImpl);
 }
 
 Buffer::~Buffer()
@@ -90,7 +97,7 @@ Error Buffer::bufferData(Context *context,
     mState.mSize  = size;
 
     // Notify when storage changes.
-    mImpl->onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
+    onStateChange(context, angle::SubjectMessage::STORAGE_CHANGED);
 
     return NoError();
 }
@@ -106,7 +113,7 @@ Error Buffer::bufferSubData(const Context *context,
     mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset), static_cast<unsigned int>(size));
 
     // Notify when data changes.
-    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+    onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 
     return NoError();
 }
@@ -123,7 +130,7 @@ Error Buffer::copyBufferSubData(const Context *context,
     mIndexRangeCache.invalidateRange(static_cast<unsigned int>(destOffset), static_cast<unsigned int>(size));
 
     // Notify when data changes.
-    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+    onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 
     return NoError();
 }
@@ -145,7 +152,7 @@ Error Buffer::map(const Context *context, GLenum access)
     mIndexRangeCache.clear();
 
     // Notify when state changes.
-    mImpl->onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
+    onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
 
     return NoError();
 }
@@ -178,7 +185,7 @@ Error Buffer::mapRange(const Context *context,
     }
 
     // Notify when state changes.
-    mImpl->onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
+    onStateChange(context, angle::SubjectMessage::RESOURCE_MAPPED);
 
     return NoError();
 }
@@ -198,7 +205,7 @@ Error Buffer::unmap(const Context *context, GLboolean *result)
     mState.mAccessFlags = 0;
 
     // Notify when data changes.
-    mImpl->onStateChange(context, angle::SubjectMessage::RESOURCE_UNMAPPED);
+    onStateChange(context, angle::SubjectMessage::RESOURCE_UNMAPPED);
 
     return NoError();
 }
@@ -208,7 +215,7 @@ void Buffer::onTransformFeedback(const Context *context)
     mIndexRangeCache.clear();
 
     // Notify when data changes.
-    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+    onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 }
 
 void Buffer::onPixelPack(const Context *context)
@@ -216,7 +223,7 @@ void Buffer::onPixelPack(const Context *context)
     mIndexRangeCache.clear();
 
     // Notify when data changes.
-    mImpl->onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
+    onStateChange(context, angle::SubjectMessage::CONTENTS_CHANGED);
 }
 
 Error Buffer::getIndexRange(const gl::Context *context,
@@ -270,11 +277,20 @@ void Buffer::onTFBindingChanged(const Context *context, bool bound, bool indexed
         ASSERT(bound || mState.mTransformFeedbackIndexedBindingCount > 0);
         mState.mTransformFeedbackIndexedBindingCount += bound ? 1 : -1;
 
-        mImpl->onStateChange(context, angle::SubjectMessage::BINDING_CHANGED);
+        onStateChange(context, angle::SubjectMessage::BINDING_CHANGED);
     }
     else
     {
         mState.mTransformFeedbackGenericBindingCount += bound ? 1 : -1;
     }
+}
+
+void Buffer::onSubjectStateChange(const gl::Context *context,
+                                  angle::SubjectIndex index,
+                                  angle::SubjectMessage message)
+{
+    // Pass it along!
+    ASSERT(index == kImplementationSubjectIndex);
+    onStateChange(context, message);
 }
 }  // namespace gl
