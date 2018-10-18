@@ -70,25 +70,25 @@ Query11::~Query11()
     mRenderer->getStateManager()->onDeleteQueryObject(this);
 }
 
-gl::Error Query11::begin(const gl::Context *context)
+angle::Result Query11::begin(const gl::Context *context)
 {
     mResultSum = 0;
     mRenderer->getStateManager()->onBeginQuery(this);
     return resume(GetImplAs<Context11>(context));
 }
 
-gl::Error Query11::end(const gl::Context *context)
+angle::Result Query11::end(const gl::Context *context)
 {
     return pause(GetImplAs<Context11>(context));
 }
 
-gl::Error Query11::queryCounter(const gl::Context *context)
+angle::Result Query11::queryCounter(const gl::Context *context)
 {
     // This doesn't do anything for D3D11 as we don't support timestamps
     ASSERT(getType() == gl::QueryType::Timestamp);
     mResultSum = 0;
     mPendingQueries.push_back(std::unique_ptr<QueryState>(new QueryState()));
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 template <typename T>
@@ -102,32 +102,32 @@ angle::Result Query11::getResultBase(Context11 *context11, T *params)
     return angle::Result::Continue();
 }
 
-gl::Error Query11::getResult(const gl::Context *context, GLint *params)
+angle::Result Query11::getResult(const gl::Context *context, GLint *params)
 {
     return getResultBase(GetImplAs<Context11>(context), params);
 }
 
-gl::Error Query11::getResult(const gl::Context *context, GLuint *params)
+angle::Result Query11::getResult(const gl::Context *context, GLuint *params)
 {
     return getResultBase(GetImplAs<Context11>(context), params);
 }
 
-gl::Error Query11::getResult(const gl::Context *context, GLint64 *params)
+angle::Result Query11::getResult(const gl::Context *context, GLint64 *params)
 {
     return getResultBase(GetImplAs<Context11>(context), params);
 }
 
-gl::Error Query11::getResult(const gl::Context *context, GLuint64 *params)
+angle::Result Query11::getResult(const gl::Context *context, GLuint64 *params)
 {
     return getResultBase(GetImplAs<Context11>(context), params);
 }
 
-gl::Error Query11::isResultAvailable(const gl::Context *context, bool *available)
+angle::Result Query11::isResultAvailable(const gl::Context *context, bool *available)
 {
     ANGLE_TRY(flush(GetImplAs<Context11>(context), false));
 
     *available = mPendingQueries.empty();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result Query11::pause(Context11 *context11)

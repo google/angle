@@ -23,8 +23,6 @@ class CompilerImpl : angle::NonCopyable
     CompilerImpl() {}
     virtual ~CompilerImpl() {}
 
-    virtual gl::Error release() = 0;
-
     // TODO(jmadill): Expose translator built-in resources init method.
     virtual ShShaderOutput getTranslatorOutputType() const = 0;
 };

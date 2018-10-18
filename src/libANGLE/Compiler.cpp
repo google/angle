@@ -181,7 +181,6 @@ Compiler::~Compiler()
     {
         sh::Finalize();
     }
-    ANGLE_SWALLOW_ERR(mImplementation->release());
 }
 
 ShCompilerInstance Compiler::getInstance(ShaderType type)

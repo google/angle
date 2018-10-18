@@ -22,11 +22,6 @@ CompilerNULL::~CompilerNULL()
 {
 }
 
-gl::Error CompilerNULL::release()
-{
-    return gl::NoError();
-}
-
 ShShaderOutput CompilerNULL::getTranslatorOutputType() const
 {
     return SH_ESSL_OUTPUT;

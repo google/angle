@@ -22,49 +22,49 @@ QueryNULL::~QueryNULL()
 {
 }
 
-gl::Error QueryNULL::begin(const gl::Context *context)
+angle::Result QueryNULL::begin(const gl::Context *context)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error QueryNULL::end(const gl::Context *context)
+angle::Result QueryNULL::end(const gl::Context *context)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error QueryNULL::queryCounter(const gl::Context *context)
+angle::Result QueryNULL::queryCounter(const gl::Context *context)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error QueryNULL::getResult(const gl::Context *context, GLint *params)
-{
-    *params = 0;
-    return gl::NoError();
-}
-
-gl::Error QueryNULL::getResult(const gl::Context *context, GLuint *params)
+angle::Result QueryNULL::getResult(const gl::Context *context, GLint *params)
 {
     *params = 0;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error QueryNULL::getResult(const gl::Context *context, GLint64 *params)
+angle::Result QueryNULL::getResult(const gl::Context *context, GLuint *params)
 {
     *params = 0;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error QueryNULL::getResult(const gl::Context *context, GLuint64 *params)
+angle::Result QueryNULL::getResult(const gl::Context *context, GLint64 *params)
 {
     *params = 0;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error QueryNULL::isResultAvailable(const gl::Context *context, bool *available)
+angle::Result QueryNULL::getResult(const gl::Context *context, GLuint64 *params)
+{
+    *params = 0;
+    return angle::Result::Continue();
+}
+
+angle::Result QueryNULL::isResultAvailable(const gl::Context *context, bool *available)
 {
     *available = true;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

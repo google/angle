@@ -1025,7 +1025,7 @@ void QueryBufferPointerv(const Buffer *buffer, GLenum pname, void **params)
     }
 }
 
-void QueryProgramiv(const Context *context, const Program *program, GLenum pname, GLint *params)
+void QueryProgramiv(Context *context, const Program *program, GLenum pname, GLint *params)
 {
     ASSERT(program != nullptr);
 

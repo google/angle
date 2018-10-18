@@ -199,10 +199,12 @@ ProgramVk::ProgramVk(const gl::ProgramState &state) : ProgramImpl(state), mUnifo
 
 ProgramVk::~ProgramVk() = default;
 
-gl::Error ProgramVk::destroy(const gl::Context *context)
+void ProgramVk::destroy(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    return reset(contextVk);
+
+    // We don't interrupt exectution in destructors.
+    (void)reset(contextVk);
 }
 
 angle::Result ProgramVk::reset(ContextVk *contextVk)

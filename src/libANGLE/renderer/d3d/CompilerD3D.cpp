@@ -17,11 +17,6 @@ CompilerD3D::CompilerD3D(ShShaderOutput translatorOutputType)
 {
 }
 
-gl::Error CompilerD3D::release()
-{
-    return gl::NoError();
-}
-
 ShShaderOutput CompilerD3D::getTranslatorOutputType() const
 {
     return mTranslatorOutputType;

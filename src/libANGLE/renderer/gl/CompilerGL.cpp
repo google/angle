@@ -88,11 +88,6 @@ CompilerGL::CompilerGL(const FunctionsGL *functions)
 {
 }
 
-gl::Error CompilerGL::release()
-{
-    return gl::NoError();
-}
-
 ShShaderOutput CompilerGL::getTranslatorOutputType() const
 {
     return mTranslatorOutputType;

@@ -23,7 +23,7 @@ Query::~Query()
 void Query::onDestroy(const Context *context)
 {
     ASSERT(mQuery);
-    ANGLE_SWALLOW_ERR(mQuery->onDestroy(context));
+    mQuery->onDestroy(context);
 }
 
 void Query::setLabel(const std::string &label)
@@ -36,42 +36,42 @@ const std::string &Query::getLabel() const
     return mLabel;
 }
 
-Error Query::begin(const Context *context)
+angle::Result Query::begin(const Context *context)
 {
     return mQuery->begin(context);
 }
 
-Error Query::end(const Context *context)
+angle::Result Query::end(const Context *context)
 {
     return mQuery->end(context);
 }
 
-Error Query::queryCounter(const Context *context)
+angle::Result Query::queryCounter(const Context *context)
 {
     return mQuery->queryCounter(context);
 }
 
-Error Query::getResult(const Context *context, GLint *params)
+angle::Result Query::getResult(const Context *context, GLint *params)
 {
     return mQuery->getResult(context, params);
 }
 
-Error Query::getResult(const Context *context, GLuint *params)
+angle::Result Query::getResult(const Context *context, GLuint *params)
 {
     return mQuery->getResult(context, params);
 }
 
-Error Query::getResult(const Context *context, GLint64 *params)
+angle::Result Query::getResult(const Context *context, GLint64 *params)
 {
     return mQuery->getResult(context, params);
 }
 
-Error Query::getResult(const Context *context, GLuint64 *params)
+angle::Result Query::getResult(const Context *context, GLuint64 *params)
 {
     return mQuery->getResult(context, params);
 }
 
-Error Query::isResultAvailable(const Context *context, bool *available)
+angle::Result Query::isResultAvailable(const Context *context, bool *available)
 {
     return mQuery->isResultAvailable(context, available);
 }

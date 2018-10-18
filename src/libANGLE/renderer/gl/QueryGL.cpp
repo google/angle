@@ -9,6 +9,8 @@
 #include "libANGLE/renderer/gl/QueryGL.h"
 
 #include "common/debug.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
@@ -85,18 +87,18 @@ StandardQueryGL::~StandardQueryGL()
     }
 }
 
-gl::Error StandardQueryGL::begin(const gl::Context *context)
+angle::Result StandardQueryGL::begin(const gl::Context *context)
 {
     mResultSum = 0;
     return resume(context);
 }
 
-gl::Error StandardQueryGL::end(const gl::Context *context)
+angle::Result StandardQueryGL::end(const gl::Context *context)
 {
     return pause(context);
 }
 
-gl::Error StandardQueryGL::queryCounter(const gl::Context *context)
+angle::Result StandardQueryGL::queryCounter(const gl::Context *context)
 {
     ASSERT(mType == gl::QueryType::Timestamp);
 
@@ -107,7 +109,7 @@ gl::Error StandardQueryGL::queryCounter(const gl::Context *context)
     mFunctions->queryCounter(query, GL_TIMESTAMP);
     mPendingQueries.push_back(query);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 template <typename T>
@@ -122,33 +124,33 @@ angle::Result StandardQueryGL::getResultBase(const gl::Context *context, T *para
     return angle::Result::Continue();
 }
 
-gl::Error StandardQueryGL::getResult(const gl::Context *context, GLint *params)
+angle::Result StandardQueryGL::getResult(const gl::Context *context, GLint *params)
 {
     return getResultBase(context, params);
 }
 
-gl::Error StandardQueryGL::getResult(const gl::Context *context, GLuint *params)
+angle::Result StandardQueryGL::getResult(const gl::Context *context, GLuint *params)
 {
     return getResultBase(context, params);
 }
 
-gl::Error StandardQueryGL::getResult(const gl::Context *context, GLint64 *params)
+angle::Result StandardQueryGL::getResult(const gl::Context *context, GLint64 *params)
 {
     return getResultBase(context, params);
 }
 
-gl::Error StandardQueryGL::getResult(const gl::Context *context, GLuint64 *params)
+angle::Result StandardQueryGL::getResult(const gl::Context *context, GLuint64 *params)
 {
     return getResultBase(context, params);
 }
 
-gl::Error StandardQueryGL::isResultAvailable(const gl::Context *context, bool *available)
+angle::Result StandardQueryGL::isResultAvailable(const gl::Context *context, bool *available)
 {
     ASSERT(mActiveQuery == 0);
 
     ANGLE_TRY(flush(context, false));
     *available = mPendingQueries.empty();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result StandardQueryGL::pause(const gl::Context *context)
@@ -317,12 +319,12 @@ bool SyncQueryGL::IsSupported(const FunctionsGL *functions)
     return nativegl::SupportsFenceSync(functions) || nativegl::SupportsOcclusionQueries(functions);
 }
 
-gl::Error SyncQueryGL::begin(const gl::Context *context)
+angle::Result SyncQueryGL::begin(const gl::Context *context)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error SyncQueryGL::end(const gl::Context *context)
+angle::Result SyncQueryGL::end(const gl::Context *context)
 {
     if (nativegl::SupportsFenceSync(mFunctions))
     {
@@ -335,43 +337,42 @@ gl::Error SyncQueryGL::end(const gl::Context *context)
     }
     else
     {
-        ASSERT(false);
-        return gl::InternalError() << "No native support for sync queries.";
+        ANGLE_GL_UNREACHABLE(GetImplAs<ContextGL>(context));
     }
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error SyncQueryGL::queryCounter(const gl::Context *context)
+angle::Result SyncQueryGL::queryCounter(const gl::Context *context)
 {
     UNREACHABLE();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error SyncQueryGL::getResult(const gl::Context *context, GLint *params)
+angle::Result SyncQueryGL::getResult(const gl::Context *context, GLint *params)
 {
     return getResultBase(context, params);
 }
 
-gl::Error SyncQueryGL::getResult(const gl::Context *context, GLuint *params)
+angle::Result SyncQueryGL::getResult(const gl::Context *context, GLuint *params)
 {
     return getResultBase(context, params);
 }
 
-gl::Error SyncQueryGL::getResult(const gl::Context *context, GLint64 *params)
+angle::Result SyncQueryGL::getResult(const gl::Context *context, GLint64 *params)
 {
     return getResultBase(context, params);
 }
 
-gl::Error SyncQueryGL::getResult(const gl::Context *context, GLuint64 *params)
+angle::Result SyncQueryGL::getResult(const gl::Context *context, GLuint64 *params)
 {
     return getResultBase(context, params);
 }
 
-gl::Error SyncQueryGL::isResultAvailable(const gl::Context *context, bool *available)
+angle::Result SyncQueryGL::isResultAvailable(const gl::Context *context, bool *available)
 {
     ANGLE_TRY(flush(context, false));
     *available = mFinished;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result SyncQueryGL::pause(const gl::Context *context)

@@ -22,11 +22,6 @@ CompilerVk::~CompilerVk()
 {
 }
 
-gl::Error CompilerVk::release()
-{
-    return gl::NoError();
-}
-
 ShShaderOutput CompilerVk::getTranslatorOutputType() const
 {
     return SH_GLSL_VULKAN_OUTPUT;

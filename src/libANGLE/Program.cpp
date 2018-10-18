@@ -930,8 +930,7 @@ void Program::onDestroy(const Context *context)
         }
     }
 
-    // TODO(jmadill): Handle error in the Context. http://anglebug.com/2491
-    ANGLE_SWALLOW_ERR(mProgram->destroy(context));
+    mProgram->destroy(context);
 
     ASSERT(!mState.hasAttachedShader());
     SafeDelete(mProgram);
@@ -1103,7 +1102,7 @@ void Program::pathFragmentInputGen(GLint index,
 // The attached shaders are checked for linking errors by matching up their variables.
 // Uniform, input and output variables get collected.
 // The code gets compiled into binaries.
-Error Program::link(const gl::Context *context)
+angle::Result Program::link(const Context *context)
 {
     const auto &data = context->getContextState();
 
@@ -1116,7 +1115,7 @@ Error Program::link(const gl::Context *context)
     // Validate we have properly attached shaders before checking the cache.
     if (!linkValidateShaders(mInfoLog))
     {
-        return NoError();
+        return angle::Result::Continue();
     }
 
     egl::BlobCache::Key programHash = {0};
@@ -1134,7 +1133,7 @@ Error Program::link(const gl::Context *context)
         double delta = platform->currentTime(platform) - startTime;
         int us       = static_cast<int>(delta * 1000000.0);
         ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramCacheHitTimeUS", us);
-        return NoError();
+        return angle::Result::Continue();
     }
 
     // Cache load failed, fall through to normal linking.
@@ -1157,7 +1156,7 @@ Error Program::link(const gl::Context *context)
         if (!linkUniforms(context->getCaps(), mInfoLog, mUniformLocationBindings,
                           &combinedImageUniforms, &resources->unusedUniforms))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
@@ -1165,7 +1164,7 @@ Error Program::link(const gl::Context *context)
                                  context->getExtensions().webglCompatibility, mInfoLog,
                                  &combinedShaderStorageBlocks))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         // [OpenGL ES 3.1] Chapter 8.22 Page 203:
@@ -1181,7 +1180,7 @@ Error Program::link(const gl::Context *context)
                    "and active fragment shader outputs exceeds "
                    "MAX_COMBINED_SHADER_OUTPUT_RESOURCES ("
                 << context->getCaps().maxCombinedShaderOutputResources << ")";
-            return NoError();
+            return angle::Result::Continue();
         }
 
         InitUniformBlockLinker(mState, &resources->uniformBlockLinker);
@@ -1211,19 +1210,19 @@ Error Program::link(const gl::Context *context)
 
         if (!linkAttributes(context->getCaps(), mInfoLog))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         if (!linkVaryings(mInfoLog))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         GLuint combinedImageUniforms = 0u;
         if (!linkUniforms(context->getCaps(), mInfoLog, mUniformLocationBindings,
                           &combinedImageUniforms, &resources->unusedUniforms))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         GLuint combinedShaderStorageBlocks = 0u;
@@ -1231,19 +1230,19 @@ Error Program::link(const gl::Context *context)
                                  context->getExtensions().webglCompatibility, mInfoLog,
                                  &combinedShaderStorageBlocks))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         if (!linkValidateGlobalNames(mInfoLog))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         if (!linkOutputVariables(context->getCaps(), context->getExtensions(),
                                  context->getClientVersion(), combinedImageUniforms,
                                  combinedShaderStorageBlocks))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         const auto &mergedVaryings = getMergedVaryings();
@@ -1257,13 +1256,13 @@ Error Program::link(const gl::Context *context)
         if (!linkValidateTransformFeedback(context->getClientVersion(), mInfoLog, mergedVaryings,
                                            context->getCaps()))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         if (!resources->varyingPacking.collectAndPackUserVaryings(
                 mInfoLog, mergedVaryings, mState.getTransformFeedbackVaryingNames()))
         {
-            return NoError();
+            return angle::Result::Continue();
         }
 
         gatherTransformFeedbackVaryings(mergedVaryings);
@@ -1276,7 +1275,7 @@ Error Program::link(const gl::Context *context)
     mLinkingState->resources   = std::move(resources);
     mLinkResolved              = false;
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 bool Program::isLinking() const
@@ -1427,22 +1426,22 @@ void Program::unlink()
     mInfoLog.reset();
 }
 
-Error Program::loadBinary(const Context *context,
-                          GLenum binaryFormat,
-                          const void *binary,
-                          GLsizei length)
+angle::Result Program::loadBinary(const Context *context,
+                                  GLenum binaryFormat,
+                                  const void *binary,
+                                  GLsizei length)
 {
     ASSERT(mLinkResolved);
     unlink();
 
 #if ANGLE_PROGRAM_BINARY_LOAD != ANGLE_ENABLED
-    return NoError();
+    return angle::Result::Continue();
 #else
     ASSERT(binaryFormat == GL_PROGRAM_BINARY_ANGLE);
     if (binaryFormat != GL_PROGRAM_BINARY_ANGLE)
     {
         mInfoLog << "Invalid program binary format.";
-        return NoError();
+        return angle::Result::Continue();
     }
 
     const uint8_t *bytes = reinterpret_cast<const uint8_t *>(binary);
@@ -1460,15 +1459,15 @@ Error Program::loadBinary(const Context *context,
         mDirtyBits.set(uniformBlockIndex);
     }
 
-    return NoError();
+    return angle::Result::Continue();
 #endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
 }
 
-Error Program::saveBinary(const Context *context,
-                          GLenum *binaryFormat,
-                          void *binary,
-                          GLsizei bufSize,
-                          GLsizei *length) const
+angle::Result Program::saveBinary(Context *context,
+                                  GLenum *binaryFormat,
+                                  void *binary,
+                                  GLsizei bufSize,
+                                  GLsizei *length) const
 {
     ASSERT(mLinkResolved);
     if (binaryFormat)
@@ -1492,7 +1491,7 @@ Error Program::saveBinary(const Context *context,
         // TODO: This should be moved to the validation layer but computing the size of the binary
         // before saving it causes the save to happen twice.  It may be possible to write the binary
         // to a separate buffer, validate sizes and then copy it.
-        return InternalError();
+        ANGLE_CHECK(context, false, "Insufficient buffer size", GL_INVALID_OPERATION);
     }
 
     if (binary)
@@ -1510,10 +1509,10 @@ Error Program::saveBinary(const Context *context,
         *length = streamLength;
     }
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
-GLint Program::getBinaryLength(const Context *context) const
+GLint Program::getBinaryLength(Context *context) const
 {
     ASSERT(mLinkResolved);
     if (!mLinked)
@@ -1522,8 +1521,9 @@ GLint Program::getBinaryLength(const Context *context) const
     }
 
     GLint length;
-    Error error = saveBinary(context, nullptr, nullptr, std::numeric_limits<GLint>::max(), &length);
-    if (error.isError())
+    angle::Result result =
+        saveBinary(context, nullptr, nullptr, std::numeric_limits<GLint>::max(), &length);
+    if (result != angle::Result::Continue())
     {
         return 0;
     }

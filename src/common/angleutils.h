@@ -261,6 +261,10 @@ std::string ToString(const T &value)
 #define ANGLE_CHECK_GL_MATH(context, result) \
     ANGLE_CHECK(context, result, "Integer overflow.", GL_INVALID_OPERATION)
 
+#define ANGLE_GL_UNREACHABLE(context) \
+    UNREACHABLE();                    \
+    ANGLE_CHECK(context, false, "Unreachable Code.", GL_INVALID_OPERATION)
+
 // The below inlining code lifted from V8.
 #if defined(__clang__) || (defined(__GNUC__) && defined(__has_attribute))
 #define ANGLE_HAS_ATTRIBUTE_ALWAYS_INLINE (__has_attribute(always_inline))

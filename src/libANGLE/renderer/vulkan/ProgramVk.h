@@ -23,7 +23,7 @@ class ProgramVk : public ProgramImpl
   public:
     ProgramVk(const gl::ProgramState &state);
     ~ProgramVk() override;
-    gl::Error destroy(const gl::Context *context) override;
+    void destroy(const gl::Context *context) override;
 
     angle::Result load(const gl::Context *context,
                        gl::InfoLog &infoLog,

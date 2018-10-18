@@ -11,9 +11,8 @@
 namespace rx
 {
 
-gl::Error QueryImpl::onDestroy(const gl::Context *context)
+void QueryImpl::onDestroy(const gl::Context *context)
 {
-    return gl::NoError();
 }
 
 }  // namespace rx
