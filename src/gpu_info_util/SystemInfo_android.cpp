@@ -97,6 +97,7 @@ class VulkanLibrary final : NonCopyable
     VkInstance mInstance = VK_NULL_HANDLE;
 };
 
+ANGLE_FORMAT_PRINTF(1, 2)
 std::string FormatString(const char *fmt, ...)
 {
     va_list vararg;
