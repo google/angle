@@ -60,7 +60,7 @@ TEST(ImageTest, RefCounting)
     renderbuffer->addRef();
 
     EXPECT_CALL(*renderbufferImpl, setStorageEGLImageTarget(_, _))
-        .WillOnce(Return(gl::NoError()))
+        .WillOnce(Return(angle::Result::Continue()))
         .RetiresOnSaturation();
     EXPECT_FALSE(renderbuffer->setStorageEGLImageTarget(nullptr, image).isError());
 
@@ -71,7 +71,9 @@ TEST(ImageTest, RefCounting)
     EXPECT_EQ(1u, renderbuffer->getRefCount());
 
     // Simulate deletion of the texture and verify that it is deleted but the image still exists
-    EXPECT_CALL(*imageImpl, orphan(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
+    EXPECT_CALL(*imageImpl, orphan(_, _))
+        .WillOnce(Return(angle::Result::Continue()))
+        .RetiresOnSaturation();
     EXPECT_CALL(*textureImpl, destructor()).Times(1).RetiresOnSaturation();
     texture->release(nullptr);
     EXPECT_EQ(2u, image->getRefCount());
@@ -85,7 +87,9 @@ TEST(ImageTest, RefCounting)
 
     // Simulate deletion of the renderbuffer and verify that the deletion cascades to all objects
     EXPECT_CALL(*imageImpl, destructor()).Times(1).RetiresOnSaturation();
-    EXPECT_CALL(*imageImpl, orphan(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
+    EXPECT_CALL(*imageImpl, orphan(_, _))
+        .WillOnce(Return(angle::Result::Continue()))
+        .RetiresOnSaturation();
 
     EXPECT_CALL(*renderbufferImpl, destructor()).Times(1).RetiresOnSaturation();
 
@@ -107,7 +111,7 @@ TEST(ImageTest, RespecificationReleasesReferences)
     gl::PixelUnpackState defaultUnpackState;
 
     EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _))
-        .WillOnce(Return(gl::NoError()))
+        .WillOnce(Return(angle::Result::Continue()))
         .RetiresOnSaturation();
     EXPECT_FALSE(texture
                      ->setImage(nullptr, defaultUnpackState, gl::TextureTarget::_2D, 0, GL_RGBA8,
@@ -128,9 +132,11 @@ TEST(ImageTest, RespecificationReleasesReferences)
 
     // Respecify the texture and verify that the image is orpahaned
     rx::MockImageImpl *imageImpl = static_cast<rx::MockImageImpl *>(image->getImplementation());
-    EXPECT_CALL(*imageImpl, orphan(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
+    EXPECT_CALL(*imageImpl, orphan(_, _))
+        .WillOnce(Return(angle::Result::Continue()))
+        .RetiresOnSaturation();
     EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _))
-        .WillOnce(Return(gl::NoError()))
+        .WillOnce(Return(angle::Result::Continue()))
         .RetiresOnSaturation();
 
     EXPECT_FALSE(texture

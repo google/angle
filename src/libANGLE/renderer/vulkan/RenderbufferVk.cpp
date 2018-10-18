@@ -32,21 +32,19 @@ RenderbufferVk::~RenderbufferVk()
 {
 }
 
-gl::Error RenderbufferVk::onDestroy(const gl::Context *context)
+void RenderbufferVk::onDestroy(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
     mImage.release(renderer);
     renderer->releaseObject(renderer->getCurrentQueueSerial(), &mImageView);
-
-    return gl::NoError();
 }
 
-gl::Error RenderbufferVk::setStorage(const gl::Context *context,
-                                     GLenum internalformat,
-                                     size_t width,
-                                     size_t height)
+angle::Result RenderbufferVk::setStorage(const gl::Context *context,
+                                         GLenum internalformat,
+                                         size_t width,
+                                         size_t height)
 {
     ContextVk *contextVk       = vk::GetImpl(context);
     RendererVk *renderer       = contextVk->getRenderer();
@@ -99,23 +97,24 @@ gl::Error RenderbufferVk::setStorage(const gl::Context *context,
         }
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error RenderbufferVk::setStorageMultisample(const gl::Context *context,
-                                                size_t samples,
-                                                GLenum internalformat,
-                                                size_t width,
-                                                size_t height)
+angle::Result RenderbufferVk::setStorageMultisample(const gl::Context *context,
+                                                    size_t samples,
+                                                    GLenum internalformat,
+                                                    size_t width,
+                                                    size_t height)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
+    return angle::Result::Stop();
 }
 
-gl::Error RenderbufferVk::setStorageEGLImageTarget(const gl::Context *context, egl::Image *image)
+angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *context,
+                                                       egl::Image *image)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
+    return angle::Result::Stop();
 }
 
 angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,

@@ -23,18 +23,18 @@ class RenderbufferVk : public RenderbufferImpl
     RenderbufferVk(const gl::RenderbufferState &state);
     ~RenderbufferVk() override;
 
-    gl::Error onDestroy(const gl::Context *context) override;
+    void onDestroy(const gl::Context *context) override;
 
-    gl::Error setStorage(const gl::Context *context,
-                         GLenum internalformat,
-                         size_t width,
-                         size_t height) override;
-    gl::Error setStorageMultisample(const gl::Context *context,
-                                    size_t samples,
-                                    GLenum internalformat,
-                                    size_t width,
-                                    size_t height) override;
-    gl::Error setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) override;
+    angle::Result setStorage(const gl::Context *context,
+                             GLenum internalformat,
+                             size_t width,
+                             size_t height) override;
+    angle::Result setStorageMultisample(const gl::Context *context,
+                                        size_t samples,
+                                        GLenum internalformat,
+                                        size_t width,
+                                        size_t height) override;
+    angle::Result setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) override;
 
     angle::Result getAttachmentRenderTarget(const gl::Context *context,
                                             GLenum binding,

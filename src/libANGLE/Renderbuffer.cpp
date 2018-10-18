@@ -80,7 +80,7 @@ void Renderbuffer::onDestroy(const Context *context)
 
     if (mImplementation)
     {
-        ANGLE_SWALLOW_ERR(mImplementation->onDestroy(context));
+        mImplementation->onDestroy(context);
     }
 }
 
@@ -98,28 +98,28 @@ const std::string &Renderbuffer::getLabel() const
     return mLabel;
 }
 
-Error Renderbuffer::setStorage(const Context *context,
-                               GLenum internalformat,
-                               size_t width,
-                               size_t height)
+angle::Result Renderbuffer::setStorage(const Context *context,
+                                       GLenum internalformat,
+                                       size_t width,
+                                       size_t height)
 {
-    ANGLE_TRY(orphanImages(context));
+    ANGLE_TRY_HANDLE(context, orphanImages(context));
     ANGLE_TRY(mImplementation->setStorage(context, internalformat, width, height));
 
     mState.update(static_cast<GLsizei>(width), static_cast<GLsizei>(height), Format(internalformat),
                   0, InitState::MayNeedInit);
     onStorageChange(context);
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error Renderbuffer::setStorageMultisample(const Context *context,
-                                          size_t samples,
-                                          GLenum internalformat,
-                                          size_t width,
-                                          size_t height)
+angle::Result Renderbuffer::setStorageMultisample(const Context *context,
+                                                  size_t samples,
+                                                  GLenum internalformat,
+                                                  size_t width,
+                                                  size_t height)
 {
-    ANGLE_TRY(orphanImages(context));
+    ANGLE_TRY_HANDLE(context, orphanImages(context));
     ANGLE_TRY(
         mImplementation->setStorageMultisample(context, samples, internalformat, width, height));
 
@@ -127,12 +127,12 @@ Error Renderbuffer::setStorageMultisample(const Context *context,
                   static_cast<GLsizei>(samples), InitState::MayNeedInit);
     onStorageChange(context);
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
-Error Renderbuffer::setStorageEGLImageTarget(const Context *context, egl::Image *image)
+angle::Result Renderbuffer::setStorageEGLImageTarget(const Context *context, egl::Image *image)
 {
-    ANGLE_TRY(orphanImages(context));
+    ANGLE_TRY_HANDLE(context, orphanImages(context));
     ANGLE_TRY(mImplementation->setStorageEGLImageTarget(context, image));
 
     setTargetImage(context, image);
@@ -141,7 +141,7 @@ Error Renderbuffer::setStorageEGLImageTarget(const Context *context, egl::Image 
                   Format(image->getFormat()), 0, image->sourceInitState());
     onStorageChange(context);
 
-    return NoError();
+    return angle::Result::Continue();
 }
 
 rx::RenderbufferImpl *Renderbuffer::getImplementation() const

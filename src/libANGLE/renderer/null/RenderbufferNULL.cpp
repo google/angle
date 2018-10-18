@@ -22,26 +22,27 @@ RenderbufferNULL::~RenderbufferNULL()
 {
 }
 
-gl::Error RenderbufferNULL::setStorage(const gl::Context *context,
-                                       GLenum internalformat,
-                                       size_t width,
-                                       size_t height)
+angle::Result RenderbufferNULL::setStorage(const gl::Context *context,
+                                           GLenum internalformat,
+                                           size_t width,
+                                           size_t height)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error RenderbufferNULL::setStorageMultisample(const gl::Context *context,
-                                                  size_t samples,
-                                                  GLenum internalformat,
-                                                  size_t width,
-                                                  size_t height)
+angle::Result RenderbufferNULL::setStorageMultisample(const gl::Context *context,
+                                                      size_t samples,
+                                                      GLenum internalformat,
+                                                      size_t width,
+                                                      size_t height)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error RenderbufferNULL::setStorageEGLImageTarget(const gl::Context *context, egl::Image *image)
+angle::Result RenderbufferNULL::setStorageEGLImageTarget(const gl::Context *context,
+                                                         egl::Image *image)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result RenderbufferNULL::initializeContents(const gl::Context *context,

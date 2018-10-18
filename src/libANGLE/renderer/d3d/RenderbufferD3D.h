@@ -27,18 +27,18 @@ class RenderbufferD3D : public RenderbufferImpl
     RenderbufferD3D(const gl::RenderbufferState &state, RendererD3D *renderer);
     ~RenderbufferD3D() override;
 
-    gl::Error onDestroy(const gl::Context *context) override;
+    void onDestroy(const gl::Context *context) override;
 
-    gl::Error setStorage(const gl::Context *context,
-                         GLenum internalformat,
-                         size_t width,
-                         size_t height) override;
-    gl::Error setStorageMultisample(const gl::Context *context,
-                                    size_t samples,
-                                    GLenum internalformat,
-                                    size_t width,
-                                    size_t height) override;
-    gl::Error setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) override;
+    angle::Result setStorage(const gl::Context *context,
+                             GLenum internalformat,
+                             size_t width,
+                             size_t height) override;
+    angle::Result setStorageMultisample(const gl::Context *context,
+                                        size_t samples,
+                                        GLenum internalformat,
+                                        size_t width,
+                                        size_t height) override;
+    angle::Result setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) override;
 
     angle::Result getRenderTarget(const gl::Context *context, RenderTargetD3D **outRenderTarget);
     angle::Result getAttachmentRenderTarget(const gl::Context *context,
