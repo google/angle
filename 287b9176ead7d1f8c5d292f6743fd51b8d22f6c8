@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "b02b6c41_d164a807",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-18T06:21:29Z",
+      "side": 1,
+      "message": "Hi Corentin. \nelementStride * (i0 * a1 * a2 * a3 + i1 * a2 * a3 + i2 * a3 + i3)\nis exactly what I want and the implementation also follows it. One thing is that the sequence of *type.getArraySizes() is inverse with the declaration.\nS a[a0][a1][a2][a3], the elements of *type.getArraySizes() will be a3, a2, a1, a0. So you see that my formula is a[0] * a[1] * a[2] *... * i0.\nFor example,\nstruct S\n{\n    uvec2 uvData;\n};\nlayout(std140, binding \u003d 0) buffer blockIn {\n    S s[5][4][3][2];\n} instanceIn;\nlayout(std140, binding \u003d 1) buffer blockOut {\n    S s[5][4][3][2];\n} instanceOut;\nvoid main()\n{\n    instanceOut.s[1][1][1][0].uvData \u003d instanceIn.s[1][1][1][0].uvData;\n}\n\n// becomes\n\nuint2_Store(_instanceOut, 0 + 16 * (2 * 3 * 4 * 1 + 2 * 3 * 1 + 2 * 1 + 0) + 0, uint2_Load(_instanceIn, 0 + 16 * (2 * 3 * 4 * 1 + 2 * 3 * 1 + 2 * 1 + 0) + 0));\n\nin my current code. Maybe I should add comment like you provided to make it clear.",
+      "parentUuid": "25c72629_24aa3a15",
+      "revId": "287b9176ead7d1f8c5d292f6743fd51b8d22f6c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "02e720ae_7ca17215",
         "filename": "src/compiler/translator/blocklayout.h",
         "patchSetId": 4
