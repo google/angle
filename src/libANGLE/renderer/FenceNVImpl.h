@@ -28,9 +28,9 @@ class FenceNVImpl : angle::NonCopyable
     FenceNVImpl() { };
     virtual ~FenceNVImpl() { };
 
-    virtual gl::Error set(const gl::Context *context, GLenum condition)        = 0;
-    virtual gl::Error test(const gl::Context *context, GLboolean *outFinished) = 0;
-    virtual gl::Error finish(const gl::Context *context)                       = 0;
+    virtual angle::Result set(const gl::Context *context, GLenum condition)        = 0;
+    virtual angle::Result test(const gl::Context *context, GLboolean *outFinished) = 0;
+    virtual angle::Result finish(const gl::Context *context)                       = 0;
 };
 }  // namespace rx
 

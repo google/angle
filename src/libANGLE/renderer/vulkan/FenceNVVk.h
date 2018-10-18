@@ -20,9 +20,9 @@ class FenceNVVk : public FenceNVImpl
     FenceNVVk();
     ~FenceNVVk() override;
 
-    gl::Error set(const gl::Context *context, GLenum condition) override;
-    gl::Error test(const gl::Context *context, GLboolean *outFinished) override;
-    gl::Error finish(const gl::Context *context) override;
+    angle::Result set(const gl::Context *context, GLenum condition) override;
+    angle::Result test(const gl::Context *context, GLboolean *outFinished) override;
+    angle::Result finish(const gl::Context *context) override;
 };
 }  // namespace rx
 

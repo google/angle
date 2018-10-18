@@ -25,9 +25,9 @@ class MockFenceNVImpl : public rx::FenceNVImpl
   public:
     virtual ~MockFenceNVImpl() { destroy(); }
 
-    MOCK_METHOD2(set, gl::Error(const gl::Context *, GLenum));
-    MOCK_METHOD2(test, gl::Error(const gl::Context *, GLboolean *));
-    MOCK_METHOD1(finish, gl::Error(const gl::Context *));
+    MOCK_METHOD2(set, angle::Result(const gl::Context *, GLenum));
+    MOCK_METHOD2(test, angle::Result(const gl::Context *, GLboolean *));
+    MOCK_METHOD1(finish, angle::Result(const gl::Context *));
 
     MOCK_METHOD0(destroy, void());
 };
@@ -67,14 +67,16 @@ TEST_F(FenceNVTest, DestructionDeletesImpl)
 
 TEST_F(FenceNVTest, SetAndTestBehavior)
 {
-    EXPECT_CALL(*mImpl, set(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
+    EXPECT_CALL(*mImpl, set(_, _))
+        .WillOnce(Return(angle::Result::Continue()))
+        .RetiresOnSaturation();
     EXPECT_FALSE(mFence->isSet());
     EXPECT_FALSE(mFence->set(nullptr, GL_ALL_COMPLETED_NV).isError());
     EXPECT_TRUE(mFence->isSet());
     // Fake the behavior of testing the fence before and after it's passed.
     EXPECT_CALL(*mImpl, test(_, _))
-        .WillOnce(DoAll(SetArgumentPointee<1>(GL_FALSE), Return(gl::NoError())))
-        .WillOnce(DoAll(SetArgumentPointee<1>(GL_TRUE), Return(gl::NoError())))
+        .WillOnce(DoAll(SetArgumentPointee<1>(GL_FALSE), Return(angle::Result::Continue())))
+        .WillOnce(DoAll(SetArgumentPointee<1>(GL_TRUE), Return(angle::Result::Continue())))
         .RetiresOnSaturation();
     GLboolean out;
     EXPECT_FALSE(mFence->test(nullptr, &out).isError());
@@ -92,10 +94,10 @@ class MockSyncImpl : public rx::SyncImpl
   public:
     virtual ~MockSyncImpl() { destroy(); }
 
-    MOCK_METHOD3(set, gl::Error(const gl::Context *, GLenum, GLbitfield));
-    MOCK_METHOD4(clientWait, gl::Error(const gl::Context *, GLbitfield, GLuint64, GLenum *));
-    MOCK_METHOD3(serverWait, gl::Error(const gl::Context *, GLbitfield, GLuint64));
-    MOCK_METHOD2(getStatus, gl::Error(const gl::Context *, GLint *));
+    MOCK_METHOD3(set, angle::Result(const gl::Context *, GLenum, GLbitfield));
+    MOCK_METHOD4(clientWait, angle::Result(const gl::Context *, GLbitfield, GLuint64, GLenum *));
+    MOCK_METHOD3(serverWait, angle::Result(const gl::Context *, GLbitfield, GLuint64));
+    MOCK_METHOD2(getStatus, angle::Result(const gl::Context *, GLint *));
 
     MOCK_METHOD0(destroy, void());
 };
@@ -134,13 +136,15 @@ TEST_F(FenceSyncTest, DestructionDeletesImpl)
 
 TEST_F(FenceSyncTest, SetAndGetStatusBehavior)
 {
-    EXPECT_CALL(*mImpl, set(_, _, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
+    EXPECT_CALL(*mImpl, set(_, _, _))
+        .WillOnce(Return(angle::Result::Continue()))
+        .RetiresOnSaturation();
     EXPECT_FALSE(mFence->set(nullptr, GL_SYNC_GPU_COMMANDS_COMPLETE, 0).isError());
     EXPECT_EQ(static_cast<GLenum>(GL_SYNC_GPU_COMMANDS_COMPLETE), mFence->getCondition());
     // Fake the behavior of testing the fence before and after it's passed.
     EXPECT_CALL(*mImpl, getStatus(_, _))
-        .WillOnce(DoAll(SetArgumentPointee<1>(GL_UNSIGNALED), Return(gl::NoError())))
-        .WillOnce(DoAll(SetArgumentPointee<1>(GL_SIGNALED), Return(gl::NoError())))
+        .WillOnce(DoAll(SetArgumentPointee<1>(GL_UNSIGNALED), Return(angle::Result::Continue())))
+        .WillOnce(DoAll(SetArgumentPointee<1>(GL_SIGNALED), Return(angle::Result::Continue())))
         .RetiresOnSaturation();
     GLint out;
     EXPECT_FALSE(mFence->getStatus(nullptr, &out).isError());

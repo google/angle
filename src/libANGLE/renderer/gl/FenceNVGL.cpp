@@ -28,24 +28,24 @@ FenceNVGL::~FenceNVGL()
     mFence = 0;
 }
 
-gl::Error FenceNVGL::set(const gl::Context *context, GLenum condition)
+angle::Result FenceNVGL::set(const gl::Context *context, GLenum condition)
 {
     ASSERT(condition == GL_ALL_COMPLETED_NV);
     mFunctions->setFenceNV(mFence, condition);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error FenceNVGL::test(const gl::Context *context, GLboolean *outFinished)
+angle::Result FenceNVGL::test(const gl::Context *context, GLboolean *outFinished)
 {
     ASSERT(outFinished);
     *outFinished = mFunctions->testFenceNV(mFence);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error FenceNVGL::finish(const gl::Context *context)
+angle::Result FenceNVGL::finish(const gl::Context *context)
 {
     mFunctions->finishFenceNV(mFence);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }

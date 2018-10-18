@@ -25,7 +25,7 @@ FenceNV9::~FenceNV9()
     SafeRelease(mQuery);
 }
 
-gl::Error FenceNV9::set(const gl::Context *context, GLenum condition)
+angle::Result FenceNV9::set(const gl::Context *context, GLenum condition)
 {
     if (!mQuery)
     {
@@ -35,20 +35,18 @@ gl::Error FenceNV9::set(const gl::Context *context, GLenum condition)
     HRESULT result = mQuery->Issue(D3DISSUE_END);
     if (FAILED(result))
     {
-        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         SafeRelease(mQuery);
-        return gl::OutOfMemory() << "Failed to end event query, " << gl::FmtHR(result);
     }
-
-    return gl::NoError();
+    ANGLE_TRY_HR(GetImplAs<Context9>(context), result, "Failed to end event query");
+    return angle::Result::Continue();
 }
 
-gl::Error FenceNV9::test(const gl::Context *context, GLboolean *outFinished)
+angle::Result FenceNV9::test(const gl::Context *context, GLboolean *outFinished)
 {
     return testHelper(GetImplAs<Context9>(context), true, outFinished);
 }
 
-gl::Error FenceNV9::finish(const gl::Context *context)
+angle::Result FenceNV9::finish(const gl::Context *context)
 {
     GLboolean finished = GL_FALSE;
     while (finished != GL_TRUE)
@@ -57,7 +55,7 @@ gl::Error FenceNV9::finish(const gl::Context *context)
         Sleep(0);
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result FenceNV9::testHelper(Context9 *context9,

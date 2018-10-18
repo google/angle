@@ -22,29 +22,29 @@ SyncNULL::~SyncNULL()
 {
 }
 
-gl::Error SyncNULL::set(const gl::Context *context, GLenum condition, GLbitfield flags)
+angle::Result SyncNULL::set(const gl::Context *context, GLenum condition, GLbitfield flags)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error SyncNULL::clientWait(const gl::Context *context,
-                               GLbitfield flags,
-                               GLuint64 timeout,
-                               GLenum *outResult)
+angle::Result SyncNULL::clientWait(const gl::Context *context,
+                                   GLbitfield flags,
+                                   GLuint64 timeout,
+                                   GLenum *outResult)
 {
     *outResult = GL_ALREADY_SIGNALED;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error SyncNULL::serverWait(const gl::Context *context, GLbitfield flags, GLuint64 timeout)
+angle::Result SyncNULL::serverWait(const gl::Context *context, GLbitfield flags, GLuint64 timeout)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error SyncNULL::getStatus(const gl::Context *context, GLint *outResult)
+angle::Result SyncNULL::getStatus(const gl::Context *context, GLint *outResult)
 {
     *outResult = GL_SIGNALED;
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 }  // namespace rx

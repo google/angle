@@ -10,6 +10,9 @@
 #include "libANGLE/renderer/vulkan/FenceNVVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {
@@ -22,22 +25,22 @@ FenceNVVk::~FenceNVVk()
 {
 }
 
-gl::Error FenceNVVk::set(const gl::Context *context, GLenum condition)
+angle::Result FenceNVVk::set(const gl::Context *context, GLenum condition)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
+    return angle::Result::Stop();
 }
 
-gl::Error FenceNVVk::test(const gl::Context *context, GLboolean *outFinished)
+angle::Result FenceNVVk::test(const gl::Context *context, GLboolean *outFinished)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
+    return angle::Result::Stop();
 }
 
-gl::Error FenceNVVk::finish(const gl::Context *context)
+angle::Result FenceNVVk::finish(const gl::Context *context)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
+    return angle::Result::Stop();
 }
 
 }  // namespace rx
