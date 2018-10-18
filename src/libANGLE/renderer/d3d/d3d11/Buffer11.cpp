@@ -337,15 +337,14 @@ Buffer11::~Buffer11()
     mRenderer->onBufferDelete(this);
 }
 
-gl::Error Buffer11::setData(const gl::Context *context,
-                            gl::BufferBinding target,
-                            const void *data,
-                            size_t size,
-                            gl::BufferUsage usage)
+angle::Result Buffer11::setData(const gl::Context *context,
+                                gl::BufferBinding target,
+                                const void *data,
+                                size_t size,
+                                gl::BufferUsage usage)
 {
     updateD3DBufferUsage(context, usage);
-    ANGLE_TRY(setSubData(context, target, data, size, 0));
-    return gl::NoError();
+    return setSubData(context, target, data, size, 0);
 }
 
 angle::Result Buffer11::getData(const gl::Context *context, const uint8_t **outData)
@@ -367,11 +366,11 @@ angle::Result Buffer11::getData(const gl::Context *context, const uint8_t **outD
     return angle::Result::Continue();
 }
 
-gl::Error Buffer11::setSubData(const gl::Context *context,
-                               gl::BufferBinding target,
-                               const void *data,
-                               size_t size,
-                               size_t offset)
+angle::Result Buffer11::setSubData(const gl::Context *context,
+                                   gl::BufferBinding target,
+                                   const void *data,
+                                   size_t size,
+                                   size_t offset)
 {
     size_t requiredSize = size + offset;
 
@@ -424,14 +423,14 @@ gl::Error Buffer11::setSubData(const gl::Context *context,
     mSize = std::max(mSize, requiredSize);
     invalidateStaticData(context);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Buffer11::copySubData(const gl::Context *context,
-                                BufferImpl *source,
-                                GLintptr sourceOffset,
-                                GLintptr destOffset,
-                                GLsizeiptr size)
+angle::Result Buffer11::copySubData(const gl::Context *context,
+                                    BufferImpl *source,
+                                    GLintptr sourceOffset,
+                                    GLintptr destOffset,
+                                    GLsizeiptr size)
 {
     Buffer11 *sourceBuffer = GetAs<Buffer11>(source);
     ASSERT(sourceBuffer != nullptr);
@@ -488,10 +487,10 @@ gl::Error Buffer11::copySubData(const gl::Context *context,
     mSize = std::max<size_t>(mSize, destOffset + size);
     invalidateStaticData(context);
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Buffer11::map(const gl::Context *context, GLenum access, void **mapPtr)
+angle::Result Buffer11::map(const gl::Context *context, GLenum access, void **mapPtr)
 {
     // GL_OES_mapbuffer uses an enum instead of a bitfield for it's access, convert to a bitfield
     // and call mapRange.
@@ -499,11 +498,11 @@ gl::Error Buffer11::map(const gl::Context *context, GLenum access, void **mapPtr
     return mapRange(context, 0, mSize, GL_MAP_WRITE_BIT, mapPtr);
 }
 
-gl::Error Buffer11::mapRange(const gl::Context *context,
-                             size_t offset,
-                             size_t length,
-                             GLbitfield access,
-                             void **mapPtr)
+angle::Result Buffer11::mapRange(const gl::Context *context,
+                                 size_t offset,
+                                 size_t length,
+                                 GLbitfield access,
+                                 void **mapPtr)
 {
     ASSERT(!mMappedStorage);
 
@@ -538,10 +537,10 @@ gl::Error Buffer11::mapRange(const gl::Context *context,
     ASSERT(mappedBuffer);
 
     *mapPtr = static_cast<void *>(mappedBuffer);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error Buffer11::unmap(const gl::Context *context, GLboolean *result)
+angle::Result Buffer11::unmap(const gl::Context *context, GLboolean *result)
 {
     ASSERT(mMappedStorage);
     mMappedStorage->unmap();
@@ -550,7 +549,7 @@ gl::Error Buffer11::unmap(const gl::Context *context, GLboolean *result)
     // TODO: detect if we had corruption. if so, return false.
     *result = GL_TRUE;
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result Buffer11::markTransformFeedbackUsage(const gl::Context *context)

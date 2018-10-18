@@ -57,12 +57,12 @@ class BufferD3D : public BufferImpl
 
     void promoteStaticUsage(const gl::Context *context, size_t dataSize);
 
-    gl::Error getIndexRange(const gl::Context *context,
-                            GLenum type,
-                            size_t offset,
-                            size_t count,
-                            bool primitiveRestartEnabled,
-                            gl::IndexRange *outRange) override;
+    angle::Result getIndexRange(const gl::Context *context,
+                                GLenum type,
+                                size_t offset,
+                                size_t count,
+                                bool primitiveRestartEnabled,
+                                gl::IndexRange *outRange) override;
 
     BufferFactoryD3D *getFactory() const { return mFactory; }
     D3DBufferUsage getUsage() const { return mUsage; }

@@ -35,35 +35,35 @@ class BufferImpl : public angle::Subject
     virtual ~BufferImpl() {}
     virtual void destroy(const gl::Context *context) {}
 
-    virtual gl::Error setData(const gl::Context *context,
-                              gl::BufferBinding target,
-                              const void *data,
-                              size_t size,
-                              gl::BufferUsage usage)                                = 0;
-    virtual gl::Error setSubData(const gl::Context *context,
-                                 gl::BufferBinding target,
-                                 const void *data,
-                                 size_t size,
-                                 size_t offset)                                     = 0;
-    virtual gl::Error copySubData(const gl::Context *context,
-                                  BufferImpl *source,
-                                  GLintptr sourceOffset,
-                                  GLintptr destOffset,
-                                  GLsizeiptr size)                                  = 0;
-    virtual gl::Error map(const gl::Context *context, GLenum access, void **mapPtr) = 0;
-    virtual gl::Error mapRange(const gl::Context *context,
-                               size_t offset,
-                               size_t length,
-                               GLbitfield access,
-                               void **mapPtr)                                       = 0;
-    virtual gl::Error unmap(const gl::Context *context, GLboolean *result)          = 0;
+    virtual angle::Result setData(const gl::Context *context,
+                                  gl::BufferBinding target,
+                                  const void *data,
+                                  size_t size,
+                                  gl::BufferUsage usage)                                = 0;
+    virtual angle::Result setSubData(const gl::Context *context,
+                                     gl::BufferBinding target,
+                                     const void *data,
+                                     size_t size,
+                                     size_t offset)                                     = 0;
+    virtual angle::Result copySubData(const gl::Context *context,
+                                      BufferImpl *source,
+                                      GLintptr sourceOffset,
+                                      GLintptr destOffset,
+                                      GLsizeiptr size)                                  = 0;
+    virtual angle::Result map(const gl::Context *context, GLenum access, void **mapPtr) = 0;
+    virtual angle::Result mapRange(const gl::Context *context,
+                                   size_t offset,
+                                   size_t length,
+                                   GLbitfield access,
+                                   void **mapPtr)                                       = 0;
+    virtual angle::Result unmap(const gl::Context *context, GLboolean *result)          = 0;
 
-    virtual gl::Error getIndexRange(const gl::Context *context,
-                                    GLenum type,
-                                    size_t offset,
-                                    size_t count,
-                                    bool primitiveRestartEnabled,
-                                    gl::IndexRange *outRange) = 0;
+    virtual angle::Result getIndexRange(const gl::Context *context,
+                                        GLenum type,
+                                        size_t offset,
+                                        size_t count,
+                                        bool primitiveRestartEnabled,
+                                        gl::IndexRange *outRange) = 0;
 
     // Override if accurate native memory size information is available
     virtual GLint getMemorySize() const { return 0; }

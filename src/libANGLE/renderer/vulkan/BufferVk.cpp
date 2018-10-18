@@ -39,11 +39,11 @@ void BufferVk::release(RendererVk *renderer)
     mBuffer.release(renderer);
 }
 
-gl::Error BufferVk::setData(const gl::Context *context,
-                            gl::BufferBinding target,
-                            const void *data,
-                            size_t size,
-                            gl::BufferUsage usage)
+angle::Result BufferVk::setData(const gl::Context *context,
+                                gl::BufferBinding target,
+                                const void *data,
+                                size_t size,
+                                gl::BufferUsage usage)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -79,40 +79,39 @@ gl::Error BufferVk::setData(const gl::Context *context,
         ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, 0));
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error BufferVk::setSubData(const gl::Context *context,
-                               gl::BufferBinding target,
-                               const void *data,
-                               size_t size,
-                               size_t offset)
+angle::Result BufferVk::setSubData(const gl::Context *context,
+                                   gl::BufferBinding target,
+                                   const void *data,
+                                   size_t size,
+                                   size_t offset)
 {
     ASSERT(mBuffer.valid());
 
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(setDataImpl(contextVk, static_cast<const uint8_t *>(data), size, offset));
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error BufferVk::copySubData(const gl::Context *context,
-                                BufferImpl *source,
-                                GLintptr sourceOffset,
-                                GLintptr destOffset,
-                                GLsizeiptr size)
+angle::Result BufferVk::copySubData(const gl::Context *context,
+                                    BufferImpl *source,
+                                    GLintptr sourceOffset,
+                                    GLintptr destOffset,
+                                    GLsizeiptr size)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(vk::GetImpl(context));
+    return angle::Result::Stop();
 }
 
-gl::Error BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr)
+angle::Result BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr)
 {
     ASSERT(mBuffer.valid());
 
     ContextVk *contextVk = vk::GetImpl(context);
-    ANGLE_TRY(mapImpl(contextVk, mapPtr));
-    return gl::NoError();
+    return mapImpl(contextVk, mapPtr);
 }
 
 angle::Result BufferVk::mapImpl(ContextVk *contextVk, void **mapPtr)
@@ -126,23 +125,21 @@ GLint64 BufferVk::getSize()
     return mState.getSize();
 }
 
-gl::Error BufferVk::mapRange(const gl::Context *context,
-                             size_t offset,
-                             size_t length,
-                             GLbitfield access,
-                             void **mapPtr)
+angle::Result BufferVk::mapRange(const gl::Context *context,
+                                 size_t offset,
+                                 size_t length,
+                                 GLbitfield access,
+                                 void **mapPtr)
 {
     ASSERT(mBuffer.valid());
 
     ContextVk *contextVk = vk::GetImpl(context);
 
-    ANGLE_TRY(mBuffer.getDeviceMemory().map(contextVk, offset, length, 0,
-                                            reinterpret_cast<uint8_t **>(mapPtr)));
-
-    return gl::NoError();
+    return mBuffer.getDeviceMemory().map(contextVk, offset, length, 0,
+                                         reinterpret_cast<uint8_t **>(mapPtr));
 }
 
-gl::Error BufferVk::unmap(const gl::Context *context, GLboolean *result)
+angle::Result BufferVk::unmap(const gl::Context *context, GLboolean *result)
 {
     return unmapImpl(vk::GetImpl(context));
 }
@@ -156,12 +153,12 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
     return angle::Result::Continue();
 }
 
-gl::Error BufferVk::getIndexRange(const gl::Context *context,
-                                  GLenum type,
-                                  size_t offset,
-                                  size_t count,
-                                  bool primitiveRestartEnabled,
-                                  gl::IndexRange *outRange)
+angle::Result BufferVk::getIndexRange(const gl::Context *context,
+                                      GLenum type,
+                                      size_t offset,
+                                      size_t count,
+                                      bool primitiveRestartEnabled,
+                                      gl::IndexRange *outRange)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -180,7 +177,7 @@ gl::Error BufferVk::getIndexRange(const gl::Context *context,
     *outRange = gl::ComputeIndexRange(type, mapPointer, count, primitiveRestartEnabled);
 
     mBuffer.getDeviceMemory().unmap(contextVk->getDevice());
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result BufferVk::setDataImpl(ContextVk *contextVk,

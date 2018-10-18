@@ -36,8 +36,6 @@ class BufferState final : angle::NonCopyable
     BufferState();
     ~BufferState();
 
-    const std::string &getLabel();
-
     BufferUsage getUsage() const { return mUsage; }
     GLbitfield getAccessFlags() const { return mAccessFlags; }
     GLenum getAccess() const { return mAccess; }
@@ -78,35 +76,38 @@ class Buffer final : public RefCountObject,
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
 
-    Error bufferData(Context *context,
-                     BufferBinding target,
-                     const void *data,
-                     GLsizeiptr size,
-                     BufferUsage usage);
-    Error bufferSubData(const Context *context,
-                        BufferBinding target,
-                        const void *data,
-                        GLsizeiptr size,
-                        GLintptr offset);
-    Error copyBufferSubData(const Context *context,
-                            Buffer *source,
-                            GLintptr sourceOffset,
-                            GLintptr destOffset,
-                            GLsizeiptr size);
-    Error map(const Context *context, GLenum access);
-    Error mapRange(const Context *context, GLintptr offset, GLsizeiptr length, GLbitfield access);
-    Error unmap(const Context *context, GLboolean *result);
+    angle::Result bufferData(Context *context,
+                             BufferBinding target,
+                             const void *data,
+                             GLsizeiptr size,
+                             BufferUsage usage);
+    angle::Result bufferSubData(const Context *context,
+                                BufferBinding target,
+                                const void *data,
+                                GLsizeiptr size,
+                                GLintptr offset);
+    angle::Result copyBufferSubData(const Context *context,
+                                    Buffer *source,
+                                    GLintptr sourceOffset,
+                                    GLintptr destOffset,
+                                    GLsizeiptr size);
+    angle::Result map(const Context *context, GLenum access);
+    angle::Result mapRange(const Context *context,
+                           GLintptr offset,
+                           GLsizeiptr length,
+                           GLbitfield access);
+    angle::Result unmap(const Context *context, GLboolean *result);
 
     // These are called when another operation changes Buffer data.
     void onTransformFeedback(const Context *context);
     void onPixelPack(const Context *context);
 
-    Error getIndexRange(const gl::Context *context,
-                        GLenum type,
-                        size_t offset,
-                        size_t count,
-                        bool primitiveRestartEnabled,
-                        IndexRange *outRange) const;
+    angle::Result getIndexRange(const gl::Context *context,
+                                GLenum type,
+                                size_t offset,
+                                size_t count,
+                                bool primitiveRestartEnabled,
+                                IndexRange *outRange) const;
 
     BufferUsage getUsage() const { return mState.mUsage; }
     GLbitfield getAccessFlags() const { return mState.mAccessFlags; }
