@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "714c5b53_359361fe",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-18T01:38:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b692cbfb_ddf9d37e",
+      "revId": "a7775fb53e48f97c926ad70bc3b9bd181fe369b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "384ee364_3ac19ade",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-10-12T12:58:45Z",
       "side": 1,
       "message": "What we should do here is:\n\n - Compute the info for the member of the struct and get the size and arrayStride of the struct at the same time.\n - Update \"encoder\"\u0027s offset with totalArraySize * struct size. You might need to double check this it is valid for both std140 and HLSL but I believe it is.\n\nYou might need to add something to the encoder where you can say \"add n times the struct represented by this other encoder\" or something like that. But it would make the code much much simpler and with better complexity.",
+      "revId": "a7775fb53e48f97c926ad70bc3b9bd181fe369b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f67a2ea2_1b5accd0",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-18T01:38:52Z",
+      "side": 1,
+      "message": "Thanks for your suggestion. Done.",
+      "parentUuid": "384ee364_3ac19ade",
       "revId": "a7775fb53e48f97c926ad70bc3b9bd181fe369b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -50,6 +86,24 @@
       "revId": "a7775fb53e48f97c926ad70bc3b9bd181fe369b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78bd30a8_2c284753",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-18T01:38:52Z",
+      "side": 1,
+      "message": "Add a new test for array of arrays. Done",
+      "parentUuid": "aaef6af7_f297463c",
+      "revId": "a7775fb53e48f97c926ad70bc3b9bd181fe369b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
