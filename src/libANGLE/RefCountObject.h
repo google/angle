@@ -93,7 +93,7 @@ class BindingPointer
         ASSERT(mObject == nullptr);
     }
 
-    virtual void set(const ContextType *context, ObjectType *newObject)
+    void set(const ContextType *context, ObjectType *newObject)
     {
         // addRef first in case newObject == mObject and this is the last reference to it.
         if (newObject != nullptr)
@@ -180,16 +180,9 @@ class OffsetBindingPointer : public BindingPointer<ObjectType>
 
     OffsetBindingPointer() : mOffset(0), mSize(0) { }
 
-    void set(const ContextType *context, ObjectType *newObject) override
-    {
-        BindingPointer<ObjectType>::set(context, newObject);
-        mOffset = 0;
-        mSize = 0;
-    }
-
     void set(const ContextType *context, ObjectType *newObject, GLintptr offset, GLsizeiptr size)
     {
-        BindingPointer<ObjectType>::set(context, newObject);
+        set(context, newObject);
         mOffset = offset;
         mSize = size;
     }
@@ -209,12 +202,16 @@ class OffsetBindingPointer : public BindingPointer<ObjectType>
 
     void assign(ObjectType *object, GLintptr offset, GLsizeiptr size)
     {
-        BindingPointer<ObjectType>::assign(object);
+        assign(object);
         mOffset = offset;
         mSize   = size;
     }
 
   private:
+    // Delete the unparameterized functions. This forces an explicit offset and size.
+    using BindingPointer<ObjectType>::set;
+    using BindingPointer<ObjectType>::assign;
+
     GLintptr mOffset;
     GLsizeiptr mSize;
 };
