@@ -668,6 +668,7 @@ ProgramD3D::ProgramD3D(const gl::ProgramState &state, RendererD3D *renderer)
       mDirtySamplerMapping(true),
       mUsedComputeImageRange(0, 0),
       mUsedComputeReadonlyImageRange(0, 0),
+      mUsedComputeAtomicCounterRange(0, 0),
       mSerial(issueSerial())
 {
     mDynamicHLSL = new DynamicHLSL(renderer);
@@ -925,6 +926,11 @@ angle::Result ProgramD3D::load(const gl::Context *context,
     mUsedComputeReadonlyImageRange =
         gl::RangeUI(computeReadonlyImageRangeLow, computeReadonlyImageRangeHigh);
 
+    unsigned int atomicCounterRangeLow, atomicCounterRangeHigh;
+    stream->readInt(&atomicCounterRangeLow);
+    stream->readInt(&atomicCounterRangeHigh);
+    mUsedComputeAtomicCounterRange = gl::RangeUI(atomicCounterRangeLow, atomicCounterRangeHigh);
+
     const unsigned int shaderStorageBlockCount = stream->readInt<unsigned int>();
     if (stream->error())
     {
@@ -941,6 +947,12 @@ angle::Result ProgramD3D::load(const gl::Context *context,
             stream->readInt(&shaderStorageBlock.mShaderRegisterIndexes[shaderType]);
         }
         mD3DShaderStorageBlocks.push_back(shaderStorageBlock);
+    }
+
+    for (unsigned int ii = 0; ii < gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS; ++ii)
+    {
+        unsigned int index                             = stream->readInt<unsigned int>();
+        mComputeAtomicCounterBufferRegisterIndices[ii] = index;
     }
 
     const unsigned int uniformCount = stream->readInt<unsigned int>();
@@ -1225,6 +1237,8 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
     stream->writeInt(mUsedComputeImageRange.high());
     stream->writeInt(mUsedComputeReadonlyImageRange.low());
     stream->writeInt(mUsedComputeReadonlyImageRange.high());
+    stream->writeInt(mUsedComputeAtomicCounterRange.low());
+    stream->writeInt(mUsedComputeAtomicCounterRange.high());
 
     stream->writeInt(mD3DShaderStorageBlocks.size());
     for (const D3DInterfaceBlock &shaderStorageBlock : mD3DShaderStorageBlocks)
@@ -1233,6 +1247,11 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
         {
             stream->writeIntOrNegOne(shaderStorageBlock.mShaderRegisterIndexes[shaderType]);
         }
+    }
+
+    for (unsigned int ii = 0; ii < gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS; ++ii)
+    {
+        stream->writeInt(mComputeAtomicCounterBufferRegisterIndices[ii]);
     }
 
     stream->writeInt(mD3DUniforms.size());
@@ -2111,6 +2130,18 @@ void ProgramD3D::updateUniformBufferCache(
     }
 }
 
+unsigned int ProgramD3D::getAtomicCounterBufferRegisterIndex(GLuint binding,
+                                                             gl::ShaderType shaderType) const
+{
+    if (shaderType != gl::ShaderType::Compute)
+    {
+        // Implement atomic counters for non-compute shaders
+        // http://anglebug.com/1729
+        UNIMPLEMENTED();
+    }
+    return mComputeAtomicCounterBufferRegisterIndices[binding];
+}
+
 unsigned int ProgramD3D::getShaderStorageBufferRegisterIndex(GLuint blockIndex,
                                                              gl::ShaderType shaderType) const
 {
@@ -2308,11 +2339,15 @@ void ProgramD3D::defineUniformsAndAssignRegisters()
     }
 
     assignAllSamplerRegisters();
+    assignAllAtomicCounterRegisters();
     // Samplers and readonly images share shader input resource slot, adjust low value of
     // readonly image range.
     mUsedComputeReadonlyImageRange =
         gl::RangeUI(mUsedShaderSamplerRanges[gl::ShaderType::Compute].high(),
                     mUsedShaderSamplerRanges[gl::ShaderType::Compute].high());
+    // Atomic counter buffers and non-readonly images share input resource slots
+    mUsedComputeImageRange =
+        gl::RangeUI(mUsedComputeAtomicCounterRange.high(), mUsedComputeAtomicCounterRange.high());
     assignAllImageRegisters();
     initializeUniformStorage(attachedShaders);
 }
@@ -2357,6 +2392,14 @@ void ProgramD3D::defineUniformBase(const gl::Shader *shader,
         UniformEncodingVisitorD3D visitor(shader->getType(), HLSLRegisterType::None, &dummyEncoder,
                                           uniformMap);
         sh::TraverseShaderVariable(uniform, false, &visitor);
+        return;
+    }
+    else if (gl::IsAtomicCounterType(uniform.type))
+    {
+        UniformEncodingVisitorD3D visitor(shader->getType(), HLSLRegisterType::UnorderedAccessView,
+                                          &dummyEncoder, uniformMap);
+        sh::TraverseShaderVariable(uniform, false, &visitor);
+        mAtomicBindingMap[uniform.name] = uniform.binding;
         return;
     }
 
@@ -2568,6 +2611,45 @@ void ProgramD3D::assignAllImageRegisters()
     }
 }
 
+void ProgramD3D::assignAllAtomicCounterRegisters()
+{
+    if (mAtomicBindingMap.empty())
+    {
+        return;
+    }
+    gl::ShaderType shaderType       = gl::ShaderType::Compute;
+    const gl::Shader *computeShader = mState.getAttachedShader(shaderType);
+    if (computeShader)
+    {
+        const ShaderD3D *computeShaderD3D = GetImplAs<ShaderD3D>(computeShader);
+        auto &registerIndices             = mComputeAtomicCounterBufferRegisterIndices;
+        unsigned int firstRegister        = GL_INVALID_VALUE;
+        unsigned int lastRegister         = 0;
+        for (auto &atomicBinding : mAtomicBindingMap)
+        {
+            ASSERT(computeShaderD3D->hasUniform(atomicBinding.first));
+            unsigned int currentRegister =
+                computeShaderD3D->getUniformRegister(atomicBinding.first);
+            ASSERT(currentRegister != GL_INVALID_INDEX);
+            const int kBinding = atomicBinding.second;
+
+            registerIndices[kBinding] = currentRegister;
+
+            firstRegister = std::min(firstRegister, currentRegister);
+            lastRegister  = std::max(lastRegister, currentRegister);
+        }
+        ASSERT(firstRegister != GL_INVALID_VALUE);
+        ASSERT(lastRegister != GL_INVALID_VALUE);
+        mUsedComputeAtomicCounterRange = gl::RangeUI(firstRegister, lastRegister + 1);
+    }
+    else
+    {
+        // Implement atomic counters for non-compute shaders
+        // http://anglebug.com/1729
+        UNIMPLEMENTED();
+    }
+}
+
 void ProgramD3D::assignImageRegisters(size_t uniformIndex)
 {
     D3DUniform *d3dUniform = mD3DUniforms[uniformIndex];
@@ -2700,6 +2782,7 @@ void ProgramD3D::reset()
     SafeDeleteContainer(mD3DUniforms);
     mD3DUniformBlocks.clear();
     mD3DShaderStorageBlocks.clear();
+    mComputeAtomicCounterBufferRegisterIndices.fill({});
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
@@ -2711,6 +2794,7 @@ void ProgramD3D::reset()
     mReadonlyImagesCS.clear();
 
     mUsedShaderSamplerRanges.fill({0, 0});
+    mUsedComputeAtomicCounterRange = {0, 0};
     mDirtySamplerMapping           = true;
     mUsedComputeImageRange         = {0, 0};
     mUsedComputeReadonlyImageRange = {0, 0};

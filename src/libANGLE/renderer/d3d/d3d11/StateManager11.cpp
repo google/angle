@@ -3686,7 +3686,63 @@ angle::Result StateManager11::syncUniformBuffers(const gl::Context *context)
 
 angle::Result StateManager11::syncAtomicCounterBuffers(const gl::Context *context)
 {
-    // TODO(jie.a.chen@intel.com): http://anglebug.com/1729
+    if (mProgramD3D->hasShaderStage(gl::ShaderType::Compute))
+    {
+        ANGLE_TRY(syncAtomicCounterBuffersForShader(context, gl::ShaderType::Compute));
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result StateManager11::syncAtomicCounterBuffersForShader(const gl::Context *context,
+                                                                gl::ShaderType shaderType)
+{
+    const gl::State &glState   = context->getState();
+    const gl::Program *program = glState.getProgram();
+    for (const auto &atomicCounterBuffer : program->getState().getAtomicCounterBuffers())
+    {
+        GLuint binding     = atomicCounterBuffer.binding;
+        const auto &buffer = glState.getIndexedAtomicCounterBuffer(binding);
+
+        if (buffer.get() == nullptr)
+        {
+            continue;
+        }
+
+        Buffer11 *bufferStorage = GetImplAs<Buffer11>(buffer.get());
+        // TODO(enrico.galli@intel.com): Check to make sure that we aren't binding the same buffer
+        // multiple times, as this is unsupported by D3D11. http://anglebug.com/3141
+
+        // Bindings only have a valid size if bound using glBindBufferRange. Therefore, we use the
+        // buffer size for glBindBufferBase
+        GLsizeiptr viewSize = (buffer.getSize() > 0) ? buffer.getSize() : bufferStorage->getSize();
+        d3d11::UnorderedAccessView *uavPtr = nullptr;
+        ANGLE_TRY(bufferStorage->getRawUAVRange(context, buffer.getOffset(), viewSize, &uavPtr));
+
+        // We need to make sure that resource being set to UnorderedAccessView slot |registerIndex|
+        // is not bound on SRV.
+        if (uavPtr && unsetConflictingView(uavPtr->get()))
+        {
+            mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+        }
+
+        const unsigned int registerIndex =
+            mProgramD3D->getAtomicCounterBufferRegisterIndex(binding, shaderType);
+
+        if (shaderType == gl::ShaderType::Compute)
+        {
+            ID3D11UnorderedAccessView *uav     = uavPtr->get();
+            ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+            deviceContext->CSSetUnorderedAccessViews(registerIndex, 1, &uav, nullptr);
+        }
+        else
+        {
+            // Atomic Shaders on non-compute shaders are currently unimplemented
+            // http://anglebug.com/1729
+            UNIMPLEMENTED();
+        }
+    }
+
     return angle::Result::Continue;
 }
 

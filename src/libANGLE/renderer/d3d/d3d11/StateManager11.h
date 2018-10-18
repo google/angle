@@ -370,6 +370,8 @@ class StateManager11 final : angle::NonCopyable
     angle::Result syncUniformBuffersForShader(const gl::Context *context,
                                               gl::ShaderType shaderType);
     angle::Result syncAtomicCounterBuffers(const gl::Context *context);
+    angle::Result syncAtomicCounterBuffersForShader(const gl::Context *context,
+                                                    gl::ShaderType shaderType);
     angle::Result syncShaderStorageBuffers(const gl::Context *context);
     angle::Result syncTransformFeedbackBuffers(const gl::Context *context);
 

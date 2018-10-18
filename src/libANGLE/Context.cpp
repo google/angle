@@ -3278,6 +3278,9 @@ void Context::initCaps()
 
     LimitCap(&mState.mCaps.maxImageUnits, IMPLEMENTATION_MAX_IMAGE_UNITS);
 
+    LimitCap(&mState.mCaps.maxCombinedAtomicCounterBuffers,
+             IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS);
+
     mState.mCaps.maxSampleMaskWords =
         std::min<GLuint>(mState.mCaps.maxSampleMaskWords, MAX_SAMPLE_MASK_WORDS);
 

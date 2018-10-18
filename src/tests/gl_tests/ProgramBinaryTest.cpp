@@ -416,6 +416,69 @@ TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that saving and loading a program attached with computer shader.
+TEST_P(ProgramBinaryES31Test, ProgramBinaryWithAtomicCounterComputeShader)
+{
+    // We can't run the test if no program binary formats are supported.
+    GLint binaryFormatCount = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(binaryFormatCount == 0);
+
+    constexpr char kComputeShader[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(binding = 0, offset = 4) uniform atomic_uint ac[2];
+void main() {
+    atomicCounterIncrement(ac[0]);
+    atomicCounterDecrement(ac[1]);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+
+    // Read back the binary.
+    GLint programLength = 0;
+    glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &programLength);
+    ASSERT_GL_NO_ERROR();
+
+    GLsizei readLength  = 0;
+    GLenum binaryFormat = GL_NONE;
+    std::vector<uint8_t> binary(programLength);
+    glGetProgramBinary(program, programLength, &readLength, &binaryFormat, binary.data());
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(static_cast<GLsizei>(programLength), readLength);
+
+    // Load a new program with the binary.
+    ANGLE_GL_BINARY_ES3_PROGRAM(binaryProgram, binary, binaryFormat);
+    ASSERT_GL_NO_ERROR();
+
+    // Dispatch compute with the loaded binary program
+    glUseProgram(binaryProgram);
+
+    // The initial value of 'ac[0]' is 3u, 'ac[1]' is 1u.
+    unsigned int bufferData[3] = {11u, 3u, 1u};
+    GLBuffer atomicCounterBuffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(bufferData), bufferData, GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_ATOMIC_COUNTER_BARRIER_BIT);
+
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
+    void *mappedBuffer =
+        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 3, GL_MAP_READ_BIT);
+    memcpy(bufferData, mappedBuffer, sizeof(bufferData));
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+    EXPECT_EQ(11u, bufferData[0]);
+    EXPECT_EQ(4u, bufferData[1]);
+    EXPECT_EQ(0u, bufferData[2]);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests that image texture works correctly when loading a program from binary.
 TEST_P(ProgramBinaryES31Test, ImageTextureBinding)
 {

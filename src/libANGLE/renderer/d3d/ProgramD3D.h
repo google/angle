@@ -217,6 +217,9 @@ class ProgramD3D : public ProgramImpl
     void updateUniformBufferCache(const gl::Caps &caps,
                                   const gl::ShaderMap<unsigned int> &reservedShaderRegisterIndexes);
 
+    unsigned int getAtomicCounterBufferRegisterIndex(GLuint binding,
+                                                     gl::ShaderType shaderType) const;
+
     unsigned int getShaderStorageBufferRegisterIndex(GLuint blockIndex,
                                                      gl::ShaderType shaderType) const;
     const std::vector<GLint> &getShaderUniformBufferCache(gl::ShaderType shaderType) const;
@@ -435,6 +438,7 @@ class ProgramD3D : public ProgramImpl
                                gl::RangeUI *outUsedRange);
 
     void assignAllImageRegisters();
+    void assignAllAtomicCounterRegisters();
     void assignImageRegisters(size_t uniformIndex);
     static void AssignImages(unsigned int startImageIndex,
                              int startLogicalImageUnit,
@@ -522,6 +526,7 @@ class ProgramD3D : public ProgramImpl
     std::vector<Image> mReadonlyImagesCS;
     gl::RangeUI mUsedComputeImageRange;
     gl::RangeUI mUsedComputeReadonlyImageRange;
+    gl::RangeUI mUsedComputeAtomicCounterRange;
 
     // Cache for pixel shader output layout to save reallocations.
     std::vector<GLenum> mPixelShaderOutputLayoutCache;
@@ -539,8 +544,11 @@ class ProgramD3D : public ProgramImpl
     std::vector<D3DVarying> mStreamOutVaryings;
     std::vector<D3DUniform *> mD3DUniforms;
     std::map<std::string, int> mImageBindingMap;
+    std::map<std::string, int> mAtomicBindingMap;
     std::vector<D3DInterfaceBlock> mD3DUniformBlocks;
     std::vector<D3DInterfaceBlock> mD3DShaderStorageBlocks;
+    std::array<unsigned int, gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS>
+        mComputeAtomicCounterBufferRegisterIndices;
 
     std::vector<sh::Uniform> mImage2DUniforms;
     gl::ImageUnitTextureTypeMap mComputeShaderImage2DBindLayoutCache;
