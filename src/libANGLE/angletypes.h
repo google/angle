@@ -17,6 +17,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
 
+#include <inttypes.h>
 #include <stdint.h>
 
 #include <bitset>

@@ -53,8 +53,8 @@ void GL_APIENTRY AttachShader(GLuint program, GLuint shader)
 void GL_APIENTRY BindAttribLocation(GLuint program, GLuint index, const GLchar *name)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint program = %u, GLuint index = %u, const GLchar *name = 0x%0.8p)", program, index,
-          name);
+    EVENT("(GLuint program = %u, GLuint index = %u, const GLchar *name = 0x%016" PRIxPTR ")",
+          program, index, reinterpret_cast<uintptr_t>(name));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -235,10 +235,9 @@ void GL_APIENTRY BlendFuncSeparate(GLenum sfactorRGB,
 void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(
-        "(GLenum target = 0x%X, GLsizeiptr size = %d, const void *data = 0x%0.8p, GLenum usage = "
-        "0x%X)",
-        target, size, data, usage);
+    EVENT("(GLenum target = 0x%X, GLsizeiptr size = %llu, const void *data = 0x%016" PRIxPTR
+          ", GLenum usage = 0x%X)",
+          target, static_cast<unsigned long long>(size), reinterpret_cast<uintptr_t>(data), usage);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -259,9 +258,10 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
-        "(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr size = %d, const void *data = "
-        "0x%0.8p)",
-        target, offset, size, data);
+        "(GLenum target = 0x%X, GLintptr offset = %llu, GLsizeiptr size = %llu, const void *data = "
+        "0x%016" PRIxPTR ")",
+        target, static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
+        reinterpret_cast<uintptr_t>(data));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -413,8 +413,9 @@ void GL_APIENTRY CompressedTexImage2D(GLenum target,
     EVENT(
         "(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = "
         "%d, GLsizei height = %d, GLint border = %d, GLsizei imageSize = %d, const void *data = "
-        "0x%0.8p)",
-        target, level, internalformat, width, height, border, imageSize, data);
+        "0x%016" PRIxPTR ")",
+        target, level, internalformat, width, height, border, imageSize,
+        reinterpret_cast<uintptr_t>(data));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -447,8 +448,9 @@ void GL_APIENTRY CompressedTexSubImage2D(GLenum target,
     EVENT(
         "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLsizei "
         "width = %d, GLsizei height = %d, GLenum format = 0x%X, GLsizei imageSize = %d, const void "
-        "*data = 0x%0.8p)",
-        target, level, xoffset, yoffset, width, height, format, imageSize, data);
+        "*data = 0x%016" PRIxPTR ")",
+        target, level, xoffset, yoffset, width, height, format, imageSize,
+        reinterpret_cast<uintptr_t>(data));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -590,7 +592,8 @@ void GL_APIENTRY CullFace(GLenum mode)
 void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLsizei n = %d, const GLuint *buffers = 0x%0.8p)", n, buffers);
+    EVENT("(GLsizei n = %d, const GLuint *buffers = 0x%016" PRIxPTR ")", n,
+          reinterpret_cast<uintptr_t>(buffers));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -607,7 +610,8 @@ void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
 void GL_APIENTRY DeleteFramebuffers(GLsizei n, const GLuint *framebuffers)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLsizei n = %d, const GLuint *framebuffers = 0x%0.8p)", n, framebuffers);
+    EVENT("(GLsizei n = %d, const GLuint *framebuffers = 0x%016" PRIxPTR ")", n,
+          reinterpret_cast<uintptr_t>(framebuffers));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -641,7 +645,8 @@ void GL_APIENTRY DeleteProgram(GLuint program)
 void GL_APIENTRY DeleteRenderbuffers(GLsizei n, const GLuint *renderbuffers)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLsizei n = %d, const GLuint *renderbuffers = 0x%0.8p)", n, renderbuffers);
+    EVENT("(GLsizei n = %d, const GLuint *renderbuffers = 0x%016" PRIxPTR ")", n,
+          reinterpret_cast<uintptr_t>(renderbuffers));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -675,7 +680,8 @@ void GL_APIENTRY DeleteShader(GLuint shader)
 void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint *textures)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLsizei n = %d, const GLuint *textures = 0x%0.8p)", n, textures);
+    EVENT("(GLsizei n = %d, const GLuint *textures = 0x%016" PRIxPTR ")", n,
+          reinterpret_cast<uintptr_t>(textures));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -814,8 +820,8 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const voi
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
         "(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const void *indices = "
-        "0x%0.8p)",
-        mode, count, type, indices);
+        "0x%016" PRIxPTR ")",
+        mode, count, type, reinterpret_cast<uintptr_t>(indices));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -973,7 +979,8 @@ void GL_APIENTRY FrontFace(GLenum mode)
 void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLsizei n = %d, GLuint *buffers = 0x%0.8p)", n, buffers);
+    EVENT("(GLsizei n = %d, GLuint *buffers = 0x%016" PRIxPTR ")", n,
+          reinterpret_cast<uintptr_t>(buffers));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -990,7 +997,8 @@ void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
 void GL_APIENTRY GenFramebuffers(GLsizei n, GLuint *framebuffers)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLsizei n = %d, GLuint *framebuffers = 0x%0.8p)", n, framebuffers);
+    EVENT("(GLsizei n = %d, GLuint *framebuffers = 0x%016" PRIxPTR ")", n,
+          reinterpret_cast<uintptr_t>(framebuffers));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1007,7 +1015,8 @@ void GL_APIENTRY GenFramebuffers(GLsizei n, GLuint *framebuffers)
 void GL_APIENTRY GenRenderbuffers(GLsizei n, GLuint *renderbuffers)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLsizei n = %d, GLuint *renderbuffers = 0x%0.8p)", n, renderbuffers);
+    EVENT("(GLsizei n = %d, GLuint *renderbuffers = 0x%016" PRIxPTR ")", n,
+          reinterpret_cast<uintptr_t>(renderbuffers));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1024,7 +1033,8 @@ void GL_APIENTRY GenRenderbuffers(GLsizei n, GLuint *renderbuffers)
 void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLsizei n = %d, GLuint *textures = 0x%0.8p)", n, textures);
+    EVENT("(GLsizei n = %d, GLuint *textures = 0x%016" PRIxPTR ")", n,
+          reinterpret_cast<uintptr_t>(textures));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1066,9 +1076,12 @@ void GL_APIENTRY GetActiveAttrib(GLuint program,
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
-        "(GLuint program = %u, GLuint index = %u, GLsizei bufSize = %d, GLsizei *length = 0x%0.8p, "
-        "GLint *size = 0x%0.8p, GLenum *type = 0x%0.8p, GLchar *name = 0x%0.8p)",
-        program, index, bufSize, length, size, type, name);
+        "(GLuint program = %u, GLuint index = %u, GLsizei bufSize = %d, GLsizei *length = "
+        "0x%016" PRIxPTR ", GLint *size = 0x%016" PRIxPTR ", GLenum *type = 0x%016" PRIxPTR
+        ", GLchar *name = 0x%016" PRIxPTR ")",
+        program, index, bufSize, reinterpret_cast<uintptr_t>(length),
+        reinterpret_cast<uintptr_t>(size), reinterpret_cast<uintptr_t>(type),
+        reinterpret_cast<uintptr_t>(name));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1094,9 +1107,12 @@ void GL_APIENTRY GetActiveUniform(GLuint program,
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
-        "(GLuint program = %u, GLuint index = %u, GLsizei bufSize = %d, GLsizei *length = 0x%0.8p, "
-        "GLint *size = 0x%0.8p, GLenum *type = 0x%0.8p, GLchar *name = 0x%0.8p)",
-        program, index, bufSize, length, size, type, name);
+        "(GLuint program = %u, GLuint index = %u, GLsizei bufSize = %d, GLsizei *length = "
+        "0x%016" PRIxPTR ", GLint *size = 0x%016" PRIxPTR ", GLenum *type = 0x%016" PRIxPTR
+        ", GLchar *name = 0x%016" PRIxPTR ")",
+        program, index, bufSize, reinterpret_cast<uintptr_t>(length),
+        reinterpret_cast<uintptr_t>(size), reinterpret_cast<uintptr_t>(type),
+        reinterpret_cast<uintptr_t>(name));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1118,10 +1134,10 @@ void GL_APIENTRY GetAttachedShaders(GLuint program,
                                     GLuint *shaders)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(
-        "(GLuint program = %u, GLsizei maxCount = %d, GLsizei *count = 0x%0.8p, GLuint *shaders = "
-        "0x%0.8p)",
-        program, maxCount, count, shaders);
+    EVENT("(GLuint program = %u, GLsizei maxCount = %d, GLsizei *count = 0x%016" PRIxPTR
+          ", GLuint *shaders = 0x%016" PRIxPTR ")",
+          program, maxCount, reinterpret_cast<uintptr_t>(count),
+          reinterpret_cast<uintptr_t>(shaders));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1139,7 +1155,8 @@ void GL_APIENTRY GetAttachedShaders(GLuint program,
 GLint GL_APIENTRY GetAttribLocation(GLuint program, const GLchar *name)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint program = %u, const GLchar *name = 0x%0.8p)", program, name);
+    EVENT("(GLuint program = %u, const GLchar *name = 0x%016" PRIxPTR ")", program,
+          reinterpret_cast<uintptr_t>(name));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1158,7 +1175,8 @@ GLint GL_APIENTRY GetAttribLocation(GLuint program, const GLchar *name)
 void GL_APIENTRY GetBooleanv(GLenum pname, GLboolean *data)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum pname = 0x%X, GLboolean *data = 0x%0.8p)", pname, data);
+    EVENT("(GLenum pname = 0x%X, GLboolean *data = 0x%016" PRIxPTR ")", pname,
+          reinterpret_cast<uintptr_t>(data));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1175,8 +1193,8 @@ void GL_APIENTRY GetBooleanv(GLenum pname, GLboolean *data)
 void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname,
-          params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
+          pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1214,7 +1232,8 @@ GLenum GL_APIENTRY GetError()
 void GL_APIENTRY GetFloatv(GLenum pname, GLfloat *data)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum pname = 0x%X, GLfloat *data = 0x%0.8p)", pname, data);
+    EVENT("(GLenum pname = 0x%X, GLfloat *data = 0x%016" PRIxPTR ")", pname,
+          reinterpret_cast<uintptr_t>(data));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1236,8 +1255,8 @@ void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target,
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
         "(GLenum target = 0x%X, GLenum attachment = 0x%X, GLenum pname = 0x%X, GLint *params = "
-        "0x%0.8p)",
-        target, attachment, pname, params);
+        "0x%016" PRIxPTR ")",
+        target, attachment, pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1256,7 +1275,8 @@ void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target,
 void GL_APIENTRY GetIntegerv(GLenum pname, GLint *data)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum pname = 0x%X, GLint *data = 0x%0.8p)", pname, data);
+    EVENT("(GLenum pname = 0x%X, GLint *data = 0x%016" PRIxPTR ")", pname,
+          reinterpret_cast<uintptr_t>(data));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1276,10 +1296,10 @@ void GL_APIENTRY GetProgramInfoLog(GLuint program,
                                    GLchar *infoLog)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(
-        "(GLuint program = %u, GLsizei bufSize = %d, GLsizei *length = 0x%0.8p, GLchar *infoLog = "
-        "0x%0.8p)",
-        program, bufSize, length, infoLog);
+    EVENT("(GLuint program = %u, GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
+          ", GLchar *infoLog = 0x%016" PRIxPTR ")",
+          program, bufSize, reinterpret_cast<uintptr_t>(length),
+          reinterpret_cast<uintptr_t>(infoLog));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1297,8 +1317,8 @@ void GL_APIENTRY GetProgramInfoLog(GLuint program,
 void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint program = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", program, pname,
-          params);
+    EVENT("(GLuint program = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", program,
+          pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1315,8 +1335,8 @@ void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params)
 void GL_APIENTRY GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname,
-          params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
+          pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1334,10 +1354,10 @@ void GL_APIENTRY GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint *
 void GL_APIENTRY GetShaderInfoLog(GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *infoLog)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(
-        "(GLuint shader = %u, GLsizei bufSize = %d, GLsizei *length = 0x%0.8p, GLchar *infoLog = "
-        "0x%0.8p)",
-        shader, bufSize, length, infoLog);
+    EVENT("(GLuint shader = %u, GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
+          ", GLchar *infoLog = 0x%016" PRIxPTR ")",
+          shader, bufSize, reinterpret_cast<uintptr_t>(length),
+          reinterpret_cast<uintptr_t>(infoLog));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1358,10 +1378,10 @@ void GL_APIENTRY GetShaderPrecisionFormat(GLenum shadertype,
                                           GLint *precision)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(
-        "(GLenum shadertype = 0x%X, GLenum precisiontype = 0x%X, GLint *range = 0x%0.8p, GLint "
-        "*precision = 0x%0.8p)",
-        shadertype, precisiontype, range, precision);
+    EVENT("(GLenum shadertype = 0x%X, GLenum precisiontype = 0x%X, GLint *range = 0x%016" PRIxPTR
+          ", GLint *precision = 0x%016" PRIxPTR ")",
+          shadertype, precisiontype, reinterpret_cast<uintptr_t>(range),
+          reinterpret_cast<uintptr_t>(precision));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1380,10 +1400,10 @@ void GL_APIENTRY GetShaderPrecisionFormat(GLenum shadertype,
 void GL_APIENTRY GetShaderSource(GLuint shader, GLsizei bufSize, GLsizei *length, GLchar *source)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(
-        "(GLuint shader = %u, GLsizei bufSize = %d, GLsizei *length = 0x%0.8p, GLchar *source = "
-        "0x%0.8p)",
-        shader, bufSize, length, source);
+    EVENT("(GLuint shader = %u, GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
+          ", GLchar *source = 0x%016" PRIxPTR ")",
+          shader, bufSize, reinterpret_cast<uintptr_t>(length),
+          reinterpret_cast<uintptr_t>(source));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1401,8 +1421,8 @@ void GL_APIENTRY GetShaderSource(GLuint shader, GLsizei bufSize, GLsizei *length
 void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint shader = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", shader, pname,
-          params);
+    EVENT("(GLuint shader = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", shader,
+          pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1438,8 +1458,8 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
 void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLfloat *params = 0x%0.8p)", target, pname,
-          params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLfloat *params = 0x%016" PRIxPTR ")",
+          target, pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1458,8 +1478,8 @@ void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
 void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname,
-          params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
+          pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1478,7 +1498,8 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint *params)
 GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar *name)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint program = %u, const GLchar *name = 0x%0.8p)", program, name);
+    EVENT("(GLuint program = %u, const GLchar *name = 0x%016" PRIxPTR ")", program,
+          reinterpret_cast<uintptr_t>(name));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1497,8 +1518,8 @@ GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar *name)
 void GL_APIENTRY GetUniformfv(GLuint program, GLint location, GLfloat *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint program = %u, GLint location = %d, GLfloat *params = 0x%0.8p)", program,
-          location, params);
+    EVENT("(GLuint program = %u, GLint location = %d, GLfloat *params = 0x%016" PRIxPTR ")",
+          program, location, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1515,8 +1536,8 @@ void GL_APIENTRY GetUniformfv(GLuint program, GLint location, GLfloat *params)
 void GL_APIENTRY GetUniformiv(GLuint program, GLint location, GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint program = %u, GLint location = %d, GLint *params = 0x%0.8p)", program, location,
-          params);
+    EVENT("(GLuint program = %u, GLint location = %d, GLint *params = 0x%016" PRIxPTR ")", program,
+          location, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1533,8 +1554,8 @@ void GL_APIENTRY GetUniformiv(GLuint program, GLint location, GLint *params)
 void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, void **pointer)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint index = %u, GLenum pname = 0x%X, void **pointer = 0x%0.8p)", index, pname,
-          pointer);
+    EVENT("(GLuint index = %u, GLenum pname = 0x%X, void **pointer = 0x%016" PRIxPTR ")", index,
+          pname, reinterpret_cast<uintptr_t>(pointer));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1552,8 +1573,8 @@ void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, void **poin
 void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLfloat *params = 0x%0.8p)", index, pname,
-          params);
+    EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLfloat *params = 0x%016" PRIxPTR ")", index,
+          pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1570,8 +1591,8 @@ void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
 void GL_APIENTRY GetVertexAttribiv(GLuint index, GLenum pname, GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", index, pname,
-          params);
+    EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", index,
+          pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1814,8 +1835,8 @@ void GL_APIENTRY ReadPixels(GLint x,
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
         "(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, GLenum format = "
-        "0x%X, GLenum type = 0x%X, void *pixels = 0x%0.8p)",
-        x, y, width, height, format, type, pixels);
+        "0x%X, GLenum type = 0x%X, void *pixels = 0x%016" PRIxPTR ")",
+        x, y, width, height, format, type, reinterpret_cast<uintptr_t>(pixels));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1914,10 +1935,11 @@ void GL_APIENTRY ShaderBinary(GLsizei count,
                               GLsizei length)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(
-        "(GLsizei count = %d, const GLuint *shaders = 0x%0.8p, GLenum binaryformat = 0x%X, const "
-        "void *binary = 0x%0.8p, GLsizei length = %d)",
-        count, shaders, binaryformat, binary, length);
+    EVENT("(GLsizei count = %d, const GLuint *shaders = 0x%016" PRIxPTR
+          ", GLenum binaryformat = 0x%X, const void *binary = 0x%016" PRIxPTR
+          ", GLsizei length = %d)",
+          count, reinterpret_cast<uintptr_t>(shaders), binaryformat,
+          reinterpret_cast<uintptr_t>(binary), length);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1939,10 +1961,9 @@ void GL_APIENTRY ShaderSource(GLuint shader,
                               const GLint *length)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(
-        "(GLuint shader = %u, GLsizei count = %d, const GLchar *const*string = 0x%0.8p, const "
-        "GLint *length = 0x%0.8p)",
-        shader, count, string, length);
+    EVENT("(GLuint shader = %u, GLsizei count = %d, const GLchar *const*string = 0x%016" PRIxPTR
+          ", const GLint *length = 0x%016" PRIxPTR ")",
+          shader, count, reinterpret_cast<uintptr_t>(string), reinterpret_cast<uintptr_t>(length));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2077,8 +2098,9 @@ void GL_APIENTRY TexImage2D(GLenum target,
     EVENT(
         "(GLenum target = 0x%X, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, "
         "GLsizei height = %d, GLint border = %d, GLenum format = 0x%X, GLenum type = 0x%X, const "
-        "void *pixels = 0x%0.8p)",
-        target, level, internalformat, width, height, border, format, type, pixels);
+        "void *pixels = 0x%016" PRIxPTR ")",
+        target, level, internalformat, width, height, border, format, type,
+        reinterpret_cast<uintptr_t>(pixels));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2118,8 +2140,8 @@ void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
 void GL_APIENTRY TexParameterfv(GLenum target, GLenum pname, const GLfloat *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLfloat *params = 0x%0.8p)", target,
-          pname, params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLfloat *params = 0x%016" PRIxPTR ")",
+          target, pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2156,8 +2178,8 @@ void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
 void GL_APIENTRY TexParameteriv(GLenum target, GLenum pname, const GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint *params = 0x%0.8p)", target,
-          pname, params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint *params = 0x%016" PRIxPTR ")",
+          target, pname, reinterpret_cast<uintptr_t>(params));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2187,8 +2209,9 @@ void GL_APIENTRY TexSubImage2D(GLenum target,
     EVENT(
         "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLsizei "
         "width = %d, GLsizei height = %d, GLenum format = 0x%X, GLenum type = 0x%X, const void "
-        "*pixels = 0x%0.8p)",
-        target, level, xoffset, yoffset, width, height, format, type, pixels);
+        "*pixels = 0x%016" PRIxPTR ")",
+        target, level, xoffset, yoffset, width, height, format, type,
+        reinterpret_cast<uintptr_t>(pixels));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2227,8 +2250,8 @@ void GL_APIENTRY Uniform1f(GLint location, GLfloat v0)
 void GL_APIENTRY Uniform1fv(GLint location, GLsizei count, const GLfloat *value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat *value = 0x%0.8p)", location,
-          count, value);
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat *value = 0x%016" PRIxPTR ")",
+          location, count, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2262,8 +2285,8 @@ void GL_APIENTRY Uniform1i(GLint location, GLint v0)
 void GL_APIENTRY Uniform1iv(GLint location, GLsizei count, const GLint *value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLint location = %d, GLsizei count = %d, const GLint *value = 0x%0.8p)", location,
-          count, value);
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLint *value = 0x%016" PRIxPTR ")",
+          location, count, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2297,8 +2320,8 @@ void GL_APIENTRY Uniform2f(GLint location, GLfloat v0, GLfloat v1)
 void GL_APIENTRY Uniform2fv(GLint location, GLsizei count, const GLfloat *value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat *value = 0x%0.8p)", location,
-          count, value);
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat *value = 0x%016" PRIxPTR ")",
+          location, count, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2332,8 +2355,8 @@ void GL_APIENTRY Uniform2i(GLint location, GLint v0, GLint v1)
 void GL_APIENTRY Uniform2iv(GLint location, GLsizei count, const GLint *value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLint location = %d, GLsizei count = %d, const GLint *value = 0x%0.8p)", location,
-          count, value);
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLint *value = 0x%016" PRIxPTR ")",
+          location, count, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2368,8 +2391,8 @@ void GL_APIENTRY Uniform3f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
 void GL_APIENTRY Uniform3fv(GLint location, GLsizei count, const GLfloat *value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat *value = 0x%0.8p)", location,
-          count, value);
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat *value = 0x%016" PRIxPTR ")",
+          location, count, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2404,8 +2427,8 @@ void GL_APIENTRY Uniform3i(GLint location, GLint v0, GLint v1, GLint v2)
 void GL_APIENTRY Uniform3iv(GLint location, GLsizei count, const GLint *value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLint location = %d, GLsizei count = %d, const GLint *value = 0x%0.8p)", location,
-          count, value);
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLint *value = 0x%016" PRIxPTR ")",
+          location, count, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2441,8 +2464,8 @@ void GL_APIENTRY Uniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, G
 void GL_APIENTRY Uniform4fv(GLint location, GLsizei count, const GLfloat *value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat *value = 0x%0.8p)", location,
-          count, value);
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLfloat *value = 0x%016" PRIxPTR ")",
+          location, count, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2477,8 +2500,8 @@ void GL_APIENTRY Uniform4i(GLint location, GLint v0, GLint v1, GLint v2, GLint v
 void GL_APIENTRY Uniform4iv(GLint location, GLsizei count, const GLint *value)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLint location = %d, GLsizei count = %d, const GLint *value = 0x%0.8p)", location,
-          count, value);
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLint *value = 0x%016" PRIxPTR ")",
+          location, count, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2500,8 +2523,8 @@ void GL_APIENTRY UniformMatrix2fv(GLint location,
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
         "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
-        "= 0x%0.8p)",
-        location, count, transpose, value);
+        "= 0x%016" PRIxPTR ")",
+        location, count, transpose, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2524,8 +2547,8 @@ void GL_APIENTRY UniformMatrix3fv(GLint location,
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
         "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
-        "= 0x%0.8p)",
-        location, count, transpose, value);
+        "= 0x%016" PRIxPTR ")",
+        location, count, transpose, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2548,8 +2571,8 @@ void GL_APIENTRY UniformMatrix4fv(GLint location,
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
         "(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat *value "
-        "= 0x%0.8p)",
-        location, count, transpose, value);
+        "= 0x%016" PRIxPTR ")",
+        location, count, transpose, reinterpret_cast<uintptr_t>(value));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2618,7 +2641,8 @@ void GL_APIENTRY VertexAttrib1f(GLuint index, GLfloat x)
 void GL_APIENTRY VertexAttrib1fv(GLuint index, const GLfloat *v)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint index = %u, const GLfloat *v = 0x%0.8p)", index, v);
+    EVENT("(GLuint index = %u, const GLfloat *v = 0x%016" PRIxPTR ")", index,
+          reinterpret_cast<uintptr_t>(v));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2652,7 +2676,8 @@ void GL_APIENTRY VertexAttrib2f(GLuint index, GLfloat x, GLfloat y)
 void GL_APIENTRY VertexAttrib2fv(GLuint index, const GLfloat *v)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint index = %u, const GLfloat *v = 0x%0.8p)", index, v);
+    EVENT("(GLuint index = %u, const GLfloat *v = 0x%016" PRIxPTR ")", index,
+          reinterpret_cast<uintptr_t>(v));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2686,7 +2711,8 @@ void GL_APIENTRY VertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z)
 void GL_APIENTRY VertexAttrib3fv(GLuint index, const GLfloat *v)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint index = %u, const GLfloat *v = 0x%0.8p)", index, v);
+    EVENT("(GLuint index = %u, const GLfloat *v = 0x%016" PRIxPTR ")", index,
+          reinterpret_cast<uintptr_t>(v));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2721,7 +2747,8 @@ void GL_APIENTRY VertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, G
 void GL_APIENTRY VertexAttrib4fv(GLuint index, const GLfloat *v)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint index = %u, const GLfloat *v = 0x%0.8p)", index, v);
+    EVENT("(GLuint index = %u, const GLfloat *v = 0x%016" PRIxPTR ")", index,
+          reinterpret_cast<uintptr_t>(v));
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -2745,8 +2772,8 @@ void GL_APIENTRY VertexAttribPointer(GLuint index,
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT(
         "(GLuint index = %u, GLint size = %d, GLenum type = 0x%X, GLboolean normalized = %u, "
-        "GLsizei stride = %d, const void *pointer = 0x%0.8p)",
-        index, size, type, normalized, stride, pointer);
+        "GLsizei stride = %d, const void *pointer = 0x%016" PRIxPTR ")",
+        index, size, type, normalized, stride, reinterpret_cast<uintptr_t>(pointer));
 
     Context *context = GetValidGlobalContext();
     if (context)

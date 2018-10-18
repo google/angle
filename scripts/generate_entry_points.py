@@ -298,6 +298,34 @@ def just_the_name_packed(param, reserved_set):
     else:
         return name
 
+static_cast_to_dict = {
+    "GLintptr": "unsigned long long",
+    "GLsizeiptr": "unsigned long long",
+    "GLuint64": "unsigned long long",
+}
+
+reinterpret_cast_to_dict = {
+    "GLsync": "uintptr_t",
+    "GLDEBUGPROC": "uintptr_t",
+    "GLDEBUGPROCKHR": "uintptr_t",
+    "GLeglImageOES": "uintptr_t",
+}
+
+def param_print_argument(param):
+    name_only = just_the_name(param)
+    type_only = just_the_type(param)
+
+    if "*" in param:
+        return "reinterpret_cast<uintptr_t>(" + name_only + ")"
+
+    if type_only in reinterpret_cast_to_dict:
+        return "reinterpret_cast<" + reinterpret_cast_to_dict[type_only] + ">(" + name_only + ")"
+
+    if type_only in static_cast_to_dict:
+        return "static_cast<" + static_cast_to_dict[type_only] + ">(" + name_only + ")"
+
+    return name_only
+
 format_dict = {
     "GLbitfield": "0x%X",
     "GLboolean": "%u",
@@ -306,22 +334,22 @@ format_dict = {
     "GLfixed": "0x%X",
     "GLfloat": "%f",
     "GLint": "%d",
-    "GLintptr": "%d",
+    "GLintptr": "%llu",
     "GLshort": "%d",
     "GLsizei": "%d",
-    "GLsizeiptr": "%d",
-    "GLsync": "0x%0.8p",
+    "GLsizeiptr": "%llu",
+    "GLsync": "0x%016\" PRIxPTR \"",
     "GLubyte": "%d",
     "GLuint": "%u",
     "GLuint64": "%llu",
-    "GLDEBUGPROC": "0x%0.8p",
-    "GLDEBUGPROCKHR": "0x%0.8p",
-    "GLeglImageOES": "0x%0.8p",
+    "GLDEBUGPROC": "0x%016\" PRIxPTR \"",
+    "GLDEBUGPROCKHR": "0x%016\" PRIxPTR \"",
+    "GLeglImageOES": "0x%016\" PRIxPTR \"",
 }
 
 def param_format_string(param):
     if "*" in param:
-        return param + " = 0x%0.8p"
+        return param + " = 0x%016\" PRIxPTR \""
     else:
         type_only = just_the_type(param)
         if type_only not in format_dict:
@@ -358,7 +386,7 @@ def format_entry_point_def(cmd_name, proto, params, is_explicit_context):
             packed_gl_enum_conversions += ["\n        " + internal_type + " " + internal_name +" = FromGLenum<" +
                                           internal_type + ">(" + name + ");"]
 
-    pass_params = [just_the_name(param) for param in params]
+    pass_params = [param_print_argument(param) for param in params]
     format_params = [param_format_string(param) for param in params]
     return_type = proto[:-len(cmd_name)]
     default_return = default_return_value(cmd_name, return_type.strip())
