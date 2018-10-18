@@ -123,7 +123,7 @@ angle::Result VertexArrayVk::streamIndexData(ContextVk *contextVk,
                                              const void *sourcePointer,
                                              vk::DynamicBuffer *dynamicBuffer)
 {
-    ASSERT(!mState.getElementArrayBuffer().get() || indexType == GL_UNSIGNED_BYTE);
+    ASSERT(!mState.getElementArrayBuffer() || indexType == GL_UNSIGNED_BYTE);
 
     dynamicBuffer->releaseRetainedBuffers(contextVk->getRenderer());
 
@@ -251,7 +251,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         {
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:
             {
-                gl::Buffer *bufferGL = mState.getElementArrayBuffer().get();
+                gl::Buffer *bufferGL = mState.getElementArrayBuffer();
                 if (bufferGL)
                 {
                     BufferVk *bufferVk                 = vk::GetImpl(bufferGL);
@@ -485,7 +485,7 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
         // Handle GL_LINE_LOOP drawElements.
         if (mDirtyLineLoopTranslation)
         {
-            gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer().get();
+            gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer();
 
             if (!elementArrayBuffer)
             {
@@ -540,7 +540,7 @@ angle::Result VertexArrayVk::updateIndexTranslation(ContextVk *contextVk,
     ASSERT(drawCallParams.isDrawElements());
     ASSERT(drawCallParams.mode() != gl::PrimitiveMode::LineLoop);
 
-    gl::Buffer *glBuffer = mState.getElementArrayBuffer().get();
+    gl::Buffer *glBuffer = mState.getElementArrayBuffer();
 
     if (!glBuffer)
     {

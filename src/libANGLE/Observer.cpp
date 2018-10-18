@@ -20,11 +20,6 @@ namespace angle
 {
 namespace
 {
-template <typename HaystackT, typename NeedleT>
-bool IsInContainer(const HaystackT &haystack, const NeedleT &needle)
-{
-    return std::find(haystack.begin(), haystack.end(), needle) != haystack.end();
-}
 }  // anonymous namespace
 
 // Observer implementation.
@@ -45,50 +40,29 @@ bool Subject::hasObservers() const
     return !mObservers.empty();
 }
 
-ANGLE_INLINE void Subject::addObserver(ObserverBinding *observer)
-{
-    ASSERT(!IsInContainer(mObservers, observer));
-    mObservers.push_back(observer);
-}
-
-ANGLE_INLINE void Subject::removeObserver(ObserverBinding *observer)
-{
-    ASSERT(IsInContainer(mObservers, observer));
-    size_t len = mObservers.size() - 1;
-    for (size_t index = 0; index < len; ++index)
-    {
-        if (mObservers[index] == observer)
-        {
-            mObservers[index] = mObservers[len];
-            break;
-        }
-    }
-    mObservers.pop_back();
-}
-
 void Subject::onStateChange(const gl::Context *context, SubjectMessage message) const
 {
     if (mObservers.empty())
         return;
 
-    for (const angle::ObserverBinding *receiver : mObservers)
+    for (const ObserverBindingBase *binding : mObservers)
     {
-        receiver->onStateChange(context, message);
+        binding->getObserver()->onSubjectStateChange(context, binding->getSubjectIndex(), message);
     }
 }
 
 void Subject::resetObservers()
 {
-    for (angle::ObserverBinding *observer : mObservers)
+    for (angle::ObserverBindingBase *binding : mObservers)
     {
-        observer->onSubjectReset();
+        binding->onSubjectReset();
     }
     mObservers.clear();
 }
 
 // ObserverBinding implementation.
 ObserverBinding::ObserverBinding(ObserverInterface *observer, SubjectIndex index)
-    : mSubject(nullptr), mObserver(observer), mIndex(index)
+    : ObserverBindingBase(observer, index), mSubject(nullptr)
 {
     ASSERT(observer);
 }
@@ -104,7 +78,7 @@ ObserverBinding &ObserverBinding::operator=(const ObserverBinding &other) = defa
 
 void ObserverBinding::bind(Subject *subject)
 {
-    ASSERT(mObserver);
+    ASSERT(getObserver());
     if (mSubject)
     {
         mSubject->removeObserver(this);
@@ -120,7 +94,7 @@ void ObserverBinding::bind(Subject *subject)
 
 void ObserverBinding::onStateChange(const gl::Context *context, SubjectMessage message) const
 {
-    mObserver->onSubjectStateChange(context, mIndex, message);
+    getObserver()->onSubjectStateChange(context, getSubjectIndex(), message);
 }
 
 void ObserverBinding::onSubjectReset()

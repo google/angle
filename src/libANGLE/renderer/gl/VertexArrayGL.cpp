@@ -129,7 +129,7 @@ angle::Result VertexArrayGL::syncDrawElementsState(const gl::Context *context,
 
 void VertexArrayGL::updateElementArrayBufferBinding(const gl::Context *context) const
 {
-    gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer();
     if (elementArrayBuffer != nullptr && elementArrayBuffer != mAppliedElementArrayBuffer.get())
     {
         const BufferGL *bufferGL = GetImplAs<BufferGL>(elementArrayBuffer);
@@ -187,7 +187,7 @@ angle::Result VertexArrayGL::syncIndexData(const gl::Context *context,
 {
     ASSERT(outIndices);
 
-    gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer();
 
     // Need to check the range of indices if attributes need to be streamed
     if (elementArrayBuffer != nullptr)

@@ -82,6 +82,9 @@ class FastVector final
     void resize(size_type count);
     void resize(size_type count, const value_type &value);
 
+    // Specialty function that removes a known element and might shuffle the list.
+    void remove_and_permute(const value_type &element);
+
   private:
     void assign_from_initializer_list(std::initializer_list<value_type> init);
     void ensure_capacity(size_t capacity);
@@ -381,6 +384,21 @@ void FastVector<T, N, Storage>::assign_from_initializer_list(std::initializer_li
     {
         mData[index++] = value;
     }
+}
+
+template <class T, size_t N, class Storage>
+ANGLE_INLINE void FastVector<T, N, Storage>::remove_and_permute(const value_type &element)
+{
+    size_t len = mSize - 1;
+    for (size_t index = 0; index < len; ++index)
+    {
+        if (mData[index] == element)
+        {
+            mData[index] = std::move(mData[len]);
+            break;
+        }
+    }
+    pop_back();
 }
 
 template <class T, size_t N, class Storage>

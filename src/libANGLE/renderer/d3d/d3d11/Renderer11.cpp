@@ -1667,7 +1667,7 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
 {
     const gl::State &glState       = context->getGLState();
     gl::VertexArray *vao           = glState.getVertexArray();
-    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
     const void *indices = indexPointer;
 
@@ -1744,7 +1744,7 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
 {
     const gl::State &glState       = context->getGLState();
     gl::VertexArray *vao           = glState.getVertexArray();
-    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
     const void *indexPointer = indices;
 

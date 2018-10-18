@@ -2978,7 +2978,7 @@ angle::Result StateManager11::applyIndexBuffer(const gl::Context *context,
     }
 
     GLenum destElementType         = mVertexArray11->getCachedDestinationIndexType();
-    gl::Buffer *elementArrayBuffer = mVertexArray11->getState().getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = mVertexArray11->getState().getElementArrayBuffer();
 
     TranslatedIndexData indexInfo;
     ANGLE_TRY(mIndexDataManager.prepareIndexData(context, params.type(), destElementType,

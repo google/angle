@@ -60,7 +60,7 @@ bool DrawCallHasStreamingVertexArrays(const gl::Context *context, gl::PrimitiveM
 bool DrawCallHasStreamingElementArray(const gl::Context *context, GLenum srcType)
 {
     const gl::State &glState       = context->getGLState();
-    gl::Buffer *elementArrayBuffer = glState.getVertexArray()->getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = glState.getVertexArray()->getElementArrayBuffer();
 
     bool primitiveRestartWorkaround =
         UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), srcType);

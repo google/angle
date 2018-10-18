@@ -14,6 +14,7 @@
 #include "common/bitset_utils.h"
 #include "common/mathutil.h"
 #include "common/matrix_utils.h"
+#include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Debug.h"
@@ -162,13 +163,14 @@ void State::setGenericBufferBinding<BufferBinding::ElementArray>(const Context *
     Buffer *oldBuffer = mVertexArray->mState.mElementArrayBuffer.get();
     if (oldBuffer)
     {
+        oldBuffer->removeObserver(&mVertexArray->mState.mElementArrayBuffer);
         oldBuffer->onNonTFBindingChanged(-1);
         oldBuffer->release(context);
     }
     mVertexArray->mState.mElementArrayBuffer.assign(buffer);
-    mVertexArray->mElementArrayBufferObserverBinding.bind(buffer);
     if (buffer)
     {
+        buffer->addObserver(&mVertexArray->mState.mElementArrayBuffer);
         buffer->onNonTFBindingChanged(1);
         buffer->addRef();
     }
@@ -1638,7 +1640,7 @@ Buffer *State::getTargetBuffer(BufferBinding target) const
     switch (target)
     {
         case BufferBinding::ElementArray:
-            return getVertexArray()->getElementArrayBuffer().get();
+            return getVertexArray()->getElementArrayBuffer();
         default:
             return mBoundBuffers[target].get();
     }
@@ -2232,8 +2234,11 @@ Error State::getIntegerv(const Context *context, GLenum pname, GLint *params)
             *params = mBoundBuffers[BufferBinding::DrawIndirect].id();
             break;
         case GL_ELEMENT_ARRAY_BUFFER_BINDING:
-            *params = getVertexArray()->getElementArrayBuffer().id();
+        {
+            Buffer *elementArrayBuffer = getVertexArray()->getElementArrayBuffer();
+            *params                    = elementArrayBuffer ? elementArrayBuffer->id() : 0;
             break;
+        }
         case GL_DRAW_FRAMEBUFFER_BINDING:
             static_assert(GL_DRAW_FRAMEBUFFER_BINDING == GL_DRAW_FRAMEBUFFER_BINDING_ANGLE,
                           "Enum mismatch");

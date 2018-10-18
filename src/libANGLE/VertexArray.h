@@ -35,12 +35,12 @@ class Buffer;
 class VertexArrayState final : angle::NonCopyable
 {
   public:
-    VertexArrayState(size_t maxAttribs, size_t maxBindings);
+    VertexArrayState(VertexArray *vertexArray, size_t maxAttribs, size_t maxBindings);
     ~VertexArrayState();
 
     const std::string &getLabel() const { return mLabel; }
 
-    const BindingPointer<Buffer> &getElementArrayBuffer() const { return mElementArrayBuffer; }
+    Buffer *getElementArrayBuffer() const { return mElementArrayBuffer.get(); }
     size_t getMaxAttribs() const { return mVertexAttributes.size(); }
     size_t getMaxBindings() const { return mVertexBindings.size(); }
     const AttributesMask &getEnabledAttributesMask() const { return mEnabledAttributesMask; }
@@ -75,7 +75,7 @@ class VertexArrayState final : angle::NonCopyable
     friend class VertexArray;
     std::string mLabel;
     std::vector<VertexAttribute> mVertexAttributes;
-    BindingPointer<Buffer> mElementArrayBuffer;
+    SubjectBindingPointer<Buffer> mElementArrayBuffer;
     std::vector<VertexBinding> mVertexBindings;
     AttributesMask mEnabledAttributesMask;
     ComponentTypeMask mVertexAttributesTypeMask;
@@ -153,10 +153,7 @@ class VertexArray final : public angle::ObserverInterface,
                               GLintptr offset,
                               GLsizei stride);
 
-    const BindingPointer<Buffer> &getElementArrayBuffer() const
-    {
-        return mState.getElementArrayBuffer();
-    }
+    Buffer *getElementArrayBuffer() const { return mState.getElementArrayBuffer(); }
     size_t getMaxAttribs() const { return mState.getMaxAttribs(); }
     size_t getMaxBindings() const { return mState.getMaxBindings(); }
 
@@ -289,7 +286,6 @@ class VertexArray final : public angle::ObserverInterface,
     rx::VertexArrayImpl *mVertexArray;
 
     std::vector<angle::ObserverBinding> mArrayBufferObserverBindings;
-    angle::ObserverBinding mElementArrayBufferObserverBinding;
 
     AttributesMask mCachedTransformFeedbackConflictedBindingsMask;
 };

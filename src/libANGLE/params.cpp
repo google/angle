@@ -97,7 +97,7 @@ Error DrawCallParams::ensureIndexRangeResolved(const Context *context) const
     const State &state = context->getGLState();
 
     const gl::VertexArray *vao     = state.getVertexArray();
-    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
     if (elementArrayBuffer)
     {

@@ -199,7 +199,7 @@ angle::Result VertexArray11::updateElementArrayStorage(const gl::Context *contex
         static_cast<unsigned int>(reinterpret_cast<uintptr_t>(drawCallParams.indices()));
 
     mCurrentElementArrayStorage =
-        ClassifyIndexStorage(context->getGLState(), mState.getElementArrayBuffer().get(),
+        ClassifyIndexStorage(context->getGLState(), mState.getElementArrayBuffer(),
                              drawCallParams.type(), mCachedDestinationIndexType, offset);
 
     return angle::Result::Continue();

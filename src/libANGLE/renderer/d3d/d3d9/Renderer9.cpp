@@ -1299,7 +1299,7 @@ angle::Result Renderer9::applyIndexBuffer(const gl::Context *context,
                                           TranslatedIndexData *indexInfo)
 {
     gl::VertexArray *vao                     = context->getGLState().getVertexArray();
-    gl::Buffer *elementArrayBuffer           = vao->getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer           = vao->getElementArrayBuffer();
     const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
 
     GLenum dstType = GL_NONE;
@@ -1387,7 +1387,7 @@ angle::Result Renderer9::drawElementsImpl(const gl::Context *context,
     int minIndex = static_cast<int>(indexRange.start);
 
     gl::VertexArray *vao           = context->getGLState().getVertexArray();
-    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
     if (mode == gl::PrimitiveMode::Points)
     {

@@ -15,6 +15,7 @@
 #include "angle_gl.h"
 #include "common/debug.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/Observer.h"
 
 #include <cstddef>
 
@@ -119,6 +120,9 @@ class BindingPointer
 
     bool operator!=(const BindingPointer &other) const { return !(*this == other); }
 
+  protected:
+    ANGLE_INLINE void setImpl(ObjectType *obj) { mObject = obj; }
+
   private:
     ObjectType *mObject;
 };
@@ -168,11 +172,11 @@ class BindingPointer : public angle::BindingPointer<ObjectType, Context, Error>
 };
 
 template <class ObjectType>
-class OffsetBindingPointer : public gl::BindingPointer<ObjectType>
+class OffsetBindingPointer : public BindingPointer<ObjectType>
 {
   public:
-    using ContextType = typename gl::BindingPointer<ObjectType>::ContextType;
-    using ErrorType   = typename gl::BindingPointer<ObjectType>::ErrorType;
+    using ContextType = typename BindingPointer<ObjectType>::ContextType;
+    using ErrorType   = typename BindingPointer<ObjectType>::ErrorType;
 
     OffsetBindingPointer() : mOffset(0), mSize(0) { }
 
@@ -213,6 +217,42 @@ class OffsetBindingPointer : public gl::BindingPointer<ObjectType>
   private:
     GLintptr mOffset;
     GLsizeiptr mSize;
+};
+
+template <typename SubjectT>
+class SubjectBindingPointer : protected BindingPointer<SubjectT>, public angle::ObserverBindingBase
+{
+  public:
+    SubjectBindingPointer(angle::ObserverInterface *observer, angle::SubjectIndex index)
+        : ObserverBindingBase(observer, index)
+    {
+    }
+    ~SubjectBindingPointer() {}
+    SubjectBindingPointer(const SubjectBindingPointer &other) = default;
+    SubjectBindingPointer &operator=(const SubjectBindingPointer &other) = default;
+
+    void bind(const Context *context, SubjectT *subject)
+    {
+        // AddRef first in case subject == get()
+        if (subject)
+        {
+            subject->addObserver(this);
+            subject->addRef();
+        }
+
+        if (get())
+        {
+            get()->removeObserver(this);
+            get()->release(context);
+        }
+
+        this->setImpl(subject);
+    }
+
+    using BindingPointer<SubjectT>::get;
+    using BindingPointer<SubjectT>::operator->;
+
+    friend class State;
 };
 }  // namespace gl
 
