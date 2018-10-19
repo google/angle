@@ -531,6 +531,74 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+TEST_P(ShaderStorageBufferTest31, LoadAndStoreBooleanValue)
+{
+    // TODO(jiajia.qin@intel.com): Figure out why it fails on Intel Linux platform.
+    // http://anglebug.com/1951
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
+
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout (local_size_x=1) in;
+layout(binding=0, std140) buffer Storage0
+{
+    bool b1;
+    bvec2 b2;
+} sb_load;
+layout(binding=1, std140) buffer Storage1
+{
+    bool b1;
+    bvec2 b2;
+} sb_store;
+void main()
+{
+   sb_store.b1 = sb_load.b1;
+   sb_store.b2 = sb_load.b2;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    constexpr GLuint kB1Value                 = 1u;
+    constexpr GLuint kB2Value[2]              = {0u, 1u};
+    constexpr unsigned int kBytesPerComponent = sizeof(GLuint);
+    // Create shader storage buffer
+    GLBuffer shaderStorageBuffer[2];
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 3 * kBytesPerComponent, nullptr, GL_STATIC_DRAW);
+    GLint offset = 0;
+    // upload data to sb_load.b1
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, kBytesPerComponent, &kB1Value);
+    offset += kBytesPerComponent;
+    // upload data to sb_load.b2
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, 2 * kBytesPerComponent, kB2Value);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 3 * kBytesPerComponent, nullptr, GL_STATIC_DRAW);
+
+    // Bind shader storage buffer
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+
+    glDispatchCompute(1, 1, 1);
+    glFinish();
+
+    // Read back shader storage buffer
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+    const GLboolean *ptr = reinterpret_cast<const GLboolean *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, 3 * kBytesPerComponent, GL_MAP_READ_BIT));
+    EXPECT_EQ(GL_TRUE, *ptr);
+    ptr += kBytesPerComponent;
+    EXPECT_EQ(GL_FALSE, *ptr);
+    ptr += kBytesPerComponent;
+    EXPECT_EQ(GL_TRUE, *ptr);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(ShaderStorageBufferTest31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 
 }  // namespace

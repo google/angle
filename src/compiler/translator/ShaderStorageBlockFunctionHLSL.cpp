@@ -112,12 +112,29 @@ void ShaderStorageBlockFunctionHLSL::OutputSSBOStoreFunctionBody(
 {
     if (ssboFunction.type.isScalar())
     {
-        out << "    buffer.Store(loc, asuint(value));\n";
+        if (ssboFunction.type.getBasicType() == EbtBool)
+        {
+            out << "    uint _tmp = uint(value);\n"
+                << "    buffer.Store(loc, _tmp);\n";
+        }
+        else
+        {
+            out << "    buffer.Store(loc, asuint(value));\n";
+        }
     }
     else if (ssboFunction.type.isVector())
     {
-        out << "    buffer.Store" << ssboFunction.type.getNominalSize()
-            << "(loc, asuint(value));\n";
+        if (ssboFunction.type.getBasicType() == EbtBool)
+        {
+            out << "    uint" << ssboFunction.type.getNominalSize() << " _tmp = uint"
+                << ssboFunction.type.getNominalSize() << "(value);\n";
+            out << "    buffer.Store" << ssboFunction.type.getNominalSize() << "(loc, _tmp);\n";
+        }
+        else
+        {
+            out << "    buffer.Store" << ssboFunction.type.getNominalSize()
+                << "(loc, asuint(value));\n";
+        }
     }
     else if (ssboFunction.type.isMatrix())
     {
