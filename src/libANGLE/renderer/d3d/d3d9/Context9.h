@@ -22,7 +22,7 @@ class Context9 : public ContextD3D
     Context9(const gl::ContextState &state, Renderer9 *renderer);
     ~Context9() override;
 
-    gl::Error initialize() override;
+    angle::Result initialize() override;
     void onDestroy(const gl::Context *context) override;
 
     // Shader creation
@@ -64,45 +64,45 @@ class Context9 : public ContextD3D
     std::vector<PathImpl *> createPaths(GLsizei) override;
 
     // Flush and finish.
-    gl::Error flush(const gl::Context *context) override;
-    gl::Error finish(const gl::Context *context) override;
+    angle::Result flush(const gl::Context *context) override;
+    angle::Result finish(const gl::Context *context) override;
 
     // Drawing methods.
     angle::Result drawArrays(const gl::Context *context,
                              gl::PrimitiveMode mode,
                              GLint first,
                              GLsizei count) override;
-    gl::Error drawArraysInstanced(const gl::Context *context,
-                                  gl::PrimitiveMode mode,
-                                  GLint first,
-                                  GLsizei count,
-                                  GLsizei instanceCount) override;
+    angle::Result drawArraysInstanced(const gl::Context *context,
+                                      gl::PrimitiveMode mode,
+                                      GLint first,
+                                      GLsizei count,
+                                      GLsizei instanceCount) override;
 
-    gl::Error drawElements(const gl::Context *context,
-                           gl::PrimitiveMode mode,
-                           GLsizei count,
-                           GLenum type,
-                           const void *indices) override;
-    gl::Error drawElementsInstanced(const gl::Context *context,
+    angle::Result drawElements(const gl::Context *context,
+                               gl::PrimitiveMode mode,
+                               GLsizei count,
+                               GLenum type,
+                               const void *indices) override;
+    angle::Result drawElementsInstanced(const gl::Context *context,
+                                        gl::PrimitiveMode mode,
+                                        GLsizei count,
+                                        GLenum type,
+                                        const void *indices,
+                                        GLsizei instances) override;
+    angle::Result drawRangeElements(const gl::Context *context,
                                     gl::PrimitiveMode mode,
+                                    GLuint start,
+                                    GLuint end,
                                     GLsizei count,
                                     GLenum type,
-                                    const void *indices,
-                                    GLsizei instances) override;
-    gl::Error drawRangeElements(const gl::Context *context,
-                                gl::PrimitiveMode mode,
-                                GLuint start,
-                                GLuint end,
-                                GLsizei count,
-                                GLenum type,
-                                const void *indices) override;
-    gl::Error drawArraysIndirect(const gl::Context *context,
-                                 gl::PrimitiveMode mode,
-                                 const void *indirect) override;
-    gl::Error drawElementsIndirect(const gl::Context *context,
-                                   gl::PrimitiveMode mode,
-                                   GLenum type,
-                                   const void *indirect) override;
+                                    const void *indices) override;
+    angle::Result drawArraysIndirect(const gl::Context *context,
+                                     gl::PrimitiveMode mode,
+                                     const void *indirect) override;
+    angle::Result drawElementsIndirect(const gl::Context *context,
+                                       gl::PrimitiveMode mode,
+                                       GLenum type,
+                                       const void *indirect) override;
 
     // Device loss
     GLenum getResetStatus() override;
@@ -130,7 +130,7 @@ class Context9 : public ContextD3D
     GLint64 getTimestamp() override;
 
     // Context switching
-    gl::Error onMakeCurrent(const gl::Context *context) override;
+    angle::Result onMakeCurrent(const gl::Context *context) override;
 
     // Caps queries
     gl::Caps getNativeCaps() const override;
@@ -138,14 +138,14 @@ class Context9 : public ContextD3D
     const gl::Extensions &getNativeExtensions() const override;
     const gl::Limitations &getNativeLimitations() const override;
 
-    gl::Error dispatchCompute(const gl::Context *context,
-                              GLuint numGroupsX,
-                              GLuint numGroupsY,
-                              GLuint numGroupsZ) override;
-    gl::Error dispatchComputeIndirect(const gl::Context *context, GLintptr indirect) override;
+    angle::Result dispatchCompute(const gl::Context *context,
+                                  GLuint numGroupsX,
+                                  GLuint numGroupsY,
+                                  GLuint numGroupsZ) override;
+    angle::Result dispatchComputeIndirect(const gl::Context *context, GLintptr indirect) override;
 
-    gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
-    gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
+    angle::Result memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
+    angle::Result memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
     Renderer9 *getRenderer() const { return mRenderer; }
 

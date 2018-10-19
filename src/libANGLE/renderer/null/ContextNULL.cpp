@@ -106,19 +106,19 @@ ContextNULL::~ContextNULL()
 {
 }
 
-gl::Error ContextNULL::initialize()
+angle::Result ContextNULL::initialize()
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::flush(const gl::Context *context)
+angle::Result ContextNULL::flush(const gl::Context *context)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::finish(const gl::Context *context)
+angle::Result ContextNULL::finish(const gl::Context *context)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result ContextNULL::drawArrays(const gl::Context *context,
@@ -129,58 +129,58 @@ angle::Result ContextNULL::drawArrays(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::drawArraysInstanced(const gl::Context *context,
-                                           gl::PrimitiveMode mode,
-                                           GLint first,
-                                           GLsizei count,
-                                           GLsizei instanceCount)
+angle::Result ContextNULL::drawArraysInstanced(const gl::Context *context,
+                                               gl::PrimitiveMode mode,
+                                               GLint first,
+                                               GLsizei count,
+                                               GLsizei instanceCount)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::drawElements(const gl::Context *context,
-                                    gl::PrimitiveMode mode,
-                                    GLsizei count,
-                                    GLenum type,
-                                    const void *indices)
+angle::Result ContextNULL::drawElements(const gl::Context *context,
+                                        gl::PrimitiveMode mode,
+                                        GLsizei count,
+                                        GLenum type,
+                                        const void *indices)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::drawElementsInstanced(const gl::Context *context,
+angle::Result ContextNULL::drawElementsInstanced(const gl::Context *context,
+                                                 gl::PrimitiveMode mode,
+                                                 GLsizei count,
+                                                 GLenum type,
+                                                 const void *indices,
+                                                 GLsizei instances)
+{
+    return angle::Result::Continue();
+}
+
+angle::Result ContextNULL::drawRangeElements(const gl::Context *context,
                                              gl::PrimitiveMode mode,
+                                             GLuint start,
+                                             GLuint end,
                                              GLsizei count,
                                              GLenum type,
-                                             const void *indices,
-                                             GLsizei instances)
+                                             const void *indices)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::drawRangeElements(const gl::Context *context,
-                                         gl::PrimitiveMode mode,
-                                         GLuint start,
-                                         GLuint end,
-                                         GLsizei count,
-                                         GLenum type,
-                                         const void *indices)
+angle::Result ContextNULL::drawArraysIndirect(const gl::Context *context,
+                                              gl::PrimitiveMode mode,
+                                              const void *indirect)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::drawArraysIndirect(const gl::Context *context,
-                                          gl::PrimitiveMode mode,
-                                          const void *indirect)
+angle::Result ContextNULL::drawElementsIndirect(const gl::Context *context,
+                                                gl::PrimitiveMode mode,
+                                                GLenum type,
+                                                const void *indirect)
 {
-    return gl::NoError();
-}
-
-gl::Error ContextNULL::drawElementsIndirect(const gl::Context *context,
-                                            gl::PrimitiveMode mode,
-                                            GLenum type,
-                                            const void *indirect)
-{
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void ContextNULL::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask)
@@ -313,9 +313,9 @@ GLint64 ContextNULL::getTimestamp()
     return 0;
 }
 
-gl::Error ContextNULL::onMakeCurrent(const gl::Context *context)
+angle::Result ContextNULL::onMakeCurrent(const gl::Context *context)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 gl::Caps ContextNULL::getNativeCaps() const
@@ -418,27 +418,27 @@ std::vector<PathImpl *> ContextNULL::createPaths(GLsizei range)
     return result;
 }
 
-gl::Error ContextNULL::dispatchCompute(const gl::Context *context,
-                                       GLuint numGroupsX,
-                                       GLuint numGroupsY,
-                                       GLuint numGroupsZ)
+angle::Result ContextNULL::dispatchCompute(const gl::Context *context,
+                                           GLuint numGroupsX,
+                                           GLuint numGroupsY,
+                                           GLuint numGroupsZ)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
+angle::Result ContextNULL::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::memoryBarrier(const gl::Context *context, GLbitfield barriers)
+angle::Result ContextNULL::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextNULL::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
+angle::Result ContextNULL::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
 {
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void ContextNULL::handleError(GLenum errorCode,

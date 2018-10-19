@@ -34,49 +34,49 @@ class ContextImpl : public GLImplFactory
 
     virtual void onDestroy(const gl::Context *context) {}
 
-    virtual gl::Error initialize() = 0;
+    virtual angle::Result initialize() = 0;
 
     // Flush and finish.
-    virtual gl::Error flush(const gl::Context *context)  = 0;
-    virtual gl::Error finish(const gl::Context *context) = 0;
+    virtual angle::Result flush(const gl::Context *context)  = 0;
+    virtual angle::Result finish(const gl::Context *context) = 0;
 
     // Drawing methods.
     virtual angle::Result drawArrays(const gl::Context *context,
                                      gl::PrimitiveMode mode,
                                      GLint first,
                                      GLsizei count)              = 0;
-    virtual gl::Error drawArraysInstanced(const gl::Context *context,
-                                          gl::PrimitiveMode mode,
-                                          GLint first,
-                                          GLsizei count,
-                                          GLsizei instanceCount) = 0;
+    virtual angle::Result drawArraysInstanced(const gl::Context *context,
+                                              gl::PrimitiveMode mode,
+                                              GLint first,
+                                              GLsizei count,
+                                              GLsizei instanceCount) = 0;
 
-    virtual gl::Error drawElements(const gl::Context *context,
-                                   gl::PrimitiveMode mode,
-                                   GLsizei count,
-                                   GLenum type,
-                                   const void *indices)        = 0;
-    virtual gl::Error drawElementsInstanced(const gl::Context *context,
+    virtual angle::Result drawElements(const gl::Context *context,
+                                       gl::PrimitiveMode mode,
+                                       GLsizei count,
+                                       GLenum type,
+                                       const void *indices)        = 0;
+    virtual angle::Result drawElementsInstanced(const gl::Context *context,
+                                                gl::PrimitiveMode mode,
+                                                GLsizei count,
+                                                GLenum type,
+                                                const void *indices,
+                                                GLsizei instances) = 0;
+    virtual angle::Result drawRangeElements(const gl::Context *context,
                                             gl::PrimitiveMode mode,
+                                            GLuint start,
+                                            GLuint end,
                                             GLsizei count,
                                             GLenum type,
-                                            const void *indices,
-                                            GLsizei instances) = 0;
-    virtual gl::Error drawRangeElements(const gl::Context *context,
-                                        gl::PrimitiveMode mode,
-                                        GLuint start,
-                                        GLuint end,
-                                        GLsizei count,
-                                        GLenum type,
-                                        const void *indices)   = 0;
+                                            const void *indices)   = 0;
 
-    virtual gl::Error drawArraysIndirect(const gl::Context *context,
-                                         gl::PrimitiveMode mode,
-                                         const void *indirect)   = 0;
-    virtual gl::Error drawElementsIndirect(const gl::Context *context,
-                                           gl::PrimitiveMode mode,
-                                           GLenum type,
-                                           const void *indirect) = 0;
+    virtual angle::Result drawArraysIndirect(const gl::Context *context,
+                                             gl::PrimitiveMode mode,
+                                             const void *indirect)   = 0;
+    virtual angle::Result drawElementsIndirect(const gl::Context *context,
+                                               gl::PrimitiveMode mode,
+                                               GLenum type,
+                                               const void *indirect) = 0;
 
     // CHROMIUM_path_rendering path drawing methods.
     virtual void stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask);
@@ -150,7 +150,7 @@ class ContextImpl : public GLImplFactory
     virtual GLint64 getTimestamp() = 0;
 
     // Context switching
-    virtual gl::Error onMakeCurrent(const gl::Context *context) = 0;
+    virtual angle::Result onMakeCurrent(const gl::Context *context) = 0;
 
     // Native capabilities, unmodified by gl::Context.
     virtual gl::Caps getNativeCaps() const                         = 0;
@@ -160,14 +160,16 @@ class ContextImpl : public GLImplFactory
 
     virtual void applyNativeWorkarounds(gl::Workarounds *workarounds) const {}
 
-    virtual gl::Error dispatchCompute(const gl::Context *context,
-                                      GLuint numGroupsX,
-                                      GLuint numGroupsY,
-                                      GLuint numGroupsZ)                                     = 0;
-    virtual gl::Error dispatchComputeIndirect(const gl::Context *context, GLintptr indirect) = 0;
+    virtual angle::Result dispatchCompute(const gl::Context *context,
+                                          GLuint numGroupsX,
+                                          GLuint numGroupsY,
+                                          GLuint numGroupsZ)         = 0;
+    virtual angle::Result dispatchComputeIndirect(const gl::Context *context,
+                                                  GLintptr indirect) = 0;
 
-    virtual gl::Error memoryBarrier(const gl::Context *context, GLbitfield barriers)         = 0;
-    virtual gl::Error memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) = 0;
+    virtual angle::Result memoryBarrier(const gl::Context *context, GLbitfield barriers) = 0;
+    virtual angle::Result memoryBarrierByRegion(const gl::Context *context,
+                                                GLbitfield barriers)                     = 0;
 
     const gl::ContextState &getContextState() { return mState; }
     int getClientMajorVersion() const { return mState.getClientMajorVersion(); }

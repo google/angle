@@ -690,8 +690,9 @@ egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         }
     }
 
-    // Notify the renderer of a context switch
-    ANGLE_TRY(mImplementation->onMakeCurrent(this));
+    // Notify the renderer of a context switch.
+    // TODO(jmadill): Fix this error handling. http://anglebug.com/2491
+    (void)(mImplementation->onMakeCurrent(this));
     return egl::NoError();
 }
 

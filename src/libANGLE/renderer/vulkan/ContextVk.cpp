@@ -186,7 +186,7 @@ gl::Error ContextVk::getIncompleteTexture(const gl::Context *context,
     return mIncompleteTextures.getIncompleteTexture(context, type, nullptr, textureOut);
 }
 
-gl::Error ContextVk::initialize()
+angle::Result ContextVk::initialize()
 {
     // Note that this may reserve more sets than strictly necessary for a particular layout.
     ANGLE_TRY(mDynamicDescriptorPools[kUniformsDescriptorSetIndex].init(
@@ -219,15 +219,15 @@ gl::Error ContextVk::initialize()
         buffer.init(1, mRenderer);
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextVk::flush(const gl::Context *context)
+angle::Result ContextVk::flush(const gl::Context *context)
 {
     return mRenderer->flush(this);
 }
 
-gl::Error ContextVk::finish(const gl::Context *context)
+angle::Result ContextVk::finish(const gl::Context *context)
 {
     return mRenderer->finish(this);
 }
@@ -484,21 +484,21 @@ angle::Result ContextVk::drawArrays(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-gl::Error ContextVk::drawArraysInstanced(const gl::Context *context,
-                                         gl::PrimitiveMode mode,
-                                         GLint first,
-                                         GLsizei count,
-                                         GLsizei instanceCount)
+angle::Result ContextVk::drawArraysInstanced(const gl::Context *context,
+                                             gl::PrimitiveMode mode,
+                                             GLint first,
+                                             GLsizei count,
+                                             GLsizei instanceCount)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(this);
+    return angle::Result::Stop();
 }
 
-gl::Error ContextVk::drawElements(const gl::Context *context,
-                                  gl::PrimitiveMode mode,
-                                  GLsizei count,
-                                  GLenum type,
-                                  const void *indices)
+angle::Result ContextVk::drawElements(const gl::Context *context,
+                                      gl::PrimitiveMode mode,
+                                      GLsizei count,
+                                      GLenum type,
+                                      const void *indices)
 {
     const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
 
@@ -514,29 +514,30 @@ gl::Error ContextVk::drawElements(const gl::Context *context,
         commandBuffer->drawIndexed(count, 1, 0, 0, 0);
     }
 
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
-gl::Error ContextVk::drawElementsInstanced(const gl::Context *context,
+angle::Result ContextVk::drawElementsInstanced(const gl::Context *context,
+                                               gl::PrimitiveMode mode,
+                                               GLsizei count,
+                                               GLenum type,
+                                               const void *indices,
+                                               GLsizei instances)
+{
+    ANGLE_VK_UNREACHABLE(this);
+    return angle::Result::Stop();
+}
+
+angle::Result ContextVk::drawRangeElements(const gl::Context *context,
                                            gl::PrimitiveMode mode,
+                                           GLuint start,
+                                           GLuint end,
                                            GLsizei count,
                                            GLenum type,
-                                           const void *indices,
-                                           GLsizei instances)
+                                           const void *indices)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
-}
-
-gl::Error ContextVk::drawRangeElements(const gl::Context *context,
-                                       gl::PrimitiveMode mode,
-                                       GLuint start,
-                                       GLuint end,
-                                       GLsizei count,
-                                       GLenum type,
-                                       const void *indices)
-{
-    return gl::NoError();
+    ANGLE_VK_UNREACHABLE(this);
+    return angle::Result::Stop();
 }
 
 VkDevice ContextVk::getDevice() const
@@ -544,22 +545,21 @@ VkDevice ContextVk::getDevice() const
     return mRenderer->getDevice();
 }
 
-gl::Error ContextVk::drawArraysIndirect(const gl::Context *context,
-                                        gl::PrimitiveMode mode,
-                                        const void *indirect)
+angle::Result ContextVk::drawArraysIndirect(const gl::Context *context,
+                                            gl::PrimitiveMode mode,
+                                            const void *indirect)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError() << "DrawArraysIndirect hasn't been implemented for vulkan backend.";
+    ANGLE_VK_UNREACHABLE(this);
+    return angle::Result::Stop();
 }
 
-gl::Error ContextVk::drawElementsIndirect(const gl::Context *context,
-                                          gl::PrimitiveMode mode,
-                                          GLenum type,
-                                          const void *indirect)
+angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
+                                              gl::PrimitiveMode mode,
+                                              GLenum type,
+                                              const void *indirect)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError()
-           << "DrawElementsIndirect hasn't been implemented for vulkan backend.";
+    ANGLE_VK_UNREACHABLE(this);
+    return angle::Result::Stop();
 }
 
 GLenum ContextVk::getResetStatus()
@@ -903,7 +903,7 @@ GLint64 ContextVk::getTimestamp()
     return GLint64();
 }
 
-gl::Error ContextVk::onMakeCurrent(const gl::Context *context)
+angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
 {
     // Flip viewports if FeaturesVk::flipViewportY is enabled and the user did not request that the
     // surface is flipped.
@@ -916,7 +916,7 @@ gl::Error ContextVk::onMakeCurrent(const gl::Context *context)
     updateFlipViewportDrawFramebuffer(glState);
     updateFlipViewportReadFramebuffer(glState);
     invalidateDriverUniforms();
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 void ContextVk::updateFlipViewportDrawFramebuffer(const gl::State &glState)
@@ -1052,31 +1052,31 @@ void ContextVk::invalidateDriverUniforms()
     mDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
 }
 
-gl::Error ContextVk::dispatchCompute(const gl::Context *context,
-                                     GLuint numGroupsX,
-                                     GLuint numGroupsY,
-                                     GLuint numGroupsZ)
+angle::Result ContextVk::dispatchCompute(const gl::Context *context,
+                                         GLuint numGroupsX,
+                                         GLuint numGroupsY,
+                                         GLuint numGroupsZ)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(this);
+    return angle::Result::Stop();
 }
 
-gl::Error ContextVk::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
+angle::Result ContextVk::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(this);
+    return angle::Result::Stop();
 }
 
-gl::Error ContextVk::memoryBarrier(const gl::Context *context, GLbitfield barriers)
+angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield barriers)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(this);
+    return angle::Result::Stop();
 }
 
-gl::Error ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
+angle::Result ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers)
 {
-    UNIMPLEMENTED();
-    return gl::InternalError();
+    ANGLE_VK_UNREACHABLE(this);
+    return angle::Result::Stop();
 }
 
 vk::DynamicDescriptorPool *ContextVk::getDynamicDescriptorPool(uint32_t descriptorSetIndex)
