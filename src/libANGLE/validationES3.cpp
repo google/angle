@@ -3101,6 +3101,78 @@ bool ValidateDrawElementsInstanced(Context *context,
     return ValidateDrawElementsInstancedCommon(context, mode, count, type, indices, instanceCount);
 }
 
+bool ValidateMultiDrawArraysInstancedANGLE(Context *context,
+                                           PrimitiveMode mode,
+                                           const GLint *firsts,
+                                           const GLsizei *counts,
+                                           const GLsizei *instanceCounts,
+                                           GLsizei drawcount)
+{
+    if (!context->getExtensions().multiDraw)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+    if (context->getClientMajorVersion() < 3)
+    {
+        if (!context->getExtensions().instancedArrays)
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+            return false;
+        }
+        if (!ValidateDrawInstancedANGLE(context))
+        {
+            return false;
+        }
+    }
+    for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+    {
+        if (!ValidateDrawArraysInstancedBase(context, mode, firsts[drawID], counts[drawID],
+                                             instanceCounts[drawID]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool ValidateMultiDrawElementsInstancedANGLE(Context *context,
+                                             PrimitiveMode mode,
+                                             const GLsizei *counts,
+                                             GLenum type,
+                                             const GLsizei *offsets,
+                                             const GLsizei *instanceCounts,
+                                             GLsizei drawcount)
+{
+    if (!context->getExtensions().multiDraw)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+        return false;
+    }
+    if (context->getClientMajorVersion() < 3)
+    {
+        if (!context->getExtensions().instancedArrays)
+        {
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), ExtensionNotEnabled);
+            return false;
+        }
+        if (!ValidateDrawInstancedANGLE(context))
+        {
+            return false;
+        }
+    }
+    for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+    {
+        const void *indices = reinterpret_cast<void *>(static_cast<long>(offsets[drawID]));
+        if (!ValidateDrawElementsInstancedCommon(context, mode, counts[drawID], type, indices,
+                                                 instanceCounts[drawID]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool ValidateFramebufferTextureMultiviewLayeredANGLE(Context *context,
                                                      GLenum target,
                                                      GLenum attachment,

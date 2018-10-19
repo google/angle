@@ -109,6 +109,7 @@ struct ShaderVariable
                               std::string* originalFullName) const;
 
     bool isBuiltIn() const;
+    bool isEmulatedBuiltIn() const;
 
     GLenum type;
     GLenum precision;

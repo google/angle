@@ -48,9 +48,9 @@
   "GL copy conversion table:src/libANGLE/gen_copy_conversion_table.py":
     "ac1afe23d9578bd1d2ef74f4a7aa927a",
   "GL entry point:scripts/entry_point_packed_gl_enums.json":
-    "f16b55c293b38a18e0e9d693bdaa341d",
+    "91796c2aa1aef35c93b5c4ddd88496d2",
   "GL entry point:scripts/generate_entry_points.py":
-    "24661bb77e40e05ae8de8459e350d373",
+    "b13f2afab982902852a16caad6b937be",
   "GL entry point:scripts/gl.xml":
     "b470cb06b06cbbe7adb2c8129ec85708",
   "GL format map:src/libANGLE/es3_format_type_combinations.json":

@@ -359,7 +359,7 @@ void Shader::compile(const Context *context)
     std::string sourcePath;
     ShCompileOptions options =
         mImplementation->prepareSourceAndReturnOptions(context, &sourceStream, &sourcePath);
-    options |= (SH_OBJECT_CODE | SH_VARIABLES);
+    options |= (SH_OBJECT_CODE | SH_VARIABLES | SH_EMULATE_GL_DRAW_ID);
     auto source = sourceStream.str();
 
     // Add default options to WebGL shaders to prevent unexpected behavior during compilation.

@@ -447,6 +447,9 @@ class ProgramState final : angle::NonCopyable
     int mGeometryShaderInvocations;
     int mGeometryShaderMaxVertices;
 
+    // GL_ANGLE_multi_draw
+    int mDrawIDLocation;
+
     // The size of the data written to each transform feedback buffer per vertex.
     std::vector<GLsizei> mTransformFeedbackStrides;
 
@@ -725,6 +728,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLenum getTransformFeedbackBufferMode() const;
     GLuint getTransformFeedbackVaryingResourceIndex(const GLchar *name) const;
     const TransformFeedbackVarying &getTransformFeedbackVaryingResource(GLuint index) const;
+
+    bool hasDrawIDUniform() const;
+    void setDrawIDUniform(GLint drawid);
 
     ANGLE_INLINE void addRef()
     {

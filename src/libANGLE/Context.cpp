@@ -5409,6 +5409,162 @@ void Context::memoryBarrierByRegion(GLbitfield barriers)
     handleError(mImplementation->memoryBarrierByRegion(this, barriers));
 }
 
+void Context::multiDrawArrays(PrimitiveMode mode,
+                              const GLint *firsts,
+                              const GLsizei *counts,
+                              GLsizei drawcount)
+{
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject = mGLState.getLinkedProgram(this);
+    const bool hasDrawID   = programObject && programObject->hasDrawIDUniform();
+    if (hasDrawID)
+    {
+        for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+        {
+            if (noopDraw(mode, counts[drawID]))
+            {
+                continue;
+            }
+            programObject->setDrawIDUniform(drawID);
+            ANGLE_CONTEXT_TRY(
+                mImplementation->drawArrays(this, mode, firsts[drawID], counts[drawID]));
+            MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(),
+                                             counts[drawID], 1);
+        }
+    }
+    else
+    {
+        for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+        {
+            if (noopDraw(mode, counts[drawID]))
+            {
+                continue;
+            }
+            ANGLE_CONTEXT_TRY(
+                mImplementation->drawArrays(this, mode, firsts[drawID], counts[drawID]));
+            MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(),
+                                             counts[drawID], 1);
+        }
+    }
+}
+
+void Context::multiDrawArraysInstanced(PrimitiveMode mode,
+                                       const GLint *firsts,
+                                       const GLsizei *counts,
+                                       const GLsizei *instanceCounts,
+                                       GLsizei drawcount)
+{
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject = mGLState.getLinkedProgram(this);
+    const bool hasDrawID   = programObject && programObject->hasDrawIDUniform();
+    if (hasDrawID)
+    {
+        for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+        {
+            if (noopDrawInstanced(mode, counts[drawID], instanceCounts[drawID]))
+            {
+                continue;
+            }
+            programObject->setDrawIDUniform(drawID);
+            ANGLE_CONTEXT_TRY(mImplementation->drawArraysInstanced(
+                this, mode, firsts[drawID], counts[drawID], instanceCounts[drawID]));
+            MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(),
+                                             counts[drawID], instanceCounts[drawID]);
+        }
+    }
+    else
+    {
+        for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+        {
+            if (noopDrawInstanced(mode, counts[drawID], instanceCounts[drawID]))
+            {
+                continue;
+            }
+            ANGLE_CONTEXT_TRY(mImplementation->drawArraysInstanced(
+                this, mode, firsts[drawID], counts[drawID], instanceCounts[drawID]));
+            MarkTransformFeedbackBufferUsage(this, mGLState.getCurrentTransformFeedback(),
+                                             counts[drawID], instanceCounts[drawID]);
+        }
+    }
+}
+
+void Context::multiDrawElements(PrimitiveMode mode,
+                                const GLsizei *counts,
+                                GLenum type,
+                                const GLsizei *offsets,
+                                GLsizei drawcount)
+{
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject = mGLState.getLinkedProgram(this);
+    const bool hasDrawID   = programObject && programObject->hasDrawIDUniform();
+    if (hasDrawID)
+    {
+        for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+        {
+            if (noopDraw(mode, counts[drawID]))
+            {
+                continue;
+            }
+            programObject->setDrawIDUniform(drawID);
+            const void *indices = reinterpret_cast<void *>(static_cast<long>(offsets[drawID]));
+            ANGLE_CONTEXT_TRY(
+                mImplementation->drawElements(this, mode, counts[drawID], type, indices));
+        }
+    }
+    else
+    {
+        for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+        {
+            if (noopDraw(mode, counts[drawID]))
+            {
+                continue;
+            }
+            const void *indices = reinterpret_cast<void *>(static_cast<long>(offsets[drawID]));
+            ANGLE_CONTEXT_TRY(
+                mImplementation->drawElements(this, mode, counts[drawID], type, indices));
+        }
+    }
+}
+
+void Context::multiDrawElementsInstanced(PrimitiveMode mode,
+                                         const GLsizei *counts,
+                                         GLenum type,
+                                         const GLsizei *offsets,
+                                         const GLsizei *instanceCounts,
+                                         GLsizei drawcount)
+{
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
+    Program *programObject = mGLState.getLinkedProgram(this);
+    const bool hasDrawID   = programObject && programObject->hasDrawIDUniform();
+    if (hasDrawID)
+    {
+        for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+        {
+            if (noopDrawInstanced(mode, counts[drawID], instanceCounts[drawID]))
+            {
+                continue;
+            }
+            programObject->setDrawIDUniform(drawID);
+            const void *indices = reinterpret_cast<void *>(static_cast<long>(offsets[drawID]));
+            ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstanced(
+                this, mode, counts[drawID], type, indices, instanceCounts[drawID]));
+        }
+    }
+    else
+    {
+        for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
+        {
+            if (noopDrawInstanced(mode, counts[drawID], instanceCounts[drawID]))
+            {
+                continue;
+            }
+            const void *indices = reinterpret_cast<void *>(static_cast<long>(offsets[drawID]));
+            ANGLE_CONTEXT_TRY(mImplementation->drawElementsInstanced(
+                this, mode, counts[drawID], type, indices, instanceCounts[drawID]));
+        }
+    }
+}
+
 GLenum Context::checkFramebufferStatus(GLenum target)
 {
     Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);

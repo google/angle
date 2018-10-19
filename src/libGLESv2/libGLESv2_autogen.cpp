@@ -2507,6 +2507,44 @@ void GL_APIENTRY glVertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     return gl::VertexAttribDivisorANGLE(index, divisor);
 }
 
+// GL_ANGLE_multi_draw
+void GL_APIENTRY glMultiDrawArraysANGLE(GLenum mode,
+                                        const GLint *firsts,
+                                        const GLsizei *counts,
+                                        GLsizei drawcount)
+{
+    return gl::MultiDrawArraysANGLE(mode, firsts, counts, drawcount);
+}
+
+void GL_APIENTRY glMultiDrawArraysInstancedANGLE(GLenum mode,
+                                                 const GLint *firsts,
+                                                 const GLsizei *counts,
+                                                 const GLsizei *instanceCounts,
+                                                 GLsizei drawcount)
+{
+    return gl::MultiDrawArraysInstancedANGLE(mode, firsts, counts, instanceCounts, drawcount);
+}
+
+void GL_APIENTRY glMultiDrawElementsANGLE(GLenum mode,
+                                          const GLsizei *counts,
+                                          GLenum type,
+                                          const GLsizei *offsets,
+                                          GLsizei drawcount)
+{
+    return gl::MultiDrawElementsANGLE(mode, counts, type, offsets, drawcount);
+}
+
+void GL_APIENTRY glMultiDrawElementsInstancedANGLE(GLenum mode,
+                                                   const GLsizei *counts,
+                                                   GLenum type,
+                                                   const GLsizei *offsets,
+                                                   const GLsizei *instanceCounts,
+                                                   GLsizei drawcount)
+{
+    return gl::MultiDrawElementsInstancedANGLE(mode, counts, type, offsets, instanceCounts,
+                                               drawcount);
+}
+
 // GL_ANGLE_multiview
 void GL_APIENTRY glFramebufferTextureMultiviewLayeredANGLE(GLenum target,
                                                            GLenum attachment,
@@ -9053,6 +9091,48 @@ void GL_APIENTRY glGetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx,
                                                            GLfloat *params)
 {
     return gl::GetTexLevelParameterfvANGLEContextANGLE(ctx, target, level, pname, params);
+}
+
+void GL_APIENTRY glMultiDrawArraysANGLEContextANGLE(GLeglContext ctx,
+                                                    GLenum mode,
+                                                    const GLint *firsts,
+                                                    const GLsizei *counts,
+                                                    GLsizei drawcount)
+{
+    return gl::MultiDrawArraysANGLEContextANGLE(ctx, mode, firsts, counts, drawcount);
+}
+
+void GL_APIENTRY glMultiDrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
+                                                             GLenum mode,
+                                                             const GLint *firsts,
+                                                             const GLsizei *counts,
+                                                             const GLsizei *instanceCounts,
+                                                             GLsizei drawcount)
+{
+    return gl::MultiDrawArraysInstancedANGLEContextANGLE(ctx, mode, firsts, counts, instanceCounts,
+                                                         drawcount);
+}
+
+void GL_APIENTRY glMultiDrawElementsANGLEContextANGLE(GLeglContext ctx,
+                                                      GLenum mode,
+                                                      const GLsizei *counts,
+                                                      GLenum type,
+                                                      const GLsizei *offsets,
+                                                      GLsizei drawcount)
+{
+    return gl::MultiDrawElementsANGLEContextANGLE(ctx, mode, counts, type, offsets, drawcount);
+}
+
+void GL_APIENTRY glMultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
+                                                               GLenum mode,
+                                                               const GLsizei *counts,
+                                                               GLenum type,
+                                                               const GLsizei *offsets,
+                                                               const GLsizei *instanceCounts,
+                                                               GLsizei drawcount)
+{
+    return gl::MultiDrawElementsInstancedANGLEContextANGLE(ctx, mode, counts, type, offsets,
+                                                           instanceCounts, drawcount);
 }
 
 }  // extern "C"

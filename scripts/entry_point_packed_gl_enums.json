@@ -292,6 +292,18 @@
     "glMatrixMode": {
         "mode": "MatrixType"
     },
+    "glMultiDrawArraysANGLE": {
+        "mode": "PrimitiveMode"
+    },
+    "glMultiDrawArraysInstancedANGLE": {
+        "mode": "PrimitiveMode"
+    },
+    "glMultiDrawElementsANGLE": {
+        "mode": "PrimitiveMode"
+    },
+    "glMultiDrawElementsInstancedANGLE": {
+        "mode": "PrimitiveMode"
+    },
     "glPointParameterf": {
         "pname" : "PointParameter"
     },

@@ -216,6 +216,11 @@ bool ShaderVariable::isBuiltIn() const
     return (name.size() >= 4 && name[0] == 'g' && name[1] == 'l' && name[2] == '_');
 }
 
+bool ShaderVariable::isEmulatedBuiltIn() const
+{
+    return isBuiltIn() && name != mappedName;
+}
+
 bool ShaderVariable::isSameVariableAtLinkTime(const ShaderVariable &other,
                                               bool matchPrecision,
                                               bool matchName) const

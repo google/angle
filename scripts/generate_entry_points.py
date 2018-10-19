@@ -74,6 +74,7 @@ supported_extensions = sorted(angle_extensions + gles1_extensions + [
     "GL_OES_texture_storage_multisample_2d_array",
     "GL_OES_vertex_array_object",
     "GL_KHR_parallel_shader_compile",
+    "GL_ANGLE_multi_draw",
 ])
 
 # The EGL_ANGLE_explicit_context extension is generated differently from other extensions.

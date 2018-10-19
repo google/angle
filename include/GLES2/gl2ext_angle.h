@@ -657,6 +657,20 @@ typedef void *GLeglContext;
 #include "../GLES3/gl31ext_explicit_context_autogen.inc"
 #endif /* GL_ANGLE_explicit_context */
 
+#ifndef GL_ANGLE_multi_draw
+#define GL_ANGLE_multi_draw 1
+typedef void (GL_APIENTRYP PFNGLMULTIDRAWARRAYSANGLEPROC) (GLenum mode, const GLint *firsts, const GLsizei *counts, GLsizei drawcount);
+typedef void (GL_APIENTRYP PFNGLMULTIDRAWARRAYSINSTANCEDANGLEPROC) (GLenum mode, const GLint *firsts, const GLsizei *counts, const GLsizei *instanceCounts, GLsizei drawcount);
+typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSANGLEPROC) (GLenum mode, const GLsizei *counts, GLenum type, const GLsizei *offsets, GLsizei drawcount);
+typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSINSTANCEDANGLEPROC) (GLenum mode, const GLsizei *counts, GLenum type, const GLsizei *offsets, const GLsizei *instanceCounts, GLsizei drawcount);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glMultiDrawArraysANGLE (GLenum mode, const GLint *firsts, const GLsizei *counts, GLsizei drawcount);
+GL_APICALL void GL_APIENTRY glMultiDrawArraysInstancedANGLE (GLenum mode, const GLint *firsts, const GLsizei *counts, const GLsizei *instanceCounts, GLsizei drawcount);
+GL_APICALL void GL_APIENTRY glMultiDrawElementsANGLE (GLenum mode, const GLsizei *counts, GLenum type, const GLsizei *offsets, GLsizei drawcount);
+GL_APICALL void GL_APIENTRY glMultiDrawElementsInstancedANGLE (GLenum mode, const GLsizei *counts, GLenum type, const GLsizei *offsets, const GLsizei *instanceCounts, GLsizei drawcount);
+#endif
+#endif /* GL_ANGLE_multi_draw */
+
 // clang-format on
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_

@@ -2170,7 +2170,7 @@ void ProgramD3D::defineUniformBase(const gl::Shader *shader,
         mImageBindingMap[uniform.name] = uniform.binding;
         return;
     }
-    else if (uniform.isBuiltIn())
+    else if (uniform.isBuiltIn() && !uniform.isEmulatedBuiltIn())
     {
         defineUniform(shader->getType(), uniform, uniform.name, HLSLRegisterType::None, nullptr,
                       uniformMap);

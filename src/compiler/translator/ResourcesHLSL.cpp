@@ -156,7 +156,14 @@ unsigned int ResourcesHLSL::assignUniformRegister(const TType &type,
         registerIndex = mUniformRegister;
     }
 
-    mUniformRegisterMap[uniform->name] = registerIndex;
+    if (uniform->name == "angle_DrawID" && uniform->mappedName == "angle_DrawID")
+    {
+        mUniformRegisterMap["gl_DrawID"] = registerIndex;
+    }
+    else
+    {
+        mUniformRegisterMap[uniform->name] = registerIndex;
+    }
 
     unsigned int registerCount = HLSLVariableRegisterCount(*uniform, mOutputType);
 

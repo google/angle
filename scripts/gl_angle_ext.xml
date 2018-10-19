@@ -871,6 +871,38 @@
                 <param><ptype>GLenum</ptype> <name>pname</name></param>
                 <param><ptype>GLfloat *</ptype> <name>params</name></param>
             </command>
+            <command>
+            <proto>void <name>glMultiDrawArraysANGLE</name></proto>
+                <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLint</ptype> *<name>firsts</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>counts</name></param>
+                <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
+            </command>
+            <command>
+            <proto>void <name>glMultiDrawArraysInstancedANGLE</name></proto>
+                <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLint</ptype> *<name>firsts</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>counts</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>instanceCounts</name></param>
+                <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
+            </command>
+            <command>
+            <proto>void <name>glMultiDrawElementsANGLE</name></proto>
+                <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>counts</name></param>
+                <param group="DrawElementsType"><ptype>GLenum</ptype> <name>type</name></param>
+                <param len="COMPSIZE(primcount)">const GLsizei*<name>offsets</name></param>
+                <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
+            </command>
+            <command>
+            <proto>void <name>glMultiDrawElementsInstancedANGLE</name></proto>
+                <param group="PrimitiveType"><ptype>GLenum</ptype> <name>mode</name></param>
+                <param len="COMPSIZE(primcount)">const <ptype>GLsizei</ptype> *<name>counts</name></param>
+                <param group="DrawElementsType"><ptype>GLenum</ptype> <name>type</name></param>
+                <param len="COMPSIZE(primcount)">const GLsizei*<name>offsets</name></param>
+                <param len="COMPSIZE(primcount)">const GLsizei*<name>instanceCounts</name></param>
+                <param><ptype>GLsizei</ptype> <name>drawcount</name></param>
+            </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->
     <extensions>
@@ -1014,6 +1046,14 @@
                 <command name="glTexStorage2DMultisampleANGLE"/>
                 <command name="glGetTexLevelParameterivANGLE"/>
                 <command name="glGetTexLevelParameterfvANGLE"/>
+            </require>
+        </extension>
+        <extension name="GL_ANGLE_multi_draw" supported='gl|gles2'>
+            <require>
+                <command name="glMultiDrawArraysANGLE"/>
+                <command name="glMultiDrawArraysInstancedANGLE"/>
+                <command name="glMultiDrawElementsANGLE"/>
+                <command name="glMultiDrawElementsInstancedANGLE"/>
             </require>
         </extension>
     </extensions>

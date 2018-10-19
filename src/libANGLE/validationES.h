@@ -323,6 +323,7 @@ bool ValidateDrawElementsInstancedANGLE(Context *context,
                                         GLenum type,
                                         const void *indices,
                                         GLsizei primcount);
+bool ValidateDrawInstancedANGLE(Context *context);
 
 bool ValidateFramebufferTextureBase(Context *context,
                                     GLenum target,

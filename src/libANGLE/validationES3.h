@@ -448,6 +448,21 @@ bool ValidateDrawElementsInstanced(Context *context,
                                    const void *indices,
                                    GLsizei instanceCount);
 
+bool ValidateMultiDrawArraysInstancedANGLE(Context *context,
+                                           PrimitiveMode mode,
+                                           const GLint *firsts,
+                                           const GLsizei *counts,
+                                           const GLsizei *instanceCounts,
+                                           GLsizei drawcount);
+
+bool ValidateMultiDrawElementsInstancedANGLE(Context *context,
+                                             PrimitiveMode mode,
+                                             const GLsizei *counts,
+                                             GLenum type,
+                                             const GLsizei *offsets,
+                                             const GLsizei *instanceCounts,
+                                             GLsizei drawcount);
+
 bool ValidateFramebufferTextureMultiviewLayeredANGLE(Context *context,
                                                      GLenum target,
                                                      GLenum attachment,
