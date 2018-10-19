@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "35480469_540790ec",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-19T03:28:14Z",
+      "side": 1,
+      "message": "[a]",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 53
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "72edcb3c_cbe5aba9",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 5
@@ -25,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "9f310f68_387e32fe",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-19T03:28:14Z",
+      "side": 1,
+      "message": "the offset of s is not 0. It will be set in line 91 [a]. \nThe first field member offset in structure means the member in structure itself. See below example.\n\nstruct S\n{\n    int i;\n    float f;\n}\n\nbuffer buf\n{\n    ivec4 i\n    vec4 f\n    struct s\n}\n\ns.i is the first field member in structure.\ns is the field member of ssbo \u0027buf\u0027.\n\nThe location of s.i will be: s.offset + i.offset\nSo we should make sure that the first field member offset in structure is always zero.",
+      "parentUuid": "72edcb3c_cbe5aba9",
+      "range": {
+        "startLine": 94,
+        "startChar": 20,
+        "endLine": 94,
+        "endChar": 62
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "880482e3_289d6524",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 5
@@ -36,6 +83,30 @@
       "writtenOn": "2018-10-18T15:44:22Z",
       "side": 1,
       "message": "is it possible you need to recurse more than one level? if you have:\n\na[1][2][3] .. then you would have node \u003d\u003d float, node-\u003eleft \u003d\u003d array of float, and node-\u003eleft-\u003eleft \u003d\u003d array of arrays of float, right? Maybe you should use if type.isArrayOfArrays || IsArrayOfArrays(node-\u003eleft)",
+      "range": {
+        "startLine": 153,
+        "startChar": 5,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa2f2a65_8e3232b9",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-19T03:28:14Z",
+      "side": 1,
+      "message": "node is already got from node-\u003egetLeft(). You can see that this function is called by \u0027IsInArrayOfArray(node-\u003egetLeft())\u0027. So we don\u0027t need to recurse more.",
+      "parentUuid": "880482e3_289d6524",
       "range": {
         "startLine": 153,
         "startChar": 5,
