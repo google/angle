@@ -34,28 +34,29 @@ Framebuffer9::~Framebuffer9()
 {
 }
 
-gl::Error Framebuffer9::discard(const gl::Context *context, size_t, const GLenum *)
+angle::Result Framebuffer9::discard(const gl::Context *context,
+                                    size_t count,
+                                    const GLenum *attachments)
 {
-    // Extension not implemented in D3D9 renderer
-    UNREACHABLE();
-    return gl::NoError();
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
+    return angle::Result::Stop();
 }
 
-gl::Error Framebuffer9::invalidate(const gl::Context *context, size_t, const GLenum *)
+angle::Result Framebuffer9::invalidate(const gl::Context *context,
+                                       size_t count,
+                                       const GLenum *attachments)
 {
-    // Shouldn't ever reach here in D3D9
-    UNREACHABLE();
-    return gl::NoError();
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
+    return angle::Result::Stop();
 }
 
-gl::Error Framebuffer9::invalidateSub(const gl::Context *context,
-                                      size_t,
-                                      const GLenum *,
-                                      const gl::Rectangle &)
+angle::Result Framebuffer9::invalidateSub(const gl::Context *context,
+                                          size_t count,
+                                          const GLenum *attachments,
+                                          const gl::Rectangle &area)
 {
-    // Shouldn't ever reach here in D3D9
-    UNREACHABLE();
-    return gl::NoError();
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
+    return angle::Result::Stop();
 }
 
 angle::Result Framebuffer9::clearImpl(const gl::Context *context,
@@ -390,12 +391,12 @@ GLenum Framebuffer9::getRenderTargetImplementationFormat(RenderTargetD3D *render
     return d3dFormatInfo.info().glInternalFormat;
 }
 
-gl::Error Framebuffer9::getSamplePosition(const gl::Context *context,
-                                          size_t index,
-                                          GLfloat *xy) const
+angle::Result Framebuffer9::getSamplePosition(const gl::Context *context,
+                                              size_t index,
+                                              GLfloat *xy) const
 {
-    UNREACHABLE();
-    return gl::InternalError() << "getSamplePosition is unsupported to d3d9.";
+    ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
+    return angle::Result::Stop();
 }
 
 angle::Result Framebuffer9::syncState(const gl::Context *context,

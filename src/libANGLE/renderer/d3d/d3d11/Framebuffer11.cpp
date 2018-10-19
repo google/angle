@@ -113,16 +113,16 @@ angle::Result Framebuffer11::clearImpl(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-gl::Error Framebuffer11::invalidate(const gl::Context *context,
-                                    size_t count,
-                                    const GLenum *attachments)
+angle::Result Framebuffer11::invalidate(const gl::Context *context,
+                                        size_t count,
+                                        const GLenum *attachments)
 {
     return invalidateBase(context, count, attachments, false);
 }
 
-gl::Error Framebuffer11::discard(const gl::Context *context,
-                                 size_t count,
-                                 const GLenum *attachments)
+angle::Result Framebuffer11::discard(const gl::Context *context,
+                                     size_t count,
+                                     const GLenum *attachments)
 {
     return invalidateBase(context, count, attachments, true);
 }
@@ -219,13 +219,13 @@ angle::Result Framebuffer11::invalidateBase(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-gl::Error Framebuffer11::invalidateSub(const gl::Context *context,
-                                       size_t,
-                                       const GLenum *,
-                                       const gl::Rectangle &)
+angle::Result Framebuffer11::invalidateSub(const gl::Context *context,
+                                           size_t count,
+                                           const GLenum *attachments,
+                                           const gl::Rectangle &area)
 {
     // A no-op implementation conforms to the spec, so don't call UNIMPLEMENTED()
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 angle::Result Framebuffer11::invalidateAttachment(const gl::Context *context,
@@ -397,16 +397,16 @@ angle::Result Framebuffer11::syncState(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-gl::Error Framebuffer11::getSamplePosition(const gl::Context *context,
-                                           size_t index,
-                                           GLfloat *xy) const
+angle::Result Framebuffer11::getSamplePosition(const gl::Context *context,
+                                               size_t index,
+                                               GLfloat *xy) const
 {
     const gl::FramebufferAttachment *attachment = mState.getFirstNonNullAttachment();
     ASSERT(attachment);
     GLsizei sampleCount = attachment->getSamples();
 
     d3d11_gl::GetSamplePosition(sampleCount, index, xy);
-    return gl::NoError();
+    return angle::Result::Continue();
 }
 
 RenderTarget11 *Framebuffer11::getFirstRenderTarget() const

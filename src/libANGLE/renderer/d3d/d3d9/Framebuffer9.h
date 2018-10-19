@@ -23,18 +23,20 @@ class Framebuffer9 : public FramebufferD3D
     Framebuffer9(const gl::FramebufferState &data, Renderer9 *renderer);
     ~Framebuffer9() override;
 
-    gl::Error discard(const gl::Context *context, size_t count, const GLenum *attachments) override;
-    gl::Error invalidate(const gl::Context *context,
-                         size_t count,
-                         const GLenum *attachments) override;
-    gl::Error invalidateSub(const gl::Context *context,
-                            size_t count,
-                            const GLenum *attachments,
-                            const gl::Rectangle &area) override;
+    angle::Result discard(const gl::Context *context,
+                          size_t count,
+                          const GLenum *attachments) override;
+    angle::Result invalidate(const gl::Context *context,
+                             size_t count,
+                             const GLenum *attachments) override;
+    angle::Result invalidateSub(const gl::Context *context,
+                                size_t count,
+                                const GLenum *attachments,
+                                const gl::Rectangle &area) override;
 
-    gl::Error getSamplePosition(const gl::Context *context,
-                                size_t index,
-                                GLfloat *xy) const override;
+    angle::Result getSamplePosition(const gl::Context *context,
+                                    size_t index,
+                                    GLfloat *xy) const override;
 
     angle::Result syncState(const gl::Context *context,
                             const gl::Framebuffer::DirtyBits &dirtyBits) override;

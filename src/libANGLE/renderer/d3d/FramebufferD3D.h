@@ -62,38 +62,38 @@ class FramebufferD3D : public FramebufferImpl
     FramebufferD3D(const gl::FramebufferState &data, RendererD3D *renderer);
     ~FramebufferD3D() override;
 
-    gl::Error clear(const gl::Context *context, GLbitfield mask) override;
-    gl::Error clearBufferfv(const gl::Context *context,
-                            GLenum buffer,
-                            GLint drawbuffer,
-                            const GLfloat *values) override;
-    gl::Error clearBufferuiv(const gl::Context *context,
-                             GLenum buffer,
-                             GLint drawbuffer,
-                             const GLuint *values) override;
-    gl::Error clearBufferiv(const gl::Context *context,
-                            GLenum buffer,
-                            GLint drawbuffer,
-                            const GLint *values) override;
-    gl::Error clearBufferfi(const gl::Context *context,
-                            GLenum buffer,
-                            GLint drawbuffer,
-                            GLfloat depth,
-                            GLint stencil) override;
+    angle::Result clear(const gl::Context *context, GLbitfield mask) override;
+    angle::Result clearBufferfv(const gl::Context *context,
+                                GLenum buffer,
+                                GLint drawbuffer,
+                                const GLfloat *values) override;
+    angle::Result clearBufferuiv(const gl::Context *context,
+                                 GLenum buffer,
+                                 GLint drawbuffer,
+                                 const GLuint *values) override;
+    angle::Result clearBufferiv(const gl::Context *context,
+                                GLenum buffer,
+                                GLint drawbuffer,
+                                const GLint *values) override;
+    angle::Result clearBufferfi(const gl::Context *context,
+                                GLenum buffer,
+                                GLint drawbuffer,
+                                GLfloat depth,
+                                GLint stencil) override;
 
     GLenum getImplementationColorReadFormat(const gl::Context *context) const override;
     GLenum getImplementationColorReadType(const gl::Context *context) const override;
-    gl::Error readPixels(const gl::Context *context,
-                         const gl::Rectangle &area,
-                         GLenum format,
-                         GLenum type,
-                         void *pixels) override;
+    angle::Result readPixels(const gl::Context *context,
+                             const gl::Rectangle &area,
+                             GLenum format,
+                             GLenum type,
+                             void *pixels) override;
 
-    gl::Error blit(const gl::Context *context,
-                   const gl::Rectangle &sourceArea,
-                   const gl::Rectangle &destArea,
-                   GLbitfield mask,
-                   GLenum filter) override;
+    angle::Result blit(const gl::Context *context,
+                       const gl::Rectangle &sourceArea,
+                       const gl::Rectangle &destArea,
+                       GLbitfield mask,
+                       GLenum filter) override;
 
     bool checkStatus(const gl::Context *context) const override;
 
