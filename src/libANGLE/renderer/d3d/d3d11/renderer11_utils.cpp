@@ -972,6 +972,13 @@ void SetUAVRelatedResourceLimits(D3D_FEATURE_LEVEL featureLevel, gl::Caps *caps)
     caps->maxCombinedAtomicCounters = reservedUAVsForAtomicCounterBuffers * 1024;
     caps->maxShaderAtomicCounters[gl::ShaderType::Compute] = caps->maxCombinedAtomicCounters;
 
+    // See
+    // https://docs.microsoft.com/en-us/windows/desktop/direct3d11/overviews-direct3d-11-resources-limits
+    // Resource size (in MB) for any of the preceding resources is min(max(128,0.25f * (amount of
+    // dedicated VRAM)), 2048) MB. So we set it to 128MB to keep same with GL backend.
+    caps->maxShaderStorageBlockSize =
+        D3D11_REQ_RESOURCE_SIZE_IN_MEGABYTES_EXPRESSION_A_TERM * 1024 * 1024;
+
     // Allocate the remaining slots for images and shader storage blocks.
     // The maximum number of fragment shader outputs depends on the current context version, so we
     // will not set it here. See comments in Context11::initialize().
