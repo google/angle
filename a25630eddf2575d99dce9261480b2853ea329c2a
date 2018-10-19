@@ -46,6 +46,30 @@
       "revId": "a25630eddf2575d99dce9261480b2853ea329c2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05f78206_a6293bd0",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-19T01:48:52Z",
+      "side": 1,
+      "message": "Because this test also test on ES 3.1, and shader contains ANGLE_multisample_texture, but we haven\u0027t removed it in translatorESSL.cpp.\n\nTrybot log of patch 29\nhttps://logs.chromium.org/logs/chromium/buildbucket/cr-buildbucket.appspot.com/8932348515262078832/+/steps/angle_end2end_tests_on_Android_device_Nexus_5X__with_patch_/0/stdout\n\nI   68.566s run_tests_on_device(0125dc77fa98b188)  [ RUN      ] TextureMultisampleTest.SimpleTexelFetch/ES3_1_OPENGLES\nI   68.566s run_tests_on_device(0125dc77fa98b188)  Warning: resolveCompile(420): \nI   68.566s run_tests_on_device(0125dc77fa98b188)  ERROR: 0:2: \u0027GL_ANGLE_texture_multisample\u0027 : extension is not supported\nI   68.566s run_tests_on_device(0125dc77fa98b188)  ERROR: 0:6: \u0027sampler2DMS\u0027 : Illegal use of reserved word\nI   68.566s run_tests_on_device(0125dc77fa98b188)  ERROR: 0:6: \u0027sampler2DMS\u0027 : syntax error",
+      "parentUuid": "fd1b078a_d0b46c28",
+      "range": {
+        "startLine": 362,
+        "startChar": 3,
+        "endLine": 362,
+        "endChar": 37
+      },
+      "revId": "a25630eddf2575d99dce9261480b2853ea329c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
