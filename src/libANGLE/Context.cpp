@@ -3452,6 +3452,13 @@ void Context::initWorkarounds()
     // Lose the context upon out of memory error if the application is
     // expecting to watch for those events.
     mWorkarounds.loseContextOnOutOfMemory = (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
+
+    if (mWorkarounds.syncFramebufferBindingsOnTexImage)
+    {
+        // Update the Framebuffer bindings on TexImage to work around an Intel bug.
+        mTexImageDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+        mTexImageDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    }
 }
 
 // Return true if the draw is a no-op, else return false.

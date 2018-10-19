@@ -1747,7 +1747,7 @@ void StateManagerGL::syncState(const gl::Context *context,
         mMultiviewDirtyBits.reset();
     }
 
-    const gl::State::DirtyBits &glAndLocalDirtyBits = (glDirtyBits | mLocalDirtyBits);
+    const gl::State::DirtyBits &glAndLocalDirtyBits = (glDirtyBits | mLocalDirtyBits) & bitMask;
 
     if (!glAndLocalDirtyBits.any())
     {
@@ -1939,6 +1939,11 @@ void StateManagerGL::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
             {
                 gl::Framebuffer *framebuffer = state.getReadFramebuffer();
+
+                // Necessary for an Intel TexImage workaround.
+                if (!framebuffer)
+                    continue;
+
                 FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
                 bindFramebuffer(GL_READ_FRAMEBUFFER, framebufferGL->getFramebufferID());
                 break;
@@ -1946,11 +1951,19 @@ void StateManagerGL::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
             {
                 gl::Framebuffer *framebuffer = state.getDrawFramebuffer();
+
+                // Necessary for an Intel TexImage workaround.
+                if (!framebuffer)
+                    continue;
+
                 FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
                 bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferGL->getFramebufferID());
 
                 const gl::Program *program = state.getProgram();
-                updateMultiviewBaseViewLayerIndexUniform(program, framebufferGL->getState());
+                if (program)
+                {
+                    updateMultiviewBaseViewLayerIndexUniform(program, framebufferGL->getState());
+                }
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -2070,9 +2083,9 @@ void StateManagerGL::syncState(const gl::Context *context,
                 UNREACHABLE();
                 break;
         }
-
-        mLocalDirtyBits.reset();
     }
+
+    mLocalDirtyBits &= ~(bitMask);
 }
 
 void StateManagerGL::setFramebufferSRGBEnabled(const gl::Context *context, bool enabled)

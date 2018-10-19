@@ -1243,14 +1243,22 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
 void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds)
 {
-#if defined(ANGLE_PLATFORM_ANDROID)
     VendorID vendor = GetVendorID(functions);
+    ANGLE_UNUSED_VARIABLE(vendor);
 
+#if defined(ANGLE_PLATFORM_ANDROID)
     if (IsQualcomm(vendor))
     {
         workarounds->disableProgramCachingForTransformFeedback = true;
     }
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
+
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    if (IsIntel(vendor))
+    {
+        workarounds->syncFramebufferBindingsOnTexImage = true;
+    }
+#endif  // defined(ANGLE_PLATFORM_WINDOWS)
 }
 
 }  // namespace nativegl_gl
