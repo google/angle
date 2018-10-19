@@ -70,6 +70,30 @@
       "revId": "a25630eddf2575d99dce9261480b2853ea329c2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "603118dd_2e9516df",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2018-10-19T03:09:16Z",
+      "side": 1,
+      "message": "I\u0027ve revised the skip condition. Skip the test if the extension is not supported.",
+      "parentUuid": "05f78206_a6293bd0",
+      "range": {
+        "startLine": 362,
+        "startChar": 3,
+        "endLine": 362,
+        "endChar": 37
+      },
+      "revId": "a25630eddf2575d99dce9261480b2853ea329c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
