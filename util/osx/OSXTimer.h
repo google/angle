@@ -23,10 +23,15 @@ class OSXTimer : public Timer
     void stop() override;
     double getElapsedTime() const override;
 
+    double getAbsoluteTime() override;
+
   private:
+    double getSecondCoeff();
+
     bool mRunning;
     uint64_t mStartTime;
     uint64_t mStopTime;
+    double mSecondCoeff;
 };
 
 #endif // UTIL_OSX_TIMER_H_

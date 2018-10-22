@@ -9,6 +9,7 @@
 #ifndef UTIL_LINUX_TIMER_H
 #define UTIL_LINUX_TIMER_H
 
+#include <stdint.h>
 #include <time.h>
 
 #include "Timer.h"
@@ -22,10 +23,12 @@ class LinuxTimer : public Timer
     void stop() override;
     double getElapsedTime() const override;
 
+    double getAbsoluteTime() override;
+
   private:
     bool mRunning;
-    struct timespec mStartTime;
-    struct timespec mStopTime;
+    uint64_t mStartTimeNs;
+    uint64_t mStopTimeNs;
 };
 
 #endif // UTIL_LINUX_TIMER_H

@@ -13,9 +13,17 @@ class ANGLE_EXPORT Timer
 {
   public:
     virtual ~Timer() {}
+
+    // Timer functionality: Use start() and stop() to record the duration and use getElapsedTime()
+    // to query that duration.  If getElapsedTime() is called in between, it will report the elapsed
+    // time since start().
     virtual void start() = 0;
     virtual void stop() = 0;
     virtual double getElapsedTime() const = 0;
+
+    // Timestamp functionality: Use getAbsoluteTime() to get an absolute time with an unknown
+    // origin. This time moves forward regardless of start()/stop().
+    virtual double getAbsoluteTime() = 0;
 };
 
 ANGLE_EXPORT Timer *CreateTimer();

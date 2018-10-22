@@ -14,33 +14,46 @@ LinuxTimer::LinuxTimer()
 {
 }
 
+namespace
+{
+uint64_t getCurrentTimeNs()
+{
+    struct timespec currentTime;
+    clock_gettime(CLOCK_MONOTONIC, &currentTime);
+    return currentTime.tv_sec * 1'000'000'000llu + currentTime.tv_nsec;
+}
+}  // anonymous namespace
+
 void LinuxTimer::start()
 {
-    clock_gettime(CLOCK_MONOTONIC, &mStartTime);
+    mStartTimeNs = getCurrentTimeNs();
     mRunning = true;
 }
 
 void LinuxTimer::stop()
 {
-    clock_gettime(CLOCK_MONOTONIC, &mStopTime);
+    mStopTimeNs = getCurrentTimeNs();
     mRunning = false;
 }
 
 double LinuxTimer::getElapsedTime() const
 {
-    struct timespec endTime;
+    uint64_t endTimeNs;
     if (mRunning)
     {
-        clock_gettime(CLOCK_MONOTONIC, &endTime);
+        endTimeNs = getCurrentTimeNs();
     }
     else
     {
-        endTime = mStopTime;
+        endTimeNs = mStopTimeNs;
     }
 
-    double startSeconds = mStartTime.tv_sec + (1.0 / 1000000000) * mStartTime.tv_nsec;
-    double endSeconds = endTime.tv_sec + (1.0 / 1000000000) * endTime.tv_nsec;
-    return endSeconds - startSeconds;
+    return (endTimeNs - mStartTimeNs) * 1e-9;
+}
+
+double LinuxTimer::getAbsoluteTime()
+{
+    return getCurrentTimeNs() * 1e-9;
 }
 
 Timer *CreateTimer()
