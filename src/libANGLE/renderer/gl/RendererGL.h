@@ -50,42 +50,6 @@ class RendererGL : angle::NonCopyable
     angle::Result flush();
     angle::Result finish();
 
-    angle::Result drawArrays(const gl::Context *context,
-                             gl::PrimitiveMode mode,
-                             GLint first,
-                             GLsizei count);
-    angle::Result drawArraysInstanced(const gl::Context *context,
-                                      gl::PrimitiveMode mode,
-                                      GLint first,
-                                      GLsizei count,
-                                      GLsizei instanceCount);
-
-    angle::Result drawElements(const gl::Context *context,
-                               gl::PrimitiveMode mode,
-                               GLsizei count,
-                               GLenum type,
-                               const void *indices);
-    angle::Result drawElementsInstanced(const gl::Context *context,
-                                        gl::PrimitiveMode mode,
-                                        GLsizei count,
-                                        GLenum type,
-                                        const void *indices,
-                                        GLsizei instances);
-    angle::Result drawRangeElements(const gl::Context *context,
-                                    gl::PrimitiveMode mode,
-                                    GLuint start,
-                                    GLuint end,
-                                    GLsizei count,
-                                    GLenum type,
-                                    const void *indices);
-    angle::Result drawArraysIndirect(const gl::Context *context,
-                                     gl::PrimitiveMode mode,
-                                     const void *indirect);
-    angle::Result drawElementsIndirect(const gl::Context *context,
-                                       gl::PrimitiveMode mode,
-                                       GLenum type,
-                                       const void *indirect);
-
     // CHROMIUM_path_rendering implementation
     void stencilFillPath(const gl::ContextState &state,
                          const gl::Path *path,
@@ -191,20 +155,6 @@ class RendererGL : angle::NonCopyable
                       gl::TextureCapsMap *outTextureCaps,
                       gl::Extensions *outExtensions,
                       gl::Limitations *outLimitations) const;
-
-    angle::Result setDrawArraysState(const gl::Context *context,
-                                     GLint first,
-                                     GLsizei count,
-                                     GLsizei instanceCount);
-
-    angle::Result setDrawElementsState(const gl::Context *context,
-                                       GLsizei count,
-                                       GLenum type,
-                                       const void *indices,
-                                       GLsizei instanceCount,
-                                       const void **outIndices);
-
-    angle::Result setDrawIndirectState(const gl::Context *context);
 
     mutable gl::Version mMaxSupportedESVersion;
 

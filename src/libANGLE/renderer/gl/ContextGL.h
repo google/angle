@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_GL_CONTEXTGL_H_
 
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/gl/RendererGL.h"
 
 namespace sh
 {
@@ -194,7 +195,8 @@ class ContextGL : public ContextImpl
     void applyNativeWorkarounds(gl::Workarounds *workarounds) const override;
 
     // Handle helpers
-    const FunctionsGL *getFunctions() const;
+    ANGLE_INLINE const FunctionsGL *getFunctions() const { return mRenderer->getFunctions(); }
+
     StateManagerGL *getStateManager();
     const WorkaroundsGL &getWorkaroundsGL() const;
     BlitGL *getBlitter() const;
@@ -216,6 +218,20 @@ class ContextGL : public ContextImpl
                      unsigned int line);
 
   private:
+    angle::Result setDrawArraysState(const gl::Context *context,
+                                     GLint first,
+                                     GLsizei count,
+                                     GLsizei instanceCount);
+
+    angle::Result setDrawElementsState(const gl::Context *context,
+                                       GLsizei count,
+                                       GLenum type,
+                                       const void *indices,
+                                       GLsizei instanceCount,
+                                       const void **outIndices);
+
+    angle::Result setDrawIndirectState(const gl::Context *context);
+
     std::shared_ptr<RendererGL> mRenderer;
 };
 
