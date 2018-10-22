@@ -147,30 +147,29 @@ GetImplType<T> *GetImpl(const T *glObject)
 // PhysicalDevice
 // Device
 // Queue
-// Event
-// QueryPool
 // BufferView
 // DescriptorSet
-// PipelineCache
 
 #define ANGLE_HANDLE_TYPES_X(FUNC) \
-    FUNC(Semaphore)                \
-    FUNC(CommandBuffer)            \
-    FUNC(Fence)                    \
-    FUNC(DeviceMemory)             \
     FUNC(Buffer)                   \
+    FUNC(CommandBuffer)            \
+    FUNC(CommandPool)              \
+    FUNC(DescriptorPool)           \
+    FUNC(DescriptorSetLayout)      \
+    FUNC(DeviceMemory)             \
+    FUNC(Event)                    \
+    FUNC(Fence)                    \
+    FUNC(Framebuffer)              \
     FUNC(Image)                    \
     FUNC(ImageView)                \
-    FUNC(ShaderModule)             \
-    FUNC(PipelineLayout)           \
-    FUNC(RenderPass)               \
     FUNC(Pipeline)                 \
-    FUNC(DescriptorSetLayout)      \
+    FUNC(PipelineCache)            \
+    FUNC(PipelineLayout)           \
+    FUNC(QueryPool)                \
+    FUNC(RenderPass)               \
     FUNC(Sampler)                  \
-    FUNC(DescriptorPool)           \
-    FUNC(Framebuffer)              \
-    FUNC(CommandPool)              \
-    FUNC(QueryPool)
+    FUNC(Semaphore)                \
+    FUNC(ShaderModule)
 
 #define ANGLE_COMMA_SEP_FUNC(TYPE) TYPE,
 
@@ -424,6 +423,19 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                        uint32_t size,
                        const void *data);
 
+    void setEvent(const vk::Event &event, VkPipelineStageFlags stageMask);
+    void resetEvent(const vk::Event &event, VkPipelineStageFlags stageMask);
+    void waitEvents(uint32_t eventCount,
+                    const VkEvent *events,
+                    VkPipelineStageFlags srcStageMask,
+                    VkPipelineStageFlags dstStageMask,
+                    uint32_t memoryBarrierCount,
+                    const VkMemoryBarrier *memoryBarriers,
+                    uint32_t bufferMemoryBarrierCount,
+                    const VkBufferMemoryBarrier *bufferMemoryBarriers,
+                    uint32_t imageMemoryBarrierCount,
+                    const VkImageMemoryBarrier *imageMemoryBarriers);
+
     void resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount);
     void beginQuery(VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);
     void endQuery(VkQueryPool queryPool, uint32_t query);
@@ -600,6 +612,19 @@ class Sampler final : public WrappedObject<Sampler, VkSampler>
     Sampler();
     void destroy(VkDevice device);
     angle::Result init(Context *context, const VkSamplerCreateInfo &createInfo);
+};
+
+class Event final : public WrappedObject<Event, VkEvent>
+{
+  public:
+    Event();
+    void destroy(VkDevice fence);
+    using WrappedObject::operator=;
+
+    angle::Result init(Context *context, const VkEventCreateInfo &createInfo);
+    angle::Result getStatus(Context *context) const;
+    angle::Result set(Context *context) const;
+    angle::Result reset(Context *context) const;
 };
 
 class Fence final : public WrappedObject<Fence, VkFence>
@@ -891,27 +916,30 @@ VkColorComponentFlags GetColorComponentFlags(bool red, bool green, bool blue, bo
         return angle::Result::Continue();     \
     } while (0)
 
-#define ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, acceptable)                       \
-    do                                                                                      \
-    {                                                                                       \
-        auto ANGLE_LOCAL_VAR = command;                                                     \
-        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != VK_SUCCESS && ANGLE_LOCAL_VAR != acceptable)) \
-        {                                                                                   \
-            context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__);                      \
-            return angle::Result::Stop();                                                   \
-        }                                                                                   \
-        return ANGLE_LOCAL_VAR == VK_SUCCESS ? angle::Result::Continue()                    \
-                                             : angle::Result::Incomplete();                 \
+#define ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, success, incomplete)           \
+    do                                                                                   \
+    {                                                                                    \
+        auto ANGLE_LOCAL_VAR = command;                                                  \
+        if (ANGLE_UNLIKELY(ANGLE_LOCAL_VAR != success && ANGLE_LOCAL_VAR != incomplete)) \
+        {                                                                                \
+            context->handleError(ANGLE_LOCAL_VAR, __FILE__, __LINE__);                   \
+            return angle::Result::Stop();                                                \
+        }                                                                                \
+        return ANGLE_LOCAL_VAR == success ? angle::Result::Continue()                    \
+                                          : angle::Result::Incomplete();                 \
     } while (0)
 
 #define ANGLE_VK_TRY_RETURN_ALLOW_INCOMPLETE(context, command) \
-    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_INCOMPLETE)
+    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_SUCCESS, VK_INCOMPLETE)
 
 #define ANGLE_VK_TRY_RETURN_ALLOW_NOT_READY(context, command) \
-    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_NOT_READY)
+    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_SUCCESS, VK_NOT_READY)
 
 #define ANGLE_VK_TRY_RETURN_ALLOW_TIMEOUT(context, command) \
-    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_TIMEOUT)
+    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_SUCCESS, VK_TIMEOUT)
+
+#define ANGLE_VK_TRY_RETURN_EVENT_STATUS(context, command) \
+    ANGLE_VK_TRY_RETURN_ALLOW_OTHER(context, command, VK_EVENT_SET, VK_EVENT_RESET)
 
 #define ANGLE_VK_UNREACHABLE(context) \
     UNREACHABLE();                    \

@@ -565,6 +565,35 @@ void CommandBuffer::pushConstants(const PipelineLayout &layout,
     vkCmdPushConstants(mHandle, layout.getHandle(), flag, offset, size, data);
 }
 
+void CommandBuffer::setEvent(const vk::Event &event, VkPipelineStageFlags stageMask)
+{
+    ASSERT(valid() && event.valid());
+    vkCmdSetEvent(mHandle, event.getHandle(), stageMask);
+}
+
+void CommandBuffer::resetEvent(const vk::Event &event, VkPipelineStageFlags stageMask)
+{
+    ASSERT(valid() && event.valid());
+    vkCmdResetEvent(mHandle, event.getHandle(), stageMask);
+}
+
+void CommandBuffer::waitEvents(uint32_t eventCount,
+                               const VkEvent *events,
+                               VkPipelineStageFlags srcStageMask,
+                               VkPipelineStageFlags dstStageMask,
+                               uint32_t memoryBarrierCount,
+                               const VkMemoryBarrier *memoryBarriers,
+                               uint32_t bufferMemoryBarrierCount,
+                               const VkBufferMemoryBarrier *bufferMemoryBarriers,
+                               uint32_t imageMemoryBarrierCount,
+                               const VkImageMemoryBarrier *imageMemoryBarriers)
+{
+    ASSERT(valid());
+    vkCmdWaitEvents(mHandle, eventCount, events, srcStageMask, dstStageMask, memoryBarrierCount,
+                    memoryBarriers, bufferMemoryBarrierCount, bufferMemoryBarriers,
+                    imageMemoryBarrierCount, imageMemoryBarriers);
+}
+
 void CommandBuffer::resetQueryPool(VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount)
 {
     ASSERT(valid());
@@ -1000,6 +1029,42 @@ angle::Result Sampler::init(Context *context, const VkSamplerCreateInfo &createI
                         vkCreateSampler(context->getDevice(), &createInfo, nullptr, &mHandle));
 }
 
+// Event implementation.
+Event::Event()
+{
+}
+
+void Event::destroy(VkDevice device)
+{
+    if (valid())
+    {
+        vkDestroyEvent(device, mHandle, nullptr);
+        mHandle = VK_NULL_HANDLE;
+    }
+}
+
+angle::Result Event::init(Context *context, const VkEventCreateInfo &createInfo)
+{
+    ASSERT(!valid());
+    ANGLE_VK_TRY_RETURN(context,
+                        vkCreateEvent(context->getDevice(), &createInfo, nullptr, &mHandle));
+}
+
+angle::Result Event::getStatus(Context *context) const
+{
+    ANGLE_VK_TRY_RETURN_EVENT_STATUS(context, vkGetEventStatus(context->getDevice(), mHandle));
+}
+
+angle::Result Event::set(Context *context) const
+{
+    ANGLE_VK_TRY_RETURN(context, vkSetEvent(context->getDevice(), mHandle));
+}
+
+angle::Result Event::reset(Context *context) const
+{
+    ANGLE_VK_TRY_RETURN(context, vkResetEvent(context->getDevice(), mHandle));
+}
+
 // Fence implementation.
 Fence::Fence()
 {
@@ -1220,6 +1285,9 @@ void GarbageObject::destroy(VkDevice device)
         case HandleType::CommandBuffer:
             // Command buffers are pool allocated.
             UNREACHABLE();
+            break;
+        case HandleType::Event:
+            vkDestroyEvent(device, reinterpret_cast<VkEvent>(mHandle), nullptr);
             break;
         case HandleType::Fence:
             vkDestroyFence(device, reinterpret_cast<VkFence>(mHandle), nullptr);
