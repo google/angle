@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "2fcb2aaa_98fa1b85",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-22T17:25:45Z",
+      "side": 1,
+      "message": "won\u0027t this always be zero? You just created a new encoder and all you did was call enterAggregateType?",
+      "range": {
+        "startLine": 74,
+        "startChar": 4,
+        "endLine": 74,
+        "endChar": 57
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "35480469_540790ec",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 5
@@ -13,6 +36,30 @@
       "writtenOn": "2018-10-19T03:28:14Z",
       "side": 1,
       "message": "[a]",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 53
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75d6af9c_02a8a749",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-22T17:25:45Z",
+      "side": 1,
+      "message": "Are the only places the offset/arrayStride used is in the SSBO code?\n\nWhy don\u0027t you store them outside of the tree to keep it clear this is something specific to SSBOs. You could store them in a map like a BlockLayoutMap, but instead of indexing by std::string you could index by const TField *. Then you would use the map in writeDotOperatorOutput and any other place it is needed. But using BlockMemberInfo seems more appropriate than adding offset/arrayStride to the AST.",
+      "parentUuid": "35480469_540790ec",
       "range": {
         "startLine": 91,
         "startChar": 12,
@@ -72,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "c1d2cc6b_ec6b4a8d",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-22T17:25:45Z",
+      "side": 1,
+      "message": "Sorry, I\u0027m just coming up to speed on this stuff now. I apologize for missing your response to my question in your SSBO design doc. Please see me other comment for one suggestion.",
+      "parentUuid": "9f310f68_387e32fe",
+      "range": {
+        "startLine": 94,
+        "startChar": 20,
+        "endLine": 94,
+        "endChar": 62
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "880482e3_289d6524",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 5
@@ -107,6 +178,30 @@
       "side": 1,
       "message": "node is already got from node-\u003egetLeft(). You can see that this function is called by \u0027IsInArrayOfArray(node-\u003egetLeft())\u0027. So we don\u0027t need to recurse more.",
       "parentUuid": "880482e3_289d6524",
+      "range": {
+        "startLine": 153,
+        "startChar": 5,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bde92c68_2d1eba79",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-22T17:25:45Z",
+      "side": 1,
+      "message": "I am worried about edge cases with shaders like this:\n\n#version 310 es\n\nprecision mediump float;\n\nout vec4 fragColor;\n\nvoid main()\n{\n\tfloat b[2] \u003d float[2](0.0,0.0);\n\tfloat c[2][2] \u003d float[2][2](float[2](0.0,0.0),float[2](0.0,0.0));\n\n\tfloat f \u003d (b \u003d c[0])[0];\n\n\tfragColor \u003d vec4(1, 0, 0, 1);\n}\n\nImagine that you have a tree with (float) -\u003e (array) -\u003e (array) -\u003e (array of arrays). Maybe you should call IsInArrayOfArrays recursively to make sure.",
+      "parentUuid": "fa2f2a65_8e3232b9",
       "range": {
         "startLine": 153,
         "startChar": 5,
