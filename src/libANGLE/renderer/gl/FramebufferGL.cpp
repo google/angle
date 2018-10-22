@@ -10,7 +10,6 @@
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
-#include "libANGLE/Context.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/State.h"
 #include "libANGLE/angletypes.h"
@@ -714,12 +713,11 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
         }
     }
 
-    if (attachment)
+    if (attachment && mState.id() == context->getGLState().getDrawFramebuffer()->id())
     {
         const bool isSideBySide =
             (attachment->getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE);
         stateManager->setSideBySide(isSideBySide);
-        stateManager->setViewportOffsets(attachment->getMultiviewViewportOffsets());
         stateManager->updateMultiviewBaseViewLayerIndexUniform(context->getGLState().getProgram(),
                                                                getState());
     }
@@ -737,32 +735,28 @@ bool FramebufferGL::isDefault() const
     return mIsDefault;
 }
 
-void FramebufferGL::maskOutInactiveOutputDrawBuffers(const gl::Context *context,
-                                                     GLenum binding,
-                                                     DrawBufferMask maxSet)
+void FramebufferGL::maskOutInactiveOutputDrawBuffersImpl(const gl::Context *context,
+                                                         DrawBufferMask targetAppliedDrawBuffers)
 {
 
-    auto targetAppliedDrawBuffers = mState.getEnabledDrawBuffers() & maxSet;
-    if (mAppliedEnabledDrawBuffers != targetAppliedDrawBuffers)
+    ASSERT(mAppliedEnabledDrawBuffers != targetAppliedDrawBuffers);
+    mAppliedEnabledDrawBuffers = targetAppliedDrawBuffers;
+
+    const auto &stateDrawBuffers = mState.getDrawBufferStates();
+    GLsizei drawBufferCount      = static_cast<GLsizei>(stateDrawBuffers.size());
+    ASSERT(drawBufferCount <= IMPLEMENTATION_MAX_DRAW_BUFFERS);
+
+    GLenum drawBuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
+    for (GLenum i = 0; static_cast<int>(i) < drawBufferCount; ++i)
     {
-        mAppliedEnabledDrawBuffers = targetAppliedDrawBuffers;
-
-        const auto &stateDrawBuffers = mState.getDrawBufferStates();
-        GLsizei drawBufferCount      = static_cast<GLsizei>(stateDrawBuffers.size());
-        ASSERT(drawBufferCount <= IMPLEMENTATION_MAX_DRAW_BUFFERS);
-
-        GLenum drawBuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
-        for (GLenum i = 0; static_cast<int>(i) < drawBufferCount; ++i)
-        {
-            drawBuffers[i] = targetAppliedDrawBuffers[i] ? stateDrawBuffers[i] : GL_NONE;
-        }
-
-        const FunctionsGL *functions = GetFunctionsGL(context);
-        StateManagerGL *stateManager = GetStateManagerGL(context);
-
-        stateManager->bindFramebuffer(binding, mFramebufferID);
-        functions->drawBuffers(drawBufferCount, drawBuffers);
+        drawBuffers[i] = targetAppliedDrawBuffers[i] ? stateDrawBuffers[i] : GL_NONE;
     }
+
+    const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    ASSERT(stateManager->getFramebufferID(angle::FramebufferBindingDraw) == mFramebufferID);
+    functions->drawBuffers(drawBufferCount, drawBuffers);
 }
 
 void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)

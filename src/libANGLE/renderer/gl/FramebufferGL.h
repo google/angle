@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_GL_FRAMEBUFFERGL_H_
 #define LIBANGLE_RENDERER_GL_FRAMEBUFFERGL_H_
 
+#include "libANGLE/Context.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 
 namespace rx
@@ -85,9 +86,19 @@ class FramebufferGL : public FramebufferImpl
     GLuint getFramebufferID() const;
     bool isDefault() const;
 
-    void maskOutInactiveOutputDrawBuffers(const gl::Context *context,
-                                          GLenum binding,
-                                          gl::DrawBufferMask maxSet);
+    ANGLE_INLINE void maskOutInactiveOutputDrawBuffers(const gl::Context *context)
+    {
+        ASSERT(context->getExtensions().webglCompatibility);
+
+        const gl::DrawBufferMask &maxSet =
+            context->getGLState().getProgram()->getActiveOutputVariables();
+
+        gl::DrawBufferMask targetAppliedDrawBuffers = mState.getEnabledDrawBuffers() & maxSet;
+        if (mAppliedEnabledDrawBuffers != targetAppliedDrawBuffers)
+        {
+            maskOutInactiveOutputDrawBuffersImpl(context, targetAppliedDrawBuffers);
+        }
+    }
 
   private:
     void syncClearState(const gl::Context *context, GLbitfield mask);
@@ -112,6 +123,9 @@ class FramebufferGL : public FramebufferImpl
                                       const gl::PixelPackState &pack,
                                       GLubyte *pixels,
                                       bool readLastRowSeparately) const;
+
+    void maskOutInactiveOutputDrawBuffersImpl(const gl::Context *context,
+                                              gl::DrawBufferMask targetAppliedDrawBuffers);
 
     GLuint mFramebufferID;
     bool mIsDefault;

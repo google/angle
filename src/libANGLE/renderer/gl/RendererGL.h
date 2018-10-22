@@ -192,6 +192,20 @@ class RendererGL : angle::NonCopyable
                       gl::Extensions *outExtensions,
                       gl::Limitations *outLimitations) const;
 
+    angle::Result setDrawArraysState(const gl::Context *context,
+                                     GLint first,
+                                     GLsizei count,
+                                     GLsizei instanceCount);
+
+    angle::Result setDrawElementsState(const gl::Context *context,
+                                       GLsizei count,
+                                       GLenum type,
+                                       const void *indices,
+                                       GLsizei instanceCount,
+                                       const void **outIndices);
+
+    angle::Result setDrawIndirectState(const gl::Context *context);
+
     mutable gl::Version mMaxSupportedESVersion;
 
     std::unique_ptr<FunctionsGL> mFunctions;
