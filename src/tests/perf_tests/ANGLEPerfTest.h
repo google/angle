@@ -44,12 +44,13 @@ struct TraceEvent final
 {
     TraceEvent() {}
 
-    TraceEvent(char phaseIn, const char *nameIn, double timestampIn)
-        : phase(phaseIn), name(nameIn), timestamp(timestampIn)
+    TraceEvent(char phaseIn, const char *categoryNameIn, const char *nameIn, double timestampIn)
+        : phase(phaseIn), categoryName(categoryNameIn), name(nameIn), timestamp(timestampIn)
     {
     }
 
     char phase       = 0;
+    const char *categoryName = nullptr;
     const char *name = nullptr;
     double timestamp = 0;
 };

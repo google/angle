@@ -9,6 +9,7 @@
 
 #include "ANGLEPerfTest.h"
 #include "third_party/perf/perf_test.h"
+#include "third_party/trace_event/trace_event.h"
 
 #include <cassert>
 #include <cmath>
@@ -20,6 +21,17 @@
 namespace
 {
 constexpr size_t kInitialTraceEventBufferSize = 50000;
+
+struct TraceCategory
+{
+    unsigned char enabled;
+    const char *name;
+};
+
+constexpr TraceCategory gTraceCategories[2] = {
+    {1, "gpu.angle"},
+    {1, "gpu.angle.gpu"},
+};
 
 void EmptyPlatformMethod(angle::PlatformMethods *, const char *)
 {
@@ -43,17 +55,33 @@ angle::TraceEventHandle AddTraceEvent(angle::PlatformMethods *platform,
                                       const unsigned long long *argValues,
                                       unsigned char flags)
 {
+    // Discover the category name based on categoryEnabledFlag.  This flag comes from the first
+    // parameter of TraceCategory, and corresponds to one of the entries in gTraceCategories.
+    static_assert(offsetof(TraceCategory, enabled) == 0,
+                  "|enabled| must be the first field of the TraceCategory class.");
+    const TraceCategory *category = reinterpret_cast<const TraceCategory *>(categoryEnabledFlag);
+    ptrdiff_t categoryIndex       = category - gTraceCategories;
+    ASSERT(categoryIndex >= 0 && static_cast<size_t>(categoryIndex) < ArraySize(gTraceCategories));
+
     ANGLERenderTest *renderTest     = static_cast<ANGLERenderTest *>(platform->context);
     std::vector<TraceEvent> &buffer = renderTest->getTraceEventBuffer();
-    buffer.emplace_back(phase, name, timestamp);
+    buffer.emplace_back(phase, category->name, name, timestamp);
     return buffer.size();
 }
 
 const unsigned char *GetTraceCategoryEnabledFlag(angle::PlatformMethods *platform,
                                                  const char *categoryName)
 {
-    constexpr static unsigned char kNonZero = 1;
-    return &kNonZero;
+    for (const TraceCategory &category : gTraceCategories)
+    {
+        if (strcmp(category.name, categoryName) == 0)
+        {
+            return &category.enabled;
+        }
+    }
+
+    constexpr static unsigned char kZero = 0;
+    return &kZero;
 }
 
 void UpdateTraceEventDuration(angle::PlatformMethods *platform,
@@ -67,7 +95,10 @@ void UpdateTraceEventDuration(angle::PlatformMethods *platform,
 double MonotonicallyIncreasingTime(angle::PlatformMethods *platform)
 {
     ANGLERenderTest *renderTest = static_cast<ANGLERenderTest *>(platform->context);
-    return renderTest->getTimer()->getElapsedTime();
+    // Move the time origin to the first call to this function, to avoid generating unnecessarily
+    // large timestamps.
+    static double origin = renderTest->getTimer()->getAbsoluteTime();
+    return renderTest->getTimer()->getAbsoluteTime() - origin;
 }
 
 void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
@@ -86,11 +117,11 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
             static_cast<unsigned long long>(traceEvent.timestamp * 1000.0 * 1000.0);
 
         value["name"] = traceEvent.name;
-        value["cat"]  = "gpu.angle";
+        value["cat"]  = traceEvent.categoryName;
         value["ph"]   = phaseName.str();
         value["ts"]   = microseconds;
         value["pid"]  = "ANGLE";
-        value["tid"]  = "CPU";
+        value["tid"]  = strcmp(traceEvent.categoryName, "gpu.angle.gpu") == 0 ? "GPU" : "CPU";
 
         eventsValue.append(value);
     }

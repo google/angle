@@ -80,6 +80,12 @@ config("internal_config") {
   if (angle_force_thread_safety) {
     defines += [ "ANGLE_FORCE_THREAD_SAFETY=1" ]
   }
+
+  if (angle_enable_vulkan) {
+    if (angle_enable_vulkan_gpu_trace_events) {
+      defines += [ "ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS=1" ]
+    }
+  }
 }
 
 config("extra_warnings") {

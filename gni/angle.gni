@@ -75,6 +75,11 @@ declare_args() {
   # Disable the layers in ubsan builds because of really slow builds.
   angle_enable_vulkan_validation_layers =
       angle_enable_vulkan && !is_ubsan && !is_tsan && !is_asan
+
+  if (angle_enable_vulkan) {
+    # Enable Vulkan GPU trace event capability
+    angle_enable_vulkan_gpu_trace_events = false
+  }
 }
 
 if (is_win) {

@@ -18,6 +18,7 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/FeaturesVk.h"
+#include "libANGLE/renderer/vulkan/QueryVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_internal_shaders.h"
@@ -172,6 +173,19 @@ class RendererVk : angle::NonCopyable
     vk::ShaderLibrary *getShaderLibrary();
     const FeaturesVk &getFeatures() const { return mFeatures; }
 
+    // Create Begin/End/Instant GPU trace events, which take their timestamps from GPU queries.
+    // The events are queued until the query results are available.  Possible values for `phase`
+    // are TRACE_EVENT_PHASE_*
+    ANGLE_INLINE angle::Result traceGpuEvent(vk::Context *context,
+                                             vk::CommandBuffer *commandBuffer,
+                                             char phase,
+                                             const char *name)
+    {
+        if (mGpuEventsEnabled)
+            return traceGpuEventImpl(context, commandBuffer, phase, name);
+        return angle::Result::Continue();
+    }
+
   private:
     // Number of semaphores for external entities to renderer to issue a wait, such as surface's
     // image acquire.
@@ -184,7 +198,8 @@ class RendererVk : angle::NonCopyable
     void ensureCapsInitialized() const;
     void getSubmitWaitSemaphores(
         vk::Context *context,
-        angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> *waitSemaphores);
+        angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> *waitSemaphores,
+        angle::FixedVector<VkPipelineStageFlags, kMaxWaitSemaphores> *waitStageMasks);
     angle::Result submitFrame(vk::Context *context,
                               const VkSubmitInfo &submitInfo,
                               vk::CommandBuffer &&commandBuffer);
@@ -193,6 +208,14 @@ class RendererVk : angle::NonCopyable
     void initFeatures();
     void initPipelineCacheVkKey();
     angle::Result initPipelineCacheVk(DisplayVk *display);
+
+    angle::Result synchronizeCpuGpuTime(vk::Context *context);
+    angle::Result traceGpuEventImpl(vk::Context *context,
+                                    vk::CommandBuffer *commandBuffer,
+                                    char phase,
+                                    const char *name);
+    angle::Result checkCompletedGpuEvents(vk::Context *context);
+    void flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS);
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;
@@ -277,6 +300,58 @@ class RendererVk : angle::NonCopyable
 
     // Internal shader library.
     vk::ShaderLibrary mShaderLibrary;
+
+    // The GpuEventQuery struct holds together a timestamp query and enough data to create a
+    // trace event based on that. Use traceGpuEvent to insert such queries.  They will be readback
+    // when the results are available, without inserting a GPU bubble.
+    //
+    // - eventName will be the reported name of the event
+    // - phase is either 'B' (duration begin), 'E' (duration end) or 'i' (instant // event).
+    //   See Google's "Trace Event Format":
+    //   https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU
+    // - serial is the serial of the batch the query was submitted on.  Until the batch is
+    //   submitted, the query is not checked to avoid incuring a flush.
+    struct GpuEventQuery final
+    {
+        const char *name;
+        char phase;
+
+        uint32_t queryIndex;
+        size_t queryPoolIndex;
+
+        Serial serial;
+    };
+
+    // Once a query result is available, the timestamp is read and a GpuEvent object is kept until
+    // the next clock sync, at which point the clock drift is compensated in the results before
+    // handing them off to the application.
+    struct GpuEvent final
+    {
+        uint64_t gpuTimestampCycles;
+        const char *name;
+        char phase;
+    };
+
+    bool mGpuEventsEnabled;
+    vk::DynamicQueryPool mGpuEventQueryPool;
+    // A list of queries that have yet to be turned into an event (their result is not yet
+    // available).
+    std::vector<GpuEventQuery> mInFlightGpuEventQueries;
+    // A list of gpu events since the last clock sync.
+    std::vector<GpuEvent> mGpuEvents;
+
+    // Hold information from the last gpu clock sync for future gpu-to-cpu timestamp conversions.
+    struct GpuClockSyncInfo
+    {
+        double gpuTimestampS;
+        double cpuTimestampS;
+    };
+    GpuClockSyncInfo mGpuClockSync;
+
+    // The very first timestamp queried for a GPU event is used as origin, so event timestamps would
+    // have a value close to zero, to avoid losing 12 bits when converting these 64 bit values to
+    // double.
+    uint64_t mGpuEventTimestampOrigin;
 };
 
 uint32_t GetUniformBufferDescriptorCount();

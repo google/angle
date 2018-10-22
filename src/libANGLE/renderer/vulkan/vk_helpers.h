@@ -229,6 +229,11 @@ class DynamicQueryPool final : public DynamicallyGrowingPool<QueryPool>
     angle::Result allocateQuery(Context *context, QueryHelper *queryOut);
     void freeQuery(Context *context, QueryHelper *query);
 
+    // Special allocator that doesn't work with QueryHelper, which is a CommandGraphResource.
+    // Currently only used with RendererVk::GpuEventQuery.
+    angle::Result allocateQuery(Context *context, size_t *poolIndex, uint32_t *queryIndex);
+    void freeQuery(Context *context, size_t poolIndex, uint32_t queryIndex);
+
     const QueryPool *getQueryPool(size_t index) const { return &mPools[index]; }
 
   private:

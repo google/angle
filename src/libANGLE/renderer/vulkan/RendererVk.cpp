@@ -306,7 +306,10 @@ RendererVk::RendererVk()
       mCurrentQueueSerial(mQueueSerialFactory.generate()),
       mDeviceLost(false),
       mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod),
-      mCommandGraph(kEnableCommandGraphDiagnostics)
+      mCommandGraph(kEnableCommandGraphDiagnostics),
+      mGpuEventsEnabled(false),
+      mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
+      mGpuEventTimestampOrigin(0)
 {
 }
 
@@ -330,6 +333,7 @@ void RendererVk::onDestroy(vk::Context *context)
     mPipelineCacheVk.destroy(mDevice);
     mSubmitSemaphorePool.destroy(mDevice);
     mShaderLibrary.destroy(mDevice);
+    mGpuEventQueryPool.destroy(mDevice);
 
     GlslangWrapper::Release();
 
@@ -624,6 +628,25 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     // Initialize the submission semaphore pool.
     ANGLE_TRY(mSubmitSemaphorePool.init(displayVk, vk::kDefaultSemaphorePoolSize));
 
+#if ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS
+    angle::PlatformMethods *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    // GPU tracing workaround for anglebug.com/2927.  The renderer should not emit gpu events during
+    // platform discovery.
+    const unsigned char *gpuEventsEnabled =
+        platform->getTraceCategoryEnabledFlag(platform, "gpu.angle.gpu");
+    mGpuEventsEnabled = gpuEventsEnabled && *gpuEventsEnabled;
+#endif
+
+    if (mGpuEventsEnabled)
+    {
+        // Calculate the difference between CPU and GPU clocks for GPU event reporting.
+        ANGLE_TRY(mGpuEventQueryPool.init(displayVk, VK_QUERY_TYPE_TIMESTAMP,
+                                          vk::kDefaultTimestampQueryPoolSize));
+        ANGLE_TRY(synchronizeCpuGpuTime(displayVk));
+    }
+
     return angle::Result::Continue();
 }
 
@@ -781,11 +804,13 @@ void RendererVk::ensureCapsInitialized() const
 
 void RendererVk::getSubmitWaitSemaphores(
     vk::Context *context,
-    angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> *waitSemaphores)
+    angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> *waitSemaphores,
+    angle::FixedVector<VkPipelineStageFlags, kMaxWaitSemaphores> *waitStageMasks)
 {
     if (mSubmitLastSignaledSemaphore.getSemaphore())
     {
         waitSemaphores->push_back(mSubmitLastSignaledSemaphore.getSemaphore()->getHandle());
+        waitStageMasks->push_back(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
 
         // Return the semaphore to the pool (which will remain valid and unused until the
         // queue it's about to be waited on has finished execution).
@@ -795,6 +820,8 @@ void RendererVk::getSubmitWaitSemaphores(
     for (vk::SemaphoreHelper &semaphore : mSubmitWaitSemaphores)
     {
         waitSemaphores->push_back(semaphore.getSemaphore()->getHandle());
+        waitStageMasks->push_back(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
+
         mSubmitSemaphorePool.freeSemaphore(context, &semaphore);
     }
     mSubmitWaitSemaphores.clear();
@@ -845,18 +872,15 @@ angle::Result RendererVk::finish(vk::Context *context)
         vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
         ANGLE_TRY(flushCommandGraph(context, &commandBatch.get()));
 
-        VkPipelineStageFlags waitStageMask[2] = {
-            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-        };
-
         angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> waitSemaphores;
-        getSubmitWaitSemaphores(context, &waitSemaphores);
+        angle::FixedVector<VkPipelineStageFlags, kMaxWaitSemaphores> waitStageMasks;
+        getSubmitWaitSemaphores(context, &waitSemaphores, &waitStageMasks);
 
         VkSubmitInfo submitInfo         = {};
         submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.waitSemaphoreCount   = static_cast<uint32_t>(waitSemaphores.size());
         submitInfo.pWaitSemaphores      = waitSemaphores.data();
-        submitInfo.pWaitDstStageMask    = waitStageMask;
+        submitInfo.pWaitDstStageMask    = waitStageMasks.data();
         submitInfo.commandBufferCount   = 1;
         submitInfo.pCommandBuffers      = commandBatch.get().ptr();
         submitInfo.signalSemaphoreCount = 0;
@@ -868,6 +892,20 @@ angle::Result RendererVk::finish(vk::Context *context)
     ASSERT(mQueue != VK_NULL_HANDLE);
     ANGLE_VK_TRY(context, vkQueueWaitIdle(mQueue));
     freeAllInFlightResources();
+
+    if (mGpuEventsEnabled)
+    {
+        // Recalculate the CPU/GPU time difference to account for clock drifting.  Note that
+        // currently, the perftest event handler does not correctly handle out of order gpu and sync
+        // events, so make sure all gpu events are completed.  This loop should in practice execute
+        // once since the queue is already idle.
+        while (mInFlightGpuEventQueries.size() > 0)
+        {
+            ANGLE_TRY(checkCompletedGpuEvents(context));
+        }
+        ANGLE_TRY(synchronizeCpuGpuTime(context));
+    }
+
     return angle::Result::Continue();
 }
 
@@ -958,6 +996,11 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
     ANGLE_TRY(checkCompletedCommands(context));
 
+    if (mGpuEventsEnabled)
+    {
+        ANGLE_TRY(checkCompletedGpuEvents(context));
+    }
+
     // Simply null out the command buffer here - it was allocated using the command pool.
     commandBuffer.releaseHandle();
 
@@ -965,12 +1008,10 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     // TODO(jmadill): Consider reusing command pools.
     VkCommandPoolCreateInfo poolInfo = {};
     poolInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    poolInfo.flags            = 0;
+    poolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
     poolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
 
-    ANGLE_TRY(mCommandPool.init(context, poolInfo));
-
-    return angle::Result::Continue();
+    return mCommandPool.init(context, poolInfo);
 }
 
 bool RendererVk::isSerialInUse(Serial serial) const
@@ -1052,12 +1093,9 @@ angle::Result RendererVk::flush(vk::Context *context)
     vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
     ANGLE_TRY(flushCommandGraph(context, &commandBatch.get()));
 
-    VkPipelineStageFlags waitStageMask[2] = {
-        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-    };
-
     angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> waitSemaphores;
-    getSubmitWaitSemaphores(context, &waitSemaphores);
+    angle::FixedVector<VkPipelineStageFlags, kMaxWaitSemaphores> waitStageMasks;
+    getSubmitWaitSemaphores(context, &waitSemaphores, &waitStageMasks);
 
     // On every flush, create a semaphore to be signaled.  On the next submission, this semaphore
     // will be waited on.
@@ -1067,7 +1105,7 @@ angle::Result RendererVk::flush(vk::Context *context)
     submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo.waitSemaphoreCount   = static_cast<uint32_t>(waitSemaphores.size());
     submitInfo.pWaitSemaphores      = waitSemaphores.data();
-    submitInfo.pWaitDstStageMask    = waitStageMask;
+    submitInfo.pWaitDstStageMask    = waitStageMasks.data();
     submitInfo.commandBufferCount   = 1;
     submitInfo.pCommandBuffers      = commandBatch.get().ptr();
     submitInfo.signalSemaphoreCount = 1;
@@ -1196,6 +1234,346 @@ const vk::Semaphore *RendererVk::getSubmitLastSignaledSemaphore(vk::Context *con
 vk::ShaderLibrary *RendererVk::getShaderLibrary()
 {
     return &mShaderLibrary;
+}
+
+angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)
+{
+    ASSERT(mGpuEventsEnabled);
+
+    angle::PlatformMethods *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    // To synchronize CPU and GPU times, we need to get the CPU timestamp as close as possible to
+    // the GPU timestamp.  The process of getting the GPU timestamp is as follows:
+    //
+    //             CPU                            GPU
+    //
+    //     Record command buffer
+    //     with timestamp query
+    //
+    //     Submit command buffer
+    //
+    //     Post-submission work             Begin execution
+    //
+    //            ????                    Write timstamp Tgpu
+    //
+    //            ????                       End execution
+    //
+    //            ????                    Return query results
+    //
+    //            ????
+    //
+    //       Get query results
+    //
+    // The areas of unknown work (????) on the CPU indicate that the CPU may or may not have
+    // finished post-submission work while the GPU is executing in parallel. With no further work,
+    // querying CPU timestamps before submission and after getting query results give the bounds to
+    // Tgpu, which could be quite large.
+    //
+    // Using VkEvents, the GPU can be made to wait for the CPU and vice versa, in an effort to
+    // reduce this range. This function implements the following procedure:
+    //
+    //             CPU                            GPU
+    //
+    //     Record command buffer
+    //     with timestamp query
+    //
+    //     Submit command buffer
+    //
+    //     Post-submission work             Begin execution
+    //
+    //            ????                    Set Event GPUReady
+    //
+    //    Wait on Event GPUReady         Wait on Event CPUReady
+    //
+    //       Get CPU Time Ts             Wait on Event CPUReady
+    //
+    //      Set Event CPUReady           Wait on Event CPUReady
+    //
+    //      Get CPU Time Tcpu              Get GPU Time Tgpu
+    //
+    //    Wait on Event GPUDone            Set Event GPUDone
+    //
+    //       Get CPU Time Te                 End Execution
+    //
+    //            Idle                    Return query results
+    //
+    //      Get query results
+    //
+    // If Te-Ts > epsilon, a GPU or CPU interruption can be assumed and the operation can be
+    // retried.  Once Te-Ts < epsilon, Tcpu can be taken to presumably match Tgpu.  Finding an
+    // epsilon that's valid for all devices may be difficult, so the loop can be performed only a
+    // limited number of times and the Tcpu,Tgpu pair corresponding to smallest Te-Ts used for
+    // calibration.
+    //
+    // Note: Once VK_EXT_calibrated_timestamps is ubiquitous, this should be redone.
+
+    // Make sure nothing is running
+    ASSERT(mCommandGraph.empty());
+
+    TRACE_EVENT0("gpu.angle", "RendererVk::synchronizeCpuGpuTime");
+
+    // Create a query used to receive the GPU timestamp
+    vk::QueryHelper timestampQuery;
+    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(context, &timestampQuery));
+
+    // Create the three events
+    VkEventCreateInfo eventCreateInfo = {};
+    eventCreateInfo.sType             = VK_STRUCTURE_TYPE_EVENT_CREATE_INFO;
+    eventCreateInfo.flags             = 0;
+
+    vk::Scoped<vk::Event> cpuReady(mDevice), gpuReady(mDevice), gpuDone(mDevice);
+    ANGLE_TRY(cpuReady.get().init(context, eventCreateInfo));
+    ANGLE_TRY(gpuReady.get().init(context, eventCreateInfo));
+    ANGLE_TRY(gpuDone.get().init(context, eventCreateInfo));
+
+    constexpr uint32_t kRetries = 10;
+
+    // Time suffixes used are S for seconds and Cycles for cycles
+    double tightestRangeS = 1e6f;
+    double TcpuS          = 0;
+    uint64_t TgpuCycles   = 0;
+    for (uint32_t i = 0; i < kRetries; ++i)
+    {
+        // Reset the events
+        ANGLE_TRY(cpuReady.get().reset(context));
+        ANGLE_TRY(gpuReady.get().reset(context));
+        ANGLE_TRY(gpuDone.get().reset(context));
+
+        // Record the command buffer
+        vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
+        vk::CommandBuffer &commandBuffer = commandBatch.get();
+
+        VkCommandBufferAllocateInfo commandBufferInfo = {};
+        commandBufferInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        commandBufferInfo.commandPool        = mCommandPool.getHandle();
+        commandBufferInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        commandBufferInfo.commandBufferCount = 1;
+
+        ANGLE_TRY(commandBuffer.init(context, commandBufferInfo));
+
+        VkCommandBufferBeginInfo beginInfo = {};
+        beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags                    = 0;
+        beginInfo.pInheritanceInfo         = nullptr;
+
+        ANGLE_TRY(commandBuffer.begin(context, beginInfo));
+
+        commandBuffer.setEvent(gpuReady.get(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
+        commandBuffer.waitEvents(1, cpuReady.get().ptr(), VK_PIPELINE_STAGE_HOST_BIT,
+                                 VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, nullptr, 0, nullptr, 0,
+                                 nullptr);
+
+        commandBuffer.resetQueryPool(timestampQuery.getQueryPool()->getHandle(),
+                                     timestampQuery.getQuery(), 1);
+        commandBuffer.writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                                     timestampQuery.getQueryPool()->getHandle(),
+                                     timestampQuery.getQuery());
+
+        commandBuffer.setEvent(gpuDone.get(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
+
+        ANGLE_TRY(commandBuffer.end(context));
+
+        // Submit the command buffer
+        angle::FixedVector<VkSemaphore, kMaxWaitSemaphores> waitSemaphores;
+        angle::FixedVector<VkPipelineStageFlags, kMaxWaitSemaphores> waitStageMasks;
+        getSubmitWaitSemaphores(context, &waitSemaphores, &waitStageMasks);
+
+        VkSubmitInfo submitInfo         = {};
+        submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.waitSemaphoreCount   = static_cast<uint32_t>(waitSemaphores.size());
+        submitInfo.pWaitSemaphores      = waitSemaphores.data();
+        submitInfo.pWaitDstStageMask    = waitStageMasks.data();
+        submitInfo.commandBufferCount   = 1;
+        submitInfo.pCommandBuffers      = commandBuffer.ptr();
+        submitInfo.signalSemaphoreCount = 0;
+        submitInfo.pSignalSemaphores    = nullptr;
+
+        ANGLE_TRY(submitFrame(context, submitInfo, std::move(commandBuffer)));
+
+        // Wait for GPU to be ready.  This is a short busy wait.
+        angle::Result result = angle::Result::Incomplete();
+        do
+        {
+            result = gpuReady.get().getStatus(context);
+            ANGLE_TRY(result);
+        } while (result == angle::Result::Incomplete());
+
+        double TsS = platform->monotonicallyIncreasingTime(platform);
+
+        // Tell the GPU to go ahead with the timestamp query.
+        ANGLE_TRY(cpuReady.get().set(context));
+        double cpuTimestampS = platform->monotonicallyIncreasingTime(platform);
+
+        // Wait for GPU to be done.  Another short busy wait.
+        do
+        {
+            result = gpuDone.get().getStatus(context);
+            ANGLE_TRY(result);
+        } while (result == angle::Result::Incomplete());
+
+        double TeS = platform->monotonicallyIncreasingTime(platform);
+
+        // Get the query results
+        ANGLE_TRY(finishToSerial(context, getLastSubmittedQueueSerial()));
+
+        constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
+
+        uint64_t gpuTimestampCycles = 0;
+        ANGLE_TRY(timestampQuery.getQueryPool()->getResults(
+            context, timestampQuery.getQuery(), 1, sizeof(gpuTimestampCycles), &gpuTimestampCycles,
+            sizeof(gpuTimestampCycles), queryFlags));
+
+        // Use the first timestamp queried as origin.
+        if (mGpuEventTimestampOrigin == 0)
+        {
+            mGpuEventTimestampOrigin = gpuTimestampCycles;
+        }
+
+        // Take these CPU and GPU timestamps if there is better confidence.
+        double confidenceRangeS = TeS - TsS;
+        if (confidenceRangeS < tightestRangeS)
+        {
+            tightestRangeS = confidenceRangeS;
+            TcpuS          = cpuTimestampS;
+            TgpuCycles     = gpuTimestampCycles;
+        }
+    }
+
+    mGpuEventQueryPool.freeQuery(context, &timestampQuery);
+
+    // timestampPeriod gives nanoseconds/cycle.
+    double TgpuS = (TgpuCycles - mGpuEventTimestampOrigin) *
+                   static_cast<double>(mPhysicalDeviceProperties.limits.timestampPeriod) /
+                   1'000'000'000.0;
+
+    flushGpuEvents(TgpuS, TcpuS);
+
+    mGpuClockSync.gpuTimestampS = TgpuS;
+    mGpuClockSync.cpuTimestampS = TcpuS;
+
+    return angle::Result::Continue();
+}
+
+angle::Result RendererVk::traceGpuEventImpl(vk::Context *context,
+                                            vk::CommandBuffer *commandBuffer,
+                                            char phase,
+                                            const char *name)
+{
+    ASSERT(mGpuEventsEnabled);
+
+    GpuEventQuery event;
+
+    event.name   = name;
+    event.phase  = phase;
+    event.serial = mCurrentQueueSerial;
+
+    ANGLE_TRY(mGpuEventQueryPool.allocateQuery(context, &event.queryPoolIndex, &event.queryIndex));
+
+    commandBuffer->resetQueryPool(
+        mGpuEventQueryPool.getQueryPool(event.queryPoolIndex)->getHandle(), event.queryIndex, 1);
+    commandBuffer->writeTimestamp(
+        VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+        mGpuEventQueryPool.getQueryPool(event.queryPoolIndex)->getHandle(), event.queryIndex);
+
+    mInFlightGpuEventQueries.push_back(std::move(event));
+
+    return angle::Result::Continue();
+}
+
+angle::Result RendererVk::checkCompletedGpuEvents(vk::Context *context)
+{
+    ASSERT(mGpuEventsEnabled);
+
+    angle::PlatformMethods *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    int finishedCount = 0;
+
+    for (GpuEventQuery &eventQuery : mInFlightGpuEventQueries)
+    {
+        // Only check the timestamp query if the submission has finished.
+        if (eventQuery.serial > mLastCompletedQueueSerial)
+        {
+            break;
+        }
+
+        // See if the results are available.
+        uint64_t gpuTimestampCycles = 0;
+        angle::Result result        = mGpuEventQueryPool.getQueryPool(eventQuery.queryPoolIndex)
+                                   ->getResults(context, eventQuery.queryIndex, 1,
+                                                sizeof(gpuTimestampCycles), &gpuTimestampCycles,
+                                                sizeof(gpuTimestampCycles), VK_QUERY_RESULT_64_BIT);
+        ANGLE_TRY(result);
+
+        if (result == angle::Result::Incomplete())
+        {
+            break;
+        }
+
+        mGpuEventQueryPool.freeQuery(context, eventQuery.queryPoolIndex, eventQuery.queryIndex);
+
+        GpuEvent event;
+        event.gpuTimestampCycles = gpuTimestampCycles;
+        event.name               = eventQuery.name;
+        event.phase              = eventQuery.phase;
+
+        mGpuEvents.emplace_back(event);
+
+        ++finishedCount;
+    }
+
+    mInFlightGpuEventQueries.erase(mInFlightGpuEventQueries.begin(),
+                                   mInFlightGpuEventQueries.begin() + finishedCount);
+
+    return angle::Result::Continue();
+}
+
+void RendererVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS)
+{
+    if (mGpuEvents.size() == 0)
+    {
+        return;
+    }
+
+    angle::PlatformMethods *platform = ANGLEPlatformCurrent();
+    ASSERT(platform);
+
+    // Find the slope of the clock drift for adjustment
+    double lastGpuSyncTimeS  = mGpuClockSync.gpuTimestampS;
+    double lastGpuSyncDiffS  = mGpuClockSync.cpuTimestampS - mGpuClockSync.gpuTimestampS;
+    double gpuSyncDriftSlope = 0;
+
+    double nextGpuSyncTimeS = nextSyncGpuTimestampS;
+    double nextGpuSyncDiffS = nextSyncCpuTimestampS - nextSyncGpuTimestampS;
+
+    // No gpu trace events should have been generated before the clock sync, so if there is no
+    // "previous" clock sync, there should be no gpu events (i.e. the function early-outs above).
+    ASSERT(mGpuClockSync.gpuTimestampS != std::numeric_limits<double>::max() &&
+           mGpuClockSync.cpuTimestampS != std::numeric_limits<double>::max());
+
+    gpuSyncDriftSlope =
+        (nextGpuSyncDiffS - lastGpuSyncDiffS) / (nextGpuSyncTimeS - lastGpuSyncTimeS);
+
+    for (const GpuEvent &event : mGpuEvents)
+    {
+        double gpuTimestampS =
+            (event.gpuTimestampCycles - mGpuEventTimestampOrigin) *
+            static_cast<double>(mPhysicalDeviceProperties.limits.timestampPeriod) * 1e-9;
+
+        // Account for clock drift.
+        gpuTimestampS += lastGpuSyncDiffS + gpuSyncDriftSlope * (gpuTimestampS - lastGpuSyncTimeS);
+
+        // Generate the trace now that the GPU timestamp is available and clock drifts are accounted
+        // for.
+        static long long eventId = 1;
+        static const unsigned char *categoryEnabled =
+            TRACE_EVENT_API_GET_CATEGORY_ENABLED("gpu.angle.gpu");
+        platform->addTraceEvent(platform, event.phase, categoryEnabled, event.name, eventId++,
+                                gpuTimestampS, 0, nullptr, nullptr, nullptr, TRACE_EVENT_FLAG_NONE);
+    }
+
+    mGpuEvents.clear();
 }
 
 uint32_t GetUniformBufferDescriptorCount()

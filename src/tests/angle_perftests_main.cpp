@@ -27,8 +27,7 @@ int main(int argc, char **argv)
         }
         if (strcmp("--trace-file", argv[i]) == 0 && i < argc - 1)
         {
-            gTraceFile = argv[i + 1];
-            argc++;
+            gTraceFile = argv[++i];
         }
     }
 
