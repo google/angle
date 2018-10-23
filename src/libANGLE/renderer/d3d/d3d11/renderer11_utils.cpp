@@ -966,6 +966,12 @@ void SetUAVRelatedResourceLimits(D3D_FEATURE_LEVEL featureLevel, gl::Caps *caps)
         reservedUAVsForAtomicCounterBuffers;
     caps->maxAtomicCounterBufferBindings  = reservedUAVsForAtomicCounterBuffers;
 
+    // Setting MAX_COMPUTE_ATOMIC_COUNTERS to a conservative number of 1024 * the number of UAV
+    // reserved for atomic counters. It could theoretically be set to max buffer size / 4 but that
+    // number could cause problems.
+    caps->maxCombinedAtomicCounters = reservedUAVsForAtomicCounterBuffers * 1024;
+    caps->maxShaderAtomicCounters[gl::ShaderType::Compute] = caps->maxCombinedAtomicCounters;
+
     // Allocate the remaining slots for images and shader storage blocks.
     // The maximum number of fragment shader outputs depends on the current context version, so we
     // will not set it here. See comments in Context11::initialize().

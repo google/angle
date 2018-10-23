@@ -967,7 +967,8 @@ TString TypeString(const TType &type)
             case EbtSamplerExternalOES:
                 return "sampler2D";
             case EbtAtomicCounter:
-                return "atomic_uint";
+                // Multiple atomic_uints will be implemented as a single RWByteAddressBuffer
+                return "RWByteAddressBuffer";
             default:
                 break;
         }

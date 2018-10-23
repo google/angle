@@ -34,7 +34,7 @@ TEST_P(AtomicCounterBufferTest, AtomicCounterBufferBindings)
 {
     ASSERT_EQ(3, getClientMajorVersion());
     GLBuffer atomicCounterBuffer;
-    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 1, atomicCounterBuffer.get());
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer.get());
     if (getClientMinorVersion() < 1)
     {
         EXPECT_GL_ERROR(GL_INVALID_ENUM);
@@ -54,7 +54,7 @@ TEST_P(AtomicCounterBufferTest31, ExceedMaxVertexAtomicCounters)
 {
     const std::string &vertexShaderSource =
         "#version 310 es\n"
-        "layout(binding = 2) uniform atomic_uint foo[gl_MaxVertexAtomicCounters + 1];\n"
+        "layout(binding = 0) uniform atomic_uint foo[gl_MaxVertexAtomicCounters + 1];\n"
         "void main()\n"
         "{\n"
         "    atomicCounterIncrement(foo[0]);\n"
@@ -75,14 +75,14 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecified)
 {
     const std::string &vertexShaderSource =
         "#version 310 es\n"
-        "layout(binding = 2, offset = 4) uniform atomic_uint foo;\n"
+        "layout(binding = 0, offset = 4) uniform atomic_uint foo;\n"
         "void main()\n"
         "{\n"
         "    atomicCounterIncrement(foo);\n"
         "}\n";
     const std::string &fragmentShaderSource =
         "#version 310 es\n"
-        "layout(binding = 2) uniform atomic_uint foo;\n"
+        "layout(binding = 0) uniform atomic_uint foo;\n"
         "void main()\n"
         "{\n"
         "}\n";
@@ -97,14 +97,14 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
 {
     const std::string &vertexShaderSource =
         "#version 310 es\n"
-        "layout(binding = 2, offset = 4) uniform atomic_uint foo;\n"
+        "layout(binding = 0, offset = 4) uniform atomic_uint foo;\n"
         "void main()\n"
         "{\n"
         "    atomicCounterIncrement(foo);\n"
         "}\n";
     const std::string &fragmentShaderSource =
         "#version 310 es\n"
-        "layout(binding = 2, offset = 8) uniform atomic_uint foo;\n"
+        "layout(binding = 0, offset = 8) uniform atomic_uint foo;\n"
         "void main()\n"
         "{\n"
         "}\n";
@@ -113,13 +113,43 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
     EXPECT_EQ(0u, program);
 }
 
+// Tests atomic counter reads using compute shaders. Used as a sanity check for the translator.
+TEST_P(AtomicCounterBufferTest31, AtomicCounterReadCompute)
+{
+    // Skipping due to a bug on the Adreno OpenGLES Android driver.
+    // http://anglebug.com/2925
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(binding = 0, offset = 8) uniform atomic_uint ac[3];
+
+void atomicCounterInFunction(in atomic_uint counter[3])
+{
+    atomicCounter(counter[0]);
+}
+
+void main()
+{
+    atomicCounterInFunction(ac);
+    atomicCounter(ac[gl_LocalInvocationIndex + 1u]);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test atomic counter read.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 {
+    // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
+    // http://anglebug.com/1729
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
     const std::string &fragShader =
         "#version 310 es\n"
         "precision highp float;\n"
-        "layout(binding = 2, offset = 4) uniform atomic_uint ac;\n"
+        "layout(binding = 0, offset = 4) uniform atomic_uint ac;\n"
         "out highp vec4 my_color;\n"
         "void main()\n"
         "{\n"
@@ -138,7 +168,7 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
     glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(bufferData), bufferData, GL_STATIC_DRAW);
 
-    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 2, atomicCounterBuffer);
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer);
 
     drawQuad(program.get(), essl31_shaders::PositionAttrib(), 0.0f);
     ASSERT_GL_NO_ERROR();
@@ -148,10 +178,14 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 // Test atomic counter increment and decrement.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
 {
+    // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
+    // http://anglebug.com/1729
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
     const std::string &csSource =
         "#version 310 es\n"
         "layout(local_size_x=1, local_size_y=1, local_size_z=1) in;\n"
-        "layout(binding = 2, offset = 4) uniform atomic_uint ac[2];\n"
+        "layout(binding = 0, offset = 4) uniform atomic_uint ac[2];\n"
         "void main()\n"
         "{\n"
         "    atomicCounterIncrement(ac[0]);\n"
@@ -168,7 +202,7 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
     glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(bufferData), bufferData, GL_STATIC_DRAW);
 
-    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 2, atomicCounterBuffer);
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer);
 
     glDispatchCompute(1, 1, 1);
     EXPECT_GL_NO_ERROR();
@@ -188,7 +222,8 @@ ANGLE_INSTANTIATE_TEST(AtomicCounterBufferTest,
                        ES3_OPENGL(),
                        ES3_OPENGLES(),
                        ES31_OPENGL(),
-                       ES31_OPENGLES());
-ANGLE_INSTANTIATE_TEST(AtomicCounterBufferTest31, ES31_OPENGL(), ES31_OPENGLES());
+                       ES31_OPENGLES(),
+                       ES31_D3D11());
+ANGLE_INSTANTIATE_TEST(AtomicCounterBufferTest31, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
 
 }  // namespace

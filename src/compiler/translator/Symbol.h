@@ -235,6 +235,7 @@ class TFunction : public TSymbol
 
     bool isMain() const;
     bool isImageFunction() const;
+    bool isAtomicCounterFunction() const;
     bool hasSamplerInStructParams() const;
 
     // Note: Only to be used for static built-in functions!

@@ -23,6 +23,7 @@ class BuiltInFunctionEmulator;
 
 namespace sh
 {
+class AtomicCounterFunctionHLSL;
 class ImageFunctionHLSL;
 class ResourcesHLSL;
 class StructureHLSL;
@@ -177,6 +178,7 @@ class OutputHLSL : public TIntermTraverser
     ResourcesHLSL *mResourcesHLSL;
     TextureFunctionHLSL *mTextureFunctionHLSL;
     ImageFunctionHLSL *mImageFunctionHLSL;
+    AtomicCounterFunctionHLSL *mAtomicCounterFunctionHLSL;
 
     // Parameters determining what goes in the header output
     bool mUsesFragColor;

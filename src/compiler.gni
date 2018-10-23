@@ -223,6 +223,8 @@ angle_translator_glsl_sources = [
 angle_translator_hlsl_sources = [
   "src/compiler/translator/ASTMetadataHLSL.cpp",
   "src/compiler/translator/ASTMetadataHLSL.h",
+  "src/compiler/translator/AtomicCounterFunctionHLSL.cpp",
+  "src/compiler/translator/AtomicCounterFunctionHLSL.h",
   "src/compiler/translator/blocklayoutHLSL.cpp",
   "src/compiler/translator/blocklayoutHLSL.h",
   "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",

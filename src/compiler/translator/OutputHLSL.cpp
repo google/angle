@@ -13,6 +13,7 @@
 #include "common/angleutils.h"
 #include "common/debug.h"
 #include "common/utilities.h"
+#include "compiler/translator/AtomicCounterFunctionHLSL.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/BuiltInFunctionEmulatorHLSL.h"
 #include "compiler/translator/ImageFunctionHLSL.h"
@@ -233,9 +234,10 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
 
     mExcessiveLoopIndex = nullptr;
 
-    mStructureHLSL       = new StructureHLSL;
-    mTextureFunctionHLSL = new TextureFunctionHLSL;
-    mImageFunctionHLSL   = new ImageFunctionHLSL;
+    mStructureHLSL             = new StructureHLSL;
+    mTextureFunctionHLSL       = new TextureFunctionHLSL;
+    mImageFunctionHLSL         = new ImageFunctionHLSL;
+    mAtomicCounterFunctionHLSL = new AtomicCounterFunctionHLSL;
 
     unsigned int firstUniformRegister =
         ((compileOptions & SH_SKIP_D3D_CONSTANT_REGISTER_ZERO) != 0) ? 1u : 0u;
@@ -263,6 +265,7 @@ OutputHLSL::~OutputHLSL()
     SafeDelete(mResourcesHLSL);
     SafeDelete(mTextureFunctionHLSL);
     SafeDelete(mImageFunctionHLSL);
+    SafeDelete(mAtomicCounterFunctionHLSL);
     for (auto &eqFunction : mStructEqualityFunctions)
     {
         SafeDelete(eqFunction);
@@ -544,6 +547,11 @@ void OutputHLSL::header(TInfoSinkBase &out,
            "#define LOOP\n"
            "#define FLATTEN\n"
            "#endif\n";
+
+    // array stride for atomic counter buffers is always 4 per original extension
+    // ARB_shader_atomic_counters and discussion on
+    // https://github.com/KhronosGroup/OpenGL-API/issues/5
+    out << "\n#define ATOMIC_COUNTER_ARRAY_STRIDE 4\n\n";
 
     if (mShaderType == GL_FRAGMENT_SHADER)
     {
@@ -864,6 +872,7 @@ void OutputHLSL::header(TInfoSinkBase &out,
         (mCompileOptions & SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL) != 0;
     mTextureFunctionHLSL->textureFunctionHeader(out, mOutputType, getDimensionsIgnoresBaseLevel);
     mImageFunctionHLSL->imageFunctionHeader(out);
+    mAtomicCounterFunctionHLSL->atomicCounterFunctionHeader(out);
 
     if (mUsesFragCoord)
     {
@@ -940,6 +949,21 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     {
         mUsesDepthRange = true;
         out << name;
+    }
+    else if (IsAtomicCounter(variable.getType().getBasicType()))
+    {
+        const TType &variableType = variable.getType();
+        if (variableType.getQualifier() == EvqUniform)
+        {
+            TLayoutQualifier layout             = variableType.getLayoutQualifier();
+            mReferencedUniforms[uniqueId.get()] = &variable;
+            out << getAtomicCounterNameForBinding(layout.binding) << ", " << layout.offset;
+        }
+        else
+        {
+            TString varName = DecorateVariableIfNeeded(variable);
+            out << varName << ", " << varName << "_offset";
+        }
     }
     else
     {
@@ -1377,6 +1401,10 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 // separator to access the sampler variable that has been moved out of the struct.
                 outputTriplet(out, visit, "", "_", "");
             }
+            else if (IsAtomicCounter(leftType.getBasicType()))
+            {
+                outputTriplet(out, visit, "", " + (", ") * ATOMIC_COUNTER_ARRAY_STRIDE");
+            }
             else
             {
                 outputTriplet(out, visit, "", "[", "]");
@@ -1384,10 +1412,21 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         break;
         case EOpIndexIndirect:
+        {
             // We do not currently support indirect references to interface blocks
             ASSERT(node->getLeft()->getBasicType() != EbtInterfaceBlock);
-            outputTriplet(out, visit, "", "[", "]");
+
+            const TType &leftType = node->getLeft()->getType();
+            if (IsAtomicCounter(leftType.getBasicType()))
+            {
+                outputTriplet(out, visit, "", " + (", ") * ATOMIC_COUNTER_ARRAY_STRIDE");
+            }
+            else
+            {
+                outputTriplet(out, visit, "", "[", "]");
+            }
             break;
+        }
         case EOpIndexDirectStruct:
         {
             const TStructure *structure       = node->getLeft()->getType().getStruct();
@@ -2110,6 +2149,13 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     name, type.getBasicType(), type.getLayoutQualifier().imageInternalFormat,
                     type.getMemoryQualifier().readonly);
                 out << imageFunctionName << "(";
+            }
+            else if (node->getFunction()->isAtomicCounterFunction())
+            {
+                const ImmutableString &name = node->getFunction()->name();
+                ImmutableString atomicFunctionName =
+                    mAtomicCounterFunctionHLSL->useAtomicCounterFunction(name);
+                out << atomicFunctionName << "(";
             }
             else
             {
@@ -2871,8 +2917,18 @@ void OutputHLSL::writeParameter(const TVariable *param, TInfoSinkBase &out)
         }
     }
 
-    out << QualifierString(qualifier) << " " << TypeString(type) << " " << nameStr
-        << ArrayString(type);
+    // If the parameter is an atomic counter, we need to add an extra parameter to keep track of the
+    // buffer offset.
+    if (IsAtomicCounter(type.getBasicType()))
+    {
+        out << QualifierString(qualifier) << " " << TypeString(type) << " " << nameStr << ", int "
+            << nameStr << "_offset";
+    }
+    else
+    {
+        out << QualifierString(qualifier) << " " << TypeString(type) << " " << nameStr
+            << ArrayString(type);
+    }
 
     // If the structure parameter contains samplers, they need to be passed into the function as
     // separate parameters. HLSL doesn't natively support samplers in structs.

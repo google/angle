@@ -25,6 +25,7 @@ constexpr const ImmutableString kMainName("main");
 constexpr const ImmutableString kImageLoadName("imageLoad");
 constexpr const ImmutableString kImageStoreName("imageStore");
 constexpr const ImmutableString kImageSizeName("imageSize");
+constexpr const ImmutableString kAtomicCounterName("atomicCounter");
 
 static const char kFunctionMangledNameSeparator = '(';
 
@@ -217,6 +218,11 @@ bool TFunction::isImageFunction() const
 {
     return symbolType() == SymbolType::BuiltIn &&
            (name() == kImageSizeName || name() == kImageLoadName || name() == kImageStoreName);
+}
+
+bool TFunction::isAtomicCounterFunction() const
+{
+    return SymbolType() == SymbolType::BuiltIn && name().beginsWith(kAtomicCounterName);
 }
 
 bool TFunction::hasSamplerInStructParams() const

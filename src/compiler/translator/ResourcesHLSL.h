@@ -81,6 +81,9 @@ class ResourcesHLSL : angle::NonCopyable
                        const TType &type,
                        const TVariable &variable,
                        const unsigned int registerIndex);
+    void outputAtomicCounterBuffer(TInfoSinkBase &out,
+                                   const int binding,
+                                   const unsigned int registerIndex);
 
     // Returns the uniform's register index
     unsigned int assignUniformRegister(const TType &type,
