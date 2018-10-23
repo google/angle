@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfc279f9_506c1943",
+        "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-23T00:51:15Z",
+      "side": 1,
+      "message": "Uncertain of the precision permitted here. The OpenGL ES Shading Language 1.00 Spec allows highp integer uniforms, but I couldn\u0027t find a precision specified for gl_DrawID itself.",
+      "revId": "9bf277cfd7802575b4ec6d03efb16856eed87298",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
