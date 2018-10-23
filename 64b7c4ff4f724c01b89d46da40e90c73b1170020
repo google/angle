@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62dff25f_28ec4708",
+        "filename": "src/compiler/translator/SymbolTable_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2322,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-10-23T18:27:29Z",
+      "side": 1,
+      "message": "You can revert this file.",
+      "revId": "64b7c4ff4f724c01b89d46da40e90c73b1170020",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
