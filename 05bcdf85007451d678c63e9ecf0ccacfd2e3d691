@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "892ded82_ea5e5181",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-23T02:54:58Z",
+      "side": 1,
+      "message": "You are right. I can remove above two lines.",
+      "parentUuid": "2fcb2aaa_98fa1b85",
+      "range": {
+        "startLine": 74,
+        "startChar": 4,
+        "endLine": 74,
+        "endChar": 57
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "35480469_540790ec",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 5
@@ -60,6 +84,30 @@
       "side": 1,
       "message": "Are the only places the offset/arrayStride used is in the SSBO code?\n\nWhy don\u0027t you store them outside of the tree to keep it clear this is something specific to SSBOs. You could store them in a map like a BlockLayoutMap, but instead of indexing by std::string you could index by const TField *. Then you would use the map in writeDotOperatorOutput and any other place it is needed. But using BlockMemberInfo seems more appropriate than adding offset/arrayStride to the AST.",
       "parentUuid": "35480469_540790ec",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 53
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41ad9b79_509a76a4",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-23T02:54:58Z",
+      "side": 1,
+      "message": "Ok. I can try your method in a separate patch. But I think it\u0027s only a change for the saving places of offset/arrayStride. Can we keep the current implementation for structure support for this patch? I can do the refactor for the all field members in the following patch. How do you think?",
+      "parentUuid": "75d6af9c_02a8a749",
       "range": {
         "startLine": 91,
         "startChar": 12,
@@ -202,6 +250,30 @@
       "side": 1,
       "message": "I am worried about edge cases with shaders like this:\n\n#version 310 es\n\nprecision mediump float;\n\nout vec4 fragColor;\n\nvoid main()\n{\n\tfloat b[2] \u003d float[2](0.0,0.0);\n\tfloat c[2][2] \u003d float[2][2](float[2](0.0,0.0),float[2](0.0,0.0));\n\n\tfloat f \u003d (b \u003d c[0])[0];\n\n\tfragColor \u003d vec4(1, 0, 0, 1);\n}\n\nImagine that you have a tree with (float) -\u003e (array) -\u003e (array) -\u003e (array of arrays). Maybe you should call IsInArrayOfArrays recursively to make sure.",
       "parentUuid": "fa2f2a65_8e3232b9",
+      "range": {
+        "startLine": 153,
+        "startChar": 5,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe3eeab4_3f60f281",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-23T02:54:58Z",
+      "side": 1,
+      "message": "Sorry. IsInArrayOfArray is only used for SSBO field member. And we only process below format usages:\nexpression_no_ssbo \u003d ssbo_access_chain\nssbo_access_chain\u003dexpression_no_ssbo\nssbo_access_chain\u003dssbo_access_chain.\n\nI don\u0027t think we can meet the situation that you provided. Can you give me a ssbo example? Also, even, we have a tree with (float) -\u003e (array) -\u003e (array) -\u003e (array of arrays), I can\u0027t see a problem in my current implementation. I think the first array doesn\u0027t belong to the array of arrays, and the second array is in the array of arrays.",
+      "parentUuid": "bde92c68_2d1eba79",
       "range": {
         "startLine": 153,
         "startChar": 5,
