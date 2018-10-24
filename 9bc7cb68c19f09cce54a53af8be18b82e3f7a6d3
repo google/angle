@@ -399,6 +399,30 @@
     },
     {
       "key": {
+        "uuid": "a5ff76a5_fa8b00e5",
+        "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-24T21:49:21Z",
+      "side": 1,
+      "message": "Cool.. generally that seems good. I would tweak it to be:\n\n1) maybe we can add \"ShaderVar::isEmulatedBuiltIn that returns isBuiltin \u0026\u0026 mName !\u003d mMappedName? then you could change the test from \"isBuiltIn\" to \"isBuiltIn \u0026\u0026 !IsEmulatedBuiltIn\".. something like that.\n2) this ASSERT seems innocuous. You could special case it to ignore gl_DrawID if you want, with a comment. Not actually sure what you mean by hardcoding the mapping.\n3) Again you could check isEmulatedBuiltIn. No problem if you also want to bind the location, just that would probably be done inside if ANGLE. Might have less edge cases if we just tweak the test.\n\nLMK if this works.. if not as always we can go back to just exposing the emulated name.",
+      "parentUuid": "a76252cf_d0e270f9",
+      "range": {
+        "startLine": 70,
+        "startChar": 33,
+        "endLine": 70,
+        "endChar": 62
+      },
+      "revId": "9bc7cb68c19f09cce54a53af8be18b82e3f7a6d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3c333bef_3132ef3c",
         "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
         "patchSetId": 14
