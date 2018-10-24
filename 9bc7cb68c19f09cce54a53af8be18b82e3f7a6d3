@@ -351,6 +351,30 @@
     },
     {
       "key": {
+        "uuid": "620a68b9_7652d929",
+        "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-24T19:07:52Z",
+      "side": 1,
+      "message": "Right... well, it\u0027s outside of ANGLE won\u0027t the ProgramLinkedResources/ProgramD3D/TranslatorVulkan stuff not matter? That\u0027s all I was thinking. You can always get the full info about the variable outside of ANGLE from the shader language reflection APIs. The data you fill out here, basically. But maybe there was another problem with this method.",
+      "parentUuid": "53ca3beb_e2020d2b",
+      "range": {
+        "startLine": 70,
+        "startChar": 33,
+        "endLine": 70,
+        "endChar": 62
+      },
+      "revId": "9bc7cb68c19f09cce54a53af8be18b82e3f7a6d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3c333bef_3132ef3c",
         "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
         "patchSetId": 14
