@@ -279,6 +279,30 @@
     },
     {
       "key": {
+        "uuid": "e21b4011_09adaa08",
+        "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-24T18:10:17Z",
+      "side": 1,
+      "message": "I don\u0027t think I would add \u0027isEmulated\u0027. I would probably do the approach you have here if it isn\u0027t workable otherwise.\n\nJust to follow-up, when you say \u0027because we need to set it in the validating command decoder\u0027, you mean assign to it a location with glBindUniformLocation? Why do you need to bind it in the validating decoder and not in ANGLE? And are there other breaking points?",
+      "parentUuid": "3c63d292_11da94f3",
+      "range": {
+        "startLine": 70,
+        "startChar": 33,
+        "endLine": 70,
+        "endChar": 62
+      },
+      "revId": "9bc7cb68c19f09cce54a53af8be18b82e3f7a6d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3c333bef_3132ef3c",
         "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
         "patchSetId": 14
@@ -354,6 +378,30 @@
       "side": 1,
       "message": "So here\u0027s our thinking about what we should name things; we weren\u0027t really sure what to do so perhaps you could help us understand more.\n\nThe issue is that yes, we definitely could implement EXT_multi_draw_arrays, but EXT_multi_draw_arrays does not expose gl_DrawID. For simplicity, we want WEBGL_multi_draw_arrays to include the Multi* entrypoints as well as the new builtin.\n\nWe thought about implementing EXT_multi_draw_arrays and another extension \"ANGLE_draw_id\" or something like that which would add gl_DrawID to Multi* commands. Then in Chrome, enabling WEBGL_multi_draw_arrays would actually enable both of these.\n\nDoing so feels messy because the content creator would either have to specify \"WEBGL_multi_draw_arrays\" in their JS code and \"ANGLE_draw_id\" in their shader. Alternatively we would also have to translate all of the extension directives in ANGLE.\n\nFurthermore, Ken feels that it would be very impactful for clients to also have glMultiDrawArraysInstanced, glMultiDrawElementsInstanced, glMultiDrawElementsInstancedBaseVertex variants.. which would also include gl_InstanceID (we already have that so I don\u0027t think that\u0027s an issue) and gl_BaseVertex.\n\nSo with all these extra entrypoints and builtins which we may emulate, we thought it better to contain them all in a single extension. I am quite unfamiliar regarding how things should be spec\u0027ed. What do you suggest we do here?",
       "parentUuid": "00967e43_157351c0",
+      "range": {
+        "startLine": 454,
+        "startChar": 9,
+        "endLine": 454,
+        "endChar": 24
+      },
+      "revId": "9bc7cb68c19f09cce54a53af8be18b82e3f7a6d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "783804b6_3204bfc9",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-24T18:10:17Z",
+      "side": 1,
+      "message": "Yeah if you want to patch in the draw ID feature to the extension you can\u0027t use EXT_multi_draw_arrays. Didn\u0027t notice that.\n\nI think in this case you want to make the WebGL extension called ANGLE_multi_draw_arrays. This prevents the naming conflict.\n\nPrior example of ANGLE WebGL extension: https://www.khronos.org/registry/webgl/extensions/ANGLE_instanced_arrays/\n\nAnd this way ANGLE doesn\u0027t have to add a WebGL extension.",
+      "parentUuid": "aa8bf78a_d8ff43b2",
       "range": {
         "startLine": 454,
         "startChar": 9,
