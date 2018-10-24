@@ -28,13 +28,15 @@
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "platform/Platform.h"
 
+#include "third_party/trace_event/trace_event.h"
+
 // Consts
 namespace
 {
 const uint32_t kMockVendorID     = 0xba5eba11;
 const uint32_t kMockDeviceID     = 0xf005ba11;
 constexpr char kMockDeviceName[] = "Vulkan Mock Device";
-constexpr size_t kInFlightCommandsLimit = 50000u;
+constexpr size_t kInFlightCommandsLimit = 100u;
 }  // anonymous namespace
 
 namespace rx
@@ -838,6 +840,8 @@ angle::Result RendererVk::finish(vk::Context *context)
 {
     if (!mCommandGraph.empty())
     {
+        TRACE_EVENT0("gpu.angle", "RendererVk::finish");
+
         vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
         ANGLE_TRY(flushCommandGraph(context, &commandBatch.get()));
 
@@ -881,6 +885,8 @@ void RendererVk::freeAllInFlightResources()
         garbage.destroy(mDevice);
     }
     mGarbage.clear();
+
+    mLastCompletedQueueSerial = mLastSubmittedQueueSerial;
 }
 
 angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
@@ -940,15 +946,14 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
     mInFlightCommands.emplace_back(scopedBatch.release());
 
-    // Check that mInFlightCommands isn't growing too fast
-    // If it is, wait for the queue to complete work it has alread been assigned
-    if (mInFlightCommands.size() > kInFlightCommandsLimit)
-    {
-        vkQueueWaitIdle(mQueue);
-    }
+    // CPU should be throttled to avoid mInFlightCommands from growing too fast.  That is done on
+    // swap() though, and there could be multiple submissions in between (through glFlush() calls),
+    // so the limit is larger than the expected number of images.
+    ASSERT(mInFlightCommands.size() <= kInFlightCommandsLimit);
 
     // Increment the queue serial. If this fails, we should restart ANGLE.
     // TODO(jmadill): Overflow check.
+    mLastSubmittedQueueSerial = mCurrentQueueSerial;
     mCurrentQueueSerial = mQueueSerialFactory.generate();
 
     ANGLE_TRY(checkCompletedCommands(context));
@@ -1041,6 +1046,8 @@ angle::Result RendererVk::flush(vk::Context *context)
     {
         return angle::Result::Continue();
     }
+
+    TRACE_EVENT0("gpu.angle", "RendererVk::flush");
 
     vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
     ANGLE_TRY(flushCommandGraph(context, &commandBatch.get()));

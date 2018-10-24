@@ -84,6 +84,7 @@ class RendererVk : angle::NonCopyable
     uint32_t getMaxActiveTextures();
 
     Serial getCurrentQueueSerial() const { return mCurrentQueueSerial; }
+    Serial getLastSubmittedQueueSerial() const { return mLastSubmittedQueueSerial; }
     Serial getLastCompletedQueueSerial() const { return mLastCompletedQueueSerial; }
 
     bool isSerialInUse(Serial serial) const;
@@ -214,6 +215,7 @@ class RendererVk : angle::NonCopyable
     SerialFactory mQueueSerialFactory;
     SerialFactory mShaderSerialFactory;
     Serial mLastCompletedQueueSerial;
+    Serial mLastSubmittedQueueSerial;
     Serial mCurrentQueueSerial;
 
     bool mDeviceLost;

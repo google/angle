@@ -18,6 +18,7 @@
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
+#include "third_party/trace_event/trace_event.h"
 
 namespace rx
 {
@@ -31,22 +32,37 @@ VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &pres
 {
     ASSERT(!presentModes.empty());
 
-    // Use FIFO mode for v-sync, since it throttles you to the display rate. Mailbox is more
-    // similar to triple-buffering. For now we hard-code Mailbox for perf testing.
+    // Use FIFO mode for v-sync, since it throttles you to the display rate.
+    //
+    // However, for performance testing (for now), we want to issue draws as fast as possible so we
+    // use either of the following, if available, in order specified here:
+    //
+    // - Mailbox is similar to triple-buffering.
+    // - Immediate is similar to single-buffering.
+    //
     // TODO(jmadill): Properly select present mode and re-create display if changed.
-    VkPresentModeKHR bestChoice = VK_PRESENT_MODE_MAILBOX_KHR;
+    bool mailboxAvailable   = false;
+    bool immediateAvailable = false;
 
     for (VkPresentModeKHR presentMode : presentModes)
     {
-        if (presentMode == bestChoice)
+        switch (presentMode)
         {
-            return bestChoice;
+            case VK_PRESENT_MODE_MAILBOX_KHR:
+                mailboxAvailable = true;
+                break;
+            case VK_PRESENT_MODE_IMMEDIATE_KHR:
+                immediateAvailable = true;
+                break;
+            default:
+                break;
         }
     }
 
-    WARN() << "Present mode " << bestChoice << " not available. Falling back to "
-           << presentModes[0];
-    return presentModes[0];
+    // Note that VK_PRESENT_MODE_FIFO_KHR is guaranteed to be available.
+    return mailboxAvailable
+               ? VK_PRESENT_MODE_MAILBOX_KHR
+               : immediateAvailable ? VK_PRESENT_MODE_IMMEDIATE_KHR : VK_PRESENT_MODE_FIFO_KHR;
 }
 
 constexpr VkImageUsageFlags kSurfaceVKImageUsageFlags =
@@ -261,9 +277,11 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mSurface(VK_NULL_HANDLE),
       mInstance(VK_NULL_HANDLE),
       mSwapchain(VK_NULL_HANDLE),
+      mSwapchainPresentMode(VK_PRESENT_MODE_FIFO_KHR),
       mColorRenderTarget(nullptr, nullptr, 0),
       mDepthStencilRenderTarget(&mDepthStencilImage, &mDepthStencilImageView, 0),
-      mCurrentSwapchainImageIndex(0)
+      mCurrentSwapchainImageIndex(0),
+      mCurrentSwapSerialIndex(0)
 {
 }
 
@@ -376,8 +394,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     ASSERT(minSwapInterval == 0 || minSwapInterval == 1);
     ASSERT(maxSwapInterval == 0 || maxSwapInterval == 1);
 
-    VkPresentModeKHR swapchainPresentMode =
-        GetDesiredPresentMode(presentModes, minSwapInterval, maxSwapInterval);
+    mSwapchainPresentMode = GetDesiredPresentMode(presentModes, minSwapInterval, maxSwapInterval);
 
     // Determine number of swapchain images. Aim for one more than the minimum.
     uint32_t minImageCount = surfaceCaps.minImageCount + 1;
@@ -436,24 +453,24 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     VkImageUsageFlags imageUsageFlags = kSurfaceVKColorImageUsageFlags;
 
     VkSwapchainCreateInfoKHR swapchainInfo = {};
-    swapchainInfo.sType                 = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    swapchainInfo.flags                 = 0;
-    swapchainInfo.surface               = mSurface;
-    swapchainInfo.minImageCount         = minImageCount;
-    swapchainInfo.imageFormat           = nativeFormat;
-    swapchainInfo.imageColorSpace       = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-    swapchainInfo.imageExtent.width     = width;
-    swapchainInfo.imageExtent.height    = height;
-    swapchainInfo.imageArrayLayers      = 1;
-    swapchainInfo.imageUsage            = imageUsageFlags;
-    swapchainInfo.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;
-    swapchainInfo.queueFamilyIndexCount = 0;
-    swapchainInfo.pQueueFamilyIndices   = nullptr;
-    swapchainInfo.preTransform          = preTransform;
-    swapchainInfo.compositeAlpha        = compositeAlpha;
-    swapchainInfo.presentMode           = swapchainPresentMode;
-    swapchainInfo.clipped               = VK_TRUE;
-    swapchainInfo.oldSwapchain          = VK_NULL_HANDLE;
+    swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    swapchainInfo.flags                    = 0;
+    swapchainInfo.surface                  = mSurface;
+    swapchainInfo.minImageCount            = minImageCount;
+    swapchainInfo.imageFormat              = nativeFormat;
+    swapchainInfo.imageColorSpace          = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+    swapchainInfo.imageExtent.width        = width;
+    swapchainInfo.imageExtent.height       = height;
+    swapchainInfo.imageArrayLayers         = 1;
+    swapchainInfo.imageUsage               = imageUsageFlags;
+    swapchainInfo.imageSharingMode         = VK_SHARING_MODE_EXCLUSIVE;
+    swapchainInfo.queueFamilyIndexCount    = 0;
+    swapchainInfo.pQueueFamilyIndices      = nullptr;
+    swapchainInfo.preTransform             = preTransform;
+    swapchainInfo.compositeAlpha           = compositeAlpha;
+    swapchainInfo.presentMode              = mSwapchainPresentMode;
+    swapchainInfo.clipped                  = VK_TRUE;
+    swapchainInfo.oldSwapchain             = VK_NULL_HANDLE;
 
     VkDevice device = renderer->getDevice();
     ANGLE_VK_TRY(displayVk, vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &mSwapchain));
@@ -473,6 +490,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     transparentBlack.float32[3] = 0.0f;
 
     mSwapchainImages.resize(imageCount);
+    mSwapSerials.resize(imageCount);
 
     for (uint32_t imageIndex = 0; imageIndex < imageCount; ++imageIndex)
     {
@@ -549,6 +567,14 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
 {
     RendererVk *renderer = displayVk->getRenderer();
 
+    // If the swapchain is not in mailbox mode, throttle the submissions.  NOTE(syoussefi): this can
+    // be done in mailbox mode too, just currently unnecessary.
+    if (mSwapchainPresentMode != VK_PRESENT_MODE_MAILBOX_KHR)
+    {
+        TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::swapImpl: Throttle CPU");
+        ANGLE_TRY(renderer->finishToSerial(displayVk, mSwapSerials[mCurrentSwapSerialIndex]));
+    }
+
     vk::CommandBuffer *swapCommands = nullptr;
     ANGLE_TRY(mSwapchainImages[mCurrentSwapchainImageIndex].image.recordCommands(displayVk,
                                                                                  &swapCommands));
@@ -561,7 +587,12 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
 
     ANGLE_TRY(renderer->flush(displayVk));
 
-    // Ask the renderer what semaphore it signalled in the last flush.
+    // Remember the serial of the last submission.
+    mSwapSerials[mCurrentSwapSerialIndex++] = renderer->getLastSubmittedQueueSerial();
+    mCurrentSwapSerialIndex =
+        mCurrentSwapSerialIndex == mSwapSerials.size() ? 0 : mCurrentSwapSerialIndex;
+
+    // Ask the renderer what semaphore it signaled in the last flush.
     const vk::Semaphore *commandsCompleteSemaphore =
         renderer->getSubmitLastSignaledSemaphore(displayVk);
 
@@ -577,8 +608,13 @@ angle::Result WindowSurfaceVk::swapImpl(DisplayVk *displayVk)
 
     ANGLE_VK_TRY(displayVk, vkQueuePresentKHR(renderer->getQueue(), &presentInfo));
 
-    // Get the next available swapchain image.
-    ANGLE_TRY(nextSwapchainImage(displayVk));
+    {
+        // Note: TRACE_EVENT0 is put here instead of inside the function to workaround this issue:
+        // http://anglebug.com/2927
+        TRACE_EVENT0("gpu.angle", "nextSwapchainImage");
+        // Get the next available swapchain image.
+        ANGLE_TRY(nextSwapchainImage(displayVk));
+    }
 
     ANGLE_TRY(renderer->syncPipelineCacheVk(displayVk));
 

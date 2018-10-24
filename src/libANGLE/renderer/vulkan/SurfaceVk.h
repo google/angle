@@ -146,6 +146,7 @@ class WindowSurfaceVk : public SurfaceImpl
     angle::Result swapImpl(DisplayVk *displayVk);
 
     VkSwapchainKHR mSwapchain;
+    VkPresentModeKHR mSwapchainPresentMode;
 
     RenderTargetVk mColorRenderTarget;
     RenderTargetVk mDepthStencilRenderTarget;
@@ -164,6 +165,12 @@ class WindowSurfaceVk : public SurfaceImpl
     };
 
     std::vector<SwapchainImage> mSwapchainImages;
+
+    // A circular buffer, with the same size as mSwapchainImages (N), that stores the serial of the
+    // renderer on every swap.  In FIFO present modes, the CPU is throttled by waiting for the
+    // Nth previous serial to finish.
+    std::vector<Serial> mSwapSerials;
+    size_t mCurrentSwapSerialIndex;
 
     vk::ImageHelper mDepthStencilImage;
     vk::ImageView mDepthStencilImageView;
