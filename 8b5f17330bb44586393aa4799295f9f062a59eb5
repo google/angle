@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ea90b1b_ac1f7645",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2018-10-24T09:08:30Z",
+      "side": 1,
+      "message": "nit: I think .get() is optional here.",
+      "range": {
+        "startLine": 563,
+        "startChar": 24,
+        "endLine": 563,
+        "endChar": 30
+      },
+      "revId": "8b5f17330bb44586393aa4799295f9f062a59eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
