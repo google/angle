@@ -303,6 +303,30 @@
     },
     {
       "key": {
+        "uuid": "bb71063b_cc176e30",
+        "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-24T18:42:19Z",
+      "side": 1,
+      "message": "Yes. Or by doing glGetUniformLocation and caching that value, but I realize glBindUniformLocation may be the better option.\n\nCan we do glBindUniformLocation in ANGLE with the validating command decoder? I thought that the validating cmd decoder only uses ANGLE for shader translation. glBindUniformLocation is done after shaders are compiled, just before the program is linked.",
+      "parentUuid": "e21b4011_09adaa08",
+      "range": {
+        "startLine": 70,
+        "startChar": 33,
+        "endLine": 70,
+        "endChar": 62
+      },
+      "revId": "9bc7cb68c19f09cce54a53af8be18b82e3f7a6d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3c333bef_3132ef3c",
         "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
         "patchSetId": 14
