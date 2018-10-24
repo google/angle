@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "22b70b88_ca021874",
+        "filename": "src/compiler/translator/ShaderStorageBlockFunctionHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-24T01:22:42Z",
+      "side": 1,
+      "message": "I just thought the variable needs to be decorated like other variables in HLSL. It\u0027s not related with this patch. Removing it.",
+      "parentUuid": "51a81e1c_8708bf4d",
+      "range": {
+        "startLine": 76,
+        "startChar": 50,
+        "endLine": 76,
+        "endChar": 57
+      },
+      "revId": "c48bbef833dc117a97df8f9e1c568fff0634b8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b44c8201_fb640acb",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "c48bbef833dc117a97df8f9e1c568fff0634b8ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b22c701a_ca1f994e",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-24T01:22:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b44c8201_fb640acb",
+      "range": {
+        "startLine": 775,
+        "startChar": 0,
+        "endLine": 784,
+        "endChar": 9
+      },
+      "revId": "c48bbef833dc117a97df8f9e1c568fff0634b8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
