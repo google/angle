@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "8222dc2d_07e8b647",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-24T17:39:19Z",
+      "side": 1,
+      "message": "Sure, can do in a follow up. It also will force you to use the BlockLayoutInfo which is meant to be used for the encoders. But my hope was that if you did the refactor I could more easily understand why you needed to add the methods for \"increaseCurrentOffset\". I hope it shouldn\u0027t be necessary to add this method if you use the encoders differently.",
+      "parentUuid": "41ad9b79_509a76a4",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 53
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "72edcb3c_cbe5aba9",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 5
@@ -188,6 +212,30 @@
       "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6098f41_b4dc6e31",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-24T17:39:19Z",
+      "side": 1,
+      "message": "OK we can revisit this in a follow-up.",
+      "parentUuid": "c1d2cc6b_ec6b4a8d",
+      "range": {
+        "startLine": 94,
+        "startChar": 20,
+        "endLine": 94,
+        "endChar": 62
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -274,6 +322,30 @@
       "side": 1,
       "message": "Sorry. IsInArrayOfArray is only used for SSBO field member. And we only process below format usages:\nexpression_no_ssbo \u003d ssbo_access_chain\nssbo_access_chain\u003dexpression_no_ssbo\nssbo_access_chain\u003dssbo_access_chain.\n\nI don\u0027t think we can meet the situation that you provided. Can you give me a ssbo example? Also, even, we have a tree with (float) -\u003e (array) -\u003e (array) -\u003e (array of arrays), I can\u0027t see a problem in my current implementation. I think the first array doesn\u0027t belong to the array of arrays, and the second array is in the array of arrays.",
       "parentUuid": "bde92c68_2d1eba79",
+      "range": {
+        "startLine": 153,
+        "startChar": 5,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ade7fcae_e02bf392",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-24T17:39:19Z",
+      "side": 1,
+      "message": "OK - so the \"array of arrays\" in this case is always for an array of arrays of SSBO? not the SSBO fields? Then it should be okay - but you should rename your function to make it clear. Like \"IsArrayOfSSBOArrays\"",
+      "parentUuid": "fe3eeab4_3f60f281",
       "range": {
         "startLine": 153,
         "startChar": 5,
