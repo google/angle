@@ -22,6 +22,30 @@
       "revId": "8b5f17330bb44586393aa4799295f9f062a59eb5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6170ed7b_b49da5ed",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-24T18:16:08Z",
+      "side": 1,
+      "message": "correct.",
+      "parentUuid": "3ea90b1b_ac1f7645",
+      "range": {
+        "startLine": 563,
+        "startChar": 24,
+        "endLine": 563,
+        "endChar": 30
+      },
+      "revId": "8b5f17330bb44586393aa4799295f9f062a59eb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
