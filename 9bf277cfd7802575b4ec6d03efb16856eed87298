@@ -16,6 +16,24 @@
       "revId": "9bf277cfd7802575b4ec6d03efb16856eed87298",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2844b892_8ef1eee9",
+        "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-24T17:23:57Z",
+      "side": 1,
+      "message": "Oh, probably not a big deal. Highp should be available in the vertex shader. It\u0027s possible technically this would change with the default precision but doesn\u0027t seem like a big concern to me.",
+      "parentUuid": "bfc279f9_506c1943",
+      "revId": "9bf277cfd7802575b4ec6d03efb16856eed87298",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
