@@ -375,6 +375,30 @@
     },
     {
       "key": {
+        "uuid": "a76252cf_d0e270f9",
+        "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-24T21:32:17Z",
+      "side": 1,
+      "message": "Oh, I see what you mean. That\u0027s correct outside of ANGLE those don\u0027t matter.\n\nSorry, I was not clear before but I found the problem I was having now. If we want to implement the extension on ANGLE with the passthrough cmd decoder, then we need the D3D / Vulkan stuff to work.\n\nIf we use \"gl_DrawID\" as the name of the uniform:\n\n1) On the Vulkan backend, an invalid shader is created b.c. \"builtin\" uniforms don\u0027t get pulled out into the defaultUniform block. We\u0027re left with @@ QUALIFIER-_u_gl_DrawID or something like that.\n2) For HLSL, DecorateVariableIfNeeded fails the assertion for variables of type SymbolType::AngleInternal, ASSERT(!name.beginsWith(\"_\"));\n3) ProgramLinkedResources won\u0027t index uniforms starting with \"gl_\" so it doesn\u0027t get a location\n\nI did some digging to see what I could do to get around this:\n\n1) Can be fixed by adding the uniform to the defaultUniform block if the name is \"gl_DrawID\"\n2) Can be fixed by hardcoding a mapping of gl_DrawID --\u003e angle_DrawID instead of letting it get hashed.\n3) Can be fixed by using glBindUniformLocation to explicitly reserve a location instead of glGetUniformLocation\n\nDo you see any problems with doing this?",
+      "parentUuid": "620a68b9_7652d929",
+      "range": {
+        "startLine": 70,
+        "startChar": 33,
+        "endLine": 70,
+        "endChar": 62
+      },
+      "revId": "9bc7cb68c19f09cce54a53af8be18b82e3f7a6d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3c333bef_3132ef3c",
         "filename": "src/compiler/translator/tree_ops/EmulateGLDrawID.cpp",
         "patchSetId": 14
