@@ -257,6 +257,24 @@
       "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3af7a637_bd58bd2e",
+        "filename": "src/tests/compiler_tests/EmulateGLDrawID_test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-25T21:53:53Z",
+      "side": 1,
+      "message": "heh, that\u0027s not much of a hash. I\u0027d prefer /\\\u003cgl_DrawID\\\u003e/ if we had regex, but I have no idea if we do.",
+      "parentUuid": "54f711d2_bddb7c23",
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
