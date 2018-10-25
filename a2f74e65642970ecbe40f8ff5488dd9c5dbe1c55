@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c23288a5_e4f1a8a0",
+        "filename": "util/osx/OSXTimer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-25T16:28:39Z",
+      "side": 1,
+      "message": "Sure, let\u0027s store the secondCoeff in the timer class.",
+      "parentUuid": "f324e0e5_496692a5",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 0
+      },
+      "revId": "a2f74e65642970ecbe40f8ff5488dd9c5dbe1c55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de07049c_76a76696",
         "filename": "util/windows/WindowsTimer.cpp",
         "patchSetId": 6
