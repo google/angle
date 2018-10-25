@@ -168,6 +168,30 @@
     },
     {
       "key": {
+        "uuid": "40babe2c_ab1f42be",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-25T20:37:43Z",
+      "side": 1,
+      "message": "OK, I\u0027ll take a look. SGTM",
+      "parentUuid": "b13601b0_10a15b6e",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 53
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "72edcb3c_cbe5aba9",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 5
@@ -394,6 +418,30 @@
       "side": 1,
       "message": "What do you mean \u0027not the SSBO fields\u0027? I think it\u0027s for all array of arrays situations in a SSBO access chain. Currently, I am trying to run all ssbo related deqp cases. And fixing the bugs in existed implementation. I think we run revisit it if there are cases not covered.",
       "parentUuid": "ade7fcae_e02bf392",
+      "range": {
+        "startLine": 153,
+        "startChar": 5,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f39658af_d9866cc7",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-25T20:37:43Z",
+      "side": 1,
+      "message": "Well, say you have an array of arrays ssbo\n\nbuffer blockName {\n int i;\n} instance[2][2][2];\n\nvs an ssbo with an array of arrays field\n\nbuffer blockName {\n  int arr[2][2][2];\n};\n\nI think you\u0027re right and the code works, but I would feel a bit better if you could add a few tests with things like\n\nint arr2[2][2];\n((arr2 \u003d blockName.arr[0])[0], or\n\nblockName.arr[(blockName.arr[1] \u003d blockName.arr[2])[0][0]][1][2].\n\nI don\u0027t if this is legal. But anyway, LGTM with a bit more testing.",
+      "parentUuid": "5e9f4a83_cd1b7d88",
       "range": {
         "startLine": 153,
         "startChar": 5,
