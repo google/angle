@@ -51,10 +51,13 @@ const TField *GetFieldMemberInShaderStorageBlock(const TInterfaceBlock *interfac
 void GetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
                                           sh::BlockLayoutEncoder *encoder,
                                           TLayoutBlockStorage storage,
+                                          bool rowMajor,
+                                          bool isSSBOFieldMember,
                                           BlockMemberInfoMap *blockInfoOut);
 
 size_t GetBlockFieldMemberInfoAndReturnBlockSize(const TFieldList &fields,
                                                  TLayoutBlockStorage storage,
+                                                 bool rowMajor,
                                                  BlockMemberInfoMap *blockInfoOut)
 {
     sh::Std140BlockEncoder std140Encoder;
@@ -71,28 +74,34 @@ size_t GetBlockFieldMemberInfoAndReturnBlockSize(const TFieldList &fields,
         structureEncoder = &hlslEncoder;
     }
 
-    GetShaderStorageBlockFieldMemberInfo(fields, structureEncoder, storage, blockInfoOut);
+    GetShaderStorageBlockFieldMemberInfo(fields, structureEncoder, storage, rowMajor, false,
+                                         blockInfoOut);
     structureEncoder->exitAggregateType();
     return structureEncoder->getBlockSize();
 }
 
-// TODO(jiajia.qin@intel.com): use correct row major attribute for structure field member.
-// http://anglebug.com/1951
 void GetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
                                           sh::BlockLayoutEncoder *encoder,
                                           TLayoutBlockStorage storage,
+                                          bool rowMajor,
+                                          bool isSSBOFieldMember,
                                           BlockMemberInfoMap *blockInfoOut)
 {
     for (const TField *field : fields)
     {
         const TType &fieldType = *field->type();
+        bool isRowMajorLayout  = rowMajor;
+        if (isSSBOFieldMember)
+        {
+            isRowMajorLayout = (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
+        }
         if (fieldType.getStruct())
         {
             encoder->enterAggregateType();
             // This is to set structure member offset and array stride using a new encoder to ensure
             // that the first field member offset in structure is always zero.
             size_t structureStride = GetBlockFieldMemberInfoAndReturnBlockSize(
-                fieldType.getStruct()->fields(), storage, blockInfoOut);
+                fieldType.getStruct()->fields(), storage, isRowMajorLayout, blockInfoOut);
             const BlockMemberInfo memberInfo(static_cast<int>(encoder->getBlockSize()),
                                              static_cast<int>(structureStride), 0, false);
             (*blockInfoOut)[field] = memberInfo;
@@ -120,8 +129,6 @@ void GetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
             {
                 fieldArraySizes.assign(arraySizes->begin(), arraySizes->end());
             }
-            const bool isRowMajorLayout =
-                (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
             const BlockMemberInfo &memberInfo =
                 encoder->encodeType(GLVariableType(fieldType), fieldArraySizes,
                                     isRowMajorLayout && fieldType.isMatrix());
@@ -148,7 +155,7 @@ void GetShaderStorageBlockMembersInfo(const TInterfaceBlock *interfaceBlock,
     }
 
     GetShaderStorageBlockFieldMemberInfo(interfaceBlock->fields(), encoder,
-                                         interfaceBlock->blockStorage(), blockInfoOut);
+                                         interfaceBlock->blockStorage(), false, true, blockInfoOut);
 }
 
 bool IsInArrayOfArraysChain(TIntermTyped *node)
@@ -171,6 +178,8 @@ ShaderStorageBlockOutputHLSL::ShaderStorageBlockOutputHLSL(OutputHLSL *outputHLS
                                                            TSymbolTable *symbolTable,
                                                            ResourcesHLSL *resourcesHLSL)
     : TIntermTraverser(true, true, true, symbolTable),
+      mMatrixStride(0),
+      mRowMajor(false),
       mIsLoadFunctionCall(false),
       mOutputHLSL(outputHLSL),
       mResourcesHLSL(resourcesHLSL)
@@ -448,14 +457,25 @@ void ShaderStorageBlockOutputHLSL::writeEOpIndexDirectOrIndirectOutput(TInfoSink
         {
             if (node->getType().isVector() && type.isMatrix())
             {
-                int matrixStride = BlockLayoutEncoder::ComponentsPerRegister *
-                                   BlockLayoutEncoder::BytesPerComponent;
-                out << " + " << str(matrixStride);
+                if (mRowMajor)
+                {
+                    out << " + " << BlockLayoutEncoder::BytesPerComponent;
+                }
+                else
+                {
+                    out << " + " << mMatrixStride;
+                }
             }
             else if (node->getType().isScalar() && !type.isArray())
             {
-                int scalarStride = BlockLayoutEncoder::BytesPerComponent;
-                out << " + " << str(scalarStride);
+                if (mRowMajor)
+                {
+                    out << " + " << mMatrixStride;
+                }
+                else
+                {
+                    out << " + " << BlockLayoutEncoder::BytesPerComponent;
+                }
             }
 
             out << " * ";
@@ -486,6 +506,8 @@ void ShaderStorageBlockOutputHLSL::writeDotOperatorOutput(TInfoSinkBase &out, co
     auto fieldInfoIter = mBlockMemberInfoMap.find(field);
     ASSERT(fieldInfoIter != mBlockMemberInfoMap.end());
     const BlockMemberInfo &memberInfo = fieldInfoIter->second;
+    mMatrixStride                     = memberInfo.matrixStride;
+    mRowMajor                         = memberInfo.isRowMajorMatrix;
     out << memberInfo.offset;
 
     const TType &fieldType = *field->type();

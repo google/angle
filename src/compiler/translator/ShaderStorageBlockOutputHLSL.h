@@ -68,6 +68,8 @@ class ShaderStorageBlockOutputHLSL : public TIntermTraverser
     // Common part in dot operations.
     void writeDotOperatorOutput(TInfoSinkBase &out, const TField *field);
 
+    int mMatrixStride;
+    bool mRowMajor;
     bool mIsLoadFunctionCall;
     OutputHLSL *mOutputHLSL;
     ShaderStorageBlockFunctionHLSL *mSSBOFunctionHLSL;

@@ -27,6 +27,52 @@ class ShaderStorageBufferTest31 : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
+
+    void runStd140RowMajorMatrixTest(const char *computeShaderSource)
+    {
+        ANGLE_GL_COMPUTE_PROGRAM(program, computeShaderSource);
+
+        glUseProgram(program);
+
+        constexpr unsigned int kColumns           = 2;
+        constexpr unsigned int kRows              = 3;
+        constexpr unsigned int kBytesPerComponent = sizeof(float);
+        constexpr unsigned int kMatrixStride      = 16;
+        // kMatrixStride / kBytesPerComponent is used instead of kColumns is because std140 layout
+        // requires that base alignment and stride of arrays of scalars and vectors are rounded up a
+        // multiple of the base alignment of a vec4.
+        constexpr float kInputDada[kRows][kMatrixStride / kBytesPerComponent] = {
+            {0.1, 0.2, 0.0, 0.0}, {0.3, 0.4, 0.0, 0.0}, {0.5, 0.6, 0.0, 0.0}};
+        // Create shader storage buffer
+        GLBuffer shaderStorageBuffer[2];
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, kRows * kMatrixStride, kInputDada, GL_STATIC_DRAW);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, kRows * kMatrixStride, nullptr, GL_STATIC_DRAW);
+
+        // Bind shader storage buffer
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, shaderStorageBuffer[0]);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer[1]);
+
+        glDispatchCompute(1, 1, 1);
+        glFinish();
+
+        // Read back shader storage buffer
+        constexpr float kExpectedValues[kRows][kColumns] = {{0.1, 0.2}, {0.3, 0.4}, {0.5, 0.6}};
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
+        const GLfloat *ptr = reinterpret_cast<const GLfloat *>(
+            glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kRows * kMatrixStride, GL_MAP_READ_BIT));
+        for (unsigned int idx = 0; idx < kRows; idx++)
+        {
+            for (unsigned int idy = 0; idy < kColumns; idy++)
+            {
+                EXPECT_EQ(kExpectedValues[idx][idy],
+                          *(ptr + idx * (kMatrixStride / kBytesPerComponent) + idy));
+            }
+        }
+
+        EXPECT_GL_NO_ERROR();
+    }
 };
 
 // Matched block names within a shader interface must match in terms of having the same number of
@@ -245,7 +291,73 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferVector)
     EXPECT_GL_NO_ERROR();
 }
 
-// Test that access/write to matrix data in shader storage buffer.
+// Test that access/write to scalar data in matrix in shader storage block with row major.
+TEST_P(ShaderStorageBufferTest31, ScalarDataInMatrixInSSBOWithRowMajorQualifier)
+{
+    // TODO(jiajia.qin@intel.com): Figure out why it fails on Intel Linux platform.
+    // http://anglebug.com/1951
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
+    ANGLE_SKIP_TEST_IF(IsAndroid());
+
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(std140, binding = 0) buffer blockIn {
+    layout(row_major) mat2x3 data;
+} instanceIn;
+layout(std140, binding = 1) buffer blockOut {
+    layout(row_major) mat2x3 data;
+} instanceOut;
+void main()
+{
+    instanceOut.data[0][0] = instanceIn.data[0][0];
+    instanceOut.data[0][1] = instanceIn.data[0][1];
+    instanceOut.data[0][2] = instanceIn.data[0][2];
+    instanceOut.data[1][0] = instanceIn.data[1][0];
+    instanceOut.data[1][1] = instanceIn.data[1][1];
+    instanceOut.data[1][2] = instanceIn.data[1][2];
+}
+)";
+
+    runStd140RowMajorMatrixTest(kComputeShaderSource);
+}
+
+// Test that access/write to scalar data in structure matrix in shader storage block with row major.
+TEST_P(ShaderStorageBufferTest31, ScalarDataInMatrixInStructureInSSBOWithRowMajorQualifier)
+{
+    // TODO(jiajia.qin@intel.com): Figure out why it fails on Intel Linux platform.
+    // http://anglebug.com/1951
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux());
+    ANGLE_SKIP_TEST_IF(IsAndroid());
+
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+struct S
+{
+    mat2x3 data;
+};
+layout(std140, binding = 0) buffer blockIn {
+    layout(row_major) S s;
+} instanceIn;
+layout(std140, binding = 1) buffer blockOut {
+    layout(row_major) S s;
+} instanceOut;
+void main()
+{
+    instanceOut.s.data[0][0] = instanceIn.s.data[0][0];
+    instanceOut.s.data[0][1] = instanceIn.s.data[0][1];
+    instanceOut.s.data[0][2] = instanceIn.s.data[0][2];
+    instanceOut.s.data[1][0] = instanceIn.s.data[1][0];
+    instanceOut.s.data[1][1] = instanceIn.s.data[1][1];
+    instanceOut.s.data[1][2] = instanceIn.s.data[1][2];
+}
+)";
+
+    runStd140RowMajorMatrixTest(kComputeShaderSource);
+}
+
+// Test that access/write to column major matrix data in shader storage buffer.
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferMatrix)
 {
     constexpr char kComputeShaderSource[] =
