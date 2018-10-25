@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "b13601b0_10a15b6e",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-25T02:13:26Z",
+      "side": 1,
+      "message": "Sorry, I am a little confused with your replying. I think increaseCurrentOffset is necessary for both situations. If you don\u0027t mind, you can see patch set 2 https://chromium-review.googlesource.com/c/angle/angle/+/1278097/2/src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp#79. Originally, increaseCurrentOffset was not introduced and I did only use the existed method to increase the offset implicitly. But like Corentin said, that will result that the time complexity is O(number of elements in the array * members of the struct) when it could be O(members of the struct).\n\nAnd I think the refactor that you mentioned is just not add two additional fields member in TField and can save them into a map like \u003cTField, \u003coffset, arrayStride\u003e\u003e. And the calculation of offset/arrayStride still needs to adopt the current method. I am not sure why you think \"increaseCurrentOffset\" can be removed?",
+      "parentUuid": "8222dc2d_07e8b647",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 53
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "72edcb3c_cbe5aba9",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 5
