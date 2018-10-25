@@ -12,6 +12,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/validationES3.h"
+#include "libGLESv2/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
 
 namespace gl
@@ -25,8 +26,6 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
     if (context)
     {
         QueryType targetPacked = FromGLenum<QueryType>(target);
-        context->gatherParams<EntryPoint::BeginQuery>(targetPacked, id);
-
         if (context->skipValidation() || ValidateBeginQuery(context, targetPacked, id))
         {
             context->beginQuery(targetPacked, id);
@@ -43,8 +42,6 @@ void GL_APIENTRY BeginTransformFeedback(GLenum primitiveMode)
     if (context)
     {
         PrimitiveMode primitiveModePacked = FromGLenum<PrimitiveMode>(primitiveMode);
-        context->gatherParams<EntryPoint::BeginTransformFeedback>(primitiveModePacked);
-
         if (context->skipValidation() ||
             ValidateBeginTransformFeedback(context, primitiveModePacked))
         {
@@ -62,8 +59,6 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        context->gatherParams<EntryPoint::BindBufferBase>(targetPacked, index, buffer);
-
         if (context->skipValidation() ||
             ValidateBindBufferBase(context, targetPacked, index, buffer))
         {
@@ -86,9 +81,6 @@ BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLs
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        context->gatherParams<EntryPoint::BindBufferRange>(targetPacked, index, buffer, offset,
-                                                           size);
-
         if (context->skipValidation() ||
             ValidateBindBufferRange(context, targetPacked, index, buffer, offset, size))
         {
@@ -105,8 +97,6 @@ void GL_APIENTRY BindSampler(GLuint unit, GLuint sampler)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BindSampler>(unit, sampler);
-
         if (context->skipValidation() || ValidateBindSampler(context, unit, sampler))
         {
             context->bindSampler(unit, sampler);
@@ -122,8 +112,6 @@ void GL_APIENTRY BindTransformFeedback(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BindTransformFeedback>(target, id);
-
         if (context->skipValidation() || ValidateBindTransformFeedback(context, target, id))
         {
             context->bindTransformFeedback(target, id);
@@ -139,8 +127,6 @@ void GL_APIENTRY BindVertexArray(GLuint array)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BindVertexArray>(array);
-
         if (context->skipValidation() || ValidateBindVertexArray(context, array))
         {
             context->bindVertexArray(array);
@@ -169,9 +155,6 @@ void GL_APIENTRY BlitFramebuffer(GLint srcX0,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BlitFramebuffer>(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0,
-                                                           dstX1, dstY1, mask, filter);
-
         if (context->skipValidation() ||
             ValidateBlitFramebuffer(context, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
                                     mask, filter))
@@ -191,8 +174,6 @@ void GL_APIENTRY ClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, G
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::ClearBufferfi>(buffer, drawbuffer, depth, stencil);
-
         if (context->skipValidation() ||
             ValidateClearBufferfi(context, buffer, drawbuffer, depth, stencil))
         {
@@ -210,8 +191,6 @@ void GL_APIENTRY ClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *v
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::ClearBufferfv>(buffer, drawbuffer, value);
-
         if (context->skipValidation() || ValidateClearBufferfv(context, buffer, drawbuffer, value))
         {
             context->clearBufferfv(buffer, drawbuffer, value);
@@ -228,8 +207,6 @@ void GL_APIENTRY ClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *val
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::ClearBufferiv>(buffer, drawbuffer, value);
-
         if (context->skipValidation() || ValidateClearBufferiv(context, buffer, drawbuffer, value))
         {
             context->clearBufferiv(buffer, drawbuffer, value);
@@ -246,8 +223,6 @@ void GL_APIENTRY ClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *v
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::ClearBufferuiv>(buffer, drawbuffer, value);
-
         if (context->skipValidation() || ValidateClearBufferuiv(context, buffer, drawbuffer, value))
         {
             context->clearBufferuiv(buffer, drawbuffer, value);
@@ -264,8 +239,6 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::ClientWaitSync>(sync, flags, timeout);
-
         if (context->skipValidation() || ValidateClientWaitSync(context, sync, flags, timeout))
         {
             return context->clientWaitSync(sync, flags, timeout);
@@ -296,9 +269,6 @@ void GL_APIENTRY CompressedTexImage3D(GLenum target,
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        context->gatherParams<EntryPoint::CompressedTexImage3D>(
-            targetPacked, level, internalformat, width, height, depth, border, imageSize, data);
-
         if (context->skipValidation() ||
             ValidateCompressedTexImage3D(context, targetPacked, level, internalformat, width,
                                          height, depth, border, imageSize, data))
@@ -333,10 +303,6 @@ void GL_APIENTRY CompressedTexSubImage3D(GLenum target,
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        context->gatherParams<EntryPoint::CompressedTexSubImage3D>(targetPacked, level, xoffset,
-                                                                   yoffset, zoffset, width, height,
-                                                                   depth, format, imageSize, data);
-
         if (context->skipValidation() ||
             ValidateCompressedTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset,
                                             width, height, depth, format, imageSize, data))
@@ -365,9 +331,6 @@ void GL_APIENTRY CopyBufferSubData(GLenum readTarget,
     {
         BufferBinding readTargetPacked  = FromGLenum<BufferBinding>(readTarget);
         BufferBinding writeTargetPacked = FromGLenum<BufferBinding>(writeTarget);
-        context->gatherParams<EntryPoint::CopyBufferSubData>(readTargetPacked, writeTargetPacked,
-                                                             readOffset, writeOffset, size);
-
         if (context->skipValidation() ||
             ValidateCopyBufferSubData(context, readTargetPacked, writeTargetPacked, readOffset,
                                       writeOffset, size))
@@ -398,9 +361,6 @@ void GL_APIENTRY CopyTexSubImage3D(GLenum target,
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        context->gatherParams<EntryPoint::CopyTexSubImage3D>(targetPacked, level, xoffset, yoffset,
-                                                             zoffset, x, y, width, height);
-
         if (context->skipValidation() ||
             ValidateCopyTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset, x, y,
                                       width, height))
@@ -419,8 +379,6 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::DeleteQueries>(n, ids);
-
         if (context->skipValidation() || ValidateDeleteQueries(context, n, ids))
         {
             context->deleteQueries(n, ids);
@@ -437,8 +395,6 @@ void GL_APIENTRY DeleteSamplers(GLsizei count, const GLuint *samplers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::DeleteSamplers>(count, samplers);
-
         if (context->skipValidation() || ValidateDeleteSamplers(context, count, samplers))
         {
             context->deleteSamplers(count, samplers);
@@ -454,8 +410,6 @@ void GL_APIENTRY DeleteSync(GLsync sync)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::DeleteSync>(sync);
-
         if (context->skipValidation() || ValidateDeleteSync(context, sync))
         {
             context->deleteSync(sync);
@@ -471,8 +425,6 @@ void GL_APIENTRY DeleteTransformFeedbacks(GLsizei n, const GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::DeleteTransformFeedbacks>(n, ids);
-
         if (context->skipValidation() || ValidateDeleteTransformFeedbacks(context, n, ids))
         {
             context->deleteTransformFeedbacks(n, ids);
@@ -488,8 +440,6 @@ void GL_APIENTRY DeleteVertexArrays(GLsizei n, const GLuint *arrays)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::DeleteVertexArrays>(n, arrays);
-
         if (context->skipValidation() || ValidateDeleteVertexArrays(context, n, arrays))
         {
             context->deleteVertexArrays(n, arrays);
@@ -507,9 +457,6 @@ void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
     if (context)
     {
         PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
-        context->gatherParams<EntryPoint::DrawArraysInstanced>(modePacked, first, count,
-                                                               instancecount);
-
         if (context->skipValidation() ||
             ValidateDrawArraysInstanced(context, modePacked, first, count, instancecount))
         {
@@ -526,8 +473,6 @@ void GL_APIENTRY DrawBuffers(GLsizei n, const GLenum *bufs)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::DrawBuffers>(n, bufs);
-
         if (context->skipValidation() || ValidateDrawBuffers(context, n, bufs))
         {
             context->drawBuffers(n, bufs);
@@ -551,9 +496,6 @@ void GL_APIENTRY DrawElementsInstanced(GLenum mode,
     if (context)
     {
         PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
-        context->gatherParams<EntryPoint::DrawElementsInstanced>(modePacked, count, type, indices,
-                                                                 instancecount);
-
         if (context->skipValidation() ||
             ValidateDrawElementsInstanced(context, modePacked, count, type, indices, instancecount))
         {
@@ -579,9 +521,6 @@ void GL_APIENTRY DrawRangeElements(GLenum mode,
     if (context)
     {
         PrimitiveMode modePacked = FromGLenum<PrimitiveMode>(mode);
-        context->gatherParams<EntryPoint::DrawRangeElements>(modePacked, start, end, count, type,
-                                                             indices);
-
         if (context->skipValidation() ||
             ValidateDrawRangeElements(context, modePacked, start, end, count, type, indices))
         {
@@ -599,8 +538,6 @@ void GL_APIENTRY EndQuery(GLenum target)
     if (context)
     {
         QueryType targetPacked = FromGLenum<QueryType>(target);
-        context->gatherParams<EntryPoint::EndQuery>(targetPacked);
-
         if (context->skipValidation() || ValidateEndQuery(context, targetPacked))
         {
             context->endQuery(targetPacked);
@@ -616,8 +553,6 @@ void GL_APIENTRY EndTransformFeedback()
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::EndTransformFeedback>();
-
         if (context->skipValidation() || ValidateEndTransformFeedback(context))
         {
             context->endTransformFeedback();
@@ -633,8 +568,6 @@ GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::FenceSync>(condition, flags);
-
         if (context->skipValidation() || ValidateFenceSync(context, condition, flags))
         {
             return context->fenceSync(condition, flags);
@@ -654,8 +587,6 @@ void GL_APIENTRY FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeip
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        context->gatherParams<EntryPoint::FlushMappedBufferRange>(targetPacked, offset, length);
-
         if (context->skipValidation() ||
             ValidateFlushMappedBufferRange(context, targetPacked, offset, length))
         {
@@ -676,9 +607,6 @@ FramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::FramebufferTextureLayer>(target, attachment, texture,
-                                                                   level, layer);
-
         if (context->skipValidation() ||
             ValidateFramebufferTextureLayer(context, target, attachment, texture, level, layer))
         {
@@ -695,8 +623,6 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GenQueries>(n, ids);
-
         if (context->skipValidation() || ValidateGenQueries(context, n, ids))
         {
             context->genQueries(n, ids);
@@ -712,8 +638,6 @@ void GL_APIENTRY GenSamplers(GLsizei count, GLuint *samplers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GenSamplers>(count, samplers);
-
         if (context->skipValidation() || ValidateGenSamplers(context, count, samplers))
         {
             context->genSamplers(count, samplers);
@@ -729,8 +653,6 @@ void GL_APIENTRY GenTransformFeedbacks(GLsizei n, GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GenTransformFeedbacks>(n, ids);
-
         if (context->skipValidation() || ValidateGenTransformFeedbacks(context, n, ids))
         {
             context->genTransformFeedbacks(n, ids);
@@ -746,8 +668,6 @@ void GL_APIENTRY GenVertexArrays(GLsizei n, GLuint *arrays)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GenVertexArrays>(n, arrays);
-
         if (context->skipValidation() || ValidateGenVertexArrays(context, n, arrays))
         {
             context->genVertexArrays(n, arrays);
@@ -770,9 +690,6 @@ void GL_APIENTRY GetActiveUniformBlockName(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetActiveUniformBlockName>(
-            program, uniformBlockIndex, bufSize, length, uniformBlockName);
-
         if (context->skipValidation() ||
             ValidateGetActiveUniformBlockName(context, program, uniformBlockIndex, bufSize, length,
                                               uniformBlockName))
@@ -797,9 +714,6 @@ void GL_APIENTRY GetActiveUniformBlockiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetActiveUniformBlockiv>(program, uniformBlockIndex,
-                                                                   pname, params);
-
         if (context->skipValidation() ||
             ValidateGetActiveUniformBlockiv(context, program, uniformBlockIndex, pname, params))
         {
@@ -823,9 +737,6 @@ void GL_APIENTRY GetActiveUniformsiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetActiveUniformsiv>(program, uniformCount,
-                                                               uniformIndices, pname, params);
-
         if (context->skipValidation() || ValidateGetActiveUniformsiv(context, program, uniformCount,
                                                                      uniformIndices, pname, params))
         {
@@ -844,8 +755,6 @@ void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *pa
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        context->gatherParams<EntryPoint::GetBufferParameteri64v>(targetPacked, pname, params);
-
         if (context->skipValidation() ||
             ValidateGetBufferParameteri64v(context, targetPacked, pname, params))
         {
@@ -864,8 +773,6 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        context->gatherParams<EntryPoint::GetBufferPointerv>(targetPacked, pname, params);
-
         if (context->skipValidation() ||
             ValidateGetBufferPointerv(context, targetPacked, pname, params))
         {
@@ -883,8 +790,6 @@ GLint GL_APIENTRY GetFragDataLocation(GLuint program, const GLchar *name)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetFragDataLocation>(program, name);
-
         if (context->skipValidation() || ValidateGetFragDataLocation(context, program, name))
         {
             return context->getFragDataLocation(program, name);
@@ -903,8 +808,6 @@ void GL_APIENTRY GetInteger64i_v(GLenum target, GLuint index, GLint64 *data)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetInteger64i_v>(target, index, data);
-
         if (context->skipValidation() || ValidateGetInteger64i_v(context, target, index, data))
         {
             context->getInteger64i_v(target, index, data);
@@ -920,8 +823,6 @@ void GL_APIENTRY GetInteger64v(GLenum pname, GLint64 *data)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetInteger64v>(pname, data);
-
         if (context->skipValidation() || ValidateGetInteger64v(context, pname, data))
         {
             context->getInteger64v(pname, data);
@@ -938,8 +839,6 @@ void GL_APIENTRY GetIntegeri_v(GLenum target, GLuint index, GLint *data)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetIntegeri_v>(target, index, data);
-
         if (context->skipValidation() || ValidateGetIntegeri_v(context, target, index, data))
         {
             context->getIntegeri_v(target, index, data);
@@ -962,9 +861,6 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetInternalformativ>(target, internalformat, pname,
-                                                               bufSize, params);
-
         if (context->skipValidation() ||
             ValidateGetInternalformativ(context, target, internalformat, pname, bufSize, params))
         {
@@ -987,9 +883,6 @@ void GL_APIENTRY GetProgramBinary(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetProgramBinary>(program, bufSize, length, binaryFormat,
-                                                            binary);
-
         if (context->skipValidation() ||
             ValidateGetProgramBinary(context, program, bufSize, length, binaryFormat, binary))
         {
@@ -1007,8 +900,6 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetQueryObjectuiv>(id, pname, params);
-
         if (context->skipValidation() || ValidateGetQueryObjectuiv(context, id, pname, params))
         {
             context->getQueryObjectuiv(id, pname, params);
@@ -1026,8 +917,6 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
     if (context)
     {
         QueryType targetPacked = FromGLenum<QueryType>(target);
-        context->gatherParams<EntryPoint::GetQueryiv>(targetPacked, pname, params);
-
         if (context->skipValidation() || ValidateGetQueryiv(context, targetPacked, pname, params))
         {
             context->getQueryiv(targetPacked, pname, params);
@@ -1044,8 +933,6 @@ void GL_APIENTRY GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat *pa
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetSamplerParameterfv>(sampler, pname, params);
-
         if (context->skipValidation() ||
             ValidateGetSamplerParameterfv(context, sampler, pname, params))
         {
@@ -1063,8 +950,6 @@ void GL_APIENTRY GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint *para
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetSamplerParameteriv>(sampler, pname, params);
-
         if (context->skipValidation() ||
             ValidateGetSamplerParameteriv(context, sampler, pname, params))
         {
@@ -1081,8 +966,6 @@ const GLubyte *GL_APIENTRY GetStringi(GLenum name, GLuint index)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetStringi>(name, index);
-
         if (context->skipValidation() || ValidateGetStringi(context, name, index))
         {
             return context->getStringi(name, index);
@@ -1104,8 +987,6 @@ GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *va
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetSynciv>(sync, pname, bufSize, length, values);
-
         if (context->skipValidation() ||
             ValidateGetSynciv(context, sync, pname, bufSize, length, values))
         {
@@ -1133,9 +1014,6 @@ void GL_APIENTRY GetTransformFeedbackVarying(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetTransformFeedbackVarying>(program, index, bufSize,
-                                                                       length, size, type, name);
-
         if (context->skipValidation() ||
             ValidateGetTransformFeedbackVarying(context, program, index, bufSize, length, size,
                                                 type, name))
@@ -1154,8 +1032,6 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetUniformBlockIndex>(program, uniformBlockName);
-
         if (context->skipValidation() ||
             ValidateGetUniformBlockIndex(context, program, uniformBlockName))
         {
@@ -1180,9 +1056,6 @@ void GL_APIENTRY GetUniformIndices(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetUniformIndices>(program, uniformCount, uniformNames,
-                                                             uniformIndices);
-
         if (context->skipValidation() ||
             ValidateGetUniformIndices(context, program, uniformCount, uniformNames, uniformIndices))
         {
@@ -1200,8 +1073,6 @@ void GL_APIENTRY GetUniformuiv(GLuint program, GLint location, GLuint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetUniformuiv>(program, location, params);
-
         if (context->skipValidation() || ValidateGetUniformuiv(context, program, location, params))
         {
             context->getUniformuiv(program, location, params);
@@ -1218,8 +1089,6 @@ void GL_APIENTRY GetVertexAttribIiv(GLuint index, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetVertexAttribIiv>(index, pname, params);
-
         if (context->skipValidation() || ValidateGetVertexAttribIiv(context, index, pname, params))
         {
             context->getVertexAttribIiv(index, pname, params);
@@ -1236,8 +1105,6 @@ void GL_APIENTRY GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::GetVertexAttribIuiv>(index, pname, params);
-
         if (context->skipValidation() || ValidateGetVertexAttribIuiv(context, index, pname, params))
         {
             context->getVertexAttribIuiv(index, pname, params);
@@ -1258,9 +1125,6 @@ void GL_APIENTRY InvalidateFramebuffer(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::InvalidateFramebuffer>(target, numAttachments,
-                                                                 attachments);
-
         if (context->skipValidation() ||
             ValidateInvalidateFramebuffer(context, target, numAttachments, attachments))
         {
@@ -1286,9 +1150,6 @@ void GL_APIENTRY InvalidateSubFramebuffer(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::InvalidateSubFramebuffer>(
-            target, numAttachments, attachments, x, y, width, height);
-
         if (context->skipValidation() ||
             ValidateInvalidateSubFramebuffer(context, target, numAttachments, attachments, x, y,
                                              width, height))
@@ -1307,8 +1168,6 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::IsQuery>(id);
-
         if (context->skipValidation() || ValidateIsQuery(context, id))
         {
             return context->isQuery(id);
@@ -1326,8 +1185,6 @@ GLboolean GL_APIENTRY IsSampler(GLuint sampler)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::IsSampler>(sampler);
-
         if (context->skipValidation() || ValidateIsSampler(context, sampler))
         {
             return context->isSampler(sampler);
@@ -1345,8 +1202,6 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::IsSync>(sync);
-
         if (context->skipValidation() || ValidateIsSync(context, sync))
         {
             return context->isSync(sync);
@@ -1364,8 +1219,6 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::IsTransformFeedback>(id);
-
         if (context->skipValidation() || ValidateIsTransformFeedback(context, id))
         {
             return context->isTransformFeedback(id);
@@ -1383,8 +1236,6 @@ GLboolean GL_APIENTRY IsVertexArray(GLuint array)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::IsVertexArray>(array);
-
         if (context->skipValidation() || ValidateIsVertexArray(context, array))
         {
             return context->isVertexArray(array);
@@ -1410,8 +1261,6 @@ void *GL_APIENTRY MapBufferRange(GLenum target,
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        context->gatherParams<EntryPoint::MapBufferRange>(targetPacked, offset, length, access);
-
         if (context->skipValidation() ||
             ValidateMapBufferRange(context, targetPacked, offset, length, access))
         {
@@ -1430,8 +1279,6 @@ void GL_APIENTRY PauseTransformFeedback()
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::PauseTransformFeedback>();
-
         if (context->skipValidation() || ValidatePauseTransformFeedback(context))
         {
             context->pauseTransformFeedback();
@@ -1452,8 +1299,6 @@ void GL_APIENTRY ProgramBinary(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::ProgramBinary>(program, binaryFormat, binary, length);
-
         if (context->skipValidation() ||
             ValidateProgramBinary(context, program, binaryFormat, binary, length))
         {
@@ -1470,8 +1315,6 @@ void GL_APIENTRY ProgramParameteri(GLuint program, GLenum pname, GLint value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::ProgramParameteri>(program, pname, value);
-
         if (context->skipValidation() || ValidateProgramParameteri(context, program, pname, value))
         {
             context->programParameteri(program, pname, value);
@@ -1487,8 +1330,6 @@ void GL_APIENTRY ReadBuffer(GLenum src)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::ReadBuffer>(src);
-
         if (context->skipValidation() || ValidateReadBuffer(context, src))
         {
             context->readBuffer(src);
@@ -1511,9 +1352,6 @@ void GL_APIENTRY RenderbufferStorageMultisample(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::RenderbufferStorageMultisample>(
-            target, samples, internalformat, width, height);
-
         if (context->skipValidation() ||
             ValidateRenderbufferStorageMultisample(context, target, samples, internalformat, width,
                                                    height))
@@ -1531,8 +1369,6 @@ void GL_APIENTRY ResumeTransformFeedback()
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::ResumeTransformFeedback>();
-
         if (context->skipValidation() || ValidateResumeTransformFeedback(context))
         {
             context->resumeTransformFeedback();
@@ -1548,8 +1384,6 @@ void GL_APIENTRY SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::SamplerParameterf>(sampler, pname, param);
-
         if (context->skipValidation() || ValidateSamplerParameterf(context, sampler, pname, param))
         {
             context->samplerParameterf(sampler, pname, param);
@@ -1566,8 +1400,6 @@ void GL_APIENTRY SamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::SamplerParameterfv>(sampler, pname, param);
-
         if (context->skipValidation() || ValidateSamplerParameterfv(context, sampler, pname, param))
         {
             context->samplerParameterfv(sampler, pname, param);
@@ -1583,8 +1415,6 @@ void GL_APIENTRY SamplerParameteri(GLuint sampler, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::SamplerParameteri>(sampler, pname, param);
-
         if (context->skipValidation() || ValidateSamplerParameteri(context, sampler, pname, param))
         {
             context->samplerParameteri(sampler, pname, param);
@@ -1601,8 +1431,6 @@ void GL_APIENTRY SamplerParameteriv(GLuint sampler, GLenum pname, const GLint *p
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::SamplerParameteriv>(sampler, pname, param);
-
         if (context->skipValidation() || ValidateSamplerParameteriv(context, sampler, pname, param))
         {
             context->samplerParameteriv(sampler, pname, param);
@@ -1633,9 +1461,6 @@ void GL_APIENTRY TexImage3D(GLenum target,
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        context->gatherParams<EntryPoint::TexImage3D>(targetPacked, level, internalformat, width,
-                                                      height, depth, border, format, type, pixels);
-
         if (context->skipValidation() ||
             ValidateTexImage3D(context, targetPacked, level, internalformat, width, height, depth,
                                border, format, type, pixels))
@@ -1659,9 +1484,6 @@ TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        context->gatherParams<EntryPoint::TexStorage2D>(targetPacked, levels, internalformat, width,
-                                                        height);
-
         if (context->skipValidation() ||
             ValidateTexStorage2D(context, targetPacked, levels, internalformat, width, height))
         {
@@ -1687,9 +1509,6 @@ void GL_APIENTRY TexStorage3D(GLenum target,
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        context->gatherParams<EntryPoint::TexStorage3D>(targetPacked, levels, internalformat, width,
-                                                        height, depth);
-
         if (context->skipValidation() || ValidateTexStorage3D(context, targetPacked, levels,
                                                               internalformat, width, height, depth))
         {
@@ -1722,10 +1541,6 @@ void GL_APIENTRY TexSubImage3D(GLenum target,
     if (context)
     {
         TextureType targetPacked = FromGLenum<TextureType>(target);
-        context->gatherParams<EntryPoint::TexSubImage3D>(targetPacked, level, xoffset, yoffset,
-                                                         zoffset, width, height, depth, format,
-                                                         type, pixels);
-
         if (context->skipValidation() ||
             ValidateTexSubImage3D(context, targetPacked, level, xoffset, yoffset, zoffset, width,
                                   height, depth, format, type, pixels))
@@ -1749,9 +1564,6 @@ void GL_APIENTRY TransformFeedbackVaryings(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::TransformFeedbackVaryings>(program, count, varyings,
-                                                                     bufferMode);
-
         if (context->skipValidation() ||
             ValidateTransformFeedbackVaryings(context, program, count, varyings, bufferMode))
         {
@@ -1768,8 +1580,6 @@ void GL_APIENTRY Uniform1ui(GLint location, GLuint v0)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::Uniform1ui>(location, v0);
-
         if (context->skipValidation() || ValidateUniform1ui(context, location, v0))
         {
             context->uniform1ui(location, v0);
@@ -1786,8 +1596,6 @@ void GL_APIENTRY Uniform1uiv(GLint location, GLsizei count, const GLuint *value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::Uniform1uiv>(location, count, value);
-
         if (context->skipValidation() || ValidateUniform1uiv(context, location, count, value))
         {
             context->uniform1uiv(location, count, value);
@@ -1803,8 +1611,6 @@ void GL_APIENTRY Uniform2ui(GLint location, GLuint v0, GLuint v1)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::Uniform2ui>(location, v0, v1);
-
         if (context->skipValidation() || ValidateUniform2ui(context, location, v0, v1))
         {
             context->uniform2ui(location, v0, v1);
@@ -1821,8 +1627,6 @@ void GL_APIENTRY Uniform2uiv(GLint location, GLsizei count, const GLuint *value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::Uniform2uiv>(location, count, value);
-
         if (context->skipValidation() || ValidateUniform2uiv(context, location, count, value))
         {
             context->uniform2uiv(location, count, value);
@@ -1839,8 +1643,6 @@ void GL_APIENTRY Uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::Uniform3ui>(location, v0, v1, v2);
-
         if (context->skipValidation() || ValidateUniform3ui(context, location, v0, v1, v2))
         {
             context->uniform3ui(location, v0, v1, v2);
@@ -1857,8 +1659,6 @@ void GL_APIENTRY Uniform3uiv(GLint location, GLsizei count, const GLuint *value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::Uniform3uiv>(location, count, value);
-
         if (context->skipValidation() || ValidateUniform3uiv(context, location, count, value))
         {
             context->uniform3uiv(location, count, value);
@@ -1875,8 +1675,6 @@ void GL_APIENTRY Uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLu
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::Uniform4ui>(location, v0, v1, v2, v3);
-
         if (context->skipValidation() || ValidateUniform4ui(context, location, v0, v1, v2, v3))
         {
             context->uniform4ui(location, v0, v1, v2, v3);
@@ -1893,8 +1691,6 @@ void GL_APIENTRY Uniform4uiv(GLint location, GLsizei count, const GLuint *value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::Uniform4uiv>(location, count, value);
-
         if (context->skipValidation() || ValidateUniform4uiv(context, location, count, value))
         {
             context->uniform4uiv(location, count, value);
@@ -1913,9 +1709,6 @@ void GL_APIENTRY UniformBlockBinding(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::UniformBlockBinding>(program, uniformBlockIndex,
-                                                               uniformBlockBinding);
-
         if (context->skipValidation() ||
             ValidateUniformBlockBinding(context, program, uniformBlockIndex, uniformBlockBinding))
         {
@@ -1938,8 +1731,6 @@ void GL_APIENTRY UniformMatrix2x3fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::UniformMatrix2x3fv>(location, count, transpose, value);
-
         if (context->skipValidation() ||
             ValidateUniformMatrix2x3fv(context, location, count, transpose, value))
         {
@@ -1962,8 +1753,6 @@ void GL_APIENTRY UniformMatrix2x4fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::UniformMatrix2x4fv>(location, count, transpose, value);
-
         if (context->skipValidation() ||
             ValidateUniformMatrix2x4fv(context, location, count, transpose, value))
         {
@@ -1986,8 +1775,6 @@ void GL_APIENTRY UniformMatrix3x2fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::UniformMatrix3x2fv>(location, count, transpose, value);
-
         if (context->skipValidation() ||
             ValidateUniformMatrix3x2fv(context, location, count, transpose, value))
         {
@@ -2010,8 +1797,6 @@ void GL_APIENTRY UniformMatrix3x4fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::UniformMatrix3x4fv>(location, count, transpose, value);
-
         if (context->skipValidation() ||
             ValidateUniformMatrix3x4fv(context, location, count, transpose, value))
         {
@@ -2034,8 +1819,6 @@ void GL_APIENTRY UniformMatrix4x2fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::UniformMatrix4x2fv>(location, count, transpose, value);
-
         if (context->skipValidation() ||
             ValidateUniformMatrix4x2fv(context, location, count, transpose, value))
         {
@@ -2058,8 +1841,6 @@ void GL_APIENTRY UniformMatrix4x3fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::UniformMatrix4x3fv>(location, count, transpose, value);
-
         if (context->skipValidation() ||
             ValidateUniformMatrix4x3fv(context, location, count, transpose, value))
         {
@@ -2077,8 +1858,6 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     if (context)
     {
         BufferBinding targetPacked = FromGLenum<BufferBinding>(target);
-        context->gatherParams<EntryPoint::UnmapBuffer>(targetPacked);
-
         if (context->skipValidation() || ValidateUnmapBuffer(context, targetPacked))
         {
             return context->unmapBuffer(targetPacked);
@@ -2096,8 +1875,6 @@ void GL_APIENTRY VertexAttribDivisor(GLuint index, GLuint divisor)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::VertexAttribDivisor>(index, divisor);
-
         if (context->skipValidation() || ValidateVertexAttribDivisor(context, index, divisor))
         {
             context->vertexAttribDivisor(index, divisor);
@@ -2114,8 +1891,6 @@ void GL_APIENTRY VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::VertexAttribI4i>(index, x, y, z, w);
-
         if (context->skipValidation() || ValidateVertexAttribI4i(context, index, x, y, z, w))
         {
             context->vertexAttribI4i(index, x, y, z, w);
@@ -2131,8 +1906,6 @@ void GL_APIENTRY VertexAttribI4iv(GLuint index, const GLint *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::VertexAttribI4iv>(index, v);
-
         if (context->skipValidation() || ValidateVertexAttribI4iv(context, index, v))
         {
             context->vertexAttribI4iv(index, v);
@@ -2149,8 +1922,6 @@ void GL_APIENTRY VertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::VertexAttribI4ui>(index, x, y, z, w);
-
         if (context->skipValidation() || ValidateVertexAttribI4ui(context, index, x, y, z, w))
         {
             context->vertexAttribI4ui(index, x, y, z, w);
@@ -2166,8 +1937,6 @@ void GL_APIENTRY VertexAttribI4uiv(GLuint index, const GLuint *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::VertexAttribI4uiv>(index, v);
-
         if (context->skipValidation() || ValidateVertexAttribI4uiv(context, index, v))
         {
             context->vertexAttribI4uiv(index, v);
@@ -2187,8 +1956,6 @@ VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, cons
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::VertexAttribIPointer>(index, size, type, stride, pointer);
-
         if (context->skipValidation() ||
             ValidateVertexAttribIPointer(context, index, size, type, stride, pointer))
         {
@@ -2206,8 +1973,6 @@ void GL_APIENTRY WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::WaitSync>(sync, flags, timeout);
-
         if (context->skipValidation() || ValidateWaitSync(context, sync, flags, timeout))
         {
             context->waitSync(sync, flags, timeout);

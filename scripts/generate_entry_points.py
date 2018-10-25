@@ -191,8 +191,6 @@ template_entry_point_def = """{return_type}GL_APIENTRY {name}{explicit_context_s
     Context *context = {context_getter};
     if (context)
     {{{assert_explicit_context}{packed_gl_enum_conversions}
-        context->gatherParams<EntryPoint::{name}>({internal_params});
-
         if (context->skipValidation() || Validate{name}({validate_params}))
         {{
             {return_if_needed}context->{name_lower_no_suffix}({internal_params});
@@ -679,6 +677,7 @@ template_sources_includes = """#include "libGLESv2/entry_points_gles_{}_autogen.
 
 #include "libANGLE/Context.h"
 #include "libANGLE/validationES{}{}.h"
+#include "libGLESv2/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
 """
 
@@ -904,7 +903,7 @@ entry_points_enum = template_entry_points_enum_header.format(
     year = date.today().year,
     entry_points_list = ",\n".join(["    " + cmd for cmd in sorted_cmd_names]))
 
-entry_points_enum_header_path = path_to("libANGLE", "entry_points_enum_autogen.h")
+entry_points_enum_header_path = path_to("libGLESv2", "entry_points_enum_autogen.h")
 with open(entry_points_enum_header_path, "w") as out:
     out.write(entry_points_enum)
     out.close()

@@ -34,7 +34,7 @@ class Renderer11;
 class RenderTarget11;
 struct Renderer11DeviceCaps;
 
-using RTVArray          = std::array<ID3D11RenderTargetView *, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
+using RTVArray = std::array<ID3D11RenderTargetView *, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 
 namespace gl_d3d11
 {
@@ -50,7 +50,10 @@ D3D11_DEPTH_WRITE_MASK ConvertDepthMask(bool depthWriteEnabled);
 UINT8 ConvertStencilMask(GLuint stencilmask);
 D3D11_STENCIL_OP ConvertStencilOp(GLenum stencilOp);
 
-D3D11_FILTER ConvertFilter(GLenum minFilter, GLenum magFilter, float maxAnisotropy, GLenum comparisonMode);
+D3D11_FILTER ConvertFilter(GLenum minFilter,
+                           GLenum magFilter,
+                           float maxAnisotropy,
+                           GLenum comparisonMode);
 D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap);
 UINT ConvertMaxAnisotropy(float maxAnisotropy, D3D_FEATURE_LEVEL featureLevel);
 
@@ -96,7 +99,11 @@ enum ANGLED3D11DeviceType
 
 ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device);
 
-void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
+void MakeValidSize(bool isImage,
+                   DXGI_FORMAT format,
+                   GLsizei *requestWidth,
+                   GLsizei *requestHeight,
+                   int *levelOffset);
 
 angle::Result GenerateInitialTextureData(
     const gl::Context *context,
@@ -115,7 +122,7 @@ struct PositionTexCoordVertex
     float x, y;
     float u, v;
 };
-void SetPositionTexCoordVertex(PositionTexCoordVertex* vertex, float x, float y, float u, float v);
+void SetPositionTexCoordVertex(PositionTexCoordVertex *vertex, float x, float y, float u, float v);
 
 struct PositionLayerTexCoord3DVertex
 {
@@ -123,8 +130,13 @@ struct PositionLayerTexCoord3DVertex
     unsigned int l;
     float u, v, s;
 };
-void SetPositionLayerTexCoord3DVertex(PositionLayerTexCoord3DVertex* vertex, float x, float y,
-                                      unsigned int layer, float u, float v, float s);
+void SetPositionLayerTexCoord3DVertex(PositionLayerTexCoord3DVertex *vertex,
+                                      float x,
+                                      float y,
+                                      unsigned int layer,
+                                      float u,
+                                      float v,
+                                      float s);
 
 struct PositionVertex
 {
@@ -162,10 +174,11 @@ bool operator==(const RasterizerStateKey &a, const RasterizerStateKey &b);
 bool operator!=(const RasterizerStateKey &a, const RasterizerStateKey &b);
 
 template <typename outType>
-outType* DynamicCastComObject(IUnknown* object)
+outType *DynamicCastComObject(IUnknown *object)
 {
     outType *outObject = nullptr;
-    HRESULT result = object->QueryInterface(__uuidof(outType), reinterpret_cast<void**>(&outObject));
+    HRESULT result =
+        object->QueryInterface(__uuidof(outType), reinterpret_cast<void **>(&outObject));
     if (SUCCEEDED(result))
     {
         return outObject;
@@ -181,14 +194,14 @@ inline bool isDeviceLostError(HRESULT errorCode)
 {
     switch (errorCode)
     {
-      case DXGI_ERROR_DEVICE_HUNG:
-      case DXGI_ERROR_DEVICE_REMOVED:
-      case DXGI_ERROR_DEVICE_RESET:
-      case DXGI_ERROR_DRIVER_INTERNAL_ERROR:
-      case DXGI_ERROR_NOT_CURRENTLY_AVAILABLE:
-        return true;
-      default:
-        return false;
+        case DXGI_ERROR_DEVICE_HUNG:
+        case DXGI_ERROR_DEVICE_REMOVED:
+        case DXGI_ERROR_DEVICE_RESET:
+        case DXGI_ERROR_DRIVER_INTERNAL_ERROR:
+        case DXGI_ERROR_NOT_CURRENTLY_AVAILABLE:
+            return true;
+        default:
+            return false;
     }
 }
 
@@ -438,4 +451,4 @@ IndexStorageType ClassifyIndexStorage(const gl::State &glState,
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_

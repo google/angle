@@ -336,7 +336,6 @@ Context::Context(rx::EGLImplFactory *implFactory,
              mLimitations),
       mSkipValidation(GetNoError(attribs)),
       mDisplayTextureShareGroup(shareTextures != nullptr),
-      mSavedArgsType(nullptr),
       mImplementation(implFactory->createContext(mState, config, shareContext, attribs)),
       mLabel(nullptr),
       mCompiler(),
@@ -368,10 +367,6 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mZeroFilledBuffer(1000u),
       mThreadPool(nullptr)
 {
-    // Needed to solve a Clang warning of unused variables.
-    ANGLE_UNUSED_VARIABLE(mSavedArgsType);
-    ANGLE_UNUSED_VARIABLE(mParamsBuffer);
-
     for (angle::SubjectIndex uboIndex = kUniformBuffer0SubjectIndex;
          uboIndex < kUniformBufferMaxSubjectIndex; ++uboIndex)
     {

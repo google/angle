@@ -23,8 +23,8 @@ namespace rx
 {
 namespace
 {
-constexpr size_t kDynamicVertexDataSize = 1024 * 1024;
-constexpr size_t kDynamicIndexDataSize  = 1024 * 8;
+constexpr size_t kDynamicVertexDataSize    = 1024 * 1024;
+constexpr size_t kDynamicIndexDataSize     = 1024 * 8;
 constexpr size_t kMaxVertexFormatAlignment = 4;
 
 bool BindingIsAligned(const gl::VertexBinding &binding, unsigned componentSize)
@@ -182,7 +182,7 @@ angle::Result VertexArrayVk::convertVertexBuffer(ContextVk *contextVk,
     if (bytes > 0)
         numVertices += static_cast<size_t>(bytes) / binding.getStride();
 
-    void *src       = nullptr;
+    void *src = nullptr;
     ANGLE_TRY(srcBuffer->mapImpl(contextVk, &src));
     const uint8_t *srcBytes = reinterpret_cast<const uint8_t *>(src);
     srcBytes += binding.getOffset();
@@ -335,8 +335,8 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                 mCurrentArrayBufferResources[attribIndex] = &bufferVk->getBuffer();
                 mCurrentArrayBufferHandles[attribIndex] =
                     bufferVk->getBuffer().getBuffer().getHandle();
-                mCurrentArrayBufferOffsets[attribIndex]   = binding.getOffset();
-                mCurrentArrayBufferStrides[attribIndex]   = binding.getStride();
+                mCurrentArrayBufferOffsets[attribIndex] = binding.getOffset();
+                mCurrentArrayBufferStrides[attribIndex] = binding.getStride();
             }
         }
         else
@@ -436,7 +436,7 @@ angle::Result VertexArrayVk::updateClientAttribs(const gl::Context *context,
                                                  GLenum indexTypeOrNone,
                                                  const void *indices)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
+    ContextVk *contextVk                    = vk::GetImpl(context);
     const gl::AttributesMask &clientAttribs = context->getStateCache().getActiveClientAttribsMask();
 
     ASSERT(clientAttribs.any());

@@ -983,7 +983,7 @@ angle::Result Renderer9::setTexture(const gl::Context *context,
                                     gl::Texture *texture)
 {
     int d3dSamplerOffset = (type == gl::ShaderType::Fragment) ? 0 : D3DVERTEXTEXTURESAMPLER0;
-    int d3dSampler                    = index + d3dSamplerOffset;
+    int d3dSampler       = index + d3dSamplerOffset;
     IDirect3DBaseTexture9 *d3dTexture = nullptr;
     bool forceSetTexture              = false;
 
@@ -1302,8 +1302,8 @@ angle::Result Renderer9::applyIndexBuffer(const gl::Context *context,
                                           GLenum type,
                                           TranslatedIndexData *indexInfo)
 {
-    gl::VertexArray *vao                     = context->getGLState().getVertexArray();
-    gl::Buffer *elementArrayBuffer           = vao->getElementArrayBuffer();
+    gl::VertexArray *vao           = context->getGLState().getVertexArray();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
     GLenum dstType = GL_NONE;
     ANGLE_TRY(GetIndexTranslationDestType(context, count, type, indices, false, &dstType));
@@ -1676,7 +1676,7 @@ angle::Result Renderer9::getCountingIB(const gl::Context *context,
 
 angle::Result Renderer9::applyShaders(const gl::Context *context, gl::PrimitiveMode drawMode)
 {
-    const gl::State &state = context->getContextState().getState();
+    const gl::State &state   = context->getContextState().getState();
     d3d::Context *contextD3D = GetImplAs<ContextD3D>(context);
 
     // This method is called single-threaded.

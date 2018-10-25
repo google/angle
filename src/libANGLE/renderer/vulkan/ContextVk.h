@@ -236,10 +236,8 @@ class ContextVk : public ContextImpl, public vk::Context
 
     angle::Result handleDirtyDefaultAttribs(const gl::Context *context,
                                             vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyPipeline(const gl::Context *context,
-                                      vk::CommandBuffer *commandBuffer);
-    angle::Result handleDirtyTextures(const gl::Context *context,
-                                      vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyPipeline(const gl::Context *context, vk::CommandBuffer *commandBuffer);
+    angle::Result handleDirtyTextures(const gl::Context *context, vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyVertexBuffers(const gl::Context *context,
                                            vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyIndexBuffer(const gl::Context *context,

@@ -205,7 +205,7 @@ angle::Result InputLayoutCache::createInputLayout(
     GLsizei instances,
     d3d11::InputLayout *inputLayoutOut)
 {
-    Renderer11 *renderer   = context11->getRenderer();
+    Renderer11 *renderer           = context11->getRenderer();
     ProgramD3D *programD3D         = renderer->getStateManager()->getProgramD3D();
     D3D_FEATURE_LEVEL featureLevel = renderer->getRenderer11DeviceCaps().featureLevel;
 

@@ -238,7 +238,7 @@ class VertexArray final : public angle::ObserverInterface,
         DIRTY_BINDING_MAX = DIRTY_BINDING_UNKNOWN,
     };
 
-    using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
+    using DirtyBits             = angle::BitSet<DIRTY_BIT_MAX>;
     using DirtyAttribBits       = angle::BitSet<DIRTY_ATTRIB_MAX>;
     using DirtyBindingBits      = angle::BitSet<DIRTY_BINDING_MAX>;
     using DirtyAttribBitsArray  = std::array<DirtyAttribBits, gl::MAX_VERTEX_ATTRIBS>;
@@ -343,4 +343,4 @@ class VertexArray final : public angle::ObserverInterface,
 
 }  // namespace gl
 
-#endif // LIBANGLE_VERTEXARRAY_H_
+#endif  // LIBANGLE_VERTEXARRAY_H_

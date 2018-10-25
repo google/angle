@@ -105,8 +105,7 @@ class ProgramVk : public ProgramImpl
     angle::Result updateUniforms(ContextVk *contextVk);
     angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
 
-    angle::Result updateDescriptorSets(ContextVk *contextVk,
-                                       vk::CommandBuffer *commandBuffer);
+    angle::Result updateDescriptorSets(ContextVk *contextVk, vk::CommandBuffer *commandBuffer);
 
     // For testing only.
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);

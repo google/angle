@@ -990,12 +990,10 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
 
     if (mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE)
     {
-        Error err = syncState(context);
-        if (err.isError())
+        angle::Result err = syncState(context);
+        if (err != angle::Result::Continue())
         {
-            // TODO(jmadill): Remove when refactor complete. http://anglebug.com/2491
-            const_cast<Context *>(context)->handleError(err);
-            return GetDefaultReturnValue<EntryPoint::CheckFramebufferStatus, GLenum>();
+            return 0;
         }
         if (!mImpl->checkStatus(context))
         {

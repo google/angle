@@ -105,4 +105,4 @@ class VertexArray11 : public VertexArrayImpl
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_VERTEXARRAY11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_VERTEXARRAY11_H_

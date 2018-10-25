@@ -364,7 +364,7 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
 
     for (vk::ShaderType shaderType : vk::AllShaderTypes())
     {
-        gl::ShaderType glShaderType = static_cast<gl::ShaderType>(shaderType);
+        gl::ShaderType glShaderType              = static_cast<gl::ShaderType>(shaderType);
         gl::Shader *shader                       = mState.getAttachedShader(glShaderType);
         const std::vector<sh::Uniform> &uniforms = shader->getUniforms();
         InitDefaultUniformBlock(uniforms, shader, &layoutMap[shaderType],
@@ -372,7 +372,7 @@ angle::Result ProgramVk::initDefaultUniformBlocks(const gl::Context *glContext)
     }
 
     // Init the default block layout info.
-    const auto &uniforms  = mState.getUniforms();
+    const auto &uniforms = mState.getUniforms();
     for (const gl::VariableLocation &location : mState.getUniformLocations())
     {
         vk::ShaderMap<sh::BlockMemberInfo> layoutInfo;

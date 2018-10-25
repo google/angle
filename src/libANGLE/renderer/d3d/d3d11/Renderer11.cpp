@@ -3100,7 +3100,7 @@ angle::Result Renderer11::readFromAttachment(const gl::Context *context,
     bool reverseRowOrder     = pack.reverseRowOrder;
     if (invertTexture)
     {
-        actualArea.y = texSize.height - actualArea.y - actualArea.height;
+        actualArea.y    = texSize.height - actualArea.y - actualArea.height;
         reverseRowOrder = !reverseRowOrder;
     }
 

@@ -180,10 +180,10 @@ angle::Result DynamicBuffer::flush(Context *context)
     if (!mHostCoherent && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
     {
         VkMappedMemoryRange range = {};
-        range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        range.memory = mMemory.getHandle();
-        range.offset = mLastFlushOrInvalidateOffset;
-        range.size   = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
+        range.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        range.memory              = mMemory.getHandle();
+        range.offset              = mLastFlushOrInvalidateOffset;
+        range.size                = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
         ANGLE_VK_TRY(context, vkFlushMappedMemoryRanges(context->getDevice(), 1, &range));
 
         mLastFlushOrInvalidateOffset = mNextAllocationOffset;
@@ -196,10 +196,10 @@ angle::Result DynamicBuffer::invalidate(Context *context)
     if (!mHostCoherent && (mNextAllocationOffset > mLastFlushOrInvalidateOffset))
     {
         VkMappedMemoryRange range = {};
-        range.sType  = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        range.memory = mMemory.getHandle();
-        range.offset = mLastFlushOrInvalidateOffset;
-        range.size   = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
+        range.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        range.memory              = mMemory.getHandle();
+        range.offset              = mLastFlushOrInvalidateOffset;
+        range.size                = mNextAllocationOffset - mLastFlushOrInvalidateOffset;
         ANGLE_VK_TRY(context, vkInvalidateMappedMemoryRanges(context->getDevice(), 1, &range));
 
         mLastFlushOrInvalidateOffset = mNextAllocationOffset;
@@ -790,7 +790,7 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
 
     VkIndexType indexType = gl_vk::GetIndexType(glIndexType);
     ASSERT(indexType == VK_INDEX_TYPE_UINT16 || indexType == VK_INDEX_TYPE_UINT32);
-    uint32_t *indices          = nullptr;
+    uint32_t *indices = nullptr;
 
     auto unitSize = (indexType == VK_INDEX_TYPE_UINT16 ? sizeof(uint16_t) : sizeof(uint32_t));
     size_t allocateBytes = unitSize * (indexCount + 1) + 1;
@@ -800,8 +800,8 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            bufferOffsetOut, nullptr));
 
-    VkDeviceSize sourceOffset = static_cast<VkDeviceSize>(elementArrayOffset);
-    uint64_t unitCount        = static_cast<VkDeviceSize>(indexCount);
+    VkDeviceSize sourceOffset                  = static_cast<VkDeviceSize>(elementArrayOffset);
+    uint64_t unitCount                         = static_cast<VkDeviceSize>(indexCount);
     angle::FixedVector<VkBufferCopy, 3> copies = {
         {sourceOffset, *bufferOffsetOut, unitCount * unitSize},
         {sourceOffset, *bufferOffsetOut + unitCount * unitSize, unitSize},
@@ -836,7 +836,7 @@ angle::Result LineLoopHelper::streamIndices(ContextVk *contextVk,
     {
         // Vulkan doesn't support uint8 index types, so we need to emulate it.
         ASSERT(indexType == VK_INDEX_TYPE_UINT16);
-        uint16_t *indicesDst  = reinterpret_cast<uint16_t *>(indices);
+        uint16_t *indicesDst = reinterpret_cast<uint16_t *>(indices);
         for (int i = 0; i < indexCount; i++)
         {
             indicesDst[i] = srcPtr[i];
@@ -999,11 +999,11 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
                                               uint32_t layerCount)
 {
     VkImageViewCreateInfo viewInfo = {};
-    viewInfo.sType    = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    viewInfo.flags    = 0;
-    viewInfo.image    = mImage.getHandle();
-    viewInfo.viewType = gl_vk::GetImageViewType(textureType);
-    viewInfo.format   = mFormat->vkTextureFormat;
+    viewInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    viewInfo.flags                 = 0;
+    viewInfo.image                 = mImage.getHandle();
+    viewInfo.viewType              = gl_vk::GetImageViewType(textureType);
+    viewInfo.format                = mFormat->vkTextureFormat;
     if (swizzleMap.swizzleRequired())
     {
         viewInfo.components.r = gl_vk::GetSwizzle(swizzleMap.swizzleRed);
@@ -1144,14 +1144,14 @@ void ImageHelper::changeLayoutWithStages(VkImageAspectFlags aspectMask,
                                          CommandBuffer *commandBuffer)
 {
     VkImageMemoryBarrier imageMemoryBarrier = {};
-    imageMemoryBarrier.sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-    imageMemoryBarrier.srcAccessMask       = 0;
-    imageMemoryBarrier.dstAccessMask       = 0;
-    imageMemoryBarrier.oldLayout           = mCurrentLayout;
-    imageMemoryBarrier.newLayout           = newLayout;
-    imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    imageMemoryBarrier.image               = mImage.getHandle();
+    imageMemoryBarrier.sType                = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    imageMemoryBarrier.srcAccessMask        = 0;
+    imageMemoryBarrier.dstAccessMask        = 0;
+    imageMemoryBarrier.oldLayout            = mCurrentLayout;
+    imageMemoryBarrier.newLayout            = newLayout;
+    imageMemoryBarrier.srcQueueFamilyIndex  = VK_QUEUE_FAMILY_IGNORED;
+    imageMemoryBarrier.dstQueueFamilyIndex  = VK_QUEUE_FAMILY_IGNORED;
+    imageMemoryBarrier.image                = mImage.getHandle();
 
     // TODO(jmadill): Is this needed for mipped/layer images?
     imageMemoryBarrier.subresourceRange.aspectMask     = aspectMask;
@@ -1211,11 +1211,11 @@ void ImageHelper::clearColorLayer(const VkClearColorValue &color,
                            commandBuffer);
 
     VkImageSubresourceRange range = {};
-    range.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    range.baseMipLevel   = baseMipLevel;
-    range.levelCount     = levelCount;
-    range.baseArrayLayer = baseArrayLayer;
-    range.layerCount     = layerCount;
+    range.aspectMask              = VK_IMAGE_ASPECT_COLOR_BIT;
+    range.baseMipLevel            = baseMipLevel;
+    range.levelCount              = levelCount;
+    range.baseArrayLayer          = baseArrayLayer;
+    range.layerCount              = layerCount;
 
     commandBuffer->clearColorImage(mImage, mCurrentLayout, color, 1, &range);
 }

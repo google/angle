@@ -1622,9 +1622,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     MemoryProgramCache *getMemoryProgramCache() const { return mMemoryProgramCache; }
 
-    template <EntryPoint EP, typename... ParamsT>
-    void gatherParams(ParamsT &&... params);
-
     // Notification for a state change in a Texture.
     void onTextureChange(const Texture *texture);
 
@@ -1692,9 +1689,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     bool isWebGL() const { return mState.isWebGL(); }
     bool isWebGL1() const { return mState.isWebGL1(); }
-
-    template <typename T>
-    const T &getParams() const;
 
     bool isValidBufferBinding(BufferBinding binding) const { return mValidBufferBindings[binding]; }
 
@@ -1765,11 +1759,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     // Stores for each buffer binding type whether is it allowed to be used in this context.
     angle::PackedEnumBitSet<BufferBinding> mValidBufferBindings;
-
-    // Caches entry point parameters and values re-used between layers.
-    mutable const ParamTypeInfo *mSavedArgsType;
-    static constexpr size_t kParamsBufferSize = 128u;
-    mutable std::array<uint8_t, kParamsBufferSize> mParamsBuffer;
 
     std::unique_ptr<rx::ContextImpl> mImplementation;
 
@@ -1868,34 +1857,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     std::shared_ptr<angle::WorkerThreadPool> mThreadPool;
 };
-
-template <typename T>
-const T &Context::getParams() const
-{
-    const T *params = reinterpret_cast<T *>(mParamsBuffer.data());
-    ASSERT(mSavedArgsType->hasDynamicType(T::TypeInfo));
-    return *params;
-}
-
-template <EntryPoint EP, typename... ArgsT>
-ANGLE_INLINE void Context::gatherParams(ArgsT &&... args)
-{
-    static_assert(sizeof(EntryPointParamType<EP>) <= kParamsBufferSize,
-                  "Params struct too large, please increase kParamsBufferSize.");
-
-    mSavedArgsType = &EntryPointParamType<EP>::TypeInfo;
-
-    // Skip doing any work for ParamsBase/Invalid type.
-    if (!EntryPointParamType<EP>::TypeInfo.isValid())
-    {
-        return;
-    }
-
-    EntryPointParamType<EP> *objBuffer =
-        reinterpret_cast<EntryPointParamType<EP> *>(mParamsBuffer.data());
-    EntryPointParamType<EP>::template Factory<EP>(objBuffer, this, std::forward<ArgsT>(args)...);
-}
-
 }  // namespace gl
 
 #endif  // LIBANGLE_CONTEXT_H_

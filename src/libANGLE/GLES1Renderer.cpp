@@ -458,7 +458,6 @@ void GLES1Renderer::drawTexture(Context *context,
 
     setAttributesEnabled(context, glState, AttributesMask());
 
-    context->gatherParams<EntryPoint::DrawArrays>(PrimitiveMode::Triangles, 0, 6);
     context->drawArrays(PrimitiveMode::Triangles, 0, 6);
 
     setAttributesEnabled(context, glState, prevAttributesMask);

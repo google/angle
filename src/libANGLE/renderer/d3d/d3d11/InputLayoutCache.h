@@ -120,4 +120,4 @@ class InputLayoutCache : angle::NonCopyable
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_INPUTLAYOUTCACHE_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_INPUTLAYOUTCACHE_H_
