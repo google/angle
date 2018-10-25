@@ -31,8 +31,7 @@ namespace gl
 class ScopedPerfEventHelper : angle::NonCopyable
 {
   public:
-    ANGLE_FORMAT_PRINTF(2, 3)
-    ScopedPerfEventHelper(const char *format, ...);
+    ScopedPerfEventHelper(const char* format, ...);
     ~ScopedPerfEventHelper();
 };
 
