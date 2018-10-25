@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2cb5152a_62e56ff7",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-25T21:38:06Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0e34299b_7cba7441",
+      "range": {
+        "startLine": 449,
+        "startChar": 11,
+        "endLine": 449,
+        "endChar": 54
+      },
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4f3d3e4a_fcd94e1e",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 16
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "45311b4d_4e107267",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-25T21:38:06Z",
+      "side": 1,
+      "message": "I removed the ASSERTs for this anyway, because it\u0027s not true that gl_DrawID MUST be an AngleInternal Uniform. It does exist in 4.60 or if we ever add extensions to support it.\n\nAdded tests for the cases you mentioned as well.",
+      "parentUuid": "4f3d3e4a_fcd94e1e",
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dd16975f_2d17e966",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 16
@@ -56,6 +98,24 @@
       "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "337db0b7_4e1b426f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-25T21:38:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd16975f_2d17e966",
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -106,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "16d4f215_8bc84ca8",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-25T21:38:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d882625_ae7b3e04",
+      "range": {
+        "startLine": 642,
+        "startChar": 55,
+        "endLine": 642,
+        "endChar": 64
+      },
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "98e6e0ff_ef60e87a",
         "filename": "src/compiler/translator/builtin_variables.json",
         "patchSetId": 16
@@ -123,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "4ab41707_5b2271e4",
+        "filename": "src/compiler/translator/builtin_variables.json",
+        "patchSetId": 16
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-25T21:38:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "98e6e0ff_ef60e87a",
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d94c0b4_050f5d92",
         "filename": "src/tests/compiler_tests/EmulateGLDrawID_test.cpp",
         "patchSetId": 16
@@ -137,6 +239,24 @@
       "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54f711d2_bddb7c23",
+        "filename": "src/tests/compiler_tests/EmulateGLDrawID_test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-25T21:38:06Z",
+      "side": 1,
+      "message": "Sadly, it gets hashed to something like \"_u_gl_DrawID\"...",
+      "parentUuid": "1d94c0b4_050f5d92",
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
