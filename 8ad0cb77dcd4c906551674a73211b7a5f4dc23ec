@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e34299b_7cba7441",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-25T18:18:26Z",
+      "side": 1,
+      "message": "seems reasonable. Technically we could make it non-mangled but something like angle_DrawID, but doesn\u0027t seem very different either way.",
+      "range": {
+        "startLine": 449,
+        "startChar": 11,
+        "endLine": 449,
+        "endChar": 54
+      },
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f43ae8b2_a3b3777e",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-25T18:18:26Z",
+      "side": 1,
+      "message": "I think I still like having the helper I suggested to at least avoid the special-casing here.",
+      "range": {
+        "startLine": 642,
+        "startChar": 55,
+        "endLine": 642,
+        "endChar": 64
+      },
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
