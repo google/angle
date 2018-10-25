@@ -275,6 +275,24 @@
       "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2b20cad_fcaaa198",
+        "filename": "src/tests/compiler_tests/EmulateGLDrawID_test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-25T23:51:54Z",
+      "side": 1,
+      "message": "This is a bit weird unfortunately. I think we\u0027d want like angle_DrawID or something. Technically if the user defines a gl_DrawID it would hash the name also to _u_gl_DrawID. Fortuantely this wouldn\u0027t be valid since the users can\u0027t define variables that start with \"gl_\".\n\nDon\u0027t think we have regex.",
+      "parentUuid": "3af7a637_bd58bd2e",
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
