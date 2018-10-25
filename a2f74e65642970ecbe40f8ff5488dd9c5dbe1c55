@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f324e0e5_496692a5",
+        "filename": "util/osx/OSXTimer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2018-10-25T15:57:13Z",
+      "side": 1,
+      "message": "Hmmm... These are system calls, so might be not super cheap. I\u0027m mostly concerned with `getAbsoluteTime()` which gets called many times a frame. I could store that in the class though.",
+      "parentUuid": "b659a02f_fc60a9a0",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 0
+      },
+      "revId": "a2f74e65642970ecbe40f8ff5488dd9c5dbe1c55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de07049c_76a76696",
         "filename": "util/windows/WindowsTimer.cpp",
         "patchSetId": 6
