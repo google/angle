@@ -173,6 +173,8 @@ class RendererVk : angle::NonCopyable
     vk::ShaderLibrary *getShaderLibrary();
     const FeaturesVk &getFeatures() const { return mFeatures; }
 
+    angle::Result getTimestamp(vk::Context *context, uint64_t *timestampOut);
+
     // Create Begin/End/Instant GPU trace events, which take their timestamps from GPU queries.
     // The events are queued until the query results are available.  Possible values for `phase`
     // are TRACE_EVENT_PHASE_*

@@ -570,7 +570,7 @@ static_library("libANGLE") {
     }
     if (is_android) {
       sources += libangle_vulkan_android_sources
-      libs += ["vulkan"]
+      libs += [ "vulkan" ]
     }
     deps += [ ":angle_vulkan" ]
     public_deps += [ "$angle_root/third_party/vulkan-headers:vulkan_headers" ]

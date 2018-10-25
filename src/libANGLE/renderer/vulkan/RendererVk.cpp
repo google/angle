@@ -895,15 +895,18 @@ angle::Result RendererVk::finish(vk::Context *context)
 
     if (mGpuEventsEnabled)
     {
-        // Recalculate the CPU/GPU time difference to account for clock drifting.  Note that
-        // currently, the perftest event handler does not correctly handle out of order gpu and sync
-        // events, so make sure all gpu events are completed.  This loop should in practice execute
-        // once since the queue is already idle.
+        // This loop should in practice execute once since the queue is already idle.
         while (mInFlightGpuEventQueries.size() > 0)
         {
             ANGLE_TRY(checkCompletedGpuEvents(context));
         }
-        ANGLE_TRY(synchronizeCpuGpuTime(context));
+        // Recalculate the CPU/GPU time difference to account for clock drifting.  Avoid unnecessary
+        // synchronization if there is no event to be adjusted (happens when finish() gets called
+        // multiple times towards the end of the application).
+        if (mGpuEvents.size() > 0)
+        {
+            ANGLE_TRY(synchronizeCpuGpuTime(context));
+        }
     }
 
     return angle::Result::Continue();
@@ -1007,9 +1010,9 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
     // Reallocate the command pool for next frame.
     // TODO(jmadill): Consider reusing command pools.
     VkCommandPoolCreateInfo poolInfo = {};
-    poolInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    poolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     poolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-    poolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
+    poolInfo.queueFamilyIndex        = mCurrentQueueFamilyIndex;
 
     return mCommandPool.init(context, poolInfo);
 }
@@ -1234,6 +1237,106 @@ const vk::Semaphore *RendererVk::getSubmitLastSignaledSemaphore(vk::Context *con
 vk::ShaderLibrary *RendererVk::getShaderLibrary()
 {
     return &mShaderLibrary;
+}
+
+angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestampOut)
+{
+    // The intent of this function is to query the timestamp without stalling the GPU.  Currently,
+    // that seems impossible, so instead, we are going to make a small submission with just a
+    // timestamp query.  First, the disjoint timer query extension says:
+    //
+    // > This will return the GL time after all previous commands have reached the GL server but
+    // have not yet necessarily executed.
+    //
+    // The previous commands are stored in the command graph at the moment and are not yet flushed.
+    // The wording allows us to make a submission to get the timestamp without performing a flush.
+    //
+    // Second:
+    //
+    // > By using a combination of this synchronous get command and the asynchronous timestamp query
+    // object target, applications can measure the latency between when commands reach the GL server
+    // and when they are realized in the framebuffer.
+    //
+    // This fits with the above strategy as well, although inevitably we are possibly introducing a
+    // GPU bubble.  This function directly generates a command buffer and submits it instead of
+    // using the other member functions.  This is to avoid changing any state, such as the queue
+    // serial.
+
+    // Create a query used to receive the GPU timestamp
+    vk::Scoped<vk::DynamicQueryPool> timestampQueryPool(mDevice);
+    vk::QueryHelper timestampQuery;
+    ANGLE_TRY(timestampQueryPool.get().init(context, VK_QUERY_TYPE_TIMESTAMP, 1));
+    ANGLE_TRY(timestampQueryPool.get().allocateQuery(context, &timestampQuery));
+
+    // Record the command buffer
+    vk::Scoped<vk::CommandBuffer> commandBatch(mDevice);
+    vk::CommandBuffer &commandBuffer = commandBatch.get();
+
+    VkCommandBufferAllocateInfo commandBufferInfo = {};
+    commandBufferInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    commandBufferInfo.commandPool                 = mCommandPool.getHandle();
+    commandBufferInfo.level                       = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    commandBufferInfo.commandBufferCount          = 1;
+
+    ANGLE_TRY(commandBuffer.init(context, commandBufferInfo));
+
+    VkCommandBufferBeginInfo beginInfo = {};
+    beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags                    = 0;
+    beginInfo.pInheritanceInfo         = nullptr;
+
+    ANGLE_TRY(commandBuffer.begin(context, beginInfo));
+
+    commandBuffer.resetQueryPool(timestampQuery.getQueryPool()->getHandle(),
+                                 timestampQuery.getQuery(), 1);
+    commandBuffer.writeTimestamp(VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                                 timestampQuery.getQueryPool()->getHandle(),
+                                 timestampQuery.getQuery());
+
+    ANGLE_TRY(commandBuffer.end(context));
+
+    // Create fence for the submission
+    VkFenceCreateInfo fenceInfo = {};
+    fenceInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags             = 0;
+
+    vk::Scoped<vk::Fence> fence(mDevice);
+    ANGLE_TRY(fence.get().init(context, fenceInfo));
+
+    // Submit the command buffer
+    VkSubmitInfo submitInfo         = {};
+    submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.waitSemaphoreCount   = 0;
+    submitInfo.pWaitSemaphores      = nullptr;
+    submitInfo.pWaitDstStageMask    = nullptr;
+    submitInfo.commandBufferCount   = 1;
+    submitInfo.pCommandBuffers      = commandBuffer.ptr();
+    submitInfo.signalSemaphoreCount = 0;
+    submitInfo.pSignalSemaphores    = nullptr;
+
+    ANGLE_VK_TRY(context, vkQueueSubmit(mQueue, 1, &submitInfo, fence.get().getHandle()));
+
+    // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
+    // in parallel with what's already running on the GPU.
+    constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
+    angle::Result result                   = fence.get().wait(context, kMaxFenceWaitTimeNs);
+    if (result == angle::Result::Incomplete())
+    {
+        // Declare it a failure if it times out.
+        result = angle::Result::Stop();
+    }
+    ANGLE_TRY(result);
+
+    // Get the query results
+    constexpr VkQueryResultFlags queryFlags = VK_QUERY_RESULT_WAIT_BIT | VK_QUERY_RESULT_64_BIT;
+
+    ANGLE_TRY(timestampQuery.getQueryPool()->getResults(context, timestampQuery.getQuery(), 1,
+                                                        sizeof(*timestampOut), timestampOut,
+                                                        sizeof(*timestampOut), queryFlags));
+
+    timestampQueryPool.get().freeQuery(context, &timestampQuery);
+
+    return angle::Result::Continue();
 }
 
 angle::Result RendererVk::synchronizeCpuGpuTime(vk::Context *context)

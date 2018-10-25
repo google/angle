@@ -204,7 +204,6 @@ angle::Result ContextVk::initialize()
                                                          vk::kDefaultTimestampQueryPoolSize));
     ANGLE_TRY(mQueryPools[gl::QueryType::TimeElapsed].init(this, VK_QUERY_TYPE_TIMESTAMP,
                                                            vk::kDefaultTimestampQueryPoolSize));
-    // TODO(syoussefi): Initialize other query pools as they get implemented.
 
     size_t minAlignment = static_cast<size_t>(
         mRenderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
@@ -898,14 +897,17 @@ angle::Result ContextVk::syncState(const gl::Context *context,
 
 GLint ContextVk::getGPUDisjoint()
 {
-    UNIMPLEMENTED();
-    return GLint();
+    // No extension seems to be available to query this information.
+    return 0;
 }
 
 GLint64 ContextVk::getTimestamp()
 {
-    UNIMPLEMENTED();
-    return GLint64();
+    uint64_t timestamp = 0;
+
+    (void)mRenderer->getTimestamp(this, &timestamp);
+
+    return static_cast<GLint64>(timestamp);
 }
 
 angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
