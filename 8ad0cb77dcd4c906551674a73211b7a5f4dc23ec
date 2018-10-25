@@ -25,6 +25,40 @@
     },
     {
       "key": {
+        "uuid": "4f3d3e4a_fcd94e1e",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-25T20:40:19Z",
+      "side": 1,
+      "message": "Do you have a test which tries to use gl_DrawID as an identifier (e.g. as a uniform or local var) just to make sure the right error is produced (and that these asserts aren\u0027t hit)?",
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd16975f_2d17e966",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-25T20:40:19Z",
+      "side": 1,
+      "message": "A descriptively-named helper would be nice here too.",
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f43ae8b2_a3b3777e",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 16
@@ -42,6 +76,64 @@
         "endLine": 642,
         "endChar": 64
       },
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d882625_ae7b3e04",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-25T20:40:19Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "f43ae8b2_a3b3777e",
+      "range": {
+        "startLine": 642,
+        "startChar": 55,
+        "endLine": 642,
+        "endChar": 64
+      },
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98e6e0ff_ef60e87a",
+        "filename": "src/compiler/translator/builtin_variables.json",
+        "patchSetId": 16
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-25T20:40:19Z",
+      "side": 1,
+      "message": "Old name here?",
+      "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d94c0b4_050f5d92",
+        "filename": "src/tests/compiler_tests/EmulateGLDrawID_test.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-25T20:40:19Z",
+      "side": 1,
+      "message": "Can this be \"gl_DrawID\" instead of \"float(gl_DrawID)\" now?",
       "revId": "8ad0cb77dcd4c906551674a73211b7a5f4dc23ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
