@@ -131,10 +131,9 @@ angle::Result SyncDefaultUniformBlock(ContextVk *contextVk,
     return angle::Result::Continue();
 }
 
-bool UseLineRaster(const ContextVk *contextVk, const gl::DrawCallParams &drawCallParams)
+bool UseLineRaster(const ContextVk *contextVk, gl::PrimitiveMode mode)
 {
-    return contextVk->getFeatures().basicGLLineRasterization &&
-           gl::IsLineMode(drawCallParams.mode());
+    return contextVk->getFeatures().basicGLLineRasterization && gl::IsLineMode(mode);
 }
 }  // anonymous namespace
 
@@ -742,12 +741,12 @@ void ProgramVk::setPathFragmentInputGen(const std::string &inputName,
 }
 
 angle::Result ProgramVk::initShaders(ContextVk *contextVk,
-                                     const gl::DrawCallParams &drawCallParams,
+                                     gl::PrimitiveMode mode,
                                      const vk::ShaderAndSerial **vertexShaderAndSerialOut,
                                      const vk::ShaderAndSerial **fragmentShaderAndSerialOut,
                                      const vk::PipelineLayout **pipelineLayoutOut)
 {
-    if (UseLineRaster(contextVk, drawCallParams))
+    if (UseLineRaster(contextVk, mode))
     {
         ANGLE_TRY(mLineRasterShaderInfo.getShaders(contextVk, mVertexSource, mFragmentSource, true,
                                                    vertexShaderAndSerialOut,
@@ -948,7 +947,6 @@ void ProgramVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
 }
 
 angle::Result ProgramVk::updateDescriptorSets(ContextVk *contextVk,
-                                              const gl::DrawCallParams &drawCallParams,
                                               vk::CommandBuffer *commandBuffer)
 {
     // Can probably use better dirty bits here.

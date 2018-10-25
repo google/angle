@@ -93,7 +93,9 @@ class InputLayoutCache : angle::NonCopyable
                                  const gl::State &state,
                                  const std::vector<const TranslatedAttribute *> &currentAttributes,
                                  const AttribIndexArray &sortedSemanticIndices,
-                                 const gl::DrawCallParams &drawCallParams,
+                                 gl::PrimitiveMode mode,
+                                 GLsizei vertexCount,
+                                 GLsizei instances,
                                  const d3d11::InputLayout **inputLayoutOut);
 
   private:
@@ -101,8 +103,9 @@ class InputLayoutCache : angle::NonCopyable
         Context11 *context11,
         const AttribIndexArray &sortedSemanticIndices,
         const std::vector<const TranslatedAttribute *> &currentAttributes,
-        gl::Program *program,
-        const gl::DrawCallParams &drawCallParams,
+        gl::PrimitiveMode mode,
+        GLsizei vertexCount,
+        GLsizei instances,
         d3d11::InputLayout *inputLayoutOut);
 
     // Starting cache size.

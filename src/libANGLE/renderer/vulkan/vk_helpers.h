@@ -340,7 +340,8 @@ class LineLoopHelper final : angle::NonCopyable
     ~LineLoopHelper();
 
     angle::Result getIndexBufferForDrawArrays(ContextVk *contextVk,
-                                              const gl::DrawCallParams &drawCallParams,
+                                              uint32_t clampedVertexCount,
+                                              GLint firstVertex,
                                               VkBuffer *bufferHandleOut,
                                               VkDeviceSize *offsetOut);
 

@@ -39,7 +39,6 @@ class Display;
 namespace gl
 {
 struct Box;
-class DrawCallParams;
 struct Extents;
 struct RasterizerState;
 struct Rectangle;

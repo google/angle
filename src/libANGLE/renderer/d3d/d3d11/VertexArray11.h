@@ -26,7 +26,7 @@ class VertexArray11 : public VertexArrayImpl
     void destroy(const gl::Context *context) override;
 
     // Does not apply any state updates - these are done in syncStateForDraw which as access to
-    // the DrawCallParams before a draw.
+    // the draw call parameters.
     angle::Result syncState(const gl::Context *context,
                             const gl::VertexArray::DirtyBits &dirtyBits,
                             const gl::VertexArray::DirtyAttribBitsArray &attribBits,
@@ -34,7 +34,12 @@ class VertexArray11 : public VertexArrayImpl
 
     // Applied buffer pointers are updated here.
     angle::Result syncStateForDraw(const gl::Context *context,
-                                   const gl::DrawCallParams &drawCallParams);
+                                   GLint firstVertex,
+                                   GLsizei vertexOrIndexCount,
+                                   GLenum indexTypeOrNone,
+                                   const void *indices,
+                                   GLsizei instances,
+                                   GLint baseVertex);
 
     // This will check the dynamic attribs mask.
     bool hasActiveDynamicAttrib(const gl::Context *context);
@@ -61,11 +66,18 @@ class VertexArray11 : public VertexArrayImpl
                                      const gl::AttributesMask &activeDirtyAttribs);
     angle::Result updateDynamicAttribs(const gl::Context *context,
                                        VertexDataManager *vertexDataManager,
-                                       const gl::DrawCallParams &drawCallParams,
+                                       GLint firstVertex,
+                                       GLsizei vertexOrIndexCount,
+                                       GLenum indexTypeOrNone,
+                                       const void *indices,
+                                       GLsizei instances,
+                                       GLint baseVertex,
                                        const gl::AttributesMask &activeDynamicAttribs);
 
     angle::Result updateElementArrayStorage(const gl::Context *context,
-                                            const gl::DrawCallParams &drawCallParams,
+                                            GLsizei indexCount,
+                                            GLenum indexType,
+                                            const void *indices,
                                             bool restartEnabled);
 
     std::vector<VertexStorageType> mAttributeStorageTypes;

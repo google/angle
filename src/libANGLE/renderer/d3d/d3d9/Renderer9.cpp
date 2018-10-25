@@ -1304,10 +1304,9 @@ angle::Result Renderer9::applyIndexBuffer(const gl::Context *context,
 {
     gl::VertexArray *vao                     = context->getGLState().getVertexArray();
     gl::Buffer *elementArrayBuffer           = vao->getElementArrayBuffer();
-    const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
 
     GLenum dstType = GL_NONE;
-    ANGLE_TRY(GetIndexTranslationDestType(context, drawCallParams, false, &dstType));
+    ANGLE_TRY(GetIndexTranslationDestType(context, count, type, indices, false, &dstType));
 
     ANGLE_TRY(mIndexDataManager->prepareIndexData(context, type, dstType, count, elementArrayBuffer,
                                                   indices, indexInfo));

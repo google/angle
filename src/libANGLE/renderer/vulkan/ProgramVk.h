@@ -97,7 +97,7 @@ class ProgramVk : public ProgramImpl
 
     // Also initializes the pipeline layout, descriptor set layouts, and used descriptor ranges.
     angle::Result initShaders(ContextVk *contextVk,
-                              const gl::DrawCallParams &drawCallParams,
+                              gl::PrimitiveMode mode,
                               const vk::ShaderAndSerial **vertexShaderAndSerialOut,
                               const vk::ShaderAndSerial **fragmentShaderAndSerialOut,
                               const vk::PipelineLayout **pipelineLayoutOut);
@@ -106,7 +106,6 @@ class ProgramVk : public ProgramImpl
     angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
 
     angle::Result updateDescriptorSets(ContextVk *contextVk,
-                                       const gl::DrawCallParams &drawCallParams,
                                        vk::CommandBuffer *commandBuffer);
 
     // For testing only.

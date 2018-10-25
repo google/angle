@@ -7,11 +7,12 @@
 //   Helper utilitiy classes that manage Vulkan resources.
 
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
-#include "libANGLE/renderer/vulkan/vk_utils.h"
 
+#include "common/utilities.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {
@@ -714,22 +715,21 @@ LineLoopHelper::LineLoopHelper(RendererVk *renderer)
 LineLoopHelper::~LineLoopHelper() = default;
 
 angle::Result LineLoopHelper::getIndexBufferForDrawArrays(ContextVk *contextVk,
-                                                          const gl::DrawCallParams &drawCallParams,
+                                                          uint32_t clampedVertexCount,
+                                                          GLint firstVertex,
                                                           VkBuffer *bufferHandleOut,
                                                           VkDeviceSize *offsetOut)
 {
     uint32_t *indices    = nullptr;
-    size_t allocateBytes = sizeof(uint32_t) * (drawCallParams.vertexCount() + 1);
+    size_t allocateBytes = sizeof(uint32_t) * (static_cast<size_t>(clampedVertexCount) + 1);
 
     mDynamicIndexBuffer.releaseRetainedBuffers(contextVk->getRenderer());
     ANGLE_TRY(mDynamicIndexBuffer.allocate(contextVk, allocateBytes,
                                            reinterpret_cast<uint8_t **>(&indices), bufferHandleOut,
                                            offsetOut, nullptr));
 
-    uint32_t clampedVertexCount = drawCallParams.getClampedVertexCount<uint32_t>();
-
     // Note: there could be an overflow in this addition.
-    uint32_t unsignedFirstVertex = static_cast<uint32_t>(drawCallParams.firstVertex());
+    uint32_t unsignedFirstVertex = static_cast<uint32_t>(firstVertex);
     uint32_t vertexCount         = (clampedVertexCount + unsignedFirstVertex);
     for (uint32_t vertexIndex = unsignedFirstVertex; vertexIndex < vertexCount; vertexIndex++)
     {

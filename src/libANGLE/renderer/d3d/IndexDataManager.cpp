@@ -303,7 +303,9 @@ angle::Result IndexDataManager::getStreamingIndexBuffer(const gl::Context *conte
 }
 
 angle::Result GetIndexTranslationDestType(const gl::Context *context,
-                                          const gl::DrawCallParams &drawCallParams,
+                                          GLsizei indexCount,
+                                          GLenum indexType,
+                                          const void *indices,
                                           bool usePrimitiveRestartWorkaround,
                                           GLenum *destTypeOut)
 {
@@ -312,24 +314,24 @@ angle::Result GetIndexTranslationDestType(const gl::Context *context,
     if (usePrimitiveRestartWorkaround)
     {
         // Conservatively assume we need to translate the indices for draw indirect.
-        if (drawCallParams.isDrawIndirect())
+        // This is a bit of a trick. We assume the count for an indirect draw is zero.
+        if (indexCount == 0)
         {
             *destTypeOut = GL_UNSIGNED_INT;
             return angle::Result::Continue();
         }
 
         gl::IndexRange indexRange;
-        ANGLE_TRY_HANDLE(context, context->getGLState().getVertexArray()->getIndexRange(
-                                      context, drawCallParams.type(), drawCallParams.indexCount(),
-                                      drawCallParams.indices(), &indexRange));
-        if (indexRange.end == gl::GetPrimitiveRestartIndex(drawCallParams.type()))
+        ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(
+            context, indexType, indexCount, indices, &indexRange));
+        if (indexRange.end == gl::GetPrimitiveRestartIndex(indexType))
         {
             *destTypeOut = GL_UNSIGNED_INT;
             return angle::Result::Continue();
         }
     }
 
-    *destTypeOut = (drawCallParams.type() == GL_UNSIGNED_INT) ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
+    *destTypeOut = (indexType == GL_UNSIGNED_INT) ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
     return angle::Result::Continue();
 }
 

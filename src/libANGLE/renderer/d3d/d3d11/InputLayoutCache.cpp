@@ -120,7 +120,9 @@ angle::Result InputLayoutCache::getInputLayout(
     const gl::State &state,
     const std::vector<const TranslatedAttribute *> &currentAttributes,
     const AttribIndexArray &sortedSemanticIndices,
-    const gl::DrawCallParams &drawCallParams,
+    gl::PrimitiveMode mode,
+    GLsizei vertexCount,
+    GLsizei instances,
     const d3d11::InputLayout **inputLayoutOut)
 {
     gl::Program *program         = state.getProgram();
@@ -131,7 +133,7 @@ angle::Result InputLayoutCache::getInputLayout(
     bool programUsesInstancedPointSprites =
         programD3D->usesPointSize() && programD3D->usesInstancedPointSpriteEmulation();
     bool instancedPointSpritesActive =
-        programUsesInstancedPointSprites && (drawCallParams.mode() == gl::PrimitiveMode::Points);
+        programUsesInstancedPointSprites && (mode == gl::PrimitiveMode::Points);
 
     if (programUsesInstancedPointSprites)
     {
@@ -143,7 +145,7 @@ angle::Result InputLayoutCache::getInputLayout(
         layout.flags |= PackedAttributeLayout::FLAG_INSTANCED_SPRITES_ACTIVE;
     }
 
-    if (drawCallParams.instances() > 0)
+    if (instances > 0)
     {
         layout.flags |= PackedAttributeLayout::FLAG_INSTANCED_RENDERING_ACTIVE;
     }
@@ -183,8 +185,8 @@ angle::Result InputLayoutCache::getInputLayout(
             angle::TrimCache(mLayoutCache.max_size() / 2, kGCLimit, "input layout", &mLayoutCache);
 
             d3d11::InputLayout newInputLayout;
-            ANGLE_TRY(createInputLayout(context11, sortedSemanticIndices, currentAttributes,
-                                        program, drawCallParams, &newInputLayout));
+            ANGLE_TRY(createInputLayout(context11, sortedSemanticIndices, currentAttributes, mode,
+                                        vertexCount, instances, &newInputLayout));
 
             auto insertIt   = mLayoutCache.Put(layout, std::move(newInputLayout));
             *inputLayoutOut = &insertIt->second;
@@ -198,13 +200,14 @@ angle::Result InputLayoutCache::createInputLayout(
     Context11 *context11,
     const AttribIndexArray &sortedSemanticIndices,
     const std::vector<const TranslatedAttribute *> &currentAttributes,
-    gl::Program *program,
-    const gl::DrawCallParams &drawCallParams,
+    gl::PrimitiveMode mode,
+    GLsizei vertexCount,
+    GLsizei instances,
     d3d11::InputLayout *inputLayoutOut)
 {
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     Renderer11 *renderer   = context11->getRenderer();
-    auto featureLevel      = renderer->getRenderer11DeviceCaps().featureLevel;
+    ProgramD3D *programD3D         = renderer->getStateManager()->getProgramD3D();
+    D3D_FEATURE_LEVEL featureLevel = renderer->getRenderer11DeviceCaps().featureLevel;
 
     bool programUsesInstancedPointSprites =
         programD3D->usesPointSize() && programD3D->usesInstancedPointSpriteEmulation();
@@ -251,18 +254,18 @@ angle::Result InputLayoutCache::createInputLayout(
         // simultaneously, so a non-instanced element must exist.
 
         UINT numIndicesPerInstance = 0;
-        if (drawCallParams.instances() > 0)
+        if (instances > 0)
         {
             // This requires that the index range is resolved.
             // Note: Vertex indexes can be arbitrarily large.
-            numIndicesPerInstance = drawCallParams.getClampedVertexCount<UINT>();
+            numIndicesPerInstance = gl::clampCast<UINT>(vertexCount);
         }
 
         for (size_t elementIndex = 0; elementIndex < inputElementCount; ++elementIndex)
         {
             // If rendering points and instanced pointsprite emulation is being used, the
             // inputClass is required to be configured as per instance data
-            if (drawCallParams.mode() == gl::PrimitiveMode::Points)
+            if (mode == gl::PrimitiveMode::Points)
             {
                 inputElements[elementIndex].InputSlotClass       = D3D11_INPUT_PER_INSTANCE_DATA;
                 inputElements[elementIndex].InstanceDataStepRate = 1;

@@ -1258,11 +1258,11 @@ angle::Result StateManager11::syncDepthStencilState(const gl::Context *context)
 }
 
 angle::Result StateManager11::syncRasterizerState(const gl::Context *context,
-                                                  const gl::DrawCallParams &drawCallParams)
+                                                  gl::PrimitiveMode mode)
 {
     // TODO: Remove pointDrawMode and multiSample from gl::RasterizerState.
     gl::RasterizerState rasterState = context->getGLState().getRasterizerState();
-    rasterState.pointDrawMode       = (drawCallParams.mode() == gl::PrimitiveMode::Points);
+    rasterState.pointDrawMode       = (mode == gl::PrimitiveMode::Points);
     rasterState.multiSample         = mCurRasterState.multiSample;
 
     ID3D11RasterizerState *dxRasterState = nullptr;
@@ -2055,8 +2055,13 @@ void StateManager11::setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT str
 }
 
 angle::Result StateManager11::updateState(const gl::Context *context,
-                                          const gl::DrawCallParams &drawCallParams,
-                                          GLint firstVertex)
+                                          gl::PrimitiveMode mode,
+                                          GLint firstVertex,
+                                          GLsizei vertexOrIndexCount,
+                                          GLenum indexTypeOrNone,
+                                          const void *indices,
+                                          GLsizei instanceCount,
+                                          GLint baseVertex)
 {
     const gl::State &glState = context->getGLState();
 
@@ -2098,7 +2103,9 @@ angle::Result StateManager11::updateState(const gl::Context *context,
         mInternalDirtyBits.set(DIRTY_BIT_BLEND_STATE);
     }
 
-    ANGLE_TRY(mVertexArray11->syncStateForDraw(context, drawCallParams));
+    ANGLE_TRY(mVertexArray11->syncStateForDraw(context, firstVertex, vertexOrIndexCount,
+                                               indexTypeOrNone, indices, instanceCount,
+                                               baseVertex));
 
     // Changes in the draw call can affect the vertex buffer translations.
     if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != firstVertex)
@@ -2107,17 +2114,17 @@ angle::Result StateManager11::updateState(const gl::Context *context,
         invalidateInputLayout();
     }
 
-    if (drawCallParams.isDrawElements())
+    if (indexTypeOrNone != GL_NONE)
     {
-        ANGLE_TRY(applyIndexBuffer(context, drawCallParams));
+        ANGLE_TRY(applyIndexBuffer(context, vertexOrIndexCount, indexTypeOrNone, indices));
     }
 
-    if (mLastAppliedDrawMode != drawCallParams.mode())
+    if (mLastAppliedDrawMode != mode)
     {
-        mLastAppliedDrawMode = drawCallParams.mode();
+        mLastAppliedDrawMode = mode;
         mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
 
-        bool pointDrawMode = (drawCallParams.mode() == gl::PrimitiveMode::Points);
+        bool pointDrawMode = (mode == gl::PrimitiveMode::Points);
         if (pointDrawMode != mCurRasterState.pointDrawMode)
         {
             mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
@@ -2144,7 +2151,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                 syncScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
                 break;
             case DIRTY_BIT_RASTERIZER_STATE:
-                ANGLE_TRY(syncRasterizerState(context, drawCallParams));
+                ANGLE_TRY(syncRasterizerState(context, mode));
                 break;
             case DIRTY_BIT_BLEND_STATE:
                 ANGLE_TRY(syncBlendState(context, glState.getBlendState(), glState.getBlendColor(),
@@ -2174,7 +2181,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                 // TODO(jie.a.chen@intel.com): http://anglebug.com/1951
                 break;
             case DIRTY_BIT_SHADERS:
-                ANGLE_TRY(syncProgram(context, drawCallParams.mode()));
+                ANGLE_TRY(syncProgram(context, mode));
                 break;
             case DIRTY_BIT_CURRENT_VALUE_ATTRIBS:
                 ANGLE_TRY(syncCurrentValueAttribs(context, glState.getVertexAttribCurrentValues()));
@@ -2183,10 +2190,12 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                 ANGLE_TRY(syncTransformFeedbackBuffers(context));
                 break;
             case DIRTY_BIT_VERTEX_BUFFERS_AND_INPUT_LAYOUT:
-                ANGLE_TRY(syncVertexBuffersAndInputLayout(context, drawCallParams, firstVertex));
+                ANGLE_TRY(syncVertexBuffersAndInputLayout(context, mode, firstVertex,
+                                                          vertexOrIndexCount, indexTypeOrNone,
+                                                          instanceCount));
                 break;
             case DIRTY_BIT_PRIMITIVE_TOPOLOGY:
-                syncPrimitiveTopology(glState, drawCallParams.mode());
+                syncPrimitiveTopology(glState, mode);
                 break;
             default:
                 UNREACHABLE();
@@ -2799,10 +2808,12 @@ angle::Result StateManager11::syncProgramForCompute(const gl::Context *context)
     return angle::Result::Continue();
 }
 
-angle::Result StateManager11::syncVertexBuffersAndInputLayout(
-    const gl::Context *context,
-    const gl::DrawCallParams &drawCallParams,
-    GLint firstVertex)
+angle::Result StateManager11::syncVertexBuffersAndInputLayout(const gl::Context *context,
+                                                              gl::PrimitiveMode mode,
+                                                              GLint firstVertex,
+                                                              GLsizei vertexOrIndexCount,
+                                                              GLenum indexTypeOrNone,
+                                                              GLsizei instanceCount)
 {
     const auto &vertexArrayAttribs = mVertexArray11->getTranslatedAttribs();
 
@@ -2832,24 +2843,25 @@ angle::Result StateManager11::syncVertexBuffersAndInputLayout(
     const gl::State &state                = context->getGLState();
     const d3d11::InputLayout *inputLayout = nullptr;
     ANGLE_TRY(mInputLayoutCache.getInputLayout(GetImplAs<Context11>(context), state,
-                                               mCurrentAttributes, sortedSemanticIndices,
-                                               drawCallParams, &inputLayout));
+                                               mCurrentAttributes, sortedSemanticIndices, mode,
+                                               vertexOrIndexCount, instanceCount, &inputLayout));
     setInputLayoutInternal(inputLayout);
 
     // Update the applied vertex buffers.
-    ANGLE_TRY(applyVertexBuffers(context, drawCallParams, firstVertex));
+    ANGLE_TRY(applyVertexBuffers(context, mode, indexTypeOrNone, firstVertex));
 
     return angle::Result::Continue();
 }
 
 angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
-                                                 const gl::DrawCallParams &drawCallParams,
+                                                 gl::PrimitiveMode mode,
+                                                 GLenum indexTypeOrNone,
                                                  GLint firstVertex)
 {
     bool programUsesInstancedPointSprites =
         mProgramD3D->usesPointSize() && mProgramD3D->usesInstancedPointSpriteEmulation();
     bool instancedPointSpritesActive =
-        programUsesInstancedPointSprites && (drawCallParams.mode() == gl::PrimitiveMode::Points);
+        programUsesInstancedPointSprites && (mode == gl::PrimitiveMode::Points);
 
     // Note that if we use instance emulation, we reserve the first buffer slot.
     size_t reservedBuffers = GetReservedBufferCount(programUsesInstancedPointSprites);
@@ -2876,7 +2888,7 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
                 ASSERT(attrib.vertexBuffer.get());
                 buffer = GetAs<VertexBuffer11>(attrib.vertexBuffer.get())->getBuffer().get();
             }
-            else if (instancedPointSpritesActive && drawCallParams.isDrawElements())
+            else if (instancedPointSpritesActive && indexTypeOrNone != GL_NONE)
             {
                 ASSERT(mVertexArray11->isCachedIndexInfoValid());
                 TranslatedIndexData indexInfo = mVertexArray11->getCachedIndexInfo();
@@ -2990,7 +3002,9 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
 }
 
 angle::Result StateManager11::applyIndexBuffer(const gl::Context *context,
-                                               const gl::DrawCallParams &params)
+                                               GLsizei indexCount,
+                                               GLenum indexType,
+                                               const void *indices)
 {
     if (!mIndexBufferIsDirty)
     {
@@ -3002,9 +3016,8 @@ angle::Result StateManager11::applyIndexBuffer(const gl::Context *context,
     gl::Buffer *elementArrayBuffer = mVertexArray11->getState().getElementArrayBuffer();
 
     TranslatedIndexData indexInfo;
-    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, params.type(), destElementType,
-                                                 params.indexCount(), elementArrayBuffer,
-                                                 params.indices(), &indexInfo));
+    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, indexType, destElementType, indexCount,
+                                                 elementArrayBuffer, indices, &indexInfo));
 
     ID3D11Buffer *buffer = nullptr;
     DXGI_FORMAT bufferFormat =

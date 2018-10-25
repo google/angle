@@ -14,11 +14,6 @@
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
-namespace gl
-{
-class DrawCallParams;
-}  // namespace gl
-
 namespace rx
 {
 class BufferVk;
@@ -49,9 +44,16 @@ class VertexArrayVk : public VertexArrayImpl
                              uint32_t offset);
 
     angle::Result updateClientAttribs(const gl::Context *context,
-                                      const gl::DrawCallParams &drawCallParams);
+                                      GLint firstVertex,
+                                      GLsizei vertexOrIndexCount,
+                                      GLenum indexTypeOrNone,
+                                      const void *indices);
 
-    angle::Result handleLineLoop(ContextVk *contextVk, const gl::DrawCallParams &drawCallParams);
+    angle::Result handleLineLoop(ContextVk *contextVk,
+                                 GLint firstVertex,
+                                 GLsizei vertexOrIndexCount,
+                                 GLenum indexTypeOrNone,
+                                 const void *indices);
 
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const
     {
@@ -86,7 +88,9 @@ class VertexArrayVk : public VertexArrayImpl
     }
 
     angle::Result updateIndexTranslation(ContextVk *contextVk,
-                                         const gl::DrawCallParams &drawCallParams);
+                                         GLsizei indexCount,
+                                         GLenum type,
+                                         const void *indices);
 
   private:
     // This will update any dirty packed input descriptions, regardless if they're used by the

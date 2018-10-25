@@ -399,13 +399,20 @@ class Renderer11 : public RendererD3D
 
     DeviceImpl *createEGLDevice() override;
 
-    angle::Result drawArrays(const gl::Context *context, const gl::DrawCallParams &params);
+    angle::Result drawArrays(const gl::Context *context,
+                             gl::PrimitiveMode mode,
+                             GLint firstVertex,
+                             GLsizei vertexCount,
+                             GLsizei instanceCount);
     angle::Result drawElements(const gl::Context *context,
-                               const gl::DrawCallParams &params,
-                               GLint startVertex);
-    angle::Result drawArraysIndirect(const gl::Context *context, const gl::DrawCallParams &params);
-    angle::Result drawElementsIndirect(const gl::Context *context,
-                                       const gl::DrawCallParams &params);
+                               gl::PrimitiveMode mode,
+                               GLint startVertex,
+                               GLsizei indexCount,
+                               GLenum indexType,
+                               const void *indices,
+                               GLsizei instanceCount);
+    angle::Result drawArraysIndirect(const gl::Context *context, const void *indirect);
+    angle::Result drawElementsIndirect(const gl::Context *context, const void *indirect);
 
     // Necessary hack for default framebuffers in D3D.
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;

@@ -248,10 +248,10 @@ angle::Result Context11::drawArrays(const gl::Context *context,
                                     GLint first,
                                     GLsizei count)
 {
-    const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
-    ASSERT(!drawCallParams.isDrawElements() && !drawCallParams.isDrawIndirect());
-    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, drawCallParams, first));
-    return mRenderer->drawArrays(context, drawCallParams);
+    ASSERT(count > 0);
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode, first, count, GL_NONE,
+                                                        nullptr, 0, 0));
+    return mRenderer->drawArrays(context, mode, first, count, 0);
 }
 
 angle::Result Context11::drawArraysInstanced(const gl::Context *context,
@@ -260,10 +260,10 @@ angle::Result Context11::drawArraysInstanced(const gl::Context *context,
                                              GLsizei count,
                                              GLsizei instanceCount)
 {
-    const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
-    ASSERT(!drawCallParams.isDrawElements() && !drawCallParams.isDrawIndirect());
-    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, drawCallParams, first));
-    return mRenderer->drawArrays(context, drawCallParams);
+    ASSERT(count > 0);
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode, first, count, GL_NONE,
+                                                        nullptr, instanceCount, 0));
+    return mRenderer->drawArrays(context, mode, first, count, instanceCount);
 }
 
 ANGLE_INLINE angle::Result Context11::drawElementsImpl(const gl::Context *context,
@@ -273,22 +273,24 @@ ANGLE_INLINE angle::Result Context11::drawElementsImpl(const gl::Context *contex
                                                        const void *indices,
                                                        GLsizei instanceCount)
 {
-    const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
-    ASSERT(drawCallParams.isDrawElements() && !drawCallParams.isDrawIndirect());
+    ASSERT(indexCount > 0);
 
     if (DrawCallHasDynamicAttribs(context))
     {
         gl::IndexRange indexRange;
         ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(
             context, indexType, indexCount, indices, &indexRange));
-        ANGLE_TRY(
-            mRenderer->getStateManager()->updateState(context, drawCallParams, indexRange.start));
-        return mRenderer->drawElements(context, drawCallParams, indexRange.start);
+        ANGLE_TRY(mRenderer->getStateManager()->updateState(
+            context, mode, indexRange.start, indexCount, indexType, indices, instanceCount, 0));
+        return mRenderer->drawElements(context, mode, indexRange.start, indexCount, indexType,
+                                       indices, instanceCount);
     }
     else
     {
-        ANGLE_TRY(mRenderer->getStateManager()->updateState(context, drawCallParams, 0));
-        return mRenderer->drawElements(context, drawCallParams, 0);
+        ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode, 0, indexCount, indexType,
+                                                            indices, instanceCount, 0));
+        return mRenderer->drawElements(context, mode, 0, indexCount, indexType, indices,
+                                       instanceCount);
     }
 }
 
@@ -331,16 +333,15 @@ angle::Result Context11::drawArraysIndirect(const gl::Context *context,
         const gl::DrawArraysIndirectCommand *cmd = nullptr;
         ANGLE_TRY(ReadbackIndirectBuffer(context, indirect, &cmd));
 
-        gl::DrawCallParams drawCallParams(mode, cmd->first, cmd->count, cmd->instanceCount);
-        ANGLE_TRY(mRenderer->getStateManager()->updateState(context, drawCallParams, cmd->first));
-        return mRenderer->drawArrays(context, drawCallParams);
+        ANGLE_TRY(mRenderer->getStateManager()->updateState(
+            context, mode, cmd->first, cmd->count, GL_NONE, nullptr, cmd->instanceCount, 0));
+        return mRenderer->drawArrays(context, mode, cmd->first, cmd->count, cmd->instanceCount);
     }
     else
     {
-        const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
-        ASSERT(!drawCallParams.isDrawElements() && drawCallParams.isDrawIndirect());
-        ANGLE_TRY(mRenderer->getStateManager()->updateState(context, drawCallParams, 0));
-        return mRenderer->drawArraysIndirect(context, drawCallParams);
+        ANGLE_TRY(
+            mRenderer->getStateManager()->updateState(context, mode, 0, 0, GL_NONE, nullptr, 0, 0));
+        return mRenderer->drawArraysIndirect(context, indirect);
     }
 }
 
@@ -359,9 +360,6 @@ angle::Result Context11::drawElementsIndirect(const gl::Context *context,
         const void *indices      = reinterpret_cast<const void *>(
             static_cast<uintptr_t>(cmd->firstIndex * typeInfo.bytes));
 
-        gl::DrawCallParams drawCallParams(mode, cmd->count, type, indices, cmd->baseVertex,
-                                          cmd->primCount);
-
         // We must explicitly resolve the index range for the slow-path indirect drawElements to
         // make sure we are using the correct 'baseVertex'. This parameter does not exist for the
         // direct drawElements.
@@ -369,19 +367,21 @@ angle::Result Context11::drawElementsIndirect(const gl::Context *context,
         ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(context, type, cmd->count,
                                                                         indices, &indexRange));
 
-        GLint firstVertex;
-        ANGLE_TRY(ComputeStartVertex(GetImplAs<Context11>(context), indexRange,
-                                     drawCallParams.baseVertex(), &firstVertex));
+        GLint startVertex;
+        ANGLE_TRY(ComputeStartVertex(GetImplAs<Context11>(context), indexRange, cmd->baseVertex,
+                                     &startVertex));
 
-        ANGLE_TRY(mRenderer->getStateManager()->updateState(context, drawCallParams, firstVertex));
-        return mRenderer->drawElements(context, drawCallParams, indexRange.start);
+        ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode, startVertex, cmd->count,
+                                                            type, indices, cmd->primCount,
+                                                            cmd->baseVertex));
+        return mRenderer->drawElements(context, mode, indexRange.start, cmd->count, type, indices,
+                                       cmd->primCount);
     }
     else
     {
-        const gl::DrawCallParams &drawCallParams = context->getParams<gl::DrawCallParams>();
-        ASSERT(drawCallParams.isDrawElements() && drawCallParams.isDrawIndirect());
-        ANGLE_TRY(mRenderer->getStateManager()->updateState(context, drawCallParams, 0));
-        return mRenderer->drawElementsIndirect(context, drawCallParams);
+        ANGLE_TRY(
+            mRenderer->getStateManager()->updateState(context, mode, 0, 0, type, nullptr, 0, 0));
+        return mRenderer->drawElementsIndirect(context, indirect);
     }
 }
 

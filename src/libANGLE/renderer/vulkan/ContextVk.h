@@ -197,21 +197,31 @@ class ContextVk : public ContextImpl, public vk::Context
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 
     using DirtyBitHandler = angle::Result (ContextVk::*)(const gl::Context *,
-                                                         const gl::DrawCallParams &,
                                                          vk::CommandBuffer *commandBuffer);
 
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mDirtyBitHandlers;
 
-    angle::Result initPipeline(const gl::DrawCallParams &drawCallParams);
+    angle::Result initPipeline();
     angle::Result setupDraw(const gl::Context *context,
-                            const gl::DrawCallParams &drawCallParams,
+                            gl::PrimitiveMode mode,
+                            GLint firstVertex,
+                            GLsizei vertexOrIndexCount,
+                            GLenum indexTypeOrNone,
+                            const void *indices,
                             DirtyBits dirtyBitMask,
                             vk::CommandBuffer **commandBufferOut);
     angle::Result setupIndexedDraw(const gl::Context *context,
-                                   const gl::DrawCallParams &drawCallParams,
+                                   gl::PrimitiveMode mode,
+                                   GLsizei indexCount,
+                                   GLenum indexType,
+                                   const void *indices,
                                    vk::CommandBuffer **commandBufferOut);
     angle::Result setupLineLoopDraw(const gl::Context *context,
-                                    const gl::DrawCallParams &drawCallParams,
+                                    gl::PrimitiveMode mode,
+                                    GLint firstVertex,
+                                    GLsizei vertexOrIndexCount,
+                                    GLenum indexTypeOrNone,
+                                    const void *indices,
                                     vk::CommandBuffer **commandBufferOut);
 
     void updateScissor(const gl::State &glState) const;
@@ -225,25 +235,18 @@ class ContextVk : public ContextImpl, public vk::Context
     void invalidateDriverUniforms();
 
     angle::Result handleDirtyDefaultAttribs(const gl::Context *context,
-                                            const gl::DrawCallParams &drawCallParams,
                                             vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyPipeline(const gl::Context *context,
-                                      const gl::DrawCallParams &drawCallParams,
                                       vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyTextures(const gl::Context *context,
-                                      const gl::DrawCallParams &drawCallParams,
                                       vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyVertexBuffers(const gl::Context *context,
-                                           const gl::DrawCallParams &drawCallParams,
                                            vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyIndexBuffer(const gl::Context *context,
-                                         const gl::DrawCallParams &drawCallParams,
                                          vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyDriverUniforms(const gl::Context *context,
-                                            const gl::DrawCallParams &drawCallParams,
                                             vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyDescriptorSets(const gl::Context *context,
-                                            const gl::DrawCallParams &drawCallParams,
                                             vk::CommandBuffer *commandBuffer);
 
     vk::PipelineAndSerial *mCurrentPipeline;

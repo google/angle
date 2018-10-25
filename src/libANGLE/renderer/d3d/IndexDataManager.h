@@ -97,7 +97,9 @@ class IndexDataManager : angle::NonCopyable
 };
 
 angle::Result GetIndexTranslationDestType(const gl::Context *context,
-                                          const gl::DrawCallParams &drawCallParams,
+                                          GLsizei indexCount,
+                                          GLenum indexType,
+                                          const void *indices,
                                           bool usePrimitiveRestartWorkaround,
                                           GLenum *destTypeOut);
 
