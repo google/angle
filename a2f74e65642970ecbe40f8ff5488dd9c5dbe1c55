@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b659a02f_fc60a9a0",
+        "filename": "util/osx/OSXTimer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-25T15:35:07Z",
+      "side": 1,
+      "message": "Let\u0027s remove the static, I doubt it gives any benefit at the cost of thread safety.",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 0
+      },
+      "revId": "a2f74e65642970ecbe40f8ff5488dd9c5dbe1c55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de07049c_76a76696",
+        "filename": "util/windows/WindowsTimer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2018-10-25T15:35:07Z",
+      "side": 1,
+      "message": "Same comment.",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 10
+      },
+      "revId": "a2f74e65642970ecbe40f8ff5488dd9c5dbe1c55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
