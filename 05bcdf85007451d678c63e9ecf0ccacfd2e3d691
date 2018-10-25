@@ -379,6 +379,30 @@
       "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e9f4a83_cd1b7d88",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-25T07:12:15Z",
+      "side": 1,
+      "message": "What do you mean \u0027not the SSBO fields\u0027? I think it\u0027s for all array of arrays situations in a SSBO access chain. Currently, I am trying to run all ssbo related deqp cases. And fixing the bugs in existed implementation. I think we run revisit it if there are cases not covered.",
+      "parentUuid": "ade7fcae_e02bf392",
+      "range": {
+        "startLine": 153,
+        "startChar": 5,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
