@@ -11,6 +11,7 @@
 #define COMPILER_TRANSLATOR_SHADERSTORAGEBLOCKOUTPUTHLSL_H_
 
 #include "compiler/translator/ShaderStorageBlockFunctionHLSL.h"
+#include "compiler/translator/blocklayout.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
@@ -29,6 +30,9 @@ struct TReferencedBlock : angle::NonCopyable
 
 // Maps from uniqueId to a variable.
 using ReferencedInterfaceBlocks = std::map<int, const TReferencedBlock *>;
+
+// Used to save shader storage block field member information.
+using BlockMemberInfoMap = std::map<const TField *, BlockMemberInfo>;
 
 class ShaderStorageBlockOutputHLSL : public TIntermTraverser
 {
@@ -69,6 +73,8 @@ class ShaderStorageBlockOutputHLSL : public TIntermTraverser
     ShaderStorageBlockFunctionHLSL *mSSBOFunctionHLSL;
     ResourcesHLSL *mResourcesHLSL;
     ReferencedInterfaceBlocks mReferencedShaderStorageBlocks;
+
+    BlockMemberInfoMap mBlockMemberInfoMap;
 };
 }
 

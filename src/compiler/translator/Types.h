@@ -32,12 +32,7 @@ class TField : angle::NonCopyable
   public:
     POOL_ALLOCATOR_NEW_DELETE();
     TField(TType *type, const ImmutableString &name, const TSourceLoc &line, SymbolType symbolType)
-        : mType(type),
-          mName(name),
-          mLine(line),
-          mSymbolType(symbolType),
-          mOffset(0),
-          mArrayStride(0)
+        : mType(type), mName(name), mLine(line), mSymbolType(symbolType)
     {
         ASSERT(mSymbolType != SymbolType::Empty);
     }
@@ -49,18 +44,12 @@ class TField : angle::NonCopyable
     const ImmutableString &name() const { return mName; }
     const TSourceLoc &line() const { return mLine; }
     SymbolType symbolType() const { return mSymbolType; }
-    unsigned int getOffset() const { return mOffset; }
-    unsigned int getArrayStride() const { return mArrayStride; }
-    void setOffset(unsigned int offset) { mOffset = offset; }
-    void setArrayStride(int arrayStride) { mArrayStride = arrayStride; }
 
   private:
     TType *mType;
     const ImmutableString mName;
     const TSourceLoc mLine;
     const SymbolType mSymbolType;
-    unsigned int mOffset;
-    unsigned int mArrayStride;
 };
 
 typedef TVector<TField *> TFieldList;

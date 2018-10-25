@@ -26,7 +26,6 @@
 #include "compiler/translator/ShaderStorageBlockOutputHLSL.h"
 
 #include "compiler/translator/ResourcesHLSL.h"
-#include "compiler/translator/blocklayout.h"
 #include "compiler/translator/blocklayoutHLSL.h"
 #include "compiler/translator/util.h"
 
@@ -49,12 +48,14 @@ const TField *GetFieldMemberInShaderStorageBlock(const TInterfaceBlock *interfac
     return nullptr;
 }
 
-void SetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
+void GetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
                                           sh::BlockLayoutEncoder *encoder,
-                                          TLayoutBlockStorage storage);
+                                          TLayoutBlockStorage storage,
+                                          BlockMemberInfoMap *blockInfoOut);
 
-size_t SetBlockFieldMemberInfoAndReturnBlockSize(const TFieldList &fields,
-                                                 TLayoutBlockStorage storage)
+size_t GetBlockFieldMemberInfoAndReturnBlockSize(const TFieldList &fields,
+                                                 TLayoutBlockStorage storage,
+                                                 BlockMemberInfoMap *blockInfoOut)
 {
     sh::Std140BlockEncoder std140Encoder;
     sh::HLSLBlockEncoder hlslEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
@@ -70,31 +71,31 @@ size_t SetBlockFieldMemberInfoAndReturnBlockSize(const TFieldList &fields,
         structureEncoder = &hlslEncoder;
     }
 
-    SetShaderStorageBlockFieldMemberInfo(fields, structureEncoder, storage);
+    GetShaderStorageBlockFieldMemberInfo(fields, structureEncoder, storage, blockInfoOut);
     structureEncoder->exitAggregateType();
     return structureEncoder->getBlockSize();
 }
 
-// TODO(jiajia.qin@intel.com): Save the offset/arrystride into a std::map<const TField *,
-// BlockMemberInfo> BlockLayoutMap instead of adding offset/arrayStride to the TField.
+// TODO(jiajia.qin@intel.com): use correct row major attribute for structure field member.
 // http://anglebug.com/1951
-void SetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
+void GetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
                                           sh::BlockLayoutEncoder *encoder,
-                                          TLayoutBlockStorage storage)
+                                          TLayoutBlockStorage storage,
+                                          BlockMemberInfoMap *blockInfoOut)
 {
-    for (TField *field : fields)
+    for (const TField *field : fields)
     {
         const TType &fieldType = *field->type();
         if (fieldType.getStruct())
         {
             encoder->enterAggregateType();
-            field->setOffset(encoder->getBlockSize());
-
             // This is to set structure member offset and array stride using a new encoder to ensure
             // that the first field member offset in structure is always zero.
-            size_t structureStride =
-                SetBlockFieldMemberInfoAndReturnBlockSize(fieldType.getStruct()->fields(), storage);
-            field->setArrayStride(structureStride);
+            size_t structureStride = GetBlockFieldMemberInfoAndReturnBlockSize(
+                fieldType.getStruct()->fields(), storage, blockInfoOut);
+            const BlockMemberInfo memberInfo(static_cast<int>(encoder->getBlockSize()),
+                                             static_cast<int>(structureStride), 0, false);
+            (*blockInfoOut)[field] = memberInfo;
 
             // Below if-else is in order to get correct offset for the field members after structure
             // field.
@@ -124,13 +125,13 @@ void SetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
             const BlockMemberInfo &memberInfo =
                 encoder->encodeType(GLVariableType(fieldType), fieldArraySizes,
                                     isRowMajorLayout && fieldType.isMatrix());
-            field->setOffset(memberInfo.offset);
-            field->setArrayStride(memberInfo.arrayStride);
+            (*blockInfoOut)[field] = memberInfo;
         }
     }
 }
 
-void SetShaderStorageBlockMembersOffset(const TInterfaceBlock *interfaceBlock)
+void GetShaderStorageBlockMembersInfo(const TInterfaceBlock *interfaceBlock,
+                                      BlockMemberInfoMap *blockInfoOut)
 {
     sh::Std140BlockEncoder std140Encoder;
     sh::HLSLBlockEncoder hlslEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
@@ -146,8 +147,8 @@ void SetShaderStorageBlockMembersOffset(const TInterfaceBlock *interfaceBlock)
         encoder = &hlslEncoder;
     }
 
-    SetShaderStorageBlockFieldMemberInfo(interfaceBlock->fields(), encoder,
-                                         interfaceBlock->blockStorage());
+    GetShaderStorageBlockFieldMemberInfo(interfaceBlock->fields(), encoder,
+                                         interfaceBlock->blockStorage(), blockInfoOut);
 }
 
 bool IsInArrayOfArraysChain(TIntermTyped *node)
@@ -262,7 +263,7 @@ void ShaderStorageBlockOutputHLSL::visitSymbol(TIntermSymbol *node)
             }
             mReferencedShaderStorageBlocks[interfaceBlock->uniqueId().get()] =
                 new TReferencedBlock(interfaceBlock, instanceVariable);
-            SetShaderStorageBlockMembersOffset(interfaceBlock);
+            GetShaderStorageBlockMembersInfo(interfaceBlock, &mBlockMemberInfoMap);
         }
         if (variableType.isInterfaceBlock())
         {
@@ -349,7 +350,7 @@ bool ShaderStorageBlockOutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                     {
                         mReferencedShaderStorageBlocks[interfaceBlock->uniqueId().get()] =
                             new TReferencedBlock(interfaceBlock, &instanceArraySymbol->variable());
-                        SetShaderStorageBlockMembersOffset(interfaceBlock);
+                        GetShaderStorageBlockMembersInfo(interfaceBlock, &mBlockMemberInfoMap);
                     }
 
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
@@ -482,13 +483,16 @@ void ShaderStorageBlockOutputHLSL::writeEOpIndexDirectOrIndirectOutput(TInfoSink
 
 void ShaderStorageBlockOutputHLSL::writeDotOperatorOutput(TInfoSinkBase &out, const TField *field)
 {
-    out << str(field->getOffset());
+    auto fieldInfoIter = mBlockMemberInfoMap.find(field);
+    ASSERT(fieldInfoIter != mBlockMemberInfoMap.end());
+    const BlockMemberInfo &memberInfo = fieldInfoIter->second;
+    out << memberInfo.offset;
 
     const TType &fieldType = *field->type();
     if (fieldType.isArray() && !isEndOfSSBOAccessChain())
     {
         out << " + ";
-        out << field->getArrayStride();
+        out << memberInfo.arrayStride;
         if (fieldType.isArrayOfArrays())
         {
             out << " * (";
