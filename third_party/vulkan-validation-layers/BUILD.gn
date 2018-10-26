@@ -215,7 +215,6 @@ config("vulkan_config") {
       "VK_USE_PLATFORM_ANDROID_KHR",
       "VK_USE_PLATFORM_ANDROID_KHX",
     ]
-    libs = [ "vulkan" ]
   }
   defines += [ "API_NAME=\"Vulkan\"" ]
 }
