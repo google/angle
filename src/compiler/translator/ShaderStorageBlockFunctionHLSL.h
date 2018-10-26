@@ -43,7 +43,11 @@ enum class SSBOMethod
 class ShaderStorageBlockFunctionHLSL final : angle::NonCopyable
 {
   public:
-    TString registerShaderStorageBlockFunction(const TType &type, SSBOMethod method);
+    TString registerShaderStorageBlockFunction(const TType &type,
+                                               SSBOMethod method,
+                                               TLayoutBlockStorage storage,
+                                               bool rowMajor,
+                                               int matrixStride);
 
     void shaderStorageBlockFunctionHeader(TInfoSinkBase &out);
 
@@ -55,6 +59,9 @@ class ShaderStorageBlockFunctionHLSL final : angle::NonCopyable
         TString typeString;
         SSBOMethod method;
         TType type;
+        TLayoutBlockStorage storage;
+        bool rowMajor;
+        int matrixStride;
     };
 
     static void OutputSSBOLoadFunctionBody(TInfoSinkBase &out,

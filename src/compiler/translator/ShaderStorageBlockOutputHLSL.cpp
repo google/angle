@@ -35,6 +35,85 @@ namespace sh
 namespace
 {
 
+void GetBlockLayoutInfo(TIntermTyped *node,
+                        bool rowMajorAlreadyAssigned,
+                        TLayoutBlockStorage *storage,
+                        bool *rowMajor)
+{
+    TIntermSwizzle *swizzleNode = node->getAsSwizzleNode();
+    if (swizzleNode)
+    {
+        return GetBlockLayoutInfo(swizzleNode->getOperand(), rowMajorAlreadyAssigned, storage,
+                                  rowMajor);
+    }
+
+    TIntermBinary *binaryNode = node->getAsBinaryNode();
+    if (binaryNode)
+    {
+        switch (binaryNode->getOp())
+        {
+            case EOpIndexDirectInterfaceBlock:
+            {
+                // The column_major/row_major qualifier of a field member overrides the interface
+                // block's row_major/column_major. So we can assign rowMajor here and don't need to
+                // assign it again. But we still need to call recursively to get the storage's
+                // value.
+                const TType &type = node->getType();
+                *rowMajor         = type.getLayoutQualifier().matrixPacking == EmpRowMajor;
+                return GetBlockLayoutInfo(binaryNode->getLeft(), true, storage, rowMajor);
+            }
+            case EOpIndexIndirect:
+            case EOpIndexDirect:
+            case EOpIndexDirectStruct:
+                return GetBlockLayoutInfo(binaryNode->getLeft(), rowMajorAlreadyAssigned, storage,
+                                          rowMajor);
+            default:
+                UNREACHABLE();
+                return;
+        }
+    }
+
+    const TType &type = node->getType();
+    ASSERT(type.getQualifier() == EvqBuffer);
+    const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+    ASSERT(interfaceBlock);
+    *storage = interfaceBlock->blockStorage();
+    // If the block doesn't have an instance name, rowMajorAlreadyAssigned will be false. In
+    // this situation, we still need to set rowMajor's value.
+    if (!rowMajorAlreadyAssigned)
+    {
+        *rowMajor = type.getLayoutQualifier().matrixPacking == EmpRowMajor;
+    }
+}
+
+// It's possible that the current type has lost the original layout information. So we should pass
+// the right layout information to GetMatrixStride.
+unsigned int GetMatrixStride(const TType &type, TLayoutBlockStorage storage, bool rowMajor)
+{
+    sh::Std140BlockEncoder std140Encoder;
+    sh::HLSLBlockEncoder hlslEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
+    sh::BlockLayoutEncoder *encoder = nullptr;
+
+    if (storage == EbsStd140)
+    {
+        encoder = &std140Encoder;
+    }
+    else
+    {
+        encoder = &hlslEncoder;
+    }
+
+    std::vector<unsigned int> arraySizes;
+    auto *typeArraySizes = type.getArraySizes();
+    if (typeArraySizes != nullptr)
+    {
+        arraySizes.assign(typeArraySizes->begin(), typeArraySizes->end());
+    }
+    const BlockMemberInfo &memberInfo =
+        encoder->encodeType(GLVariableType(type), arraySizes, rowMajor);
+    return memberInfo.matrixStride;
+}
+
 const TField *GetFieldMemberInShaderStorageBlock(const TInterfaceBlock *interfaceBlock,
                                                  const ImmutableString &variableName)
 {
@@ -222,8 +301,40 @@ void ShaderStorageBlockOutputHLSL::outputLoadFunctionCall(TIntermTyped *node)
 
 void ShaderStorageBlockOutputHLSL::traverseSSBOAccess(TIntermTyped *node, SSBOMethod method)
 {
-    const TString &functionName =
-        mSSBOFunctionHLSL->registerShaderStorageBlockFunction(node->getType(), method);
+    mMatrixStride = 0;
+    mRowMajor     = false;
+
+    // Note that we don't have correct BlockMemberInfo from mBlockMemberInfoMap at the current
+    // point. But we must use those information to generate the right function name. So here we have
+    // to calculate them again.
+    TLayoutBlockStorage storage;
+    bool rowMajor;
+    GetBlockLayoutInfo(node, false, &storage, &rowMajor);
+
+    // Note that we must calculate the matrix stride here instead of ShaderStorageBlockFunctionHLSL.
+    // It's because that if the current node's type is a vector which comes from a matrix, we will
+    // lost the matrix type info once we enter ShaderStorageBlockFunctionHLSL.
+    if (node->getType().isVector())
+    {
+        TIntermBinary *binaryNode = node->getAsBinaryNode();
+        if (binaryNode)
+        {
+            const TType &leftType = binaryNode->getLeft()->getType();
+            if (leftType.isMatrix())
+            {
+                mMatrixStride = GetMatrixStride(leftType, storage, rowMajor);
+                mRowMajor     = rowMajor;
+            }
+        }
+    }
+    else if (node->getType().isMatrix())
+    {
+        mMatrixStride = GetMatrixStride(node->getType(), storage, rowMajor);
+        mRowMajor     = rowMajor;
+    }
+
+    const TString &functionName = mSSBOFunctionHLSL->registerShaderStorageBlockFunction(
+        node->getType(), method, storage, mRowMajor, mMatrixStride);
     TInfoSinkBase &out = mOutputHLSL->getInfoSink();
     out << functionName;
     out << "(";
