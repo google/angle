@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c9d64ff9_f41795fb",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-26T11:43:32Z",
+      "side": 1,
+      "message": "If the variable is \"AngleInternal\" it should use a different namespace than the user\u0027s variables. Due to the decoration.",
+      "parentUuid": "47862cf2_e1acb7c3",
+      "revId": "423919fac28b0f2e92b357926eabf37f84825335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "56579aa0_8fd31119",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 20
