@@ -193,7 +193,7 @@ class RendererVk : angle::NonCopyable
   private:
     // Number of semaphores for external entities to renderer to issue a wait, such as surface's
     // image acquire.
-    static constexpr size_t kMaxExternalSemaphores = 8;
+    static constexpr size_t kMaxExternalSemaphores = 64;
     // Total possible number of semaphores a submission can wait on.  +1 is for the semaphore
     // signaled in the last submission.
     static constexpr size_t kMaxWaitSemaphores = kMaxExternalSemaphores + 1;

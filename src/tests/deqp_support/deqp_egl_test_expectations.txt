@@ -179,8 +179,7 @@
 2635 WIN VULKAN : dEQP-EGL.functional.resize.surface_size.stretch_width = FAIL
 2635 WIN VULKAN : dEQP-EGL.functional.wide_color.pbuffer_8888_colorspace_default = FAIL
 2716 WIN VULKAN : dEQP-EGL.functional.preserve_swap.no_preserve.* = FAIL
-2811 WIN VULKAN : dEQP-EGL.functional.swap_buffers_with_damage.* = SKIP
-
+2811 WIN VULKAN : dEQP-EGL.functional.swap_buffers_with_damage.resize* = SKIP
 
 // Linux failures
 2546 LINUX : dEQP-EGL.functional.color_clears.multi_context.gles1.rgba8888_pixmap = SKIP

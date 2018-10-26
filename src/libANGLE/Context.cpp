@@ -545,12 +545,15 @@ void Context::initialize()
 
 egl::Error Context::onDestroy(const egl::Display *display)
 {
+    // Trigger a finish() to make sure resources are not in use upon destruction.  Particularly
+    // necessary for Vulkan.
+    finish();
+
     if (mGLES1Renderer)
     {
         mGLES1Renderer->onDestroy(this, &mGLState);
     }
 
-    // Delete the Surface first to trigger a finish() in Vulkan.
     ANGLE_TRY(releaseSurface(display));
 
     for (auto fence : mFenceNVMap)
