@@ -24,6 +24,20 @@ namespace egl
 template <typename Enum>
 Enum FromEGLenum(EGLenum from);
 
+enum class CompositorTiming : uint8_t
+{
+    CompositeDeadline        = 0,
+    CompositInterval         = 1,
+    CompositToPresentLatency = 2,
+
+    InvalidEnum = 3,
+    EnumCount   = 3,
+};
+
+template <>
+CompositorTiming FromEGLenum<CompositorTiming>(EGLenum from);
+EGLenum ToEGLenum(CompositorTiming from);
+
 enum class MessageType : uint8_t
 {
     Critical = 0,
@@ -70,6 +84,26 @@ enum class TextureFormat : uint8_t
 template <>
 TextureFormat FromEGLenum<TextureFormat>(EGLenum from);
 EGLenum ToEGLenum(TextureFormat from);
+
+enum class Timestamp : uint8_t
+{
+    RequestedPresentTime            = 0,
+    RenderingCompleteTime           = 1,
+    CompositionLatchTime            = 2,
+    FirstCompositionStartTime       = 3,
+    LastCompositionStartTime        = 4,
+    FirstCompositionGPUFinishedTime = 5,
+    DisplayPresentTime              = 6,
+    DequeueReadyTime                = 7,
+    ReadsDoneTime                   = 8,
+
+    InvalidEnum = 9,
+    EnumCount   = 9,
+};
+
+template <>
+Timestamp FromEGLenum<Timestamp>(EGLenum from);
+EGLenum ToEGLenum(Timestamp from);
 
 }  // namespace egl
 

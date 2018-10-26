@@ -156,4 +156,84 @@ EGLSurface SurfaceEGL::getSurface() const
     return mSurface;
 }
 
+void SurfaceEGL::setTimestampsEnabled(bool enabled)
+{
+    ASSERT(mEGL->hasExtension("EGL_ANDROID_get_frame_timestamps"));
+
+    EGLBoolean success =
+        mEGL->surfaceAttrib(mSurface, EGL_TIMESTAMPS_ANDROID, enabled ? EGL_TRUE : EGL_FALSE);
+    if (success == EGL_FALSE)
+    {
+        ERR() << "eglSurfaceAttribute failed: " << egl::Error(mEGL->getError());
+    }
+}
+
+egl::SupportedCompositorTimings SurfaceEGL::getSupportedCompositorTimings() const
+{
+    ASSERT(mEGL->hasExtension("EGL_ANDROID_get_frame_timestamps"));
+
+    egl::SupportedCompositorTimings result;
+    for (egl::CompositorTiming name : angle::AllEnums<egl::CompositorTiming>())
+    {
+        result[name] = mEGL->getCompositorTimingSupportedANDROID(mSurface, egl::ToEGLenum(name));
+    }
+    return result;
+}
+
+egl::Error SurfaceEGL::getCompositorTiming(EGLint numTimestamps,
+                                           const EGLint *names,
+                                           EGLnsecsANDROID *values) const
+{
+    ASSERT(mEGL->hasExtension("EGL_ANDROID_get_frame_timestamps"));
+
+    EGLBoolean success = mEGL->getCompositorTimingANDROID(mSurface, numTimestamps, names, values);
+    if (success == EGL_FALSE)
+    {
+        return egl::Error(mEGL->getError(), "eglGetCompositorTimingANDROID failed");
+    }
+    return egl::NoError();
+}
+
+egl::Error SurfaceEGL::getNextFrameId(EGLuint64KHR *frameId) const
+{
+    ASSERT(mEGL->hasExtension("EGL_ANDROID_get_frame_timestamps"));
+
+    EGLBoolean success = mEGL->getNextFrameIdANDROID(mSurface, frameId);
+    if (success == EGL_FALSE)
+    {
+        return egl::Error(mEGL->getError(), "eglGetNextFrameId failed");
+    }
+    return egl::NoError();
+}
+
+egl::SupportedTimestamps SurfaceEGL::getSupportedTimestamps() const
+{
+    ASSERT(mEGL->hasExtension("EGL_ANDROID_get_frame_timestamps"));
+
+    egl::SupportedTimestamps result;
+    for (egl::Timestamp timestamp : angle::AllEnums<egl::Timestamp>())
+    {
+        result[timestamp] =
+            mEGL->getFrameTimestampSupportedANDROID(mSurface, egl::ToEGLenum(timestamp));
+    }
+    return result;
+}
+
+egl::Error SurfaceEGL::getFrameTimestamps(EGLuint64KHR frameId,
+                                          EGLint numTimestamps,
+                                          const EGLint *timestamps,
+                                          EGLnsecsANDROID *values) const
+{
+    ASSERT(mEGL->hasExtension("EGL_ANDROID_get_frame_timestamps"));
+
+    // The driver may return EGL_BAD_ACCESS at any time if the requested frame is no longer stored.
+    EGLBoolean success =
+        mEGL->getFrameTimestampsANDROID(mSurface, frameId, numTimestamps, timestamps, values);
+    if (success == EGL_FALSE)
+    {
+        return egl::Error(mEGL->getError(), "eglGetFrameTimestampsANDROID failed");
+    }
+    return egl::NoError();
+}
+
 }  // namespace rx

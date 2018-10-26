@@ -112,8 +112,8 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->createContextRobustness =
         mEGL->hasExtension("EGL_EXT_create_context_robustness");
 
-    outExtensions->postSubBuffer = false;  // Since SurfaceEGL::postSubBuffer is not implemented
-    outExtensions->presentationTime      = mEGL->hasExtension("EGL_ANDROID_presentation_time");
+    outExtensions->postSubBuffer    = false;  // Since SurfaceEGL::postSubBuffer is not implemented
+    outExtensions->presentationTime = mEGL->hasExtension("EGL_ANDROID_presentation_time");
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
@@ -132,6 +132,8 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->glRenderbufferImage   = mEGL->hasExtension("EGL_KHR_gl_renderbuffer_image");
 
     outExtensions->imageNativeBuffer = mEGL->hasExtension("EGL_ANDROID_image_native_buffer");
+
+    outExtensions->getFrameTimestamps = mEGL->hasExtension("EGL_ANDROID_get_frame_timestamps");
 
     DisplayGL::generateExtensions(outExtensions);
 }

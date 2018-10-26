@@ -16,6 +16,38 @@ namespace egl
 {
 
 template <>
+CompositorTiming FromEGLenum<CompositorTiming>(EGLenum from)
+{
+    switch (from)
+    {
+        case EGL_COMPOSITE_DEADLINE_ANDROID:
+            return CompositorTiming::CompositeDeadline;
+        case EGL_COMPOSITE_INTERVAL_ANDROID:
+            return CompositorTiming::CompositInterval;
+        case EGL_COMPOSITE_TO_PRESENT_LATENCY_ANDROID:
+            return CompositorTiming::CompositToPresentLatency;
+        default:
+            return CompositorTiming::InvalidEnum;
+    }
+}
+
+EGLenum ToEGLenum(CompositorTiming from)
+{
+    switch (from)
+    {
+        case CompositorTiming::CompositeDeadline:
+            return EGL_COMPOSITE_DEADLINE_ANDROID;
+        case CompositorTiming::CompositInterval:
+            return EGL_COMPOSITE_INTERVAL_ANDROID;
+        case CompositorTiming::CompositToPresentLatency:
+            return EGL_COMPOSITE_TO_PRESENT_LATENCY_ANDROID;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
 MessageType FromEGLenum<MessageType>(EGLenum from)
 {
     switch (from)
@@ -125,6 +157,62 @@ EGLenum ToEGLenum(TextureFormat from)
             return EGL_TEXTURE_RGB;
         case TextureFormat::RGBA:
             return EGL_TEXTURE_RGBA;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <>
+Timestamp FromEGLenum<Timestamp>(EGLenum from)
+{
+    switch (from)
+    {
+        case EGL_REQUESTED_PRESENT_TIME_ANDROID:
+            return Timestamp::RequestedPresentTime;
+        case EGL_RENDERING_COMPLETE_TIME_ANDROID:
+            return Timestamp::RenderingCompleteTime;
+        case EGL_COMPOSITION_LATCH_TIME_ANDROID:
+            return Timestamp::CompositionLatchTime;
+        case EGL_FIRST_COMPOSITION_START_TIME_ANDROID:
+            return Timestamp::FirstCompositionStartTime;
+        case EGL_LAST_COMPOSITION_START_TIME_ANDROID:
+            return Timestamp::LastCompositionStartTime;
+        case EGL_FIRST_COMPOSITION_GPU_FINISHED_TIME_ANDROID:
+            return Timestamp::FirstCompositionGPUFinishedTime;
+        case EGL_DISPLAY_PRESENT_TIME_ANDROID:
+            return Timestamp::DisplayPresentTime;
+        case EGL_DEQUEUE_READY_TIME_ANDROID:
+            return Timestamp::DequeueReadyTime;
+        case EGL_READS_DONE_TIME_ANDROID:
+            return Timestamp::ReadsDoneTime;
+        default:
+            return Timestamp::InvalidEnum;
+    }
+}
+
+EGLenum ToEGLenum(Timestamp from)
+{
+    switch (from)
+    {
+        case Timestamp::RequestedPresentTime:
+            return EGL_REQUESTED_PRESENT_TIME_ANDROID;
+        case Timestamp::RenderingCompleteTime:
+            return EGL_RENDERING_COMPLETE_TIME_ANDROID;
+        case Timestamp::CompositionLatchTime:
+            return EGL_COMPOSITION_LATCH_TIME_ANDROID;
+        case Timestamp::FirstCompositionStartTime:
+            return EGL_FIRST_COMPOSITION_START_TIME_ANDROID;
+        case Timestamp::LastCompositionStartTime:
+            return EGL_LAST_COMPOSITION_START_TIME_ANDROID;
+        case Timestamp::FirstCompositionGPUFinishedTime:
+            return EGL_FIRST_COMPOSITION_GPU_FINISHED_TIME_ANDROID;
+        case Timestamp::DisplayPresentTime:
+            return EGL_DISPLAY_PRESENT_TIME_ANDROID;
+        case Timestamp::DequeueReadyTime:
+            return EGL_DEQUEUE_READY_TIME_ANDROID;
+        case Timestamp::ReadsDoneTime:
+            return EGL_READS_DONE_TIME_ANDROID;
         default:
             UNREACHABLE();
             return 0;

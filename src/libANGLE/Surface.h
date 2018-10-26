@@ -40,6 +40,9 @@ namespace egl
 class Display;
 struct Config;
 
+using SupportedCompositorTiming = angle::PackedEnumBitSet<CompositorTiming>;
+using SupportedTimestamps       = angle::PackedEnumBitSet<Timestamp>;
+
 struct SurfaceState final : private angle::NonCopyable
 {
     SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn);
@@ -47,6 +50,10 @@ struct SurfaceState final : private angle::NonCopyable
     EGLLabelKHR label;
     const egl::Config *config;
     AttributeMap attributes;
+
+    bool timestampsEnabled;
+    SupportedCompositorTiming supportedCompositorTimings;
+    SupportedTimestamps supportedTimestamps;
 };
 
 class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
@@ -139,6 +146,22 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     bool isRobustResourceInitEnabled() const { return mRobustResourceInitialization; }
 
     const gl::Format &getBindTexImageFormat() const { return mColorFormat; }
+
+    // EGL_ANDROID_get_frame_timestamps entry points
+    void setTimestampsEnabled(bool enabled);
+    bool isTimestampsEnabled() const;
+
+    const SupportedCompositorTiming &getSupportedCompositorTimings() const;
+    Error getCompositorTiming(EGLint numTimestamps,
+                              const EGLint *names,
+                              EGLnsecsANDROID *values) const;
+
+    Error getNextFrameId(EGLuint64KHR *frameId) const;
+    const SupportedTimestamps &getSupportedTimestamps() const;
+    Error getFrameTimestamps(EGLuint64KHR frameId,
+                             EGLint numTimestamps,
+                             const EGLint *timestamps,
+                             EGLnsecsANDROID *values) const;
 
   protected:
     Surface(EGLint surfaceType,

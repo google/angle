@@ -26,7 +26,7 @@ namespace egl
 {
 
 SurfaceState::SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn)
-    : label(nullptr), config(configIn), attributes(attributesIn)
+    : label(nullptr), config(configIn), attributes(attributesIn), timestampsEnabled(false)
 {
 }
 
@@ -167,6 +167,12 @@ Error Surface::initialize(const Display *display)
         {
             mGLColorspace = EGL_GL_COLORSPACE_SRGB;
         }
+    }
+
+    if (mType == EGL_WINDOW_BIT && display->getExtensions().getFrameTimestamps)
+    {
+        mState.supportedCompositorTimings = mImplementation->getSupportedCompositorTimings();
+        mState.supportedTimestamps        = mImplementation->getSupportedTimestamps();
     }
 
     return NoError();
@@ -479,6 +485,47 @@ gl::InitState Surface::initState(const gl::ImageIndex & /*imageIndex*/) const
 void Surface::setInitState(const gl::ImageIndex & /*imageIndex*/, gl::InitState initState)
 {
     mInitState = initState;
+}
+
+void Surface::setTimestampsEnabled(bool enabled)
+{
+    mImplementation->setTimestampsEnabled(enabled);
+    mState.timestampsEnabled = enabled;
+}
+
+bool Surface::isTimestampsEnabled() const
+{
+    return mState.timestampsEnabled;
+}
+
+const SupportedCompositorTiming &Surface::getSupportedCompositorTimings() const
+{
+    return mState.supportedCompositorTimings;
+}
+
+Error Surface::getCompositorTiming(EGLint numTimestamps,
+                                   const EGLint *names,
+                                   EGLnsecsANDROID *values) const
+{
+    return mImplementation->getCompositorTiming(numTimestamps, names, values);
+}
+
+Error Surface::getNextFrameId(EGLuint64KHR *frameId) const
+{
+    return mImplementation->getNextFrameId(frameId);
+}
+
+const SupportedTimestamps &Surface::getSupportedTimestamps() const
+{
+    return mState.supportedTimestamps;
+}
+
+Error Surface::getFrameTimestamps(EGLuint64KHR frameId,
+                                  EGLint numTimestamps,
+                                  const EGLint *timestamps,
+                                  EGLnsecsANDROID *values) const
+{
+    return mImplementation->getFrameTimestamps(frameId, numTimestamps, timestamps, values);
 }
 
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,

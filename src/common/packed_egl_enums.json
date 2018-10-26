@@ -21,5 +21,23 @@
         "Error": "EGL_DEBUG_MSG_ERROR_KHR",
         "Warn": "EGL_DEBUG_MSG_WARN_KHR",
         "Info": "EGL_DEBUG_MSG_INFO_KHR"
+    },
+    "CompositorTiming":
+    {
+        "CompositeDeadline": "EGL_COMPOSITE_DEADLINE_ANDROID",
+        "CompositInterval": "EGL_COMPOSITE_INTERVAL_ANDROID",
+        "CompositToPresentLatency": "EGL_COMPOSITE_TO_PRESENT_LATENCY_ANDROID"
+    },
+    "Timestamp":
+    {
+        "RequestedPresentTime": "EGL_REQUESTED_PRESENT_TIME_ANDROID",
+        "RenderingCompleteTime": "EGL_RENDERING_COMPLETE_TIME_ANDROID",
+        "CompositionLatchTime": "EGL_COMPOSITION_LATCH_TIME_ANDROID",
+        "FirstCompositionStartTime": "EGL_FIRST_COMPOSITION_START_TIME_ANDROID",
+        "LastCompositionStartTime": "EGL_LAST_COMPOSITION_START_TIME_ANDROID",
+        "FirstCompositionGPUFinishedTime": "EGL_FIRST_COMPOSITION_GPU_FINISHED_TIME_ANDROID",
+        "DisplayPresentTime": "EGL_DISPLAY_PRESENT_TIME_ANDROID",
+        "DequeueReadyTime": "EGL_DEQUEUE_READY_TIME_ANDROID",
+        "ReadsDoneTime": "EGL_READS_DONE_TIME_ANDROID"
     }
 }

@@ -813,6 +813,9 @@ struct DisplayExtensions
 
     // EGL_ANDROID_image_native_buffer
     bool imageNativeBuffer;
+
+    // EGL_ANDROID_get_frame_timestamps
+    bool getFrameTimestamps;
 };
 
 struct DeviceExtensions

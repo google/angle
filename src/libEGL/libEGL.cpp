@@ -518,4 +518,44 @@ void EGLAPIENTRY eglSetBlobCacheFuncsANDROID(EGLDisplay dpy,
     return egl::SetBlobCacheFuncsANDROID(dpy, set, get);
 }
 
+EGLBoolean EGLAPIENTRY eglGetCompositorTimingSupportedANDROID(EGLDisplay dpy,
+                                                              EGLSurface surface,
+                                                              EGLint name)
+{
+    return egl::GetCompositorTimingSupportedANDROID(dpy, surface, name);
+}
+
+EGLBoolean EGLAPIENTRY eglGetCompositorTimingANDROID(EGLDisplay dpy,
+                                                     EGLSurface surface,
+                                                     EGLint numTimestamps,
+                                                     const EGLint *names,
+                                                     EGLnsecsANDROID *values)
+{
+    return egl::GetCompositorTimingANDROID(dpy, surface, numTimestamps, names, values);
+}
+
+EGLBoolean EGLAPIENTRY eglGetNextFrameIdANDROID(EGLDisplay dpy,
+                                                EGLSurface surface,
+                                                EGLuint64KHR *frameId)
+{
+    return egl::GetNextFrameIdANDROID(dpy, surface, frameId);
+}
+
+EGLBoolean EGLAPIENTRY eglGetFrameTimestampSupportedANDROID(EGLDisplay dpy,
+                                                            EGLSurface surface,
+                                                            EGLint timestamp)
+{
+    return egl::GetFrameTimestampSupportedANDROID(dpy, surface, timestamp);
+}
+
+EGLBoolean EGLAPIENTRY eglGetFrameTimestampsANDROID(EGLDisplay dpy,
+                                                    EGLSurface surface,
+                                                    EGLuint64KHR frameId,
+                                                    EGLint numTimestamps,
+                                                    const EGLint *timestamps,
+                                                    EGLnsecsANDROID *values)
+{
+    return egl::GetFrameTimestampsANDROID(dpy, surface, frameId, numTimestamps, timestamps, values);
+}
+
 }  // extern "C"

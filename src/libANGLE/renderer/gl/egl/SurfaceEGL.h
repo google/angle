@@ -43,6 +43,18 @@ class SurfaceEGL : public SurfaceGL
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
+    void setTimestampsEnabled(bool enabled) override;
+    egl::SupportedCompositorTimings getSupportedCompositorTimings() const override;
+    egl::Error getCompositorTiming(EGLint numTimestamps,
+                                   const EGLint *names,
+                                   EGLnsecsANDROID *values) const override;
+    egl::Error getNextFrameId(EGLuint64KHR *frameId) const override;
+    egl::SupportedTimestamps getSupportedTimestamps() const override;
+    egl::Error getFrameTimestamps(EGLuint64KHR frameId,
+                                  EGLint numTimestamps,
+                                  const EGLint *timestamps,
+                                  EGLnsecsANDROID *values) const override;
+
     EGLSurface getSurface() const;
 
   protected:

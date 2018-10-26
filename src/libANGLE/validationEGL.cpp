@@ -625,7 +625,41 @@ Error ValidateDisplayPointer(const Display *display)
     return NoError();
 }
 
-}  // namespace
+bool ValidCompositorTimingName(CompositorTiming name)
+{
+    switch (name)
+    {
+        case CompositorTiming::CompositeDeadline:
+        case CompositorTiming::CompositInterval:
+        case CompositorTiming::CompositToPresentLatency:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+bool ValidTimestampType(Timestamp timestamp)
+{
+    switch (timestamp)
+    {
+        case Timestamp::RequestedPresentTime:
+        case Timestamp::RenderingCompleteTime:
+        case Timestamp::CompositionLatchTime:
+        case Timestamp::FirstCompositionStartTime:
+        case Timestamp::LastCompositionStartTime:
+        case Timestamp::FirstCompositionGPUFinishedTime:
+        case Timestamp::DisplayPresentTime:
+        case Timestamp::DequeueReadyTime:
+        case Timestamp::ReadsDoneTime:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+}  // anonymous namespace
 
 Error ValidateDisplay(const Display *display)
 {
@@ -3024,6 +3058,23 @@ Error ValidateSurfaceAttrib(const Display *display,
             }
             break;
 
+        case EGL_TIMESTAMPS_ANDROID:
+            if (!display->getExtensions().getFrameTimestamps)
+            {
+                return EglBadAttribute() << "EGL_TIMESTAMPS_ANDROID cannot be used without "
+                                            "EGL_ANDROID_get_frame_timestamps support.";
+            }
+            switch (value)
+            {
+                case EGL_TRUE:
+                case EGL_FALSE:
+                    break;
+
+                default:
+                    return EglBadAttribute() << "Invalid value.";
+            }
+            break;
+
         default:
             return EglBadAttribute() << "Invalid surface attribute.";
     }
@@ -3114,6 +3165,14 @@ Error ValidateQuerySurface(const Display *display,
                 return EglBadAttribute() << "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE cannot be "
                                             "used without EGL_ANGLE_robust_resource_initialization "
                                             "support.";
+            }
+            break;
+
+        case EGL_TIMESTAMPS_ANDROID:
+            if (!display->getExtensions().getFrameTimestamps)
+            {
+                return EglBadAttribute() << "EGL_TIMESTAMPS_ANDROID cannot be used without "
+                                            "EGL_ANDROID_get_frame_timestamps support.";
             }
             break;
 
@@ -3221,6 +3280,171 @@ Error ValidateLabelObjectKHR(Thread *thread,
 
     LabeledObject *labeledObject = nullptr;
     ANGLE_TRY(ValidateLabeledObject(thread, display, objectType, object, &labeledObject));
+
+    return NoError();
+}
+
+Error ValidateGetCompositorTimingSupportedANDROID(const Display *display,
+                                                  const Surface *surface,
+                                                  CompositorTiming name)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().getFrameTimestamps)
+    {
+        return EglBadDisplay() << "EGL_ANDROID_get_frame_timestamps extension is not available.";
+    }
+
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (!ValidCompositorTimingName(name))
+    {
+        return EglBadParameter() << "invalid timing name.";
+    }
+
+    return NoError();
+}
+
+Error ValidateGetCompositorTimingANDROID(const Display *display,
+                                         const Surface *surface,
+                                         EGLint numTimestamps,
+                                         const EGLint *names,
+                                         EGLnsecsANDROID *values)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().getFrameTimestamps)
+    {
+        return EglBadDisplay() << "EGL_ANDROID_get_frame_timestamps extension is not available.";
+    }
+
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (names == nullptr && numTimestamps > 0)
+    {
+        return EglBadParameter() << "names is NULL.";
+    }
+
+    if (values == nullptr && numTimestamps > 0)
+    {
+        return EglBadParameter() << "values is NULL.";
+    }
+
+    if (numTimestamps < 0)
+    {
+        return EglBadParameter() << "numTimestamps must be at least 0.";
+    }
+
+    for (EGLint i = 0; i < numTimestamps; i++)
+    {
+        CompositorTiming name = FromEGLenum<CompositorTiming>(names[i]);
+
+        if (!ValidCompositorTimingName(name))
+        {
+            return EglBadParameter() << "invalid compositor timing.";
+        }
+
+        if (!surface->getSupportedCompositorTimings().test(name))
+        {
+            return EglBadParameter() << "compositor timing not supported by surface.";
+        }
+    }
+
+    return NoError();
+}
+
+Error ValidateGetNextFrameIdANDROID(const Display *display,
+                                    const Surface *surface,
+                                    EGLuint64KHR *frameId)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().getFrameTimestamps)
+    {
+        return EglBadDisplay() << "EGL_ANDROID_get_frame_timestamps extension is not available.";
+    }
+
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (frameId == nullptr)
+    {
+        return EglBadParameter() << "frameId is NULL.";
+    }
+
+    return NoError();
+}
+
+Error ValidateGetFrameTimestampSupportedANDROID(const Display *display,
+                                                const Surface *surface,
+                                                Timestamp timestamp)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().getFrameTimestamps)
+    {
+        return EglBadDisplay() << "EGL_ANDROID_get_frame_timestamps extension is not available.";
+    }
+
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (!ValidTimestampType(timestamp))
+    {
+        return EglBadParameter() << "invalid timestamp type.";
+    }
+
+    return NoError();
+}
+
+Error ValidateGetFrameTimestampsANDROID(const Display *display,
+                                        const Surface *surface,
+                                        EGLuint64KHR frameId,
+                                        EGLint numTimestamps,
+                                        const EGLint *timestamps,
+                                        EGLnsecsANDROID *values)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().getFrameTimestamps)
+    {
+        return EglBadDisplay() << "EGL_ANDROID_get_frame_timestamps extension is not available.";
+    }
+
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (!surface->isTimestampsEnabled())
+    {
+        return EglBadSurface() << "timestamp collection is not enabled for this surface.";
+    }
+
+    if (timestamps == nullptr && numTimestamps > 0)
+    {
+        return EglBadParameter() << "timestamps is NULL.";
+    }
+
+    if (values == nullptr && numTimestamps > 0)
+    {
+        return EglBadParameter() << "values is NULL.";
+    }
+
+    if (numTimestamps < 0)
+    {
+        return EglBadParameter() << "numTimestamps must be at least 0.";
+    }
+
+    for (EGLint i = 0; i < numTimestamps; i++)
+    {
+        Timestamp timestamp = FromEGLenum<Timestamp>(timestamps[i]);
+
+        if (!ValidTimestampType(timestamp))
+        {
+            return EglBadParameter() << "invalid timestamp type.";
+        }
+
+        if (!surface->getSupportedTimestamps().test(timestamp))
+        {
+            return EglBadParameter() << "timestamp not supported by surface.";
+        }
+    }
 
     return NoError();
 }

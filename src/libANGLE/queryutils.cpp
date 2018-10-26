@@ -2988,6 +2988,9 @@ void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
         case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
             *value = surface->isRobustResourceInitEnabled();
             break;
+        case EGL_TIMESTAMPS_ANDROID:
+            *value = surface->isTimestampsEnabled();
+            break;
         default:
             UNREACHABLE();
             break;
@@ -3012,6 +3015,9 @@ void SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value)
             break;
         case EGL_HEIGHT:
             surface->setFixedHeight(value);
+            break;
+        case EGL_TIMESTAMPS_ANDROID:
+            surface->setTimestampsEnabled(value != EGL_FALSE);
             break;
         default:
             UNREACHABLE();

@@ -62,6 +62,7 @@ class FunctionsEGL
 
     EGLBoolean bindTexImage(EGLSurface surface, EGLint buffer) const;
     EGLBoolean releaseTexImage(EGLSurface surface, EGLint buffer) const;
+    EGLBoolean surfaceAttrib(EGLSurface surface, EGLint attribute, EGLint value) const;
     EGLBoolean swapInterval(EGLint interval) const;
 
     EGLImageKHR createImageKHR(EGLContext context,
@@ -80,6 +81,19 @@ class FunctionsEGL
     EGLBoolean presentationTimeANDROID(EGLSurface surface, EGLnsecsANDROID time) const;
 
     void setBlobCacheFuncsANDROID(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get) const;
+
+    EGLBoolean getCompositorTimingSupportedANDROID(EGLSurface surface, EGLint name) const;
+    EGLBoolean getCompositorTimingANDROID(EGLSurface surface,
+                                          EGLint numTimestamps,
+                                          const EGLint *names,
+                                          EGLnsecsANDROID *values) const;
+    EGLBoolean getNextFrameIdANDROID(EGLSurface surface, EGLuint64KHR *frameId) const;
+    EGLBoolean getFrameTimestampSupportedANDROID(EGLSurface surface, EGLint timestamp) const;
+    EGLBoolean getFrameTimestampsANDROID(EGLSurface surface,
+                                         EGLuint64KHR frameId,
+                                         EGLint numTimestamps,
+                                         const EGLint *timestamps,
+                                         EGLnsecsANDROID *values) const;
 
   private:
     // So as to isolate from angle we do not include angleutils.h and cannot

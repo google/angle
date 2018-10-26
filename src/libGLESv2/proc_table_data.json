@@ -879,6 +879,14 @@
         "eglLabelObjectKHR"
     ],
 
+    "EGL_ANDROID_get_frame_timestamps": [
+        "eglGetCompositorTimingSupportedANDROID",
+        "eglGetCompositorTimingANDROID",
+        "eglGetNextFrameIdANDROID",
+        "eglGetFrameTimestampSupportedANDROID",
+        "eglGetFrameTimestampsANDROID"
+    ],
+
     "angle::Platform related entry points": [
         "ANGLEGetDisplayPlatform",
         "ANGLEResetDisplayPlatform"
