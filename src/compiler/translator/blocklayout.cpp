@@ -41,6 +41,9 @@ void GetInterfaceBlockStructMemberInfo(const std::vector<VarT> &fields,
                                        bool inRowMajorLayout,
                                        BlockLayoutMap *blockInfoOut)
 {
+    // TODO(jiajia.qin@intel.com):we need to set the right structure base alignment before
+    // enterAggregateType for std430 layout just like GetShaderStorageBlockFieldMemberInfo did in
+    // ShaderStorageBlockOutputHLSL.cpp. http://anglebug.com/1920
     encoder->enterAggregateType();
     GetInterfaceBlockInfo(fields, fieldName, encoder, inRowMajorLayout, blockInfoOut);
     encoder->exitAggregateType();
@@ -149,9 +152,7 @@ void GetInterfaceBlockInfo(const std::vector<VarT> &fields,
 
 }  // anonymous namespace
 
-BlockLayoutEncoder::BlockLayoutEncoder() : mCurrentOffset(0)
-{
-}
+BlockLayoutEncoder::BlockLayoutEncoder() : mCurrentOffset(0), mStructureBaseAlignment(0) {}
 
 BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
                                                const std::vector<unsigned int> &arraySizes,
@@ -175,6 +176,11 @@ BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
 void BlockLayoutEncoder::increaseCurrentOffset(size_t offsetInBytes)
 {
     mCurrentOffset += (offsetInBytes / BytesPerComponent);
+}
+
+void BlockLayoutEncoder::setStructureBaseAlignment(size_t baseAlignment)
+{
+    mStructureBaseAlignment = baseAlignment;
 }
 
 // static
@@ -261,14 +267,61 @@ void Std140BlockEncoder::advanceOffset(GLenum type,
     }
     else if (gl::IsMatrixType(type))
     {
-        ASSERT(matrixStride == ComponentsPerRegister);
         const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
-        mCurrentOffset += ComponentsPerRegister * numRegisters;
+        mCurrentOffset += matrixStride * numRegisters;
     }
     else
     {
         mCurrentOffset += gl::VariableComponentCount(type);
     }
+}
+
+Std430BlockEncoder::Std430BlockEncoder() {}
+
+void Std430BlockEncoder::nextRegister()
+{
+    mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, mStructureBaseAlignment);
+}
+
+void Std430BlockEncoder::getBlockLayoutInfo(GLenum type,
+                                            const std::vector<unsigned int> &arraySizes,
+                                            bool isRowMajorMatrix,
+                                            int *arrayStrideOut,
+                                            int *matrixStrideOut)
+{
+    // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
+    ASSERT(gl::VariableComponentSize(gl::VariableComponentType(type)) == BytesPerComponent);
+
+    size_t baseAlignment = 0;
+    int matrixStride     = 0;
+    int arrayStride      = 0;
+
+    if (gl::IsMatrixType(type))
+    {
+        const int numComponents = gl::MatrixComponentCount(type, isRowMajorMatrix);
+        baseAlignment           = (numComponents == 3 ? 4u : static_cast<size_t>(numComponents));
+        matrixStride            = baseAlignment;
+
+        if (!arraySizes.empty())
+        {
+            const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
+            arrayStride            = matrixStride * numRegisters;
+        }
+    }
+    else
+    {
+        const int numComponents = gl::VariableComponentCount(type);
+        baseAlignment           = (numComponents == 3 ? 4u : static_cast<size_t>(numComponents));
+        if (!arraySizes.empty())
+        {
+            arrayStride = baseAlignment;
+        }
+    }
+    mStructureBaseAlignment = std::max(baseAlignment, mStructureBaseAlignment);
+    mCurrentOffset          = rx::roundUp(mCurrentOffset, baseAlignment);
+
+    *matrixStrideOut = matrixStride;
+    *arrayStrideOut  = arrayStride;
 }
 
 void GetInterfaceBlockInfo(const std::vector<InterfaceBlockField> &fields,

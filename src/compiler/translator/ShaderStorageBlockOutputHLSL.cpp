@@ -91,12 +91,17 @@ void GetBlockLayoutInfo(TIntermTyped *node,
 unsigned int GetMatrixStride(const TType &type, TLayoutBlockStorage storage, bool rowMajor)
 {
     sh::Std140BlockEncoder std140Encoder;
+    sh::Std430BlockEncoder std430Encoder;
     sh::HLSLBlockEncoder hlslEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
     sh::BlockLayoutEncoder *encoder = nullptr;
 
     if (storage == EbsStd140)
     {
         encoder = &std140Encoder;
+    }
+    else if (storage == EbsStd430)
+    {
+        encoder = &std430Encoder;
     }
     else
     {
@@ -137,9 +142,11 @@ void GetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
 size_t GetBlockFieldMemberInfoAndReturnBlockSize(const TFieldList &fields,
                                                  TLayoutBlockStorage storage,
                                                  bool rowMajor,
-                                                 BlockMemberInfoMap *blockInfoOut)
+                                                 BlockMemberInfoMap *blockInfoOut,
+                                                 int *structureBaseAlignment)
 {
     sh::Std140BlockEncoder std140Encoder;
+    sh::Std430BlockEncoder std430Encoder;
     sh::HLSLBlockEncoder hlslEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
     sh::BlockLayoutEncoder *structureEncoder = nullptr;
 
@@ -147,15 +154,19 @@ size_t GetBlockFieldMemberInfoAndReturnBlockSize(const TFieldList &fields,
     {
         structureEncoder = &std140Encoder;
     }
+    else if (storage == EbsStd430)
+    {
+        structureEncoder = &std430Encoder;
+    }
     else
     {
-        // TODO(jiajia.qin@intel.com): add std430 support.
         structureEncoder = &hlslEncoder;
     }
 
     GetShaderStorageBlockFieldMemberInfo(fields, structureEncoder, storage, rowMajor, false,
                                          blockInfoOut);
     structureEncoder->exitAggregateType();
+    *structureBaseAlignment = static_cast<int>(structureEncoder->getStructureBaseAlignment());
     return structureEncoder->getBlockSize();
 }
 
@@ -176,11 +187,20 @@ void GetShaderStorageBlockFieldMemberInfo(const TFieldList &fields,
         }
         if (fieldType.getStruct())
         {
-            encoder->enterAggregateType();
+            int structureBaseAlignment = 0;
             // This is to set structure member offset and array stride using a new encoder to ensure
             // that the first field member offset in structure is always zero.
             size_t structureStride = GetBlockFieldMemberInfoAndReturnBlockSize(
-                fieldType.getStruct()->fields(), storage, isRowMajorLayout, blockInfoOut);
+                fieldType.getStruct()->fields(), storage, isRowMajorLayout, blockInfoOut,
+                &structureBaseAlignment);
+            // According to OpenGL ES 3.1 spec, session 7.6.2.2 Standard Uniform Block Layout. In
+            // rule 9, if the member is a structure, the base alignment of the structure is N, where
+            // N is the largest base alignment value of any of its members. When using the std430
+            // storage layout, the base alignment and stride of structures in rule 9 are not rounded
+            // up a multiple of the base alignment of a vec4. So we must set structure base
+            // alignment before enterAggregateType.
+            encoder->setStructureBaseAlignment(structureBaseAlignment);
+            encoder->enterAggregateType();
             const BlockMemberInfo memberInfo(static_cast<int>(encoder->getBlockSize()),
                                              static_cast<int>(structureStride), 0, false);
             (*blockInfoOut)[field] = memberInfo;
@@ -236,6 +256,7 @@ void GetShaderStorageBlockMembersInfo(const TInterfaceBlock *interfaceBlock,
                                       BlockMemberInfoMap *blockInfoOut)
 {
     sh::Std140BlockEncoder std140Encoder;
+    sh::Std430BlockEncoder std430Encoder;
     sh::HLSLBlockEncoder hlslEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
     sh::BlockLayoutEncoder *encoder = nullptr;
 
@@ -243,9 +264,12 @@ void GetShaderStorageBlockMembersInfo(const TInterfaceBlock *interfaceBlock,
     {
         encoder = &std140Encoder;
     }
+    else if (interfaceBlock->blockStorage() == EbsStd430)
+    {
+        encoder = &std430Encoder;
+    }
     else
     {
-        // TODO(jiajia.qin@intel.com): add std430 support.
         encoder = &hlslEncoder;
     }
 

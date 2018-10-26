@@ -78,7 +78,9 @@ class BlockLayoutEncoder
                                bool isRowMajorMatrix);
 
     size_t getBlockSize() const { return mCurrentOffset * BytesPerComponent; }
+    size_t getStructureBaseAlignment() const { return mStructureBaseAlignment; }
     void increaseCurrentOffset(size_t offsetInBytes);
+    void setStructureBaseAlignment(size_t baseAlignment);
 
     virtual void enterAggregateType() = 0;
     virtual void exitAggregateType()  = 0;
@@ -91,8 +93,9 @@ class BlockLayoutEncoder
 
   protected:
     size_t mCurrentOffset;
+    size_t mStructureBaseAlignment;
 
-    void nextRegister();
+    virtual void nextRegister();
 
     virtual void getBlockLayoutInfo(GLenum type,
                                     const std::vector<unsigned int> &arraySizes,
@@ -128,6 +131,20 @@ class Std140BlockEncoder : public BlockLayoutEncoder
                        bool isRowMajorMatrix,
                        int arrayStride,
                        int matrixStride) override;
+};
+
+class Std430BlockEncoder : public Std140BlockEncoder
+{
+  public:
+    Std430BlockEncoder();
+
+  protected:
+    void nextRegister() override;
+    void getBlockLayoutInfo(GLenum type,
+                            const std::vector<unsigned int> &arraySizes,
+                            bool isRowMajorMatrix,
+                            int *arrayStrideOut,
+                            int *matrixStrideOut) override;
 };
 
 using BlockLayoutMap = std::map<std::string, BlockMemberInfo>;
