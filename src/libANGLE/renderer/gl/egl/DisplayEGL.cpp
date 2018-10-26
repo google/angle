@@ -143,9 +143,10 @@ void DisplayEGL::generateCaps(egl::Caps *outCaps) const
 
 void DisplayEGL::setBlobCacheFuncs(EGLSetBlobFuncANDROID set, EGLGetBlobFuncANDROID get)
 {
-    ASSERT(mEGL->hasExtension("EGL_ANDROID_blob_cache"));
-
-    mEGL->setBlobCacheFuncsANDROID(set, get);
+    if (mEGL->hasExtension("EGL_ANDROID_blob_cache"))
+    {
+        mEGL->setBlobCacheFuncsANDROID(set, get);
+    }
 }
 
 }  // namespace rx
