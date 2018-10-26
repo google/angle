@@ -2331,9 +2331,9 @@ constexpr const TVariable *p0N2B[2]   = {&BuiltInVariable::kVar_pt0N, &BuiltInVa
 constexpr const TVariable *p0N3B[2]   = {&BuiltInVariable::kVar_pt0N, &BuiltInVariable::kVar_pt3B};
 constexpr const TVariable *p0O1C0C[3] = {&BuiltInVariable::kVar_pt0O, &BuiltInVariable::kVar_pt1C,
                                          &BuiltInVariable::kVar_pt0C};
-constexpr const TVariable *p0P2C0C[3]   = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt2C,
+constexpr const TVariable *p0P2C0C[3] = {&BuiltInVariable::kVar_pt0P, &BuiltInVariable::kVar_pt2C,
                                          &BuiltInVariable::kVar_pt0C};
-constexpr const TVariable *p0Q0C[2] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt0C};
+constexpr const TVariable *p0Q0C[2]   = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt0C};
 constexpr const TVariable *p0Q1B0B1C[4] = {&BuiltInVariable::kVar_pt0Q, &BuiltInVariable::kVar_pt1B,
                                            &BuiltInVariable::kVar_pt0B,
                                            &BuiltInVariable::kVar_pt1C};
@@ -2546,11 +2546,11 @@ constexpr const TVariable *p0e2B0B1C[4] = {&BuiltInVariable::kVar_pt0e, &BuiltIn
 constexpr const TVariable *p0e3B1B1B1C[5] = {
     &BuiltInVariable::kVar_pt0e, &BuiltInVariable::kVar_pt3B, &BuiltInVariable::kVar_pt1B,
     &BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt1C};
-constexpr const TVariable *p0f1C3B[3]   = {&BuiltInVariable::kVar_pt0f, &BuiltInVariable::kVar_pt1C,
+constexpr const TVariable *p0f1C3B[3]  = {&BuiltInVariable::kVar_pt0f, &BuiltInVariable::kVar_pt1C,
                                          &BuiltInVariable::kVar_pt3B};
-constexpr const TVariable *p0g1C3C[3]   = {&BuiltInVariable::kVar_pt0g, &BuiltInVariable::kVar_pt1C,
+constexpr const TVariable *p0g1C3C[3]  = {&BuiltInVariable::kVar_pt0g, &BuiltInVariable::kVar_pt1C,
                                          &BuiltInVariable::kVar_pt3C};
-constexpr const TVariable *p0h1C3D[3]   = {&BuiltInVariable::kVar_pt0h, &BuiltInVariable::kVar_pt1C,
+constexpr const TVariable *p0h1C3D[3]  = {&BuiltInVariable::kVar_pt0h, &BuiltInVariable::kVar_pt1C,
                                          &BuiltInVariable::kVar_pt3D};
 constexpr const TVariable *p0i2C3B[3]  = {&BuiltInVariable::kVar_pt0i, &BuiltInVariable::kVar_pt2C,
                                          &BuiltInVariable::kVar_pt3B};
@@ -2564,11 +2564,11 @@ constexpr const TVariable *p0m2C3C[3]  = {&BuiltInVariable::kVar_pt0m, &BuiltInV
                                          &BuiltInVariable::kVar_pt3C};
 constexpr const TVariable *p0n2C3D[3]  = {&BuiltInVariable::kVar_pt0n, &BuiltInVariable::kVar_pt2C,
                                          &BuiltInVariable::kVar_pt3D};
-constexpr const TVariable *p0o2C3B[3]   = {&BuiltInVariable::kVar_pt0o, &BuiltInVariable::kVar_pt2C,
+constexpr const TVariable *p0o2C3B[3]  = {&BuiltInVariable::kVar_pt0o, &BuiltInVariable::kVar_pt2C,
                                          &BuiltInVariable::kVar_pt3B};
-constexpr const TVariable *p0p2C3C[3]   = {&BuiltInVariable::kVar_pt0p, &BuiltInVariable::kVar_pt2C,
+constexpr const TVariable *p0p2C3C[3]  = {&BuiltInVariable::kVar_pt0p, &BuiltInVariable::kVar_pt2C,
                                          &BuiltInVariable::kVar_pt3C};
-constexpr const TVariable *p0q2C3D[3]   = {&BuiltInVariable::kVar_pt0q, &BuiltInVariable::kVar_pt2C,
+constexpr const TVariable *p0q2C3D[3]  = {&BuiltInVariable::kVar_pt0q, &BuiltInVariable::kVar_pt2C,
                                          &BuiltInVariable::kVar_pt3D};
 constexpr const TVariable *p1B0B0B[3]  = {&BuiltInVariable::kVar_pt1B, &BuiltInVariable::kVar_pt0B,
                                          &BuiltInVariable::kVar_pt0B};
@@ -7336,7 +7336,7 @@ constexpr const TFunction kFunction_texture_0Y2B(
     BuiltInId::texture_USamplerCube1_Float3,
     BuiltInName::texture,
     TExtension::UNDEFINED,
-    BuiltInParameters::p0Y2B2B2B,
+    BuiltInParameters::p0Y2B0B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,
@@ -9613,7 +9613,7 @@ constexpr const TFunction kFunction_textureGather_0Y2B(
     BuiltInId::textureGather_USamplerCube1_Float3,
     BuiltInName::textureGather,
     TExtension::UNDEFINED,
-    BuiltInParameters::p0Y2B2B2B,
+    BuiltInParameters::p0Y2B0B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpCallBuiltInFunction,

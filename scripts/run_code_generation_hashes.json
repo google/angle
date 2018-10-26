@@ -36,7 +36,7 @@
   "ESSL static builtins:src/compiler/translator/builtin_function_declarations.txt":
     "e5e567406476306ea06984d885be028d",
   "ESSL static builtins:src/compiler/translator/builtin_variables.json":
-    "2c0e86ff9f92f79ada03f04206e63fba",
+    "2be179f5b2f04d68367d023bec7209e3",
   "ESSL static builtins:src/compiler/translator/gen_builtin_symbols.py":
     "9a5226ee6573650897bdc21e1bb0bfd0",
   "Emulated HLSL functions:src/compiler/translator/emulated_builtin_function_data_hlsl.json":
