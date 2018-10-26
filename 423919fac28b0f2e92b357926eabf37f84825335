@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "6f62a203_69e488bf",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-26T16:55:45Z",
+      "side": 1,
+      "message": "Yes, any user-defined \"angle_DrawID\" should be decorated and have a different mappedName.\nI added a test to check this.",
+      "parentUuid": "c9d64ff9_f41795fb",
+      "revId": "423919fac28b0f2e92b357926eabf37f84825335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56579aa0_8fd31119",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 20
@@ -51,6 +69,24 @@
       "revId": "423919fac28b0f2e92b357926eabf37f84825335",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5a103cc_ce627d43",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2018-10-26T16:55:45Z",
+      "side": 1,
+      "message": "This change is indeed necessary. This code here is creating the uniform blocks at the top of the Vulkan shader.\nTranslatorVulkan uses OutputGLSLBase::visitSymbol to translate the shader body.\n\nOutputGLSLBase hashes the Symbol, so I\u0027ve changed it here to hash the Symbol as well instead of the name.\n\nThe hash function for Symbols works differently for UserDefined and AngleInternal variables.",
+      "parentUuid": "56579aa0_8fd31119",
+      "revId": "423919fac28b0f2e92b357926eabf37f84825335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
