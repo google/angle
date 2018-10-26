@@ -287,6 +287,23 @@
     },
     {
       "key": {
+        "uuid": "77c0435b_6a3668d1",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-26T02:44:29Z",
+      "side": 1,
+      "message": "[b]",
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "880482e3_289d6524",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 5
@@ -442,6 +459,30 @@
       "side": 1,
       "message": "Well, say you have an array of arrays ssbo\n\nbuffer blockName {\n int i;\n} instance[2][2][2];\n\nvs an ssbo with an array of arrays field\n\nbuffer blockName {\n  int arr[2][2][2];\n};\n\nI think you\u0027re right and the code works, but I would feel a bit better if you could add a few tests with things like\n\nint arr2[2][2];\n((arr2 \u003d blockName.arr[0])[0], or\n\nblockName.arr[(blockName.arr[1] \u003d blockName.arr[2])[0][0]][1][2].\n\nI don\u0027t if this is legal. But anyway, LGTM with a bit more testing.",
       "parentUuid": "5e9f4a83_cd1b7d88",
+      "range": {
+        "startLine": 153,
+        "startChar": 5,
+        "endLine": 153,
+        "endChar": 21
+      },
+      "revId": "05bcdf85007451d678c63e9ecf0ccacfd2e3d691",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "016e66b4_cdf01a05",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-10-26T02:44:29Z",
+      "side": 1,
+      "message": "Hi Jamie. I misunderstand your array of arrays of ssbo. I though your array of arrays of SSBO was the array of arrys in SSBO. In fact, array of arrays ssbo is not allowed by the spec (See OpenGL ESSL spec 4.3.9 Interface Blocks \u0027Arrays of arrays of blocks are not allowed\u0027). You can\u0027t write it like below:\nbuffer blockName {\n int i;\n} instance[2][2][2];\n\nHere we process array of arrays in ssbo field member and the nested structure field member in SSBO. So you can see that one of my test cases is ShaderStorageBufferStructureArrayOfArray.\nI can write a test case like below:\nlayout(local_size_x\u003d1, local_size_y\u003d1, local_size_z\u003d1) in;\nlayout(std140, binding \u003d 0) uniform blockName0 {\n  int arr3[2][2][2];\n};\n\nlayout(std140, binding \u003d 1) buffer blockName1 {\n int i;\n} instance;\n\nvoid main()\n{\n    int arr2[2][2];\n    int tmp \u003d (arr2 \u003d arr3[0])[0][0];\n    instance.i \u003d tmp;\n}\n\nAnd it can pass in the GL backend. But it has exceeded the current patch\u0027s ability.\nFirst, currently we don\u0027t support a sentence like below:\n int tmp \u003d (arr2 \u003d arr3[0])[0][0];\nThe right hand of \u0027\u003d\u0027 is not a simple ssbo access chain. We need to split it to below in the AST pass.\narr2 \u003d arr3[0];\nint tmp \u003d arr2[0][0]\nSecond, arr2 \u003d arr3[0] is an array assignment. We need to call angle_assign_2_2_int(_arr2, _arr3[0]) when translation. And again, this kind of usage of SSBO hasn\u0027t been implemented.\nThird, in this patch, we mainly want to support simple structure and structure array usage in a ssbo. So I prefer we keep the current status. And you can see [b] (https://chromium-review.googlesource.com/c/angle/angle/+/1278097/5/src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp#113), that\u0027s the place we add the array of arrays support.\n\nAnother thing is that we never process this kind of usage \u0027(array \u003d ssbo_access_chain)[][]\u0027 since it must be split to\n    array \u003d ssbo_access_chain\n    array[][]\n\nSo we only need to process \u0027[][][][]\u0027 format in current status. We can add more test cases when the needed features are supported. Are we ok to land this patch now?",
+      "parentUuid": "f39658af_d9866cc7",
       "range": {
         "startLine": 153,
         "startChar": 5,
