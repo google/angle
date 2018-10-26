@@ -317,4 +317,23 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #define ANGLE_FUNCTION __func__
 #endif
 
+// Defining ANGLE_ENABLE_STRUCT_PADDING_WARNINGS will enable warnings when members are added to
+// structs to enforce packing. This is helpful for diagnosing unexpected struct sizes when making
+// fast cache variables.
+#if defined(__clang__)
+#define ANGLE_ENABLE_STRUCT_PADDING_WARNINGS \
+    _Pragma("clang diagnostic push") _Pragma("clang diagnostic error \"-Wpadded\"")
+#define ANGLE_DISABLE_STRUCT_PADDING_WARNINGS _Pragma("clang diagnostic pop")
+#elif defined(COMPILER_GCC)
+#define ANGLE_ENABLE_STRUCT_PADDING_WARNINGS \
+    _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic error \"-Wpadded\"")
+#define ANGLE_DISABLE_STRUCT_PADDING_WARNINGS _Pragma("GCC diagnostic pop")
+#elif defined(_MSC_VER)
+#define ANGLE_ENABLE_STRUCT_PADDING_WARNINGS __pragma(warning(push)) __pragma(warning(error : 4820))
+#define ANGLE_DISABLE_STRUCT_PADDING_WARNINGS __pragma(warning(pop))
+#else
+#define ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+#define ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+#endif
+
 #endif   // COMMON_DEBUG_H_

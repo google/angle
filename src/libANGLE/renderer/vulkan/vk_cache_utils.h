@@ -45,6 +45,9 @@ using SharedPipelineLayout      = RefCounted<PipelineLayout>;
 // packing nicely into the desired space. This is something we could also potentially fix
 // with a redesign to use bitfields or bit mask operations.
 
+// Enable struct padding warnings for the code below since it is used in caches.
+ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+
 struct alignas(4) PackedAttachmentDesc
 {
     uint8_t flags;
@@ -236,10 +239,11 @@ static_assert(sizeof(PackedColorBlendAttachmentState) == 8, "Size check failed")
 
 struct PackedColorBlendStateInfo final
 {
-    // Padded to round the strut size.
+    // Padded to round the struct size.
     uint32_t logicOpEnable;
     uint32_t logicOp;
     uint32_t attachmentCount;
+    uint32_t padding;
     float blendConstants[4];
     PackedColorBlendAttachmentState attachments[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
 };
@@ -459,6 +463,9 @@ static_assert(sizeof(PipelineLayoutDesc) ==
                   (sizeof(DescriptorSetLayoutArray<DescriptorSetLayoutDesc>) +
                    sizeof(std::array<PackedPushConstantRange, kMaxPushConstantRanges>)),
               "Unexpected Size");
+
+// Disable warnings about struct padding.
+ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 }  // namespace vk
 }  // namespace rx
 
