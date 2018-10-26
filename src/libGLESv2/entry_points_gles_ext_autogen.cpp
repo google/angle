@@ -4642,8 +4642,8 @@ GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
 void GL_APIENTRY GetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", sampler, pname,
-          params);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", sampler,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -4661,8 +4661,8 @@ void GL_APIENTRY GetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *
 void GL_APIENTRY GetSamplerParameterIuivOES(GLuint sampler, GLenum pname, GLuint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", sampler, pname,
-          params);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLuint *params = 0x%016" PRIxPTR ")", sampler,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -4680,8 +4680,8 @@ void GL_APIENTRY GetSamplerParameterIuivOES(GLuint sampler, GLenum pname, GLuint
 void GL_APIENTRY GetTexParameterIivOES(GLenum target, GLenum pname, GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname,
-          params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -4700,8 +4700,8 @@ void GL_APIENTRY GetTexParameterIivOES(GLenum target, GLenum pname, GLint *param
 void GL_APIENTRY GetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", target, pname,
-          params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLuint *params = 0x%016" PRIxPTR ")", target,
+          pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -4720,8 +4720,8 @@ void GL_APIENTRY GetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *par
 void GL_APIENTRY SamplerParameterIivOES(GLuint sampler, GLenum pname, const GLint *param)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint *param = 0x%0.8p)", sampler,
-          pname, param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint *param = 0x%016" PRIxPTR ")",
+          sampler, pname, (uintptr_t)param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -4739,8 +4739,8 @@ void GL_APIENTRY SamplerParameterIivOES(GLuint sampler, GLenum pname, const GLin
 void GL_APIENTRY SamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLuint *param)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLuint *param = 0x%0.8p)", sampler,
-          pname, param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLuint *param = 0x%016" PRIxPTR ")",
+          sampler, pname, (uintptr_t)param);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -4758,8 +4758,8 @@ void GL_APIENTRY SamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLu
 void GL_APIENTRY TexParameterIivOES(GLenum target, GLenum pname, const GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint *params = 0x%0.8p)", target,
-          pname, params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint *params = 0x%016" PRIxPTR ")",
+          target, pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -4778,8 +4778,8 @@ void GL_APIENTRY TexParameterIivOES(GLenum target, GLenum pname, const GLint *pa
 void GL_APIENTRY TexParameterIuivOES(GLenum target, GLenum pname, const GLuint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLuint *params = 0x%0.8p)", target,
-          pname, params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLuint *params = 0x%016" PRIxPTR ")",
+          target, pname, (uintptr_t)params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -10094,8 +10094,8 @@ void GL_APIENTRY GetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
                                                        GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", sampler, pname,
-          params);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", sampler,
+          pname, (uintptr_t)params);
 
     Context *context = static_cast<gl::Context *>(ctx);
     if (context)
@@ -10117,8 +10117,8 @@ void GL_APIENTRY GetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
                                                         GLuint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", sampler, pname,
-          params);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLuint *params = 0x%016" PRIxPTR ")", sampler,
+          pname, (uintptr_t)params);
 
     Context *context = static_cast<gl::Context *>(ctx);
     if (context)
@@ -10548,8 +10548,8 @@ void GL_APIENTRY GetTexParameterIivOESContextANGLE(GLeglContext ctx,
                                                    GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", target, pname,
-          params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint *params = 0x%016" PRIxPTR ")", target,
+          pname, (uintptr_t)params);
 
     Context *context = static_cast<gl::Context *>(ctx);
     if (context)
@@ -10572,8 +10572,8 @@ void GL_APIENTRY GetTexParameterIuivOESContextANGLE(GLeglContext ctx,
                                                     GLuint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLuint *params = 0x%0.8p)", target, pname,
-          params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLuint *params = 0x%016" PRIxPTR ")", target,
+          pname, (uintptr_t)params);
 
     Context *context = static_cast<gl::Context *>(ctx);
     if (context)
@@ -13926,8 +13926,8 @@ void GL_APIENTRY SamplerParameterIivOESContextANGLE(GLeglContext ctx,
                                                     const GLint *param)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint *param = 0x%0.8p)", sampler,
-          pname, param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint *param = 0x%016" PRIxPTR ")",
+          sampler, pname, (uintptr_t)param);
 
     Context *context = static_cast<gl::Context *>(ctx);
     if (context)
@@ -13949,8 +13949,8 @@ void GL_APIENTRY SamplerParameterIuivOESContextANGLE(GLeglContext ctx,
                                                      const GLuint *param)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLuint *param = 0x%0.8p)", sampler,
-          pname, param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLuint *param = 0x%016" PRIxPTR ")",
+          sampler, pname, (uintptr_t)param);
 
     Context *context = static_cast<gl::Context *>(ctx);
     if (context)
@@ -14697,8 +14697,8 @@ void GL_APIENTRY TexParameterIivOESContextANGLE(GLeglContext ctx,
                                                 const GLint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint *params = 0x%0.8p)", target,
-          pname, params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint *params = 0x%016" PRIxPTR ")",
+          target, pname, (uintptr_t)params);
 
     Context *context = static_cast<gl::Context *>(ctx);
     if (context)
@@ -14721,8 +14721,8 @@ void GL_APIENTRY TexParameterIuivOESContextANGLE(GLeglContext ctx,
                                                  const GLuint *params)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLuint *params = 0x%0.8p)", target,
-          pname, params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLuint *params = 0x%016" PRIxPTR ")",
+          target, pname, (uintptr_t)params);
 
     Context *context = static_cast<gl::Context *>(ctx);
     if (context)
