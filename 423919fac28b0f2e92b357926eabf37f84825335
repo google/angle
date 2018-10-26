@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "d0bee8ff_96df9724",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-26T18:13:14Z",
+      "side": 1,
+      "message": "Great, that\u0027s what I thought. Good to have a test anyway.",
+      "parentUuid": "6f62a203_69e488bf",
+      "revId": "423919fac28b0f2e92b357926eabf37f84825335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56579aa0_8fd31119",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 20
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "This change is indeed necessary. This code here is creating the uniform blocks at the top of the Vulkan shader.\nTranslatorVulkan uses OutputGLSLBase::visitSymbol to translate the shader body.\n\nOutputGLSLBase hashes the Symbol, so I\u0027ve changed it here to hash the Symbol as well instead of the name.\n\nThe hash function for Symbols works differently for UserDefined and AngleInternal variables.",
       "parentUuid": "56579aa0_8fd31119",
+      "revId": "423919fac28b0f2e92b357926eabf37f84825335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af0ab883_4e0df117",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-26T18:13:14Z",
+      "side": 1,
+      "message": "ah, I noticed the type difference but didn\u0027t realize the implementation was different. This definitely seems better.",
+      "parentUuid": "f5a103cc_ce627d43",
       "revId": "423919fac28b0f2e92b357926eabf37f84825335",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
