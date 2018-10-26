@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "47862cf2_e1acb7c3",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-26T01:53:30Z",
+      "side": 1,
+      "message": "Does this break if the application tries to use a uniform called angle_DrawID? (Or is the mappedName enough to prevent that?) Either way, tests would be good if you don\u0027t have any for this. (Maybe one using angle_DrawID as a uniform name with the extension enabled, and one without?)",
+      "revId": "423919fac28b0f2e92b357926eabf37f84825335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56579aa0_8fd31119",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2018-10-26T01:53:30Z",
+      "side": 1,
+      "message": "Looking at the diff from base to here, is this change necessary? If not, may as well change it back to how it was.",
+      "revId": "423919fac28b0f2e92b357926eabf37f84825335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
