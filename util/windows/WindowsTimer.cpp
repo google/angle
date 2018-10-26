@@ -8,7 +8,7 @@
 
 #include "windows/WindowsTimer.h"
 
-WindowsTimer::WindowsTimer() : mRunning(false), mStartTime(0), mStopTime(0)
+WindowsTimer::WindowsTimer() : mRunning(false), mStartTime(0), mStopTime(0), mFrequency(0)
 {
 }
 
