@@ -1392,11 +1392,11 @@ class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
     const gl::InfoLog &getInfoLog() const { return mInfoLog; }
     ShaderExecutableD3D *getExecutable() { return mExecutable; }
 
-    void handleError(HRESULT hr,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line) override
+    void handleResult(HRESULT hr,
+                      const char *message,
+                      const char *file,
+                      const char *function,
+                      unsigned int line) override
     {
         mStoredHR       = hr;
         mStoredMessage  = message;
@@ -1407,7 +1407,7 @@ class ProgramD3D::GetExecutableTask : public Closure, public d3d::Context
 
     void popError(d3d::Context *context)
     {
-        context->handleError(mStoredHR, mStoredMessage, mStoredFile, mStoredFunction, mStoredLine);
+        context->handleResult(mStoredHR, mStoredMessage, mStoredFile, mStoredFunction, mStoredLine);
     }
 
   protected:

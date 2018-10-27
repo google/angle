@@ -359,11 +359,11 @@ gl::Version DisplayD3D::getMaxSupportedESVersion() const
     return mRenderer->getMaxSupportedESVersion();
 }
 
-void DisplayD3D::handleError(HRESULT hr,
-                             const char *message,
-                             const char *file,
-                             const char *function,
-                             unsigned int line)
+void DisplayD3D::handleResult(HRESULT hr,
+                              const char *message,
+                              const char *file,
+                              const char *function,
+                              unsigned int line)
 {
     ASSERT(FAILED(hr));
 

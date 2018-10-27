@@ -29,6 +29,7 @@ class FramebufferAttachment;
 
 namespace rx
 {
+class Context11;
 class Renderer11;
 class RenderTarget11;
 struct Renderer11DeviceCaps;

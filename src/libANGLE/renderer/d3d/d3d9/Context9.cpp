@@ -339,11 +339,11 @@ angle::Result Context9::getIncompleteTexture(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-void Context9::handleError(HRESULT hr,
-                           const char *message,
-                           const char *file,
-                           const char *function,
-                           unsigned int line)
+void Context9::handleResult(HRESULT hr,
+                            const char *message,
+                            const char *file,
+                            const char *function,
+                            unsigned int line)
 {
     ASSERT(FAILED(hr));
 

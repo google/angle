@@ -2055,7 +2055,8 @@ void StateManager11::setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT str
 }
 
 angle::Result StateManager11::updateState(const gl::Context *context,
-                                          const gl::DrawCallParams &drawCallParams)
+                                          const gl::DrawCallParams &drawCallParams,
+                                          GLint firstVertex)
 {
     const gl::State &glState = context->getGLState();
 
@@ -2100,9 +2101,9 @@ angle::Result StateManager11::updateState(const gl::Context *context,
     ANGLE_TRY(mVertexArray11->syncStateForDraw(context, drawCallParams));
 
     // Changes in the draw call can affect the vertex buffer translations.
-    if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != drawCallParams.firstVertex())
+    if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != firstVertex)
     {
-        mLastFirstVertex = drawCallParams.firstVertex();
+        mLastFirstVertex = firstVertex;
         invalidateInputLayout();
     }
 
@@ -2182,7 +2183,7 @@ angle::Result StateManager11::updateState(const gl::Context *context,
                 ANGLE_TRY(syncTransformFeedbackBuffers(context));
                 break;
             case DIRTY_BIT_VERTEX_BUFFERS_AND_INPUT_LAYOUT:
-                ANGLE_TRY(syncVertexBuffersAndInputLayout(context, drawCallParams));
+                ANGLE_TRY(syncVertexBuffersAndInputLayout(context, drawCallParams, firstVertex));
                 break;
             case DIRTY_BIT_PRIMITIVE_TOPOLOGY:
                 syncPrimitiveTopology(glState, drawCallParams.mode());
@@ -2800,7 +2801,8 @@ angle::Result StateManager11::syncProgramForCompute(const gl::Context *context)
 
 angle::Result StateManager11::syncVertexBuffersAndInputLayout(
     const gl::Context *context,
-    const gl::DrawCallParams &drawCallParams)
+    const gl::DrawCallParams &drawCallParams,
+    GLint firstVertex)
 {
     const auto &vertexArrayAttribs = mVertexArray11->getTranslatedAttribs();
 
@@ -2835,13 +2837,14 @@ angle::Result StateManager11::syncVertexBuffersAndInputLayout(
     setInputLayoutInternal(inputLayout);
 
     // Update the applied vertex buffers.
-    ANGLE_TRY(applyVertexBuffers(context, drawCallParams));
+    ANGLE_TRY(applyVertexBuffers(context, drawCallParams, firstVertex));
 
     return angle::Result::Continue();
 }
 
 angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
-                                                 const gl::DrawCallParams &drawCallParams)
+                                                 const gl::DrawCallParams &drawCallParams,
+                                                 GLint firstVertex)
 {
     bool programUsesInstancedPointSprites =
         mProgramD3D->usesPointSize() && mProgramD3D->usesInstancedPointSpriteEmulation();
@@ -2889,9 +2892,8 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
                     indexInfo.srcIndexData.srcIndices = bufferData + offset;
                 }
 
-                ANGLE_TRY(bufferStorage->getEmulatedIndexedBuffer(
-                    context, &indexInfo.srcIndexData, attrib, drawCallParams.firstVertex(),
-                    &buffer));
+                ANGLE_TRY(bufferStorage->getEmulatedIndexedBuffer(context, &indexInfo.srcIndexData,
+                                                                  attrib, firstVertex, &buffer));
 
                 mVertexArray11->updateCachedIndexInfo(indexInfo);
             }
@@ -2902,7 +2904,7 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
             }
 
             vertexStride = attrib.stride;
-            ANGLE_TRY(attrib.computeOffset(context, drawCallParams.firstVertex(), &vertexOffset));
+            ANGLE_TRY(attrib.computeOffset(context, firstVertex, &vertexOffset));
         }
 
         size_t bufferIndex = reservedBuffers + attribIndex;

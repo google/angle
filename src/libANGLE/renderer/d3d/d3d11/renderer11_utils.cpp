@@ -2107,7 +2107,7 @@ angle::Result GenerateInitialTextureData(
     unsigned int maxImageSize = depthPitch * depth;
 
     angle::MemoryBuffer *scratchBuffer = nullptr;
-    ANGLE_CHECK_HR_ALLOC(GetImplAs<Context11>(context),
+    ANGLE_CHECK_GL_ALLOC(GetImplAs<Context11>(context),
                          context->getScratchBuffer(maxImageSize, &scratchBuffer));
 
     d3dFormatInfo.dataInitializerFunction(width, height, depth, scratchBuffer->data(), rowPitch,

@@ -276,13 +276,13 @@ angle::Result Image11::loadData(const gl::Context *context,
 
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(mInternalFormat);
     GLuint inputRowPitch                 = 0;
-    ANGLE_CHECK_HR_MATH(context11, formatInfo.computeRowPitch(type, area.width, unpack.alignment,
+    ANGLE_CHECK_GL_MATH(context11, formatInfo.computeRowPitch(type, area.width, unpack.alignment,
                                                               unpack.rowLength, &inputRowPitch));
     GLuint inputDepthPitch = 0;
-    ANGLE_CHECK_HR_MATH(context11, formatInfo.computeDepthPitch(area.height, unpack.imageHeight,
+    ANGLE_CHECK_GL_MATH(context11, formatInfo.computeDepthPitch(area.height, unpack.imageHeight,
                                                                 inputRowPitch, &inputDepthPitch));
     GLuint inputSkipBytes = 0;
-    ANGLE_CHECK_HR_MATH(context11,
+    ANGLE_CHECK_GL_MATH(context11,
                         formatInfo.computeSkipBytes(type, inputRowPitch, inputDepthPitch, unpack,
                                                     applySkipImages, &inputSkipBytes));
 
@@ -316,10 +316,10 @@ angle::Result Image11::loadCompressedData(const gl::Context *context,
 
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(mInternalFormat);
     GLuint inputRowPitch                 = 0;
-    ANGLE_CHECK_HR_MATH(
+    ANGLE_CHECK_GL_MATH(
         context11, formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0, &inputRowPitch));
     GLuint inputDepthPitch = 0;
-    ANGLE_CHECK_HR_MATH(
+    ANGLE_CHECK_GL_MATH(
         context11, formatInfo.computeDepthPitch(area.height, 0, inputRowPitch, &inputDepthPitch));
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(mDXGIFormat);

@@ -43,11 +43,6 @@ class VertexArrayVk : public VertexArrayImpl
 
     void getPackedInputDescriptions(vk::PipelineDesc *pipelineDesc);
 
-    gl::Error drawElements(const gl::Context *context,
-                           const gl::DrawCallParams &drawCallParams,
-                           vk::CommandBuffer *commandBuffer,
-                           bool shouldApplyVertexArray);
-
     void updateDefaultAttrib(RendererVk *renderer,
                              size_t attribIndex,
                              VkBuffer bufferHandle,
@@ -103,10 +98,6 @@ class VertexArrayVk : public VertexArrayImpl
     void updatePackedInputInfo(uint32_t attribIndex,
                                const gl::VertexBinding &binding,
                                const gl::VertexAttribute &attrib);
-
-    void updateArrayBufferReadDependencies(vk::CommandGraphResource *drawFramebuffer,
-                                           const gl::AttributesMask &activeAttribsMask,
-                                           Serial serial);
 
     angle::Result streamIndexData(ContextVk *contextVk,
                                   GLenum indexType,

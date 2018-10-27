@@ -82,36 +82,39 @@ class Context : angle::NonCopyable
     Context() {}
     virtual ~Context() {}
 
-    virtual void handleError(HRESULT hr,
-                             const char *message,
-                             const char *file,
-                             const char *function,
-                             unsigned int line) = 0;
+    virtual void handleResult(HRESULT hr,
+                              const char *message,
+                              const char *file,
+                              const char *function,
+                              unsigned int line) = 0;
 };
 }  // namespace d3d
 
 // ANGLE_TRY for HRESULT errors.
-#define ANGLE_TRY_HR(CONTEXT, EXPR, MESSAGE)                                                    \
+#define ANGLE_TRY_HR(CONTEXT, EXPR, MESSAGE)                                                     \
     \
-{                                                                                        \
-        auto ANGLE_LOCAL_VAR = (EXPR);                                                          \
-        if (ANGLE_UNLIKELY(FAILED(ANGLE_LOCAL_VAR)))                                            \
-        {                                                                                       \
-            CONTEXT->handleError(ANGLE_LOCAL_VAR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
-            return angle::Result::Stop();                                                       \
-        }                                                                                       \
+{                                                                                         \
+        auto ANGLE_LOCAL_VAR = (EXPR);                                                           \
+        if (ANGLE_UNLIKELY(FAILED(ANGLE_LOCAL_VAR)))                                             \
+        {                                                                                        \
+            CONTEXT->handleResult(ANGLE_LOCAL_VAR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
+            return angle::Result::Stop();                                                        \
+        }                                                                                        \
     \
 }
 
-#define ANGLE_CHECK_HR_ALLOC(context, result) \
-    ANGLE_CHECK(context, result, "Failed to allocate host memory", E_OUTOFMEMORY)
-
-#define ANGLE_CHECK_HR_MATH(context, result) \
-    ANGLE_CHECK(context, result, "Integer overflow.", E_FAIL)
+#define ANGLE_CHECK_HR(CONTEXT, EXPR, MESSAGE, ERROR)                                  \
+    {                                                                                  \
+        if (ANGLE_UNLIKELY(!(EXPR)))                                                   \
+        {                                                                              \
+            CONTEXT->handleResult(ERROR, MESSAGE, __FILE__, ANGLE_FUNCTION, __LINE__); \
+            return angle::Result::Stop();                                              \
+        }                                                                              \
+    }
 
 #define ANGLE_HR_UNREACHABLE(context) \
     UNREACHABLE();                    \
-    ANGLE_CHECK(context, false, "Unreachble code reached.", E_FAIL)
+    ANGLE_CHECK_HR(context, false, "Unreachble code reached.", E_FAIL)
 
 // Check if the device is lost every 10 failures to get the query data
 constexpr unsigned int kPollingD3DDeviceLostCheckFrequency = 10;

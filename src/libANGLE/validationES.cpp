@@ -3132,9 +3132,8 @@ bool ValidateDrawElementsCommon(Context *context,
     if (!context->getExtensions().robustBufferAccessBehavior && count > 0 && primcount > 0)
     {
         // Use the parameter buffer to retrieve and cache the index range.
-        const DrawCallParams &params = context->getParams<DrawCallParams>();
-        ANGLE_VALIDATION_TRY(params.ensureIndexRangeResolved(context));
-        const IndexRange &indexRange = params.getIndexRange();
+        IndexRange indexRange;
+        ANGLE_VALIDATION_TRY(vao->getIndexRange(context, type, count, indices, &indexRange));
 
         // If we use an index greater than our maximum supported index range, return an error.
         // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should always

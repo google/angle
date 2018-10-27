@@ -42,7 +42,7 @@ angle::Result Buffer9::setData(const gl::Context *context,
 {
     if (size > mMemory.size())
     {
-        ANGLE_CHECK_HR_ALLOC(GetImplAs<Context9>(context), mMemory.resize(size));
+        ANGLE_CHECK_GL_ALLOC(GetImplAs<Context9>(context), mMemory.resize(size));
     }
 
     mSize = size;
@@ -72,7 +72,7 @@ angle::Result Buffer9::setSubData(const gl::Context *context,
 {
     if (offset + size > mMemory.size())
     {
-        ANGLE_CHECK_HR_ALLOC(GetImplAs<Context9>(context), mMemory.resize(size + offset));
+        ANGLE_CHECK_GL_ALLOC(GetImplAs<Context9>(context), mMemory.resize(size + offset));
     }
 
     mSize = std::max(mSize, offset + size);

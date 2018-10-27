@@ -153,11 +153,11 @@ class Context9 : public ContextD3D
                                        gl::TextureType type,
                                        gl::Texture **textureOut);
 
-    void handleError(HRESULT hr,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line) override;
+    void handleResult(HRESULT hr,
+                      const char *message,
+                      const char *file,
+                      const char *function,
+                      unsigned int line) override;
 
   private:
     Renderer9 *mRenderer;

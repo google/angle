@@ -96,7 +96,7 @@ angle::Result StreamInIndexBuffer(const gl::Context *context,
 
     bool check = (count > (std::numeric_limits<unsigned int>::max() >> dstTypeInfo.bytesShift));
     ANGLE_CHECK(GetImplAs<ContextD3D>(context), !check,
-                "Reserving indices exceeds the maximum buffer size.", E_OUTOFMEMORY);
+                "Reserving indices exceeds the maximum buffer size.", GL_OUT_OF_MEMORY);
 
     unsigned int bufferSizeRequired = count << dstTypeInfo.bytesShift;
     ANGLE_TRY(buffer->reserveBufferSpace(context, bufferSizeRequired, dstType));
@@ -318,8 +318,10 @@ angle::Result GetIndexTranslationDestType(const gl::Context *context,
             return angle::Result::Continue();
         }
 
-        ANGLE_TRY_HANDLE(context, drawCallParams.ensureIndexRangeResolved(context));
-        const gl::IndexRange &indexRange = drawCallParams.getIndexRange();
+        gl::IndexRange indexRange;
+        ANGLE_TRY_HANDLE(context, context->getGLState().getVertexArray()->getIndexRange(
+                                      context, drawCallParams.type(), drawCallParams.indexCount(),
+                                      drawCallParams.indices(), &indexRange));
         if (indexRange.end == gl::GetPrimitiveRestartIndex(drawCallParams.type()))
         {
             *destTypeOut = GL_UNSIGNED_INT;

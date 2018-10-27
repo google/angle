@@ -17,6 +17,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Texture.h"
+#include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/validationES.h"
 
@@ -1432,11 +1433,10 @@ bool ValidateDrawRangeElements(Context *context,
         return true;
     }
 
-    // Use the parameter buffer to retrieve and cache the index range.
-    const DrawCallParams &params = context->getParams<DrawCallParams>();
-    ANGLE_VALIDATION_TRY(params.ensureIndexRangeResolved(context));
-
-    const IndexRange &indexRange = params.getIndexRange();
+    // Note that resolving the index range is a bit slow. We should probably optimize this.
+    IndexRange indexRange;
+    ANGLE_VALIDATION_TRY(context->getGLState().getVertexArray()->getIndexRange(
+        context, type, count, indices, &indexRange));
 
     if (indexRange.end > end || indexRange.start < start)
     {

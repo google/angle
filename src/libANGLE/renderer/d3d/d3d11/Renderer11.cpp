@@ -1230,7 +1230,8 @@ angle::Result Renderer11::finish(Context11 *context11)
         if (checkDeviceLost && testDeviceLost())
         {
             mDisplay->notifyDeviceLost();
-            ANGLE_CHECK(context11, false, "Device was lost while waiting for sync.", E_OUTOFMEMORY);
+            ANGLE_CHECK(context11, false, "Device was lost while waiting for sync.",
+                        GL_OUT_OF_MEMORY);
         }
     } while (result == S_FALSE);
 
@@ -1530,7 +1531,9 @@ angle::Result Renderer11::drawArrays(const gl::Context *context, const gl::DrawC
     return angle::Result::Continue();
 }
 
-angle::Result Renderer11::drawElements(const gl::Context *context, const gl::DrawCallParams &params)
+angle::Result Renderer11::drawElements(const gl::Context *context,
+                                       const gl::DrawCallParams &params,
+                                       GLint startVertex)
 {
     if (mStateManager.getCullEverything())
     {
@@ -1544,8 +1547,7 @@ angle::Result Renderer11::drawElements(const gl::Context *context, const gl::Dra
 
     // If this draw call is coming from an indirect call, offset by the indirect call's base vertex.
     // No base vertex parameter exists for a normal drawElements, so params.baseVertex will be zero.
-    int startVertex = static_cast<int>(params.firstVertex() - params.baseVertex());
-    int baseVertex  = -startVertex;
+    int baseVertex = -startVertex;
 
     const ProgramD3D *programD3D  = mStateManager.getProgramD3D();
     GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(programD3D, params.instances());
@@ -1600,7 +1602,11 @@ angle::Result Renderer11::drawElements(const gl::Context *context, const gl::Dra
     // efficent code path. Instanced rendering of emulated pointsprites requires a loop to draw each
     // batch of points. An offset into the instanced data buffer is calculated and applied on each
     // iteration to ensure all instances are rendered correctly.
-    UINT clampedVertexCount = params.getClampedVertexCount<UINT>();
+    gl::IndexRange indexRange;
+    ANGLE_TRY(glState.getVertexArray()->getIndexRange(context, params.type(), params.indexCount(),
+                                                      params.indices(), &indexRange));
+
+    UINT clampedVertexCount = gl::clampCast<UINT>(indexRange.vertexCount());
 
     // Each instance being rendered requires the inputlayout cache to reapply buffers and offsets.
     for (GLsizei i = 0; i < params.instances(); i++)
@@ -1696,7 +1702,7 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
     ANGLE_CHECK(GetImplAs<Context11>(context), !indexCheck,
                 "Failed to create a 32-bit looping index buffer for "
                 "GL_LINE_LOOP, too many indices required.",
-                E_OUTOFMEMORY);
+                GL_OUT_OF_MEMORY);
 
     GetLineLoopIndices(indices, type, static_cast<GLuint>(count),
                        glState.isPrimitiveRestartEnabled(), &mScratchIndexDataBuffer);
@@ -1777,7 +1783,7 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
     ANGLE_CHECK(GetImplAs<Context11>(context), !indexCheck,
                 "Failed to create a scratch index buffer for GL_TRIANGLE_FAN, "
                 "too many indices required.",
-                E_OUTOFMEMORY);
+                GL_OUT_OF_MEMORY);
 
     GetTriFanIndices(indexPointer, type, count, glState.isPrimitiveRestartEnabled(),
                      &mScratchIndexDataBuffer);
@@ -3645,7 +3651,7 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
     unsigned int elementSize = dxgiFormatInfo.pixelBytes;
     bool check = (elementSize > std::numeric_limits<unsigned int>::max() / elementCount);
     ANGLE_CHECK(GetImplAs<Context11>(context), !check,
-                "New vertex buffer size would result in an overflow.", E_OUTOFMEMORY);
+                "New vertex buffer size would result in an overflow.", GL_OUT_OF_MEMORY);
 
     *bytesRequiredOut = elementSize * elementCount;
     return angle::Result::Continue();
@@ -3684,7 +3690,7 @@ angle::Result Renderer11::getScratchMemoryBuffer(Context11 *context11,
                                                  size_t requestedSize,
                                                  angle::MemoryBuffer **bufferOut)
 {
-    ANGLE_CHECK_HR_ALLOC(context11, mScratchMemoryBuffer.get(requestedSize, bufferOut));
+    ANGLE_CHECK_GL_ALLOC(context11, mScratchMemoryBuffer.get(requestedSize, bufferOut));
     return angle::Result::Continue();
 }
 

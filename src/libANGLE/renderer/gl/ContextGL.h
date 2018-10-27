@@ -211,12 +211,6 @@ class ContextGL : public ContextImpl
     angle::Result memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
     angle::Result memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
-    void handleError(GLenum errorCode,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line);
-
   private:
     angle::Result setDrawArraysState(const gl::Context *context,
                                      GLint first,

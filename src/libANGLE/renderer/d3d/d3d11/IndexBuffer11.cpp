@@ -69,13 +69,13 @@ angle::Result IndexBuffer11::mapBuffer(const gl::Context *context,
                                        void **outMappedMemory)
 {
     Context11 *context11 = GetImplAs<Context11>(context);
-    ANGLE_CHECK(context11, mBuffer.valid(), "Internal index buffer is not initialized.",
-                E_OUTOFMEMORY);
+    ANGLE_CHECK_HR(context11, mBuffer.valid(), "Internal index buffer is not initialized.",
+                   E_OUTOFMEMORY);
 
     // Check for integer overflows and out-out-bounds map requests
     bool outOfBounds = (offset + size < offset || offset + size > mBufferSize);
-    ANGLE_CHECK(context11, !outOfBounds, "Index buffer map range is not inside the buffer.",
-                E_OUTOFMEMORY);
+    ANGLE_CHECK_HR(context11, !outOfBounds, "Index buffer map range is not inside the buffer.",
+                   E_OUTOFMEMORY);
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     ANGLE_TRY(mRenderer->mapResource(context, mBuffer.get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0,
@@ -88,8 +88,8 @@ angle::Result IndexBuffer11::mapBuffer(const gl::Context *context,
 angle::Result IndexBuffer11::unmapBuffer(const gl::Context *context)
 {
     Context11 *context11 = GetImplAs<Context11>(context);
-    ANGLE_CHECK(context11, mBuffer.valid(), "Internal index buffer is not initialized.",
-                E_OUTOFMEMORY);
+    ANGLE_CHECK_HR(context11, mBuffer.valid(), "Internal index buffer is not initialized.",
+                   E_OUTOFMEMORY);
 
     ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
     dxContext->Unmap(mBuffer.get(), 0);
@@ -121,8 +121,8 @@ angle::Result IndexBuffer11::setSize(const gl::Context *context,
 angle::Result IndexBuffer11::discard(const gl::Context *context)
 {
     Context11 *context11 = GetImplAs<Context11>(context);
-    ANGLE_CHECK(context11, mBuffer.valid(), "Internal index buffer is not initialized.",
-                E_OUTOFMEMORY);
+    ANGLE_CHECK_HR(context11, mBuffer.valid(), "Internal index buffer is not initialized.",
+                   E_OUTOFMEMORY);
 
     ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
 

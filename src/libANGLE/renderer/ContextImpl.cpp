@@ -122,4 +122,17 @@ void ContextImpl::setErrorSet(gl::ErrorSet *errorSet)
 {
     mErrors = errorSet;
 }
+
+void ContextImpl::handleError(GLenum errorCode,
+                              const char *message,
+                              const char *file,
+                              const char *function,
+                              unsigned int line)
+{
+    std::stringstream errorStream;
+    errorStream << "Internal error: " << gl::FmtHex(errorCode) << ", in " << file << ", "
+                << function << ":" << line << ". " << message;
+
+    mErrors->handleError(gl::Error(errorCode, errorCode, errorStream.str()));
+}
 }  // namespace rx

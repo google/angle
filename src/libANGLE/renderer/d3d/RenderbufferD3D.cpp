@@ -63,7 +63,7 @@ angle::Result RenderbufferD3D::setStorageMultisample(const gl::Context *context,
     // Because ES 3.0 already knows the exact number of supported samples, it would already have been
     // validated and generated GL_INVALID_VALUE.
     const gl::TextureCaps &formatCaps = mRenderer->getNativeTextureCaps().get(creationFormat);
-    ANGLE_CHECK_HR_ALLOC(GetImplAs<ContextD3D>(context), samples <= formatCaps.getMaxSamples());
+    ANGLE_CHECK_GL_ALLOC(GetImplAs<ContextD3D>(context), samples <= formatCaps.getMaxSamples());
 
     RenderTargetD3D *newRT = nullptr;
     ANGLE_TRY(mRenderer->createRenderTarget(context, static_cast<int>(width),

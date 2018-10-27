@@ -37,6 +37,7 @@ class AttributeMap;
 
 namespace rx
 {
+class ContextImpl;
 
 class ResourceSerial
 {
@@ -272,6 +273,20 @@ template <typename NonFloatT>
 void GetMatrixUniform(GLenum type, NonFloatT *dataOut, const NonFloatT *source, bool transpose);
 
 const angle::Format &GetFormatFromFormatType(GLenum format, GLenum type);
+
+angle::Result ComputeStartVertex(ContextImpl *contextImpl,
+                                 const gl::IndexRange &indexRange,
+                                 GLint baseVertex,
+                                 GLint *firstVertexOut);
+
+angle::Result GetVertexRangeInfo(const gl::Context *context,
+                                 GLint firstVertex,
+                                 GLsizei vertexOrIndexCount,
+                                 GLenum indexTypeOrNone,
+                                 const void *indices,
+                                 GLint baseVertex,
+                                 GLint *startVertexOut,
+                                 size_t *vertexCountOut);
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_RENDERER_UTILS_H_

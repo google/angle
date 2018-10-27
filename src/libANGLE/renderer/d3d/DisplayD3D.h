@@ -72,11 +72,11 @@ class DisplayD3D : public DisplayImpl, public d3d::Context
     egl::Error waitNative(const gl::Context *context, EGLint engine) override;
     gl::Version getMaxSupportedESVersion() const override;
 
-    void handleError(HRESULT hr,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line) override;
+    void handleResult(HRESULT hr,
+                      const char *message,
+                      const char *file,
+                      const char *function,
+                      unsigned int line) override;
 
     const std::string &getStoredErrorString() const { return mStoredErrorString; }
 

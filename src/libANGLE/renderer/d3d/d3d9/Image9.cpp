@@ -488,7 +488,7 @@ angle::Result Image9::loadData(const gl::Context *context,
 
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(mInternalFormat);
     GLuint inputRowPitch                 = 0;
-    ANGLE_CHECK_HR_MATH(context9, formatInfo.computeRowPitch(type, area.width, unpack.alignment,
+    ANGLE_CHECK_GL_MATH(context9, formatInfo.computeRowPitch(type, area.width, unpack.alignment,
                                                              unpack.rowLength, &inputRowPitch));
     ASSERT(!applySkipImages);
     ASSERT(unpack.skipPixels == 0);
@@ -526,11 +526,11 @@ angle::Result Image9::loadCompressedData(const gl::Context *context,
 
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(mInternalFormat);
     GLuint inputRowPitch                 = 0;
-    ANGLE_CHECK_HR_MATH(
+    ANGLE_CHECK_GL_MATH(
         context9, formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0, &inputRowPitch));
 
     GLuint inputDepthPitch = 0;
-    ANGLE_CHECK_HR_MATH(
+    ANGLE_CHECK_GL_MATH(
         context9, formatInfo.computeDepthPitch(area.height, 0, inputRowPitch, &inputDepthPitch));
 
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(mInternalFormat);

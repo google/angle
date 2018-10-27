@@ -158,7 +158,8 @@ angle::Result HLSLCompiler::ensureInitialized(d3d::Context *context)
     mD3DDisassembleFunc = reinterpret_cast<pD3DDisassemble>(D3DDisassemble);
 #endif
 
-    ANGLE_CHECK(context, mD3DCompileFunc, "Error finding D3DCompile entry point.", E_OUTOFMEMORY);
+    ANGLE_CHECK_HR(context, mD3DCompileFunc, "Error finding D3DCompile entry point.",
+                   E_OUTOFMEMORY);
 
     mInitialized = true;
     return angle::Result::Continue();

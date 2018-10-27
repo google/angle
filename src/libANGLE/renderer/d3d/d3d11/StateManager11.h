@@ -211,7 +211,9 @@ class StateManager11 final : angle::NonCopyable
 
     void setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT stride, UINT offset);
 
-    angle::Result updateState(const gl::Context *context, const gl::DrawCallParams &drawCallParams);
+    angle::Result updateState(const gl::Context *context,
+                              const gl::DrawCallParams &drawCallParams,
+                              GLint firstVertex);
 
     void setShaderResourceShared(gl::ShaderType shaderType,
                                  UINT resourceSlot,
@@ -359,12 +361,14 @@ class StateManager11 final : angle::NonCopyable
 
     bool syncIndexBuffer(ID3D11Buffer *buffer, DXGI_FORMAT indexFormat, unsigned int offset);
     angle::Result syncVertexBuffersAndInputLayout(const gl::Context *context,
-                                                  const gl::DrawCallParams &vertexParams);
+                                                  const gl::DrawCallParams &vertexParams,
+                                                  GLint firstVertex);
 
     bool setInputLayoutInternal(const d3d11::InputLayout *inputLayout);
 
     angle::Result applyVertexBuffers(const gl::Context *context,
-                                     const gl::DrawCallParams &drawCallParams);
+                                     const gl::DrawCallParams &drawCallParams,
+                                     GLint firstVertex);
     // TODO(jmadill): Migrate to d3d11::Buffer.
     bool queueVertexBufferChange(size_t bufferIndex,
                                  ID3D11Buffer *buffer,

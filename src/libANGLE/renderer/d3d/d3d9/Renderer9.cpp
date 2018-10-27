@@ -1378,11 +1378,11 @@ angle::Result Renderer9::drawElementsImpl(const gl::Context *context,
 
     ANGLE_TRY(applyIndexBuffer(context, indices, count, mode, type, &indexInfo));
 
-    const auto &drawCallParams = context->getParams<gl::DrawCallParams>();
-    ANGLE_TRY_HANDLE(context, drawCallParams.ensureIndexRangeResolved(context));
+    gl::IndexRange indexRange;
+    ANGLE_TRY(context->getGLState().getVertexArray()->getIndexRange(context, type, count, indices,
+                                                                    &indexRange));
 
-    const gl::IndexRange &indexRange = drawCallParams.getIndexRange();
-    size_t vertexCount               = indexRange.vertexCount();
+    size_t vertexCount = indexRange.vertexCount();
     ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexRange.start),
                                 static_cast<GLsizei>(vertexCount), instances, &indexInfo));
 
@@ -1449,7 +1449,7 @@ angle::Result Renderer9::drawLineLoop(const gl::Context *context,
                         (std::numeric_limits<unsigned int>::max() / sizeof(unsigned int)),
                     "Failed to create a 32-bit looping index buffer for "
                     "GL_LINE_LOOP, too many indices required.",
-                    E_OUTOFMEMORY);
+                    GL_OUT_OF_MEMORY);
 
         const unsigned int spaceNeeded =
             (static_cast<unsigned int>(count) + 1) * sizeof(unsigned int);
@@ -1515,7 +1515,7 @@ angle::Result Renderer9::drawLineLoop(const gl::Context *context,
                         (std::numeric_limits<unsigned short>::max() / sizeof(unsigned short)),
                     "Failed to create a 16-bit looping index buffer for "
                     "GL_LINE_LOOP, too many indices required.",
-                    E_OUTOFMEMORY);
+                    GL_OUT_OF_MEMORY);
 
         const unsigned int spaceNeeded =
             (static_cast<unsigned int>(count) + 1) * sizeof(unsigned short);
@@ -2941,7 +2941,7 @@ angle::Result Renderer9::getVertexSpaceRequired(const gl::Context *context,
     bool check = (d3d9VertexInfo.outputElementSize >
                   std::numeric_limits<unsigned int>::max() / elementCount);
     ANGLE_CHECK(GetImplAs<Context9>(context), !check,
-                "New vertex buffer size would result in an overflow.", E_OUTOFMEMORY);
+                "New vertex buffer size would result in an overflow.", GL_OUT_OF_MEMORY);
 
     *bytesRequiredOut = static_cast<unsigned int>(d3d9VertexInfo.outputElementSize) * elementCount;
     return angle::Result::Continue();

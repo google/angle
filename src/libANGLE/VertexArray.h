@@ -255,6 +255,21 @@ class VertexArray final : public angle::ObserverInterface,
     void onBindingChanged(const Context *context, int incr);
     bool hasTransformFeedbackBindingConflict(const gl::Context *context) const;
 
+    ANGLE_INLINE angle::Result getIndexRange(const Context *context,
+                                             GLenum type,
+                                             GLsizei indexCount,
+                                             const void *indices,
+                                             IndexRange *indexRangeOut) const
+    {
+        Buffer *elementArrayBuffer = mState.mElementArrayBuffer.get();
+        if (elementArrayBuffer && mIndexRangeCache.get(type, indexCount, indices, indexRangeOut))
+        {
+            return angle::Result::Continue();
+        }
+
+        return getIndexRangeImpl(context, type, indexCount, indices, indexRangeOut);
+    }
+
   private:
     ~VertexArray() override;
 
@@ -275,6 +290,12 @@ class VertexArray final : public angle::ObserverInterface,
     void updateCachedTransformFeedbackBindingValidation(size_t bindingIndex, const Buffer *buffer);
     void updateCachedMappedArrayBuffers(VertexBinding *binding);
 
+    angle::Result getIndexRangeImpl(const Context *context,
+                                    GLenum type,
+                                    GLsizei indexCount,
+                                    const void *indices,
+                                    IndexRange *indexRangeOut) const;
+
     GLuint mId;
 
     VertexArrayState mState;
@@ -288,6 +309,36 @@ class VertexArray final : public angle::ObserverInterface,
     std::vector<angle::ObserverBinding> mArrayBufferObserverBindings;
 
     AttributesMask mCachedTransformFeedbackConflictedBindingsMask;
+
+    class IndexRangeCache final : angle::NonCopyable
+    {
+      public:
+        IndexRangeCache();
+
+        void invalidate() { mTypeKey = GL_NONE; }
+
+        bool get(GLenum type, GLsizei indexCount, const void *indices, IndexRange *indexRangeOut)
+        {
+            size_t offset = reinterpret_cast<uintptr_t>(indices);
+            if (mTypeKey == type && mIndexCountKey == indexCount && mOffsetKey == offset)
+            {
+                *indexRangeOut = mPayload;
+                return true;
+            }
+
+            return false;
+        }
+
+        void put(GLenum type, GLsizei indexCount, size_t offset, const IndexRange &indexRange);
+
+      private:
+        GLenum mTypeKey;
+        GLsizei mIndexCountKey;
+        size_t mOffsetKey;
+        IndexRange mPayload;
+    };
+
+    mutable IndexRangeCache mIndexRangeCache;
 };
 
 }  // namespace gl

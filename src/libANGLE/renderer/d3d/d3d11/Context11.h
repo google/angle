@@ -161,18 +161,19 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
     gl::Error initializeMultisampleTextureToBlack(const gl::Context *context,
                                                   gl::Texture *glTexture) override;
 
-    void handleError(HRESULT hr,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line) override;
-
-    // TODO(jmadill): Remove this once refactor is complete. http://anglebug.com/2738
-    void handleError(const gl::Error &error);
+    void handleResult(HRESULT hr,
+                      const char *message,
+                      const char *file,
+                      const char *function,
+                      unsigned int line) override;
 
   private:
-    angle::Result prepareForDrawCall(const gl::Context *context,
-                                     const gl::DrawCallParams &drawCallParams);
+    angle::Result drawElementsImpl(const gl::Context *context,
+                                   gl::PrimitiveMode mode,
+                                   GLsizei indexCount,
+                                   GLenum indexType,
+                                   const void *indices,
+                                   GLsizei instanceCount);
 
     Renderer11 *mRenderer;
     IncompleteTextureSet mIncompleteTextures;

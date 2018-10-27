@@ -478,7 +478,7 @@ angle::Result ContextVk::drawArrays(const gl::Context *context,
     else
     {
         ANGLE_TRY(setupDraw(context, drawCallParams, mNonIndexedDirtyBitsMask, &commandBuffer));
-        commandBuffer->draw(clampedVertexCount, 1, drawCallParams.firstVertex(), 0);
+        commandBuffer->draw(clampedVertexCount, 1, first, 0);
     }
 
     return angle::Result::Continue();

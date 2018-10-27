@@ -175,6 +175,7 @@ void State::setGenericBufferBinding<BufferBinding::ElementArray>(const Context *
         buffer->addRef();
     }
     mVertexArray->mDirtyBits.set(VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
+    mVertexArray->mIndexRangeCache.invalidate();
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 

@@ -141,7 +141,7 @@ angle::Result TranslatedAttribute::computeOffset(const gl::Context *context,
     CheckedNumeric<unsigned int> checkedStride(stride);
 
     offset += checkedStride * static_cast<unsigned int>(startVertex);
-    ANGLE_CHECK_HR_MATH(GetImplAs<ContextD3D>(context), offset.IsValid());
+    ANGLE_CHECK_GL_MATH(GetImplAs<ContextD3D>(context), offset.IsValid());
     *offsetOut = offset.ValueOrDie();
     return angle::Result::Continue();
 }
@@ -382,7 +382,7 @@ angle::Result VertexDataManager::StoreStaticAttrib(const gl::Context *context,
     CheckedNumeric<unsigned int> checkedOffset(streamOffset);
     checkedOffset += firstElementOffset;
 
-    ANGLE_CHECK_HR_MATH(GetImplAs<ContextD3D>(context), checkedOffset.IsValid());
+    ANGLE_CHECK_GL_MATH(GetImplAs<ContextD3D>(context), checkedOffset.IsValid());
 
     translated->vertexBuffer.set(vertexBuffer);
     translated->serial = vertexBuffer->getSerial();
@@ -491,7 +491,7 @@ angle::Result VertexDataManager::reserveSpaceForAttrib(const gl::Context *contex
             ElementsInBuffer(attrib, binding, static_cast<unsigned int>(bufferD3D->getSize()));
 
         ANGLE_CHECK(GetImplAs<ContextD3D>(context), maxVertexCount <= elementsInBuffer,
-                    "Vertex buffer is not big enough for the draw call.", E_FAIL);
+                    "Vertex buffer is not big enough for the draw call.", GL_INVALID_OPERATION);
     }
     return mStreamingBuffer.reserveVertexSpace(context, attrib, binding, totalCount, instances);
 }

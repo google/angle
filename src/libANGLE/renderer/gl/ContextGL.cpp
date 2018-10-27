@@ -591,17 +591,4 @@ angle::Result ContextGL::memoryBarrierByRegion(const gl::Context *context, GLbit
 {
     return mRenderer->memoryBarrierByRegion(barriers);
 }
-
-void ContextGL::handleError(GLenum errorCode,
-                            const char *message,
-                            const char *file,
-                            const char *function,
-                            unsigned int line)
-{
-    std::stringstream errorStream;
-    errorStream << "Internal OpenGL error: " << gl::FmtHex(errorCode) << ", in " << file << ", "
-                << function << ":" << line << ". " << message;
-
-    mErrors->handleError(gl::Error(errorCode, errorCode, errorStream.str()));
-}
 }  // namespace rx

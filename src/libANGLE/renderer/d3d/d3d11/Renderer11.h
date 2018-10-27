@@ -400,7 +400,9 @@ class Renderer11 : public RendererD3D
     DeviceImpl *createEGLDevice() override;
 
     angle::Result drawArrays(const gl::Context *context, const gl::DrawCallParams &params);
-    angle::Result drawElements(const gl::Context *context, const gl::DrawCallParams &params);
+    angle::Result drawElements(const gl::Context *context,
+                               const gl::DrawCallParams &params,
+                               GLint startVertex);
     angle::Result drawArraysIndirect(const gl::Context *context, const gl::DrawCallParams &params);
     angle::Result drawElementsIndirect(const gl::Context *context,
                                        const gl::DrawCallParams &params);

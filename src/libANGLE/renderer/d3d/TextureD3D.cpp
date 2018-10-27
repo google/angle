@@ -359,7 +359,7 @@ angle::Result TextureD3D::fastUnpackPixels(const gl::Context *context,
     bool check = (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 ||
                   unpack.skipImages != 0);
     ANGLE_CHECK(GetImplAs<ContextD3D>(context), !check,
-                "Unimplemented pixel store parameters in fastUnpackPixels", E_FAIL);
+                "Unimplemented pixel store parameters in fastUnpackPixels", GL_INVALID_OPERATION);
 
     // No-op
     if (destArea.width <= 0 && destArea.height <= 0 && destArea.depth <= 0)
@@ -728,7 +728,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
     const auto &formatInfo = gl::GetSizedInternalFormatInfo(image->getInternalFormat());
 
     GLuint imageBytes = 0;
-    ANGLE_CHECK_HR_MATH(contextD3D, formatInfo.computeRowPitch(formatInfo.type, image->getWidth(),
+    ANGLE_CHECK_GL_MATH(contextD3D, formatInfo.computeRowPitch(formatInfo.type, image->getWidth(),
                                                                1, 0, &imageBytes));
     imageBytes *= image->getHeight() * image->getDepth();
 
@@ -736,7 +736,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
     zeroDataUnpackState.alignment = 1;
 
     angle::MemoryBuffer *zeroBuffer = nullptr;
-    ANGLE_CHECK_HR_ALLOC(contextD3D, context->getZeroFilledBuffer(imageBytes, &zeroBuffer));
+    ANGLE_CHECK_GL_ALLOC(contextD3D, context->getZeroFilledBuffer(imageBytes, &zeroBuffer));
 
     if (shouldUseSetData(image))
     {
@@ -3054,7 +3054,7 @@ gl::Error TextureD3D_2DArray::setImage(const gl::Context *context,
     ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
 
     GLuint inputDepthPitch = 0;
-    ANGLE_CHECK_HR_MATH(contextD3D, formatInfo.computeDepthPitch(
+    ANGLE_CHECK_GL_MATH(contextD3D, formatInfo.computeDepthPitch(
                                         type, size.width, size.height, unpack.alignment,
                                         unpack.rowLength, unpack.imageHeight, &inputDepthPitch));
 
@@ -3083,7 +3083,7 @@ gl::Error TextureD3D_2DArray::setSubImage(const gl::Context *context,
     const gl::InternalFormat &formatInfo =
         gl::GetInternalFormatInfo(getInternalFormat(index.getLevelIndex()), type);
     GLuint inputDepthPitch = 0;
-    ANGLE_CHECK_HR_MATH(contextD3D, formatInfo.computeDepthPitch(
+    ANGLE_CHECK_GL_MATH(contextD3D, formatInfo.computeDepthPitch(
                                         type, area.width, area.height, unpack.alignment,
                                         unpack.rowLength, unpack.imageHeight, &inputDepthPitch));
 
@@ -3119,7 +3119,7 @@ gl::Error TextureD3D_2DArray::setCompressedImage(const gl::Context *context,
 
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
     GLuint inputDepthPitch               = 0;
-    ANGLE_CHECK_HR_MATH(
+    ANGLE_CHECK_GL_MATH(
         contextD3D, formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, size.width, size.height, 1, 0, 0,
                                                  &inputDepthPitch));
 
@@ -3148,7 +3148,7 @@ gl::Error TextureD3D_2DArray::setCompressedSubImage(const gl::Context *context,
 
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(format);
     GLuint inputDepthPitch               = 0;
-    ANGLE_CHECK_HR_MATH(
+    ANGLE_CHECK_GL_MATH(
         contextD3D, formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1, 0, 0,
                                                  &inputDepthPitch));
 

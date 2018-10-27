@@ -289,7 +289,14 @@ angle::Result VertexArray11::updateDynamicAttribs(const gl::Context *context,
     const auto &attribs  = mState.getVertexAttributes();
     const auto &bindings = mState.getVertexBindings();
 
-    ANGLE_TRY_HANDLE(context, drawCallParams.ensureIndexRangeResolved(context));
+    GLint startVertex;
+    size_t vertexCount;
+    GLsizei vertexOrIndexCount = drawCallParams.isDrawElements() ? drawCallParams.indexCount()
+                                                                 : drawCallParams.vertexCount();
+    GLenum indexTypeOrNone = drawCallParams.isDrawElements() ? drawCallParams.type() : GL_NONE;
+    ANGLE_TRY(GetVertexRangeInfo(context, drawCallParams.firstVertex(), vertexOrIndexCount,
+                                 indexTypeOrNone, drawCallParams.indices(),
+                                 drawCallParams.baseVertex(), &startVertex, &vertexCount));
 
     for (size_t dynamicAttribIndex : activeDynamicAttribs)
     {
@@ -303,12 +310,12 @@ angle::Result VertexArray11::updateDynamicAttribs(const gl::Context *context,
         dynamicAttrib->divisor = dynamicAttrib->binding->getDivisor() * mAppliedNumViewsToDivisor;
     }
 
-    ANGLE_TRY(vertexDataManager->storeDynamicAttribs(
-        context, &mTranslatedAttribs, activeDynamicAttribs, drawCallParams.firstVertex(),
-        drawCallParams.vertexCount(), drawCallParams.instances()));
+    ANGLE_TRY(vertexDataManager->storeDynamicAttribs(context, &mTranslatedAttribs,
+                                                     activeDynamicAttribs, startVertex, vertexCount,
+                                                     drawCallParams.instances()));
 
     VertexDataManager::PromoteDynamicAttribs(context, mTranslatedAttribs, activeDynamicAttribs,
-                                             drawCallParams.vertexCount());
+                                             vertexCount);
 
     return angle::Result::Continue();
 }

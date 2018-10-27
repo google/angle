@@ -76,7 +76,8 @@ angle::Result IndexBufferInterface::mapBuffer(const gl::Context *context,
     // Protect against integer overflow
     bool check = (mWritePosition + size < mWritePosition);
     ANGLE_CHECK(GetImplAs<ContextD3D>(context), !check,
-                "Mapping of internal index buffer would cause an integer overflow.", E_OUTOFMEMORY);
+                "Mapping of internal index buffer would cause an integer overflow.",
+                GL_OUT_OF_MEMORY);
 
     angle::Result error = mIndexBuffer->mapBuffer(context, mWritePosition, size, outMappedMemory);
     if (error == angle::Result::Stop())
