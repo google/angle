@@ -86,6 +86,17 @@ if (build_with_chromium) {
   }
 }
 
+# This config adds build-ids to the associated library.
+# -Wl is a special option that indicates that clang should pass the associated
+# option --build-id to the linker. This will cause a build-id section to be added
+# to the associated library. The build-id makes it possible for a debugger to
+# find the right symbol file to use.
+config("build_id_config") {
+  if (is_clang) {
+    ldflags = [ "-Wl,--build-id" ]
+  }
+}
+
 test("angle_unittests") {
   include_dirs = [ "$angle_root/src" ]
 
@@ -124,6 +135,7 @@ if (is_win || is_linux || is_mac || is_android) {
 
     if (is_android) {
       use_native_activity = true
+      configs += [ ":build_id_config" ]
     }
 
     sources = angle_end2end_tests_sources
