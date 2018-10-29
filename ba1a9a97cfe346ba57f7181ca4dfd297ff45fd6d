@@ -46,6 +46,30 @@
       "revId": "ba1a9a97cfe346ba57f7181ca4dfd297ff45fd6d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f28824ea_40336caf",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 996,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2018-10-29T20:35:00Z",
+      "side": 1,
+      "message": "Wow, the spec is pretty inconsistent. This doesn\u0027t make any sense combined with the rest of paragraph 9.4.2 in ES3.2 spec.",
+      "parentUuid": "14626bd2_ae3857b6",
+      "range": {
+        "startLine": 996,
+        "startChar": 19,
+        "endLine": 996,
+        "endChar": 20
+      },
+      "revId": "ba1a9a97cfe346ba57f7181ca4dfd297ff45fd6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
