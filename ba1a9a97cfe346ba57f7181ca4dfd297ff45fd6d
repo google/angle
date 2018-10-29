@@ -70,6 +70,30 @@
       "revId": "ba1a9a97cfe346ba57f7181ca4dfd297ff45fd6d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2da9b309_ac66ed38",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 996,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2018-10-29T20:37:52Z",
+      "side": 1,
+      "message": "I think it mistakenly overloads the meaning of the word \u0027error\u0027. Error in this case means an internal error. Something like a lost device. All the rest are really just various completeness/incompleteness values.\n\nBut yes.",
+      "parentUuid": "f28824ea_40336caf",
+      "range": {
+        "startLine": 996,
+        "startChar": 19,
+        "endLine": 996,
+        "endChar": 20
+      },
+      "revId": "ba1a9a97cfe346ba57f7181ca4dfd297ff45fd6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
