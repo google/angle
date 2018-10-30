@@ -82,23 +82,11 @@ const char *GetResourceTypeName(CommandGraphResourceType resourceType,
 
 // CommandGraphResource implementation.
 CommandGraphResource::CommandGraphResource(CommandGraphResourceType resourceType)
-    : mCurrentWritingNode(nullptr), mResourceType(resourceType)
+    : mResourceType(resourceType), mCurrentWritingNode(nullptr)
 {
 }
 
 CommandGraphResource::~CommandGraphResource() = default;
-
-void CommandGraphResource::updateQueueSerial(Serial queueSerial)
-{
-    ASSERT(queueSerial >= mStoredQueueSerial);
-
-    if (queueSerial > mStoredQueueSerial)
-    {
-        mCurrentWritingNode = nullptr;
-        mCurrentReadingNodes.clear();
-        mStoredQueueSerial = queueSerial;
-    }
-}
 
 bool CommandGraphResource::isResourceInUse(RendererVk *renderer) const
 {
@@ -117,14 +105,34 @@ Serial CommandGraphResource::getStoredQueueSerial() const
     return mStoredQueueSerial;
 }
 
-angle::Result CommandGraphResource::recordCommands(Context *context,
-                                                   CommandBuffer **commandBufferOut)
+// RecordableGraphResource implementation.
+RecordableGraphResource::RecordableGraphResource(CommandGraphResourceType resourceType)
+    : CommandGraphResource(resourceType)
+{
+}
+
+RecordableGraphResource::~RecordableGraphResource() = default;
+
+void RecordableGraphResource::updateQueueSerial(Serial queueSerial)
+{
+    ASSERT(queueSerial >= mStoredQueueSerial);
+
+    if (queueSerial > mStoredQueueSerial)
+    {
+        mCurrentWritingNode = nullptr;
+        mCurrentReadingNodes.clear();
+        mStoredQueueSerial = queueSerial;
+    }
+}
+
+angle::Result RecordableGraphResource::recordCommands(Context *context,
+                                                      CommandBuffer **commandBufferOut)
 {
     updateQueueSerial(context->getRenderer()->getCurrentQueueSerial());
 
     if (!hasChildlessWritingNode() || hasStartedRenderPass())
     {
-        startNewCommands(context->getRenderer(), CommandGraphNodeFunction::Generic);
+        startNewCommands(context->getRenderer());
         return mCurrentWritingNode->beginOutsideRenderPassRecording(
             context, context->getRenderer()->getCommandPool(), commandBufferOut);
     }
@@ -143,8 +151,8 @@ angle::Result CommandGraphResource::recordCommands(Context *context,
     return angle::Result::Continue();
 }
 
-bool CommandGraphResource::appendToStartedRenderPass(RendererVk *renderer,
-                                                     CommandBuffer **commandBufferOut)
+bool RecordableGraphResource::appendToStartedRenderPass(RendererVk *renderer,
+                                                        CommandBuffer **commandBufferOut)
 {
     updateQueueSerial(renderer->getCurrentQueueSerial());
     if (hasStartedRenderPass())
@@ -158,23 +166,23 @@ bool CommandGraphResource::appendToStartedRenderPass(RendererVk *renderer,
     }
 }
 
-const gl::Rectangle &CommandGraphResource::getRenderPassRenderArea() const
+const gl::Rectangle &RecordableGraphResource::getRenderPassRenderArea() const
 {
     ASSERT(hasStartedRenderPass());
     return mCurrentWritingNode->getRenderPassRenderArea();
 }
 
-angle::Result CommandGraphResource::beginRenderPass(Context *context,
-                                                    const Framebuffer &framebuffer,
-                                                    const gl::Rectangle &renderArea,
-                                                    const RenderPassDesc &renderPassDesc,
-                                                    const std::vector<VkClearValue> &clearValues,
-                                                    CommandBuffer **commandBufferOut)
+angle::Result RecordableGraphResource::beginRenderPass(Context *context,
+                                                       const Framebuffer &framebuffer,
+                                                       const gl::Rectangle &renderArea,
+                                                       const RenderPassDesc &renderPassDesc,
+                                                       const std::vector<VkClearValue> &clearValues,
+                                                       CommandBuffer **commandBufferOut)
 {
     // If a barrier has been inserted in the meantime, stop the command buffer.
     if (!hasChildlessWritingNode())
     {
-        startNewCommands(context->getRenderer(), CommandGraphNodeFunction::Generic);
+        startNewCommands(context->getRenderer());
     }
 
     // Hard-code RenderPass to clear the first render target to the current clear value.
@@ -184,44 +192,7 @@ angle::Result CommandGraphResource::beginRenderPass(Context *context,
     return mCurrentWritingNode->beginInsideRenderPassRecording(context, commandBufferOut);
 }
 
-void CommandGraphResource::beginQuery(Context *context,
-                                      const QueryPool *queryPool,
-                                      uint32_t queryIndex)
-{
-    startNewCommands(context->getRenderer(), CommandGraphNodeFunction::BeginQuery);
-    mCurrentWritingNode->setQueryPool(queryPool, queryIndex);
-}
-
-void CommandGraphResource::endQuery(Context *context,
-                                    const QueryPool *queryPool,
-                                    uint32_t queryIndex)
-{
-    startNewCommands(context->getRenderer(), CommandGraphNodeFunction::EndQuery);
-    mCurrentWritingNode->setQueryPool(queryPool, queryIndex);
-}
-
-void CommandGraphResource::writeTimestamp(Context *context,
-                                          const QueryPool *queryPool,
-                                          uint32_t queryIndex)
-{
-    startNewCommands(context->getRenderer(), CommandGraphNodeFunction::WriteTimestamp);
-    mCurrentWritingNode->setQueryPool(queryPool, queryIndex);
-}
-
-void CommandGraphResource::finishCurrentCommands(RendererVk *renderer)
-{
-    startNewCommands(renderer, CommandGraphNodeFunction::Generic);
-}
-
-void CommandGraphResource::startNewCommands(RendererVk *renderer, CommandGraphNodeFunction function)
-{
-    bool isBarrier                = function != CommandGraphNodeFunction::Generic;
-    CommandGraphNode *newCommands = renderer->getCommandGraph()->allocateNode(isBarrier, function);
-    newCommands->setDiagnosticInfo(mResourceType, reinterpret_cast<uintptr_t>(this));
-    onWriteImpl(newCommands, renderer->getCurrentQueueSerial());
-}
-
-void CommandGraphResource::addWriteDependency(CommandGraphResource *writingResource)
+void RecordableGraphResource::addWriteDependency(RecordableGraphResource *writingResource)
 {
     CommandGraphNode *writingNode = writingResource->mCurrentWritingNode;
     ASSERT(writingNode);
@@ -229,7 +200,37 @@ void CommandGraphResource::addWriteDependency(CommandGraphResource *writingResou
     onWriteImpl(writingNode, writingResource->getStoredQueueSerial());
 }
 
-void CommandGraphResource::onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial)
+void RecordableGraphResource::addReadDependency(RecordableGraphResource *readingResource)
+{
+    updateQueueSerial(readingResource->getStoredQueueSerial());
+
+    CommandGraphNode *readingNode = readingResource->mCurrentWritingNode;
+    ASSERT(readingNode);
+
+    if (hasChildlessWritingNode())
+    {
+        // Ensure 'readingNode' happens after the current writing node.
+        CommandGraphNode::SetHappensBeforeDependency(mCurrentWritingNode, readingNode);
+    }
+
+    // Add the read node to the list of nodes currently reading this resource.
+    mCurrentReadingNodes.push_back(readingNode);
+}
+
+void RecordableGraphResource::finishCurrentCommands(RendererVk *renderer)
+{
+    startNewCommands(renderer);
+}
+
+void RecordableGraphResource::startNewCommands(RendererVk *renderer)
+{
+    CommandGraphNode *newCommands =
+        renderer->getCommandGraph()->allocateNode(CommandGraphNodeFunction::Generic);
+    newCommands->setDiagnosticInfo(mResourceType, reinterpret_cast<uintptr_t>(this));
+    onWriteImpl(newCommands, renderer->getCurrentQueueSerial());
+}
+
+void RecordableGraphResource::onWriteImpl(CommandGraphNode *writingNode, Serial currentSerial)
 {
     updateQueueSerial(currentSerial);
 
@@ -249,21 +250,44 @@ void CommandGraphResource::onWriteImpl(CommandGraphNode *writingNode, Serial cur
     mCurrentWritingNode = writingNode;
 }
 
-void CommandGraphResource::addReadDependency(CommandGraphResource *readingResource)
+// QueryGraphResource implementation.
+QueryGraphResource::QueryGraphResource() : CommandGraphResource(CommandGraphResourceType::Query)
 {
-    updateQueueSerial(readingResource->getStoredQueueSerial());
+}
 
-    CommandGraphNode *readingNode = readingResource->mCurrentWritingNode;
-    ASSERT(readingNode);
+QueryGraphResource::~QueryGraphResource() = default;
 
-    if (hasChildlessWritingNode())
-    {
-        // Ensure 'readingNode' happens after the current writing node.
-        CommandGraphNode::SetHappensBeforeDependency(mCurrentWritingNode, readingNode);
-    }
+void QueryGraphResource::beginQuery(Context *context,
+                                    const QueryPool *queryPool,
+                                    uint32_t queryIndex)
+{
+    startNewCommands(context->getRenderer(), CommandGraphNodeFunction::BeginQuery);
+    mCurrentWritingNode->setQueryPool(queryPool, queryIndex);
+}
 
-    // Add the read node to the list of nodes currently reading this resource.
-    mCurrentReadingNodes.push_back(readingNode);
+void QueryGraphResource::endQuery(Context *context, const QueryPool *queryPool, uint32_t queryIndex)
+{
+    startNewCommands(context->getRenderer(), CommandGraphNodeFunction::EndQuery);
+    mCurrentWritingNode->setQueryPool(queryPool, queryIndex);
+}
+
+void QueryGraphResource::writeTimestamp(Context *context,
+                                        const QueryPool *queryPool,
+                                        uint32_t queryIndex)
+{
+    startNewCommands(context->getRenderer(), CommandGraphNodeFunction::WriteTimestamp);
+    mCurrentWritingNode->setQueryPool(queryPool, queryIndex);
+}
+
+void QueryGraphResource::startNewCommands(RendererVk *renderer, CommandGraphNodeFunction function)
+{
+    CommandGraph *commandGraph = renderer->getCommandGraph();
+    CommandGraphNode *newNode  = commandGraph->allocateNode(function);
+    newNode->setDiagnosticInfo(mResourceType, reinterpret_cast<uintptr_t>(this));
+    commandGraph->setNewBarrier(newNode);
+
+    mStoredQueueSerial  = renderer->getCurrentQueueSerial();
+    mCurrentWritingNode = newNode;
 }
 
 // CommandGraphNode implementation.
@@ -555,17 +579,11 @@ CommandGraph::~CommandGraph()
     ASSERT(empty());
 }
 
-CommandGraphNode *CommandGraph::allocateNode(bool isBarrier, CommandGraphNodeFunction function)
+CommandGraphNode *CommandGraph::allocateNode(CommandGraphNodeFunction function)
 {
     // TODO(jmadill): Use a pool allocator for the CPU node allocations.
     CommandGraphNode *newCommands = new CommandGraphNode(function);
     mNodes.emplace_back(newCommands);
-
-    if (isBarrier)
-    {
-        setNewBarrier(newCommands);
-    }
-
     return newCommands;
 }
 

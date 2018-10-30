@@ -31,7 +31,7 @@ RenderTargetVk::RenderTargetVk(RenderTargetVk &&other)
 {
 }
 
-void RenderTargetVk::onColorDraw(vk::CommandGraphResource *framebufferVk,
+void RenderTargetVk::onColorDraw(vk::FramebufferHelper *framebufferVk,
                                  vk::CommandBuffer *commandBuffer,
                                  vk::RenderPassDesc *renderPassDesc)
 {
@@ -51,7 +51,7 @@ void RenderTargetVk::onColorDraw(vk::CommandGraphResource *framebufferVk,
     mImage->addWriteDependency(framebufferVk);
 }
 
-void RenderTargetVk::onDepthStencilDraw(vk::CommandGraphResource *framebufferVk,
+void RenderTargetVk::onDepthStencilDraw(vk::FramebufferHelper *framebufferVk,
                                         vk::CommandBuffer *commandBuffer,
                                         vk::RenderPassDesc *renderPassDesc)
 {
@@ -104,7 +104,7 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageView 
     mImageView = imageView;
 }
 
-vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readingResource,
+vk::ImageHelper *RenderTargetVk::getImageForRead(vk::RecordableGraphResource *readingResource,
                                                  VkImageLayout layout,
                                                  vk::CommandBuffer *commandBuffer)
 {
@@ -120,7 +120,8 @@ vk::ImageHelper *RenderTargetVk::getImageForRead(vk::CommandGraphResource *readi
     return mImage;
 }
 
-vk::ImageHelper *RenderTargetVk::getImageForWrite(vk::CommandGraphResource *writingResource) const
+vk::ImageHelper *RenderTargetVk::getImageForWrite(
+    vk::RecordableGraphResource *writingResource) const
 {
     ASSERT(mImage && mImage->valid());
     mImage->addWriteDependency(writingResource);

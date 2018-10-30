@@ -446,7 +446,7 @@ angle::Result ContextVk::handleDirtyIndexBuffer(const gl::Context *context,
                                    mVertexArray->getCurrentElementArrayBufferOffset(),
                                    gl_vk::GetIndexType(mCurrentDrawElementsType));
 
-    vk::CommandGraphResource *elementArrayBufferResource =
+    vk::RecordableGraphResource *elementArrayBufferResource =
         mVertexArray->getCurrentElementArrayBufferResource();
     if (elementArrayBufferResource)
     {

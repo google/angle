@@ -252,7 +252,7 @@ class DynamicQueryPool final : public DynamicallyGrowingPool<QueryPool>
 // of a fixed size as needed and allocates indices within those pools.
 //
 // The QueryHelper class below keeps the pool and index pair together.
-class QueryHelper final : public CommandGraphResource
+class QueryHelper final : public QueryGraphResource
 {
   public:
     QueryHelper();
@@ -373,7 +373,7 @@ class LineLoopHelper final : angle::NonCopyable
     DynamicBuffer mDynamicIndexBuffer;
 };
 
-class BufferHelper final : public CommandGraphResource
+class BufferHelper final : public RecordableGraphResource
 {
   public:
     BufferHelper();
@@ -397,7 +397,7 @@ class BufferHelper final : public CommandGraphResource
     VkMemoryPropertyFlags mMemoryPropertyFlags;
 };
 
-class ImageHelper final : public CommandGraphResource
+class ImageHelper final : public RecordableGraphResource
 {
   public:
     ImageHelper();
@@ -507,7 +507,7 @@ class ImageHelper final : public CommandGraphResource
     uint32_t mLayerCount;
 };
 
-class FramebufferHelper : public CommandGraphResource
+class FramebufferHelper : public RecordableGraphResource
 {
   public:
     FramebufferHelper();
