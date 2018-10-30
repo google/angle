@@ -261,11 +261,19 @@ std::string RenderTestParams::suffix() const
 }
 
 ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams &testParams)
-    : ANGLEPerfTest(name, testParams.suffix(), testParams.iterationsPerStep),
+    : ANGLEPerfTest(name,
+                    testParams.suffix(),
+                    g_OnlyOneRunFrame ? 1 : testParams.iterationsPerStep),
       mTestParams(testParams),
       mEGLWindow(createEGLWindow(testParams)),
       mOSWindow(nullptr)
 {
+    // Force fast tests to make sure our slowest bots don't time out.
+    if (g_OnlyOneRunFrame)
+    {
+        const_cast<RenderTestParams &>(testParams).iterationsPerStep = 1;
+    }
+
     // Try to ensure we don't trigger allocation during execution.
     mTraceEventBuffer.reserve(kInitialTraceEventBufferSize);
 }
@@ -335,9 +343,12 @@ void ANGLERenderTest::SetUp()
     }
 
     // Warm up the benchmark to reduce variance.
-    for (size_t iteration = 0; iteration < kWarmupIterations; ++iteration)
+    if (!g_OnlyOneRunFrame)
     {
-        drawBenchmark();
+        for (size_t iteration = 0; iteration < kWarmupIterations; ++iteration)
+        {
+            drawBenchmark();
+        }
     }
 }
 
