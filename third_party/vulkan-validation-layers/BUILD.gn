@@ -248,7 +248,6 @@ core_validation_sources = [
   "src/layers/buffer_validation.h",
   "src/layers/core_validation.cpp",
   "src/layers/core_validation.h",
-  "src/layers/convert_to_renderpass2.cpp",
   "src/layers/descriptor_sets.cpp",
   "src/layers/descriptor_sets.h",
   "src/layers/shader_validation.cpp",
