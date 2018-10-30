@@ -46,6 +46,7 @@ class ClearTestBase : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
+        setConfigStencilBits(8);
     }
 
     void SetUp() override
@@ -79,7 +80,13 @@ class ClearTestBase : public ANGLETest
 
 class ClearTest : public ClearTestBase
 {
+  protected:
+    void MaskedScissoredColorDepthStencilClear(bool mask,
+                                               bool scissor,
+                                               bool clearDepth,
+                                               bool clearStencil);
 };
+
 class ClearTestES3 : public ClearTestBase
 {
 };
@@ -95,6 +102,10 @@ class ClearTestRGB : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
     }
+};
+
+class ScissoredClearTest : public ClearTest
+{
 };
 
 // Test clearing the default framebuffer
@@ -521,135 +532,181 @@ TEST_P(ClearTestES3, RepeatedClear)
     ASSERT_GL_NO_ERROR();
 }
 
-class ScissoredClearTest : public ANGLETest
-{
-  public:
-    ScissoredClearTest()
-    {
-        setWindowWidth(64);
-        setWindowHeight(64);
-        setConfigRedBits(8);
-        setConfigGreenBits(8);
-        setConfigBlueBits(8);
-        setConfigAlphaBits(8);
-        setConfigDepthBits(24);
-        setConfigStencilBits(8);
-    }
-};
-
-// Simple scissored clear.
-TEST_P(ScissoredClearTest, BasicScissoredColorClear)
-{
-    const int w     = getWindowWidth();
-    const int h     = getWindowHeight();
-    const int whalf = w >> 1;
-    const int hhalf = h >> 1;
-
-    // Clear whole region to red.
-    glClearColor(1.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    // Enable scissor and clear to green.
-    glEnable(GL_SCISSOR_TEST);
-    glScissor(whalf / 2, hhalf / 2, whalf, whalf);
-    glClearColor(0.0, 1.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    ASSERT_GL_NO_ERROR();
-
-    // Check the four corners for the original clear color, and the middle for the scissored clear
-    // color.
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(w - 1, 0, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(whalf, hhalf, GLColor::green) << "in-scissor area should be green";
-}
-
-// Tests combined scissored color+depth clear.
-TEST_P(ScissoredClearTest, ScissoredColorAndDepthClear)
-{
-    const int w     = getWindowWidth();
-    const int h     = getWindowHeight();
-    const int whalf = w >> 1;
-    const int hhalf = h >> 1;
-
-    // Clear whole region to red/1.0f.
-    glClearColor(1.0, 0.0, 0.0, 1.0);
-    glClearDepthf(1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // Enable scissor and clear to green/0.5f.
-    glEnable(GL_SCISSOR_TEST);
-    glScissor(whalf / 2, hhalf / 2, whalf, whalf);
-    glClearColor(0.0, 1.0, 0.0, 1.0);
-    glClearDepthf(0.5f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    ASSERT_GL_NO_ERROR();
-
-    // Check the four corners for the original clear color, and the middle for the scissored clear
-    // color.
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(w - 1, 0, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(whalf, hhalf, GLColor::green) << "in-scissor area should be green";
-
-    // Draw blue with depth 0.5f and depth test enabled - verify only the middle changes.
-    glDisable(GL_SCISSOR_TEST);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_EQUAL);
-    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Blue());
-
-    // OpenGL uses a depth range of [-1,1] so pass in a z value of 0 to get 0.5 depth.
-    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(w - 1, 0, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::red) << "out-of-scissor area should be red";
-    EXPECT_PIXEL_COLOR_EQ(whalf, hhalf, GLColor::blue) << "in-scissor area should be blue";
-}
-
-// Tests combined color+depth clear.
-TEST_P(ClearTest, MaskedColorAndDepthClear)
+void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
+                                                      bool scissor,
+                                                      bool clearDepth,
+                                                      bool clearStencil)
 {
     // Flaky on Android Nexus 5x, possible driver bug.
     // TODO(jmadill): Re-enable when possible. http://anglebug.com/2548
     ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsAndroid());
 
-    // Clear to a random color and 1.0 depth.
+    const int w     = getWindowWidth();
+    const int h     = getWindowHeight();
+    const int whalf = w >> 1;
+    const int hhalf = h >> 1;
+
+    // Clear to a random color, 1.0 depth and 0x00 stencil
     Vector4 color1(0.1f, 0.2f, 0.3f, 0.4f);
     GLColor color1RGB(color1);
 
     glClearColor(color1[0], color1[1], color1[2], color1[3]);
     glClearDepthf(1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearStencil(0x00);
+    glClear(GL_COLOR_BUFFER_BIT | (clearDepth ? GL_DEPTH_BUFFER_BIT : 0) |
+            (clearStencil ? GL_STENCIL_BUFFER_BIT : 0));
     ASSERT_GL_NO_ERROR();
 
-    // Verify color and was cleared correctly.
+    // Verify color was cleared correctly.
     EXPECT_PIXEL_COLOR_NEAR(0, 0, color1RGB, 1);
 
-    // Use a color mask to clear to a second color and 0.5 depth.
+    if (scissor)
+    {
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(whalf / 2, hhalf / 2, whalf, hhalf);
+    }
+
+    // Use color and stencil masks to clear to a second color, 0.5 depth and 0x59 stencil.
     Vector4 color2(0.2f, 0.4f, 0.6f, 0.8f);
     GLColor color2RGB(color2);
     glClearColor(color2[0], color2[1], color2[2], color2[3]);
     glClearDepthf(0.5f);
-    glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_FALSE);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearStencil(0xFF);
+    if (mask)
+    {
+        glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_FALSE);
+        glDepthMask(GL_FALSE);
+        glStencilMask(0x59);
+    }
+    glClear(GL_COLOR_BUFFER_BIT | (clearDepth ? GL_DEPTH_BUFFER_BIT : 0) |
+            (clearStencil ? GL_STENCIL_BUFFER_BIT : 0));
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glDepthMask(GL_TRUE);
+    glStencilMask(0xFF);
     ASSERT_GL_NO_ERROR();
 
     // Verify second clear mask worked as expected.
-    GLColor color2Masked(color2RGB[0], color1RGB[1], color2RGB[2], color1RGB[3]);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, color2Masked);
+    GLColor color2MaskedRGB(color2RGB[0], color1RGB[1], color2RGB[2], color1RGB[3]);
+    GLColor expectedColorRGB = mask ? color2MaskedRGB : color2RGB;
 
-    // We use a small shader to verify depth.
-    ANGLE_GL_PROGRAM(depthTestProgram, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Blue());
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_EQUAL);
-    drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), 0.0f);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
-    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedColorRGB, 1);
+
+    if (scissor)
+    {
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, color1RGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, color1RGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(0, h - 1, color1RGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, color1RGB, 1);
+    }
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_SCISSOR_TEST);
+
+    if (clearDepth)
+    {
+        // We use a small shader to verify depth.
+        ANGLE_GL_PROGRAM(depthTestProgram, essl1_shaders::vs::Passthrough(),
+                         essl1_shaders::fs::Blue());
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_EQUAL);
+        drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), 0.0f);
+        glDisable(GL_DEPTH_TEST);
+        ASSERT_GL_NO_ERROR();
+
+        expectedColorRGB = mask ? expectedColorRGB : GLColor::blue;
+        EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedColorRGB, 1);
+
+        if (scissor)
+        {
+            EXPECT_PIXEL_COLOR_NEAR(0, 0, color1RGB, 1);
+            EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, color1RGB, 1);
+            EXPECT_PIXEL_COLOR_NEAR(0, h - 1, color1RGB, 1);
+            EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, color1RGB, 1);
+        }
+    }
+
+    if (clearStencil)
+    {
+        // And another small shader to verify stencil.
+        ANGLE_GL_PROGRAM(stencilTestProgram, essl1_shaders::vs::Passthrough(),
+                         essl1_shaders::fs::Green());
+        glEnable(GL_STENCIL_TEST);
+        glStencilFunc(GL_EQUAL, mask ? 0x59 : 0xFF, 0xFF);
+        drawQuad(stencilTestProgram, essl1_shaders::PositionAttrib(), 0.0f);
+        glDisable(GL_STENCIL_TEST);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, GLColor::green, 1);
+
+        if (scissor)
+        {
+            EXPECT_PIXEL_COLOR_NEAR(0, 0, color1RGB, 1);
+            EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, color1RGB, 1);
+            EXPECT_PIXEL_COLOR_NEAR(0, h - 1, color1RGB, 1);
+            EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, color1RGB, 1);
+        }
+    }
+}
+
+// Tests combined color+depth+stencil clears.
+TEST_P(ClearTest, MaskedColorAndDepthClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, false, true, false);
+}
+
+TEST_P(ClearTest, MaskedColorAndStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, false, false, true);
+}
+
+TEST_P(ClearTest, MaskedColorAndDepthAndStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, false, true, true);
+}
+
+// Simple scissored clear.
+TEST_P(ScissoredClearTest, BasicScissoredColorClear)
+{
+    MaskedScissoredColorDepthStencilClear(false, true, false, false);
+}
+
+// Simple scissored masked clear.
+TEST_P(ScissoredClearTest, MaskedScissoredColorClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, true, false, false);
+}
+
+// Tests combined color+depth+stencil scissored clears.
+TEST_P(ScissoredClearTest, ScissoredColorAndDepthClear)
+{
+    MaskedScissoredColorDepthStencilClear(false, true, true, false);
+}
+
+TEST_P(ScissoredClearTest, ScissoredColorAndStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(false, true, false, true);
+}
+
+TEST_P(ScissoredClearTest, ScissoredColorAndDepthAndStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(false, true, true, true);
+}
+
+// Tests combined color+depth+stencil scissored masked clears.
+TEST_P(ScissoredClearTest, MaskedScissoredColorAndDepthClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, true, true, false);
+}
+
+TEST_P(ScissoredClearTest, MaskedScissoredColorAndStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, true, false, true);
+}
+
+TEST_P(ScissoredClearTest, MaskedScissoredColorAndDepthAndStencilClear)
+{
+    MaskedScissoredColorDepthStencilClear(true, true, true, true);
 }
 
 // Test that just clearing a nonexistent drawbuffer of the default framebuffer doesn't cause an
