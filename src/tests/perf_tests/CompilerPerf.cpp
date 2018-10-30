@@ -162,6 +162,8 @@ void main()
 
 const char *kTrickyESSL300Id = "TrickyESSL300";
 
+constexpr int kNumIterationsPerStep = 10;
+
 struct CompilerPerfParameters final : public angle::CompilerParameters
 {
     CompilerPerfParameters(ShShaderOutput output,
@@ -206,7 +208,8 @@ class CompilerPerfTest : public ANGLEPerfTest,
     sh::TCompiler *mTranslator;
 };
 
-CompilerPerfTest::CompilerPerfTest() : ANGLEPerfTest("CompilerPerf", GetParam().testId)
+CompilerPerfTest::CompilerPerfTest()
+    : ANGLEPerfTest("CompilerPerf", GetParam().testId, kNumIterationsPerStep)
 {
 }
 
@@ -249,8 +252,6 @@ void CompilerPerfTest::step()
 
     ShCompileOptions compileOptions = SH_OBJECT_CODE | SH_VARIABLES |
                                       SH_INITIALIZE_UNINITIALIZED_LOCALS | SH_INIT_OUTPUT_VARIABLES;
-
-    const int kNumIterationsPerStep = 10;
 
 #if !defined(NDEBUG)
     // Make sure that compilation succeeds and print the info log if it doesn't in debug mode.

@@ -12,18 +12,19 @@
 
 namespace
 {
+unsigned int kIterationsPerStep = 50;
 
 struct DispatchComputePerfParams final : public RenderTestParams
 {
     DispatchComputePerfParams()
     {
+        iterationsPerStep = kIterationsPerStep;
         majorVersion = 3;
         minorVersion = 1;
     }
 
     std::string suffix() const override;
 
-    unsigned int iterations    = 50;
     unsigned int localSizeX    = 16;
     unsigned int localSizeY    = 16;
     unsigned int textureWidth  = 32;
@@ -77,7 +78,6 @@ DispatchComputePerfBenchmark::DispatchComputePerfBenchmark()
 void DispatchComputePerfBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
-    ASSERT_LT(0u, params.iterations);
 
     initComputeShader();
     initTextures();
@@ -149,7 +149,7 @@ void DispatchComputePerfBenchmark::destroyBenchmark()
 void DispatchComputePerfBenchmark::drawBenchmark()
 {
     const auto &params = GetParam();
-    for (unsigned int it = 0; it < params.iterations; it++)
+    for (unsigned int it = 0; it < params.iterationsPerStep; it++)
     {
         glDispatchCompute(mDispatchX, mDispatchY, 1);
         glMemoryBarrier(GL_TEXTURE_UPDATE_BARRIER_BIT);

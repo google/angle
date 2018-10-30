@@ -15,10 +15,15 @@ DrawCallPerfParams::DrawCallPerfParams()
 {
     majorVersion = 2;
     minorVersion = 0;
-    windowWidth  = 256;
-    windowHeight = 256;
+    windowWidth  = 64;
+    windowHeight = 64;
 
-    iterations     = 50;
+// Lower the iteration count in debug.
+#if !defined(NDEBUG)
+    iterationsPerStep = 100;
+#else
+    iterationsPerStep = 20000;
+#endif
     runTimeSeconds = 10.0;
     numTris        = 1;
     useFBO         = false;
@@ -80,7 +85,6 @@ DrawCallPerfParams DrawCallPerfValidationOnly()
 {
     DrawCallPerfParams params;
     params.eglParameters  = DEFAULT();
-    params.iterations     = 10000;
     params.numTris        = 0;
     params.runTimeSeconds = 5.0;
     return params;

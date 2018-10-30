@@ -21,6 +21,7 @@ using namespace angle;
 
 namespace
 {
+constexpr unsigned int kIterationsPerStep = 4;
 
 // Controls when we call glUniform, if the data is the same as last frame.
 enum DataMode
@@ -48,6 +49,8 @@ struct UniformsParams final : public RenderTestParams
 {
     UniformsParams()
     {
+        iterationsPerStep = kIterationsPerStep;
+
         // Common default params
         majorVersion = 2;
         minorVersion = 0;
@@ -62,9 +65,6 @@ struct UniformsParams final : public RenderTestParams
     DataType dataType = DataType::VEC4;
     DataMode dataMode = DataMode::REPEAT;
     ProgramMode programMode = ProgramMode::SINGLE;
-
-    // static parameters
-    size_t iterations = 4;
 };
 
 std::ostream &operator<<(std::ostream &os, const UniformsParams &params)
@@ -159,8 +159,6 @@ UniformsBenchmark::UniformsBenchmark() : ANGLERenderTest("Uniforms", GetParam())
 void UniformsBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
-
-    ASSERT_GT(params.iterations, 0u);
 
     // Verify the uniform counts are within the limits
     GLint maxVertexUniformVectors, maxFragmentUniformVectors;
@@ -323,7 +321,7 @@ void UniformsBenchmark::drawLoop(const SetUniformFunc &setUniformsFunc)
 
     size_t frameIndex = 0;
 
-    for (size_t it = 0; it < params.iterations; ++it, frameIndex = (frameIndex == 0 ? 1 : 0))
+    for (size_t it = 0; it < params.iterationsPerStep; ++it, frameIndex = (frameIndex == 0 ? 1 : 0))
     {
         if (MultiProgram)
         {

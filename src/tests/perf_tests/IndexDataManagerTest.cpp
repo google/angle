@@ -20,6 +20,7 @@ using namespace testing;
 
 namespace
 {
+constexpr unsigned int kIterationsPerStep = 100;
 
 class MockIndexBuffer : public rx::IndexBuffer
 {
@@ -158,7 +159,7 @@ class IndexDataManagerPerfTest : public ANGLEPerfTest
 };
 
 IndexDataManagerPerfTest::IndexDataManagerPerfTest()
-    : ANGLEPerfTest("IndexDataManger", "_run"),
+    : ANGLEPerfTest("IndexDataManger", "_run", kIterationsPerStep),
       mIndexDataManager(&mMockBufferFactory),
       mIndexCount(4000),
       mBufferSize(mIndexCount * sizeof(GLushort)),
@@ -181,7 +182,7 @@ void IndexDataManagerPerfTest::step()
 {
     rx::TranslatedIndexData translatedIndexData;
     gl::IndexRange indexRange;
-    for (unsigned int iteration = 0; iteration < 100; ++iteration)
+    for (unsigned int iteration = 0; iteration < kIterationsPerStep; ++iteration)
     {
         (void)mIndexBuffer.getIndexRange(nullptr, GL_UNSIGNED_SHORT, 0, mIndexCount, false,
                                          &indexRange);

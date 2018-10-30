@@ -75,9 +75,7 @@ class EGLInitializePerfTest : public ANGLEPerfTest,
 };
 
 EGLInitializePerfTest::EGLInitializePerfTest()
-    : ANGLEPerfTest("EGLInitialize", "_run"),
-      mOSWindow(nullptr),
-      mDisplay(EGL_NO_DISPLAY)
+    : ANGLEPerfTest("EGLInitialize", "_run", 1), mOSWindow(nullptr), mDisplay(EGL_NO_DISPLAY)
 {
     auto platform = GetParam().eglParameters;
 

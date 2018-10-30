@@ -16,6 +16,7 @@ using namespace angle;
 
 namespace
 {
+constexpr unsigned int kIterationsPerStep = 4;
 
 struct BufferSubDataParams final : public RenderTestParams
 {
@@ -28,7 +29,7 @@ struct BufferSubDataParams final : public RenderTestParams
         windowHeight = 512;
         updateSize = 3000;
         bufferSize = 40000000;
-        iterations   = 4;
+        iterationsPerStep = kIterationsPerStep;
         updateRate = 1;
     }
 
@@ -42,7 +43,6 @@ struct BufferSubDataParams final : public RenderTestParams
     // static parameters
     GLsizeiptr updateSize;
     GLsizeiptr bufferSize;
-    unsigned int iterations;
 };
 
 std::ostream &operator<<(std::ostream &os, const BufferSubDataParams &params)
@@ -267,7 +267,6 @@ void BufferSubDataBenchmark::initializeBenchmark()
     const auto &params = GetParam();
 
     ASSERT_LT(1, params.vertexComponentCount);
-    ASSERT_LT(0u, params.iterations);
 
     mProgram = SetupSimpleScaleAndOffsetProgram();
     ASSERT_NE(0u, mProgram);
@@ -335,7 +334,7 @@ void BufferSubDataBenchmark::drawBenchmark()
 
     const auto &params = GetParam();
 
-    for (unsigned int it = 0; it < params.iterations; it++)
+    for (unsigned int it = 0; it < params.iterationsPerStep; it++)
     {
         if (params.updateSize > 0 && ((getNumStepsPerformed() % params.updateRate) == 0))
         {

@@ -19,17 +19,19 @@ using namespace angle;
 
 namespace
 {
+constexpr unsigned int kIterationsPerStep = 100;
 
 struct PointSpritesParams final : public RenderTestParams
 {
     PointSpritesParams()
     {
+        iterationsPerStep = kIterationsPerStep;
+
         // Common default params
         majorVersion = 2;
         minorVersion = 0;
         windowWidth = 1280;
         windowHeight = 720;
-        iterations   = 100;
         count = 10;
         size = 3.0f;
         numVaryings = 3;
@@ -40,9 +42,6 @@ struct PointSpritesParams final : public RenderTestParams
     unsigned int count;
     float size;
     unsigned int numVaryings;
-
-    // static parameters
-    unsigned int iterations;
 };
 
 std::ostream &operator<<(std::ostream &os, const PointSpritesParams &params)
@@ -86,8 +85,6 @@ PointSpritesBenchmark::PointSpritesBenchmark()
 void PointSpritesBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
-
-    ASSERT_LT(0u, params.iterations);
 
     std::stringstream vstrstr;
 
@@ -189,7 +186,7 @@ void PointSpritesBenchmark::drawBenchmark()
 
     const auto &params = GetParam();
 
-    for (unsigned int it = 0; it < params.iterations; it++)
+    for (unsigned int it = 0; it < params.iterationsPerStep; it++)
     {
         //TODO(jmadill): Indexed point rendering. ANGLE is bad at this.
         glDrawArrays(GL_POINTS, 0, params.count);

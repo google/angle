@@ -14,7 +14,7 @@ volatile int gThing = 0;
 
 namespace
 {
-constexpr int kIterations = 1000;
+constexpr int kIterationsPerStep = 1000;
 
 class ResultPerfTest : public ANGLEPerfTest
 {
@@ -23,7 +23,7 @@ class ResultPerfTest : public ANGLEPerfTest
     void step() override;
 };
 
-ResultPerfTest::ResultPerfTest() : ANGLEPerfTest("ResultPerf", "_run")
+ResultPerfTest::ResultPerfTest() : ANGLEPerfTest("ResultPerf", "_run", kIterationsPerStep)
 {
 }
 
@@ -56,7 +56,7 @@ gl::Error CallReturningResult(int depth)
 
 void ResultPerfTest::step()
 {
-    for (int i = 0; i < kIterations; i++)
+    for (int i = 0; i < kIterationsPerStep; i++)
     {
         (void)CallReturningResult(0);
         (void)CallReturningResult(0);

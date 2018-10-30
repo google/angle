@@ -8,8 +8,10 @@
 //
 
 #include "ANGLEPerfTest.h"
+
 #include "third_party/perf/perf_test.h"
 #include "third_party/trace_event/trace_event.h"
+#include "system_utils.h"
 
 #include <cassert>
 #include <cmath>
@@ -21,6 +23,9 @@
 namespace
 {
 constexpr size_t kInitialTraceEventBufferSize = 50000;
+constexpr size_t kWarmupIterations            = 3;
+constexpr double kMicroSecondsPerSecond       = 1e6;
+constexpr double kNanoSecondsPerSecond        = 1e9;
 
 struct TraceCategory
 {
@@ -143,13 +148,16 @@ bool g_OnlyOneRunFrame = false;
 bool gEnableTrace      = false;
 const char *gTraceFile = "ANGLETrace.json";
 
-ANGLEPerfTest::ANGLEPerfTest(const std::string &name, const std::string &suffix)
+ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
+                             const std::string &suffix,
+                             unsigned int iterationsPerStep)
     : mName(name),
       mSuffix(suffix),
       mTimer(CreateTimer()),
-      mRunTimeSeconds(5.0),
+      mRunTimeSeconds(2.0),
       mSkipTest(false),
       mNumStepsPerformed(0),
+      mIterationsPerStep(iterationsPerStep),
       mRunning(true)
 {
 }
@@ -203,7 +211,25 @@ void ANGLEPerfTest::TearDown()
     {
         return;
     }
-    double relativeScore = static_cast<double>(mNumStepsPerformed) / mTimer->getElapsedTime();
+
+    double elapsedTimeSeconds = mTimer->getElapsedTime();
+
+    double secondsPerStep      = elapsedTimeSeconds / static_cast<double>(mNumStepsPerformed);
+    double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
+
+    // Give the result a different name to ensure separate graphs if we transition.
+    if (secondsPerIteration > 1e-3)
+    {
+        double microSecondsPerIteration = secondsPerIteration * kMicroSecondsPerSecond;
+        printResult("microSecPerIteration", microSecondsPerIteration, "us", true);
+    }
+    else
+    {
+        double nanoSecPerIteration = secondsPerIteration * kNanoSecondsPerSecond;
+        printResult("nanoSecPerIteration", nanoSecPerIteration, "ns", true);
+    }
+
+    double relativeScore = static_cast<double>(mNumStepsPerformed) / elapsedTimeSeconds;
     printResult("score", static_cast<size_t>(std::round(relativeScore)), "score", true);
 }
 
@@ -235,7 +261,7 @@ std::string RenderTestParams::suffix() const
 }
 
 ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams &testParams)
-    : ANGLEPerfTest(name, testParams.suffix()),
+    : ANGLEPerfTest(name, testParams.suffix(), testParams.iterationsPerStep),
       mTestParams(testParams),
       mEGLWindow(createEGLWindow(testParams)),
       mOSWindow(nullptr)
@@ -258,6 +284,9 @@ void ANGLERenderTest::addExtensionPrerequisite(const char *extensionName)
 void ANGLERenderTest::SetUp()
 {
     ANGLEPerfTest::SetUp();
+
+    // Set a consistent CPU core affinity and high priority.
+    angle::StabilizeCPUForBenchmarking();
 
     mOSWindow = CreateOSWindow();
     ASSERT(mEGLWindow != nullptr);
@@ -293,11 +322,23 @@ void ANGLERenderTest::SetUp()
 
     if (mSkipTest)
     {
-        std::cout << "Test skipped due to missing extension." << std::endl;
         return;
     }
 
     initializeBenchmark();
+
+    if (mTestParams.iterationsPerStep == 0)
+    {
+        FAIL() << "Please initialize 'iterationsPerStep'.";
+        abortTest();
+        return;
+    }
+
+    // Warm up the benchmark to reduce variance.
+    for (size_t iteration = 0; iteration < kWarmupIterations; ++iteration)
+    {
+        drawBenchmark();
+    }
 }
 
 void ANGLERenderTest::TearDown()

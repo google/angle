@@ -72,7 +72,7 @@ class VulkanCommandBufferPerfTest : public ANGLEPerfTest,
 };
 
 VulkanCommandBufferPerfTest::VulkanCommandBufferPerfTest()
-    : ANGLEPerfTest("VulkanCommandBufferPerfTest", GetParam().suffix)
+    : ANGLEPerfTest("VulkanCommandBufferPerfTest", GetParam().suffix, GetParam().frames)
 {
     mInfo             = {};
     mSampleTitle      = "Draw Textured Cube";

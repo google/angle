@@ -64,6 +64,7 @@ struct MultiviewPerfParams final : public RenderTestParams
                         const MultiviewPerfWorkload &workloadIn,
                         MultiviewOption multiviewOptionIn)
     {
+        iterationsPerStep = 1;
         majorVersion    = 3;
         minorVersion    = 0;
         eglParameters   = platformParametersIn;

@@ -18,19 +18,16 @@ using namespace angle;
 
 namespace
 {
+constexpr unsigned int kIterationsPerStep = 4;
 
 struct DynamicPromotionParams final : public RenderTestParams
 {
-    DynamicPromotionParams();
+    DynamicPromotionParams() { iterationsPerStep = kIterationsPerStep; }
+
     std::string suffix() const override;
 
-    size_t vertexCount;
-    unsigned int iterations;
+    size_t vertexCount = 1024;
 };
-
-DynamicPromotionParams::DynamicPromotionParams() : vertexCount(1024), iterations(4)
-{
-}
 
 std::string DynamicPromotionParams::suffix() const
 {
@@ -151,7 +148,7 @@ void DynamicPromotionPerfTest::destroyBenchmark()
 
 void DynamicPromotionPerfTest::drawBenchmark()
 {
-    unsigned int iterations = GetParam().iterations;
+    unsigned int iterations = GetParam().iterationsPerStep;
     size_t vertexCount      = GetParam().vertexCount;
 
     glClear(GL_COLOR_BUFFER_BIT);

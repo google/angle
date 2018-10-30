@@ -22,17 +22,19 @@ using namespace angle;
 
 namespace
 {
+constexpr unsigned int kIterationsPerStep = 4;
 
 struct TextureSamplingParams final : public RenderTestParams
 {
     TextureSamplingParams()
     {
+        iterationsPerStep = kIterationsPerStep;
+
         // Common default params
         majorVersion = 2;
         minorVersion = 0;
         windowWidth  = 720;
         windowHeight = 720;
-        iterations   = 4;
 
         numSamplers = 2;
         textureSize = 32;
@@ -43,9 +45,6 @@ struct TextureSamplingParams final : public RenderTestParams
     unsigned int numSamplers;
     unsigned int textureSize;
     unsigned int kernelSize;
-
-    // static parameters
-    unsigned int iterations;
 };
 
 std::ostream &operator<<(std::ostream &os, const TextureSamplingParams &params)
@@ -91,8 +90,6 @@ TextureSamplingBenchmark::TextureSamplingBenchmark()
 void TextureSamplingBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
-
-    ASSERT_LT(0u, params.iterations);
 
     // Verify "numSamplers" is within MAX_TEXTURE_IMAGE_UNITS limit
     GLint maxTextureImageUnits;
@@ -249,7 +246,7 @@ void TextureSamplingBenchmark::drawBenchmark()
 
     const auto &params = GetParam();
 
-    for (unsigned int it = 0; it < params.iterations; ++it)
+    for (unsigned int it = 0; it < params.iterationsPerStep; ++it)
     {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }

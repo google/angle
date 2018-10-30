@@ -16,7 +16,6 @@ using namespace angle;
 
 namespace
 {
-
 struct IndexConversionPerfParams final : public RenderTestParams
 {
     std::string suffix() const override
@@ -33,7 +32,6 @@ struct IndexConversionPerfParams final : public RenderTestParams
         return strstr.str();
     }
 
-    unsigned int iterations;
     unsigned int numIndexTris;
 
     // A second test, which covers using index ranges with an offset.
@@ -81,7 +79,7 @@ void IndexConversionPerfTest::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    ASSERT_LT(0u, params.iterations);
+    ASSERT_LT(0u, params.iterationsPerStep);
     ASSERT_LT(0u, params.numIndexTris);
 
     mProgram = SetupSimpleScaleAndOffsetProgram();
@@ -157,7 +155,7 @@ void IndexConversionPerfTest::drawConversion()
     // Trigger an update to ensure we convert once a frame
     updateBufferData();
 
-    for (unsigned int it = 0; it < params.iterations; it++)
+    for (unsigned int it = 0; it < params.iterationsPerStep; it++)
     {
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(params.numIndexTris * 3 - 1),
                        GL_UNSIGNED_SHORT, reinterpret_cast<void *>(0));
@@ -178,7 +176,7 @@ void IndexConversionPerfTest::drawIndexRange()
     // This test increments an offset each step. Drawing repeatedly may cause the system memory
     // to release. Then, using a fresh offset will require index range validation, which pages
     // it back in. The performance should be good even if the data is was used quite a bit.
-    for (unsigned int it = 0; it < params.iterations; it++)
+    for (unsigned int it = 0; it < params.iterationsPerStep; it++)
     {
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_SHORT,
                        reinterpret_cast<void *>(offset));
@@ -195,7 +193,7 @@ IndexConversionPerfParams IndexConversionPerfD3D11Params()
     params.minorVersion     = 0;
     params.windowWidth      = 256;
     params.windowHeight     = 256;
-    params.iterations       = 225;
+    params.iterationsPerStep = 225;
     params.numIndexTris     = 3000;
     params.indexRangeOffset = 0;
     return params;
@@ -209,7 +207,7 @@ IndexConversionPerfParams IndexRangeOffsetPerfD3D11Params()
     params.minorVersion     = 0;
     params.windowWidth      = 256;
     params.windowHeight     = 256;
-    params.iterations       = 16;
+    params.iterationsPerStep = 16;
     params.numIndexTris     = 50000;
     params.indexRangeOffset = 64;
     return params;

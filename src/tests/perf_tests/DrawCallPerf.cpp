@@ -117,8 +117,6 @@ void DrawCallPerfBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    ASSERT_LT(0u, params.iterations);
-
     if (params.stateChange == StateChange::Texture)
     {
         mProgram = SetupSimpleTextureProgram();
@@ -225,21 +223,21 @@ void DrawCallPerfBenchmark::drawBenchmark()
     switch (params.stateChange)
     {
         case StateChange::VertexBuffer:
-            ChangeVerticesThenDraw(params.iterations, numElements, mBuffer1, mBuffer2);
+            ChangeVerticesThenDraw(params.iterationsPerStep, numElements, mBuffer1, mBuffer2);
             break;
         case StateChange::Texture:
-            ChangeTextureThenDraw(params.iterations, numElements, mTexture1, mTexture2);
+            ChangeTextureThenDraw(params.iterationsPerStep, numElements, mTexture1, mTexture2);
             break;
         case StateChange::NoChange:
             if (eglParams.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE ||
                 (eglParams.renderer != EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE &&
                  eglParams.renderer != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE))
             {
-                ClearThenDraw(params.iterations, numElements);
+                ClearThenDraw(params.iterationsPerStep, numElements);
             }
             else
             {
-                JustDraw(params.iterations, numElements);
+                JustDraw(params.iterationsPerStep, numElements);
             }
             break;
     }

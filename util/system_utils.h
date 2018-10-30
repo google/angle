@@ -27,6 +27,9 @@ ANGLE_EXPORT void SetLowPriorityProcess();
 // Write a debug message, either to a standard output or Debug window.
 ANGLE_EXPORT void WriteDebugMessage(const char *format, ...);
 
+// Set thread affinity and priority.
+ANGLE_EXPORT bool StabilizeCPUForBenchmarking();
+
 } // namespace angle
 
 #endif  // UTIL_SYSTEM_UTILS_H_

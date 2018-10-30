@@ -15,6 +15,8 @@ using namespace rx;
 
 namespace
 {
+constexpr unsigned int kIterationsPerStep = 100;
+
 class VulkanPipelineCachePerfTest : public ANGLEPerfTest
 {
   public:
@@ -36,7 +38,7 @@ class VulkanPipelineCachePerfTest : public ANGLEPerfTest
 };
 
 VulkanPipelineCachePerfTest::VulkanPipelineCachePerfTest()
-    : ANGLEPerfTest("VulkanPipelineCachePerf", "")
+    : ANGLEPerfTest("VulkanPipelineCachePerf", "", kIterationsPerStep)
 {
 }
 
@@ -85,7 +87,7 @@ void VulkanPipelineCachePerfTest::step()
     vk::PipelineAndSerial *result = nullptr;
     gl::AttributesMask am;
 
-    for (int iteration = 0; iteration < 100; ++iteration)
+    for (unsigned int iteration = 0; iteration < kIterationsPerStep; ++iteration)
     {
         for (const auto &hit : mCacheHits)
         {

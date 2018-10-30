@@ -17,17 +17,19 @@
 
 namespace angle
 {
+constexpr unsigned int kIterationsPerStep = 256;
 
 struct TexturesParams final : public RenderTestParams
 {
     TexturesParams()
     {
+        iterationsPerStep = kIterationsPerStep;
+
         // Common default params
         majorVersion = 2;
         minorVersion = 0;
         windowWidth  = 720;
         windowHeight = 720;
-        iterations   = 256;
 
         numTextures                 = 8;
         textureRebindFrequency      = 5;
@@ -44,9 +46,6 @@ struct TexturesParams final : public RenderTestParams
     size_t textureMipCount;
 
     bool webgl;
-
-    // static parameters
-    size_t iterations;
 };
 
 std::ostream &operator<<(std::ostream &os, const TexturesParams &params)
@@ -102,8 +101,6 @@ TexturesBenchmark::TexturesBenchmark() : ANGLERenderTest("Textures", GetParam())
 void TexturesBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
-
-    ASSERT_GT(params.iterations, 0u);
 
     // Verify the uniform counts are within the limits
     GLint maxTextureUnits;
@@ -210,7 +207,7 @@ void TexturesBenchmark::drawBenchmark()
 {
     const auto &params = GetParam();
 
-    for (size_t it = 0; it < params.iterations; ++it)
+    for (size_t it = 0; it < params.iterationsPerStep; ++it)
     {
         if (it % params.textureRebindFrequency == 0)
         {

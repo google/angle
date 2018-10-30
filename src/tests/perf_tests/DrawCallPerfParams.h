@@ -22,7 +22,6 @@ struct DrawCallPerfParams : public RenderTestParams
 
     std::string suffix() const override;
 
-    unsigned int iterations;
     double runTimeSeconds;
     int numTris;
     bool useFBO;

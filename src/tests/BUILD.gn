@@ -126,7 +126,6 @@ if (is_win || is_linux || is_mac || is_android) {
   test("angle_end2end_tests") {
     include_dirs = [
       "../../src/tests",
-      "../../util",
     ]
     defines = [
       "ANGLE_EGL_LIBRARY_NAME=\"libEGL${angle_libs_suffix}\"",
@@ -187,7 +186,6 @@ if (is_win || is_linux || is_mac || is_android) {
   test("angle_white_box_tests") {
     include_dirs = [
       "../../src/tests",
-      "../../util",
     ]
 
     if (is_android) {
@@ -240,7 +238,6 @@ if (is_win || is_linux || is_android || is_mac) {
   test("angle_perftests") {
     include_dirs = [
       "../../src/tests",
-      "../../util",
     ]
 
     sources = angle_perf_tests_sources
@@ -471,7 +468,6 @@ if (build_angle_gles1_conform_tests) {
 
     include_dirs = [
       "../../src/tests",
-      "../../util",
     ]
 
     sources = [

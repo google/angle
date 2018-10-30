@@ -12,6 +12,7 @@
 
 namespace
 {
+constexpr unsigned int kIterationsPerStep = 5;
 
 enum class BufferType
 {
@@ -93,6 +94,7 @@ struct BlitFramebufferParams final : public RenderTestParams
 {
     BlitFramebufferParams()
     {
+        iterationsPerStep = kIterationsPerStep;
         majorVersion = 3;
         minorVersion = 0;
         windowWidth  = 256;
@@ -114,7 +116,6 @@ struct BlitFramebufferParams final : public RenderTestParams
     BufferType type              = BufferType::COLOR;
     unsigned int framebufferSize = 512;
     unsigned int samples         = 0;
-    unsigned int iterations      = 5;
 };
 
 std::ostream &operator<<(std::ostream &os, const BlitFramebufferParams &params)
@@ -216,7 +217,7 @@ void BlitFramebufferPerf::drawBenchmark()
             break;
     }
 
-    for (unsigned int iteration = 0; iteration < param.iterations; ++iteration)
+    for (unsigned int iteration = 0; iteration < param.iterationsPerStep; ++iteration)
     {
         glBlitFramebuffer(0, 0, size, size, 0, 0, size, size, mask, GL_NEAREST);
     }

@@ -47,4 +47,10 @@ void WriteDebugMessage(const char *format, ...)
     // TODO(jmadill): Implement this
 }
 
+bool StabilizeCPUForBenchmarking()
+{
+    // TODO(jmadill): Implement this. http://anglebug.com/2923
+    return true;
+}
+
 } // namespace angle

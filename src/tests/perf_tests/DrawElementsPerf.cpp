@@ -102,8 +102,6 @@ void DrawElementsPerfBenchmark::initializeBenchmark()
 {
     const auto &params = GetParam();
 
-    ASSERT_LT(0u, params.iterations);
-
     mProgram = SetupSimpleDrawProgram();
     ASSERT_NE(0u, mProgram);
 
@@ -175,7 +173,7 @@ void DrawElementsPerfBenchmark::drawBenchmark()
         const void *bufferData = (params.type == GL_UNSIGNED_INT)
                                      ? static_cast<GLvoid *>(mIntIndexData.data())
                                      : static_cast<GLvoid *>(mShortIndexData.data());
-        for (unsigned int it = 0; it < params.iterations; it++)
+        for (unsigned int it = 0; it < params.iterationsPerStep; it++)
         {
             glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, mBufferSize, bufferData);
             glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mCount), params.type, 0);
@@ -183,7 +181,7 @@ void DrawElementsPerfBenchmark::drawBenchmark()
     }
     else
     {
-        for (unsigned int it = 0; it < params.iterations; it++)
+        for (unsigned int it = 0; it < params.iterationsPerStep; it++)
         {
             glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mCount), params.type, 0);
         }

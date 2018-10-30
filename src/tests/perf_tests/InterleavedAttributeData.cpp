@@ -21,6 +21,8 @@ struct InterleavedAttributeDataParams final : public RenderTestParams
 {
     InterleavedAttributeDataParams()
     {
+        iterationsPerStep = 1;
+
         // Common default values
         majorVersion = 2;
         minorVersion = 0;
