@@ -499,9 +499,13 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
     glVertexBindingDivisor(instanceBinding, 1);
 
     // Do the first instanced draw
+    glClear(GL_COLOR_BUFFER_BIT);
     glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mIndices.size()), GL_UNSIGNED_SHORT,
                             mIndices.data(), static_cast<GLsizei>(mInstances.size()) / 3);
     checkQuads();
+
+    // Disable instancing.
+    glVertexBindingDivisor(instanceBinding, 0);
 
     // Load the vertex position into the binding indexed positionLoc.
     // Load the instance position into the binding indexed instancePosLoc.
@@ -516,6 +520,7 @@ TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
     glVertexAttribDivisor(instancePosLoc, 1);
 
     // Do the second instanced draw
+    glClear(GL_COLOR_BUFFER_BIT);
     glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mIndices.size()), GL_UNSIGNED_SHORT,
                             mIndices.data(), static_cast<GLsizei>(mInstances.size()) / 3);
     checkQuads();
