@@ -161,9 +161,19 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
                                       gl::IndexRange *outRange)
 {
     ContextVk *contextVk = vk::GetImpl(context);
+    RendererVk *renderer = contextVk->getRenderer();
+
+    // This is a workaround for the mock ICD not implementing buffer memory state.
+    // Could be removed if https://github.com/KhronosGroup/Vulkan-Tools/issues/84 is fixed.
+    if (renderer->isMockICDEnabled())
+    {
+        outRange->start = 0;
+        outRange->end   = 0;
+        return angle::Result::Continue();
+    }
 
     // Needed before reading buffer or we could get stale data.
-    ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
+    ANGLE_TRY(renderer->finish(contextVk));
 
     // TODO(jmadill): Consider keeping a shadow system memory copy in some cases.
     ASSERT(mBuffer.valid());

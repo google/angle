@@ -106,10 +106,9 @@ class ANGLERenderTest : public ANGLEPerfTest
 {
   public:
     ANGLERenderTest(const std::string &name, const RenderTestParams &testParams);
-    ANGLERenderTest(const std::string &name,
-                    const RenderTestParams &testParams,
-                    const std::vector<std::string> &extensionPrerequisites);
     ~ANGLERenderTest();
+
+    void addExtensionPrerequisite(const char *extensionName);
 
     virtual void initializeBenchmark() { }
     virtual void destroyBenchmark() { }
@@ -143,7 +142,7 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     EGLWindow *mEGLWindow;
     OSWindow *mOSWindow;
-    std::vector<std::string> mExtensionPrerequisites;
+    std::vector<const char *> mExtensionPrerequisites;
     angle::PlatformMethods mPlatformMethods;
 
     // Trace event record that can be output.

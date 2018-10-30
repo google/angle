@@ -90,7 +90,7 @@ std::string TexSubImageParams::suffix() const
 }
 
 TexSubImageBenchmark::TexSubImageBenchmark()
-    : ANGLERenderTest("TexSubImage", GetParam(), {"GL_EXT_texture_storage"}),
+    : ANGLERenderTest("TexSubImage", GetParam()),
       mProgram(0),
       mPositionLoc(-1),
       mTexCoordLoc(-1),
@@ -100,6 +100,7 @@ TexSubImageBenchmark::TexSubImageBenchmark()
       mIndexBuffer(0),
       mPixels(nullptr)
 {
+    addExtensionPrerequisite("GL_EXT_texture_storage");
 }
 
 GLuint TexSubImageBenchmark::createTexture()

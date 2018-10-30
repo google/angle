@@ -188,6 +188,8 @@ class RendererVk : angle::NonCopyable
         return angle::Result::Continue();
     }
 
+    bool isMockICDEnabled() const { return mEnableMockICD; }
+
   private:
     // Number of semaphores for external entities to renderer to issue a wait, such as surface's
     // image acquire.
@@ -228,6 +230,7 @@ class RendererVk : angle::NonCopyable
 
     VkInstance mInstance;
     bool mEnableValidationLayers;
+    bool mEnableMockICD;
     VkDebugReportCallbackEXT mDebugReportCallback;
     VkPhysicalDevice mPhysicalDevice;
     VkPhysicalDeviceProperties mPhysicalDeviceProperties;

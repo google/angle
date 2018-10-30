@@ -297,6 +297,7 @@ RendererVk::RendererVk()
     : mCapsInitialized(false),
       mInstance(VK_NULL_HANDLE),
       mEnableValidationLayers(false),
+      mEnableMockICD(false),
       mDebugReportCallback(VK_NULL_HANDLE),
       mPhysicalDevice(VK_NULL_HANDLE),
       mQueue(VK_NULL_HANDLE),
@@ -384,7 +385,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseDebugLayers(attribs),
                                                 ShouldEnableMockICD(attribs));
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
-    bool enableMockICD      = scopedEnvironment.canEnableMockICD();
+    mEnableMockICD          = scopedEnvironment.canEnableMockICD();
 
     // Gather global layer properties.
     uint32_t instanceLayerCount = 0;
@@ -481,7 +482,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
     ANGLE_VK_TRY(displayVk, vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount,
                                                        physicalDevices.data()));
-    ChoosePhysicalDevice(physicalDevices, enableMockICD, &mPhysicalDevice,
+    ChoosePhysicalDevice(physicalDevices, mEnableMockICD, &mPhysicalDevice,
                          &mPhysicalDeviceProperties);
 
     vkGetPhysicalDeviceFeatures(mPhysicalDevice, &mPhysicalDeviceFeatures);

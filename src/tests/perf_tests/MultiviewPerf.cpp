@@ -109,9 +109,11 @@ class MultiviewBenchmark : public ANGLERenderTest,
 {
   public:
     MultiviewBenchmark(const std::string &testName)
-        : ANGLERenderTest(testName, GetParam(), {"GL_ANGLE_multiview"}), mProgram(0)
+        : ANGLERenderTest(testName, GetParam()), mProgram(0)
     {
+        addExtensionPrerequisite("GL_ANGLE_multiview");
     }
+
     virtual ~MultiviewBenchmark()
     {
         if (mProgram != 0)

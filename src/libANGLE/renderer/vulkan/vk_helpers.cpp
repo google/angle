@@ -97,6 +97,13 @@ DynamicBuffer::DynamicBuffer(VkBufferUsageFlags usage, size_t minSize)
 
 void DynamicBuffer::init(size_t alignment, RendererVk *renderer)
 {
+    // Workaround for the mock ICD not supporting allocations greater than 0x1000.
+    // Could be removed if https://github.com/KhronosGroup/Vulkan-Tools/issues/84 is fixed.
+    if (renderer->isMockICDEnabled())
+    {
+        mMinSize = std::min<size_t>(mMinSize, 0x1000);
+    }
+
     ASSERT(alignment > 0);
     mAlignment = std::max(
         alignment,

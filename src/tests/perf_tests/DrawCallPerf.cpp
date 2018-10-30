@@ -259,6 +259,8 @@ DrawArraysPerfParams DrawArrays(const DrawCallPerfParams &base, StateChange stat
     return params;
 }
 
+// TODO(jmadill): Fix tex change test on Vulkan. http://anglebug.com/2938
+
 ANGLE_INSTANTIATE_TEST(
     DrawCallPerfBenchmark,
     DrawArrays(DrawCallPerfD3D9Params(false, false), StateChange::NoChange),
@@ -268,17 +270,19 @@ ANGLE_INSTANTIATE_TEST(
     DrawArrays(DrawCallPerfD3D11Params(true, true), StateChange::NoChange),
     DrawArrays(DrawCallPerfD3D11Params(false, false), StateChange::VertexBuffer),
     DrawArrays(DrawCallPerfD3D11Params(true, false), StateChange::VertexBuffer),
+    DrawArrays(DrawCallPerfD3D11Params(false, false), StateChange::Texture),
     DrawArrays(DrawCallPerfD3D11Params(true, false), StateChange::Texture),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::NoChange),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::NoChange),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, true), StateChange::NoChange),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::VertexBuffer),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::VertexBuffer),
+    DrawArrays(DrawCallPerfOpenGLOrGLESParams(false, false), StateChange::Texture),
     DrawArrays(DrawCallPerfOpenGLOrGLESParams(true, false), StateChange::Texture),
     DrawArrays(DrawCallPerfValidationOnly(), StateChange::NoChange),
-    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::VertexBuffer),
-    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::NoChange),
     DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::NoChange),
-    DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::VertexBuffer));
+    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::NoChange),
+    DrawArrays(DrawCallPerfVulkanParams(false, false), StateChange::VertexBuffer),
+    DrawArrays(DrawCallPerfVulkanParams(true, false), StateChange::VertexBuffer));
 
-} // namespace
+}  // anonymous namespace

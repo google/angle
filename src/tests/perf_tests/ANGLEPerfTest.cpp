@@ -244,21 +244,15 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
     mTraceEventBuffer.reserve(kInitialTraceEventBufferSize);
 }
 
-ANGLERenderTest::ANGLERenderTest(const std::string &name,
-                                 const RenderTestParams &testParams,
-                                 const std::vector<std::string> &extensionPrerequisites)
-    : ANGLEPerfTest(name, testParams.suffix()),
-      mTestParams(testParams),
-      mEGLWindow(createEGLWindow(testParams)),
-      mOSWindow(nullptr),
-      mExtensionPrerequisites(extensionPrerequisites)
-{
-}
-
 ANGLERenderTest::~ANGLERenderTest()
 {
     SafeDelete(mOSWindow);
     SafeDelete(mEGLWindow);
+}
+
+void ANGLERenderTest::addExtensionPrerequisite(const char *extensionName)
+{
+    mExtensionPrerequisites.push_back(extensionName);
 }
 
 void ANGLERenderTest::SetUp()
@@ -374,11 +368,12 @@ OSWindow *ANGLERenderTest::getWindow()
 
 bool ANGLERenderTest::areExtensionPrerequisitesFulfilled() const
 {
-    for (const auto &extension : mExtensionPrerequisites)
+    for (const char *extension : mExtensionPrerequisites)
     {
         if (!CheckExtensionExists(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)),
                                   extension))
         {
+            std::cout << "Test skipped due to missing extension: " << extension << std::endl;
             return false;
         }
     }
