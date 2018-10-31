@@ -471,7 +471,8 @@ class ImageHelper final : public RecordableGraphResource
                          uint32_t layerCount,
                          CommandBuffer *commandBuffer);
 
-    void clearDepthStencil(VkImageAspectFlags aspectFlags,
+    void clearDepthStencil(VkImageAspectFlags imageAspectFlags,
+                           VkImageAspectFlags clearAspectFlags,
                            const VkClearDepthStencilValue &depthStencil,
                            CommandBuffer *commandBuffer);
     gl::Extents getSize(const gl::ImageIndex &index) const;

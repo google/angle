@@ -108,6 +108,7 @@ libangle_includes = [
   "include/GLSLANG/ShaderLang.h",
   "include/GLSLANG/ShaderVars.h",
   "include/KHR/khrplatform.h",
+  "include/platform/FeaturesVk.h",
   "include/platform/Platform.h",
   "include/platform/WorkaroundsD3D.h",
 ]
@@ -747,7 +748,6 @@ libangle_vulkan_sources = [
   "src/libANGLE/renderer/vulkan/DeviceVk.h",
   "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
   "src/libANGLE/renderer/vulkan/DisplayVk.h",
-  "src/libANGLE/renderer/vulkan/FeaturesVk.h",
   "src/libANGLE/renderer/vulkan/FenceNVVk.cpp",
   "src/libANGLE/renderer/vulkan/FenceNVVk.h",
   "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",

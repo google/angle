@@ -529,7 +529,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
         // Clear the image.
         vk::CommandBuffer *commandBuffer = nullptr;
         ANGLE_TRY(mDepthStencilImage.recordCommands(displayVk, &commandBuffer));
-        mDepthStencilImage.clearDepthStencil(aspect, depthStencilClearValue, commandBuffer);
+        mDepthStencilImage.clearDepthStencil(aspect, aspect, depthStencilClearValue, commandBuffer);
 
         ANGLE_TRY(mDepthStencilImage.initImageView(displayVk, gl::TextureType::_2D, aspect,
                                                    gl::SwizzleState(), &mDepthStencilImageView, 1));

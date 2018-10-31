@@ -161,7 +161,8 @@ class FramebufferVk : public FramebufferImpl
     angle::Result clearWithClearAttachments(ContextVk *contextVk,
                                             bool clearColor,
                                             bool clearDepth,
-                                            bool clearStencil);
+                                            bool clearStencil,
+                                            const VkClearDepthStencilValue &clearDepthStencilValue);
     angle::Result clearWithDraw(ContextVk *contextVk, VkColorComponentFlags colorMaskFlags);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
 

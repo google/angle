@@ -36,6 +36,7 @@
 namespace angle
 {
 struct WorkaroundsD3D;
+struct FeaturesVk;
 using TraceEventHandle = uint64_t;
 using EGLDisplayType   = void *;
 struct PlatformMethods;
@@ -233,6 +234,13 @@ inline void DefaultOverrideWorkaroundsD3D(PlatformMethods *platform,
 {
 }
 
+using OverrideFeaturesVkFunc = void (*)(PlatformMethods *platform,
+                                        angle::FeaturesVk *workaroundsVulkan);
+inline void DefaultOverrideFeaturesVk(PlatformMethods *platform,
+                                      angle::FeaturesVk *workaroundsVulkan)
+{
+}
+
 // Callback on a successful program link with the program binary. Can be used to store
 // shaders to disk. Keys are a 160-bit SHA-1 hash.
 using ProgramKeyType   = std::array<uint8_t, 20>;
@@ -262,6 +270,7 @@ inline void DefaultCacheProgram(PlatformMethods *platform,
     OP(histogramSparse, HistogramSparse)                         \
     OP(histogramBoolean, HistogramBoolean)                       \
     OP(overrideWorkaroundsD3D, OverrideWorkaroundsD3D)           \
+    OP(overrideFeaturesVk, OverrideFeaturesVk)                   \
     OP(cacheProgram, CacheProgram)
 
 #define ANGLE_PLATFORM_METHOD_DEF(Name, CapsName) CapsName##Func Name = Default##CapsName;

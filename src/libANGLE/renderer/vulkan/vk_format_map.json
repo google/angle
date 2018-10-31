@@ -243,16 +243,16 @@
     },
     "fallbacks": {
         "D32_FLOAT_S8X24_UINT": {
-            "texture": "D24_UNORM_S8_UINT"
+            "texture": ["D24_UNORM_S8_UINT", "D32_FLOAT_S8X24_UINT"]
         },
         "D24_UNORM_S8_UINT": {
-            "texture": "D32_FLOAT_S8X24_UINT"
+            "texture": ["D32_FLOAT_S8X24_UINT", "D24_UNORM_S8_UINT"]
         },
         "D24_UNORM_X8_UINT": {
-            "texture": "D32_FLOAT_S8X24_UINT"
+            "texture": ["D32_FLOAT_S8X24_UINT", "D24_UNORM_S8_UINT"]
         },
         "S8_UINT": {
-            "texture": ["D24_UNORM_S8_UINT", "D32_FLOAT_S8X24_UINT"]
+            "texture": ["D24_UNORM_S8_UINT", "D32_FLOAT_S8X24_UINT", "S8_UINT"]
         },
 
         "R8_UNORM": {
@@ -352,6 +352,5 @@
         "R16G16B16A16_SSCALED": {
             "buffer": "R32G32B32A32_FLOAT"
         }
-
     }
 }

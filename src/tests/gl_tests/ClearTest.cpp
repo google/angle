@@ -6,6 +6,7 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include "platform/FeaturesVk.h"
 #include "random_utils.h"
 #include "shader_utils.h"
 #include "test_utils/gl_raii.h"
@@ -85,6 +86,9 @@ class ClearTest : public ClearTestBase
                                                bool scissor,
                                                bool clearDepth,
                                                bool clearStencil);
+
+    bool mHasDepth   = true;
+    bool mHasStencil = true;
 };
 
 class ClearTestES3 : public ClearTestBase
@@ -106,6 +110,77 @@ class ClearTestRGB : public ANGLETest
 
 class ScissoredClearTest : public ClearTest
 {
+};
+
+class VulkanClearTest : public ClearTest
+{
+  protected:
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        glBindTexture(GL_TEXTURE_2D, mColorTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+
+        // Setup Color/Stencil FBO with a stencil format that's emulated with packed depth/stencil.
+        glBindFramebuffer(GL_FRAMEBUFFER, mColorStencilFBO);
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorTexture,
+                               0);
+        glBindRenderbuffer(GL_RENDERBUFFER, mStencilTexture);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, getWindowWidth(),
+                              getWindowHeight());
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                                  mStencilTexture);
+
+        ASSERT_GL_NO_ERROR();
+
+        // Note: GL_DEPTH_COMPONENT24 is not allowed in GLES2.
+        if (getClientMajorVersion() >= 3)
+        {
+            // Setup Color/Depth FBO with a depth format that's emulated with packed depth/stencil.
+            glBindFramebuffer(GL_FRAMEBUFFER, mColorDepthFBO);
+
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   mColorTexture, 0);
+            glBindRenderbuffer(GL_RENDERBUFFER, mDepthTexture);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, getWindowWidth(),
+                                  getWindowHeight());
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                      mDepthTexture);
+        }
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override { ANGLETest::TearDown(); }
+
+    void bindColorStencilFBO()
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, mColorStencilFBO);
+        mHasDepth = false;
+    }
+
+    void bindColorDepthFBO()
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, mColorDepthFBO);
+        mHasStencil = false;
+    }
+
+    // Override a feature to force emulation of stencil-only and depth-only formats with a packed
+    // depth/stencil format
+    void overrideFeaturesVk(FeaturesVk *featuresVk) override
+    {
+        featuresVk->forceFallbackFormat = true;
+    }
+
+  private:
+    GLFramebuffer mColorStencilFBO;
+    GLFramebuffer mColorDepthFBO;
+    GLTexture mColorTexture;
+    GLRenderbuffer mDepthTexture;
+    GLRenderbuffer mStencilTexture;
 };
 
 // Test clearing the default framebuffer
@@ -546,12 +621,12 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
     const int whalf = w >> 1;
     const int hhalf = h >> 1;
 
-    // Clear to a random color, 1.0 depth and 0x00 stencil
+    // Clear to a random color, 0.9 depth and 0x00 stencil
     Vector4 color1(0.1f, 0.2f, 0.3f, 0.4f);
     GLColor color1RGB(color1);
 
     glClearColor(color1[0], color1[1], color1[2], color1[3]);
-    glClearDepthf(1.0f);
+    glClearDepthf(0.9f);
     glClearStencil(0x00);
     glClear(GL_COLOR_BUFFER_BIT | (clearDepth ? GL_DEPTH_BUFFER_BIT : 0) |
             (clearStencil ? GL_STENCIL_BUFFER_BIT : 0));
@@ -583,69 +658,83 @@ void ClearTest::MaskedScissoredColorDepthStencilClear(bool mask,
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     glDepthMask(GL_TRUE);
     glStencilMask(0xFF);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_SCISSOR_TEST);
     ASSERT_GL_NO_ERROR();
 
     // Verify second clear mask worked as expected.
     GLColor color2MaskedRGB(color2RGB[0], color1RGB[1], color2RGB[2], color1RGB[3]);
-    GLColor expectedColorRGB = mask ? color2MaskedRGB : color2RGB;
 
-    EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedColorRGB, 1);
+    GLColor expectedCenterColorRGB = mask ? color2MaskedRGB : color2RGB;
+    GLColor expectedCornerColorRGB = scissor ? color1RGB : expectedCenterColorRGB;
 
-    if (scissor)
-    {
-        EXPECT_PIXEL_COLOR_NEAR(0, 0, color1RGB, 1);
-        EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, color1RGB, 1);
-        EXPECT_PIXEL_COLOR_NEAR(0, h - 1, color1RGB, 1);
-        EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, color1RGB, 1);
-    }
+    EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedCenterColorRGB, 1);
 
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_STENCIL_TEST);
-    glDisable(GL_SCISSOR_TEST);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedCornerColorRGB, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, expectedCornerColorRGB, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, h - 1, expectedCornerColorRGB, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, expectedCornerColorRGB, 1);
 
-    if (clearDepth)
+    // If there is depth, but depth is not asked to be cleared, the depth buffer contains garbage,
+    // so no particular behavior can be expected.
+    if (clearDepth || !mHasDepth)
     {
         // We use a small shader to verify depth.
         ANGLE_GL_PROGRAM(depthTestProgram, essl1_shaders::vs::Passthrough(),
                          essl1_shaders::fs::Blue());
         glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_EQUAL);
-        drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), 0.0f);
+        glDepthFunc(mask ? GL_GREATER : GL_EQUAL);
+        // - If depth is cleared, but it's masked, 0.9 should be in the depth buffer.
+        // - If depth is cleared, but it's not masked, 0.5 should be in the depth buffer.
+        // - If depth is not cleared, the if above ensures there is no depth buffer at all,
+        //   which means depth test will always pass.
+        drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), mask ? 1.0f : 0.0f);
         glDisable(GL_DEPTH_TEST);
         ASSERT_GL_NO_ERROR();
 
-        expectedColorRGB = mask ? expectedColorRGB : GLColor::blue;
-        EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedColorRGB, 1);
+        // Either way, we expect blue to be written to the center.
+        expectedCenterColorRGB = GLColor::blue;
+        // If there is no depth, depth test always passes so the whole image must be blue.  Same if
+        // depth write is masked.
+        expectedCornerColorRGB =
+            mHasDepth && scissor && !mask ? expectedCornerColorRGB : GLColor::blue;
 
-        if (scissor)
-        {
-            EXPECT_PIXEL_COLOR_NEAR(0, 0, color1RGB, 1);
-            EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, color1RGB, 1);
-            EXPECT_PIXEL_COLOR_NEAR(0, h - 1, color1RGB, 1);
-            EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, color1RGB, 1);
-        }
+        EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedCenterColorRGB, 1);
+
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(0, h - 1, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, expectedCornerColorRGB, 1);
     }
 
-    if (clearStencil)
+    // If there is stencil, but it's not asked to be cleared, there is similarly no expectation.
+    if (clearStencil || !mHasStencil)
     {
         // And another small shader to verify stencil.
         ANGLE_GL_PROGRAM(stencilTestProgram, essl1_shaders::vs::Passthrough(),
                          essl1_shaders::fs::Green());
         glEnable(GL_STENCIL_TEST);
+        // - If stencil is cleared, but it's masked, 0x59 should be in the stencil buffer.
+        // - If stencil is cleared, but it's not masked, 0xFF should be in the stencil buffer.
+        // - If stencil is not cleared, the if above ensures there is no stencil buffer at all,
+        //   which means stencil test will always pass.
         glStencilFunc(GL_EQUAL, mask ? 0x59 : 0xFF, 0xFF);
         drawQuad(stencilTestProgram, essl1_shaders::PositionAttrib(), 0.0f);
         glDisable(GL_STENCIL_TEST);
         ASSERT_GL_NO_ERROR();
 
-        EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, GLColor::green, 1);
+        // Either way, we expect green to be written to the center.
+        expectedCenterColorRGB = GLColor::green;
+        // If there is no stencil, stencil test always passes so the whole image must be green.
+        expectedCornerColorRGB = mHasStencil && scissor ? expectedCornerColorRGB : GLColor::green;
 
-        if (scissor)
-        {
-            EXPECT_PIXEL_COLOR_NEAR(0, 0, color1RGB, 1);
-            EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, color1RGB, 1);
-            EXPECT_PIXEL_COLOR_NEAR(0, h - 1, color1RGB, 1);
-            EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, color1RGB, 1);
-        }
+        EXPECT_PIXEL_COLOR_NEAR(whalf, hhalf, expectedCenterColorRGB, 1);
+
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(0, h - 1, expectedCornerColorRGB, 1);
+        EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, expectedCornerColorRGB, 1);
     }
 }
 
@@ -709,6 +798,62 @@ TEST_P(ScissoredClearTest, MaskedScissoredColorAndDepthAndStencilClear)
     MaskedScissoredColorDepthStencilClear(true, true, true, true);
 }
 
+// Tests combined color+stencil scissored masked clears for a depth-stencil-emulated
+// stencil-only-type.
+TEST_P(VulkanClearTest, ColorAndStencilClear)
+{
+    bindColorStencilFBO();
+    MaskedScissoredColorDepthStencilClear(false, false, false, true);
+}
+
+TEST_P(VulkanClearTest, MaskedColorAndStencilClear)
+{
+    bindColorStencilFBO();
+    MaskedScissoredColorDepthStencilClear(true, false, false, true);
+}
+
+TEST_P(VulkanClearTest, ScissoredColorAndStencilClear)
+{
+    bindColorStencilFBO();
+    MaskedScissoredColorDepthStencilClear(false, true, false, true);
+}
+
+TEST_P(VulkanClearTest, MaskedScissoredColorAndStencilClear)
+{
+    bindColorStencilFBO();
+    MaskedScissoredColorDepthStencilClear(true, true, false, true);
+}
+
+// Tests combined color+depth scissored masked clears for a depth-stencil-emulated
+// depth-only-type.
+TEST_P(VulkanClearTest, ColorAndDepthClear)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    bindColorDepthFBO();
+    MaskedScissoredColorDepthStencilClear(false, false, true, false);
+}
+
+TEST_P(VulkanClearTest, MaskedColorAndDepthClear)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    bindColorDepthFBO();
+    MaskedScissoredColorDepthStencilClear(true, false, true, false);
+}
+
+TEST_P(VulkanClearTest, ScissoredColorAndDepthClear)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    bindColorDepthFBO();
+    MaskedScissoredColorDepthStencilClear(false, true, true, false);
+}
+
+TEST_P(VulkanClearTest, MaskedScissoredColorAndDepthClear)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    bindColorDepthFBO();
+    MaskedScissoredColorDepthStencilClear(true, true, true, false);
+}
+
 // Test that just clearing a nonexistent drawbuffer of the default framebuffer doesn't cause an
 // assert.
 TEST_P(ClearTestES3, ClearBuffer1OnDefaultFramebufferNoAssert)
@@ -735,6 +880,7 @@ ANGLE_INSTANTIATE_TEST(ClearTest,
                        ES2_VULKAN());
 ANGLE_INSTANTIATE_TEST(ClearTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(ScissoredClearTest, ES2_D3D11(), ES2_OPENGL(), ES2_VULKAN());
+ANGLE_INSTANTIATE_TEST(VulkanClearTest, ES2_VULKAN());
 
 // Not all ANGLE backends support RGB backbuffers
 ANGLE_INSTANTIATE_TEST(ClearTestRGB, ES2_D3D11(), ES3_D3D11(), ES2_VULKAN());

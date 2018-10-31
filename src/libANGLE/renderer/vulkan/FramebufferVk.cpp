@@ -187,8 +187,36 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
     bool clearColor = IsMaskFlagSet(static_cast<int>(mask), GL_COLOR_BUFFER_BIT);
 
-    const gl::FramebufferAttachment *depthStencilAttachment = mState.getDepthStencilAttachment();
-    const gl::State &glState                                = context->getGLState();
+    const gl::State &glState = context->getGLState();
+
+    VkClearDepthStencilValue clearDepthStencilValue =
+        contextVk->getClearDepthStencilValue().depthStencil;
+
+    // Apply the stencil mask to the clear value.
+    clearDepthStencilValue.stencil &=
+        contextVk->getGLState().getDepthStencilState().stencilWritemask;
+
+    // If the depth or stencil is being cleared, and the image was originally requested to have a
+    // single aspect, but it's emulated with a depth/stencil format, clear both aspects, setting the
+    // other aspect to 0.
+    if (clearStencil || clearDepth)
+    {
+        RenderTargetVk *depthStencil = mRenderTargetCache.getDepthStencil();
+        const vk::Format &format     = depthStencil->getImageFormat();
+
+        // GL_DEPTH_COMPONENT24 is always emulated with a format that has stencil.
+        if (format.angleFormat().stencilBits == 0)
+        {
+            clearStencil                   = true;
+            clearDepthStencilValue.stencil = 0;
+        }
+        // GL_STENCIL_INDEX8 may or may not be emulated.
+        else if (format.angleFormat().depthBits == 0 && format.vkTextureFormat != VK_FORMAT_S8_UINT)
+        {
+            clearDepth                   = true;
+            clearDepthStencilValue.depth = 0;
+        }
+    }
 
     // The most costly clear mode is when we need to mask out specific color channels. This can
     // only be done with a draw call. The scissor region however can easily be integrated with
@@ -206,24 +234,19 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 
         if (clearDepth || clearStencil)
         {
-            ANGLE_TRY(clearWithClearAttachments(contextVk, false, clearDepth, clearStencil));
+            ANGLE_TRY(clearWithClearAttachments(contextVk, false, clearDepth, clearStencil,
+                                                clearDepthStencilValue));
         }
         return angle::Result::Continue();
     }
 
-    // If we clear the depth OR the stencil but not both, and we have a packed depth stencil
-    // attachment, we need to use clearAttachments instead of clearDepthStencil since Vulkan won't
-    // allow us to clear one or the other separately.
-    // Note: this might be bugged if we emulate single depth or stencil with a packed format.
-    // TODO(jmadill): Investigate emulated packed formats. http://anglebug.com/2815
-    bool isSingleClearOnPackedDepthStencilAttachment =
-        depthStencilAttachment && (clearDepth != clearStencil);
-    if (glState.isScissorTestEnabled() || isSingleClearOnPackedDepthStencilAttachment)
+    if (glState.isScissorTestEnabled())
     {
         // With scissor test enabled, we clear very differently and we don't need to access
         // the image inside each attachment we can just use clearCmdAttachments with our
         // scissor region instead.
-        ANGLE_TRY(clearWithClearAttachments(contextVk, clearColor, clearDepth, clearStencil));
+        ANGLE_TRY(clearWithClearAttachments(contextVk, clearColor, clearDepth, clearStencil,
+                                            clearDepthStencilValue));
         return angle::Result::Continue();
     }
 
@@ -232,19 +255,22 @@ angle::Result FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
     {
         ANGLE_TRY(mFramebuffer.recordCommands(contextVk, &commandBuffer));
 
-        VkClearDepthStencilValue clearDepthStencilValue =
-            contextVk->getClearDepthStencilValue().depthStencil;
-
-        // Apply the stencil mask to the clear value.
-        clearDepthStencilValue.stencil &=
-            contextVk->getGLState().getDepthStencilState().stencilWritemask;
-
         RenderTargetVk *renderTarget         = mRenderTargetCache.getDepthStencil();
         const angle::Format &format          = renderTarget->getImageFormat().textureFormat();
         const VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
 
+        VkImageAspectFlags clearAspects = aspectFlags;
+        if (!clearDepth)
+        {
+            clearAspects &= ~VK_IMAGE_ASPECT_DEPTH_BIT;
+        }
+        if (!clearStencil)
+        {
+            clearAspects &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
+        }
+
         vk::ImageHelper *image = renderTarget->getImageForWrite(&mFramebuffer);
-        image->clearDepthStencil(aspectFlags, clearDepthStencilValue, commandBuffer);
+        image->clearDepthStencil(aspectFlags, clearAspects, clearDepthStencilValue, commandBuffer);
     }
 
     if (!clearColor)
@@ -875,10 +901,12 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
     return angle::Result::Continue();
 }
 
-angle::Result FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
-                                                       bool clearColor,
-                                                       bool clearDepth,
-                                                       bool clearStencil)
+angle::Result FramebufferVk::clearWithClearAttachments(
+    ContextVk *contextVk,
+    bool clearColor,
+    bool clearDepth,
+    bool clearStencil,
+    const VkClearDepthStencilValue &clearDepthStencilValue)
 {
     // Trigger a new command node to ensure overlapping writes happen sequentially.
     mFramebuffer.finishCurrentCommands(contextVk->getRenderer());
@@ -939,15 +967,8 @@ angle::Result FramebufferVk::clearWithClearAttachments(ContextVk *contextVk,
         }
     }
 
-    VkClearValue depthStencilClearValue = contextVk->getClearDepthStencilValue();
-
-    // Apply the stencil mask to the clear value.  Stencil mask is generally respected through the
-    // respective pipeline state, but clear uses its own special function.
-    if (clearStencil)
-    {
-        depthStencilClearValue.depthStencil.stencil &=
-            contextVk->getGLState().getDepthStencilState().stencilWritemask;
-    }
+    VkClearValue depthStencilClearValue = {};
+    depthStencilClearValue.depthStencil = clearDepthStencilValue;
 
     if (clearDepth && clearStencil && mState.getDepthStencilAttachment() != nullptr)
     {

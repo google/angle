@@ -3,14 +3,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// vk_helpers:
-//   Optional features for the Vulkan renderer.
+// FeaturesVk.h: Optional features for the Vulkan renderer.
+//
 
-#ifndef LIBANGLE_RENDERER_VULKAN_FEATURESVK_H_
-#define LIBANGLE_RENDERER_VULKAN_FEATURESVK_H_
+#ifndef ANGLE_PLATFORM_FEATURESVK_H_
+#define ANGLE_PLATFORM_FEATURESVK_H_
 
-namespace rx
+namespace angle
 {
+
 struct FeaturesVk
 {
     // Line segment rasterization must follow OpenGL rules. This means using an algorithm similar
@@ -37,7 +38,13 @@ struct FeaturesVk
     // Add an extra copy region when using vkCmdCopyBuffer as the Windows Intel driver seems
     // to have a bug where the last region is ignored.
     bool extraCopyBufferRegion = false;
-};
-}  // namespace rx
 
-#endif  // LIBANGLE_RENDERER_VULKAN_FEATURESVK_H_
+    // This flag is added for the sole purpose of end2end tests, to test the correctness
+    // of various algorithms when a fallback format is used, such as using a packed format to
+    // emulate a depth- or stencil-only format.
+    bool forceFallbackFormat = false;
+};
+
+}  // namespace angle
+
+#endif  // ANGLE_PLATFORM_FEATURESVK_H_

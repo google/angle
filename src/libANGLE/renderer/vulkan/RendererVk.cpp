@@ -531,7 +531,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     GlslangWrapper::Initialize();
 
     // Initialize the format table.
-    mFormatTable.initialize(mPhysicalDevice, &mNativeTextureCaps,
+    mFormatTable.initialize(mPhysicalDevice, mFeatures, &mNativeTextureCaps,
                             &mNativeCaps.compressedTextureFormats);
 
     return angle::Result::Continue();
@@ -751,6 +751,9 @@ void RendererVk::initFeatures()
     // http://anglebug.com/2838
     mFeatures.extraCopyBufferRegion = IsIntel(mPhysicalDeviceProperties.vendorID);
 #endif
+
+    angle::PlatformMethods *platform = ANGLEPlatformCurrent();
+    platform->overrideFeaturesVk(platform, &mFeatures);
 }
 
 void RendererVk::initPipelineCacheVkKey()

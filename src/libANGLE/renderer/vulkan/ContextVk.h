@@ -16,9 +16,13 @@
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
-namespace rx
+namespace angle
 {
 struct FeaturesVk;
+}
+
+namespace rx
+{
 class RendererVk;
 
 class ContextVk : public ContextImpl, public vk::Context
@@ -157,7 +161,7 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
     VkDevice getDevice() const;
-    const FeaturesVk &getFeatures() const;
+    const angle::FeaturesVk &getFeatures() const;
 
     void invalidateVertexAndIndexBuffers();
     void invalidateDefaultAttribute(size_t attribIndex);

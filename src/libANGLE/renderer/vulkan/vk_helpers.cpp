@@ -1238,18 +1238,19 @@ void ImageHelper::clearColorLayer(const VkClearColorValue &color,
     commandBuffer->clearColorImage(mImage, mCurrentLayout, color, 1, &range);
 }
 
-void ImageHelper::clearDepthStencil(VkImageAspectFlags aspectFlags,
+void ImageHelper::clearDepthStencil(VkImageAspectFlags imageAspectFlags,
+                                    VkImageAspectFlags clearAspectFlags,
                                     const VkClearDepthStencilValue &depthStencil,
                                     CommandBuffer *commandBuffer)
 {
     ASSERT(valid());
 
-    changeLayoutWithStages(aspectFlags, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+    changeLayoutWithStages(imageAspectFlags, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
                            commandBuffer);
 
     VkImageSubresourceRange clearRange = {
-        /*aspectMask*/ aspectFlags,
+        /*aspectMask*/ clearAspectFlags,
         /*baseMipLevel*/ 0,
         /*levelCount*/ 1,
         /*baseArrayLayer*/ 0,

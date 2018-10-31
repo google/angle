@@ -89,7 +89,7 @@ angle::Result RenderbufferVk::setStorage(const gl::Context *context,
 
         if (isDepthOrStencilFormat)
         {
-            mImage.clearDepthStencil(aspect, kDefaultClearDepthStencilValue, commandBuffer);
+            mImage.clearDepthStencil(aspect, aspect, kDefaultClearDepthStencilValue, commandBuffer);
         }
         else
         {

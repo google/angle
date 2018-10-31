@@ -17,7 +17,6 @@
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
-#include "libANGLE/renderer/vulkan/FeaturesVk.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
 #include "libANGLE/renderer/vulkan/vk_format_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
@@ -171,7 +170,7 @@ class RendererVk : angle::NonCopyable
     Serial issueShaderSerial();
 
     vk::ShaderLibrary *getShaderLibrary();
-    const FeaturesVk &getFeatures() const { return mFeatures; }
+    const angle::FeaturesVk &getFeatures() const { return mFeatures; }
 
     angle::Result getTimestamp(vk::Context *context, uint64_t *timestampOut);
 
@@ -226,7 +225,7 @@ class RendererVk : angle::NonCopyable
     mutable gl::TextureCapsMap mNativeTextureCaps;
     mutable gl::Extensions mNativeExtensions;
     mutable gl::Limitations mNativeLimitations;
-    mutable FeaturesVk mFeatures;
+    mutable angle::FeaturesVk mFeatures;
 
     VkInstance mInstance;
     bool mEnableValidationLayers;

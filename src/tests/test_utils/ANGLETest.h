@@ -118,8 +118,6 @@ static constexpr GLColor32F kFloatRed   = {1.0f, 0.0f, 0.0f, 1.0f};
 static constexpr GLColor32F kFloatGreen = {0.0f, 1.0f, 0.0f, 1.0f};
 static constexpr GLColor32F kFloatBlue  = {0.0f, 0.0f, 1.0f, 1.0f};
 
-struct WorkaroundsD3D;
-
 // The input here for pixelPoints are the expected integer window coordinates, we add .5 to every
 // one of them and re-scale the numbers to be between [-1,1]. Using this technique, we can make
 // sure the rasterization stage will end up drawing pixels at the expected locations.
@@ -260,6 +258,7 @@ class ANGLETestBase
     static bool eglDisplayExtensionEnabled(EGLDisplay display, const std::string &extName);
 
     virtual void overrideWorkaroundsD3D(angle::WorkaroundsD3D *workaroundsD3D) {}
+    virtual void overrideFeaturesVk(angle::FeaturesVk *workaroundsVulkan) {}
 
   protected:
     void ANGLETestSetUp();
@@ -474,7 +473,6 @@ bool IsRelease();
     do                                                            \
     {                                                             \
         if (COND)                                                 \
-                                                                  \
         {                                                         \
             std::cout << "Test skipped: " #COND "." << std::endl; \
             return;                                               \

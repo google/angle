@@ -71,7 +71,7 @@ int FindSupportedFormat(VkPhysicalDevice physicalDevice,
                         int numInfo,
                         SupportTest hasSupport)
 {
-    ASSERT(numInfo > 1);
+    ASSERT(numInfo > 0);
     const int last = numInfo - 1;
 
     for (int i = 0; i < last; ++i)
@@ -131,9 +131,14 @@ Format::Format()
 
 void Format::initTextureFallback(VkPhysicalDevice physicalDevice,
                                  const TextureFormatInitInfo *info,
-                                 int numInfo)
+                                 int numInfo,
+                                 const angle::FeaturesVk &featuresVk)
 {
-    int i = FindSupportedFormat(physicalDevice, info, numInfo, HasFullTextureFormatSupport);
+    size_t skip = featuresVk.forceFallbackFormat ? 1 : 0;
+    int i       = FindSupportedFormat(physicalDevice, info + skip, numInfo - skip,
+                                HasFullTextureFormatSupport);
+    i += skip;
+
     textureFormatID            = info[i].format;
     vkTextureFormat            = info[i].vkFormat;
     textureInitializerFunction = info[i].initializer;
@@ -186,6 +191,7 @@ FormatTable::~FormatTable()
 }
 
 void FormatTable::initialize(VkPhysicalDevice physicalDevice,
+                             const angle::FeaturesVk &featuresVk,
                              gl::TextureCapsMap *outTextureCapsMap,
                              std::vector<GLenum> *outCompressedTextureFormats)
 {
@@ -193,7 +199,7 @@ void FormatTable::initialize(VkPhysicalDevice physicalDevice,
     {
         const auto formatID              = static_cast<angle::FormatID>(formatIndex);
         const angle::Format &angleFormat = angle::Format::Get(formatID);
-        mFormatData[formatIndex].initialize(physicalDevice, angleFormat);
+        mFormatData[formatIndex].initialize(physicalDevice, angleFormat, featuresVk);
         const GLenum internalFormat = mFormatData[formatIndex].internalFormat;
         mFormatData[formatIndex].textureLoadFunctions =
             GetLoadFunctionsMap(internalFormat, mFormatData[formatIndex].textureFormatID);
