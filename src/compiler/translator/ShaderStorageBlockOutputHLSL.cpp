@@ -459,22 +459,22 @@ void ShaderStorageBlockOutputHLSL::writeEOpIndexDirectOrIndirectOutput(TInfoSink
             {
                 if (mRowMajor)
                 {
-                    out << " + " << BlockLayoutEncoder::BytesPerComponent;
+                    out << " + " << str(BlockLayoutEncoder::BytesPerComponent);
                 }
                 else
                 {
-                    out << " + " << mMatrixStride;
+                    out << " + " << str(mMatrixStride);
                 }
             }
             else if (node->getType().isScalar() && !type.isArray())
             {
                 if (mRowMajor)
                 {
-                    out << " + " << mMatrixStride;
+                    out << " + " << str(mMatrixStride);
                 }
                 else
                 {
-                    out << " + " << BlockLayoutEncoder::BytesPerComponent;
+                    out << " + " << str(BlockLayoutEncoder::BytesPerComponent);
                 }
             }
 
