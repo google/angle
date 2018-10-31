@@ -199,6 +199,11 @@ DrawElementsPerfParams DrawElementsPerfD3D11Params(bool indexBufferChanged,
         useNullDevice ? angle::egl_platform::D3D11_NULL() : angle::egl_platform::D3D11();
     params.indexBufferChanged = indexBufferChanged;
     params.type               = indexType;
+
+    // Scale down iterations for slower tests.
+    if (indexBufferChanged)
+        params.iterationsPerStep /= 100;
+
     return params;
 }
 
@@ -207,6 +212,11 @@ DrawElementsPerfParams DrawElementsPerfD3D9Params(bool indexBufferChanged)
     DrawElementsPerfParams params;
     params.eglParameters      = angle::egl_platform::D3D9();
     params.indexBufferChanged = indexBufferChanged;
+
+    // Scale down iterations for slower tests.
+    if (indexBufferChanged)
+        params.iterationsPerStep /= 100;
+
     return params;
 }
 
@@ -216,6 +226,11 @@ DrawElementsPerfParams DrawElementsPerfOpenGLOrGLESParams(bool indexBufferChange
     params.eglParameters      = angle::egl_platform::OPENGL_OR_GLES(false);
     params.indexBufferChanged = indexBufferChanged;
     params.type               = indexType;
+
+    // Scale down iterations for slower tests.
+    if (indexBufferChanged)
+        params.iterationsPerStep /= 100;
+
     return params;
 }
 
@@ -228,6 +243,11 @@ DrawElementsPerfParams DrawElementsPerfVulkanParams(bool indexBufferChanged,
         useNullDevice ? angle::egl_platform::VULKAN_NULL() : angle::egl_platform::VULKAN();
     params.indexBufferChanged = indexBufferChanged;
     params.type               = indexType;
+
+    // Scale down iterations for slower tests.
+    if (indexBufferChanged)
+        params.iterationsPerStep /= 100;
+
     return params;
 }
 
