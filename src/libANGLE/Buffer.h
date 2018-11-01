@@ -117,7 +117,7 @@ class Buffer final : public RefCountObject,
     GLint64 getMapOffset() const { return mState.mMapOffset; }
     GLint64 getMapLength() const { return mState.mMapLength; }
     GLint64 getSize() const { return mState.mSize; }
-    GLint getMemorySize() const;
+    GLint64 getMemorySize() const;
 
     rx::BufferImpl *getImplementation() const { return mImpl; }
 

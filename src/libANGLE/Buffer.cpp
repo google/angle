@@ -246,10 +246,10 @@ angle::Result Buffer::getIndexRange(const gl::Context *context,
     return angle::Result::Continue();
 }
 
-GLint Buffer::getMemorySize() const
+GLint64 Buffer::getMemorySize() const
 {
-    GLint implSize = mImpl->getMemorySize();
-    return implSize > 0 ? implSize : clampCast<GLint>(mState.mSize);
+    GLint64 implSize = mImpl->getMemorySize();
+    return implSize > 0 ? implSize : mState.mSize;
 }
 
 bool Buffer::isBound() const
