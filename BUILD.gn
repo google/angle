@@ -50,8 +50,8 @@ angle_git_is_present = exec_script("src/commit_id.py",
 
 angle_use_commit_id = angle_git_is_present == 1
 
-import("src/libGLESv2.gni")
 import("src/compiler.gni")
+import("src/libGLESv2.gni")
 
 # This config is exported to dependent targets (and also applied to internal
 # ones).

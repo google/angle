@@ -60,3 +60,4 @@ Release_Win32/
 Release_x64/
 TestResults.qpa
 tools/clang
+.idea/

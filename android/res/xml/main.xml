@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2018 The ANGLE Project Authors. All rights reserved.  Use of this
+  source code is governed by a BSD-style license that can be found in the
+  LICENSE file.
+-->
+
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="@string/pref_key_angle_flags_category"
+        android:title="@string/angle_general_title">
+
+        <!--TODO : Issue 2989 : boulder-graphics-team@google.com
+        Enable the switch once Android can boot with ANGLE enabled for everything-->
+        <android.support.v14.preference.SwitchPreference
+            android:key="@string/pref_key_all_angle"
+            android:title="@string/rules_file"
+            android:summary="@string/global_settings_driver_all_angle"
+            android:defaultValue="false"
+            android:enabled="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/pref_key_select_opengl_driver_category"
+        android:title="@string/select_opengl_driver_title">
+
+    </PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

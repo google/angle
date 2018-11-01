@@ -7,17 +7,22 @@ import("//third_party/angle/gni/angle.gni")
 
 template("angle_apk") {
   manifest_target_name = "${target_name}__manifest"
-  manifest_path = "${target_gen_dir}/${target_name}/AndroidManifest.xml"
+  manifest_path = "${target_gen_dir}/${target_name}/android/AndroidManifest.xml"
 
   jinja_template(manifest_target_name) {
-    input = "//third_party/angle/AndroidManifest.xml.jinja2"
+    input = "//third_party/angle/android/AndroidManifest.xml.jinja2"
     output = manifest_path
     variables = [ "manifest_package=${invoker.package_name}" ]
   }
 
   android_resources("${invoker.package_name}_resources") {
     resource_dirs = [ "android/res" ]
-    custom_package = "${invoker.package_name}"
+
+    custom_package = "com.android.angle.common"
+    deps = [
+      "//third_party/android_deps:android_support_v14_preference_java",
+      "//third_party/android_deps:android_support_v7_preference_java",
+    ]
   }
 
   android_assets("${invoker.package_name}_assets") {
@@ -34,6 +39,9 @@ template("angle_apk") {
     deps = [
       ":${invoker.package_name}_assets",
       ":${invoker.package_name}_resources",
+      "//base:base_java",
+      "//third_party/android_deps:android_support_v14_preference_java",
+      "//third_party/android_deps:android_support_v7_preference_java",
     ]
 
     uncompress_shared_libraries = true
@@ -54,5 +62,18 @@ template("angle_apk") {
       "//third_party/angle:libGLESv2${angle_libs_suffix}",
       "//third_party/angle:libfeature_support${angle_libs_suffix}",
     ]
+
+    # Common files required by all builds
+    java_files = [
+      "android/src/com/android/angle/common/GlobalSettings.java",
+      "android/src/com/android/angle/common/MainFragment.java",
+      "android/src/com/android/angle/common/Receiver.java",
+    ]
+
+    if (target_name == "aosp_apk") {
+      java_files += [ "android/src/com/android/angle/MainActivity.java" ]
+    } else if (target_name == "google_apk") {
+      java_files += [ "android/src/com/google/android/angle/MainActivity.java" ]
+    }
   }
 }
