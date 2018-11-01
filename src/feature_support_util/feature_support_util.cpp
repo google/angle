@@ -892,11 +892,11 @@ ANGLE_EXPORT bool ANGLEUseForApplication(const char *appName,
     RuleList *rules              = RuleList::ReadRulesFromJsonString(jsonFileContents);
     rules->logRules();
 
-    if (developerOption != ANGLE_NO_PREFERENCE)
+    if (developerOption != ANGLE_PREFER_DEFAULT)
     {
         rtn = (developerOption == ANGLE_PREFER_ANGLE);
     }
-    else if ((appPreference != ANGLE_NO_PREFERENCE) && rules->getAppChoice(scenario))
+    else if ((appPreference != ANGLE_PREFER_DEFAULT) && rules->getAppChoice(scenario))
     {
         rtn = (appPreference == ANGLE_PREFER_ANGLE);
     }

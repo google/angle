@@ -27,9 +27,9 @@ constexpr unsigned int kFeatureVersion_HighestSupported = 1;
 // strongly typed, and look at renaming it and its values.
 typedef enum ANGLEPreference
 {
-    ANGLE_NO_PREFERENCE = 0,
-    ANGLE_PREFER_NATIVE = 1,
-    ANGLE_PREFER_ANGLE  = 2,
+    ANGLE_PREFER_DEFAULT = 0,
+    ANGLE_PREFER_NATIVE  = 1,
+    ANGLE_PREFER_ANGLE   = 2,
 } ANGLEPreference;
 
 // The Android EGL loader will call this function in order to determine whether

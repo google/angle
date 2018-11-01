@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2018 The ANGLE Project Authors. All rights reserved.  Use of this
+  source code is governed by a BSD-style license that can be found in the
+  LICENSE file.
+-->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.google.android.angle">
+
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+
+    <uses-sdk android:minSdkVersion="26"
+              android:targetSdkVersion="28">
+    </uses-sdk>
+
+    <application android:label="Android System Angle"
+        android:extractNativeLibs="false"
+        android:multiArch="true">
+
+        <activity android:name=".MainActivity"
+                  android:label="@string/angle_preferences"
+                  android:description="@string/angle_preferences_summary"
+                  android:theme="@style/Theme.Settings"
+                  android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.INFO"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
+
+            <!-- Mark this fragment as a dynamic setting in the development category. -->
+            <intent-filter>
+                <action android:name="com.android.settings.action.IA_SETTINGS" />
+            </intent-filter>
+            <meta-data android:name="com.android.settings.category"
+                       android:value="com.android.settings.category.ia.development" />
+            <meta-data android:name="com.android.settings.summary" android:resource="@string/angle_preferences_summary" />
+            <meta-data android:name="com.android.settings.order" android:value="100" />
+            <meta-data android:name="com.android.settings.profile" android:value="primary_profile_only" />
+        </activity>
+    </application>
+</manifest>

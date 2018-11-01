@@ -7,6 +7,7 @@ R"=====({"Rules":
    "AppChoice" : true, "NonChoice" : true,
    "Applications" :
    [
+    {"AppName" : "com.android.angle"},
     {"AppName" : "com.google.android.apps.internal.cubey"},
     {"AppName" : "com.android.gl2jni"}
    ],

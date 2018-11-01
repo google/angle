@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2018 The ANGLE Project Authors. All rights reserved.  Use of this
+  source code is governed by a BSD-style license that can be found in the
+  LICENSE file.
+-->
+
+<resources>
+    <!-- This is the user visible name of the app and title. -->
+    <string name="angle_preferences">ANGLE Preferences</string>
+
+    <!-- This string is a description of what "ANGLE Preferences" is.
+    It is used as a subtitle or summary text to describe this ANGLE app. -->
+    <string name="angle_preferences_summary">Modify ANGLE settings</string>
+
+    <!-- Category title listing ANGLE flags [CHAR_LIMIT=50]-->
+    <string name="angle_general_title">General</string>
+
+    <!-- This is the label for a toggle button.
+    When the toggle is enabled, we will use ANGLE for all PKGs, regardless of any other settings.
+    This is also used as a Quick Settings tile label. -->
+    <string name="rules_file">Use ANGLE for all apps</string>
+
+    <!-- ListPreference title listing installed packages [CHAR_LIMIT=50]-->
+    <string name="select_opengl_driver_title">Select OpenGL Driver</string>
+
+    <!-- These are keywords that the user can use to search for this app.
+    'angle' should not be translated, as it is an app name. -->
+    <string name="keywords">angle, opengl, graphics</string>
+
+</resources>

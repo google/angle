@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2018 The ANGLE Project Authors. All rights reserved.  Use of this
+  source code is governed by a BSD-style license that can be found in the
+  LICENSE file.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:orientation="vertical">
+
+    <fragment  android:name="com.google.android.angle.MainFragment"
+               android:id="@+id/fragment"
+               android:layout_height="wrap_content"
+               android:layout_width="match_parent"/>
+
+</LinearLayout>

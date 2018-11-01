@@ -49,8 +49,8 @@ angle_git_is_present = exec_script("src/commit_id.py",
 
 angle_use_commit_id = angle_git_is_present == 1
 
-import("src/libGLESv2.gni")
 import("src/compiler.gni")
+import("src/libGLESv2.gni")
 
 # This config is exported to dependent targets (and also applied to internal
 # ones).
@@ -962,10 +962,23 @@ if (is_android) {
       "src/feature_support_util/a4a_rules.json",
     ]
   }
+  android_resources("angle_apk_resources") {
+    custom_package = "com.google.android.angle"
+    resource_dirs = [ "android/res" ]
+    deps = [
+      "//third_party/android_deps:android_support_v14_preference_java",
+      "//third_party/android_deps:android_support_v7_preference_java",
+    ]
+  }
   android_apk("angle_apk") {
     deps = [
       ":angle_apk_assets",
+      ":angle_apk_resources",
+      "//base:base_java",
+      "//third_party/android_deps:android_support_v14_preference_java",
+      "//third_party/android_deps:android_support_v7_preference_java",
     ]
+
     if (build_apk_secondary_abi && android_64bit_target_cpu) {
       secondary_abi_shared_libraries = [
         "//third_party/angle:libEGL${angle_libs_suffix}($android_secondary_abi_toolchain)",
@@ -975,7 +988,7 @@ if (is_android) {
       ]
     }
 
-    android_manifest = "AndroidManifest.xml"
+    android_manifest = "android/AndroidManifest.xml"
 
     apk_name = "ANGLEPrebuilt"
     uncompress_shared_libraries = true
@@ -984,6 +997,13 @@ if (is_android) {
       "//third_party/angle:libGLESv1_CM${angle_libs_suffix}",
       "//third_party/angle:libGLESv2${angle_libs_suffix}",
       "//third_party/angle:libfeature_support${angle_libs_suffix}",
+    ]
+
+    java_files = [
+      "android/src/com/google/android/angle/GlobalSettings.java",
+      "android/src/com/google/android/angle/MainActivity.java",
+      "android/src/com/google/android/angle/MainFragment.java",
+      "android/src/com/google/android/angle/Receiver.java",
     ]
   }
 }
