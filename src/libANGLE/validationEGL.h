@@ -166,7 +166,9 @@ Error ValidateReleaseTexImage(const Display *display,
                               const EGLSurface eglSurface,
                               const EGLint buffer);
 
-Error ValidateSwapInterval(const Display *display, const Surface *draw_surface);
+Error ValidateSwapInterval(const Display *display,
+                           const Surface *draw_surface,
+                           const gl::Context *context);
 
 Error ValidateBindAPI(const EGLenum api);
 

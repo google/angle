@@ -258,9 +258,7 @@
 2546 ANDROID : dEQP-EGL.functional.color_clears.single_context.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.native_color_mapping.native_window.* = FAIL
 2546 ANDROID : dEQP-EGL.functional.native_coord_mapping.native_window.* = FAIL
-2546 ANDROID : dEQP-EGL.functional.negative_api.choose_config = FAIL
 2546 ANDROID : dEQP-EGL.functional.negative_api.copy_buffers = FAIL
-2546 ANDROID : dEQP-EGL.functional.negative_api.swap_interval = FAIL
 2546 ANDROID : dEQP-EGL.functional.partial_update.odd_clear_* = FAIL
 2546 ANDROID : dEQP-EGL.functional.partial_update.odd_render_* = FAIL
 2546 ANDROID : dEQP-EGL.functional.partial_update.render_* = FAIL

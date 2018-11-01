@@ -684,12 +684,13 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
     ANGLE_SCOPED_GLOBAL_LOCK();
     EVENT("(EGLDisplay dpy = 0x%016" PRIxPTR ", EGLint interval = %d)", (uintptr_t)dpy, interval);
     Thread *thread = GetCurrentThread();
+    gl::Context *context = thread->getContext();
 
     Display *display      = static_cast<Display *>(dpy);
     Surface *draw_surface = static_cast<Surface *>(thread->getCurrentDrawSurface());
 
-    ANGLE_EGL_TRY_RETURN(thread, ValidateSwapInterval(display, draw_surface), "eglSwapInterval",
-                         GetDisplayIfValid(display), EGL_FALSE);
+    ANGLE_EGL_TRY_RETURN(thread, ValidateSwapInterval(display, draw_surface, context),
+                         "eglSwapInterval", GetDisplayIfValid(display), EGL_FALSE);
 
     const egl::Config *surfaceConfig = draw_surface->getConfig();
     EGLint clampedInterval           = std::min(std::max(interval, surfaceConfig->minSwapInterval),

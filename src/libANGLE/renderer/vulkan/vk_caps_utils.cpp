@@ -235,7 +235,7 @@ egl::Config GenerateDefaultConfig(const VkPhysicalDeviceProperties &physicalDevi
     config.renderableType        = EGL_OPENGL_ES2_BIT;
     config.sampleBuffers         = (sampleCount > 0) ? 1 : 0;
     config.samples               = sampleCount;
-    config.surfaceType           = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
+    config.surfaceType = EGL_WINDOW_BIT | EGL_PBUFFER_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
     // Vulkan surfaces use a different origin than OpenGL, always prefer to be flipped vertically if
     // possible.
     config.optimalOrientation    = EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE;
