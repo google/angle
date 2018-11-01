@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ed0fd02c_0fcbe3c7",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-01T08:12:07Z",
+      "side": 1,
+      "message": "Good point. Done",
+      "parentUuid": "c8f61518_134456e4",
+      "revId": "744326ace2a634dcb72ea6c1cf56c08c8c793ed0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1007b681_48ee0749",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 6
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "a762eb7c_c882a82f",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-01T08:12:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1007b681_48ee0749",
+      "range": {
+        "startLine": 50,
+        "startChar": 1,
+        "endLine": 58,
+        "endChar": 13
+      },
+      "revId": "744326ace2a634dcb72ea6c1cf56c08c8c793ed0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "17f7ad25_9d131c4f",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 6
@@ -56,6 +98,24 @@
       "revId": "744326ace2a634dcb72ea6c1cf56c08c8c793ed0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0aa69559_8c4a720e",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-01T08:12:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17f7ad25_9d131c4f",
+      "revId": "744326ace2a634dcb72ea6c1cf56c08c8c793ed0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "d7c03e62_d68de872",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-01T08:12:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02c89b3c_47334b42",
+      "revId": "744326ace2a634dcb72ea6c1cf56c08c8c793ed0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbe96566_8bf93a28",
         "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
         "patchSetId": 6
@@ -87,6 +165,24 @@
       "writtenOn": "2018-10-31T11:50:00Z",
       "side": 1,
       "message": "Can you explain that this is a member of an interface block so it can have a row_major in its layout qualifiers? And that we don\u0027t still need to call recursively to get the storage but shouldn\u0027t assign rowmajor again.\n\nI\u0027m also surprised we don\u0027t have something similar for indexing into structs. Can\u0027t struct members be declared row-major too ?",
+      "revId": "744326ace2a634dcb72ea6c1cf56c08c8c793ed0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c21dfb7_aeb4d836",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-01T08:12:07Z",
+      "side": 1,
+      "message": "\u003e Can\u0027t struct members be declared row-major too ?\n\nCurrently, it can\u0027t. Maybe it\u0027s because the same structure can be used in different interface blocks with different column_major/row_major qualifiers.",
+      "parentUuid": "cbe96566_8bf93a28",
       "revId": "744326ace2a634dcb72ea6c1cf56c08c8c793ed0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -121,6 +217,30 @@
       "writtenOn": "2018-10-31T11:50:00Z",
       "side": 1,
       "message": "The semantic of assignRowMajor is wrong, either all conditions or booleans need to be inverted, or the variable should be renamed to \"rowMajorAlreadyAssigned\"",
+      "range": {
+        "startLine": 97,
+        "startChar": 9,
+        "endLine": 97,
+        "endChar": 23
+      },
+      "revId": "744326ace2a634dcb72ea6c1cf56c08c8c793ed0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78228e65_0a2b2b9c",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2018-11-01T08:12:07Z",
+      "side": 1,
+      "message": "Rename it to rowMajorAlreadyAssigned. Done.",
+      "parentUuid": "5342ed95_08d9b70e",
       "range": {
         "startLine": 97,
         "startChar": 9,
