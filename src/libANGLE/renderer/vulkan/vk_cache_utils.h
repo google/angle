@@ -48,16 +48,7 @@ using SharedPipelineLayout      = RefCounted<PipelineLayout>;
 // Enable struct padding warnings for the code below since it is used in caches.
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 
-struct alignas(4) PackedAttachmentDesc
-{
-    uint8_t flags;
-    uint8_t samples;
-    uint16_t format;
-};
-
-static_assert(sizeof(PackedAttachmentDesc) == 4, "Size check failed");
-
-class RenderPassDesc final
+class alignas(4) RenderPassDesc final
 {
   public:
     RenderPassDesc();
@@ -65,29 +56,31 @@ class RenderPassDesc final
     RenderPassDesc(const RenderPassDesc &other);
     RenderPassDesc &operator=(const RenderPassDesc &other);
 
-    // Depth stencil attachments must be packed after color attachments.
-    void packColorAttachment(const ImageHelper &imageHelper);
-    void packDepthStencilAttachment(const ImageHelper &imageHelper);
+    void packAttachment(const Format &format);
 
     size_t hash() const;
 
-    uint32_t attachmentCount() const;
-    uint32_t colorAttachmentCount() const;
-    uint32_t depthStencilAttachmentCount() const;
-    const PackedAttachmentDesc &operator[](size_t index) const;
+    size_t attachmentCount() const;
+
+    void setSamples(GLint samples);
+
+    uint8_t samples() const { return mSamples; }
+
+    angle::FormatID operator[](size_t index) const
+    {
+        ASSERT(index < mAttachmentFormats.size());
+        return static_cast<angle::FormatID>(mAttachmentFormats[index]);
+    }
 
   private:
-    void packAttachment(uint32_t index, const ImageHelper &imageHelper);
-
-    uint32_t mColorAttachmentCount;
-    uint32_t mDepthStencilAttachmentCount;
-    gl::AttachmentArray<PackedAttachmentDesc> mAttachmentDescs;
-    uint32_t mPadding[4];
+    uint8_t mSamples;
+    uint8_t mAttachmentCount;
+    gl::AttachmentArray<uint8_t> mAttachmentFormats;
 };
 
 bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs);
 
-static_assert(sizeof(RenderPassDesc) == 64, "Size check failed");
+static_assert(sizeof(RenderPassDesc) == 12, "Size check failed");
 
 struct alignas(8) PackedAttachmentOpsDesc final
 {
@@ -358,6 +351,7 @@ class PipelineDesc final
     // TODO(jmadill): Dynamic state.
     // TODO(jmadill): Pipeline layout
     RenderPassDesc mRenderPassDesc;
+    uint8_t mPadding[20];
 };
 
 // Verify the packed pipeline description has no gaps in the packing.
@@ -369,9 +363,10 @@ constexpr size_t kPipelineDescSumOfSizes =
     sizeof(PackedInputAssemblyInfo) + sizeof(VkViewport) + sizeof(VkRect2D) +
     sizeof(PackedRasterizationStateInfo) + sizeof(PackedMultisampleStateInfo) +
     sizeof(PackedDepthStencilStateInfo) + sizeof(PackedColorBlendStateInfo) +
-    sizeof(RenderPassDesc);
+    sizeof(RenderPassDesc) + 20;
 
-static_assert(sizeof(PipelineDesc) == kPipelineDescSumOfSizes, "Size mismatch");
+static constexpr size_t kPipelineDescSize = sizeof(PipelineDesc);
+static_assert(kPipelineDescSize == kPipelineDescSumOfSizes, "Size mismatch");
 
 constexpr uint32_t kMaxDescriptorSetLayoutBindings = gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES;
 

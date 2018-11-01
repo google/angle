@@ -39,7 +39,7 @@ void RenderTargetVk::onColorDraw(vk::FramebufferHelper *framebufferVk,
     ASSERT(!mImage->getFormat().textureFormat().hasDepthOrStencilBits());
 
     // Store the attachment info in the renderPassDesc.
-    renderPassDesc->packColorAttachment(*mImage);
+    renderPassDesc->packAttachment(mImage->getFormat());
 
     // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
     mImage->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT,
@@ -59,7 +59,7 @@ void RenderTargetVk::onDepthStencilDraw(vk::FramebufferHelper *framebufferVk,
     ASSERT(mImage->getFormat().textureFormat().hasDepthOrStencilBits());
 
     // Store the attachment info in the renderPassDesc.
-    renderPassDesc->packDepthStencilAttachment(*mImage);
+    renderPassDesc->packAttachment(mImage->getFormat());
 
     // TODO(jmadill): Use automatic layout transition. http://anglebug.com/2361
     const angle::Format &format    = mImage->getFormat().textureFormat();

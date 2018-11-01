@@ -116,6 +116,9 @@ class FramebufferVk : public FramebufferImpl
 
     angle::Result startNewRenderPass(ContextVk *context, vk::CommandBuffer **commandBufferOut);
 
+    RenderTargetVk *getFirstRenderTarget() const;
+    GLint getSamples() const;
+
   private:
     FramebufferVk(RendererVk *renderer,
                   const gl::FramebufferState &state,
