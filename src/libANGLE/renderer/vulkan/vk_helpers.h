@@ -150,13 +150,9 @@ class DynamicDescriptorPool final : angle::NonCopyable
   private:
     angle::Result allocateNewPool(ContextVk *contextVk);
 
-    // This is somewhat fragile. It limits the total number of in-flight descriptors to
-    // kMaxInFlightPools * kDefaultDescriptorPoolMaxSets. Currently this is ~500k.
-    static constexpr size_t kMaxInFlightPools = 256;
-
     uint32_t mMaxSetsPerPool;
     size_t mCurrentPoolIndex;
-    std::array<SharedDescriptorPoolHelper, kMaxInFlightPools> mDescriptorPools;
+    std::vector<SharedDescriptorPoolHelper *> mDescriptorPools;
     VkDescriptorPoolSize mPoolSize;
 };
 

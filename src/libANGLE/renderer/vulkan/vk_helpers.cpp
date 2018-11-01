@@ -352,21 +352,27 @@ angle::Result DynamicDescriptorPool::init(ContextVk *contextVk,
                                           VkDescriptorType descriptorType,
                                           uint32_t descriptorsPerSet)
 {
-    ASSERT(mCurrentPoolIndex == 0 && !mDescriptorPools[mCurrentPoolIndex].isReferenced());
+    ASSERT(mCurrentPoolIndex == 0);
+    ASSERT(mDescriptorPools.empty() || (mDescriptorPools.size() == 1 &&
+                                        mDescriptorPools[0]->get().hasCapacity(mMaxSetsPerPool)));
 
     mPoolSize.type            = descriptorType;
     mPoolSize.descriptorCount = descriptorsPerSet * mMaxSetsPerPool;
 
-    return mDescriptorPools[0].get().init(contextVk, mPoolSize, mMaxSetsPerPool);
+    mDescriptorPools.push_back(new SharedDescriptorPoolHelper());
+    return mDescriptorPools[0]->get().init(contextVk, mPoolSize, mMaxSetsPerPool);
 }
 
 void DynamicDescriptorPool::destroy(VkDevice device)
 {
-    for (SharedDescriptorPoolHelper &pool : mDescriptorPools)
+    for (SharedDescriptorPoolHelper *pool : mDescriptorPools)
     {
-        ASSERT(!pool.isReferenced());
-        pool.get().destroy(device);
+        ASSERT(!pool->isReferenced());
+        pool->get().destroy(device);
+        delete pool;
     }
+
+    mDescriptorPools.clear();
 }
 
 angle::Result DynamicDescriptorPool::allocateSets(ContextVk *contextVk,
@@ -377,7 +383,7 @@ angle::Result DynamicDescriptorPool::allocateSets(ContextVk *contextVk,
 {
     if (!bindingOut->valid() || !bindingOut->get().hasCapacity(descriptorSetCount))
     {
-        if (!mDescriptorPools[mCurrentPoolIndex].get().hasCapacity(descriptorSetCount))
+        if (!mDescriptorPools[mCurrentPoolIndex]->get().hasCapacity(descriptorSetCount))
         {
             ANGLE_TRY(allocateNewPool(contextVk));
         }
@@ -391,7 +397,7 @@ angle::Result DynamicDescriptorPool::allocateSets(ContextVk *contextVk,
             bindingOut->get().updateSerial(currentSerial);
         }
 
-        bindingOut->set(&mDescriptorPools[mCurrentPoolIndex]);
+        bindingOut->set(mDescriptorPools[mCurrentPoolIndex]);
     }
 
     return bindingOut->get().allocateSets(contextVk, descriptorSetLayout, descriptorSetCount,
@@ -404,12 +410,12 @@ angle::Result DynamicDescriptorPool::allocateNewPool(ContextVk *contextVk)
 
     bool found = false;
 
-    for (size_t poolIndex = 0; poolIndex < kMaxInFlightPools; ++poolIndex)
+    for (size_t poolIndex = 0; poolIndex < mDescriptorPools.size(); ++poolIndex)
     {
-        if (!mDescriptorPools[poolIndex].isReferenced() &&
-            !renderer->isSerialInUse(mDescriptorPools[poolIndex].get().getSerial()))
+        if (!mDescriptorPools[poolIndex]->isReferenced() &&
+            !renderer->isSerialInUse(mDescriptorPools[poolIndex]->get().getSerial()))
         {
-            // We cannot allocate a new pool if the current pool is available.
+            // The newly allocated pool must be a different index from the current pool.
             ASSERT(poolIndex != mCurrentPoolIndex);
             mCurrentPoolIndex = poolIndex;
             found             = true;
@@ -417,8 +423,16 @@ angle::Result DynamicDescriptorPool::allocateNewPool(ContextVk *contextVk)
         }
     }
 
-    ANGLE_VK_CHECK(contextVk, found, VK_ERROR_TOO_MANY_OBJECTS);
-    return mDescriptorPools[mCurrentPoolIndex].get().init(contextVk, mPoolSize, mMaxSetsPerPool);
+    if (!found)
+    {
+        mDescriptorPools.push_back(new SharedDescriptorPoolHelper());
+        mCurrentPoolIndex = mDescriptorPools.size() - 1;
+
+        static constexpr size_t kMaxPools = 99999;
+        ANGLE_VK_CHECK(contextVk, mDescriptorPools.size() < kMaxPools, VK_ERROR_TOO_MANY_OBJECTS);
+    }
+
+    return mDescriptorPools[mCurrentPoolIndex]->get().init(contextVk, mPoolSize, mMaxSetsPerPool);
 }
 
 void DynamicDescriptorPool::setMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool)
