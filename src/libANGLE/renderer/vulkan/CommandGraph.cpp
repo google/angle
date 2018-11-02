@@ -650,8 +650,6 @@ angle::Result CommandGraph::submitCommands(Context *context,
             previousBarrier, &mNodes[previousBarrierIndex + 1], afterNodesCount);
     }
 
-    mLastBarrierIndex = kInvalidNodeIndex;
-
     VkCommandBufferAllocateInfo primaryInfo = {};
     primaryInfo.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     primaryInfo.commandPool                 = commandPool->getHandle();
@@ -715,12 +713,7 @@ angle::Result CommandGraph::submitCommands(Context *context,
 
     ANGLE_VK_TRY(context, primaryCommandBufferOut->end());
 
-    // TODO(jmadill): Use pool allocation so we don't need to deallocate command graph.
-    for (CommandGraphNode *node : mNodes)
-    {
-        delete node;
-    }
-    mNodes.clear();
+    clear();
 
     return angle::Result::Continue();
 }
@@ -728,6 +721,18 @@ angle::Result CommandGraph::submitCommands(Context *context,
 bool CommandGraph::empty() const
 {
     return mNodes.empty();
+}
+
+void CommandGraph::clear()
+{
+    mLastBarrierIndex = kInvalidNodeIndex;
+
+    // TODO(jmadill): Use pool allocator for performance. http://anglebug.com/2951
+    for (CommandGraphNode *node : mNodes)
+    {
+        delete node;
+    }
+    mNodes.clear();
 }
 
 // Dumps the command graph into a dot file that works with graphviz.

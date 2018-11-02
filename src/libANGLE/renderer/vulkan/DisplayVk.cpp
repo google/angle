@@ -32,7 +32,7 @@ DisplayVk::~DisplayVk()
 egl::Error DisplayVk::initialize(egl::Display *display)
 {
     ASSERT(mRenderer != nullptr && display != nullptr);
-    angle::Result result = mRenderer->initialize(this, display->getAttributeMap(), getWSIName());
+    angle::Result result = mRenderer->initialize(this, display, getWSIName());
     ANGLE_TRY(angle::ToEGL(result, this, EGL_NOT_INITIALIZED));
     return egl::NoError();
 }
@@ -196,7 +196,7 @@ void DisplayVk::handleError(VkResult result, const char *file, unsigned int line
 
     if (result == VK_ERROR_DEVICE_LOST)
     {
-        mRenderer->markDeviceLost();
+        mRenderer->notifyDeviceLost();
     }
 }
 

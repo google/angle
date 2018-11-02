@@ -1235,7 +1235,7 @@ void ContextVk::handleError(VkResult errorCode, const char *file, unsigned int l
 
     if (errorCode == VK_ERROR_DEVICE_LOST)
     {
-        mRenderer->markDeviceLost();
+        mRenderer->notifyDeviceLost();
     }
 
     mErrors->handleError(gl::Error(glErrorCode, glErrorCode, errorStream.str()));

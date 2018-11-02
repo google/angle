@@ -16,6 +16,7 @@
 
 #include "common/debug.h"
 #include "common/system_utils.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/vulkan/CommandGraph.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
@@ -49,6 +50,8 @@ namespace
 constexpr size_t kUniformBufferDescriptorsPerDescriptorSet = 2;
 // Update the pipeline cache every this many swaps (if 60fps, this means every 10 minutes)
 static constexpr uint32_t kPipelineCacheVkUpdatePeriod = 10 * 60 * 60;
+// Wait a maximum of 10s.  If that times out, we declare it a failure.
+static constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
 
 bool ShouldEnableMockICD(const egl::AttributeMap &attribs)
 {
@@ -294,7 +297,8 @@ void RendererVk::CommandBatch::destroy(VkDevice device)
 
 // RendererVk implementation.
 RendererVk::RendererVk()
-    : mCapsInitialized(false),
+    : mDisplay(nullptr),
+      mCapsInitialized(false),
       mInstance(VK_NULL_HANDLE),
       mEnableValidationLayers(false),
       mEnableMockICD(false),
@@ -368,9 +372,16 @@ void RendererVk::onDestroy(vk::Context *context)
     mPhysicalDevice = VK_NULL_HANDLE;
 }
 
-void RendererVk::markDeviceLost()
+void RendererVk::notifyDeviceLost()
 {
     mDeviceLost = true;
+
+    mCommandGraph.clear();
+    mLastSubmittedQueueSerial = mCurrentQueueSerial;
+    mCurrentQueueSerial       = mQueueSerialFactory.generate();
+    freeAllInFlightResources();
+
+    mDisplay->notifyDeviceLost();
 }
 
 bool RendererVk::isDeviceLost() const
@@ -379,9 +390,11 @@ bool RendererVk::isDeviceLost() const
 }
 
 angle::Result RendererVk::initialize(DisplayVk *displayVk,
-                                     const egl::AttributeMap &attribs,
+                                     egl::Display *display,
                                      const char *wsiName)
 {
+    mDisplay                         = display;
+    const egl::AttributeMap &attribs = mDisplay->getAttributeMap();
     ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseDebugLayers(attribs),
                                                 ShouldEnableMockICD(attribs));
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
@@ -933,6 +946,13 @@ void RendererVk::freeAllInFlightResources()
 {
     for (CommandBatch &batch : mInFlightCommands)
     {
+        // On device loss we need to wait for fence to be signaled before destroying it
+        if (mDeviceLost)
+        {
+            VkResult status = batch.fence.wait(mDevice, kMaxFenceWaitTimeNs);
+            // If wait times out, it is probably not possible to recover from lost device
+            ASSERT(status == VK_SUCCESS || status == VK_ERROR_DEVICE_LOST);
+        }
         batch.fence.destroy(mDevice);
         batch.commandPool.destroy(mDevice);
     }
@@ -1063,8 +1083,6 @@ angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
     const CommandBatch &batch = mInFlightCommands[batchIndex];
 
     // Wait for it finish
-    constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
-    // Wait a maximum of 10s.  If that times out, we declare it a failure.
     ANGLE_VK_TRY(context, batch.fence.wait(mDevice, kMaxFenceWaitTimeNs));
 
     // Clean up finished batches.
@@ -1335,8 +1353,6 @@ angle::Result RendererVk::getTimestamp(vk::Context *context, uint64_t *timestamp
 
     // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
     // in parallel with what's already running on the GPU.
-    // Declare it a failure if it times out.
-    constexpr uint64_t kMaxFenceWaitTimeNs = 10'000'000'000llu;
     ANGLE_VK_TRY(context, fence.get().wait(mDevice, kMaxFenceWaitTimeNs));
 
     // Get the query results

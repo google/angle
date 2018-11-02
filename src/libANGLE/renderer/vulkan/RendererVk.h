@@ -24,7 +24,7 @@
 
 namespace egl
 {
-class AttributeMap;
+class Display;
 class BlobCache;
 }
 
@@ -44,12 +44,10 @@ class RendererVk : angle::NonCopyable
     RendererVk();
     ~RendererVk();
 
-    angle::Result initialize(DisplayVk *displayVk,
-                             const egl::AttributeMap &attribs,
-                             const char *wsiName);
+    angle::Result initialize(DisplayVk *displayVk, egl::Display *display, const char *wsiName);
     void onDestroy(vk::Context *context);
 
-    void markDeviceLost();
+    void notifyDeviceLost();
     bool isDeviceLost() const;
 
     std::string getVendorString() const;
@@ -221,6 +219,8 @@ class RendererVk : angle::NonCopyable
                                     const char *name);
     angle::Result checkCompletedGpuEvents(vk::Context *context);
     void flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS);
+
+    egl::Display *mDisplay;
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;
